@@ -22,11 +22,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>Step 1: Create category</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
@@ -57,6 +52,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>Step 1: Create category</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>//div[@id='PortalNavigationTopContainer']/div[4]/div/div/div/div/div/div/a</td>
 	<td></td>
@@ -87,6 +87,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>Step 2: Add new category</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>eventCategoryName</td>
 	<td></td>
@@ -107,9 +112,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAt</td>
 	<td>link=Save</td>
-	<td></td>
+	<td>1,1</td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -137,11 +142,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>Step 3: Submit Question</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForElementPresent</td>
 	<td>QuestionTitle</td>
 	<td></td>
@@ -151,7 +151,6 @@
 	<td>QuestionTitle</td>
 	<td>Question Test_ANS_08_001</td>
 </tr>
-<!--//========================-->
 <tr>
 	<td>selectFrame</td>
 	<td>//*[@id=&quot;Question___Frame&quot;]</td>
@@ -175,7 +174,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>Cuộc tình đó ngày đó bao nhiêu mơ mộng. Một mình anh bước trong mai đêm với bóng ai</td>
+	<td>Giật mình ngồi buồn mới biết ta không còn em.</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -185,7 +184,7 @@
 <tr>
 	<td>type</td>
 	<td>EmailAddress</td>
-	<td>root@localhost.com</td>
+	<td>exoplatform.vn@gmail.com</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -198,23 +197,19 @@
 	<td>1,1</td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>confirm OK</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForElementPresent</td>
 	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td>1</td>
+	<td></td>
 </tr>
+<!--=====/-->
 <tr>
 	<td>echo</td>
-	<td>========detele data</td>
+	<td>Step 3: Submit Question</td>
 	<td></td>
 </tr>
 <tr>
@@ -229,32 +224,37 @@
 </tr>
 <tr>
 	<td>waitForText</td>
-	<td>//div[@id='categories/Category23314e1cc0a8013d00415205579386b4/questions/Question23315542c0a8013d014cfcb4338567db']/table/tbody/tr/td[2]/table/tbody/tr[2]/td/div/div/div[1]</td>
+	<td>//a/span</td>
 	<td>Question Test_ANS_08_001</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//div[@id='categories/Category23314e1cc0a8013d00415205579386b4/questions/Question23315542c0a8013d014cfcb4338567db']/table/tbody/tr/td[2]/table/tbody/tr[2]/td/div/div/div[1]</td>
+	<td>//a/span</td>
 	<td>Question Test_ANS_08_001</td>
 </tr>
 <tr>
 	<td>waitForText</td>
-	<td>//div[@id='categories/Category23314e1cc0a8013d00415205579386b4/questions/Question23315542c0a8013d014cfcb4338567db']/table/tbody/tr/td[2]/table/tbody/tr[2]/td/div/div/div[3]/p</td>
-	<td>Cuộc tình đó ngày đó bao nhiêu mơ mộng. Một mình anh bước trong mai đêm với bóng ai</td>
+	<td>//p</td>
+	<td>Giật mình ngồi buồn mới biết ta không còn em.</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//div[@id='categories/Category23314e1cc0a8013d00415205579386b4/questions/Question23315542c0a8013d014cfcb4338567db']/table/tbody/tr/td[2]/table/tbody/tr[2]/td/div/div/div[3]/p</td>
-	<td>Cuộc tình đó ngày đó bao nhiêu mơ mộng. Một mình anh bước trong mai đêm với bóng ai</td>
+	<td>//p</td>
+	<td>Giật mình ngồi buồn mới biết ta không còn em.</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//td[1]/div/div[2]/div[2]/div/div[1]/div</td>
+	<td>//div[@id='AnswersContainer']/div/div[1]/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//td[1]/div/div[2]/div[2]/div/div[1]/div</td>
+	<td>//div[@id='AnswersContainer']/div/div[1]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-- Delete--</td>
 	<td></td>
 </tr>
 <tr>
@@ -284,12 +284,12 @@
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>Test_ANS_21_002</td>
+	<td>Test_ANS_08_001</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>Test_ANS_21_002</td>
+	<td>Test_ANS_08_001</td>
 	<td></td>
 </tr>
 <tr>

@@ -22,11 +22,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>Step 1: Create category</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
@@ -54,6 +49,11 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>//div[@id='UIPortalLoginFormAction']/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>Step 1: Create category</td>
 	<td></td>
 </tr>
 <tr>
@@ -87,6 +87,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>Step 2: Add new category</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>eventCategoryName</td>
 	<td></td>
@@ -94,103 +99,22 @@
 <tr>
 	<td>type</td>
 	<td>eventCategoryName</td>
-	<td>Test_ANS_08_006</td>
+	<td>Test_ANS_08_005</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>moderatequestions</td>
+	<td></td>
+</tr>
+<tr>
+	<td>uncheck</td>
+	<td>moderatequestions</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>description</td>
 	<td>Add new question into the Category which does not require approval on new questions</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>moderatequestions</td>
-	<td></td>
-</tr>
-<tr>
-	<td>check</td>
-	<td>moderatequestions</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Save</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Save</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>Step 2: Open Submit question form</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[6]/div/a/span</td>
-	<td></td>
-</tr>
-<tr>
-	<td>contextMenu</td>
-	<td>//div[6]/div/a/span</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAt</td>
-	<td>//div[@id='UIFAQPopupCategories2']/div/div/div/div/div[4]/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>Step 3: Submit Question</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>QuestionTitle</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>QuestionTitle</td>
-	<td>Question Test_ANS_08_006</td>
-</tr>
-<!--//========================-->
-<tr>
-	<td>selectFrame</td>
-	<td>//*[@id=&quot;Question___Frame&quot;]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
-	<td></td>
-</tr>
-<tr>
-	<td>selectFrame</td>
-	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//html/body</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>//html/body</td>
-	<td>//*[@id=&quot;Question___Frame&quot;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//html/body/table/tbody/tr[2]/td/iframe</td>
-</tr>
-<tr>
-	<td>selectFrame</td>
-	<td>relative=top</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>EmailAddress</td>
-	<td>demo@localhost.com</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -203,54 +127,8 @@
 	<td>1,1</td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td></td>
-</tr>
-<!--=====/-->
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[6]/div/a/span</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[6]/div/a/span</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Question Test_ANS_08_006 This question is pending for approval.</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>Question Test_ANS_08_006 This question is pending for approval.</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementPresent</td>
-	<td>//div[3]/div/div[1]/div[1]/div[2]</td>
-	<td>Question Test_ANS_08_006 This question is pending for approval.<br /><br /> By Root Root | 0 minute(s) ago.</td>
-</tr>
-<tr>
 	<td>echo</td>
-	<td>Check visible</td>
+	<td>Step 2: Open Submit question form</td>
 	<td></td>
 </tr>
 <tr>
@@ -261,11 +139,6 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>Login demo</td>
 	<td></td>
 </tr>
 <tr>
@@ -319,23 +192,168 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextNotPresent</td>
-	<td>Question Test_ANS_08_006 This question is pending for approval.</td>
+	<td>waitForElementPresent</td>
+	<td>link=Submit question</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextNotPresent</td>
-	<td>Question Test_ANS_08_006 This question is pending for approval.</td>
+	<td>click</td>
+	<td>link=Submit question</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyNotVisible</td>
-	<td>//div[3]/div/div[1]/div[1]/div[2]</td>
-	<td>Question Test_ANS_08_006 This question is pending for approval.</td>
+	<td>waitForElementPresent</td>
+	<td>QuestionTitle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>QuestionTitle</td>
+	<td>Question Test_ANS_08_005</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//*[@id=&quot;Question___Frame&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
+	<td>Mùa đông lại đến, tâm hồn như lạnh giá. Mùa đông tuyết trắng chết theo ánh nắng</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>EmailAddress</td>
+	<td>exoplatform.vn@gmail.com</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Save</td>
+	<td>1,1</td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>css=div[class='PopupMessage']</td>
+	<td>The question has been submitted to moderators.</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=div[class='PopupMessage']</td>
+	<td>The question has been submitted to moderators.</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td>1,1</td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-- Detele Category --</td>
+	<td>check visible</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>username</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>mary</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>gtn</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIPortalLoginFormAction']/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='PortalNavigationTopContainer']/div[4]/div/div/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='PortalNavigationTopContainer']/div[4]/div/div/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[6]/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[6]/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>link=Question Test_ANS_08_005</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementNotPresent</td>
+	<td>link=Question Test_ANS_08_005</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-- Delete--</td>
 	<td></td>
 </tr>
 <tr>
@@ -415,37 +433,22 @@
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>Test_ANS_08_006</td>
+	<td>Test_ANS_08_005</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>Test_ANS_08_006</td>
+	<td>Test_ANS_08_005</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id='PortalNavigationTopContainer']/div[4]/div/div/div/div/div/div/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>//div[@id='PortalNavigationTopContainer']/div[4]/div/div/div/div/div/div/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextNotPresent</td>
-	<td>Test_ANS_08_006</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextNotPresent</td>
-	<td>Test_ANS_08_006</td>
 	<td></td>
 </tr>
 

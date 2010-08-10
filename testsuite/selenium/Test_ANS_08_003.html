@@ -22,11 +22,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>Step 1: Create category</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
@@ -57,6 +52,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>Step 1: Create category</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>//div[@id='PortalNavigationTopContainer']/div[4]/div/div/div/div/div/div/a</td>
 	<td></td>
@@ -87,6 +87,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>Step 2: Add new category</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>eventCategoryName</td>
 	<td></td>
@@ -107,17 +112,22 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAt</td>
 	<td>link=Save</td>
-	<td></td>
+	<td>1,1</td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>Step 2: Open Submit question form</td>
+	<td>Step 3: Open Submit question form</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
+	<td>//div[6]/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseOver</td>
 	<td>//div[6]/div/a/span</td>
 	<td></td>
 </tr>
@@ -127,34 +137,54 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDownRight</td>
 	<td>//div[@id='UIFAQPopupCategories2']/div/div/div/div/div[4]/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>Step 3: Submit Question</td>
+	<td>waitForElementPresent</td>
+	<td>QuestionTitle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>QuestionTitle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//*[@id=&quot;Question___Frame&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Submit question</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=Submit question</td>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>EmailAddress</td>
+	<td>//html/body</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
+	<td>Nếu anh gặp em từ đầu có lẽ đã không phải qua bể râu. Nếu em rồi sẽ ở lại anh sẽ biết yêu hơn ngày xưa nếu như mầu sắc nhạt dần anh sẽ vẽ em với mầu nỗi nhớ.</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>EmailAddress</td>
-	<td>root@localhost.com</td>
+	<td>exoplatform.vn@gmail.com</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -168,37 +198,37 @@
 </tr>
 <tr>
 	<td>waitForText</td>
-	<td>//div[2]/div[2]/div/div/div/div/div[2]</td>
+	<td>css=div[class='PopupMessage']</td>
 	<td>Please enter a question for the default language.</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//div[2]/div[2]/div/div/div/div/div[2]</td>
+	<td>css=div[class='PopupMessage']</td>
 	<td>Please enter a question for the default language.</td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>confirm OK</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForElementPresent</td>
 	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAt</td>
-	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td>1</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id='UIAnswersPopupWindow']/div/div[1]/div/div/div/div[2]/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIAnswersPopupWindow']/div/div[1]/div/div/div/div[2]/div</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIQuestionForm']/div[3]/table/tbody/tr/td/div[2]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UIQuestionForm']/div[3]/table/tbody/tr/td/div[2]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-- Delete--</td>
 	<td></td>
 </tr>
 <tr>
@@ -228,12 +258,12 @@
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>Test_ANS_08_003</td>
+	<td>Test_ANS_08_004</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>Test_ANS_08_003</td>
+	<td>Test_ANS_08_004</td>
 	<td></td>
 </tr>
 <tr>
@@ -244,26 +274,6 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Answers</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Answers</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextNotPresent</td>
-	<td>Test_ANS_08_003</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextNotPresent</td>
-	<td>Test_ANS_08_003</td>
 	<td></td>
 </tr>
 

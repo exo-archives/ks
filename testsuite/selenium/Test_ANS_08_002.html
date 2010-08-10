@@ -22,11 +22,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>Step 1: Create category</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
@@ -57,6 +52,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>Step 1: Create category</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>//div[@id='PortalNavigationTopContainer']/div[4]/div/div/div/div/div/div/a</td>
 	<td></td>
@@ -87,6 +87,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>Step 2: Add new category</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>eventCategoryName</td>
 	<td></td>
@@ -107,9 +112,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAt</td>
 	<td>link=Save</td>
-	<td></td>
+	<td>1,1</td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -122,23 +127,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>mouseOver</td>
+	<td>//div[6]/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
 	<td>contextMenu</td>
 	<td>//div[6]/div/a/span</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDownRight</td>
 	<td>//div[@id='UIFAQPopupCategories2']/div/div/div/div/div[4]/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>Step 3: Submit Question</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Question :</td>
 	<td></td>
 </tr>
 <tr>
@@ -151,7 +151,6 @@
 	<td>QuestionTitle</td>
 	<td>Question Test_ANS_08_002</td>
 </tr>
-<!--//========================-->
 <tr>
 	<td>selectFrame</td>
 	<td>//*[@id=&quot;Question___Frame&quot;]</td>
@@ -175,7 +174,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>Cuộc tình đó ngày đó bao nhiêu mơ mộng. Một mình anh bước trong mai đêm với bóng ai</td>
+	<td>Còn đâu người yêu dấu. trời bão tố gió vẫn thét gào. để cho tình thêm đắng cay và bão giônng tiên đưa ngưofwi về trong màn dêm u buôn</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -185,7 +184,7 @@
 <tr>
 	<td>type</td>
 	<td>EmailAddress</td>
-	<td>root@localhost.com</td>
+	<td>exoplatform.vn@gmail.com</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -198,19 +197,20 @@
 	<td>1,1</td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>confirm OK</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForElementPresent</td>
 	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td>1</td>
+	<td></td>
+</tr>
+<!--=====/-->
+<tr>
+	<td>echo</td>
+	<td>Step 3: Submit Question</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -234,37 +234,37 @@
 </tr>
 <tr>
 	<td>waitForText</td>
-	<td>//tr[2]/td/div/div/div[1]</td>
+	<td>//a/span</td>
 	<td>Question Test_ANS_08_002</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//tr[2]/td/div/div/div[1]</td>
+	<td>//a/span</td>
 	<td>Question Test_ANS_08_002</td>
 </tr>
 <tr>
 	<td>waitForText</td>
 	<td>//p</td>
-	<td>Cuộc tình đó ngày đó bao nhiêu mơ mộng. Một mình anh bước trong mai đêm với bóng ai</td>
+	<td>Còn đâu người yêu dấu. trời bão tố gió vẫn thét gào. để cho tình thêm đắng cay và bão giônng tiên đưa ngưofwi về trong màn dêm u buôn</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//p</td>
-	<td>Cuộc tình đó ngày đó bao nhiêu mơ mộng. Một mình anh bước trong mai đêm với bóng ai</td>
+	<td>Còn đâu người yêu dấu. trời bão tố gió vẫn thét gào. để cho tình thêm đắng cay và bão giônng tiên đưa ngưofwi về trong màn dêm u buôn</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//td[1]/div/div[2]/div[2]/div/div[1]/div</td>
+	<td>//div[@id='AnswersContainer']/div/div[1]/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//td[1]/div/div[2]/div[2]/div/div[1]/div</td>
+	<td>//div[@id='AnswersContainer']/div/div[1]/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>========detele data</td>
+	<td>-- Delete--</td>
 	<td></td>
 </tr>
 <tr>
@@ -294,12 +294,12 @@
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>Test_ANS_21_002</td>
+	<td>Test_ANS_08_002</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>Test_ANS_21_002</td>
+	<td>Test_ANS_08_002</td>
 	<td></td>
 </tr>
 <tr>
