@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs author="eXoPlatform"
+		title="Last post"
+		directory_title="Last post"
+		title_url="http://www.exoplatform.org"
+		description="Last post."
+		thumbnail="/ksResources/gadgets/lastpost/skin/thumb.png">
+		<Locale messages="/ksResources/gadgets/lastpost/locale/default.xml" />
+		<Locale lang="ar" messages="/ksResources/gadgets/lastpost/locale/ar.xml" language_direction="rtl"/>
+		<Locale lang="fr" messages="/ksResources/gadgets/lastpost/locale/fr.xml" />
+		<Locale lang="vi" messages="/ksResources/gadgets/lastpost/locale/vi.xml" />
+		<Require feature="setprefs"/>
+		<Require feature="dynamic-height"/>
+	</ModulePrefs>
+	<UserPref name="baseurl" display_name="__MSG_baseurl__" datatype="string" value="/portal/rest/ks/forum/getmessage" required="true"/>
+	<UserPref name="url" display_name="__MSG_subscribeurl__" datatype="string" value="/forum" required="true"/>
+	<UserPref name="limit" display_name="__MSG_limit__" default_value="10" datatype="string"/>  
+  <Content type="html">
+    <![CDATA[
+			<script type="text/javascript" src="skin/lastpost.js"></script>
+      <link href="skin/lastpost.css" type="text/css" rel="stylesheet"/>
+			<div class="UIGadgetThemes UIYellowThemes">
+				<div class="TitGad ClearFix">
+					<a href="#demo" class="IconDropDown" id="ShowAll" target="_blank">__MSG_showall__</a>
+					<div class="ContTit">__MSG_title__</div>
+				</div>
+				<div class="GadCont LastPost" id="ItemContainer">
+	        <!--
+					<div class="PostItem">
+						<label id="abc">09:00<span>Joint PR CS + KS</span></label>
+					</div>
+	        -->
+				</div>
+			</div>
+    ]]>
+  </Content>
+</Module>
