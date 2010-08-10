@@ -3011,6 +3011,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				}
 				// set InfoPost for Forum
 				long forumPostCount = forumNode.getProperty(EXO_POST_COUNT).getLong() + 1;
+				
 				boolean isSetLastPost = true;
 				if(topicNode.getProperty(EXO_IS_CLOSED).getBoolean()) {
 					sendAlertJob = false;
@@ -3078,6 +3079,12 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 								} 
 								if(post.getIsHidden()) sendAlertJob = true;
 							}else sendAlertJob = true;
+						}
+						else 
+						{
+							// update post count
+							forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
+							topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
 						}
 					} else {
 						postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, false);
