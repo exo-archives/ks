@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -42,7 +42,7 @@ import org.exoplatform.webui.event.EventListener;
  * Jun 3, 2008 - 9:49:22 AM	
  */
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/popup/UIListSentPrivateMessage.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIListSentPrivateMessage.gtmpl",
 		events = {
 			@EventConfig(listeners = UIListSentPrivateMessage.ViewMessageActionListener.class),
 			@EventConfig(listeners = UIListSentPrivateMessage.DeleteMessageActionListener.class,confirm="UIPrivateMessageForm.confirm.Delete-message"),

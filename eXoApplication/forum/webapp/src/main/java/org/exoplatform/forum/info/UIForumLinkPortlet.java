@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -30,37 +30,37 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Apr 23, 2009 - 7:42:07 AM  
+ *					tu.duy@exoplatform.com
+ * Apr 23, 2009 - 7:42:07 AM	
  */
 
 @ComponentConfig(
-   lifecycle = UIApplicationLifecycle.class,
-   template = "app:/templates/forum/webui/info/UIForumLinkPortlet.gtmpl",
-   events = {
-     	@EventConfig(listeners = UIForumLinkPortlet.ForumLinkEventActionListener.class)
-   }
+	 lifecycle = UIApplicationLifecycle.class,
+	 template = "app:/templates/forum/webui/info/UIForumLinkPortlet.gtmpl",
+	 events = {
+		 	@EventConfig(listeners = UIForumLinkPortlet.ForumLinkEventActionListener.class)
+	 }
 )
 	
 public class UIForumLinkPortlet extends UIPortletApplication {
 	private boolean isRenderChild = false;
 	public UIForumLinkPortlet() throws Exception {
 		addChild(UIForumLinks.class, null, null).setRendered(isRenderChild);
-  }
-  
-  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
-    super.processRender(app, context) ;
-  }  
-  
-  public boolean isRenderChild() {
-  	return isRenderChild;
-  }
-  
-  public void setRenderChild(boolean isRenderChild) {
-  	this.isRenderChild = isRenderChild;
-  }
-  
-  static public class ForumLinkEventActionListener extends EventListener<UIForumLinkPortlet> {
+	}
+	
+	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {		
+		super.processRender(app, context) ;
+	}	
+	
+	public boolean isRenderChild() {
+		return isRenderChild;
+	}
+	
+	public void setRenderChild(boolean isRenderChild) {
+		this.isRenderChild = isRenderChild;
+	}
+	
+	static public class ForumLinkEventActionListener extends EventListener<UIForumLinkPortlet> {
 		public void execute(Event<UIForumLinkPortlet> event) throws Exception {
 			UIForumLinkPortlet forumLinkPortlet = event.getSource();
 			ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);

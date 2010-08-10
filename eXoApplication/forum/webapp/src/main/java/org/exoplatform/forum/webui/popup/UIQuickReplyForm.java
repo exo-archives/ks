@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -52,12 +52,12 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Apr 15, 2009 - 4:34:11 AM  
+ *					tu.duy@exoplatform.com
+ * Apr 15, 2009 - 4:34:11 AM	
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template =	"app:/templates/forum/webui/popup/UIQuickReplyForm.gtmpl", 
+		template = "app:/templates/forum/webui/popup/UIQuickReplyForm.gtmpl", 
 		events = {
 			@EventConfig(listeners = UIQuickReplyForm.PreviewReplyActionListener.class),
 			@EventConfig(listeners = UIQuickReplyForm.QuickReplyActionListener.class)
@@ -74,7 +74,7 @@ public class UIQuickReplyForm extends UIForm {
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UIQuickReplyForm() {
 		addUIFormInput( new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA,null)) ;
-  }
+	}
 	
 	private String getLink() {
 		return links;
@@ -89,15 +89,15 @@ public class UIQuickReplyForm extends UIForm {
 		try {
 			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			this.topic = forumService.getTopic(categoryId, forumId, topicId, userName) ;
-    } catch (Exception e) {
-    	topic = new Topic();
-    }
-  }
+		} catch (Exception e) {
+			topic = new Topic();
+		}
+	}
 	
 	static public class QuickReplyActionListener extends EventListener<UIQuickReplyForm> {
-	  
+		
 		public void execute(Event<UIQuickReplyForm> event) throws Exception {
-		  Log log = ExoLogger.getLogger(QuickReplyActionListener.class); 
+			Log log = ExoLogger.getLogger(QuickReplyActionListener.class); 
 			UIQuickReplyForm quickReply = event.getSource() ;
 			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			ForumAdministration forumAdministration = forumService.getForumAdministration() ;
@@ -154,7 +154,7 @@ public class UIQuickReplyForm extends UIForm {
 				post.setLink(link);
 				try {
 					forumService.savePost(quickReply.categoryId, quickReply.forumId, quickReply.topicId, post, true, ForumUtils.getDefaultMail()) ;
-					forumService.updateTopicAccess(quickReply.userName,  topic.getId()) ;
+					forumService.updateTopicAccess(quickReply.userName,	topic.getId()) ;
 					if(userProfile.getIsAutoWatchTopicIPost()) {
 						List<String> values = new ArrayList<String>();
 						values.add(userProfile.getEmail());
@@ -181,9 +181,9 @@ public class UIQuickReplyForm extends UIForm {
 						ForumParameter param = new ForumParameter() ;
 						param.setTopicId(topic.getId());
 						actionRes.setEvent(new QName("ReLoadPortletEvent"), param) ;
-	        } catch (Exception e) {
-	          log.debug("\nSetting Topic fail: " + e.getMessage() + "\n" + e.getCause());
-	        }
+					} catch (Exception e) {
+						log.debug("\nSetting Topic fail: " + e.getMessage() + "\n" + e.getCause());
+					}
 				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(quickReply) ;
 			}else {

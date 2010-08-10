@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -58,7 +58,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
-		template =	"app:/templates/forum/webui/UICategory.gtmpl",
+		template = "app:/templates/forum/webui/UICategory.gtmpl",
 		events = {
 				@EventConfig(listeners = UICategory.SearchFormActionListener.class),
 				@EventConfig(listeners = UICategory.EditCategoryActionListener.class),
@@ -92,7 +92,7 @@ public class UICategory extends BaseForumForm	{
 	private boolean	isEditCategory = false ;
 	private boolean	isEditForum = false ;
 	private boolean useAjax = true;
-  private int dayForumNewPost = 0;
+	private int dayForumNewPost = 0;
 	private List<Forum> forums = new ArrayList<Forum>() ;
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	private Map<String, Topic> MaptopicLast =new HashMap<String, Topic>(); 
@@ -107,7 +107,7 @@ public class UICategory extends BaseForumForm	{
 				"SetUnLock","SetOpen","SetClose","MoveForum","RemoveForum"});
 	}
 	
-  private UserProfile getUserProfile() throws Exception {
+	private UserProfile getUserProfile() throws Exception {
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
 		useAjax = forumPortlet.isUseAjax();
 		dayForumNewPost = forumPortlet.getDayForumNewPost();
@@ -117,19 +117,19 @@ public class UICategory extends BaseForumForm	{
 	}
 
 	public String getRSSLink(String cateId){
-		PortalContainer pcontainer =  PortalContainer.getInstance() ;
+		PortalContainer pcontainer = PortalContainer.getInstance() ;
 		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
 	}
 	
-  private int getDayForumNewPost() {
+	private int getDayForumNewPost() {
 		return dayForumNewPost;
 	}
-  
-  private String getLastReadPostOfForum(String forumId) throws Exception {
+	
+	private String getLastReadPostOfForum(String forumId) throws Exception {
 		return userProfile.getLastPostIdReadOfForum(forumId);
 	}
-  
-  private String getScreenName(String userName) throws Exception {
+	
+	private String getScreenName(String userName) throws Exception {
 		return getForumService().getScreenName(userName);
 	}
 	
@@ -158,8 +158,8 @@ public class UICategory extends BaseForumForm	{
 	}
 	
 	public String getCategoryId() {
-	  return this.categoryId;
-  }
+		return this.categoryId;
+	}
 	
 	private Category getCategory() throws Exception{
 		if(this.isEditCategory || this.category == null) {
@@ -174,23 +174,23 @@ public class UICategory extends BaseForumForm	{
 	}
 
 	 private Category refreshCategory() throws Exception{
-      try {
-        this.category = getForumService().getCategory(this.categoryId);
-      }catch (Exception e) {
-        e.printStackTrace();
-      }
-	    return category ;
-	  }
+			try {
+				this.category = getForumService().getCategory(this.categoryId);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			return category ;
+		}
 
 	
 	private boolean isShowForum(String id) {
-	  if(this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories().isEmpty()) return true;
+		if(this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories().isEmpty()) return true;
 		List<String> list = new ArrayList<String>();
 		list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums());
 		return (list.contains(id))?true:false;
 	}
 	
-  private List<Forum> getForumList() throws Exception {
+	private List<Forum> getForumList() throws Exception {
 		if(this.isEditForum) {
 			String strQuery = "";
 			if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
@@ -231,30 +231,30 @@ public class UICategory extends BaseForumForm	{
 	}
 	
 	private Topic getLastTopic(Category cate, Forum forum) throws Exception {
-	  
-	  
+		
+		
 		Topic topic = null;
 		String topicPath = forum.getLastTopicPath();
 		if (!ForumUtils.isEmpty(topicPath)) {
-		  
-		  try {
-		    topic = getForumService().getTopicByPath(topicPath, true) ;
-		  }catch (Exception e) {
-		    topic = null;
-		    log.warn(e);
-		  }
-		  if(topic != null) {
-		    String topicId = topic.getId() ;
-		    if (getAncestorOfType(UIForumPortlet.class).checkCanView(cate, forum, topic)) {		      
-		      this.MaptopicLast.put(topicId, topic);
-		    } else {
-		      if(this.MaptopicLast.containsKey(topicId)) {
-		        this.MaptopicLast.remove(topicId);
-		      }
-		      return null;
-		    }
-		  }
-		  
+			
+			try {
+				topic = getForumService().getTopicByPath(topicPath, true) ;
+			}catch (Exception e) {
+				topic = null;
+				log.warn(e);
+			}
+			if(topic != null) {
+				String topicId = topic.getId() ;
+				if (getAncestorOfType(UIForumPortlet.class).checkCanView(cate, forum, topic)) {					
+					this.MaptopicLast.put(topicId, topic);
+				} else {
+					if(this.MaptopicLast.containsKey(topicId)) {
+						this.MaptopicLast.remove(topicId);
+					}
+					return null;
+				}
+			}
+			
 		}
 		return topic ;
 	}
@@ -266,10 +266,10 @@ public class UICategory extends BaseForumForm	{
 		return null ;
 	}
 	
-  private boolean isWatching(String path) throws Exception {
+	private boolean isWatching(String path) throws Exception {
 		for (Watch watch : listWatches) {
 			if(path.equals(watch.getNodePath())) return true;
-    }
+		}
 		return false;
 	}
 
@@ -277,7 +277,7 @@ public class UICategory extends BaseForumForm	{
 		for (Watch watch : listWatches) {
 			try {
 				if(watch.getNodePath().endsWith(path)) return watch.getEmail();
-      } catch (Exception e) {}
+			} catch (Exception e) {}
 		}
 		return "";
 	}
@@ -594,7 +594,7 @@ public class UICategory extends BaseForumForm	{
 					uiCategory.userProfile.addLastPostIdReadOfForum(forum.getId(), "");
 					uiCategory.getForumService().saveLastPostIdRead(uiCategory.userProfile.getUserId(), uiCategory.userProfile.getLastReadPostOfForum(),
 							uiCategory.userProfile.getLastReadPostOfTopic());
-					((UIApplication)forumPortlet).addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission",  new String[]{"this","topic"}, ApplicationMessage.WARNING)) ;
+					((UIApplication)forumPortlet).addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission",	new String[]{"this","topic"}, ApplicationMessage.WARNING)) ;
 					context.addUIComponentToUpdateByAjax(uiCategory) ;
 				}
 			}
@@ -625,10 +625,10 @@ public class UICategory extends BaseForumForm	{
 					if(uiCategory.userProfile.getUserRole() == 1) {
 						String []strings = uiCategory.userProfile.getModerateForums();
 						for (int i = 0; i < strings.length; i++) {
-		          String str = strings[i].substring(strings[i].lastIndexOf("/")+1);
-		          if(str.length() > 0)
-		          	forumIdsOfModerator.add(str);
-	          }
+							String str = strings[i].substring(strings[i].lastIndexOf("/")+1);
+							if(str.length() > 0)
+								forumIdsOfModerator.add(str);
+						}
 					}
 				}
 				UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
@@ -704,7 +704,7 @@ public class UICategory extends BaseForumForm	{
 	static public class UnWatchActionListener extends BaseEventListener<UICategory> {
 		public void onEvent(Event<UICategory> event, UICategory uiCategory, final String path) throws Exception {
 			try {
-			  unwatchEmail = uiCategory.getEmailWatching(path);
+				unwatchEmail = uiCategory.getEmailWatching(path);
 				uiCategory.getForumService().removeWatch(1, path,uiCategory.userProfile.getUserId()+"/"+uiCategory.getEmailWatching(path)) ;
 				UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateWatchinh();
@@ -772,15 +772,15 @@ public class UICategory extends BaseForumForm	{
 	
 	static public class WatchOptionActionListener extends BaseEventListener<UICategory> {
 		public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
-		  Category category;
+			Category category;
 			if(UICategory.isUnWatch){
-			   category = uiCategory.refreshCategory() ;
+				 category = uiCategory.refreshCategory() ;
 			}else {
-			  category = uiCategory.category ;
+				category = uiCategory.category ;
 			}
 			 UIWatchToolsForm watchToolsForm = uiCategory.openPopup(UIWatchToolsForm.class, 500, 365) ;
-       watchToolsForm.setPath(category.getPath());
-       watchToolsForm.setEmails(category.getEmailNotification());
+			 watchToolsForm.setPath(category.getPath());
+			 watchToolsForm.setEmails(category.getEmailNotification());
 		}
 	}
 	

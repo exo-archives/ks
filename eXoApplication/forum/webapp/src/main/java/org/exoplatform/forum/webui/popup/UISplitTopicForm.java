@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -78,10 +78,10 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 	public void setLink(String link) {this.link = link;}
 	
 	public boolean getIdRender() {
-	  return this.isRender;
-  }
+		return this.isRender;
+	}
 	@SuppressWarnings({ "unchecked", "unused" })
-  private List<Post> getListPost() throws Exception {
+	private List<Post> getListPost() throws Exception {
 		List<Post> posts = new ArrayList<Post>() ;
 		String path = this.topic.getPath();
 		path = path.substring(path.indexOf(Utils.CATEGORY));
@@ -90,9 +90,9 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 		}
 		pageList.setPageSize(6);
 		maxPage = pageList.getAvailablePage() ;
-		posts =  pageList.getPage(pageSelect);
+		posts = pageList.getPage(pageSelect);
 		pageSelect = pageList.getCurrentPage();
-		if(maxPage <= 1) isRender =  false ;
+		if(maxPage <= 1) isRender = false ;
 		String checkBoxId;
 		for (Post post : posts) {
 			checkBoxId = post.getCreatedDate().getTime()+ "/"+post.getId();
@@ -127,12 +127,12 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 				// postIds number/id
 				List<String> postIds = uiForm.getIdSelected() ;
 				if(postIds.size() > 0) {
-				  Collections.sort(postIds);
-				  List<String> postPaths = new ArrayList<String>();
-				  String path = uiForm.topic.getPath() ;
-				  for (String str : postIds) {
-				  	postPaths.add(path + str.substring(str.indexOf("/")));
-          }
+					Collections.sort(postIds);
+					List<String> postPaths = new ArrayList<String>();
+					String path = uiForm.topic.getPath() ;
+					for (String str : postIds) {
+						postPaths.add(path + str.substring(str.indexOf("/")));
+					}
 					Topic topic = new Topic() ;
 					Post post = uiForm.forumService.getPost("", "", "", postPaths.get(0));
 					String owner = uiForm.userProfile.getUserId();
@@ -163,7 +163,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 						String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
 						uiForm.forumService.movePost(postPaths.toArray(new String[]{}), destTopicPath, true, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
 					} catch (Exception e) {
-					  uiForm.log.error("Saving topic " + topic + " fail: "+ e.getMessage(), e);
+						uiForm.log.error("Saving topic " + topic + " fail: "+ e.getMessage(), e);
 						UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;

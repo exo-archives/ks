@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -32,33 +32,33 @@ import org.exoplatform.webui.event.EventListener;
 
 /**
  * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
+ *					hung.nguyen@exoplatform.com
  * Mar 04, 2008
  */
 
 @ComponentConfig(
-   lifecycle = UIApplicationLifecycle.class,
-   template = "app:/templates/forum/webui/info/UIForumPollPortlet.gtmpl",
-   events = {
-     	@EventConfig(listeners = UIForumPollPortlet.ForumPollEventActionListener.class)
-   }
+	 lifecycle = UIApplicationLifecycle.class,
+	 template = "app:/templates/forum/webui/info/UIForumPollPortlet.gtmpl",
+	 events = {
+		 	@EventConfig(listeners = UIForumPollPortlet.ForumPollEventActionListener.class)
+	 }
 )
 
 public class UIForumPollPortlet extends UIPortletApplication {
 	private boolean isRenderChild = false;
 	public UIForumPollPortlet() throws Exception {
-  	addChild(UITopicPoll.class, null, null).setRendered(false) ;
-  	addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
-  }
-  
-  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
-    super.processRender(app, context) ;
-  }  
-  
-  public void renderPopupMessages() throws Exception {
+		addChild(UITopicPoll.class, null, null).setRendered(false) ;
+		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
+	}
+	
+	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {		
+		super.processRender(app, context) ;
+	}	
+	
+	public void renderPopupMessages() throws Exception {
 		UIPopupMessages popupMess = getUIPopupMessages();
 		if(popupMess == null)	return ;
-		WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
+		WebuiRequestContext	context = RequestContext.getCurrentInstance() ;
 		popupMess.processRender(context);
 	}
 

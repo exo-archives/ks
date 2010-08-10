@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -36,8 +36,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 22, 2009 - 2:11:20 AM  
+ *					tu.duy@exoplatform.com
+ * May 22, 2009 - 2:11:20 AM	
  */
 
 @ComponentConfig(
@@ -89,17 +89,17 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
 		addUIFormInput(jobDay);
 		addUIFormInput(jobDayType);
 		setActions(new String[]{"Save", "Close"});
-  }
+	}
 	
-  public boolean isActivate() {
-  	return isActivate;
-  }
-  public void setActivate(boolean isActivate) {
-  	this.isActivate = isActivate;
-  }
+	public boolean isActivate() {
+		return isActivate;
+	}
+	public void setActivate(boolean isActivate) {
+		this.isActivate = isActivate;
+	}
 
 	@SuppressWarnings("unused")
-  private void setInitForm() throws Exception{
+	private void setInitForm() throws Exception{
 		if(!isTest) {
 			long i = pruneSetting.getInActiveDay();
 			String type = FIELD_VALUEDAY;
@@ -107,32 +107,32 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
 				if(i%7 == 0) {i = i/7; type = FIELD_VALUEWEEKS;}
 				else if(i%30 == 0) {i = i/30; type = FIELD_VALUEMONTHS;}
 			}
-		  getUIStringInput(FIELD_INACTIVEDAY_INPUT).setValue(String.valueOf(i));
-		  getUIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX).setValue(type) ;
-		  i = pruneSetting.getPeriodTime();
-		  type = FIELD_VALUEDAY;
-		  if(i != 0){
-		  	if(i%7 == 0) {i = i/7; type = FIELD_VALUEWEEKS;}
-		  	else if(i%30 == 0) {i = i/30; type = FIELD_VALUEMONTHS;}
-		  }
-		  type = type+"_Id";
-		  getUIStringInput(FIELD_JOBDAY_INPUT).setValue(String.valueOf(i));
-		  getUIFormSelectBox(FIELD_JOBDAY_SELECTBOX).setValue(type) ;
-		  isTest = false;
+			getUIStringInput(FIELD_INACTIVEDAY_INPUT).setValue(String.valueOf(i));
+			getUIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX).setValue(type) ;
+			i = pruneSetting.getPeriodTime();
+			type = FIELD_VALUEDAY;
+			if(i != 0){
+				if(i%7 == 0) {i = i/7; type = FIELD_VALUEWEEKS;}
+				else if(i%30 == 0) {i = i/30; type = FIELD_VALUEMONTHS;}
+			}
+			type = type+"_Id";
+			getUIStringInput(FIELD_JOBDAY_INPUT).setValue(String.valueOf(i));
+			getUIFormSelectBox(FIELD_JOBDAY_SELECTBOX).setValue(type) ;
+			isTest = false;
 		}
-  }
+	}
 
 	public void setPruneSetting(PruneSetting pruneSetting) {
 		this.pruneSetting = pruneSetting ;
 	}
 	
 	public long getTopicOld() {
-  	return topicOld;
-  }
+		return topicOld;
+	}
 
 	public void setTopicOld(long topicOld) {
-  	this.topicOld = topicOld;
-  }
+		this.topicOld = topicOld;
+	}
 
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
@@ -150,17 +150,17 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
 			try {
 				String date_ = uiform.getUIStringInput(FIELD_INACTIVEDAY_INPUT).getValue();
 				String type = uiform.getUIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX).getValue();
-	      uiform.pruneSetting.setInActiveDay(uiform.convertDay(type, Long.parseLong(date_)));
-	      isInactiveDay = true;
-	      date_ = uiform.getUIStringInput(FIELD_JOBDAY_INPUT).getValue();
-	      type = uiform.getUIFormSelectBox(FIELD_JOBDAY_SELECTBOX).getValue();
-	      uiform.pruneSetting.setPeriodTime(uiform.convertDay(type, Long.parseLong(date_)));
-	      if(uiform.isActivate) {uiform.pruneSetting.setActive(true); uiform.isActivate = false;}
-	      uiform.getForumService().savePruneSetting(uiform.pruneSetting);
-	      UIAutoPruneForm autoPruneForm = uiform.getAncestorOfType(UIForumPortlet.class).
-	      	findFirstComponentOfType(UIAutoPruneForm.class);
-	      event.getRequestContext().addUIComponentToUpdateByAjax(autoPruneForm);
-	      uiform.cancelChildPopupAction();
+				uiform.pruneSetting.setInActiveDay(uiform.convertDay(type, Long.parseLong(date_)));
+				isInactiveDay = true;
+				date_ = uiform.getUIStringInput(FIELD_JOBDAY_INPUT).getValue();
+				type = uiform.getUIFormSelectBox(FIELD_JOBDAY_SELECTBOX).getValue();
+				uiform.pruneSetting.setPeriodTime(uiform.convertDay(type, Long.parseLong(date_)));
+				if(uiform.isActivate) {uiform.pruneSetting.setActive(true); uiform.isActivate = false;}
+				uiform.getForumService().savePruneSetting(uiform.pruneSetting);
+				UIAutoPruneForm autoPruneForm = uiform.getAncestorOfType(UIForumPortlet.class).
+					findFirstComponentOfType(UIAutoPruneForm.class);
+				event.getRequestContext().addUIComponentToUpdateByAjax(autoPruneForm);
+				uiform.cancelChildPopupAction();
 			} catch (NumberFormatException e) {
 				String[] args = new String[]{uiform.getLabel(FIELD_INACTIVEDAY_INPUT)};
 				if(isInactiveDay)args = new String[]{uiform.getLabel(FIELD_JOBDAY_INPUT)};
@@ -175,7 +175,7 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
 			UIAutoPruneSettingForm uiform = event.getSource();
 			String date_ = uiform.getUIStringInput(FIELD_INACTIVEDAY_INPUT).getValue();
 			String type = uiform.getUIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX).getValue();
-			long date =  uiform.convertDay(type, Long.parseLong(date_));
+			long date = uiform.convertDay(type, Long.parseLong(date_));
 			PruneSetting setting = uiform.pruneSetting ;
 			setting.setInActiveDay(date) ;
 			uiform.topicOld = uiform.getForumService().checkPrune(setting) ;

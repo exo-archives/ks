@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -49,7 +49,7 @@ import org.exoplatform.webui.application.portlet.PortletRequestContext;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
+ *					tu.duy@exoplatform.com
  * Dec 21, 2007 5:35:54 PM 
  */
 
@@ -77,20 +77,20 @@ public class ForumUtils {
 	
 	
 	static String buildForumLink(String url, String selectedNode, String portalName, String type, String id) throws Exception { 
-    if(url.indexOf(portalName) > 0) {
-      if(url.indexOf(portalName + "/" + selectedNode) < 0){
-        url = url.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-      }                 
-    }
-    selectedNode = portalName + "/" + selectedNode;
-    url = url.substring(0, url.lastIndexOf(selectedNode)+selectedNode.length());
-    StringBuilder link = new StringBuilder().append(url);
-    if(!isEmpty(type) && !isEmpty(id)){
-      if(link.lastIndexOf("/") == (link.length()-1)) link.append(type);
-      else link.append("/").append(type);
-      if(!id.equals(Utils.FORUM_SERVICE))link.append("/").append(id);
-    }
-    return link.toString();
+		if(url.indexOf(portalName) > 0) {
+			if(url.indexOf(portalName + "/" + selectedNode) < 0){
+				url = url.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+			}								 
+		}
+		selectedNode = portalName + "/" + selectedNode;
+		url = url.substring(0, url.lastIndexOf(selectedNode)+selectedNode.length());
+		StringBuilder link = new StringBuilder().append(url);
+		if(!isEmpty(type) && !isEmpty(id)){
+			if(link.lastIndexOf("/") == (link.length()-1)) link.append(type);
+			else link.append("/").append(type);
+			if(!id.equals(Utils.FORUM_SERVICE))link.append("/").append(id);
+		}
+		return link.toString();
 	}
 	
 	public static String createdForumLink(String type, String id) throws Exception {
@@ -98,7 +98,7 @@ public class ForumUtils {
 		String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 		String portalName = "/" + Util.getUIPortal().getName() ;
 		return buildForumLink(url, selectedNode, portalName, type, id);
-  }
+	}
 	
 	public static String getFormatDate(String format, Date myDate) {
 		/*h,hh,H, m, mm, d, dd, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
@@ -139,18 +139,18 @@ public class ForumUtils {
 	}
 	
 	public static String getSizeFile(long size) {
-	  String sizeStr = String.valueOf(size) ;
-	  String unit = " Byte" ;
-    if(size >= 1024) {
-      DecimalFormat df = new DecimalFormat("#,###.#", new DecimalFormatSymbols(Locale.ENGLISH));
-      double convertedSize = (double)size/1024 ;
-      unit = " Kb" ;
-      if(convertedSize >= 1024) {
-        convertedSize = convertedSize/1024 ;
-        unit = " Mb" ;        
-      }
-      sizeStr = df.format(convertedSize) ;
-    }
+		String sizeStr = String.valueOf(size) ;
+		String unit = " Byte" ;
+		if(size >= 1024) {
+			DecimalFormat df = new DecimalFormat("#,###.#", new DecimalFormatSymbols(Locale.ENGLISH));
+			double convertedSize = (double)size/1024 ;
+			unit = " Kb" ;
+			if(convertedSize >= 1024) {
+				convertedSize = convertedSize/1024 ;
+				unit = " Mb" ;				
+			}
+			sizeStr = df.format(convertedSize) ;
+		}
 		return (sizeStr + unit);
 	}
 	
@@ -222,9 +222,9 @@ public class ForumUtils {
 			String strs[] = new String[]{";", ", ", " ,", ",,"};
 			for (int i = 0; i < strs.length; i++) {
 				while (str.indexOf(strs[i]) >= 0) {
-	        str = str.replaceAll(strs[i], ",");
-        }
-      }
+					str = str.replaceAll(strs[i], ",");
+				}
+			}
 			if(str.lastIndexOf(",") == str.length() - 1) {
 				str = str.substring(0, str.length() - 1) ;
 			}
@@ -321,9 +321,9 @@ public class ForumUtils {
 		if(array == null) return list;
 		if(list.isEmpty() && !isArrayEmpty(array)) list.addAll(Arrays.asList(array));
 		else {
-			for (int i = 0; i < array.length; i++) {			  
-	      if(array[i] != null && !list.contains(array[i]) && array[i].trim().length() > 0) list.add(array[i]);
-      }
+			for (int i = 0; i < array.length; i++) {				
+				if(array[i] != null && !list.contains(array[i]) && array[i].trim().length() > 0) list.add(array[i]);
+			}
 		}
 		return list;
 	}
@@ -332,10 +332,10 @@ public class ForumUtils {
 		if (isEmpty(key)) key = " ";
 		try {
 			return label.replaceFirst("<keyWord>", key) ;
-    } catch (Exception e) {
-    	String s = label.substring(0, label.indexOf("<keyWord>") - 1);
-	    return s + "'" + key + "'" + label.substring(label.indexOf("<keyWord>"));
-    }
+		} catch (Exception e) {
+			String s = label.substring(0, label.indexOf("<keyWord>") - 1);
+			return s + "'" + key + "'" + label.substring(label.indexOf("<keyWord>"));
+		}
 	}
 	
 	public static String[] getColor() {
@@ -361,7 +361,7 @@ public class ForumUtils {
 		portletPref.setValue("invisibleCategories", listCategoryId);
 		portletPref.setValue("invisibleForums", listForumId);
 		portletPref.store();
-  }
+	}
 	
 	public static SettingPortletPreference getPorletPreference() throws Exception {
 		SettingPortletPreference preference = new SettingPortletPreference();
@@ -382,8 +382,8 @@ public class ForumUtils {
 		preference.setShowQuickReply(Boolean.parseBoolean(portletPref.getValue("isShowQuickReply", "")));
 		preference.setShowRules(Boolean.parseBoolean(portletPref.getValue("isShowRules", "")));
 		preference.setShowStatistics(Boolean.parseBoolean(portletPref.getValue("isShowStatistics", "")));
-	  return preference;
-  }
+		return preference;
+	}
 	
 	public static void savePortletPreference(SettingPortletPreference sPreference) throws Exception {
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
@@ -408,7 +408,7 @@ public class ForumUtils {
 		portletPref.setValue("invisibleCategories", listCategoryId);
 		portletPref.setValue("invisibleForums", listForumId);
 		portletPref.store();
-  }
+	}
 
 	public static List<String> getListInValus(String value) throws Exception {
 		List<String>list = new ArrayList<String>();
@@ -431,17 +431,17 @@ public class ForumUtils {
 	}
 	
 	static public class DatetimeComparatorDESC implements Comparator<Object> {
-    public int compare(Object o1, Object o2) throws ClassCastException {
-    	Date date1 = ((Post) o1).getCreatedDate() ;
-      Date date2  = ((Post) o2).getCreatedDate() ;
-      return date1.compareTo(date2) ;
-    }
-  }
+		public int compare(Object o1, Object o2) throws ClassCastException {
+			Date date1 = ((Post) o1).getCreatedDate() ;
+			Date date2 = ((Post) o2).getCreatedDate() ;
+			return date1.compareTo(date2) ;
+		}
+	}
 
 	static public class SortComparatorDESC implements Comparator<Object> {
 		public int compare(Object o1, Object o2) throws ClassCastException {
 			String str1 = ((TopicType) o1).getName() ;
-			String str2  = ((TopicType) o2).getName() ;
+			String str2 = ((TopicType) o2).getName() ;
 			return str1.compareTo(str2) ;
 		}
 	}
@@ -462,8 +462,8 @@ public class ForumUtils {
 		for (int i = 0; i < strs.length; i++) {
 			if(isEmpty(strs[i])) continue;
 			if(i > 0) builder.append(",<br/>");
-	    builder.append("<span title='").append(strs[i]).append("'>").append(getSubString(strs[i], 15)).append("</span>");
-    }
+			builder.append("<span title='").append(strs[i]).append("'>").append(getSubString(strs[i], 15)).append("</span>");
+		}
 		return builder.toString();
 	}
 }

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -31,8 +31,8 @@ import org.exoplatform.webui.event.Event.Phase;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 24, 2009 - 11:16:35 PM  
+ *					tu.duy@exoplatform.com
+ * May 24, 2009 - 11:16:35 PM	
  */
 
 @ComponentConfig(
@@ -44,12 +44,12 @@ import org.exoplatform.webui.event.Event.Phase;
 		}
 )
 
-public class UIRunPruneForm  extends BaseForumForm implements UIPopupComponent {
+public class UIRunPruneForm	extends BaseForumForm implements UIPopupComponent {
 	private PruneSetting pruneSetting;
 	private long topicOld = 0;
 	public UIRunPruneForm() {
 		
-  }
+	}
 	
 	public void setPruneSetting(PruneSetting pruneSetting) throws Exception{
 		this.pruneSetting = pruneSetting ;
@@ -57,12 +57,12 @@ public class UIRunPruneForm  extends BaseForumForm implements UIPopupComponent {
 	}
 	
 	public long getTopicOld() {
-  	return topicOld;
-  }
+		return topicOld;
+	}
 
 	public void setTopicOld(long topicOld) {
-  	this.topicOld = topicOld;
-  }
+		this.topicOld = topicOld;
+	}
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}

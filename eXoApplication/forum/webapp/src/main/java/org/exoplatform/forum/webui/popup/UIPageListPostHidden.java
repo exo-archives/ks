@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -47,7 +47,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template =	"app:/templates/forum/webui/popup/UIPageListPostUnApprove.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIPageListPostUnApprove.gtmpl",
 		events = {
 			@EventConfig(listeners = UIPageListPostHidden.OpenPostLinkActionListener.class),
 			@EventConfig(listeners = UIPageListPostHidden.UnHiddenActionListener.class),
@@ -84,7 +84,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPosts() throws Exception {
-		pageList	= forumService.getPosts(this.categoryId, this.forumId, this.topicId, "", "true", "", "");
+		pageList = forumService.getPosts(this.categoryId, this.forumId, this.topicId, "", "true", "", "");
 		pageList.setPageSize(6) ;
 		maxPage = pageList.getAvailablePage();
 		listPost = pageList.getPage(pageSelect);
@@ -110,7 +110,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 	}
 	
 	static	public class OpenPostLinkActionListener extends BaseEventListener<UIPageListPostHidden> {
-    public void onEvent(Event<UIPageListPostHidden> event, UIPageListPostHidden uiForm, final String postId) throws Exception {
+		public void onEvent(Event<UIPageListPostHidden> event, UIPageListPostHidden uiForm, final String postId) throws Exception {
 			Post post = uiForm.getPost(postId) ;
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
@@ -123,7 +123,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 	}
 
 	static public class UnHiddenActionListener extends BaseEventListener<UIPageListPostHidden> {
-    public void onEvent(Event<UIPageListPostHidden> event, UIPageListPostHidden postHidden, final String objectId) throws Exception {
+		public void onEvent(Event<UIPageListPostHidden> event, UIPageListPostHidden postHidden, final String objectId) throws Exception {
 			Post post = new Post();
 			List<Post> posts = new ArrayList<Post>();
 			boolean haveCheck = false;

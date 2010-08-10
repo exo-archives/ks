@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -149,7 +149,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 		permissionUser = new String[titleUser.length];
 		for (int i = 0; i < titleUser.length; i++) {
 			permissionUser[i] = titleUser[i].toLowerCase();
-    }
+		}
 	}
 	
 	public void setValueSearch(String value){
@@ -207,7 +207,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 				this.setListUserProfile();
 			}
 		}
-		if(userProfiles ==	null) userProfiles = new ArrayList<UserProfile>();
+		if(userProfiles == null) userProfiles = new ArrayList<UserProfile>();
 		return this.userProfiles ;
 	}
 	
@@ -638,7 +638,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 			if(isAdmin) userRole = 0;
 			else if(uiForm.isAdmin(userProfile.getUserId())){
 				isAdmin = true; userRole = 0;
-				if(userTitle ==	null || userTitle.trim().length() == 0) userTitle = Utils.ADMIN;
+				if(userTitle == null || userTitle.trim().length() == 0) userTitle = Utils.ADMIN;
 				else if(userTitle.equals(Utils.ADMIN)) userTitle = userProfile.getUserTitle();
 			}
 			
@@ -750,7 +750,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 				banUntil = Long.parseLong(until.substring(6));
 			}
 			String banReason = inputSetBan.getUIFormTextAreaInput(FIELD_BANREASON_TEXTAREA).getValue() ;
-			String []banReasonSummaries =	userProfile.getBanReasonSummary();
+			String []banReasonSummaries = userProfile.getBanReasonSummary();
 			Date date = uiForm.getInstanceTempCalendar();
 			int banCounter = userProfile.getBanCounter();
 			date.setTime(banUntil) ;

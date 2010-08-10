@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -108,10 +108,10 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 		}
 		String format = "MM-dd-yyyy";
 		try {
-	    format = this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getShortDateFormat();
-    } catch (NullPointerException e) {
-	    format = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), null).getShortDateFormat();
-    } catch (Exception e) {}
+			format = this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getShortDateFormat();
+		} catch (NullPointerException e) {
+			format = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), null).getShortDateFormat();
+		} catch (Exception e) {}
 		return ForumUtils.getFormatDate(format, date);
 	}
 	
@@ -215,7 +215,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 							vote[k] = String.valueOf((newVote*100)/rmPecent) ;
 						}
 						if(!uiForm.poll.getIsMultiCheck()) {
-							int newSize	= (int) Math.round((temps*rmPecent)/100) ;
+							int newSize = (int) Math.round((temps*rmPecent)/100) ;
 							newUser = new String[newSize] ;
 							int l = 0 ;
 							for (String string : oldUserVote) {
@@ -232,7 +232,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 							
 							
 							for(String uv : oldUserVote) {
-							  StringBuffer sbUserInfo = new StringBuffer();
+								StringBuffer sbUserInfo = new StringBuffer();
 								for(String string : uv.split(":")) {
 									if(!voteRemoved.contains(string)) {
 										if(sbUserInfo.length() > 0) sbUserInfo.append(":");
@@ -290,12 +290,12 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 					detailContainer.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]) ;
 					detailContainer.getChild(UITopicDetail.class).hasPoll(true);
 					event.getRequestContext().addUIComponentToUpdateByAjax(detailContainer);
-        } catch (Exception e) {
-        	UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class) ;
+				} catch (Exception e) {
+					UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class) ;
 					forumPollPortlet.cancelAction() ;
 					forumPollPortlet.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]);
-        	event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet);
-        }
+					event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet);
+				}
 			}
 			if(!ForumUtils.isEmpty(sms)) {
 				uiForm.warning("UIPollForm.msg." + sms) ;
@@ -323,10 +323,10 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 			try {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;
-      } catch (Exception e) {
-      	UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class) ;
+			} catch (Exception e) {
+				UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class) ;
 				forumPollPortlet.cancelAction() ;
-      }
+			}
 			uiForm.isUpdate = false ;
 		}
 	}

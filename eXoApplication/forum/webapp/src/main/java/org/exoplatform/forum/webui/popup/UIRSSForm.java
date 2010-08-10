@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -36,7 +36,7 @@ import org.exoplatform.webui.form.UIForm;
 @SuppressWarnings({ "unused" })
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
-		template =	"app:/templates/forum/webui/popup/UIRSSForm.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIRSSForm.gtmpl",
 		events = {
 				@EventConfig(listeners = UIRSSForm.CancelActionListener.class)
 		}
@@ -57,12 +57,12 @@ public class UIRSSForm extends UIForm	{
 	}
 
 	static public class CancelActionListener extends EventListener<UIRSSForm> {
-    public void execute(Event<UIRSSForm> event) throws Exception {
-    	UIRSSForm commentForm = event.getSource() ;
-    	UIForumPortlet portlet = commentForm.getAncestorOfType(UIForumPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-    }
-  }
+		public void execute(Event<UIRSSForm> event) throws Exception {
+			UIRSSForm commentForm = event.getSource() ;
+			UIForumPortlet portlet = commentForm.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			popupAction.deActivate() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
 }

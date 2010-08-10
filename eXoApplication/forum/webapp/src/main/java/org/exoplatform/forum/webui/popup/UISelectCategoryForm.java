@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -38,8 +38,8 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jun 5, 2009 - 10:12:41 AM  
+ *					tu.duy@exoplatform.com
+ * Jun 5, 2009 - 10:12:41 AM	
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
@@ -59,10 +59,10 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		public void deActivate() throws Exception {}
 		
 		public void setSelectCateId(List<String> listIdIsSelected) throws Exception {
-	    this.listIdIsSelected = listIdIsSelected;
-	    ForumService forumService =	(ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+			this.listIdIsSelected = listIdIsSelected;
+			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			this.forumLinks = forumService.getAllLink("", "");
-    }
+		}
 
 		@SuppressWarnings({ "unchecked", "unused" })
 		private List<ForumLinkData> getForumLinks() throws Exception {

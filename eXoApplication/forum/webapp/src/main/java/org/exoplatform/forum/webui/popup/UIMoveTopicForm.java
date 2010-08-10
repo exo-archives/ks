@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -74,21 +74,21 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
 	public void setLink(String link) {this.link = link;}
 	
 	public boolean isAdmin() {
-  	return isAdmin;
-  }
+		return isAdmin;
+	}
 	public void setAdmin(boolean isAdmin) {
-  	this.isAdmin = isAdmin;
-  }
+		this.isAdmin = isAdmin;
+	}
 	
 	public UserProfile getUserProfile() throws Exception {
-	  return this.userProfile ;
-  }
+		return this.userProfile ;
+	}
 	public void setUserProfile(UserProfile userProfile) throws Exception {
-	  this.userProfile = userProfile ;
-	  if(this.userProfile == null) {
-	  	this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-	  }
-  }
+		this.userProfile = userProfile ;
+		if(this.userProfile == null) {
+			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+		}
+	}
 	
 	public UIMoveTopicForm() throws Exception {
 		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
@@ -101,7 +101,7 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
 		this.topics = topics ;
 		try {
 			this.pathTopic = topics.get(0).getPath();
-    } catch (Exception e) {}
+		} catch (Exception e) {}
 		this.isFormTopic = isFormTopic ;
 		setCategories() ;
 	}
@@ -122,7 +122,7 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
 	}
 	@SuppressWarnings("unused")
 	private List<Category> getCategories() throws Exception {
-		return  this.categories;
+		return	this.categories;
 	}
 	
 	@SuppressWarnings("unused")
@@ -148,15 +148,15 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
 			}
 			// TODO KS-2469
 			if(forum.getCreateTopicRole().length > 0 && !ForumUtils.isStringInStrings(forum.getCreateTopicRole(), this.userProfile.getUserId())){
-        continue ;
-      }
+				continue ;
+			}
 			forums.add(forum) ;
 		}
 		return forums ;
 	}
 	
 	static	public class SaveActionListener extends BaseEventListener<UIMoveTopicForm> {
-    public void onEvent(Event<UIMoveTopicForm> event, UIMoveTopicForm uiForm, final String forumPath) throws Exception {
+		public void onEvent(Event<UIMoveTopicForm> event, UIMoveTopicForm uiForm, final String forumPath) throws Exception {
 			if(!ForumUtils.isEmpty(forumPath)) {
 				try {
 					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
@@ -176,26 +176,26 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
 						UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
 						forumDescription.setForumIds(temp[temp.length - 2], temp[temp.length - 1]);
 						UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class);
-            topicDetail.setUpdateForum(uiForm.forumService.getForum(temp[temp.length - 2], temp[temp.length - 1]));
-            topicDetail.setUpdateTopic(temp[temp.length - 2], temp[temp.length - 1], uiForm.topics.get(0).getId()) ;
+						topicDetail.setUpdateForum(uiForm.forumService.getForum(temp[temp.length - 2], temp[temp.length - 1]));
+						topicDetail.setUpdateTopic(temp[temp.length - 2], temp[temp.length - 1], uiForm.topics.get(0).getId()) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					} else {
 						UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 					}
-        } catch (ItemExistsException e) {
-        	warning("UIImportForm.msg.ObjectIsExist") ;
-        	return;
-        } catch (Exception e) {
-        	warning("UIMoveTopicForm.msg.parent-deleted") ;
-        	return;
-        }
+				} catch (ItemExistsException e) {
+					warning("UIImportForm.msg.ObjectIsExist") ;
+					return;
+				} catch (Exception e) {
+					warning("UIMoveTopicForm.msg.parent-deleted") ;
+					return;
+				}
 			}
 		}
 	}
 	
 	static	public class CancelActionListener extends EventListener<UIMoveTopicForm> {
-    public void execute(Event<UIMoveTopicForm> event) throws Exception {
+		public void execute(Event<UIMoveTopicForm> event) throws Exception {
 			UIMoveTopicForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;

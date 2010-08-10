@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -21,12 +21,12 @@ import org.exoplatform.webui.core.UIComponent;
 /**
  * Created by The eXo Platform SARL
  * Author : Pham Tuan
- *          tuan.pham@exoplatform.com
- * Aug 29, 2007  
+ *					tuan.pham@exoplatform.com
+ * Aug 29, 2007	
  */
 public interface UISelectComponent {
-  final public static String TYPE_USER = "0".intern() ;
-  final public static String TYPE_MEMBERSHIP = "1".intern() ;
-  final public static String TYPE_GROUP = "2".intern() ;
-  public void setComponent(UIComponent uicomponent, String[] initParams) ;
+	final public static String TYPE_USER = "0".intern() ;
+	final public static String TYPE_MEMBERSHIP = "1".intern() ;
+	final public static String TYPE_GROUP = "2".intern() ;
+	public void setComponent(UIComponent uicomponent, String[] initParams) ;
 }

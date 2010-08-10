@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -58,7 +58,7 @@ public class UIForumLinks extends BaseUIForm {
 	private ForumService forumService ;
 	public static final String FIELD_FORUMLINK_SELECTBOX = "forumLink" ;
 	public static final String FIELD_FORUMHOMEPAGE_LABEL = "forumHomePage" ;
-	private String path	= Utils.FORUM_SERVICE;
+	private String path = Utils.FORUM_SERVICE;
 	private List<ForumLinkData> forumLinks = null;
 	private UserProfile userProfile = new UserProfile();
 	public UIForumLinks() throws Exception {
@@ -81,8 +81,8 @@ public class UIForumLinks extends BaseUIForm {
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
 		try {
 			this.userProfile = forumPortlet.getUserProfile() ;
-    } catch (Exception e) {
-    	String userName = UserHelper.getCurrentUser();
+		} catch (Exception e) {
+			String userName = UserHelper.getCurrentUser();
 			if (userName != null) {
 				try {
 					userProfile = forumService.getQuickProfile(userName);
@@ -90,7 +90,7 @@ public class UIForumLinks extends BaseUIForm {
 					userProfile = new UserProfile();
 				}
 			}
-    }
+		}
 		String strQueryCate = "";
 		String strQueryForum = "";
 		List<String>listUser = UserHelper.getAllGroupAndMembershipOfUser(this.userProfile.getUserId());
@@ -204,11 +204,11 @@ public class UIForumLinks extends BaseUIForm {
 					forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(path.trim());
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 				}
-      } catch (Exception e) {
-      	try {
-      		if(!path.equals(uiForm.path)) {
-  					uiForm.path = path ;
-						UIForumLinkPortlet linkPortlet  = uiForm.getParent();
+			} catch (Exception e) {
+				try {
+					if(!path.equals(uiForm.path)) {
+						uiForm.path = path ;
+						UIForumLinkPortlet linkPortlet = uiForm.getParent();
 						if(path.equals(Utils.FORUM_SERVICE)){
 							linkPortlet.setRenderChild(false);
 						} else {
@@ -219,11 +219,11 @@ public class UIForumLinks extends BaseUIForm {
 						param.setPath(path);
 						actionRes.setEvent(new QName("OpenLink"), param) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(linkPortlet);
-      		}
-        } catch (Exception ex) {
-          uiForm.log.error("Rendering " + uiForm.getParent() + " uicomponent fail: " +ex.getMessage() + "\n" + ex.getCause());
-        }
-      }
+					}
+				} catch (Exception ex) {
+					uiForm.log.error("Rendering " + uiForm.getParent() + " uicomponent fail: " +ex.getMessage() + "\n" + ex.getCause());
+				}
+			}
 		}
 	}
 }

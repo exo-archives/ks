@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -30,8 +30,6 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.webui.UICategories;
-import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
@@ -62,7 +60,7 @@ import org.exoplatform.webui.event.EventListener;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl",
 		events = {
 				@EventConfig(listeners = UIPageListTopicByUser.OpenTopicActionListener.class ),
 				@EventConfig(listeners = UIPageListTopicByUser.SetOrderByActionListener.class ),
@@ -93,8 +91,8 @@ public class UIPageListTopicByUser extends UIContainer{
 	}
 	
 	public boolean isUseAjax() {
-	  return isUseAjax;
-  }
+		return isUseAjax;
+	}
 	
 	public void setUserName(String userName) {
 		this.userName = userName ;
@@ -111,18 +109,18 @@ public class UIPageListTopicByUser extends UIContainer{
 		try {
 			boolean isMod = false;
 			if(this.userProfile.getUserRole() == 0) isMod = true;
-			pageList	= forumService.getPageTopicByUser(this.userName, isMod, strOrderBy) ;
+			pageList = forumService.getPageTopicByUser(this.userName, isMod, strOrderBy) ;
 			forumPageIterator.updatePageList(pageList) ;
 			if(pageList != null)pageList.setPageSize(5) ;
 			topics = pageList.getPage(forumPageIterator.getPageSelected()) ;
 			forumPageIterator.setSelectPage(pageList.getCurrentPage());
 		}catch (Exception e) {
-		  log.trace("\nThe topic(s) must exist: " + e.getMessage() + "\n" + e.getCause());
+			log.trace("\nThe topic(s) must exist: " + e.getMessage() + "\n" + e.getCause());
 		}
 		return topics ;
 	}
 	
-  public Topic getTopicById(String topicId) throws Exception {
+	public Topic getTopicById(String topicId) throws Exception {
 		for(Topic topic : topics) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}

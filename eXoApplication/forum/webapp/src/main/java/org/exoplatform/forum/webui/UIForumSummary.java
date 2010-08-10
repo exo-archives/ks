@@ -27,7 +27,7 @@ import org.exoplatform.webui.core.UIContainer;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UIForumSummary.gtmpl"
+		template = "app:/templates/forum/webui/UIForumSummary.gtmpl"
 )
 public class UIForumSummary extends UIContainer	{
 	public UIForumSummary() throws Exception {

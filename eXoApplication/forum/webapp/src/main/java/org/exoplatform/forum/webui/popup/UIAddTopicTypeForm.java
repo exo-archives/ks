@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -41,8 +41,8 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jun 1, 2009 - 10:56:38 AM  
+ *					tu.duy@exoplatform.com
+ * Jun 1, 2009 - 10:56:38 AM	
  */
 
 @ComponentConfig(
@@ -66,23 +66,23 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
 		uiIconSelector.setSelectedIcon("IconsView");
 		addUIFormInput(topicTypeName);
 		addUIFormInput(uiIconSelector) ;
-  }
+	}
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 
 	public void setTopicType(TopicType topicType) {
-	  this.topicType = topicType;
-	  this.isEdit = true;
-	  getUIStringInput(FIELD_TOPICTYPENAME_INPUT).setValue(topicType.getName());
-	  ((UIFormInputIconSelector)getChild(UIFormInputIconSelector.class)).setSelectedIcon(topicType.getIcon());
-  }
+		this.topicType = topicType;
+		this.isEdit = true;
+		getUIStringInput(FIELD_TOPICTYPENAME_INPUT).setValue(topicType.getName());
+		((UIFormInputIconSelector)getChild(UIFormInputIconSelector.class)).setSelectedIcon(topicType.getIcon());
+	}
 
 	private boolean checkIsSameName(ForumService forumService, String name) throws Exception {
 		List<TopicType> topicTs = forumService.getTopicTypes();
 		for (TopicType topicT : topicTs) {
 			if(topicT.getName().equalsIgnoreCase(name)) return true;
-    }
+		}
 		return false;
 	}
 
@@ -103,9 +103,9 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
 			if(topicTypeForm.isEdit) {
 				topicType = topicTypeForm.topicType;
 			}
-			while (typeName.indexOf("  ") >= 0) {
-				typeName = StringUtils.replace(typeName, "  ", " ");
-	    }
+			while (typeName.indexOf("	") >= 0) {
+				typeName = StringUtils.replace(typeName, "	", " ");
+			}
 			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			if(!typeName.equalsIgnoreCase(topicType.getName()) && topicTypeForm.checkIsSameName(forumService, typeName)) {
 				topicTypeForm.warning("UIAddTopicTypeForm.smg.SameNameType") ;
@@ -124,14 +124,14 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
 			}
 			topicTypeForm.isEdit = false;
 			try {
-	      UITopicForm topicForm = forumPortlet.findFirstComponentOfType(UITopicForm.class);
-	      topicForm.addNewTopicType();
-	      event.getRequestContext().addUIComponentToUpdateByAjax(topicForm) ;
-      } catch (Exception e) {
-      	UITopicTypeManagerForm typeManagerForm = topicTypeForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UITopicTypeManagerForm.class);
-      	event.getRequestContext().addUIComponentToUpdateByAjax(typeManagerForm) ;
-      }
-      topicTypeForm.cancelChildPopupAction();
+				UITopicForm topicForm = forumPortlet.findFirstComponentOfType(UITopicForm.class);
+				topicForm.addNewTopicType();
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicForm) ;
+			} catch (Exception e) {
+				UITopicTypeManagerForm typeManagerForm = topicTypeForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UITopicTypeManagerForm.class);
+				event.getRequestContext().addUIComponentToUpdateByAjax(typeManagerForm) ;
+			}
+			topicTypeForm.cancelChildPopupAction();
 		}
 	}
 }

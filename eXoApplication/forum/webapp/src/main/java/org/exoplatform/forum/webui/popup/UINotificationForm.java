@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -40,8 +40,8 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jan 29, 2010 - 4:51:01 AM  
+ *					tu.duy@exoplatform.com
+ * Jan 29, 2010 - 4:51:01 AM	
  */
 
 @ComponentConfig(
@@ -136,7 +136,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
 	}
 
 	@SuppressWarnings("unused")
-  private boolean tabIsSelected(int tabId) {
+	private boolean tabIsSelected(int tabId) {
 		if(this.tabId == tabId) return true ;
 		else return false ;
 	}
@@ -159,7 +159,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
 				return;
 			}
 			if(notifyEmailMoved == null || notifyEmailMoved.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
-			  warning("UINotificationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA));
+				warning("UINotificationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA));
 				return;
 			}
 			uiForm.administration.setEnableHeaderSubject(enableHeaderSubject) ;

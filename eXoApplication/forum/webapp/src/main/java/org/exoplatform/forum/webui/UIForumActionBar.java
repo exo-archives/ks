@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -60,7 +60,7 @@ import org.mortbay.cometd.continuation.EXoContinuationBayeux;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UIForumActionBar.gtmpl", 
+		template = "app:/templates/forum/webui/UIForumActionBar.gtmpl", 
 		events = {
 				@EventConfig(listeners = UIForumActionBar.AddCategoryActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.AddForumActionListener.class),
@@ -111,33 +111,33 @@ public class UIForumActionBar extends UIContainer	{
 		try {
 			String username = this.userProfile.getUserId();
 			return forumService.getNewPrivateMessage(username);
-    } catch (Exception e) {
-	    return -1;
-    }
+		} catch (Exception e) {
+			return -1;
+		}
 	}
 	
 	protected String getCometdContextName() {
-    String cometdContextName = "cometd";
-    try {
-      EXoContinuationBayeux bayeux = 
-        (EXoContinuationBayeux) PortalContainer.getInstance().getComponentInstanceOfType(AbstractBayeux.class);
-      return (bayeux == null ? "cometd" : bayeux.getCometdContextName());
-    } catch (Exception e) {
-    }    
-    return cometdContextName;
-  }
+		String cometdContextName = "cometd";
+		try {
+			EXoContinuationBayeux bayeux = 
+				(EXoContinuationBayeux) PortalContainer.getInstance().getComponentInstanceOfType(AbstractBayeux.class);
+			return (bayeux == null ? "cometd" : bayeux.getCometdContextName());
+		} catch (Exception e) {
+		}		
+		return cometdContextName;
+	}
 	
-  public String getUserToken()throws Exception {
-    try {
-    	ContinuationService continuation = (ContinuationService) PortalContainer.getInstance().getComponentInstanceOfType(ContinuationService.class);
-	    return continuation.getUserToken(userProfile.getUserId());
-    } catch (Exception e) {
-      log.error("Could not retrieve continuation token for user "+ userProfile.getUserId(), e);
-    }
-    return "";
-  }
+	public String getUserToken()throws Exception {
+		try {
+			ContinuationService continuation = (ContinuationService) PortalContainer.getInstance().getComponentInstanceOfType(ContinuationService.class);
+			return continuation.getUserToken(userProfile.getUserId());
+		} catch (Exception e) {
+			log.error("Could not retrieve continuation token for user "+ userProfile.getUserId(), e);
+		}
+		return "";
+	}
 	
-  static public class PrivateMessageActionListener extends EventListener<UIForumActionBar> {
+	static public class PrivateMessageActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource();
 			UIForumPortlet forumPortlet = uiActionBar.getParent();
@@ -152,7 +152,7 @@ public class UIForumActionBar extends UIContainer	{
 		}
 	}
 	
-  static public class ModerationActionListener extends EventListener<UIForumActionBar> {
+	static public class ModerationActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource();
 			UIForumPortlet forumPortlet = uiActionBar.getParent();
@@ -165,7 +165,7 @@ public class UIForumActionBar extends UIContainer	{
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
-  
+	
 	static public class AddCategoryActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
@@ -351,7 +351,7 @@ public class UIForumActionBar extends UIContainer	{
 			UIForumActionBar uiActionBar = event.getSource() ;
 			UIPopupAction popupAction = ((UIForumPortlet)uiActionBar.getParent()).getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UITopicTypeManagerForm topicTypeManager  = popupContainer.addChild(UITopicTypeManagerForm.class, null, null) ;
+			UITopicTypeManagerForm topicTypeManager = popupContainer.addChild(UITopicTypeManagerForm.class, null, null) ;
 			popupContainer.setId("TopicTypeManagerForm");
 			popupAction.activate(popupContainer, 600, 400) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

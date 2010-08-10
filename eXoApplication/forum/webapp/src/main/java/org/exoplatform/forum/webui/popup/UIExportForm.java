@@ -34,16 +34,16 @@ import org.exoplatform.webui.form.UIFormStringInput;
 
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
-		template =  "app:/templates/forum/webui/popup/UIExportForm.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIExportForm.gtmpl",
 		events = {
 			@EventConfig(listeners = UIExportForm.SaveActionListener.class),
 			@EventConfig(listeners = UIExportForm.CancelActionListener.class)
 		}
 )
 public class UIExportForm extends BaseForumForm implements UIPopupComponent{
-  
-  public static final Log log = ExoLogger.getLogger(UIExportForm.class);
-  
+	
+	public static final Log log = ExoLogger.getLogger(UIExportForm.class);
+	
 	private boolean isExportAll = false;
 	private final static String LIST_CATEGORIES = "listCategories";
 	private final static String CREATE_ZIP = "createZip";
@@ -63,7 +63,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 		this.object_ = object;
 		this.setActions(new String[]{"Save", "Cancel"});
 		if(object == null || object instanceof Category){
-		  Category cat = (Category)object;
+			Category cat = (Category)object;
 			UIFormCheckBoxInput<Boolean> checkBoxInput = null;
 			try {
 				UIFormInputWithActions formInputWithActions = new UIFormInputWithActions(LIST_CATEGORIES);
@@ -84,7 +84,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 				}
 				addChild(formInputWithActions);
 			} catch(Exception e){ 
-			  log.warn("failed to list forum categories", e);
+				log.warn("failed to list forum categories", e);
 			}
 			
 			UIFormStringInput stringInput = new UIFormStringInput(FILE_NAME, null);
@@ -165,7 +165,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 			ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
 			CompressData zipService = new CompressData();
 
-			File file =  null;
+			File file = null;
 			try{
 				List<String> listId = new ArrayList<String>();
 				if(!exportForm.isExportAll){

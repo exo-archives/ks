@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -59,7 +59,7 @@ import org.exoplatform.webui.event.EventListener;
  * 06-03-2008, 04:41:47
  */
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/popup/UIPageListPostByUser.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIPageListPostByUser.gtmpl",
 		events = {
 			@EventConfig(listeners = UIPageListPostByUser.OpenPostLinkActionListener.class),
 			@EventConfig(listeners = UIPageListPostByUser.OpenTopicLinkActionListener.class),
@@ -84,8 +84,8 @@ public class UIPageListPostByUser extends UIContainer {
 	}
 	
 	public boolean getHasEnableIPLogging() {
-	  return hasEnableIPLogging;
-  }
+		return hasEnableIPLogging;
+	}
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
 		if(this.userProfile == null) {
@@ -113,13 +113,13 @@ public class UIPageListPostByUser extends UIContainer {
 		try {
 			boolean isMod = false;
 			if(this.userProfile.getUserRole() < 2) isMod = true;
-			JCRPageList pageList	= forumService.getPagePostByUser(this.userName, this.userProfile.getUserId(), isMod, strOrderBy) ;
+			JCRPageList pageList = forumService.getPagePostByUser(this.userName, this.userProfile.getUserId(), isMod, strOrderBy) ;
 			forumPageIterator.updatePageList(pageList) ;
 			if(pageList != null) pageList.setPageSize(6) ;
 			posts = pageList.getPage(forumPageIterator.getPageSelected());
 			forumPageIterator.setSelectPage(pageList.getCurrentPage());
 		}catch (Exception e) {
-		  log.trace("\nThe post must exist: " + e.getMessage()+ "\n" + e.getCause());
+			log.trace("\nThe post must exist: " + e.getMessage()+ "\n" + e.getCause());
 		}
 		if(posts == null) posts = new ArrayList<Post>();
 		this.posts = posts ;
@@ -146,7 +146,7 @@ public class UIPageListPostByUser extends UIContainer {
 			}
 			boolean isRead = true;
 			if(uiForm.userProfile.getUserRole() > 0) {
-				String path =	post.getPath();
+				String path = post.getPath();
 				String []id = path.split("/") ;
 				int l = id.length;
 				try {
@@ -229,7 +229,7 @@ public class UIPageListPostByUser extends UIContainer {
 			Category category = null;
 			Forum forum = null;
 			if(uiForm.userProfile.getUserRole() > 0) {
-				String path =	post.getPath();
+				String path = post.getPath();
 				String []id = path.split("/") ;
 				int l = id.length;
 				try {

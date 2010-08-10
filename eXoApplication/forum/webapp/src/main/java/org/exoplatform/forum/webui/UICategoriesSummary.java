@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -27,7 +27,7 @@ import org.exoplatform.webui.core.UIContainer;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UICategoriesSummary.gtmpl"
+		template = "app:/templates/forum/webui/UICategoriesSummary.gtmpl"
 )
 public class UICategoriesSummary extends UIContainer	{
 	public UICategoriesSummary() throws Exception {
@@ -36,14 +36,14 @@ public class UICategoriesSummary extends UIContainer	{
 	}
 	
 	@SuppressWarnings("unused")
-  private void setRenderChild() throws Exception {
+	private void setRenderChild() throws Exception {
 		try {
 			UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 			UICategoryInfo categoryInfo = getChild(UICategoryInfo.class);
 			if(categoryInfo.isRendered())
 				categoryInfo.setRendered(forumPortlet.isShowStatistics());
 			getChild(UIForumIconState.class).setRendered(forumPortlet.isShowIconsLegend());
-    } catch (Exception e) {
-    }
+		} catch (Exception e) {
+		}
 	}
 }

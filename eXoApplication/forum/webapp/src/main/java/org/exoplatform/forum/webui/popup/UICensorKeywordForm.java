@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -32,8 +32,8 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jan 29, 2010 - 4:51:01 AM  
+ *					tu.duy@exoplatform.com
+ * Jan 29, 2010 - 4:51:01 AM	
  */
 
 @ComponentConfig(
@@ -55,7 +55,7 @@ public class UICensorKeywordForm extends BaseForumForm implements UIPopupCompone
 		UIFormTextAreaInput censorKeyword = new UIFormTextAreaInput(FIELD_CENSOREDKEYWORD_TEXTAREA, FIELD_CENSOREDKEYWORD_TEXTAREA, null);
 		censorKeyword.setValue(administration.getCensoredKeyword()) ;
 		addUIFormInput(censorKeyword);
-  }
+	}
 
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}

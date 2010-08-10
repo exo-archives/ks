@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -30,11 +30,11 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Apr 21, 2009 - 2:35:02 AM  
+ *					tu.duy@exoplatform.com
+ * Apr 21, 2009 - 2:35:02 AM	
  */
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UIForumModerator.gtmpl",
+		template = "app:/templates/forum/webui/UIForumModerator.gtmpl",
 		events = {
 				@EventConfig(listeners = UIForumModerator.CreatedLinkActionListener.class )
 		}
@@ -49,7 +49,7 @@ public class UIForumModerator extends UIContainer	{
 	}
 	
 	@SuppressWarnings("unused")
-  private long getUserRole(){return role;}
+	private long getUserRole(){return role;}
 	public void setUserRole(long role) {this.role = role;}
 	
 	@SuppressWarnings("unused")

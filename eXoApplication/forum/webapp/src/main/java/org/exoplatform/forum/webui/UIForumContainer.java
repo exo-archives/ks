@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -33,7 +33,7 @@ import org.exoplatform.webui.core.UIContainer;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UIForumContainer.gtmpl"
+		template = "app:/templates/forum/webui/UIForumContainer.gtmpl"
 )
 public class UIForumContainer extends UIContainer	{
 	public UIForumContainer() throws Exception {
@@ -56,8 +56,8 @@ public class UIForumContainer extends UIContainer	{
 				param.setRenderPoll(false);
 				actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
 				actionRes.setEvent(new QName("ForumPollEvent"), param) ;
-      } catch (Exception e) {
-      }
+			} catch (Exception e) {
+			}
 		}
 	}
 }

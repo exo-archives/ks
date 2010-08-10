@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -53,7 +53,7 @@ import org.exoplatform.webui.event.EventListener;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UICategories.gtmpl",
+		template = "app:/templates/forum/webui/UICategories.gtmpl",
 		events = {
 			@EventConfig(listeners = UICategories.CollapCategoryActionListener.class),
 			@EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
@@ -96,7 +96,7 @@ public class UICategories extends UIContainer	{
 	}
 	
 	public String getPortalName() {
-		PortalContainer pcontainer =	PortalContainer.getInstance() ;
+		PortalContainer pcontainer = PortalContainer.getInstance() ;
 		return pcontainer.getPortalContainerInfo().getContainerName() ;	
 	}
 	

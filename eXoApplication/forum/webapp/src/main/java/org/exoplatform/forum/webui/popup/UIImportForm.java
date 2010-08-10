@@ -34,7 +34,7 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
-		template =  "app:/templates/forum/webui/popup/UIImportForm.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIImportForm.gtmpl",
 		events = {
 			@EventConfig(listeners = UIImportForm.SaveActionListener.class),
 			@EventConfig(listeners = UIImportForm.CancelActionListener.class)
@@ -61,7 +61,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 	private void extractFromZipFile(ZipInputStream zipStream, String nodePath, ForumService service) throws Exception {
 		try {
 			ByteArrayOutputStream out= new ByteArrayOutputStream();
-			byte[] data  = new byte[5120];   
+			byte[] data = new byte[5120];	 
 			ZipEntry entry = zipStream.getNextEntry();
 			ByteArrayInputStream inputStream = null;
 			while(entry != null) {
@@ -69,7 +69,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 				int available = -1;
 				while ((available = zipStream.read(data, 0, 1024)) > -1) {
 					out.write(data, 0, available); 
-				}                         
+				}												 
 				zipStream.closeEntry();
 				inputStream = new ByteArrayInputStream(out.toByteArray());
 				out.close();
@@ -121,16 +121,16 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 				}
 				service.updateForum(nodePath);
 				importForm.info("UIImportForm.msg.import-successful");
-  			isUdateForm = true;
-  			popupAction.deActivate() ;
-  			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-  			if(!ForumUtils.isEmpty(importForm.categoryPath)){
-  				UICategory category = forumPortlet.findFirstComponentOfType(UICategory.class) ;
-  				category.setIsEditForum(true);
-  				event.getRequestContext().addUIComponentToUpdateByAjax(category) ;
-  			}else{
-  				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-  			}
+				isUdateForm = true;
+				popupAction.deActivate() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+				if(!ForumUtils.isEmpty(importForm.categoryPath)){
+					UICategory category = forumPortlet.findFirstComponentOfType(UICategory.class) ;
+					category.setIsEditForum(true);
+					event.getRequestContext().addUIComponentToUpdateByAjax(category) ;
+				}else{
+					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				}
 			} catch(PathNotFoundException pnf){
 				importForm.warning("UIImportForm.msg.CategoryNoLongerExist");
 				isErr = true;

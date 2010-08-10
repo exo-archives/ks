@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -64,7 +64,7 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 	private String[] emails = new String[]{};
 	private boolean isTopic = false;
 	@SuppressWarnings("unchecked")
-  private JCRPageList pageList ;
+	private JCRPageList pageList ;
 	UIForumPageIterator pageIterator ;
 	private List<String> listEmail = new ArrayList<String>();
 	
@@ -80,27 +80,27 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 	public void setIsTopic(boolean isTopic) {this.isTopic = isTopic;}
 	
 	public String[] getEmails() throws Exception {
-	  emails = getListEmail().toArray(new String[]{});
+		emails = getListEmail().toArray(new String[]{});
 		return emails;
 	}
 	
 	@SuppressWarnings("deprecation")
 	public void setEmails(String[] emails) {
-    listEmail.clear();
-    listEmail.addAll(Arrays.asList(emails));
-    pageList = new ForumPageList(6, listEmail.size());
-    pageList.setPageSize(6);
-    pageIterator = this.getChild(UIForumPageIterator.class);
-    pageIterator.updatePageList(pageList);
-    try {
-      if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
-    } catch (Exception e) {
-      log.error("\nA UIComponent could not rendered: ", e);
-    }  
+		listEmail.clear();
+		listEmail.addAll(Arrays.asList(emails));
+		pageList = new ForumPageList(6, listEmail.size());
+		pageList.setPageSize(6);
+		pageIterator = this.getChild(UIForumPageIterator.class);
+		pageIterator.updatePageList(pageList);
+		try {
+			if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
+		} catch (Exception e) {
+			log.error("\nA UIComponent could not rendered: ", e);
+		}	
 	}
 
 	@SuppressWarnings("unchecked")
-  public List<String> getListEmail() throws Exception {
+	public List<String> getListEmail() throws Exception {
 		int pageSelect = pageIterator.getPageSelected() ;
 		List<String>list = new ArrayList<String>();
 		try {
@@ -117,18 +117,18 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 	}
 
 	public void setUnWatchEmail(String[] emails, String unwatchEmail){
-	  if(emails.length == 1) setEmails(emails);
-	  else if(emails.length>1){
-	    List<String> temp = new ArrayList<String>();
-	    int i = 0;
-	    for(String em : emails){
-	      if(!em.equals(unwatchEmail)){
-	        temp.add(em);
-	      } 
-	    }
-	   String[] tempEmails =  (String[]) temp.toArray(new String[0]);
-	    setEmails(tempEmails);
-	  }
+		if(emails.length == 1) setEmails(emails);
+		else if(emails.length>1){
+			List<String> temp = new ArrayList<String>();
+			int i = 0;
+			for(String em : emails){
+				if(!em.equals(unwatchEmail)){
+					temp.add(em);
+				} 
+			}
+		 String[] tempEmails = (String[]) temp.toArray(new String[0]);
+			setEmails(tempEmails);
+		}
 	}
 
 	public void activate() throws Exception {}
@@ -148,7 +148,7 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 				for (String string : uiForm.listEmail) {
 					if(string.equals(email)) continue ;
 					strings[j] = string; ++j;
-	      }
+				}
 				uiForm.setEmails(strings) ;
 				forumPortlet.updateWatchinh();
 				List<Watch> listWatches = forumPortlet.getWatchinhByCurrentUser();

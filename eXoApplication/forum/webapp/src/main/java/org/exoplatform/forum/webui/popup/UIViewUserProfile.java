@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -71,16 +71,16 @@ public class UIViewUserProfile extends BaseUIForm implements UIPopupComponent {
 		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 	}
 
-  private boolean isAdmin(String userId) throws Exception {
-  	return forumService.isAdminRole(userId);
-  }
+	private boolean isAdmin(String userId) throws Exception {
+		return forumService.isAdminRole(userId);
+	}
 	
 	
 	private boolean isOnline(String userId) throws Exception {
 		return forumService.isOnline(userId) ;
 	}
 	
-  private String getScreenName(String userName) throws Exception {
+	private String getScreenName(String userName) throws Exception {
 		return forumService.getScreenName(userName); 
 	}
 	
@@ -101,7 +101,7 @@ public class UIViewUserProfile extends BaseUIForm implements UIPopupComponent {
 	}
 	
 	private CommonContact getPersonalContact(String userId) throws Exception {
-	  CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
+		CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {
 			contact = new CommonContact() ;
 		}

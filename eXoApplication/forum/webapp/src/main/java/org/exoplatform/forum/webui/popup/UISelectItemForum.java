@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -70,8 +70,8 @@ public class UISelectItemForum extends BaseForumForm implements UIPopupComponent
 		if(uiForumLinks != null) {
 			this.forumLinks = uiForumLinks.getForumLinks();
 		}
-		if(this.forumLinks ==	null || this.forumLinks.size() <= 0) {
-			ForumService forumService =	(ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+		if(this.forumLinks == null || this.forumLinks.size() <= 0) {
+			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			this.forumLinks = forumService.getAllLink("", "");
 		}
 	}

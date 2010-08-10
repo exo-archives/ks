@@ -30,7 +30,7 @@ public class ForumParameter implements Serializable {
 		infoRules.add("false");
 		infoRules.add("false");
 		infoRules.add("false");
-  }
+	}
 	
 	public void setCategoryId(String s) {categoryId = s;}
 	public String getCategoryId() { return categoryId;}

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -107,7 +107,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		setActions(new String[]{"Save"});
 	}
 
-  public void setInitComponent() throws Exception {
+	public void setInitComponent() throws Exception {
 		UIForumInputWithActions EnabledPanel = getChildById(FIELD_SHOW_HIDDEN_TAB);
 		UIForumInputWithActions ForumPreference = getChildById(FIELD_FORUM_PREFERENCE_TAB);
 		portletPreference = ForumUtils.getPorletPreference();
@@ -120,7 +120,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISMODERATOR_CHECKBOX).setChecked(portletPreference.isShowModerators());
 		
 		ForumPreference.getUIFormCheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX).setChecked(portletPreference.isUseAjax());
-  }
+	}
 	
 	public void setUserProfile(UserProfile userProfile) throws Exception {
 		setInitComponent();
@@ -136,7 +136,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		return list;
 	}
 	
-  private boolean tabIsSelected(int tabId) {
+	private boolean tabIsSelected(int tabId) {
 		if(this.tabId == tabId) return true ;
 		else return false ;
 	}
@@ -212,7 +212,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 	}
 
 	static public class SaveActionListener extends EventListener<UISettingEditModeForm> {
-    public void execute(Event<UISettingEditModeForm> event) throws Exception {
+		public void execute(Event<UISettingEditModeForm> event) throws Exception {
 			UISettingEditModeForm editModeForm = event.getSource();
 			List<UIComponent> children = editModeForm.getChildren() ;
 			String listCategoryId = "";
@@ -257,11 +257,11 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 				Object[] args = { "" };
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-successfully", args, ApplicationMessage.INFO)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-      } catch (Exception e) {
-	      Object[] args = { "" };
-	      uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-fail", args, ApplicationMessage.INFO)) ;
-	      event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-      }
+			} catch (Exception e) {
+				Object[] args = { "" };
+				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-fail", args, ApplicationMessage.INFO)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			}
 		}
 	}
 	

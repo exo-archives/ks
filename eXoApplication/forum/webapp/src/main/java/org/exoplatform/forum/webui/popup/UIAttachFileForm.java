@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -46,7 +46,7 @@ import org.exoplatform.webui.form.UIFormUploadInput;
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template =	"app:/templates/forum/webui/popup/UIFormForum.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
 		events = {
 			@EventConfig(listeners = UIAttachFileForm.SaveActionListener.class), 
 			@EventConfig(listeners = UIAttachFileForm.CancelActionListener.class, phase = Phase.DECODE)
@@ -56,9 +56,9 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent {
 
 	final static public String FIELD_UPLOAD	 = "upload";
-	private boolean	           isTopicForm	 = true;
+	private boolean						 isTopicForm	 = true;
 	private boolean 					 isChangeAvatar_ = false;
-	private int	               maxField	     = 5;
+	private int								 maxField			 = 5;
 
 	public UIAttachFileForm() throws Exception {
 		setMultiPart(true) ;
@@ -134,8 +134,8 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
 			} else if(uiForm.isChangeAvatar_){
 				if(files.get(0).getMimeType().indexOf("image") < 0){
 					uiForm.warning("UIAttachFileForm.msg.fileIsNotImage") ;
-          return ;
-      	}
+					return ;
+				}
 				if(files.get(0).getSize() >= (2 * 1048576)){
 					uiForm.warning("UIAttachFileForm.msg.avatar-upload-long") ;
 					return ;

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -37,8 +37,8 @@ import org.exoplatform.webui.event.Event.Phase;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jan 29, 2010 - 4:51:01 AM  
+ *					tu.duy@exoplatform.com
+ * Jan 29, 2010 - 4:51:01 AM	
  */
 
 @ComponentConfig(
@@ -56,11 +56,11 @@ public class UITopicTypeManagerForm extends BaseForumForm implements UIPopupComp
 	private List<TopicType> listTT = new ArrayList<TopicType>();
 	public UITopicTypeManagerForm() {
 		setActions(new String[]{"AddTopicType", "Close"});
-  }
+	}
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-  private List<TopicType> getTopicTypes() throws Exception {
+	private List<TopicType> getTopicTypes() throws Exception {
 		listTT = new ArrayList<TopicType>();
 		listTT.addAll(getForumService().getTopicTypes());
 		return listTT;
@@ -68,8 +68,8 @@ public class UITopicTypeManagerForm extends BaseForumForm implements UIPopupComp
 	
 	private TopicType getTopicType(String topicTId) throws Exception {
 		for (TopicType topicT : listTT) {
-	    if(topicT.getId().equals(topicTId)) return topicT;
-    }
+			if(topicT.getId().equals(topicTId)) return topicT;
+		}
 		return new TopicType();
 	}
 	
@@ -91,7 +91,7 @@ public class UITopicTypeManagerForm extends BaseForumForm implements UIPopupComp
 	
 	static	public class DeleteTopicTypeActionListener extends BaseEventListener<UITopicTypeManagerForm> {
 		public void onEvent(Event<UITopicTypeManagerForm> event, UITopicTypeManagerForm uiForm, final String topicTypeId) throws Exception {
-		  uiForm.getForumService().removeTopicType(topicTypeId);
+			uiForm.getForumService().removeTopicType(topicTypeId);
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
 			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
 			topicContainer.setTopicType(topicTypeId);

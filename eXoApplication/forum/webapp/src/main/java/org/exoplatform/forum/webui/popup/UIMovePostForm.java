@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -93,26 +93,26 @@ public class UIMovePostForm extends BaseUIForm implements UIPopupComponent {
 		this.posts = posts ;
 		try {
 			this.pathPost = posts.get(0).getPath();
-    } catch (Exception e) {}
+		} catch (Exception e) {}
 		setCategories() ;
 	}
 	
 	public UserProfile getUserProfile() throws Exception {
-	  return this.userProfile ;
-  }
+		return this.userProfile ;
+	}
 	public void setUserProfile(UserProfile userProfile) throws Exception {
-	  this.userProfile = userProfile ;
-	  if(this.userProfile == null) {
-	  	this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-	  }
-  }
+		this.userProfile = userProfile ;
+		if(this.userProfile == null) {
+			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+		}
+	}
 	
 	private void setCategories() throws Exception {
 		this.categories = new ArrayList<Category>();
 		for (Category category : this.forumService.getCategories()) {
 			if(this.userProfile.getUserRole() == 1) {
 				String []list = category.getUserPrivate();
-				if(list !=  null && list.length > 0 && !list[0].equals(" ")){
+				if(list != null && list.length > 0 && !list[0].equals(" ")){
 					if(!ForumUtils.isStringInStrings(list, this.userProfile.getUserId())) {
 						continue ;
 					}
@@ -123,7 +123,7 @@ public class UIMovePostForm extends BaseUIForm implements UIPopupComponent {
 	}
 	@SuppressWarnings("unused")
 	private List<Category> getCategories() throws Exception {
-		return  this.categories;
+		return	this.categories;
 	}
 	
 	@SuppressWarnings("unused")
@@ -168,7 +168,7 @@ public class UIMovePostForm extends BaseUIForm implements UIPopupComponent {
 	}
 	
 	static	public class SaveActionListener extends BaseEventListener<UIMovePostForm> {
-    public void onEvent(Event<UIMovePostForm> event, UIMovePostForm uiForm, final String topicPath) throws Exception {
+		public void onEvent(Event<UIMovePostForm> event, UIMovePostForm uiForm, final String topicPath) throws Exception {
 			if(!ForumUtils.isEmpty(topicPath)) {
 				try {
 					String[] temp = topicPath.split("/") ;
@@ -182,7 +182,7 @@ public class UIMovePostForm extends BaseUIForm implements UIPopupComponent {
 					int i = 0;
 					for (Post post : uiForm.posts) {
 						postPath[i] = post.getPath(); ++i;
-          }
+					}
 					uiForm.forumService.movePost(postPath, topicPath, false, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.cancelAction() ;
@@ -193,19 +193,19 @@ public class UIMovePostForm extends BaseUIForm implements UIPopupComponent {
 					UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
 					forumDescription.setForumIds(temp[temp.length - 3], temp[temp.length - 2]);
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-        } catch (ItemExistsException e) {
-        	warning("UIImportForm.msg.ObjectIsExist") ;
-        	return;
-        } catch (Exception e) {
-        	warning("UIMovePostForm.msg.parent-deleted") ;
-        	return ;
-        }
+				} catch (ItemExistsException e) {
+					warning("UIImportForm.msg.ObjectIsExist") ;
+					return;
+				} catch (Exception e) {
+					warning("UIMovePostForm.msg.parent-deleted") ;
+					return ;
+				}
 			}
 		}
 	}
 	
 	static	public class CancelActionListener extends EventListener<UIMovePostForm> {
-    public void execute(Event<UIMovePostForm> event) throws Exception {
+		public void execute(Event<UIMovePostForm> event) throws Exception {
 			UIMovePostForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;

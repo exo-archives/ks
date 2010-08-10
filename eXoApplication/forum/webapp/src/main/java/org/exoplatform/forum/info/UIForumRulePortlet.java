@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -31,29 +31,29 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
 /**
- * Author : Hung Nguyen Quang *          hung.nguyen@exoplatform.com
+ * Author : Hung Nguyen Quang *					hung.nguyen@exoplatform.com
  * Mar 04, 2008
  */
 
 @ComponentConfig(
-   lifecycle = UIApplicationLifecycle.class,
-   template = "app:/templates/forum/webui/info/UIForumRulePortlet.gtmpl",
-   events = {
-      	@EventConfig(listeners = UIForumRulePortlet.ForumRuleEventActionListener.class)
-    }
+	 lifecycle = UIApplicationLifecycle.class,
+	 template = "app:/templates/forum/webui/info/UIForumRulePortlet.gtmpl",
+	 events = {
+				@EventConfig(listeners = UIForumRulePortlet.ForumRuleEventActionListener.class)
+		}
 )
 
 public class UIForumRulePortlet extends UIPortletApplication {
 	private boolean isRenderChild = false;
 	public UIForumRulePortlet() throws Exception {
 		addChild(UIPostRules.class, null, null).setRendered(isRenderChild);
-  }
-  
-  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
-    super.processRender(app, context) ;
-  }  
-  
-  static public class ForumRuleEventActionListener extends EventListener<UIForumRulePortlet> {
+	}
+	
+	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {		
+		super.processRender(app, context) ;
+	}	
+	
+	static public class ForumRuleEventActionListener extends EventListener<UIForumRulePortlet> {
 		public void execute(Event<UIForumRulePortlet> event) throws Exception {
 			UIForumRulePortlet forumRulePortlet = event.getSource();
 			ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -49,33 +49,33 @@ public class UIForumInputWithActions extends UIFormInputSet {
 	}
 	
 	public Map<String, String> getMapLabelInfo() {
-  	return mapLabelInfo;
-  }
+		return mapLabelInfo;
+	}
 	public void setMapLabelInfo(String itemId, String valueInfo ) {
-  	this.mapLabelInfo.put(itemId, valueInfo);
-  }
+		this.mapLabelInfo.put(itemId, valueInfo);
+	}
 
 	public String getActionAddItem() {
-  	return actionAddItem;
-  }
+		return actionAddItem;
+	}
 	public void setActionAddItem(String actionAddItem) {
-  	this.actionAddItem = actionAddItem;
-  }
+		this.actionAddItem = actionAddItem;
+	}
 
 	public String getLabelActionAddItem() {
-  	return labelActionAddItem;
-  }
+		return labelActionAddItem;
+	}
 	public void setLabelActionAddItem(String labelActionAddItem) {
-  	this.labelActionAddItem = labelActionAddItem;
-  }
+		this.labelActionAddItem = labelActionAddItem;
+	}
 
 	public String getActionIdAddItem() {
-  	return actionIdAddItem;
-  }
+		return actionIdAddItem;
+	}
 
 	public void setActionIdAddItem(String actionIdAddItem) {
-  	this.actionIdAddItem = actionIdAddItem;
-  }
+		this.actionIdAddItem = actionIdAddItem;
+	}
 
 	public void setActionField(String fieldName, List<ActionData> actions) throws Exception {
 		actionField.put(fieldName, actions) ;

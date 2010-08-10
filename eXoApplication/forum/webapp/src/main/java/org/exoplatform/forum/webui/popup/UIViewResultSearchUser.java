@@ -37,15 +37,15 @@ import org.exoplatform.webui.form.UIForm;
 public class UIViewResultSearchUser extends UIForm implements UIPopupComponent {
 	
 	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
-  private JCRPageList pageList ;
+	private JCRPageList pageList ;
 	private static String FORUM_PAGE_ITERATOR="ForumUserPageIterator";
-  private String[] permissionUser = null;
+	private String[] permissionUser = null;
 	private long totalPage = 0;
 	
 	public UIViewResultSearchUser() throws Exception {
 		addChild(UIForumPageIterator.class, null, FORUM_PAGE_ITERATOR) ;
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-    ResourceBundle res = context.getApplicationResourceBundle() ;
+		ResourceBundle res = context.getApplicationResourceBundle() ;
 		permissionUser = new String[]{res.getString("UIForumPortlet.label.PermissionAdmin").toLowerCase(), 
 																	res.getString("UIForumPortlet.label.PermissionModerator").toLowerCase(),
 																	res.getString("UIForumPortlet.label.PermissionUser").toLowerCase(),
@@ -60,24 +60,24 @@ public class UIViewResultSearchUser extends UIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings({ "unused", "unchecked" })
-  private List<UserProfile> getListUserProfile() throws Exception{
+	private List<UserProfile> getListUserProfile() throws Exception{
 		UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
 		int page = pageIterator.getPageSelected() ;
-  	List<UserProfile> listUserProfile = pageList.getPage(page);
-  	pageIterator.setSelectPage(pageList.getCurrentPage());
-    if(listUserProfile == null)listUserProfile = new ArrayList<UserProfile>();
-  	this.userProfiles = new ArrayList<UserProfile>();
-  	for (UserProfile userProfile : listUserProfile) {
-  		this.userProfiles.add(userProfile);
-    }
-  	return this.userProfiles;
+		List<UserProfile> listUserProfile = pageList.getPage(page);
+		pageIterator.setSelectPage(pageList.getCurrentPage());
+		if(listUserProfile == null)listUserProfile = new ArrayList<UserProfile>();
+		this.userProfiles = new ArrayList<UserProfile>();
+		for (UserProfile userProfile : listUserProfile) {
+			this.userProfiles.add(userProfile);
+		}
+		return this.userProfiles;
 	}
 	
 	public void activate() throws Exception { }
 
 	public void deActivate() throws Exception { }
 	
-	static  public class ViewUserActionListener extends EventListener<UIViewResultSearchUser> {
+	static	public class ViewUserActionListener extends EventListener<UIViewResultSearchUser> {
 		public void execute(Event<UIViewResultSearchUser> event) throws Exception {
 			UIViewResultSearchUser uiForm = event.getSource() ;
 			String userId = event.getRequestContext().getRequestParameter(OBJECTID);
@@ -85,32 +85,32 @@ public class UIViewResultSearchUser extends UIForm implements UIPopupComponent {
 			UIModeratorManagementForm moderatorManagementForm = popupContainer.getChild(UIModeratorManagementForm.class);
 			moderatorManagementForm.setValueSearch(userId) ;
 			popupContainer.getChild(UIPopupAction.class).deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}
 	
-	static  public class CloseActionListener extends EventListener<UIViewResultSearchUser> {
-    public void execute(Event<UIViewResultSearchUser> event) throws Exception {
-    	UIViewResultSearchUser uiForm = event.getSource() ;
-    	UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-      popupContainer.getChild(UIPopupAction.class).deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
-    }
-  }
+	static	public class CloseActionListener extends EventListener<UIViewResultSearchUser> {
+		public void execute(Event<UIViewResultSearchUser> event) throws Exception {
+			UIViewResultSearchUser uiForm = event.getSource() ;
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			popupContainer.getChild(UIPopupAction.class).deActivate() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+		}
+	}
 
 	public String[] getPermissionUser() {
-  	return permissionUser;
-  }
+		return permissionUser;
+	}
 
 	public void setPermissionUser(String[] permissionUser) {
-  	this.permissionUser = permissionUser;
-  }
+		this.permissionUser = permissionUser;
+	}
 
 	public long getTotalPage() {
-  	return totalPage;
-  }
+		return totalPage;
+	}
 
 	public void setTotalPage(long totalPage) {
-  	this.totalPage = totalPage;
-  }
+		this.totalPage = totalPage;
+	}
 }

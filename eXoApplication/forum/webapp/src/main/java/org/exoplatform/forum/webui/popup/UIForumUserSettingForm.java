@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -114,7 +114,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 	public final String WATCHES_ITERATOR = "WatchChesPageIterator";
 	
 	@SuppressWarnings("unused")
-  private String tabId = "ForumUserProfile";
+	private String tabId = "ForumUserProfile";
 	private UserProfile userProfile = null ;
 	private String[] permissionUser = null;
 	private List<Watch> listWatches = new ArrayList<Watch>();
@@ -133,8 +133,8 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 	}
 	
 	public String getPortalName() {
-		PortalContainer pcontainer =  PortalContainer.getInstance() ;
-		return pcontainer.getPortalContainerInfo().getContainerName() ;  
+		PortalContainer pcontainer = PortalContainer.getInstance() ;
+		return pcontainer.getPortalContainerInfo().getContainerName() ;	
 	}
 	
 	@SuppressWarnings({ "unchecked" })
@@ -320,7 +320,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 	}
 	
 	@SuppressWarnings("unchecked")
-  private void saveForumSubscription() throws Exception {
+	private void saveForumSubscription() throws Exception {
 		List<String> cateIds = new ArrayList<String>();
 		List<String> forumIds = new ArrayList<String>();
 		List<String> topicIds = new ArrayList<String>();
@@ -348,7 +348,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 	}
 	
 	@SuppressWarnings("unchecked")
-  public List<Watch> getListWatch() throws Exception {
+	public List<Watch> getListWatch() throws Exception {
 		int pageSelect = pageIterator.getPageSelected() ;
 		List<Watch>list = new ArrayList<Watch>();
 		try {
@@ -373,7 +373,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 	}
 	
 	@SuppressWarnings("unused")
-  private String getAvatarUrl(){
+	private String getAvatarUrl(){
 		String url = defaultAvatar;
 		try {
 			DownloadService dservice = getApplicationComponent(DownloadService.class) ;
@@ -402,13 +402,13 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 			String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue() ;
 			UserProfile userProfile = uiForm.userProfile ;
 			if(userTitle == null || userTitle.trim().length() < 1){
-    		userTitle = userProfile.getUserTitle();
-    	} else {
-    		int newPos = Arrays.asList(uiForm.permissionUser).indexOf(userTitle.toLowerCase());
-    		if(newPos >= 0 && newPos < userProfile.getUserRole()){
-    			userTitle = userProfile.getUserTitle();
-    		}
-    	}
+				userTitle = userProfile.getUserTitle();
+			} else {
+				int newPos = Arrays.asList(uiForm.permissionUser).indexOf(userTitle.toLowerCase());
+				if(newPos >= 0 && newPos < userProfile.getUserRole()){
+					userTitle = userProfile.getUserTitle();
+				}
+			}
 			int maxText = ForumUtils.MAXSIGNATURE ;
 			String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
 			if (ForumUtils.isEmpty(signature)) {
@@ -450,10 +450,10 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 			
 			uiForm.getForumService().saveUserSettingProfile(userProfile);
 			try {
-	      uiForm.saveForumSubscription();
-      } catch (Exception e) {
-      	uiForm.log.error("Can not save forum subscription, exception: ", e);
-      }
+				uiForm.saveForumSubscription();
+			} catch (Exception e) {
+				uiForm.log.error("Can not save forum subscription, exception: ", e);
+			}
 			forumPortlet.updateUserProfileInfo() ;
 			userProfile = forumPortlet.getUserProfile();
 			forumPortlet.setRenderForumLink();
@@ -582,7 +582,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 	static	public class OpentContentActionListener extends EventListener<UIForumUserSettingForm> {
 		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
-			String path =  event.getRequestContext().getRequestParameter(OBJECTID) ;
+			String path = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			String []id = path.split("/") ;
 			String paths="";

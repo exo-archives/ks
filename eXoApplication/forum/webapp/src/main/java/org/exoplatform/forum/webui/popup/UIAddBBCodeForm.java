@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -42,8 +42,8 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Apr 28, 2009 - 9:55:17 AM  
+ *					tu.duy@exoplatform.com
+ * Apr 28, 2009 - 9:55:17 AM	
  */
 
 @ComponentConfig(
@@ -88,12 +88,12 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
 		addUIFormInput(example);
 		addUIFormInput(isOption);
 		this.setActions(new String[]{"Save", "Cancel"});
-  }
+	}
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	@SuppressWarnings("unused")
-  private boolean getPriview() {
+	private boolean getPriview() {
 		return isPriview;
 	}
 	
@@ -108,10 +108,10 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
 		this.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).setValue(bbcode.getDescription());
 		this.getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).setValue(bbcode.getExample());
 		this.getUIFormCheckBoxInput(FIELD_USEOPTION_CHECKBOX).setChecked(bbcode.isOption());
-  }
+	}
 	
 	@SuppressWarnings("unused")
-  private String getReplaceByBBCode() throws Exception {
+	private String getReplaceByBBCode() throws Exception {
 		return (new BBCodeRenderer()).renderExample(example, bbcode);
 	}
 	
@@ -134,31 +134,31 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
 			uiForm.listBBCode = new ArrayList<BBCode>();
 			try {
 				uiForm.listBBCode.addAll(uiForm.bbCodeService.getAll());
-	    } catch (Exception e) {
-	    }
-    	for (BBCode code : uiForm.listBBCode) {
-	      if(uiForm.bbcode.getTagName().equals(code.getTagName()) && (uiForm.bbcode.isOption() == code.isOption()) &&
-	      		!uiForm.bbcode.getId().equals(code.getId())) {
-	      	uiForm.warning("UIAddBBCodeForm.msg.addDuplicateBBCode") ;
-	      	return;
-	      }
-      }
+			} catch (Exception e) {
+			}
+			for (BBCode code : uiForm.listBBCode) {
+				if(uiForm.bbcode.getTagName().equals(code.getTagName()) && (uiForm.bbcode.isOption() == code.isOption()) &&
+						!uiForm.bbcode.getId().equals(code.getId())) {
+					uiForm.warning("UIAddBBCodeForm.msg.addDuplicateBBCode") ;
+					return;
+				}
+			}
 			try {
 				List<BBCode> bbcodes = new ArrayList<BBCode>();
 				bbcodes.add(uiForm.bbcode);
 				uiForm.bbCodeService.save(bbcodes);
-      } catch (Exception e) {
-      	uiForm.log.error("Can not save BBCode has name: " + uiForm.bbcode.getTagName(), e);
-      }
-      uiForm.cancelChildPopupAction();
+			} catch (Exception e) {
+				uiForm.log.error("Can not save BBCode has name: " + uiForm.bbcode.getTagName(), e);
+			}
+			uiForm.cancelChildPopupAction();
 			try {
 				UIBBCodeManagerForm codeManagerForm = uiForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIBBCodeManagerForm.class);
 				codeManagerForm.loadBBCodes();
 				codeManagerForm.initCheckBoxActiveBBCode();
 				event.getRequestContext().addUIComponentToUpdateByAjax(codeManagerForm) ;
-      } catch (Exception e) {
-      	uiForm.log.error("Can not update from: UIBBCodeManagerForm");
-      }
+			} catch (Exception e) {
+				uiForm.log.error("Can not update from: UIBBCodeManagerForm");
+			}
 		}
 	}
 	

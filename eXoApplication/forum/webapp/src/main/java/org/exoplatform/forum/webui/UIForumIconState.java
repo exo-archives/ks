@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -34,10 +34,10 @@ import org.exoplatform.webui.event.EventListener;
 
 @ComponentConfig(
 		lifecycle = UIApplicationLifecycle.class,
-		template =	"app:/templates/forum/webui/UIForumIconState.gtmpl",
+		template = "app:/templates/forum/webui/UIForumIconState.gtmpl",
 		events = {
-      @EventConfig(listeners = UIForumIconState.IconStateParamActionListener.class)      
-    }	
+			@EventConfig(listeners = UIForumIconState.IconStateParamActionListener.class)			
+		}	
 )
 public class UIForumIconState extends UIContainer	{
 	private boolean isForumIcon = true ;
@@ -52,11 +52,11 @@ public class UIForumIconState extends UIContainer	{
 		return this.isForumIcon ;
 	}
 	
-	static  public class IconStateParamActionListener extends EventListener<UIForumIconState> {
-    public void execute(Event<UIForumIconState> event) throws Exception {
-    	UIForumIconState forumIconState = event.getSource();
-    	ForumParameter params = (ForumParameter)event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-    	forumIconState.isForumIcon = params.isForumIcon() ; 
-    }
-  }  
+	static	public class IconStateParamActionListener extends EventListener<UIForumIconState> {
+		public void execute(Event<UIForumIconState> event) throws Exception {
+			UIForumIconState forumIconState = event.getSource();
+			ForumParameter params = (ForumParameter)event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
+			forumIconState.isForumIcon = params.isForumIcon() ; 
+		}
+	}	
 }

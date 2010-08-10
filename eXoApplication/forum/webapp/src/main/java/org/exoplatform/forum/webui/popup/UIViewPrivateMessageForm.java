@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -60,8 +60,8 @@ public class UIViewPrivateMessageForm extends UIForm implements UIPopupComponent
 	public String renderMessage(String str) throws RenderingException {
 		Post post = new Post();
 		post.setMessage(str);
-    return renderHelper.renderPost(post);
-  }
+		return renderHelper.renderPost(post);
+	}
 	
 	public UserProfile getUserProfile() { return userProfile;}
 	public void setUserProfile(UserProfile userProfile) {

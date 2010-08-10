@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -27,7 +27,7 @@ import org.exoplatform.webui.core.UIContainer;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UITopicDetailContainer.gtmpl" 
+		template = "app:/templates/forum/webui/UITopicDetailContainer.gtmpl" 
 )
 public class UITopicDetailContainer extends UIContainer	{
 	private boolean isRender = true ;
@@ -41,13 +41,13 @@ public class UITopicDetailContainer extends UIContainer	{
 	}
 	
 	@SuppressWarnings("unused")
-  private boolean getRenderPoll(boolean isShow) throws Exception {
+	private boolean getRenderPoll(boolean isShow) throws Exception {
 		try {
 			boolean isRdByDeff = this.getAncestorOfType(UIForumPortlet.class).isShowPoll();
 			if(isShow && isRender && isRdByDeff) return true;	
 			else return false;
-    } catch (Exception e) {
-    }
+		} catch (Exception e) {
+		}
 		return isShow;
 	}
 }

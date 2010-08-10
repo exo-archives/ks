@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -71,7 +71,7 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent{
 		try{
 			bookMarks = forumService.getBookmarks( this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId());
 		}catch(Exception e) {
-		  log.error("Getting book mark fail: ", e);
+			log.error("Getting book mark fail: ", e);
 		}
 		pageList = new ForumPageList(6, bookMarks.size());
 		pageList.setPageSize(6);
@@ -83,7 +83,7 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent{
 		try {
 			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
 		} catch (Exception e) {
-		  log.error("\nCould not render a UIComponent: " + e.getMessage() + "\n" + e.getCause());
+			log.error("\nCould not render a UIComponent: " + e.getMessage() + "\n" + e.getCause());
 		}
 		return list ;
 	} 
@@ -96,7 +96,7 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent{
 	}
 	
 	@SuppressWarnings("unused")
-  private String getType(String id) {
+	private String getType(String id) {
 		return (id.indexOf(Utils.FORUM_SERVICE) >= 0)? Utils.FORUM_SERVICE:(
 					 (id.indexOf(Utils.CATEGORY) >= 0)? ForumUtils.CATEGORY :( 
 					 (id.indexOf(Utils.FORUM) >= 0)? ForumUtils.FORUM :(
@@ -104,7 +104,7 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent{
 	}
 	
 	static	public class OpenLinkActionListener extends BaseEventListener<UIShowBookMarkForm> {
-    public void onEvent(Event<UIShowBookMarkForm> event, UIShowBookMarkForm bookmarkForm, String id) throws Exception {
+		public void onEvent(Event<UIShowBookMarkForm> event, UIShowBookMarkForm bookmarkForm, String id) throws Exception {
 			UIForumPortlet forumPortlet = bookmarkForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.calculateRenderComponent(id, event.getRequestContext());
 			forumPortlet.cancelAction() ;
@@ -113,7 +113,7 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent{
 	}
 	
 	static	public class DeleteLinkActionListener extends BaseEventListener<UIShowBookMarkForm> {
-    public void onEvent(Event<UIShowBookMarkForm> event, UIShowBookMarkForm bookmarkForm, String path) throws Exception {
+		public void onEvent(Event<UIShowBookMarkForm> event, UIShowBookMarkForm bookmarkForm, String path) throws Exception {
 			UIShowBookMarkForm bookMark = event.getSource() ;
 			UIForumPortlet forumPortlet = bookMark.getAncestorOfType(UIForumPortlet.class) ;
 			bookMark.forumService.saveUserBookmark(forumPortlet.getUserProfile().getUserId(), path, false) ;

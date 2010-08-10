@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -54,7 +54,7 @@ import org.exoplatform.webui.event.EventListener;
  * Aus 01, 2007 2:48:18 PM 
  */
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UIBreadcumbs.gtmpl" ,
+		template = "app:/templates/forum/webui/UIBreadcumbs.gtmpl" ,
 		events = {
 				@EventConfig(listeners = UIBreadcumbs.ChangePathActionListener.class),
 				@EventConfig(listeners = UIBreadcumbs.AccountSettingsActionListener.class),
@@ -63,10 +63,10 @@ import org.exoplatform.webui.event.EventListener;
 )
 @SuppressWarnings("unused")
 public class UIBreadcumbs extends UIContainer {
-  
-  private static Log log = ExoLogger.getExoLogger(UIBreadcumbs.class);
-  
-  private boolean useAjax = true;
+	
+	private static Log log = ExoLogger.getExoLogger(UIBreadcumbs.class);
+	
+	private boolean useAjax = true;
 	private ForumService forumService ;
 	private List<String> breadcumbs_ = new ArrayList<String>();
 	private List<String> path_ = new ArrayList<String>();
@@ -83,7 +83,7 @@ public class UIBreadcumbs extends UIContainer {
 		addChild(UIQuickSearchForm.class, null, QUICK_SEARCH) ;
 	}
 
-  private void setIsUseAjax() throws Exception{
+	private void setIsUseAjax() throws Exception{
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
 		userProfile = forumPortlet.getUserProfile();
 		useAjax = forumPortlet.isUseAjax();
@@ -165,8 +165,8 @@ public class UIBreadcumbs extends UIContainer {
 				param.setRenderForumLink(false);
 			}
 			actionRes.setEvent(new QName("ForumLinkEvent"), param) ;
-    } catch (Exception e) {
-    }
+		} catch (Exception e) {
+		}
 	}
 	
 	public boolean isOpen() {
@@ -177,7 +177,7 @@ public class UIBreadcumbs extends UIContainer {
 		this.isOpen = isOpen;
 	}
 	
-  private String getToolTip() {
+	private String getToolTip() {
 		return tooltipLink ;
 	}
 	private boolean isLink() {return this.isLink;}
@@ -196,7 +196,7 @@ public class UIBreadcumbs extends UIContainer {
 	
 	private boolean isArrayNotNull(String []strs){
 		if(strs != null && strs.length > 0 && !strs[0].equals(" ")) return true;//private
-		else  return false;
+		else	return false;
 	}
 	
 	private String getType(String id) {
@@ -206,7 +206,7 @@ public class UIBreadcumbs extends UIContainer {
 					 (id.indexOf(Utils.TOPIC) >= 0)? ForumUtils.TOPIC :(""))));
 	}
 	
-  private boolean checkLinkPrivate(String id) throws Exception {
+	private boolean checkLinkPrivate(String id) throws Exception {
 		boolean isPrivate = false;
 		if(id.indexOf(Utils.TOPIC) >= 0) {
 			try {
@@ -229,19 +229,19 @@ public class UIBreadcumbs extends UIContainer {
 						}
 					}
 				}
-      } catch (Exception e) {
-        log.error("\nThe "+ id + " must exist: "+  e.getMessage(), e);
-      }
+			} catch (Exception e) {
+				log.error("\nThe "+ id + " must exist: "+	e.getMessage(), e);
+			}
 		}else	if(id.indexOf(Utils.CATEGORY) == 0) {
 			try {
 				Category cate = (Category)this.forumService.getObjectNameById(id, Utils.CATEGORY);
 				if(isArrayNotNull(cate.getUserPrivate())){
 					isPrivate = true;
 				}
-      } catch (Exception e) {
-      }
+			} catch (Exception e) {
+			}
 		}else if(id.indexOf(Utils.FORUM) == 0){
-      try {
+			try {
 				Forum forum = (Forum)this.forumService.getObjectNameById(id, Utils.FORUM);
 				if(forum.getIsClosed()) isPrivate = true;
 				if(!isPrivate) {
@@ -284,15 +284,15 @@ public class UIBreadcumbs extends UIContainer {
 	}	
 	
 	static public class AccountSettingsActionListener extends EventListener<UIBreadcumbs> {
-    public void execute(Event<UIBreadcumbs> event) throws Exception {
-      UIPortal uiPortal = Util.getUIPortal() ;
-      UIPortalApplication uiApp = uiPortal.getAncestorOfType(UIPortalApplication.class) ;
-      UIMaskWorkspace uiMaskWS = uiApp.getChildById(UIPortalApplication.UI_MASK_WS_ID) ;
-     
-      UIAccountSetting uiAccountForm = uiMaskWS.createUIComponent(UIAccountSetting.class, null, null) ;
-      uiMaskWS.setUIComponent(uiAccountForm) ;
-      uiMaskWS.setShow(true) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiMaskWS) ;
-    }
-  }
+		public void execute(Event<UIBreadcumbs> event) throws Exception {
+			UIPortal uiPortal = Util.getUIPortal() ;
+			UIPortalApplication uiApp = uiPortal.getAncestorOfType(UIPortalApplication.class) ;
+			UIMaskWorkspace uiMaskWS = uiApp.getChildById(UIPortalApplication.UI_MASK_WS_ID) ;
+		 
+			UIAccountSetting uiAccountForm = uiMaskWS.createUIComponent(UIAccountSetting.class, null, null) ;
+			uiMaskWS.setUIComponent(uiAccountForm) ;
+			uiMaskWS.setShow(true) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiMaskWS) ;
+		}
+	}
 }

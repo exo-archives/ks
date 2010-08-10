@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -49,7 +49,7 @@ import org.exoplatform.webui.event.EventListener;
  * 14 Apr 2008, 08:22:52	
  */
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UIForumListSearch.gtmpl",
+		template = "app:/templates/forum/webui/UIForumListSearch.gtmpl",
 		events = {
 			@EventConfig(listeners = UIForumListSearch.OpentContentActionListener.class),
 			@EventConfig(listeners = UIForumListSearch.CloseActionListener.class)
@@ -71,8 +71,8 @@ public class UIForumListSearch extends UIContainer {
 	}
 	
 	public boolean getIsShowIter() {
-	  return isShowIter ;
-  }
+		return isShowIter ;
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<ForumSearch> getListEvent() {
@@ -151,11 +151,11 @@ public class UIForumListSearch extends UIContainer {
 			String []id = path.split("/") ;
 			String cateId="", forumId="", topicId="", postId="";
 			for (int i = 0; i < id.length; i++) {
-	      if(id[i].indexOf(Utils.CATEGORY) >= 0) cateId = id[i];
-	      else if(id[i].indexOf(Utils.FORUM) >= 0) forumId = id[i];
-	      else if(id[i].indexOf(Utils.TOPIC) >= 0) topicId = id[i];
-	      else if(id[i].indexOf(Utils.POST) >= 0) postId = id[i];
-      }
+				if(id[i].indexOf(Utils.CATEGORY) >= 0) cateId = id[i];
+				else if(id[i].indexOf(Utils.FORUM) >= 0) forumId = id[i];
+				else if(id[i].indexOf(Utils.TOPIC) >= 0) topicId = id[i];
+				else if(id[i].indexOf(Utils.POST) >= 0) postId = id[i];
+			}
 			Category category = null;
 			Forum forum = null;
 			Topic topic = null;
@@ -207,7 +207,7 @@ public class UIForumListSearch extends UIContainer {
 						uiTopicDetail.setTopicFromCate(cateId, forumId, topic, 0) ;
 						uiTopicDetail.setIdPostView("top") ;
 						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(cateId, forumId , topic.getId()) ;
-						forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
+						forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),	topic.getId()) ;
 						forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 						forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId + "/" + forumId + " "));
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -32,41 +32,41 @@ import org.exoplatform.webui.core.UIContainer;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UIForumDescription.gtmpl"
+		template = "app:/templates/forum/webui/UIForumDescription.gtmpl"
 )
 public class UIForumDescription extends UIContainer	{
 	private String forumId ;
 	private String categoryId ;
-  private Forum forum = null ;
-  private boolean isForum = false;
-  
-  private Log log = ExoLogger.getLogger(UIForumDescription.class); 
-  
+	private Forum forum = null ;
+	private boolean isForum = false;
+	
+	private Log log = ExoLogger.getLogger(UIForumDescription.class); 
+	
 	public UIForumDescription() throws Exception {		
 	}
 	
-  public void setForum(Forum forum) {
-    this.forum = forum ;
-    this.isForum = false ;
-  }
+	public void setForum(Forum forum) {
+		this.forum = forum ;
+		this.isForum = false ;
+	}
 	public void setForumIds(String categoryId, String forumId) {
-    this.isForum = true;
+		this.isForum = true;
 		this.forumId = forumId ;
 		this.categoryId = categoryId ;
 	}
 	
 	@SuppressWarnings("unused")
 	private Forum getForum() throws Exception {
-    if(forum == null || isForum) {
-  		ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+		if(forum == null || isForum) {
+			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			try {
 				return forumService.getForum(categoryId, forumId);
 			}catch (Exception e) {
-			  log.debug(forumId + " must exist: " + e.getMessage() + "\n" +e.getCause());
+				log.debug(forumId + " must exist: " + e.getMessage() + "\n" +e.getCause());
 				return null;
 			}
-    } else {
-      return this.forum ;
-    }
+		} else {
+			return this.forum ;
+		}
 	}
 }

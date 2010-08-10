@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -28,55 +28,55 @@ import org.exoplatform.ks.rendering.spi.MarkupRenderDelegate;
  */
 public class RenderHelper {
 
-  private MarkupRenderingService markupRenderingService;
-  
-  
-  public RenderHelper() {
-  }
+	private MarkupRenderingService markupRenderingService;
+	
+	
+	public RenderHelper() {
+	}
 
-  /**
-   * Render markup for a forum Post
-   * 
-   * @param post
-   * @return
-   */
-  public String renderPost(Post post) {
-    try {
-      return getMarkupRenderingService().delegateRendering(new PostDelegate(), post);
-    } catch (Exception e) {
-      throw new RenderingException(e);
-    }
-  }
+	/**
+	 * Render markup for a forum Post
+	 * 
+	 * @param post
+	 * @return
+	 */
+	public String renderPost(Post post) {
+		try {
+			return getMarkupRenderingService().delegateRendering(new PostDelegate(), post);
+		} catch (Exception e) {
+			throw new RenderingException(e);
+		}
+	}
 
-  
-  
-  static class PostDelegate implements MarkupRenderDelegate<Post> {
-    
-    public String getMarkup(Post post) {
-      return post.getMessage();
-    }
+	
+	
+	static class PostDelegate implements MarkupRenderDelegate<Post> {
+		
+		public String getMarkup(Post post) {
+			return post.getMessage();
+		}
 
-    /**
-     * TODO when Forum will support more syntaxes, we should have the
-     * resolving logic here
-     */
-    public String getSyntax(Post target) {
-      return SupportedSyntaxes.bbcode.name();
-    }
+		/**
+		 * TODO when Forum will support more syntaxes, we should have the
+		 * resolving logic here
+		 */
+		public String getSyntax(Post target) {
+			return SupportedSyntaxes.bbcode.name();
+		}
 
-  }
-  
-  
-  public MarkupRenderingService getMarkupRenderingService() {
-    if (this.markupRenderingService == null) {
-      this.markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer()
-                                                                                   .getComponentInstanceOfType(MarkupRenderingService.class);
-    }
-    return this.markupRenderingService;
-  }
-  
-  public void setMarkupRenderingService(MarkupRenderingService markupRenderingService) {
-    this.markupRenderingService = markupRenderingService;
-  }
-  
+	}
+	
+	
+	public MarkupRenderingService getMarkupRenderingService() {
+		if (this.markupRenderingService == null) {
+			this.markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer()
+																																									 .getComponentInstanceOfType(MarkupRenderingService.class);
+		}
+		return this.markupRenderingService;
+	}
+	
+	public void setMarkupRenderingService(MarkupRenderingService markupRenderingService) {
+		this.markupRenderingService = markupRenderingService;
+	}
+	
 }

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -40,7 +40,7 @@ import org.exoplatform.webui.event.EventListener;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UICategoryInfo.gtmpl",
+		template = "app:/templates/forum/webui/UICategoryInfo.gtmpl",
 		events = {
 				@EventConfig(listeners = UICategoryInfo.CreatedLinkActionListener.class )
 		}
@@ -59,45 +59,45 @@ public class UICategoryInfo extends UIContainer	{
 		return forumService.getOnlineUsers();
 	}
 
-  private String getScreenName(String userName) throws Exception {
+	private String getScreenName(String userName) throws Exception {
 		return forumService.getScreenName(userName);
 	}
-  
-  private UserProfile getUserProfile() throws Exception {
-  	try {
-     	UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
-     	userProfile = forumPortlet.getUserProfile();
-     } catch (Exception e) {
-    	 String userId = UserHelper.getCurrentUser();
-     	userProfile = forumService.getDefaultUserProfile(userId, "");
-     }
-    return userProfile;
-  }
-  
-  private String getMostUsersOnline(String s, String at) throws Exception {
+	
+	private UserProfile getUserProfile() throws Exception {
+		try {
+		 	UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+		 	userProfile = forumPortlet.getUserProfile();
+		 } catch (Exception e) {
+			 String userId = UserHelper.getCurrentUser();
+		 	userProfile = forumService.getDefaultUserProfile(userId, "");
+		 }
+		return userProfile;
+	}
+	
+	private String getMostUsersOnline(String s, String at) throws Exception {
 		if(ForumUtils.isEmpty(s)) return "";
 		try {
-	    String []strs = s.split(",");
-	    long l = Long.parseLong(strs[1].replace("at", "").trim());
-	    Calendar calendar = GregorianCalendar.getInstance();
-      double timeZone = userProfile.getTimeZone();
-      if(userProfile.getUserId().equals(UserProfile.USER_GUEST))timeZone = 0;
-      long zone = (long)(timeZone*3600000) ;
-      calendar.setTimeInMillis(l - zone);
-      StringBuilder builder = new StringBuilder();
-      
-      if(ForumUtils.isEmpty(at)) at = "at";
-      builder.append(strs[0]).append(", ").append(at).append(" ");
-      builder.append(ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()), calendar.getTime()));
-      if(userProfile.getUserId().equals(UserProfile.GUEST)) {
-      	if(timeZone >= 0)
-      		builder.append(" GMT+").append(String.valueOf(timeZone).replace(".0", ""));
-      	else builder.append(" GMT").append(String.valueOf(timeZone).replace(".0", ""));
-      }
-      s = builder.toString();
-    } catch (Exception e) {
-    	s = s.replace("at", at);
-    }
+			String []strs = s.split(",");
+			long l = Long.parseLong(strs[1].replace("at", "").trim());
+			Calendar calendar = GregorianCalendar.getInstance();
+			double timeZone = userProfile.getTimeZone();
+			if(userProfile.getUserId().equals(UserProfile.USER_GUEST))timeZone = 0;
+			long zone = (long)(timeZone*3600000) ;
+			calendar.setTimeInMillis(l - zone);
+			StringBuilder builder = new StringBuilder();
+			
+			if(ForumUtils.isEmpty(at)) at = "at";
+			builder.append(strs[0]).append(", ").append(at).append(" ");
+			builder.append(ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()), calendar.getTime()));
+			if(userProfile.getUserId().equals(UserProfile.GUEST)) {
+				if(timeZone >= 0)
+					builder.append(" GMT+").append(String.valueOf(timeZone).replace(".0", ""));
+				else builder.append(" GMT").append(String.valueOf(timeZone).replace(".0", ""));
+			}
+			s = builder.toString();
+		} catch (Exception e) {
+			s = s.replace("at", at);
+		}
 		return s;
 	}
 	
@@ -110,7 +110,7 @@ public class UICategoryInfo extends UIContainer	{
 	}
 	
 	public ForumStatistic getForumStatistic() throws Exception {
-		return  forumService.getForumStatistic() ;				
+		return	forumService.getForumStatistic() ;				
 	}
 	
 	static public class CreatedLinkActionListener extends EventListener<UICategoryInfo> {

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -64,8 +64,8 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		if(this.listTopic != null && this.listTopic.size() > 0) {
 			for (Topic topic : this.listTopic) {
-	      list.add(new SelectItemOption<String>(topic.getTopicName(), topic.getId()));
-      }
+				list.add(new SelectItemOption<String>(topic.getTopicName(), topic.getId()));
+			}
 		}
 		UIFormSelectBox destination = new UIFormSelectBox(DESTINATION, DESTINATION, list) ;
 		UIFormStringInput titleThread = new UIFormStringInput(TITLE,TITLE, null) ;
@@ -90,7 +90,7 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
 	public void deActivate() throws Exception {}
 	
 	static	public class SaveActionListener extends EventListener<UIMergeTopicForm> {
-    public void execute(Event<UIMergeTopicForm> event) throws Exception {
+		public void execute(Event<UIMergeTopicForm> event) throws Exception {
 			UIMergeTopicForm uiForm = event.getSource() ;
 			String topicMergeId = uiForm.getUIFormSelectBox(DESTINATION).getValue() ;
 			String topicMergeTitle = uiForm.getUIStringInput(TITLE).getValue() ;
@@ -118,29 +118,29 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
 								// set link
 								link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");	
 								forumService.mergeTopic(categoryId+"/"+forumId+"/"+topic.getId(), destTopicPath, emailContent, link) ;
-		          } catch (Exception e) {
-			          isMerge = false;
-			          break;
-		          }
+							} catch (Exception e) {
+								isMerge = false;
+								break;
+							}
 						}
 						if(isMerge){
 							topicMerge.setTopicName(topicMergeTitle) ;
-			        try {
-			        	List<Topic>list = new ArrayList<Topic>();
-			        	list.add(topicMerge) ;
-			          forumService.modifyTopic(list, 7) ;
-			        } catch (Exception e) {
-			        	uiForm.log.error("Merge topic is fall ", e);
-			          isMerge = false;
-			        }
+							try {
+								List<Topic>list = new ArrayList<Topic>();
+								list.add(topicMerge) ;
+								forumService.modifyTopic(list, 7) ;
+							} catch (Exception e) {
+								uiForm.log.error("Merge topic is fall ", e);
+								isMerge = false;
+							}
 						}
 					}catch (Exception e) {}
 				} else {
 					isMerge = false;
 				}
-        if(!isMerge) {
-        	uiForm.warning("UIMergeTopicForm.msg.forum-deleted") ;
-        }
+				if(!isMerge) {
+					uiForm.warning("UIMergeTopicForm.msg.forum-deleted") ;
+				}
 			} else {
 				uiForm.warning("UIMergeTopicForm.msg.checkEmptyTitle") ;
 				return;
@@ -152,7 +152,7 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
 	}
 	
 	static	public class CancelActionListener extends EventListener<UIMergeTopicForm> {
-    public void execute(Event<UIMergeTopicForm> event) throws Exception {
+		public void execute(Event<UIMergeTopicForm> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

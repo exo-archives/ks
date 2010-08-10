@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -99,12 +99,12 @@ public class UIForumPageIterator extends UIContainer {
 			temp.add((long)pageList.getCurrentPage()) ;//trang hien tai
 			temp.add((long)pageList.getAvailable()) ;//tong so item
 			temp.add((long)pageList.getAvailablePage()) ;// so trang toi da
-    } catch (Exception e) {
-    	temp.add((long)1) ;
-    	temp.add((long)1) ;
-    	temp.add((long)1) ;
-    	temp.add((long)1) ;
-    }
+		} catch (Exception e) {
+			temp.add((long)1) ;
+			temp.add((long)1) ;
+			temp.add((long)1) ;
+			temp.add((long)1) ;
+		}
 		return temp ;
 	} 
 	
@@ -126,7 +126,7 @@ public class UIForumPageIterator extends UIContainer {
 			}
 			String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim() ;
 			int maxPage = forumPageIterator.pageList.getAvailablePage() ;
-			int presentPage	= forumPageIterator.page ;
+			int presentPage = forumPageIterator.page ;
 			if(stateClick.equalsIgnoreCase("next")) {
 				if(presentPage < maxPage){
 					forumPageIterator.page = presentPage + 1 ;

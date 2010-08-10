@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -36,8 +36,8 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jan 29, 2010 - 4:51:01 AM  
+ *					tu.duy@exoplatform.com
+ * Jan 29, 2010 - 4:51:01 AM	
  */
 
 @ComponentConfig(
@@ -59,51 +59,51 @@ public class UISortSettingForm extends BaseForumForm implements UIPopupComponent
 	
 	public void setInitForm() throws Exception {
 		administration = getForumService().getForumAdministration();
-    UIFormSelectBox forumSortBy = initForumSortField();
-    UIFormSelectBox forumSortByType = initForumSortDirectionField();
+		UIFormSelectBox forumSortBy = initForumSortField();
+		UIFormSelectBox forumSortByType = initForumSortDirectionField();
 		UIFormSelectBox topicSortBy = initTopicSortField();		
-    UIFormSelectBox topicSortByType = initTopicSortDirectionField();
-    
-    addUIFormInput(forumSortBy) ;
+		UIFormSelectBox topicSortByType = initTopicSortDirectionField();
+		
+		addUIFormInput(forumSortBy) ;
 		addUIFormInput(forumSortByType) ;
 		addUIFormInput(topicSortBy) ;
 		addUIFormInput(topicSortByType) ;
-  }
+	}
 	
 	private UIFormSelectBox initTopicSortDirectionField() {
-    List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
+		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
 		ls.add(new SelectItemOption<String>(this.getLabel("ascending"), "ascending")) ;
 		ls.add(new SelectItemOption<String>(this.getLabel("descending"), "descending")) ;
 		UIFormSelectBox topicSortByType = new UIFormSelectBox(FIELD_TOPICSORTBYTYPE_INPUT, FIELD_TOPICSORTBYTYPE_INPUT, ls);
 		topicSortByType.setValue(administration.getTopicSortByType()) ;
-    return topicSortByType;
-  }
+		return topicSortByType;
+	}
 
-  private UIFormSelectBox initTopicSortField() {
-    String[] idLables = new String[]{"isLock", "createdDate", "modifiedDate", 
+	private UIFormSelectBox initTopicSortField() {
+		String[] idLables = new String[]{"isLock", "createdDate", "modifiedDate", 
 												"lastPostDate", "postCount", "viewCount", "numberAttachments"}; 
-    List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
+		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
 		ls.add(new SelectItemOption<String>(this.getLabel("threadName"), "name")) ;
 		for (String string : idLables) {
 			ls.add(new SelectItemOption<String>(this.getLabel(string), string)) ;
 		}
 		UIFormSelectBox topicSortBy = new UIFormSelectBox(FIELD_TOPICSORTBY_INPUT, FIELD_TOPICSORTBY_INPUT, ls);
 		topicSortBy.setValue(administration.getTopicSortBy()) ;
-    return topicSortBy;
-  }
+		return topicSortBy;
+	}
 
-  private UIFormSelectBox initForumSortDirectionField() {
-    List<SelectItemOption<String>> ls;
+	private UIFormSelectBox initForumSortDirectionField() {
+		List<SelectItemOption<String>> ls;
 		ls = new ArrayList<SelectItemOption<String>>() ;
 		ls.add(new SelectItemOption<String>(this.getLabel("ascending"), "ascending")) ;
 		ls.add(new SelectItemOption<String>(this.getLabel("descending"), "descending")) ;
 		UIFormSelectBox forumSortByType = new UIFormSelectBox(FIELD_FORUMSORTBYTYPE_INPUT, FIELD_FORUMSORTBYTYPE_INPUT, ls);
 		forumSortByType.setValue(administration.getForumSortByType()) ;
-    return forumSortByType;
-  }
+		return forumSortByType;
+	}
 
-  private UIFormSelectBox initForumSortField() {
-    String []idLables = new String[]{"forumOrder", "isLock", "createdDate",
+	private UIFormSelectBox initForumSortField() {
+		String []idLables = new String[]{"forumOrder", "isLock", "createdDate",
 																"modifiedDate",	"topicCount", "postCount"}; 
 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
 		ls.add(new SelectItemOption<String>(this.getLabel("forumName"), "name")) ;
@@ -111,10 +111,10 @@ public class UISortSettingForm extends BaseForumForm implements UIPopupComponent
 			ls.add(new SelectItemOption<String>(this.getLabel(string), string)) ;
 		}
 		UIFormSelectBox forumSortBy = new UIFormSelectBox(FIELD_FORUMSORTBY_INPUT, FIELD_FORUMSORTBY_INPUT, ls);
-    forumSortBy.setValue(administration.getForumSortBy()) ;
-    return forumSortBy;
-  }
-  
+		forumSortBy.setValue(administration.getForumSortBy()) ;
+		return forumSortBy;
+	}
+	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -25,23 +25,23 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 
 /**
  * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
+ *					hung.nguyen@exoplatform.com
  * Mar 04, 2008
  */
 
 @ComponentConfig(
-   lifecycle = UIApplicationLifecycle.class,
-   template = "app:/templates/forum/webui/info/UIForumIconStatePortlet.gtmpl"
+	 lifecycle = UIApplicationLifecycle.class,
+	 template = "app:/templates/forum/webui/info/UIForumIconStatePortlet.gtmpl"
 )
 
 public class UIForumIconStatePortlet extends UIPortletApplication {
 	public UIForumIconStatePortlet() throws Exception {
-  	addChild(UIForumIconState.class, null, null) ;
-  }
-  
-  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
-   
-    super.processRender(app, context) ;
-  }  
-  
+		addChild(UIForumIconState.class, null, null) ;
+	}
+	
+	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {		
+	 
+		super.processRender(app, context) ;
+	}	
+	
 } 

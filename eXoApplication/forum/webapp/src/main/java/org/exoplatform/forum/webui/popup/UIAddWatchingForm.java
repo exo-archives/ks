@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -83,12 +83,12 @@ public class UIAddWatchingForm	extends BaseUIForm	implements UIPopupComponent {
 
 	public void activate() throws Exception {}
 	public boolean isCategory() {
-  	return isCategory;
-  }
+		return isCategory;
+	}
 
 	public void setIsCategory(boolean isCategory) {
-  	this.isCategory = isCategory;
-  }
+		this.isCategory = isCategory;
+	}
 
 	public void deActivate() throws Exception {}
 	
@@ -110,7 +110,7 @@ public class UIAddWatchingForm	extends BaseUIForm	implements UIPopupComponent {
 	}
 	
 	private CommonContact getPersonalContact(String userId) throws Exception {
-	  CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
+		CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {
 			contact = new CommonContact() ;
 		}
@@ -118,7 +118,7 @@ public class UIAddWatchingForm	extends BaseUIForm	implements UIPopupComponent {
 	}
 
 	static	public class SaveActionListener extends BaseEventListener<UIAddWatchingForm> {
-    public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
+		public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			String path = uiForm.path;
 			List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
@@ -157,13 +157,13 @@ public class UIAddWatchingForm	extends BaseUIForm	implements UIPopupComponent {
 	}
 	
 	static	public class RefreshActionListener extends BaseEventListener<UIAddWatchingForm> {
-    public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
+		public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
 			uiForm.initForm() ;
 		}
 	}
 	
 	static	public class CancelActionListener extends BaseEventListener<UIAddWatchingForm> {
-    public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
+		public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}

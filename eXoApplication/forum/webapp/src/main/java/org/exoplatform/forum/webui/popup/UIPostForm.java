@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -23,8 +23,6 @@ import java.util.List;
 import javax.jcr.PathNotFoundException;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
@@ -55,7 +53,6 @@ import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
-import org.exoplatform.webui.form.wysiwyg.FCKEditorConfig;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 /**
@@ -296,10 +293,10 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 					return ForumServiceUtils.hasPermission(canCreadPost, userProfile.getUserId());
 				}
 			}
-    } catch (Exception e) {
-    	throw e;
-    }
-    return true;
+		} catch (Exception e) {
+			throw e;
+		}
+		return true;
 	}
 	
 	private String[] getCensoredKeyword() throws Exception {
@@ -324,165 +321,165 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			UserProfile userProfile = forumPortlet.getUserProfile();
 			try {
-	      if(uiForm.checkForumHasAddTopic(userProfile)) {
-	      	UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
-	      	int t = 0, k = 1 ;
-	      	String postTitle = " " + threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
-	      	int maxText = ForumUtils.MAXTITLE ;
-	      	if(postTitle.length() > maxText) {
-	      		warning("NameValidator.msg.warning-long-text", new String[]{ uiForm.getLabel(FIELD_POSTTITLE_INPUT), String.valueOf(maxText) }) ;
-	      		uiForm.isDoubleClickSubmit = false;
-	      		return ;
-	      	}
-	      	String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
-	      	if(!ForumUtils.isEmpty(editReason) && editReason.length() > maxText) {
-	      		warning("NameValidator.msg.warning-long-text", new String[]{ uiForm.getLabel(FIELD_EDITREASON_INPUT), String.valueOf(maxText) }) ;
-	      		uiForm.isDoubleClickSubmit = false;
-	      		return ;
-	      	}
-	      	
-	      	editReason = ForumTransformHTML.enCodeHTML(editReason).trim() ;
-	      	String userName = userProfile.getUserId() ;
-	      	String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-	      	String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes())) ;
-	      	message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
-	      	message = StringUtils.replace(message, "'", "&apos;");
-	      	message = ForumTransformHTML.fixAddBBcodeAction(message);
-	      	checksms = checksms.replaceAll("&nbsp;", " ") ;
-	      	t = checksms.length() ;
-	      	postTitle = postTitle.trim();
-	      	if(postTitle.trim().length() <= 0) {k = 0;}
-	      	postTitle = ForumTransformHTML.enCodeHTML(postTitle) ;
-	      	Post post = uiForm.post_;
-	      	boolean isPP = false;
-	      	if(t > 0 && k != 0 && !checksms.equals("null")) {	
-	      		boolean isOffend = false ; 
-	      		boolean hasTopicMod = false ;
-	      		if(!uiForm.isMod()) {
-      				String []censoredKeyword = uiForm.getCensoredKeyword() ;
-      				checksms = checksms.toLowerCase().trim();
-      				for (String string : censoredKeyword) {
-      					if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
-      					if(postTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
-      				}
-	      			if(post.getUserPrivate() != null && post.getUserPrivate().length == 2)isPP = true;
-	      			if((!uiForm.isMP || !isPP) && uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
-	      		}
-	      		if(isOffend && (uiForm.isMP || isPP)) {
-	      			uiForm.warning("UIPostForm.msg.PrivateCensor") ;
-	      			uiForm.isDoubleClickSubmit = false;
-	      			return ;
-	      		}
-	      		// set link
-	      		String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, uiForm.topicId).replaceFirst("private", "public");	
-	      		//
-	      		if(uiForm.isQuote || uiForm.isMP) post = new Post();
-	      		post.setName(postTitle) ;
-	      		post.setMessage(message) ;
-	      		post.setOwner(userName) ;
-	      		post.setCreatedDate(new Date()) ;
-	      		UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
-	      		post.setIcon(uiIconSelector.getSelectedIcon());
-	      		post.setAttachments(uiForm.getAttachFileList()) ;
-	      		post.setIsHidden(isOffend) ;
-	      		post.setLink(link);
-	      		String[]userPrivate = new String[]{"exoUserPri"};
-	      		if(uiForm.isMP){
-	      			userPrivate = new String[]{userName, uiForm.post_.getOwner()};
-	      			hasTopicMod = false;
-	      		}
-	      		post.setUserPrivate(userPrivate);
-	      		post.setIsApproved(!hasTopicMod) ;
-	      		
-	      		UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
-	      		UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
-	      		boolean isParentDelete = false;
-	      		boolean isNew = false;
-	      		try {
-	      			if(!ForumUtils.isEmpty(uiForm.postId)) {
-	      				if(uiForm.isQuote || uiForm.isMP) {
-	      					post.setRemoteAddr(org.exoplatform.ks.common.Utils.getRemoteIP()) ;
-	      					try {
-	      						uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
-	      						isNew = true;
-	      					} catch (PathNotFoundException e) {
-	      						isParentDelete = true;
-	      					} catch (Exception ex) {}
-	      					topicDetail.setIdPostView("lastpost");
-	      				} else{
-	      					//post.setId(uiForm.postId) ;
-	      					post.setModifiedBy(userName) ;
-	      					post.setModifiedDate(new Date()) ;
-	      					post.setEditReason(editReason) ;
-	      					try {
-	      						uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, ForumUtils.getDefaultMail()) ;
-	      					} catch (PathNotFoundException e) {
-	      						isParentDelete = true;
-	      					} catch (Exception ex) {}
-	      					topicDetail.setIdPostView(uiForm.postId);
-	      				}
-	      			} else {
-	      				post.setRemoteAddr(org.exoplatform.ks.common.Utils.getRemoteIP()) ;
-	      				try {
-	      					uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
-	      					isNew = true;
-	      				} catch (PathNotFoundException e) {
-	      					isParentDelete = true;
-	      				} catch (Exception ex) {}
-	      				topicDetail.setIdPostView("lastpost");
-	      			}
-	      			if(isNew) {
-	      				if(userProfile.getIsAutoWatchTopicIPost()) {
-	      					List<String> values = new ArrayList<String>();
-	      					values.add(userProfile.getEmail());
-	      					String path = uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId;
-	      					uiForm.getForumService().addWatch(1, path, values, userProfile.getUserId()) ;
-	      				}
-	      			}
-	      			uiForm.getForumService().updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  uiForm.topicId) ;
-	      			forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
-	      		} catch (Exception e) {
-	      		}
-	      		uiForm.isMP = uiForm.isQuote = false;
-	      		if(isParentDelete){
-	      			uiForm.warning("UIPostForm.msg.isParentDelete") ;
-	      			forumPortlet.cancelAction() ;
-	      			return ;
-	      		}
-	      		forumPortlet.cancelAction() ;
-	      		if(isOffend || hasTopicMod) {
-	      			topicDetail.setIdPostView("normal");
-	      			if(isOffend)uiForm.warning("MessagePost.msg.isOffend") ;
-	      			else {
-	      				uiForm.warning("MessagePost.msg.isModerate") ;
-	      			}
-	      		}
-	      		event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer);
-	      	}else {
-	      		String[] args = { ""} ;
-	      		if(k == 0) {
-	      			args = new String[] {uiForm.getLabel(FIELD_POSTTITLE_INPUT)} ;
-	      			if(t == 0) args = new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT) + ", " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
-	      			uiForm.isDoubleClickSubmit = false;
-	      			uiForm.warning("NameValidator.msg.ShortText", args) ;
-	      		} else if(t == 0) {
-	      			args = new String[] {uiForm.getLabel(FIELD_MESSAGECONTENT) } ;
-	      			uiForm.isDoubleClickSubmit = false;
-	      			uiForm.warning("NameValidator.msg.ShortMessage", args) ;
-	      		}
-	      	}
-	      } else {
-	      	forumPortlet.cancelAction() ;
+				if(uiForm.checkForumHasAddTopic(userProfile)) {
+					UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
+					int t = 0, k = 1 ;
+					String postTitle = " " + threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
+					int maxText = ForumUtils.MAXTITLE ;
+					if(postTitle.length() > maxText) {
+						warning("NameValidator.msg.warning-long-text", new String[]{ uiForm.getLabel(FIELD_POSTTITLE_INPUT), String.valueOf(maxText) }) ;
+						uiForm.isDoubleClickSubmit = false;
+						return ;
+					}
+					String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
+					if(!ForumUtils.isEmpty(editReason) && editReason.length() > maxText) {
+						warning("NameValidator.msg.warning-long-text", new String[]{ uiForm.getLabel(FIELD_EDITREASON_INPUT), String.valueOf(maxText) }) ;
+						uiForm.isDoubleClickSubmit = false;
+						return ;
+					}
+					
+					editReason = ForumTransformHTML.enCodeHTML(editReason).trim() ;
+					String userName = userProfile.getUserId() ;
+					String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+					String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes())) ;
+					message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
+					message = StringUtils.replace(message, "'", "&apos;");
+					message = ForumTransformHTML.fixAddBBcodeAction(message);
+					checksms = checksms.replaceAll("&nbsp;", " ") ;
+					t = checksms.length() ;
+					postTitle = postTitle.trim();
+					if(postTitle.trim().length() <= 0) {k = 0;}
+					postTitle = ForumTransformHTML.enCodeHTML(postTitle) ;
+					Post post = uiForm.post_;
+					boolean isPP = false;
+					if(t > 0 && k != 0 && !checksms.equals("null")) {	
+						boolean isOffend = false ; 
+						boolean hasTopicMod = false ;
+						if(!uiForm.isMod()) {
+							String []censoredKeyword = uiForm.getCensoredKeyword() ;
+							checksms = checksms.toLowerCase().trim();
+							for (String string : censoredKeyword) {
+								if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
+								if(postTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
+							}
+							if(post.getUserPrivate() != null && post.getUserPrivate().length == 2)isPP = true;
+							if((!uiForm.isMP || !isPP) && uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
+						}
+						if(isOffend && (uiForm.isMP || isPP)) {
+							uiForm.warning("UIPostForm.msg.PrivateCensor") ;
+							uiForm.isDoubleClickSubmit = false;
+							return ;
+						}
+						// set link
+						String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, uiForm.topicId).replaceFirst("private", "public");	
+						//
+						if(uiForm.isQuote || uiForm.isMP) post = new Post();
+						post.setName(postTitle) ;
+						post.setMessage(message) ;
+						post.setOwner(userName) ;
+						post.setCreatedDate(new Date()) ;
+						UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
+						post.setIcon(uiIconSelector.getSelectedIcon());
+						post.setAttachments(uiForm.getAttachFileList()) ;
+						post.setIsHidden(isOffend) ;
+						post.setLink(link);
+						String[]userPrivate = new String[]{"exoUserPri"};
+						if(uiForm.isMP){
+							userPrivate = new String[]{userName, uiForm.post_.getOwner()};
+							hasTopicMod = false;
+						}
+						post.setUserPrivate(userPrivate);
+						post.setIsApproved(!hasTopicMod) ;
+						
+						UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
+						UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
+						boolean isParentDelete = false;
+						boolean isNew = false;
+						try {
+							if(!ForumUtils.isEmpty(uiForm.postId)) {
+								if(uiForm.isQuote || uiForm.isMP) {
+									post.setRemoteAddr(org.exoplatform.ks.common.Utils.getRemoteIP()) ;
+									try {
+										uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
+										isNew = true;
+									} catch (PathNotFoundException e) {
+										isParentDelete = true;
+									} catch (Exception ex) {}
+									topicDetail.setIdPostView("lastpost");
+								} else{
+									//post.setId(uiForm.postId) ;
+									post.setModifiedBy(userName) ;
+									post.setModifiedDate(new Date()) ;
+									post.setEditReason(editReason) ;
+									try {
+										uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, ForumUtils.getDefaultMail()) ;
+									} catch (PathNotFoundException e) {
+										isParentDelete = true;
+									} catch (Exception ex) {}
+									topicDetail.setIdPostView(uiForm.postId);
+								}
+							} else {
+								post.setRemoteAddr(org.exoplatform.ks.common.Utils.getRemoteIP()) ;
+								try {
+									uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
+									isNew = true;
+								} catch (PathNotFoundException e) {
+									isParentDelete = true;
+								} catch (Exception ex) {}
+								topicDetail.setIdPostView("lastpost");
+							}
+							if(isNew) {
+								if(userProfile.getIsAutoWatchTopicIPost()) {
+									List<String> values = new ArrayList<String>();
+									values.add(userProfile.getEmail());
+									String path = uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId;
+									uiForm.getForumService().addWatch(1, path, values, userProfile.getUserId()) ;
+								}
+							}
+							uiForm.getForumService().updateTopicAccess(forumPortlet.getUserProfile().getUserId(),	uiForm.topicId) ;
+							forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
+						} catch (Exception e) {
+						}
+						uiForm.isMP = uiForm.isQuote = false;
+						if(isParentDelete){
+							uiForm.warning("UIPostForm.msg.isParentDelete") ;
+							forumPortlet.cancelAction() ;
+							return ;
+						}
+						forumPortlet.cancelAction() ;
+						if(isOffend || hasTopicMod) {
+							topicDetail.setIdPostView("normal");
+							if(isOffend)uiForm.warning("MessagePost.msg.isOffend") ;
+							else {
+								uiForm.warning("MessagePost.msg.isModerate") ;
+							}
+						}
+						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer);
+					}else {
+						String[] args = { ""} ;
+						if(k == 0) {
+							args = new String[] {uiForm.getLabel(FIELD_POSTTITLE_INPUT)} ;
+							if(t == 0) args = new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT) + ", " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
+							uiForm.isDoubleClickSubmit = false;
+							uiForm.warning("NameValidator.msg.ShortText", args) ;
+						} else if(t == 0) {
+							args = new String[] {uiForm.getLabel(FIELD_MESSAGECONTENT) } ;
+							uiForm.isDoubleClickSubmit = false;
+							uiForm.warning("NameValidator.msg.ShortMessage", args) ;
+						}
+					}
+				} else {
+					forumPortlet.cancelAction() ;
 					UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
 					topicDetail.setUpdateContainer(uiForm.categoryId, uiForm.forumId, uiForm.topic, 0);
 					uiForm.warning("UIPostForm.msg.no-permission") ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-	      }
-      } catch (Exception e) {
-      	uiForm.log.error("Can not save post into this topic, exception: " + e.getMessage(), e);
-      	uiForm.warning("UIPostForm.msg.isParentDelete") ;
-  			forumPortlet.cancelAction() ;
-      }
+				}
+			} catch (Exception e) {
+				uiForm.log.error("Can not save post into this topic, exception: " + e.getMessage(), e);
+				uiForm.warning("UIPostForm.msg.isParentDelete") ;
+				forumPortlet.cancelAction() ;
+			}
 		}
 	}
 	

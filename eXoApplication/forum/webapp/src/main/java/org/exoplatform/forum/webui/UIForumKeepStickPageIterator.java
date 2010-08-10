@@ -33,8 +33,8 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 30-10-2008 - 10:35:05  
+ *					tu.duy@exoplatform.com
+ * 30-10-2008 - 10:35:05	
  */
 @ComponentConfig(
 )
@@ -44,7 +44,7 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
 	public int pageSelect = 1 ;
 	public int maxPage = 1;
 	@SuppressWarnings("unchecked")
-  public JCRPageList pageList ;
+	public JCRPageList pageList ;
 	public int totalCheked = 0;
 	private int endTabPage = 0;
 	private int beginTabPage = 0;
@@ -56,24 +56,24 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
 	}
 	
 	public List<String> getListChecked(int page) {
-	  return pageCheckedList.get(page);
-  }
+		return pageCheckedList.get(page);
+	}
 	
 	public int getTotalChecked() {
-	  return totalCheked;
-  }
+		return totalCheked;
+	}
 	public void cleanCheckedList() {
 		totalCheked = 0;
-	  this.pageCheckedList.clear();
-  }
+		this.pageCheckedList.clear();
+	}
 	
 	public boolean isUseAjax() {
-  	return isUseAjax;
-  }
+		return isUseAjax;
+	}
 
 	public void setUseAjax(boolean isUseAjax) {
-  	this.isUseAjax = isUseAjax;
-  }
+		this.isUseAjax = isUseAjax;
+	}
 
 	public String getURLGopage(String number) throws Exception {
 		String type = (objectId.indexOf(Utils.FORUM_SERVICE) >= 0)? Utils.FORUM_SERVICE:(
@@ -117,12 +117,12 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
 			temp.add(pageList.getCurrentPage()) ;
 			temp.add(pageList.getAvailable()) ;
 			temp.add(maxPage) ;
-    } catch (Exception e) {
-    	temp.add(1) ;
-    	temp.add(1) ;
-    	temp.add(1) ;
-    	temp.add(1) ;
-    }
+		} catch (Exception e) {
+			temp.add(1) ;
+			temp.add(1) ;
+			temp.add(1) ;
+			temp.add(1) ;
+		}
 		return temp ;
 	} 
 	
@@ -134,8 +134,8 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
 		return this.pageSelect ;
 	}
 	
-  @SuppressWarnings("unchecked")
-  public List<String> getIdSelected() throws Exception{
+	@SuppressWarnings("unchecked")
+	public List<String> getIdSelected() throws Exception{
 		List<UIComponent> children = this.getChildren() ;
 		List<String> ids = new ArrayList<String>() ;
 		for (int i = 0; i <= this.maxPage; i++) {
@@ -154,10 +154,10 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
 	
 	static public class GoPageActionListener extends EventListener<UIForumKeepStickPageIterator> {
 		@SuppressWarnings("unchecked")
-    public void execute(Event<UIForumKeepStickPageIterator> event) throws Exception {
+		public void execute(Event<UIForumKeepStickPageIterator> event) throws Exception {
 			UIForumKeepStickPageIterator keepStickPageIter = event.getSource() ;
 			UIComponent component = keepStickPageIter;
-			List<String> checkedList =  new ArrayList<String>();
+			List<String> checkedList = new ArrayList<String>();
 			try{
 				List<UIComponent> children = keepStickPageIter.getChildren() ;
 				for(UIComponent child : children) {
@@ -168,7 +168,7 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
 					}
 				}
 			} catch (Exception e) {
-			  keepStickPageIter.log.warn("\nPage that reached is not exist: " + e.getMessage() + "\n" + e.getCause());
+				keepStickPageIter.log.warn("\nPage that reached is not exist: " + e.getMessage() + "\n" + e.getCause());
 			}
 			if(component instanceof UITopicDetail) {
 				UITopicDetail topicDetail = (UITopicDetail) component;
@@ -176,7 +176,7 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
 			}
 			String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim() ;
 			int maxPage = keepStickPageIter.maxPage;
-			int presentPage	= keepStickPageIter.pageSelect ;
+			int presentPage = keepStickPageIter.pageSelect ;
 			if(stateClick.equalsIgnoreCase("next")) {
 				if(presentPage < maxPage){
 					keepStickPageIter.pageSelect = presentPage + 1 ;
@@ -205,7 +205,7 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
 				if(keepStickPageIter.pageCheckedList.get(i) != null){
 					checked = checked + ((List<String>)keepStickPageIter.pageCheckedList.get(i)).size();
 				}
-      }
+			}
 			keepStickPageIter.totalCheked = checked;
 			event.getRequestContext().addUIComponentToUpdateByAjax(component) ;
 		}

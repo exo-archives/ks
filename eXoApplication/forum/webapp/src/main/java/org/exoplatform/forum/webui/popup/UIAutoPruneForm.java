@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -36,8 +36,8 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jan 29, 2010 - 4:51:01 AM  
+ *					tu.duy@exoplatform.com
+ * Jan 29, 2010 - 4:51:01 AM	
  */
 
 @ComponentConfig(
@@ -54,12 +54,12 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent{
 	private List<PruneSetting> listPruneSetting = new ArrayList<PruneSetting>();
 	public UIAutoPruneForm() {
-  }
+	}
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-  @SuppressWarnings("unchecked")
-  private List<PruneSetting> getPruneSettings() throws Exception {
+	@SuppressWarnings("unchecked")
+	private List<PruneSetting> getPruneSettings() throws Exception {
 		listPruneSetting = new ArrayList<PruneSetting>();
 		try {
 			UIFormCheckBoxInput<Boolean>isActiveBBcode;
@@ -70,42 +70,42 @@ public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent{
 					isActiveBBcode = new UIFormCheckBoxInput<Boolean>(getForumIdOfPrune(pruneSetting), getForumIdOfPrune(pruneSetting), false); 
 					addUIFormInput(isActiveBBcode);
 				}
-	    	isActiveBBcode.setChecked(pruneSetting.isActive());
-      }
-    } catch (Exception e) {
-      log.error("failed to get prune settings", e);
-    }
+				isActiveBBcode.setChecked(pruneSetting.isActive());
+			}
+		} catch (Exception e) {
+			log.error("failed to get prune settings", e);
+		}
 		return listPruneSetting;
 	}
 	
-  private String getForumIdOfPrune(PruneSetting pruneSetting) {
-  	String id = pruneSetting.getForumPath();
-  	return (ForumUtils.isEmpty(id))?"" : id.substring(id.lastIndexOf("/"));
-  }
-  
+	private String getForumIdOfPrune(PruneSetting pruneSetting) {
+		String id = pruneSetting.getForumPath();
+		return (ForumUtils.isEmpty(id))?"" : id.substring(id.lastIndexOf("/"));
+	}
+	
 	private PruneSetting getPruneSetting(String forumId) throws Exception {
 		for (PruneSetting prune : listPruneSetting) {
-	    if(prune.getForumPath().indexOf(forumId) > 0) return prune;
-    }
+			if(prune.getForumPath().indexOf(forumId) > 0) return prune;
+		}
 		return new PruneSetting();
 	}
 	
-  static public class RunPruneActionListener extends BaseEventListener<UIAutoPruneForm> {
-    public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
-      PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
-      if (pruneSetting.getInActiveDay() == 0) {
-        warning("UIAutoPruneForm.sms.not-set-activeDay");
-        return;
-      } else {
-      	UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-        UIRunPruneForm pruneForm = uiForm.openPopup(popupContainer, UIRunPruneForm.class, 200, 0);
-        pruneForm.setPruneSetting(pruneSetting);
-      }
-    }
-  }
+	static public class RunPruneActionListener extends BaseEventListener<UIAutoPruneForm> {
+		public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
+			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
+			if (pruneSetting.getInActiveDay() == 0) {
+				warning("UIAutoPruneForm.sms.not-set-activeDay");
+				return;
+			} else {
+				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+				UIRunPruneForm pruneForm = uiForm.openPopup(popupContainer, UIRunPruneForm.class, 200, 0);
+				pruneForm.setPruneSetting(pruneSetting);
+			}
+		}
+	}
 
-  static	public class ActivatePruneActionListener extends BaseEventListener<UIAutoPruneForm> {
-	  public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
+	static	public class ActivatePruneActionListener extends BaseEventListener<UIAutoPruneForm> {
+		public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
 			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
 			boolean isActive = uiForm.getUIFormCheckBoxInput(pruneId).isChecked();
 			if(pruneSetting.getInActiveDay() == 0) {

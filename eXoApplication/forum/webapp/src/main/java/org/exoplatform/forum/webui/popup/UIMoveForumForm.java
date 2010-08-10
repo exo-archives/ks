@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -74,9 +74,9 @@ public class UIMoveForumForm extends BaseUIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings("unused")
-  private List<Category> getCategories() throws Exception {
-		ForumService forumService =	(ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-		List<Category> categorys =	new ArrayList<Category>();
+	private List<Category> getCategories() throws Exception {
+		ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+		List<Category> categorys = new ArrayList<Category>();
 		for (Category category :forumService.getCategories()) {
 			if( !category.getId().equals(categoryId_) ) {
 				categorys.add(category) ;
@@ -86,7 +86,7 @@ public class UIMoveForumForm extends BaseUIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings("unused")
-  private boolean getSeclectedCategory(String cactegoryId) throws Exception {
+	private boolean getSeclectedCategory(String cactegoryId) throws Exception {
 		if(cactegoryId.equalsIgnoreCase(this.newCategoryId_)) return true;
 		else return false ;
 	}
@@ -97,8 +97,8 @@ public class UIMoveForumForm extends BaseUIForm implements UIPopupComponent {
 	}
 
 	static	public class SaveActionListener extends BaseEventListener<UIMoveForumForm> {
-    public void onEvent(Event<UIMoveForumForm> event, UIMoveForumForm uiForm, final String categoryPath) throws Exception {
-			ForumService forumService =	(ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+		public void onEvent(Event<UIMoveForumForm> event, UIMoveForumForm uiForm, final String categoryPath) throws Exception {
+			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			List<Forum> forums = uiForm.forums_ ;
 			String categoryId = categoryPath.substring((categoryPath.lastIndexOf("/")+1))	;
 			try {
@@ -117,18 +117,18 @@ public class UIMoveForumForm extends BaseUIForm implements UIPopupComponent {
 					UICategory uiCategory = forumPortlet.findFirstComponentOfType(UICategory.class);
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory) ;
 				}
-      } catch (ItemExistsException e) {
-      	warning("UIImportForm.msg.ObjectIsExist") ;
-      	return;
-      } catch (Exception e) {
-	    	warning("UIMoveForumForm.msg.forum-deleted") ;
-	    	return;
-      }
+			} catch (ItemExistsException e) {
+				warning("UIImportForm.msg.ObjectIsExist") ;
+				return;
+			} catch (Exception e) {
+				warning("UIMoveForumForm.msg.forum-deleted") ;
+				return;
+			}
 		}
 	}
  
 	static	public class CancelActionListener extends EventListener<UIMoveForumForm> {
-    public void execute(Event<UIMoveForumForm> event) throws Exception {
+		public void execute(Event<UIMoveForumForm> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}

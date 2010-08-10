@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -74,16 +74,16 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 						}
 				)
 			,
-		    @ComponentConfig(
-             id = "UIUserSearchPopupWindow",
-             type = UIPopupWindow.class,
-             template =  "system:/groovy/webui/core/UIPopupWindow.gtmpl",
-             events = {
-               @EventConfig(listeners = UIPopupWindow.CloseActionListener.class, name = "ClosePopup")  ,
-               @EventConfig(listeners = UISearchForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
-               @EventConfig(listeners = UISearchForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
-             }
-		    )
+				@ComponentConfig(
+						 id = "UIUserSearchPopupWindow",
+						 type = UIPopupWindow.class,
+						 template = "system:/groovy/webui/core/UIPopupWindow.gtmpl",
+						 events = {
+							 @EventConfig(listeners = UIPopupWindow.CloseActionListener.class, name = "ClosePopup")	,
+							 @EventConfig(listeners = UISearchForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
+							 @EventConfig(listeners = UISearchForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
+						 }
+				)
 		}
 )
 
@@ -135,7 +135,7 @@ public class UISearchForm extends UIForm implements UISelector {
 		list.add(new SelectItemOption<String>(getLabel("All"), "all")) ;
 		for (TopicType topicType : listTT) {
 			list.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
-    }
+		}
 		UIFormSelectBox topicType = new UIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX, FIELD_TOPICTYPE_SELECTBOX, list) ;
 		topicType.setValue(TopicType.DEFAULT_ID);
 		
@@ -155,11 +155,11 @@ public class UISearchForm extends UIForm implements UISelector {
 		UIFormDateTimePicker FromDateCreatedLastPost = new UIFormDateTimePicker(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false, showCalendar) ;
 		UIFormDateTimePicker ToDateCreatedLastPost = new UIFormDateTimePicker(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false, showCalendar) ;
 
-    UISliderControl topicCountMin = new UISliderControl(FIELD_TOPICCOUNTMIN_SLIDER, FIELD_TOPICCOUNTMIN_SLIDER, "0") ;//Sliders 
+		UISliderControl topicCountMin = new UISliderControl(FIELD_TOPICCOUNTMIN_SLIDER, FIELD_TOPICCOUNTMIN_SLIDER, "0") ;//Sliders 
 
-    UISliderControl postCountMin = new UISliderControl(FIELD_POSTCOUNTMIN_SLIDER, FIELD_POSTCOUNTMIN_SLIDER, "0") ;
+		UISliderControl postCountMin = new UISliderControl(FIELD_POSTCOUNTMIN_SLIDER, FIELD_POSTCOUNTMIN_SLIDER, "0") ;
 		
-    UISliderControl viewCountMin = new UISliderControl(FIELD_VIEWCOUNTMIN_SLIDER, FIELD_VIEWCOUNTMIN_SLIDER, "0") ;
+		UISliderControl viewCountMin = new UISliderControl(FIELD_VIEWCOUNTMIN_SLIDER, FIELD_VIEWCOUNTMIN_SLIDER, "0") ;
 		
 		UIFormStringInput moderator = new UIFormStringInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null) ;
 		
@@ -225,7 +225,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			list.add(new SelectItemOption<String>(this.getLabel("All"), "all")) ;
 			for (TopicType topicType : this.listTT) {
 				list.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
-	    }
+			}
 			this.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setOptions(list);
 		} else if(type.equals(Utils.CATEGORY)){
 			this.isSearchCate = true;
@@ -237,8 +237,8 @@ public class UISearchForm extends UIForm implements UISelector {
 			this.isSearchTopic = false;
 		}
 		try {
-	    this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setValueOption("");
-    } catch (Exception e) {}
+			this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setValueOption("");
+		} catch (Exception e) {}
 	}
 	
 	public UIFormRadioBoxInput getUIFormRadioBoxInput(String name) {
@@ -294,7 +294,7 @@ public class UISearchForm extends UIForm implements UISelector {
 	
 	static	public class SearchActionListener extends EventListener<UISearchForm> {
 		@SuppressWarnings("unchecked")
-    public void execute(Event<UISearchForm> event) throws Exception {
+		public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
 			Log log = ExoLogger.getLogger(SearchActionListener.class);
 			String keyValue = uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).getValue() ;
@@ -350,16 +350,16 @@ public class UISearchForm extends UIForm implements UISelector {
 					uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", new String[]{}, ApplicationMessage.WARNING)) ;
 					return ;
 				}
-      } catch (Exception e) {
-      }
-      try {
-      	if(type.equals(Utils.TOPIC) && (fromDateCreatedLastPost.getTimeInMillis() > toDateCreatedLastPost.getTimeInMillis())){
-      		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-      		uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", new String[]{"last post"}, ApplicationMessage.WARNING)) ;
-      		return ;
-      	}
-      } catch (Exception e) {
-      }
+			} catch (Exception e) {
+			}
+			try {
+				if(type.equals(Utils.TOPIC) && (fromDateCreatedLastPost.getTimeInMillis() > toDateCreatedLastPost.getTimeInMillis())){
+					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", new String[]{"last post"}, ApplicationMessage.WARNING)) ;
+					return ;
+				}
+			} catch (Exception e) {
+			}
 			ForumEventQuery eventQuery = new ForumEventQuery() ;
 			eventQuery.setListOfUser(UserHelper.getAllGroupAndMembershipOfUser(uiForm.userProfile.getUserId()));
 			eventQuery.setUserPermission(uiForm.userProfile.getUserRole());
@@ -396,7 +396,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			try {
 				list = uiForm.forumService.getAdvancedSearch(eventQuery, forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()));
 			}catch (Exception e) {
-			  log.warn("\nGetting advance search fail:\n " + e.getCause());
+				log.warn("\nGetting advance search fail:\n " + e.getCause());
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 				return ;
@@ -459,50 +459,50 @@ public class UISearchForm extends UIForm implements UISelector {
 		}
 	}
 
-  static  public class CloseActionListener extends EventListener<UIUserSelector> {
-    public void execute(Event<UIUserSelector> event) throws Exception {
-      UIUserSelector uiUserSelector = event.getSource() ;
-      UIPopupWindow uiPoupPopupWindow = uiUserSelector.getParent() ;
-      UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
-      uiPoupPopupWindow.setUIComponent(null);
-			uiPoupPopupWindow.setShow(false);
-      forumPortlet.cancelAction();
-    }
-  }
-  
-  static  public class AddActionListener extends EventListener<UIUserSelector> {
-  	public void execute(Event<UIUserSelector> event) throws Exception {
-  		UIUserSelector uiUserSelector = event.getSource() ;
-  		String values = uiUserSelector.getSelectedUsers();
-  		UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
-  		UISearchForm searchForm = forumPortlet.findFirstComponentOfType(UISearchForm.class);
-  		UIPopupWindow uiPoupPopupWindow = uiUserSelector.getParent();
-  		UIPopupContainer uiContainer = uiPoupPopupWindow.getAncestorOfType(UIPopupContainer.class);
-  		String id = uiContainer.getId();
-  		if(id.equals("PopupContainer"+FIELD_SEARCHUSER_INPUT)){
-  			UIFormStringInput searchUser = searchForm.getUIStringInput(FIELD_SEARCHUSER_INPUT);
-  			String vls = searchUser.getValue();
-  			if(!ForumUtils.isEmpty(vls)) {
-  				values = values + "," + vls;
-  				values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
-  			}
-  			searchUser.setValue(values);
-  		} else {
-  			UIFormStringInput moderators = searchForm.getUIStringInput(FIELD_MODERATOR_INPUT);
-  			String vls = moderators.getValue();
-  			if(!ForumUtils.isEmpty(vls)) {
-  				values = values + "," + vls;
-  				values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
-  			}
-  			moderators.setValue(values);
-  		}
+	static	public class CloseActionListener extends EventListener<UIUserSelector> {
+		public void execute(Event<UIUserSelector> event) throws Exception {
+			UIUserSelector uiUserSelector = event.getSource() ;
+			UIPopupWindow uiPoupPopupWindow = uiUserSelector.getParent() ;
+			UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
 			uiPoupPopupWindow.setUIComponent(null);
 			uiPoupPopupWindow.setShow(false);
-  		forumPortlet.cancelAction();
+			forumPortlet.cancelAction();
+		}
+	}
+	
+	static	public class AddActionListener extends EventListener<UIUserSelector> {
+		public void execute(Event<UIUserSelector> event) throws Exception {
+			UIUserSelector uiUserSelector = event.getSource() ;
+			String values = uiUserSelector.getSelectedUsers();
+			UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
+			UISearchForm searchForm = forumPortlet.findFirstComponentOfType(UISearchForm.class);
+			UIPopupWindow uiPoupPopupWindow = uiUserSelector.getParent();
+			UIPopupContainer uiContainer = uiPoupPopupWindow.getAncestorOfType(UIPopupContainer.class);
+			String id = uiContainer.getId();
+			if(id.equals("PopupContainer"+FIELD_SEARCHUSER_INPUT)){
+				UIFormStringInput searchUser = searchForm.getUIStringInput(FIELD_SEARCHUSER_INPUT);
+				String vls = searchUser.getValue();
+				if(!ForumUtils.isEmpty(vls)) {
+					values = values + "," + vls;
+					values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+				}
+				searchUser.setValue(values);
+			} else {
+				UIFormStringInput moderators = searchForm.getUIStringInput(FIELD_MODERATOR_INPUT);
+				String vls = moderators.getValue();
+				if(!ForumUtils.isEmpty(vls)) {
+					values = values + "," + vls;
+					values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+				}
+				moderators.setValue(values);
+			}
+			uiPoupPopupWindow.setUIComponent(null);
+			uiPoupPopupWindow.setShow(false);
+			forumPortlet.cancelAction();
 			event.getRequestContext().addUIComponentToUpdateByAjax(searchForm) ;
-  	}
-  }
-  
+		}
+	}
+	
 	static	public class AddValuesUserActionListener extends EventListener<UISearchForm> {
 		public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm searchForm = event.getSource() ;

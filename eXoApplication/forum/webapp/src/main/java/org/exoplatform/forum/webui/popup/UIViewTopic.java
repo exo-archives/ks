@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -40,7 +40,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -95,12 +94,12 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	}
 	
 	public void setActionForm(String[] actions) {
-	  this.setActions(actions);
-  }
+		this.setActions(actions);
+	}
 	
 	public String renderPost(Post post) throws RenderingException {
-    return renderHelper.renderPost(post);
-  }
+		return renderHelper.renderPost(post);
+	}
 	
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
@@ -174,7 +173,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
 	private CommonContact getPersonalContact(String userId) throws Exception {
-	  CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
+		CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {
 			contact = new CommonContact() ;
 		}
@@ -182,14 +181,14 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	}
 	
 	public String getImageUrl(String imagePath) throws Exception {
-  	String url = "";
-  	try {
-  		url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
-    } catch (Exception e) {
-      log.warn(imagePath + " must exist: " +e.getCause());
-    }
-    return url ;
-  }
+		String url = "";
+		try {
+			url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
+		} catch (Exception e) {
+			log.warn(imagePath + " must exist: " +e.getCause());
+		}
+		return url ;
+	}
 	
 	@SuppressWarnings("unused")
 	private String getFileSource(ForumAttachment attachment) throws Exception {
@@ -224,7 +223,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 				uiForm.forumService.modifyTopic(topics, 3);
 				uiForm.forumService.modifyTopic(topics, 5);
 			}catch(Exception e) {
-			  uiForm.log.debug("\nModify topic fail: " + e.getMessage() + "\n" + e.getCause());
+				uiForm.log.debug("\nModify topic fail: " + e.getMessage() + "\n" + e.getCause());
 			}
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
@@ -248,10 +247,10 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 			try {
 				String []path = topic.getPath().split("/");
 				int l = path.length ;
-	      uiForm.forumService.removeTopic(path[l-3], path[l-2], topic.getId());
-      } catch (Exception e) {
-        uiForm.log.debug("Removing " + topic.getId() + " topic fail: " + e.getCause());
-      }
+				uiForm.forumService.removeTopic(path[l-3], path[l-2], topic.getId());
+			} catch (Exception e) {
+				uiForm.log.debug("Removing " + topic.getId() + " topic fail: " + e.getCause());
+			}
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);

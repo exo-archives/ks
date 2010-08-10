@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -22,8 +22,8 @@ import java.util.List;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 18, 2009 - 7:49:34 AM  
+ *					tu.duy@exoplatform.com
+ * May 18, 2009 - 7:49:34 AM	
  */
 public class SettingPortletPreference {
 	private int forumNewPost = 1;
@@ -50,89 +50,89 @@ public class SettingPortletPreference {
 [ ] Statistics 
 */	
 	public SettingPortletPreference() {
-  }
+	}
 	public int getForumNewPost() {
-  	return forumNewPost;
-  }
+		return forumNewPost;
+	}
 	public void setForumNewPost(int forumNewPost) {
-  	this.forumNewPost = forumNewPost;
-  }
+		this.forumNewPost = forumNewPost;
+	}
 	public boolean isEnableIPLogging() {
-  	return enableIPLogging;
-  }
+		return enableIPLogging;
+	}
 	public void setEnableIPLogging(boolean enableIPLogging) {
-  	this.enableIPLogging = enableIPLogging;
-  }
+		this.enableIPLogging = enableIPLogging;
+	}
 	public boolean isEnableIPFiltering() {
-  	return enableIPFiltering;
-  }
+		return enableIPFiltering;
+	}
 	public void setEnableIPFiltering(boolean enableIPFiltering) {
-  	this.enableIPFiltering = enableIPFiltering;
-  }
+		this.enableIPFiltering = enableIPFiltering;
+	}
 	public boolean isShowForumActionBar() {
-  	return isShowForumActionBar;
-  }
+		return isShowForumActionBar;
+	}
 	public void setShowForumActionBar(boolean isShowForumActionBar) {
-  	this.isShowForumActionBar = isShowForumActionBar;
-  }
+		this.isShowForumActionBar = isShowForumActionBar;
+	}
 	public boolean isShowForumJump() {
-  	return isShowForumJump;
-  }
+		return isShowForumJump;
+	}
 	public void setShowForumJump(boolean isShowForumJump) {
-  	this.isShowForumJump = isShowForumJump;
-  }
+		this.isShowForumJump = isShowForumJump;
+	}
 	public boolean isShowPoll() {
-  	return isShowPoll;
-  }
+		return isShowPoll;
+	}
 	public void setShowPoll(boolean isShowPoll) {
-  	this.isShowPoll = isShowPoll;
-  }
+		this.isShowPoll = isShowPoll;
+	}
 	public boolean isShowModerators() {
-  	return isShowModerators;
-  }
+		return isShowModerators;
+	}
 	public void setShowModerators(boolean isShowModerators) {
-  	this.isShowModerators = isShowModerators;
-  }
+		this.isShowModerators = isShowModerators;
+	}
 	public boolean isShowQuickReply() {
-  	return isShowQuickReply;
-  }
+		return isShowQuickReply;
+	}
 	public void setShowQuickReply(boolean isShowQuickReply) {
-  	this.isShowQuickReply = isShowQuickReply;
-  }
+		this.isShowQuickReply = isShowQuickReply;
+	}
 	public boolean isShowIconsLegend() {
-  	return isShowIconsLegend;
-  }
+		return isShowIconsLegend;
+	}
 	public void setShowIconsLegend(boolean isShowIconsLegend) {
-  	this.isShowIconsLegend = isShowIconsLegend;
-  }
+		this.isShowIconsLegend = isShowIconsLegend;
+	}
 	public boolean isShowRules() {
-  	return isShowRules;
-  }
+		return isShowRules;
+	}
 	public void setShowRules(boolean isShowRules) {
-  	this.isShowRules = isShowRules;
-  }
+		this.isShowRules = isShowRules;
+	}
 	public boolean isShowStatistics() {
-  	return isShowStatistics;
-  }
+		return isShowStatistics;
+	}
 	public void setShowStatistics(boolean isShowStatistics) {
-  	this.isShowStatistics = isShowStatistics;
-  }
+		this.isShowStatistics = isShowStatistics;
+	}
 	public boolean isUseAjax() {
-  	return useAjax;
-  }
+		return useAjax;
+	}
 	public void setUseAjax(boolean useAjax) {
-  	this.useAjax = useAjax;
-  }
+		this.useAjax = useAjax;
+	}
 	public List<String> getInvisibleForums() {
-  	return invisibleForums;
-  }
+		return invisibleForums;
+	}
 	public void setInvisibleForums(List<String> invisibleForums) {
-  	this.invisibleForums = invisibleForums;
-  }
+		this.invisibleForums = invisibleForums;
+	}
 	public List<String> getInvisibleCategories() {
-  	return invisibleCategories;
-  }
+		return invisibleCategories;
+	}
 	public void setInvisibleCategories(List<String> invisibleCategories) {
-  	this.invisibleCategories = invisibleCategories;
-  }
+		this.invisibleCategories = invisibleCategories;
+	}
 }

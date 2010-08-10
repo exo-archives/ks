@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -109,13 +109,13 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
 		if(TYPE_USER.equals(type_)){
 			PageList<User> userPageList = service.getUserHandler().findUsersByGroup(this.getCurrentGroup().getId()) ;
 			List<User> userList = new ArrayList<User>() ;
-	    for(int i = 1; i <= userPageList.getAvailablePage(); i++) {
-	      userList.clear() ;
-	      userList.addAll(userPageList.getPage(i)) ;
-	      for (User user : userList) {
-	        children.add(user.getUserName()) ;
-	      }
-	    }
+			for(int i = 1; i <= userPageList.getAvailablePage(); i++) {
+				userList.clear() ;
+				userList.addAll(userPageList.getPage(i)) ;
+				for (User user : userList) {
+					children.add(user.getUserName()) ;
+				}
+			}
 			/*for(Object child : userPageList.getAll()){
 				String userName = ((User)child).getUserName() ;
 				children.add(userName) ;
@@ -204,7 +204,7 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
 		public void execute(Event<UIBreadcumbs> event) throws Exception {
 			UIBreadcumbs uiBreadcumbs = event.getSource() ;
 			UIGroupSelector uiGroupSelector = uiBreadcumbs.getParent() ;
-			//String objectId =	event.getRequestContext().getRequestParameter(OBJECTID) ;
+			//String objectId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			uiBreadcumbs.setSelectPath(uiGroupSelector.getCurrentGroup().getId());		 
 			//String selectGroupId = uiBreadcumbs.getSelectLocalPath().getId() ;
 			uiGroupSelector.changeGroup(uiGroupSelector.getCurrentGroup().getId()) ;

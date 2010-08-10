@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -40,8 +40,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 23-12-2008 - 04:17:18  
+ *					tu.duy@exoplatform.com
+ * 23-12-2008 - 04:17:18	
  */
 
 @ComponentConfig(
@@ -76,29 +76,29 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
 		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT4, null)).setMaxLength(3));
 		setActions(new String[]{"Cancel"});
 		pageIterator = addChild(UIForumPageIterator.class, null, BAN_IP_PAGE_ITERATOR);
-  }
+	}
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 
 	public void setForumId(String forumId) {
-	  this.forumId = forumId;
-	  isForum = true;
-  }
+		this.forumId = forumId;
+		isForum = true;
+	}
 	
 	@SuppressWarnings("unused")
-  private String getRestPath() throws Exception {
+	private String getRestPath() throws Exception {
 		try {
 			ExoContainerContext exoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
-	    return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
-    } catch (Exception e) {
-	    log.error("Can not get portal name or rest context name, exception: ",e);
-    }
+			return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
+		} catch (Exception e) {
+			log.error("Can not get portal name or rest context name, exception: ",e);
+		}
 		return "";
 	}
 	
 	@SuppressWarnings({ "unused", "unchecked" })
-  private List<String> getListIpBan() throws Exception {
+	private List<String> getListIpBan() throws Exception {
 		List<String> listIpBan = new ArrayList<String>();
 		if(isForum) {
 			listIpBan = getForumService().getForumBanList(forumId);
@@ -114,7 +114,7 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
 		pageIterator.setSelectPage(pageList.getCurrentPage());
 		try {
 			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
-			else  pageIterator.setRendered(true);
+			else	pageIterator.setRendered(true);
 		} catch (Exception e) {
 			log.error("failed to init page iterator", e);
 		}
@@ -145,13 +145,13 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
 			if(ips[0] == 0 && ips[1] == 0 && ips[2] == 0 && ips[3] == 0) return null;
 			return ip;
 		} catch (Exception e){
-      log.error("failed to check IP address, Ip is not format number.");
+			log.error("failed to check IP address, Ip is not format number.");
 			return null;
 		}
 	}
 	
 	private String getValueIp(String inputId) throws Exception {
-		UIFormStringInput stringInput = this.getUIStringInput(inputId) ;  
+		UIFormStringInput stringInput = this.getUIStringInput(inputId) ;	
 		String vl = stringInput.getValue();
 		stringInput.setValue("");
 		return ForumUtils.isEmpty(vl)?"0":vl;
@@ -160,7 +160,7 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
 	static	public class AddIpActionListener extends BaseEventListener<UIBanIPForumManagerForm> {
 		public void onEvent(Event<UIBanIPForumManagerForm> event, UIBanIPForumManagerForm uiForm, final String objectId) throws Exception {
 			String[] ip = new String[] { uiForm.getValueIp(NEW_IP_BAN_INPUT1), uiForm.getValueIp(NEW_IP_BAN_INPUT2),
-			    												 uiForm.getValueIp(NEW_IP_BAN_INPUT3), uiForm.getValueIp(NEW_IP_BAN_INPUT4) };
+																	 uiForm.getValueIp(NEW_IP_BAN_INPUT3), uiForm.getValueIp(NEW_IP_BAN_INPUT4) };
 			String ipAdd = uiForm.checkIpAddress(ip);
 			if (ipAdd == null) {
 				warning("UIBanIPForumManagerForm.sms.ipInvalid");

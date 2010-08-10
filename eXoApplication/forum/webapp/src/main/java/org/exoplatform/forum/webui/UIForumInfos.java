@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -36,7 +36,7 @@ import org.exoplatform.webui.core.UIContainer;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UIForumInfos.gtmpl"
+		template = "app:/templates/forum/webui/UIForumInfos.gtmpl"
 )
 public class UIForumInfos extends UIContainer	{
 	private UserProfile userProfile ;
@@ -69,7 +69,7 @@ public class UIForumInfos extends UIContainer	{
 			if(!isLock && userProfile.getUserRole()!=0) {
 				if(!moderators.contains(userProfile.getUserId())) {
 					List<String> ipBaneds = forum.getBanIP();
-					if(ipBaneds.contains(getRemoteIP())) isLock =  true;
+					if(ipBaneds.contains(getRemoteIP())) isLock = true;
 					if(!isLock){
 						String []listUser = forum.getCreateTopicRole() ;
 						boolean isEmpty = false;

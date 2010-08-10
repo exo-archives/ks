@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -49,7 +49,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template =	"app:/templates/forum/webui/popup/UIPageListTopicUnApprove.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIPageListTopicUnApprove.gtmpl",
 		events = {
 				@EventConfig(listeners = UIPageListTopicUnApprove.OpenTopicActionListener.class ),
 				@EventConfig(listeners = UIPageListTopicUnApprove.ApproveTopicActionListener.class ),
@@ -84,7 +84,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsUnApprove() throws Exception {
-		pageList	= forumService.getPageTopic(this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
+		pageList = forumService.getPageTopic(this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
 		pageList.setPageSize(6) ;
 		maxPage = pageList.getAvailablePage();
 		topics = pageList.getPage(pageSelect);
@@ -104,7 +104,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 		for (Topic topic : topics) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
-		return (Topic)forumService.getObjectNameById(topicId, Utils.TOPIC)  ;
+		return (Topic)forumService.getObjectNameById(topicId, Utils.TOPIC)	;
 	}
 	
 	

@@ -43,12 +43,11 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.htmlparser.beans.StringBean;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 29-12-2008 - 04:43:19  
+ *					tu.duy@exoplatform.com
+ * 29-12-2008 - 04:43:19	
  */
 
 @ComponentConfig(
@@ -68,7 +67,7 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 	private boolean isShowIter = true;
 	public final String SEARCH_ITERATOR = "moderationIterator";
 	@SuppressWarnings("unchecked")
-  private JCRPageList pageList ;
+	private JCRPageList pageList ;
 	private UIForumPageIterator pageIterator ;
 	public UIModerationForum() throws Exception {
 		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
@@ -85,11 +84,11 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 	}
 	
 	public void setUserProfile(UserProfile userProfile) throws Exception {
-	  this.userProfile = userProfile;
-	  if(this.userProfile == null) {
-	  	this.userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
-	  }
-  }
+		this.userProfile = userProfile;
+		if(this.userProfile == null) {
+			this.userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
+		}
+	}
 	
 	public String[] getPath() {
 		if(userProfile.getUserRole() <= 1) {
@@ -105,11 +104,11 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 	}
 
 	public boolean getIsShowIter() {
-	  return isShowIter ;
-  }
+		return isShowIter ;
+	}
 	
 	@SuppressWarnings({ "unused", "unchecked" })
-  private List<ForumSearch> getListObject() throws Exception {
+	private List<ForumSearch> getListObject() throws Exception {
 		try {
 			list_ = forumService.getJobWattingForModerator(getPath()) ;
 		} catch (Exception e) {
@@ -133,8 +132,8 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 	
 	private ForumSearch getObject(String id) throws Exception {
 		for (ForumSearch obj : list_) {
-	    if(obj.getId().equals(id)) return obj;
-    }
+			if(obj.getId().equals(id)) return obj;
+		}
 		return null;
 	}
 
@@ -155,7 +154,7 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 				}
 			} else {
 				try {
-	        Post post = moderationForum.forumService.getPost("", "", "", forumSearch.getPath());
+					Post post = moderationForum.forumService.getPost("", "", "", forumSearch.getPath());
 					UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700) ;
 					viewPost.setPostView(post) ;
 					viewPost.setViewUserInfo(false) ;

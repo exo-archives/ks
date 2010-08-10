@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -37,7 +37,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -83,8 +82,8 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	}
 	
 	public void setActionForm(String[] actions) {
-	  this.setActions(actions);
-  }
+		this.setActions(actions);
+	}
 	
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
@@ -103,18 +102,18 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	}
 	
 	public String renderPost(Post post) throws RenderingException {
-    return renderHelper.renderPost(post);
-  }
+		return renderHelper.renderPost(post);
+	}
 	
 	public String getImageUrl(String imagePath) throws Exception {
-  	String url = "";
-  	try {
-  		url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
-    } catch (Exception e) {
-      log.warn(imagePath + " is not exist: " + e.getMessage());
-    }
-    return url ;
-  }
+		String url = "";
+		try {
+			url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
+		} catch (Exception e) {
+			log.warn(imagePath + " is not exist: " + e.getMessage());
+		}
+		return url ;
+	}
 	
 	@SuppressWarnings("unused")
 	private String getFileSource(ForumAttachment attachment) throws Exception {
@@ -162,7 +161,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 				uiForm.forumService.modifyPost(posts, 1);
 				uiForm.forumService.modifyPost(posts, 2);
 			}catch(Exception e) {
-			  UIViewPost.log.debug("\nModify post fail: " + e.getMessage() + "\n" + e.getCause());
+				UIViewPost.log.debug("\nModify post fail: " + e.getMessage() + "\n" + e.getCause());
 			}
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
@@ -188,7 +187,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 				int l = path.length ;
 				uiForm.forumService.removePost(path[l-4], path[l-3], path[l-2], post.getId());
 			}catch(Exception e) {
-			  UIViewPost.log.debug("Removing " + post.getId() + " post fail: " +e.getCause());
+				UIViewPost.log.debug("Removing " + post.getId() + " post fail: " +e.getCause());
 			}
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
@@ -231,10 +230,10 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 			} else {
 				try {
 					forumPortlet.cancelAction() ;
-        } catch (Exception e) {
-        	UIForumQuickReplyPortlet forumQuickReplyPortlet = uiForm.getAncestorOfType(UIForumQuickReplyPortlet.class) ;
-        	forumQuickReplyPortlet.cancelAction() ;
-        }
+				} catch (Exception e) {
+					UIForumQuickReplyPortlet forumQuickReplyPortlet = uiForm.getAncestorOfType(UIForumQuickReplyPortlet.class) ;
+					forumQuickReplyPortlet.cancelAction() ;
+				}
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 		}
@@ -257,10 +256,10 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 				try {
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.cancelAction() ;
-        } catch (Exception e) {
-        	UIForumQuickReplyPortlet forumPortlet = uiForm.getAncestorOfType(UIForumQuickReplyPortlet.class) ;
-        	forumPortlet.cancelAction() ;
-        }
+				} catch (Exception e) {
+					UIForumQuickReplyPortlet forumPortlet = uiForm.getAncestorOfType(UIForumQuickReplyPortlet.class) ;
+					forumPortlet.cancelAction() ;
+				}
 			}
 		}
 	}

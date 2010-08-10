@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -47,7 +47,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template =	"app:/templates/forum/webui/popup/UIPageListPostUnApprove.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIPageListPostUnApprove.gtmpl",
 		events = {
 			@EventConfig(listeners = UIPageListPostUnApprove.OpenPostLinkActionListener.class),
 			@EventConfig(listeners = UIPageListPostUnApprove.UnApproveActionListener.class),
@@ -69,7 +69,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 	public void deActivate() throws Exception {}
 	
 	@SuppressWarnings("unused")
-  private String getTitleInHTMLCode(String s) {
+	private String getTitleInHTMLCode(String s) {
 		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
 	}
 	
@@ -84,7 +84,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPosts() throws Exception {
-		pageList	= forumService.getPosts(this.categoryId, this.forumId, this.topicId, "false", "", "", "");
+		pageList = forumService.getPosts(this.categoryId, this.forumId, this.topicId, "false", "", "", "");
 		pageList.setPageSize(6) ;
 		maxPage = pageList.getAvailablePage();
 		List<Post> posts = pageList.getPage(pageSelect);
@@ -111,7 +111,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 	}
 
 	static	public class OpenPostLinkActionListener extends BaseEventListener<UIPageListPostUnApprove> {
-    public void onEvent(Event<UIPageListPostUnApprove> event, UIPageListPostUnApprove uiForm, final String postId) throws Exception {
+		public void onEvent(Event<UIPageListPostUnApprove> event, UIPageListPostUnApprove uiForm, final String postId) throws Exception {
 			Post post = uiForm.getPost(postId) ;
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
@@ -124,7 +124,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 	}
 
 	static	public class UnApproveActionListener extends BaseEventListener<UIPageListPostUnApprove> {
-    public void onEvent(Event<UIPageListPostUnApprove> event, UIPageListPostUnApprove uiForm, final String objectId) throws Exception {
+		public void onEvent(Event<UIPageListPostUnApprove> event, UIPageListPostUnApprove uiForm, final String objectId) throws Exception {
 			UIPageListPostUnApprove postUnApprove = event.getSource() ;
 			Post post = new Post() ;
 			boolean haveCheck = false ;

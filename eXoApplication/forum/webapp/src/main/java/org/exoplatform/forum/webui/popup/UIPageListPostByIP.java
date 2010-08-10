@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -53,7 +53,7 @@ import org.exoplatform.webui.event.EventListener;
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
-		template =	"app:/templates/forum/webui/popup/UIPageListPostByIP.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIPageListPostByIP.gtmpl",
 		events = {
 			@EventConfig(listeners = UIPageListPostByIP.OpenPostLinkActionListener.class),
 			@EventConfig(listeners = UIPageListPostByIP.SetOrderByActionListener.class),
@@ -61,7 +61,7 @@ import org.exoplatform.webui.event.EventListener;
 			@EventConfig(listeners = UIPageListPostByIP.DeletePostLinkActionListener.class)
 		}
 )
-public class UIPageListPostByIP  extends BaseUIForm implements UIPopupComponent  {
+public class UIPageListPostByIP	extends BaseUIForm implements UIPopupComponent	{
 	private ForumService forumService ;
 	private UserProfile userProfile = null ;
 	private String userName = "";
@@ -109,7 +109,7 @@ public class UIPageListPostByIP  extends BaseUIForm implements UIPopupComponent 
 		try {
 			boolean isMod = false;
 			if(this.userProfile.getUserRole() < 2) isMod = true;
-			JCRPageList pageList	= forumService.getListPostsByIP(ip_, strOrderBy);
+			JCRPageList pageList = forumService.getListPostsByIP(ip_, strOrderBy);
 			forumPageIterator.updatePageList(pageList) ;
 			if(pageList != null) pageList.setPageSize(6) ;
 			posts = pageList.getPage(forumPageIterator.getPageSelected());
@@ -128,7 +128,7 @@ public class UIPageListPostByIP  extends BaseUIForm implements UIPopupComponent 
 	}
 
 	static	public class OpenPostLinkActionListener extends BaseEventListener<UIPageListPostByIP> {
-    public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiForm, final String postId) throws Exception {
+		public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiForm, final String postId) throws Exception {
 			Post post = uiForm.getPostById(postId) ;
 			if(post == null){
 				warning("UIShowBookMarkForm.msg.link-not-found") ;
@@ -211,7 +211,7 @@ public class UIPageListPostByIP  extends BaseUIForm implements UIPopupComponent 
 	}
 
 	static	public class DeletePostLinkActionListener extends BaseEventListener<UIPageListPostByIP> {
-    public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiForm, final String postId) throws Exception {
+		public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiForm, final String postId) throws Exception {
 			Post post = uiForm.getPostById(postId);
 			String[] path = post.getPath().split("/");
 			int length = path.length;
@@ -231,7 +231,7 @@ public class UIPageListPostByIP  extends BaseUIForm implements UIPopupComponent 
 		}
 	}
 	static public class SetOrderByActionListener extends BaseEventListener<UIPageListPostByIP> {
-    public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiContainer, final String path) throws Exception {
+		public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiContainer, final String path) throws Exception {
 			if(!ForumUtils.isEmpty(uiContainer.strOrderBy)) {
 				if(uiContainer.strOrderBy.indexOf(path) >= 0) {
 					if(uiContainer.strOrderBy.indexOf("descending") > 0) {

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -79,17 +79,17 @@ public class UIQuickSearchForm extends BaseUIForm {
 				if(userProfile.getUserRole() == 1) {
 					String []strings = userProfile.getModerateForums();
 					for (int i = 0; i < strings.length; i++) {
-	          String str = strings[i].substring(strings[i].lastIndexOf("/")+1);
-	          if(str.length() > 0)
-	          	forumIdsOfModerator.add(str);
-          }
+						String str = strings[i].substring(strings[i].lastIndexOf("/")+1);
+						if(str.length() > 0)
+							forumIdsOfModerator.add(str);
+					}
 				}
 				List<ForumSearch> list = null;
 				try {
 					list = forumService.getQuickSearch(text, type, "", userProfile.getUserId(),
 															forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()), forumIdsOfModerator);
 				}catch (Exception e) {
-				  uiForm.log.warn("\nGetting quick search failure:\n " + e.getCause());
+					uiForm.log.warn("\nGetting quick search failure:\n " + e.getCause());
 					uiForm.warning("UIQuickSearchForm.msg.failure") ;
 					return ;
 				}
