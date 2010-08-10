@@ -24,7 +24,6 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIBreadcumbs;
@@ -335,35 +334,27 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 				}
 			} catch (Exception e) {
 				warning("UIForumPortlet.msg.catagory-deleted") ;
-				
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				
 				categoryContainer.updateIsRender(true) ;
 				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
 			}
-			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-			forumPortlet.findFirstComponentOfType(UICategory.class).setIsEditForum(true) ;
 			forumPortlet.cancelAction() ;
 			uiForm.isDoubleClickSubmit = true;
 			
-			
-			UICategories uiCategories = categoryContainer.getChild(UICategories.class);
-			String categoryId = cat.getId()	;
 			try {
 				UICategory uiCategory = categoryContainer.getChild(UICategory.class) ;
-				List<Forum> list = null;
-				if(!uiCategories.getCollapCategories().contains(categoryId)){
-					list = uiCategories.getForumListPublic(categoryId);
-				}
-				forumPortlet.setRenderForumLink();
-				uiCategory.update(uiCategories.getCategoryPublic(categoryId), list) ;
+				uiCategory.setIsEditForum(true) ;
+				uiCategory.updateByLink(cat) ;
 				categoryContainer.updateIsRender(false) ;
-				forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId);
-				uiCategories.getMaptopicLast().clear();
+        forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+        forumPortlet.findFirstComponentOfType(UIBreadcumbs.class).setUpdataPath(cat.getId());
+        UIForumLinks forumLinks = forumPortlet.getChild(UIForumLinks.class) ;
+        forumLinks.setUpdateForumLinks() ;
+        forumLinks.setValueOption(cat.getId());
 			} catch (Exception e) {
 				Object[] args = { "" };
-				UIApplication uiApp = uiCategories.getAncestorOfType(UIApplication.class) ;
+				UIApplication uiApp = (UIApplication)forumPortlet ;
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			}

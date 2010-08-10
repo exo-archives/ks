@@ -96,8 +96,8 @@ public class UICategories extends UIContainer	{
 	}
 	
 	public String getPortalName() {
-		PortalContainer pcontainer =  PortalContainer.getInstance() ;
-		return pcontainer.getPortalContainerInfo().getContainerName() ;  
+		PortalContainer pcontainer =	PortalContainer.getInstance() ;
+		return pcontainer.getPortalContainerInfo().getContainerName() ;	
 	}
 	
 	public String getRSSLink(String cateId){
@@ -105,12 +105,12 @@ public class UICategories extends UIContainer	{
 	}
 	
 	@SuppressWarnings("unused")
-  private String getScreenName(String userName) throws Exception {
+	private String getScreenName(String userName) throws Exception {
 		return forumService.getScreenName(userName);
 	}
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+	private UserProfile getUserProfile() throws Exception {
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
 		useAjax = forumPortlet.isUseAjax();
 		dayForumNewPost = forumPortlet.getDayForumNewPost();
@@ -126,10 +126,10 @@ public class UICategories extends UIContainer	{
 	}
 	
 	@SuppressWarnings("unused")
-  private boolean isWatching(String path) throws Exception {
+	private boolean isWatching(String path) throws Exception {
 		for (Watch watch : listWatches) {
 			if(path.equals(watch.getNodePath())) return true;
-    }
+		}
 		return false;
 	}
 
@@ -137,22 +137,22 @@ public class UICategories extends UIContainer	{
 		for (Watch watch : listWatches) {
 			try {
 				if(watch.getNodePath().endsWith(path)) return watch.getEmail();
-      } catch (Exception e) {}
+			} catch (Exception e) {}
 		}
 		return "";
 	}
 	
 	@SuppressWarnings("unused")
-  private int getDayForumNewPost() {
+	private int getDayForumNewPost() {
 		return dayForumNewPost;
 	}
 	
 	public boolean getUseAjax() {
-	  return useAjax;
-  }
+		return useAjax;
+	}
 	
 	@SuppressWarnings("unused")
-  private String getLastReadPostOfForum(String forumId) throws Exception {
+	private String getLastReadPostOfForum(String forumId) throws Exception {
 		return userProfile.getLastPostIdReadOfForum(forumId);
 	}
 	
@@ -178,7 +178,7 @@ public class UICategories extends UIContainer	{
 	}
 	
 	@SuppressWarnings("unused")
-  private boolean isShowCategory(String id) {
+	private boolean isShowCategory(String id) {
 		List<String> list = new ArrayList<String>();
 		list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories());
 		if(list.isEmpty()) return true;
@@ -186,7 +186,7 @@ public class UICategories extends UIContainer	{
 	}
 
 	private boolean isShowForum(String id) {
-	  if(this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories().isEmpty()) return true;
+		if(this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories().isEmpty()) return true;
 		List<String> list = new ArrayList<String>();
 		list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums());
 		return (list.contains(id))?true:false;
@@ -195,9 +195,9 @@ public class UICategories extends UIContainer	{
 	private List<Category> getCategoryList() throws Exception {
 		try {
 			categoryList = forumService.getCategories();
-    } catch (Exception e) {
-    	categoryList = new ArrayList<Category>();
-    }
+		} catch (Exception e) {
+			categoryList = new ArrayList<Category>();
+		}
 		return categoryList;
 	}	
 	
@@ -210,7 +210,7 @@ public class UICategories extends UIContainer	{
 		if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
 
 		forumList = forumService.getForumSummaries(categoryId, strQuery);
-	    
+			
 		if(mapListForum.containsKey(categoryId)) {
 			mapListForum.remove(categoryId) ;
 		}
@@ -251,17 +251,17 @@ public class UICategories extends UIContainer	{
 			if(topic == null) {
 				try {
 					topic = forumService.getTopicSummary(topicPath) ;
-			  } catch (Exception e) {
+				} catch (Exception e) {
 					log.warn(e);
 				}
 			}
 			if(topic != null){
-			  if(getAncestorOfType(UIForumPortlet.class).checkCanView(cate, forum, topic))
-			    maptopicLast.put(topic.getId(), topic) ;
-			  else {
-			    if(maptopicLast.containsKey(topicId)) maptopicLast.remove(topicId);
-			    return null;
-			  }
+				if(getAncestorOfType(UIForumPortlet.class).checkCanView(cate, forum, topic))
+					maptopicLast.put(topic.getId(), topic) ;
+				else {
+					if(maptopicLast.containsKey(topicId)) maptopicLast.remove(topicId);
+					return null;
+				}
 			}
 		}
 		return topic ;
@@ -434,7 +434,7 @@ public class UICategories extends UIContainer	{
 					categories.userProfile.addLastPostIdReadOfForum(forum.getId(), "");
 					categories.forumService.saveLastPostIdRead(categories.userProfile.getUserId(), categories.userProfile.getLastReadPostOfForum(),
 							categories.userProfile.getLastReadPostOfTopic());
-					((UIApplication)forumPortlet).addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission",  new String[]{"this","topic"}, ApplicationMessage.WARNING)) ;
+					((UIApplication)forumPortlet).addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission",	new String[]{"this","topic"}, ApplicationMessage.WARNING)) ;
 					context.addUIComponentToUpdateByAjax(categories) ;
 				}
 			}
@@ -501,7 +501,7 @@ public class UICategories extends UIContainer	{
 			List<String> values = new ArrayList<String>();
 			String userName = uiContainer.userProfile.getUserId();
 			try {
-        values.add(uiContainer.forumService.getUserInformations(uiContainer.userProfile).getEmail());
+				values.add(uiContainer.forumService.getUserInformations(uiContainer.userProfile).getEmail());
 				uiContainer.forumService.addWatch(1, path, values, userName) ;
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateWatchinh();
@@ -542,40 +542,4 @@ public class UICategories extends UIContainer	{
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer) ;
 		}
 	}
-
-	public List<String> getCollapCategories() {
-		return collapCategories;
-	}
-	
-	public List<Forum> getForumListPublic(String categoryId) {
-		try {
-			return getForumList(categoryId);
-		} catch (Exception e) {
-		  if(log.isDebugEnabled())log.debug("Select forum list problem " + e.getMessage());
-			return new ArrayList<Forum>();
-		}
-	}
-	
-	public Category getCategoryPublic(String categoryId) {
-		try {
-			return getCategory(categoryId);
-		} catch (Exception e) {
-		  if(log.isDebugEnabled())log.debug("Select category problem " + e.getMessage());
-			return null;
-		}
-	}
-
-	public Forum getForumByIdPublic(String categoryId, String forumId) {
-		try {
-			return getForumById(categoryId, forumId);
-		} catch (Exception e) {
-		  if(log.isDebugEnabled())log.debug("Select forum problem " + e.getMessage());
-			return new Forum();
-		}
-	}
-	
-	public Map<String, Topic> getMaptopicLast() {
-		return maptopicLast;
-	}
-	
 }

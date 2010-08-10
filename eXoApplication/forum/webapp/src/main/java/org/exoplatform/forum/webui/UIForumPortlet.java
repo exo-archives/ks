@@ -461,13 +461,6 @@ public class UIForumPortlet extends UIPortletApplication {
     }
   }
 
-  private boolean isInArray(String[] arr, String str) {
-    if(Arrays.asList(arr).contains(str)){
-      return true;
-    }
-    return false;
-  }
-
   private boolean isArrayNotNull(String []strs){
     if(strs != null && strs.length > 0 && !strs[0].equals(" ")) return true;//private
     else  return false;
@@ -695,9 +688,9 @@ public class UIForumPortlet extends UIPortletApplication {
       categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
       path = Utils.FORUM_SERVICE;
     }
-    UIBreadcumbs uiBreadcumbs = this.findFirstComponentOfType(UIBreadcumbs.class);
+    UIBreadcumbs uiBreadcumbs = getChild(UIBreadcumbs.class);
     uiBreadcumbs.setUpdataPath(path);
-    this.getChild(UIForumLinks.class).setValueOption(path);
+    getChild(UIForumLinks.class).setValueOption(path);
   }
 
   static public class OpenLinkActionListener extends EventListener<UIForumPortlet> {
