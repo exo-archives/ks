@@ -87,7 +87,7 @@ public class ForumTransformHTML {
 		if(s.length() > 500) s = s.substring(0, 500);
 		s = s.replaceAll("&nbsp;&nbsp;", "&nbsp;").replaceAll("&nbsp; ", "&nbsp;")
 										 .replaceAll(" &nbsp;", "&nbsp;").replaceAll("<br/>", " ");
-		s = StringUtils.replace(s, "	", " ");
+		s = StringUtils.replace(s, "  ", " ");
 		s = cleanHtmlCode(s, bbcs);
 		s = removeCharterStrange(s);
 		return s;
