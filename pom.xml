@@ -24,7 +24,7 @@
   </issueManagement>
   <ciManagement>
     <system>hudson</system>
-    <url>http://builder.exoplatform.org/hudson/job/ks-trunk-ci/</url>
+    <url>http://builder.exoplatform.org/hudson/job/ks-2.1.x-ci/</url>
   </ciManagement>
   <properties>
     <org.exoplatform.kernel.version>2.2.3-GA-SNAPSHOT</org.exoplatform.kernel.version>
