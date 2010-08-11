@@ -83,7 +83,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
+	<td>ThreadTitle</td>
 	<td></td>
 </tr>
 <tr>
@@ -232,18 +232,23 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Knowledge Suite</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Knowledge Suite</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[3]/div/div/div/div/a/span</td>
+	<td>pause</td>
+	<td>5000</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[3]/div/div/div/div/a/span</td>
+	<td>//div[@id='AddForum']/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
 <tr>
@@ -262,8 +267,23 @@
 	<td>Destination Forum</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Move Topic-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Knowledge Suite</td>
 	<td></td>
 </tr>
 <tr>
@@ -282,13 +302,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>-Move Topic-</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Topic for Forum Actions Test Edit</td>
+	<td>pause</td>
+	<td>3000</td>
 	<td></td>
 </tr>
 <tr>
@@ -308,7 +323,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Move</td>
+	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[11]</td>
 	<td></td>
 </tr>
 <tr>
@@ -327,13 +342,23 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Forum Destination</td>
+	<td>pause</td>
+	<td>2000</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
 	<td>link=Forum Destination</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Topic for Forum Actions Test Edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Topic for Forum Actions Test Edit</td>
 	<td></td>
 </tr>
 <tr>
@@ -342,11 +367,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Topic for Forum Actions Test Edit</td>
-	<td></td>
-</tr>
-<tr>
 	<td>click</td>
 	<td>link=Topic for Forum Actions Test Edit</td>
 	<td></td>
@@ -359,6 +379,11 @@
 <tr>
 	<td>click</td>
 	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[5]/div[1]/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
 	<td></td>
 </tr>
 <tr>

@@ -17,6 +17,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>windowMaximize</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
@@ -92,8 +97,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -102,8 +107,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=SNF_KS_22</td>
+	<td>waitForTextPresent</td>
+	<td>SNF_KS_22</td>
 	<td></td>
 </tr>
 <tr>
@@ -117,13 +122,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=SNF_KS_22</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UICategory</td>
+	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
 	<td></td>
 </tr>
 <tr>
@@ -197,18 +207,33 @@
 	<td>root</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForTextPresent</td>
-	<td>SNF_KS_22 Update : SNF_KS_22 Desc Update</td>
+	<td>SNF_KS_22 Update </td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>SNF_KS_22 Update : SNF_KS_22 Desc Update</td>
+	<td>SNF_KS_22 Update</td>
 	<td></td>
 </tr>
 <tr>
@@ -217,13 +242,23 @@
 	<td></td>
 </tr>
 <tr>
+	<td>click</td>
+	<td>link=SNF_KS_22 Update</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>UICategory</td>
+	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
 	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Delete</td>
 	<td></td>
 </tr>
 <tr>
@@ -237,7 +272,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementNotPresent</td>
+	<td>waitForTextNotPresent</td>
 	<td>SNF_KS_22 Update</td>
 	<td></td>
 </tr>

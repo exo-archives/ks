@@ -37,7 +37,6 @@ public class UIPopupAction extends AbstractPopupAction {
   protected void afterProcessRender(WebuiRequestContext context) {
     String parentId = ((UIComponent) this.getParent()).getId();
     	context.getJavascriptManager()
-      .addOnLoadJavascript("function(){eXo.ks.KSUtils.setMaskLayer('" + parentId
-          + "');}");
+      .addOnLoadJavascript("function(){eXo.ks.KSUtils.setMaskLayer('" + parentId + "');}");
   }
  }
