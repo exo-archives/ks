@@ -17,10 +17,8 @@
 package org.exoplatform.ks.rss;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
-import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
@@ -34,7 +32,7 @@ public class ForumRSSEventListener implements EventListener{
 	public ForumRSSEventListener(KSDataLocation dataLocator) throws Exception {
 		this.locator = dataLocator;
 		workspace_ = dataLocator.getWorkspace();
-		repository_ = dataLocator.getRepository();
+		repository_ = dataLocator.DEFAULT_WORKSPACE_NAME;
 	}
 	
   public String getSrcWorkspace(){  return workspace_ ; }

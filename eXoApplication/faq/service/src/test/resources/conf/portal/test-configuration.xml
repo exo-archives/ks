@@ -16,11 +16,6 @@
     <description>Holds JCR storage location for KS data</description>
     <init-params>
       <value-param>
-        <name>repository</name>
-        <description>JCR repository for KS data</description>
-        <value>repository</value>
-      </value-param>
-      <value-param>
         <name>workspace</name>
         <description>workspace for KS data</description>
         <value>knowledge</value>

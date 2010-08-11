@@ -37,13 +37,22 @@ public class JCRSessionManager implements SessionManager {
   
   
   String workspaceName = "portal-system";
-  String repositoryName = "repository";
-  
+  RepositoryService repositoryService;
+
  
   
-  public JCRSessionManager(String repository, String workspace) {
+  /**
+   * Constructor
+   * @param workspace
+   * @param repositoryService
+   */
+  public JCRSessionManager(String workspace, RepositoryService repositoryService) {
     this.workspaceName = workspace;
-    this.repositoryName = repository;
+    this.repositoryService = repositoryService;
+  }
+
+  public JCRSessionManager(String workspace) {
+  	this.workspaceName = workspace;
   }
   
   public String getWorkspaceName() {
@@ -52,14 +61,6 @@ public class JCRSessionManager implements SessionManager {
 
   public void setWorkspaceName(String workspaceName) {
     this.workspaceName = workspaceName;
-  }
-
-  public String getRepositoryName() {
-    return repositoryName;
-  }
-
-  public void setRepositoryName(String repositoryName) {
-    this.repositoryName = repositoryName;
   }
 
   /**
@@ -80,19 +81,20 @@ public class JCRSessionManager implements SessionManager {
   /* (non-Javadoc)
    * @see org.exoplatform.ks.common.jcr.SessionManager#getSession(org.exoplatform.services.jcr.ext.common.SessionProvider)
    */
-  public Session getSession(SessionProvider sessionProvider) {
-    Session session = null;
-    try {
-     RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
-     if(repositoryService == null) 
-       repositoryService = (RepositoryService) ExoContainerContext.getContainerByName("portal").getComponentInstanceOfType(RepositoryService.class);
-     ManageableRepository repository = repositoryService.getRepository(repositoryName);
-     session = sessionProvider.getSession(workspaceName, repository);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-    return session;
-  }
+	public Session getSession(SessionProvider sessionProvider) {
+		Session session = null;
+		try {
+			if (repositoryService == null) {
+				repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer()
+															.getComponentInstanceOfType(RepositoryService.class);
+			}
+			ManageableRepository repository = repositoryService.getCurrentRepository();
+			session = sessionProvider.getSession(workspaceName, repository);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return session;
+	}
 
   /**
    * <p>Open and returns a session to the model. When the current thread is already associated with a previously
@@ -133,9 +135,11 @@ public class JCRSessionManager implements SessionManager {
   public Session createSession() {
     Session session = null;
     try {
-
-     RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
-     ManageableRepository repository = repositoryService.getRepository(repositoryName);
+    	if (repositoryService == null) {
+				repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer()
+															.getComponentInstanceOfType(RepositoryService.class);
+			}
+     ManageableRepository repository = repositoryService.getCurrentRepository();
      session = repository.getSystemSession(workspaceName);
     } catch (Exception e) {
       throw new RuntimeException(e);

@@ -101,7 +101,7 @@ public abstract class FAQServiceTestCase extends FAQTestCase {
     repositoryService = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
     
     // Initialize datas
-    Session session = repositoryService.getRepository(REPO_NAME).getSystemSession(KNOWLEDGE_WS);
+    Session session = repositoryService.getCurrentRepository().getSystemSession(KNOWLEDGE_WS);
     root_ = session.getRootNode();   
     sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;   
     }

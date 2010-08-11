@@ -41,7 +41,7 @@ public class FAQRSSEventListener implements EventListener{
 	
 	public FAQRSSEventListener(KSDataLocation dataLocator) throws Exception {
 		workspace_ = dataLocator.getWorkspace() ;
-		repository_ = dataLocator.getRepository(); ;
+		repository_ = dataLocator.DEFAULT_WORKSPACE_NAME; ;
 		this.locator = dataLocator;
 	}
 	
