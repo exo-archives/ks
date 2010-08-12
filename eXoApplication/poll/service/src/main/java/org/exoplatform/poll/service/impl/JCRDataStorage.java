@@ -31,34 +31,34 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.poll.service.DataStorage;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollSummary;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
-
-import com.lowagie.text.pdf.PRAcroForm;
 
 public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 	
 	private NodeHierarchyCreator nodeHierarchyCreator_;
+	private SessionManager sessionManager;
+	KSDataLocation dataLocator;
 
-  private RepositoryService    repoService_;
-
-  public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService repoService) {
+  public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator, KSDataLocation dataLocator) {
     nodeHierarchyCreator_ = nodeHierarchyCreator;
-    repoService_ = repoService;
+    this.dataLocator = dataLocator;
+    this.sessionManager = dataLocator.getSessionManager();
   }
   
-  public Node getNodeByPath(String nodePath, SessionProvider sessionProvider) throws Exception {
+
+	public Node getNodeByPath(String nodePath, SessionProvider sessionProvider) throws Exception {
     return (Node) getSession(sessionProvider).getItem(nodePath);
   }
   
-  public Session getSession(SessionProvider sprovider) throws Exception{
-    ManageableRepository currentRepo = repoService_.getCurrentRepository() ;
-    return sprovider.getSession(currentRepo.getConfiguration().getDefaultWorkspaceName(), currentRepo) ;
+  @SuppressWarnings("deprecation")
+	public Session getSession(SessionProvider sprovider) throws Exception{
+  	return sessionManager.getSession(sprovider);
   }
   
   // Path: /exo:applications/eXoPolls/   using for: $PORTAL/Polls
@@ -81,6 +81,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
   private Node getParentNode(SessionProvider sProvider, String parentId) throws Exception {
   	Node appNode = null;
 		try { // id = /exo:applications/../../${forumId}/${topicId}/
+			System.out.println("\n\n---------->parentId " + parentId);
 			appNode = getNodeByPath(parentId, sProvider);
 		} catch (Exception e) {
 			if (e instanceof PathNotFoundException || e instanceof RepositoryException) {
