@@ -11,11 +11,6 @@
       <set-method>setLocation</set-method>
       <type>org.exoplatform.ks.common.conf.DataLocationPlugin</type>
       <init-params>
-        <!--value-param>
-          <name>repository</name>
-          <description>JCR repository for KS data</description>
-          <value>repository</value>
-        </value-param-->
         <value-param>
           <name>workspace</name>
           <description>workspace for KS data</description>

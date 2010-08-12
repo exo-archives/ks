@@ -28,7 +28,7 @@ public class DataLocationPlugin extends ManagedPlugin {
   private String workspace;
 
   public DataLocationPlugin(InitParams params) throws Exception {
-    this.repository = params.getValueParam("repository").getValue();
+//    this.repository = params.getValueParam("repository").getValue();
     this.workspace = params.getValueParam("workspace").getValue();
   }
 
