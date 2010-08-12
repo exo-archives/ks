@@ -91,11 +91,11 @@ public class UIViewer extends UIContainer {
 		List<String> list = new ArrayList<String>();
 		list = FAQUtils.getCategoriesIdFAQPortlet();
 		useAjax = FAQUtils.getUseAjaxFAQPortlet();
-		try {
+		//try {
 			categoryInfo = this.fAqService.getCategoryInfo(this.path, list);
-    } catch (Exception e) {
-      log.error("fail to get category info: ", e);
-    }
+    //} catch (Exception e) {
+      //log.error("fail to get category info: ", e);
+    //}
 		return categoryInfo;
 	}
 

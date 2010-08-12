@@ -412,7 +412,11 @@
 		</div>
 	</div>
 	<% } %>
-<% } else { %>
-
+	<% } else {
+ 	 link = Utils.CATEGORY_HOME; 
+	%>
+		<a class="ActionLink" style="color:red;" href="<%=uicomponent.event("ChangePath", link);%>" >
+  		<%=_ctx.appRes("UIBreadcumbs.label.backToHome") %>
+		</a>
 <% } %>
 </div>
