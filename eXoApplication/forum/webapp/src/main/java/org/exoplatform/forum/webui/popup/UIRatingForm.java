@@ -16,6 +16,9 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -85,7 +88,9 @@ public class UIRatingForm extends BaseUIForm implements UIPopupComponent {
 			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			try {
-				forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topic, false, true, ForumUtils.getDefaultMail()) ;
+				List<Topic> topics = new ArrayList<Topic>();
+				topics.add(topic);
+				forumService.modifyTopic(topics, 8);
 			} catch (PathNotFoundException e) {
 				warning("UIRatingForm.msg.forum-deleted") ;
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
