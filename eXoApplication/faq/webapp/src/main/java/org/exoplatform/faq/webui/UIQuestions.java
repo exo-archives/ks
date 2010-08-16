@@ -336,7 +336,7 @@ public class UIQuestions extends UIContainer {
 	public String getVoteScore(Question question) {
 	  double vote = question.getMarkVote();
 	  vote = vote < 0 ? 0 : vote;
-	  DecimalFormat df = new DecimalFormat("0.00");
+	  DecimalFormat df = new DecimalFormat("0");
 	  return df.format(vote);
 	}
 	
