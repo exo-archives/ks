@@ -66,6 +66,19 @@ public class Utils {
 	public static final String USER = "User".intern() ;
 	public static final String GUEST = "Guest".intern() ;
 	public static final String DELETED = "_deleted".intern() ;
+	
+	// Type Modify
+	public static final int CLOSE = 1 ;
+	public static final int LOCK = 2 ;
+	public static final int APPROVE = 3 ;
+	public static final int STICKY = 4 ;
+	public static final int WAITING = 5 ;
+	public static final int ACTIVE = 6 ;
+	public static final int CHANGE_NAME = 7 ;
+	public static final int VOTE_RATING = 8 ;
+	public static final int HIDDEN = 9 ;
+	
+	
 
 	public static final String SPACE = " ".intern() ;
 	

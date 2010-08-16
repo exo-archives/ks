@@ -1250,12 +1250,12 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			String forumPath = forum.getPath();
 			Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
 			switch (type) {
-			case CLOSE_FORUM: {
+			case Utils.CLOSE: {
 				forumNode.setProperty(EXO_IS_CLOSED, forum.getIsClosed());
 				setActiveTopicByForum(sProvider, forumNode, forum.getIsClosed());
 				break;
 			}
-			case LOCK_FORUM: {
+			case Utils.LOCK: {
 				forumNode.setProperty(EXO_IS_LOCK, forum.getIsLock());
 				break;
 			}
@@ -2203,27 +2203,27 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				String topicPath = topic.getPath();
 				Node topicNode = (Node) forumHomeNode.getSession().getItem(topicPath);
 				switch (type) {
-				case 1: {
+				case Utils.CLOSE: {
 					topicNode.setProperty(EXO_IS_CLOSED, topic.getIsClosed());
 					setActivePostByTopic(sProvider, topicNode, !(topic.getIsClosed()));
 					break;
 				}
-				case 2: {
+				case Utils.LOCK: {
 					topicNode.setProperty(EXO_IS_LOCK, topic.getIsLock());
 					break;
 				}
-				case 3: {
+				case Utils.APPROVE: {
 					topicNode.setProperty(EXO_IS_APPROVED, topic.getIsApproved());
 					sendNotification(topicNode.getParent(), topic, null, "", true);
 					setActivePostByTopic(sProvider, topicNode, topic.getIsApproved());
 					getTotalJobWatting(userIdsp);
 					break;
 				}
-				case 4: {
+				case Utils.STICKY: {
 					topicNode.setProperty(EXO_IS_STICKY, topic.getIsSticky());
 					break;
 				}
-				case 5: {
+				case Utils.WAITING: {
 					boolean isWaiting = topic.getIsWaiting();
 					topicNode.setProperty(EXO_IS_WAITING, isWaiting);
 					setActivePostByTopic(sProvider, topicNode, !(isWaiting));
@@ -2233,13 +2233,13 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					getTotalJobWatting(userIdsp);
 					break;
 				}
-				case 6: {
+				case Utils.ACTIVE: {
 					topicNode.setProperty(EXO_IS_ACTIVE, topic.getIsActive());
 					setActivePostByTopic(sProvider, topicNode, topic.getIsActive());
 					getTotalJobWatting(userIdsp);
 					break;
 				}
-				case 7: {
+				case Utils.CHANGE_NAME: {
 					topicNode.setProperty(EXO_NAME, topic.getTopicName());
 					try {
 						Node nodeFirstPost = topicNode.getNode(topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST));
@@ -2248,7 +2248,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					}
 					break;
 				}
-				case 8: {
+				case Utils.VOTE_RATING: {
 					topicNode.setProperty(EXO_USER_VOTE_RATING, topic.getUserVoteRating());
 					topicNode.setProperty(EXO_VOTE_RATING, topic.getVoteRating());
 					break;
@@ -2256,13 +2256,13 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				default:
 					break;
 				}
-				if(type == 3 || type == 5) {
+				if(type == Utils.APPROVE || type == Utils.WAITING) {
 					if(!topic.getIsWaiting() && topic.getIsApproved()) {
 						topicCount = topicCount + 1;
 						postCount = postCount + (topicNode.getProperty(EXO_POST_COUNT).getLong()+1);
 					}
 				}
-				if (type != 2 && type != 4 && type != 7 && type != 8 && 
+				if (type != Utils.LOCK && type != Utils.STICKY && type != Utils.CHANGE_NAME && type != Utils.VOTE_RATING && 
 						forumNode.hasProperty(EXO_LAST_TOPIC_PATH) && (forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString().equals(topicNode.getName()) ||
 						Utils.isEmpty(forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString()))) {
 					queryLastTopic(sProvider, forumNode.getPath());
@@ -2270,7 +2270,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			} catch (PathNotFoundException e) {
 			}
 		}
-		if(type == 3 || type == 5) {
+		if(type == Utils.APPROVE || type == Utils.WAITING) {
 			forumNode.setProperty(EXO_TOPIC_COUNT, topicCount);
 			forumNode.setProperty(EXO_POST_COUNT, postCount);
 		}
@@ -3540,13 +3540,13 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					} catch (Exception e) {
 					}
 					switch (type) {
-					case 1: {
+					case Utils.APPROVE: {
 						postNode.setProperty(EXO_IS_APPROVED, true);
 						post.setIsApproved(true);
 						sendNotification(topicNode, null, post, "", false);
 						break;
 					}
-					case 2: {
+					case Utils.HIDDEN: {
 						if (post.getIsHidden()) {
 							postNode.setProperty(EXO_IS_HIDDEN, true);
 							Node postLastNode = getLastDatePost(forumHomeNode, topicNode, postNode);

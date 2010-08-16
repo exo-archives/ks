@@ -25,6 +25,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
@@ -125,7 +126,7 @@ public class UIListTopicOld extends UIContainer {
 			List<Topic> topics = new ArrayList<Topic>();
 			topics.add(topic);
 			try {
-				administration.forumService.modifyTopic(topics, 6) ;
+				administration.forumService.modifyTopic(topics, Utils.ACTIVE) ;
 				administration.isUpdate = true ;
 			} catch (Exception e) {}
 			event.getRequestContext().addUIComponentToUpdateByAjax(administration);

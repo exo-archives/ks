@@ -24,6 +24,7 @@ import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
@@ -141,7 +142,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 				warning("UIPageListPostUnApprove.sms.notCheck") ;
 			} else {
 				try {
-					postUnApprove.forumService.modifyPost(posts, 1) ;
+					postUnApprove.forumService.modifyPost(posts, Utils.APPROVE) ;
 				}catch (Exception e) {}
 			}
 			if(posts.size() == postUnApprove.listAllPost.size()) {

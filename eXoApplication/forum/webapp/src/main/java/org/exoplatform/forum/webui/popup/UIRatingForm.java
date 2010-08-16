@@ -90,7 +90,7 @@ public class UIRatingForm extends BaseUIForm implements UIPopupComponent {
 			try {
 				List<Topic> topics = new ArrayList<Topic>();
 				topics.add(topic);
-				forumService.modifyTopic(topics, 8);
+				forumService.modifyTopic(topics, Utils.VOTE_RATING);
 			} catch (PathNotFoundException e) {
 				warning("UIRatingForm.msg.forum-deleted") ;
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;

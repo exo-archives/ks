@@ -1028,7 +1028,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 					topic.setIsClosed(false) ;
 					List<Topic>topics = new ArrayList<Topic>();
 					topics.add(topic);
-					topicDetail.getForumService().modifyTopic(topics, 1) ;
+					topicDetail.getForumService().modifyTopic(topics, Utils.CLOSE) ;
 					topicDetail.isEditTopic = true ;
 					topicDetail.setRenderInfoPorlet();
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
@@ -1051,7 +1051,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 					topic.setIsClosed(true) ;
 					List<Topic>topics = new ArrayList<Topic>();
 					topics.add(topic);
-					topicDetail.getForumService().modifyTopic(topics, 1) ;
+					topicDetail.getForumService().modifyTopic(topics, Utils.CLOSE) ;
 					topicDetail.isEditTopic = true ;
 					topicDetail.setRenderInfoPorlet();
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
@@ -1074,7 +1074,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 					topic.setIsLock(true) ;
 					List<Topic>topics = new ArrayList<Topic>();
 					topics.add(topic);
-					topicDetail.getForumService().modifyTopic(topics, 2) ;
+					topicDetail.getForumService().modifyTopic(topics, Utils.LOCK) ;
 					topicDetail.isEditTopic = true ;
 					topicDetail.setRenderInfoPorlet();
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
@@ -1097,7 +1097,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 					topic.setIsLock(false) ;
 					List<Topic>topics = new ArrayList<Topic>();
 					topics.add(topic);
-					topicDetail.getForumService().modifyTopic(topics, 2) ;
+					topicDetail.getForumService().modifyTopic(topics, Utils.LOCK) ;
 					topicDetail.isEditTopic = true ;
 					topicDetail.setRenderInfoPorlet();
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
@@ -1141,7 +1141,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 					topic.setIsSticky(true) ;
 					List<Topic>topics = new ArrayList<Topic>();
 					topics.add(topic);
-					topicDetail.getForumService().modifyTopic(topics, 4) ;
+					topicDetail.getForumService().modifyTopic(topics, Utils.STICKY) ;
 					topicDetail.isEditTopic = true ;
 					refresh();
 				} else {
@@ -1163,7 +1163,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 					topic.setIsSticky(false) ;
 					List<Topic>topics = new ArrayList<Topic>();
 					topics.add(topic);
-					topicDetail.getForumService().modifyTopic(topics, 4) ;
+					topicDetail.getForumService().modifyTopic(topics, Utils.STICKY) ;
 					topicDetail.isEditTopic = true ;
 					refresh();
 				} else {
@@ -1204,7 +1204,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 				topic.setIsApproved(true) ;
 				List<Topic>topics = new ArrayList<Topic>();
 				topics.add(topic);
-				topicDetail.getForumService().modifyTopic(topics, 3) ;
+				topicDetail.getForumService().modifyTopic(topics, Utils.APPROVE) ;
 				topicDetail.isEditTopic = true ;
 				refresh();
 			} catch (Exception e) {
@@ -1221,7 +1221,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 				topic.setIsApproved(false) ;
 				List<Topic>topics = new ArrayList<Topic>();
 				topics.add(topic);
-				topicDetail.getForumService().modifyTopic(topics, 3) ;
+				topicDetail.getForumService().modifyTopic(topics, Utils.APPROVE) ;
 				topicDetail.isEditTopic = true ;
 				refresh();
 			} catch (Exception e) {
@@ -1233,7 +1233,6 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 
 	static public class SetDeleteTopicActionListener extends BaseEventListener<UITopicDetail> {
 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-			
 			try {
 				Topic topic = topicDetail.topic ;
 				topicDetail.getForumService().removeTopic(topicDetail.categoryId, topicDetail.forumId, topic.getId()) ;
@@ -1305,7 +1304,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 				}
 				if(posts.size() > 0){
 					try {
-						topicDetail.getForumService().modifyPost(posts, 1) ;
+						topicDetail.getForumService().modifyPost(posts, Utils.APPROVE) ;
 					} catch (Exception e) {
 						topicDetail.log.warn("Failed to modify: "+ e.getMessage(), e);
 					}
@@ -1331,7 +1330,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 				}
 			}
 			try {
-				topicDetail.getForumService().modifyPost(posts, 2) ;
+				topicDetail.getForumService().modifyPost(posts, Utils.HIDDEN) ;
 			} catch (Exception e) {
 				topicDetail.log.warn("Failed to modify post: "+ e.getMessage(), e);
 			}
@@ -1365,7 +1364,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 				}
 				if(posts.size() > 0){
 					try {
-						topicDetail.getForumService().modifyPost(posts, 2) ;
+						topicDetail.getForumService().modifyPost(posts, Utils.HIDDEN) ;
 					} catch (Exception e) {
 						topicDetail.log.warn("Failed to modify post: "+ e.getMessage(), e);
 					}

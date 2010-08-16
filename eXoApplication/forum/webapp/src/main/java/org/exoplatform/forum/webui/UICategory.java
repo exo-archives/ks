@@ -360,7 +360,7 @@ public class UICategory extends BaseForumForm	{
 					for (Forum forum : forums) {
 						if(forum.getIsLock()) continue ;
 						forum.setIsLock(true) ;
-						uiCategory.getForumService().modifyForum(forum, 2);
+						uiCategory.getForumService().modifyForum(forum, Utils.LOCK);
 					}
 					uiCategory.isEditForum = true ;
 				} catch (Exception e) {
@@ -388,7 +388,7 @@ public class UICategory extends BaseForumForm	{
 					for (Forum forum : forums) {
 						if(!forum.getIsLock()) continue ;
 						forum.setIsLock(false) ;
-						uiCategory.getForumService().modifyForum(forum, 2);
+						uiCategory.getForumService().modifyForum(forum, Utils.LOCK);
 					}
 					uiCategory.isEditForum = true ;
 				} catch (Exception e) {
@@ -415,7 +415,7 @@ public class UICategory extends BaseForumForm	{
 				try {
 					for (Forum forum : forums) {
 						forum.setIsClosed(false) ;
-						uiCategory.getForumService().modifyForum(forum, 1);
+						uiCategory.getForumService().modifyForum(forum, Utils.CLOSE);
 					}
 					uiCategory.isEditForum = true ;
 				}catch (Exception e) {
@@ -442,7 +442,7 @@ public class UICategory extends BaseForumForm	{
 				try {
 					for (Forum forum : forums) {
 						forum.setIsClosed(true) ;
-						uiCategory.getForumService().modifyForum(forum, 1);
+						uiCategory.getForumService().modifyForum(forum, Utils.CLOSE);
 					}
 					uiCategory.isEditForum = true ;
 				} catch (Exception e) {

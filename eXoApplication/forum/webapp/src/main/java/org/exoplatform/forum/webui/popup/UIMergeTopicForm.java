@@ -25,6 +25,7 @@ import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -128,7 +129,7 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
 							try {
 								List<Topic>list = new ArrayList<Topic>();
 								list.add(topicMerge) ;
-								forumService.modifyTopic(list, 7) ;
+								forumService.modifyTopic(list, Utils.CHANGE_NAME) ;
 							} catch (Exception e) {
 								uiForm.log.error("Merge topic is fall ", e);
 								isMerge = false;

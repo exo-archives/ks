@@ -24,6 +24,7 @@ import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
@@ -139,7 +140,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 				warning("UIPageListPostUnApprove.sms.notCheck");
 			} else {
 				try {
-					postHidden.forumService.modifyPost(posts, 2);
+					postHidden.forumService.modifyPost(posts, Utils.HIDDEN);
 				}catch (Exception e) {}
 			}
 			if(posts.size() == postHidden.listPost.size()) {

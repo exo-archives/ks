@@ -158,8 +158,8 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 			List<Post> posts = new ArrayList<Post>();
 			posts.add(post);
 			try{
-				uiForm.forumService.modifyPost(posts, 1);
-				uiForm.forumService.modifyPost(posts, 2);
+				uiForm.forumService.modifyPost(posts, Utils.APPROVE);
+				uiForm.forumService.modifyPost(posts, Utils.HIDDEN);
 			}catch(Exception e) {
 				UIViewPost.log.debug("\nModify post fail: " + e.getMessage() + "\n" + e.getCause());
 			}

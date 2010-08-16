@@ -126,7 +126,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 				}
 			}
 			if(!listTopic.isEmpty()) {
-				topicUnApprove.forumService.modifyTopic(listTopic, 3) ;
+				topicUnApprove.forumService.modifyTopic(listTopic, Utils.APPROVE) ;
 			} else {
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UIPageListTopicUnApprove.sms.notCheck", args, ApplicationMessage.WARNING)) ;

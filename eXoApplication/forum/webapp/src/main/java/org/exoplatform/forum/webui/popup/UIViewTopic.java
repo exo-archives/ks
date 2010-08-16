@@ -35,6 +35,7 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.user.CommonContact;
@@ -220,8 +221,8 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 			List<Topic> topics = new ArrayList<Topic>();
 			topics.add(topic);
 			try{
-				uiForm.forumService.modifyTopic(topics, 3);
-				uiForm.forumService.modifyTopic(topics, 5);
+				uiForm.forumService.modifyTopic(topics, Utils.APPROVE);
+				uiForm.forumService.modifyTopic(topics, Utils.WAITING);
 			}catch(Exception e) {
 				uiForm.log.debug("\nModify topic fail: " + e.getMessage() + "\n" + e.getCause());
 			}
