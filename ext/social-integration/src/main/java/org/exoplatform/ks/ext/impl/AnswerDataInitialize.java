@@ -85,7 +85,7 @@ public class AnswerDataInitialize extends SpaceListenerPlugin {
      //cat.setViewAuthorInfor(true);
      cat.setIndex(1);
      //TODO hard text manager should check with portal team
-     cat.setModerators(new String[]{SpaceServiceImpl.MANAGER +""+ space.getGroupId()}) ;
+     cat.setModerators(new String[]{SpaceServiceImpl.MANAGER +":"+ space.getGroupId()}) ;
      if(fServie.getCategoryById(cat.getId()) == null) fServie.saveCategory(parent.getId(), cat, true);
      } else {
        log.error("\n\n Root category null please check to create one !") ;
