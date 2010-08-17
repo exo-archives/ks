@@ -81,7 +81,6 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
   private Node getParentNode(SessionProvider sProvider, String parentId) throws Exception {
   	Node appNode = null;
 		try { // id = /exo:applications/../../${forumId}/${topicId}/
-			System.out.println("\n\n---------->parentId " + parentId);
 			appNode = getNodeByPath(parentId, sProvider);
 		} catch (Exception e) {
 			if (e instanceof PathNotFoundException || e instanceof RepositoryException) {
@@ -288,7 +287,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 						parentNode.setProperty(EXO_IS_POLL, true);
 					}
 				} else {
-					if(!parentNode.getPath().equals(poll.getOldParentPath())) {
+					if(!isEmpty(poll.getOldParentPath()) && !parentNode.getPath().equals(poll.getOldParentPath())) {
 						Session session = getSession(sProvider);
 						session.move(poll.getOldParentPath()+"/"+pollId, parentNode.getPath()+"/"+pollId);
 						session.save();
