@@ -94,9 +94,11 @@ public class ForumUtils {
 	}
 	
 	public static String createdForumLink(String type, String id) throws Exception {
-		String url = ((PortalRequestContext)Util.getPortalRequestContext()).getRequest().getRequestURL().toString();
+		PortalRequestContext pContext = (PortalRequestContext)Util.getPortalRequestContext();
+		String url = pContext.getRequest().getRequestURL().toString();
 		String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-		String portalName = "/" + Util.getUIPortal().getName() ;
+		//String portalName = "/" + Util.getUIPortal().getName() ;
+		String portalName = pContext.getPortalOwner();
 		return buildForumLink(url, selectedNode, portalName, type, id);
   }
 	
