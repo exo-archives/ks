@@ -286,20 +286,23 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 				poll.setTimeOut(timeOut) ;
 				poll.setIsClosed(uiForm.poll.getIsClosed());
 				try {
-					boolean isPublic = uiForm.getUIFormCheckBoxInput(FIELD_PUBLIC_DATA_CHECKBOX).isChecked();
-					String parentPath = "";
-					// if poll of topic : parentPath = topic.getPath();
-					// if poll of Group : parentPath = $GROUP/${PollNodeTypes.APPLICATION_DATA}/${PollNodeTypes.EXO_POLLS}
-					// if poll of public: parentPath = $PORTAL/${PollNodeTypes.POLLS}
-					if(isPublic) {
-						// test for public:
-						parentPath = ExoContainerContext.getCurrentContainer().getContext().getName() + "/" + PollNodeTypes.POLLS;
-					} else {
-						parentPath = uiForm.getUIStringInput(FIELD_GROUP_PRIVATE_INPUT).getValue();
-						if(parentPath.indexOf("/") == 0) parentPath = parentPath.substring(1);
-						parentPath = parentPath + "/" + PollNodeTypes.APPLICATION_DATA + "/" + PollNodeTypes.EXO_POLLS;
+					if(Utils.isEmpty(poll.getParentPath()) || poll.getParentPath().contains(PollNodeTypes.POLLS) ||
+							poll.getParentPath().contains(PollNodeTypes.EXO_POLLS)) {
+						boolean isPublic = uiForm.getUIFormCheckBoxInput(FIELD_PUBLIC_DATA_CHECKBOX).isChecked();
+						String parentPath = "";
+						// if poll of topic : parentPath = topic.getPath();
+						// if poll of Group : parentPath = $GROUP/${PollNodeTypes.APPLICATION_DATA}/${PollNodeTypes.EXO_POLLS}
+						// if poll of public: parentPath = $PORTAL/${PollNodeTypes.POLLS}
+						if(isPublic) {
+							// test for public:
+							parentPath = ExoContainerContext.getCurrentContainer().getContext().getName() + "/" + PollNodeTypes.POLLS;
+						} else {
+							parentPath = uiForm.getUIStringInput(FIELD_GROUP_PRIVATE_INPUT).getValue();
+							if(parentPath.indexOf("/") == 0) parentPath = parentPath.substring(1);
+							parentPath = parentPath + "/" + PollNodeTypes.APPLICATION_DATA + "/" + PollNodeTypes.EXO_POLLS;
+						}
+						poll.setParentPath(parentPath);
 					}
-					poll.setParentPath(parentPath);
 					if(uiForm.isUpdate) {
 						if(newUser.length > 0) poll.setUserVote(newUser) ;
 						uiForm.getPollService().savePoll(poll, false, false) ;

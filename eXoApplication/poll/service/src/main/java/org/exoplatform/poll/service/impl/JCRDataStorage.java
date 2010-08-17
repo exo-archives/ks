@@ -287,7 +287,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 						parentNode.setProperty(EXO_IS_POLL, true);
 					}
 				} else {
-					if(!parentNode.getPath().equals(poll.getOldParentPath())) {
+					if(!isEmpty(poll.getOldParentPath()) && !parentNode.getPath().equals(poll.getOldParentPath())) {
 						Session session = getSession(sProvider);
 						session.move(poll.getOldParentPath()+"/"+pollId, parentNode.getPath()+"/"+pollId);
 						session.save();
