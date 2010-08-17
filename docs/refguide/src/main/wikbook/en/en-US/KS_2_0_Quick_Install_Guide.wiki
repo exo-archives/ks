@@ -1,0 +1,119 @@
+
+
+h1. KS 2.0 Quick Install Guide
+
+
+h1. Objectives
+
+This install guide will help you to get up and running with eXo KS on your computer in *5 minutes*. It is pretty straightforward :
+
+
+
+*Requirements*
+* +OS+ : *Windows*, *Linux* or *MAC OS*.
+* +Memory+ : *1GB* of RAM and at least one 1.5 Ghz processor.
+* +Disk+ : *150MB* of disk space is necessary for the install
+* +Browser+ : *Firefox 3+* or *Internet Explorer 7+*
+
+This guide let you run a pre-built bundle for *demonstration and evaluation purposes only*. If you need to go further, have a look at these docs :
+- [KS:KS 2-0 Integration into an Existing Gatein Portal]
+- [KS Migration from 1-2 to 2-0]
+- [KS Configuration|KS Manual(HConfiguration]
+
+
+
+h2. Download
+
+Download the last binary bundle of KS. All released versions are available for download on *[OW2 Forge |http://download.forge.objectweb.org/exoplatform]*.
+
+It is a 70MB download, *make sure you have enough free disk space* on your hard drive.
+
+
+h2. Extract
+
+Unzip tomcat version to hard drive to a directory. We will call that directory *$EXTRACT_FOLDER* until the end of the article
+You will need at least 150MB free  disk space to extract the file. 
+
+#info}
+KS comes with a builtin file-based database (HSQL). Which means any data created with KS apps will take some more space on the disk. Make sure you have enough disk space for your Forum and Answers information that you will create during your evaluation.
+{HConfiguration]
+
+
+
+h2. Download
+
+Download the last binary bundle of KS. All released versions are available for download on *[OW2 Forge |http://download.forge.objectweb.org/exoplatform]*.
+
+It is a 70MB download, *make sure you have enough free disk space* on your hard drive.
+
+
+h2. Extract
+
+Unzip tomcat version to hard drive to a directory. We will call that directory *$EXTRACT_FOLDER* until the end of the article
+You will need at least 150MB free  disk space to extract the file. 
+
+#info}
+
+h2. Launch
+
++Prerequisites+ : 
+- eXo *KS requires a Java 5 environment or higher*, make sure the JAVA_HOME environment variable point to a JRE 5 or higher folder
+- the exo server will run on portal 8080, make sure this port is not currently in use
+
+
++Launch instructions+ : 
+
+* Using command line, go to *{{$EXTRACT_FOLDER/bin}}* and start the server : 
+** Windows :
+{code}
+gatein.bat run
+{code}
+** Linux / Mac OS :
+{code}
+chmod+x *.sh ; gatein.sh run
+{code}
+
+* Wait for the server to start. You should see something like this on the console : 
+{code}
+INFO: Server startup in 15359 ms
+{code}
+
+
+* eXo KS is now ready to use. Point your browser to [http//localhost:8080-portal] or [http//localhost:8080-ksdemo]
+
+- For http://localhost:8080/portal or http://localhost:8080/portal/public/classic 
+  
+That is KS product deploy on Gatein portal, there is no configuration for default display portlets of KS likes Forum, Answer, FAQ,... User needs to configuration to display those portlets by themselves.
+
+- For http://localhost:8080/ksdemo or http://localhost:8080/ksdemo/public/classic 
+  
+That is a demo of KS product in Gatein portal there are configuration to display Forum, Answers, FAQ portlets at the home navigation. Each portlet also has default data that is initialized by configurations.
+
+
+You can log into the portal and ksdemo with the following accounts: *root, john, mary, demo.*
+
+All those accounts have the default password gtn.
+
+For more documentation and latest updated news, please visit our website www.gatein.org.
+
+
+_Congratulations, you have successfully installed  eXo Knowledge Suite!_
+
+h2. Setup
+
+Edit the file $TOMCAT_HOME/gatein/conf/configuration.properties and configure mail  if you want to enable mail notifications.
+Similarly, if you want to use the ksdemo, you need to edit $TOMCAT_HOME/gatein/conf/portal/ksdemo/ksdemo.properties
+
+To enable mail notifications, quickly you can use your own gmail account for example :
+{code}
+# EMail
+gatein.email.smtp.username=*youracount@gmail.com*
+gatein.email.smtp.password=*yourpassword*
+gatein.email.smtp.host=smtp.gmail.com
+gatein.email.smtp.port=465
+gatein.email.smtp.starttls.enable=true
+gatein.email.smtp.auth=true
+gatein.email.smtp.socketFactory.port=465
+gatein.email.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
+{code}
+

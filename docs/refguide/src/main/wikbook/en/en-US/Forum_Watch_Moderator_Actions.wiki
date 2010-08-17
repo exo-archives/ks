@@ -1,0 +1,19 @@
+
+h1. Forum Watch Moderator Actions
+
+# Moderator can manage watches of a specific forum/topic by following guides: 
+
+
+*Step 1\.* Open the *Watch Tools* form by:
+
+- Go to inside the forum, click the *Forum Tools* and select *Watch Tools* in menu.
+- Go to inside the topic, click the *Tools* and select *Watch Tools* in menu.
+
+The *Watch Tools* form will appear:
+
+ !WatchToolsForm.png! 
+
+*Step 2.* Click the !DeleteIcon.png! icon corresponding to the email address you want to delete.
+
+After being deleted, the author of the deleted email will no longer receive email notifications about the forum/topic. 
+

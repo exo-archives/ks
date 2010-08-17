@@ -1,0 +1,84 @@
+h1. Auto Prone Plugin Configuration
+
+
+
+h1. Overview
+
+Auto prune component is used to activate automatically the topics in specific Forums which are not activated (not viewed, edited or added post) for a period of time. 
+
+When Job Schedule Service runs, it will get values which are returned from Auto prune plugin component to identify the topics which have to be inactivated in Forum application. These topics will be invisible to users.
+
+h1. Configuration
+
+The properties of Auto prune plugin is configured in _ks-plugins-configuration.xml_ file.
+
+In details:
+
+At the runtime of Job Schedule Service, Auto prune plugin component is called, then _ks-plugins-configuration.xml_ file is executed, the component-plugin named _ForumDeactiveJob_ will be referred to _org.exoplatform.forum.service.conf.DeactivePeriodJob_ to inactivate the topics in specific Forum which satisfy predefined inactivation properties.
+
+{code:xml}
+<component-plugin>
+      <name>ForumDeactiveJob</name>
+      <set-method>addPeriodJob</set-method>
+      <type>org.exoplatform.forum.service.conf.DeactivePeriodJob</type>
+      <description>add a Deactive job to the JobSchedulerService</description>
+      <init-params>
+        <properties-param>
+          <name>job.info</name>
+          <description>save the monitor data  periodically</description>
+          <property name="jobName" value="DeactiveJob"/>
+          <property name="groupName" value="KnowlegedSuite"/>
+          <property name="job" value="org.exoplatform.forum.service.conf.DeactiveJob"/>
+          <property name="repeatCount" value="0"/>
+          <property name="period" value="7200000"/> <!- 2 hours->    
+          <property name="startTime" value="+0"/>
+          <property name="endTime" value=""/>               
+        </properties-param>
+        <properties-param>
+          <name>deactive.info</name>
+          <description></description>
+          <property name="inactiveDays" value="1"/>          
+          <property name="forumName" value="Live demo"/>          
+        </properties-param>
+      </init-params>
+    </component-plugin>
+{code}
+
+The properties for Auto-prune plugin are defined in ~~property~~ tag with format like below:
+
+{code:xml}
+...
+          <property name="jobName" value="DeactiveJob"/>
+          <property name="groupName" value="KnowlegedSuite"/>
+          <property name="job" value="org.exoplatform.forum.service.conf.DeactiveJob"/>
+          <property name="repeatCount" value="0"/>
+          <property name="period" value="7200000"/> <!-- 2 hours-->    
+          <property name="startTime" value="+0"/>
+          <property name="endTime" value=""/>               
+...
+          <property name="inactiveDays" value="1"/>          
+          <property name="forumName" value="Live demo"/>          
+ ...
+{code}
+
+In details:
+
+|| property || description || value  ||
+| jobname | The name of job which will be executed. | DeactiveJob |
+| groupname | The name of the application which will be executed. | KnowlegedSuite |
+| job | The reference function of the job which will be executed. | org.exoplatform.forum.service.conf.DeactiveJob |
+| repeatCount | The repeat time for the job. It means that how many time the job will be executed. It means that _DecactiveJob_  is called at runtime only. It is does not repeat. Assume that the value is 2 or 3, _DecactiveJob_  is called 2 or 3 times.| 0 \\ any value |
+| period | The time interval the job will be executed. | 72000000 (equal to 2 hours)\\ any value |
+| starttime | The start time when the function will be executed.\\_starttime_ is +0. It means that the time to start executing _DecactiveJob_  is the runtime | +0\\ any value |
+| endtime | The end time when the function will be stopped executing.\\_endtime_ is blank. It means that there is no limitation for the end time for _DecactiveJob_. |  null |
+With start and end time, you can give a specific date in format:yyyy-mm-dd HH:mm:ss.sss to define the start and end time for _DecactiveJob_ .
+ 
+Besides, deactive information is also defined:
+
+|| property || description || value  ||
+| inactiveDays | The number of days the topic has not been activated. _inactivateDays_ is 1. It means that all the topics which have 1 inactivated day, will be set inactivated status. They will be invisible. | numeric value |
+| forumname | The name of the Forum which will be checked for Auto prune. In case, _forumname_ is blank. It means that all forums will be checked for auto prune. _forumname_ is Live demo. It means that only the forum named 'Live demo' is checked for Auto prune. | Live Demo |
+
+By fault, the default properties can only be changed by editing its value in _ks-plugins-configuration.xml_ file.
+
+At the runtime, the new changes in _ks-plugins-configuration.xml_ file will be executed and updated, Auto prune plugin will be executed depending on its properties.

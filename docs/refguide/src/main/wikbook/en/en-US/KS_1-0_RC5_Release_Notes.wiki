@@ -1,0 +1,136 @@
+h1. eXo KS 1.0 RC5 release notes
+
+
+
+h2. Notable changes
+* New features for xml import/export Forum and FAQ's data
+* Many bug fix and improvement to make better performance
+
+h2. API Changes
+* APIs for xml import/export data both Forum and FAQ
+
+h2. Dependencies Changes
+* KS 1.0-RC5 relies on portal 2.2.1
+
+h2. How to upgrade
+
+
+h2. System Requirements
+* Web Browser: IE6, IE7, FF2, FF3, Safari. Best for Frirefox 3 and IE7
+* JVM: 1.5.xx
+* Application Server: Tomcat, JBoss, Jonas, Webshpere
+* Building Tools: Maven 2.0.6 and up
+
+h2. Other resources and links
+* [Community JIRA|http://jira.exoplatform.org/browse/KS]
+* [Subversion|http://svn.exoplatform.org/projects/ks/tags/rc5]
+* [Live demo|http://ks.demo.exoplatform.org]
+* [Announces|http://blog.exoplatform.com]
+* [Company site|http://www.exoplatform.com]
+
+
+h2. Detailed Changelog
+
+ - Complete list of issues fixed in eXo KS 1.0RC5
+{code:xml}
+
+Bugs
+	* KS-841 	 Image preview: Can not view image in case it is too large
+	* KS-840  	 Can not add tag for topic
+	* KS-835  	 Incorrect forum rules text in special case
+	* KS-834  	 Search result form: page index does not work
+	* KS-832  	 Remove Topics in tag function does not work
+	* KS-831  	 Can not activate or approve at Manage questions form
+	* KS-826  	 View user profile: admin's user title is not updated at View User Profile form
+	* KS-825  	 View topic by user: unknown error when view a topic which no longer exists
+	* KS-821  	 Move question can not be done
+	* KS-820  	 User info: Posts value is not updated in case some posts are deleted
+	* KS-819  	 Tag: the topic pending for censor is also displayed inside 1 tag in special case
+	* KS-816  	 IE 6: UI broken in main menu 
+	* KS-811  	 Invalid statistics of total topics and posts
+	* KS-810  	 Tag: Need to check view topic permission inside 1 tag
+	* KS-808  	 Advance Search form is closed unexpectedly in special case
+	* KS-807  	 Online users list is incorrect
+	* KS-803  	 FF_UI error and Start topic button does not work
+	* KS-802  	 Notification mail: no link is provided in special case
+	* KS-801  	 Number of new and unread private messages should be updated during using process
+	* KS-800  	 Delete topic/post: confirmessage is invalid
+	* KS-799  	 Search question at root folder by normal user (demo), Unknown error
+	* KS-797  	 Add new forum option is disabled unexpectedly
+	* KS-795  	 Search result form: can not view the question which is added at root folder
+	* KS-790  	 Back to the home page of Forum: UI is broken in 1 second before valid UI is shown
+	* KS-789  	 IE 6- View 1 question: UI is broken in 1s before valid UI is shown
+	* KS-788  	 Manage Questions form: Close button does not work
+	* KS-785  	 Number of deleted topics/posts are shown invalidly in special case
+	* KS-783  	 Edit private post: the edited post is not updated, the new one is also added
+	* KS-782  	 Small UI error on Selector form
+	* KS-780  	 User Management - Post tab: No need to check view permission
+	* KS-778  	 IE_View post: can not download document file at 2nd timeKS-776  	 
+	* KS-776	 More check for Post in all thread or View in all topic in special case
+	* KS-775  	 Invalid display User title and role of root at first time login
+	* KS-773  	 init user profile
+	* KS-764  	 Tag: unknown error in case tag a topic that no longer exists.
+	* KS-763  	 Small error typo of alert message
+	* KS-735  	 IE6_lack of border of menu pop up
+	* KS-724  	 IE 7: UI error when viewing inside 1 forum
+	* KS-672  	 UI small error
+	* KS-741  	 Manage page: sub tabs of Default Email are shown invalidly in special case
+	* KS-848  	 Unknown error when exporting category/forum which no longer exists
+	* KS-847  	 Move import forum: invalid message is shown
+	* KS-846  	 Delete imported Forum: loading error
+	* KS-844  	 Export categories form: Title need to be more clear
+	* KS-843  	 Export forum form is shown with small pop up
+	* KS-842  	 Export all FAQ and then Import again, question in root folder is not shown
+	* KS-833  	 Export category: invalid message is shown in case export with blank name
+	* KS-822  	 Import multiple language questions, only English is shown
+	* KS-818  	 Some functions on the imported question are invalid
+	* KS-817  	 Unanswered questions in the imported category are not updated at Pending question list
+	* KS-814  	 Unknown error when importing into 1 category which no longer exists
+	* KS-813  	 Unknown error when exporting 1 category which no longer exists
+	* KS-796  	 Can not import the forum file from the second time in the same Category
+	* KS-794  	 Import File: do not see the content inside
+
+Improvements
+	* KS-851  	 Improve alert message in case not file found when importing
+	* KS-845  	 Export categories: No need to show Create zip file option
+	* KS-838  	 Export all FAQs
+	* KS-824  	 View topic/post by admin: no need to check view permission
+	* KS-815  	 Export/Import options should be shown in right click menu pop up
+	* KS-812  	 Search result: No need to check view permission in case admin login and search
+	* KS-806  	 Delete Post from Moderation: alert message should be shown more reasonably
+	* KS-805  	 Refactor PageListIterator, JCRPageList
+	* KS-804  	 Search result form: search keyword should be shown
+	* KS-798  	 Import forum: the imported forum should be updated immediately into the Forum Container
+	* KS-793  	 Import : need to differ the imported file in case duplication of category name
+	* KS-792  	 Export: File name field is reqiured
+	* KS-791  	 Move question: root foleder is required
+	* KS-787  	 Improve highlight Read/Unread feature
+	* KS-786  	 FCK editor is required for Notify content tab.
+	* KS-784  	 Do not close form immediately after executing action 
+	* KS-781  	 View private message form: no need to show red border and remove scroll bar on IE 6
+	* KS-777  	 Move post by Moderator should be done inside 1 Forum only
+	* KS-768  	 List questions under categories.
+	* KS-765  	 Allow questions in root category.
+	* KS-760  	 Add List items button to wysiwyg editor.
+	* KS-756  	 Smaller and resizeable 'manage questions'.
+	* KS-744  	 Be consistent for send icon on FF & IE in special case.
+	* KS-743  	 Improve email notifications.
+	* KS-742  	 Notify Content: Get default content function is suggested.
+	* KS-739  	 IE6: Improve Confirm deletion form.
+	* KS-732  	 Check if the class org.exoplatform.forum.service.ForumSessionListener can better handle 
+                         the Portal Container to be compatible with multiple portal instance.
+	* KS-731  	 Check if the class org.exoplatform.forum.service.AuthenticationLoginListener can better handle 
+			 the Portal Container to be compatible with multiple portal instance.
+	* KS-723  	 Search: warning message should be shown in case search with so long term.
+	* KS-721  	 Image preview: Improve to view entire the image.
+	* KS-718  	 Download file: Original file name should be kept.
+	* KS-714  	 Print preview: Remove script menu popup.
+	* KS-710  	 IE6_Remove redundant scroll bar for some other forms.
+	* KS-707  	 Calendar pop up can make the FAQ footer broken.
+
+New Feature
+	* KS-766  	 import / export
+
+{code}
+
+ 

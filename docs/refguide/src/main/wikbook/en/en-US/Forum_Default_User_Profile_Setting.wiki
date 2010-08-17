@@ -1,0 +1,53 @@
+h1. Default forum setting configuration
+
+
+h1. Overview
+
+Default forum setting includes settings set for new user account. It contains declarations of time zone, short date format, long date format, time format, max topic per page, max post per page and flag for showing forum jump or not. It's rather simple and user can change such settings by UI based function after that.
+
+h1. Configuration
+
+This configuration is declared in a file named "ks-configuration.xml". Its path is _"\[tomcat source\]/webapps/ks-extension/WEB-INF/ks-extension/ks/ks-configuration.xml"_ if you are running tomcat and _"\[project source\]/extension/webapp/src/main/webapp/WEB-INF/ks-extension/ks/ks-configuration.xml"_ if you are in developing phase.
+
+In details:
+
+{code:xml}
+
+...
+ <external-component-plugins>
+    <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
+    <component-plugin>
+     ...
+      <init-params>
+        <properties-param>
+          <name>user.profile.setting</name>
+          <description>set default user profile</description>
+          <property name="timeZone" value="GMT"/>
+          <property name="shortDateFormat" value="MM/dd/yyyy"/>
+          <property name="longDateFormat" value="DDD,MMM dd,yyyy"/>
+          <property name="timeFormat" value="hh:mm a"/>
+          <property name="maxTopic" value="10"/>
+          <property name="maxPost" value="10"/>
+          <property name="isShowForumJump" value="true"/>
+          
+        </properties-param>
+      </init-params>
+      
+      
+    </component-plugin>
+  </external-component-plugins>
+...
+
+{code}
+
+In which: 
+
+|| parameter || description || value ||
+| timeZone | time zone of user | time zone id. \\ For example: GMT, GMT-05:00, GMT+07:00, GMT+08:30 ... \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/util/TimeZone.html for more detail. |
+| shortDateFormat | the format to display short information of a date | String \\ date format \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. |
+| longDateFormat | the format to display a date with more infomation | String \\ date format \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. |
+| timeFormat | format to view time(hour, minute,..) | String \\ time format \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. |
+| maxTopic | maximum number of topics on a page | number |
+| maxPost | maximum number of posts on a page | number |
+| isShowForumJump | show forum jump or not | true\\false |
+

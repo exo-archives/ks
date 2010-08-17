@@ -1,0 +1,99 @@
+
+h1. KS Migration from 1-2 to 2-0
+
+
+
+
+This article explains how to upgrade from KS 1.2 to KS 2.0
+
+h2. Migration Procedure
+
+* *Main progress for migrate KS from 1.2 to 2.0 version*
+   
+
+* *Detail steps*
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+h2. Data structure changes
+h3. FAQ nodetypes changed
+* Node property added *exo:link* to *exo:faqQuestion*
+{code:xml}
+<propertyDefinition name="exo:link" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+	<valueConstraints/>
+</propertyDefinition>
+{code}
+ 
+1.1.1 Forum nodetypes changed
+
+* Node type added *exo:userDeleted*
+ 
+{code:xml}
+<nodeType name="exo:userDeleted" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+		<supertypes>
+			<supertype>nt:base</supertype>
+		</supertypes> 
+		<childNodeDefinitions>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:forumUserProfile" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:forumUserProfile</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+		</childNodeDefinitions>
+	</nodeType>
+{code}
+ * Node type modified *exo:forumWatching*	
+ - change mandatory field for exo:emailWatching and exo:userWatching from true to be false
+{code:xml}
+  <propertyDefinition name="exo:emailWatching" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true"> 			   <valueConstraints/>
+  </propertyDefinition>
+  <propertyDefinition name="exo:userWatching" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+    <valueConstraints/>
+  </propertyDefinition>
+{code}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

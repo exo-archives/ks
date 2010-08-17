@@ -1,0 +1,86 @@
+
+h1. Auto-count Active Users Plugin Configuration
+
+
+
+h1. Overview
+
+Auto-count Active Users component is used to calculate automatically the number of active users. A user is considered as an active user only when he/she often adds topic/post in Forum and his/her last post date satisfies with the interval time that is predefined.
+
+For example, after 15 days if one user does not have any new post, he/she is not considered as an active user.
+
+When Job Schedule Service runs, it will get values which are returned from Auto-count Active Users plugin component to identify the number of active users. This value is updated at Active Members information when viewing Forum statistics.
+
+h1. Configuration
+
+The properties of Auto-count Active Users plugin is configured in _ks-plugins-configuration.xml_ file.
+
+In details:
+
+At Job Schedule Service runtime, Auto-count Active Users plugin component is called, then _ks-plugins-configuration.xml_ file is executed, the component-plugin named _RecountActiveUserJob_ will be referred to _org.exoplatform.forum.service.conf.RecountActiveUserPeriodJob_ to calculate number active users.
+
+{code:xml}
+ <component-plugin>
+      <name>RecountActiveUserJob</name>
+      <set-method>addPeriodJob</set-method>
+      <type>org.exoplatform.forum.service.conf.RecountActiveUserPeriodJob</type>
+      <description>add a RecountActiveUser job to the JobSchedulerService</description>
+      <init-params>
+        <properties-param>
+          <name>job.info</name>
+          <description>save the monitor data  periodically</description>
+          <property name="jobName" value="RecountActiveUserJob"/>
+          <property name="groupName" value="KnowlegedSuite"/>
+          <property name="job" value="org.exoplatform.forum.service.conf.RecountActiveUserJob"/>
+          <property name="repeatCount" value="0"/>
+          <property name="period" value="7200000"/> <!- 2 hours->    
+          <property name="startTime" value="+0"/>
+          <property name="endTime" value=""/>               
+        </properties-param>
+        <properties-param>
+          <name>RecountActiveUser.info</name>
+          <description></description>
+          <property name="lastPost" value="15"/> <!- users are active if have last posts in 15 day ->
+        </properties-param>
+      </init-params>
+    </component-plugin>
+{code}
+
+The properties for Auto-count Active Members plugin are defined in ~~property~~ tag like below:
+
+{code:xml}
+...
+          <property name="jobName" value="RecountActiveUserJob"/>
+          <property name="groupName" value="KnowlegedSuite"/>
+          <property name="job" value="org.exoplatform.forum.service.conf.RecountActiveUserJob"/>
+          <property name="repeatCount" value="0"/>
+          <property name="period" value="7200000"/> <!-- 2 hours-->    
+          <property name="startTime" value="+0"/>
+          <property name="endTime" value=""/>     
+...
+         <property name="lastPost" value="15"/> 
+ ...
+{code}
+
+In which:
+
+|| property || description || value  ||
+| jobname | The name of job which will be executed.| RecountActiveUserJob |
+| groupname | The name of the application which will be executed. | KnowlegedSuite |
+| job | The reference function of the job which will be executed. | org.exoplatform.forum.service.conf.RecountActiveUserJob  |
+| repeatCount | The repeat time for the job. It means that how many time the job will be executed. _repeatCount_ is 0. It means that _RecountActiveUserJob_  is called at runtime only. It is does not repeat. Assume that the value is 2 or 3, _RecountActiveUserJob_  is called 2 or 3 times.| 0\\ any value |
+| period | The time interval the job will be executed. | 7200000 (millisecond)\\(equal to 2 hours) |
+| starttime | The start time when the function will be executed.\\ _starttime_ is +0. It means that the time to start executing _RecountActiveUserJob_  is the runtime.| 0 \\ any value |
+| endtime | The end time when the function will be stopped executing. _endtime_ is blank. It means that there is no limitation for the end time for _RecountActiveUserJob_ . | null |
+
+With start and end time, you can give a specific date in format:yyyy-mm-dd HH:mm:ss.sss to define the start and end time for _RecountActiveUserJob_ .
+ 
+Besides, active time information is also defined:
+
+|| property || description || value  ||
+| lastPost | The number of days that the user has added last post.\\_lastPost_ is 15. It means that all users, within 15 days since their last post date, have any new post, they are active members. | numeric value |
+
+By default, the default properties can only be changed by editing its value in _ks-plugins-configuration.xml_ file.
+
+At the runtime, the new changes in _ks-plugins-configuration.xml_ file will be executed and updated, Auto-count Active Users plugin will be executed depending on its properties.
+

@@ -1,0 +1,88 @@
+h1. Roles Plugin Configuration
+
+
+
+h1. Overview
+
+The roles plugin component is used to define user roles in eXo Forum and eXo FAQ. Roles are a convenient instrument to define access to a set of functions within the application.
+
+Currently, it only allows to define who is in the _administrator_ role. Administrators get access to administration functions.
+
+
+At runtime, the application get data from the roles plugin in order to decide whether the logged user has the administration role or not.
+
+h1. Configuration
+
+The plugin is configured in _ks-plugins-configuration.xml_ file.
+
+When a user signs in, his or her username, group and membership is compared with the user roles defined in the _xml_ file that is provided by the roles plugin component.
+
+In details:
+
+At runtime of the Forum Service, the roles plugin component is called. The role plugin is configured in the _ks-plugins-configuration.xml_ file. The component-plugin named _add.role.rules.plugin_ refers to _org.exoplatform.forum.service.conf.RoleRulesPlugin_ to create users for eXo Forum corresponding to the users that exist in the Organization database. Besides, the list of users who have administration roles is also defined.
+
+{code:xml}
+
+  <component-plugin>
+      <name>add.role.rules.plugin</name>
+      <set-method>addRolePlugin</set-method>
+      <type>org.exoplatform.forum.service.conf.RoleRulesPlugin</type>
+      <description>add role rules</description>
+      <init-params>
+	      <value-param>
+	        <name>role</name>
+	        <description>name of the role</description>
+	        <value>ADMIN</value>
+	      </value-param>
+	      <values-param>
+	        <name>rules</name>
+	        <description>rules of the role</description>
+	        <value>root</value>
+                <value>john</value> 
+                <value>/platform/administrators</value> 
+	        <value>member:/VIP</value>
+		<value>validator:/VIP</value>
+	        <!-value>*:/somegroup/somesubgroup</value->
+	        <!-value>manager:/somegroup/someothergroup</value->
+	      </values-param>
+	 </init-params>
+    </component-plugin>
+{code}
+
+When ~~ks-plugins-configuration.xml~~ file is executed, the administration role (with ADMIN value) will be checked and assigned to a matrix of users/groups/memberships defined inside "value" tags like below:
+
+{code}
+<value>...</value>
+{code}
+ 
+For example:
+
+{code:xml}
+...
+                <value>root</value>
+                <value>john</value> 
+                <value>/platform/administrators</value> 
+	        <value>member:/VIP</value>
+		<value>validator:/VIP</value>
+...
+{code}
+
+With the example above, the default Forum Administrator are _root_ , _john_, users in _/platform/administrators_ group and users who are _member/validator_ memberships in the VIP group. 
+
+When _root_, _john_ or any user who belongs to the _/platform/administrators_ group or users who have a_member/validator_ memberships in the VIP group signs in to eXo Forum, he or she will be identified as the default Forum Administrator. 
+
+To add or remove the default Forum Administrator, simply edit _ks-plugins-configuration.xml_ file and add or remove the correspondent "value" tags.
+
+{code:xml}
+...             
+                <values-param>
+                 ...
+                <value>...</value>
+                 ...
+                </values-param>
+...
+{code}
+
+The default Forum Administrators can only change their roles by editing in _ks-plugins-configuration.xml_ file.
+
+At runtime, the modifications in the _ks-plugins-configuration.xml_ file will be read and the database updated, the forum normal users and the default administration will be created correspondingly.

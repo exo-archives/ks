@@ -1,0 +1,64 @@
+
+h1. Moderatior actions on Answers
+
+
+
+{info}
+These features are available since version 1.1
+{info} 
+
+
+h1. Activating/Inactivating Answers
+
+This function is used to activate/inactive an answer of a specific question. If the the Administration or the Moderator want to activate/inactivate a specific answer of a question, he can click directly on Activate/Inactive icon beside the answer.
+
+To activate an answer, click the inactivated icon to change the status:
+
+ !FAQActivateAnswer.png! 
+
+To inactivate an answer, click activated icon to change status:
+
+ !FAQInActivateAnswer.png! 
+
+The inactivated answer will be hidden to normal users while the activated question is displayed.
+
+
+
+h1. Approving/Disapproving Answers
+
+
+You can approve/disapprove an answer of a specific question. When the Administrator or the Moderator view the question answer, if they want to approve/disapprove a specific answer, he can click directly on the Approve/disapprove icon beside the answer.
+
+To approve a question, click  the disapproved icon to change the status:
+
+ !FAQApproveAnswer.png! 
+
+To disapprove an answer, click the approved icon to change the status:
+
+ !FAQDisapproveAnswer.png! 
+
+The approved answer will be visible to normal user while the unapproved question will be invisible.
+
+h1. Edit Answers
+
+
+You can edit specific answers of a question by following these steps:
+
+*Step 1\.* Click on the edit icon !EditAnswerIcon.png! corresponding to the answer that you want to edit. The *Answer* form will be displayed with the current answer's information available for editing:
+
+ !EditAnswerForm.png! 
+
+*Step 2.* Make any changes in the form the click *Save* button to finish
+
+
+
+
+h1. Deleting Answers
+
+When viewing a question, if you are the Administrator/Moderator, you can see all answers of a specific question. You also delete specific answers of a question by following guides: 
+
+To delete one answer, simply clicking on the delete icon below the answer you want to delete:
+
+ !FAQDeleteAnswer.png! 
+
+# deletion confirmation  message is shown. Click the *OK* button to confirm the deletion or *Cancel* button to cancel.

@@ -1,0 +1,88 @@
+
+h1. eXo KS 1.1 release notes
+
+
+h2. Introduction
+KS 1.1 final release is version with many new  added features, improvement of current feature and bugs fixed
+
+h2. Notable changes
+h3. FAQ 
+* Vote 
+* RSS feed 
+* Multiple answer and comment 
+* Manage avatar 
+* Manage my watch 
+* Discuss in forum
+
+h3. Forum 
+* Manage my watches 
+* Avatar 
+* Pending list 
+* Notify with advaned feature 
+* Ban IP 
+* IP logging 
+* Watch my topics and replies options
+
+h2. APIs Changes
+
+h2. How to upgrade from KS 1.0
+
+To deploy KS 1.1you should update version of dependencies to:
+  	 * KERNEL:2.0.5
+  	 * CORE: 2.1.3
+  	 * WS: 1.3.1
+  	 * JCR: 1.10.1
+  	 * PC: 2.0.4
+  	 * PORTAL: 2.5
+
+We provided tool and description to migrate data of KS from 1.0 to 1.1. See http://wiki.exoplatform.org/xwiki/bin/view/Upgrade+1/1 for more detail
+
+h2. System Requirements
+* Web Browser: IE6, IE7, FF2, FF3, Safari. Best for Frirefox 3 and IE7
+* JVM: 1.5.xx
+* Application Server: Tomcat, JBoss, Jonas, Webshpere
+* Building Tools: Maven 2.0.6 and up
+
+h2. Other resources and links
+* [Community JIRA|http://jira.exoplatform.org/browse/KS]
+* [Subversion|http://svn.exoplatform.org/projects/ks/tags/1.1]
+* [Live demo|http://ks.demo.exoplatform.org]
+* [Announces|http://blog.exoplatform.com]
+* [Company site|http://www.exoplatform.com]
+
+
+h2. Detailed Changelog
+
+Complete list of features were implemented in KS 1.1
+{code:xml}
+    * KS-379    IP Logging     
+    * KS-380    IP Bans
+    * KS-410    RSS feeds
+    * KS-417    Multiple answers
+    * KS-418    Comments and votes
+    * KS-545    Approve action bar for pending thread/post
+    * KS-582    Option to display question's Author and Email
+    * KS-624    Question details
+    * KS-626    Left panes
+    * KS-628    Categories browser pane
+    * KS-641    User profile
+    * KS-759    Rearrange Categories by drag and drop
+    * KS-904    IP Ban from this forum
+    * KS-905    Ban from IP icon
+    * KS-915    Discuss in Forum
+    * KS-1046   Change avatar
+    * KS-1047   Bookmark and Watch buttons
+    * KS-1048   Enhanced notifications
+    * KS-1074   Show Avatar
+    * KS-1123   Watch category
+    * KS-1135   Watch my Topics and replies options
+    * KS-1142   Edit root category
+    * KS-1144   Automatically subscribe moderator to notifications
+    * KS-1246   Edit Answer icon 	 
+{code}
+
+
+
+
+
+

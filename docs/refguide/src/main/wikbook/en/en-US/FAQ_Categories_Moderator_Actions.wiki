@@ -1,0 +1,204 @@
+
+h1. Categories Moderator Actions
+
+{info}
+Since eXo KS 1.2, *FAQ* has been renamed to *Answers*
+{info}
+
+
+
+
+# Moderator can manage categories by adding, editing, deleting... categories.
+
+h1. Adding Categories
+
+{info}
+Since eXo KS 1.1
+{info}
+
+# Moderator can add categories in the FAQ application by following guides:
+
+
+*Step 1\.* Click on the *Manage Category* on the main action bar and select *Add Category* in the menu:
+
+ !FAQManageCategory.png! 
+
+The *Add Category* form will appear:
+
+ !FAQAddCategoryForm11.png! 
+
+
+*Step 2.* Enter values for fields in this form.
+
+
+|| Name || Description ||
+| Category | The name of the category. This field is required. |
+| Description | The brief description of the category. |
+| Moderate new questions | This option is to require/ not require approving a new question in the category to be visible or not. |
+| View question authors |	This option is to display author information of the question added into the category. If it is selected, author 	information is shown. If not, author information of all in this category is hidden. |
+| Moderate answers | This option is to require/ not require approving a new answer in the category to be visible or not. |
+| Moderator | The list of users/groups that have responsibility to approve/disapprove questions and answer all questions in this category. Default value is root. This field is required. |
+| Save button | To accept adding a new category. |
+| Cancel button |	To close the *Add Category* form. |
+
+
+The restricted audiences and moderators can be inputted manually or selected from the selector tool.
+
+- Click the !HumanIcon.png!  icon to select users from group list: Firstly, select a group from the left list and then select an user on the right. The selected users will be displayed in the *Moderator* field.
+
+  !SelectUser.png! 
+
+- Click the !HumanIcon1.png!  icon to select all users with a specific membership in a group. Firstly, select one group from the left pane and then select a membership on the right. The selected role will be displayed in the *Moderator* field.
+
+  !SelectRole.png! 
+
+- Similarly, click the !HumanIcon2.png! icon to select all users in a specific group. 
+
+*Step 3.* Click the *Save* button to complete adding a new category.
+
+{info}
+*Notes:* The Moderator can only add a new sub category inside the category that he is the moderator.
+{info}
+
+
+
+
+
+
+
+
+h1. Editing Categories
+
+
+You can edit a specific category in eXo Answers by following these steps:
+
+
+*Step 1\.* Click on the *Manage Category* button on the main action bar and select *Edit* in menu.
+
+The *Edit Category* form will appear :
+
+ !FAQEditCategoryForm11.png! 
+
+*Step 2.* Make any changes in the *Edit Category* form.
+
+*Step 3.* Click the *Save* button to save changes. The edited category will be updated with new changes.
+
+
+
+
+
+
+h1. Deleting Categories
+
+
+
+
+This function allows deleting a specific category in eXo Answers by following these steps:
+
+*Step 1\.* Click on the *Manage Category* button on the action bar and select *Delete* in menu. A confirmation message will appear:
+
+ !FAQConfirmDeleteCategory.png! 
+
+*Step 2.* Click the *OK* button in the confirmation message to accept deleting or click *Cancel* button to quit.
+
+
+
+
+
+h1. Moving Categories
+
+You can move a category from the current place to another place. Following guides to move categories:
+
+
+*Step 1\.* Right click on the category that you want to move and then select *Move* in menu. The *Move category to* form will appear : 
+
+ !FAQMoveCategoryForm.png! 
+
+*Step 2.* Move the category by double clicking on the destination category in the category list. 
+
+After being moved, the *Move category to* form is closed, the moved category is moved to the new destination category. 
+
+{info}
+*Notes:*
+Only the Administrator can move categories to any where in eXo Answers while the Moderator have to get the permission when moving categories. The Moderator can only move categories to the categories that he is the Moderator.
+{info}
+
+
+
+
+
+h1. Exporting
+
+Export function allows exporting Answers in form of xml or zip file to backup data.
+
+
+*Step 1\.* Click on *Manage Category* on the action bar and select *Export* in menu or right click on a specific category and select *Export* in menu.
+
+ !ExportMenu.png! 
+
+The *Export* form will appear:
+
+ !FAQExportForm.png! 
+
+*Step 2.* Input a file name to export.
+
+*Step 3.* Click the *Save* button to accept exporting.
+
+On Fire Fox, a download pop up will appear like the illustration below:
+
+ !FAQExportDownload.png! 
+
+* Simply select the *Save File* option and click the *OK* button to accept saving the exported file.
+
+
+
+
+
+
+h1. Importing
+Import function allows importing *eXo Answers* data from a xml or zip file.
+
+
+
+*Step 1\.* Click on the *Manage Category* on the main action bar and select *Import* in menu or right click on a specific category that you want to import and select *Import* in menu.
+
+ !ImportMenu.png! 
+
+The *Import* form will appear :
+
+ !FAQImportForm.png! 
+
+
+
+|| Name || Description ||
+| File Import | The path of the imported file. |
+| Browser button | To select the imported file path. |
+| !UploadIcon.png! button | To upload the selected file. |
+| Save button | To accept importing the uploaded file. |
+| Cancel button |	To exit the *Import* form. |
+
+
+*Step 2.* Click the *Browser...* button and select a file from local disk. 
+
+*Step 3.* Click the !UploadIcon.png! button to upload the selected file.
+
+For example:
+
+* Select and upload the exported file named eXo KS.zip. After uploading, the *Import* form is shown :
+
+ !FAQImportFormAfterUploaded.png! 
+
+* Click the *Save* button to accept importing the uploaded file into *eXo Answers* or a specific category in eXo Answers.
+
+After importing, all categories and questions which are defined in the zip file will be imported and displayed properly in Answers home page or a specific category.
+
+
+
+
+
+
+
+
+
+
+

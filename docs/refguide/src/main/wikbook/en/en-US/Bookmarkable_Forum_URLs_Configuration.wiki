@@ -1,0 +1,52 @@
+
+h1. Bookmarkable Forum URLs Configuration
+
+
+
+h1. Overview
+
+
+
+This feature defines how the links are generated in the Forum application. You can choose to use ajax or not.
+
+* By not using Ajax, the Forum will generate plain URLs in the links. The added benefit will be bookmarkability and better SEO as the links will be permalinks.
+* Using ajax, the links will be javascript based and generate ajax calls. This should make browsing faster because the whole page is not reloaded. 
+
+This article will explain how to configure the ajax setting for the forum portlet.
+
+
+
+
+
+
+h1. Changing the portlet preference
+
+The setting is called *useAjax* and  is defined in _portlet.xml_ file below:
+
+{code}
+<preference>
+ <name>useAjax</name>
+ <value>true</value> <!--true/false -->
+ <read-only>false</read-only>
+</preference>
+{code}
+
+By default, 'true' value is set. Because using Ajax will makes the speed of the Forum process fatser.
+
+If you want to show the detail link to any forum/topic in the Forum Application, simply replace 'true' value by 'false', the Forum Application will be displayed with the detail link to the page that is being viewed.
+
+
+
+h1. Changing in the UI
+
+{info}
+Since KS 1.2
+{info}
+
+The easiest way to configure bookmarkability of the forum urls is to use the UI.
+Go to the portlet Edit Mode, then go to tab "Options", then uncheck "Use Ajax" option.
+
+!useAjax-editmode.png!
+
+
+

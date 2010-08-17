@@ -1,0 +1,199 @@
+
+h1. Forum User Settings Member Actions
+
+
+
+
+h1. Forum User Settings Member Actions
+
+
+
+h1. Define Profile Settings
+
+Following guides to define *User Settings* such as displaying avatar, signature, etc ...
+
+*Step 1\.* Click on the !Settingsbutton.png! button on the main bar and click the *Profile* tab:
+
+ !Settings.png! 
+
+|| Name || Description || Since ||
+| User name | Your user name. It can not be edited.| 1.0 |
+| Screen name | The name that will be displayed on the screen.    |  1.2 |
+| User Title | Your title. You can not edit this field. It is set by the Administrator and only the Administrator can change a value of this field.| 1.0 |
+| Signature | Your signature. This signature will be displayed under each post/topic created by you. | 1.0 |
+| Display signature | This option is to display your signature under each post/topic or not.| 1.0 |
+| Avatar | The avatar of your account| 1.0 |
+| Update| To open the *Upload File* form to change avatar.| 1.1 |
+| Reset | To remove the current avatar and set by the default one| 1.1 |
+| Display avatar | This option is to display your avatar or not. Information in displaying avatar is loaded from the Address Book application.| 1.0 |
+| Watch topics I start | This option is to add you to the watchers of the topic you create. You will receive notification mail when there is new post added to your posted topic.| 1.1 |
+| Watch topics I post in | This option is to add you to the watchers of the topic when you post to a topic. You will receive notification mail when there is new post added to the topic that you added post.| 1.1  |
+
+
+*Step 2.*  Enter and set values for fields in tab.
+
+*Step 3.* Complete the Settings by clicking the *Save* button.
+
+To change your avatar, do as follows:
+* Click on the *Upload* link to open the *Upload File* form:
+
+ !UploadFileForm.png! 
+
+* Click the *Browse...* button to select the file to upload.
+* Click the !UploadIcon.png! icon to upload the selected file.
+* Click the *Save* button to accept changing an avatar.
+
+
+
+
+
+
+
+
+
+
+
+h1. Define Forum Settings
+
+This function allows defining forum settings such as time zone, date format, number of topic/post display...
+
+*Step 1\.* Click on the !Settingsbutton.png! button and click the *Forum Settings* tab:
+
+ !ForumSettings.png! 
+
+
+
+|| Name || Description ||
+| Time zone | A region that has the same time everywhere within it. This field is referred to as local and standard time. |
+| Short date format | The format is to display a short date in the application. |
+| Long date format | The format is to display a long date in the application. |
+| Time format | The format is to display time in the application. There are 2 options: 12 hour or 24 hour.					 |
+| Topics per page | The maximum number of topics can be displayed per page. |
+| Posts per page | The maximum number of posts can be displayed per page. |
+| Show forum jump | The option  is to display Forum link at the bottom or not. |
+| Save button | To accept saving new settings. |
+| Cancel button |	To close the *User Settings* form. |	
+
+
+*Step 2.* Enter and set values for fields in tab.
+
+*Step 3.* Complete setting the forum by clicking the *Save* button.
+
+
+
+
+
+
+h1. Manage User Watches
+
+{info}
+For eXo Forum 1.1
+{info}
+ 
+The *My Watches* tab lists all your current watched objects (categories, forums, topics) so you easily manage your watch list in the Forum application. 
+
+ !UserWatchTab.png! 
+
+To view your being watched object, simply clicking on the object's title.
+
+To remove the being watched object from your watch list, simply clicking on the delete icon !DeleteIcon.png! . After being removed, you will not receive a notification email about the removed object anymore. 
+		 
+
+
+{info}
+For eXo Forum 1.2
+{info}
+
+Since eXo Forum 1.2, the *My Subscription* tab will replace the *My Watches* tab with the same purpose of managing the watch list in the Forum application.
+
+
+ !MySubscriptions.png! 
+
+- To view your current watched object, simply click on the object's title.
+- To get a new RSS feed that contains selected RSS feeds in the !Column1.png! column, check the checkboxes corresponding to RSS feeds that you want to get. The *Your personal feed URL is* is the URL of your RSS feed.
+- To send notifications to your friends, enter one or more email addresses in the *Your notifications are sent to* field and check checkboxes in the !Mail.png ! column. Click the *Update* button to add the entered email addresses in the ! Mail.png! column:
+
+
+ !MySubscriptions.png! 
+
+To remove being watched objects from your watch list, simply click on the delete !DeleteIcon.png! icon correspondingly. After being removed, you will not receive notification mails about the removed object anymore. 
+
+
+
+
+
+
+
+
+
+h1. Define Forum Settings
+
+This function allows defining forum settings such as time zone, date format, number of topic/post display...
+
+*Step 1\.* Click on the !Settingsbutton.png! button and click the *Forum Settings* tab:
+
+ !ForumSettings.png! 
+
+
+
+|| Name || Description ||
+| Time zone | A region that has the same time everywhere within it. This field is referred to as local and standard time. |
+| Short date format | The format is to display a short date in the application. |
+| Long date format | The format is to display a long date in the application. |
+| Time format | The format is to display time in the application. There are 2 options: 12 hour or 24 hour.					 |
+| Topics per page | The maximum number of topics can be displayed per page. |
+| Posts per page | The maximum number of posts can be displayed per page. |
+| Show forum jump | The option  is to display Forum link at the bottom or not. |
+| Save button | To accept saving new settings. |
+| Cancel button |	To close the *User Settings* form. |	
+
+
+*Step 2.* Enter and set values for fields in tab.
+
+*Step 3.* Complete setting the forum by clicking the *Save* button.
+
+
+
+
+
+h1. Manage User Watches
+
+{info}
+For eXo Forum 1.1
+{info}
+ 
+The *My Watches* tab lists all your being watched objects (categories, forums, topics) so you easily manage your watch list in the Forum application. 
+
+ !UserWatchTab.png! 
+
+To view your being watched object, simply clicking on the object's title.
+
+To remove the being watched object from your watch list, simply clicking on the delete icon !DeleteIcon.png! . After being removed, you will not receive a notification email about the removed object anymore. 
+		 
+
+
+{info}
+For eXo Forum 1.2
+{info}
+
+Since eXo Forum 1.2, the *My Subscription* tab will replace the *My Watches* tab with the same purpose of managing the watch list in the Forum application.
+
+
+ !MySubscriptions.png! 
+
+- To view your current watched object, simply click on the object's title.
+- To get a new RSS feed that contains selected RSS feeds in the !Column1.png! column, check the checkboxes corresponding to RSS feeds that you want to get. The *Your personal feed URL is* is the URL of your RSS feed.
+- To send notifications to your friends, enter one or more email addresses in the *Your watches are sent to* field and check checkboxes in the !Mail.png ! column then click the *Update* button to add the entered email addresses in the ! Mail.png! column.
+
+ !MySubscriptions.png! 
+
+To remove being watched objects from your watch list, simply click on the delete !DeleteIcon.png! icon correspondingly. After being removed, you will not receive notification mails about the removed object anymore. 
+
+
+
+
+
+
+
+
+

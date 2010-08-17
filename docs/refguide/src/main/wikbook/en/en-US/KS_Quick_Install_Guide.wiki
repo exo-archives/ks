@@ -1,0 +1,124 @@
+
+h1. KS Quick Install Guide
+
+h1. Objectives
+
+This install guide will help you to get up and running with eXo KS on your computer in *5 minutes*. It is pretty straightforward :
+
+
+
+*Requirements*
+* +OS+ : *Windows*, *Linux* or *MAC OS*.
+* +CPU+ : At least 1.5 Ghz processor. 
+* +Memory+ : *1GB* of RAM.
+* +Hard Disk Space+ : *150MB* of disk space is necessary for the install
+* +Browser+ : *Firefox 3+* or *Internet Explorer 7+*
+
+This guide let you run a pre-built bundle for *demonstration and evaluation purposes only*. If you need to go further, have a look at these docs :
+- [KS:KS Integration into an Existing Portal]
+- [KS:KS Migration from 1-1 to 1-2]
+- [KS Configuration|KS Manual(HConfiguration]
+
+
+
+h2. Download
+
+Download the last binary bundle of CS. All released versions are available for download on *[OW2 Forge |http://download.forge.objectweb.org/exoplatform/exo-eXoKS-1.2-tomcat.zip]*.
+
+It is a 70MB compressed file, *make sure you have enough free disk space* on your hard drive.
+
+
+
+h2. Extract
+
+Unzip tomcat version to a directory on your hard drive. We will call that directory *$EXTRACT_FOLDER* until the end of the article.
+You will need at least 150MB free  disk space to extract the file. 
+
+#info}
+KS comes with a builtin file-based database (HSQL). Which means any data created with KS apps will take some more space on the disk. Make sure you have enough disk space for your emails, calendar and contacts information that you will create during your evaluation.
+{HConfiguration]
+
+
+
+h2. Download
+
+Download the last binary bundle of CS. All released versions are available for download on *[OW2 Forge |http://download.forge.objectweb.org/exoplatform/exo-eXoKS-1.2-tomcat.zip]*.
+
+It is a 70MB compressed file, *make sure you have enough free disk space* on your hard drive.
+
+
+
+h2. Extract
+
+Unzip tomcat version to a directory on your hard drive. We will call that directory *$EXTRACT_FOLDER* until the end of the article.
+You will need at least 150MB free  disk space to extract the file. 
+
+#info}
+
+
+h2. Launch
+
++Prerequisites+ : 
+- eXo *KS requires a Java 5 environment*, make sure the JAVA_HOME environment variable point to a JRE 5 folder
+- the exo server will run on portal 8080, make sure this port is not currently in use
+
+
++Launch instructions+ : 
+
+* Using command line, go to *{{$EXTRACT_FOLDER/bin}}* and start the server : 
+** On Windows :
+{code}
+eXo.bat run
+{code}
+** On Linux / Mac OS :
+{code}
+chmod+x *.sh ; eXo.sh run
+{code}
+
+* Wait for the server to start. You should see something like this on the console : 
+{code}
+INFO: Server startup in 43948 ms
+{code}
+
+ !terminal.png! 
+
+* eXo KS is now ready to use. Point your browser to [http//localhost:8080-portal]
+
+
+
+
+_Congratulations, you have successfully installed  eXo Knowledge Suite!_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

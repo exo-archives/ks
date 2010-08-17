@@ -1,0 +1,404 @@
+
+h1. Moderator Actions on Questions 
+
+{info}
+Since eXo KS 1.2, *FAQ* has been renamed to *Answers*
+{info}
+
+
+
+
+h1. Adding Questions
+
+# Moderator can add questions into the FAQ home page or a specific category by follow these steps:
+ 
+
+*Step 1\.* Show the *Submit question* form by one of two following ways:
+
++*The 1st way*+: Right click on the category/subcategory that you want to add new questions into and then select *Submit Question* in menu.
+
+
++*The 2nd way*+: In the home page or go into the category that you want to add a question into and then click the  button on the tool bar. 
+
+!SubmitQuestionButton.png! 
+
+The *Submit question* form will appear:
+
+ !SubmitQuestion1.2.png! 
+
+
+*Step 2.* Input values for fields in the *Submit question* form.
+
+
+| Name | Description |
+| Question   |	The brief content of the question.  |
+| Detail  |	The detail explanation of the question. The details can be decorated by FCK Editor or BBC tags. |
+| Language  |	The language that is used to add question. By default, the language is English. Language combo box allows selecting language option. |
+| Author  |	The name of the author. This field is required. |
+| Email  |	The email address. This field must be in valid format likes: username@abc.com. This field is required. |
+| Files  |	The files that are attached into the question.  |
+| Attach a file |	To attach files into the question.	 |
+| Save button  |	To accept submitting the question. |
+| Cancel button  |	To close the *Submit question* form. |
+
+
+
+
+You can add a question by another language:
+
+- Click on the language combo box in the *Submit question* form. The language drop down list will be displayed:
+
+ !SelectLanguage.png! 
+
+
+Select a language by clicking on the language that you want to add to a question. 
+
+- Click the *Save* button to accept adding another language or click the *Cancel* button to quit.
+
+There will be a text box corresponding to the selected language in the *Submit question*.
+
+
+To remove a question in a specific language, simply select the language you want to delete and click on the delete icon beside the language combo box.
+After deleting, the corresponding language content will be deleted.
+
+To attach files, click the *attach a file* link in the *Submit question* form, the *Upload File* form will appear: 
+
+ !UploadFile.png! 
+
+
+Select files to upload by clicking the *Browser...*  to select file's path from local computer.
+
+Upload the selected files by clicking the !UploadIcon.png!  icon to upload. Complete attaching files to topic by clicking the *Save* button.
+
+*Step 3.* Complete submitting a question by clicking the *Save* button.
+
+The question is added into the selected category and an alert message is shown to inform that the question is added. In case, the question is added to the category require moderation before displaying, the alert message will have the content to inform that the question will be checked by the Moderator for approval.
+
+The question list is shown below:
+
+
+ !SubmitQuestionList.png! 
+
+
+!NoAnswer.png! :  This icon means that the question has not been answered.
+
+!Answer.png!   :  This icon means that the question has been answered.  
+
+
+
+
+
+
+
+
+
+h1. Editing Questions
+
+
+With the Moderation role, the Moderator can edit existing questions inside categories managed by him while the Administrator can edit question in all categories in FAQ.
+
+Following ways to edit questions:
+
++The 1st way:+ 
+
+*Step1\.* Right click on the question that you want to edit and then select *Edit* in menu: 
+
+ !FAQEditQuestionMenu.png! 
+
+The *Edit question* form will appear with current information, available for editing:
+
+{info}
+Since eXo KS 1.1 
+{info}
+
+
+ !EditQuestionForm11.png! 
+
+
+
+|| Name || Description ||
+| Question | The brief content of the question.  |
+| Detail | The detail explanation of the question. The detail can be decorated by FCK Editor. |
+| Language | The language that is used to add question. By default, the language is English. The language combo box allows selecting language option. |
+| Author | The name of the author. This field is required. |
+| Email | The email address. This field must be in valid format likes: username@abc.com. This field is required. |
+| Validation | This option is to validate the question. It includes activated and approved option . |
+| Approved | This option is to approve the edited question or not. If this question is in the category that does not need to be moderated, this option is checked. If this question is in the category that needs to be moderated, this option is not checked. To approve this question, check this field. |
+| Activated | This option is to display this question or not. By default, this option will be checked. It means the question is displayed, all users can view it. But if FAQ Administrators or Moderators don't want to display this question, don't check this option. |
+| Files | The files that are attached into the question.  |
+| Attach a file |	To attach files into the edited question.	 |
+| Save button | To accept submitting the edited question. |
+| Cancel button | To close the *Edit question* form. |
+
+
+*Step 2.* Change current information of the selected question like when adding a new question. You can add more or remove the language option, attach file...
+
+*Step 3.* Complete editing a question by clicking the *Save* button.
+
++The 2nd  way:+ 
+
+*Step 1\.* Click the !FAQManageQuestionButton.png! button on the tool bar. The *Manage questions* form will appear :
+
+ !AnswersManageQuestionsForm.png! 
+
+*Step 2.* Click the !EditIcon.png! icon to edit the question in list. The form to edit will be displayed under the question list and available for editing.
+
+*Step 3.* Change current information of the selected question. 
+
+*Step 4.* Complete editing a question by clicking the *Save* button.
+
+
+
+
+
+
+h1. Deleting Questions
+
+
+
+With the Moderation role, the Moderator can only delete questions in the categories managed by him/her while the Administrator can delete all questions in all categories.
+
+Following ways to delete questions:
+
++The 1st way:+
+
+*Step 1\.* Right click on the question that you want to delete and select *Delete* in menu:
+
+ !FAQDeleteQuestionMenu.png! 
+
+The confirm deletion form will appear:
+
+ !FAQConfirmDeleteQuestionForm.png! 
+
+*Step 2.* Click the *OK* button to accept deleting the question or *Cancel* button to cancel the deleting action. After being deleted, the question will be removed from FAQ.
+
++The 2nd way:+
+
+*Step 1\.* Click on !FAQManageQuestionButton.png! on the main actions bar.
+
+The *Manage questions* form will appear :
+
+ !AnswersManageQuestionsForm.png! 
+
+*Step 2.* In the *All questions* tab, click on the !FAQDeleteQuestionIcon.png! icon of the question that you want to delete. A confirm deletion form will appear with two option : *OK* and *Cancel*.
+
+*Step 3.* Click the *OK* button to accept deleting the question or *Cancel* button to cancel deleting. After being deleted, the question will be removed from the question list and FAQ.
+
+
+
+
+
+h1. Answer Questions
+
+
+With the Moderation role, a Moderator can only answer questions in categories managed by him/her while the Administrator can answer all questions in all categories.
+
+Following ways to answer questions:
+
++The 1st way:+
+
+Open the *Answer* form by right clicking on the question that you want to answer and select *Answer question* in menu:
+
+ !FAQAnswerQuestionMenu.png! 
+
+{info}
+Since eXo KS 1.1
+{info}
+
+The *Answer* form will appear:
+
+ !FAQAnswerForm.png! 
+
+
+
+|| Name || Description ||
+| Question | The brief content of the question. It can only be viewed.  |
+| Question detail | The detail content of the question. It can only be viewed. |
+| Answer | The content of the answer. It can be decorated with FCK Editor. |
+| Language | The language is used to display the content of Question and Question detail field and is used to answer a question. You also can answer by another language the question is asked. Select another language in value list of the *Language* field. The question is displayed by the selected language. |
+| Approved | The option is to approve the question or not. If this question is in the category that does not need  moderating, this option is  checked. If this question is in the category that need moderating, this option is not checked. To approve this question, check this field. |
+| Activated | The option is to display this answer or not. It means: the answer of this question with the selected language will be displayed or not. By default, the answer always is shown.	 |
+| Related to | All questions related to the question that you want other users to refer to. |
+| !PlusIcon.png! | To link the current question to the other entry/question(s). |
+| Save button | To accept submitting answer of the question. |
+| Cancel button |	To close Answer form. |
+
+
+To add more answers, simply click on *Answer question* in the question panel to open the *Answer* form and add more.
+
+
+You can add related questions by following guides:
+
+*Step 1\.* Click the !PlusIcon.png! icon to display the question list in all categories. The *Related questions* form will appear:
+
+ !FAQRelatedQuestionForm.png! 
+
+
+*Step 2.* Select one or more questions in list by selecting the check boxes corresponding to the questions.
+
+*Step 3.* Click the *Save* button to add the selected questions into the *Related to* field or click the *Cancel* button to quit.
+
+To remove attachments or related questions, simply click the *Remove* link beside the attachment or the question that you want to delete.
+
+*Step 4.* Enter values for required fields in the *Answer* form.
+
+*Step 5.* Complete answering a question by clicking the *Save* button.
+
+
++The 2nd way:+
+
+*Step 1\.* Click the !FAQManageQuestionButton.png! button on the tool bar, then click the *Open questions* tab.
+
+ !AnswersManageQuestionsForm1.png! 
+
+*Step 2.* Click on the language (English, Vietnamese or French) or click the !FAQAnswerIcon.png! icon corresponding to the question that you want to answer.
+
+The form to answer a  question will be displayed under the question list.
+
+*Step 3.*  Enter values for required fields like the 1st way.
+
+*Step 4.* Complete answering question by clicking the *Save* button.
+
+
+
+
+
+h1. Moving Questions
+
+
+You can move one question from one category to another. Only the Answers Administrators and the moderators of one category can move questions inside it. 
+
+Only the Administrator can move questions to any where in Answers while the Moderator is checked the permission when moving question. A moderator can only move questions to the category that he moderates.
+
+The Move Notification is only sent to the owner of the questions that have been moved. 
+
+
+*Step 1\.* Right click on the question that you want to move and then select *Move to* :
+
+ !FAQMoveQuestionMenu.png! 
+
+The *Move question* form will appear:
+
+ !AnswersMoveQuestionForm.png! 
+
+*Step 2.* Move the question by double clicking on the destination category in the category list. 
+
+After moving, the *Move question* form is closed, the question is moved to the new destination category. The *Cancel* button is used to close the *Move question* form without moving.
+
+
+
+h1. Send to friends
+
+
+This function is used to send a specific question to your friends via email. When you visit an interesting question, you may want to share with your friends for reference. This action supports this purpose.
+
+In the eXo Answers, only Administrators and Moderators can send pending questions.
+
+Do as follows:
+
+*Step 1\.* Show the *Send question by email* form by one of two following ways:
+
+_*The 1st way*_: Right click on the question that you want to send to your friend and then select *Send* in the menu:
+
+ !SendQuestionMenu.png! 
+
+_*The 2nd way*_: Click the *Send* icon at the top right corner of the question when viewing it in details:
+
+
+ !SendIcon.png! 
+
+The *Send question by email* form will be displayed:
+
+ !SendQuestionByMail.png! 
+
+Details:
+
+|| Field  || Meaning ||
+| From    |	The name of the sender. |
+| Email    |	The email address of the sender. |
+| To     | 	The email address of the receivers. Using CC and BCC to send this message to more than one person easily and fast by clicking the 'Add CC' or 'Add BCC'. Using  the 'Add CC' when you want other users know and refer to this message. Using the 'Add BCC' when you want other users also receive this message but all receivers do not know that you also send this message to others. |
+| Language    |	The language is used to display content of the question. By default, it is English. However, if the sent question has been submitted in the other language such as French or Vietnamese, you can select the favorite for sending. When the language is changed, the question's subject and message content are changed correspondingly. |
+| Subject   |	The subject that you want to send to your friend. |
+| Message     |	The content of the message that you want to send to your friend. |
+| Send button    |	To accept sending a question to friend. |
+| Cancel button    |	To close the *Send question by email* form. |
+
+
+*Step 2.* Enter values for fields in the *Send question by email* form
+
+*Step 3.* Complete sending the question by clicking the *Send* button.
+
+The users with email addresses in the *To*, *CC* and *BBC* field will receive this message. The receivers can click the 'here' link in the content of the message to view the question in details in the Answers application.
+
+
+
+
+
+
+
+h1. Activate/Inactivate Questions
+
+
+Activated questions are visible to normal users while inactivated questions are invisible, only the Administrator/Moderator can view.
+
+With the Moderation role, the Moderator can only activate/inactivate questions in the category managed by him/her while the Administrator can activate/inactivate all questions in all categories.
+
+Following guides to activate and inactivate Questions
+
++The 1st way:+
+
+1\. Go to Edit question function corresponding to the question that you want to activate or not.
+
+2. To activate, select the *Activated* check box. Otherwise, don't select this check box. After being activated, all users can view these questions normally whatever FAQ mode is.
+
++The 2nd way:+
+	
+1\. Go to Answer question function corresponding to the question that you want to activate or not.
+
+2. To activate, select the *Activated* check box. Otherwise, don't select this check box. After being activated, all users can view these questions normally whatever FAQ mode is.
+
++The 3rd way:+
+
+1\. Click the !FAQManageQuestionButton.png! button on the tool bar to open the *Manage questions* form. 
+
+2. Click on 'Yes' to change the 'No' status that means the question is inactivated and make it vice versa to activate question.
+
+ !ActivateQuestion.png! 
+
+
+h1. Approve/Disapprove Questions
+
+This function allows approving or disapproving question in FAQ. FAQ has 2 modes: All and Approved.
+
+With the *All* mode: both approved and unapproved questions are visible.
+
+With the *Approved* mode: only approved questions are visible while unapproved questions are invisible to normal users.
+
+With the Moderation role, the Moderator can only approve/disapprove questions in the category managed by him/her while the Administrator can approve/disapprove all questions in all categories.
+
+Following ways to approve/disapprove questions:
+
++The 1st way:+
+
+1\. Go to Edit question function corresponding to the question that you want to approve or not.
+
+2. To approve, select the *Approved* check box. Otherwise, don't select this check box. After being approved, all users can view these questions normally whatever FAQ mode is.
+
++The 2nd way:+
+	
+1\. Go to Answer question function corresponding to the question that you want to approve or not.
+
+2. To approve, select the *Approved* check box. Otherwise, don't select this check box. After being approved, all users can view these questions normally whatever FAQ mode is.
+
++The 3rd way:+
+
+1\. Click the !FAQManageQuestionButton.png! button on the tool bar to open the *Manage questions* form. 
+
+2. Click on 'Yes' to change the 'No' status that means the question is unapproved and make it vice versa to approve question.
+
+ !ApproveQuestion.png! 
+
+
+
+
+

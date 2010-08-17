@@ -1,0 +1,99 @@
+h1. eXo FAQ Terms
+
+{info}
+Since eXo KS 1.2, *FAQ* has been renamed to *Answers*
+{info}
+
+
+
+
+
+h1. Main Screen
+h2. FAQ 1.0 Screen
+ !FAQScreen.png! 
+
+
+
+ !FAQExp.png! 
+
+
+h2. FAQ 1.1 Screen
+
+{info}
+This screen is being improved...
+{info} 
+
+ !FAQAdminMainScreen.gif! 
+
+
+
+ !FAQExp11.png! 
+
+
+h2. Answers 1.2 Screen
+
+{info }
+Since eXo KS 1.2, *FAQ* will be renamed to *Answers*
+{info }
+
+
+
+ !Answers.png! 
+
+
+
+
+ !Meaning.png! 
+
+
+
+
+
+h1. Basic Concepts
+
+h2. What is a Category?
+
+# Category is the name for a collection of questions/answers about a specific topic. In the eXo FAQ application, one category may include one or more sub-categories. One category may also contain both sub-categories and questions inside it.
+
+h2. What is a Question?
+
+# Question is user's expression used to ask and get information. In the FAQ, all Questions related the same topic have to be posted and grouped in the same category.
+
+h2. What is Answer?
+
+Answer is a response to a specific question. In FAQ, all responses are posted below its questions. Only people have the Moderation permission can answer questions of users.
+
+h2. What is a Comment?
+
+# comment is user's opinion on a specific question. In FAQ, all comments are posted below its question. A comment can be promoted to an answer by the Administrator.
+
+h1. User Roles
+
+h2. Administrator
+
+Users in the administrator group are users who have the highest permission  that allows them to take all actions in FAQ such as: create, edit, delete, move and modify, etc... any category, questions and answers as well as define the FAQ properties. 
+
+At the runtime of the FAQ service, the default administrators are created. These administrators are defined at the FAQ Roles Plugin in xml file. These administrators can be changed if the value in xml file is changed. 
+
+The default administrators are the ones who initialize the FAQ and assign the moderation role to normal users. 
+
+# normal user can be a FAQ moderator if the default administrators assigns directly a moderation role to him/her in the FAQ application.
+
+h2. Moderator
+
+Moderators have subset of Administrator's permissions that allows them to edit, delete and move topics in a special category which they have a Moderation permission. 
+
+When the Administrators create a new Category, they have to set this permission to some users or some groups. If not, only the administrators can mange that category.
+
+h2. All users
+
+All users includes guests and logged users. Guests can view, add questions and watch categories while logged users can take other basic actions in FAQ application such as defining user settings.
+
+By default, all users can view the FAQ as well as all its questions and answers. 
+
+
+
+
+
+
+

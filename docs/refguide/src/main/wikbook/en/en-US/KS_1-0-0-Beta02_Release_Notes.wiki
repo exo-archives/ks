@@ -1,0 +1,62 @@
+
+
+
+
+
+
+h1. eXo Social 1.0.0-Beta02 Release Notes 
+
+
+
+
+
+
+h2. Notable changes
+
+* *General*
+** Upgrade to use portal Gatein 3.0.0 Beta05
+** Feature improvement and Bugs fixed
+
+
+
+h2. API Changes 
+
+Social does not maintain a public API.
+
+h2. Dependencies Changes
+ * Gatein 3.0.0-Beta05
+ * Kernel 2.2.0-Beta05
+ * Core 2.3.0-Beta05
+ * JCR 1.12.0-Beta05
+ * WS 2.1.0-Beta05  
+See also the  page [Portal|http://wiki.exoplatform.org/xwiki/bin/view/Portal/]
+
+
+
+h2. System Requirements
+* Web Browser: IE 6-8, Firefox 2-3 (recommended)
+* JVM: version 1.5.0_10 or higher
+* Application Server : Tomcat, JBoss
+
+h2. How to install
+
+   Follow the [Install Guide|http://wiki.exoplatform.org/xwiki/bin/view/Social/InstallGuide]
+
+
+h2. Other resources and links
+* [Community JIRA|http://jira.exoplatform.org/browse/SOC]
+* [Subversion|http://svn.exoplatform.org/projects/social/tags/1.0.0-Beta02]
+* [Download|http://download.forge.objectweb.org/exoplatform/]
+* [Live demo|http://social.demo.exoplatform.org]
+* [Announces|http://blog.exoplatform.org/tags/social/]
+* [Company site|http://www.exoplatform.com]
+
+
+
+h2. Detailed Changelog 
+
+
+h3. Version 1.0.0-Beta02
+
+
+

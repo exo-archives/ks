@@ -1,0 +1,97 @@
+
+h1. Forum Users Administration Actions
+
+
+You can manage all information related to users by following guides:
+ 
+
+*Step 1\.* Click the !UserManagement.png! button on the main action bar. The *User Management* form will appear:
+
+ !UserManagement1.png! 
+
+
+
+|| Name || Description ||
+| !EditUserIcon.png! | To edit a specific user. |
+| !EyeIcon.png! | To view the user profile. |
+
+
+*Step 2.* To find expected users quickly, simply inputting a search term into the search box and clicking the *Search* icon.
+ 
+
+The found users will be displayed in the *User list* table.  After searching, there is also the *Get all user* icon that allows getting all default users in the user list table.
+
+*Step 3.* To edit the profile of a specific user, simply click the edit icon !EditUserIcon.png! corresponding to the user that you want to edit. 
+
+The information about this user is displayed immediately under the list:
+
+ !UserManagementForm.png! 
+
+
+
+The *Profile* tab allows editing basic information of the user.
+
+
+
+|| Name || Description || Since ||
+| User name | The current user name of a user. It can not be changed. | 1.0 |
+| Screen name | The name that will be displayed on the screen.       |  1.2 |
+| User Title | The title corresponding to the user's role.| 1.0 |
+| Forum administration | This option is to assign the administrator role to the edited user or not. It is set disabled and can not be changed in case the edited user is the default administrator. | 1.0 |
+| Moderator of | The list of forums that the edited user can moderate. | 1.0 |
+| !AddIcon.png! | To open Select Forum form that allows selecting forum for Moderator of field.| 1.0 |
+| Signature | The short text which is created to use as a standard appendage at end of his/her post.| 1.0 |
+| Display signature | This option is to whether display the signature or not.| 1.0 |
+| Display avatar | This option is to whether display avatar of the current user or not| 1.0 |
+| Set default avatar | This option is set the default avatar for the current user in case his/her avatar is invalid.| 1.1 |
+| Save button | To accept saving changes of the edited user.| |
+| Cancel button | To close all detail tab of the edited user.| |
+| Close button | To close the *User Management* form.| |
+
+
+The *Settings* tab allows you to set some properties of the Forum Application:
+
+ !UserManagement1.21.png! 
+
+
+
+|| Name || Description ||
+| Time zone | A region that has the same time everywhere within it. This field is referred to as local time and standard time. |
+| Short date format | The format is to display a short date in application. |
+| Long date format | The format is  to display a long date in application. |
+| Time format | The format is to display time in application. |
+| Topics per page | The maximum number of topics can be displayed per page. |
+| Posts per page | The maximum number of posts can be displayed per page. |
+| Show forum jump | The option is to display Forum Jump or not. |
+
+
+The *Ban user* tab is used to ban a specific user when he/she has invalid or illegal action in the Forum Application:
+
+ !UserManagement1.22.png! 
+	
+
+
+|| Name || Description ||
+| Banned | This option is to ban one user or not. |
+| Duration | The last date that this user will be banned. This field is only edited when you ban this user in the *Banned* field. In ban duration, the banned user only can view forums and topics but he/she can not post replies or send messages... |
+| Reason | The reason that this user will be banned. This field is only edited when you ban this user in the *Banned* field. |
+| Ban count | The banned number of this user. |
+| Bans log | All the ban reasons of the edited user.  |
+| Ban date | The start date that this user will be banned. |
+
+
+
+The *Topics* tab contains the list of topics which are created by this edited user:
+
+ !UserManagement1.23.png! 
+
+To view a specific topic, simply click on its title.
+
+To delete a specific topic, simply click on its corresponding delete icon !DeletePostIcon.png! .
+
+Similarly, the *Posts* tab contains the list of posts which are created by this edited user. The Administrator can view and edit it.
+
+*Step 4.* Make changes to any tab of the edited user.
+
+*Step 5.* Complete editing user information by clicking the *Save* button.
+

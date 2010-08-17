@@ -1,0 +1,91 @@
+
+h1. Forum Posts Moderator Actions
+
+
+
+Beside adding, editing, deleting, etc Posts in [KS:Forum Posts Member Actions]; a Moderator also take more actions on Posts.
+
+
+
+h1. Move Posts
+
+You can move the selected Posts from the current Topic to another Topic.
+
+The Administrators can move Posts to whatever Topics in whatever Forums he want to while the Moderators can only move Posts to the Topics inside the Forums moderated by him.
+
+*Step 1\.* Select Post(s) by selecting its check box(s).
+
+*Step 2.* Click the !ModerationButton.png! on the topic bar and select *Move* in menu. The *Move Posts* form will appear:
+
+ !MovePostForm.png! 
+
+*Step 3.* Select a destination topic by clicking the name of a topic in list to accept moving or the *Cancel* button to quit.
+
+
+
+
+
+
+
+h1. Approve Posts 
+
+This function is used to approve pending posts in the topic having 'Post moderation' option. All new posts which are added into the 'Post moderation' topic, will be in status 'pending for approval'. It means that nobody can view these posts except the Administrator and Moderators of this forum. Only after the post with status 'pending for approval' is approved, it will be visible.
+
+Follow one of these ways to approve Posts:
+
++The 1st way:+
+
+*Step 1\.* Select post(s) with status *This post is pending for approval* by selecting its check box(s).
+
+*Step 2.* Click the !ModerationButton.png! button on the topic bar and select *Approve* in menu. 
+
++The 2nd way:+
+
+*Step 1\.* Do not select any *pending for approval* post, then click *Moderation* on the topic bar and select Approve in menu. The *Posts to approve* form will appear:
+
+ !PostToApproveForm.png! 
+
+*Step 2.* Select post(s) to approve by selecting its check box(s).
+
+*Step 3.* Click the *Approve* button to accept the approval or *Cancel* button to exit.
+
+
+
+
+h1. Show Posts
+
+You can show one or more hidden posts. When a hidden post is shown, its *hidden* label will be removed and it is visible to normal uses.
+The way to show the post is the same as the way to censor the post. Following guides to show Post(s):
+
+
++The 1st way:+
+
+*Step 1\.* Select hidden post(s) by selecting its check box(s).
+
+*Step 2.* Click the !ModerationButton.png! button on the topic bar and select *Show* in menu to accept directly showing the selected post(s).
+
++The 2nd way:+
+
+*Step 1\.* Click the !ModerationButton.png! on the topic bar and select *Show* in menu. The *Hidden posts* form will appear:
+
+ !HiddenPostForm.png! 
+
+*Step 2.* Select hidden post(s) by selecting its check box(s).
+
+*Step 3.* Click the *Show* button to accept showing or the *Cancel* button to quit.
+
+
+
+
+
+h1. Hide Posts
+
+When a post is hidden, only the Administrator and moderatorS can view and manage it. 
+To hide Post(s) do as follows:
+
+*Step 1\.* Select Post(s) by selecting its check box(s).
+
+*Step 2.* Click the !ModerationButton.png! button on the topic bar and select *Hide* in menu to accept hiding the selected Posts. After being hidden, the hidden post is marked by *This post is hidden* label and normal users can not view it.
+ 
+
+

@@ -1,0 +1,61 @@
+
+h1. Forum Portlet Settings Administration Actions
+
+
+
+{info}
+This feature is available since eXo KS 1.1
+{info} 
+
+
+In the Forum Portlet Settings, the  Portal Administrator can hide/show categories/forums in the Forum Application. The hidden categories/forums will not be displayed in the Forum application.
+
+
+*Step 1\.* Login as the Portal Administrator.
+
+*Step 2.* Go to *eXo*-> *Administration* -> *Advanced* -> *Manage page* -> *Edit Forum* --> *Edit mode*
+
+The *Edit Mode* of the Forum Portlet Settings is displayed:
+
+ !EditMode1.2.2.png! 
+
+The *Scoping* tab allows showing/hiding categories and forums in the eXo Forum by simply selecting or unselecting their check boxes.
+
+*Step 3.* Select/unselect check box(s) of the categories/forums that you want to show/hide.
+
+*Step 4.* Click the *Save* button in the tab, the form and the page.
+
+The Forum Portlet Settings will be saved. The selected categories/forums will be displayed in the Forum application while the unselected categories/forums will be hidden.
+
+
+The *Enabled Panel* tab that allows enabling/disabling some functions in the Forum Application by simply selecting or unselecting their check boxes.
+
+ !EditMode1.2.21.png! 
+
+Similarly, select/unselect check box(s) of the function/information you want to enable or disable.
+
+
+|| Field     || Description ||
+| Show Forum Jump  |		This option is whether to enable Forum Jump function or not. |
+| Show Poll      |			This option is whether to set visible for the topic poll or not |
+| Show Moderator  |		This option is whether to show forum moderator information or not. |
+| Show Quick Reply   |		This option is whether to enable Quick Reply function or not. |
+| Show Icons Legend   |		This option is whether to show the Icon Legend or not |
+| Show Rules        |			This option is whether to show forum rules information or not. |
+| Show Statistics	   |	This option is whether to show the forum statistics or not. |
+
+
+{info}
+Since eXo KS 1.2.2
+{info}
+
+The *Options* panel: Users need to have a knowledge about Ajax. Ajax (stands for Asynchronous JavaScript and XML) is used here with the purpose of update a whole web page or a part of a web page. 
+
+
+ !EditMode1.2.22.png! 
+
+The default value of Use Ajax is false that means a whole page is loaded. If users select the Use Ajax check box, it will load a part of a page.
+
+
+
+

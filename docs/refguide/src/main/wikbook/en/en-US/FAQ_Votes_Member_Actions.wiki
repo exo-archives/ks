@@ -1,0 +1,71 @@
+
+h1. Rating Answers
+
+{info}
+This feature is available since 1.1
+{info}
+
+
+
+
+
+h1. Rating Questions
+
+If you find a questions interesting or think that question is commonly asked, you can rate that question. eXo Answers provides an intuitive rating experience that allows you to select the number of stars that represents your rating. You can rate a question on a five-star scale: five is the highest.
+
+*Step 1\.* Go to the question/answer that you want to rate.
+
+ !FAQVoteQuestion.png! 
+
+{info}
+For eXo KS1.2.2
+{info}
+
+
+ !RateQues.png! 
+
+*Step 2.* Rate the question/answer by left clicking on the star. The number of selected stars will be changed from gray to yellow. Click the *Cancel* button if you want to quit the *Vote* form.
+ 
+
+
+h1. Removing Ratings of Questions
+
+You also remove your vote on a specific question by following these simple guides:
+
+*Step 1\.* Go to the question that you have voted it before.
+
+*Step 2.* Click on the vote star at the top right question panel:
+
+ !FAQUnVoteQuestion.png! 
+
+The alert message will appear:
+
+ !FAQRemoveVoteAlert.png! 
+
+
+{info}
+For eXo KS 1.2.1
+{info}
+
+Click on the rate star at the top right question panel:
+
+ !UnrateQuestion.png! 
+
+The alert message will appear:
+
+ !ConfirmMessage.png! 
+
+
+*Step 3.* Click the *OK* button to confirm removing your vote or *Cancel* button to close the alert message without removing.
+
+
+h1. Voting for answers
+
+This function allows you to vote for an answer that you find useful. 
+
+To vote for an answer, simply click the corresponding thumb icon:
+
+ !FAQRateUpDown.png! 
+
+You can not rate twice but you can change your rate. When changing, the old rate will be removed, recalculated and updated with new score.
+

@@ -1,0 +1,30 @@
+
+h1. KS Migration from 2-0 to 2-1
+
+
+
+
+This article explains how to upgrade from KS 2-0 to KS 2-1
+
+h2. Migration Procedure
+
+* *Main progress for migrate KS from 2-0 to 2-1 version*
+   
+
+* *Detail steps*
+
+h2. Data structure changes
+h3. FAQ nodetypes changed
+* Node property added *exo:lastActivity* to *exo:faqQuestion*
+{code:xml}<propertyDefinition name="exo:lastActivity" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+<valueConstraints/>
+</propertyDefinition>
+{code}
+Value of this property contains two parts separated by a dash. Part one is id of user who had last activity on question, part two is long value of time when last activity appeared. Note that, last activities include posting an answer which approved and activated, or posting a comment.
+
+* Node property added *exo:numberOfPublicAnswers* to *exo:faqQuestion*
+{code:xml}<propertyDefinition name="exo:numberOfPublicAnswers" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+<valueConstraints/>
+</propertyDefinition>
+{code}
+This property save number of answers which are approved and activated.

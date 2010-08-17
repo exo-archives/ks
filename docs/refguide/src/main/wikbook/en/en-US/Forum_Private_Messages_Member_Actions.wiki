@@ -1,0 +1,23 @@
+
+h1. Forum Private Messages Member Actions
+
+
+eXo Forum members can exchange private messages to other members. Following guides to send a private message:
+
+*Step 1\.* Click on the !PrivateSMSButton.png! button on the main action bar and select the *Compose message* tab:
+
+ !ComposeMessageTab2.png! 
+
+*Step 2.* Enter values for fields in this form.
+
+*Step 3.* Click the *Send* button to send a message. After being sent, the messages will be sent to users in the *Send to* field.
+
+To check the received message, simply go to the *Inbox* tab:
+
+ !PrivateMessageInbox.png! 
+
+* To view a message, simply clicking on the message title, its content will be displayed in the message pop up.
+* To delete an inbox message, simply clicking on its delete    !DeleteIcon1.png!       icon.
+* To reply a message, simply clicking on the      !EyeIcon1.png!           icon.
+
+Similarly, in the *Sent messages* tab, all sent messages are listed. You can view, delete or forward messages.

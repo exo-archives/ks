@@ -1,0 +1,126 @@
+
+h1. Forum JCR Structure
+
+
+
+h1. Overview
+eXo Forum is a JCR based application. Forum information is saved in eXo-JCR under ForumService data directory.
+
+!forumstructure.png!
+
+
+h1. Forum System
+Forum system node creates from nodetype exo:forumSystem. That is defined as a child node of ForumService and can store nodes with nodetype as exo:banIP, exo:forumUserProfile, exo:statistic, exo:administration under forum system.
+
+<tt>
+/exo:applications/ForumService/ForumSystem
+<tt>
+
+
+h2. Ban IP address and Ban IP address home
+Storing information about banned IP address access forum. Node type is exo:banIP, exo:banIPHome
+
+The banIP stores under ForumSystem node
+
+<tt>
+/exo:applications/ForumService/ForumSystem/exo:banIPHome/exo:banIP
+<tt>
+
+
+h2. User profile and User profile home
+Storing information of each user, user profile is auto created by a listener when user register to organization service. Private message can be added to user profile as a child node. Node type is exo:forumUserProfile, exo:userProfileHome. Private message exo:privateMessage define as child node of exo:forumUserProfile
+
+The user profile stores under ForumSystem node
+
+<tt>
+/exo:applications/ForumService/ForumSystem/exo:userProfileHome/exo:forumUserProfile
+<tt>
+
+h2. Statistic and Statistic home
+Storing Statistic information of forum as number of posts, topics, users, active users, ... Node type is exo:forumStatistic, exo:statisticHome
+
+The Statistic stores under ForumSystem node
+
+<tt>
+/exo:applications/ForumService/ForumSystem/exo:statisticHome/exo:forumStatistic
+<tt>
+
+
+h2. Administration and Administration home
+Storing informations for setting the layout, email notify format and censor works. Node type is exo:administration, exo:administrationHome
+
+The Administration stores under ForumSystem node
+
+<tt>
+/exo:applications/ForumService/ForumSystem/exo:administrationHome/exo:administration
+<tt>
+
+
+h1. Forum Data
+Forum data node creates from nodetype exo:forumData. The data nodes as category, forum, topic, post, tag, BBcode, topic type will store under forum data node.
+
+<tt>
+/exo:applications/ForumService/ForumData
+<tt>
+
+
+h2. Category and Category home
+Category home is defined for stores all categories of forum, this node is a child node of ForumData node and only category nodetype can be added to category home. Node type is exo:categoryHome
+
+<tt>
+/exo:applications/ForumService/ForumData/CategoryHome
+<tt>
+
+Category (node type is exo:forumCategory) is a child node of category home, this nodetype defined to allow add child nodes as exo:forum and exo:forumRSS
+
+<tt>
+/exo:applications/ForumService/ForumData/CategoryHome/Category736e99dec0a8014701622a1157719bb4
+<tt>
+
+
+h2. Forum
+Forum node is defined as child node of category and allowed add child nodes as Topic and RSS type. Node type is exo:forum
+
+<tt>
+/exo:applications/ForumService/ForumData/CategoryHome/Category736e99dec0a8014701622a1157719bb4/Forum1622a1157719bb4736e99dec0a801470
+<tt>
+
+h2. Topic
+
+Topic nodetype is defined as child node of Forum and allowed add child nodes as Topic, Poll and RSS type. Node type is exo:topic, exo:poll
+
+<tt>
+/exo:applications/ForumService/ForumData/CategoryHome/Category736e99dec0a8014701622a1157719bb4/Forum1622a1157719bb4736e99dec0a801470/Topica8014701622a1157719bb4736e99dec0
+<tt>
+
+
+h2. Post
+Post nodetype is defined as child node of Topic and allowed add only attachment type child node. Node type is exo:post, exo:forumAttachment
+
+<tt>
+/exo:applications/ForumService/ForumData/CategoryHome/Category736e99dec0a8014701622a1157719bb4/Forum1622a1157719bb4736e99dec0a801470/Topica8014701622a1157719bb4736e99dec0/Posta157719bb4736e99dec08014701622a1
+<tt>
+
+
+h2. Tag and Tag home
+Tag is storing in formation about name, topic that tag added, number of user used this tag, number of tag in used. Node type is exo:forumTag, exo:tagHome
+
+<tt>
+/exo:applications/ForumService/ForumData/TagHome/tag2a1157719bb4736e99dec0a801470162
+<tt>
+
+
+h2. BBCode and BBCode home
+Defined BBCode that is using in forum, Node type is exo:forumBBCode, exo:forumBBCodeHome
+
+<tt>
+/exo:applications/ForumService/ForumData/forumBBCode/$\{bbcode_name}
+<tt>
+
+
+h2. Topic type and Topic type home
+Node type is exo:topicType, exo:topicTypeHome
+
+<tt>
+/exo:applications/ForumService/ForumData/TopicTypeHome/topicType2ec0a801470162a1157719bb4736e99d
+<tt>

@@ -1,0 +1,58 @@
+
+h1. Search
+
+
+
+We provide users with a Quick Search and Advanced Search categories and questions:
+
+h1. Quick Search
+
+With a Quick Search, you can directly type a search term in the search field. All the categories and questions that have a keyword matching the search term will be quickly displayed in the *Search results* form. Following these steps to do a Quick Search:
+
+
+*Step 1\.* Enter a search term into the search text box at the right top of the Answers screen:
+ 
+ !FAQQuickSearch.png! 
+
+*Step 2.* Click the search icon !SearchIcon.png! to do the Quick Search.
+
+All categories and questions which have the keyword matching with the search term will be displayed in *Search results* form:
+
+ !FAQSearchResult.png! 
+
+
+|| Icon || Name || Description ||
+| !CategoryIcon.png! | Category icon | The result is a category. |
+| !UnansweredIcon.png! | Unanswered question icon | It means the question has not been answered. |
+| !AnsweredIcon.png! | Answered question icon | It means the question has been answered. |
+| !ViewIcon.png! | View icon | To link to question or category detail. |
+
+
+
+
+
+h1. Advanced Search
+
+The Advanced Search allows you to do a search with particular criteria corresponding to the object that is expected to be found. Using the advanced search, users can find questions/categories more exactly.  
+
+To do the Advanced Search, simply click on the Advanced Search icon !AdvancedSearchIcon.png! to open the Advance Search form.
+
+There are some main Advanced Search forms:
+
+* Search in both categories and entries/questions:
+
+You can do the Advanced Search with some specific criteria to find expected categories and questions.
+
+ !FAQSearchInBoth.png! 
+
+* Search in Categories:
+
+You can do the Advanced Search with some specific criteria to find expected categories. Search result will be displayed with categories only.
+
+ !FAQSearchInCategory.png! 
+
+* Search in Entries/Questions:
+
+You can do the Advanced Search with some specific criteria to find expected questions. Search result will be displayed with questions only.
+
+ !FAQSearchInEntry.png! 

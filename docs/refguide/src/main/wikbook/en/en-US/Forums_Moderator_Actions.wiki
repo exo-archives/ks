@@ -1,0 +1,200 @@
+
+h1. Forums Moderator Actions
+
+
+
+
+h1. Edit Forums  
+
+The Administrator can edit whatever forums in whatever categories while the Moderator can only edit the forum moderated by him.
+
+# Moderator can edit an existing forum by following ways:
+
+
+1\. Select a forum and open the *Edit Forum* form by 2 ways:
+
++The 1st way:+ 
+
+- Go to inside the forum which you want to edit.
+- Click the *Forum Tools* and select *Edit* in menu.
+
++The 2nd way:+ This way is for the Administrator only.
+
+- Go to inside the category that contains the forum which you want to edit.
+- Select the forum by selecting its check box.
+- Click the *Manage Category* and select *Edit*.
+
+
+The *Edit Forum* form will appear:
+
+The *Forum* tab:
+
+ !EditForumTab.png! 
+
+
+|| Name || Description ||
+| Add Forum to Category | The category which contains the forum. The moderator has no permission to edit. |
+| Title | The title of the forum. This field is required and limited by 100 characters. |
+| Order |	The order of the forum in the forum list in one category. The default value of this field is '0'. |
+| State | The state of the forum. The default value of this field is 'Open'. It means that this forum is being opened for users to discuss. The other value is 'Close'. It means that normal users can not see that forum. |
+| Status | The status of the forum. The default value is 'Unlock'. It means that all users can view forum and reply to its topic. The other value is 'Lock'. It means that normal users can only view a forum but can't add a topic or a reply. |
+| Description | The brief description about the forum. This field is limited by 100 characters. |
+
+
+
+
+The *Moderation option* tab:
+
+ !EditModerationTab.png! 
+
+
+
+|| Name || Description ||
+| Email addresses to notify when there is a new post | The list of email addresses which will be received a notification when there is new post added to forum.  |
+| Email addresses to notify when there is a new topic | The list of email addresses which will be received notification when there is a new topic added to forum.  |
+| !AddIcon.png! | To select email address from the database. When it is clicked, a pop up is shown to allow selecting email addresses. |
+| Moderate topics | This option is to approve whether the topic to be visible or not when it is added into the forum.  |
+
+
+The *Permission* tab:
+
+ !EditPermissionTab.png! 
+
+
+
+|| Name || Description ||
+| Moderators | The list of users or group having moderation permission. Only the Administrator can edit this field. Simply manually edit value of this field or select from Selector tools.   |
+| Can create topic | The list of users who can create topics in this forum. Simply manually edit value of this field or select from Selector tools. |
+| Post in all threads | The list of users who have permission to add posts to all topics in the forum. Simply manually edit value of this field or select from Selector tools. |
+| Viewer all threads |The list of users who have permission to view all topics the forum. Simply manually edit value of this field or select from Selector tools. |
+
+
+2. Change information of the selected forum. 
+
+3. Complete editing a forum by clicking the *Save* button. 
+
+
+
+
+
+
+
+h1. Lock Forums
+
+It prevents a specific forum from adding a new topic or posting a reply and normal users only have a view permission on the locked forum. Following guides to lock a forum:
+
+
++The 1st way:+
+
+1\. Go into the forum which you want to lock.
+
+2. Click the *Forum Tools* on the forum bar and select *Lock* in menu.
+
++The 2nd way:+   Only the Administrator can do this way.
+
+1\. Go into the category that contains the forum you want to lock.
+
+2. Select the forum by selecting its check boxes.
+
+3. Click the *Manage Category* and select *Lock* in menu.
+
+After being locked, all functions of this forum such as New topic, Post reply... will be disabled. The icons corresponding to forums/topics will be changed from normal status into locked status !LockedForumIcon.png ! /!LockedTopicIcon.png! . 
+
+
+
+
+h1. Unlock Forums 
+
+# Moderator can also unlock forums. A forum can only be added post and topic when it is unlocked. Following guides to unlock forum(s)
+
+
++The 1st way:+
+
+1\. Go into the locked forum which you want to unlock.
+
+2. Click the *Forum Tools* on the forum bar and select *Unlock* in menu.
+
++The 2nd way:+ Only the Administrator can do this way.
+
+
+1\. Go into the category that contains the locked forum which you want to unlock.
+
+2. Select locked forum(s) by selecting the check boxes.
+
+3. Click the *Manage Category* and select *Unlock* in menu.
+
+After being unlocked, all functions such as New post, Post reply... will be enabled. The icons corresponding to forums, topics will be changed from locked status to normal status !NormalForumIcon.png! .
+
+
+h1. Close Forums 
+
+
+# Moderator can close a forum. When a forum is closed, it is invisible and all its functions are disabled. There are two ways to close a forum:
+
+
++The 1st way:+
+
+1\. Go into the forum which you want to close.
+
+2. Click the *Forum Tools* on the forum bar and select *Close* in menu.
+
++The 2nd way:+ Only the Administrator can do this way.
+
+1\. Go into the category that contains the forum which you want to close.
+
+2. Select forums by selecting its check boxes.
+
+3. Click the *Manage Category* and select *Close* in menu. 
+
+After being closed, only the Administrator and the Moderator can see it. 
+
+
+
+h1. Opening forums 
+This function is used to open a closed forum. When a closed forum is opened, all its function will be enabled.
+Do as follows:
+
++The 1st way:+
+* Go into the closed forum which you want to open.
+* Click the *Forum Tools* on the forum bar and select *Open* in menu.
+
++The 2nd way:+
+* Go into the category that includes the forum which you want to close.
+* Select the closed forums by ticking check boxes.
+* Select Open in menu of Manage Category.
+
+After being opened, the forum will be visible to all users.
+
+
+
+
+h1. Export Forums
+
+# Moderator can also export a specific forum in the Forum Application into zip or xml file by following guides:
+
+1\. Go to inside one forum and click on *Forum Tools* and select *Export Forum* in menu:
+
+ !ExportForumMenu.png! 
+
+The *Export* form will appear:
+
+ !ExportForumForm.png! 
+
+
+
+| Name | Description| 
+| File Name | The name of the exported file.| 
+| Compress | This option is to export a file  in form of  zip or xml format| 
+| Save button | To accept exporting the forum.| 
+| Cancel button | To exit the Export form.| 
+
+
+2. Input a File name to export.
+
+3. Select the Create Zip file check box to export a file in form of zip file or leave it blank to export in form of xml file.
+
+4. Click the *Save* button to accept exporting a forum.
+
+# down load pop up will appear to allow you to save the exported file into your local disk.
+
+

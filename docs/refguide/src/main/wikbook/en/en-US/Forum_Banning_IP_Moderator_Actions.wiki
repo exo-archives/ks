@@ -1,0 +1,78 @@
+h1. Forum Banning IP Moderator Actions
+
+{info}
+ Since eXo Forum 1.1
+{info} 
+
+
+
+
+
+
+
+
+
+
+h1. Banning IP from IP Tools
+
+This function allows banning some IPs that may be used by users who abuse the forum functions or violate the forum rules and policies. 
+
+Bans can mean the person can no longer log in or even view the site anymore. All Banned IPs can not be used to add post to the Forum. Any user who uses banned IPs to add post, will be recognized as the banned user, he/she can only view and limited most of basic actions to the forum such as add topic, post, rate...
+
+This function is similar to IP bans in the Administration function. However, the Ban IP tool is used both administrators and moderators to ban IP within one specific forum only while IP bans in the Administration form is used to ban the IP on the Forum application, having effect on all forums.
+
+Both the Administrator and Moderators can use Ban IP tools to ban IP within one specific forum. Following these steps to ban IP on a specific forum: 
+
+*Step 1\.* Go to inside the Forum that you want to ban IP.
+
+*Step 2.* Click the *Forum Tools* and select *Ban IP Tools* in menu:
+
+ !BanIPToolsMenu.png! 
+
+The *Ban IP Forum* form will appear:
+
+ !BanIPForumForm.png! 
+
+*Step 3.* Input an IP into the IP text boxes.
+
+*Step 4.* Click the *Add* link to accept banning the IP.
+
+After adding IP ban, the banned IP will be listed in IP table. You can view all posts added by a specific banned IP or delete it from banned IP list.
+
+To view all post of a specific IP, click on the *Posts* link in the action column of the banned IP that you want to view. All posts of the banned IP will be listed in the *Posts* form. These posts can be viewed and deleted by the Administrator/Moderator
+
+ !PostsForm.png! 
+
+To remove a banned IP from the banned IP list, simply click on *X* in the action column of the banned IP that you want to delete. After being removed from the banned IP list, this IP can be used to take actions in Forum normally.
+
+Besides, filter function in the IP Bans tab help you filter the banned IP easily. To filter banned IPs, simply input the filter term into the filter text box, all IPs that match with the filter term will be displayed in banned IP list.
+
+
+
+
+
+h1. Banning IP from IP Icon
+
+IP can be also banned from the IP information icon when the Administrator or the forum Moderator views a specific topic or post.
+
+Only the Administrator can ban IP on all forums. The Moderator only can ban IP on the forum moderated by him. Following guides to ban IP from IP icon:
+
+*Step 1\.* Right click on the IP information icon.
+
+*Step 2.* Select a ban option in menu:
+
+ !BanIPFormIcon.png! 
+
+In case Ban IP this forum is selected, the IP is banned on the current forum.
+
+In case Ban IP all forum is selected, the IP is banned on all forums in the Forum application.
+
+After being banned, when a mouse over on the banned IP icon, its tool tip will be shown that it is being banned.
+
+
+
+
+
+
+
+

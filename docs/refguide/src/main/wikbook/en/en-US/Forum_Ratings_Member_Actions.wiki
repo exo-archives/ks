@@ -1,0 +1,15 @@
+
+h1. Forum Ratings Member Actions
+
+eXo Forum provides an intuitive rating experience that allows you to select the number of stars that represents your rating. You can rate a topic on a five-star scale: five is the highest.
+
+Following simple guides to rate for the topic you are interested in:
+
+*Step 1\.* Go into the topic which you want to vote.
+
+*Step 2.* Show the *Rate this topic* form by clicking the !TopicRateButton.png! button on the topic bar. 
+
+
+ !TopicRateForm.png! 
+
+*Step 3.* Rate the topic by left clicking on the star. Click the *Cancel* button if you want to quit the *Rate this topic* form.

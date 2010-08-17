@@ -1,0 +1,621 @@
+
+h1. KS Migration from 1.0 to 1.1
+
+
+
+
+This article explains how to upgrade from KS 1.0 to KS 1.1
+
+h2. Data migration Procedure
+
+If you have some existing data from an 1.0 install you need to use our migration tool to transform it for 1.1.
+
+* Export data from current version of KS(version 1.0): Use the export function of Forum and FAQ
+* Build your product with new version of KS(version 1.1)
+* Download exo.ks.migration-1.1.jar file from http://maven2.exoplatform.org/rest/maven2/org/exoplatform/ks/exo.ks.migration/1.1 to your machine
+* Copy downloaded jar file to lib folder in your product server
+* Start server and imports data to Forum and FAQ
+* Stop server(Note: Should be wait for some seconds after server stopped if you are using hsql DB)
+* Start server and see how the new version is working with old data
+* Don't forget remove exo.ks.migration-1.1.jar file in lib folder for the next stop server
+
++Note:+ If you are importing all forum's data via DMS application you need to open forum xml file in an text editor and replace all "exo:userProfile" to "exo:forumUserProfile".
+Careful with "replace all" function of editor because there is another nodetype named "exo:userProfiles" so the "replace all" function will be make a wrong name of nodetype.
+
+
+
+
+
+h2. Feature changes
+
+Some features have been added others have changed a little bit. So, you may want to update your configuration too.
+This chapter details the  possible configuration changes you may want to apply per feature.
+
+h3. FAQ
+* New feature
+** *View user's avatar*: configuration in portlet preference (file: portlet.xml in eXoApplication/faq/webapp/src/main/webapp/WEB-INF directory ) add new preference:
+{code:xml}
+<preference>
+  <name>enableViewAvatar</name>
+  <value>true</value> <!- true/false ->
+  <read-only>false</read-only>
+</preference>
+{code}
+
+Click [here>http:--wiki.exoplatform.com-xwiki-bin-view-KS-FAQ+Member+actions#HUsersetting] to more detail about user setting function.
+** *RSS*: configuration in portlet preference (file: portlet.xml in eXoApplication/faq/webapp/src/main/webapp/WEB-INF directory ) add new preference:
+{code:xml}
+<preference>
+  <name>enableAutomaticRSS</name>
+  <value>true</value> <!-- true/false -->
+  <read-only>false</read-only>
+</preference>
+{code}
+
+Click [here|http://wiki.exoplatform.com/xwiki/bin/view/KS/FAQ+Guest+actions#GettingRSS] to more detail about RSS function.
+** *Vote and comment*: configuration in portlet preference (file: portlet.xml in eXoApplication/faq/webapp/src/main/webapp/WEB-INF directory ) add new preference:
+{code:xml}
+<preference>
+  <name>enanbleVotesAndComments</name>
+  <value>true</value> <!- true/false ->
+  <read-only>false</read-only>
+</preference>
+{code}
+
+Click [here>http:--wiki.exoplatform.com-xwiki-bin-view-KS-FAQ+Member+actions#HVoting] to more detail about Vote and Comment functions.
+** *Discuss forum*: configuration in portlet preference (file: portlet.xml in eXoApplication/faq/webapp/src/main/webapp/WEB-INF directory ) add new preferences:
+{code:xml}
+<preference>
+  <name>isDiscussForum</name>
+  <value>false</value>
+  <read-only>false</read-only>
+</preference>
+<preference>
+  <name>idNameCategoryForum</name>
+  <value> </value>	<!-- id of forum;CategoryName/ForumName -->
+  <read-only>false</read-only>
+</preference>
+{code}
+
+Click [here|http://wiki.exoplatform.com/xwiki/bin/view/KS/FAQ+Member+actions#Discussingforum] to more detail about Disscuss Forum functions.
+
+* Changed feature
+** *Role rules plugin*: configuration in KS Plugin (file: ks-plugins-configuration.xml in web/ksportal/src/main/webapp/WEB-INF/conf/ks directory ), find 
+
+{code:xml}
+<external-component-plugins>
+	<target-component>org.exoplatform.faq.service.FAQService</target-component>		
+	
+	<component-plugin>
+		<name>add.role.rules.plugin</name>
+		<set-method>addRolePlugin</set-method>
+		<type>org.exoplatform.faq.service.conf.RoleRulesPlugin</type>
+		<description>add role rules</description>
+		<init-params>
+			<value-param>
+				<name>role</name>
+				<description>name of the role</description>
+				<value>ADMIN</value>
+			</value-param>
+			<values-param>
+				<name>rules</name>
+				<description>rules of the role</description>
+				<value>member:/demo</value>
+				<value>root</value>
+				<value>admin</value>
+				<!-value>/platform/administrators</value->
+				<!-value>manager:/platform/users</value->
+				<!-value>*:/somegroup/somesubgroup</value->
+				<!-value>manager:/somegroup/someothergroup</value->
+			</values-param>
+		</init-params>
+	</component-plugin>
+	
+</external-component-plugins>	 
+{code}
+
+and change 
+
+{code:xml}<type>org.exoplatform.faq.service.conf.RoleRulesPlugin</type>
+{code}
+ 
+
+to 
+
+{code:xml}
+<type>org.exoplatform.ks.common.conf.RoleRulesPlugin</type>
+{code}
+
+Because *RoleRulesPlugin* component have been moved to *common* to re-use for all KS, and path to this component must change.
+
+* Removed feature
+** Removed some actions in *FCKEditor*: find exoconfig.js file (in web/ksportal/src/main/webapp/fckeditor/exo directory) and change 
+
+{code:xml}
+FCKConfig.ToolbarSets["eXoFAQ"] = [
+	['FitWindow','-','Cut','Copy','Paste','-','Undo','Redo','-','Bold','Italic','Underline'],
+	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],['OrderedList','UnorderedList','Outdent','Indent'],
+	['Image','Flash','Table','-','TextColor']
+] ;
+{code}
+
+to
+
+{code:xml}
+FCKConfig.ToolbarSets["eXoFAQ"] = [
+	['FitWindow','-','Cut','Copy','Paste','-','Undo','Redo','-','Bold','Italic','Underline'],
+	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],['OrderedList','UnorderedList','Outdent','Indent','-','TextColor'],
+	['Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
+] ;
+{code}
+
+1.1.1 Forum
+* New feature
+** *Have use AJAX*: configuration in portlet preference (file: portlet.xml in eXoApplication/forum/webapp/src/main/webapp/WEB-INF directory ), add new preference 
+
+{code:xml}
+<preference>
+	<name>useAjax</name>
+	<value>true</value> <!--true/false -->
+	<read-only>false</read-only>
+</preference>
+{code}
+
+** *Ban IP address*: configuration in portlet preference (file: portlet.xml in eXoApplication/forum/webapp/src/main/webapp/WEB-INF directory ), add new preference 
+
+{code:xml}
+<preference>
+	<name>enableIPFiltering</name>
+	<value>true</value> <!-true/false ->
+	<read-only>false</read-only>
+</preference>
+{code}
+
+Click [here>http:--wiki.exoplatform.com-xwiki-bin-view-KS-Forum+Moderator+actions#HBanningIP] to more detail about Ban IP function.
+** *Invisible Categories and Forums*: configuration in portlet preference (file: portlet.xml in eXoApplication/forum/webapp/src/main/webapp/WEB-INF directory ), add new preferences
+
+{code:xml}
+<preference>
+	<name>invisibleCategories</name>
+	<value></value> <!--id categories -->
+	<read-only>false</read-only>
+</preference>
+<preference>
+	<name>invisibleForums</name>
+	<value></value> <!--id forums -->
+	<read-only>false</read-only>
+</preference> 
+{code}
+
+Click [here|http://wiki.exoplatform.com/xwiki/bin/view/KS/Forum+Admin+actions#Hiding2FshowinginForumPortletSettings] to more detail about Hiding/showing in Forum Portlet Settings function.
+
+* Changed features
+** *Role rules plugin*: configuration in KS Plugin (file: ks-plugins-configuration.xml in web/ksportal/src/main/webapp/WEB-INF/conf/ks directory ), find 
+
+{code:xml}
+	<external-component-plugins>
+		<target-component>org.exoplatform.forum.service.ForumService</target-component>		
+		
+		<component-plugin>
+			<name>add.role.rules.plugin</name>
+			<set-method>addRolePlugin</set-method>
+			<type>org.exoplatform.forum.service.conf.RoleRulesPlugin</type>
+			<description>add role rules</description>
+			<init-params>
+				<value-param>
+					<name>role</name>
+					<description>name of the role</description>
+					<value>ADMIN</value>
+				</value-param>
+				<values-param>
+					<name>rules</name>
+					<description>rules of the role</description>
+					<value>root</value>
+					<value>admin</value>
+					<value>member:/demo</value>
+					<!-value>/platform/administrators</value->
+					<!-value>manager:/platform/users</value->
+					<!-value>*:/somegroup/somesubgroup</value->
+					<!-value>manager:/somegroup/someothergroup</value->
+				</values-param>
+			</init-params>
+		</component-plugin>
+	  
+	  <component-plugin>
+			<name>default.data</name>
+			<set-method>addInitialDataPlugin</set-method>
+			<type>org.exoplatform.forum.service.conf.InitializeForumPlugin</type>
+			<description>description</description>
+			<init-params>
+				<object-param>
+					<name>livedemo.default.configuration</name>
+					<description>initial data for live demo</description>
+					<object type="org.exoplatform.forum.service.conf.ForumInitialData">
+						<field name="categories">
+							<collection type="java.util.ArrayList">
+								<value>
+									<object type="org.exoplatform.forum.service.conf.CategoryData">
+										<field name="owner">
+											<string>root</string>
+										</field>
+										<field name="name">
+											<string>Knowledge Suite</string>
+										</field>
+										<field name="description">
+											<string>All about eXo KS</string>
+										</field>
+										<field name="forums">
+											<collection type="java.util.ArrayList">
+												<value>
+													<object type="org.exoplatform.forum.service.conf.ForumData">
+														<field name="owner"><string>root</string></field>
+														<field name="name"><string>Live demo</string></field>
+														<field name="description"><string>Questions about this demo</string></field>
+														<field name="topics">
+															<collection type="java.util.ArrayList">
+																<value>
+																	<object type="org.exoplatform.forum.service.conf.TopicData">
+																		<field name="name"><string>Demo data policy</string></field>
+																		<field name="icon"><string>Shield</string></field>
+																		<field name="owner"><string>root</string></field>
+																		<field name="content"><string>
+																		Welcome to eXo Knowledge Suite live demo!\n\n\n 
+
+																		We hope you enjoy discovering eXo Forum and FAQ applications features. 
+																		You don't need to be logged in to see the applications in action. But the power of KS lies in the rich set of admin/moderation features.\n\n
+																		We didn't want you to miss them so, when you [b][url="/portal/public/classic/register"]create a demo account[/url][/b], you will be granted full permissions.
+																		Anybody can become an administrator or a moderator and play in the sandbox!\n
+																		As a consequence, the data for this forum (including the accounts) is not meant to stay.\n\n
+																		[b][center]WE MAY RESET FORUMS AND FAQS ANYTIME[/center][/b]\n\n
+																		Enjoy and don't forget to send feedback at [email]ks@exoplatform.com[/email]</string></field>
+																	</object>
+																</value>
+															</collection>
+														</field>
+													</object>
+												</value>
+											</collection>
+										</field>
+									</object>
+								</value>
+							</collection>
+						</field>
+					</object>
+				</object-param>
+			</init-params>
+		</component-plugin>
+	</external-component-plugins>
+{code}
+
+and change 
+
+{code:xml}<type>org.exoplatform.forum.service.conf.RoleRulesPlugin</type>
+{code}
+
+to 
+
+{code:xml}
+<type>org.exoplatform.ks.common.conf.RoleRulesPlugin</type>
+{code}
+
+Because *RoleRulesPlugin* component have been moved to *common* to re-use for all KS, and path to this component must change.
+
+* Removed feature
+** Remove some action in *FCKEditor*: find exoconfig.js file (in web/ksportal/src/main/webapp/fckeditor/exo directory) and change 
+
+{code:xml}
+FCKConfig.ToolbarSets["eXoForum"] = [
+	['FitWindow','-','Cut','Copy','Paste','-','Undo','Redo','-','Bold','Italic','Underline'],
+	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],['OrderedList','UnorderedList','Outdent','Indent'],
+	['Image','Flash','Table','-','TextColor'],
+	['Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
+] ;
+{code}
+to
+{code:xml}
+FCKConfig.ToolbarSets["eXoForum"] = [
+	['FitWindow','-','Cut','Copy','Paste','-','Undo','Redo','-','Bold','Italic','Underline'],
+	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],['OrderedList','UnorderedList','Outdent','Indent','-','TextColor'],
+	['Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
+] ;
+{code}
+
+1.1 Data structure changes
+
+This chapter details what has changed to the data structures.
+
+1.1.1 FAQ nodetypes
+* Added new node types: *exo:answer*, *exo:comment*, *exo:faqRSS*.
+** *exo:answer* 
+
+{code:xml}
+<nodeType name="exo:answer" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+ <supertypes>
+     <supertype>nt:base</supertype>
+ </supertypes>
+  <propertyDefinitions>
+     <propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+      <valueConstraints/>
+  </propertyDefinition>
+  <propertyDefinition name="exo:responses" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+     <valueConstraints/>
+  </propertyDefinition>
+  <propertyDefinition name="exo:dateResponse" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+      <valueConstraints/>
+  </propertyDefinition>
+  <propertyDefinition name="exo:responseBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+      <valueConstraints/>
+  </propertyDefinition>
+  <propertyDefinition name="exo:approveResponses" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+      <valueConstraints/>
+  </propertyDefinition>
+ <propertyDefinition name="exo:activateResponses" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+     <valueConstraints/>
+ </propertyDefinition>
+ <propertyDefinition name="exo:usersVoteAnswer" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+     <valueConstraints/>
+ </propertyDefinition>
+ <propertyDefinition name="exo:MarkVotes" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+     <valueConstraints/>
+ </propertyDefinition>
+ <propertyDefinition name="exo:postId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+     <valueConstraints/>
+ </propertyDefinition>
+ </propertyDefinitions>
+  </nodeType>
+{code}
+
+** *exo:comment*
+{code:xml}
+  <nodeType name="exo:comment" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+  	<supertypes>
+	 	  <supertype>nt:base</supertype>
+	 	</supertypes>
+    <propertyDefinitions>
+    	<propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+  		</propertyDefinition>
+      <propertyDefinition name="exo:comments" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+  		</propertyDefinition>
+  		<propertyDefinition name="exo:dateComment" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+  		</propertyDefinition>
+  		<propertyDefinition name="exo:commentBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+	  	</propertyDefinition>
+	  	<propertyDefinition name="exo:postId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+	  	</propertyDefinition>
+    </propertyDefinitions>
+  </nodeType>
+{code}
+
+** *exo:faqRSS*
+
+{code:xml}
+  <nodeType name="exo:faqRSS" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+  	<supertypes>
+	 	  <supertype>nt:base</supertype>
+	 	</supertypes>
+    <propertyDefinitions>
+      <propertyDefinition name="exo:content" requiredType="Binary" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+  		</propertyDefinition>	  
+    </propertyDefinitions>
+  </nodeType>
+{code}
+
+* Node type changes: 
+** *exo:faqQuestion*
+     *** Add new properties: *exo:title*, *exo:usersVote*, *exo:markVote* and *exo:topicIdDiscuss*.
+     *** Remove properties: *exo:responses*, *exo:dateResponse* and *exo:responseBy*.
+     *** Add new child node definitions: *exo:answer*, *exo:comment*.
+** *exo:faqCategory*
+     *** Add new properties: *exo:isModerateAnswers*.
+     *** Add new child node definitions: *exo:faqRSS*.
+** *exo:faqCategoryHome*
+     *** Add new properties: *exo:name*, *exo:description*, *exo:isModerateQuestions*, *exo:isModerateAnswers*, *exo:viewAuthorInfor*, *exo:moderators*.
+     *** Add new child node definitions: *exo:faqRSS*.
+* configuration
+
+{code:xml}
+<external-component-plugins>
+	<target-component>org.exoplatform.faq.service.FAQService</target-component>		
+	
+	<component-plugin>
+		<name>add.role.rules.plugin</name>
+		<set-method>addRolePlugin</set-method>
+		<type>org.exoplatform.ks.common.conf.RoleRulesPlugin</type>
+		<description>add role rules</description>
+		<init-params>
+			<value-param>
+				<name>role</name>
+				<description>name of the role</description>
+				<value>ADMIN</value>
+			</value-param>
+			<values-param>
+				<name>rules</name>
+				<description>rules of the role</description>
+				<value>root</value>
+				<value>admin</value>
+				<!-value>member:/demo</value->
+				<!-value>/platform/administrators</value->
+				<!-value>manager:/platform/users</value->
+				<!-value>*:/somegroup/somesubgroup</value->
+				<!-value>manager:/somegroup/someothergroup</value->
+			</values-param>
+		</init-params>
+	</component-plugin>
+	
+</external-component-plugins>	
+{code}
+
+1.1.1 Forum nodetypes
+* Added new node types: *exo:banIP*.
+
+{code:xml}
+	<nodeType name="exo:banIP" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+		<supertypes>
+		  <supertype>nt:base</supertype>
+	  </supertypes>	
+		<propertyDefinitions>
+			<propertyDefinition name="exo:ips" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+			</propertyDefinition>			
+		</propertyDefinitions>
+	</nodeType>
+{code}
+
+* Node types updated
+** *exo:forum*
+     *** Add new properties: *exo:isAutoAddEmailNotify*, *exo:banIPs*, 
+** *exo:userProfile*
+     *** The first, change this node type from *exo:userProfile* to *exo:forumUserProfile*.
+     *** Add new properties: *exo:readForum*, *exo:isAutoWatchMyTopics*, *exo:isAutoWatchTopicIPost*.
+** *exo:userProfiles*
+     *** Find 
+{code:xml}
+<childNodeDefinitions>
+     <childNodeDefinition name="*" defaultPrimaryType="exo:userProfile" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+          <requiredPrimaryTypes>
+               <requiredPrimaryType>exo:userProfile</requiredPrimaryType>
+          </requiredPrimaryTypes>
+     </childNodeDefinition>
+</childNodeDefinitions>
+
+{code}
+ and replace all *exo:userProfile* to *exo:forumUserProfile*.
+** *exo:administration*
+     *** Add new properties: *exo:headerSubject*, *exo:enableHeaderSubject*.
+** *exo:forumHome*
+     *** Add new child node definitions: *exo:banIP*.
+
+* Configuration
+{code:xml}
+<external-component-plugins>
+	<target-component>org.exoplatform.forum.service.ForumService</target-component>		
+	
+	<component-plugin>
+		<name>add.role.rules.plugin</name>
+		<set-method>addRolePlugin</set-method>
+		<type>org.exoplatform.ks.common.conf.RoleRulesPlugin</type>
+		<description>add role rules</description>
+		<init-params>
+			<value-param>
+				<name>role</name>
+				<description>name of the role</description>
+				<value>ADMIN</value>
+			</value-param>
+			<values-param>
+				<name>rules</name>
+				<description>rules of the role</description>
+				<value>root</value>
+				<value>admin</value>
+				<value>member:/demo</value>
+				<value>/forums/admin</value>
+      <value>*:/forum/admin</value> 
+				<!--value>/platform/administrators</value-->
+				<!--value>manager:/platform/users</value-->
+				<!--value>*:/somegroup/somesubgroup</value-->
+				<!--value>manager:/somegroup/someothergroup</value-->
+			</values-param>
+		</init-params>
+	</component-plugin>
+  
+  <component-plugin>
+		<name>default.data</name>
+		<set-method>addInitialDataPlugin</set-method>
+		<type>org.exoplatform.forum.service.conf.InitializeForumPlugin</type>
+		<description>description</description>
+		<init-params>
+			<object-param>
+				<name>livedemo.default.configuration</name>
+				<description>initial data for live demo</description>
+				<object type="org.exoplatform.forum.service.conf.ForumInitialData">
+					<field name="categories">
+						<collection type="java.util.ArrayList">
+							<value>
+								<object type="org.exoplatform.forum.service.conf.CategoryData">
+									<field name="owner">
+										<string>root</string>
+									</field>
+									<field name="name">
+										<string>Knowledge Suite</string>
+									</field>
+									<field name="description">
+										<string>All about eXo KS</string>
+									</field>
+									<field name="forums">
+										<collection type="java.util.ArrayList">
+											<value>
+												<object type="org.exoplatform.forum.service.conf.ForumData">
+													<field name="owner"><string>root</string></field>
+													<field name="name"><string>Live demo</string></field>
+													<field name="description"><string>Questions about this demo</string></field>
+													<field name="topics">
+														<collection type="java.util.ArrayList">
+															<value>
+																<object type="org.exoplatform.forum.service.conf.TopicData">
+																	<field name="name"><string>Demo data policy</string></field>
+																	<field name="icon"><string>Shield</string></field>
+																	<field name="owner"><string>root</string></field>
+																	<field name="content"><string>
+																	Welcome to eXo Knowledge Suite live demo!\n\n\n 
+
+																	We hope you enjoy discovering eXo Forum and FAQ applications features. 
+																	You don't need to be logged in to see the applications in action. But the power of KS lies in the rich set of admin/moderation features.\n\n
+																	We didn't want you to miss them so, when you [b][url="/portal/public/classic/register"]create a demo account[/url][/b], you will be granted full permissions.
+																	Anybody can become an administrator or a moderator and play in the sandbox!\n
+																	As a consequence, the data for this forum (including the accounts) is not meant to stay.\n\n
+																	[b][center]WE MAY RESET FORUMS AND FAQS ANYTIME[/center][/b]\n\n
+																	Enjoy and don't forget to send feedback at [email]ks@exoplatform.com[/email]</string></field>
+																</object>
+															</value>
+														</collection>
+													</field>
+												</object>
+											</value>
+										</collection>
+									</field>
+								</object>
+							</value>
+						</collection>
+					</field>
+				</object>
+			</object-param>
+		</init-params>
+	</component-plugin>
+</external-component-plugins>
+{code}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

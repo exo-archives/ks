@@ -1,0 +1,625 @@
+
+h1. Forums Administration Actions
+
+
+
+
+
+h1. Add Forums
+
+The Administrator can add new forums into a specific category in the Forum Application. Following guides to add a new forum:
+
+*Step 1.* Open the *Add New Forum* form by one of following ways:
+
++The 1st way:+ 
+
+
+Click the *Manage Category* button on the main menu bar and select *Add forum* in menu.
+
+The *Forum* form will appear with the *Add Forum to Category* combo box available for selecting the category to which the forum will belong.
+
++The 2nd way:+ 
+
+Go into the category which you want to add a forum.
+
+Click the *Manage Category* and select *Add new forum* in menu. 
+
+The *Forum* form will appear:
+
+ !ForumForm.png! 
+
+*Step 2.* Enter values for fields in the *Add New Forum* form.
+
+*Step 3.* Complete adding a new forum by clicking the *Save* button.
+
+The *Forum* tab:
+
+|| Name || Description ||
+| Add Forum to Category | the category which is selected to add a new forum. In this way, because the Add new forum function is called inside the selected forum so that this filed is already set with predefined value and can not be changed flexibly like the 1st  way. |
+| Title |	The title of the forum. This field is required and limited by 100 characters. |
+| Order | The order of the forum in the forum list in one category. The default value of this field is '0'. |
+| State | The state of the forum. The default value of this field is 'Open'. It means that this forum is being opened for users to discuss. The other value is 'Close' . It means that normal users can not see that forum. |
+| Status | The status of the forum. The default value is 'Unlock'. It means that all users can view a forum and reply to its topic. The other value is 'Lock'. It means that normal users can only view a forum but can't add topic or reply. |
+| Description | The brief description about the forum. This field is limited by 100 characters. |
+| Save button | To accept saving a new forum. |
+| Cancel button |	To close the *Add New Forum* form. |
+
+
+
+The *Moderation options* tab:
+
+ !ModerationOptionstab.png! 
+
+
+
+|| Name || Description ||
+| Automatically get mails | This option is to add mail into the notify boxes automatically or not. In case, this check box is ticked, if the moderator is assigned to this forum, his email address will be added automatically into the notify boxes. On the other hand, notify boxes can be edited manually. |
+| Email addresses to notify when there is a new post | The list of email addresses which will receive the notification when there is a new post added to forum.  |
+| Email addresses to notify when there is a new topic | The list of email addresses which will receive the  notification when there is a new topic added to forum.  |
+| Moderate topics | This option is to check status of all new topics in the forum. It means: by default, when there is a new topic ,this topic is always approved and visible.  But when the creator checks this check box , the new topic added to forum will be pending for being checked the approval before visible.	 |
+	
+
+
+The *Permissions* tab:
+
+ !PermissionTab.png! 
+
+
+
+|| Name || Description ||
+| Moderators | The list of users or groups that have the Moderation right. Only the Administrator can edit this field. Simply manually edit the value of this field or select from the Selector tools !SelectorTools.png! .  |
+| Can create topic | The list of users who can create topics in this forum. Simply manually edit value of this field or select from the Selector tools. |
+| Post in all threads | The list of users who have a permission to add posts to all topics in the forum. Simply manually edit value of this field or select from the Selector tools. |
+| Viewer all threads |The list of users who have a permission to view all topics the forum. Simply manually edit value of this field or select from the Selector tools !SelectorTools.png! . |
+
+
+
+You can enter values for the *Moderation options* tab or the *Permissions* tab. By default, if you do not input values for these tabs, only the Administrators have the management permission, the normal users can only view, add new topics and post replies into this forum.
+
+
+
++*Note:*+ 
+
+Since 1.1, when you add a Moderator to a forum, the moderator 's email address will be added automatically in the "Notify ..." fields in the  *Moderation* tab. When there are new changes in the forum, the notification mail will be sent to the Moderator.  In case the moderator does not want to receive the notification, he can remove his email address manually from the boxes when editing the forum.
+
+
+
+
+
+
+
+
+
+
+
+h1. Move Forums 
+
+The *Administration* can move one forum from the current category to another one by following ways: 
+
++The 1st way:+ 
+
+*Step 1\.* Go into the category that includes the forum which you want to move.
+
+*Step 2.* Select forum(s) in list by selecting its check box(s).
+
+*Step 3.* Click the *Manage Category* and select *Move* in menu. The *Move Forum* form will appear:
+
+ !MoveForumForm.png! 
+
+*Step 4.* Select one category in list to move.
+
++The 2nd  way:+
+
+*Step 1\.* Go into the forum that you want to move.
+
+*Step 2.* Click the *Forum Tools* on the forum bar and select *Move* in menu. The *Move Forum* form will appear like above.
+
+*Step 3.* Select one category in the list to move a forum to.
+
+
+
+
+
+h1. Export Forums and Categories
+
+The export function is a best way to back up data in the Forum. This function allows exporting category and forum in the Forum application into zip or xml file. When a category or a forum is exported, all its forum, topics, posts and its properties are exported exactly. The exported file can be used to import into the Forum application.
+
+h2. Export Categories
+
+This function is used to export category and all forums inside in form of zip file. You can export all categories or one specific category in the Forum.
+
+To export all categories, do as follow:
+
+*Step 1:* Go to the Forum application and click the *Manage Category* button on the main menu bar and select *Export*  in menu.
+
+The *Export Categories* form will appear:
+
+ !ExportCategories.png! 
+
+*Step 2:* Select category and input the File name to export.
+
+*Step 3:* Click the *Save* button to accept exporting all categories in Forum
+
+# download pop up will appear:
+
+ !DownloadPopup.png! 
+
+*Step 4:* Simply select the *Save File* option and click the *OK* button to accept saving the exported file
+
+Similarly, to export a specific category, go to the Forum application and go to inside a specific category. Click on the Manage Category button and select Export category in the menu
+
+The *Export Category* form will appear and do action like steps above to export the category.
+
+Notes:
+
+Because only one category is exported, you can choose export format for the exported file zip or xml.
+
+
+
+
+
+h2. Export Forums
+
+This function is used to export forums and all topics inside in the Forum application in form of xml or zip file.
+
+Do as follow:
+
+*Step 1:* Go to inside one forum and click on the Forum Tools and select Export Forum in the menu:
+
+ !ExportForumOption.png! 
+
+The *Export* form will appear:
+
+ !ExportForm.png! 
+
+*Step 2:* Input the File name to export
+
+*Step 3:* Tick on the Create Zip file check box to export file in form of zip file or leave it blank to export in form of xml file.
+
+*Step 4:* Click the Save button to accept exporting forum.
+
+# Fire Fox 3 down load pop up will appear :
+
+ !DownloadPopup.png! 
+
+Simply select the *Save File* option and click the *OK* button to accept saving the exported file.
+
+
+
+
+
+
+h1. Import Forums and Categories
+
+h2. Import Categories
+
+This function is used to import category into the Forum application from valid format file. If the imported file contains some categories, some categories can be imported at a time. If the imported file contains only one category, only one category is exported.
+
+To import category, do as follow:
+
+*Step 1.* Go to the Forum application and  click the *Manage Category* button on the main menu bar and select *Import* category in menu.
+
+The *Import Category* form will appear:
+
+ !ImportCategory.png! 
+
+*Step 2.* Click the Browser button and select the file path.
+
+*Step 3.* Click the !UploadIcon.png! button to upload the selected file.
+
+For example, select and upload the exported file named eXo Knowledge Suite.zip. After uploading successfully, the  *Import Category* form is shown:
+
+ !ImportCategory2.png! 
+
+*Step 4.* Click the *Save* button to accept importing.
+
+After being imported successfully, all categories and forums inside which are defined in the zip file will be imported and displayed properly in Forum home page.
+
+
+
+
+
+
+
+
+
+
+h2. Import Forums
+
+
+The Administrator can import a forum into the Forum application from a valid format file by following guides:
+
+*Step 1\.* Go to inside one category and click the *Manage category* and select *Import forum* in menu:
+
+ !ImportForumMenu.png! 
+
+The *Import Forum* form will appear:
+
+ !ImportForumForm.png! 
+
+
+
+|| Name || Description ||
+| File Import | The path of the imported file. |
+| Browser button | To select the imported file path. |
+| !UploadIcon.png! | To upload the selected file. |
+| *Save* button | To accept importing the uploaded file. |
+| *Cancel* button | To exit the *Import* form. |
+
+
+*Step 2.* Click the *Browser...* button and select a file from the local disk.
+
+*Step 3.* Click the !UploadIcon.png!  button to upload the selected file.
+
+*Step 4.* Click the *Save* button to accept importing.
+
+After being imported, the forums and topics inside which are defined in the zip or xml file will be imported into the selected category and displayed properly in Forum home page.
+
+
+
+
+
+
+
+h1. Forum Administration
+
+You easily administrate a forum by following guides:
+
+
+*Step 1\.* Click on the !AdministrationButton.png! button on the main action bar to open the *Forum Administration* form.
+
+
+|| Functions   ||  Since ||
+| Sort    | eXo KS 1.0 |
+| Censor  | eXo KS 1.0 |
+| Notification | eXo KS 1.1 |
+| BB Codes   |   eXo KS 1.2 |
+| Auto-Prune  | eXo KS 1.2 |
+| Topic Type  | eXo KS 1.2 |
+| IP Bans    | eXo KS 1.1 |
+
+
+h2. Sort
+
+The *Sort* tab is used to set some properties related to the sorting of forums and topics in the Forum Application. 
+
+ !1SortTab.png!  
+
+- *Sort forums by*: The properties are used to sort forums in list. These properties are:
+
+
+|| Name || Description  ||
+| Name | The name of a forum. |
+| Order | The order of a forum.  |
+| Lock Status | The lock status of a forum. |
+| Creation Date | The created date of a forum. |
+| Modification Date | The modified date of a forum. |
+| Topic Count | The number of topics in forum |
+| Post Count | The number of posts in a forum. |
+
+
+- *Direction*: The type of sorting forums. It may be: Ascending or Descending
+- *Sort topics by*: The properties of topic are used to sort topics in list. These properties are:
+
+
+ !3SortTab.png!  
+
+
+|| Name || Description ||
+| Name | The name of a topic. |
+| Lock status | Topics with status 'Locked'. |
+| Creation Date | The created date of a topic. |
+| Modification Date | The modified date of a topic. |
+| Date of last post | The created date of a topic's last post  |
+| Post count | The number of posts in a topic. |
+| View count | The number of views in a topic. |
+| Attachments count | The number of attached files in a topic. |
+
+
+- *Direction*: The type of sorting topics.
+- *Save* button: To accept saving changes in *Forum Administration*.
+- *Cancel* button:	To close the *Forum Administration* form.
+
+
+
+
+h2. Censor
+
+The *Censor* tab includes all censored keywords. The topic/post that is added with one of these keywords will be censored before displaying. It means that those topics or posts only are displayed after the Administrator/Moderator censor them. 
+
+
+
+
+ !4CensorTab.png!  
+
+
+h2. Notify Content
+
+The *Notify Content* tab allows the Administrator to compose the notification email content by manually editing and clicking the *Save* button. 
+
+The content defined in the *Notify Content* tab will be used to send the notification email to users who have registered for eXo Category/Forum/Topic Watching notification and the Administrator/Moderator/Creator who uses 'Topic notification' or 'Post notification' when adding a new forum or topic.
+
+
+
+ !5NotificationTab.png!  
+
+
+
+|| Name || Description || Since ||
+| Enable Header Subject |	This option is to whether display the header subject for the notification email or not. | 1.1 |
+| Header Subject | The content of the header subject of the notification email.| 1.1 |
+| Template new topic/post notification | The template content of the notification email. It can be decorated by FCK Editor. | 1.0 |
+| $OBJECT_WATCH_TYPE | This parameter is to show  watch object  which may be Forum or Topic. | 1.0 |
+| $OBJECT_NAME | This parameter is to show the title of  Forum/Topic which is being watched. | 1.0	 |
+| $ADD_TYPE | This parameter is to show the added type which may be a new topic or post.| 1.0 |
+| @POST_CONTENT |	This parameter is to show the content of the new post added.| 1.0 |
+| STIME | This parameter is to show the time of the added post.| 1.0 |
+| $DATE | This parameter is to show the date of the added post.| 1.0 |
+| @POSTER |This parameter is to show the user name of the person who adds post. | 1.0 |
+| $LINK |	This parameter is to show the link which refer to the post in Forum.| 1.0	 |
+| Template moving notification  |	The template content of the topic/post that is moved to the other forum/topic. |
+| $OBJECT_NAME   | 	This parameter is to show the title of topic/post which has been moved to the new destination. |
+| $OBJECT_PARENT_NAME   | 	This parameter is to show the title of the forum/topic destination of the moved object. |
+
+
+
+{info}
+For eXo KS 1.2 
+{info}
+
+The *Notification* tab has some small changes:
+
+ !Notification1.2.png! 
+
+
+Details:
+
+
+|| Name     || Description ||
+| Add a prefix to Notification   |	This option is to whether add a prefix for the notification email or not. |
+| Notification subject template   |	The content of the header subject of the notification email. The default template contains name of a category, forum, topic. |
+| New Posts Notification   |	The template content of the new topic/post notification email. It can be decorated by FCK Editor. |
+| $OBJECT_WATCH_TYPE    |  	This parameter is to show  watch object  which may be Forum or Topic. |
+| $OBJECT_NAME   |  	This parameter is to show the title of  Forum/Topic which is being watched.	 |
+| $ADD_TYPE       |	This parameter is to show the added type which may be new topic or post. |
+| @POST_CONTENT   |	This parameter is to show the content of the new post added. |
+| STIME   | 	This parameter is to show the time of the added post. |
+| $DATE   | 	This parameter is to show the date of the added post. |
+| @POSTER    |	This parameter is to show the user name of the person who adds post, |
+| $LINK   |	This parameter is to show the link which refer to the post in Forum.	 |
+| Content moved Notification	|    The template content of the topic/post that is moved to the other forum/topic. |
+| $OBJECT_NAME   | 	This parameter is to show the title of topic/post which has been moved to the new destination. |
+| $OBJECT_PARENT_NAME   |	This parameter is to show the title of the forum/topic destination of the moved object.	 |
+
+
+
++*Note:*+	
+
+- There are some parameters which is used to dynamically load the content. Thus, you should not edit them.
+
+- In case, the notify content is changed unexpectedly, the administrator can get the default one by clicking on the !RestoreIcon.png! icon.	
+
+
+h2. BB Codes
+
+{info}
+For eXo KS 1.2
+{info}
+
+
+The BB Code tab allows administrators to manage custom BB Codes. Admin can add or edit/delete an existing BB Code tag definition. The BB Code tags help users enrich posts with formatting and inclusions.
+
+
+ !BBCode1.2.png! 
+
+
+By default there are some default BB Code tags that are initialized via plugin such as: "*B*", "*I*", "*HIGHLIGHT*", "*IMG*", "*CSS*", "*URL*", "*LINK*", "*GOTO*", "*QUOTE*", "*LEFT*", "*RIGHT*", "*CENTER*", "*JUSTIFY*", "*SIZE*", "*COLOR*", "*CSS*", "*EMAIL*", "*CODE*", "*LIST*". 
+
+
+The BB Code tags can be modified by adding, editing or deleting.
+
+
+h3. Add BB Code
+
+Following these easily guides to add a new BB Code used in Forum. 
+
+*Step 1\.* Click on the *Add BBCode* button. The *Add BBCode* dialog will appear:
+
+
+ !ForumAdmin7.png! 
+
+
+
+|| Name          ||        Description ||
+| Tag Name     |  	A name of a tag, it is unique in system. |
+| Replacement   | 	A short description that helps users of the tag understand what it does.  |
+| Description   | 	The html replacement pattern to use when processing the tag.  |
+| Example Usage  |	Working example demonstrating on how to use the BB Code.  |
+| Use\{option}   | 	Allow  to create a style tag. |
+| Help dialog    |	Display list of supported BB Codes and their syntax.  |
+| Preview dialog  | 	Allows to preview a rendered BB Code.  |
+| *Save* button   |	    To accept saving a new BB Code tag. |
+| *Cancel* button  |	To close the *Add BBCode* dialog. |
+
+
+
+
+- To open the Help dialog, you just click on !HelpDialogIcon.png! the icon. The Help dialog appears:
+
+
+ !HelpDialog1.png! 
+
+
+
+- To open the Preview dialog, click on the *Preview*  button. The Preview dialog appears:
+
+
+ !ForumAdmin8.png! 
+
+
+
+|| Field   || Meaning ||
+| Example usage text area   |  By default it is initialized with the Usage Example. |
+|  |
+| *Apply* button         |		Apply the content of Example Usage area to the preview area. |
+| Preview area      |		Displays the example usage rendered by the BB Code engine (using the replacement pattern).  |
+| *Back* button      |		Return the *Add BB Code* form. |
+
+
+
+*Step 2.* Input values in fields.
+
+*Step 3.* Click on the *Save* button to accept adding a new BB Code or *Cancel* button to quit without saving.
+
+
+h3. Edit BB Code
+
+You easily edit the BB Code by following these guides:
+
+*Step 1\.* Click on the !EditIcon.png! icon that corresponds to the BB Code tag which you want to edit. The *Edit BBCode* form appears:
+
+
+ !ForumAdmin9.png! 
+
+*Step 2.* Change information of the selected BB Code tag.
+
+*Step 3.* Preview the BB Code tag before saving by clicking the *Preview* button.
+
+*Step 4.* Complete editing the BB Code tag by clicking the *Save* button or the *Cancel* button to quit without saving.
+
+
+h3. Delete BB Code
+
+To delete the BB code tag, following these simple guides:
+
+*Step 1\.* Click on the  !DeleteIcon.png! icon that corresponds to the BB Code tag which you want to delete. The confirmation message pop up appears. 
+
+*Step 2.* Click on the *OK* button in the confirm message to accept deleting or the *Cancel* button to quit.
+
+
+h2. Auto-Prune
+
+The *Auto-Prune* tab lists all categories, forums in the Forum Application that allows cleaning old and inactivating topics of your forum. The old topics that have not been added post for a long time will be inactivated in the forum.
+
+ !6AutoTab.png! 
+
+
+|| Icon       || Meaning ||
+| The clock icon !ClockIcon.png!      | To open the *Prune Setting* form. |
+| The play icon  !PlayIcon.png!        |  To play the prune function manually |
+
+
+To set prune for any forum, do as follows:
+
+*Step 1\.* Simply click on the prune icon !ClockIcon.png! corresponding to the forum that you want to check.
+
+The *Prune Settings* form appears:
+
+  !FruneSettings.png! 
+
+
+|| Field        || Meaning ||
+| Clear topics that have been inactive for   |	The number of days/weeks/moths that the topic has not been added post will be inactivated. |
+| Run prune job every   | 	The number of days/weeks/ moths that the prune job will be executed to check for the old topics and inactivate them. |
+| *Test* button	 | To check how many topics will be pruned that means how many old topics will be inactivated. |
+| *Save* button	|  To accept saving the prune setting |
+| *Close* button	|  To close the *Prune Settings* form |
+
+
+
+*Step 2.* Define some values for the setting.
+ 
+*Step 3.* Click the *Save* button to accept the setting.
+
+After setting the prune, the auto prune function will be run automatically on the forum that has been set to check for the old/inactivate topics.
+
+Note:
+
+- Only the Administrator and Moderator can active topics.
+- Normal users can't view the inactivated topics.
+
+
+
+h2. Topic Type
+
+{info}
+This feature is available since eXo KS 1.2
+{info}
+
+The *Topic Type* tab lists all the topic types and allows defining the different topic types for the added topics in the Forum
+
+ !TopicType.png! 
+
+
+- To add a topic type, do as follows:
+
+*Step 1\.* Click the *Add Topic Type* button. The *Add Topic Type* form appears:
+
+ !AddTopicType.png! 
+
+
+Details:
+
+
+|| Field   || Description ||
+| Type name   |           The name of the topic type. This field is required. |
+| Type Icon    |	        The icon for the topic type |
+| Save button    |	To accept saving the topic type. |
+| Cancel button   |	To close the form. |
+
+
+*Step 2.* Enter a topic type name.
+
+*Step 3.* Select an icon for the topic type.
+
+*Step 4.* Click the *Save* button to accept creating a new topic type.
+
+
+After adding a topic type, it will be updated in the topic type list in the *Add Topic* form. Besides, when adding a new topic type , the new added topic type is also listed in the *Topic Type* combo box for selecting. Moreover, adding a type for a topic helps users quickly search the topic that they want when using the Advanced Search in [KS:Search].
+
+- To edit the topic type, simply click on its corresponding edit !EditIcon.png! icon 
+
+- To delete the topic type, simply click on its corresponding delete !DeleteIcon.png! icon 
+
+
+h2. IPs ban 
+
+
+{info}
+This feature is available since eXo KS 1.1
+{info} 
+
+
+The *IP bans* tab is used to ban some IPs that may be used by illegal users who try to spam or add post with rebellious or dissolute content. Banned IPs will not be used to add posts into the Forum Application. 
+
+Any user who uses banned IPs to add posts will be recognized as banned user, he/she can only view and limit most of basic actions to forums such as add topics, posts, rates...
+
+
+ !ForumAdmin10.png! 
+
+- To ban an IP, simply input the IP into IP text box and click *Add* link to accept saving the banned IP. After adding the IP ban, the banned IP will be listed in IP table. You can view all posts which are added by a specific banned IP or delete it from the banned IP list.
+
+- To view all posts of a specific IP, click on the *Posts* link in the action column of the banned IP that you want to view. All posts of the banned IP will be listed in the *View Post* form. These posts can be viewed and deleted by the Administrator.
+
+- To remove a banned IP from the banned IP list, simply click on *X* link in the action column of the banned IP that you want to delete.
+
+After being removed from the banned IP list, this IP can be used to take actions in the Forum Application. Besides, the filter function in IP Bans tab help you filter the banned IP easily.
+
+- To filter banned IP, simply input filter term into filter text box, all IP matching with filter term will be displayed in banned IP list.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

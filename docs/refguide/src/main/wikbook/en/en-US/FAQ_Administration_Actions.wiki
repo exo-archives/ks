@@ -1,0 +1,218 @@
+
+
+h1. Administration Actions
+
+{info}
+Since eXo KS 1.2, *FAQ* has been renamed to *Answers*
+{info}
+
+
+
+
+h1. Initialize the eXo Answers
+
+With the Administration role, the Administrator can take all actions on all questions in all categories in eXo Answers without any limitation.
+
+The Administrator is the person who initializes FAQ by creating categories and assigning the Moderator.
+
+Please refer to KS User Manual for more details on how to take all actions in eXo KS.
+
+
+
+
+h1. Define Properties
+
+Following these steps to define the FAQ(Answers from eXo KS 1.2) properties:
+
+*Step 1\.* Go to *eXo Start*-> *Administration*-> *Advanced* --> *Manage Pages*.
+
+*Step 2.* Click the !FAQEditPortletIcon.png! icon corresponding to the FAQ page in the page list:
+
+ !FAQPortletList.png! 
+
+The Answers Portlet will appear:
+
+ !FAQPortlet.png! 
+
+*Step 3.* Click the !FAQEditICon.png! icon on the right corner of this portlet. The form to edit the Answers Portlet will display:
+
+
+ !EditModeTab.png! 
+
+ {info }
+Since eXo KS 1.2
+{info }
+
+Since eXo KS 1.2, the FAQ Portlet will be renamed to the Answers Portlet. Following these steps to define the Answers properties:
+
+*Step 1\.* Go to *eXo Start*-> *Administration*-> *Advanced* --> *Manage Pages*.
+
+*Step 2.* Click the !FAQEditPortletIcon.png! icon corresponding to the answers page in the page list:
+
+ !SearchPage1.2.png! 
+
+The Answers Portlet will appear:
+
+
+ !AnswersPortlet.png! 
+
+
+*Step 3.* Click the !FAQEditICon.png! icon on the right corner of this portlet. The form to edit the FAQ Portlet will display:
+
+ !EditModeTab1.2.2.png! 
+
+
+
+
+h2. Edit Mode
+
+
+h3. Display Mode
+
+The *Display Mode* tab includes all default properties of displaying the eXo Answers.
+
+
+
+|| Name || Description || Since ||
+| Display | The mode is used to display all entries in the Answers application. With 'All', all entries (includes: approved and unapproved entries/questions) are displayed in list when users view. With 'Approved', only approved entries are displayed in list when users view.| 1.0 |
+| Order by | The way is used to display all entries in Answers application. With '*Created Date*': entries in list will be displayed in order of the entries 's created date. With '*Alphabet*': entries in list will be displayed in alphabet order. The type of sorting entries in list. It may be: Ascending or Descending. | 1.0 |
+| Enable vote and comment | This option is to allow vote and comment function to be available in Answers or not. If the *Enable vote and comment* check box is selected, users can comment and vote in Answers. If not, these functions are disabled. | 1.1	 |
+| Anonymous users may submit question     | This option is to allow whether or not allow the anonymous submit question in the Answers     | 1.2.2 |
+| Enable automatic RSS | This option is to allow RSS feeds function to be available in Answers or not. If the *Enable automatic RSS* is selected, users can get RSS information in Answers. If not, RSS function is disabled. | 1.1 |
+| Enable view avatar | This option is to allow viewing an avatar in Answers or not. If the *Enable view avatar* check box is selected, avatar of eXo members are shown in Answers. If not, they are hidden. | 1.1 |
+
+
+h3. Email Notification
+
+The *Email notifications* tab allows defining the content of the notification mail. It includes the *New question* and *Edit/answer* tab:
+
+ !MoveQuestion.png! 
+
+
+The *New question* tab contains the default content of the notification mail about the new question.
+
+The *Edit/Answer* tab contains the default content of the notification mail about the question which is answered or edited.
+
+{info}
+Since eXo KS 1.2
+{info}
+
+TThe *Move Question* tab will be added, it contains the default content of notification mail about moving questions.
+
+To change the content of the notification mails, manually edit the text in the FCK editor. 
+
+*Notes:* There are some parameters which is used to dynamically load the category and question's content. Thus, you should not edit them.
+
+
+|| Parameter || Description ||
+| &categoryName_ | To load the category's name. |
+| &questionContent_ | To load the question's content. |
+| &questionResponse_ | To load the question's answer. |
+| Here | To load the link to the question in Answers. |
+
+
+
+h3. Discussion
+
+{info}
+This feature is available since eXo KS 1.1
+{info}
+
+The *Discussion* tab allows enabling/disabling the Forum discussions function in the Answers Application and set the default forum category for this function.
+
+ !Discussion.png! 
+
+To enable/disable Forum discussions , simply select/ unselect  the *Enable Discuss* check box.
+
+Following these steps to define the default category for discussions:
+
+*Step 1\.* Click on the !PlusIcon.png! icon to open the *Select Category/Forum* form:
+
+ !SelectCategory.png! 
+
+*Step 2.* Click on the specific category/forum title to select it.
+
+*Step 3.* Click the *Save* button to accept saving changes in the *Discussion* tab.
+
+h3. Category Scoping
+
+{info}
+This feature is available since eXo KS 1.2
+{info}
+
+The *Category Scoping* tab allows you to hide/show categories in the Answers application. The hidden category will not be displayed in the Answers application.
+
+ !CategoryScoping.png! 
+
+To hide/show any category, simply unselect or select its check box and click the *Save* button.
+
+After the Forum portlet settings will be saved. The selected category will be displayed in the Answers application while the unselected category will be hidden.
+
+
+
+
+
+
+
+
+
+h2. Portlet Setting
+
+
+The *Portlet Setting* tab looks like below:
+
+
+ !FAQPortletSettingTab.png! 
+
+
+|| Name || Description ||
+| Portlet Id | The identification value of the Portlet. |
+| Window Id | The identification value of the portlet's window. |
+| Portlet Title |	The title of Answers Portlet. |
+| Width | The vertical size of a Portlet. Value of this field should be a numeric format. It is not required and you can change.  |
+| Height | The horizontal size of a Portlet. It should be a numeric format. It is not required and you can be change. |
+| Show Infor Bar | The option is to show the *Information* bar of a Portlet or not |
+| Show Portlet Mode | The option is to show the Portlet mode of a Portlet or not |
+| Show Window State | The option is to show the window state of a Portlet or not |
+| Description | The brief description about the Portlet. It must has length from 0 to 255 characters. |
+
+
+
+
+h2.  Select Icon
+
+The *Select Icon* tab allows selecting an icon for the Portlet. 
+
+
+ !FAQSelectIconTab.png! 
+
+By clicking *Get Default*, you do not have to choose any icon from the list, it will automatically get the default one for the Portlet.
+
+h2. Decoration Themes
+
+The *Decoration Themes* tab allows selecting theme for the Portlet. 
+
+
+ !FAQDecorationTab.png! 
+
+There are some themes list, by clicking *Get Default*, you do not have to choose any theme, it will be automatically set for the Portlet.
+
+*Step 1\.* You can set values in the *Display Mode* tab to set properties in FAQ or check option *Show Info Bar* and *Show Portlet Mode* option to set properties.
+
+*Step 2.* Click the !FAQShortCutIcon.png! icon to save all changes. All entries/questions in Answers will be shown according to your setting in the *Edit Mode* tab.
+
+Besides, you can also set displaying properties by following these steps:
+
+*Step 1\.* Open the Answers application and select *Edit* function in the menu when you click the icon on the right corner of the Answers Portlet.
+
+The form to edit displaying properties will appear like in the *Edit Mode* tab like above.
+
+*Step 2.* Change values in fields.
+
+*Step 3.* Click the *Save* button to save all changes.
+
+
+
+
+
+

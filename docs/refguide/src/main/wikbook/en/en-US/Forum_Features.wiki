@@ -1,0 +1,66 @@
+h1. Forum Features
+
+
+
+h1. Overview
+eXo Forum is a part of Knowledge Suite product. Forum application is [Portal:WebUI] portlet runing on top of [eXo Portal|Portal:WebHome] and leverage the eXo Platform's technology such as [JCR|JCR:WebHome], [REST framework|WS:REST Framework] and [WS:Cometd].
+
+h1. Features
+|| Feature|| Description || Administrator || Moderator || Owner || User || Guest || Since ||
+| View Forum | View category, forum, topic, post |X|X|X|X|X| 1.0 |
+| Permlink | Provide Forum link and share it to the other people|X|X|X|X|X| 1.0 |
+| Attachment | Image preview and download attachment |X|X|X|X|X| 1.0 |
+| Search | Do simple and advanced search |X|X|X|X|X| 1.0 |
+| Bookmark | Bookmark category, forum, topic |X|X|X|X| | 1.0 |
+| Add post | Post reply, quote, private post, quick reply |X|X|X|X| | 1.0 |
+| Edit Post | Edit post, quote and private post |X|X|X|X| | 1.0 |
+| Delete Post | Delete post inside specific topic |X|X|X|X| | 1.0  |
+| Add topic | Add topic into a specific Forum |X|X|X|X| | 1.0  |
+| Edit topic | Edit topic in a specific Forum |X|X|X|X| | 1.0 |
+| Delete topic | Delete topic inside a specific Forum |X|X|X|X| | 1.0 |
+| Lock topic | Lock topic inside a specific Forum |X|X|X|X| | 1.0 |
+| Unlock topic | Unlock topic inside a specific Forum |X|X|X|X| | 1.0 |
+| Add poll | Add poll to topic |X|X|X|X| | 1.0 |
+| Vote poll | Vote a poll inside a specific Forum |X|X|X|X| | 1.0 |
+| Rate | Evaluate topic by rate star |X|X|X|X| | 1.0 |
+| Add tag | Create new tag and tag a topic |X|X|X|X| | 1.0 |
+| Private message | Exchange private messages among users |X|X|X|X| | 1.0 |
+| Watch | Add watch category, forum, topic to receive notification mails on new post |X|X|X|X| | 1.0 |
+| User Settings | Define profile settings, forum settings|X|X|X|X| | 1.0 |
+| Stick/unstick topic | Stick/unstick topic inside specific Forum. |X|X|X| | | 1.0 |
+| Close/open topic | Close/open topic inside specific Forum. |X|X| | | | 1.0 |
+| Split topic | Divide one topic into 2 different topics |X|X| | | | 1.0 |
+| Merge topic | Combine 2 or more topics into one. |X|X| | | | 1.0 |
+| Manage Poll | Edit, delete, close and reopen poll |X|X| | | | 1.0 |
+| Move topic | Move one topic from current forum to the other forum |X|X| | | | 1.0 |
+| Move post | Move one post from current topic to the other topic |X|X| | | | 1.0 |
+| Approve topic | Change topic from pending status to normal status that guest, normal user can view |X|X| | | | 1.0 |
+| Approve post | Change post from pending status to normal status that guest, normal user can view |X|X| | | | 1.0 |
+| Censor topic | Allow a topic which has censor content to be displayed that guest, normal user can view |X|X| | | | 1.0 |
+| Show/hide topic | Allow topic to be shown/hidden that guest, normal user can view/ can not view |X|X| | | | 1.0 |
+| Manage pending list bar | Allow managing all pending/censored topic/post(s) in all Forum application in one place.|X|X| | | | 1.1 |
+| Manage watch | Manage watch of forum and topic. Edit and delete watched email. |X|X| | | | 1.0 |
+| Ban IP | Ban IP from IP Tools or IP icon |X|X| | | | 1.1 |
+| Edit Forum | Change forum title, description, moderation option, permission |X|X| | | | 1.0| |
+| Delete Forum | Delete forum from a specific category |X|X| | | | 1.0 |
+| Lock Forum | Locked forum can be viewed only that all users can not add, edit, delete topic, post |X|X| | | | 1.0 |
+| Unlock Forum | Unlock a locked forum that allow doing basic action on unlocked forum |X|X| | | | 1.0 |
+| Close Forum | Closed forum can only viewed by administrator and moderator only |X|X| | | | 1.0 |
+| Open Forum | Opened forum allows normal user to view and do basic action on it |X|X| | | | 1.0 |
+| Export Forum | Export a forum in form of zip or xml file |X|X| | | | 1.0 |
+| Add Forum | Add new a forum into a specific category |X|X| | | | 1.0 |
+| Import Forum | Import a forum from zip/xml file into Forum application |X| | | | | 1.0 |
+| Move Forum | Move forum from one category to the other category |X| | | | | 1.0  |
+| Import Forum | Import a forum from compressed file into Forum application |X| | | | | 1.0 |
+| Add category | Add new a category and restrict audience |X| | | | | 1.0 |
+| Edit category | Edit a category and change properties |X| | | | | 1.0 |
+| Export Category | Export categories in form of zip or xml file |X| | | | | 1.0 |
+| Import Category | Import categories from zip/xml file into Forum application |X| | | | | 1.0 |
+| Delete category | Delete a category and all forum, topic, post inside it |X| | | | | 1.0 |
+| Administrate Sort | Sort forums, topic according to specific condition |X| | | | | 1.0 |
+| Administrate Censor | Define censor terms that can not be used in forum |X| | | | | 1.0 |
+| Notify content | Define the notify content for notification mails |X| | | | | 1.0 |
+| IP ban | Ban IP on Forum application. Ban IP can not be used to do basic action in Forum |X| | | | | 1.1 |
+| User Management | Manage User profile, assign role, ban User, view topic, post by specific user |X| | | | | 1.0 |
+
+

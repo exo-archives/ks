@@ -1,0 +1,29 @@
+<bookinfo>
+  <title>My product title (see bookinfo.xml)</title>
+  <subtitle>${project.artifactId} - ${project.version}</subtitle>
+  <edition>${project.version}</edition>
+  <pubsnumber>1</pubsnumber>
+  <productname>${project.artifactId}</productname>
+  <productnumber>${project.version}</productnumber>
+  <copyright>
+    <year>2010</year>
+    <holder>My company</holder>
+  </copyright>
+  <authorgroup>
+    <author>
+      <firstname>John</firstname>
+      <surname>Doe</surname>
+      <affiliation>
+        <shortaffil>Acme</shortaffil>
+      </affiliation>
+    </author>
+  </authorgroup>
+  <mediaobject>
+    <imageobject role="fo">
+      <imagedata align="center" fileref="mylogohere.png" format="PNG" width="150mm"/>
+    </imageobject>
+    <imageobject role="html">
+      <imagedata align="center" fileref="mylogohere.png" format="PNG" scale="150"/>
+    </imageobject>
+  </mediaobject>
+</bookinfo>

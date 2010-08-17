@@ -1,0 +1,35 @@
+
+h1. Categories Administration Actions
+
+
+
+
+
+h1. Manage Root Category
+
+Only the Administrator can manage the root category - the highest category.
+
+To manage the root category, simply click on the *Manage Category* on the main action bar and select a specific action:
+
+ !ManageRootCategory.png! 
+
+
+Managing Root category by is similar with managing a subcategory, referring the KS User Manual for the details.
+
+
+
+
+h1. Drag and Drop
+
+This feature is used to change the position of categories in the category list or move the subcategory to its parent list.
+
+Follow these steps to drag and drop categories:
+
+
+*Step 1\.* Right click the icon of the category that you want to change the display position.
+
+ !DragandDrop.png! 
+
+*Step 2.* Drag and drop the categories to the new position that you want. 
+
+The dropped category will be moved to the new position properly. The category list will be changed properly. The order of all categories will be updated correspondingly.

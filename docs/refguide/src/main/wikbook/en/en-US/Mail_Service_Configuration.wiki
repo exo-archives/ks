@@ -1,0 +1,62 @@
+
+h1. Mail Service Configuration
+
+
+
+h1. Overview
+
+In KS, MailService comes from kernel, KS relies on this service to sends notifications via email.
+
+This configuration initializes parameters for MailService, the parameters declare properties of a mail box that is used to send email notification.
+
+h1. Runtime Configuration
+
+At runtime of KS, when the send mail function is executed, _org.exoplatform.services.mail.MailService_ will be called that refers to _org.exoplatform.services.mail.impl.MailServiceImpl_.
+
+Properties of MailService are defined with the format:
+
+{code:xml}
+...
+ <component>
+  <key>org.exoplatform.services.mail.MailService</key> 
+  <type>org.exoplatform.services.mail.impl.MailServiceImpl</type> 
+- <init-params>
+- <properties-param>
+  <name>config</name> 
+  <property name="mail.smtp.auth.username" value="notifuser" /> 
+  <property name="mail.smtp.auth.password" value="somepassword" /> 
+  <property name="mail.smtp.host" value="smtp.example.org" /> 
+  <property name="mail.smtp.port" value="465" /> 
+  <property name="mail.smtp.starttls.enable" value="true" /> 
+  <property name="mail.smtp.auth" value="true" /> 
+  <property name="mail.smtp.debug" value="false" /> 
+  <property name="mail.smtp.socketFactory.port" value="465" /> 
+  <property name="mail.smtp.socketFactory.class" value="javax.net.ssl.SSLSocketFactory" /> 
+  <property name="mail.smtp.socketFactory.fallback" value="false" /> 
+  </properties-param>
+  </init-params>
+  </component>
+
+...
+{code}
+
+Properties:
+
+|| name || description || sample value ||
+| _mail.smtp.auth.username_ | Default user name for SMTP or the email address which is used to send notification mail. | notifuser |
+| _mail.smtp.auth.password_ | The password of the email address which is used to send notification mail. | somepassword |
+| _mail.smtp.host_ | The SMTP server to connect to or the host name of the email provider. | smtp.example.org |
+| _mail.smtp.port_ | The SMTP server port corresponding to the mail server of the email provider. | 465 |
+| _mail.smtp.starttls.enable_ | If true, enables the use of the STARTTLS command (if supported by the server) to switch the connection to a TLS-protected connection before issuing any login commands. Note that an appropriate trust store must configured so that the client will trust the server's certificate. | true\\false |
+| _mail.smtp.auth_ | If true, attempt to authenticate the user using the AUTH command. | true\\false  |
+| _mail.smtp.debug_ | If true, in case there is error when connecting to SMTP server, warning will be returned. | true\\false |
+| _mail.smtp.socketFactory.port_ | Specifies the port to connect to when using the specified socket factory. If not set, the default port will be used. | 465 |
+| _mail.smtp.socketFactory.class_ | If set, specifies the name of a class that implements the socketFactory interface. This class will be used to create SMTP sockets. | javax.net.ssl.SSLSocketFactory |
+| _mail.smtp.socketFactory.fallback_ | If set to true, failure to create a socket using the specified socket factory class will cause the socket to be created. | true\\false |
+
+When sending an email in KS, those properties will use to connect to mail box(example: exoservice on gmail ) and send notification from there.
+
+By fault, the default properties can only be changed by editing its value in _ks-plugins-configuration.xml_ file and the user can configure an different mail box when deploying KS.
+Note that the properties which are used for SMTP Service must be exact.
+
+At runtime, the modifications in _ks-plugins-configuration.xml_ file will be read and updated, MailService will be executed depending on its properties.

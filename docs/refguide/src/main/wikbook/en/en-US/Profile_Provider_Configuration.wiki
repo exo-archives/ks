@@ -1,0 +1,44 @@
+
+h1. Profile Provider Configuration
+
+
+
+h1. Overview
+
+Forum and FAQ applications allow to show some information about the posters. 
+The way we retrieve that information is pluggable through contact provider implementations.
+
+For public internet websites, you may want to allow user provide personal information such as personal email address and location. To enable this simply override the ContactProvider component in your configuration.
+
+h1. Configuration
+
+Configuration file format:
+
+{code:xml}
+ <component>
+    <key>org.exoplatform.forum.service.user.ContactProvider</key>
+    <type>org.exoplatform.forum.service.user.PersonalProfileContactProvider</type>
+ </component>  
+
+{code}
+
+For corporate websites, it is probably more advisable to use the business information such as professional phone or email address. In that case you would use the BusinessProfileContactProvider :
+
+{code:xml}
+ <component>
+    <key>org.exoplatform.forum.service.user.ContactProvider</key>
+    <type>org.exoplatform.forum.service.user.BusinessProfileContactProvider</type>
+ </component> 
+
+{code}
+
+If you run eXo [Collaboration Suite|CS:WebHome] on your portal you can get profile information from eXo Address Book contacts, including avatar image. To enable this nice feature : 
+
+{code:xml}
+ <component>
+    <key>org.exoplatform.forum.service.user.ContactProvider</key>
+    <type>org.exoplatform.forum.provider.cs.CSContactProvider</type>
+</component>  
+{code}
+
+And finally you can create your own implementation to apply custom privacy policies.

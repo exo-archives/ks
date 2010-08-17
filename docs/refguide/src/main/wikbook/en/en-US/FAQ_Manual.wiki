@@ -1,0 +1,243 @@
+
+h1. Answers Manual
+
+{info}
+Since eXo KS 1.2, *FAQ* has been renamed to *Answers*
+{info}
+
+
+
+
+
+h1. View the Answers Application
+
+{info}
+Since eXo KS 1.1
+{info}
+
+
+Answers application is displayed and available for viewing the rate, multiple answers or comments:
+
+ !QuestionView.png! 
+
+{info}
+For KS 1.2.2
+{info}
+
+More available icons that can be taken in the Answers view:
+
+ !QuestionView1.2.2.png! 
+
+
+|| Icon || Name || Description || Since ||
+| !FAQPrintIcon.png! | Print Icon|  To open a print preview page. |
+| !EditIcon1.2.2.png!  | Edit Icon  | To edit a question or an answer.| 1.2.2 |
+| !DeleteQuestion.png! | Delete Icon | To delete a question.     |  1.2.2 |
+| !MoveToIcon1.2.2.png! | Move to Icon | To move a question to another category.   | 1.2.2 |
+| !FAQSendIcon.png! | Send Icon| To open Send questions by email form that allows sending questions to friends via email |
+| !FAQSortIcon.png! | Sort icon | To sort questions by a starred rate. |
+| !Approve1.2.2.png! | Approve icon | To approve an answer.   |1.2.2 |
+| !InactivateIcon1.2.1.png!  | Inactivate icon | To inactivate an answer.| 1.2.2 |
+| !DeleteIcon1.2.2.png!  | Delete Icon  | To delete an answer.| 1.2.2 |
+
+
+
+To view questions in the other languages, simply clicking on its language options. With the sample above, there are 3 languages: English, Vietnamese and French. By default, the question is displayed in English. 
+
+If you want to see the related questions, you can click question links at the *See also* field.
+
+
+
+
+
+h1. Preview and Download Attachments
+
+h2. Preview Image in Full Mode
+
+In the eXo Answers, when viewing a question that has image attachments, you can click directly on the image to preview it in full mode:
+
+ !FAQImagePreview.png! 
+
+To close the image preview mode, left click on the previewed image, the preview mode will be closed.
+
+
+h2. Download Attachments
+
+To download any attachment, simply clicking on the attached file's name to open the download pop up that allows saving it into the local disk.
+
+
+ !FAQDownloadPopUp.png! 
+
+
+
+
+h1. Submit Questions
+
+{info}
+Since eXo KS 1.1
+{info}
+
+When viewing a specific category, you can submit questions to it. Following guides to submit questions into Answers:
+
+
+1\. Open the *Submit question* form by clicking on the !SubmitQuestionButton1.png!  button on the main action bar or right click on the specific category and select *Submit question* in menu:     
+
+ !SubmitQuestionMenu.png! 
+
+
+The *Submit question* form:
+
+ !SubmitQuestion11.png! 
+
+The question detail can be decorated by the FCK Editor. To add a question in multiple languages, click on the Language combo box and select any language:
+
+ !LanguageComboBox.png! 
+
+The *Submit question* form will be changed with the corresponding content to add questions.
+
+2. Enter data into the *Submit question* form.
+
+3. Click the *Save* button to accept submitting a question.
+
+After being submitted, the question will be displayed in the selected category in the FAQ.
+
+# question can be submitted with multiple files by attaching files:
+
+* Open the *Upload File* form by clicking on the *Attach Files* button/link in the *Submit question* form.
+
+The *Upload File* form will be displayed:
+
+ !UploadFile.png! 
+
+* Select files to upload by clicking the *Browser...*  to select file's path from local computer.
+* Upload the selected files by clicking the !UploadIcon.png! icon to upload. 
+* Complete attaching file to topic by clicking the *Save* button.
+
+
+
+
+
+h1. Watch
+
+{info}
+Since eXo KS 1.1
+{info}
+
+Only the eXo members can take this action at once by the signed up mail address. When there is any changes such as editing questions, adding  new questions or answers, you will receive the notification email. You can register an email address in order to watch Answers on a specific category.
+
+Following guides to add watch to a specific category:
+
+
+1\. Right click on a specific category and select *Watch* in menu:
+
+ !FAQWatch.png! 
+
+The *Watch* form will appear:
+
+ !FAQWatchForm.png! 
+
+
+|| Icon || Name || Description ||
+| !AddIcon.png! | Add Icon | To add more email addresses text field. |
+| !DeleteIcon.png! | Delete Icon | To delete the email address text field. |
+
+
+2. Input valid User Name and email address.
+
+3. Click the *Save* button to complete the watch registration.
+
+An alert pop up will appear to inform the success of watching:
+
+ !FAQWatchAlert.png! 
+
+
+
+
+
+h1. Print FAQs
+
+You can print a question or all questions in a specific category by following these simple guides:
+
+1\. Go to the Answers screen view that you want to print.
+
+2. Click the !FAQPrintButton.png ! button on the tool bar to print all questions in the current category in details or click the print icon ! FAQPrintIcon.png! on the right question panel to print that question only.
+
+The print preview page will appear:
+
+ !PrintPreview.png! 
+
+3. Click the *Print* button to set up the printer or click the *Close* button to quit the print preview mode.
+
+
+h1. Send Questions
+
+You can send questions via email in multiple languages by following guides:
+
+1\. View a specific question and click on the !FAQSendIcon.png! icon at the top right panel or select *Send* in the right click menu:
+
+ !Send.png! 
+
+The *Send question by email* form will appear with the current question content:
+
+ !SendQuestion.png! 
+
+2. Enter valid email address for sending.
+
+3. Click the *Send* button to send an email to the address list that defined in *To*, *CC* or *BCC* field.
+
+
+h1. Get RSS
+
+{info}
+This feature is available since version 1.1
+{info} 
+
+This function provides RSS feeds. Each time an entry is added or updated, the feed of the corresponding category will be updated:
+
+1\. Click on the category that you want to get RSS feed.
+
+2. Click the !FAQRSSButton.png! button on the main action bar or select *RSS* in the right click menu of a specific category:
+
+ !FAQRSSMenu.png! 
+
+RSS link form will appear:
+
+ !FAQRSSLinkForm! 
+
+In case RSS button is clicked, the RSS information page will appear:
+
+ !FAQRSSLinkView.png! 
+
+All question information of the category that is being watched are listed.
+
+On Fire Fox, to add a live bookmark, simply clicking on the *Subscribe Now* button and click the *Add* button in menu pop up.
+
+
+
+
+{info }
+For eXo KS 1.2
+{info }
+
+1\. Click on the category that you want to get RSS feed.
+
+2. Click the !FAQRSSButton.png! button on the main action bar or select *RSS* in the right click menu of a specific category:
+
+ !RSS1.2.png! 
+
+
+On Fire Fox, the RSS information page will be displayed and viewed on another tab:
+
+
+ !FAQRSSFeed.png! 
+
+
+All question information of the category that is being watched are listed.
+
+To add a live bookmark, simply clicking on the *Subscribe Now* button and click the *Add* button in the menu pop up.
+
+
+
+  
+
+

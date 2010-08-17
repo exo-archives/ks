@@ -1,0 +1,115 @@
+
+h1. Forum Manual
+
+
+
+h1. View Forum
+
+By default, all users can view all basic information in the eXo Forum applications such as: category list, all forums, topics and posts.
+Besides, guests can view forum statistics, user profiles, posts or topics of the specific users...
+
+The main screen of the eXo Forum is displayed:
+
+ !ForumMain.png! 
+
+All categories are displayed with forums and topics information. Besides, the forum statistics provides useful information about the forum.
+
+Click on the specific category title, the forum list inside are listed. The main screen inside one category is displayed:
+
+ !InsideCategory.png! 
+
+Click on the specific forum title, the topic list inside are listed. The main screen inside one forum is displayed:
+
+ !InsideForum.png! 
+
+Click on a specific topic, its content is displayed. The main screen inside one topic will be displayed:
+
+ !InsideTopic.png! 
+
+
+
+
+h1. Preview and Download Attachments
+
+h2. Preview an Image in a Full Mode
+
+In the eXo Forum, when viewing a topic or a post that have image attachments, users can click directly on it to preview the image in full mode:
+
+ !ImagePreview.png! 
+
+h2. Download Attachments
+
+To download any attachment, simply clicking on the attached file, a download pop up that allows saving it into the local disk will be displayed:
+
+
+ !DownloadPopUp.png! 
+
+
+
+
+
+h1. Get Permlink
+
+This function provides Permlink of a specific category, a forum or a topic. When viewing a category, a forum or a topic, its permlink can be gotten by simply clicking on the *Permlink* link at the top right of the breadcrumb bar.
+
+ !Permlink.png! 
+
+When the *Permlink* is clicked, the link will be displayed in url text box of the web browser.
+
+
+
+
+
+h1. View Profile
+
+Users are allowed viewing the profile of a specific user such as personal information, list of post/topic...
+To do this, simply clicking on the v icon beside a user name (for version 1.0) or directly clicking on the user name to open the *User profile* menu and select the option that you want to view:
+
+ !ProfileMenu.png! 
+
+
+h1. RSS feed
+
+RSS feed allows getting RSS of a specific category, forum, topic. Each time if there have any change, the feed of corresponding category, forum or topic will be updated.
+
+Following 2 ways to get RSS:
+
++The 1^st^ way+:
+
+Right click on a specific category, forum or topic and select RSS in menu action.
+
+ !RSS.jpg! 
+
++The 2^nd^ way+:
+
+Click on the RSS icon:
+
+ !RSS.png! 
+
+
+The *RSS Form* that contains the RSS link will appear:
+
+ !RSSForm.png! 
+
+then, Click on the *RSS* icon to view information of a category, a forum or a topic.
+
+The detail information of a category, a forum or a topic are displayed and listed in page. You can directly redirect to it by clicking on its name.
+
+ !RSSBookmark.png! 
+
+
+
+- Category feeds contains all posts in all topics in all forums in a category. The Category Feeds shows title (title of the category), description (category description), link (permlink to the category), pubdate(creation date of the category).
+- Forum feeds contains all posts in all topics in a forum. The Forum Feeds shows title (Name of the forum), description (description of the forum), link (permalink of the forum), pubdate (creation date of the forum ).
+- Topic feeds contains all posts in a topic. The Topic Feeds shows title (Title of the topic), description (content of the topic's initial post), link (permlink to the topic), pubdate (creation date of the topic).
+
+
+
+To add a live bookmark, simply clicking on the *Subscribe Now* button and click the *Add* button in the menu pop up:
+
+ !RSSBookmark1.png! 
+
+
+
+
+

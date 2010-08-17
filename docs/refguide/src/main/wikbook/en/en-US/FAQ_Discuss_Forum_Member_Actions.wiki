@@ -1,0 +1,32 @@
+
+h1. Discuss Forum Member Actions
+
+
+{info}
+Since eXo KS 1.2, *FAQ* has been renamed to *Answers*
+{info}
+
+{info}
+This feature is available since eXo KS 1.1
+{info} 
+
+
+
+You can discuss questions in the Forum application. When a question is discussed, it will become a new topic in the Forum application.
+
+The new topic is created with the topic title is the question title, the topic content is the question content and the post is the question answer or comment.
+
+
+To discuss or view the discussion of a question, click on the discuss icon !DiscussIcon.png! at the top left of the question panel or click on a specific question and select *Discuss Forum* in menu:
+
+ !FAQDiscussForumMenu.png! 
+
+After being discussed, a new topic is created into the forum which is defined as the discussed forum in the FAQ Setting and you are redirected directly to the Forum application:
+
+ !FAQForumView.png! 
+
+When there is a answer added, a comment added or any edition in questions, the discussed topic in the Forum application is changed correspondingly.
+
+However, when the question is clicked to discuss at the first time, its status is pending for approval. You can only view the discussed topic when the Forum Administrator/Moderator approve it.
+
+After a question is discussed, to view it, simply clicking on the Discuss forum option in its right click menu.

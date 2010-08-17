@@ -1,0 +1,55 @@
+h1. Watching
+
+
+{info}
+Since eXo KS 1.2, *FAQ* has been renamed to *Answers*
+{info}
+
+
+
+h1. Add Watch
+
+
+{info}
+Since 1.1, Add Watch function is available with eXo members only.
+{info}
+
+The logged users can keep track the changes of specific categories in the FAQ application such as new editions, new questions, question responses...
+You only need registering an account and adding watch to specific categories, whenever there are new changes, you will receive the notification mails from the FAQ.
+
+To add a watch, simply right click on any category in list and select *Watch* in the menu:
+
+ !WatchMenu.png! 
+
+
+The alert message is shown:
+
+ !WatchAlertMessage.png! 
+
+{info}
+*Note*: 
+* This function is not available to anonymous users. Only logged users can watch categories in FAQ.
+* You can only have 1 email address for receiving notification mail. It is the default mail when registering an account.
+{info}
+
+
+
+
+
+
+
+h1. Unwatch
+
+
+
+{info}
+This feature is available since eXo KS 1.1
+{info}
+
+
+You also remove your watch on a specific category. When unwatching, you will not receive notification mails about the category that you used to add watch anymore from FAQ.
+
+To unwatch, simply right click on the category that you are watching and select *Unwatch* in the menu:
+
+ !UnwatchMenu.png! 
+

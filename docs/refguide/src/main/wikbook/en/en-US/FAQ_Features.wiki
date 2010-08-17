@@ -1,0 +1,61 @@
+h1. Answers Features
+
+
+{info}
+Since eXo KS 1.2, *FAQ* has been renamed to *Answers*
+{info}
+
+
+
+h1. Overview
+FAQ and Answers are two portlets of the eXo Answers system. They are [Portal:WebUI] portlets runing on top of [eXo Portal|Portal:WebHome] and leverage the eXo Platform's technology such as [JCR|JCR:WebHome], [REST framework|WS:REST Framework] and [WS:Cometd].
+
+Answers is a collaborative Question & Answer system similar to Yahoo Answers or StackOverflow.com but for your own enterprise where collaboration is encouraged. It poses a series of common questions and answers on a specific topic. There, users can edit questions, provide answers and edit them as they wish. 
+
+ !AnswersScreen.png! 
+
+The Answers section familiarizes visitors with answers to most commonly asked questions about a site/service or about the entity/subject that is responsible for the site/service. Repeatedly received questions will be added into the Answers. 
+
+FAQ takes this content as input and publish it in a clean and quickly browsable manner. You can point a FAQ portlet to one or several categories. As a publishing portlet, it is not possible to edit questions and answers from FAQ.
+
+ !FAQScreen.png! 
+
+
+
+
+
+h1. Features 
+
+||  Feature||    Description    || Admin ||Moderator|| Owner || User || Guest || Since ||
+| View FAQ(Answers from eXo KS 1.2) | Allow viewing a category and the activated question in multiple languages|X|X|X|X|X| 1.0 |
+| Image preview | Click on an image attachment to preview in full mode |X|X|X|X|X| 1.0 |
+| Download attachment |Click on a question's attachment to download |X|X|X|X|X| 1.0 |
+| Submit question | Submit a question with attachment in multiple languages |X|X|X|X|X| 1.0 |
+| Send question | Send a question via email |X|X|X|X|X| 1.0 |
+| Print | Print preview, print the category list and the question list |X|X|X|X|X| 1.0 |
+| Search | Simple and advanced search for a specific category or question |X|X|X|X|X| 1.0 |
+| Watch category | Watch a category to receive email notifications on new questions, edits or any changes |X|X|X|X|X| 1.0 |
+| RSS | Get RSS links |X|X|X|X|X| 1.1 |
+| View user profile | View profile of a specific user: submits of questions, answers or comments |X|X|X|X|X| 1.1 |
+| User settings | Define user preferences: Sort type, Sort by |X|X|X|X| | 1.0 |
+| Comment question | Give opinion on a specific question in multiple languages |X|X|X|X| | 1.1 |
+| Vote | Vote question and answer by rating star |X|X|X|X| | 1.1 |
+| Discuss forum | Discuss a question in forum. When a question is discussed, it becomes a topic in the selected forum |X|X|X|X| | 1.1 |
+| Manage category | Add, edit, delete and move categories |X|X| | | | 1.0 |
+| Export | Export FAQ in form of xml or zip file to back up data |X|X| | | | 1.0 |
+| Import | Import data into FAQ from xml or zip file |X|X| | | | 1.0 |
+| Manage question | Add or edit a question in multiple languages, delete and move questions |X|X| | | | 1.0 |
+| Answer question | Provide an answer for a question in rich text format |X|X| | | | 1.0 |
+| Multiple answers | A question can have multiple answers in multiple languages |X|X| | | | 1.1 |
+| Link question | Link one question to an other entry |X|X| | | | 1.0 |
+| Activate/Inactivate question |Set activated/inactivated status to specific questions. Inactivated questions are hidden and normal users can not view inactivated questions |X|X| | | | 1.0 |
+| Approve/ Disapprove question | Set approved/unapproved status to specific questions. Unapproved questions are hidden in Approve mode and normal users can not view unapproved questions |X|X| | | | 1.0 |
+| Activate/Inactivate answer |Set activated/inactivated status to specific answers. Inactivated answers are hidden and normal users can not view inactivated answers |X|X| | | | 1.1 |
+| Approve/ Disapprove answer | Set approved/unapproved status to specific answers. Unapproved answers are also hidden and normal users can not view unapproved questions |X|X| | | | 1.1 |
+| Promote comment | A comment can be promoted to be an answer of a question |X|X| | | | 1.1 |
+| Initialize FAQ(Answers from eXo KS 1.2) | Create a category and assign the moderator role |X| | | | | 1.0 |
+| FAQ(Answers from eXo KS 1.2) Properties | Define FAQ properties: Order Type, Order by, Notify content, theme, icon |X| | | | | 1.0 |
+| FAQ(Answers from eXo KS 1.2) Advanced Properties | Define advanced features: enable RSS, vote, comment, avatar, define category to discuss |X| | | | | 1.1 |
+
+*Note:* The administrators can initialize and manage all categories and questions inside Answers application while the moderators can only manage and take actions on the categories they have moderation roles.
+
