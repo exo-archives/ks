@@ -2248,6 +2248,11 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					}
 					break;
 				}
+				case 8: {
+					topicNode.setProperty(EXO_USER_VOTE_RATING, topic.getUserVoteRating());
+					topicNode.setProperty(EXO_VOTE_RATING, topic.getVoteRating());
+					break;
+				}
 				default:
 					break;
 				}
@@ -2257,7 +2262,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 						postCount = postCount + (topicNode.getProperty(EXO_POST_COUNT).getLong()+1);
 					}
 				}
-				if (type != 2 && type != 4 && type != 7 && 
+				if (type != 2 && type != 4 && type != 7 && type != 8 && 
 						forumNode.hasProperty(EXO_LAST_TOPIC_PATH) && (forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString().equals(topicNode.getName()) ||
 						Utils.isEmpty(forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString()))) {
 					queryLastTopic(sProvider, forumNode.getPath());
