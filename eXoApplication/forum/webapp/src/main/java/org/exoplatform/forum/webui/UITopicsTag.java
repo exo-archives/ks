@@ -205,7 +205,10 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	@SuppressWarnings("unused")
 	private boolean isWatching(String path) throws Exception {
 		for (Watch watch : listWatches) {
-			if(path.equals(watch.getNodePath())) return true;
+			// KS-2573
+			// check: is watching by email watch
+			if(path.equals(watch.getNodePath()) && watch.isAddWatchByEmail()) 
+				return true;
 		}
 		return false;
 	}
