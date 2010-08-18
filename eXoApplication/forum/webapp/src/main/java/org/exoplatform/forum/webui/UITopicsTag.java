@@ -84,7 +84,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		this.mapNumberPagePost.clear();
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		this.userProfile = forumPortlet.getUserProfile() ;
-		listWatches = forumPortlet.getWatchinhByCurrentUser();
+		listWatches = forumPortlet.getWatchingByCurrentUser();
 		if(!userProfile.getUserId().equals(UserProfile.USER_GUEST)){
 			this.userIdAndtagId = userProfile.getUserId() + ":" + tagId;
 		} else this.userIdAndtagId = tagId;
@@ -98,7 +98,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		this.userIdAndtagId = userIdAndtagId;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		this.userProfile = forumPortlet.getUserProfile() ;
-		listWatches = forumPortlet.getWatchinhByCurrentUser();
+		listWatches = forumPortlet.getWatchingByCurrentUser();
 	}
 	
 	private UserProfile getUserProfile() {
@@ -340,8 +340,8 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 					values.add(topicTag.userProfile.getEmail());
 					topicTag.getForumService().addWatch(1, path, values, topicTag.userProfile.getUserId()) ;
 					UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
-					forumPortlet.updateWatchinh();
-					topicTag.listWatches = forumPortlet.getWatchinhByCurrentUser();
+					forumPortlet.updateWatching();
+					topicTag.listWatches = forumPortlet.getWatchingByCurrentUser();
 					info("UIAddWatchingForm.msg.successfully") ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicTag) ;
 				} catch (Exception e) {
@@ -357,8 +357,8 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			try {
 				topicTag.getForumService().removeWatch(1, path, topicTag.userProfile.getUserId()+"/"+topicTag.getEmailWatching(path)) ;
 				UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.updateWatchinh();
-				topicTag.listWatches = forumPortlet.getWatchinhByCurrentUser();
+				forumPortlet.updateWatching();
+				topicTag.listWatches = forumPortlet.getWatchingByCurrentUser();
 				info("UIAddWatchingForm.msg.UnWatchSuccessfully") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicTag) ;
 			} catch (Exception e) {

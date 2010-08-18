@@ -112,7 +112,7 @@ public class UICategory extends BaseForumForm	{
 		useAjax = forumPortlet.isUseAjax();
 		dayForumNewPost = forumPortlet.getDayForumNewPost();
 		userProfile = forumPortlet.getUserProfile() ;
-		listWatches = forumPortlet.getWatchinhByCurrentUser();
+		listWatches = forumPortlet.getWatchingByCurrentUser();
 		return this.userProfile ;
 	}
 
@@ -268,7 +268,10 @@ public class UICategory extends BaseForumForm	{
 	
 	private boolean isWatching(String path) throws Exception {
 		for (Watch watch : listWatches) {
-			if(path.equals(watch.getNodePath())) return true;
+			// KS-2573
+			// check: is watching by email
+			if(path.equals(watch.getNodePath()) && watch.isAddWatchByEmail()) 
+				return true;
 		}
 		return false;
 	}
@@ -689,7 +692,7 @@ public class UICategory extends BaseForumForm	{
 				uiCategory.getForumService().addWatch(1, path, values, uiCategory.userProfile.getUserId()) ;
 				uiCategory.isEditCategory = true;
 				UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.updateWatchinh();
+				forumPortlet.updateWatching();
 				isUnWatch = false;
 				info("UIAddWatchingForm.msg.successfully") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory) ;
@@ -707,7 +710,7 @@ public class UICategory extends BaseForumForm	{
 				unwatchEmail = uiCategory.getEmailWatching(path);
 				uiCategory.getForumService().removeWatch(1, path,uiCategory.userProfile.getUserId()+"/"+uiCategory.getEmailWatching(path)) ;
 				UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.updateWatchinh();
+				forumPortlet.updateWatching();
 				isUnWatch = true;
 				info("UIAddWatchingForm.msg.UnWatchSuccessfully") ;
 			} catch (Exception e) {

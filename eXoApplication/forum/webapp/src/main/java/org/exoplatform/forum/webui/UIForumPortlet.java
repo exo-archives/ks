@@ -388,12 +388,12 @@ public class UIForumPortlet extends UIPortletApplication {
 		return this.userProfile ;
 	}
 
-	public void updateWatchinh() throws Exception {
+	public void updateWatching() throws Exception {
 		listWatches = forumService.getWatchByUser(userProfile.getUserId());
 	}
 
-	public List<Watch> getWatchinhByCurrentUser() throws Exception {
-		if(listWatches == null) updateWatchinh();
+	public List<Watch> getWatchingByCurrentUser() throws Exception {
+		if(listWatches == null) updateWatching();
 		return listWatches;
 	}
 
