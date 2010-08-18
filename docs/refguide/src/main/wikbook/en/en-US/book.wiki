@@ -20,22 +20,6 @@ h2. Answers Configuration
 {include:document="FAQ_Preferences_Configuration.wiki"}
 {include:document="FAQ_Mail_Template_Configuration.wiki"}
 
-h2. Advanced configuration
+h1. Data Storage
 {include:document="FAQ_JCR_Structure.wiki"}
 {include:document="Forum_JCR_Structure.wiki"}
-
-h1. Migration notes
-{include:document="KS_Migration_from_1-0_to_1-1.wiki"}
-{include:document="KS_Migration_from_1-1_to_1-2.wiki"}
-{include:document="KS_Migration_from_1-2-1_to_1-2-2.wiki"}
-{include:document="KS_Migration_from_1-2_to_2-0.wiki"}
-{include:document="KS_Migration_from_2-0_to_2-1.wiki"}
-
-h1. Integration
-
-{include:document="Integration_How_TO.wiki"}
-{include:document="KS_1-1_Integration_into_an_Existing_Portal.wiki"}
-{include:document="KS_1-2_Integration_into_an_Existing_Portal.wiki"}
-{include:document="KS_2-0_Integration_into_an_Existing_Gatein_Portal.wiki"}
-{include:document="KS_Integration_into_an_Existing_Portal.wiki"}
-

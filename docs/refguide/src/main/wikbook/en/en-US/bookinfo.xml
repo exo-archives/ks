@@ -1,20 +1,20 @@
 <bookinfo>
-  <title>My product title (see bookinfo.xml)</title>
-  <subtitle>${project.artifactId} - ${project.version}</subtitle>
-  <edition>${project.version}</edition>
+  <title>eXo Knowledge Reference Guide</title>
+  <subtitle>${artifactId} - ${project.version}</subtitle>
+  <edition>${version}</edition>
   <pubsnumber>1</pubsnumber>
-  <productname>${project.artifactId}</productname>
-  <productnumber>${project.version}</productnumber>
+  <productname>${artifactId}</productname>
+  <productnumber>${version}</productnumber>
   <copyright>
     <year>2010</year>
-    <holder>My company</holder>
+    <holder>eXo Platform</holder>
   </copyright>
   <authorgroup>
     <author>
-      <firstname>John</firstname>
-      <surname>Doe</surname>
+      <firstname>eXo</firstname>
+      <surname>Platform</surname>
       <affiliation>
-        <shortaffil>Acme</shortaffil>
+        <shortaffil>eXo Platform</shortaffil>
       </affiliation>
     </author>
   </authorgroup>
