@@ -106,13 +106,13 @@
     <dependency>
       <groupId>org.exoplatform.cs</groupId>
       <artifactId>cs.packaging.module</artifactId>
-      <version>${project.version}</version>
+      <version>${org.exoplatform.cs.version}</version>
       <type>js</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.cs</groupId>
       <artifactId>cs.packaging.product</artifactId>
-      <version>${project.version}</version>
+      <version>${org.exoplatform.cs.version}</version>
       <type>js</type>
     </dependency>
 	

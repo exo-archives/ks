@@ -33,16 +33,16 @@
     <org.exoplatform.jcr.version>1.12.3-GA</org.exoplatform.jcr.version>
 	<org.exoplatform.portal.version>3.1.1-PLF</org.exoplatform.portal.version>
 	
-   
+     <org.exoplatform.cs.version>2.1.0-CR01</org.exoplatform.cs.version>   
 	<!--commons dependencies-->
-	<org.exoplatform.commons.version>1.0.0-CR01-SNAPSHOT</org.exoplatform.commons.version>
+	<org.exoplatform.commons.version>1.0.0-CR01</org.exoplatform.commons.version>
 
 	
     <org.exoplatform.exopackage.version>1.1.0</org.exoplatform.exopackage.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <version.chromattic>1.0.3</version.chromattic>
 	<!-- Extend service -->
-	<org.exoplatform.social.version>1.1.0-SNAPSHOT</org.exoplatform.social.version>
+	<org.exoplatform.social.version>1.1.0-CR01</org.exoplatform.social.version>
 	
     <!-- 3rd parties -->
 	<org.testng.version>5.10</org.testng.version>
@@ -346,7 +346,7 @@
                 <configuration>
                   <signature>
                     <groupId>org.jvnet.animal-sniffer</groupId>
-                    <artifactId>java1.5</artifactId>
+                    <artifactId>java1.6</artifactId>
                     <version>1.0</version>
                   </signature>
                 </configuration>
@@ -364,8 +364,9 @@
     <module>extension</module>
     <module>demo</module>
     <module>ext</module>
-	<module>server/tomcat/patch</module>
+    <module>server/tomcat/patch</module>
     <module>server/jboss/patch-ear</module>
+    <module>docs</module>
     <module>packaging</module>	
   </modules>
 </project>
