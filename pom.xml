@@ -27,46 +27,85 @@
     <url>http://builder.exoplatform.org/hudson/job/ks-2.1.x-ci/</url>
   </ciManagement>
   <properties>
-    <org.exoplatform.kernel.version>2.2.3-GA-SNAPSHOT</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>2.3.3-GA-SNAPSHOT</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>2.1.3-GA-SNAPSHOT</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>1.12.3-GA-SNAPSHOT</org.exoplatform.jcr.version>
-	<org.exoplatform.portal.version>3.1.1-plf-SNAPSHOT</org.exoplatform.portal.version>
+    <org.exoplatform.kernel.version>2.2.3-GA</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>2.3.3-GA</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>2.1.3-GA</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.12.3-GA</org.exoplatform.jcr.version>
+	<org.exoplatform.portal.version>3.1.1-PLF</org.exoplatform.portal.version>
 	
    
 	<!--commons dependencies-->
 	<org.exoplatform.commons.version>1.0.0-CR01-SNAPSHOT</org.exoplatform.commons.version>
 
 	
-    <org.exoplatform.exopackage.version>1.1.0-Beta09</org.exoplatform.exopackage.version>
+    <org.exoplatform.exopackage.version>1.1.0</org.exoplatform.exopackage.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <version.chromattic>1.0.3</version.chromattic>
 	<!-- Extend service -->
 	<org.exoplatform.social.version>1.1.0-SNAPSHOT</org.exoplatform.social.version>
 	
     <!-- 3rd parties -->
+	<org.testng.version>5.10</org.testng.version>
+	<org.hibernate.version>3.3.2.GA</org.hibernate.version>
+	<commons-collections.version>3.2.1</commons-collections.version>	
+	<org.jboss.version>2.2.9.GA</org.jboss.version>	
+    <org.gatein.shindig.version>1.0-r790473-Patch02</org.gatein.shindig.version>
     <commons-lang.version>2.3</commons-lang.version>
+    <commons-chain.version>1.0</commons-chain.version>
+    <commons-logging.version>1.0.4</commons-logging.version>
+    <commons-httpclient.version>3.0</commons-httpclient.version>
     <javax.servlet.servlet-api.version>2.5</javax.servlet.servlet-api.version>
     <javax.portlet.portlet-api.version>2.0</javax.portlet.portlet-api.version>
-    <javax.mail.mail.version>1.4</javax.mail.mail.version>
+    <javax.mail.mail.version>1.4.2</javax.mail.mail.version>
     <javax.xml.bind.jaxb-api.version>2.1</javax.xml.bind.jaxb-api.version>
+    <javax.xml.stream.stax-api.version>1.0</javax.xml.stream.stax-api.version>
     <javax.ws.rs.jsr311-api.version>1.0</javax.ws.rs.jsr311-api.version>
     <javax.jcr.api.version>1.0</javax.jcr.api.version>
+    <org.jibx.jibx-run.version>1.2.1</org.jibx.jibx-run.version>
+    <javax.activation.activation.version>1.1</javax.activation.activation.version>
     <org.slf4j.slf4j-simple.version>1.5.6</org.slf4j.slf4j-simple.version>
     <xml-apis.version>1.0.b2</xml-apis.version>
-    <quartz.version>1.5.0-RC2</quartz.version>
+    <pull-parser.version>2</pull-parser.version>
+    <quartz.version>1.5.2</quartz.version>
     <rome.version>0.9</rome.version>
     <picocontainer.version>1.1</picocontainer.version>
-    <commons-io.version>1.3.2</commons-io.version>
+    <commons-io.version>1.4</commons-io.version>
     <junit.version>3.8.2</junit.version>
     <xpp3.version>1.1.3.4.O</xpp3.version>
     <mockito.version>1.8.1</mockito.version>
-    <testng.version>5.10</testng.version>
     <jtidy.version>4aug2000r7-dev</jtidy.version>
-    <commons-collections.version>3.2.1</commons-collections.version>
+     
     <org.mortbay.jetty.cometd-bayeux.version>6.1.11</org.mortbay.jetty.cometd-bayeux.version>
-    <org.jboss.version>2.2.14.GA</org.jboss.version>
-    <!-- ************** -->
+    <org.mortbay.jetty.cometd-api.version>0.9.20080221</org.mortbay.jetty.cometd-api.version>
+    <org.mortbay.jetty.jetty-util.version>6.1.11</org.mortbay.jetty.jetty-util.version>
+    
+    <selenium-java-client-driver.version>1.0-beta-1</selenium-java-client-driver.version>
+     
+    <org.fontbox.version>0.1.0</org.fontbox.version>
+    <jdom.version>1.0</jdom.version>
+    <org.slf4j.slf4j-api.version>1.5.6</org.slf4j.slf4j-api.version>
+    <org.slf4j.slf4j-jdk14.version>1.5.6</org.slf4j.slf4j-jdk14.version>
+	<c3p0.version>0.9.1.2</c3p0.version>
+	<net.oauth.version>20080621</net.oauth.version>
+	<cglib.version>2.2</cglib.version>
+	<commons-dbcp.version>1.2.1</commons-dbcp.version>
+	<org.exoplatform.tool.version>1.0.0</org.exoplatform.tool.version>
+	<javassist.version>3.4.GA</javassist.version>
+	<html-parser.version>1.6</html-parser.version>
+	<com.sun.xml.bind.version>2.1.7</com.sun.xml.bind.version>
+	<org.jvnet.jaxb2.maven2.version>0.1</org.jvnet.jaxb2.maven2.version>
+	<org.gatein.pc.version>2.1.1-GA</org.gatein.pc.version>
+	<commons-pool.version>1.2</commons-pool.version>
+	<asm.version>1.5.3</asm.version>
+	<antlr.version>2.7.6rc1</antlr.version>
+	<jcr.version>1.0</jcr.version>
+    <stax.version>1.0</stax.version>
+	<xml-apis.version>1.3.04</xml-apis.version>
+	<org.gatein.wci.version>2.0.1-GA</org.gatein.wci.version>
+	<net.sourceforge.nekohtml.version>1.9.9</net.sourceforge.nekohtml.version>
+	<commons-logging.version>1.0.4</commons-logging.version>
+	<commons-lang.version>2.4</commons-lang.version>
+	<!-- ************** -->
     <!-- Build settings -->
     <!-- ************** -->
     <!-- We enforce Java 6 to build to use Chromattic and APT -->
@@ -270,8 +309,9 @@
       <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
-        <version>${testng.version}</version>
+        <version>${org.testng.version}</version>
         <classifier>jdk15</classifier>
+		<scope>test</scope>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
