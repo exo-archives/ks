@@ -170,7 +170,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>Lòng anh vẫn thế thôi. Ôi bầu trời ôi bao vị thần đã chứng giám đã hiểu lòng ta, anh giờ này chỉ biết ngập ngùi.</td>
+	<td>de minh anh lang thang tren pho mua roi.</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -188,9 +188,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDown</td>
 	<td>link=Save</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -198,9 +198,14 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td>1,1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>Step 2: Show Edit question form</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -228,8 +233,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td></td>
-	<td></td>
+	<td>echo</td>
+	<td>Step 3: Edit Question with blank entry for required fields</td>
 	<td></td>
 </tr>
 <tr>
@@ -279,83 +284,198 @@
 	<td>vuthelinh@gmail.com</td>
 </tr>
 <tr>
-	<td></td>
-	<td></td>
-	<td></td>
-</tr>
-<tr>
-	<td></td>
-	<td></td>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td></td>
-	<td></td>
-	<td></td>
-</tr>
-<tr>
-	<td></td>
-	<td></td>
+	<td>mouseDown</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
+	<td>waitForText</td>
+	<td>//div[2]/div[2]/div/div/div/div/div[2]</td>
+	<td>Please enter a question for the default language.</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[2]/div[2]/div/div/div/div/div[2]</td>
+	<td>Please enter a question for the default language.</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
 	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
 	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>Author</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Author</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[2]/div[2]/div/div/div/div/div[2]</td>
+	<td>The author is required.</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[2]/div[2]/div/div/div/div/div[2]</td>
+	<td>The author is required.</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>Author</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Author</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>EmailAddress</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>EmailAddress</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[2]/div/div/div/div[2]/div[2]</td>
+	<td>The email is not a valid address.</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[2]/div/div/div/div[2]/div[2]</td>
+	<td>The email is not a valid address.</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>EmailAddress</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>EmailAddress</td>
+	<td>vuthelinh@gmail</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[2]/div[2]/div/div/div/div/div[2]</td>
+	<td>The email is not a valid address.</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[2]/div[2]/div/div/div/div/div[2]</td>
+	<td>The email is not a valid address.</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIAnswersPopupWindow']/div/div[1]/div/div/div/div[2]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIAnswersPopupWindow']/div/div[1]/div/div/div/div[2]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersContainer']/div/div[1]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='AnswersContainer']/div/div[1]/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
 	<td>========detele data</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Sign in</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Sign in</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>username</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>username</td>
-	<td>root</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>password</td>
-	<td>gtn</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id='PortalNavigationTopContainer']/div[4]/div/div/div/div/div/div/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>//div[@id='PortalNavigationTopContainer']/div[4]/div/div/div/div/div/div/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -385,12 +505,12 @@
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>Test_ANS_10_001</td>
+	<td>Test_ANS_10_002</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>Test_ANS_10_001</td>
+	<td>Test_ANS_10_002</td>
 	<td></td>
 </tr>
 <tr>
@@ -410,12 +530,12 @@
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>Test_ANS_10_001</td>
+	<td>Test_ANS_10_002</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>Test_ANS_10_001</td>
+	<td>Test_ANS_10_002</td>
 	<td></td>
 </tr>
 

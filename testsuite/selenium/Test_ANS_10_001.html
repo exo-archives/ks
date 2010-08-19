@@ -188,9 +188,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDown</td>
 	<td>link=Save</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -198,9 +198,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -314,9 +314,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDown</td>
 	<td>link=Save</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementNotPresent</td>
@@ -354,9 +354,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=2</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -369,9 +369,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>css=div[title='Activate']</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -389,14 +389,14 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForText</td>
-	<td>//div/p</td>
+	<td>waitForTextPresent</td>
 	<td>This question is pending for approval.</td>
+	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>//div/p</td>
+	<td>verifyTextPresent</td>
 	<td>This question is pending for approval.</td>
+	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
@@ -439,34 +439,29 @@
 	<td></td>
 </tr>
 <tr>
+	<td>verifyChecked</td>
+	<td>IsApproved</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDown</td>
 	<td>link=Save</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
-	<td>waitForNotText</td>
-	<td>//div/p</td>
+	<td>waitForTextNotPresent</td>
 	<td>This question is pending for approval.</td>
+	<td></td>
 </tr>
 <tr>
-	<td>verifyNotText</td>
-	<td>//div/p</td>
+	<td>verifyTextNotPresent</td>
 	<td>This question is pending for approval.</td>
-</tr>
-<tr>
-	<td>waitForText</td>
-	<td>//div/p</td>
-	<td>By Root Root | * minute(s) ago.</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>//div/p</td>
-	<td>By Root Root | * minute(s) ago.</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
