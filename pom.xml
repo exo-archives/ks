@@ -27,22 +27,22 @@
     <url>http://builder.exoplatform.org/hudson/job/ks-2.1.x-ci/</url>
   </ciManagement>
   <properties>
-    <org.exoplatform.kernel.version>2.2.3-GA</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>2.3.3-GA</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>2.1.3-GA</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>1.12.3-GA</org.exoplatform.jcr.version>
-	<org.exoplatform.portal.version>3.1.1-PLF</org.exoplatform.portal.version>
+    <org.exoplatform.kernel.version>2.2.4-GA-SNAPSHOT</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>2.3.4-GA-SNAPSHOT</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>2.1.4-GA-SNAPSHOT</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.12.4-GA-SNAPSHOT</org.exoplatform.jcr.version>
+	<org.exoplatform.portal.version>3.1.2-PLF-SNAPSHOT</org.exoplatform.portal.version>
 	
-     <org.exoplatform.cs.version>2.1.0-CR01</org.exoplatform.cs.version>   
+     <org.exoplatform.cs.version>2.1.0-CR02-SNAPSHOT</org.exoplatform.cs.version>   
 	<!--commons dependencies-->
-	<org.exoplatform.commons.version>1.0.0-CR01</org.exoplatform.commons.version>
+	<org.exoplatform.commons.version>1.0.0-CR02-SNAPSHOT</org.exoplatform.commons.version>
 
 	
     <org.exoplatform.exopackage.version>1.1.0</org.exoplatform.exopackage.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <version.chromattic>1.0.3</version.chromattic>
 	<!-- Extend service -->
-	<org.exoplatform.social.version>1.1.0-CR01</org.exoplatform.social.version>
+	<org.exoplatform.social.version>1.1.0-CR02-SNAPSHOT</org.exoplatform.social.version>
 	
     <!-- 3rd parties -->
 	<org.testng.version>5.10</org.testng.version>
