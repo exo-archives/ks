@@ -77,7 +77,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>${org.slf4j.slf4j-simple.version}</version>
+      <version>${org.slf4j.version}</version>
     </dependency>        
   </dependencies>
 </project>
