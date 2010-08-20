@@ -150,8 +150,8 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 					strings[j] = string; ++j;
 	      }
 				uiForm.setEmails(strings) ;
-				forumPortlet.updateWatchinh();
-				List<Watch> listWatches = forumPortlet.getWatchinhByCurrentUser();
+				forumPortlet.updateWatching();
+				List<Watch> listWatches = forumPortlet.getWatchingByCurrentUser();
 				if(uiForm.getIsTopic()){
 					UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
 					topicDetail.setListWatches(listWatches);

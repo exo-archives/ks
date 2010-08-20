@@ -266,7 +266,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		cleanCheckedList();
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.isUseAjax = forumPortlet.isUseAjax();
-		listWatches = forumPortlet.getWatchinhByCurrentUser();
+		listWatches = forumPortlet.getWatchingByCurrentUser();
 		
 		// TODO : replace these 2 statements by ForumService.viewTopic(topicId, userName)
 		this.topic = getForumService().getTopic(categoryId, forumId, topicId, userName) ;
@@ -293,7 +293,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.isUseAjax = forumPortlet.isUseAjax();
 		userProfile = forumPortlet.getUserProfile() ;
-		listWatches = forumPortlet.getWatchinhByCurrentUser();
+		listWatches = forumPortlet.getWatchingByCurrentUser();
 		userName = userProfile.getUserId() ;
 		setRenderInfoPorlet();
 	}
@@ -323,7 +323,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.isUseAjax = forumPortlet.isUseAjax();
 		userProfile = forumPortlet.getUserProfile() ;
-		listWatches = forumPortlet.getWatchinhByCurrentUser();
+		listWatches = forumPortlet.getWatchingByCurrentUser();
 		userName = userProfile.getUserId() ;
 		setRenderInfoPorlet();
 	}
@@ -711,8 +711,11 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	
 	private boolean isWatching(String path) throws Exception {
 		for (Watch watch : listWatches) {
-			if(path.equals(watch.getNodePath())) return true;
-    }
+			// KS-2573
+			// check: is watching by email watch
+			if(path.equals(watch.getNodePath()) && watch.isAddWatchByEmail()) 
+				return true;
+		}
 		return false;
 	}
 
@@ -1715,8 +1718,8 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 					values.add(topicDetail.userProfile.getEmail());
 					topicDetail.getForumService().addWatch(1, buffer.toString(), values, topicDetail.userProfile.getUserId()) ;
 					UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-					forumPortlet.updateWatchinh();
-					topicDetail.listWatches = forumPortlet.getWatchinhByCurrentUser();
+					forumPortlet.updateWatching();
+					topicDetail.listWatches = forumPortlet.getWatchingByCurrentUser();
 					topicDetail.info("UIAddWatchingForm.msg.successfully");
 					
 					refresh();
@@ -1740,8 +1743,8 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 				try {
 					topicDetail.getForumService().removeWatch(1, path, topicDetail.userProfile.getUserId()+"/"+topicDetail.getEmailWatching(path)) ;
 					UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-					forumPortlet.updateWatchinh();
-					topicDetail.listWatches = forumPortlet.getWatchinhByCurrentUser();
+					forumPortlet.updateWatching();
+					topicDetail.listWatches = forumPortlet.getWatchingByCurrentUser();
 					topicDetail.info("UIAddWatchingForm.msg.UnWatchSuccessfully");
 					
 				} catch (Exception e) {

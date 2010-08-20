@@ -121,15 +121,18 @@ public class UICategories extends UIContainer	{
 		} else if(collapCategories == null){
 			collapCategories = new ArrayList<String>();
 		}
-		listWatches = forumPortlet.getWatchinhByCurrentUser();
+		listWatches = forumPortlet.getWatchingByCurrentUser();
 		return this.userProfile ;
 	}
 	
 	@SuppressWarnings("unused")
   private boolean isWatching(String path) throws Exception {
 		for (Watch watch : listWatches) {
-			if(path.equals(watch.getNodePath())) return true;
-    }
+			// KS-2573
+			// check: is watching by email watch
+			if(path.equals(watch.getNodePath()) && watch.isAddWatchByEmail()) 
+				return true;
+		}
 		return false;
 	}
 
@@ -504,7 +507,7 @@ public class UICategories extends UIContainer	{
         values.add(uiContainer.forumService.getUserInformations(uiContainer.userProfile).getEmail());
 				uiContainer.forumService.addWatch(1, path, values, userName) ;
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.updateWatchinh();
+				forumPortlet.updateWatching();
 				Object[] args = { };
 				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
@@ -527,7 +530,7 @@ public class UICategories extends UIContainer	{
 			try {
 				uiContainer.forumService.removeWatch(1, path, uiContainer.userProfile.getUserId()+"/"+uiContainer.getEmailWatching(path)) ;
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.updateWatchinh();
+				forumPortlet.updateWatching();
 				Object[] args = { };
 				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO)) ;

@@ -5934,11 +5934,11 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					}
 					watchingNode.setProperty(EXO_EMAIL_WATCHING, Utils.getStringsInList(values));
 					watchingNode.setProperty(EXO_USER_WATCHING, Utils.getStringsInList(listUsers));
-					try {
-						watchingNode.setProperty(EXO_RSS_WATCHING, new String[]{currentUser});
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					//try {
+					//	watchingNode.setProperty(EXO_RSS_WATCHING, new String[]{currentUser});
+					//} catch (Exception e) {
+					//	e.printStackTrace();
+					//}
 				} else {	// add RSS watching
 					watchingNode.setProperty(EXO_RSS_WATCHING, new String[]{currentUser});
 				}
