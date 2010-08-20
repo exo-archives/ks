@@ -2351,10 +2351,10 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			topicNode.setProperty(EXO_IS_ACTIVE, topic.getIsActive());
 			String[] strs = topic.getCanView();
 			boolean isGetLastTopic = false;
-			if(strs == null) strs = new String[]{""};
+			if(strs == null || strs.length == 0) strs = new String[]{""};
 			topicNode.setProperty(EXO_CAN_VIEW, strs);
 			strs = topic.getCanPost();
-			if(strs == null) strs = new String []{""};
+			if(strs == null || strs.length == 0) strs = new String []{""};
 			topicNode.setProperty(EXO_CAN_POST, strs);
 			topicNode.setProperty(EXO_USER_VOTE_RATING, topic.getUserVoteRating());
 			topicNode.setProperty(EXO_VOTE_RATING, topic.getVoteRating());
@@ -2629,7 +2629,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		Set<String> set = new HashSet<String>();
 		while(!node.getName().equals(KSDataLocation.Locations.FORUM_CATEGORIES_HOME)) {
 			if(node.isNodeType(EXO_FORUM_WATCHING)){
-				set.addAll(Utils.valuesToList(node.getProperty(EXO_EMAIL_WATCHING).getValues()));
+				set.addAll(new PropertyReader(node).list(EXO_EMAIL_WATCHING, new ArrayList<String>()));
 			}
 			node = node.getParent();
 		}
