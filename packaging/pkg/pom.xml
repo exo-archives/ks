@@ -103,19 +103,7 @@
       <version>${org.exoplatform.portal.version}</version>
       <type>js</type>
     </dependency>
-    <dependency>
-      <groupId>org.exoplatform.cs</groupId>
-      <artifactId>cs.packaging.module</artifactId>
-      <version>${org.exoplatform.cs.version}</version>
-      <type>js</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.cs</groupId>
-      <artifactId>cs.packaging.product</artifactId>
-      <version>${org.exoplatform.cs.version}</version>
-      <type>js</type>
-    </dependency>
-	
+       	
 	<dependency>
 		<groupId>c3p0</groupId>
 		<artifactId>c3p0</artifactId>
@@ -167,6 +155,12 @@
 		<artifactId>exo.jcr.framework.web</artifactId>
 		<version>${org.exoplatform.jcr.version}</version>
 	  </dependency>
+	  <dependency>
+		<groupId>org.exoplatform.jcr</groupId>
+		<artifactId>exo.jcr.component.webdav</artifactId>
+		<version>${org.exoplatform.jcr.version}</version>
+	  </dependency>
+     
 	  
 	  <dependency>
 		<groupId>org.exoplatform.ws</groupId>
@@ -289,6 +283,12 @@
 	  </dependency>
 	  <dependency>
 		<groupId>org.exoplatform.portal</groupId>
+		<artifactId>exo.portal.server.jboss.plugin</artifactId>
+		<version>${org.exoplatform.portal.version}</version>
+	  </dependency>
+	  
+	  <dependency>
+		<groupId>org.exoplatform.portal</groupId>
 		<artifactId>exo.portal.component.dashboard</artifactId>
 		<version>${org.exoplatform.portal.version}</version>
 	  </dependency>
@@ -308,6 +308,12 @@
 		<groupId>org.exoplatform.portal</groupId>
 		<artifactId>gatein.portal.component.wsrp</artifactId>
 		<version>${org.exoplatform.portal.version}</version>
+	  </dependency>
+	  <dependency>
+		<groupId>org.exoplatform.portal</groupId>
+		<artifactId>exo.portal.starter.war</artifactId>
+		<version>${org.exoplatform.portal.version}</version>
+		<type>war</type>
 	  </dependency>
 	  	  
 	  <dependency>

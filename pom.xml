@@ -32,8 +32,7 @@
     <org.exoplatform.ws.version>2.1.4-GA-SNAPSHOT</org.exoplatform.ws.version>
     <org.exoplatform.jcr.version>1.12.4-GA-SNAPSHOT</org.exoplatform.jcr.version>
 	<org.exoplatform.portal.version>3.1.2-PLF-SNAPSHOT</org.exoplatform.portal.version>
-	
-     <org.exoplatform.cs.version>2.1.0-CR02-SNAPSHOT</org.exoplatform.cs.version>   
+	    
 	<!--commons dependencies-->
 	<org.exoplatform.commons.version>1.0.0-CR02-SNAPSHOT</org.exoplatform.commons.version>
 
