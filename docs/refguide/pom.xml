@@ -49,7 +49,7 @@
               <outputDirectory>${wikbook.sourceDirectory}</outputDirectory>
               <resources>
                 <resource>
-                  <directory>src/main/wikbook</directory>
+                  <directory>src/main/resources/wikbook</directory>
                   <filtering>true</filtering>
                 </resource>
               </resources>
