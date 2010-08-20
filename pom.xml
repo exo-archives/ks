@@ -62,7 +62,7 @@
     <javax.jcr.api.version>1.0</javax.jcr.api.version>
     <org.jibx.jibx-run.version>1.2.1</org.jibx.jibx-run.version>
     <javax.activation.activation.version>1.1</javax.activation.activation.version>
-    <org.slf4j.slf4j-simple.version>1.5.6</org.slf4j.slf4j-simple.version>
+    <org.slf4j.version>1.5.6</org.slf4j.version>
     <xml-apis.version>1.0.b2</xml-apis.version>
     <pull-parser.version>2</pull-parser.version>
     <quartz.version>1.5.2</quartz.version>
@@ -82,8 +82,7 @@
      
     <org.fontbox.version>0.1.0</org.fontbox.version>
     <jdom.version>1.0</jdom.version>
-    <org.slf4j.slf4j-api.version>1.5.6</org.slf4j.slf4j-api.version>
-    <org.slf4j.slf4j-jdk14.version>1.5.6</org.slf4j.slf4j-jdk14.version>
+    
 	<c3p0.version>0.9.1.2</c3p0.version>
 	<net.oauth.version>20080621</net.oauth.version>
 	<cglib.version>2.2</cglib.version>
@@ -104,6 +103,7 @@
 	<net.sourceforge.nekohtml.version>1.9.9</net.sourceforge.nekohtml.version>
 	<commons-logging.version>1.0.4</commons-logging.version>
 	<commons-lang.version>2.4</commons-lang.version>
+	<org.gatein.wsrp.version>1.1.1-GA</org.gatein.wsrp.version>
 	<!-- ************** -->
     <!-- Build settings -->
     <!-- ************** -->
@@ -263,7 +263,7 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-simple</artifactId>
-        <version>${org.slf4j.slf4j-simple.version}</version>
+        <version>${org.slf4j.version}</version>
       </dependency>
       <dependency>
         <groupId>xml-apis</groupId>

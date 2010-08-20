@@ -359,8 +359,13 @@
 	  <dependency>
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-simple</artifactId>
-		<version>${org.slf4j.slf4j-simple.version}</version>
+		<version>${org.slf4j.version}</version>
 	  </dependency>
+	   <dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-log4j12</artifactId>
+		<version>${org.slf4j.version}</version>
+	  </dependency>	  
 	  <dependency>
 		<groupId>xml-apis</groupId>
 		<artifactId>xml-apis</artifactId>
@@ -565,6 +570,44 @@
         <artifactId>commons-lang</artifactId>
         <version>${commons-lang.version}</version>
 	</dependency>
+    <dependency>
+        <groupId>org.gatein.wsrp</groupId>
+        <artifactId>wsrp-common</artifactId>
+        <version>${org.gatein.wsrp.version}</version>
+	</dependency>
+	<dependency>
+        <groupId>org.gatein.wsrp</groupId>
+        <artifactId>wsrp-producer</artifactId>
+        <version>${org.gatein.wsrp.version}</version>
+		<type>war</type>
+	</dependency>
+	<dependency>
+        <groupId>org.gatein.wsrp</groupId>
+        <artifactId>wsrp-producer-lib</artifactId>
+        <version>${org.gatein.wsrp.version}</version>
+	</dependency>
+	<dependency>
+        <groupId>org.gatein.wsrp</groupId>
+        <artifactId>wsrp-wsrp1-ws</artifactId>
+        <version>${org.gatein.wsrp.version}</version>
+	</dependency>
+	<dependency>
+        <groupId>org.gatein.wsrp</groupId>
+        <artifactId>wsrp-integration-api</artifactId>
+        <version>${org.gatein.wsrp.version}</version>
+	</dependency>
+	<dependency>
+        <groupId>org.gatein.wsrp</groupId>
+        <artifactId>wsrp-admin-gui</artifactId>
+        <version>${org.gatein.wsrp.version}</version>
+		<type>war</type>
+	</dependency>
+	<dependency>
+        <groupId>org.gatein.wsrp</groupId>
+        <artifactId>wsrp-consumer</artifactId>
+        <version>${org.gatein.wsrp.version}</version>
+	</dependency>
+	
   </dependencies>
   <build>
     <plugins>
