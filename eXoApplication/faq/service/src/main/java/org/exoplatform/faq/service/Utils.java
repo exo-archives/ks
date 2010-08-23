@@ -204,7 +204,7 @@ public class Utils {
 	}
 	
 	public static long getTimeOfLastActivity(String info) {
-    if (info == null || info.isEmpty()) return -1;
+    if (info == null || info.length() == 0) return -1;
     int dashIndex = info.lastIndexOf("-");
     if (dashIndex < 0) return -1;    
     try {
@@ -215,7 +215,7 @@ public class Utils {
   }
   
   public static String getAuthorOfLastActivity(String info) {
-    if (info == null || info.isEmpty()) return null;
+    if (info == null || info.length() == 0) return null;
     int dashIndex = info.lastIndexOf("-");
     if (dashIndex < 0) return null;
     return info.substring(0, dashIndex);
