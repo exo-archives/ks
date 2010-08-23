@@ -3084,6 +3084,12 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 								if(post.getIsHidden()) sendAlertJob = true;
 							}else sendAlertJob = true;
 						}
+						else
+						{
+							// update post count
+							forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
+							topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
+						}
 					} else {
 						postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, false);
 						sendAlertJob = true;
