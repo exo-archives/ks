@@ -6,7 +6,7 @@
   <fileSets>
    <fileSet>
     <directory>target/wikbook/output</directory>
-    <outputDirectory>wikbook.archetype-0.9.27-SNAPSHOT</outputDirectory>
+    <outputDirectory>org.exoplatform.ks</outputDirectory>
     <includes>
       <include>**</include>
      </includes>

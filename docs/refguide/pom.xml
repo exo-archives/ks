@@ -211,7 +211,7 @@
         </configuration>
         <executions>
           <execution>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
@@ -226,7 +226,7 @@
         <executions>
           <execution>
             <id>attach-artifacts</id>
-            <phase>install</phase>
+            <phase>package</phase>
             <goals>
               <goal>attach-artifact</goal>
             </goals>
