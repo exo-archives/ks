@@ -259,7 +259,7 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List>
                uiSet.createUIFormInput(maxIndex + 1);
             }
          }
-         event.getRequestContext().addUIComponentToUpdateByAjax(uiSet);
+         event.getRequestContext().addUIComponentToUpdateByAjax(uiSet.getParent());
       }
    }
 
@@ -271,7 +271,7 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List>
          String id = event.getRequestContext().getRequestParameter(OBJECTID);
          uiSet.removeChildById(id);
          uiSet.listIndexItemRemoved.add(Integer.parseInt(id.replaceAll(uiSet.getId(), "")));
-         event.getRequestContext().addUIComponentToUpdateByAjax(uiSet);
+         event.getRequestContext().addUIComponentToUpdateByAjax(uiSet.getParent());
       }
    }
 
