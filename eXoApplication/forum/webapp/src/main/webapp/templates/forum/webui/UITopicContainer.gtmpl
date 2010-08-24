@@ -431,7 +431,7 @@
 										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
 									</div>
 								</th>
-								<th style="width:60px;">
+								<th style="width:70px;">
 									<div class="<%=uicomponent.getCssClassForSorting("postCount");%>" onclick="<%=uicomponent.event("SetOrderBy","postCount");%>">
 										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a>
 									</div>
