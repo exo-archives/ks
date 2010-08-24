@@ -74,6 +74,7 @@ public class UITopicPoll extends BaseForumForm	{
 	private Forum forum ;
 	private UserProfile userProfile;
 	private PollService pollService ;
+	private String pollId;
 	
 	public UITopicPoll() throws Exception {
 		pollService = (PollService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
@@ -143,7 +144,7 @@ public class UITopicPoll extends BaseForumForm	{
 		if(!ForumUtils.isEmpty(categoryId)) {
 			if(userProfile.getUserRole() == 0 || ForumServiceUtils.hasPermission(this.forum.getModerators(), userProfile.getUserId())) this.canViewEditMenu = true ;
 			else this.canViewEditMenu = false ;
-			String pollId = forum.getPath()+"/"+topicId+"/"+topicId.replace(Utils.TOPIC, Utils.POLL);
+			pollId = forum.getPath()+"/"+topicId+"/"+topicId.replace(Utils.TOPIC, Utils.POLL);
 			try {
 				poll_ = pollService.getPoll(pollId) ; 
 			} catch (Exception e) {
@@ -233,6 +234,9 @@ public class UITopicPoll extends BaseForumForm	{
 		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicPoll> event) throws Exception {
 			UITopicPoll topicPoll = event.getSource() ;
+			if(!ForumUtils.isEmpty(topicPoll.pollId)){
+				topicPoll.poll_ = topicPoll.pollService.getPoll(topicPoll.pollId) ;
+			}
 			Poll poll = topicPoll.poll_ ; 
 			String[] votes ;
 			String[] setUserVote ;

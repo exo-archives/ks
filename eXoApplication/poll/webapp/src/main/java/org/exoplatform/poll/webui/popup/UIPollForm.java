@@ -211,7 +211,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 				}
 			}
 			if(sizeOption >= 2 && sizeOption <= 10) {
-				String[] newUser = new String[] {};
+				String[] newUser = null;
 				String userName = UserHelper.getCurrentUser() ;
 				String[] vote = new String[sizeOption]	;
 				if(uiForm.isUpdate) {
@@ -221,34 +221,51 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 						String[] oldUserVote = uiForm.poll.getUserVote() ; 
 						long temps = oldUserVote.length ;
 						double rmPecent = 0;
-						for(int j = sizeOption; j < oldVote.length; j++) {
-							rmPecent = rmPecent + Double.parseDouble(oldVote[j]) ;
-							voteRemoved.add(String.valueOf(j)) ;
-						}
-						rmPecent = 100 - rmPecent ;
-						for(int k = 0; k < sizeOption; ++k) {
-							double newVote = Double.parseDouble(oldVote[k]) ;
-							vote[k] = String.valueOf((newVote*100)/rmPecent) ;
-						}
-						if(!uiForm.poll.getIsMultiCheck()) {
-							int newSize	= (int) Math.round((temps*rmPecent)/100) ;
-							newUser = new String[newSize] ;
-							int l = 0 ;
-							for (String string : oldUserVote) {
-								boolean check = true ; 
-								for(int j = sizeOption; j < oldVote.length; j++) {
-									String x = ":" + j ;
-									if(string.indexOf(x) > 0) check = false ;
-								}
-								if(check) {newUser[l] = string ; 
-								++l ;}
+						List<Integer>listIndexItemRemoved = uiForm.uiFormMultiValue.getListIndexItemRemoved();
+						for(Integer integer : listIndexItemRemoved) {
+							if(integer < oldVote.length) {
+								rmPecent = rmPecent + Double.parseDouble(oldVote[integer]) ;
+								voteRemoved.add(String.valueOf(integer)) ;
 							}
+						}
+						double leftPecent = 100 - rmPecent ;
+						
+						int t = 0;
+						for(int k = 0; k < oldVote.length; ++k) {
+							if(listIndexItemRemoved.contains(k)) continue;
+							double newVote = Double.parseDouble(oldVote[k]) ;
+							if(leftPecent > 1){
+								vote[t] = String.valueOf((newVote*100)/leftPecent) ;
+							} else vote[t] = "0.0";
+							++t;
+						}
+						// single vote
+						if(!uiForm.poll.getIsMultiCheck()) {
+							if(leftPecent > 1) {
+								int newSize = (int) Math.round((temps*leftPecent)/100) ;
+								newUser = new String[newSize] ;
+								int l = 0 ;
+								for (String string : oldUserVote) {
+									boolean check = true ; 
+									for(Integer j : listIndexItemRemoved) {
+										if(j < oldVote.length) {
+											String x = ":" + j ;
+											if(string.indexOf(x) > 0) check = false ;
+										}
+									}
+									if(check) {
+										newUser[l] = string ; 
+										++l ;
+									}
+								}
+							} else if(voteRemoved.size() > 0 && rmPecent > 0.0){
+								newUser = new String[]{};
+							}
+							// multi vote
 						} else {
 							List<String> newUserVote = new ArrayList<String>() ;
-							
-							
 							for(String uv : oldUserVote) {
-							  StringBuffer sbUserInfo = new StringBuffer();
+								StringBuffer sbUserInfo = new StringBuffer();
 								for(String string : uv.split(":")) {
 									if(!voteRemoved.contains(string)) {
 										if(sbUserInfo.length() > 0) sbUserInfo.append(":");
@@ -261,6 +278,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 								newUser = newUserVote.toArray(new String[]{}) ;
 							}
 						}
+						// add new option
 					} else {
 						for(int j = 0; j < sizeOption; j++) {
 							if( j < oldVote.length) {
@@ -304,7 +322,9 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 						poll.setParentPath(parentPath);
 					}
 					if(uiForm.isUpdate) {
-						if(newUser.length > 0) poll.setUserVote(newUser) ;
+						if(newUser != null){
+							poll.setUserVote(newUser) ;
+						}
 						uiForm.getPollService().savePoll(poll, false, false) ;
 					} else {
 						poll.setOwner(userName) ;

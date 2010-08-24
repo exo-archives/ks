@@ -61,6 +61,7 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List>
 
    private Constructor constructor_ = null;
 
+   private List<Integer> listIndexItemRemoved = new ArrayList<Integer>();
    /**
     * Whether this field is enabled
     */
@@ -232,7 +233,15 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List>
       return inputBase;
    }
 
-   static public class AddActionListener extends EventListener<UIFormMultiValueInputSet>
+  public void resetListIndexItemRemoved() {
+		this.listIndexItemRemoved = new ArrayList<Integer>();
+	}
+
+	public List<Integer> getListIndexItemRemoved() {
+		return listIndexItemRemoved;
+	}
+
+	static public class AddActionListener extends EventListener<UIFormMultiValueInputSet>
    {
       public void execute(Event<UIFormMultiValueInputSet> event) throws Exception
       {
@@ -250,6 +259,7 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List>
                uiSet.createUIFormInput(maxIndex + 1);
             }
          }
+         event.getRequestContext().addUIComponentToUpdateByAjax(uiSet);
       }
    }
 
@@ -260,6 +270,8 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List>
          UIFormMultiValueInputSet uiSet = event.getSource();
          String id = event.getRequestContext().getRequestParameter(OBJECTID);
          uiSet.removeChildById(id);
+         uiSet.listIndexItemRemoved.add(Integer.parseInt(id.replaceAll(uiSet.getId(), "")));
+         event.getRequestContext().addUIComponentToUpdateByAjax(uiSet);
       }
    }
 
