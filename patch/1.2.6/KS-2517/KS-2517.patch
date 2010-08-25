@@ -1,0 +1,136 @@
+Index: eXoApplication/faq/service/src/test/java/conf/portal/repository-configuration.xml
+===================================================================
+--- eXoApplication/faq/service/src/test/java/conf/portal/repository-configuration.xml	(revision 50534)
++++ eXoApplication/faq/service/src/test/java/conf/portal/repository-configuration.xml	(working copy)
+@@ -17,12 +17,12 @@
+               <property name="multi-db" value="false"/>
+               <property name="update-storage" value="true"/>
+               <property name="max-buffer-size" value="204800"/>
+-              <property name="swap-directory" value="../temp/swap/system"/>
++              <property name="swap-directory" value="target/temp/swap/system"/>
+             </properties>
+             <value-storages>
+               <value-storage id="system" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
+                 <properties>
+-                  <property name="path" value="../temp/values/system"/>
++                  <property name="path" value="target/temp/values/system"/>
+                 </properties>
+                 <filters>
+                   <filter property-type="Binary"/>
+@@ -38,14 +38,14 @@
+          </cache>
+          <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
+           <properties>
+-            <property name="indexDir" value="../temp/jcrlucenedb/index/system"/>
++            <property name="indexDir" value="target/temp/jcrlucenedb/index/system"/>
+           </properties>
+          </query-handler>
+          <lock-manager>
+ 			    <time-out>900000</time-out><!-- 15min -->
+ 			     <persister class="org.exoplatform.services.jcr.impl.core.lock.FileSystemLockPersister">
+ 			       <properties>
+-			         <property name="path" value="../temp/lock/system"/>
++			         <property name="path" value="target/temp/lock/system"/>
+ 			       </properties>
+ 			     </persister>
+ 			   </lock-manager>
+@@ -61,12 +61,12 @@
+               <property name="multi-db" value="false"/>
+               <property name="update-storage" value="true"/>
+               <property name="max-buffer-size" value="204800"/>
+-              <property name="swap-directory" value="../temp/swap/collaboration"/>
++              <property name="swap-directory" value="target/temp/swap/collaboration"/>
+             </properties>
+             <value-storages>
+               <value-storage id="collaboration" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
+                 <properties>
+-                  <property name="path" value="../temp/values/collaboration"/>
++                  <property name="path" value="target/temp/values/collaboration"/>
+                 </properties>
+                 <filters>
+                   <filter property-type="Binary"/>
+@@ -82,14 +82,14 @@
+          </cache>
+          <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
+           <properties>
+-            <property name="indexDir" value="../temp/jcrlucenedb/index/collaboration"/>
++            <property name="indexDir" value="target/temp/jcrlucenedb/index/collaboration"/>
+           </properties>
+          </query-handler>
+          <lock-manager>
+ 			    <time-out>900000</time-out><!-- 15min -->
+ 			     <persister class="org.exoplatform.services.jcr.impl.core.lock.FileSystemLockPersister">
+ 			       <properties>
+-			         <property name="path" value="../temp/lock/collaboration"/>
++			         <property name="path" value="target/temp/lock/collaboration"/>
+ 			       </properties>
+ 			     </persister>
+ 			   </lock-manager>
+Index: eXoApplication/forum/service/src/test/java/conf/portal/repository-configuration.xml
+===================================================================
+--- eXoApplication/forum/service/src/test/java/conf/portal/repository-configuration.xml	(revision 50534)
++++ eXoApplication/forum/service/src/test/java/conf/portal/repository-configuration.xml	(working copy)
+@@ -17,12 +17,12 @@
+               <property name="multi-db" value="false"/>
+               <property name="update-storage" value="true"/>
+               <property name="max-buffer-size" value="204800"/>
+-              <property name="swap-directory" value="../temp/swap/system"/>
++              <property name="swap-directory" value="target/temp/swap/system"/>
+             </properties>
+             <value-storages>
+               <value-storage id="system" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
+                 <properties>
+-                  <property name="path" value="../temp/values/system"/>
++                  <property name="path" value="target/temp/values/system"/>
+                 </properties>
+                 <filters>
+                   <filter property-type="Binary"/>
+@@ -38,14 +38,14 @@
+          </cache>
+          <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
+           <properties>
+-            <property name="indexDir" value="../temp/jcrlucenedb/index/system"/>
++            <property name="indexDir" value="target/temp/jcrlucenedb/index/system"/>
+           </properties>
+          </query-handler>
+          <lock-manager>
+ 			    <time-out>900000</time-out><!-- 15min -->
+ 			     <persister class="org.exoplatform.services.jcr.impl.core.lock.FileSystemLockPersister">
+ 			       <properties>
+-			         <property name="path" value="../temp/lock/system"/>
++			         <property name="path" value="target/temp/lock/system"/>
+ 			       </properties>
+ 			     </persister>
+ 			   </lock-manager>
+@@ -61,12 +61,12 @@
+               <property name="multi-db" value="false"/>
+               <property name="update-storage" value="true"/>
+               <property name="max-buffer-size" value="204800"/>
+-              <property name="swap-directory" value="../temp/swap/collaboration"/>
++              <property name="swap-directory" value="target/temp/swap/collaboration"/>
+             </properties>
+             <value-storages>
+               <value-storage id="collaboration" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
+                 <properties>
+-                  <property name="path" value="../temp/values/collaboration"/>
++                  <property name="path" value="target/temp/values/collaboration"/>
+                 </properties>
+                 <filters>
+                   <filter property-type="Binary"/>
+@@ -82,14 +82,14 @@
+          </cache>
+          <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
+           <properties>
+-            <property name="indexDir" value="../temp/jcrlucenedb/index/collaboration"/>
++            <property name="indexDir" value="target/temp/jcrlucenedb/index/collaboration"/>
+           </properties>
+          </query-handler>
+          <lock-manager>
+ 			    <time-out>900000</time-out><!-- 15min -->
+ 			     <persister class="org.exoplatform.services.jcr.impl.core.lock.FileSystemLockPersister">
+ 			       <properties>
+-			         <property name="path" value="../temp/lock/collaboration"/>
++			         <property name="path" value="target/temp/lock/collaboration"/>
+ 			       </properties>
+ 			     </persister>
+ 			   </lock-manager>
