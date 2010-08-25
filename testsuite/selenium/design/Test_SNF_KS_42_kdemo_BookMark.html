@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="" />
+<link rel="selenium.base" href="http://localhost:8080/ksdemo/public/classic/" />
 <title>Test_SNF_KS_42_kdemo_BookMark</title>
 </head>
 <body>
@@ -52,11 +52,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>-Bookmark-</td>
-	<td></td>
-</tr>
-<tr>
 	<td>open</td>
 	<td>/ksdemo/private/classic/forum</td>
 	<td></td>
@@ -97,6 +92,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Knowledge Suite</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Knowledge Suite</td>
 	<td></td>
@@ -124,6 +124,11 @@
 <tr>
 	<td>echo</td>
 	<td>-Bookmark Topic</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Live demo</td>
 	<td></td>
 </tr>
 <tr>
@@ -187,6 +192,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Topic of Bookmark</td>
+	<td></td>
+</tr>
+<tr>
 	<td>componentExoContextMenu</td>
 	<td>link=Topic of Bookmark</td>
 	<td>contextmenu</td>
@@ -209,6 +219,11 @@
 <tr>
 	<td>echo</td>
 	<td>-View Category in Boorkmark-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
 <tr>
@@ -247,6 +262,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
 	<td></td>
@@ -279,6 +299,11 @@
 <tr>
 	<td>echo</td>
 	<td>-View topic in Bookmark-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
 <tr>

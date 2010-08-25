@@ -67,6 +67,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Knowledge Suite</td>
+	<td></td>
+</tr>
+<tr>
 	<td>componentExoContextMenu</td>
 	<td>link=Knowledge Suite</td>
 	<td>contextmenu</td>
@@ -90,6 +95,11 @@
 	<td>verifyElementPresent</td>
 	<td>//div[@class='PopupMessage']</td>
 	<td>You are now watching this item.</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[5]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -207,6 +217,11 @@
 	<td>Root Signature</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form/div[2]/div/div/div/div[1]/div/div/div/div/div[2]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//form/div[2]/div/div/div/div[1]/div/div/div/div/div[2]/div/div/div/div</td>
 	<td></td>
@@ -242,14 +257,29 @@
 	<td>label=5</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form/div[2]/div/div/div/div[1]/div/div/div/div/div[3]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//form/div[2]/div/div/div/div[1]/div/div/div/div/div[3]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>//div[@class='DeleteIcon']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementNotPresent</td>
 	<td>//div[@class='DeleteIcon']</td>
 	<td>Knowledge Suite</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Cancel</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -387,8 +417,18 @@
 	<td>Forum for Forum Setting</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Forum Setting</td>
 	<td></td>
 </tr>
 <tr>
@@ -404,6 +444,11 @@
 <tr>
 	<td>echo</td>
 	<td>-Watch Category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='EditProfile']/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
 <tr>
@@ -1224,6 +1269,11 @@
 <tr>
 	<td>echo</td>
 	<td>-Reset some value-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='EditProfile']/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
 <tr>
