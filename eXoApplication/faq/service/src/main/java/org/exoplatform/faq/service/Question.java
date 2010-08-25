@@ -495,7 +495,7 @@ public class Question {
 	}
 
   public String getAuthorOfLastActivity() {
-    if (authorOfLastActivity == null || authorOfLastActivity.isEmpty()) {
+    if (authorOfLastActivity == null || authorOfLastActivity.length() == 0) {
       return author;
     }
     return authorOfLastActivity;
