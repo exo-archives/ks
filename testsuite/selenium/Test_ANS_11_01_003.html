@@ -170,7 +170,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>//*[@id=&quot;Question___Frame&quot;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td>//*[@id=&quot;Question___Frame&quot;]//html/body/table/tbody/tr[2]/td/iframe</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -188,9 +188,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDown</td>
 	<td>link=Save</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -290,7 +290,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>//*[@id=&quot;QuestionRespone___Frame&quot;]&nbsp;&nbsp;&nbsp;//html/body/table/tbody/tr[2]/td/iframe Change language</td>
+	<td>//*[@id=&quot;QuestionRespone___Frame&quot;]//html/body/table/tbody/tr[2]/td/iframe Change language</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -303,9 +303,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Save</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -430,12 +430,12 @@
 <tr>
 	<td>waitForText</td>
 	<td>//p</td>
-	<td>exact://*[@id=&quot;Question___Frame&quot;] //html/body/table/tbody/tr[2]/td/iframe</td>
+	<td>//*[@id=&quot;Question___Frame&quot;]//html/body/table/tbody/tr[2]/td/iframe</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//p</td>
-	<td>exact://*[@id=&quot;Question___Frame&quot;] //html/body/table/tbody/tr[2]/td/iframe</td>
+	<td>//*[@id=&quot;Question___Frame&quot;]//html/body/table/tbody/tr[2]/td/iframe</td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -535,6 +535,16 @@
 <tr>
 	<td>verifyTextNotPresent</td>
 	<td>Test_ANS_11_01_003</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 
