@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>exo.ks.demo</artifactId>
-    <version>2.1.0-CR02-SNAPSHOT</version>
+    <version>2.1.0-CR02</version>
   </parent>
   <artifactId>exo.ks.demo.cometd-war</artifactId>
   <packaging>war</packaging>
