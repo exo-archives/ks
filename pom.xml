@@ -41,7 +41,7 @@
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <version.chromattic>1.0.3</version.chromattic>
 	<!-- Extend service -->
-	<org.exoplatform.social.version>1.1.0-CR02-SNAPSHOT</org.exoplatform.social.version>
+	<org.exoplatform.social.version>1.1.0-CR02</org.exoplatform.social.version>
 	
     <!-- 3rd parties -->
 	<org.testng.version>5.10</org.testng.version>
