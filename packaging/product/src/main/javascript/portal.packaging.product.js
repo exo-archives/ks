@@ -34,7 +34,7 @@ function getProduct(version) {
   // Portal extension starter required by KS etension
   portal.starter = new Project("org.exoplatform.portal", "exo.portal.starter.war", "war", portal.version);
   portal.starter.deployName = "starter";
-  product.addDependencies(portal.starter);
+  //product.addDependencies(portal.starter);
   
   portal.fck = new Project("org.exoplatform.commons", "exo.platform.commons.fck", "war", "${org.exoplatform.commons.version}");
   portal.fck.deployName = "fck";
@@ -50,6 +50,7 @@ function getProduct(version) {
   product.addDependencies(ks.eXoApplication.common);
   product.addDependencies(ks.eXoApplication.faq);
   product.addDependencies(ks.eXoApplication.forum);
+  product.addDependencies(ks.eXoApplication.wiki);
   product.addDependencies(ks.eXoApplication.poll);
   product.addDependencies(ks.web.ksResources);  
   product.addDependencies(ks.extension.webapp);

@@ -170,7 +170,7 @@
     <dependency>
       <groupId>org.chromattic</groupId>
       <artifactId>chromattic.core</artifactId>
-      <version>${version.chromattic}</version>
+      <version>${org.chromattic.version}</version>
       <scope>test</scope>
     </dependency>
     

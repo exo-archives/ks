@@ -3,17 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
-    <artifactId>ks</artifactId>
+    <artifactId>exo.ks.eXoApplication</artifactId>
     <version>2.2.0-SNAPSHOT</version>
   </parent>
-  <artifactId>exo.ks.eXoApplication</artifactId>
+  <artifactId>exo.ks.eXoApplication.wiki</artifactId>
   <packaging>pom</packaging>
-  <name>eXo KS Applications</name>
+  <name>eXo KS Forum</name>
   <modules>
-    <module>common</module>
-    <module>faq</module>
-    <module>forum</module>
-    <module>poll</module>
-    <module>wiki</module>
+    <module>service</module>
+    <module>webapp</module>
   </modules>
 </project>

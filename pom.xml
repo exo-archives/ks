@@ -39,7 +39,7 @@
 	
     <org.exoplatform.exopackage.version>1.1.0</org.exoplatform.exopackage.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
-    <version.chromattic>1.0.3</version.chromattic>
+    <org.chromattic.version>1.0.3</org.chromattic.version>
 	<!-- Extend service -->
 	<org.exoplatform.social.version>1.1.0-CR02-SNAPSHOT</org.exoplatform.social.version>
 	
@@ -49,7 +49,6 @@
 	<commons-collections.version>3.2.1</commons-collections.version>	
 	<org.jboss.version>2.2.9.GA</org.jboss.version>	
     <org.gatein.shindig.version>1.0-r790473-Patch02</org.gatein.shindig.version>
-    <commons-lang.version>2.3</commons-lang.version>
     <commons-chain.version>1.0</commons-chain.version>
     <commons-logging.version>1.0.4</commons-logging.version>
     <commons-httpclient.version>3.0</commons-httpclient.version>
@@ -88,7 +87,7 @@
 	<cglib.version>2.2</cglib.version>
 	<commons-dbcp.version>1.2.1</commons-dbcp.version>
 	<org.exoplatform.tool.version>1.0.0</org.exoplatform.tool.version>
-	<javassist.version>3.4.GA</javassist.version>
+  <javassist.version>3.8.0.GA</javassist.version>
 	<html-parser.version>1.6</html-parser.version>
 	<com.sun.xml.bind.version>2.1.7</com.sun.xml.bind.version>
 	<org.jvnet.jaxb2.maven2.version>0.1</org.jvnet.jaxb2.maven2.version>
@@ -104,6 +103,24 @@
 	<commons-logging.version>1.0.4</commons-logging.version>
 	<commons-lang.version>2.4</commons-lang.version>
 	<org.gatein.wsrp.version>1.1.1-GA</org.gatein.wsrp.version>
+  
+  <!-- Begin wiki properties -->
+  <org.xwiki.platform.version>2.4</org.xwiki.platform.version>
+  <org.wikimodel.version>2.0.7-20100805</org.wikimodel.version>
+  <gwt.version>2.0.3</gwt.version>
+  <smartgwt.version>2.0</smartgwt.version>
+    <!--dependencies which Code Macro depends on-->
+  <jython-standalone.version>2.5.2b1-xwiki</jython-standalone.version>
+  <pygments.version>1.3.1-xwiki</pygments.version>
+  <column-macro.version>1.1-SNAPSHOT</column-macro.version>
+    <!---->
+  <org.suigeneris.version>0.4.2</org.suigeneris.version>
+  <ecs.version>1.4.2</ecs.version>
+    <!--dependencies which org.xwiki.platform:xwiki-core-properties depends on-->
+  <javax.validation.version>1.0.0.GA</javax.validation.version>
+  <hibernate-validator.version>4.0.0.GA</hibernate-validator.version>
+  <!-- End wiki properties -->
+  
 	<!-- ************** -->
     <!-- Build settings -->
     <!-- ************** -->
