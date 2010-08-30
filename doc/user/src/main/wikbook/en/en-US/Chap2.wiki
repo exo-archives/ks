@@ -1,0 +1,61 @@
+h1. Basic Concepts
+
+h2. What is Wiki?
+
+Wiki is a website which can be modified by users using a simplified markup language or the WYSIWYG (What You See Is What You Get) text editor. With the Wiki, any user can edit the site content, including other users' contributions via a Web browser without any technical knowledge. The Wiki is typically powered by the wiki software and are often used to create collaborative wiki websites, to power community websites, for personal note-taking, in corporate intranets, and in knowledge management systems. Overall, the Wiki is an influential, shaping collaborative online content development that is becoming increasingly popular.
+
+h2. What is eXo Wiki?
+
+eXo Wiki is an application of the eXo Knowledge. It is used for an internal corporate project or a committee group. eXo Wiki along with other eXo Knowledge applications such as Answers and Forum will complete the ideal suite that helps users enhance their experiences on collaboration activities, an build valuable knowledge center for clients. It is an enterprise wiki application focused on content productivity for portal users as a tool to forge unstructured knowledge.
+
+h2. Page Hierachy in eXo Wiki
+
+eXo Wiki is organized as a tree of pages in which each page can contain many sub-pages. The hierarchy is reflected at User Interface by the Breadcrumb. When a page is added, it is always added as a sub-page of the current one. eXo Wiki is a wiki platform which can host several wikis. So, you can have wikis for portals, groups or users. However, the page hierarchy is not reflected in the URLs as they are accessible flatly by their URLs.
+
+h2. Wiki Spaces
+
+Spaces represent a partitioning of wiki data. A space is a set of pages. So, space partitioning means they are independent trees. This separation is to enable eXo Wiki to provide silos of knowledge for different interests groups.
+
+There are 3 types of spaces:
+
+* portal: wiki for the current portal
+* group: wiki available for members of a group
+* user: wiki for personal pages
+
+{info:title=Note}
+* In this document, we refer to Spaces simply as wikis. We are speaking of portal wikis, group wikis, user wikis.
+* Any space has an implicit root page named Wiki Home.
+{info} 
+
+
+
+h2. Bookmarkable URLs
+
+eXo Wiki provides permanent bookmarkable URLs to wiki pages. eXo Wiki will resolve wiki pages by inspecting the URL used to call it and outputting links as clean URLs in the form:
+
+{code:xml}
+<http://hostname/$CONTAINER/$ACCESS/$SITE/wiki/> 
+{code}
+
+*Details:*
+
+$CONTAINER$ is the portal container.
+
+$ACCESS is 'private' or 'public'.
+
+$SITE is the portal site (ex: 'classic').
+
+$OWNER_TYPE may be 'group' or 'user'.
+
+$OWNER is the wiki owner which can be user name or group name.
+
+$NAV_URI is the URI of navigation bound to a page where the eXo Wiki portlet is laid.
+
+$WIKI_PAGE_URI is the URI inferred automatically from the wiki page name.
+
+Any wiki page should be accessed by a friendly URL that looks like a portal URL.
+For example:
+
+* Portal wiki: http://hostname/portal/public/classic/wiki/eXo+Wiki+Specification
+* Group wiki: http://hostname/portal/private/classic/wiki/group/platform/administrators/Admin+Guide
+* Personal wiki page: http://hostname/portal/private/classic/wiki/user/john/Sandbox

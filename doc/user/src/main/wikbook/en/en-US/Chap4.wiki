@@ -1,0 +1,11 @@
+h1. Next steps
+
+It is our hope that information stated above is valuable to you, our customers and users in experiencing the eXo Wiki. Our Company is always willing to receive any feedback, ideas that can make this document better. Serving and resolving all issues related to the eXo Wiki are our responsibilities, so please post your questions at our forum freely.
+
+To learn more and contribute to the open source development process, please visit the following websites:
+
+
+* [Learn more about eXo Platform 3.0|http://www.exoplatform.com/company/public/website/platform]
+* [Video demos, tutorial and more in the eXo Resource Center|http://www.exoplatform.com/company/public/website/resource-center]
+* [Access another eXo documents in the eXo Wiki|http://wiki.exoplatform.com/xwiki/bin/view/Main/WebHome]
+* [Ask question about eXo Address Book in the Forum|http://forums.exoplatform.org]
