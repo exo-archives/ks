@@ -31,6 +31,7 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -376,13 +377,17 @@ public class MultiLanguages {
     	answerNode.setProperty("exo:questionId", questionNode.getName()) ;
     	answerNode.setProperty("exo:responseLanguage", language) ;
     	answerNode.setProperty("exo:categoryId", questionNode.getProperty("exo:categoryId").getString() ) ;    	
+    	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers());
+    	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers());
     } else {
       if (answerNode.hasProperty("exo:dateResponse")) {
         answerDate = answerNode.getProperty("exo:dateResponse").getDate().getTime();
       }
+      if(new PropertyReader(answerNode).bool("exo:approveResponses", false) != answer.getApprovedAnswers())
+    		answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
+    	if(new PropertyReader(answerNode).bool("exo:activateResponses", false) != answer.getActivateAnswers())
+    		answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
     }
-    answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers());
-    answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers());
     if(answer.getPostId() != null && answer.getPostId().length() > 0) {
   		answerNode.setProperty("exo:postId", answer.getPostId());
   	}
