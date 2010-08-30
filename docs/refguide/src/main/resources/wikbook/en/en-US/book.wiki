@@ -1,25 +1,86 @@
+h1. Prerequisites
+
+h1. Applications
+
+h2. Forum Portlet
+{include:document="applications/portlet_forum.wiki"}
+
+
+h2. Answers Portlet
+
+
+h3. Portlet Preferences
+{include:document="FAQ_Preferences_Configuration.wiki"}
+
+h2. FAQ Portlet
+
+h2. Polls Portlet
+
+h2. Poll Gadget
 
 h1. Configuration
 
-h2. General
+h2. Shared Configuration
+h2. Roles Configuration
 {include:document="Roles_Plugin_Configuration.wiki"}
-{include:document="Mail_Service_Configuration.wiki"}
+
+h2. Profile Provider
 {include:document="Profile_Provider_Configuration.wiki"}
 
-h2. Forum Configuration
-{include:document="Initialization_Forum_Plugin_Configuration.wiki"}
-{include:document="Auto_Prune_Plugin_Configuration.wiki"}
-{include:document="Auto-count_Active_Users_Plugin_Configuration.wiki"}
-{include:document="Forum_Action_Bar_Configuration.wiki"}
-{include:document="Forum_Default_User_Profile_Setting.wiki"}
-{include:document="Forum_IP_Logging_Configuration.wiki"}
-{include:document="Bookmarkable_Forum_URLs_Configuration.wiki"}
+h2. Notifications
+{include:document="Mail_Service_Configuration.wiki"}
 
-h2. Answers Configuration
+h2. Forum Configuration
+
+h3. Action Bar
+{include:document="Forum_Action_Bar_Configuration.wiki"}
+
+h3. Forums Initializer
+{include:document="Initialization_Forum_Plugin_Configuration.wiki"}
+
+h3. Auto Prune
+{include:document="Auto_Prune_Plugin_Configuration.wiki"}
+
+
+h3. User Statistics
+
+{include:document="Auto-count_Active_Users_Plugin_Configuration.wiki"}
+
+h3. IP Logging
+
+{include:document="Forum_IP_Logging_Configuration.wiki"}
+
+h3. Default User Profile
+
+{include:document="Forum_Default_User_Profile_Setting.wiki"}
+
+h2. Answer Configuration
+
+h3. FAQ Initializer
+
 {include:document="Initialization_FAQ_Plugin_Configuration.wiki"}
-{include:document="FAQ_Preferences_Configuration.wiki"}
+
+
+h2. Mails Templates
+
 {include:document="FAQ_Mail_Template_Configuration.wiki"}
 
-h1. Data Storage
-{include:document="FAQ_JCR_Structure.wiki"}
-{include:document="Forum_JCR_Structure.wiki"}
+h1. Developers Reference
+
+h2. UI Extensions
+
+eXo Knowledge does not define UI extensions yet.
+
+h2. Overrideable Components
+
+h2. Plugin SPI
+
+h2. Public APIs
+
+h3. Java API
+
+h3. REST API
+
+h3. Javascript API
+
+

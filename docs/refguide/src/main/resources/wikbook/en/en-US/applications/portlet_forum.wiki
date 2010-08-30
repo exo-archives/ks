@@ -1,0 +1,118 @@
+h1. Definition
+
+|| *Application* | forum 
+|| *Name* | ForumPortlet 
+|| *Description* | The Forum portlet is a full features bulletin board application 
+	
+h2. Declaration template	
+{code:language=xml|indent=2}
+    <portlet-application>
+      <portlet>
+        <application-ref>forum</application-ref>
+        <portlet-ref>ForumPortlet</portlet-ref>
+      </portlet>
+    </portlet-application>
+{code}	
+	
+h1. Preferences
+
+|| *Preference* || *Type* || *Values* || *Default* || *Description* ||
+| *useAjax* | {{Boolean}} | {{true}},{{false}} | {{true}}| Defines if links in the forum will be plain hrefs or javascript ajax links (better for SEO) |
+
+h2. Default Configuration
+{code:language=xml|indent=2}
+		<portlet-preferences>
+			<preference>
+				<name>showForumActionBar</name>
+				<value>true</value> <!-- true/false -->
+				<read-only>false</read-only>
+			</preference>
+
+			<preference>
+				<name>forumNewPost</name>
+				<value>1</value> <!-- day number -->
+				<read-only>false</read-only>
+			</preference>
+
+			<preference>
+				<name>useAjax</name>
+				<value>true</value> <!--true/false -->
+				<read-only>false</read-only>
+			</preference>
+			
+			<preference>
+				<name>enableIPLogging</name>
+				<value>true</value> <!--true/false -->
+				<read-only>false</read-only>
+			</preference>
+			
+			<preference>
+				<name>enableIPFiltering</name>
+				<value>true</value> <!--true/false -->
+				<read-only>false</read-only>
+			</preference>
+			
+			<preference>
+				<name>invisibleCategories</name>
+				<value></value> <!--id categories -->
+				<read-only>false</read-only>
+			</preference>
+		 	<preference>
+				<name>invisibleForums</name>
+				<value></value> <!--id forums -->
+				<read-only>false</read-only>
+			</preference> 
+			
+			<preference>
+			  <name>uploadFileSizeLimitMB</name>
+			  <value>20</value>
+			  <read-only>false</read-only>
+			</preference>
+
+			<preference>
+			  <name>isShowForumJump</name>
+			  <value>true</value><!--true/false -->
+			  <read-only>false</read-only>
+			</preference>
+			<preference>
+			  <name>isShowIconsLegend</name>
+			  <value>true</value><!--true/false -->
+			  <read-only>false</read-only>
+			</preference>
+			<preference>
+			  <name>isShowModerators</name>
+			  <value>true</value><!--true/false -->
+			  <read-only>false</read-only>
+			</preference>
+			<preference>
+			  <name>isShowPoll</name>
+			  <value>true</value><!--true/false -->
+			  <read-only>false</read-only>
+			</preference>
+			<preference>
+			  <name>isShowQuickReply</name>
+			  <value>true</value><!--true/false -->
+			  <read-only>false</read-only>
+			</preference>
+			<preference>
+			  <name>isShowRules</name>
+			  <value>true</value><!--true/false -->
+			  <read-only>false</read-only>
+			</preference>
+			<preference>
+			  <name>isShowStatistics</name>
+			  <value>true</value><!--true/false -->
+			  <read-only>false</read-only>
+			</preference>
+			</portlet-preferences>
+{code}
+h1. Events
+
+h2. Published events
+
+
+h2. Consumed events
+
+|| *Name* || *Type* || *Value* || *Effect* ||
+| ReLoadPortletEvent | {{String}} | ? | ? |
+| OpenLink | {{String}} | ? | ? |
