@@ -1,0 +1,55 @@
+<div class="UIWikiMovePageForm">
+ 
+ <%
+ 	  uiform.begin(); 	 
+ %>  
+ <%
+ 	  uiform.renderChild(uiform.PAGENAME_INFO);
+ %>
+  <div class="ClearBoth"></div>
+ <%
+ 	  uiform.renderChild(uiform.UITREE);
+ %>
+  <div class="ClearBoth"></div>
+  <table>
+  	<tr>
+  		<td style="width:20%"><label><%=_ctx.appRes("UIWikiMovePageForm.label.CurrentLocation")%></label></td>
+  		 <td><% uiform.renderChild(uiform.CURRENT_LOCATION);%></td>
+  	</tr>
+  		<tr>  		
+  		<td><label><%=_ctx.appRes("UIWikiMovePageForm.label.NewLocation")%></label></td>
+  		 <td><% uiform.renderChild(uiform.NEW_LOCATION); %></td>
+  	</tr>
+  </table>
+  <div class="ClearBoth"></div>
+ <div class="UIAction"> 
+	<table class="ActionContainer">
+		<tr>
+			<td>
+				<% 			
+ 				String closeLink=  uiform.event("Close");
+				%>
+					<div onclick="eXo.wiki.UIForm.submitPageEvent('$uiform.id','$uiform.MOVE','&objectId=$uiform.MOVE')" class="ActionButton LightBlueStyle" onmouseover="this.style.color = '#058ee6'" onmouseout="this.style.color='black'">
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">Move</a>
+								</div>
+							</div>
+						</div>
+					 </div>
+					<div onclick="$closeLink" class="ActionButton LightBlueStyle" onmouseover="this.style.color = '#058ee6'" onmouseout="this.style.color='black'">
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">Cancel</a>
+								</div>
+							</div>
+						</div>
+					 </div>				
+			</td>
+		</tr>	
+	</table>
+</div> 
+<% uiform.end(); %>
+</div>

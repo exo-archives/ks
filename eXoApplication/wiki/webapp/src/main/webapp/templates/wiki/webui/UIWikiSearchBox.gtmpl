@@ -1,0 +1,59 @@
+<%
+  def rcontext = _ctx.getRequestContext() ;
+  String inputId = uicomponent.FIELD_SEARCHVALUE;
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiSearchBox.init(\"" + inputId + "\");");
+%>
+<div class="UIWikiSearchBox">
+  <% uiform.begin() %>
+    <div class="SearchForm">
+      <a class="AdvancedSearch" title="<%=_ctx.appRes("UIWikiPortlet.label.AdvancedSearch")%>" onclick="<%=uicomponent.event("AdvancedSearch");%>"></a>
+      <div class="Input">
+		<div class="SearchBoxL">
+			<div class="SearchBoxR">
+				<div class="SearchBoxC">
+        <%
+          uiform.renderChildren() ;
+        %>
+				</div>
+			</div>
+		</div>
+      </div>
+      <div class="ClearRight">
+        <span></span>
+      </div>
+    </div>
+  <%uiform.end()%>
+</div>
+<div class="SearchPopup">
+	<div class="SearchPopupTL">
+		<div class="SearchPopupTR">
+			<div class="SearchPopupTC"><span></span></div>
+	  	</div>
+	</div>
+	<div class="SearchPopupML">
+		<div class="SearchPopupMR">
+			<div class="SearchPopupMC">
+				<div class="SubBlock">
+
+							<div class="MenuItem">	
+								<a class="ItemIcon MenuIcon" title="" href="#">Forum</a>
+							</div>
+
+							<div class="MenuItem">
+								<a class="ItemIcon MenuIcon" title="" href="#">Thread</a>
+							</div>
+
+							<div class="MenuItem">	
+								<a class="ItemIcon MenuIcon" title="" href="#">Topic</a>
+							</div>
+
+				</div>
+			</div>
+		</div>
+	</div>	
+	<div class="SearchPopupBL">
+		<div class="SearchPopupBR">
+			<div class="SearchPopupBC"><span></span></div>
+	  	</div>
+	</div>
+</div>

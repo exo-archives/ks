@@ -1,0 +1,62 @@
+<%
+  import org.exoplatform.wiki.service.WikiPageParams;
+  
+  String restUrlToViewCurrentPage = uicomponent.getRestUrlToViewCurrentPage();
+  WikiPageParams wikiPageParams = uicomponent.getCurrentWikiPageParams();
+  String wikiType = wikiPageParams.getType();
+  String wikiOwner = wikiPageParams.getOwner();
+  String pageId = wikiPageParams.getPageId();
+%>
+<div class="UIWikiRichTextEditor">
+  <% uicomponent.renderChild(uicomponent.RICHTEXT_AREA_INPUT); %>
+</div>
+<%
+  if(!uicomponent.isReloaded()) {
+    uicomponent.setReloaded(true);
+%>
+<script type="text/javascript">
+  location.reload(true);
+</script>
+<% } else { %>
+<script type="text/javascript">
+  eXo.wiki.currentWiki = '$wikiType';
+  eXo.wiki.currentSpace = '$wikiOwner';
+  eXo.wiki.currentPage = '$pageId';
+  // Create a new editor instance.
+  eXo.wiki.createWysiwygEditor = function(){
+    eXo.wiki.WysiwygEditor = new WysiwygEditor({
+      hookId: 'UIWikiRichTextArea_TextArea',
+      inputURL: '$restUrlToViewCurrentPage',
+      syntax: 'xwiki/2.0',
+      wiki: '$wikiType',
+      space: '$wikiOwner',
+      page: '$pageId',
+      //displayTabs: true,
+      defaultEditor: 'wysiwyg',
+      plugins: 'submit line separator text valign justify list indent history format font color symbol table link image macro import',
+      menu: 'link image table macro import',
+      toolbar: 'bold italic underline strikethrough teletype | subscript superscript | justifyleft justifycenter justifyright justifyfull | unorderedlist orderedlist | outdent indent | undo redo | format | fontname fontsize forecolor backcolor | hr removeformat symbol | import'
+      //debug: true
+    });
+  };
+  
+  if(eXo.wiki.WysiwygEditor){
+    try{
+      eXo.wiki.WysiwygEditor.release();
+    }catch(e){
+      if(window.console){
+        window.console.error(e);
+      }
+    }
+  };
+  
+  try{
+    if(WysiwygEditor){
+      eXo.wiki.createWysiwygEditor();
+    }
+  }catch(e){
+    eXo.wiki.Wysiwyg.onModuleLoad(eXo.wiki.createWysiwygEditor);
+  }
+  
+</script>
+<% } %>

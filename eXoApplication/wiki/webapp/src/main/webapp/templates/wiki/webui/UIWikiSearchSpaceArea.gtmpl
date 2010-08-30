@@ -1,0 +1,16 @@
+<div class="UIWikiSearchSpaceArea">
+<%
+  List children = uicomponent.getChildren() ;
+  for(component in children) {
+    if(component.isRendered()){
+      uicomponent.renderChild(component.getClass()) ;
+    }
+  }
+%> 
+   <div class="WikiBackLink">
+        <div class="BackLink" onclick="<%=uicomponent.event("Close")%>">
+          <a href="#"><< Return to Current Page</a>
+       </div>
+     <div style="ClearLeft"><span></span></div>
+   </div>
+</div>

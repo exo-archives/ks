@@ -1,0 +1,95 @@
+<%
+  import org.exoplatform.wiki.webui.UIWikiPortlet;
+  import org.exoplatform.wiki.commons.Utils;
+  
+%>
+<div id="$uicomponent.id" class="UIPageToolBar ClearFix" >
+	<div style="position:relative">
+		<div class="HoverMenu MoreMenu"> 
+		<%for(entry in uicomponent.getActions()) {
+			String action = entry.getActionName();    
+			def actionComponent = entry.getActionComponent();
+			String link = actionComponent.event(action);
+		%>
+			<% if(action.equals("MovePage")){
+			%>
+			<a href="$link" class="MoreItems Icon">Move page</a>
+			<%}%>
+		<%}%>
+		</div>
+	</div>
+
+<a class="HoverLink MoreLink Icon">More</a>
+<%
+def rcontext = _ctx.getRequestContext() ;
+rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(\""+uicomponent.id+"\");");
+rcontext.getJavascriptManager().addJavascript("eXo.wiki.UISavePageConfirmation.initDragDrop();");
+String saveLink = "";
+String cancelLink = "";
+String currentMode= uicomponent.getCurrentMode();
+String pageTitleInputId= uicomponent.getPageTitleInputId();
+for(entry in uicomponent.getActions()) {
+     String action = entry.getActionName();
+     String anchor = "#" + action;
+     String actionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + action;
+     def actionComponent = entry.getActionComponent();
+     String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+     
+     String link = actionComponent.event(action);
+     if(action == "DeletePage") {
+     		link = actionComponent.url(action);
+     }
+	   if(uicomponent.parentIsForm()){
+	     if(uicomponent.getSaveAction().equals(action)){
+	       link = uicomponent.getUrlToSavePage(actionComponent.getId(), action);
+	     }else{
+	       link = uicomponent.getParent().event(action, actionComponent.getId(), action);
+	     }
+	   }
+%>
+		<% if(action.equals("AddPage")){
+		%>
+		<a href="$anchor" class="Add Icon">&nbsp;</a>
+		<%} else if(action.equals("EditPage")){
+		%>
+		<a href="$anchor" class="Edit Icon">&nbsp;</a>
+		<%} else if(action.equals("DeletePage")){
+		%>
+		<a href="$link" class="Delete Icon">&nbsp;</a>
+		<%} else if(action.equals("Cancel")){
+		    cancelLink = uicomponent.isNewMode() ? Utils.getCurrentRequestURL() : "#";
+		%>
+		<a href="$cancelLink" class="Delete Icon">&nbsp;</a>
+		<%} else if(action.equals("Help")){
+		%>
+		<a href="$link" class="FAQ Icon">&nbsp;</a>
+		<%} else if(action.equals("PreviewPage")){
+		%>
+		<a href="$link" class="View Icon">&nbsp;</a>
+		<%} else if(action.equals("SavePage")){
+			saveLink=link;
+		%>
+		<a href="$link" onclick="return eXo.wiki.UISavePageConfirmation.validateSave('$pageTitleInputId','$currentMode');"
+		class="Save Icon">&nbsp;</a>
+		<%} else if(action.equals("RichText")){
+		%>
+		<a href="$link" class="Edit Icon">&nbsp;</a>
+		<%}%>
+		<a onclick="$link" id="$actionId" style="display:none;">&nbsp;</a>
+<%}%>
+
+	<div id="ConfirmMask" class="PopupDiv" align="center">
+		<div class="ConfirmBox">
+			<div class="ConfirmTitle" >
+				<b>Confirmation</b>
+				<a href="" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm();return false;" class="CloseButton"><span></span></a>
+			</div>
+			<div>
+				<div class="ConfirmMessage"></div>   	
+				<input type="button" value="Confirm" onclick="$saveLink">
+				<input type="button" value="Discard" onclick="javascript:window.location='#';">
+  				<input type="button" value="Cancel" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm()">
+			</div>
+		</div>
+	</div>
+</div> 

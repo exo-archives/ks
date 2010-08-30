@@ -1,0 +1,521 @@
+= Paragraphs =
+
+Paragraphs are text elements separated by 2 or more new lines.
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result
+|Simple paragraph|This is a paragraph|This is a paragraph
+|Paragraph on multiple lines|Paragraph on
+multiple lines|Paragraph on
+multiple lines
+|Two paragraphs|Paragraph one
+\\Paragraph two|Paragraph one
+\\Paragraph two
+|Parametrized paragraph|{{{(% style="text-align:center;color:blue" %)}}}
+Centered and blue paragraph|(% style="text-align:center;color:blue" %)
+Centered and blue paragraph
+
+= Headers =
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result
+|Standard headers|(((
+{{{= level 1 = 
+== level 2 ==
+=== level 3 ===
+==== level 4 ====
+===== level 5 =====
+====== level 6 ======
+}}}
+)))|(((
+= level 1 =
+
+== level 2 ==
+
+=== level 3 ===
+
+==== level 4 ====
+
+===== level 5 =====
+
+====== level 6 ======
+)))
+|Parametrized headers|{{{(% style="color:blue" %)}}}
+~= header =|(((
+(% style="color:blue" %)
+~= header =
+\\
+)))
+|Headers with wiki syntax|{{{=== Header with **bold** ===}}}|(((
+=== Header with **bold** ===
+)))
+
+= Text Formatting =
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result
+|Bold|{{{**bold**}}}|**bold**
+|Underline|{{{__underline__}}}|__underline__
+|Italics|{{{//italic//}}}|//italic//
+|Striked out|{{{--strike--}}}|--strike--
+|Monospace|{{{##monospace##}}}|##monospace##
+|Superscript|{{{some ^^superscript^^}}}|some ^^superscript^^
+|Subscript|{{{some ,,subscript,,}}}|some ,,subscript,,
+
+= Horizontal Line =
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result
+|Simple Horizontal Line|{{{----}}}|(((
+----
+)))
+|Parametrized Horizontal Line|(((
+{{{(% style="color:blue" %)
+----
+}}}
+)))|(((
+(% style="color:blue" %)
+----
+)))
+
+= Lists =
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result
+|Bulleted list|(((
+{{{* item 1
+** item 2
+*** item 3
+* item 4
+}}}
+)))|(((
+* item 1
+** item 2
+*** item 3
+* item 4
+)))
+|Numbered list|(((
+{{{1. item 1
+11. item 2
+111. item 3
+1. item 4
+}}}
+)))|(((
+1. item 1
+11. item 2
+111. item 3
+1. item 4
+)))
+|Mixed list|(((
+{{{1. item 1
+1*. item 2
+1*. item 3
+1. item 4
+}}}
+)))|(((
+1. item 1
+1*. item 2
+1*. item 3
+1. item 4
+)))
+|Square list|(((
+{{{(% style="list-style-type: square" %)
+* item 1
+* item 2
+}}}
+)))|(((
+(% style="list-style-type: square" %)
+* item 1
+* item 2
+)))
+|Disc list|(((
+{{{(% style="list-style-type: disc" %)
+* item 1
+* item 2
+}}}
+)))|(((
+(% style="list-style-type: disc" %)
+* item 1
+* item 2
+)))
+|Lowercase Alphabetical list|(((
+{{{(% style="list-style-type: lower-alpha" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: lower-alpha" %)
+* item1
+* item2
+)))
+|Uppercase Alphabetical list|(((
+{{{(% style="list-style-type: upper-alpha" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: upper-alpha" %)
+* item1
+* item2
+)))
+|Lowercase Roman list|(((
+{{{(% style="list-style-type: lower-roman" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: lower-roman" %)
+* item1
+* item2
+)))
+|Uppercase Roman list|(((
+{{{(% style="list-style-type: upper-roman" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: upper-roman" %)
+* item1
+* item2
+)))
+|Lowercase Greek list|(((
+{{{(% style="list-style-type: lower-greek" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: lower-greek" %)
+* item1
+* item2
+)))
+|Uppercase Greek list|(((
+{{{(% style="list-style-type: upper-greek" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: upper-greek" %)
+* item1
+* item2
+)))
+|Hiragana list|(((
+{{{(% style="list-style-type: hiragana" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: hiragana" %)
+* item1
+* item2
+)))
+|Hiragana Iroah list|(((
+{{{(% style="list-style-type: hiragana-iroha" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: hiragana-iroha" %)
+* item1
+* item2
+)))
+|Katakana list|(((
+{{{(% style="list-style-type: katakana" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: katakana" %)
+* item1
+* item2
+)))
+|Katakana Iroha list|(((
+{{{(% style="list-style-type: katakana-iroha" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: katakana-iroha" %)
+* item1
+* item2
+)))
+|Armenian list|(((
+{{{(% style="list-style-type: armenian" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: armenian" %)
+* item1
+* item2
+)))
+|Hebrew list|(((
+{{{(% style="list-style-type: hebrew" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: hebrew" %)
+* item1
+* item2
+)))
+|Georgian list|(((
+{{{(% style="list-style-type: georgian" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: georgian" %)
+* item1
+* item2
+)))
+|CJK ideographic list|(((
+{{{(% style="list-style-type: cjk-ideographic" %)
+* item1
+* item2
+}}}
+)))|(((
+(% style="list-style-type: cjk-ideographic" %)
+* item1
+* item2
+)))
+
+= Definition Lists =
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result
+|Standard definition|(((
+{{{; term
+: definition
+}}}
+)))|(((
+; term
+: definition
+)))
+|Nested definitions|(((
+{{{; term1
+: definition1
+:; term2
+:: definition2
+}}}
+)))|(((
+; term1
+: definition1
+:; term2
+:: definition2
+)))
+|Parametrized definition|(((
+{{{(% style="color:blue" %)
+; term
+: definition
+}}}
+)))|(((
+(% style="color:blue" %)
+; term
+: definition
+)))
+
+= New Line/Line breaks =
+
+A new line is a carriage return. A line break is a forced new line that can appear anywhere in the text.
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result
+|Line break|{{{Line\\New line}}}|Line
+New line
+|New line|Line
+New line|Line
+New line
+
+= Links =
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result XWiki Syntax 2.0
+|Link to a page in the current Space|{{{[[WebHome]]}}}|[[WebHome]]
+|Link with a label|{{{[[label>>WebHome]]}}}|[[label>>WebHome]]
+|Link to a page with the space specified|{{{[[Main.WebHome]]}}}|[[Main.WebHome]]
+|Link to a subwiki|{{{[[subwiki:Main.WebHome]]}}}|[[xwiki:Main.WebHome]]
+|Link that opens in a new page|{{{[[label>>WebHome||rel="__blank"]]}}}|[[label>>WebHome||rel="__blank"]]
+|Link to a URL directly in the text|{{{This is a URL: http://xwiki.org}}}|This is a URL: http://xwiki.org
+|Link to a URL|{{{[[http://xwiki.org]]}}}|[[http://xwiki.org]]
+|Link to a URL with a label|{{{[[XWiki>>http://xwiki.org]]}}}|[[XWiki>>http://xwiki.org]]
+|Link to an email|{{{[[email>>mailto:john@smith.net]]}}}|[[email>>mailto:john@smith.net]]
+|Image Link|(((
+{{{[[image:Space2.Page2@img.png>>Space1.Page1]]}}}
+)))|[[image:img.png>>Main.WebHome]]
+|Link to attachment|{{{[[text>>attach:img.png]]}}}|[[text>>attach:img.png]]
+
+== XWiki Syntax 2.0 Link Specification ==
+
+The full format of a link is ##(label>>)?(link)(||parameters)*##
+
+* ##label##: the link label, can contain wiki syntax
+* ##link##: the link target, i.e. where to go when the link is clicked. It has a similar format than in the XWiki 1.0 syntax and it can also contain 2 types of URIs: ##mailto:## and ##attach:## for linking to an email and linking to an attachment respectively.##
+* ##parameters##: An optional list of parameters passed to the link.
+
+= Tables =
+
+Allows to easily create content in table format. It also support parameters for table, row or cell in XWiki Syntax 2.0.
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result
+|Standard table|(((
+{{{|=Title 1|=Title 2
+|Word 1|Word 2
+}}}
+)))|(((
+|=Title 1|=Title 2
+|Word 1|Word 2
+)))
+|Parametrized table|(((
+{{{(% style="background-color:red;align=center" %)
+|=Title 1|=(% style="background-color:yellow" %)Title 2
+|Word 1|Word 2
+}}}
+)))|(((
+(% style="background-color:red;align=center" %)
+|=Title 1|=(% style="background-color:yellow" %)Title 2
+|Word 1|Word 2
+)))
+
+= Images =
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result
+|Image from attachment in current page|{{{image:img.png}}}|[[image:img.png]]
+|Image from attachment in another document|{{{image:Space.Page@img.png}}}|[[image:img.png]]
+|Image with parameters|{{{[[image:img.png||width="25" height="25"]]}}}|[[image:img.png||height="25" width="25"]]
+|Images located at URL|{{{image:http://some/url/img.png}}}|[[image:img.png]]
+
+= Verbatim =
+
+Allow to enter content that will not be formatted (in other words the wiki syntax will not be taken into account).
+
+(% style="text-align: center;" %)
+(((
+(% class="Apple-style-span" style="font-size: 13px;" %)
+\\
+)))
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result 
+|Verbatim inline|{{{Some verbatim {{{**[[not rendered]]**}}} content}}}|Some verbatim {{{**[[not rendered]]**}}}content
+|Verbatim block|(((
+{{{{{{
+multi line
+**verbatim**
+content
+}}}
+}}}
+)))|(((
+{{{multi line
+**verbatim**
+content
+}}}
+)))
+
+= Quotations =
+
+Allows to quote some text.
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result
+|Simple quote|(((
+{{{> john said this
+I said ok
+}}}
+)))|(((
+> john said this
+
+I said ok
+)))
+|Nested quotes|(((
+{{{> john said this
+>> marie answered that
+I said ok
+}}}
+)))|(((
+john said this
+
+> marie answered that
+
+I said ok
+)))
+
+= Groups =
+
+Groups can be used to insert another document inline directly into the current document. This allows for example to insert complex elements inside a list item or inside a table cell. Groups are delimited by the following syntactic elements:##{{{(((...)))}}}##. One Group can contain another Group and there is no limit of imbrication.
+
+(% style="width:100%" %)
+|=XWiki Syntax 2.0|=Result
+|(((
+{{{|=Header 1|=Header 2|=Header 3
+|Cell One|(((
+= Embedded document
+
+Some embedded paragraph.
+
+* list item one
+* list item two
+  ** sub-item 1
+  ** sub-item 2
+))) | Cell Three
+
+Next paragraph in the top-level document
+}}}
+)))|(((
+|=Header 1|=Header 2|=Header 3
+|Cell One|(((
+Some embedded paragraph.
+
+* list item one
+* list item two
+** sub-item 1
+** sub-item 2
+)))| Cell Three
+
+Next paragraph in the top-level document
+)))
+
+= Escapes =
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|=Result
+|Escape a character|(((
+{{{This is not a ~[~[link~]~]}}}
+)))|{{{This is not a [[link]]}}}
+
+= Macros =
+
+XWiki macros (called using the##{{{{{macroname param1="value1" ... paramN="valueN"}}}}}## syntax)
+
+(% style="width:100%" %)
+|=Feature|=XWiki Syntax 2.0|= Result
+|Radeox Macro/XWiki Macros|(((
+{{{{{code language="java"}}
+java content
+{{/code}}
+}}}
+)))|{{code language="java"}}Class X{ String abc; public X(){};}{{/code}}\\
+| Info Macro| ~{~{info}} Information ~{~{/info}}|
+{{info}} Information {{/info}}
+\\
+| Warning Macro| ~{~{warning}}Warning~{~{/warning}} |
+{{warning}}Warning{{/warning}}
+\\
+| Error Macro| ~{~{error}}Error~{~{/error}}|
+{{error}}Error{{/error}}
+\\
+
+= Parameters =
+
+With XWiki Syntax 2.0 it’s possible to pass parameters to the different syntax elements and also to blocks of text. This is used for example to style them. You can set any parameter key/value pair you want. The XHTML renderer will pass these parameters as XHTML attributes to the underlying XHTML representation of the different syntax elements. In XWiki Syntax 1.0 there was no syntax for passing parameters and the only way to do it was to write XHTML directly in the content as shown in the table below.
+
+(% style="width:100%" %)
+|=XWiki Syntax 2.0|=Generated XHTML
+|(((
+{{{(% class="myClass" style="myStyle" id="myId" %)
+= header =
+}}}
+)))|(((
+{{{<h1 class="myClass" style="myStyle" id="myId">header</h1>}}}
+)))

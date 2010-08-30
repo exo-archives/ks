@@ -1,0 +1,70 @@
+<%
+import org.exoplatform.wiki.service.SearchResult ;
+%>
+<div class="UIWikiPageNotFound">
+
+<%
+	String home = uicomponent.url("Home") ;
+				
+		List relativeList = uicomponent.getRelativePages() ;
+		if(relativeList != null && relativeList.size() > 0) {
+		%>
+			<h2>Page Not Found</h2>
+			<p>The page you were trying to reach could not be found: it may have been renamed or moved to another space, or the name you requested may be incomplete.</p>
+			<div class="ResultInfo"><b>In this space :</b> The page you were looking for may have been renamed to the following:</div>
+	
+			<%
+				for(relative in relativeList){
+					String url = uicomponent.url("OpenPage", relative.getNodeName()) ;
+					%>
+						<div class="BlockResultFeed">
+							<a href="$url" class="Page TxtTitFeed"><%=relative.getTitle()%></a>
+							<div class="TxtDetail"><%=relative.getExcerpt()%></div>
+							<div><a href="" class="TxtMark">Industrial trends ,Dec 02 2009</div>
+						</div>						
+					<%
+				}
+			%><p><a href="$home">home page</a></p><%
+		} else {
+			%>
+			<h2>Page Not Found</h2>
+			<p>The page you were trying to reach could not be found. This could be because:</p>
+			<ul>
+				<li>The page does not exist.</li>
+				<li>The page exists, but you do not have permission to view it.</li>
+			</ul>
+			<p><a href="$home" class="BackHome">Home page</a></p>
+			<%	
+		}
+	%>
+	
+
+<!-- scene 1 
+	<h2>Page Not Found</h2>
+	<p>The page you were trying to reach could not be found. This could be because:</p>
+	<ul>
+		<li>The page does not exist.</li>
+		<li>The page exists, but you do not have permission to view it.</li>
+	</ul>
+	<form name="" action="" method="GET" class="ClearFix">
+		<input type="text" size="40" name="" id="" value="Site Search" />
+		<a href="" class="SearchBtn">Search</a>
+	</form>
+-->
+<!-- scene 2 
+	<h2>Page Not Found</h2>
+	<p>The page you were trying to reach could not be found: it may have been renamed or moved to another space, or the name you requested may be incomplete.</p>
+	<div class="ResultInfo"><b>In this space :</b> The page you were looking for may have been renamed to the following:</div>
+	<div class="BlockResultFeed">
+		<a href="" class="Page TxtTitFeed">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+		<div class="TxtDetail">Lorem ipsum dolor sit amet, consectetur adipiscing evlit. Pellentesque blandit libero non diam tempus eu molestie sem pretium. Nulla tristique arcu at urna iaculis non interdum neque vulputate. Vestibulum tempus sapien sapien, et elementum velit. Donec at purus neque. Integer tempus dignissim dui vitae aliquam. Ut id massa velit.</div>
+		<div><a href="" class="TxtMark">Industrial trends ,Dec 02 2009</div>
+	</div>    	
+
+	<div class="BlockResultFeed">
+		<a href="" class="Page TxtTitFeed">Lorem ipsum dolor sit amet, consectetur adipiscing elit</a>
+		<div class="TxtDetail">Lorem ipsum dolor sit amet, consectetur adipiscing evlit. Pellentesque blandit libero non diam tempus eu molestie sem pretium. Nulla tristique arcu at urna iaculis non interdum neque vulputate. Vestibulum tempus sapien sapien, et elementum velit. Donec at purus neque. Integer tempus dignissim dui vitae aliquam. Ut id massa velit.</div>
+		<div><a href="" class="TxtMark">Industrial trends ,Dec 02 2009</div>
+	</div> 
+	-->
+</div>

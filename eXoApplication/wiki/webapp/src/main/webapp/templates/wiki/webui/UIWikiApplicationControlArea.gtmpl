@@ -1,0 +1,13 @@
+<div class="UIWikiApplicationControlArea Border">
+<%
+  List children = uicomponent.getChildren() ;
+  for(component in children) {
+    if(component.isRendered()){
+      uicomponent.renderChild(component.getClass()) ;
+    }
+  }
+%>
+  <div class="ClearBoth">
+    <span></span>
+  </div>
+</div>

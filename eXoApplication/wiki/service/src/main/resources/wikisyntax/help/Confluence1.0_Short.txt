@@ -1,0 +1,31 @@
+h3. Help Tips
+----
+
+Text formatting
+{noformat}*bold*{noformat} *bold*
+{noformat}_italic_ {noformat} _italic_
+{noformat}-strike-{noformat}  -strike-
+{noformat}+under+{noformat} under
+
+Headings
+{noformat}h1.{noformat} Large heading
+{noformat}h3.{noformat} Medium heading
+{noformat}h5.{noformat} Small heading
+
+Lists
+* Bulleted point
+# Numbered point
+
+Tables
+{noformat}
+||head1 ||head2
+| colA1 | colA2 
+| colB1 | colB2 
+{noformat}
+
+Links
+{noformat}[title#anchor]{noformat} Link a page
+{noformat}[dev:title]{noformat} In 'dev' space
+{noformat}[http://host.com]{noformat} Remote link
+{noformat}[phrase@shortcut]{noformat} Shortcut
+{noformat}[alias|link]{noformat} Custom link title

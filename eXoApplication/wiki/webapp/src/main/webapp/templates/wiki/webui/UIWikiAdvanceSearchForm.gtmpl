@@ -1,0 +1,39 @@
+<!-- <div class="UIWikiAdvanceSearchForm">
+	<form class="ClearFix" method="" action="">
+		<div class="SearchInfo">
+			<input type="text" value="Car" name=""/>
+			<label>Space</label>
+			<select name="" class="SelectBox">
+				<option value="">Industrial Trends</option>
+				<option value="">Industrial Trends</option>
+				<option value="">Industrial Trends</option>
+			</select>
+		</div>
+		<div class="SearchBtn"><a href="">Search</a></div>
+	</form> -->
+<%
+  def rcontext = _ctx.getRequestContext() ;
+  String inputId = uicomponent.TEXT;
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.init(\"" + inputId + "\");");
+%>
+
+<div class="UIWikiAdvanceSearchForm">
+	<% uiform.begin() %>
+		<div class="ClearFix">
+			<div class="SearchInfo">
+				<%uiform.renderChild("text")%>
+				<label><%=_ctx.appRes("UIWikiAdvanceSearchForm.label.space")%></label><%uiform.renderChild("wikiSpaces")%>
+			</div>
+			<div class="SearchBtn"> 			
+		    <% for(action in uicomponent.getActions()) { 
+		    	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+		       String link = uicomponent.event(action) ;
+		    %>
+		    		<div class="SearchAction" onclick="$link" >	      	  	
+		          <a href="javascript:void(0);">$actionLabel</a>
+		        </div>
+		    <%}%>	     
+			</div>
+		</div>
+	<% uiform.end() %>
+</div>

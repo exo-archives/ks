@@ -1,0 +1,115 @@
+
+.UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox {
+  float: right;
+  width: 210px;
+}
+
+.UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox .AdvancedSearch {
+  background: url('icons/16x16/FindIcon.gif') no-repeat ;
+  height: 16px;
+  width: 16px;
+  float: right;
+  cursor: pointer;
+  margin: 3px 0px 0px 2px;
+  display: none;
+}
+
+.UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox .Input {
+  margin: 2px 0px 0px 10px;
+  float: right ;
+}
+
+.UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox .SearchBoxL{
+  background: url('background/UIWikiSearchBG.png') no-repeat left -50px;
+  padding-left: 10px;
+}
+
+.UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox .SearchBoxR{
+  background: url('background/UIWikiSearchBG.png') no-repeat right -73px;
+  padding-right: 23px;
+}
+
+.UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox .SearchBoxC{
+  background: url('background/UIWikiSearchBG.png') repeat-x center -96px;
+  height:21px;
+}
+
+.UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox .SearchBoxC input{
+  border: none;
+	margin-top:2px;
+	padding:0px;
+	background: none;
+}
+
+.UIWikiPortlet .SearchPopup{
+  width: 100px;
+  position: absolute;
+  left: 200px;
+  display: none;
+}
+
+.UIWikiPortlet .SearchPopup .SearchPopupTL{
+  background:url("background/UIWikiSearchBG.png") no-repeat left top;
+  padding-left: 7px;
+}
+
+.UIWikiPortlet .SearchPopup .SearchPopupTR{
+  background:url("background/UIWikiSearchBG.png") no-repeat right -8px;
+  padding-right: 7px;
+}
+
+.UIWikiPortlet .SearchPopup .SearchPopupTC{
+  background:url("background/UIWikiSearchBG.png") repeat-x center -17px;
+  height: 7px;
+}
+
+.UIWikiPortlet .SearchPopup .SearchPopupML{
+  background:url("background/SearchPopupML.png") repeat-y left;
+  padding-left: 4px;
+}
+
+.UIWikiPortlet .SearchPopup .SearchPopupMR{
+  background:url("background/SearchPopupMR.png") repeat-y right;
+  padding-right: 4px;
+}
+
+.UIWikiPortlet .SearchPopup .SearchPopupMC{
+  background: white;
+}
+
+.UIWikiPortlet .SearchPopup .SearchPopupBL{
+  background:url("background/UIWikiSearchBG.png") no-repeat left -26px;
+  padding-left: 7px;
+}
+
+.UIWikiPortlet .SearchPopup .SearchPopupBR{
+  background:url("background/UIWikiSearchBG.png") no-repeat right -34px;
+  padding-right: 7px;
+}
+
+.UIWikiPortlet .SearchPopup .SearchPopupBC{
+  background:url("background/UIWikiSearchBG.png") repeat-x center -42px;
+  height: 7px;
+}
+
+.UIWikiPortlet .SearchPopup .MenuItem {
+	height:28px;
+	line-height:28px;
+	width:100%;
+}
+
+.UIWikiPortlet .SearchPopup .MenuItem a {
+	padding-right:25px;
+	color:#3E3E3E;
+	display:block;
+	padding:0 5px 0 35px;
+	white-space:nowrap;
+}
+
+.UIWikiPortlet .SearchPopup .MenuItem a:hover {
+	background: white url("background/UIWikiSearchBG.png") no-repeat 12px -118px;
+}
+
+.UIWikiPortlet .SearchPopup .MenuIcon {
+	background:url("background/UIWikiSearchBG.png") no-repeat 12px -118px;
+}

@@ -1,0 +1,10 @@
+<div class="UIWikiPagePreview">
+  <div class="UIWikiPortlet">
+    <!--
+    <p><b class="Tit">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b><br/>Nunc ac velit tortor. Cras nibh metus, sollicitudin et molestie viverra, tristique vel nunc. Aliquam commodo, nunc rutrum tempus ultrices, urna augue interdum nisi, malesuada faucibus risus velit eget risus. Sed ipsum orci, lobortis id volutpat condimentum, adipiscing ut leo. Curabitur vel sem lacus. Nam consequat ligula et tellus egestas nec viverra leo feugiat. Curabitur tincidunt elementum tortor, a aliquam purus euismod et. Quisque placerat facilisis aliquet. Nulla convallis fringilla velit vel adipiscing. Duis laoreet eleifend nunc, sit amet pretium augue lobortis in. Fusce lobortis, diam in tincidunt consequat, erat lorem ornare magna, ac sagittis odio purus vel enim.</p>
+    <p><b class="Tit">Aliquam erat volutpat.</b><br/>Quisque egestas rutrum ultricies. Phasellus porta ante et arcu auctor at mattis nisi porttitor. Maecenas et semper quam. Aliquam tellus urna, tincidunt ac posuere at, varius eu neque. Vestibulum semper lacinia consectetur. Integer eu dapibus nibh. Nam hendrerit leo vitae felis pellentesque in mattis sapien dignissim. In pharetra laoreet lectus, vel luctus quam imperdiet id. Nullam interdum convallis ligula non fringilla. Maecenas ante odio, luctus vitae gravida sed, ullamcorper ut odio. Donec non enim vitae massa tincidunt placerat. Pellentesque nec dui ipsum. Proin et sollicitudin sapien. Nunc sed consequat orci.</p>
+	  <p>Donec vestibulum dui eu erat iaculis porta. Duis ut nunc quis ligula aliquet accumsan. Nam id ultrices enim. Aliquam euismod vestibulum neque, et imperdiet ligula laoreet ac. Nunc vitae augue odio. Donec gravida mi a felis tempus et posuere nibh porta. Mauris nec eros lorem. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam eget quam nisl, eget elementum diam.</p>
+	  -->
+    ${uicomponent.htmlOutput}
+  </div>
+</div>

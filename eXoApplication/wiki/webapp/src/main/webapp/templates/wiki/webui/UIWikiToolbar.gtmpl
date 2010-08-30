@@ -1,0 +1,28 @@
+<%
+def rcontext = _ctx.getRequestContext() ;
+rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(\""+uicomponent.id+"\");");
+%>
+<div id="$uicomponent.id" class="UIWikiToolBar">
+<%
+	def browseActionComponent= uicomponent.getBrowseAction();
+	  if (browseActionComponent!=null){ 
+	%>
+		<a class="HoverLink BrowseLink Icon"><%=browseActionComponent.getActionName()%></a>	
+		<div style="position:relative;margin-top:-1px">
+			<div class="HoverMenu BrowseMenu">		
+			<%
+				for(entry in uicomponent.getActions()) {
+				def actionComponent= entry.getActionComponent();
+				String actionName = entry.getActionName();
+	 			String actionLabel=_ctx.appRes(uicomponent.getName() + ".action." + actionName);
+ 				String link = actionComponent.event(actionName);
+			%>
+				<% if(actionName.equals("Preferences")){%>
+					<a href="$link" class="Preferences Icon">$actionLabel</a>
+		<%			}
+					}
+			}
+	%>
+		</div>
+	</div>
+</div>

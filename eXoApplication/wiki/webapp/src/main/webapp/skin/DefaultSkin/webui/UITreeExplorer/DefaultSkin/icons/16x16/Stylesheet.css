@@ -1,0 +1,17 @@
+.ExpandIcon {
+  width: 16px;
+  background: url('DefaultSkin/SmallGrayExpand.gif') no-repeat left top; /* orientation=lt */
+  background: url('DefaultSkin/SmallGrayExpand-rt.gif') no-repeat right top; /* orientation=rt */  
+}
+
+.EmptyIcon {
+  width: 16px;
+  background: url('DefaultSkin/ExpandEmptyIcon.gif') no-repeat left 3px; /* orientation=lt */
+  background: url('DefaultSkin/ExpandEmptyIcon-rt.gif') no-repeat right 3px; /* orientation=rt */ 
+}
+
+.CollapseIcon  {
+  width: 16px;
+  background: url('DefaultSkin/SmallGrayCollapse.gif') no-repeat left top; /* orientation=lt */
+  background: url('DefaultSkin/SmallGrayCollapse-rt.gif') no-repeat right top; /* orientation=rt */ 
+}

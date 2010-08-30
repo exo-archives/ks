@@ -1,0 +1,108 @@
+@import url('DefaultSkin/icons/16x16/Stylesheet.css');
+
+.SideBarContent {
+  width: 550px;
+  height: 300px;
+  border: #E4E4E4 solid 1px;
+  margin: 5px 0 5px 0;
+}
+
+.SideBarContent .BarContent {
+  background: white;
+  padding: 3px 3px 3px 6px;
+  color: black;
+  font-weight: bold;
+  height: 16px;
+}
+
+.SideBarContent .SideContent {
+  padding-top: 5px;
+  background: whiteSmoke;
+  height:270px;
+  overflow: auto;
+}
+
+ .UITreeExplorer {	
+	_overflow-x: hidden;
+	_width: 183px;
+}
+
+ .UITreeExplorer .Node {
+  background: url('DefaultSkin/background/Dotted.gif') repeat-y left; /* orientation=lt */
+  background: url('DefaultSkin/background/Dotted-rt.gif') repeat-y right; /* orientation=rt */
+  clear: both; 
+  margin-left: 14px; /* orientation=lt */
+  margin-right: 14px; /* orientation=rt */
+  padding: 8px 0px 0px 0px;
+}
+
+ .UITreeExplorer .Node a {
+	display: block;
+	/*white-space: normal;*/
+	}
+
+ .UITreeExplorer .LastNode {
+  background: url('DefaultSkin/background/Dotted.gif') no-repeat left 1px ; /* orientation=lt */
+  background: url('DefaultSkin/background/Dotted-rt.gif') no-repeat right 1px ; /* orientation=rt */
+}
+  
+ .UITreeExplorer .NodeLabel {
+  line-height: 16px;
+}
+ .UITreeExplorer .NodeLabel span {
+  font-style: italic;
+}
+
+ .UITreeExplorer .ExpandIcon {  
+  width: auto;
+  height: auto;
+  padding-left: 19px; /* orientation=lt */
+  padding-right: 19px; /* orientation=rt */
+  display: block;
+}
+
+ .UITreeExplorer .CollapseIcon {
+  width: auto;  
+  padding-left: 19px; /* orientation=lt */
+  padding-right: 19px; /* orientation=rt */
+  display: block;
+}
+
+ .UITreeExplorer a:hover {
+  color: blue;
+}
+
+ .UITreeExplorer .EmptyIcon {  
+  width: auto;
+  height: auto;
+  padding-left: 19px; /* orientation=lt */
+  padding-right: 19px; /* orientation=rt */
+  display: block;
+}
+
+.UITreeExplorer .NodeType {
+  margin-left: 0px;
+  padding-left: 19px; /* orientation=lt */
+  padding-right: 20px; /* orientation=rt */
+}
+
+
+.UITreeExplorer .Space {
+  background: url('DefaultSkin/background/SpaceNode.gif') no-repeat left
+    1px; /* orientation=lt */
+}
+
+.UITreeExplorer .Wiki {
+  background: url('DefaultSkin/background/WikiNode.gif') no-repeat left
+    1px; /* orientation=lt */
+}
+
+.UITreeExplorer .Wikihome {
+  background: url('DefaultSkin/background/PageNode.gif') no-repeat left
+    1px; /* orientation=lt */
+}
+
+.UITreeExplorer .Page {
+  background: url('DefaultSkin/background/PageNode.gif') no-repeat left
+    1px; /* orientation=lt */
+}

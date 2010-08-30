@@ -1,0 +1,32 @@
+<div class="UIWikiPageEditForm">
+<% uiform.begin();
+   
+   uiform.renderChild(uiform.TITLE_CONTROL);
+   uiform.renderChild(uiform.PAGE_TOOLBAR);
+%>
+   <div class="ClearBoth"></div>
+<% uiform.renderChild(uiform.HELP_PANEL);%>
+
+<% textAreaInput = uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT)
+   textAreaInput.setRows(25);
+%>
+<% if(uicomponent.isSidePanelRendered()){
+     textAreaInput.setColumns(92);
+%>
+   <div class="UIWikiPageContentInputContainer UIWikiPageContentMarginRight HorizontalLayout">
+<% } else {
+     textAreaInput.setColumns(128);
+%>
+   <div class="UIWikiPageContentInputContainer HorizontalLayout">
+<% } %>
+  <% if(uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT).isRendered())
+       uiform.renderField(uiform.FIELD_CONTENT);
+  %>
+   </div>
+   <% uiform.renderChild(uiform.RICHTEXT_AREA);%>
+<% if(uiform.getChildById(uiform.HELP_PANEL).isRendered()) { %>
+   <div class="ClearRight"></div>
+<% } %>
+<% uiform.renderField(uiform.FIELD_SYNTAX); %>
+<% uiform.end();%>
+</div>

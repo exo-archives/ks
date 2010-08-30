@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!--
+
+    Copyright (C) 2010 eXo Platform SAS.
+    
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+    
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+    
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+
+<gatein-resources
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_0 http://www.gatein.org/xml/ns/gatein_resources_1_0"
+  xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_0">
+
+  <portlet-skin>
+    <application-name>wiki</application-name>
+    <portlet-name>WikiPortlet</portlet-name>
+    <skin-name>Default</skin-name>
+    <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
+  </portlet-skin>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.wiki.UIWikiPortlet</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiPortlet.js</js-path>
+    </param>
+  </javascript>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.wiki.UIWikiSearchBox</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiSearchBox.js</js-path>
+    </param>
+  </javascript>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.wiki.UIWikiAdvanceSearchForm</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiAdvanceSearchForm.js</js-path>
+    </param>
+  </javascript>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.wiki.UIForm</js-module>
+      <js-path>/javascript/eXo/wiki/UIForm.js</js-path>
+    </param>
+  </javascript>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.wiki.UIUpload</js-module>
+      <js-path>/javascript/eXo/wiki/UIUpload.js</js-path>
+    </param>
+  </javascript>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.wiki.UIWikiPagePreview</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiPagePreview.js</js-path>
+    </param>
+  </javascript>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.wiki.UISavePageConfirmation</js-module>
+      <js-path>/javascript/eXo/wiki/UISavePageConfirmation.js</js-path>
+    </param>
+  </javascript>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.wiki.UIWikiAjaxRequest</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiAjaxRequest.js</js-path>
+    </param>
+  </javascript>
+  
+   <javascript>
+    <param>
+      <js-module>eXo.wiki.UIWikiDropdownMenu</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiDropdownMenu.js</js-path>
+    </param>
+  </javascript>
+ 
+    <javascript>
+    <param>
+      <js-module>eXo.wiki.UITreeExplorer</js-module>
+      <js-path>/javascript/eXo/wiki/UITreeExplorer.js</js-path>
+    </param>
+  </javascript>
+   
+</gatein-resources>
+

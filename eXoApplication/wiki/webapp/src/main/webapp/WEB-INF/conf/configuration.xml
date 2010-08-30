@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (C) 2010 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+<configuration
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+  
+  <component>
+    <key>org.exoplatform.webui.ext.UIExtensionManager</key>
+    <type>org.exoplatform.webui.ext.impl.UIExtensionManagerImpl</type>
+  </component>
+  
+  <external-component-plugins>
+    <target-component>org.exoplatform.webui.ext.UIExtensionManager</target-component>
+    <component-plugin>
+      <name>add.action</name>
+      <set-method>registerUIExtensionPlugin</set-method>
+      <type>org.exoplatform.webui.ext.UIExtensionPlugin</type>
+      <init-params>
+        <object-param>
+          <name>EditPage</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="rank"><int>300</int></field>
+            <field name="name"><string>EditPage</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.EditPageActionComponent</string></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>AddPage</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="name"><string>AddPage</string></field>
+            <field name="rank"><int>200</int></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.AddPageActionComponent</string></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>DeletePage</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="rank"><int>100</int></field>
+            <field name="name"><string>DeletePage</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.DeletePageActionComponent</string></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>MovePage</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="rank"><int>50</int></field>
+            <field name="name"><string>MovePage</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.MovePageActionComponent</string></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>SavePage</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="rank"><int>500</int></field>
+            <field name="name"><string>SavePage</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.SavePageActionComponent</string></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>PreviewPage</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="rank"><int>400</int></field>
+            <field name="name"><string>PreviewPage</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.PreviewPageActionComponent</string></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>Help</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="rank"><int>300</int></field>
+            <field name="name"><string>Help</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.HelpActionComponent</string></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>RichText</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="rank"><int>200</int></field>
+            <field name="name"><string>RichText</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.RichTextActionComponent</string></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>Cancel</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="rank"><int>100</int></field>
+            <field name="name"><string>Cancel</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.CancelActionComponent</string></field>
+          </object>
+        </object-param>
+         <object-param>
+          <name>Browse</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIWikiToolBar</string></field>
+            <field name="rank"><int>50</int></field>
+            <field name="name"><string>Browse</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.BrowseActionComponent</string></field>
+          </object>
+        </object-param>   
+        <object-param>
+          <name>Preferences</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIWikiToolBar</string></field>
+            <field name="rank"><int>100</int></field>
+            <field name="name"><string>Preferences</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.PreferencesActionComponent</string></field>
+          </object>
+        </object-param>                  
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
+</configuration>

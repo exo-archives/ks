@@ -1,0 +1,194 @@
+h2. Headings 
+
+&nbsp;To create a heading, type *hn.* and one space preceding the heading title (where n is a heading number 1-6). Use the below table for more information about headings in Confluence. 
+|| Notation || Result || 
+| {noformat} 
+h1. 
+{noformat} | h1. Biggest Heading | 
+| {noformat} 
+h2. 
+{noformat} | h2. Bigger Heading | 
+| {noformat} 
+h3. 
+{noformat} | h3. Big Heading | 
+| {noformat} 
+h4. 
+{noformat} | h4. Normal Heading | 
+| {noformat} 
+h5. 
+{noformat} | h5. Small Heading | 
+| {noformat} 
+h6. 
+{noformat} | h6. Smallest Heading | 
+\\ 
+
+h2. Text Effects 
+
+Text Effects allow you to change the formatting of one word or several words. To add special effects to text, type the appropriate symbols (as show below) directly preceding and following the word or words. 
+\\ 
+|| Notation || Result || 
+| {noformat} 
+*bold* 
+{noformat} 
+{column:width=50%}\\ 
+{column} | Marks text as *bold*. | 
+| {noformat} 
+_italics_ 
+{noformat} | Marks text as _italicized_. | 
+| {noformat} 
+??citation?? 
+{noformat} | Marks text as _cited_. | 
+| {noformat} 
+-strikethrough- 
+{noformat} | Marks text as -strikedthrough-. | 
+| {noformat} 
++underline+ 
+{noformat} | Marks text as +underlined+. | 
+| {noformat} 
+^superscript^ 
+{noformat} | Marks text as a ^superscript^. | 
+| {noformat} 
+~subscript~ 
+{noformat} | Marks text as a ~subscript~. | 
+| {noformat} 
+{{monospaced code text}} 
+{noformat} | Marks text as {{code}}. | 
+| {noformat} 
+bq. Block quote 
+{noformat} | bq. To make an entire paragraph into a block quotation, which is used when you are quoting more than four lines from one source, type *bq.* at the start of the line. | 
+| {noformat} 
+{color:red}red text{color} 
+{noformat} | {color:red}Marks text as the color typed.{color} | 
+
+h2. Text Breaks 
+
+Text breaks allow you to create breaks between words or between paragraphs. To insert hyphens and dashes properly, insert one space before and after the symbols shown below. 
+|| Notation || Result \\ || 
+| (empty line) | Begins a new paragraph | 
+| {noformat} 
+
+{noformat} | Inserts a line break. | 
+| {noformat} 
+---- 
+{noformat} | Inserts a horizontal ruler. | 
+| {noformat} 
+--- 
+{noformat} | Inserts a hyphen --- . | 
+| {noformat} 
+-- 
+{noformat} | Inserts a dash - . | 
+\\ 
+
+h2. Lists 
+
+Lists allow you to present information as a series of ordered items, which are easier to read than prose. Lists cannot be formatted inside Confluence tables. 
+
+h5. Bulleted Lists 
+
+To create bulleted lists, type one asterisk and one space preceding each item. Type additional asterisks (\**, **\*) for deeper indentations. 
+
+*Notation:* 
+{noformat} 
+* bullet 
+** indented 
+** list 
+* bullet 
+{noformat} 
+*Result:* 
+* bullet 
+* bullet 
+
+h5. Numbered Lists 
+
+To create numbered lists, type one pound symbol and one space preceding each item. Type additional pound symbols (##, ###) for deeper indentations. 
+*Notation:* 
+{noformat} 
+# numbered 
+# list 
+## indented 
+## list 
+{noformat} 
+*Result:* 
+# numbered 
+# list 
+## indented 
+## list 
+
+h5. Combined Bulleted and Numbered Lists 
+
+To create combined bulleted and numbered lists, type one pound symbol, one asterisk (which can be reversed), and one space preceding each item. 
+*Notation:* 
+{noformat} 
+# numbered 
+# list 
+#* with 
+#* indented 
+#* bullet 
+# list 
+{noformat} 
+*Result:* 
+# numbered 
+# list 
+#* with 
+#* indented 
+#* bulleted 
+# list 
+
+*Notation:* 
+{noformat} 
+* bulleted 
+* list 
+*# with 
+*# indented 
+*# numbered 
+* list 
+{noformat} 
+*Result:* 
+* bulleted 
+* list 
+*# with 
+*# indented 
+*# numbered 
+* list 
+
+h2. Basic Formatting 
+
+Use these basic formatting tips to create non-formatted areas, table of contents, and special notes in Confluence articles. 
+
+h5. Table of Contents 
+
+To better serve Confluence users, writers and editors should insert a table of contents at the beginning of each article containing more than one heading (excluding the title). To create a table of contents, type the following notation. 
+*Notation:* 
+{noformat} 
+{toc} 
+{noformat} 
+*Result:* 
+{toc} 
+
+h5. Notes 
+
+There are a variety of note types that can be inserted into Confluence. They range from helpful, by-the-way notes, which are green to more serious ones that warn users of possible risk, which are red. 
+{tip:title=NOTE:} 
+Notes are by-the-way or additional information and should be formatted as explained below. 
+{tip} 
+* In the line preceding the note text, type: 
+{noformat} 
+{tip:title=NOTE:} 
+{noformat} 
+* In the line following the note text, type: 
+{noformat} 
+{tip} 
+{noformat} 
+{warning: title=ATTENTION:}Using attention alerts readers that the information given is more critical than the information given in a note, such as a risk of injury or loss of files. Attention notes should be formatted as explained below. 
+{warning} 
+* In the line preceding the warning text, type: 
+{noformat} 
+{warning:title=ATTENTION:} 
+{noformat} 
+* In the line following the warning text, type: 
+{noformat} 
+{warning} 
+{noformat} 
+
+h5. Images 
+To create extra vertical space around an image, type vspace=(pixel amount).

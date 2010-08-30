@@ -1,0 +1,48 @@
+@import url('RichTextArea.css') ;
+@import url('Wysiwyg.css') ;
+
+.gwt-RichTextArea {
+  width: 100%;
+  border: 1px solid #DDDDDD;
+  border-top: none;
+}
+
+.UIWikiRichTextEditor .xToolbar div.clearfloats {
+  background-color: transparent;
+  clear: left;
+  float: none;
+  height: 1px;
+  line-height: 1px;
+  font-size: 1px;
+  margin: 0;
+}
+
+.UIWikiRichTextEditor .textarea {
+  height: 450px;
+  visibility: hidden;
+}
+
+.UIWikiRichTextEditor .gwt-MenuBar-horizontal table {
+  margin: 0;
+}
+
+.main th {
+  background: none repeat scroll 0 0 #F4F9FE;
+  border: 1px solid #E5EFF8;
+  color: #66A3D3;
+  font: bold 1.2em/ 1.4em Arial, Helvetica, sans-serif;
+  padding: 0.3em 0.5em;
+  text-align: center;
+}
+
+.main td {
+  border: 1px solid #E5EFF8;
+  color: #4E6172;
+  padding: 3px 4px;
+  vertical-align: middle;
+}
+
+div nobr {
+  float: left;
+}
+  

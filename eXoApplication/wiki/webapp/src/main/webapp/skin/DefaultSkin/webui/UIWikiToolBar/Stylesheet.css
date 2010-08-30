@@ -1,0 +1,33 @@
+
+.UIWikiPortlet .UIWikiToolBar{
+  float:right;
+}
+
+.UIWikiPortlet .UIWikiToolBar .BrowseLink {
+	color:white;	
+	width: 50px;
+}
+
+.UIWikiPortlet .UIWikiToolBar .BrowseMenu {
+	width: 100px;
+	top: 26px;
+	right: -1px;  
+}
+
+.UIWikiPortlet .UIWikiToolBar .Icon { 
+	line-height: 25px; 
+	padding-left:5px;
+	margin: 0;
+  float: left;	
+}
+
+.UIWikiPortlet .UIWikiToolBar .Icon:hover {
+  text-decoration: none;
+  background: #1a7fdf;
+  color: white;				
+}
+
+.UIWikiPortlet .UIWikiToolBar .Preferences {
+  width:92px;
+	margin:1px;		
+}

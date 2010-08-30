@@ -1,0 +1,27 @@
+=== Help Tips ===
+----
+Text formatting
+{{{**bold**}}}  **bold**
+{{{//italic//}}}   //italic//
+{{{--strike--}}} --strike--
+{{{__underline__}}} __underline__
+
+Headings
+{{{= level 1 =}}} Large heading
+{{{=== level 3 ===}}} Medium heading
+{{{===== level 5 =====}}} Small heading
+
+Lists
+{{{*}}} Bulleted list
+{{{#.}}} Numbered point
+
+Tables
+{{{|=head1 |=head2 |
+| colA1 | colA2 |
+| colB1 | colB2 |}}}
+
+Links
+{{{[[WebHome]]}}} Link a page
+{{{[[label>>WebHome]]}}} Link with a label
+{{{[[http://xwiki.org]]}}} Link to a URL
+{{{[[email>>mailto:abc@host.net]]}}} Link to an email

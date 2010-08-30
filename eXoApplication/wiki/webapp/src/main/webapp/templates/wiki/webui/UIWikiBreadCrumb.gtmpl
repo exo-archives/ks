@@ -1,0 +1,65 @@
+<%
+  import java.util.List;
+  
+  List breadCumbs = uicomponent.getBreadCumbs();
+%>
+<div class="UIWikiBreadCrumb UIBreadcumbs">
+  <div class="LeftBreadcumbsBar">
+    <div class="RightBreadcumbsBar">
+      <div class="BreadcumbsInfoBar">
+        <%  if(breadCumbs.size() > 0) {
+              String note = "LeftBlock";
+              for(i in 0 .. breadCumbs.size()-1) {
+                breadcumbData = breadCumbs.get(i);
+                String title = breadcumbData.getTitle();
+                String actionLink = uicomponent.createActionLink(breadcumbData);
+                if(i == breadCumbs.size()-1) note = "Selected";
+        %>
+                <a href="<%=(breadcumbData.getId() == null) ? "#" : actionLink%>" class="$note">$title</a>
+        <%      
+                if(i != breadCumbs.size()-1) {
+        %>
+                <div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
+        <%
+                }
+              }
+            }
+        %>
+        <div class="ClearLeft"><span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="BreadcumPopup">
+	<div class="BreadcumPopupTL">
+		<div class="BreadcumPopupTR">
+			<div class="BreadcumPopupTC"><span></span></div>
+	  	</div>
+	</div>
+	<div class="BreadcumPopupML">
+		<div class="BreadcumPopupMR">
+			<div class="BreadcumPopupMC">
+				<div class="SubBlock">
+
+							<div class="MenuItem">	
+								<a class="ItemIcon MenuIcon" title="" href="#">Forum</a>
+							</div>
+
+							<div class="MenuItem">
+								<a class="ItemIcon MenuIcon" title="" href="#">Thread</a>
+							</div>
+
+							<div class="MenuItem">	
+								<a class="ItemIcon MenuIcon" title="" href="#">Topic</a>
+							</div>
+
+				</div>
+			</div>
+		</div>
+	</div>	
+	<div class="BreadcumPopupBL">
+		<div class="BreadcumPopupBR">
+			<div class="BreadcumPopupBC"><span></span></div>
+	  	</div>
+	</div>
+</div>

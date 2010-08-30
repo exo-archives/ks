@@ -1,0 +1,85 @@
+<%
+import org.exoplatform.wiki.mow.api.Page ;
+import org.exoplatform.wiki.mow.api.WikiNodeType ;
+import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl ;
+import org.exoplatform.commons.utils.PageList ;
+import org.exoplatform.wiki.service.SearchResult;
+import org.exoplatform.wiki.commons.Utils ;
+%>
+
+<%
+	PageList<SearchResult> results = uicomponent.getResults() ;	
+	
+	if(results != null &&  results.getAll().size() > 0) {
+		
+		%>		
+		<div class="UIWikiAdvanceSearchResult">
+			<div class="ResultInfo">Showing 1- of <%= results.getPage(uicomponent.getPageIndex()).size() %> of <%= results.getAll().size()%> for <b>"<%=uicomponent.getKeyword()%>"</b></div>
+			<%
+				String viewPage = uicomponent.event("ViewPage") ;
+				for(SearchResult result in results.getPage(uicomponent.getPageIndex())) {
+			     	String wikiURI = uicomponent.getWikiNodeUri(result) ;				
+					String space = uicomponent.getWiki(result).getOwner();
+					String wikiType= uicomponent.getWikiType(result);
+					String pageURI = wikiURI + result.getNodeName() ;					
+					if(WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())){						      	
+		      	%>		      	
+		      	<div class="BlockResultFeed">
+							<a class="TxtTitFeed" onclick="$viewPage" href="$pageURI"><%=result.getTitle()%></a>
+							<div class="TxtDetail"><%=result.getExcerpt()%></div>
+							<div><strong>$wikiType Space: </strong><a class="TxtMark" onclick="$viewPage" href="$wikiURI">$space</a></div>
+						</div>
+		      	<%	
+		      } else if (WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(result.getType())){
+		      	AttachmentImpl att = (AttachmentImpl)uicomponent.getObject(result.getPath(), result.getType()) ;
+		      	String downloadAction = uicomponent.event("DownloadAttach", result.getPath() + "/" + att.getName()) ;
+		      	String extension = Utils.getExtension(att.getName()) ;
+		      	%>		     
+		      	<div class="BlockResultFeed">
+		      		<a class="$extension TxtTitFeed" href="$downloadAction"><span><%=att.getName()%></span></a>
+							<div class="TxtDetail"><%=result.getExcerpt()%></div>
+							<div><strong>$wikiType Space: </strong><a class="TxtMark" onclick="$viewPage" href="$wikiURI">$space</a> > <a class="TxtMark" onclick="$viewPage" href="$pageURI"><%=uicomponent.getPageTitle(result.getPath())%></a></div>
+						</div>    	
+		      	<%
+		      }      
+		    }
+			%>			 	
+			<%
+				String prev = uicomponent.event("PrevPage") ;
+				String next = uicomponent.event("NextPage") ;
+			%>
+			<div class="UIPageIterator ClearFix">
+				<a class="PrevPage" href="$prev">Previous</a>
+				<%
+					for(int i = 1; i <= results.getAvailablePage(); i ++) {
+						if(i == results.getCurrentPage()) {
+						%>
+							<span class="Number Selected">$i</span>
+						<%
+						}else {
+							String changePage = uicomponent.event("ChangePage", String.valueOf(i)) ;
+						%>
+							<a class="Number" href="$changePage">$i</a>
+						<%
+						}					
+					}
+				%>				
+				<a class="NextPage" href="$next">Next</a>
+			</div> 	
+	</div>	
+	
+	<%} else {
+		%><div class="NoSearchResult">There is no search result...!</div><%
+	}
+	%>
+	
+	<!-- Page iterator -->
+			<!-- div class="UIPageIterator ClearFix">
+				<a class="PrevPage" href="">Previous</a>
+				<a class="Number Selected" href="#">1</a>
+				<a class="Number" href="">2</a>
+				<a class="Number" href="#">3</a>
+				<span class="Separator"> ... </span>
+				<a class="Number" href="#">26</a>
+				<a class="NextPage" href="#">Next</a>
+			</div-->

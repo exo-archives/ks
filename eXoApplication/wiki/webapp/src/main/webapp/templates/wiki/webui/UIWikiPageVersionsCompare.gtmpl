@@ -1,0 +1,67 @@
+<%
+  import org.exoplatform.wiki.mow.api.WikiNodeType;
+  import org.exoplatform.web.application.Parameter;
+
+%>
+<div class="UIWikiPageVersionsCompare">
+<%
+  String link = uicomponent.event(uicomponent.RETURN_VERSIONS_LIST);
+  String fromVersionName = uicomponent.getFromVersion().getName();
+  String fromVersionViewLink = uicomponent.event(uicomponent.VIEW_REVISION, fromVersionName);
+  String fromVersionAuthor = uicomponent.getFromVersion().getNTFrozenNode().getProperties().get(WikiNodeType.Definition.AUTHOR);
+  fromVersionAuthor = (fromVersionAuthor != null) ? fromVersionAuthor : "anonymous";
+  String fromUpdatedDate = uicomponent.getFromVersion().getNTFrozenNode().getProperties().get(WikiNodeType.Definition.UPDATED_DATE);
+  String previousCompare = "";
+  String previousCompareLink = "";
+  Parameter[] parameters = new Parameter[2];
+  if(!"1".equals(fromVersionName)){
+    String previous = String.valueOf(Integer.valueOf(fromVersionName) - 1);
+    previousCompare = "<< Changes from <span style=\"font-weight: bold;\">" + previous + "</span> to <span style=\"font-weight: bold;\">" + fromVersionName + "</span>";
+    parameters[0] = new Parameter(uicomponent.FROM_PARAM, previous);
+    parameters[1] = new Parameter(uicomponent.TO_PARAM, fromVersionName);
+    previousCompareLink = uicomponent.event(uicomponent.COMPARE_ACTION, null, parameters);
+  }
+  
+  String toVersionName = uicomponent.getToVersion().getName();
+  String toVersionViewLink = uicomponent.event(uicomponent.VIEW_REVISION, toVersionName);
+  String toVersionAuthor = uicomponent.getToVersion().getNTFrozenNode().getProperties().get(WikiNodeType.Definition.AUTHOR);
+  toVersionAuthor = (toVersionAuthor != null) ? toVersionAuthor : "anonymous";
+  String toUpdatedDate = uicomponent.getToVersion().getNTFrozenNode().getProperties().get(WikiNodeType.Definition.UPDATED_DATE);
+  String nextCompare = "";
+  String nextCompareLink = "";
+  if(!toVersionName.equals(uicomponent.getCurrentVersionIndex())){
+    String next = String.valueOf(Integer.valueOf(toVersionName) + 1);
+    nextCompare = "Changes from <span style=\"font-weight: bold;\">" + toVersionName + "</span> to <span style=\"font-weight: bold;\">" + next + "</span> >>";
+    parameters[0] = new Parameter(uicomponent.FROM_PARAM, toVersionName);
+    parameters[1] = new Parameter(uicomponent.TO_PARAM, next);
+    nextCompareLink = uicomponent.event(uicomponent.COMPARE_ACTION, null, parameters);
+  } else {
+    toVersionName = "Current";
+  }
+%>
+  <div class="ComparedForm ClearFix">
+		<div class="ChangeVersionForm">
+			<span class="ChangeVersionInfo"><%= "Version " + fromVersionName %> </span>  by  <span class="Admin"> <%= fromVersionAuthor %></span>
+			<div class="DateChange"><%= "on " + fromUpdatedDate %>.</div>
+			<div class="Changes" onclick="$previousCompareLink"><%= previousCompare %></div>
+		</div>
+		<div class="ComparedWith"> Compared With </div>
+		<div class="ChangeVersionForm">
+			<span class="ChangeVersionInfo"><%= "Version " + toVersionName %> </span>  by  <span class="Admin"> <%= toVersionAuthor %></span>
+			<div class="DateChange"><%= "on " + toUpdatedDate %>.</div>
+			<div class="Changes" onclick="$nextCompareLink"><%= nextCompare %></div>
+		</div>
+		<div class="ChangeVersionForm" style="float: right; width: 220px;">
+			<span class="ChangeVersionInfo">Key</span><br>
+			<span class="LineRemoved">This line was removed.</span><br>
+			<span> this</span><span class="LineRemoved">Word</span><span>was removed. This word was </span><span class="LineAdded"> added </span><br>
+			<span class="LineAdded"> This line was added </span>
+		</div>
+	</div>
+	
+	<div class="ChangedForm">
+		<div class="Label"><span style="font-weight: bold;">Changes (5)</span><a style="Color:#165fb3;" href="$link"> view page history</a></div>
+		<%= uicomponent.differencesAsHTML %>
+	</div>
+
+</div>
