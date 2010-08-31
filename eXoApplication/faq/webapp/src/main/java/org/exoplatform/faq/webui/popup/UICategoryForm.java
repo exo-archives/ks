@@ -337,9 +337,12 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			UIPopupAction childPopup = categoryForm.getAncestorOfType(UIPopupContainer.class).getChild(UIPopupAction.class) ;
 			UIGroupSelector uiGroupSelector = childPopup.activate(UIGroupSelector.class, 500) ;
 			uiGroupSelector.setType(types[1]) ;
-			if(permType.equals(UISelectComponent.TYPE_USER) ) uiGroupSelector.setId("UIUserSelector") ;
-			if(permType.equals(UISelectComponent.TYPE_MEMBERSHIP) ) uiGroupSelector.setId("UIMebershipSelector") ;
-			if(permType.equals(UISelectComponent.TYPE_GROUP) ) uiGroupSelector.setId("UIGroupSelector") ;
+			if(types[1].equals(UISelectComponent.TYPE_USER) ) 
+				uiGroupSelector.setId("UIUserSelector") ;
+			if(types[1].equals(UISelectComponent.TYPE_MEMBERSHIP) ) 
+				uiGroupSelector.setId("UIMebershipSelector") ;
+			if(types[1].equals(UISelectComponent.TYPE_GROUP) ) 
+				uiGroupSelector.setId("UIGroupSelector") ;
 			uiGroupSelector.setSelectedGroups(null) ;
 			uiGroupSelector.setComponent(categoryForm, new String[]{types[0]}) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(childPopup) ;  
@@ -422,6 +425,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			uiUserSelector.setShowSearch(true);
 			uiUserSelector.setShowSearchUser(true);
 			uiUserSelector.setShowSearchGroup(false);
+			uiUserSelector.setId("UIUserSelector");
 			uiPopupWindow.setUIComponent(uiUserSelector);
 			uiPopupWindow.setShow(true);
 			uiPopupWindow.setWindowSize(740, 400);
