@@ -711,7 +711,6 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 	}
 	
 	private boolean isWatching(String path) throws Exception {
-		System.out.println("\n\n=======>getNodePath  " + path);
 		for (Watch watch : listWatches) {
 			if(path.equals(watch.getNodePath()) && watch.isAddWatchByEmail()) 
 				return true;
