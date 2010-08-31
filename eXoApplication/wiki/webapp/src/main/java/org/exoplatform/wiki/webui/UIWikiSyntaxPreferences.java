@@ -38,7 +38,7 @@ import org.xwiki.rendering.syntax.Syntax;
 public class UIWikiSyntaxPreferences extends UIFormInputSet {
   public static final String FIELD_SYNTAX = "DefaultSyntax";
 
-  public static final String FIELD_ALLOW  = "AllowChoseOthers";
+  public static final String FIELD_ALLOW  = "AllowChooseOthers";
 
   public UIWikiSyntaxPreferences(String id) throws Exception {
    setId(id);  

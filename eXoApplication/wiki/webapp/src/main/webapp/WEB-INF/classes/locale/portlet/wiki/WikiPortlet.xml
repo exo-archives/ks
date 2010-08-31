@@ -37,7 +37,7 @@
   <UIWikiEditPreferencesForm>
     <label>
       <DefaultSyntax>Default syntax</DefaultSyntax>
-      <AllowChoseOthers>Allow User to chose others syntaxes</AllowChoseOthers>
+      <AllowChooseOthers>Allow User to choose others syntaxes</AllowChooseOthers>
     </label>
     <action>
       <Save>Save</Save>
@@ -57,7 +57,7 @@
       <Cancel>Cancel</Cancel>
     </action>
     <msg>
-      <can-not-move>Can not move</can-not-move>
+      <can-not-move-wikihome>Can not move Wiki Home</can-not-move-wikihome>
       <same-name-in-new-location-space>Same name in new location space</same-name-in-new-location-space>
       <new-location-is-empty>New location is empty</new-location-is-empty>
     </msg>

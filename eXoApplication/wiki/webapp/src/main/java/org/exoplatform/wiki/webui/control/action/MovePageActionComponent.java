@@ -68,7 +68,7 @@ public class MovePageActionComponent extends UIComponent {
       PortalRequestContext prContext = Util.getPortalRequestContext();
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       if (Utils.getCurrentWikiPage().getName().equals(WikiNodeType.Definition.WIKI_HOME_NAME)) {
-        uiWikiPortlet.addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.can-not-move",
+        uiWikiPortlet.addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.can-not-move-wikihome",
                                                         null,
                                                         ApplicationMessage.WARNING));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPortlet.getUIPopupMessages());        
