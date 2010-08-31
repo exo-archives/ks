@@ -230,6 +230,13 @@
         <xwe.module>org.xwiki.gwt.wysiwyg.Wysiwyg</xwe.module>
       </properties>
     </profile>
+    <profile>
+      <id>test</id>
+      <properties>
+        <gwt.style>OBF</gwt.style>
+        <xwe.module>org.xwiki.gwt.wysiwyg.Wysiwyg</xwe.module>
+      </properties>
+    </profile>
   </profiles>
 	
 </project>
