@@ -236,9 +236,8 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 						// single vote
 						if(!uiForm.poll.getIsMultiCheck()) {
 							if(leftPecent > 1) {
-								int newSize = (int) Math.round((temps*leftPecent)/100) ;
-								newUser = new String[newSize] ;
-								int l = 0 ;
+								List<String> userL = new ArrayList<String>();
+								newUser = new String[]{} ;
 								for (String string : oldUserVote) {
 									boolean check = true ; 
 									for(Integer j : listIndexItemRemoved) {
@@ -248,10 +247,10 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 										}
 									}
 									if(check) {
-										newUser[l] = string ; 
-										++l ;
+										userL.add(string);
 									}
 								}
+								newUser = userL.toArray(new String[userL.size()]);
 							} else if(voteRemoved.size() > 0 && rmPecent > 0.0){
 								newUser = new String[]{};
 							}
