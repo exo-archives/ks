@@ -465,8 +465,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	public boolean isWatching(String path) throws Exception {
 		for (Watch watch : listWatches) {
-			// KS-2573
-			// check: is watching by email watch
 			if(path.equals(watch.getNodePath()) && watch.isAddWatchByEmail()) 
 				return true;
 		}
@@ -581,6 +579,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			try {
 				Topic topic = uiTopicContainer.getTopic(temp[0]) ;
 				if(topic != null) {
+					topic = uiTopicContainer.getForumService().getTopicUpdate(topic, false);
+					System.out.println("\n\n---------> topic patch: " + topic.getPath());
 					uiTopicContainer.forum = uiTopicContainer.getForumService().getForum(uiTopicContainer.categoryId, uiTopicContainer.forumId);
 					if(uiTopicContainer.forum != null){
 						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;

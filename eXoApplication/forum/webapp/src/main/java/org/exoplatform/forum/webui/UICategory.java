@@ -238,7 +238,7 @@ public class UICategory extends BaseForumForm	{
 		if (!ForumUtils.isEmpty(topicPath)) {
 			
 			try {
-				topic = getForumService().getTopicByPath(topicPath, true) ;
+				topic = getForumService().getTopicSummary(topicPath) ;
 			}catch (Exception e) {
 				topic = null;
 				log.warn(e);
@@ -538,6 +538,7 @@ public class UICategory extends BaseForumForm	{
 			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 			uiForumContainer.getChild(UIForumDescription.class).setForum(uiCategory.getForum(id[0]));
 			Topic topic = uiCategory.getTopic(id[1]) ;
+			topic = uiCategory.getForumService().getTopicUpdate(topic, true);
 			uiTopicDetail.setUpdateForum(uiCategory.getForum(id[0])) ;
 			uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[0], topic, 0) ;
 			String lastPostId = "";
@@ -554,7 +555,12 @@ public class UICategory extends BaseForumForm	{
 		public void onEvent(Event<UICategory> event, UICategory uiCategory, String path) throws Exception {
 			WebuiRequestContext context = event.getRequestContext() ; 
 			String []id = path.trim().split("/");
-			Topic topic = (Topic)uiCategory.getForumService().getObjectNameById(id[2], Utils.TOPIC);
+			Topic topic = uiCategory.getTopic(id[2]);
+			if(topic == null){
+				topic = (Topic)uiCategory.getForumService().getObjectNameById(id[2], Utils.TOPIC);
+			} else {
+				topic = uiCategory.getForumService().getTopicUpdate(topic, true);
+			}
 			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 			if(topic == null) {
 				warning("UIForumPortlet.msg.topicEmpty") ;

@@ -152,6 +152,7 @@ public class UIPageListTopicByUser extends UIContainer{
 			UIPageListTopicByUser uiForm = event.getSource() ;
 			String topicId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			Topic topic = uiForm.getTopicById(topicId) ;
+			topic = uiForm.forumService.getTopicUpdate(topic, false);
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			if(topic == null){
 				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;

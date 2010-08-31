@@ -239,7 +239,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 				warning("UIForumPortlet.msg.do-not-permission") ;
 				return ;
 			}
-			
+			topic = uiTopicsTag.getForumService().getTopicUpdate(topic, false);
 			Forum forum = uiTopicsTag.getForum(cateId, forumId) ;
 			UIForumPortlet forumPortlet = uiTopicsTag.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.FORUM);

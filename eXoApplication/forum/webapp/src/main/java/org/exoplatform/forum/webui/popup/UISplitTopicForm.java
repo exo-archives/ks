@@ -164,9 +164,9 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 						uiForm.forumService.movePost(postPaths.toArray(new String[]{}), destTopicPath, true, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
 					} catch (Exception e) {
 						uiForm.log.error("Saving topic " + topic + " fail: "+ e.getMessage(), e);
-						UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+//						UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+//						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
+//						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 						uiForm.warning("UISplitTopicForm.msg.forum-deleted") ;
 					}		
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;

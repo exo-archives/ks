@@ -139,6 +139,8 @@ public interface DataStorage {
   Topic getTopicSummary(String topicPath, boolean isLastPost) throws Exception;
 
   Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception;
+  
+  Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception;
 
   JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception;
 

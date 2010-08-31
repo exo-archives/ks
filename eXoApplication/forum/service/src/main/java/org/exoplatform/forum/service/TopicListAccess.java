@@ -82,9 +82,7 @@ public class TopicListAccess extends JCRListAccess<Topic> {
   
   private Topic getTopic(Node topicNode) throws Exception {
     if(topicNode == null ) return null ;
-
     PropertyReader reader = new PropertyReader(topicNode);
-  
     Topic topicNew = new Topic() ;    
     topicNew.setId(topicNode.getName()) ;
     topicNew.setPath(topicNode.getPath()) ;
@@ -110,13 +108,13 @@ public class TopicListAccess extends JCRListAccess<Topic> {
     topicNew.setIsActive(reader.bool("exo:isActive"));
     topicNew.setVoteRating(reader.d("exo:voteRating"));
     topicNew.setUserVoteRating(reader.strings("exo:userVoteRating"));
-    topicNew.setCreatedDate(reader.date("exo:createdDate"));
+    // TODO
+   /* topicNew.setCreatedDate(reader.date("exo:createdDate"));
     topicNew.setModifiedBy(reader.string("exo:modifiedBy"));
     topicNew.setModifiedDate(reader.date("exo:modifiedDate"));
     topicNew.setTagId(reader.strings("exo:tagId"));
-    // TODO KS-2458
     topicNew.setCanView(reader.strings("exo:canView", new String[]{}));
-    topicNew.setCanPost(reader.strings("exo:canPost", new String[]{}));
+    topicNew.setCanPost(reader.strings("exo:canPost", new String[]{}));*/
     return topicNew;
   }
   

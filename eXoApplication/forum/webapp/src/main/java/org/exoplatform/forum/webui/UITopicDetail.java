@@ -277,6 +277,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
+		this.topic = topic;
 		if(page > 0) pageSelect = page;
 		else pageSelect = getPagePostRemember(topicId);
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
@@ -284,9 +285,9 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 		isShowRule = forumPortlet.isShowRules();
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
-		if(ForumUtils.isEmpty(topic.getDescription())) {
+		/*if(ForumUtils.isEmpty(topic.getDescription())) {
 			this.topic = getForumService().getTopic(categoryId, forumId, topic.getId(), userName) ;
-		} else this.topic = topic;
+		} else this.topic = topic;*/ 
 		getForumService().setViewCountTopic((categoryId + "/" + forumId + "/" + topicId), userName);
 		forumPortlet.updateAccessTopic(topicId);
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
@@ -308,15 +309,16 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 		this.topicId = topic.getId() ;
 		this.pageSelect = numberPage ;
 		this.isEditTopic = false ;
+		this.topic = topic;
 		if(pageSelect == 0) pageSelect = getPagePostRemember(topicId);
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		isShowQuickReply = forumPortlet.isShowQuickReply();
 		isShowRule = forumPortlet.isShowRules();
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
-		if(ForumUtils.isEmpty(topic.getDescription())) {
+	/*	if(ForumUtils.isEmpty(topic.getDescription())) {
 			this.topic = getForumService().getTopic(categoryId, forumId, topic.getId(), userName) ;
-		} else this.topic = topic;
+		} else this.topic = topic;*/
 		getForumService().setViewCountTopic((categoryId + "/" + forumId + "/" + topicId), userName);
 		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
@@ -709,9 +711,8 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 	}
 	
 	private boolean isWatching(String path) throws Exception {
+		System.out.println("\n\n=======>getNodePath  " + path);
 		for (Watch watch : listWatches) {
-			// KS-2573
-			// check: is watching by email watch
 			if(path.equals(watch.getNodePath()) && watch.isAddWatchByEmail()) 
 				return true;
 		}
