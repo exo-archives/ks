@@ -67,12 +67,12 @@ function getModule(params)
     addDependency(new Project("com.google.gwt", "gwt-servlet", "jar",  "${gwt.version}")).
     addDependency(new Project("com.google.gwt", "gwt-user", "jar",  "${gwt.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-web-gwt-wysiwyg-client", "jar",  "${org.xwiki.platform.version}")).
-    addDependency(new Project("org.apache.pdfbox", "fontbox", "jar",  "1.1.0")).
+    addDependency(new Project("org.apache.pdfbox", "fontbox", "jar",  "${org.apache.pdfbox.fontbox.version}")).
     addDependency(new Project("javax.validation", "validation-api", "jar",  "${javax.validation.version}")).
     addDependency(new Project("org.hibernate", "hibernate-validator", "jar",  "${hibernate-validator.version}")).
     addDependency(new Project("org.python", "jython-standalone", "jar",  "${jython-standalone.version}")).
     addDependency(new Project("pygments", "pygments", "jar",  "${pygments.version}")).
-    addDependency(new Project("net.sourceforge.htmlcleaner", "htmlcleaner", "jar",  "2.1")).
+    addDependency(new Project("net.sourceforge.htmlcleaner", "htmlcleaner", "jar",  "${net.sourceforge.htmlcleaner.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-core-configuration-api", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-core-model", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-core-context", "jar",  "${org.xwiki.platform.version}")).
