@@ -90,7 +90,7 @@
 	<cglib.version>2.2</cglib.version>
 	<commons-dbcp.version>1.2.1</commons-dbcp.version>
 	<org.exoplatform.tool.version>1.0.0</org.exoplatform.tool.version>
-  <javassist.version>3.8.0.GA</javassist.version>
+  <javassist.version>3.4.GA</javassist.version>
 	<html-parser.version>1.6</html-parser.version>
 	<com.sun.xml.bind.version>2.1.7</com.sun.xml.bind.version>
 	<org.jvnet.jaxb2.maven2.version>0.1</org.jvnet.jaxb2.maven2.version>
