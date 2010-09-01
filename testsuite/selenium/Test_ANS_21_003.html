@@ -188,9 +188,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDown</td>
 	<td>link=Save</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -203,9 +203,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -223,6 +223,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>1</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForText</td>
 	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[1]/th[1]/b</td>
 	<td>Question</td>
@@ -233,9 +238,29 @@
 	<td>Question</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>2</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[1]/th[2]/b</td>
+	<td>Category</td>
+</tr>
+<tr>
 	<td>verifyText</td>
 	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[1]/th[2]/b</td>
 	<td>Category</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>3</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[1]/th[3]/b</td>
+	<td>Approved</td>
 </tr>
 <tr>
 	<td>verifyText</td>
@@ -243,24 +268,74 @@
 	<td>Approved</td>
 </tr>
 <tr>
-	<td>verifyText</td>
+	<td>echo</td>
+	<td>4</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
 	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[1]/th[4]/b</td>
 	<td>Activated</td>
 </tr>
 <tr>
 	<td>verifyText</td>
+	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[1]/th[4]/b</td>
+	<td>Activated</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>5</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
 	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[2]/td[1]</td>
-	<td>exact:What does eXo Knowledge Suite contain ?</td>
+	<td>What does eXo Knowledge Suite contain ?</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[2]/td[1]</td>
+	<td>What does eXo Knowledge Suite contain ?</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>6</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[3]/td[1]</td>
+	<td>Why should I care about eXo KS ?</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[3]/td[1]</td>
-	<td>exact:Why should I care about eXo KS ?</td>
+	<td>Why should I care about eXo KS ?</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>7</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[4]/td[1]</td>
+	<td>How do I install KS ?</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[4]/td[1]</td>
-	<td>exact:How do I install KS ?</td>
+	<td>How do I install KS ?</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>8</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[5]/td[1]</td>
+	<td>The forum does not list the currently active user.</td>
 </tr>
 <tr>
 	<td>verifyText</td>
@@ -268,9 +343,19 @@
 	<td>The forum does not list the currently active user.</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>9</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[6]/td[1]</td>
+	<td>What is the relation between Answers and FAQ ?</td>
+</tr>
+<tr>
 	<td>verifyText</td>
 	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[6]/td[1]</td>
-	<td>exact:What is the relation between Answers and FAQ ?</td>
+	<td>What is the relation between Answers and FAQ ?</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -363,9 +448,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDown</td>
 	<td>link=Save</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>

@@ -188,9 +188,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDown</td>
 	<td>link=Save</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -203,9 +203,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -248,9 +248,24 @@
 	<td>Yes</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>//td[3]/div/div</td>
-	<td>1,1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//td[3]/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//td[3]/div/div</td>
+	<td>No</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//td[3]/div/div</td>
+	<td>No</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -258,23 +273,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//form/div[2]/table/tbody/tr/td/div/div/div/div</td>
-	<td>1,1</td>
+	<td></td>
 </tr>
 <tr>
-	<td>waitForText</td>
-	<td>//div/p</td>
+	<td>waitForTextPresent</td>
 	<td>This question is pending for approval.</td>
+	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>//div/p</td>
+	<td>verifyTextPresent</td>
 	<td>This question is pending for approval.</td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>== Demo check visiable</td>
 	<td></td>
 </tr>
 <tr>
@@ -433,9 +443,14 @@
 	<td>No</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>//td[3]/div/div</td>
-	<td>1,1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//td[3]/div/div</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForText</td>
