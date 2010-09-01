@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -23,7 +24,6 @@ import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -32,6 +32,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.SearchResult;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.webui.core.UIWikiComponent;
 
 /**
  * Created by The eXo Platform SAS
@@ -48,11 +49,12 @@ import org.exoplatform.wiki.service.WikiService;
     }
 )
 
-public class UIWikiDeletePageConfirm extends UIComponent {
+public class UIWikiDeletePageConfirm extends UIWikiComponent {
   private WikiService wservice ;
   private String pageID ;
   private String owner ;
   public UIWikiDeletePageConfirm() throws Exception{
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.DELETE_CONFIRM});
     wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
   }
   

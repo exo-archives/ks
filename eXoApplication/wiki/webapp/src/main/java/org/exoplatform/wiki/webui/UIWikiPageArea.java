@@ -16,9 +16,11 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.Arrays;
+
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -30,11 +32,14 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
   lifecycle = UIApplicationLifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPageArea.gtmpl"
 )
-public class UIWikiPageArea extends UIContainer {
+public class UIWikiPageArea extends UIWikiContainer {
   public UIWikiPageArea() throws Exception{
-    addChild(UIWikiPageContentArea.class, null, null).setRendered(true);
-    addChild(UIWikiPageEditForm.class, null, null).setRendered(false);
-    addChild(UIWikiPageNotFound.class, null, null).setRendered(false);
-    addChild(UIWikiDeletePageConfirm.class, null, null).setRendered(false);
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDIT, WikiMode.NEW,
+        WikiMode.PAGE_NOT_FOUND, WikiMode.DELETE_CONFIRM, WikiMode.HELP });
+    
+    addChild(UIWikiPageContentArea.class, null, null);
+    addChild(UIWikiPageEditForm.class, null, null);
+    addChild(UIWikiPageNotFound.class, null, null);
+    addChild(UIWikiDeletePageConfirm.class, null, null);
   }
 }

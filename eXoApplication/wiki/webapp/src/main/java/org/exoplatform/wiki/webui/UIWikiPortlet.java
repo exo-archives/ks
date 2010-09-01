@@ -70,11 +70,11 @@ public class UIWikiPortlet extends UIPortletApplication {
       UIPopupContainer uiPopupContainer = addChild(UIPopupContainer.class, null, null);
       uiPopupContainer.setId("UIWikiPopupContainer");
       uiPopupContainer.getChild(UIPopupWindow.class).setId("UIWikiPopupWindow");
-      addChild(UIWikiUpperArea.class, null, null).setRendered(true);
-      addChild(UIWikiPageArea.class, null, null).setRendered(true);
-      addChild(UIWikiBottomArea.class, null, null).setRendered(true);
-      addChild(UIWikiSearchSpaceArea.class, null, null).setRendered(false);
-      addChild(UIWikiHistorySpaceArea.class, null, null).setRendered(false);
+      addChild(UIWikiUpperArea.class, null, null);
+      addChild(UIWikiPageArea.class, null, null);
+      addChild(UIWikiBottomArea.class, null, null);
+      addChild(UIWikiSearchSpaceArea.class, null, null);
+      addChild(UIWikiHistorySpaceArea.class, null, null);
       addChild(UIWikiMaskWorkspace.class, null, "UIWikiMaskWorkspace");
     } catch (Exception e) {
       log.error("An exception happens when init WikiPortlet", e);
@@ -133,8 +133,7 @@ public class UIWikiPortlet extends UIPortletApplication {
     
     if (getWikiMode() == WikiMode.HELP) {
       changeMode(previousMode);
-    }
-    
+    }    
   }
 
   public WikiMode getWikiMode() {
@@ -142,79 +141,16 @@ public class UIWikiPortlet extends UIPortletApplication {
   }
   
   public void changeMode(WikiMode newMode) {
-    WikiMode oldMode = mode;
-    mode = newMode;
-    switch (oldMode) {
-      case VIEW:
-        switch (mode) {
-          case EDIT:
-          case NEW:
-            switchViewEditMode(true);
-            break;
-          case SEARCH:
-            switchViewSearchMode(true);
-            break;
-          case HISTORY:
-            switchViewHistoryMode(true);
-            break;
-          case PAGE_NOT_FOUND:
-            switchViewPageNotFoundMode(true);
-            break;
-          case DELETE_CONFIRM:
-            switchViewConfirmMode(true);
-            break;
-        }
-        break;
-      case EDIT:
-      case NEW:
-        switch (mode) {
-          case VIEW:
-            switchViewEditMode(false);
-            break;
-          case HELP:
-            previousMode = oldMode;
-            switchEditHelpMode(true);
-            break;
-        }
-        break;
-      case SEARCH:
-        switch (mode) {
-          case VIEW:
-            switchViewSearchMode(false);
-            break;
-        }
-        break;
-      case HISTORY:
-        switch (mode) {
-          case VIEW:
-            switchViewHistoryMode(false);
-            break;
-        }
-        break;
-      case PAGE_NOT_FOUND:
-        switch (mode) {
-          case VIEW:
-            switchViewPageNotFoundMode(false);
-            break;
-         }
-        break;
-      case DELETE_CONFIRM:
-        switch (mode) {
-          case VIEW:
-          switchViewConfirmMode(false);
-          break;
-        }
-        break;
-      case HELP:
-        switch (mode) {
-          case NEW:
-          case EDIT:
-            switchEditHelpMode(false);
-            break;
-        }
-        break;
-        
+    if (newMode.equals(WikiMode.HELP))
+      this.previousMode = mode;
+    if (newMode.equals(WikiMode.VIEW)) {
+      findFirstComponentOfType(UIWikiAttachmentArea.class).setRendered(false);
     }
+    if (newMode.equals(WikiMode.EDIT)||newMode.equals(WikiMode.NEW)) {
+      findFirstComponentOfType(UIWikiSidePanelArea.class).setRendered(true);
+      findFirstComponentOfType(UIWikiAttachmentArea.class).setRendered(true);
+    }      
+    mode = newMode;
   }
   
   public void renderPopupMessages() throws Exception {
@@ -224,59 +160,7 @@ public class UIWikiPortlet extends UIPortletApplication {
     WebuiRequestContext context = RequestContext.getCurrentInstance();
     popupMess.processRender(context);
   }
-
-  private void switchViewEditMode(boolean isViewToEdit) {
-    findFirstComponentOfType(UIWikiPageControlArea.class).setRendered(!isViewToEdit);
-    findFirstComponentOfType(UIWikiPageContentArea.class).setRendered(!isViewToEdit);
-    findFirstComponentOfType(UIWikiAttachmentArea.class).setRendered(isViewToEdit);
-    findFirstComponentOfType(UIWikiPageInfoArea.class).setRendered(!isViewToEdit);
-    UIWikiPageEditForm wikiPageEditForm = findFirstComponentOfType(UIWikiPageEditForm.class).setRendered(isViewToEdit);
-
-    UIWikiRichTextArea wikiRichTextArea = wikiPageEditForm.getChild(UIWikiRichTextArea.class);
-    boolean isRichTextRendered = wikiRichTextArea.isRendered();
-    if (!isRichTextRendered) {
-      wikiPageEditForm.getChild(UIWikiSidePanelArea.class).setRendered(isViewToEdit);
-    }
-  }
-
-  private void switchViewSearchMode(boolean isViewToSearch) {
-    findFirstComponentOfType(UIWikiPageControlArea.class).setRendered(!isViewToSearch);
-    findFirstComponentOfType(UIWikiPageArea.class).setRendered(!isViewToSearch);
-    findFirstComponentOfType(UIWikiBottomArea.class).setRendered(!isViewToSearch);
-    findFirstComponentOfType(UIWikiSearchSpaceArea.class).setRendered(isViewToSearch);
-  }
-
-  private void switchViewHistoryMode(boolean isViewToHistory) {
-    findFirstComponentOfType(UIWikiPageControlArea.class).setRendered(!isViewToHistory);
-    findFirstComponentOfType(UIWikiPageArea.class).setRendered(!isViewToHistory);
-    findFirstComponentOfType(UIWikiBottomArea.class).setRendered(!isViewToHistory);
-    findFirstComponentOfType(UIWikiHistorySpaceArea.class).setRendered(isViewToHistory);
-  }
-
-  private void switchViewPageNotFoundMode(boolean isPageNotFound) {
-    findFirstComponentOfType(UIWikiPageContentArea.class).setRendered(!isPageNotFound);
-    findFirstComponentOfType(UIWikiPageNotFound.class).setRendered(isPageNotFound);
-    findFirstComponentOfType(UIWikiPageControlArea.class).setRendered(!isPageNotFound);
-    findFirstComponentOfType(UIWikiBottomArea.class).setRendered(!isPageNotFound);
-  }
-
-  private void switchViewConfirmMode(boolean isDelete) {
-    findFirstComponentOfType(UIWikiPageContentArea.class).setRendered(!isDelete);
-    findFirstComponentOfType(UIWikiDeletePageConfirm.class).setRendered(isDelete);
-    findFirstComponentOfType(UIWikiPageControlArea.class).setRendered(!isDelete);
-    findFirstComponentOfType(UIWikiBottomArea.class).setRendered(!isDelete);
-  }
-
-  private void switchEditHelpMode(boolean isEditToHelp) {
-    findFirstComponentOfType(UIWikiApplicationControlArea.class).setRendered(!isEditToHelp);
-    findFirstComponentOfType(UIWikiPageControlArea.class).setRendered(isEditToHelp);
-    findFirstComponentOfType(UIPageToolBar.class).setRendered(!isEditToHelp);
-    findFirstComponentOfType(UIWikiPageContentArea.class).setRendered(isEditToHelp);
-    findFirstComponentOfType(UIWikiAttachmentArea.class).setRendered(!isEditToHelp);
-    findFirstComponentOfType(UIWikiPageInfoArea.class).setRendered(!isEditToHelp);
-    UIWikiPageEditForm wikiPageEditForm = findFirstComponentOfType(UIWikiPageEditForm.class).setRendered(!isEditToHelp);
-  }
-
+ 
   public static class ViewPageActionListener extends EventListener<UIWikiPortlet> {
     @Override
     public void execute(Event<UIWikiPortlet> event) throws Exception {

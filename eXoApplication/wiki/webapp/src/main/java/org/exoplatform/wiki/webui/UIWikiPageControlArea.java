@@ -16,10 +16,12 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.Arrays;
+
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.wiki.webui.control.UIPageToolBar;
+import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -31,14 +33,17 @@ import org.exoplatform.wiki.webui.control.UIPageToolBar;
   lifecycle = UIApplicationLifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPageControlArea.gtmpl"
 )
-public class UIWikiPageControlArea extends UIContainer {
+public class UIWikiPageControlArea extends UIWikiContainer {
   
   public static final String TITLE_CONTROL   = "UIWikiPageTitleControlForm_PageControlArea";
   
   public static final String TOOLBAR_NAME= "UIWikiPageControlArea_PageToolBar";
   
   public UIWikiPageControlArea() throws Exception {
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.HELP });
+    
     addChild(UIWikiPageTitleControlArea.class, null, TITLE_CONTROL).toInfoMode();
     addChild(UIPageToolBar.class, null, TOOLBAR_NAME);
   }
+  
 }

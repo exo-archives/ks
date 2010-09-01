@@ -16,12 +16,14 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.Arrays;
+
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -36,10 +38,11 @@ import org.exoplatform.webui.event.EventListener;
       @EventConfig(listeners = UIWikiSearchSpaceArea.CloseActionListener.class)
     }
 )
-public class UIWikiSearchSpaceArea extends UIContainer {
+public class UIWikiSearchSpaceArea extends UIWikiContainer {
   public UIWikiSearchSpaceArea() throws Exception{
-    addChild(UIWikiAdvanceSearchForm.class, null, null).setRendered(true);
-    addChild(UIWikiAdvanceSearchResult.class, null, null).setRendered(true);
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.SEARCH});
+    addChild(UIWikiAdvanceSearchForm.class, null, null);
+    addChild(UIWikiAdvanceSearchResult.class, null, null);
   }
   
   private void sayHello() {

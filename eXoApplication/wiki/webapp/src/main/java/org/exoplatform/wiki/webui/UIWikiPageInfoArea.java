@@ -17,6 +17,7 @@
 package org.exoplatform.wiki.webui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +26,6 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -33,6 +33,7 @@ import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.commons.VersionNameComparatorDesc;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -48,13 +49,17 @@ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
     @EventConfig(listeners = UIWikiPageInfoArea.ToggleAttachmentsActionListener.class)
   }
 )
-public class UIWikiPageInfoArea extends UIContainer {
+public class UIWikiPageInfoArea extends UIWikiContainer {
 
   private static final Log log = ExoLogger.getLogger("wiki:UIWikiPageInfoArea");
 
   public static String TOGGLE_ATTACHMENTS_ACTION = "ToggleAttachments";
   
   public static String SHOW_HISTORY = "ShowHistory";
+
+  public UIWikiPageInfoArea() {
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW });
+  }
 
   private PageImpl getCurrentWikiPage() {
     PageImpl currentPage = null;
@@ -71,11 +76,10 @@ public class UIWikiPageInfoArea extends UIContainer {
     public void execute(Event<UIWikiPageInfoArea> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       UIWikiAttachmentArea attachform = wikiPortlet.findFirstComponentOfType(UIWikiAttachmentArea.class);
-      if (attachform.isRendered()) {
+      if (attachform.isRendered())
         attachform.setRendered(false);
-      } else {
-        attachform.setRendered(true);
-      }
+      else
+        attachform.setRendered(true);     
     }
   }
 

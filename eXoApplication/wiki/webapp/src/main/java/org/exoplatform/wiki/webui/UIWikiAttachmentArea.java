@@ -18,6 +18,7 @@ package org.exoplatform.wiki.webui;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.exoplatform.container.PortalContainer;
@@ -34,13 +35,13 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiResource;
+import org.exoplatform.wiki.webui.core.UIWikiForm;
 import org.exoplatform.wiki.webui.form.UIFormUploadInput;
 
 /**
@@ -57,7 +58,7 @@ import org.exoplatform.wiki.webui.form.UIFormUploadInput;
     @EventConfig(listeners = UIWikiAttachmentArea.RemoveAttachmentActionListener.class, phase = Phase.DECODE)
   }
 )
-public class UIWikiAttachmentArea extends UIForm {
+public class UIWikiAttachmentArea extends UIWikiForm {
 
   private static final Log log = ExoLogger.getLogger("wiki:UIWikiAttachmentArea");
   final static public String FIELD_UPLOAD    = "upload";
@@ -66,11 +67,12 @@ public class UIWikiAttachmentArea extends UIForm {
   public static final long   MAX_SIZE        = 10 * 1024 * 1024;
   
   public UIWikiAttachmentArea() throws Exception {
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW,WikiMode.EDIT,WikiMode.NEW});   
     UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
     uiInput.setAutoUpload(true);
     addUIFormInput(uiInput);
   }
-  
+
   private Collection<AttachmentImpl> getAttachmentsList() {
     Collection<AttachmentImpl> attachments = null;
     try {

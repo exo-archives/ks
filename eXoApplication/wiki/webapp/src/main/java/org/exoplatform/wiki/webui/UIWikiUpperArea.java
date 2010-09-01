@@ -32,7 +32,7 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 )
 public class UIWikiUpperArea extends UIContainer {
   public UIWikiUpperArea() throws Exception{
-    addChild(UIWikiApplicationControlArea.class, null, null).setRendered(true);
-    addChild(UIWikiPageControlArea.class, null, null).setRendered(true);
+    addChild(UIWikiApplicationControlArea.class, null, null);
+    addChild(UIWikiPageControlArea.class, null, null);
   }
 }

@@ -16,13 +16,15 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.Arrays;
+
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
-import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -37,11 +39,13 @@ import org.exoplatform.webui.event.EventListener;
     @EventConfig(listeners = UIWikiHistorySpaceArea.ReturnViewModeActionListener.class)
   }
 )
-public class UIWikiHistorySpaceArea extends UIContainer {
+public class UIWikiHistorySpaceArea extends UIWikiContainer {
 
   public static final String RETURN_VIEW_MODE = "ReturnViewMode";
 
   public UIWikiHistorySpaceArea() throws Exception {
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.HISTORY});
+    
     addChild(UIWikiPageVersionsList.class, null, null).setRendered(true);
     addChild(UIWikiPageVersionsCompare.class, null, null).setRendered(false);
   }

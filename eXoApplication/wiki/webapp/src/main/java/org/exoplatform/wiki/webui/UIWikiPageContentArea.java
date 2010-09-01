@@ -16,13 +16,14 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.Arrays;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -36,6 +37,7 @@ import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.webui.core.UIWikiContainer;
 import org.xwiki.context.Execution;
 import org.xwiki.context.ExecutionContext;
 import org.xwiki.rendering.syntax.Syntax;
@@ -57,7 +59,7 @@ import org.xwiki.rendering.syntax.Syntax;
     @EventConfig(listeners = UIWikiPageContentArea.PreviousVersionActionListener.class)
   }
 )
-public class UIWikiPageContentArea extends UIContainer {
+public class UIWikiPageContentArea extends UIWikiContainer {
 
   private String htmlOutput;
   private PageMode pageMode = PageMode.CURRENT;
@@ -70,6 +72,7 @@ public class UIWikiPageContentArea extends UIContainer {
   public static final String PREVIOUS_VERSION = "PreviousVersion";
   
   public UIWikiPageContentArea(){
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.HELP });
   }
 
   public PageMode getPageMode() {

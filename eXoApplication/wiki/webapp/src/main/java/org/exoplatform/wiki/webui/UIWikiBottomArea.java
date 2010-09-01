@@ -16,9 +16,11 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.Arrays;
+
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -30,9 +32,12 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
   lifecycle = UIApplicationLifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiBottomArea.gtmpl"
 )
-public class UIWikiBottomArea extends UIContainer {
+public class UIWikiBottomArea extends UIWikiContainer {
   public UIWikiBottomArea() throws Exception {
-    addChild(UIWikiPageInfoArea.class, null, null).setRendered(true);
+    
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDIT, WikiMode.NEW });    
+    addChild(UIWikiPageInfoArea.class, null, null);
     addChild(UIWikiAttachmentArea.class, null, null).setRendered(false);
   }
+  
 }

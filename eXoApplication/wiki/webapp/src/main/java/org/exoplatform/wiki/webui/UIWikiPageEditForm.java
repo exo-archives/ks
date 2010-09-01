@@ -17,6 +17,7 @@
 package org.exoplatform.wiki.webui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -26,7 +27,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
@@ -34,6 +34,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.Preferences;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.control.UIPageToolBar;
+import org.exoplatform.wiki.webui.core.UIWikiForm;
 import org.xwiki.rendering.syntax.Syntax;
 
 /**
@@ -50,7 +51,7 @@ import org.xwiki.rendering.syntax.Syntax;
   }
   
 )
-public class UIWikiPageEditForm extends UIForm {
+public class UIWikiPageEditForm extends UIWikiForm {
 
   public static final String UNTITLED      = "Untitled";
   public static final String FIELD_CONTENT = "Markup";
@@ -63,11 +64,13 @@ public class UIWikiPageEditForm extends UIForm {
   private String  title ;
   
   public UIWikiPageEditForm() throws Exception{
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.EDIT, WikiMode.NEW });
+    
     WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
     
     addChild(UIWikiPageTitleControlArea.class, null, TITLE_CONTROL).toInputMode();
-    addChild(UIPageToolBar.class, null, PAGE_TOOLBAR).setRendered(true);
-    addChild(UIWikiSidePanelArea.class, null, HELP_PANEL).setRendered(false);
+    addChild(UIPageToolBar.class, null, PAGE_TOOLBAR);
+    addChild(UIWikiSidePanelArea.class, null, HELP_PANEL);
     addChild(UIWikiRichTextArea.class, null, RICHTEXT_AREA).setRendered(false);
     UIFormTextAreaInput markupInput = new UIFormTextAreaInput(FIELD_CONTENT, FIELD_CONTENT, "This is **sample content**");
     addUIFormInput(markupInput).setRendered(true);
@@ -90,7 +93,7 @@ public class UIWikiPageEditForm extends UIForm {
     syntaxTypeSelectBox.setValue(currentDefaultSyntaxt);
     boolean allowSelect= currentPreferences.getPreferencesSyntax().getAllowMutipleSyntaxes();
     syntaxTypeSelectBox.setEnable(allowSelect);
-    addUIFormInput(syntaxTypeSelectBox).setRendered(true);
+    addUIFormInput(syntaxTypeSelectBox);
   }   
   
   public void setTitle(String title){ this.title = title ;}
