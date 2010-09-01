@@ -10,11 +10,11 @@
   <packaging>ear</packaging>
   <name>eXo KS Extension configuration ear</name>
   <dependencies>
-    <dependency>
+    <!--dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.extension.config</artifactId>
       <version>${project.version}</version>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.component.rendering</artifactId>
@@ -164,11 +164,11 @@
               <artifactId>cometd-api</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>
-            <jarModule>
+            <!--jarModule>
               <groupId>org.exoplatform.ks</groupId>
               <artifactId>exo.ks.extension.config</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
-            </jarModule>
+            </jarModule-->
             <webModule>
               <groupId>org.exoplatform.ks</groupId>
               <artifactId>exo.ks.extension.webapp</artifactId>
