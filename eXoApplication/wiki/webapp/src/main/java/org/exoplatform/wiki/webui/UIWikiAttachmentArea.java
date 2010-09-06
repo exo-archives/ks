@@ -150,7 +150,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
         uiInput.setAutoUpload(true);
         wikiAttachmentArea.addChild(uiInput);
       }
-      
+      event.getRequestContext().addUIComponentToUpdateByAjax(wikiAttachmentArea);
     }
   }
 
