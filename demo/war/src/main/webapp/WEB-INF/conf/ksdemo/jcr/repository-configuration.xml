@@ -54,12 +54,14 @@
 								value="any read;*:/platform/administrators read;*:/platform/administrators add_node;*:/platform/administrators set_property;*:/platform/administrators remove" />
 						</properties>
 					</initializer>
-					<cache enabled="true">
-						<properties>
-							<property name="max-size" value="20000" />
-							<property name="live-time" value="30000" />
-						</properties>
-					</cache>
+					 <cache enabled="true" class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
+            <properties>
+              <property name="jbosscache-configuration" value="conf/jcr/jbosscache/${gatein.jcr.config.type}/config.xml" />
+              <property name="jgroups-configuration" value="jar:/conf/jcr/jbosscache/cluster/udp-mux.xml" />
+              <property name="jgroups-multiplexer-stack" value="true" />
+              <property name="jbosscache-cluster-name" value="jcr-${container.name.suffix}-knowledge" />
+            </properties>
+          </cache>
 					<query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
 						<properties>
 							<property name="index-dir" value="../temp/jcrlucenedb/sample-ws${container.name.suffix}" />
