@@ -37,7 +37,7 @@
   <UIWikiEditPreferencesForm>
     <label>
       <DefaultSyntax>Default syntax</DefaultSyntax>
-      <AllowChooseOthers>Allow User to choose others syntaxes</AllowChooseOthers>
+      <AllowChooseOthers>Allow User to choose other syntaxes</AllowChooseOthers>
     </label>
     <action>
       <Save>Save</Save>
@@ -71,4 +71,21 @@
       <UIWikiMovePageForm>Move Page</UIWikiMovePageForm>
     </title>
   </UIWikiPopupWindow>
+   <!--
+   #org.exoplatform.wiki.webui.UIWikiSearchBox
+  -->
+  <UIWikiSearchBox>
+    <label>
+      <Search>Search</Search>
+    </label>   
+  </UIWikiSearchBox> 
+    <!--
+   #org.exoplatform.wiki.webui.control.UIWikiToolBar
+  -->
+  <UIWikiToolBar>
+    <label>
+      <Browse>Browse</Browse>      
+      <Preferences>Preferences</Preferences>
+    </label>   
+  </UIWikiToolBar> 
 </bundle>

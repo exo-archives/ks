@@ -23,22 +23,12 @@ function UIWikiSearchBox(){
 UIWikiSearchBox.prototype.init = function(inputId){
   
   var input = document.getElementById(inputId) ;
-  input.value="Search";
-  input.style.color="Gray";
   input.onkeyup = function(evt){
     evt = window.event || evt;
     eXo.wiki.UIWikiSearchBox.pressHandler(evt,this);
   }
   input.form.onsubmit = function(){
     return false;
-  }
-  input.onfocus= function(evt){   
-    this.value="";
-    this.style.color="Black";
-  }
-  input.onblur= function(evt){   
-    input.value="Search";
-    input.style.color="Gray";
   }
 };
 

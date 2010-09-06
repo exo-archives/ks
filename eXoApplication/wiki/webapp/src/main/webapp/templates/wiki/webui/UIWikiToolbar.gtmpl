@@ -7,7 +7,7 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(
 	def browseActionComponent= uicomponent.getBrowseAction();
 	  if (browseActionComponent!=null){ 
 	%>
-		<a class="HoverLink BrowseLink Icon"><%=browseActionComponent.getActionName()%></a>	
+		<a class="HoverLink BrowseLink Icon"><%= _ctx.appRes(uicomponent.getName() + ".action." + browseActionComponent.getActionName()) %></a>	
 		<div style="position:relative;margin-top:-1px">
 			<div class="HoverMenu BrowseMenu">		
 			<%
