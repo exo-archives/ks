@@ -33,6 +33,7 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.ext.UIExtensionManager;
+import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.resolver.PageResolver;
@@ -149,6 +150,8 @@ public class UIWikiPortlet extends UIPortletApplication {
     if (newMode.equals(WikiMode.EDIT)||newMode.equals(WikiMode.NEW)) {
       findFirstComponentOfType(UIWikiSidePanelArea.class).setRendered(true);
       findFirstComponentOfType(UIWikiAttachmentArea.class).setRendered(true);
+      findFirstComponentOfType(UIWikiRichTextArea.class).setRendered(false);
+      findFirstComponentOfType(UIWikiPageEditForm.class).getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT).setRendered(true);
     }      
     mode = newMode;
   }
