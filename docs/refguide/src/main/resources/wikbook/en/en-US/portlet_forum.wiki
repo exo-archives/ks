@@ -1,0 +1,54 @@
+h1. Basic information of Forum portlet
+Forum portlet is a discussion space where users can post or read messages on different topics. 
+
+|| *Portlet name* | ForumPortlet 
+|| *War name* | forum.war
+|| *Description* | The Forum portlet is a full features bulletin board application.
+	
+h2. Declaration template	
+{code:language=xml|indent=2}
+    <portlet-application>
+      <portlet>
+        <application-ref>forum</application-ref>
+        <portlet-ref>ForumPortlet</portlet-ref>
+      </portlet>
+    </portlet-application>
+{code}	
+	
+h1. Preferences
+
+|| *Preference name* || *Possible values* || *Default value* || *Description* ||
+| *useAjax* | {{true}},{{false}} | {{true}}| To define if links in the forum will be plain hrefs or javascript ajax links (better for SEO). |
+| *showForumActionBar* | {{true}},{{false}} | {{true}}| This is the UIForumActionBar. If the value is set true, the UIForumActionBar is shown, and if the value is set false, the UIForumActionBar is hidden.|
+| *forumNewPost* | {{day number}} | {{1}}| To specify whether a post is new. If the post is created within the set period, it is new in the forum. |
+| *enableIPLogging* | {{true}},{{false}} | {{true}}| This enables using the IPLogging function in the forum. |
+| *enableIPFiltering* | {{true}},{{false}} | {{true}}| This enables using IPFiltering function in the forum. |
+| *invisibleCategories* | {{id categories}} | {{empty}}| The list of all categories shown. If the value is set empty, all categories of the forum will be shown. |
+| *invisibleForums* | {{id forums}} | {{empty}}| The list of all forums shown. If the value is set empty, all forums will be shown. |
+| *uploadFileSizeLimitMB* | {{integer}} | {{20}}| To define the maximum size of the uploaded file with the unit of MB. |
+| *isShowForumJump* | {{true}},{{false}} | {{true}}| To specify ForumJump is shown or not. |
+| *isShowIconsLegend* | {{true}},{{false}} | {{true}}| To specify IconsLegend is shown or not. |
+| *isShowModerators* | {{true}},{{false}} | {{true}}| To specify Moderators are shown or not. |
+| *isShowPoll* | {{true}},{{false}} | {{true}}| To specify Poll is shown or not. |
+| *isShowQuickReply* | {{true}},{{false}} | {{true}}| To specify QuickReply is shown or not.|
+| *isShowRules* | {{true}},{{false}} | {{true}}| To specify Rules are shown or not. |
+| *isShowStatistics* | {{true}},{{false}} | {{true}}| To specify Statistics are shown or not. |
+
+h1. Portlet.xml forum/WEB-INF/portlet.xml
+h1. Events
+
+
+|| *Name* || *Description* ||
+| ForumLinkEvent | This event is to setRender for UIForumLinkPortlet and to setValue for UIForumLinks.   |
+| ReLoadPortletEvent | This event is to reload UIForumPortlet. |
+| OpenLink | This event is to update values for UIForumLinks. |
+| ForumPollEvent | This event is to setRender for UIForumPollPortlet.|
+| ForumModerateEvent | This event is to setRender for UIForumModeratorPortlet. |
+| ForumRuleEvent | This event is to setRender for UIForumRulePortlet. |
+| QuickReplyEvent | This event is to setRender for UIForumQuickReplyPortlet. |
+
+
+
+
+
+

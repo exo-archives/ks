@@ -1,0 +1,23 @@
+h1. FAQ Portlet
+
+h2. Basic information of FAQ portlet
+|| Portlet name || War name || Description ||
+| FAQPortlet | faq.war | |
+
+
+h2. Portlet Preferences
+
+FAQ portlet has portlet preferences that you can configure to alter the behavior.
+
+At runtime you can use the portlet EDIT mode to set the preferences: 
+
+!DisplayMode.png!
+
+Alternatively, you can configure the portlet in *portet-preferences.xml* file.
+
+|| Preference name || Possible values || Default value || Description || 
+| useAjax | {{true}}, {{false}} | {{false}} |  | 
+
+h2. Portlet.xml: */webapps/faq/WEB-INF/portlet.xml*
+
+

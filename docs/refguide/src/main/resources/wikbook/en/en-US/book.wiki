@@ -2,25 +2,26 @@ h1. Prerequisites
 
 h1. Applications
 
-h2. Forum Portlet
-{include:document="applications/portlet_forum.wiki"}
+h2. Portlets
 
+h3. Forum Portlet
+{include:document="portlet_forum.wiki"}
 
-h2. Answers Portlet
+h3. Answers Portlet
+{include:document="Answers_Preferences_Configuration.wiki"}
 
+h3. FAQ Portlet
+{include:document="FAQ_Preferences.wiki"}
 
-h3. Portlet Preferences
-{include:document="FAQ_Preferences_Configuration.wiki"}
-
-h2. FAQ Portlet
-
-h2. Polls Portlet
-
-h2. Poll Gadget
+h3. Polls Portlet
+{include:document="Pollportlet_Preference.wiki"}
+h2. Gadgets
+{include:document="Gadget_poll.wiki"}
 
 h1. Configuration
 
-h2. Shared Configuration
+h2. BBCode Configuration
+{include:document="BBCode Configuration.wiki"}
 h2. Roles Configuration
 {include:document="Roles_Plugin_Configuration.wiki"}
 
@@ -51,7 +52,7 @@ h3. IP Logging
 {include:document="Forum_IP_Logging_Configuration.wiki"}
 
 h3. Default User Profile
-
+Answers_Preferences_Configuration.wiki
 {include:document="Forum_Default_User_Profile_Setting.wiki"}
 
 h2. Answer Configuration

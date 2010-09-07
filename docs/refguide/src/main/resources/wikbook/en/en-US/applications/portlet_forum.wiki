@@ -18,7 +18,20 @@ h1. Preferences
 
 || *Preference* || *Type* || *Values* || *Default* || *Description* ||
 | *useAjax* | {{Boolean}} | {{true}},{{false}} | {{true}}| Defines if links in the forum will be plain hrefs or javascript ajax links (better for SEO) |
-
+| *showForumActionBar* | {{}} | {{true}},{{false}} | {{true}}|  |
+| *forumNewPost* | {{}} | {{day number}} | {{1}}|  |
+| *enableIPLogging* | {{}} | {{true}},{{false}} | {{true}}|  |
+| *enableIPFiltering* | {{}} | {{true}},{{false}} | {{true}}|  |
+| *invisibleCategories* | {{}} | {{id categories}} | {{list of categories}}|  |
+| *invisibleForums* | {{}} | {{id forums}} | {{}}|  |
+| *uploadFileSizeLimitMB* | {{}} | {{}} | {{20}}|  |
+| *isShowForumJump* | {{}} | {{true}},{{false}} | {{true}}|  |
+| *isShowIconsLegend* | {{}} | {{true}},{{false}} | {{true}}|  |
+| *isShowModerators* | {{}} | {{true}},{{false}} | {{true}}|  |
+| *isShowPoll* | {{}} | {{true}},{{false}} | {{true}}|  |
+| *isShowQuickReply* | {{}} | {{true}},{{false}} | {{true}}|  |
+| *isShowRules* | {{}} | {{true}},{{false}} | {{true}}|  |
+| *isShowStatistics* | {{}} | {{true}},{{false}} | {{true}}|  |
 h2. Default Configuration
 {code:language=xml|indent=2}
 		<portlet-preferences>

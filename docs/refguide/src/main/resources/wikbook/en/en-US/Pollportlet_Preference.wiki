@@ -1,0 +1,23 @@
+h1. Basic information of Poll portlet
+ 
+|| *Portlet name* | PollPortlet
+|| *War name* | poll.war
+|| *Description* | 
+	
+	
+h1. Portlet Preferences
+
+|| *Preference name* || *Possible values* || *Default value* || *Description* ||
+| *pollIdShow* | {{string}} | {{empty}}| The Id of poll to display in the poll portlet. |
+
+
+h1. Portlet.xml 
+poll/WEB-INF/portlet.xml
+
+
+
+
+
+
+
+
