@@ -20,7 +20,7 @@
 function UIWikiSearchBox(){
 };
 
-UIWikiSearchBox.prototype.init = function(inputId){
+UIWikiSearchBox.prototype.init = function(inputId, searchLabel){
   
   var input = document.getElementById(inputId) ;
   input.onkeyup = function(evt){
@@ -29,6 +29,16 @@ UIWikiSearchBox.prototype.init = function(inputId){
   }
   input.form.onsubmit = function(){
     return false;
+  }
+  input.value= searchLabel;
+  input.style.color="Gray";
+  input.onfocus= function(evt){   
+    this.value="";
+    this.style.color="Black";
+  }
+  input.onblur= function(evt){   
+    input.value=searchLabel;
+    input.style.color="Gray";
   }
 };
 

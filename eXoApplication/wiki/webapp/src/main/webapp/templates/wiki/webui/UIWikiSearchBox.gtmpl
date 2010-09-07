@@ -1,7 +1,8 @@
 <%
   def rcontext = _ctx.getRequestContext() ;
   String inputId = uicomponent.FIELD_SEARCHVALUE;
-  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiSearchBox.init(\"" + inputId + "\");");
+  String searchLabel=_ctx.appRes("UIWikiSearchBox.label.Search");
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiSearchBox.init(\"" + inputId +"\",\""+searchLabel+ "\");");
 %>
 <div class="UIWikiSearchBox">
   <% uiform.begin() %>
@@ -57,17 +58,3 @@
 	  	</div>
 	</div>
 </div>
-
-<script type="text/javascript">
-	var input = document.getElementById('<%=inputId%>') ;
-	input.value= '<%=_ctx.appRes("UIWikiSearchBox.label.Search")%>';
-	input.style.color="Gray";
- 	input.onfocus= function(evt){   
-  	this.value="";
-   	this.style.color="Black";
- 	}
- 	input.onblur= function(evt){   
-   	input.value='<%=_ctx.appRes("UIWikiSearchBox.label.Search")%>';
-   	input.style.color="Gray";
- 	}
-</script>
