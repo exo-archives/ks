@@ -57,6 +57,7 @@
 	padding: 0px 0px 0px 28px;
 	background-position: 6px;
 	line-height: 24px;
+	white-space: nowrap;
 }
 
 .UIForumPortlet .UIRightClickPopupMenu .ItemIcon:hover {
