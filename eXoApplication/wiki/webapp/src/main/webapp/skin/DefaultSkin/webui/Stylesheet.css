@@ -409,13 +409,14 @@
 
 .UIPageToolBar .ConfirmBox{
 	width:350px;
-	height:110px;
+	height:auto;
 	background:white;
 	color:black;	
 	border: solid 1px black;	
 	margin-top:250px;
 	margin-left:300px;
 	position:absolute;	
+ padding-bottom:5px;
 }
 .UIPageToolBar .ConfirmTitle{
 	background-color: #D7D7D7;
@@ -427,8 +428,8 @@
 }
 
 .UIPageToolBar .ConfirmMessage {
-	padding:10px;
-	font-size:15px
+	margin:10px;
+	font-size:12px
 }
 
 .UIPageToolBar .CloseButton {
