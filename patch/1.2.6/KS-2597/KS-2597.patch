@@ -1,0 +1,39 @@
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIQuestionForm.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIQuestionForm.gtmpl	(revision 51264)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIQuestionForm.gtmpl	(working copy)
+@@ -33,7 +33,7 @@
+ 									<td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
+ 										<div style="float:left;">
+ 											<div style="float:left;"><% uiform.renderField(field) %></div>
+-											<div onclick="javaScript:if(confirm('<%=(_ctx.appRes("UIQuestionForm.msg.DeleteQuestionInLanguage").replace("{0}",uicomponent.lastLanguage_) )%> ?')){$link}" style="float:left; width:24px;">
++											<div onclick="javaScript:if(confirm('<%=(_ctx.appRes("UIQuestionForm.msg.DeleteQuestionInLanguage").replace("{0}",uicomponent.lastLanguage_).replaceAll("'", "\\\\'"))%> ?')){$link}" style="float:left; width:24px;">
+ 												<div class="DustBinIcon"><span></span></div>
+ 											</div>
+ 										</div>
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIUserWatchManager.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIUserWatchManager.gtmpl	(revision 51264)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIUserWatchManager.gtmpl	(working copy)
+@@ -90,7 +90,7 @@
+ 						 										<td class="text" style="text-align:left"><a href="$link">$path</a></td>
+ 						 									<% } %>
+ 						 									<td style="width:40px;">
+-						 										<div onclick="javaScript: if(confirm('<%=_ctx.appRes("UIUserWatchManager.msg.confirm-unwatch-category")%>')){$unWatch}" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left; cursor:pointer;">
++						 										<div onclick="javaScript: if(confirm('<%=_ctx.appRes("UIUserWatchManager.msg.confirm-unwatch-category").replaceAll("'", "\\\\'");%>')){$unWatch}" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left; cursor:pointer;">
+ 						 											<div class="DeleteWatchIcon" ></div>
+ 						 										</div>
+ 						 									</td>
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UISettingForm.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UISettingForm.gtmpl	(revision 51264)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UISettingForm.gtmpl	(working copy)
+@@ -59,7 +59,7 @@
+ 														<%
+ 														if(!uicomponent.avatarUrl.equals(Utils.DEFAULT_AVATAR_URL)){%>
+ 															|
+-															<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UISettingForm.msg.SetDeFaultAvatar")%>')){<%=uicomponent.event("SetDefaultAvatar")%>}; return false;" style="cursor:pointer; color:blue;">
++															<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UISettingForm.msg.SetDeFaultAvatar").replaceAll("'", "\\\\'");%>')){<%=uicomponent.event("SetDefaultAvatar")%>}; return false;" style="cursor:pointer; color:blue;">
+ 																<%=_ctx.appRes("UISettingForm.label.resetAvatar")%>
+ 															</a>
+ 														<%
