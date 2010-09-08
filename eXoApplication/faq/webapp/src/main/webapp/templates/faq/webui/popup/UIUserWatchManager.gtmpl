@@ -90,7 +90,7 @@
 						 										<td class="text" style="text-align:left"><a href="$link">$path</a></td>
 						 									<% } %>
 						 									<td style="width:40px;">
-						 										<div onclick="javaScript: if(confirm('<%=_ctx.appRes("UIUserWatchManager.msg.confirm-unwatch-category")%>')){$unWatch}" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left; cursor:pointer;">
+						 										<div onclick="javaScript: if(confirm('<%=_ctx.appRes("UIUserWatchManager.msg.confirm-unwatch-category").replaceAll("'", "\\\\'");%>')){$unWatch}" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left; cursor:pointer;">
 						 											<div class="DeleteWatchIcon" ></div>
 						 										</div>
 						 									</td>
