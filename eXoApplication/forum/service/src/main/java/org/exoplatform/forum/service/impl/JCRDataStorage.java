@@ -4693,26 +4693,29 @@ public class JCRDataStorage {
 		try {
 			Node userProfileHome = getUserProfileHome(sProvider);
 			for(String userName : userList) {
-				profileNode = userProfileHome.getNode(userName) ;
 				userProfile = new UserProfile();
 				userProfile.setUserId(userName) ;
-				userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
-				userProfile.setUserTitle(profileNode.getProperty("exo:userTitle").getString()) ;
-				try{
-					userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
-				}catch(Exception e) {
-					userProfile.setScreenName(userName);
+				try {
+					profileNode = userProfileHome.getNode(userName) ;
+					userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
+					userProfile.setUserTitle(profileNode.getProperty("exo:userTitle").getString()) ;
+					try{
+						userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
+					}catch(Exception e) {
+						userProfile.setScreenName(userName);
+					}
+					userProfile.setJoinedDate(profileNode.getProperty("exo:joinedDate").getDate().getTime()) ;
+					userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
+					userProfile.setTotalPost(profileNode.getProperty("exo:totalPost").getLong()) ;
+					if(userProfile.getTotalPost() > 0) {
+						userProfile.setLastPostDate(profileNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
+					}
+					userProfile.setLastLoginDate(profileNode.getProperty("exo:lastLoginDate").getDate().getTime()) ;
+					userProfile.setIsDisplaySignature(profileNode.getProperty("exo:isDisplaySignature").getBoolean()) ;
+					if(userProfile.getIsDisplaySignature()) userProfile.setSignature(profileNode.getProperty("exo:signature").getString()) ;
+				} catch (PathNotFoundException e) {
+					if(log.isDebugEnabled())log.debug("Profile not found for user: " + userName, e);
 				}
-				
-				userProfile.setJoinedDate(profileNode.getProperty("exo:joinedDate").getDate().getTime()) ;
-				userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
-				userProfile.setTotalPost(profileNode.getProperty("exo:totalPost").getLong()) ;
-				if(userProfile.getTotalPost() > 0) {
-					userProfile.setLastPostDate(profileNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
-				}
-				userProfile.setLastLoginDate(profileNode.getProperty("exo:lastLoginDate").getDate().getTime()) ;
-				userProfile.setIsDisplaySignature(profileNode.getProperty("exo:isDisplaySignature").getBoolean()) ;
-				if(userProfile.getIsDisplaySignature()) userProfile.setSignature(profileNode.getProperty("exo:signature").getString()) ;
 				profiles.add(userProfile) ;
 			}
 		}finally {sProvider.close() ;}		
@@ -4720,13 +4723,12 @@ public class JCRDataStorage {
 	}
 	
 	public UserProfile getQuickProfile(String userName) throws Exception {
-		UserProfile userProfile ;
+		UserProfile userProfile = new UserProfile();
+		userProfile.setUserId(userName) ;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node userProfileHome = getUserProfileHome(sProvider);
 			Node profileNode = userProfileHome.getNode(userName) ;
-			userProfile = new UserProfile();
-			userProfile.setUserId(userName) ;
 			userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
 			userProfile.setUserTitle(profileNode.getProperty("exo:userTitle").getString()) ;
 			try{
