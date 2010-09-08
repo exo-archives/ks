@@ -88,6 +88,7 @@
     </param>
   </javascript>
   
+   <!-- js for hover menu  -->
    <javascript>
     <param>
       <js-module>eXo.wiki.UIWikiDropdownMenu</js-module>
@@ -95,10 +96,26 @@
     </param>
   </javascript>
  
+  <!-- js for browse Tree  -->
     <javascript>
     <param>
       <js-module>eXo.wiki.UITreeExplorer</js-module>
       <js-path>/javascript/eXo/wiki/UITreeExplorer.js</js-path>
+    </param>
+  </javascript>
+  
+  <!-- js for Mask -->
+   <javascript>
+    <param>
+      <js-module>eXo.wiki.UIWikiMaskLayer</js-module>
+      <js-path>/javascript/eXo/wiki/mask/UIWikiMaskLayer.js</js-path>
+    </param>
+  </javascript>
+ 
+    <javascript>
+    <param>
+      <js-module>eXo.wiki.UIWikiMaskWorkspace</js-module>
+      <js-path>/javascript/eXo/wiki/mask/UIWikiMaskWorkspace.js</js-path>
     </param>
   </javascript>
    
