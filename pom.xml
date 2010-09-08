@@ -31,7 +31,7 @@
     <org.exoplatform.core.version>2.3.4-GA</org.exoplatform.core.version>
     <org.exoplatform.ws.version>2.1.4-GA</org.exoplatform.ws.version>
     <org.exoplatform.jcr.version>1.12.4-GA</org.exoplatform.jcr.version>
-	<org.exoplatform.portal.version>3.1.3-PLF</org.exoplatform.portal.version>
+	<org.exoplatform.portal.version>3.1.4-PLF-SNAPSHOT</org.exoplatform.portal.version>
 	    
 	<!--commons dependencies-->
 	<org.exoplatform.commons.version>1.0.0-GA</org.exoplatform.commons.version>
@@ -41,7 +41,7 @@
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <version.chromattic>1.0.3</version.chromattic>
 	<!-- Extend service -->
-	<org.exoplatform.social.version>1.1.0-CR03</org.exoplatform.social.version>
+	<org.exoplatform.social.version>1.1.0-GA-SNAPSHOT</org.exoplatform.social.version>
 	
     <!-- 3rd parties -->
 	<org.testng.version>5.10</org.testng.version>
