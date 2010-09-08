@@ -780,8 +780,14 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			return getCategory(getCategoryHome(sProvider).getNode(categoryId));
-		} catch (Exception e) {
-			log.error("Failed to get category, categoryId: " + categoryId,e);
+		}
+		catch (PathNotFoundException e)
+		{
+			log.debug("Failed to get category, categoryId: " + categoryId, e);
+			return null;
+		}
+		catch (Exception e) {
+			log.error(e.getMessage(),e);
 			return null;
 		}finally{ sProvider.close() ;} 
 	}
