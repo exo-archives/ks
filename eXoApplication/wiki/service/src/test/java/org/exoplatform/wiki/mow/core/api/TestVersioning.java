@@ -65,20 +65,20 @@ public class TestVersioning extends AbstractMOWTestcase {
     NTFrozenNode frozenNode = version.getNTFrozenNode();
     assertEquals("testCreateVersionHistoryTree-ver1.0",
                  ((ContentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT))).getText());
-    assertNotNull(frozenNode.getProperties().get(WikiNodeType.Definition.UPDATED_DATE));
-    assertNotNull(frozenNode.getProperties().get(WikiNodeType.Definition.AUTHOR));
+    assertNotNull(frozenNode.getUpdatedDate());
+    assertNotNull(frozenNode.getAuthor());
     version = iter.next();
     frozenNode = version.getNTFrozenNode();
     assertEquals("testCreateVersionHistoryTree-ver2.0",
                  ((ContentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT))).getText());
-    assertNotNull(frozenNode.getProperties().get(WikiNodeType.Definition.UPDATED_DATE));
-    assertNotNull(frozenNode.getProperties().get(WikiNodeType.Definition.AUTHOR));
+    assertNotNull(frozenNode.getUpdatedDate());
+    assertNotNull(frozenNode.getAuthor());
     version = iter.next();
     frozenNode = version.getNTFrozenNode();
     assertEquals("testCreateVersionHistoryTree-ver3.0",
                  ((ContentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT))).getText());
-    assertNotNull(frozenNode.getProperties().get(WikiNodeType.Definition.UPDATED_DATE));
-    assertNotNull(frozenNode.getProperties().get(WikiNodeType.Definition.AUTHOR));
+    assertNotNull(frozenNode.getUpdatedDate());
+    assertNotNull(frozenNode.getAuthor());
   }
 
 }

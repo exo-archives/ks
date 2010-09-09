@@ -20,11 +20,9 @@ import java.util.GregorianCalendar;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
-import javax.jcr.Value;
 
 import org.apache.commons.chain.Context;
 import org.exoplatform.services.command.action.Action;
-import org.exoplatform.services.jcr.impl.core.value.DateValue;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 
@@ -46,14 +44,11 @@ public class UpdateWikiPageAction implements Action {
       throw new Exception("Incoming node is not wiki:page nodetype but " + wikiPageNode.getPrimaryNodeType().getName());
     }
     ConversationState conversationState = ConversationState.getCurrent();
-    Value[] updatedDate = new DateValue[1];
-    String[] userName = new String[1];
-    userName[0] = null;
+    String userName = null;
     if (conversationState != null && conversationState.getIdentity() != null) {
-      userName[0] = conversationState.getIdentity().getUserId();
+      userName = conversationState.getIdentity().getUserId();
     }
-    updatedDate[0] = new DateValue(new GregorianCalendar());
-    wikiPageNode.setProperty(WikiNodeType.Definition.UPDATED_DATE, updatedDate);
+    wikiPageNode.setProperty(WikiNodeType.Definition.UPDATED_DATE, new GregorianCalendar());
     wikiPageNode.setProperty(WikiNodeType.Definition.AUTHOR, userName);
     return false;
   }

@@ -113,25 +113,11 @@ public abstract class PageImpl implements Page {
   public abstract void setOwner(String owner);
   
   @Property(name = WikiNodeType.Definition.AUTHOR)
-  protected abstract String[] getAuthorByChromattic();
-  
-  public String getAuthor() {
-    String[] author = getAuthorByChromattic();
-    if (author == null || author.length == 0) {
-      return null;
-    } else {
-      return author[0];
-    }
-  }
-  
+  public abstract String getAuthor();
+
   @Property(name = WikiNodeType.Definition.UPDATED_DATE)
-  protected abstract Date[] getUpdatedDateByChromattic();
-  
-  public Date getUpdatedDate() {
-    return getUpdatedDateByChromattic()[0];
-  }
-  
-  
+  public abstract Date getUpdatedDate();
+
   @OneToOne(type = RelationshipType.EMBEDDED)
   @Owner
   public abstract MovedMixin getMovedMixin();

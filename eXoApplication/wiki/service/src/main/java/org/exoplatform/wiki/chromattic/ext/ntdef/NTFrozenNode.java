@@ -16,12 +16,19 @@
  */
 package org.exoplatform.wiki.chromattic.ext.ntdef;
 
+import java.util.Date;
 import java.util.Map;
 
+import javax.jcr.Node;
+import javax.jcr.Value;
+
 import org.chromattic.api.annotations.OneToMany;
+import org.chromattic.api.annotations.Path;
 import org.chromattic.api.annotations.PrimaryType;
 import org.chromattic.api.annotations.Properties;
 import org.chromattic.api.annotations.Property;
+import org.exoplatform.wiki.mow.api.WikiNodeType;
+import org.exoplatform.wiki.mow.core.api.MOWService;
 
 /**
  * Created by The eXo Platform SAS
@@ -31,6 +38,8 @@ import org.chromattic.api.annotations.Property;
  */
 @PrimaryType(name = "nt:frozenNode")
 public abstract class NTFrozenNode {
+
+  private MOWService mowService;
 
   @Property(name = "jcr:frozenUuid")
   public abstract String getFrozenUuid();
@@ -42,5 +51,46 @@ public abstract class NTFrozenNode {
 
   @Properties
   public abstract Map<String, Object> getProperties();
-  
+
+  // TODO: remove these API when Chromattic support versioning
+  public String getAuthor() throws Exception {
+    Value value = getPropertyValue(WikiNodeType.Definition.AUTHOR);
+    if (value != null) {
+      return value.getString();
+    } else {
+      return null;
+    }
+  }
+
+  public Date getUpdatedDate() throws Exception {
+    Value value = getPropertyValue(WikiNodeType.Definition.UPDATED_DATE);
+    if (value != null) {
+      return value.getDate().getTime();
+    } else {
+      return null;
+    }
+  }
+
+  public void setMOWService(MOWService mowService) {
+    this.mowService = mowService;
+  }
+
+  @Path
+  protected abstract String getPath();
+
+  private Value getPropertyValue(String propertyName) throws Exception {
+    Node pageNode = getJCRPageNode();
+    if (pageNode.hasProperty(propertyName)) {
+      javax.jcr.Property property = pageNode.getProperty(propertyName);
+      Value value = property.getValue();
+      return value;
+    } else {
+      return null;
+    }
+  }
+
+  private Node getJCRPageNode() throws Exception {
+    return (Node) mowService.getSession().getJCRSession().getItem(getPath());
+  }
+
 }

@@ -73,8 +73,8 @@
               versionLabel = "v. " + versionLabel;
             }
             //String updatedDate = df.format(frozenNode.getProperties().get(WikiNodeType.Definition.UPDATED_DATE));
-            String updatedDate = frozenNode.getProperties().get(WikiNodeType.Definition.UPDATED_DATE);
-            String author = frozenNode.getProperties().get(WikiNodeType.Definition.AUTHOR);
+            String updatedDate = frozenNode.getUpdatedDate();
+            String author = frozenNode.getAuthor();
             author = (author != null) ? author : "anonymous";
             String restore = (isCurrentVersion) ? "" : "Restore";
             String viewLink = uicomponent.event(uicomponent.VIEW_REVISION, version.getName());

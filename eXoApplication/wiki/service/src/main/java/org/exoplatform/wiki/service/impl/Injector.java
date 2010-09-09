@@ -17,6 +17,7 @@
 package org.exoplatform.wiki.service.impl;
 
 import org.chromattic.api.event.LifeCycleListener;
+import org.exoplatform.wiki.chromattic.ext.ntdef.NTFrozenNode;
 import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiService;
@@ -44,6 +45,9 @@ public class Injector implements LifeCycleListener {
       ((PageImpl) o).setMOWService(mowService);
       ((PageImpl) o).setWikiService(wService);
     }
+    if (o instanceof NTFrozenNode) {
+      ((NTFrozenNode) o).setMOWService(mowService);
+    }
   }
 
   @Override
@@ -51,6 +55,9 @@ public class Injector implements LifeCycleListener {
     if (o instanceof PageImpl) {
       ((PageImpl) o).setMOWService(mowService);
       ((PageImpl) o).setWikiService(wService);
+    }
+    if (o instanceof NTFrozenNode) {
+      ((NTFrozenNode) o).setMOWService(mowService);
     }
   }
 
@@ -60,6 +67,9 @@ public class Injector implements LifeCycleListener {
       ((PageImpl) o).setMOWService(mowService);
       ((PageImpl) o).setWikiService(wService);
     }
+    if (o instanceof NTFrozenNode) {
+      ((NTFrozenNode) o).setMOWService(mowService);
+    }
   }
 
   @Override
@@ -67,6 +77,9 @@ public class Injector implements LifeCycleListener {
     if (o instanceof PageImpl) {
       ((PageImpl) o).setMOWService(mowService);
       ((PageImpl) o).setWikiService(wService);
+    }
+    if (o instanceof NTFrozenNode) {
+      ((NTFrozenNode) o).setMOWService(mowService);
     }
   }
 
