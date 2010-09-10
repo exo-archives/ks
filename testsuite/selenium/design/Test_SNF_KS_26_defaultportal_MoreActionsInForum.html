@@ -98,7 +98,7 @@
 </tr>
 <tr>
 	<td>pause</td>
-	<td>5000</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -292,8 +292,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementNotPresent</td>
-	<td>//form[@id='UITopicContainer']//div[@class='LockActionForum UIActionForum']</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -402,13 +402,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertConfirmation</td>
-	<td>This IP will no longer be banned. Do you confirm ?</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>UIBanIPForumManagerForm</td>
+	<td>assertConfirmation</td>
+	<td>This IP will no longer be banned. Do you confirm ?</td>
 	<td></td>
 </tr>
 <tr>
@@ -457,8 +457,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
 	<td>assertConfirmation</td>
 	<td>Are you sure you want to delete this category?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>

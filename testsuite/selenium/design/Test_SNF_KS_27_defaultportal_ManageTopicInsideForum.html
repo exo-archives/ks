@@ -147,8 +147,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>ForumTitle</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -302,8 +302,8 @@
 	<td>Topic 1 for Test</td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//iframe[@id='messageContent___Frame']</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -342,8 +342,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>UITopicContainer</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -437,8 +437,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>UITopicContainer</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -467,8 +467,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//form[@id='UITopicContainer']//div[@class='ThreadStatusIcon ThreadNewClosePost']</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -1332,6 +1332,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForTextPresent</td>
+	<td>Forum For Approve Test</td>
+	<td></td>
+</tr>
+<tr>
 	<td>verifyTextPresent</td>
 	<td>Forum For Approve Test</td>
 	<td></td>
@@ -1339,11 +1344,6 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
 	<td></td>
 </tr>
 <tr>
@@ -1417,8 +1417,8 @@
 	<td>Topic for Approve</td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//iframe[@id='messageContent___Frame']</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -1467,13 +1467,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=Sign out</td>
+	<td>echo</td>
+	<td>-Approve Topic By Root-</td>
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>-Approve Topic By Root-</td>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -1572,7 +1572,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
