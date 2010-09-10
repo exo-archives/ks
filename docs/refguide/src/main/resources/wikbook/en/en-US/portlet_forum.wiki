@@ -1,11 +1,11 @@
-h1. Basic information of Forum portlet
-Forum portlet is a discussion space where users can post or read messages on different topics. 
+h1. Overview
+The Forum portlet is a discussion space where users can post or read messages on different topics. 
 
 || *Portlet name* | ForumPortlet 
 || *War name* | forum.war
 || *Description* | The Forum portlet is a full features bulletin board application.
 	
-h2. Declaration template	
+* Declaration template	
 {code:language=xml|indent=2}
     <portlet-application>
       <portlet>
@@ -34,9 +34,10 @@ h1. Preferences
 | *isShowRules* | {{true}},{{false}} | {{true}}| To specify Rules are shown or not. |
 | *isShowStatistics* | {{true}},{{false}} | {{true}}| To specify Statistics are shown or not. |
 
-h1. Portlet.xml forum/WEB-INF/portlet.xml
-h1. Events
+h1. Portlet.xml
+* forum/WEB-INF/portlet.xml
 
+h1. Events
 
 || *Name* || *Description* ||
 | ForumLinkEvent | This event is to setRender for UIForumLinkPortlet and to setValue for UIForumLinks.   |

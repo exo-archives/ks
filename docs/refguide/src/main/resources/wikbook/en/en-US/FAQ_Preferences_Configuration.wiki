@@ -1,12 +1,10 @@
 h1. FAQ Preferences Configuration
 
-
-
 h1. Overview
 
 FAQ is configured mainly in two files:
 
-- Portlet preferences : */webapps/faq/WEB-INF/portlet.xml*
+- Portlet preferences: */webapps/faq/WEB-INF/portlet.xml*
 - Services configuration : *WEB-INF/conf/ks-plugins-configuration.xml* 
 
 {info}

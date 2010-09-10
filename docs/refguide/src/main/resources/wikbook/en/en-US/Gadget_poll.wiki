@@ -5,10 +5,12 @@ h1. Basic information of gadgets
 || *Description* | The list of polls.
 
 h1. Preferences
+
 || *Preference name* | pollId
 || *Description* | id of poll for showing the poll in Pollgadget.
 
 h1. Links to used REST services
+
  Links to used REST services: 
- + portal/rest/private/ks/poll/viewpoll/\{pollId\}
- + portal/rest/private/ks/poll/votepoll/\{pollId\}/\{indexVote\}
+* portal/rest/private/ks/poll/viewpoll/\{pollId\}
+* portal/rest/private/ks/poll/votepoll/\{pollId\}/\{indexVote\}

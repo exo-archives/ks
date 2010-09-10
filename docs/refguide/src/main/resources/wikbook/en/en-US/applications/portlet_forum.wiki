@@ -123,7 +123,6 @@ h1. Events
 
 h2. Published events
 
-
 h2. Consumed events
 
 || *Name* || *Type* || *Value* || *Effect* ||

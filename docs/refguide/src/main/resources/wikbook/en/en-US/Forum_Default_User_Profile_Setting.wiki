@@ -42,12 +42,12 @@ In details:
 
 In which: 
 
-|| parameter || description || value ||
-| timeZone | time zone of user | time zone id. \\ For example: GMT, GMT-05:00, GMT+07:00, GMT+08:30 ... \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/util/TimeZone.html for more detail. |
-| shortDateFormat | the format to display short information of a date | String \\ date format \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. |
-| longDateFormat | the format to display a date with more infomation | String \\ date format \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. |
-| timeFormat | format to view time(hour, minute,..) | String \\ time format \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. |
-| maxTopic | maximum number of topics on a page | number |
-| maxPost | maximum number of posts on a page | number |
-| isShowForumJump | show forum jump or not | true\\false |
+|| Parameter || Value || Description ||
+| timeZone | time zone id. |  time zone of user \\ For example: GMT, GMT-05:00, GMT+07:00, GMT+08:30 ... \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/util/TimeZone.html for more detail. |
+| shortDateFormat |  String \\ date format \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. | the format to display short information of a date |
+| longDateFormat | String \\ date format | the format to display a date with more infomation  \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. |
+| timeFormat | String \\ time format | format to view time (for example, hour, minute,) \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. |
+| maxTopic | number | maximum number of topics on a page |
+| maxPost | number | maximum number of posts on a page |
+| isShowForumJump | true\\false | show forum jump or not |
 

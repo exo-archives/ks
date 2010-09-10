@@ -1,7 +1,3 @@
-h1. Forum IP Login Configuration
-
-
-
 h1. Overview
 
 IP logging is the IP of the computer which is used to connect Internet and do action in Forum. For example, when users add a topic or post in Forum, their IP address can be saved enclosing with their entry. Only the administrator can view that IP information.

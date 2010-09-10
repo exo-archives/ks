@@ -1,7 +1,6 @@
 h1. Answers Default Data Plugin
 
 
-
 h1. Overview
 
 The Initialization plugin component is used to define the default answers data in _xml_ or _zip_ file. It includes categories of question and that should be exported from a eXo Answers application.
@@ -20,7 +19,7 @@ In details:
 
 At the run time of Answers Service, Initailization plugin component is called, then _services-configuration.xml_ file is executed, the component-plugin named _addInitialDataPlugin_ will be referred to _org.exoplatform.faq.service.InitializeDataPlugin_ to excute some objects to create default data for the forum application. 
 
-When initialize default data in a _zip_ file
+The default data in the _.zip_ file is initialized 
 
 {code:xml}
 <component-plugin>
@@ -38,7 +37,15 @@ When initialize default data in a _zip_ file
     </component-plugin>
 {code}
 
-If the default data in ~~xml~~ format
+* In which,
+|| Name || Method | Type || Description ||
+| technical-faq | addInitialDataPlugin | org.exoplatform.faq.service.InitialDataPlugin | Initialize |
+
+* Init-param
+|| Name || Possible value | Default value || Description ||
+| location | {{string}} | war:/data/Technical-FAQ.zip | location where Answers export format file is stored. |
+
+If the default data is in the ~~xml~~ format
 
 {code:xml}
 <value>war:/data/Technical-FAQ.xml</value>
@@ -46,7 +53,7 @@ If the default data in ~~xml~~ format
 
 By default, the default Answers data can only import if the importing categories does not exist in database.
 
-To initialize default data in multiple files needs to declare them in multiple plugin
+To initialize default data in multiple files, it is required to declare them in multiple plugin.
 
 {code:xml}
 <component-plugin>

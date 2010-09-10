@@ -1,13 +1,12 @@
 h1. FAQ Mail Template Configuration
 
 
-
 h1. Overview
 
 FAQ is configured mainly in two files:
 
-- Portlet preferences : */webapps/faq/WEB-INF/portlet.xml*
-- Services configuration : *WEB-INF/conf/ks-plugins-configuration.xml* 
+- Portlet preferences: */webapps/faq/WEB-INF/portlet.xml*
+- Services configuration: *WEB-INF/conf/ks-plugins-configuration.xml* 
 
 {info}
 For general KS configuration information, please refer to [KS Configuration| KS:KS Manual#Configuration] section
@@ -16,7 +15,7 @@ For general KS configuration information, please refer to [KS Configuration| KS:
 h1. Configuration
 
 
-Mail templates use a specific syntax that you can use to create a customized email message:
+The Mail templates use a specific syntax that you can use to create a customized email message:
 
 !EmailTemplate.png!
 

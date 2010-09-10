@@ -1,95 +1,94 @@
-
-h1. Initialization Forum Plugin Configuration
-
-
-
 h1. Overview
 
-The Initialization plugin component is used to define the default forum data in _xml_ file. It includes categories,forums,topics and posts.
+The Initialization Plugin component defines the default forum data in the_.xml_ file. It includes categories, forums, topics, and posts.
 
-When Forum Service runs, it will get values which are returned from Initialization plugin component to initialize the default forum data.
+When the Forum Service runs, it will get values which are returned from Initialization Plugin component to initialize the default forum data.
 
 h1. Configuration
 
 h2. Default forum data
 
-The default forum data is configured in _ks-plugins-configuration.xml_ file.
+The default forum data is configured in the _war:webapp/WEB-INF/conf/ksdemo/ks/services-configuration.xml_ file.
 
-In details:
-
-At the runtime of Forum Service, Initailization plugin component is called, then _ks-plugins-configuration.xml_ file is executed, the component-plugin named _addInitialDataPlugin_ will be referred to _org.exoplatform.forum.service.conf.InitializeForumPlugin_ to excute some objects to create default data for the forum application. 
+In particular, at the runtime of Forum Service, the Initailization Plugin component is called, then _services-configuration.xml_ file is executed, the component-plugin named _addInitialDataPlugin_ will be referred to _org.exoplatform.forum.service.conf.InitializeForumPlugin_ to excute some objects to create default data for the forum application. 
 
 {code:xml}
 
    <component-plugin>
-     <name>default.data</name>
-     <set-method>addInitialDataPlugin</set-method>
-     <type>org.exoplatform.forum.service.conf.InitializeForumPlugin</type>
-     <description>description</description>
-     <init-params>
-       <object-param>
-         <name>livedemo.default.configuration</name>
-         <description>initial data for live demo</description>
-           <object type="org.exoplatform.forum.service.conf.ForumInitialData">
-             <field name="categories">
+      <name>default.data</name>
+      <set-method>addInitialDataPlugin</set-method>
+      <type>org.exoplatform.forum.service.conf.InitializeForumPlugin</type>
+      <description>description</description>
+      <init-params>
+        <object-param>
+          <name>livedemo.default.configuration</name>
+          <description>initial data for live demo</description>
+          <object type="org.exoplatform.forum.service.conf.ForumInitialData">
+            <field name="categories">
               <collection type="java.util.ArrayList">
                 <value>
-                 <object type="org.exoplatform.forum.service.conf.CategoryData">
-                   <field name="owner">
-                     <string>root</string>
-                   </field>
-                   <field name="name">
-                     <string>Knowledge Suite</string>
-                   </field>
-                   <field name="description">
-                     <string>All about eXo KS</string>
-                   </field>
-                   <field name="forums">
-                     <collection type="java.util.ArrayList">
-                     <value>
-                     <object type="org.exoplatform.forum.service.conf.ForumData">
-                        <field name="owner"><string>root</string></field>
-                        <field name="name"><string>Live demo</string></field>
-                        <field name="description"><string>Questions about this demo</string></field>
-                         <field name="topics">
-                          <collection type="java.util.ArrayList">
-                          <value>
-                             <object type="org.exoplatform.forum.service.conf.TopicData">
-                              <field name="name"><string>Demo data policy</string></field>
-                              <field name="icon"><string>Tux</string></field>
-                              <field name="owner"><string>root</string></field>
-                              <field name="content"><string>Welcome to eXo Forum live demo...at anytime.</string></field>
-                               <field name="posts">
-                                  <collection type="java.util.ArrayList">
-                                  <value>
-                                  <object type="org.exoplatform.forum.service.conf.PostData">
-                                  <field name="name"><string>Reply: Demo data policy</string></field>
-                                  <field name="icon"><string>IconsView</string></field>
-                                  <field name="owner"><string>root</string></field>
-                                  <field name="content"><string>Enjoy and don't forget to send feedback at ks@exoplatform.com</string></field>
-                       </object>
-                      </value>
-                     </collection>
+                  <object type="org.exoplatform.forum.service.conf.CategoryData">
+                    <field name="owner">
+                      <string>root</string>
                     </field>
-                   </object>
-                  </value>
-                 </collection>
-                </field>
-               </object>
-              </value>
-             </collection>
+                    <field name="name">
+                      <string>Knowledge Suite</string>
+                    </field>
+                    <field name="description">
+                      <string>All about eXo KS</string>
+                    </field>
+                    <field name="forums">
+                      <collection type="java.util.ArrayList">
+                        <value>
+                          <object type="org.exoplatform.forum.service.conf.ForumData">
+                            <field name="owner"><string>root</string></field>
+                            <field name="name"><string>Live demo</string></field>
+                            <field name="description"><string>Questions about this demo</string></field>
+                            <field name="topics">
+                              <collection type="java.util.ArrayList">
+                                <value>
+                                  <object type="org.exoplatform.forum.service.conf.TopicData">
+                                    <field name="name"><string>Demo data policy</string></field>
+                                    <field name="icon"><string>Shield</string></field>
+                                    <field name="owner"><string>root</string></field>
+                                    <field name="content"><string>
+                                    Welcome to eXo Knowledge Suite live demo!\n\n\n 
+
+                                    We hope you enjoy discovering eXo Forum and FAQ applications features. 
+                                    You don't need to be logged in to see the applications in action. But the power of KS lies in the rich set of admin/moderation features.\n\n
+                                    We didn't want you to miss them so, when you [b][url="/portal/public/classic/register"]create a demo account[/url][/b], you will be granted full permissions.
+                                    Anybody can become an administrator or a moderator and play in the sandbox!\n
+                                    As a consequence, the data for this forum (including the accounts) is not meant to stay.\n\n
+                                    [b][center]WE MAY RESET FORUMS AND FAQS ANYTIME[/center][/b]\n\n
+                                    Enjoy and don't forget to send feedback at [email]ks@exoplatform.com[/email]</string></field>
+                                  </object>
+                                </value>
+                              </collection>
+                            </field>
+                          </object>
+                        </value>
+                      </collection>
+                    </field>
+                  </object>
+                </value>
+              </collection>
             </field>
-           </object>
-          </value>
-         </collection>
-        </field>
-       </object>
-      </object-param>
-     </init-params>
+          </object>
+        </object-param>
+      </init-params>
     </component-plugin>
 {code}
 
-1.1 Category array
+* In which,
+|| Name || Method || Type || Description ||
+| default.data | addInitialDataPlugin | org.exoplatform.forum.service.conf.InitializeForumPlugin | the initial default data of Forum |
+
+* Init-para
+|| Name || Possible value || Default value || Description |
+| livedemo.default.configuration | {{object}} | org.exoplatform.forum.service.conf.ForumInitialData || initial data for live demo |
+  
+
+* Category array
 
 After ~~org.exoplatform.forum.service.conf.InitializeForumPlugin~~ object is executed, ~~org.exoplatform.forum.service.conf.ForumInitialData~~ object is called. It returns a category array. The value of the category array is defined by ~~org.exoplatform.forum.service.conf.CategoryData~~ object like below:
 
@@ -135,7 +134,7 @@ In which:
 | name | The name of the title of the category. | Knowledge Suite| 
 | description | The brief description of the category. | All about eXo KS| 
 
-1.1 Category value modification
+* Category value modification
 
 The values of the default category can be changed by changing text values in ~~string~~ tag of each ~~field~~ by the other one.
 
@@ -168,7 +167,7 @@ h2. Forum array
               ...
 {code}
 
-1.1 Basic forum data
+- Basic forum data
 
 A forum includes some basic data which are defined in ~~field~~ tag with specific ~~name~~ like above.
 
@@ -255,7 +254,7 @@ In which:
 | ownwer | The creator of the default post. | root |
 | content | The main content of the default post. | Enjoy and don't forget to send feedback at ks@exoplatform.com |
 
-This values of the default post can be changed by changing text values in ~~string~~ tag of each ~~field~~ by the other one.
+These values of the default post can be changed by changing text values in ~~string~~ tag of each ~~field~~ by the other one.
 
 With the sample code above, ~~org.exoplatform.forum.service.conf.PostData~~ object is called only one time. It means that only one default post is defined inside the default topic named ~~Demo data policy~~. If you want to define more default posts, repeat calling ~~org.exoplatform.forum.service.conf.PostData~~ object and define values for the new post with the sample code below:
 
@@ -269,6 +268,6 @@ With the sample code above, ~~org.exoplatform.forum.service.conf.PostData~~ obje
 {code}
 
 
-By fault, the default forum data can only be changed by editing in _ks-plugins-configuration.xml_ file.
+By fault, the default forum data can only be changed by editing in _services-configuration.xml_ file.
 
-At the runtime, the new changes in _ks-plugins-configuration.xml_ file will be executed and updated, the default forum data will be created correspondingly.
+At the runtime, the new changes in _services-configuration.xml_ file will be executed and updated, the default forum data will be created correspondingly.

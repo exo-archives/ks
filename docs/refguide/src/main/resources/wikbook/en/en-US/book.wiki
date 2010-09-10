@@ -15,54 +15,51 @@ h3. FAQ Portlet
 
 h3. Polls Portlet
 {include:document="Pollportlet_Preference.wiki"}
+
 h2. Gadgets
 {include:document="Gadget_poll.wiki"}
 
 h1. Configuration
 
-h2. BBCode Configuration
-{include:document="BBCode Configuration.wiki"}
-h2. Roles Configuration
+h2. Components
+
+{include:document="Components.wiki"}
+
+h2. External-component-plugin
+
+h3. Init data configuration
+
+{include:document="Init_data_KS.wiki"}
+
+
+h3. Roles Configuration
 {include:document="Roles_Plugin_Configuration.wiki"}
 
-h2. Profile Provider
-{include:document="Profile_Provider_Configuration.wiki"}
 
-h2. Notifications
-{include:document="Mail_Service_Configuration.wiki"}
+h3. Forum Configuration
 
-h2. Forum Configuration
+h4. BBCode Configuration
+{include:document="BBCode_Configuration.wiki"}
 
-h3. Action Bar
-{include:document="Forum_Action_Bar_Configuration.wiki"}
-
-h3. Forums Initializer
+h4. Forums Initializer
 {include:document="Initialization_Forum_Plugin_Configuration.wiki"}
 
-h3. Auto Prune
+h4. Auto Prune
 {include:document="Auto_Prune_Plugin_Configuration.wiki"}
 
-
-h3. User Statistics
-
+h4. User Statistics
 {include:document="Auto-count_Active_Users_Plugin_Configuration.wiki"}
 
-h3. IP Logging
-
-{include:document="Forum_IP_Logging_Configuration.wiki"}
-
-h3. Default User Profile
-Answers_Preferences_Configuration.wiki
+h4. Default User Profile
 {include:document="Forum_Default_User_Profile_Setting.wiki"}
 
-h2. Answer Configuration
+h3. Answer Configuration
 
-h3. FAQ Initializer
+h4. FAQ Initializer
 
 {include:document="Initialization_FAQ_Plugin_Configuration.wiki"}
 
-
-h2. Mails Templates
+h4. Mails Templates
 
 {include:document="FAQ_Mail_Template_Configuration.wiki"}
 

@@ -1,11 +1,6 @@
-
-h1. Forum Action Bar Configuration
-
-
-
 h1. Overview
 
-Main action bar displays all main function buttons. The number of function buttons depending on the role of user login. Currently, the main action bar is only visible on the homepage. It disappears when you focus into other pages. But Show/hide main action bar is an option, you can configure the main action to be shown or hidden in all pages all the time.
+The main action bar displays all main function buttons. The number of function buttons depends on the role of user. Currently, the main action bar is only visible on the homepage. It disappears when you focus into other pages. But Show/hide main action bar is an option, you can configure the main action to be shown or hidden in all pages all the time.
 
 h1. Configuration
 

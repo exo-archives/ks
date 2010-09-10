@@ -18,6 +18,7 @@ Alternatively, you can configure the portlet in *portet-preferences.xml* file.
 || Preference name || Possible values || Default value || Description || 
 | useAjax | {{true}}, {{false}} | {{false}} |  | 
 
-h2. Portlet.xml: */webapps/faq/WEB-INF/portlet.xml*
+h2. Portlet.xml
+* /webapps/faq/WEB-INF/portlet.xml
 
 

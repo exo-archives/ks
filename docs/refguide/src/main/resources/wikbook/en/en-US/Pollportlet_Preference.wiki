@@ -12,7 +12,8 @@ h1. Portlet Preferences
 
 
 h1. Portlet.xml 
-poll/WEB-INF/portlet.xml
+
+* poll/WEB-INF/portlet.xml
 
 
 
