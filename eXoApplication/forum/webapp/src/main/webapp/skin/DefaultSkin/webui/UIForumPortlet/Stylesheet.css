@@ -1,8 +1,5 @@
 .UIForumPortlet {
-	padding-bottom: 10px;
-	background: white;
-	border: 1px solid #b7b7b7;
-	margin-left: 3px;
+	padding-bottom: 1px;
 }
 
 *html .UIForumPortlet {
