@@ -110,13 +110,13 @@ public class TopicListAccess extends JCRListAccess<Topic> {
     topicNew.setIsActive(reader.bool("exo:isActive"));
     topicNew.setVoteRating(reader.d("exo:voteRating"));
     topicNew.setUserVoteRating(reader.strings("exo:userVoteRating"));
-    topicNew.setCreatedDate(reader.date("exo:createdDate"));
+    
+    /*topicNew.setCreatedDate(reader.date("exo:createdDate"));
     topicNew.setModifiedBy(reader.string("exo:modifiedBy"));
     topicNew.setModifiedDate(reader.date("exo:modifiedDate"));
     topicNew.setTagId(reader.strings("exo:tagId"));
-    // TODO KS-2458
     topicNew.setCanView(reader.strings("exo:canView", new String[]{}));
-    topicNew.setCanPost(reader.strings("exo:canPost", new String[]{}));
+    topicNew.setCanPost(reader.strings("exo:canPost", new String[]{}));*/
     return topicNew;
   }
   

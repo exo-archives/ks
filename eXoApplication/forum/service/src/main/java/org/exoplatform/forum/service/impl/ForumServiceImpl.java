@@ -427,6 +427,9 @@ public class ForumServiceImpl implements ForumService, Startable {
     return storage.getTopicByPath(topicPath, isLastPost) ;
   }
 
+  public Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception {
+  	return storage.getTopicUpdate(topic, isSummary);
+  }
   /**
    * {@inheritDoc}
    */

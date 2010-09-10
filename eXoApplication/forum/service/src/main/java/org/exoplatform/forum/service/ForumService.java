@@ -265,6 +265,7 @@ public interface ForumService extends ForumServiceLegacy {
 
   Topic getTopicSummary(String topicPath) throws Exception;
 
+  Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception;
   /**
    * Modify topic.
    * 

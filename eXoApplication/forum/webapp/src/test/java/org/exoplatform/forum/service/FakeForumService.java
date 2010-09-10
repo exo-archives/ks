@@ -745,4 +745,10 @@ public class FakeForumService implements ForumService {
     
   }
 
+	@Override
+	public Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

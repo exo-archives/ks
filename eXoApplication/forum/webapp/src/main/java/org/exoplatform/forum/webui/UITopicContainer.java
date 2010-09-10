@@ -581,6 +581,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			try {
 				Topic topic = uiTopicContainer.getTopic(temp[0]) ;
 				if(topic != null) {
+					topic = uiTopicContainer.getForumService().getTopicUpdate(topic, false);
 					uiTopicContainer.forum = uiTopicContainer.getForumService().getForum(uiTopicContainer.categoryId, uiTopicContainer.forumId);
 					if(uiTopicContainer.forum != null){
 						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;

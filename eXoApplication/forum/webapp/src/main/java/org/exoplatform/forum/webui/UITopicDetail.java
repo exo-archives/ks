@@ -278,6 +278,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
+		this.topic = topic;
 		if(page > 0) pageSelect = page;
 		else pageSelect = getPagePostRemember(topicId);
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
@@ -285,9 +286,9 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		isShowRule = forumPortlet.isShowRules();
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
-		if(ForumUtils.isEmpty(topic.getDescription())) {
+		/*if(ForumUtils.isEmpty(topic.getDescription())) {
 			this.topic = getForumService().getTopic(categoryId, forumId, topic.getId(), userName) ;
-		} else this.topic = topic;
+		} else this.topic = topic;*/
 		getForumService().setViewCountTopic((categoryId + "/" + forumId + "/" + topicId), userName);
 		forumPortlet.updateAccessTopic(topicId);
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
@@ -307,6 +308,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
+		this.topic = topic;
 		this.pageSelect = numberPage ;
 		this.isEditTopic = false ;
 		if(pageSelect == 0) pageSelect = getPagePostRemember(topicId);
@@ -315,9 +317,9 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		isShowRule = forumPortlet.isShowRules();
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
-		if(ForumUtils.isEmpty(topic.getDescription())) {
+		/*if(ForumUtils.isEmpty(topic.getDescription())) {
 			this.topic = getForumService().getTopic(categoryId, forumId, topic.getId(), userName) ;
-		} else this.topic = topic;
+		} else this.topic = topic;*/
 		getForumService().setViewCountTopic((categoryId + "/" + forumId + "/" + topicId), userName);
 		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;

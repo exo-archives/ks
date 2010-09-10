@@ -367,6 +367,7 @@ public class UICategories extends UIContainer	{
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING)) ;
 				context.addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			} else {
+				topic = categories.forumService.getTopicUpdate(topic, true);
 				forumPortlet.updateIsRendered(ForumUtils.FORUM);
 				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
@@ -390,7 +391,12 @@ public class UICategories extends UIContainer	{
 			WebuiRequestContext context = event.getRequestContext() ; 
 			String path = context.getRequestParameter(OBJECTID)	;//cateid/forumid/topicid/postid/
 			String []id = path.trim().split("/");
-			Topic topic = (Topic)categories.forumService.getObjectNameById(id[2], Utils.TOPIC);
+			Topic topic = categories.maptopicLast.get(id[2]) ;
+			if(topic == null){
+				topic = (Topic)categories.forumService.getObjectNameById(id[2], Utils.TOPIC);
+			} else {
+				topic = categories.forumService.getTopicUpdate(topic, true);
+			}
 			UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class) ;
 			if(topic == null) {
 				Object[] args = { "" };

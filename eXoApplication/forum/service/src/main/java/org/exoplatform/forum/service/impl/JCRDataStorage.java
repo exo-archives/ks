@@ -2019,6 +2019,75 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		return topicNew;
 	}	
 	
+	public Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider();
+		try {
+			Node forumHomeNode = getForumHomeNode(sProvider);
+			Node topicNode = (Node)forumHomeNode.getSession().getItem(topic.getPath());
+			PropertyReader reader = new PropertyReader(topicNode);
+			
+			if(isSummary) {
+				topic.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
+				topic.setLastPostBy(reader.string(EXO_LAST_POST_BY));
+				topic.setOwner(reader.string(EXO_OWNER));
+				topic.setTopicName(reader.string(EXO_NAME));
+				topic.setTopicType(reader.string(EXO_TOPIC_TYPE, " "));
+				topic.setDescription(reader.string(EXO_DESCRIPTION));
+				topic.setPostCount(reader.l(EXO_POST_COUNT));
+				topic.setViewCount(reader.l(EXO_VIEW_COUNT));
+				topic.setNumberAttachment(reader.l(EXO_NUMBER_ATTACHMENTS));
+				if(topicNode.getParent().getProperty(EXO_IS_LOCK).getBoolean()) topic.setIsLock(true);
+				else topic.setIsLock(topicNode.getProperty(EXO_IS_LOCK).getBoolean()) ;
+				topic.setIsSticky(reader.bool(EXO_IS_STICKY));
+				topic.setIsWaiting(reader.bool(EXO_IS_WAITING));
+
+				topic.setIsActiveByForum(reader.bool(EXO_IS_ACTIVE_BY_FORUM));
+				topic.setUserVoteRating(reader.strings(EXO_USER_VOTE_RATING));
+				topic.setVoteRating(reader.d(EXO_VOTE_RATING));
+			}
+			topic.setCreatedDate(reader.date(EXO_CREATED_DATE));
+			topic.setModifiedBy(reader.string(EXO_MODIFIED_BY));
+			topic.setModifiedDate(reader.date(EXO_MODIFIED_DATE));
+			topic.setIsModeratePost(reader.bool(EXO_IS_MODERATE_POST));
+			topic.setIsNotifyWhenAddPost(reader.string(EXO_IS_NOTIFY_WHEN_ADD_POST, null));
+			topic.setLink(reader.string(EXO_LINK));
+			topic.setTagId(reader.strings(EXO_TAG_ID));
+			topic.setCanView(reader.strings(EXO_CAN_VIEW, new String[]{}));
+			topic.setCanPost(reader.strings(EXO_CAN_POST, new String[]{}));
+			topic.setEmailNotification(reader.strings(EXO_EMAIL_WATCHING, new String[]{}));
+			String idFirstPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST);
+			try {
+				Node FirstPostNode = topicNode.getNode(idFirstPost);
+				if (reader.l(EXO_NUMBER_ATTACHMENTS) > 0) {
+					NodeIterator postAttachments = FirstPostNode.getNodes();
+					List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
+					Node nodeFile;
+					while (postAttachments.hasNext()) {
+						Node node = postAttachments.nextNode();
+						if (node.isNodeType(EXO_FORUM_ATTACHMENT)) {
+							JCRForumAttachment attachment = new JCRForumAttachment();
+							nodeFile = node.getNode(JCR_CONTENT);
+							attachment.setId(node.getName());
+							attachment.setPathNode(node.getPath());
+							attachment.setMimeType(nodeFile.getProperty(JCR_MIME_TYPE).getString());
+							attachment.setName(nodeFile.getProperty(EXO_FILE_NAME).getString());
+							String workspace = node.getSession().getWorkspace().getName() ;
+							attachment.setWorkspace(workspace);
+							attachment.setSize(nodeFile.getProperty(JCR_DATA).getStream().available());
+							attachment.setPath("/" + workspace + node.getPath());
+							attachments.add(attachment);
+						}
+					}
+					topic.setAttachments(attachments);
+				}
+			} catch (Exception e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			sProvider.close();
+		}
+		return topic;
+	}
 
 	public Topic getTopicNode(Node topicNode) throws Exception {
 		if (topicNode == null) return null;
