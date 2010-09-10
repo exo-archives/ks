@@ -797,6 +797,13 @@ public class JCRDataStorage implements DataStorage {
         if(answer.getDateResponse() != null) calendar.setTime(answer.getDateResponse());
         answerNode.setProperty("exo:dateResponse", calendar) ;
         answerNode.setProperty("exo:id", answer.getId());
+        answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
+        answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
+      } else {
+      	if(new PropertyReader(answerNode).bool("exo:approveResponses", false) != answer.getApprovedAnswers())
+      		answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
+      	if(new PropertyReader(answerNode).bool("exo:activateResponses", false) != answer.getActivateAnswers())
+      		answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
       }
       if(answer.getPostId() != null && answer.getPostId().length() > 0) {
         answerNode.setProperty("exo:postId", answer.getPostId());
@@ -804,8 +811,6 @@ public class JCRDataStorage implements DataStorage {
       answerNode.setProperty("exo:responses", answer.getResponses()) ;
       answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
       answerNode.setProperty("exo:fullName", answer.getFullName());
-      answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
-      answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
       answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
       answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
       answerNode.setProperty("exo:responseLanguage", answer.getLanguage()) ;
@@ -891,14 +896,18 @@ public class JCRDataStorage implements DataStorage {
         java.util.Calendar calendar = GregorianCalendar.getInstance();
         //calendar.setTime(answer.getDateResponse());
         answerNode.setProperty("exo:dateResponses", calendar);
+        answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
+        answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
       } else {
         answerNode = answerHome.getNode(answer.getId());
+        if(new PropertyReader(answerNode).bool("exo:approveResponses", false) != answer.getApprovedAnswers())
+      		answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
+      	if(new PropertyReader(answerNode).bool("exo:activateResponses", false) != answer.getActivateAnswers())
+      		answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
       }
       answerNode.setProperty("exo:responses", answer.getResponses()) ;
       answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
       answerNode.setProperty("exo:fullName", answer.getFullName());
-      answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
-      answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
       answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
     }catch (Exception e) {
       log.error("Failed to save answer question language: ", e);
