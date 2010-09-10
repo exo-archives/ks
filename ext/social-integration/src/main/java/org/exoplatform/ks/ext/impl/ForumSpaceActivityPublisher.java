@@ -60,12 +60,16 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
     public void savePost(Post post, String forumId) {
       try {
         Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
+        if (forumId == null || forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) < 0) {
+          return;
+        }
+        
         String msg = "@"+post.getOwner() + " has added a new post <a href=" +post.getLink()+ ">" + post.getName() +  "</a>" ;
         String body = post.getLink() ;
         IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
         ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
         SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
-        String spaceId = forumId.split(Utils.FORUM)[1];
+        String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
         Space space = spaceS.getSpaceById(spaceId) ;
         Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
         activityM.recordActivity(spaceIdentity, SpaceService.SPACES_APP_ID, msg , body);
@@ -82,12 +86,16 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
     public void saveTopic(Topic topic, String forumId) {
       try {
         Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-        String msg = "@"+topic.getOwner() + " has been posted: <a href=" +topic.getLink()+ ">" + topic.getTopicName() +  "</a>" ;
+        if (forumId == null || forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) < 0) {
+          return;
+        }
+        
+        String msg = "@"+topic.getOwner() + " has posted: <a href=" +topic.getLink()+ ">" + topic.getTopicName() +  "</a>" ;
         String body = topic.getLink() ;
         IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
         ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
         SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
-        String spaceId = forumId.split(Utils.FORUM)[1];
+        String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
         Space space = spaceS.getSpaceById(spaceId) ;
         Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
         activityM.recordActivity(spaceIdentity, SpaceService.SPACES_APP_ID, msg , body);

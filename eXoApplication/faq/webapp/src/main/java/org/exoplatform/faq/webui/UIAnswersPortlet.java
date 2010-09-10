@@ -68,7 +68,7 @@ public class UIAnswersPortlet extends UIPortletApplication {
         String url = pref.getValue("SPACE_URL", null);
         SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
         Space space = sService.getSpaceByUrl(url) ;
-        String categoryId = Utils.CATEGORY_PREFIX + space.getId();
+        String categoryId = Utils.CATE_SPACE_ID_PREFIX + space.getId();
         return categoryId ;
       }
       return null;

@@ -22,6 +22,7 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.impl.AnswerEventListener;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -47,12 +48,19 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       FAQService faqS = (FAQService) PortalContainer.getInstance()
                                                     .getComponentInstanceOfType(FAQService.class);
       Question q = faqS.getQuestionById(questionId);
+      
+      String catId = q.getCategoryId();
+      
+      if (catId == null || catId.indexOf(Utils.CATE_SPACE_ID_PREFIX) < 0) {
+        return;
+      }
+      
       //TODO resource bundle needed 
       String msg = "@"+answer.getResponseBy() + " has answered: <a href=" + q.getLink() + ">"
           + q.getQuestion() + "</a>";
       String body = q.getLink();
       Category cal = faqS.getCategoryById(q.getCategoryId());
-      String spaceId = cal.getPath().split(org.exoplatform.faq.service.Utils.CATEGORY_PREFIX)[1].split("/")[0];
+      String spaceId = cal.getPath().split(Utils.CATE_SPACE_ID_PREFIX)[1].split("/")[0];
       IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance()
                                                                     .getComponentInstanceOfType(IdentityManager.class);
       ActivityManager activityM = (ActivityManager) PortalContainer.getInstance()
@@ -81,12 +89,18 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       FAQService faqS = (FAQService) PortalContainer.getInstance()
                                                     .getComponentInstanceOfType(FAQService.class);
       Question q = faqS.getQuestionById(questionId);
+      
+      String catId = q.getCategoryId();
+      if (catId == null || catId.indexOf(Utils.CATE_SPACE_ID_PREFIX) < 0) {
+        return;
+      }
+      
       //TODO resource bundle needed 
       String msg = "@"+comment.getCommentBy() + " has commented: <a href=" + q.getLink() + ">"
           + q.getQuestion() + "</a>";
       String body = q.getLink();
       Category cal = faqS.getCategoryById(q.getCategoryId());
-      String spaceId = cal.getPath().split(org.exoplatform.faq.service.Utils.CATEGORY_PREFIX)[1].split("/")[0];
+      String spaceId = cal.getPath().split(Utils.CATE_SPACE_ID_PREFIX)[1].split("/")[0];
       IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance()
                                                                     .getComponentInstanceOfType(IdentityManager.class);
       ActivityManager activityM = (ActivityManager) PortalContainer.getInstance()
@@ -111,14 +125,19 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
   public void saveQuestion(Question question) {
     try {
       Class.forName("org.exoplatform.social.core.manager.IdentityManager");
+      String catId = question.getCategoryId();
+      if (catId == null || catId.indexOf(Utils.CATE_SPACE_ID_PREFIX) < 0) {
+        return;
+      }
+      
     //TODO resource bundle needed 
-      String msg = "@"+question.getAuthor() + " has been asked: <a href=" + question.getLink() + ">"
+      String msg = "@"+question.getAuthor() + " has asked: <a href=" + question.getLink() + ">"
           + question.getQuestion() + "</a>";
       String body = question.getLink();
       FAQService faqS = (FAQService) PortalContainer.getInstance()
                                                     .getComponentInstanceOfType(FAQService.class);
       Category cal = faqS.getCategoryById(question.getCategoryId());
-      String spaceId = cal.getPath().split(org.exoplatform.faq.service.Utils.CATEGORY_PREFIX)[1].split("/")[0];
+      String spaceId = cal.getPath().split(Utils.CATE_SPACE_ID_PREFIX)[1].split("/")[0];
       IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance()
                                                                     .getComponentInstanceOfType(IdentityManager.class);
       ActivityManager activityM = (ActivityManager) PortalContainer.getInstance()
@@ -146,6 +165,12 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       FAQService faqS = (FAQService) PortalContainer.getInstance()
                                                     .getComponentInstanceOfType(FAQService.class);
       Question q = faqS.getQuestionById(questionId);
+      
+      String catId = q.getCategoryId();
+      if (catId == null || catId.indexOf(Utils.CATE_SPACE_ID_PREFIX) < 0) {
+        return;
+      }
+      
       if (answers.length == 1) {
         Answer answer = answers[0];
       //TODO resource bundle needed 
@@ -153,7 +178,7 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
             + q.getQuestion() + "</a>";
         String body = q.getLink();
         Category cal = faqS.getCategoryById(q.getCategoryId());
-        String spaceId = cal.getPath().split(org.exoplatform.faq.service.Utils.CATEGORY_PREFIX)[1].split("/")[0];
+        String spaceId = cal.getPath().split(Utils.CATE_SPACE_ID_PREFIX)[1].split("/")[0];
         IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance()
                                                                       .getComponentInstanceOfType(IdentityManager.class);
         ActivityManager activityM = (ActivityManager) PortalContainer.getInstance()

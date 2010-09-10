@@ -41,6 +41,7 @@ public class AnswerDataInitialize extends SpaceListenerPlugin {
   private static final Log log = ExoLogger.getLogger(AnswerDataInitialize.class);
 
   private final InitParams params;
+  
 
   public AnswerDataInitialize(InitParams params) {
     this.params = params;
@@ -75,7 +76,7 @@ public class AnswerDataInitialize extends SpaceListenerPlugin {
      Category parent = fServie.getCategoryById(Utils.CATEGORY_HOME) ;
      if (parent != null ) {
      Category cat = new Category();
-     cat.setId(Utils.CATEGORY_PREFIX + space.getId());
+     cat.setId(Utils.CATE_SPACE_ID_PREFIX + space.getId());
      cat.setCreatedDate(new Date()) ;
      cat.setName(space.getName()) ;
      cat.setUserPrivate(new String[]{space.getGroupId()});

@@ -43,7 +43,7 @@ public class Utils {
 	final public static String EXO_FAQQUESTIONHOME = "exo:faqQuestionHome".intern() ;
 	final public static String EXO_FAQCATEGORYHOME = "exo:faqCategoryHome".intern() ;
 	final public static String ALL = "All".intern() ;
-	final public static String CATEGORY_PREFIX = "categorySpace".intern(); 
+  public static final String CATE_SPACE_ID_PREFIX = "CategorySpace".intern();
 	final public static String UI_FAQ_VIEWER = "UIFAQViewer".intern(); 
 	
 	/**
