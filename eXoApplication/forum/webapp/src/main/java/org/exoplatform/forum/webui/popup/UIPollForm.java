@@ -17,8 +17,11 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -93,7 +96,10 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 		uiFormMultiValue.setName(FIELD_OPTIONS) ;
 		uiFormMultiValue.setType(UIFormStringInput.class) ;
 		uiFormMultiValue.setValue(list) ;
-		if(this.isUpdate)uiFormMultiValue.resetListIndexItemRemoved();
+		if(this.isUpdate){
+			uiFormMultiValue.resetListIndexItemRemoved();
+			uiFormMultiValue.setMaxOld(list.size());
+		}
 		addUIFormInput(uiFormMultiValue) ;
 	}
 	
@@ -207,84 +213,89 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 			if(sizeOption >= 2 && sizeOption <= 10) {
 				String[] newUser = null;
 				String[] vote = new String[sizeOption]	;
+				for (int j = 0; j < sizeOption; j++) {
+					vote[j] = "0.0";
+				}
 				if(uiForm.isUpdate) {
-					// edit
+					List<Integer>listIndexItemRemoved = uiForm.uiFormMultiValue.getListIndexItemRemoved();
 					String[] oldVote = uiForm.poll.getVote() ;
-					if(sizeOption < oldVote.length) {
-						List<String> voteRemoved = new ArrayList<String>() ;
-						String[] oldUserVote = uiForm.poll.getUserVote() ; 
-						long temps = oldUserVote.length ;
-						double rmPecent = 0;
-						List<Integer>listIndexItemRemoved = uiForm.uiFormMultiValue.getListIndexItemRemoved();
-						for(Integer integer : listIndexItemRemoved) {
-							if(integer < oldVote.length) {
-								rmPecent = rmPecent + Double.parseDouble(oldVote[integer]) ;
-								voteRemoved.add(String.valueOf(integer)) ;
-							}
-						}
-						double leftPecent = 100 - rmPecent ;
-						
-						int t = 0;
-						for(int k = 0; k < oldVote.length; ++k) {
-							if(listIndexItemRemoved.contains(k)) continue;
-							double newVote = Double.parseDouble(oldVote[k]) ;
-							if(leftPecent > 1){
-								vote[t] = String.valueOf((newVote*100)/leftPecent) ;
-							} else vote[t] = "0.0";
-							++t;
-						}
-						// single vote
-						if(!uiForm.poll.getIsMultiCheck()) {
-							if(leftPecent > 1) {
-								List<String> userL = new ArrayList<String>();
-								newUser = new String[]{} ;
-								for (String string : oldUserVote) {
-									boolean check = true ; 
-									for(Integer j : listIndexItemRemoved) {
-										if(j < oldVote.length) {
-											String x = ":" + j ;
-											if(string.indexOf(x) > 0) check = false ;
-										}
-									}
-									if(check) {
-										userL.add(string);
-									}
-								}
-								newUser = userL.toArray(new String[userL.size()]);
-							} else if(voteRemoved.size() > 0 && rmPecent > 0.0){
-								newUser = new String[]{};
-							}
-							// multi vote
-						} else {
-							List<String> newUserVote = new ArrayList<String>() ;
-							for(String uv : oldUserVote) {
-								StringBuffer sbUserInfo = new StringBuffer();
-								for(String string : uv.split(":")) {
-									if(!voteRemoved.contains(string)) {
-										if(sbUserInfo.length() > 0) sbUserInfo.append(":");
-										sbUserInfo.append(string) ;
-									}
-								}
-								String userInfo = sbUserInfo.toString() ;
-								if(userInfo.split(":").length >= 2)
-									newUserVote.add(userInfo) ;
-								newUser = newUserVote.toArray(new String[]{}) ;
-							}
-						}
-						// add new option
-					} else {
-						for(int j = 0; j < sizeOption; j++) {
-							if( j < oldVote.length) {
-								vote[j] = oldVote[j];
-							} else {
-								vote[j] = "0";
-							}
+					String[] oldUserVote = uiForm.poll.getUserVote() ;
+					String[] voteTp = new String[oldVote.length]	;
+					
+					double rmPecent = 0;
+					List<String> voteRemoved = new ArrayList<String>() ;
+					for(Integer integer : listIndexItemRemoved) {
+						if(integer < oldVote.length) {
+							rmPecent = rmPecent + Double.parseDouble(oldVote[integer]) ;
+							voteRemoved.add(String.valueOf(integer)) ;
 						}
 					}
-					// end edit
-				} else {
-					for (int j = 0; j < sizeOption; j++) {
-						vote[j] = "0";
+					double leftPecent = 100 - rmPecent ;
+					
+					for(int k = 0; k < oldVote.length; ++k) {
+						if(listIndexItemRemoved.contains(k)) {
+							voteTp[k] = "deleted";
+							continue;
+						}
+						if(leftPecent > 1){
+							double newVote = Double.parseDouble(oldVote[k]) ;
+							voteTp[k] = String.valueOf((newVote*100)/leftPecent) ;
+						}
+					}
+					
+					if(!uiForm.poll.getIsMultiCheck()) {
+						if(leftPecent > 1) {
+							List<String> userL = new ArrayList<String>();
+							for (String string : oldUserVote) {
+								boolean isAdd = true;
+								for(String j : voteRemoved) {
+									if(string.indexOf(":" + j) > 0) {
+										isAdd = false;
+									}
+								}
+								if(isAdd)userL.add(string);
+							}
+							
+							newUser = new String[]{} ;
+							i = 0;
+							Map<String, String> mab = new HashMap<String, String>();
+							for (int j = 0; j < voteTp.length; j++) {
+								if(voteTp[j].equals("deleted")) {
+									continue;
+								}
+								vote[i] = voteTp[j];
+								for (String str : userL) {
+									if(str.indexOf(":"+j) > 0){
+										mab.put(str, str.replace(":"+j, ":"+i));
+									} else {
+										if(!mab.keySet().contains(str)) {
+											mab.put(str, str);
+										}
+									}
+								}
+								++i;
+							}
+							newUser = mab.values().toArray(new String[userL.size()]);
+						} else if(voteRemoved.size() > 0 && rmPecent > 0.0){
+							newUser = new String[]{};
+						}
+						// multi vote
+						// TODO: edit failed.
+					} else {
+						List<String> newUserVote = new ArrayList<String>() ;
+						for(String uv : oldUserVote) {
+							StringBuffer sbUserInfo = new StringBuffer();
+							for(String string : uv.split(":")) {
+								if(!voteRemoved.contains(string)) {
+									if(sbUserInfo.length() > 0) sbUserInfo.append(":");
+									sbUserInfo.append(string) ;
+								}
+							}
+							String userInfo = sbUserInfo.toString() ;
+							if(userInfo.split(":").length >= 2)
+								newUserVote.add(userInfo) ;
+							newUser = newUserVote.toArray(new String[]{}) ;
+						}
 					}
 				}
 				String userName = UserHelper.getCurrentUser() ;
