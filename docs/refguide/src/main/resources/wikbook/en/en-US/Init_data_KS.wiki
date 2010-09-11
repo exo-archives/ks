@@ -1,15 +1,13 @@
-h1. Init data configuration
+h1. Init data
 
-|| Applications || Component || Description ||
-| Forum | KSDataLocation, ForumServiceImpl | Initialize default data of Forum portlet |
-| Answer | KSDataLocation, AnswerServiceImpl | Initialize default data of Answers portlet |
-| Poll | KSDataLocation, PollServiceImpl |  Initialize default data of Poll portlet |
+|| Application || Component || Description ||
+| *Forum* | KSDataLocation, ForumServiceImpl | Initialize default data of the Forum portlet |
+| *Answer* | KSDataLocation, AnswerServiceImpl | Initialize default data of the Answers portlet |
+| *Poll* | KSDataLocation, PollServiceImpl |  Initialize default data of the Poll portlet |
 
-h1. Overview
+The Init data plug-in is used to define the default data in .xml file. It includes nodes (node of jcr). 
 
-The Init data plug-in is used to define the default data in .xml file. It includes node (node of jcr). 
-
-When the component *org.exoplatform.services.jcr.config.RepositoryServiceConfiguration* is initialized, the component *org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin* is get and the function *addConfig* is called. Then, */ks-extension/jcr/repository-configuration.xml* will be loaded and the component *org.exoplatform.ks.common.jcr.KSDataLocation* is initialized. Once the component  *org.exoplatform.ks.common.jcr.KSDataLocation* has been initialized, the function *setLocation* is called that will setup workspace and repository for KS. After that, the function *addPlugin* will be run, generating the DataLocation (some parent nodes) for KS.
+When the component *org.exoplatform.services.jcr.config.RepositoryServiceConfiguration* is initialized, the component *org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin* will be get and the function *addConfig* is called. Then, */ks-extension/jcr/repository-configuration.xml* will be loaded and the component *org.exoplatform.ks.common.jcr.KSDataLocation* is initialized. Once the component  *org.exoplatform.ks.common.jcr.KSDataLocation* has been initialized, the function *setLocation* is called that will setup workspace and repository for KS. After that, the function *addPlugin* will be run, generating the DataLocation (some parent nodes) for KS.
 
 h1. Configuration
 

@@ -8,7 +8,7 @@ h1. Basic information of Poll portlet
 h1. Portlet Preferences
 
 || *Preference name* || *Possible values* || *Default value* || *Description* ||
-| *pollIdShow* | {{string}} | {{empty}}| The Id of poll to display in the poll portlet. |
+| *pollIdShow* | {{string}} | {{empty}}| The Id of poll which is displayed in the poll portlet. |
 
 
 h1. Portlet.xml 

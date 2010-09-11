@@ -1,0 +1,29 @@
+h1. Public Java APIs
+h2. Service
+|| Function || Param || Return || Description ||
+| addPlugin(ComponentPlugin plugin) | plugin is the ComponentPlugin |  | To add the plugin. |
+| addRolePlugin(ComponentPlugin plugin) | plugin is the ComponentPlugin |  | To add the plugin. |
+| addInitialDataPlugin(ComponentPlugin plugin) | plugin is the ComponentPlugin |  | To add the plugin. |
+| addInitRssPlugin(ComponentPlugin plugin) | plugin is the ComponentPlugin |  | To add the plugin.  |
+| getCategories()  |  | The list of categories  | To get the categories. |
+| getCategory(String categoryId)  | categoryId is the id of category. | the category | To get the category. |
+| getPermissionTopicByCategory(String categoryId, String type) | categoryId is the id of category; type is the property of category | list of users having permisions | To get the list of users having permissions, depending on _type_.|
+| saveCategory(Category category, boolean isNew) | category is the given category object; isNew is true when a new category is added or false when a category is updated |  | To save the category, and to check the category existence. If not existing, a new category will be created. |
+| calculateModerator(String categoryPath, boolean isNew) | categoryPath is the path of category; isNew is true when a new category is added or false when a category is updated  |  | To check if users as moderators will be removed, added, or remained. |
+| saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd) | moderatorCate is the list of moderators of the updated category; userId is the id of user; isAdd is true when the user is added, or false when the user is removed |  | To save or remove a moderator to (from) a category. |
+| removeCategory(String categoryId) | categoryId is the id of category removed | the category | To remove the category.|
+| getForums(String categoryId, String strQuery) | categoryId is the id of category containing the list of forums; strQuery is the command to get the list of forums. | list of forums | To get the forums in the category id. |  
+| getForum(String categoryId, String forumId) | categoryId is the id of category; forumId is the id of forum | the forum | To get the forum in the category. | 
+| modifyForum(Forum forum, int type) | forum is the forum object that should be modified; type is the forum status when the forum is modified |  | Modify the id of forum. |
+| saveForum(String categoryId, Forum forum, boolean isNew) | categoryId is the id of category; forum is the forum object which needs to be saved; isNew is true when a new forum is added, or false is the forum is updated |  | To save the forum and check the forum existence. If not existing, a new forum will created. |
+| saveModerateOfForums(List<String> forumPaths, String userName, boolean isDelete) | forumPaths is the list of paths of forums, one forum has only one path; userName is one of Account login identity information on the portal system; isDelete is true when you want to remove the userId from the list of forum moderators or false when you want to add userId into the list of forum moderator |  | To save users as moderators of forums. |
+| Forum removeForum(String categoryId, String forumId) | categoryId is the id of category; forumId is the id of forum which needs to be removed. | the forum | To remove one forum in the category id. |
+| moveForum(List<Forum> forums, String destCategoryPath) | forums are forum objects; destCategoryPath is the destination path of category | To move the list of forums to a category, based on the destination path of category. |
+| getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) | categoryId is the id of category; forumId is the id of forum; strQuery is a command to get the page topic. It is the content containing the command Query. This function will return the page topic suitable to content of that strQuery | the page topic | To get the page topic in forum. |
+| getPageTopicByUser(String userName, boolean isMod, String strOrderBy) | userName is one of identity information of user; isMod is to check if who gets the page topic is moderator or not; strOrderBy is content containing the command Query. | the page topic by user | To get the page topic by user. | 
+| getPageTopicOld(long date, String forumPath) | date is the time in the milisecond format; forumPath is the path of forum | the old page topic | To get the old page topic. |
+| getAllTopicsOld(long date, String forumPatch) | date is the time in the milisecond format; forumPath is the path of forum | the page topics | To get the all old page topics. |
+| getTotalTopicOld(long date, String forumPatch) | date is the time in the milisecond format; forumPath is the path of forum | the total number of old topics | To get the total number of old topics. |
+| getTopics(String categoryId, String forumId) | categoryId the id of category; forumId is the id of forum | topics | To get the topics. |
+| getTopic(String categoryId, String forumId, String topicId, String userRead) | categoryId is the id of category; forumId is the id of forum; topicId is the id of topic; userRead is the user reading the topic | Topic | To get the topic | 
+

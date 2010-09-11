@@ -74,6 +74,7 @@ h2. Overrideable Components
 h2. Plugin SPI
 
 h2. Public APIs
+{include:document="Public_Java_APIs.wiki"}
 
 h3. Java API
 
