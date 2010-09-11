@@ -10,9 +10,9 @@ h1. Configuration
 
 h2. Default BBCode data
 
-The default BBCode data is configured in the bbcodes-configuration.xml file.
+The default BBCode data is configured in the _bbcodes-configuration.xml_ file.
 
-In particular, at the runtime of the BBCode Service, the BBCode plugin component is called. Then, the bbcodes-configuration.xml file is executed, and the component-plugin named registerBBCodePlugin will be referred to org.exoplatform.ks.bbcode.spi.BBCodePlugin to excute some objects that will generate default data. 
+In particular, at the runtime of the BBCode Service, the BBCode plugin component is called. Then, the _bbcodes-configuration.xml file_ is executed, and the component-plugin named _registerBBCodePlugin_ will be referred to _org.exoplatform.ks.bbcode.spi.BBCodePlugin_ to excute some objects that will generate default data. 
 
 {code:xml}
 <component-plugin>
@@ -641,7 +641,7 @@ In particular, at the runtime of the BBCode Service, the BBCode plugin component
 || Name || Set method || Type || Description ||
 | forum.default.bbcodes | registerBBCodePlugin | org.exoplatform.ks.bbcode.spi.BBCodePlugin | default supported BBCodes |
 
-- The BBCode array is defined by the object org.exoplatform.ks.bbcode.spi.BBCodeData as below:
+- The BBCode array is defined by the _object org.exoplatform.ks.bbcode.spi.BBCodeData_ as below:
 {code:xml}
            <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
@@ -687,13 +687,13 @@ In particular, at the runtime of the BBCode Service, the BBCode plugin component
 {code}
 
 In which:
-|| Parameter || Value || Description ||
+|| Field-name || Values || Description ||
 | *tagName* | {{string}} | This is the text for the BB code, which goes inside the square brackets. For example, for the bold tag, you type {\[b\]} - the BB Code Tag for this is simply b without the brackets. 
 | *replacement* | {{string}} | This is the HTML code that replaces the BBCode entered by the user. Make sure that you include '\{param\}' (without the quotes) to insert the text between the opening and closing BBCode tags, and '\{option\}' for the parameter within the BBCode tag. You can only use \{option\} if 'Use Option' is selected. |
-| *description* | {{string}} | This is a piece of text to describe the BBCode tag. This can include HTML tags if you want.| {{string}} |
-| example | This is a sample piece of BB code to use as an example for this particular BB code. eg. to demonstrate the use of the [b] tag, you would enter [b]Some Text[/b]. |
-| isOption |  {{string}} | Setting this option to yes will allow you to create a [tag=option][/tag] style tag, rather than just a [tag][/tag] style tag. |
-| isActive |  | To activate the BBCode tag. |
+| *description* | {{string}} | This is a piece of text to describe the BBCode tag. This can include HTML tags if you want.|
+| *example* | {{string}} |This is a sample piece of BB code to use as an example for this particular BB code. e.g. to demonstrate the use of the [b] tag, you would enter [b]Some Text[/b]. |
+| *isOption* |  {{true / false}} | Setting this option to yes will allow you to create a [tag=option][/tag] style tag, rather than just a [tag][/tag] style tag. |
+| *isActive* | {{true/false}} | To activate the BBCode tag. |
 
 
 

@@ -8,12 +8,12 @@ h1. Basic information of Poll portlet
 h1. Portlet Preferences
 
 || *Preference name* || *Possible values* || *Default value* || *Description* ||
-| *pollIdShow* | {{string}} | {{empty}}| The Id of poll which is displayed in the poll portlet. |
+| *pollIdShow* | {{string}} | {{empty}}| The Id of poll is displayed in the poll portlet. |
 
 
 h1. Portlet.xml 
 
-* poll/WEB-INF/portlet.xml
+* See the portlet.xml file in the project following this path: poll/WEB-INF/portlet.xml
 
 
 

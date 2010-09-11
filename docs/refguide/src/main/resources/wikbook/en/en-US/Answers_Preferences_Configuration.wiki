@@ -1,4 +1,4 @@
-h1. Basic information of Answers portlet
+h1. Overview
 || Portlet name || War name || Description ||
 | *AnswersPortlet* | *faq.war* |  |
 
@@ -24,7 +24,7 @@ The Answers portlet consists of preferences as follows:
 
 h1. Portlet.xml
 
-* /webapps/faq/WEB-INF/portlet.xml
+* See the portlet.xml file in the project following this path: /webapps/faq/WEB-INF/portlet.xml
 
 
 

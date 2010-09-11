@@ -1,4 +1,4 @@
-h1. Basic information of gadgets
+h1. Overview
 
 || *Gadget name* | pollslist
 || *War name* | poll.war

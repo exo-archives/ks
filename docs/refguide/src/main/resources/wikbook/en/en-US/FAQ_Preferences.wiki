@@ -1,6 +1,6 @@
 h1. FAQ Portlet
 
-h2. Basic information of FAQ portlet
+h2. Overview
 || Portlet name || War name || Description ||
 | FAQPortlet | faq.war | |
 
@@ -19,6 +19,6 @@ Alternatively, you can configure the portlet in *portet-preferences.xml* file.
 | useAjax | {{true}}, {{false}} | {{false}} |  | 
 
 h2. Portlet.xml
-* /webapps/faq/WEB-INF/portlet.xml
+* See the portlet.xml file in the project following this path: /webapps/faq/WEB-INF/portlet.xml
 
 

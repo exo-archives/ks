@@ -12,9 +12,9 @@ h2. Components of KS
 
 * Init-params of org.exoplatform.ks.common.jcr.KSDataLocation
 
-|| Name || Possible value || Default value ||
-| repository | {{string}} | repository |
-| workspace | {{string}} | knowledge |
+|| Name || Possible values || Default values ||
+| *repository* | {{string}} | {{repository}} |
+| *workspace* | {{string}} | {{knowledge}} |
 
 h2. Components of Forum
 

@@ -38,12 +38,12 @@ The default data in the _.zip_ file is initialized
 {code}
 
 * In which,
-|| Name || Method | Type || Description ||
+|| Name || Set-Method | Type || Description ||
 | technical-faq | addInitialDataPlugin | org.exoplatform.faq.service.InitialDataPlugin | Initialize |
 
 * Init-param
 || Name || Possible value | Default value || Description ||
-| location | {{string}} | war:/data/Technical-FAQ.zip | location where Answers export format file is stored. |
+| *location* | {{string}} | {{war:/data/Technical-FAQ.zip}} | location where Answers export format file is stored. |
 
 If the default data is in the ~~xml~~ format
 

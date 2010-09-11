@@ -21,7 +21,7 @@ The Mail templates use a specific syntax that you can use to create a customized
 
 Parameters:
 || Parameter|| Description ||
-| _&categoryName__ | To load the category's name. |
-| _&questionContent__ | To load the question's content. |
-| _&questionResponse__ | To load the question's answer. |
-| +here+:| To load the link to question in FAQ. |
+| *_&categoryName__* | To load the category's name. |
+| *_&questionContent__* | To load the question's content. |
+|* _&questionResponse__* | To load the question's answer. |
+| *here*| To load the link to question in FAQ. |

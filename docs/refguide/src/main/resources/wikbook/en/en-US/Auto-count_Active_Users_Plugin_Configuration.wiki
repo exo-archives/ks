@@ -2,7 +2,7 @@ h1. Overview
 
 The Auto-count Active Users component is to calculate automatically the number of active users. A user is considered as an active user only when he/she often adds topic/post in Forum and his/her last post date satisfies with the interval time that is predefined.
 
-For example, after 15 days if one user does not have any new post, he/she is not considered as an active user.
+For example, after 15 days if one user does not have any new posts, he/she is not considered as an active user.
 
 When Job Schedule Service runs, it will get values which are returned from Auto-count Active Users plugin component to identify the number of active users. This value is updated at Active Members information when viewing Forum statistics.
 
@@ -63,21 +63,21 @@ At Job Schedule Service runtime, Auto-count Active Users plugin component is cal
 
 In which:
 
-|| Property || Value || Description ||
-| jobname | RecountActiveUserJob | The name of job which will be executed. |
-| groupname | KnowlegedSuite | The name of the application which will be executed. |
-| job | org.exoplatform.forum.service.conf.RecountActiveUserJob | The reference function of the job which will be executed. |
-| repeatCount | 0\\ any value | The repeat time for the job. It means that how many time the job will be executed. _repeatCount_ is 0. It means that _RecountActiveUserJob_  is called at runtime only. It is does not repeat. Assume that the value is 2 or 3, _RecountActiveUserJob_  is called 2 or 3 times. |
-| period | 7200000 (millisecond)\\(equal to 2 hours) | The time interval the job will be executed. |
-| starttime | 0 \\ any value | The start time when the function will be executed.\\ _starttime_ is +0. It means that the time to start executing _RecountActiveUserJob_  is the runtime. |
-| endtime | empty | The end time when the function will be stopped executing. _endtime_ is blank. It means that there is no limitation for the end time for _RecountActiveUserJob_ . |
+|| Property name || Possible value || Default value || Description ||
+| *jobname* | {{String}} | {{RecountActiveUserJob}} | The name of job which will be executed. |
+| *groupname* |{{String}} | {{KnowlegedSuite}} | The name of the application which will be executed. |
+| *job* | {{Class path}} | org.exoplatform.forum.service.conf.RecountActiveUserJob | The reference function of the job which will be executed. |
+| *repeatCount* | {{Long}} | 0 | The repeat time for the job. It means that how many time the job will be executed. _repeatCount_ is 0. It means that _RecountActiveUserJob_  is called at runtime only. It is does not repeat. Assume that the value is 2 or 3, _RecountActiveUserJob_  is called 2 or 3 times. |
+| *period* | {{Long}} | 7200000 (millisecond)\\(equal to 2 hours) | The time interval the job will be executed. |
+| *starttime* | {{Integer}} | 0 | The start time when the function will be executed.\\ _starttime_ is +0. It means that the time to start executing _RecountActiveUserJob_  is the runtime. |
+| *endtime* | {{Integer}} | null | The end time when the function will be stopped executing. _endtime_ is blank. It means that there is no limitation for the end time for _RecountActiveUserJob_ .|
 
 With start and end time, you can give a specific date in the format:yyyy-mm-dd HH:mm:ss.sss to define the start and end time for _RecountActiveUserJob_ .
  
 Besides, the active time information is also defined:
 
-|| Property || Value || Description ||
-| lastPost |  numeric | The number of days that the user has added last post.\\_lastPost_ is 15. It means that all users, within 15 days since their last post date, have any new post, they are active members. |
+|| Property name || Possible value || Default value || Description ||
+| *lastPost* | {{Integer}} | 15 | The number of days that the user has added last post.\\_lastPost_ is 15. It means that all users, within 15 days since their last post date, have any new post, they are active members. |
 
 By default, the default properties can only be changed by editing its value in the _statistics-configuration.xml_ file.
 

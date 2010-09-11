@@ -42,12 +42,12 @@ In details:
 
 In which: 
 
-|| Parameter || Value || Description ||
-| timeZone | time zone id. |  time zone of user \\ For example: GMT, GMT-05:00, GMT+07:00, GMT+08:30 ... \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/util/TimeZone.html for more detail. |
-| shortDateFormat |  String \\ date format \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. | the format to display short information of a date |
-| longDateFormat | String \\ date format | the format to display a date with more infomation  \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. |
-| timeFormat | String \\ time format | format to view time (for example, hour, minute,) \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. |
-| maxTopic | number | maximum number of topics on a page |
-| maxPost | number | maximum number of posts on a page |
-| isShowForumJump | true\\false | show forum jump or not |
+|| Parameter || Possible Value  || Default Value || Description ||
+| *timeZone* | {{Time zone id}} | {{GMT}} |  Time zone of user. For example: GMT, GMT-05:00, GMT+07:00, GMT+08:30 ... \\ Visit http://java.sun.com/j2se/1.4.2/docs/api/java/util/TimeZone.html for more detail. |
+| *shortDateFormat* | {{Valid Java Date format}} | {{MM/dd/yyyy}} | The format to display short information of a date ( visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly.) |
+| *longDateFormat* | {{Valid Java Date format}} | {{DDD,MMM dd,yyyy}} | The format to display a date with more infomation  \\ visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. |
+| *timeFormat* | {{valid Java Date format}} | {{hh:mm a}} | Format to view time (for example, hour, minute,) \\ Visit http://java.sun.com/j2se/1.4.2/docs/api/java/text/SimpleDateFormat.html to ensure the format exactly. |
+| *maxTopic* | {{Integer}} | 10 | Maximum number of topics on a page |
+| *maxPost* | {{Integer}} | 10 | Maximum number of posts on a page |
+| *isShowForumJump* | {{true / false}} | {{true}} | Show forum jump or not |
 

@@ -41,10 +41,10 @@ At the runtime of Job Schedule Service, Auto prune plugin component is called, t
 {code}
 
 * In which,
-|| Name || Method || Type || Description ||
+|| Name || Set-method || Type || Description ||
 | ForumDeactiveJob | addPeriodJob | org.exoplatform.forum.service.conf.DeactivePeriodJob | add a Deactive job to the JobSchedulerService |
 
-* The properties for the Auto-prune plugin are defined in ~~property~~ tag with format like below:
+* The properties for the Auto-prune plugin are defined in _property_ tag with format like below:
 
 {code:xml}
 ...
@@ -63,21 +63,21 @@ At the runtime of Job Schedule Service, Auto prune plugin component is called, t
 
 In details:
 
-|| Property || Description || Value  ||
-| jobname | The name of job which will be executed. | DeactiveJob |
-| groupname | The name of the application which will be executed. | KnowlegedSuite |
-| job | The reference function of the job which will be executed. | org.exoplatform.forum.service.conf.DeactiveJob |
-| repeatCount | The repeat time for the job. It means that how many time the job will be executed. It means that _DecactiveJob_  is called at runtime only. It does not repeat. Assume that the value is 2 or 3, _DecactiveJob_  is called 2 or 3 times.| 0 \\ any value |
-| period | The time interval the job will be executed. | 72000000 (equal to 2 hours)\\ any value |
-| starttime | The start time when the function will be executed.\\_starttime_ is +0. It means that the time to start executing _DecactiveJob_  is the runtime | +0\\ any value |
-| endtime | The end time when the function will be stopped executing.\\_endtime_ is blank. It means that there is no limitation for the end time for _DecactiveJob_. |  null |
+|| Property name || Possible value || Default value || Description ||
+| *jobname* | {{String}} | {{DeactiveJob}} | The name of job which will be executed. |
+| *groupname* | {{String}} | {{KnowlegedSuite}} | The name of the application which will be executed. |
+| *job* | {{Class path}} | {{org.exoplatform.forum.service.conf.DeactiveJob}} | The reference function of the job which will be executed. |
+| *repeatCount* | {{Long}} | {{0 }} | The repeat time for the job. It means that how many time the job will be executed. It means that _DecactiveJob_  is called at runtime only. It does not repeat. Assume that the value is 2 or 3, _DecactiveJob_  is called 2 or 3 times.|
+| *period* | {{Long}} | {{72000000}} | The time interval the job will be executed. |
+| *starttime* | {{Integer}} | {{+0}} | The start time when the function will be executed.\\_starttime_ is +0. It means that the time to start executing _DecactiveJob_  is the runtime |
+| *endtime* | {{Integer}} | {{ null}} | The end time when the function will be stopped executing.\\_endtime_ is blank. It means that there is no limitation for the end time for _DecactiveJob_. |
 With start and end time, you can give a specific date in format:yyyy-mm-dd HH:mm:ss.sss to define the start and end time for _DecactiveJob_ .
  
 Besides, deactive information is also defined:
 
-|| Property || Value || Description ||
-| inactiveDays | {{numeric}} | The number of days the topic has not been activated. _inactivateDays_ is 1. It means that all the topics which have 1 inactivated day, will be set inactivated status. They will be invisible. |
-| forumname | {{Live Demo}} | The name of the Forum which will be checked for Auto prune. In case, _forumname_ is blank. It means that all forums will be checked for auto prune. _forumname_ is Live demo. It means that only the forum named 'Live demo' is checked for Auto prune.  |
+|| Property name || Possible value || Default value || Description ||
+| *inactiveDays* | {{Integer}} | {{15}} | The number of days the topic has not been activated. _inactivateDays_ is 1. It means that all the topics which have 1 inactivated day, will be set inactivated status. They will be invisible. |
+| *forumname* | {{String}} | {{Live Demo}} | The name of the Forum which will be checked for Auto prune. In case, _forumname_ is blank. It means that all forums will be checked for auto prune. _forumname_ is Live demo. It means that only the forum named 'Live demo' is checked for Auto prune.  |
 
 By fault, the default properties can only be changed by editing its value in _prune-configuration.xml_ file.
 
