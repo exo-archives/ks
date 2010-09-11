@@ -31,6 +31,9 @@ UIWikiAjaxRequest.prototype.init = function(actionPrefix, defaultAction) {
   if (this.actionPrefix && this.defaultAction) {
     this.autoCheckAnchorId = window.setInterval(this.autoCheckAnchor, this.DEFAULT_TIMEOUT_CHECK);
     this.addEventListener(window, 'unload', this.destroyAll, false);
+    if (eXo.core.Browser.ie) {
+      this.createIEHistoryFrame();
+    }
   }
 };
 
@@ -77,6 +80,35 @@ UIWikiAjaxRequest.prototype.checkAnchor = function() {
     if (action) {
       action.onclick();
     }
+  }
+};
+
+UIWikiAjaxRequest.prototype.createIEHistoryFrame = function() {
+  var iframeID = 'rshHistoryFrame';
+  this.iframe = document.getElementById(iframeID);
+  if (!this.iframe) {
+    var tmpIframe = document.createElement('iframe');
+    tmpIframe.id = iframeID;
+    tmpIframe.src = '/wiki/resources/HistoryFrame.htm';
+    tmpIframe.style.display = 'none';
+    document.body.appendChild(tmpIframe);
+    this.iframe = document.getElementById(iframeID);
+  }
+};
+
+UIWikiAjaxRequest.prototype.onFrameLoaded = function(hash) {
+  location.hash = hash;
+};
+
+
+UIWikiAjaxRequest.prototype.makeNewHash = function(hash) {
+  if (eXo.core.Browser.ie) {
+    var doc = document.getElementById("rshHistoryFrame").contentWindow.document;
+    doc.open("javascript:'<html></html>'");
+    doc.write("<html><head></head><body onload=\"parent.eXo.wiki.UIWikiAjaxRequest.onFrameLoaded('" + hash + "');\"></body></html>");
+    doc.close();
+  } else {
+    this.onFrameLoaded(hash);
   }
 };
 

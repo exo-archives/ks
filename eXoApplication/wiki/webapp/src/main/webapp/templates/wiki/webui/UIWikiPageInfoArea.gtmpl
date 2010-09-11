@@ -25,7 +25,7 @@
 	<div class="TxtFeed">
 	  Added by <a class="Link" href=""><%= creator %></a>,
 	  Last modified by <a class="Link" href=""><%= author %></a> at <%= updatedDate %>
-	  <a class="Link" href="$historyAnchor">(view change)</a>
+	  <a class="Link" href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('$historyAnchor');">(view change)</a>
 	  <a onclick="<%=uicomponent.event(uicomponent.SHOW_HISTORY);%>" id="$historyActionId" style="display:none;">&nbsp;</a>
 	</div>
 	<div class="TxtFeed"><b><%= attachmentsTotal %> </b><a class="Link" href="$togglelink">attachment (s)</a>  - <b><%= versionsTotal %></b> <a class="Link" href="">revisions</a></div>

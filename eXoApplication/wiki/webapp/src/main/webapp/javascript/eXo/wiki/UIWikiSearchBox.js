@@ -88,7 +88,7 @@ UIWikiSearchBox.prototype.captureKey = function(e) {
 UIWikiSearchBox.prototype.enterHandler = function(evt, textbox){
   var action = eXo.core.DOMUtil.findAncestorByClass(textbox, "SearchForm") ;
   action = eXo.core.DOMUtil.findFirstChildByClass(action,"a","AdvancedSearch");
-  document.location.hash = '#AdvancedSearch';
+  eXo.wiki.UIWikiAjaxRequest.makeNewHash('#AdvancedSearch');
   action.onclick();
 };
 

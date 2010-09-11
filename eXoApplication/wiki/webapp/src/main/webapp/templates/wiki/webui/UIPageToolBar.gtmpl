@@ -49,15 +49,15 @@ for(entry in uicomponent.getActions()) {
 %>
 		<% if(action.equals("AddPage")){
 		%>
-		<a href="$anchor" class="Add Icon">&nbsp;</a>
+		<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Add Icon">&nbsp;</a>
 		<%} else if(action.equals("EditPage")){
 		%>
-		<a href="$anchor" class="Edit Icon">&nbsp;</a>
+		<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Edit Icon">&nbsp;</a>
 		<%} else if(action.equals("DeletePage")){
 		%>
 		<a href="$link" class="Delete Icon">&nbsp;</a>
 		<%} else if(action.equals("Cancel")){
-		    cancelLink = uicomponent.isNewMode() ? Utils.getCurrentRequestURL() : "#";
+		    cancelLink = uicomponent.isNewMode() ? Utils.getCurrentRequestURL() : "javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');";
 		%>
 		<a href="$cancelLink" class="Delete Icon">&nbsp;</a>
 		<%} else if(action.equals("Help")){
