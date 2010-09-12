@@ -44,7 +44,7 @@
 	<org.exoplatform.commons.version>1.0.0-GA</org.exoplatform.commons.version>
 	      
 	<!-- eXo extended service -->
-	<org.exoplatform.social.version>1.1.0-CR03-SNAPSHOT</org.exoplatform.social.version>
+	<org.exoplatform.social.version>1.1.0-CR03</org.exoplatform.social.version>
 	
     <!-- 3rd parties -->
 	<org.testng.version>5.10</org.testng.version>
