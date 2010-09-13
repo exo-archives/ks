@@ -34,7 +34,7 @@
       //displayTabs: true,
       defaultEditor: 'wysiwyg',
       plugins: 'submit line separator text valign justify list indent history format font color symbol table link image macro import',
-      menu: 'link image table macro import',
+      menu: 'link image table macro',
       toolbar: 'bold italic underline strikethrough teletype | subscript superscript | justifyleft justifycenter justifyright justifyfull | unorderedlist orderedlist | outdent indent | undo redo | format | fontname fontsize forecolor backcolor | hr removeformat symbol | import'
       //debug: true
     });
@@ -57,6 +57,19 @@
   }catch(e){
     eXo.wiki.Wysiwyg.onModuleLoad(eXo.wiki.createWysiwygEditor);
   }
+  
+  document.observe('xwiki:wysiwyg:loaded', function() {
+    var editForm = document.getElementById('UIWikiPageEditForm');
+    var iframe = eXo.core.DOMUtil.findFirstDescendantByClass(editForm, 'iframe', 'gwt-RichTextArea');
+    var doc = iframe.contentWindow.document;
+    doc.body.id = 'body';
+    doc.body.className = 'UIWikiPortlet';
+    var css = doc.createElement("link");
+    css.setAttribute("rel", "stylesheet");
+    css.setAttribute("type", "text/css");
+    css.setAttribute("href", "/wiki/skin/DefaultSkin/webui/Stylesheet.css");
+    doc.getElementsByTagName("head")[0].appendChild(css);
+  });
   
 </script>
 <% } %>
