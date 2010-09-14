@@ -239,6 +239,8 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 						if(leftPecent > 1){
 							double newVote = Double.parseDouble(oldVote[k]) ;
 							voteTp[k] = String.valueOf((newVote*100)/leftPecent) ;
+						} else {
+							voteTp[k] = "0.0";
 						}
 					}
 					
@@ -303,14 +305,13 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 							vote[i] = voteTp[j];
 							for (String str : newUserVote) {
 								if(str.indexOf(":"+j) > 0){
-									mab.put(str, str.replace(":"+j, ":"+i));
+									mab.put(str, mab.get(str).replace(":"+j, ":"+i));
 								} else {
 									if(!mab.keySet().contains(str)) {
 										mab.put(str, str);
 									}
 								}
 							}
-							newUserVote = new ArrayList<String>(mab.values());
 							++i;
 						}
 						newUser = mab.values().toArray(new String[newUserVote.size()]);

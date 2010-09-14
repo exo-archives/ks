@@ -216,7 +216,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 				String[] newUser = null;
 				String[] vote = new String[sizeOption]	;
 				for (int j = 0; j < sizeOption; j++) {
-					vote[j] = "0";
+					vote[j] = "0.0";
 				}
 				if(uiForm.isUpdate) {
 					List<Integer>listIndexItemRemoved = uiForm.uiFormMultiValue.getListIndexItemRemoved();
@@ -242,6 +242,8 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 						if(leftPecent > 1){
 							double newVote = Double.parseDouble(oldVote[k]) ;
 							voteTp[k] = String.valueOf((newVote*100)/leftPecent) ;
+						} else {
+							voteTp[k] = "0.0";
 						}
 					}
 					
