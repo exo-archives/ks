@@ -18,7 +18,7 @@
  */
 
 function UIWikiAjaxRequest() {
-  this.DEFAULT_TIMEOUT_CHECK = 300;
+  this.DEFAULT_TIMEOUT_CHECK = 100;
   this.autoCheckAnchorId = false;
   this.actionPrefix = false;
   this.defaultAction = false;

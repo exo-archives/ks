@@ -43,11 +43,11 @@ Centered and blue paragraph
 |Parametrized headers|{{{(% style="color:blue" %)}}}
 ~= header =|(((
 (% style="color:blue" %)
-~= header =
+= header =
 \\
 )))
-|Headers with wiki syntax|{{{=== Header with **bold** ===}}}|(((
-=== Header with **bold** ===
+|Headers with wiki syntax|{{{=== Header with //italic// ===}}}|(((
+=== Header with //italic// ===
 )))
 
 = Text Formatting =
@@ -70,11 +70,11 @@ Centered and blue paragraph
 ----
 )))
 |Parametrized Horizontal Line|(((
-{{{(% style="color:blue" %)
+{{{(% style="border-color:blue" %)
 ----
 }}}
 )))|(((
-(% style="color:blue" %)
+(% style="border-color:blue" %)
 ----
 )))
 
@@ -349,7 +349,7 @@ New line
 The full format of a link is ##(label>>)?(link)(||parameters)*##
 
 * ##label##: the link label, can contain wiki syntax
-* ##link##: the link target, i.e. where to go when the link is clicked. It has a similar format than in the XWiki 1.0 syntax and it can also contain 2 types of URIs: ##mailto:## and ##attach:## for linking to an email and linking to an attachment respectively.##
+* ##link##: the link target, i.e. where to go when the link is clicked. It can also contain 2 types of URIs: ##mailto:## and {{{attach:}}} for linking to an email and linking to an attachment respectively.
 * ##parameters##: An optional list of parameters passed to the link.
 
 = Tables =
@@ -490,25 +490,35 @@ XWiki macros (called using the##{{{{{macroname param1="value1" ... paramN="value
 
 (% style="width:100%" %)
 |=Feature|=XWiki Syntax 2.0|= Result
-|Radeox Macro/XWiki Macros|(((
+|Code Macro|(((
 {{{{{code language="java"}}
 java content
 {{/code}}
 }}}
-)))|{{code language="java"}}Class X{ String abc; public X(){};}{{/code}}\\
+)))|((( {{code language="java"}}Class X{ String abc; public X(){};}{{/code}} )))
 | Info Macro| ~{~{info}} Information ~{~{/info}}|
-{{info}} Information {{/info}}
+((( {{info}} Information {{/info}} )))
 \\
 | Warning Macro| ~{~{warning}}Warning~{~{/warning}} |
-{{warning}}Warning{{/warning}}
+((( {{warning}}Warning{{/warning}} )))
 \\
 | Error Macro| ~{~{error}}Error~{~{/error}}|
-{{error}}Error{{/error}}
+((( {{error}}Error{{/error}} )))
+\\
+| Tip Macro| ~{~{tip}}Tip~{~{/tip}} | ((({{tip}}Tip{{/tip}})))
+\\
+| Note Macro| ~{~{note}}Note~{~{/note}} | ((({{note}}Note{{/note}})))
+\\
+| Box Macro| ~{~{box title="Box Title" width="100%"}}Box Content~{~{/box}}| ((({{box title="Box Title" width="100%"}}Box Content{{/box}})))
+\\
+| Noformat Macro| ~{~{noformat}}~*~*Noformat~*~*~{~{/noformat}} | ((({{noformat}}**Noformat**{{/noformat}})))
+\\
+| Panel Macro| ~{~{panel title="Panel Title"}}Panel Content~{~{/panel}} | ((({{panel title="Panel Title"}}Panel Content{{/panel}})))
 \\
 
 = Parameters =
 
-With XWiki Syntax 2.0 it’s possible to pass parameters to the different syntax elements and also to blocks of text. This is used for example to style them. You can set any parameter key/value pair you want. The XHTML renderer will pass these parameters as XHTML attributes to the underlying XHTML representation of the different syntax elements. In XWiki Syntax 1.0 there was no syntax for passing parameters and the only way to do it was to write XHTML directly in the content as shown in the table below.
+With XWiki Syntax 2.0 it's possible to pass parameters to the different syntax elements and also to blocks of text. This is used for example to style them. You can set any parameter key/value pair you want. The XHTML renderer will pass these parameters as XHTML attributes to the underlying XHTML representation of the different syntax elements. In XWiki Syntax 1.0 there was no syntax for passing parameters and the only way to do it was to write XHTML directly in the content as shown in the table below.
 
 (% style="width:100%" %)
 |=XWiki Syntax 2.0|=Generated XHTML
