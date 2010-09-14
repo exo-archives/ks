@@ -310,6 +310,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 									}
 								}
 							}
+							newUserVote = new ArrayList<String>(mab.values());
 							++i;
 						}
 						newUser = mab.values().toArray(new String[newUserVote.size()]);

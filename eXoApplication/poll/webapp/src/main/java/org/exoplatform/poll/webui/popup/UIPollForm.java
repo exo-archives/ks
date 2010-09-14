@@ -313,6 +313,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 									}
 								}
 							}
+							newUserVote = new ArrayList<String>(mab.values());
 							++i;
 						}
 						newUser = mab.values().toArray(new String[newUserVote.size()]);
