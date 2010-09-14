@@ -282,7 +282,6 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 							newUser = new String[]{};
 						}
 						// multi vote
-						// TODO: edit failed.
 					} else {
 						List<String> newUserVote = new ArrayList<String>() ;
 						for(String uv : oldUserVote) {
@@ -296,8 +295,27 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 							String userInfo = sbUserInfo.toString() ;
 							if(userInfo.split(":").length >= 2)
 								newUserVote.add(userInfo) ;
-							newUser = newUserVote.toArray(new String[]{}) ;
 						}
+						
+						i = 0;
+						Map<String, String> mab = new HashMap<String, String>();
+						for (int j = 0; j < voteTp.length; j++) {
+							if(voteTp[j].equals("deleted")) {
+								continue;
+							}
+							vote[i] = voteTp[j];
+							for (String str : newUserVote) {
+								if(str.indexOf(":"+j) > 0){
+									mab.put(str, str.replace(":"+j, ":"+i));
+								} else {
+									if(!mab.keySet().contains(str)) {
+										mab.put(str, str);
+									}
+								}
+							}
+							++i;
+						}
+						newUser = mab.values().toArray(new String[newUserVote.size()]);
 					}
 				}
 				String userName = UserHelper.getCurrentUser() ;
