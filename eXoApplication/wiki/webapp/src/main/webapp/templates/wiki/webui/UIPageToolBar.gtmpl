@@ -68,7 +68,7 @@ for(entry in uicomponent.getActions()) {
 		<%} else if(action.equals("SavePage")){
 			saveLink=link;
 		%>
-		<a href="$link" onclick="eXo.wiki.UISavePageConfirmation.validateSave('$pageTitleInputId');return false;" 
+		<a href="$link" onclick="return eXo.wiki.UISavePageConfirmation.validateSave('$pageTitleInputId');" 
 		class="Save Icon">&nbsp;</a>
 		<%} else if(action.equals("RichText")){
 		%>
