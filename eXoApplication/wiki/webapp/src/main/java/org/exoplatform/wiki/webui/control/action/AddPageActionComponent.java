@@ -112,7 +112,7 @@ public class AddPageActionComponent extends UIComponent {
       Utils.feedDataForWYSIWYGEditor(pageEditForm, null);
     }
 
-    wikiPortlet.changeMode(WikiMode.NEW);
+    wikiPortlet.changeMode(WikiMode.ADDPAGE);
   }
   
 }

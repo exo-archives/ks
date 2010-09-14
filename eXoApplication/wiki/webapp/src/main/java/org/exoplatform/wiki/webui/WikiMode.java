@@ -27,13 +27,13 @@ public enum WikiMode {
   
   VIEW,
 
-  EDIT,
+  EDITPAGE,
 
-  NEW,
+  ADDPAGE,
 
-  SEARCH,
+  ADVANCEDSEARCH,
 
-  HISTORY,
+  SHOWHISTORY,
 
   PAGE_NOT_FOUND,
 

@@ -64,7 +64,7 @@ public class UIWikiPageEditForm extends UIWikiForm {
   private String  title ;
   
   public UIWikiPageEditForm() throws Exception{
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.EDIT, WikiMode.NEW });
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.EDITPAGE, WikiMode.ADDPAGE });
     
     WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
     

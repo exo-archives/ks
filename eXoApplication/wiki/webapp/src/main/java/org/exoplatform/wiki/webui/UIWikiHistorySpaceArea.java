@@ -44,7 +44,7 @@ public class UIWikiHistorySpaceArea extends UIWikiContainer {
   public static final String RETURN_VIEW_MODE = "ReturnViewMode";
 
   public UIWikiHistorySpaceArea() throws Exception {
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.HISTORY});
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.SHOWHISTORY});
     
     addChild(UIWikiPageVersionsList.class, null, null).setRendered(true);
     addChild(UIWikiPageVersionsCompare.class, null, null).setRendered(false);

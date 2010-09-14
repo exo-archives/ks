@@ -106,7 +106,7 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
     UIWikiHistorySpaceArea historySpaceArea = wikiPortlet.getChild(UIWikiHistorySpaceArea.class);
     UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class);
     pageVersionsList.setVersionsList(versionsList);
-    wikiPortlet.changeMode(WikiMode.HISTORY);
+    wikiPortlet.changeMode(WikiMode.SHOWHISTORY);
   }
 
 }

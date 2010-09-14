@@ -72,7 +72,7 @@ public class CancelActionComponent extends UIComponent {
       } catch (Exception e) {
         log.warn("An exception happens when cancel edit page", e);
       }
-      if (wikiPortlet.getWikiMode() == WikiMode.NEW) {
+      if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
         WikiService wikiService = event.getSource().getApplicationComponent(WikiService.class);
         String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
         wikiService.deleteDraftNewPage(sessionId);

@@ -81,7 +81,7 @@ public class EditPageActionComponent extends UIComponent {
       if (wikiRichTextArea.isRendered()) {
         Utils.feedDataForWYSIWYGEditor(pageEditForm, null);
       }      
-      wikiPortlet.changeMode(WikiMode.EDIT);
+      wikiPortlet.changeMode(WikiMode.EDITPAGE);
       super.processEvent(event);
     }
   }

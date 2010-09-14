@@ -33,7 +33,6 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.ext.UIExtensionManager;
-import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.resolver.PageResolver;
@@ -52,7 +51,8 @@ import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
   lifecycle = UIApplicationLifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPortlet.gtmpl",
   events = {
-    @EventConfig(listeners = UIWikiPortlet.ViewPageActionListener.class)
+    @EventConfig(listeners = UIWikiPortlet.ViewPageActionListener.class),
+    @EventConfig(listeners = UIWikiPortlet.ChangeModeActionListener.class)
   }
 )
 public class UIWikiPortlet extends UIPortletApplication {
@@ -61,9 +61,11 @@ public class UIWikiPortlet extends UIPortletApplication {
 
   private WikiMode previousMode;
 
-  public static String VIEW_PAGE_ACTION = "ViewPage";
+  public static String VIEW_PAGE_ACTION           = "ViewPage";
 
-  public static String WIKI_PORTLET_ACTION_PREFIX = "UIWikiPortlet_";
+  public static String CHANGE_MODE_ACTION         = "ChangeMode";
+
+  public static String WIKI_PORTLET_ACTION_PREFIX = "UIWikiPortlet_";  
   
   public UIWikiPortlet() throws Exception {
     super();
@@ -76,7 +78,7 @@ public class UIWikiPortlet extends UIPortletApplication {
       addChild(UIWikiBottomArea.class, null, null);
       addChild(UIWikiSearchSpaceArea.class, null, null);
       addChild(UIWikiHistorySpaceArea.class, null, null);
-      addChild(UIWikiMaskWorkspace.class, null, "UIWikiMaskWorkspace");
+      addChild(UIWikiMaskWorkspace.class, null, "UIWikiMaskWorkspace");      
     } catch (Exception e) {
       log.error("An exception happens when init WikiPortlet", e);
     }
@@ -142,12 +144,12 @@ public class UIWikiPortlet extends UIPortletApplication {
   }
   
   public void changeMode(WikiMode newMode) {
-    if (newMode.equals(WikiMode.HELP))
-      this.previousMode = mode;
+    if (newMode== WikiMode.HELP)
+        this.previousMode = mode;
     if (newMode.equals(WikiMode.VIEW)) {
       findFirstComponentOfType(UIWikiAttachmentArea.class).setRendered(false);
     }
-    if (newMode.equals(WikiMode.EDIT)||newMode.equals(WikiMode.NEW)) {
+    if (newMode.equals(WikiMode.EDITPAGE)||newMode.equals(WikiMode.ADDPAGE)) {
       findFirstComponentOfType(UIWikiSidePanelArea.class).setRendered(true);
       findFirstComponentOfType(UIWikiAttachmentArea.class).setRendered(true);
       findFirstComponentOfType(UIWikiRichTextArea.class).setRendered(false);
@@ -168,6 +170,18 @@ public class UIWikiPortlet extends UIPortletApplication {
     @Override
     public void execute(Event<UIWikiPortlet> event) throws Exception {
       event.getSource().changeMode(WikiMode.VIEW);
+    }
+  }
+  public static class ChangeModeActionListener extends EventListener<UIWikiPortlet> {
+    @Override
+    public void execute(Event<UIWikiPortlet> event) throws Exception {      
+      UIWikiPortlet wikiPortlet= event.getSource();
+      String mode = event.getRequestContext().getRequestParameter("mode");
+      String currentMode = (mode.equals("")) ? WikiMode.VIEW.toString() : mode;   
+      if (!currentMode.equalsIgnoreCase(wikiPortlet.mode.toString())){
+      event.getSource().changeMode(WikiMode.valueOf(currentMode.toUpperCase()));
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(wikiPortlet.findFirstComponentOfType(UIWikiBreadCrumb.class));      
     }
   }
 }

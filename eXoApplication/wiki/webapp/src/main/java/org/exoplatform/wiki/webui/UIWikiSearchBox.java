@@ -55,8 +55,8 @@ public class UIWikiSearchBox extends UIForm {
       String searchValue = event.getRequestContext().getRequestParameter(FIELD_SEARCHVALUE);
       advanceSearchForm.getUIStringInput(UIWikiAdvanceSearchForm.TEXT).setValue(searchValue);
       advanceSearchForm.processSearchAction();
-      if (!wikiPortlet.getWikiMode().equals(WikiMode.SEARCH)) {
-        wikiPortlet.changeMode(WikiMode.SEARCH);
+      if (!wikiPortlet.getWikiMode().equals(WikiMode.ADVANCEDSEARCH)) {
+        wikiPortlet.changeMode(WikiMode.ADVANCEDSEARCH);
       }
     }
     

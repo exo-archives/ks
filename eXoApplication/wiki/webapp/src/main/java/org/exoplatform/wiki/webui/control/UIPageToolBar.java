@@ -87,7 +87,7 @@ public class UIPageToolBar extends UIContainer {
   }
 
   public boolean isNewMode() {
-    return (getAncestorOfType(UIWikiPortlet.class).getWikiMode() == WikiMode.NEW);
+    return (getAncestorOfType(UIWikiPortlet.class).getWikiMode() == WikiMode.ADDPAGE);
   }
 
   public String getPageTitleInputId() {

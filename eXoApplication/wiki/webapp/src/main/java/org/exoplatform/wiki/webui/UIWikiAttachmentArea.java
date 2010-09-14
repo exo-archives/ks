@@ -67,7 +67,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
   public static final long   MAX_SIZE        = 10 * 1024 * 1024;
   
   public UIWikiAttachmentArea() throws Exception {
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW,WikiMode.EDIT,WikiMode.NEW});   
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW,WikiMode.EDITPAGE,WikiMode.ADDPAGE});   
     UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
     uiInput.setAutoUpload(true);
     addUIFormInput(uiInput);
@@ -99,7 +99,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
 
   private Page getCurrentWikiPage() throws Exception {
     UIWikiPortlet wikiPortlet = this.getAncestorOfType(UIWikiPortlet.class);
-    if (wikiPortlet.getWikiMode() == WikiMode.NEW) {
+    if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
       return Utils.getCurrentNewDraftWikiPage();
     } else {
       return Utils.getCurrentWikiPage();

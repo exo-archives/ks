@@ -40,7 +40,7 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
 )
 public class UIWikiSearchSpaceArea extends UIWikiContainer {
   public UIWikiSearchSpaceArea() throws Exception{
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.SEARCH});
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.ADVANCEDSEARCH});
     addChild(UIWikiAdvanceSearchForm.class, null, null);
     addChild(UIWikiAdvanceSearchResult.class, null, null);
   }

@@ -234,7 +234,7 @@ public class Utils {
     WikiPageParams params = Utils.getCurrentWikiPageParams();
     wikiContext.setType(params.getType());
     wikiContext.setOwner(params.getOwner());
-    if (wikiPortlet.getWikiMode() == WikiMode.NEW) {
+    if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
       String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
       wikiContext.setPageId(sessionId);
     } else {

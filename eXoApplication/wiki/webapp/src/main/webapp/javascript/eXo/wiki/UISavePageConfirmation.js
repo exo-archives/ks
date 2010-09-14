@@ -25,20 +25,22 @@ function UISavePageConfirmation() {
  * Submits a form with the given action and the given parameters
  */
 
-UISavePageConfirmation.prototype.validateSave = function(pageTitleinputId, currentMode) {
+UISavePageConfirmation.prototype.validateSave = function(pageTitleinputId) {
   var confirmMask = document.getElementById("ConfirmMask");
   var pageTitleInput = document.getElementById(pageTitleinputId);
   var confirmMessage = eXo.core.DOMUtil.findFirstDescendantByClass(confirmMask, "div", "ConfirmMessage");
-  if ((currentMode == "NEW") && (pageTitleInput.value == "Untitled")) {
-    confirmMask.style.display = "block";
-    confirmMessage.innerHTML = "You are about to save an Untitled page.";
-    return false;
-  } else if (currentMode == "EDIT") {
-    confirmMask.style.display = "block";
-    confirmMessage.innerHTML = "Your changes will be saved to history.<br/>Are you sure you want to apply this changes?";
-    return false;
+  var currentURL= window.location.href;
+  if (window.location.href.indexOf("#")>0)
+  {
+    var currentMode = currentURL.substring(currentURL.indexOf("#")+1, currentURL.length);   
+    if ((currentMode.toUpperCase() == "ADDPAGE") && (pageTitleInput.value == "Untitled")) {
+      confirmMask.style.display = "block";
+      confirmMessage.innerHTML = "You are about to save an Untitled page.";
+    } else if (currentMode.toUpperCase() == "EDITPAGE") {
+      confirmMask.style.display = "block";
+      confirmMessage.innerHTML = "Your changes will be saved to history.<br/>Are you sure you want to apply this changes?";     
+    }
   }
-  return true;
 };
 
 UISavePageConfirmation.prototype.closeConfirm = function() {

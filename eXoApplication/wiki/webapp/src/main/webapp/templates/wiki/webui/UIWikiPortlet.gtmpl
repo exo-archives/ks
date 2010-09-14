@@ -3,12 +3,17 @@
   import org.exoplatform.container.PortalContainer;
   
   def rcontext = _ctx.getRequestContext() ;
-  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAjaxRequest.init('" + uicomponent.WIKI_PORTLET_ACTION_PREFIX + "', '" + uicomponent.VIEW_PAGE_ACTION + "');");
+ 
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAjaxRequest.init('" + uicomponent.WIKI_PORTLET_ACTION_PREFIX + "', '" + uicomponent.VIEW_PAGE_ACTION + "');");  
   String viewLink = uicomponent.event(uicomponent.VIEW_PAGE_ACTION);
   String actionId = uicomponent.WIKI_PORTLET_ACTION_PREFIX + uicomponent.VIEW_PAGE_ACTION;
   String restContextName = PortalContainer.getInstance().getRestContextName();
+  
+  String changeModeLink= uicomponent.event(uicomponent.CHANGE_MODE_ACTION);
+  String changeModeLinkId = uicomponent.WIKI_PORTLET_ACTION_PREFIX + uicomponent.CHANGE_MODE_ACTION;
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPortlet.init('"+uicomponent.id+ "', '" + changeModeLinkId + "');"); 
 %>
-<script type="text/javascript">
+<script type="text/javascript"> 
   if(!eXo.env.rest){
     eXo.env.rest = {};
   }
@@ -28,7 +33,7 @@
 <script type="text/javascript" src="/wiki/javascript/xwiki/xwiki.js"></script>
 <script type="text/javascript" defer src="/wiki/javascript/xwiki/xwikiexplorer/xwikiexplorer.js"></script>
 <!--  -->
-<div class="UIWikiPortlet" id="$uicomponent.id">
+<div class="UIWikiPortlet" id="$uicomponent.id" >
   <div class="ParentMaskLayer">
     <div id="MaskLayerWiki" class="MaskLayerWiki"><span></span></div>
   </div>
@@ -43,4 +48,5 @@
   %>
   <%uicomponent.renderPopupMessages();%>
   <a onclick="$viewLink" id="$actionId" style="display:none;">&nbsp;</a>
+  <a href="$changeModeLink" onclick="" id="$changeModeLinkId" style="display:none;">&nbsp;</a> 
 </div>

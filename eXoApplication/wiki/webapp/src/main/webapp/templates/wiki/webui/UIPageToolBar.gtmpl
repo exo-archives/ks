@@ -26,7 +26,6 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(
 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UISavePageConfirmation.initDragDrop();");
 String saveLink = "";
 String cancelLink = "";
-String currentMode= uicomponent.getCurrentMode();
 String pageTitleInputId= uicomponent.getPageTitleInputId();
 for(entry in uicomponent.getActions()) {
      String action = entry.getActionName();
@@ -69,7 +68,7 @@ for(entry in uicomponent.getActions()) {
 		<%} else if(action.equals("SavePage")){
 			saveLink=link;
 		%>
-		<a href="$link" onclick="return eXo.wiki.UISavePageConfirmation.validateSave('$pageTitleInputId','$currentMode');"
+		<a href="$link" onclick="eXo.wiki.UISavePageConfirmation.validateSave('$pageTitleInputId');return false;" 
 		class="Save Icon">&nbsp;</a>
 		<%} else if(action.equals("RichText")){
 		%>
@@ -85,10 +84,10 @@ for(entry in uicomponent.getActions()) {
 				<a href="" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm();return false;" class="CloseButton"><span></span></a>
 			</div>
 			<div>
-				<div class="ConfirmMessage"></div>   	
+				<div class="ConfirmMessage"></div>				
 				<input type="button" value="Confirm" onclick="$saveLink">
 				<input type="button" value="Discard" onclick="javascript:window.location='#';">
-  				<input type="button" value="Cancel" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm()">
+ 			<input type="button" value="Cancel" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm()">
 			</div>
 		</div>
 	</div>

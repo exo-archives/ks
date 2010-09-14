@@ -69,7 +69,7 @@ public class UIWikiRichTextArea extends UIContainer {
       sb.append("/").append(PortalContainer.getCurrentPortalContainerName()).append("/");
       sb.append(PortalContainer.getCurrentRestContextName()).append("/wiki/");
       sb.append(pageParams.getType()).append("/").append(pageParams.getOwner()).append("/");
-      if (wikiPortlet.getWikiMode() == WikiMode.EDIT) {
+      if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
         sb.append(pageParams.getPageId());
       } else {
         sb.append(UIWikiPageEditForm.UNTITLED);
@@ -94,7 +94,7 @@ public class UIWikiRichTextArea extends UIContainer {
       log.warn("Can't get current wiki page params", e);
     }
     UIWikiPortlet wikiPortlet = this.getAncestorOfType(UIWikiPortlet.class);
-    if (wikiPortlet.getWikiMode() == WikiMode.NEW) {
+    if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
       String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
       wikiPageParams.setPageId(sessionId);
     }
