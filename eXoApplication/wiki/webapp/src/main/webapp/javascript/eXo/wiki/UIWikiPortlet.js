@@ -23,24 +23,26 @@ function UIWikiPortlet(){
 };
   var wikiPortletId;
   var changeModeLinkId;
+	var wikiportlet;
 
 UIWikiPortlet.prototype.init = function(portletId,linkId){
   var me= eXo.wiki.UIWikiPortlet;
   wikiPortletId= portletId;
   changeModeLinkId= linkId;
-  window.onfocus = function(event) {me.changeMode(event);};  
+	wikiportlet= document.getElementById(wikiPortletId);
+  //window.onfocus = function(event) {me.changeMode(event);};  
   window.onunload=function(event) {me.changeMode(event);}; 
   window.onload=function(event) {me.changeMode(event);}; 
   if (document.attachEvent)
     document.attachEvent("onmouseup", me.changeMode);
   else
     document.onmouseup= function(event) {me.changeMode(event);}; 
-  document.onkeypress= function(event){ if (event.keyCode==13) me.changeMode(event);};
+  wikiportlet.onkeypress= function(event){ if (event.keyCode==13) me.changeMode(event);};
 }
 
 UIWikiPortlet.prototype.changeMode = function(event){
   if (event.button==2) return;
-  var wikiPortlet= document.getElementById(wikiPortletId);
+  
   var currentURL=  document.location.href;
   var mode="";
   if (currentURL.indexOf("#")>0){
