@@ -6,6 +6,7 @@ SNF_KS_23 : Because of pop up interation, Import/Export can not be recorded and 
 SNF_KS_24 : The script is valid but have error from selenium that cause the system work invidly
 SNF_KS_38 : Because of pop up intration, Permalink can not be recorded and verified result.
 SNF_KS_39 : Because of pop up intraction, RSS Feed can not be recorded and verified.
+SNF_KS_41(default portal): can not combile to java file
 SNF_KS_54 : The script is valid but this function has bug that causes the system work invidly(KS-2582)
 
 Some function are recorded validly but can not verify its effects such as watch/unwatch, 
