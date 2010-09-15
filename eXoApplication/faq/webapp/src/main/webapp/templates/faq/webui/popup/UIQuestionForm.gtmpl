@@ -27,14 +27,14 @@
 							
 						<%} else if(field.getName().equals( uicomponent.ALL_LANGUAGES)){
 							if(!uicomponent.isRenderSelectLang) continue;
-								String link = uicomponent.event("DeleteLanguage", "delete question");
+								String link = uiform.event("DeleteLanguage", uicomponent.id,"delete question");
 						%>
 								<tr>
 									<td class="FieldLabel" style="width:100px; text-align:right"><%=uicomponent.getLabel(field.getName()) %> :</td>
 									<td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
 										<div style="float:left;">
 											<div style="float:left;"><% uiform.renderField(field) %></div>
-											<div onclick="javaScript:if(confirm('<%=(_ctx.appRes("UIQuestionForm.msg.DeleteQuestionInLanguage").replace("{0}",uicomponent.lastLanguage_) )%> ?')){$link}" style="float:left; width:24px;">
+											<div onclick="$link" style="float:left; width:24px;">
 												<div class="DustBinIcon"><span></span></div>
 											</div>
 										</div>

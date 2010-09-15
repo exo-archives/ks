@@ -74,7 +74,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
     template =  "app:/templates/faq/webui/popup/UIQuestionForm.gtmpl",
     events = {
     	@EventConfig(listeners = UIQuestionForm.SelectLanguageActionListener.class),
-    	@EventConfig(listeners = UIQuestionForm.DeleteLanguageActionListener.class),
+    	@EventConfig(listeners = UIQuestionForm.DeleteLanguageActionListener.class, confirm="UIQuestionForm.msg.DeleteQuestionInLanguage"),
       @EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class),
       @EventConfig(listeners = UIQuestionForm.SaveActionListener.class),
       @EventConfig(listeners = UIQuestionForm.CancelActionListener.class),

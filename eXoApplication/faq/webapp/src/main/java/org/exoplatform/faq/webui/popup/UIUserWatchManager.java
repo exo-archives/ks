@@ -56,7 +56,7 @@ import org.exoplatform.webui.form.UIFormTabPane;
 		template =	"app:/templates/faq/webui/popup/UIUserWatchManager.gtmpl",
 		events = {
 				@EventConfig(listeners = UIUserWatchManager.LinkActionListener.class),
-				@EventConfig(listeners = UIUserWatchManager.UnWatchActionListener.class),
+				@EventConfig(listeners = UIUserWatchManager.UnWatchActionListener.class, confirm="UIUserWatchManager.msg.confirm-unwatch-category"),
 				@EventConfig(listeners = UIUserWatchManager.CancelActionListener.class)
 		}
 )

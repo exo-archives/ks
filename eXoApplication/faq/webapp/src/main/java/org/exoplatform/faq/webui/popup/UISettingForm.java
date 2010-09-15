@@ -48,6 +48,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
@@ -72,7 +73,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 				@EventConfig(listeners = UISettingForm.ResetMailContentActionListener.class),
 				@EventConfig(listeners = UISettingForm.SelectCategoryForumActionListener.class),
 				@EventConfig(listeners = UISettingForm.ChangeAvatarActionListener.class),
-				@EventConfig(listeners = UISettingForm.SetDefaultAvatarActionListener.class),
+				@EventConfig(listeners = UISettingForm.SetDefaultAvatarActionListener.class, confirm="UISettingForm.msg.SetDeFaultAvatar", phase=Phase.DECODE),
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
 )
