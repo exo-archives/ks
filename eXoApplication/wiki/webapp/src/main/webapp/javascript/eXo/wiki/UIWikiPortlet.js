@@ -19,29 +19,44 @@
 
 if(!eXo.wiki) eXo.wiki = {};
 
-function UIWikiPortlet(){
+function UIWikiPortlet(){ 
+  this.wikiportlet=null;
+  this.changeModeLink=null; 
 };
-  var wikiPortletId;
-  var changeModeLinkId;
-	var wikiportlet;
+ 
 
 UIWikiPortlet.prototype.init = function(portletId,linkId){
   var me= eXo.wiki.UIWikiPortlet;
-  wikiPortletId= portletId;
-  changeModeLinkId= linkId;
-	wikiportlet= document.getElementById(wikiPortletId);
+	this.wikiportlet= document.getElementById(portletId);
+	this.changeModeLink= linkId= document.getElementById(linkId);  
+	
   window.onfocus = function(event) {me.changeMode(event);};  
   window.onbeforeunload = function(event){me.changeMode(event);};  
   if (document.attachEvent)
-    document.attachEvent("onmouseup", me.changeMode);
+    document.attachEvent("onmouseup", me.onMouseUp);
   else
-    document.onmouseup= function(event) {me.changeMode(event);}; 
-  wikiportlet.onkeypress= function(event){ if (event.keyCode==13) me.changeMode(event);};
+    document.onmouseup= function(event) {me.onMouseUp(event);}; 
+  this.wikiportlet.onkeypress= function(event){ me.onKeyPress(event);};
 }
 
-UIWikiPortlet.prototype.changeMode = function(event){
-  if (event.button==2) return;
-  
+
+UIWikiPortlet.prototype.onMouseUp = function(evt){
+  var evt = evt || window.event; 
+  var target = evt.target || evt.srcElement;
+  if (evt.button==2) return;
+  if (target.tagName=="A"||(target.tagName=="INPUT" && evt.type=="button")||evt.tagName=="SELECT")  
+    eXo.wiki.UIWikiPortlet.changeMode(evt);
+}
+
+UIWikiPortlet.prototype.onKeyPress = function(evt){
+  var evt = evt || window.event;
+  var target = evt.target || evt.srcElement;  
+  if (target.tagName=="INPUT" && target.type=="text")  
+    if (evt.keyCode==13)
+      eXo.wiki.UIWikiPortlet.changeMode(evt);
+}
+
+UIWikiPortlet.prototype.changeMode = function(event){ 
   var currentURL=  document.location.href;
   var mode="";
   if (currentURL.indexOf("#")>0){
@@ -49,7 +64,7 @@ UIWikiPortlet.prototype.changeMode = function(event){
     if (mode.indexOf("/")>0)
       mode= mode.substring(0,mode.indexOf("/"));
   }   
-  var link= document.getElementById(changeModeLinkId);
+  var link= this.changeModeLink;
   var endParamIndex = link.href.lastIndexOf("')");
     var modeIndex= link.href.indexOf("&mode");
     if (modeIndex<0)
@@ -60,5 +75,7 @@ UIWikiPortlet.prototype.changeMode = function(event){
 }
 
 eXo.wiki.UIWikiPortlet = new UIWikiPortlet();
+
+/********************* Other functions ******************/
 
 String.prototype.trim = function() {  return this.replace(/^\s+|\s+$/g, '');  }

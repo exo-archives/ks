@@ -3,14 +3,15 @@
   import org.exoplatform.container.PortalContainer;
   
   def rcontext = _ctx.getRequestContext() ;
- 
-  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAjaxRequest.init('" + uicomponent.WIKI_PORTLET_ACTION_PREFIX + "', '" + uicomponent.VIEW_PAGE_ACTION + "');");  
+ 		
   String viewLink = uicomponent.event(uicomponent.VIEW_PAGE_ACTION);
   String actionId = uicomponent.WIKI_PORTLET_ACTION_PREFIX + uicomponent.VIEW_PAGE_ACTION;
   String restContextName = PortalContainer.getInstance().getRestContextName();
   
   String changeModeLink= uicomponent.event(uicomponent.CHANGE_MODE_ACTION);
   String changeModeLinkId = uicomponent.WIKI_PORTLET_ACTION_PREFIX + uicomponent.CHANGE_MODE_ACTION;
+  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiPortlet') ;
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAjaxRequest.init('" + uicomponent.WIKI_PORTLET_ACTION_PREFIX + "', '" + uicomponent.VIEW_PAGE_ACTION + "');");  
   rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPortlet.init('"+uicomponent.id+ "', '" + changeModeLinkId + "');"); 
 %>
 <script type="text/javascript"> 
