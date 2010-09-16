@@ -31,8 +31,7 @@ UIWikiPortlet.prototype.init = function(portletId,linkId){
   changeModeLinkId= linkId;
 	wikiportlet= document.getElementById(wikiPortletId);
   window.onfocus = function(event) {me.changeMode(event);};  
-  window.onunload=function(event) {me.changeMode(event);}; 
-  window.onload=function(event) {me.changeMode(event);}; 
+  window.onbeforeunload = function(event){me.changeMode(event);};  
   if (document.attachEvent)
     document.attachEvent("onmouseup", me.changeMode);
   else
