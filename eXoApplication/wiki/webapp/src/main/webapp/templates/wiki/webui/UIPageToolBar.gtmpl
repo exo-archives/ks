@@ -48,10 +48,10 @@ for(entry in uicomponent.getActions()) {
 %>
 		<% if(action.equals("AddPage")){
 		%>
-		<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Add Icon">&nbsp;</a>
+		<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Add Icon">&nbsp;</a>
 		<%} else if(action.equals("EditPage")){
 		%>
-		<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Edit Icon">&nbsp;</a>
+		<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Edit Icon">&nbsp;</a>
 		<%} else if(action.equals("DeletePage")){
 		%>
 		<a href="$link" class="Delete Icon">&nbsp;</a>
@@ -68,7 +68,7 @@ for(entry in uicomponent.getActions()) {
 		<%} else if(action.equals("SavePage")){
 			saveLink=link;
 		%>
-		<a href="$link" onclick="return eXo.wiki.UISavePageConfirmation.validateSave('$pageTitleInputId');" 
+		<a onclick="eXo.wiki.UISavePageConfirmation.validateSave('$pageTitleInputId');" 
 		class="Save Icon">&nbsp;</a>
 		<%} else if(action.equals("RichText")){
 		%>
@@ -86,7 +86,7 @@ for(entry in uicomponent.getActions()) {
 			<div>
 				<div class="ConfirmMessage"></div>				
 				<input type="button" value="Confirm" onclick="$saveLink">
-				<input type="button" value="Discard" onclick="javascript:window.location='#';">
+				<input type="button" value="Discard" onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');">
  			<input type="button" value="Cancel" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm()">
 			</div>
 		</div>

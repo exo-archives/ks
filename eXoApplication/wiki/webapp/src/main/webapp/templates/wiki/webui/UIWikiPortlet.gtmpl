@@ -48,5 +48,5 @@
   %>
   <%uicomponent.renderPopupMessages();%>
   <a onclick="$viewLink" id="$actionId" style="display:none;">&nbsp;</a>
-  <a href="$changeModeLink" onclick="" id="$changeModeLinkId" style="display:none;">&nbsp;</a> 
+  <a href="$changeModeLink" id="$changeModeLinkId" style="display:none;">&nbsp;</a> 
 </div>

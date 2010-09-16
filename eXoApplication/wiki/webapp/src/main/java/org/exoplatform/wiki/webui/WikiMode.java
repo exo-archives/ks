@@ -39,6 +39,8 @@ public enum WikiMode {
 
   DELETE_CONFIRM,
 
-  HELP
+  HELP,
+  
+  VIEWREVISION
 
 }

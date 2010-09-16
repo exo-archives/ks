@@ -30,7 +30,7 @@ UIWikiPortlet.prototype.init = function(portletId,linkId){
   wikiPortletId= portletId;
   changeModeLinkId= linkId;
 	wikiportlet= document.getElementById(wikiPortletId);
-  //window.onfocus = function(event) {me.changeMode(event);};  
+  window.onfocus = function(event) {me.changeMode(event);};  
   window.onunload=function(event) {me.changeMode(event);}; 
   window.onload=function(event) {me.changeMode(event);}; 
   if (document.attachEvent)
@@ -47,6 +47,8 @@ UIWikiPortlet.prototype.changeMode = function(event){
   var mode="";
   if (currentURL.indexOf("#")>0){
     mode = currentURL.substring(currentURL.indexOf("#")+1, currentURL.length);
+    if (mode.indexOf("/")>0)
+      mode= mode.substring(0,mode.indexOf("/"));
   }   
   var link= document.getElementById(changeModeLinkId);
   var endParamIndex = link.href.lastIndexOf("')");

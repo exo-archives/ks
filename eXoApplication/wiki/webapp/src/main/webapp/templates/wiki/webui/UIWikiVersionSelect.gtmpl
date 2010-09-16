@@ -1,0 +1,47 @@
+<%
+  import org.exoplatform.wiki.webui.UIWikiPortlet;  
+%>
+
+<div class="UIWikiVersionSelect">
+	<%
+      String viewCurrentVersionLink = uicomponent.event(uicomponent.VIEW_CURRENT_VERSION);
+      String restoreLink = uicomponent.event(uicomponent.RESTORE_ACTION);
+      String viewHistoryLink = uicomponent.event(uicomponent.SHOW_HISTORY);
+      String previousVersionsLink = uicomponent.isHasPreviousVersion() ? uicomponent.event(uicomponent.PREVIOUS_VERSION) : null;
+      String nextVersionsLink = uicomponent.isHasNextVersion() ? uicomponent.event(uicomponent.NEXT_VERSION) : null;
+      String currentVersion = "Version " + uicomponent.versionName;
+      String prevVersionNumber= "";
+      	if ( uicomponent.isHasPreviousVersion()) prevVersionNumber= (--Integer.valueOf(uicomponent.versionName)).toString();
+      String nextVersionNumber= (++Integer.valueOf(uicomponent.versionName)).toString();
+      
+      String prevVersionLinkId=  UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + uicomponent.VIEW_REVISION+"/"+prevVersionNumber;
+      String nextVersionNumberLinkId=  UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + uicomponent.VIEW_REVISION+"/"+nextVersionNumber;
+      String  viewHistoryLinkId= UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX +uicomponent.SHOW_HISTORY;
+     
+  %>
+  <div class="DecorationVersion">
+		<span class="Label"> You're viewing an old version of this page. View the </span>
+		 <a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');" class="Title">current Version</a>	
+		<div class="ActionLink">
+				<a onclick="">Compare with Current</a>&nbsp;|&nbsp;
+				<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');" onclick="$restoreLink;">Restore this Versionv</a>&nbsp;|&nbsp;
+				<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.SHOW_HISTORY');">View Page History</a>
+				<a id="$viewHistoryLinkId" onclick="$viewHistoryLink" style="display:none">;
+		</div>
+	</div>
+	<div class="Breadcum">
+	<%
+    if(previousVersionsLink != null){
+  %>
+    <a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.VIEW_REVISION/$prevVersionNumber');">Prev</a>
+    <a  id="$prevVersionLinkId" onclick="$previousVersionsLink"></a>
+  <% } %>
+	  <span class="Label"><%= "&nbsp;&nbsp;" +  currentVersion + "&nbsp;&nbsp;" %></span> 
+	<%
+    if(nextVersionsLink != null){
+  %>
+	  <a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.VIEW_REVISION/$nextVersionNumber');">Next</a>
+	  <a id="$nextVersionNumberLinkId" onclick="$nextVersionsLink"></a>
+	<% } %>
+	</div>
+</div>

@@ -1,35 +1,4 @@
-<%
-  import org.exoplatform.wiki.webui.PageMode;
-  
-  PageMode pageMode = uicomponent.getPageMode();
-%>
 <div class="UIWikiPageContentArea">
-  <%
-    if(pageMode == PageMode.HISTORY) {
-      String viewCurrentVersionLink = uicomponent.event(uicomponent.VIEW_CURRENT_VERSION);
-      String restoreLink = uicomponent.event(uicomponent.RESTORE_ACTION);
-      String viewHistoryLink = uicomponent.event(uicomponent.VIEW_HISTORY);
-      String previousVersionsLink = uicomponent.isHasPreviousVersion() ? uicomponent.event(uicomponent.PREVIOUS_VERSION) : null;
-      String nextVersionsLink = uicomponent.isHasNextVersion() ? uicomponent.event(uicomponent.NEXT_VERSION) : null;
-      String currentVersion = "Version " + uicomponent.versionName;
-  %>
-  <div class="DecorationVersion">
-		<span class="Label"> You're viewing an old version of this page. View the </span> <a href="$viewCurrentVersionLink" class="Title">current Version</a>
-		<div class="ActionLink"><a href="">Compare with Current</a>&nbsp;|&nbsp;<a href="$restoreLink">Restore this Versionv</a>&nbsp;|&nbsp;<a href="$viewHistoryLink">View Page History</a></div>
-	</div>
-	<div class="Breadcum">
-	<%
-    if(previousVersionsLink != null){
-  %>
-    <a href="$previousVersionsLink">Prev</a>
-  <% } %>
-	  <span class="Label"><%= "&nbsp;&nbsp;" +  currentVersion + "&nbsp;&nbsp;" %></span> 
-	<%
-    if(nextVersionsLink != null){
-  %>
-	  <a href="$nextVersionsLink">Next</a>
-	<% } %>
-	</div>
-<% } %>
-${uicomponent.htmlOutput}
+	<% uicomponent.renderChildren(); %>
+	${uicomponent.htmlOutput}
 </div>

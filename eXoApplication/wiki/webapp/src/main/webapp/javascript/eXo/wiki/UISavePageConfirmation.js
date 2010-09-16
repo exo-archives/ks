@@ -36,14 +36,14 @@ UISavePageConfirmation.prototype.validateSave = function(pageTitleinputId) {
     if ((currentMode.toUpperCase() == "ADDPAGE") && (pageTitleInput.value == "Untitled")) {
       confirmMask.style.display = "block";
       confirmMessage.innerHTML = "You are about to save an Untitled page.";
-      return false;
+     
     } else if (currentMode.toUpperCase() == "EDITPAGE") {
       confirmMask.style.display = "block";
       confirmMessage.innerHTML = "Your changes will be saved to history.<br/>Are you sure you want to apply this changes?";
-      return false;
+     
     }
   }
-  return true;
+ 
 };
 
 UISavePageConfirmation.prototype.closeConfirm = function() {

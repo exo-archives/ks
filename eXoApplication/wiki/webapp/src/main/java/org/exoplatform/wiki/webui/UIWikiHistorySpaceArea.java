@@ -54,8 +54,9 @@ public class UIWikiHistorySpaceArea extends UIWikiContainer {
     UIWikiPortlet wikiPortlet = ((UIComponent) event.getSource()).getAncestorOfType(UIWikiPortlet.class);
     UIWikiPageContentArea pageContentArea = wikiPortlet.findFirstComponentOfType(UIWikiPageContentArea.class);
     String versionName = event.getRequestContext().getRequestParameter(OBJECTID);
-    pageContentArea.renderVersion(versionName);
-    wikiPortlet.changeMode(WikiMode.VIEW);
+    wikiPortlet.findFirstComponentOfType(UIWIkiVerSionSelect.class).setVersionName(versionName);
+    pageContentArea.renderVersion();
+    wikiPortlet.changeMode(WikiMode.VIEWREVISION);
   }
   
   static public class ReturnViewModeActionListener extends EventListener<UIWikiHistorySpaceArea> {

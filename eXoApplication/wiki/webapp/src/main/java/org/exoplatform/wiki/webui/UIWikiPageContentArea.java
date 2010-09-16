@@ -23,10 +23,7 @@ import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
-import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTFrozenNode;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
@@ -50,39 +47,17 @@ import org.xwiki.rendering.syntax.Syntax;
  */
 @ComponentConfig(
   lifecycle = UIApplicationLifecycle.class,
-  template = "app:/templates/wiki/webui/UIWikiPageContentArea.gtmpl",
-  events = {
-    @EventConfig(listeners = UIWikiPageContentArea.ViewCurrentVersionActionListener.class),
-    @EventConfig(listeners = UIWikiPageContentArea.RestoreActionListener.class),
-    @EventConfig(listeners = UIWikiPageContentArea.ViewHistoryActionListener.class),
-    @EventConfig(listeners = UIWikiPageContentArea.NextVersionActionListener.class),
-    @EventConfig(listeners = UIWikiPageContentArea.PreviousVersionActionListener.class)
-  }
+  template = "app:/templates/wiki/webui/UIWikiPageContentArea.gtmpl"
 )
 public class UIWikiPageContentArea extends UIWikiContainer {
 
-  private String htmlOutput;
-  private PageMode pageMode = PageMode.CURRENT;
-  private String versionName;
+  private String htmlOutput; 
   
-  public static final String VIEW_CURRENT_VERSION = "ViewCurrentVersion";
-  public static final String RESTORE_ACTION = "Restore";
-  public static final String VIEW_HISTORY = "ViewHistory";
-  public static final String NEXT_VERSION = "NextVersion";
-  public static final String PREVIOUS_VERSION = "PreviousVersion";
+  public UIWikiPageContentArea() throws Exception{
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.HELP, WikiMode.VIEWREVISION });
+    this.addChild(UIWIkiVerSionSelect.class, null, null);
+  }  
   
-  public UIWikiPageContentArea(){
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.HELP });
-  }
-
-  public PageMode getPageMode() {
-    return pageMode;
-  }
-
-  public void setPageMode(PageMode pageMode) {
-    this.pageMode = pageMode;
-  }
-
   public String getHtmlOutput() {
     return htmlOutput;
   }
@@ -91,13 +66,10 @@ public class UIWikiPageContentArea extends UIWikiContainer {
     this.htmlOutput = output;
   }
   
-  public void renderVersion(String versionName) throws Exception {
-    if (versionName != null && versionName.length() > 0) {
-      this.versionName = versionName;
-      pageMode = PageMode.HISTORY;
-      return;
-    }
+  public void renderVersion() throws Exception {
+    String currentVersionName= this.getChild(UIWIkiVerSionSelect.class).getVersionName();
     
+    WikiMode currentMode= this.getAncestorOfType(UIWikiPortlet.class).getWikiMode();
     RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
     PageImpl wikipage = (PageImpl) Utils.getCurrentWikiPage();
     
@@ -122,14 +94,14 @@ public class UIWikiPageContentArea extends UIWikiContainer {
     }
     
     // Render current content
-    if (pageMode == PageMode.CURRENT) {
+    if (currentMode.equals(WikiMode.VIEW)) {
       this.htmlOutput = renderingService.render(wikipage.getContent().getText(),
                                                 wikipage.getContent().getSyntax(),
                                                 Syntax.XHTML_1_0.toIdString());
     }
-    // Render history content
-    if (pageMode == PageMode.HISTORY && this.versionName != null) {
-      NTVersion version = wikipage.getVersionableMixin().getVersionHistory().getVersion(this.versionName);
+    // Render select version content
+    if (currentMode.equals(WikiMode.VIEWREVISION) && currentVersionName != null) {
+      NTVersion version = wikipage.getVersionableMixin().getVersionHistory().getVersion(currentVersionName);
       NTFrozenNode frozenNode = version.getNTFrozenNode();
       ContentImpl content = (ContentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT));
       String pageContent = content.getText();
@@ -141,63 +113,5 @@ public class UIWikiPageContentArea extends UIWikiContainer {
     
   }
   
-  private boolean isHasPreviousVersion() {
-    int version = Integer.valueOf(versionName);
-    return (version > 1) ? true : false;
-  }
-  
-  private boolean isHasNextVersion() throws Exception {
-    PageImpl wikipage = (PageImpl) Utils.getCurrentWikiPage();
-    int versionTotals = wikipage.getVersionableMixin().getVersionHistory().getChildren().size() - 1;
-    int version = Integer.valueOf(versionName);
-    return (version < versionTotals) ? true : false;
-  }
-  
-  static public class ViewCurrentVersionActionListener extends EventListener<UIWikiPageContentArea> {
-    @Override
-    public void execute(Event<UIWikiPageContentArea> event) throws Exception {
-      UIWikiPageContentArea wikiPageContentArea = event.getSource();
-      wikiPageContentArea.setPageMode(PageMode.CURRENT);
-    }
-  }
-  
-  static public class RestoreActionListener extends EventListener<UIWikiPageContentArea> {
-    @Override
-    public void execute(Event<UIWikiPageContentArea> event) throws Exception {
-      UIWikiPageContentArea wikiPageContentArea = event.getSource();
-      PageImpl wikipage = (PageImpl) Utils.getCurrentWikiPage();
-      wikipage.restore(wikiPageContentArea.versionName, false);
-      wikipage.checkout();
-      wikipage.checkin();
-      wikipage.checkout();
-      wikiPageContentArea.setPageMode(PageMode.CURRENT);
-    }
-  }
-  
-  static public class ViewHistoryActionListener extends EventListener<UIWikiPageContentArea> {
-    @Override
-    public void execute(Event<UIWikiPageContentArea> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIWikiPageInfoArea.processShowHistoryAction(wikiPortlet);
-    }
-  }
-  
-  static public class NextVersionActionListener extends EventListener<UIWikiPageContentArea> {
-    @Override
-    public void execute(Event<UIWikiPageContentArea> event) throws Exception {
-      UIWikiPageContentArea wikiPageContentArea = event.getSource();
-      int version = Integer.valueOf(wikiPageContentArea.versionName);
-      wikiPageContentArea.versionName = String.valueOf(++version);
-    }
-  }
-  
-  static public class PreviousVersionActionListener extends EventListener<UIWikiPageContentArea> {
-    @Override
-    public void execute(Event<UIWikiPageContentArea> event) throws Exception {
-      UIWikiPageContentArea wikiPageContentArea = event.getSource();
-      int version = Integer.valueOf(wikiPageContentArea.versionName);
-      wikiPageContentArea.versionName = String.valueOf(--version);
-    }
-  }
   
 }

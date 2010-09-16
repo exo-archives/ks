@@ -42,7 +42,7 @@ public class IsViewModeFilter extends UIExtensionAbstractFilter {
   @Override
   public boolean accept(Map<String, Object> context) throws Exception {
     UIWikiPortlet wikiPortlet = (UIWikiPortlet) context.get(UIWikiPortlet.class.getName());
-    return(wikiPortlet.getWikiMode() == WikiMode.VIEW);
+    return(wikiPortlet.getWikiMode() == WikiMode.VIEW||wikiPortlet.getWikiMode() == WikiMode.VIEWREVISION);
   }
 
   @Override

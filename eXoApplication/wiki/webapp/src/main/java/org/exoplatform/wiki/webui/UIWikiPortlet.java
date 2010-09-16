@@ -119,7 +119,7 @@ public class UIWikiPortlet extends UIPortletApplication {
       WikiPageParams params = pageResolver.extractWikiPageParams(requestURL);
 
       ((UIWikiPageTitleControlArea) findComponentById(UIWikiPageControlArea.TITLE_CONTROL)).getUIFormInputInfo().setValue(page.getContent().getTitle());
-      findFirstComponentOfType(UIWikiPageContentArea.class).renderVersion(null);
+      findFirstComponentOfType(UIWikiPageContentArea.class).renderVersion();
       UIWikiBreadCrumb wikiBreadCrumb = findFirstComponentOfType(UIWikiBreadCrumb.class);
       WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
       wikiBreadCrumb.setBreadCumbs(wikiService.getBreadcumb(params.getType(), params.getOwner(), page.getName()));

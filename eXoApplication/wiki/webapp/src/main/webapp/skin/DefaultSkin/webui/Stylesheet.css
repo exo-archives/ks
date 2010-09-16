@@ -114,7 +114,8 @@
 }
 
 .UIWikiPortlet a:hover {
-	text-decoration: underline;
+  cursor:pointer;
+	text-decoration: underline
 }
 
 .UIWikiPortlet p, .UIWikiPortlet dl, .UIWikiPortlet hr, .UIWikiPortlet h1, .UIWikiPortlet h2, .UIWikiPortlet h3, .UIWikiPortlet h4, .UIWikiPortlet h5, .UIWikiPortlet h6, .UIWikiPortlet ol, .UIWikiPortlet ul, .UIWikiPortlet pre, .UIWikiPortlet table, .UIWikiPortlet address, .UIWikiPortlet fieldset {
