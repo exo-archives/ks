@@ -68,7 +68,7 @@ for(entry in uicomponent.getActions()) {
 		<%} else if(action.equals("SavePage")){
 			saveLink=link;
 		%>
-		<a onclick="eXo.wiki.UISavePageConfirmation.validateSave('$pageTitleInputId');" 
+		<a href="$link" onclick="return eXo.wiki.UISavePageConfirmation.validateSave('$pageTitleInputId');" 
 		class="Save Icon">&nbsp;</a>
 		<%} else if(action.equals("RichText")){
 		%>
@@ -84,7 +84,8 @@ for(entry in uicomponent.getActions()) {
 				<a href="" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm();return false;" class="CloseButton"><span></span></a>
 			</div>
 			<div>
-				<div class="ConfirmMessage"></div>				
+				<div class="ConfirmAdd">You are about to save an Untitled page</div>
+				<div class="ConfirmEdit">Your changes will be saved to history.<br/>Are you sure you want to apply this changes?</div>			
 				<input type="button" value="Confirm" onclick="$saveLink">
 				<input type="button" value="Discard" onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');">
  			<input type="button" value="Cancel" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm()">

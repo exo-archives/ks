@@ -28,21 +28,25 @@ function UISavePageConfirmation() {
 UISavePageConfirmation.prototype.validateSave = function(pageTitleinputId) {
   var confirmMask = document.getElementById("ConfirmMask");
   var pageTitleInput = document.getElementById(pageTitleinputId);
-  var confirmMessage = eXo.core.DOMUtil.findFirstDescendantByClass(confirmMask, "div", "ConfirmMessage");
+  var confirmEdit = eXo.core.DOMUtil.findFirstDescendantByClass(confirmMask, "div", "ConfirmEdit");
+  var confirmAdd = eXo.core.DOMUtil.findFirstDescendantByClass(confirmMask, "div", "ConfirmAdd");
   var currentURL= window.location.href;
   if (window.location.href.indexOf("#")>0)
   {
     var currentMode = currentURL.substring(currentURL.indexOf("#")+1, currentURL.length);   
     if ((currentMode.toUpperCase() == "ADDPAGE") && (pageTitleInput.value == "Untitled")) {
       confirmMask.style.display = "block";
-      confirmMessage.innerHTML = "You are about to save an Untitled page.";
-     
+      confirmEdit.style.display = "none";
+      confirmAdd.style.display = "block";      
+      return false;
     } else if (currentMode.toUpperCase() == "EDITPAGE") {
       confirmMask.style.display = "block";
-      confirmMessage.innerHTML = "Your changes will be saved to history.<br/>Are you sure you want to apply this changes?";
-     
+      confirmEdit.style.display = "block";
+      confirmAdd.style.display = "none";      
+      return false;
     }
   }
+  return true;
  
 };
 
