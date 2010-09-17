@@ -26,7 +26,7 @@
 						<div class="ActionButton LightBlueStyle" >
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle" onclick="<%= uicomponent.event(uicomponent.COMPARE_ACTION); %>">
+									<div class="ButtonMiddle RefreshModeTarget" onclick="<%= uicomponent.event(uicomponent.COMPARE_ACTION); %>">
 										<a href="javascript:void(0);">Compare Selected</a> 
 									</div>
 								</div>

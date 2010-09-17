@@ -27,15 +27,15 @@ function UIWikiPortlet(){
 
 UIWikiPortlet.prototype.init = function(portletId,linkId){
   var me= eXo.wiki.UIWikiPortlet;
-	this.wikiportlet= document.getElementById(portletId);
-	this.changeModeLink= linkId= document.getElementById(linkId);  
-	
+  this.wikiportlet= document.getElementById(portletId);
+  this.changeModeLink= linkId= document.getElementById(linkId);  
+  
   window.onfocus = function(event) {me.changeMode(event);};  
   window.onbeforeunload = function(event){me.changeMode(event);};  
   if (document.attachEvent)
-    document.attachEvent("onmouseup", me.onMouseUp);
+     this.wikiportlet.attachEvent("onmouseup", me.onMouseUp);
   else
-    document.onmouseup= function(event) {me.onMouseUp(event);}; 
+     this.wikiportlet.onmouseup= function(event) {me.onMouseUp(event);}; 
   this.wikiportlet.onkeypress= function(event){ me.onKeyPress(event);};
 }
 
@@ -44,8 +44,10 @@ UIWikiPortlet.prototype.onMouseUp = function(evt){
   var evt = evt || window.event; 
   var target = evt.target || evt.srcElement;
   if (evt.button==2) return;
-  if (target.tagName=="A"||(target.tagName=="INPUT" && evt.type=="button")||evt.tagName=="SELECT")  
-    eXo.wiki.UIWikiPortlet.changeMode(evt);
+  if (target.tagName=="A"||(target.tagName=="INPUT" && target.type=="button")||
+      target.tagName=="SELECT"|| target.tagName=="DIV"&& target.className.indexOf("RefreshModeTarget")>0){    
+    eXo.wiki.UIWikiPortlet.changeMode(evt); 
+    }
 }
 
 UIWikiPortlet.prototype.onKeyPress = function(evt){
@@ -71,7 +73,8 @@ UIWikiPortlet.prototype.changeMode = function(event){
   link.href=link.href.substring(0,endParamIndex) + "&mode="+mode+"')";
     else
     link.href=link.href.substring(0,modeIndex) + "&mode="+mode+"')";    
-  window.location=link.href;    
+  window.location=link.href;
+  
 }
 
 eXo.wiki.UIWikiPortlet = new UIWikiPortlet();
