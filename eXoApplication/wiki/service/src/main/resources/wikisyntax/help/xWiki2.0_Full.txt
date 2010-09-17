@@ -209,7 +209,8 @@ Centered and blue paragraph
 * item2
 )))
 |Hiragana Iroah list|(((
-{{{(% style="list-style-type: hiragana-iroha" %)
+{{{(% style="list-style-type: hiragana-iroha"
+%)
 * item1
 * item2
 }}}
@@ -229,7 +230,8 @@ Centered and blue paragraph
 * item2
 )))
 |Katakana Iroha list|(((
-{{{(% style="list-style-type: katakana-iroha" %)
+{{{(% style="list-style-type: katakana-iroha"
+%)
 * item1
 * item2
 }}}
@@ -269,7 +271,8 @@ Centered and blue paragraph
 * item2
 )))
 |CJK ideographic list|(((
-{{{(% style="list-style-type: cjk-ideographic" %)
+{{{(% style="list-style-type: cjk-ideographic"
+%)
 * item1
 * item2
 }}}
@@ -330,18 +333,19 @@ New line
 
 (% style="width:100%" %)
 |=Feature|=XWiki Syntax 2.0|=Result XWiki Syntax 2.0
-|Link to a page in the current Space|{{{[[WebHome]]}}}|[[WebHome]]
-|Link with a label|{{{[[label>>WebHome]]}}}|[[label>>WebHome]]
-|Link to a page with the space specified|{{{[[Main.WebHome]]}}}|[[Main.WebHome]]
-|Link to a subwiki|{{{[[subwiki:Main.WebHome]]}}}|[[xwiki:Main.WebHome]]
-|Link that opens in a new page|{{{[[label>>WebHome||rel="__blank"]]}}}|[[label>>WebHome||rel="__blank"]]
+|Link to a page in the current wiki|{{{[[Wiki Home]]}}}|[[Wiki Home]]
+|Link with a label|{{{[[label>>Wiki Home]]}}}|[[label>>Wiki Home]]
+|Link to a page with the wiki name specified|{{{[[Wiki Home>>classic.Wiki Home]]}}}|[[Wiki Home>>classic.Wiki Home]]
+|Link to a page in a wiki with wiki type specified|{{{[[Wiki Home>>portal:classic.Wiki Home]]}}}|[[Wiki Home>>portal:classic.Wiki Home]]
+|Link that opens in a new page|{{{[[label>>Wiki Home||rel="__blank"]]}}}|[[label>>Wiki Home||rel="__blank"]]
 |Link to a URL directly in the text|{{{This is a URL: http://xwiki.org}}}|This is a URL: http://xwiki.org
 |Link to a URL|{{{[[http://xwiki.org]]}}}|[[http://xwiki.org]]
 |Link to a URL with a label|{{{[[XWiki>>http://xwiki.org]]}}}|[[XWiki>>http://xwiki.org]]
 |Link to an email|{{{[[email>>mailto:john@smith.net]]}}}|[[email>>mailto:john@smith.net]]
 |Image Link|(((
-{{{[[image:Space2.Page2@img.png>>Space1.Page1]]}}}
-)))|[[image:img.png>>Main.WebHome]]
+{{{[[image:classic.Wiki Home@img.png>>
+classic.Wiki Home]]}}}
+)))|[[image:img.png>>classic.Wiki Home]]
 |Link to attachment|{{{[[text>>attach:img.png]]}}}|[[text>>attach:img.png]]
 
 == XWiki Syntax 2.0 Link Specification ==
@@ -367,9 +371,9 @@ Allows to easily create content in table format. It also support parameters for 
 |Word 1|Word 2
 )))
 |Parametrized table|(((
-{{{(% style="background-color:red;align=center" %)
-|=Title 1|=(% style="background-color:yellow" %)Title 2
-|Word 1|Word 2
+{{{(% style="background-color:red;align=center
+" %)|=Title 1|=(% style="background-color:
+yellow" %)Title 2|Word 1|Word 2
 }}}
 )))|(((
 (% style="background-color:red;align=center" %)
@@ -514,6 +518,17 @@ java content
 | Noformat Macro| ~{~{noformat}}~*~*Noformat~*~*~{~{/noformat}} | ((({{noformat}}**Noformat**{{/noformat}})))
 \\
 | Panel Macro| ~{~{panel title="Panel Title"}}Panel Content~{~{/panel}} | ((({{panel title="Panel Title"}}Panel Content{{/panel}})))
+\\
+| Section and cloumn macro| ~{~{section justify="true"}}\\\\~{~{column}}column1~{~{/column}}\\\\~{~{column}}column2~{~{/column}}\\\\~{~{/section}}
+ | ((({{section justify="true"}}
+
+{{column}}column1{{/column}}
+
+{{column}}column2{{/column}}
+
+{{/section}}
+
+)))
 \\
 
 = Parameters =
