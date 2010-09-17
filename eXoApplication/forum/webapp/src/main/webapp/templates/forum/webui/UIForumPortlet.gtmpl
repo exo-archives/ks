@@ -1,5 +1,6 @@
 <%
 	import org.exoplatform.web.application.JavascriptManager;
+	import org.exoplatform.forum.service.UserProfile;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.importJavascript('eXo.ks.KSUtils', '/ksResources/javascript/');
@@ -7,6 +8,13 @@
 	jsmanager.importJavascript('eXo.forum.UIForumPortlet', '/forum/javascript/');
 	jsmanager.importJavascript('eXo.forum.webservice.SearchTagName', '/forum/javascript/');
 	jsmanager.addOnResizeJavascript('function(){eXo.ks.KSUtils.setMaskLayer("'+uicomponent.id+'");}');
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	if(userProfile.getUserRole() <= 2){
+		jsmanager.importJavascript('eXo.core.JSON') ;
+		jsmanager.importJavascript('eXo.forum.ForumSendNotification','/forum/javascript/') ;
+		jsmanager.addJavascript('eXo.forum.ForumSendNotification.init("'+userProfile.getUserId()+'","'+uicomponent.getUserToken()+'","'+uicomponent.getCometdContextName()+'");') ;
+	}
+
 %>
 
 <% 

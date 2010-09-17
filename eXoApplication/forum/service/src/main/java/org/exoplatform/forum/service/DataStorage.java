@@ -322,8 +322,6 @@ public interface DataStorage {
 
   int getJobWattingForModeratorByUser(String userId) throws Exception;
 
-  //	TODO: JUnit test is fall.
-  void getTotalJobWatting(List<String> userIds);
 
   NodeIterator search(String queryString) throws Exception;
 

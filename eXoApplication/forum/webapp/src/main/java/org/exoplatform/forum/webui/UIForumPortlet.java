@@ -71,6 +71,9 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.exception.MessageException;
+import org.exoplatform.ws.frameworks.cometd.ContinuationService;
+import org.mortbay.cometd.AbstractBayeux;
+import org.mortbay.cometd.continuation.EXoContinuationBayeux;
 
 /**
  * Author : Nguyen Quang Hung
@@ -441,6 +444,27 @@ public class UIForumPortlet extends UIPortletApplication {
 			contact = new CommonContact() ;
 		}
 		return contact ;
+	}
+	
+	protected String getCometdContextName() {
+		String cometdContextName = "cometd";
+		try {
+			EXoContinuationBayeux bayeux = 
+				(EXoContinuationBayeux) PortalContainer.getInstance().getComponentInstanceOfType(AbstractBayeux.class);
+			return (bayeux == null ? "cometd" : bayeux.getCometdContextName());
+		} catch (Exception e) {
+		}		
+		return cometdContextName;
+	}
+	
+	public String getUserToken()throws Exception {
+		try {
+			ContinuationService continuation = (ContinuationService) PortalContainer.getInstance().getComponentInstanceOfType(ContinuationService.class);
+			return continuation.getUserToken(userProfile.getUserId());
+		} catch (Exception e) {
+			log.error("Could not retrieve continuation token for user "+ userProfile.getUserId(), e);
+		}
+		return "";
 	}
 
 	static public class ReLoadPortletEventActionListener extends EventListener<UIForumPortlet> {

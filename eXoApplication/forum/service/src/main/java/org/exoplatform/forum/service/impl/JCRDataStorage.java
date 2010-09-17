@@ -2298,7 +2298,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					topicNode.setProperty(EXO_IS_APPROVED, topic.getIsApproved());
 					sendNotification(topicNode.getParent(), topic, null, "", true);
 					setActivePostByTopic(sProvider, topicNode, topic.getIsApproved());
-					getTotalJobWatting(userIdsp);
+					getTotalJobWatting(sProvider, userIdsp);
 					break;
 				}
 				case Utils.STICKY: {
@@ -2312,13 +2312,13 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					if(!isWaiting){
 						sendNotification(topicNode.getParent(), topic, null, "", true);
 					}
-					getTotalJobWatting(userIdsp);
+					getTotalJobWatting(sProvider, userIdsp);
 					break;
 				}
 				case Utils.ACTIVE: {
 					topicNode.setProperty(EXO_IS_ACTIVE, topic.getIsActive());
 					setActivePostByTopic(sProvider, topicNode, topic.getIsActive());
-					getTotalJobWatting(userIdsp);
+					getTotalJobWatting(sProvider, userIdsp);
 					break;
 				}
 				case Utils.CHANGE_NAME: {
@@ -2453,7 +2453,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
 				}
 				userIdsp.addAll(getAllAdministrator(sProvider));
-				getTotalJobWatting(userIdsp);
+				getTotalJobWatting(sProvider, userIdsp);
 				isGetLastTopic = true;
 			}
 			if(!isNew && (isGetLastTopic || topic.getIsActive() || topic.getIsClosed())) {
@@ -2581,7 +2581,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
 				}
 				userIdsp.addAll(getAllAdministrator(sProvider));
-				getTotalJobWatting(userIdsp);
+				getTotalJobWatting(sProvider, userIdsp);
 			}
 			try {
 				queryLastTopic(sProvider, forumNode.getPath());
@@ -3199,7 +3199,17 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
 				}
 				userIdsp.addAll(getAllAdministrator(sProvider));
-				getTotalJobWatting(userIdsp);
+				getTotalJobWatting(sProvider, userIdsp);
+			}
+			if(post.getUserPrivate().length > 1) {
+				ForumPrivateMessage message = new ForumPrivateMessage();
+				message.setFrom(getScreenName(sProvider, post.getOwner()));
+				message.setSendTo(post.getUserPrivate()[0]+","+post.getUserPrivate()[1]);
+				message.setType("PrivatePost");
+				message.setName(post.getName());
+				message.setMessage(post.getMessage());
+				message.setId(post.getLink());
+				sendNotificationMessage(message);
 			}
 		} catch (Exception e) {
 			log.error("Failed to save post" + post.getName(),e);
@@ -3671,7 +3681,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					if (isGetLastPost){
 						queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")));
 					}
-					getTotalJobWatting(userIdsp) ;
+					getTotalJobWatting(sProvider, userIdsp) ;
 				} catch (PathNotFoundException e) {
 					log.error("Failed to modify post" + post.getName(),e);
 				}
@@ -3755,7 +3765,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					list.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
 				}
 				list.addAll(getAllAdministrator(sProvider));
-				getTotalJobWatting(list);
+				getTotalJobWatting(sProvider, list);
 			}
 			return post;			
 		} catch (Exception e) {
@@ -3917,7 +3927,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				}
 			}
 			if(!userIdsp.isEmpty()) {
-				getTotalJobWatting(userIdsp);
+				getTotalJobWatting(sProvider, userIdsp);
 			}
 		}catch (Exception e) {
 			throw e;
@@ -4577,15 +4587,23 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 	
 	public String getScreenName(String userName) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
+		try {
+			return getScreenName(sProvider, userName);
+		} catch (Exception e) {
+			return userName ;
+		}finally {
+			sProvider.close();
+		}
+	}
+
+	private String getScreenName(SessionProvider sProvider, String userName) throws Exception {
 		String userTemp = userName;
 		try {
 			Node userProfile = getUserProfileNode(getUserProfileHome(sProvider), userName);
 			PropertyReader reader = new PropertyReader(userProfile);
 			userName = reader.string(EXO_SCREEN_NAME, userName);
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			sProvider.close();
+			log.debug("Failed to get scrennName for user " + userName, e);
 		}
 		return (userTemp.contains(Utils.DELETED)) ? "<s>"
 				+ ((userName.contains(Utils.DELETED)) ? 
@@ -5237,6 +5255,9 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				profileNode.setProperty(EXO_NEW_MESSAGE, 1);
 			}
 		}
+//		send notification message for user
+		privateMessage.setType("PrivateMessage");
+		sendNotificationMessage(privateMessage);
 		if (messageNode != null) {
 			messageNode.setProperty(EXO_TYPE, Utils.SEND_MESSAGE);
 		}
@@ -6475,9 +6496,8 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		}
 		return totalJob;
 	}
-//	TODO: JUnit test is fall.
-	public void getTotalJobWatting(List<String> userIds) {
-		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
+
+	private void getTotalJobWatting(SessionProvider sProvider, List<String> userIds) {
 		try {
 			JsonGeneratorImpl generatorImpl = new JsonGeneratorImpl();
 			Category cat = new Category();
@@ -6495,15 +6515,29 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			}
 		} catch (Exception e) {
 			log.error("Failed to get total job watting",e);
-		}finally {
-			sProvider.close();
 		}
 	}
 
-	
 	protected ContinuationService getContinuationService() {
 		ContinuationService continuation = (ContinuationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ContinuationService.class);
 		return continuation;
+	}
+	
+	public void sendNotificationMessage(ForumPrivateMessage message) {
+		try {
+			if(message != null){
+				String []sendTo = message.getSendTo().replaceAll(";", ",").split(",");
+				JsonGeneratorImpl generatorImpl = new JsonGeneratorImpl();
+				ContinuationService continuation = getContinuationService() ;
+				JsonValue json = generatorImpl.createJsonObject(message);
+				for (int i = 0; i < sendTo.length; i++) {
+					if(sendTo[i].equals(message.getFrom())) continue ;
+					continuation.sendMessage(sendTo[i], "/eXo/Application/Forum/NotificationMessage", json, message.toString());
+				}
+			}
+		} catch (Exception e) {
+			log.error("Failed to send notification message",e);
+		}
 	}
 	 
 	public NodeIterator search(String queryString) throws Exception {
@@ -7826,8 +7860,5 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 	public void setInitRssListener(boolean isInitRssListener) {
 		this.isInitRssListener = isInitRssListener;
 	}
-
-	
-	
 	
 }
