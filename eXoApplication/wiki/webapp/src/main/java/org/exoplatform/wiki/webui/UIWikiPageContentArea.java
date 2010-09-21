@@ -94,7 +94,7 @@ public class UIWikiPageContentArea extends UIWikiContainer {
     }
     
     // Render current content
-    if (currentMode.equals(WikiMode.VIEW)) {
+    if (currentMode.equals(WikiMode.VIEW)|| currentMode.equals(WikiMode.HELP) ) {
       this.htmlOutput = renderingService.render(wikipage.getContent().getText(),
                                                 wikipage.getContent().getSyntax(),
                                                 Syntax.XHTML_1_0.toIdString());
