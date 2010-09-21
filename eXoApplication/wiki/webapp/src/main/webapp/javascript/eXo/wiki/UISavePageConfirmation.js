@@ -45,6 +45,7 @@ UISavePageConfirmation.prototype.validateSave = function(pageTitleinputId) {
       confirmAdd.style.display = "none";      
       return false;
     }
+    return true;
   }
   return true;
  

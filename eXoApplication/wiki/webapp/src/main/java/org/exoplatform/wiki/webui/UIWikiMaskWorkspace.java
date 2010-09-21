@@ -16,7 +16,11 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.exoplatform.portal.webui.workspace.UIMaskWorkspace;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.event.Event.Phase;
@@ -32,5 +36,21 @@ import org.exoplatform.webui.event.Event.Phase;
   events = @EventConfig(phase = Phase.DECODE, listeners = UIMaskWorkspace.CloseActionListener.class)
 )
 public class UIWikiMaskWorkspace extends UIMaskWorkspace {
+  public List<WikiMode> accept_Modes;
+  
+ 
+  public UIWikiMaskWorkspace() {
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.EDITPAGE, WikiMode.ADDPAGE});
+  }
 
+  public void processRender(WebuiRequestContext context) throws Exception {
+    // TODO Auto-generated method stub
+    WikiMode currentMode = getCurrentMode();    
+    if (currentMode != null && accept_Modes.contains(currentMode))
+      super.processRender(context);
+  }
+
+  public WikiMode getCurrentMode() {
+    return getAncestorOfType(UIWikiPortlet.class).getWikiMode();
+  }
 }
