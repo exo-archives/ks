@@ -1,0 +1,13 @@
+Index: pom.xml
+===================================================================
+--- pom.xml	(revision 50527)
++++ pom.xml	(working copy)
+@@ -38,7 +38,7 @@
+   <scm>
+     <connection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</connection>
+     <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</developerConnection>
+-    <url>http://fisheye.exoplatform.org/browse/projects/ks/branches/1.2.x</url>
++    <url>http://fisheye.exoplatform.org/browse/ks/branches/1.2.x</url>
+   </scm>
+   <issueManagement>
+     <system>jira</system>
