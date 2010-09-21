@@ -1,27 +1,43 @@
 function ForumSendNotification() {
-  
+	this.notification="Notification" ;
+	this.message="message";
+	this.post="post";
+	this.titeName="You have received a new private TYPE";
+	this.from = "From";
+	this.briefContent="Brief content";
+	this.GoDirectly="Go directly to the post: LINK Click here.";
 } ;
 
 ForumSendNotification.prototype.init = function(eXoUser, eXoToken, contextName){
 	if (!eXo.core.Cometd) {
 		eXo.require('eXo.core.Cometd');
 	}
-  if(String(eXoToken) != ''){
-	  if (!eXo.core.Cometd.isConnected()) {
-		eXo.core.Cometd.url = '/' + contextName + '/cometd' ;  
+	if(String(eXoToken) != ''){
+		if (!eXo.core.Cometd.isConnected()) {
+		eXo.core.Cometd.url = '/' + contextName + '/cometd' ;	
 		eXo.core.Cometd.exoId = eXoUser;
 		eXo.core.Cometd.exoToken = eXoToken;
-	    eXo.core.Cometd.addOnConnectionReadyCallback(this.subcribeCometdSendNotification);
-	    eXo.core.Cometd.init();
-	  } else {
-	  	this.subcribeCometdSendNotification();
-	  }
-  }
+			eXo.core.Cometd.addOnConnectionReadyCallback(this.subcribeCometdSendNotification);
+			eXo.core.Cometd.init();
+		} else {
+			this.subcribeCometdSendNotification();
+		}
+	}
+	var i18n = document.getElementById('NotificationMessage');
+	if(i18n) {
+		this.notification = i18n.getAttribute("notification") ;
+		this.message		= i18n.getAttribute("message");
+		this.post			= i18n.getAttribute("post");
+		this.titeName		= i18n.getAttribute("titeName");
+		this.from			= i18n.getAttribute("from");
+		this.briefContent = i18n.getAttribute("briefContent");
+		this.GoDirectly	= i18n.getAttribute("goDirectly");
+	}
 } ;
 
 
 ForumSendNotification.prototype.subcribeCometdSendNotification = function() {
-  eXo.core.Cometd.subscribe('/eXo/Application/Forum/NotificationMessage', function(eventObj) {		
+	eXo.core.Cometd.subscribe('/eXo/Application/Forum/NotificationMessage', function(eventObj) {		
 		eXo.forum.ForumSendNotification.alarm(eventObj) ;
 	});
 };
@@ -31,7 +47,6 @@ ForumSendNotification.prototype.alarm = function(eventObj){
 	var popup = eXo.core.DOMUtil.findFirstDescendantByClass(this.createMessage(message), "div","UIPopupNotification") ;
 	eXo.webui.Box.config(popup,popup.offsetHeight, 5, this.openCallback, this.closeBox) ;
 	window.focus() ;
-	
 	return ;
 } ;
 
@@ -70,10 +85,10 @@ ForumSendNotification.prototype.createMessage = function(message){
 
 ForumSendNotification.prototype.getContentHTML = function(message){
 	var link = '';
-	var type = 'message';
+	var type = this.message;
 	if(message.type=='PrivatePost'){
-		type = 'post';
-		link = 'Click <a style="color:#204AA0" href="'+ String(message.id).replace('public', 'private') +'">here</a> to view.</p>';
+		type = this.post;
+		link = String(this.GoDirectly).replace(' LINK', '<a style="color:#204AA0" href="'+ String(message.id).replace('public', 'private') +'">') +	'</a>';
 	}
 	var msg = String(message.message).replace(/<\/?[^>]+(>|$)/g, "");
 	if(msg.length > 100){
@@ -81,14 +96,15 @@ ForumSendNotification.prototype.getContentHTML = function(message){
 	}
 	var content = 
 		'<div style="padding:7px 0px 7px 5px">'+
-		'<b>You have received a new private '+type+':</b> <br/>'+message.name+'<br/>'+
-		'<b>Brief content:</b><br/>'+ msg + '<br/>' + link +
+		'<b>'+String(this.titeName).replace('TYPE',type)+':</b> <br/>'+message.name+'<br/>'+
+		'<b>'+this.from+':</b> ' + message.from + '<br/>' +
+		'<b>'+this.briefContent+':</b><br/>'+ msg + '<br/>' + link +
 		'</div>';
 	return content;
 };
 
 ForumSendNotification.prototype.generateHTML = function(message){
-	var html =  '<div class="UIPopupNotification">' +
+	var html =	'<div class="UIPopupNotification">' +
 	'	<div class="TLPopupNotification">' +
 	'		<div class="TRPopupNotification">' +
 	'			<div class="TCPopupNotification"><span></span></div>' +
@@ -98,7 +114,7 @@ ForumSendNotification.prototype.generateHTML = function(message){
 	'		<div class="MRPopupNotification">' +
 	'			<div class="MCPopupNotification">' +
 	'				<div class="TitleNotification">' +
-	'					<a class="ItemTitle" href="#">Notification</a>' +
+	'					<a class="ItemTitle" href="#">'+this.notification+'</a>' +
 	'					<a class="Close" href="#"><span></span></a>' +
 	'				</div>' +
 	'				<div class="contentBox">'+ this.getContentHTML(message) + '</div>' +
@@ -145,7 +161,7 @@ Box.prototype.open = function(){
 		Box.object.style.overflow = "visible" ;
 		Box.tmpHeight = Box.maxHeight ;
 		if(Box.timer) window.clearTimeout(Box.timer) ;
-		if(Box.closeTimer)  window.clearInterval(Box.closeTimer) ;
+		if(Box.closeTimer)	window.clearInterval(Box.closeTimer) ;
 		if(Box.autoClose) Box.closeTimer = window.setInterval(Box.close,Box.closeInterval*1000) ;
 		Box.openCallback(Box.object) ;
 		return ;
@@ -165,7 +181,7 @@ Box.prototype.close = function(){
 		Box.tmpHeight = 0 ;
 		Box.object.style.height = Box.tmpHeight + "px" ;
 		if(Box.timer) window.clearTimeout(Box.timer) ;
-		if(Box.closeTimer)  window.clearInterval(Box.closeTimer) ;
+		if(Box.closeTimer)	window.clearInterval(Box.closeTimer) ;
 		Box.closeCallback(Box.object) ;
 		return ;
 	}

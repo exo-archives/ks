@@ -38,5 +38,6 @@
 		}
 	%>
 	<%uicomponent.renderPopupMessages();%>
+	<div style="display:none;" id="NotificationMessage" notification="<%=_ctx.appRes("UIForumPortlet.label.Notification");%>" message="<%=_ctx.appRes("UIForumPortlet.type.message");%>" post="<%=_ctx.appRes("UIForumPortlet.type.post");%>" titeName="<%=_ctx.appRes("UIForumPortlet.label.titeName");%>" from="<%=_ctx.appRes("UIForumPortlet.label.from");%>" briefContent="<%=_ctx.appRes("UIForumPortlet.label.briefContent");%>" goDirectly="<%=_ctx.appRes("UIForumPortlet.label.GoDirectly");%>"><span></span></div>
 	<div><span></span></div>
 </div>
