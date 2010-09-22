@@ -178,7 +178,6 @@ public class SavePageActionComponent extends UIComponent {
       sb.append("/");
     }
     sb.append(newPageId);
-    System.out.println("sb.toString() ==>" + sb.toString());
     portalRequestContext.sendRedirect(sb.toString());
   }
   

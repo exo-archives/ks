@@ -12,3 +12,8 @@ org.exoplatform.wiki.rendering.macro.message.NoteMessageMacro
 org.exoplatform.wiki.rendering.macro.message.TipMessageMacro
 org.exoplatform.wiki.rendering.macro.panel.PanelMacro
 org.exoplatform.wiki.rendering.macro.noformat.NoFormatMacro
+org.exoplatform.wiki.rendering.macro.table.TableMacro
+org.exoplatform.wiki.rendering.macro.table.TableRowMacro
+org.exoplatform.wiki.rendering.macro.table.TableHeaderRowMacro
+org.exoplatform.wiki.rendering.macro.table.TableCellMacro
+org.exoplatform.wiki.rendering.macro.table.TableHeaderCellMacro
