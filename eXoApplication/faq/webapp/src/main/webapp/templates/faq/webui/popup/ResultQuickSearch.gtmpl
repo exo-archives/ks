@@ -2,8 +2,7 @@
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.FAQUtils;
-	import java.text.Format;
-	import java.text.SimpleDateFormat;
+	import java.text.DateFormat;
 	import java.util.Date;
 %>
 <div class="ResultQuickSearch $uicomponent.id" style="padding:8px">
@@ -29,8 +28,7 @@
  											for(result in searchResults) {
 												String Id = result.getId();
 												String name = result.getName() ;
-												Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
-						 						String date = formatter.format(result.getCreatedDate());
+						 						String date = FAQUtils.getFormatDate(DateFormat.SHORT, result.getCreatedDate());
 						 						String icon = result.getIcon() ;
 						 						String categoryLink = uicomponent.event("OpenCategory",Id);
 						 						String linkQuestion = uicomponent.event("LinkQuestion",Id);

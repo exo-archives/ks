@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -499,7 +500,7 @@ public class UIQuestions extends UIContainer {
       msg = msg.replace("{0}", String.valueOf(hours));
       return msg;
     } else {
-      return FAQUtils.getFormatDate(new Date(time));
+      return FAQUtils.getFormatDate(DateFormat.LONG, new Date(time));
     }
     
   }

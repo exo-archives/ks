@@ -19,9 +19,13 @@ package org.exoplatform.faq.webui;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +37,7 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -444,10 +449,32 @@ public class FAQUtils {
 		}
 	}
 	
-	public static String getFormatDate(Date myDate) {
-		if(myDate == null) return null;
+	public static String getFormatDate(int dateFormat, Date myDate) {
+		if(myDate == null) return "";
+		String format = (dateFormat == DateFormat.LONG)?"DDD,MMM dd,yyyy":"MM/dd/yyyy";
+		try {
+			String userName = getCurrentUser();
+			if(!isFieldEmpty(userName)) {
+				org.exoplatform.forum.service.ForumService forumService = (org.exoplatform.forum.service.ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(org.exoplatform.forum.service.ForumService.class);
+				org.exoplatform.forum.service.UserProfile profile = forumService.getUserSettingProfile(userName);
+				format = (dateFormat == DateFormat.LONG)?profile.getLongDateFormat():profile.getShortDateFormat();
+			}
+		} catch (Exception e) {}
+		if(!isFieldEmpty(format)) {
+			if(format.indexOf("DDDD") >= 0)format = format.replaceAll("DDDD", "EEEE");
+			if(format.indexOf("DDD") >= 0)format = format.replaceAll("DDD", "EEE");
+		}
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
-		return DateFormat.getDateInstance(DateFormat.LONG, portalContext.getLocale()).format(myDate);
+		Format formatter = new SimpleDateFormat(format, portalContext.getLocale());
+		return formatter.format(myDate);
+	}
+	
+	public static Calendar getInstanceTempCalendar() { 
+		Calendar	calendar = GregorianCalendar.getInstance() ;
+		calendar.setLenient(false) ;
+		int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+		calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset) ; 
+		return	calendar;
 	}
 	
 	private static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {

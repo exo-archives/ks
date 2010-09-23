@@ -19,11 +19,10 @@ package org.exoplatform.faq.webui.popup;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.jcr.Node;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQSetting;
@@ -37,14 +36,12 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -410,10 +407,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
     public void onEvent(Event<UIQuestionForm> event, UIQuestionForm questionForm, String objectId) throws Exception {
     	try {
     		boolean isNew = true;
-	      DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy") ;
-	      java.util.Date date = new java.util.Date();
-	      String dateStr = dateFormat.format(date) ;
-	      date = dateFormat.parse(dateStr) ;
+	      Date date = FAQUtils.getInstanceTempCalendar().getTime();
 	      String author = questionForm.inputAuthor.getValue() ;      
 	      String emailAddress = questionForm.inputEmailAddress.getValue() ;
 	      String questionContent = questionForm.inputQuestionContent.getValue(); 
