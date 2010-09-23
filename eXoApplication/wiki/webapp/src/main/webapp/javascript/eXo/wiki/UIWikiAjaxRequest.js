@@ -73,6 +73,10 @@ UIWikiAjaxRequest.prototype.checkAnchor = function() {
       var splits = this.currentAnchor.split('&');
       // Get the action name
       action = splits[0];
+      if(action && action.length > 0 && action.charAt(0) == 'H'){
+        // This is an anchor in the document, so skip.
+        return;
+      }
       action = document.getElementById(this.actionPrefix + action);
     } else if (!this.urlHasActionParameters()) {
       action = document.getElementById(this.actionPrefix + this.defaultAction);

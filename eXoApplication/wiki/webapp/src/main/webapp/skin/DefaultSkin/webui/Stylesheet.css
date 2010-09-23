@@ -186,7 +186,7 @@
 }
 
 .UIWikiPortlet .warningmessage {
-  background-image: url("background/exclamation.gif");
+  background-image: url("background/error.gif");
   color:#D5A13D;
 }
 
@@ -738,6 +738,7 @@
 
 /* Advance search */
 .UIWikiSearchSpaceArea {
+  min-height: 300px;
 	padding: 8px 20px;
 }
 
@@ -1179,16 +1180,8 @@
 /*Page History Area*/
 
 .UIWikiHistorySpaceArea {
+  min-height: 300px;
   padding: 10px 15px 15px 15px;
-}
-
-.UIWikiHistorySpaceArea .WikiBackLink {
-  height: 21px;
-  padding: 12px 0 3px;
-}
-
-.UIWikiHistorySpaceArea .WikiBackLink .BackLink {
-  float:left;
 }
 
 .UIWikiPageVersionsList .CompareBtn {

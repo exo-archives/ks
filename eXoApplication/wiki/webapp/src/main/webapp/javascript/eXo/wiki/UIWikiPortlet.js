@@ -63,6 +63,9 @@ UIWikiPortlet.prototype.changeMode = function(event){
   var mode="";
   if (currentURL.indexOf("#")>0){
     mode = currentURL.substring(currentURL.indexOf("#")+1, currentURL.length);
+    if(mode && mode.length > 0 && mode.charAt(0) == 'H') {
+      mode = "";
+    }
     if (mode.indexOf("/")>0)
       mode= mode.substring(0,mode.indexOf("/"));
   }   

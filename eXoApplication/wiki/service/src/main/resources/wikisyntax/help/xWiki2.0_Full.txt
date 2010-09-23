@@ -494,6 +494,8 @@ XWiki macros (called using the##{{{{{macroname param1="value1" ... paramN="value
 
 (% style="width:100%" %)
 |=Feature|=XWiki Syntax 2.0|= Result
+| Toc Macro| ~{~{toc}}~{~{/toc}} | ((({{toc numbered="true"}}Toc{{/toc}})))
+\\
 |Code Macro|(((
 {{{{{code language="java"}}
 java content
@@ -505,9 +507,6 @@ java content
 \\
 | Warning Macro| ~{~{warning}}Warning~{~{/warning}} |
 ((( {{warning}}Warning{{/warning}} )))
-\\
-| Error Macro| ~{~{error}}Error~{~{/error}}|
-((( {{error}}Error{{/error}} )))
 \\
 | Tip Macro| ~{~{tip}}Tip~{~{/tip}} | ((({{tip}}Tip{{/tip}})))
 \\

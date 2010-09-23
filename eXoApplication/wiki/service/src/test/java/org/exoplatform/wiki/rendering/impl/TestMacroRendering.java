@@ -80,4 +80,11 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
     assertEquals(expectedHtml, renderingService.render("{panel:title=My Title}Some text with a title{panel}", Syntax.CONFLUENCE_1_0.toIdString(), Syntax.XHTML_1_0.toIdString()));
   }
   
+  public void testTocMacro() throws Exception {
+    String xwikiExpectedHtml = "<ol><li><span class=\"wikilink\"><a href=\"#HH1\">H1</a></span><ol><li><span class=\"wikilink\"><a href=\"#HH2\">H2</a></span><ol><li><span class=\"wikilink\"><a href=\"#HH3\">H3</a></span></li></ol></li></ol></li></ol><h1 id=\"HH1\"><span>H1</span></h1><p>&nbsp;</p><h2 id=\"HH2\"><span>H2</span></h2><p>&nbsp;</p><h3 id=\"HH3\"><span>H3</span></h3>";
+    String confluenceExpectedHtml = "<ol><li><span class=\"wikilink\"><a href=\"#HH1\">H1&nbsp;</a></span><ol><li><span class=\"wikilink\"><a href=\"#HH2\">H2&nbsp;</a></span><ol><li><span class=\"wikilink\"><a href=\"#HH3\">H3&nbsp;</a></span></li></ol></li></ol></li></ol><h1 id=\"HH1\"><span>H1&nbsp;</span></h1><h2 id=\"HH2\"><span>H2&nbsp;</span></h2><h3 id=\"HH3\"><span>H3&nbsp;</span></h3>";
+    assertEquals(xwikiExpectedHtml, renderingService.render("{{toc numbered=\"true\"}} {{/toc}}\n= H1 = \n == H2 == \n === H3 ===", Syntax.XWIKI_2_0.toIdString(), Syntax.XHTML_1_0.toIdString()));
+    assertEquals(confluenceExpectedHtml, renderingService.render("{toc:numbered=\"true\"}\nh1. H1 \nh2. H2 \nh3. H3 ", Syntax.CONFLUENCE_1_0.toIdString(), Syntax.XHTML_1_0.toIdString()));
+  }
+  
 }

@@ -301,10 +301,44 @@ This method allow using wiki syntax in cells of table. For example, allow multi 
 *What you will get*
 {table}
 {thead}
+{th}Notation{th}
+{th}Result{th}
+{thead}
+{table-row}
+{table-cell}{noformat} 
+* bullet 
+** indented 
+** list 
+* bullet 
+{noformat}{table-cell}
+{table-cell}
+* bullet 
+** indented 
+** list 
+* bullet
+{table-cell}
+{table-row}
+{table}
+
+h2. Macros
+{table}
+{thead}
 {th}Feature{th}
 {th}XWiki Syntax 2.0{th}
 {th}Result{th}
 {thead}
+{table-row}
+{table-cell}Toc Macro{table-cell}
+{table-cell}{{{
+{toc:numbered="true"} {toc}
+}}}
+{table-cell}
+{table-cell}
+{toc:numbered="true"}
+
+{toc}
+{table-cell}
+{table-row}
 {table-row}
 {table-cell}Code Macro{table-cell}
 {table-cell}{{{
@@ -370,7 +404,8 @@ Note
 {table-row}
 {table-cell}Box Macro{table-cell}
 {table-cell}{{{
- {box:title="Box Title",width="100%"} Box Content {box}
+ {box:title="Box Title",width="100%"}
+ Box Content {box}
 }}}
 {table-cell}
 {table-cell}
@@ -392,7 +427,8 @@ Box Content
 {table-row}
 {table-cell}Panel Macro{table-cell}
 {table-cell}{{{
- {panel:title="Panel Title"} Panel Content {panel}
+ {panel:title="Panel Title"} Panel 
+ Content {panel}
 }}}
 {table-cell}
 {table-cell}
@@ -402,7 +438,9 @@ Box Content
 {table-row}
 {table-cell}Section and column macro{table-cell}
 {table-cell}{{{
- {section:justify="true"}\\\\{column}column1{column}\\\\{column}column2{column}{section}
+ {section:justify="true"}\\\\{column}
+ column1{column}\\\\{column}column2
+ {column}{section}
 }}}
 {table-cell}
 {table-cell}
