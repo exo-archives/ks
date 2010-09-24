@@ -308,7 +308,10 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 							vote[i] = voteTp[j];
 							for (String str : newUserVote) {
 								if(str.indexOf(":"+j) > 0){
-									mab.put(str, mab.get(str).replace(":"+j, ":"+i));
+									if(mab.containsKey(str))
+										mab.put(str, mab.get(str).replace(":"+j, ":"+i));
+									else 
+										mab.put(str, str.replace(":"+j, ":"+i));
 								} else {
 									if(!mab.keySet().contains(str)) {
 										mab.put(str, str);
