@@ -25,6 +25,10 @@ function getModule(params)
     addDependency(new Project("org.mortbay.jetty", "cometd-bayeux", "jar", "6.1.11")).
 	addDependency(new Project("org.mortbay.jetty", "jetty-util", "jar", "6.1.11")).
 	addDependency(new Project("org.mortbay.jetty", "cometd-api", "jar", "0.9.20080221")).
+  addDependency(new Project("org.apache.poi", "poi-ooxml", "jar", "3.6")).
+    addDependency(new Project("org.apache.poi", "poi", "jar", "3.6")).
+    addDependency(new Project("org.apache.poi", "poi-scratchpad", "jar", "3.6")).
+    addDependency(new Project("org.apache.xmlbeans", "xmlbeans", "jar", "2.3.0")).
 	addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.comet.service", "jar", cometVersion));  	
 	module.comet.cometd.deployName = "cometd";
   // KS
@@ -35,6 +39,8 @@ function getModule(params)
   module.component.rendering =  new Project("org.exoplatform.ks", "exo.ks.component.rendering","jar", module.version);
   module.component.bbcode =  new Project("org.exoplatform.ks", "exo.ks.component.bbcode","jar", module.version);
   
+
+
 	
   // KS apps
   module.eXoApplication = {};

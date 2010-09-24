@@ -9,6 +9,10 @@
   <artifactId>exo.ks.packaging</artifactId>
   <packaging>pom</packaging>
   <name>eXo KS Packaging</name>   
+<dependencies>
+<dependency><groupId>org.wikimodel</groupId><artifactId>org.wikimodel.wem</artifactId><version>${org.wikimodel.version}</version><type>jar</type></dependency>
+</dependencies>
+
   <modules>
     <module>module</module>
     <module>product</module>
