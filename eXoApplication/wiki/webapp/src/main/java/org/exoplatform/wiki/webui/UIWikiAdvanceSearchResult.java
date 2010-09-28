@@ -77,33 +77,23 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
   
   private Wiki getWiki(SearchResult result) throws Exception {
     Wiki searchWiki = null;
-    try {     
+    try {
       if (WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())) {
-        ContentImpl searchContent= (ContentImpl)getObject(result.getPath(), result.getType());       
-         searchWiki = searchContent.getParent().getWiki();
+        ContentImpl searchContent = (ContentImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(),
+                                                                                             result.getType());
+        searchWiki = searchContent.getParent().getWiki();
       } else {
-        //Search Object is attachment
-        AttachmentImpl searchAtt= (AttachmentImpl)getObject(result.getPath(), result.getType());
+        // Search Object is attachment 
+        String attPath = result.getPath().substring(0, result.getPath().lastIndexOf("/"));
+        AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(attPath,
+                                                                                               WikiNodeType.WIKI_ATTACHMENT);
         searchWiki = searchAtt.getParentPage().getWiki();
       }
     } catch (Exception e) {
     }
     return searchWiki;
-  }
+  } 
 
-  private String getWikiType(SearchResult result) throws Exception {
-    try {
-      return org.exoplatform.wiki.utils.Utils.getWikiType(getWiki(result));
-    } catch (Exception e) {
-    }
-    return null;
-  }
-
-  private Object getObject(String path, String type) throws Exception {
-    WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
-    return wservice.findByPath(path, type) ;    
-  }
-  
   private String getPageTitle(String path) throws Exception {
     WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
     return wservice.getPageTitleOfAttachment(path) ;    
@@ -111,7 +101,7 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
   
   private String getWikiNodeUri(SearchResult result) throws Exception {
     Wiki wiki= getWiki(result);
-    String wikiType= getWikiType(result);
+    String wikiType= org.exoplatform.wiki.utils.Utils.getWikiType(wiki);
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     StringBuilder sb = new StringBuilder(portalRequestContext.getPortalURI());
     UIPortal uiPortal = Util.getUIPortal();

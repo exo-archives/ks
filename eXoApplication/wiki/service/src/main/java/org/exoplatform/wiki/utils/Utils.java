@@ -24,6 +24,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.PortalWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.UserWiki;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.service.WikiService;
 
 public class Utils {
   
@@ -164,6 +165,11 @@ public class Utils {
       return isDescendantPage(page,childpage);
     }
     return false;
+  }  
+
+  public static Object getObject(String path, String type) throws Exception {
+    WikiService wservice = (WikiService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);
+    return wservice.findByPath(path, type) ;    
   }
 
 }

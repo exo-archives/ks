@@ -18,9 +18,10 @@ import org.exoplatform.wiki.commons.Utils ;
 			<%
 				String viewPage = uicomponent.event("ViewPage") ;
 				for(SearchResult result in results.getPage(uicomponent.getPageIndex())) {
-			     	String wikiURI = uicomponent.getWikiNodeUri(result) ;				
-					String space = uicomponent.getWiki(result).getOwner();
-					String wikiType= uicomponent.getWikiType(result);
+			    String wikiURI = uicomponent.getWikiNodeUri(result) ;
+			    def wiki= uicomponent.getWiki(result);
+					String space = wiki.getOwner();
+					String wikiType=org.exoplatform.wiki.utils.Utils.getWikiType(wiki);
 					String pageURI = wikiURI + result.getNodeName() ;					
 					if(WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())){						      	
 		      	%>		      	
@@ -31,7 +32,9 @@ import org.exoplatform.wiki.commons.Utils ;
 						</div>
 		      	<%	
 		      } else if (WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(result.getType())){
-		      	AttachmentImpl att = (AttachmentImpl)uicomponent.getObject(result.getPath(), result.getType()) ;
+		      	String attPath = result.getPath().substring(0, result.getPath().lastIndexOf("/"));
+      			AttachmentImpl att = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(attPath,
+                                                                                               WikiNodeType.WIKI_ATTACHMENT);
 		      	String downloadAction = uicomponent.event("DownloadAttach", result.getPath() + "/" + att.getName()) ;
 		      	String extension = Utils.getExtension(att.getName()) ;
 		      	%>		     

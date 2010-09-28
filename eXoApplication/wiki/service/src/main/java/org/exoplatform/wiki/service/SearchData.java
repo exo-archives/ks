@@ -134,6 +134,20 @@ public class SearchData {
     return statement.toString() ;
   }
   
+  public String getStatementForTitle() {
+    StringBuilder statement = new StringBuilder();
+    statement.append("SELECT jcr:primaryType, jcr:path, title ")
+             .append("FROM nt:base ")
+             .append("WHERE ")
+             .append(jcrQueryPath)
+             .append(" AND ")
+             .append("title LIKE '%")
+             .append(title)
+             .append("%' ")
+             .append("ORDER BY jcr:primaryType DESC");
+    return statement.toString();
+  }
+  
   public String getStatement() {
     StringBuilder statement = new StringBuilder();    
     try {

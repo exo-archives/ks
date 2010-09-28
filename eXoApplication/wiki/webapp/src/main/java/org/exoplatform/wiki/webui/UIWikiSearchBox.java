@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.webui;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -44,6 +45,13 @@ public class UIWikiSearchBox extends UIForm {
   public UIWikiSearchBox() {
     addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null)) ;
   }
+  
+  public String getRestUrl() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("/").append(PortalContainer.getCurrentPortalContainerName()).append("/");
+    sb.append(PortalContainer.getCurrentRestContextName()).append("/wiki/contextsearch/");
+    return sb.toString();
+  }  
   
   public static class AdvancedSearchActionListener extends EventListener<UIWikiSearchBox> {
     @Override

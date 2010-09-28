@@ -53,6 +53,7 @@ public interface WikiService {
 	public List<BreadcumbData> getBreadcumb(String wikiType, String wikiOwner, String pageId) throws Exception ;
 	public PageList<SearchResult> search(SearchData data) throws Exception ;
 	public List<SearchResult> searchRenamedPage(String wikiType, String wikiOwner, String pageId) throws Exception  ;
+	public List<TitleSearchResult> searchDataByTitle(SearchData data) throws Exception;
 	public Object findByPath(String path, String objectNodeType) throws Exception  ;
 	public String getDefaultWikiSyntaxId();
 	public String getPageTitleOfAttachment(String path) throws Exception ;

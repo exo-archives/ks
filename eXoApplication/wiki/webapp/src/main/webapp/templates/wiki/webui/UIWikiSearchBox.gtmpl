@@ -1,8 +1,14 @@
 <%
+import org.exoplatform.wiki.commons.Utils;
+  %>
+
+<%
   def rcontext = _ctx.getRequestContext() ;
   String inputId = uicomponent.FIELD_SEARCHVALUE;
   String searchLabel=_ctx.appRes("UIWikiSearchBox.label.Search");
-  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiSearchBox.init(\"" + inputId +"\",\""+searchLabel+ "\");");
+  String wikiNodeURI = Utils.getCurrentWikiNodeUri();
+  String restUrl= uicomponent.getRestUrl();
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiSearchBox.init(\"" + inputId +"\",\""+searchLabel +"\",\""+restUrl + "\",\""+ wikiNodeURI +"\");");
 %>
 <div class="UIWikiSearchBox">
   <% uiform.begin() %>
@@ -24,19 +30,18 @@
       </div>
     </div>
   <%uiform.end()%>
-</div>
-<div class="SearchPopup">
-	<div class="SearchPopupTL">
-		<div class="SearchPopupTR">
-			<div class="SearchPopupTC"><span></span></div>
+  <div class="SearchPopup">
+		<div class="SearchPopupTL">
+			<div class="SearchPopupTR">
+				<div class="SearchPopupTC"><span></span></div>
 	  	</div>
-	</div>
-	<div class="SearchPopupML">
-		<div class="SearchPopupMR">
-			<div class="SearchPopupMC">
-				<div class="SubBlock">
+		</div>
+		<div class="SearchPopupML">
+			<div class="SearchPopupMR">
+				<div class="SearchPopupMC">
+					<div class="SubBlock">
 
-							<div class="MenuItem">	
+						<!--	<div class="MenuItem">	
 								<a class="ItemIcon MenuIcon" title="" href="#">Forum</a>
 							</div>
 
@@ -46,15 +51,16 @@
 
 							<div class="MenuItem">	
 								<a class="ItemIcon MenuIcon" title="" href="#">Topic</a>
-							</div>
+							</div>-->
 
+					</div>
 				</div>
 			</div>
-		</div>
-	</div>	
-	<div class="SearchPopupBL">
-		<div class="SearchPopupBR">
-			<div class="SearchPopupBC"><span></span></div>
-	  	</div>
+		</div>	
+		<div class="SearchPopupBL">
+			<div class="SearchPopupBR">
+				<div class="SearchPopupBC"><span></span></div>
+		  	</div>
+	</div>
 	</div>
 </div>

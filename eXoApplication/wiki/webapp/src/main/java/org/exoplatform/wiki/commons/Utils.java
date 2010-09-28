@@ -243,5 +243,14 @@ public class Utils {
 
     return wikiContext;
   }
+  
+  public static String getCurrentWikiNodeUri() throws Exception {    
+    PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
+    StringBuilder sb = new StringBuilder(portalRequestContext.getPortalURI());
+    UIPortal uiPortal = Util.getUIPortal();
+    String pageNodeSelected = uiPortal.getSelectedNode().getUri();
+    sb.append(pageNodeSelected);   
+    return sb.toString();
+  }  
  
 }

@@ -22,8 +22,7 @@ if(!eXo.wiki) eXo.wiki = {};
 function UIWikiPortlet(){ 
   this.wikiportlet=null;
   this.changeModeLink=null; 
-};
- 
+}; 
 
 UIWikiPortlet.prototype.init = function(portletId,linkId){
   var me= eXo.wiki.UIWikiPortlet;
@@ -39,10 +38,12 @@ UIWikiPortlet.prototype.init = function(portletId,linkId){
   this.wikiportlet.onkeypress= function(event){ me.onKeyPress(event);};
 }
 
-
 UIWikiPortlet.prototype.onMouseUp = function(evt){
   var evt = evt || window.event; 
-  var target = evt.target || evt.srcElement;
+  var target = evt.target || evt.srcElement;  
+  var searchPopup= eXo.core.DOMUtil.findFirstDescendantByClass(this.wikiportlet,"div","SearchPopup");
+  if (searchPopup)
+    searchPopup.style.display='none';  
   if (evt.button==2) return;
   if (target.tagName=="A"||(target.tagName=="INPUT" && target.type=="button")||
       target.tagName=="SELECT"|| target.tagName=="DIV"&& target.className.indexOf("RefreshModeTarget")>0){    

@@ -52,6 +52,10 @@ public abstract class AttachmentImpl extends NTFile implements Attachment {
   @WorkspaceName
   public abstract String getWorkspace();
   
+  @Property(name = WikiNodeType.Definition.TITLE)
+  public abstract String getTitle();
+  public abstract void setTitle(String title);
+  
   @Property(name = WikiNodeType.Definition.CREATOR)
   public abstract String getCreator();
   public abstract void setCreator(String creator);

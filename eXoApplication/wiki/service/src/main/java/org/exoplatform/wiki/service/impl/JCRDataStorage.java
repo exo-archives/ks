@@ -19,6 +19,7 @@ import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
+import org.exoplatform.wiki.service.TitleSearchResult;
 import org.exoplatform.wiki.service.DataStorage;
 import org.exoplatform.wiki.service.SearchData;
 import org.exoplatform.wiki.service.SearchResult;
@@ -32,7 +33,7 @@ public class JCRDataStorage implements DataStorage{
     QueryManager qm = session.getJCRSession().getWorkspace().getQueryManager();
     Query q = qm.createQuery(statement, Query.SQL);
     QueryResult result = q.execute();
-    RowIterator iter = result.getRows() ;
+    RowIterator iter = result.getRows();
     while(iter.hasNext()) {
       try{resultList.add(getResult(iter.nextRow())) ;} catch(Exception e){}
     }
@@ -46,6 +47,14 @@ public class JCRDataStorage implements DataStorage{
     String title = (row.getValue("title")== null ? null : row.getValue("title").getString()) ;
     SearchResult result = new SearchResult(excerpt,title, path, type) ;
     return result ;
+  }
+  
+  private TitleSearchResult getTitleSearchResult(Row row) throws Exception {
+    String type = row.getValue("jcr:primaryType").getString();
+    String path = row.getValue("jcr:path").getString();
+    String title = (row.getValue("title") == null ? null : row.getValue("title").getString());
+    TitleSearchResult result = new TitleSearchResult(title, path, type);
+    return result;
   }
   
   public List<SearchResult> searchRenamedPage(ChromatticSession session, SearchData data) throws Exception {
@@ -76,6 +85,26 @@ public class JCRDataStorage implements DataStorage{
     Node attContent = (Node)session.getJCRSession().getItem(path) ;
     return attContent.getProperty("jcr:data").getStream() ;    
   }
+  
+  public List<TitleSearchResult> searchDataByTitle(ChromatticSession session, SearchData data) throws Exception {
+    List<TitleSearchResult> resultList = new ArrayList<TitleSearchResult>();
+    String statement = data.getStatementForTitle();
+
+    QueryManager qm = session.getJCRSession().getWorkspace().getQueryManager();
+    Query q = qm.createQuery(statement, Query.SQL);
+    QueryResult result = q.execute();
+    RowIterator iter = result.getRows();
+
+    while (iter.hasNext()) {
+      try {
+        resultList.add(getTitleSearchResult(iter.nextRow()));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    
+    return resultList;
+  }  
   
   /*public boolean deletePage(String pagePath, String wikiPath, ChromatticSession session) throws Exception {
     try {
@@ -151,5 +180,4 @@ public class JCRDataStorage implements DataStorage{
     }
     return list;
   }
-  
 }

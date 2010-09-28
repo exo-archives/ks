@@ -65,7 +65,9 @@ import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
+import org.exoplatform.wiki.service.TitleSearchResult;
 import org.exoplatform.wiki.service.Relations;
+import org.exoplatform.wiki.service.SearchData;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiResource;
@@ -395,6 +397,21 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       log.error(e.getMessage(), e);
     }
     return attachments;
+  }
+  
+  @GET
+  @Path("contextsearch/{keyword}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response searchData(@PathParam("keyword") String keyword) throws Exception {
+    try {
+      SearchData data = new SearchData(null, keyword, null, null, null);
+      List<TitleSearchResult> result = wikiService.searchDataByTitle(data);
+      return Response.ok(new BeanToJsons(result), MediaType.APPLICATION_JSON)
+                     .cacheControl(cc)
+                     .build();
+    } catch (Exception e) {
+      return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cc).build();
+    }
   }
 
   public Space createSpace(ObjectFactory objectFactory,

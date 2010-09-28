@@ -179,6 +179,7 @@ public abstract class PageImpl implements Page {
     AttachmentImpl file = createAttachment();
     file.setName(fileName) ;
     addAttachment(file) ;
+    file.setTitle(fileName);
     if (contentResource != null) {
       file.setContentResource(contentResource);      
     }

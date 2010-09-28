@@ -47,6 +47,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.BreadcumbData;
+import org.exoplatform.wiki.service.TitleSearchResult;
 import org.exoplatform.wiki.service.SearchData;
 import org.exoplatform.wiki.service.SearchResult;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -382,7 +383,7 @@ public class WikiServiceImpl implements WikiService {
     }
     return null;
   }
-
+  
   public PageList<SearchResult> search(SearchData data) throws Exception {
 
     Model model = getModel();
@@ -403,18 +404,22 @@ public class WikiServiceImpl implements WikiService {
     return jcrDataStorage.searchRenamedPage(wStore.getSession(), data);
   }
 
-  public Object findByPath(String path, String objectNodeType) throws Exception {
+  public Object findByPath(String path, String objectNodeType) {    
     String relPath = path;
     if (relPath.startsWith("/"))
       relPath = relPath.substring(1);
-    Model model = getModel();
-    WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
-    if (WikiNodeType.WIKI_PAGE_CONTENT.equals(objectNodeType)) {
-      return wStore.getSession().findByPath(ContentImpl.class, relPath);
-    } else if (WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(objectNodeType)) {
-      relPath = relPath.substring(0, relPath.lastIndexOf("/"));
-      return wStore.getSession().findByPath(AttachmentImpl.class, relPath);
-    }
+    try {
+      Model model = getModel();
+      WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+      if (WikiNodeType.WIKI_PAGE_CONTENT.equals(objectNodeType)) {
+        return wStore.getSession().findByPath(ContentImpl.class, relPath);
+      } else if (WikiNodeType.WIKI_ATTACHMENT.equals(objectNodeType)) {   
+        return wStore.getSession().findByPath(AttachmentImpl.class, relPath);
+      }
+    } catch (Exception e) {
+      // TODO: handle exception
+      log.error("Can't find Object", e);
+    }  
     return null;
   }
 
@@ -471,7 +476,18 @@ public class WikiServiceImpl implements WikiService {
     }
     return Syntax.XWIKI_2_0.toIdString();
   }
-
+  
+  public List<TitleSearchResult> searchDataByTitle(SearchData data) throws Exception {
+    try {
+      Model model = getModel();
+      WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+      return jcrDataStorage.searchDataByTitle(wStore.getSession(), data);
+    } catch (Exception e) {
+      log.error("Can't search content", e);
+    }
+    return null;
+  }
+  
   private Model getModel() {
     MOWService mowService = (MOWService) ExoContainerContext.getCurrentContainer()
                                                             .getComponentInstanceOfType(MOWService.class);

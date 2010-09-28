@@ -356,6 +356,26 @@ public class TestWikiService extends AbstractMOWTestcase {
       
   }
   
+  public void testSearchTitle() throws Exception {
+    Model model = mowService.getModel();
+    WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+    PageImpl kspage = (PageImpl) wService.createPage(PortalConfig.PORTAL_TYPE,
+                                                     "classic",
+                                                     "dumpPage",
+                                                     "WikiHome");
+    assertNotNull(wService.getPageById(PortalConfig.PORTAL_TYPE, "classic", "dumpPage"));
+
+    AttachmentImpl attachment1 = kspage.createAttachment("dumpFile.txt",
+                                                         Resource.createPlainText("foo"));
+    assertEquals(attachment1.getName(), "dumpFile.txt");
+    assertNotNull(attachment1.getContentResource());
+    kspage.getChromatticSession().save();
+
+    SearchData data = new SearchData(null, "dump", null, "portal", "classic");
+    List<TitleSearchResult> result = wService.searchDataByTitle(data);
+    assertEquals(2, result.size());
+  }
+  
   public void testGetPageTitleOfAttachment() throws Exception {
     PageImpl kspage = (PageImpl)wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "GetPageTitleOfAttachment", "WikiHome") ;
     kspage.getContent().setText("forum faq wiki exoplatform") ;

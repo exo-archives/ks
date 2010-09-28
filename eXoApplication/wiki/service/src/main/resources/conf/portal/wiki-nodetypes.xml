@@ -301,6 +301,9 @@
       <supertype>nt:file</supertype>      
     </supertypes>
     <propertyDefinitions>
+      <propertyDefinition name="title" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
     	<propertyDefinition name="creator" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
         <valueConstraints/>
       </propertyDefinition>
