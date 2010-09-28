@@ -110,6 +110,13 @@ After _org.exoplatform.forum.service.conf.InitializeForumPlugin_ object is execu
                               <field name="description">
                                  <string>All about eXo KS</string>
                               </field>
+                            ...
+                          </object>
+                       </value>
+                     </collection>
+                   </field>
+                </object>
+    </object-param>
 {code}
 
 # category includes some basic data which are defined in _field_ tag with specific _name_ like below:
@@ -147,6 +154,7 @@ With the sample code above, ~~org.exoplatform.forum.service.conf.CategoryData~~ 
         <field name= " ">                             
            ...  
         </field> 
+        </object>
       </value>
 {code}
 
@@ -165,6 +173,10 @@ h2. Forum array
          <field name="name"><string>Live demo</string></field>
          <field name="description"><string>Questions about this demo</string></field>
               ...
+       </object>
+       </value>
+       </collection>
+    </field>
 {code}
 
 - Basic forum data
@@ -187,7 +199,8 @@ With the sample code above, ~~org.exoplatform.forum.service.conf.ForumData~~ obj
       <object type="org.exoplatform.forum.service.conf.ForumData">
       <field name=" ">
               ...
-      </field> 
+      </field>
+      </object>
     </value>
 {code}
 
@@ -205,6 +218,10 @@ h2. Forum topics
              <field name="owner"><string>root</string></field>
              <field name="content"><string>Welcome to eXo Forum live demo. ... at anytime.</string></field>
                    ...
+       </object>
+       </value>
+       </collection>
+    </field>
 {code}
 
 A topic includes some basic data which are defined in ~~field~~ tag with specific ~~name~~ like above.\\
@@ -226,6 +243,7 @@ With the sample code above, ~~org.exoplatform.forum.service.conf.TopicData~~ obj
         <field name=" ">
                     ...
         </field> 
+        </object>
       </value>
 {code}
 
@@ -239,9 +257,12 @@ With the sample code above, ~~org.exoplatform.forum.service.conf.TopicData~~ obj
         <field name="name"><string>Reply: Demo data policy</string></field>
         <field name="icon"><string>IconsView</string></field>
         <field name="owner"><string>root</string></field>
-        <field name="content"><string>Enjoy and don't forget to send feedback at ks@exoplatform.com</string>     
-      </field>
-                             ...
+        <field name="content"><string>Enjoy and don't forget to send feedback at ks@exoplatform.com</string></field>
+              ...
+       </object>
+       </value>
+       </collection>
+    </field>
 {code}
 
 A post includes some basic data which are defined in _field_ tag with specific _name_ like above.
@@ -264,6 +285,7 @@ With the sample code above, _org.exoplatform.forum.service.conf.PostData_ object
          <field name=" ">
                ...
          </field> 
+        </object>
        </value>
 {code}
 

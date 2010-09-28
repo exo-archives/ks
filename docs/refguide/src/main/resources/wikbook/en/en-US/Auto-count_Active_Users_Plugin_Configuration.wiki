@@ -28,14 +28,14 @@ At Job Schedule Service runtime, Auto-count Active Users plugin component is cal
           <property name="groupName" value="KnowlegedSuite"/>
           <property name="job" value="org.exoplatform.forum.service.conf.RecountActiveUserJob"/>
           <property name="repeatCount" value="0"/>
-          <property name="period" value="7200000"/> <!- 2 hours->    
+          <property name="period" value="7200000"/> <!-- 2 hours-->    
           <property name="startTime" value="+0"/>
           <property name="endTime" value=""/>               
         </properties-param>
         <properties-param>
           <name>RecountActiveUser.info</name>
           <description></description>
-          <property name="lastPost" value="15"/> <!- users are active if have last posts in 15 day ->
+          <property name="lastPost" value="15"/> <!-- users are active if have last posts in 15 day -->
         </properties-param>
       </init-params>
     </component-plugin>
