@@ -20,13 +20,18 @@
   String historyActionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + uicomponent.SHOW_HISTORY;
   String togglelink= uicomponent.event(uicomponent.TOGGLE_ATTACHMENTS_ACTION);
   
+  String addedByLabel = _ctx.appRes("UIWikiPageInfoArea.label.AddedBy").replace("{0}", "<a class=\"Link\" href=\"\">" + creator + "</a>,");
+  String lastModifiedByLabel = _ctx.appRes("UIWikiPageInfoArea.label.LastModifiedBy").replace("{0}", "<a class=\"Link\" href=\"\">" + author + "</a>");
+  lastModifiedByLabel = lastModifiedByLabel.replace("{1}", updatedDate);
+  String totalAttachmentsLabel = _ctx.appRes("UIWikiPageInfoArea.label.TotalAttachments").replace("{0}", "<div class=\"TxtFeed\"><b>" + attachmentsTotal + "</b><a class=\"Link\" href=\"" + togglelink + "\">");
+  String totalRevisionsLabel = _ctx.appRes("UIWikiPageInfoArea.label.TotalRevisions").replace("{0}", versionsTotal + "</b> <a class=\"Link\" href=\"\">");
 %>
 <div class="UIWikiPageInfoArea">
 	<div class="TxtFeed">
-	  Added by <a class="Link" href=""><%= creator %></a>,
-	  Last modified by <a class="Link" href=""><%= author %></a> at <%= updatedDate %>
-	  <a class="Link" href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('$historyAnchor');">(view change)</a>
+	  <%= addedByLabel %>
+	  <%= lastModifiedByLabel %>
+	  <a class="Link" href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('$historyAnchor');"><%= "(" + _ctx.appRes("UIWikiPageInfoArea.label.ViewChange") + ")"; %></a>
 	  <a onclick="<%=uicomponent.event(uicomponent.SHOW_HISTORY);%>" id="$historyActionId" style="display:none;">&nbsp;</a>
 	</div>
-	<div class="TxtFeed"><b><%= attachmentsTotal %> </b><a class="Link" href="$togglelink">attachment (s)</a>  - <b><%= versionsTotal %></b> <a class="Link" href="">revisions</a></div>
+	<%= totalAttachmentsLabel %></a>  - <b><%= totalRevisionsLabel %></a></div>
 </div>

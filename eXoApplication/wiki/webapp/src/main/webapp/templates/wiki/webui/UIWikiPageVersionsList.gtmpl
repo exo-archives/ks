@@ -21,7 +21,7 @@
 %>
 <div class="UIWikiPageVersionsList UIWikiAttachmentArea">
  <% uiform.begin(); %>
-	<div class="HistoryLabel">History page</div>
+	<div class="HistoryLabel"><%= _ctx.appRes("UIWikiPageVersionsList.label.HistoryLabel"); %></div>
     <div class="UIAction">
 		<table class="ActionContainer">
 			<tbody>
@@ -31,7 +31,7 @@
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle RefreshModeTarget" onclick="<%= uicomponent.event(uicomponent.COMPARE_ACTION); %>">
-										<a href="javascript:void(0);">Compare Selected</a> 
+										<a href="javascript:void(0);"><%= _ctx.appRes("UIWikiPageVersionsList.label.CompareSelected"); %></a> 
 									</div>
 								</div>
 							</div>
@@ -46,11 +46,11 @@
       <thead >
         <tr>
           <th style="width:30px"></th>
-          <th style="width: 15%">Revision</th>
-          <th style="width: 20%">Date</th>
-          <th style="width: 15%">Author</th>
-          <th style="width: 35%">Summary</th>
-          <th style="width: 10%; border-right: 1px solid #d7d7d7;">Action</th>
+          <th style="width: 15%"><%= _ctx.appRes("UIWikiPageVersionsList.label.Revision"); %></th>
+          <th style="width: 20%"><%= _ctx.appRes("UIWikiPageVersionsList.label.Date"); %></th>
+          <th style="width: 15%"><%= _ctx.appRes("UIWikiPageVersionsList.label.Author"); %></th>
+          <th style="width: 35%"><%= _ctx.appRes("UIWikiPageVersionsList.label.Summary"); %></th>
+          <th style="width: 10%; border-right: 1px solid #d7d7d7;"><%= _ctx.appRes("UIWikiPageVersionsList.label.Action"); %></th>
         </tr>
       </thead>
       <tbody>
@@ -74,7 +74,7 @@
             String versionNumber= versionLabel;       
             checkboxField = uicomponent.getChildById(versionLabel) ;
             if(isCurrentVersion){
-              versionLabel = "CURRENT (v. " + versionLabel + ")";
+              versionLabel = _ctx.appRes("UIWikiPageVersionsList.label.Current") + " (v. " + versionLabel + ")";
             } else {
               versionLabel = "v. " + versionLabel;
             }
@@ -82,7 +82,7 @@
             String updatedDate = frozenNode.getUpdatedDate();
             String author = frozenNode.getAuthor();
             author = (author != null) ? author : "anonymous";
-            String restore = (isCurrentVersion) ? "" : "Restore";
+            String restore = (isCurrentVersion) ? "" : _ctx.appRes("UIWikiPageVersionsList.label.Restore");
             String viewLink = uicomponent.event(uicomponent.VIEW_REVISION, version.getName());
             String restoreLink = uicomponent.event(uicomponent.RESTORE_ACTION, version.getName());
             
@@ -96,14 +96,14 @@
             %>
           </td>
           <td class="Tit">
-          	<a onclick="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.VIEW_REVISION/$versionNumber')" title="View the revision" ><%= versionLabel %></a>
+          	<a onclick="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.VIEW_REVISION/$versionNumber')" title="<%= _ctx.appRes("UIWikiPageVersionsList.label.ViewRevision"); %>" ><%= versionLabel %></a>
           	<a id="$viewLinkId" onclick="$viewLink" style="display:none"></a>                   	
           </td>
           <td><%= updatedDate %></td>
           <td><%= author %></td>
           <td></td>
           <td class="Tit" style="border-right: 1px solid #d7d7d7;">
-      	    <a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');" onclick="$restoreLink" title="Restore the revision" ><%= restore %></a>      	   
+      	    <a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');" onclick="$restoreLink" title="<%= _ctx.appRes("UIWikiPageVersionsList.label.RestoreRevision"); %>" ><%= restore %></a>      	   
           </td>
         </tr>
         <%}%>

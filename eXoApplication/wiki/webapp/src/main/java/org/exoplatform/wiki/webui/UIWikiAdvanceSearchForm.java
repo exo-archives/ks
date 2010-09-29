@@ -93,17 +93,17 @@ public class UIWikiAdvanceSearchForm extends UIForm {
     return listOptions;
   }
 
-  public SelectOptionGroup getAllSpacesOptions() {
+  public SelectOptionGroup getAllSpacesOptions() throws Exception {
     SelectOptionGroup allSpaceOptions = new SelectOptionGroup("");
-    allSpaceOptions.addOption(new SelectOption("All Spaces", ""));
-    allSpaceOptions.addOption(new SelectOption("All Portal Spaces", PortalConfig.PORTAL_TYPE));
-    allSpaceOptions.addOption(new SelectOption("All Group Spaces", PortalConfig.GROUP_TYPE));
-    allSpaceOptions.addOption(new SelectOption("All User Spaces", PortalConfig.USER_TYPE));
+    allSpaceOptions.addOption(new SelectOption(getLabel("AllSpaces"), ""));
+    allSpaceOptions.addOption(new SelectOption(getLabel("AllPortalSpaces"), PortalConfig.PORTAL_TYPE));
+    allSpaceOptions.addOption(new SelectOption(getLabel("AllGroupSpaces"), PortalConfig.GROUP_TYPE));
+    allSpaceOptions.addOption(new SelectOption(getLabel("AllUserSpaces"), PortalConfig.USER_TYPE));
     return allSpaceOptions;
   }
 
-  public SelectOptionGroup getPortalSpacesOptions() {
-    SelectOptionGroup portalSpaceOptions = new SelectOptionGroup("Portal Spaces");
+  public SelectOptionGroup getPortalSpacesOptions() throws Exception {
+    SelectOptionGroup portalSpaceOptions = new SelectOptionGroup(getLabel("PortalSpaces"));
     Collection<Wiki> portalWikis = Utils.getWikisByType(WikiType.PORTAL);
     for (Wiki wiki : portalWikis) {
       portalSpaceOptions.addOption(new SelectOption(wiki.getOwner(), PortalConfig.PORTAL_TYPE + "/"
@@ -112,8 +112,8 @@ public class UIWikiAdvanceSearchForm extends UIForm {
     return portalSpaceOptions;
   }
 
-  public SelectOptionGroup getGroupSpacesOptions() {
-    SelectOptionGroup groupSpaceOptions = new SelectOptionGroup("Group Spaces");
+  public SelectOptionGroup getGroupSpacesOptions() throws Exception {
+    SelectOptionGroup groupSpaceOptions = new SelectOptionGroup(getLabel("GroupSpaces"));
     Collection<Wiki> groupWikis = Utils.getWikisByType(WikiType.GROUP);
     for (Wiki wiki : groupWikis) {
       groupSpaceOptions.addOption(new SelectOption(wiki.getOwner(), PortalConfig.GROUP_TYPE + "/"
@@ -122,8 +122,8 @@ public class UIWikiAdvanceSearchForm extends UIForm {
     return groupSpaceOptions;
   }
 
-  public SelectOptionGroup getUserSpacesOptions() {
-    SelectOptionGroup userSpaceOptions = new SelectOptionGroup("User Spaces");
+  public SelectOptionGroup getUserSpacesOptions() throws Exception {
+    SelectOptionGroup userSpaceOptions = new SelectOptionGroup(getLabel("UserSpaces"));
     Collection<Wiki> userWikis = Utils.getWikisByType(WikiType.USER);
     for (Wiki wiki : userWikis) {
       userSpaceOptions.addOption(new SelectOption(wiki.getOwner(), PortalConfig.USER_TYPE + "/"

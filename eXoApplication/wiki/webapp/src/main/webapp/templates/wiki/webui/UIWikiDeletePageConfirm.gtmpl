@@ -14,12 +14,12 @@ import org.exoplatform.wiki.commons.Utils ;
 		}else {
 		%>
 			<div>
-				<h2>Deleting page "<span><%=page.getContent().getTitle()%></span>"</h2>
-				<p><b>Are you sure you want to send this page to the trash?</b> <br/>Please note: </p>				
+				<h2><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfoHeader").replace("{0}", "<span>" + page.getContent().getTitle() + "</span>"); %></h2>
+				<p><b><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfo1"); %></b> <br/><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfo2"); %> </p>				
 				<ul>
-					<li>Removing a page moves it into the trash can. You can speak to your space administrator to have it recovered</li>
-					<li>The links to this page will be broken when this page is removed</li>
-					<li>This page is a child page of page <b><%=uicomponent.getWiki()%>: <%=page.getParentPage().getContent().getTitle()%>.</b></li>
+					<li><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfo3"); %></li>
+					<li><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfo4"); %></li>
+					<li><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfo5").replace("{0}", "<b>" + uicomponent.getWiki() + ": " + page.getParentPage().getContent().getTitle() + "</b>."); %></li>
 				</ul>
 			</div>		
 		<%
@@ -34,7 +34,7 @@ import org.exoplatform.wiki.commons.Utils ;
             <div class="ButtonLeft">
               <div class="ButtonRight">
                 <div class="ButtonMiddle">
-                  <a href="<%=uicomponent.url("OK")%>">OK</a>
+                  <a href="<%=uicomponent.url("OK")%>"><%= _ctx.appRes("UIWikiDeletePageConfirm.action.OK"); %></a>
                 </div>
               </div>
             </div>
@@ -45,7 +45,7 @@ import org.exoplatform.wiki.commons.Utils ;
             <div class="ButtonLeft">
               <div class="ButtonRight">
                 <div class="ButtonMiddle">
-                  <a href="<%=uicomponent.url("Cancel")%>">Cancel</a>
+                  <a href="<%=uicomponent.url("Cancel")%>"><%= _ctx.appRes("UIWikiDeletePageConfirm.action.Cancel"); %></a>
                 </div>
               </div>
             </div>

@@ -13,13 +13,13 @@
 		%>
 			<% if(action.equals("MovePage")){
 			%>
-			<a href="$link" class="MoreItems Icon">Move page</a>
+			<a href="$link" class="MoreItems Icon" title="<%=_ctx.appRes("UIPageToolBar.label.MovePage");%>"><%= _ctx.appRes("UIPageToolBar.label.MovePage"); %></a>
 			<%}%>
 		<%}%>
 		</div>
 	</div>
 
-<a class="HoverLink MoreLink Icon">More</a>
+<a class="HoverLink MoreLink Icon" title="<%=_ctx.appRes("UIPageToolBar.label.More");%>"><%= _ctx.appRes("UIPageToolBar.label.More"); %></a>
 <%
 def rcontext = _ctx.getRequestContext() ;
 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(\""+uicomponent.id+"\");");
@@ -48,31 +48,31 @@ for(entry in uicomponent.getActions()) {
 %>
 		<% if(action.equals("AddPage")){
 		%>
-		<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Add Icon">&nbsp;</a>
+		<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Add Icon" title="<%=_ctx.appRes("UIPageToolBar.label.AddPage");%>">&nbsp;</a>
 		<%} else if(action.equals("EditPage")){
 		%>
-		<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Edit Icon">&nbsp;</a>
+		<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Edit Icon" title="<%=_ctx.appRes("UIPageToolBar.label.EditPage");%>">&nbsp;</a>
 		<%} else if(action.equals("DeletePage")){
 		%>
-		<a href="$link" class="Delete Icon">&nbsp;</a>
+		<a href="$link" class="Delete Icon" title="<%=_ctx.appRes("UIPageToolBar.label.DeletePage");%>">&nbsp;</a>
 		<%} else if(action.equals("Cancel")){
 		    cancelLink = uicomponent.isNewMode() ? Utils.getCurrentRequestURL() : "javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');";
 		%>
-		<a href="$cancelLink" class="Delete Icon">&nbsp;</a>
+		<a href="$cancelLink" class="Delete Icon" title="<%=_ctx.appRes("UIPageToolBar.label.Cancel");%>">&nbsp;</a>
 		<%} else if(action.equals("Help")){
 		%>
-		<a href="$link" class="FAQ Icon">&nbsp;</a>
+		<a href="$link" class="FAQ Icon" title="<%=_ctx.appRes("UIPageToolBar.label.Help");%>">&nbsp;</a>
 		<%} else if(action.equals("PreviewPage")){
 		%>
-		<a href="$link" class="View Icon">&nbsp;</a>
+		<a href="$link" class="View Icon" title="<%=_ctx.appRes("UIPageToolBar.label.Preview");%>">&nbsp;</a>
 		<%} else if(action.equals("SavePage")){
 			saveLink=link;
 		%>
 		<a href="$link" onclick="return eXo.wiki.UISavePageConfirmation.validateSave('$pageTitleInputId');" 
-		class="Save Icon">&nbsp;</a>
+		class="Save Icon" title="<%=_ctx.appRes("UIPageToolBar.label.SavePage");%>">&nbsp;</a>
 		<%} else if(action.equals("RichText")){
 		%>
-		<a href="$link" class="Edit Icon">&nbsp;</a>
+		<a href="$link" class="Edit Icon" title="<%=_ctx.appRes("UIPageToolBar.label.RichTextEditor");%>">&nbsp;</a>
 		<%}%>
 		<a onclick="$link" id="$actionId" style="display:none;">&nbsp;</a>
 <%}%>
@@ -80,12 +80,12 @@ for(entry in uicomponent.getActions()) {
 	<div id="ConfirmMask" class="PopupDiv" align="center">
 		<div class="ConfirmBox">
 			<div class="ConfirmTitle" >
-				<b>Confirmation</b>
+				<b><%= _ctx.appRes("UISavePageConfirmation.label.Confirmation"); %></b>
 				<a href="" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm();return false;" class="CloseButton"><span></span></a>
 			</div>
 			<div>
-				<div class="ConfirmAdd">You are about to save an Untitled page</div>
-				<div class="ConfirmEdit">Your changes will be saved to history.<br/>Are you sure you want to apply this changes?</div>			
+				<div class="ConfirmAdd"><%= _ctx.appRes("UISavePageConfirmation.label.ConfirmAdd").replace("{0}", "Untitled"); %></div>
+				<div class="ConfirmEdit"><%= _ctx.appRes("UISavePageConfirmation.label.ConfirmEdit").replace("{0}", "<br/>"); %></div>			
 				<input type="button" value="Confirm" onclick="$saveLink">
 				<input type="button" value="Discard" onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');">
  			<input type="button" value="Cancel" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm()">

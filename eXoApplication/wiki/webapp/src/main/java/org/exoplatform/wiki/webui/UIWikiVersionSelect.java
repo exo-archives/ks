@@ -37,13 +37,13 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
                  lifecycle = UIApplicationLifecycle.class,
                  template = "app:/templates/wiki/webui/UIWikiVersionSelect.gtmpl",
                  events = {               
-                   @EventConfig(listeners = UIWIkiVerSionSelect.RestoreActionListener.class),
-                   @EventConfig(listeners = UIWIkiVerSionSelect.ShowHistoryActionListener.class),
-                   @EventConfig(listeners = UIWIkiVerSionSelect.NextVersionActionListener.class),
-                   @EventConfig(listeners = UIWIkiVerSionSelect.PreviousVersionActionListener.class)
+                   @EventConfig(listeners = UIWikiVersionSelect.RestoreActionListener.class),
+                   @EventConfig(listeners = UIWikiVersionSelect.ShowHistoryActionListener.class),
+                   @EventConfig(listeners = UIWikiVersionSelect.NextVersionActionListener.class),
+                   @EventConfig(listeners = UIWikiVersionSelect.PreviousVersionActionListener.class)
                  }
 )
-public class UIWIkiVerSionSelect extends UIWikiContainer {
+public class UIWikiVersionSelect extends UIWikiContainer {
   
   private String versionName;
   
@@ -55,7 +55,7 @@ public class UIWIkiVerSionSelect extends UIWikiContainer {
   public static final String VIEW_REVISION  = "ViewRevision";
   
   
-  public UIWIkiVerSionSelect() {
+  public UIWikiVersionSelect() {
     this.accept_Modes = Arrays.asList(new WikiMode[] {WikiMode.VIEWREVISION });
   }
 
@@ -79,10 +79,10 @@ public class UIWIkiVerSionSelect extends UIWikiContainer {
     return (version < versionTotals) ? true : false;
   } 
   
-  static public class RestoreActionListener extends EventListener<UIWIkiVerSionSelect> {
+  static public class RestoreActionListener extends EventListener<UIWikiVersionSelect> {
     @Override
-    public void execute(Event<UIWIkiVerSionSelect> event) throws Exception {
-      UIWIkiVerSionSelect versionSelect = event.getSource();
+    public void execute(Event<UIWikiVersionSelect> event) throws Exception {
+      UIWikiVersionSelect versionSelect = event.getSource();
       PageImpl wikipage = (PageImpl) Utils.getCurrentWikiPage();
       wikipage.restore(versionSelect.versionName, false);
       wikipage.checkout();
@@ -92,28 +92,28 @@ public class UIWIkiVerSionSelect extends UIWikiContainer {
     }
   }
   
-  static public class ShowHistoryActionListener extends EventListener<UIWIkiVerSionSelect> {
+  static public class ShowHistoryActionListener extends EventListener<UIWikiVersionSelect> {
     @Override
-    public void execute(Event<UIWIkiVerSionSelect> event) throws Exception {
+    public void execute(Event<UIWikiVersionSelect> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       UIWikiPageInfoArea.processShowHistoryAction(wikiPortlet);
       event.getSource().getAncestorOfType(UIWikiPortlet.class).changeMode(WikiMode.SHOWHISTORY);
     }
   }
   
-  static public class NextVersionActionListener extends EventListener<UIWIkiVerSionSelect> {
+  static public class NextVersionActionListener extends EventListener<UIWikiVersionSelect> {
     @Override
-    public void execute(Event<UIWIkiVerSionSelect> event) throws Exception {
-      UIWIkiVerSionSelect versionSelect = event.getSource();
+    public void execute(Event<UIWikiVersionSelect> event) throws Exception {
+      UIWikiVersionSelect versionSelect = event.getSource();
       int version = Integer.valueOf(versionSelect.versionName);
       versionSelect.versionName = String.valueOf(++version);
     }
   }
   
-  static public class PreviousVersionActionListener extends EventListener<UIWIkiVerSionSelect> {
+  static public class PreviousVersionActionListener extends EventListener<UIWikiVersionSelect> {
     @Override
-    public void execute(Event<UIWIkiVerSionSelect> event) throws Exception {
-      UIWIkiVerSionSelect versionSelect = event.getSource();
+    public void execute(Event<UIWikiVersionSelect> event) throws Exception {
+      UIWikiVersionSelect versionSelect = event.getSource();
       int version = Integer.valueOf(versionSelect.versionName);
       versionSelect.versionName = String.valueOf(--version);
     }

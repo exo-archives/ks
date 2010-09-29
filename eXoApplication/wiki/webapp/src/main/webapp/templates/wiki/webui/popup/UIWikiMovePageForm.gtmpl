@@ -33,7 +33,7 @@
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
 								<div class="ButtonMiddle">
-									<a href="javascript:void(0);">Move</a>
+									<a href="javascript:void(0);"><%=_ctx.appRes("UIWikiMovePageForm.action.Move")%></a>
 								</div>
 							</div>
 						</div>
@@ -42,7 +42,7 @@
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
 								<div class="ButtonMiddle">
-									<a href="javascript:void(0);">Cancel</a>
+									<a href="javascript:void(0);"><%=_ctx.appRes("UIWikiMovePageForm.action.Cancel")%></a>
 								</div>
 							</div>
 						</div>

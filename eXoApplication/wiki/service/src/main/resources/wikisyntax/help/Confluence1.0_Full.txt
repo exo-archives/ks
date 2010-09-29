@@ -330,13 +330,12 @@ h2. Macros
 {table-row}
 {table-cell}Toc Macro{table-cell}
 {table-cell}{{{
-{toc:numbered="true"} {toc}
+{toc:numbered="true"}
 }}}
 {table-cell}
 {table-cell}
 {toc:numbered="true"}
 
-{toc}
 {table-cell}
 {table-row}
 {table-row}

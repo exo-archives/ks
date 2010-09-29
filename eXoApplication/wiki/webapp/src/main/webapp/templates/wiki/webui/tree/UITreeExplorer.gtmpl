@@ -25,6 +25,7 @@
  public void renderSpaceTreeNode(SpaceTreeNode treeNode ,boolean isLastNode, String currentPagePath) {
     currentPagePath= currentPagePath.replace("/",".");   
     String nodeName = treeNode.getName();
+    nodeName = _ctx.appRes("UIWikiMovePageForm.label." + nodeName);
     String iconType = "Expand";
     String lastNodeClass = "";
     String nodeType = treeNode.getNodeType().toString();
@@ -50,7 +51,7 @@
 %>
 <div class="SideBarContent">  
   <div class="BarContent">
-  Chose page to move
+  <%=_ctx.appRes("UIWikiMovePageForm.label.choose-page-to-move")%>
   </div>
   <div class="SideContent">
 	  <div class="UITreeExplorer" id="UITreeExplorer">

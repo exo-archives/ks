@@ -55,7 +55,7 @@ public class UIWikiPageContentArea extends UIWikiContainer {
   
   public UIWikiPageContentArea() throws Exception{
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.HELP, WikiMode.VIEWREVISION });
-    this.addChild(UIWIkiVerSionSelect.class, null, null);
+    this.addChild(UIWikiVersionSelect.class, null, null);
   }  
   
   public String getHtmlOutput() {
@@ -67,7 +67,7 @@ public class UIWikiPageContentArea extends UIWikiContainer {
   }
   
   public void renderVersion() throws Exception {
-    String currentVersionName= this.getChild(UIWIkiVerSionSelect.class).getVersionName();
+    String currentVersionName= this.getChild(UIWikiVersionSelect.class).getVersionName();
     
     WikiMode currentMode= this.getAncestorOfType(UIWikiPortlet.class).getWikiMode();
     RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
