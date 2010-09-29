@@ -404,7 +404,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
   @Produces(MediaType.APPLICATION_JSON)
   public Response searchData(@PathParam("keyword") String keyword) throws Exception {
     try {
-      SearchData data = new SearchData(null, keyword, null, null, null);
+      SearchData data = new SearchData(null, keyword.toLowerCase(), null, null, null);
       List<TitleSearchResult> result = wikiService.searchDataByTitle(data);
       return Response.ok(new BeanToJsons(result), MediaType.APPLICATION_JSON)
                      .cacheControl(cc)

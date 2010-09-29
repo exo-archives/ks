@@ -141,7 +141,7 @@ public class SearchData {
              .append("WHERE ")
              .append(jcrQueryPath)
              .append(" AND ")
-             .append("title LIKE '%")
+             .append("LOWER(title) LIKE '%")
              .append(title)
              .append("%' ")
              .append("ORDER BY jcr:primaryType DESC");
