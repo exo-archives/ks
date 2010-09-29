@@ -200,7 +200,7 @@ UIWikiSearchBox.prototype.renderMenu = function(data){
   this.searchPopup.style.display="block";
   this.menu= eXo.core.DOMUtil.findFirstDescendantByClass(this.searchPopup,"div","SubBlock");
   var resultLength = data.jsonList.length;  
-  this.menu.innerHTML= null;
+  this.menu.innerHTML= "";
   
   var textNode= document.createTextNode('');
   this.menu.appendChild(textNode);
