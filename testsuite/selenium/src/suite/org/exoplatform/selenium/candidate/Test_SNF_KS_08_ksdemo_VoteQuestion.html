@@ -87,13 +87,18 @@
 	<td>SNF_KS_08</td>
 </tr>
 <tr>
-	<td>pause</td>
-	<td>1000</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>selectFrame</td>
 	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
 	<td></td>
 </tr>
 <tr>
@@ -118,12 +123,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>mouseDown</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>

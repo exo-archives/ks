@@ -92,13 +92,18 @@
 	<td>SNF_KS_07 in English</td>
 </tr>
 <tr>
-	<td>pause</td>
-	<td>1000</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>selectFrame</td>
 	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
 	<td></td>
 </tr>
 <tr>
@@ -109,7 +114,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>The detail of SNF_KS_08 in English</td>
+	<td>The detail of SNF_KS_07 in English</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -147,13 +152,18 @@
 	<td>SNF_KS_07 in French</td>
 </tr>
 <tr>
-	<td>pause</td>
-	<td>1000</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>selectFrame</td>
 	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
 	<td></td>
 </tr>
 <tr>
@@ -164,7 +174,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>The detail of SNF_KS_08 in French</td>
+	<td>The detail of SNF_KS_07 in French</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -173,12 +183,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>mouseDown</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
@@ -223,12 +233,12 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>The detail of SNF_KS_08 in French</td>
+	<td>The detail of SNF_KS_07 in French</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>The detail of SNF_KS_08 in French</td>
+	<td>The detail of SNF_KS_07 in French</td>
 	<td></td>
 </tr>
 <tr>
@@ -248,12 +258,12 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>The detail of SNF_KS_08 in English</td>
+	<td>The detail of SNF_KS_07 in English</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>The detail of SNF_KS_08 in English</td>
+	<td>The detail of SNF_KS_07 in English</td>
 	<td></td>
 </tr>
 <tr>
@@ -282,8 +292,8 @@
 	<td>SNF_KS_07 in English Update</td>
 </tr>
 <tr>
-	<td>pause</td>
-	<td>1000</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
@@ -292,14 +302,24 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
 	<td>selectFrame</td>
 	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body</td>
+	<td>The detail of SNF_KS_07 in English</td>
+</tr>
+<tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>The detail of SNF_KS_08 in English Update</td>
+	<td>The detail of SNF_KS_07 in English Update</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -314,31 +334,31 @@
 <tr>
 	<td>select</td>
 	<td>AllLanguages</td>
-	<td>label=Vietnamese</td>
+	<td>label=French</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//option[@value='Vietnamese']</td>
+	<td>//option[@value='French']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//option[@value='Vietnamese']</td>
+	<td>//option[@value='French']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
 	<td>QuestionTitle</td>
-	<td></td>
+	<td>SNF_KS_07 in French</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>QuestionTitle</td>
-	<td>More Edit in Vietnamese</td>
+	<td>SNF_KS_07 in French Update</td>
 </tr>
 <tr>
-	<td>pause</td>
-	<td>1000</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
@@ -347,14 +367,24 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
 	<td>selectFrame</td>
 	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body</td>
+	<td>The detail of SNF_KS_07 in French</td>
+</tr>
+<tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>Details in Vietnamese</td>
+	<td>The detail of SNF_KS_07 in French Update</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -363,72 +393,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIQuestionForm']//div[@class='UIAction']/table//div</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//form[@id='UIQuestionForm']//div[@class='UIAction']/table//div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Vietnamese</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Vietnamese</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>More Edit in Vietnamese</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>More Edit in Vietnamese</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>Details in Vietnamese</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=French</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=French</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>SNF_KS_07 in French</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>SNF_KS_07 in French</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>The detail of SNF_KS_08 in French</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>The detail of SNF_KS_08 in French</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=English</td>
+	<td>mouseDown</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
@@ -443,12 +413,42 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>The detail of SNF_KS_08 in English</td>
+	<td>The detail of SNF_KS_07 in English Update</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>The detail of SNF_KS_08 in English</td>
+	<td>The detail of SNF_KS_07 in English Update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=French</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=French</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>SNF_KS_07 in French Update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>SNF_KS_07 in French Update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>The detail of SNF_KS_07 in French Update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>The detail of SNF_KS_07 in French Update</td>
 	<td></td>
 </tr>
 <tr>
