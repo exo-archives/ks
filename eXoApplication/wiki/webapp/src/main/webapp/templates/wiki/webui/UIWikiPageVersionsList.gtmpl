@@ -7,7 +7,11 @@
   import org.exoplatform.wiki.mow.api.WikiNodeType;
   import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
   import org.exoplatform.wiki.chromattic.ext.ntdef.NTFrozenNode;
-   import org.exoplatform.wiki.webui.UIWikiPortlet;
+  import org.exoplatform.wiki.webui.UIWikiPortlet;
+%>
+<%
+	def rcontext = _ctx.getRequestContext() ;
+	rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPageVersionsList.init(\""+uicomponent.id+"\");");
   
   Locale currentLocale = Util.getPortalRequestContext().getLocale();
   List<NTVersion> versionsList = uicomponent.getVersionsList();

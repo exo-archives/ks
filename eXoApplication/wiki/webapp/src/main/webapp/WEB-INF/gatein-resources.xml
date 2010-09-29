@@ -117,6 +117,13 @@
       <js-module>eXo.wiki.UIWikiMaskWorkspace</js-module>
       <js-path>/javascript/eXo/wiki/mask/UIWikiMaskWorkspace.js</js-path>
     </param>
+  </javascript>  
+  
+   <javascript>
+    <param>
+      <js-module>eXo.wikiUIWikiPageVersionsList</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiPageVersionsList.js</js-path>
+    </param>
   </javascript>
    
 </gatein-resources>
