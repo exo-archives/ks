@@ -5,7 +5,7 @@ function ForumSendNotification() {
 	this.titeName="You have received a new private TYPE";
 	this.from = "From";
 	this.briefContent="Brief content";
-	this.GoDirectly="Go directly to the post: LINK Click here.";
+	this.GoDirectly="Go directly to the TYPE: LINK Click here.";
 } ;
 
 ForumSendNotification.prototype.init = function(eXoUser, eXoToken, contextName){
@@ -88,7 +88,14 @@ ForumSendNotification.prototype.getContentHTML = function(message){
 	var type = this.message;
 	if(message.type=='PrivatePost'){
 		type = this.post;
-		link = String(this.GoDirectly).replace(' LINK', '<a style="color:#204AA0" href="'+ String(message.id).replace('public', 'private') +'">') +	'</a>';
+		link = String(this.GoDirectly).replace('TYPE', type);
+		link = link.replace(' LINK', '<a style="color:#204AA0" href="'+ String(message.id).replace('public', 'private') +'">') +	'</a>';
+	} else {
+		link = String(this.GoDirectly).replace('TYPE', type);
+		var alink = document.getElementById('privateMessageLink');
+		if(alink) {
+			link = link.replace(' LINK', '<a style="color:#204AA0" href="'+ alink.href +'">') + '</a>';
+		}
 	}
 	var msg = String(message.message).replace(/<\/?[^>]+(>|$)/g, "");
 	if(msg.length > 100){

@@ -28,13 +28,13 @@ ForumTotalJob.prototype.subcribeCometdTopics = function() {
 ForumTotalJob.prototype.alarm = function(eventObj){
 	var a = eXo.core.JSON.parse(eventObj.data);	
 	var pr = document.getElementById('PendingJob');
-  if(pr) {
+	if(pr) {
 		if(pr) {
 		var str = String(pr.innerHTML);
-			str = str.substring(0, (str.indexOf("(")+4));
-			pr.innerHTML = str + a.categoryName + "</b>)";
+			str = str.substring(0, (str.indexOf("=")+1));
+			pr.innerHTML = str + (((a.categoryName)*1 > 0)?'"font-weight:bold; text-decoration:blink;">':'"font-weight:bold;">') + a.categoryName + "</span>)";
 		}
-  } 
+	} 
 	return ;
 } ;
 

@@ -84,6 +84,7 @@ import org.mortbay.cometd.continuation.EXoContinuationBayeux;
 public class UIForumActionBar extends UIContainer	{
 	private UserProfile userProfile ;
 	private ForumService forumService ;
+	private static final String RELOAD = "RELOAD".intern();
 	
 	 private static final Log log = ExoLogger.getLogger(UIForumActionBar.class);
 	
@@ -149,6 +150,11 @@ public class UIForumActionBar extends UIContainer	{
 			popupContainer.setId("PrivateMessageForm") ;
 			popupAction.activate(popupContainer, 800, 480) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			if(RELOAD.equals(event.getRequestContext().getRequestParameter(OBJECTID))) {
+				forumPortlet.updateUserProfileInfo();
+				uiActionBar.getUserProfile();
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiActionBar) ;
+			}
 		}
 	}
 	

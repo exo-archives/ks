@@ -9,7 +9,7 @@
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("setTimeout('eXo.forum.UIForumPortlet.loadScroll()', 1000);") ;
 	if(userProfile.getUserRole() <= 1) {
-		//jsmanager.importJavascript('eXo.core.JSON') ;
+		jsmanager.importJavascript('eXo.core.JSON') ;
 		jsmanager.importJavascript('eXo.forum.ForumTotalJob','/forum/javascript/') ;
 		jsmanager.addJavascript('eXo.forum.ForumTotalJob.init("'+uicomponent.userProfile.getUserId()+'","'+uicomponent.getUserToken()+'","'+uicomponent.getCometdContextName()+'");') ;
 		jsmanager.addJavascript("eXo.forum.UIForumPortlet.visibleAction('"+uicomponent.id+"');") ;
@@ -116,25 +116,28 @@
 									priMessage=_ctx.appRes("UIBreadcumbs.label.PrivateMessages"); 
 									String newMessage;
 									if(numberOfNewMessage > 0) {
-										newMessage = "<b>"+priMessage+"(" + numberOfNewMessage + ") </b>";
+										newMessage = "<span style=\"font-weight:bold; text-decoration:blink;\">"+priMessage+"(" + numberOfNewMessage + ") </span>";
 									} else {
-										newMessage = priMessage + " " ;
+										newMessage = "<span>" + priMessage + "</span>" ;
 									}
 									if(userProfile.getUserRole() <= 1) {
 										total = uicomponent.getTotalJobWattingForModerator();
 										pending = _ctx.appRes("UIBreadcumbs.label.Pending");
+										String style = (total > 0)?"text-decoration:blink;":"";
 								%>
 									<div class="SeparatorLineForum" style="float:right;width:auto; padding:0px 5px;">
-										<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>">$pending:(<b>$total</b>)</a>
+										<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>">$pending:(<span style="font-weight:bold; $style">$total</span>)</a>
 									</div>
 								<%}%>
 									<div class="SeparatorLineForum" style="float:right;width:auto; padding:0px 5px;">
-										<a class="PrivateMessage PMStyle" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
-											 <span>$newMessage</span>
+										<a class="PrivateMessage PMStyle" href="<%=uicomponent.event("PrivateMessage");%>">
+											 $newMessage
 										</a>
 									</div>
 									<% 
-										int lengths = (String.valueOf(numberOfNewMessage)+ priMessage+pending+String.valueOf(total)).length(); 
+										int lengths = (String.valueOf(numberOfNewMessage)+ priMessage+pending+String.valueOf(total)).length();
+										lengths = (numberOfNewMessage > 0)?lengths+1:lengths;
+										lengths = (total > 0)?lengths+1:lengths;
 									%>
 									<div id="lengthStr" style="display:none; float:right;">$lengths</div>
 									<script type="text/javascript">
@@ -151,4 +154,5 @@
 			</div>
 		</div>
 	</div>
+	<a id="privateMessageLink" href="<%=uicomponent.event("PrivateMessage", uicomponent.RELOAD);%>" style="display:none">a</a>
 </div>

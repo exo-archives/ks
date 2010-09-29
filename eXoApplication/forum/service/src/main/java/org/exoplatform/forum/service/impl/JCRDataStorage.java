@@ -3349,7 +3349,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 				message.setType("PrivatePost");
 				message.setName(post.getName());
 				message.setMessage(post.getMessage());
-				message.setId(post.getLink());
+				message.setId(post.getLink()+"/"+post.getId());
 				sendNotificationMessage(message);
 			}
 		} catch (Exception e) {
@@ -3654,10 +3654,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 						formatter = new SimpleDateFormat("MM/dd/yyyy");
 						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 						content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId()
-								+ "\">click here</a><br/>");
-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private")
-								+ "/" + post.getId() + "/true\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") + "/" + post.getId() + "/true\">click here</a><br/>");
 
 						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
 						content_ = StringUtils.replace(content_, "$FORUM", forumName);
@@ -3696,10 +3694,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 						formatter = new SimpleDateFormat("MM/dd/yyyy");
 						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 						content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId()
-								+ "\">click here</a><br/>");
-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private")
-								+ "/" + post.getId() + "/true\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") + "/" + post.getId() + "/true\">click here</a><br/>");
 
 						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
 						content_ = StringUtils.replace(content_, "$FORUM", forumName);
