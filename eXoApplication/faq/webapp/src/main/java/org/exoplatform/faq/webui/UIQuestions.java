@@ -16,10 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -62,8 +60,6 @@ import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -500,7 +496,7 @@ public class UIQuestions extends UIContainer {
       msg = msg.replace("{0}", String.valueOf(hours));
       return msg;
     } else {
-      return FAQUtils.getFormatDate(DateFormat.LONG, new Date(time));
+      return FAQUtils.getLongDateFormat(new Date(time));
     }
     
   }

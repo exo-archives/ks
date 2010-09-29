@@ -1,6 +1,4 @@
 <% 
-	import java.text.DateFormat;
-	import java.util.Date;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.FAQUtils;
 %>
@@ -31,7 +29,7 @@
 											String author = question.getAuthor() ;
 											String email = question.getEmail() ;
 											String questionContent = question.getQuestion() ;
-						 					String date = FAQUtils.getFormatDate(DateFormat.SHORT, question.getCreatedDate());
+						 					String date = FAQUtils.getShortDateFormat(question.getCreatedDate());
 											String view = uicomponent.event("View", questionId);
 											String link = uicomponent.event("Link",questionId) ;
 											String icon = "" ;

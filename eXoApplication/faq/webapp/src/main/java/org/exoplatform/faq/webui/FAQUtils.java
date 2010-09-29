@@ -449,7 +449,7 @@ public class FAQUtils {
 		}
 	}
 	
-	public static String getFormatDate(int dateFormat, Date myDate) {
+	private static String getFormatDate(int dateFormat, Date myDate) {
 		if(myDate == null) return "";
 		String format = (dateFormat == DateFormat.LONG)?"DDD,MMM dd,yyyy":"MM/dd/yyyy";
 		try {
@@ -459,7 +459,9 @@ public class FAQUtils {
 				org.exoplatform.forum.service.UserProfile profile = forumService.getUserSettingProfile(userName);
 				format = (dateFormat == DateFormat.LONG)?profile.getLongDateFormat():profile.getShortDateFormat();
 			}
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			log.debug("No forum settings found for date format. Will use format " + format);
+		}
 		if(!isFieldEmpty(format)) {
 			if(format.indexOf("DDDD") >= 0)format = format.replaceAll("DDDD", "EEEE");
 			if(format.indexOf("DDD") >= 0)format = format.replaceAll("DDD", "EEE");
@@ -467,6 +469,15 @@ public class FAQUtils {
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
 		Format formatter = new SimpleDateFormat(format, portalContext.getLocale());
 		return formatter.format(myDate);
+	}
+	
+	
+	public static String getLongDateFormat(Date myDate) {
+		return getFormatDate(DateFormat.LONG, myDate);
+	}
+	
+	public static String getShortDateFormat(Date myDate) {
+		return getFormatDate(DateFormat.SHORT, myDate);
 	}
 	
 	public static Calendar getInstanceTempCalendar() { 

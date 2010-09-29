@@ -1,6 +1,4 @@
 <% 
-	import java.text.DateFormat;
-	import java.util.Date;
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.webui.FAQUtils;
 %>
@@ -29,7 +27,7 @@
 												String categoryId = category.getId();
 												String categoryName = category.getName() ;
 												String description = category.getDescription() ;
-						 						String date = FAQUtils.getFormatDate(DateFormat.SHORT, category.getCreatedDate());
+						 						String date = FAQUtils.getShortDateFormat(category.getCreatedDate());
 												String link = uicomponent.event("Link", categoryId);
  										 	%>
 	 											<tr class="EvenRow"> 

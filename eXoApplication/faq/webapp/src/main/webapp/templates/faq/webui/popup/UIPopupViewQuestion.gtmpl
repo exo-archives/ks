@@ -1,6 +1,4 @@
 <% 
-	import java.text.DateFormat;
-	import java.util.Date;
 	import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.ValidatorDataInput;
@@ -36,7 +34,7 @@
 					if(question.getAnswers() != null && question.getAnswers().length > 0) {
 							for(Answer answer in question.getAnswers()) {
 								responseBy = answer.getResponseBy();
-							 	date = FAQUtils.getFormatDate(DateFormat.SHORT, answer.getDateResponse());
+							 	date = FAQUtils.getShortDateFormat(answer.getDateResponse());
 								response = uicomponent.renderAnswer(answer);
 								%> 
 								<div style="width:97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>

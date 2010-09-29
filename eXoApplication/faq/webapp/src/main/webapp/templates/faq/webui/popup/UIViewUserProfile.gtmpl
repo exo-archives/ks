@@ -2,7 +2,6 @@
 	import org.exoplatform.services.organization.User ;
 	import org.exoplatform.faq.webui.FAQUtils;
 	import org.exoplatform.ks.common.user.CommonContact;
-	import java.text.DateFormat;
 %>
 <div class="UIViewUserProfile $uicomponent.id">
 <% uiform.begin() %>
@@ -35,7 +34,7 @@
 		}
 	}
 	if(user != null){ 
-		createdDate = FAQUtils.getFormatDate(DateFormat.LONG, user.getCreatedDate());
+		createdDate = FAQUtils.getLongDateFormat(user.getCreatedDate());
 		fullName = user.getFullName();
 	}
 	if(fullName == null || fullName.length() <=0) fullName = userName;
@@ -59,7 +58,7 @@
 								<div class="Rank">$fullName</div>
 								<div class="InfoUser">
 									<div><%=_ctx.appRes("UIViewUserProfile.label.JoinDate");%>: $createdDate</div>
-									<div><%=_ctx.appRes("UIViewUserProfile.label.LastLoginTime");%>: <%=FAQUtils.getFormatDate(DateFormat.LONG, user.getLastLoginTime()) + dateFormatter.format(user.getLastLoginTime());%> </div>
+									<div><%=_ctx.appRes("UIViewUserProfile.label.LastLoginTime");%>: <%=FAQUtils.getLongDateFormat(user.getLastLoginTime()) + dateFormatter.format(user.getLastLoginTime());%> </div>
 								</div>
 							</div>
 						</td>
