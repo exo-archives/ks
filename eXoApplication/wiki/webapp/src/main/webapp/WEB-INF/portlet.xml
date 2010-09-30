@@ -27,7 +27,13 @@
       <keywords>wiki</keywords>
     </portlet-info>
     
-    <portlet-preferences></portlet-preferences>
+    <portlet-preferences>
+      <preference>
+        <name>showBreadcrumb</name>
+        <value>true</value>
+        <read-only>false</read-only>
+      </preference>
+    </portlet-preferences>
       
   </portlet>  
 </portlet-app>

@@ -19,10 +19,14 @@ package org.exoplatform.wiki.webui;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.portlet.PortletMode;
+import javax.portlet.PortletPreferences;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupContainer;
@@ -33,6 +37,7 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.ext.UIExtensionManager;
+import org.exoplatform.wiki.WikiPortletPreference;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.resolver.PageResolver;
@@ -60,6 +65,8 @@ public class UIWikiPortlet extends UIPortletApplication {
   private WikiMode mode = WikiMode.VIEW;
 
   private WikiMode previousMode;
+  
+  private WikiPortletPreference portletPreferences = new WikiPortletPreference();
 
   public static String VIEW_PAGE_ACTION           = "ViewPage";
 
@@ -70,6 +77,8 @@ public class UIWikiPortlet extends UIPortletApplication {
   public UIWikiPortlet() throws Exception {
     super();
     try {
+      addChild(UIWikiPortletPreferences.class, null, null);
+      addChild(UIWikiEmptyAjaxBlock.class, null, null);
       UIPopupContainer uiPopupContainer = addChild(UIPopupContainer.class, null, null);
       uiPopupContainer.setId("UIWikiPopupContainer");
       uiPopupContainer.getChild(UIPopupWindow.class).setId("UIWikiPopupWindow");
@@ -78,65 +87,81 @@ public class UIWikiPortlet extends UIPortletApplication {
       addChild(UIWikiBottomArea.class, null, null);
       addChild(UIWikiSearchSpaceArea.class, null, null);
       addChild(UIWikiHistorySpaceArea.class, null, null);
-      addChild(UIWikiMaskWorkspace.class, null, "UIWikiMaskWorkspace");      
+      addChild(UIWikiMaskWorkspace.class, null, "UIWikiMaskWorkspace");
+      loadPreferences();
     } catch (Exception e) {
       log.error("An exception happens when init WikiPortlet", e);
     }
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
-    String requestURL = Utils.getCurrentRequestURL();
-    PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
-    Page page = pageResolver.resolve(requestURL);
-    if (page == null) {
-      changeMode(WikiMode.PAGE_NOT_FOUND);
-      super.processRender(app, context);
-      return;
-    } else {
-      if (mode.equals(WikiMode.PAGE_NOT_FOUND)) {
+    PortletRequestContext portletReqContext = (PortletRequestContext) context;
+    if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+      if (mode.equals(WikiMode.PORTLETPREFERENCES)) {
+        loadPreferences();
         changeMode(WikiMode.VIEW);
       }
-    }
-    Page helpPage = Utils.isRenderFullHelpPage();
-    if (helpPage != null) {
-      changeMode(WikiMode.HELP);
-      page = helpPage;
-    }
-    WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
-    if (WikiContext.ADDPAGE.equalsIgnoreCase(pageParams.getParameter(WikiContext.ACTION))) {
-      UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
-      Map<String, Object> uiExtensionContext = new HashMap<String, Object>();
-      uiExtensionContext.put(UIWikiPortlet.class.getName(), this);
-      uiExtensionContext.put(WikiContext.PAGETITLE, pageParams.getParameter(WikiContext.PAGETITLE));
-      if (manager.accept(UIPageToolBar.EXTENSION_TYPE, WikiContext.ADDPAGE, uiExtensionContext)) {
-        AddPageActionComponent.processAddPageAction(uiExtensionContext);
+      getChild(UIWikiUpperArea.class).getChild(UIWikiApplicationControlArea.class)
+                                     .getChild(UIWikiBreadCrumb.class)
+                                     .setRendered(portletPreferences.isShowBreadcrumb());
+      String requestURL = Utils.getCurrentRequestURL();
+      PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
+      Page page = pageResolver.resolve(requestURL);
+      if (page == null) {
+        changeMode(WikiMode.PAGE_NOT_FOUND);
+        super.processRender(app, context);
+        return;
+      } else {
+        if (mode.equals(WikiMode.PAGE_NOT_FOUND)) {
+          changeMode(WikiMode.VIEW);
+        }
       }
-    }
-
-    try {
-      // TODO: ignore request URL of resources
-      context.setAttribute("wikiPage", page);
-      WikiPageParams params = pageResolver.extractWikiPageParams(requestURL);
-
-      ((UIWikiPageTitleControlArea) findComponentById(UIWikiPageControlArea.TITLE_CONTROL)).getUIFormInputInfo().setValue(page.getContent().getTitle());
-      findFirstComponentOfType(UIWikiPageContentArea.class).renderVersion();
-      UIWikiBreadCrumb wikiBreadCrumb = findFirstComponentOfType(UIWikiBreadCrumb.class);
-      WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
-      wikiBreadCrumb.setBreadCumbs(wikiService.getBreadcumb(params.getType(), params.getOwner(), page.getName()));
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.setAttribute("wikiPage", null);
-      findFirstComponentOfType(UIWikiPageContentArea.class).setHtmlOutput(null);
-      if (log.isWarnEnabled()) {
-        log.warn("An exception happens when resolving URL: " + requestURL, e);
+      Page helpPage = Utils.isRenderFullHelpPage();
+      if (helpPage != null) {
+        changeMode(WikiMode.HELP);
+        page = helpPage;
       }
-    }
+      WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
+      if (WikiContext.ADDPAGE.equalsIgnoreCase(pageParams.getParameter(WikiContext.ACTION))) {
+        UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
+        Map<String, Object> uiExtensionContext = new HashMap<String, Object>();
+        uiExtensionContext.put(UIWikiPortlet.class.getName(), this);
+        uiExtensionContext.put(WikiContext.PAGETITLE,
+                               pageParams.getParameter(WikiContext.PAGETITLE));
+        if (manager.accept(UIPageToolBar.EXTENSION_TYPE, WikiContext.ADDPAGE, uiExtensionContext)) {
+          AddPageActionComponent.processAddPageAction(uiExtensionContext);
+        }
+      }
+      try {
+        // TODO: ignore request URL of resources
+        context.setAttribute("wikiPage", page);
+        WikiPageParams params = pageResolver.extractWikiPageParams(requestURL);
 
-    super.processRender(app, context);
-    
-    if (getWikiMode() == WikiMode.HELP) {
-      changeMode(previousMode);
-    }    
+        ((UIWikiPageTitleControlArea) findComponentById(UIWikiPageControlArea.TITLE_CONTROL)).getUIFormInputInfo().setValue(page.getContent().getTitle());
+        findFirstComponentOfType(UIWikiPageContentArea.class).renderVersion();
+        UIWikiBreadCrumb wikiBreadCrumb = findFirstComponentOfType(UIWikiBreadCrumb.class);
+        WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
+        wikiBreadCrumb.setBreadCumbs(wikiService.getBreadcumb(params.getType(), params.getOwner(), page.getName()));
+      } catch (Exception e) {
+        e.printStackTrace();
+        context.setAttribute("wikiPage", null);
+        findFirstComponentOfType(UIWikiPageContentArea.class).setHtmlOutput(null);
+        if (log.isWarnEnabled()) {
+          log.warn("An exception happens when resolving URL: " + requestURL, e);
+        }
+      }
+
+      super.processRender(app, context);
+
+      if (getWikiMode() == WikiMode.HELP) {
+        changeMode(previousMode);
+      }
+    } else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+      changeMode(WikiMode.PORTLETPREFERENCES);
+      super.processRender(app, context);
+    } else {
+      super.processRender(app, context);
+    }
   }
 
   public WikiMode getWikiMode() {
@@ -181,7 +206,18 @@ public class UIWikiPortlet extends UIPortletApplication {
       if (!currentMode.equalsIgnoreCase(wikiPortlet.mode.toString())){
       event.getSource().changeMode(WikiMode.valueOf(currentMode.toUpperCase()));
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(wikiPortlet.findFirstComponentOfType(UIWikiBreadCrumb.class));      
+      event.getRequestContext().addUIComponentToUpdateByAjax(wikiPortlet.findFirstComponentOfType(UIWikiEmptyAjaxBlock.class));      
     }
   }
+  
+  private void loadPreferences() {
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+    try {
+      portletPreferences.setShowBreadcrumb(Boolean.parseBoolean(portletPref.getValue(WikiPortletPreference.SHOW_BREADCRUMB, "true")));
+    } catch (Exception e) {
+      log.error("Fail to load wiki portlet's preference: ", e);
+    }
+  }
+  
 }

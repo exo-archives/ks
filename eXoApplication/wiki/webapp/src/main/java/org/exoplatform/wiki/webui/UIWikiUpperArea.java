@@ -16,9 +16,11 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.Arrays;
+
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -30,8 +32,11 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
   lifecycle = UIApplicationLifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiUpperArea.gtmpl"
 )
-public class UIWikiUpperArea extends UIContainer {
-  public UIWikiUpperArea() throws Exception{
+public class UIWikiUpperArea extends UIWikiContainer {
+  public UIWikiUpperArea() throws Exception {
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE,
+        WikiMode.ADDPAGE, WikiMode.ADVANCEDSEARCH, WikiMode.SHOWHISTORY, WikiMode.PAGE_NOT_FOUND,
+        WikiMode.DELETE_CONFIRM, WikiMode.VIEWREVISION });
     addChild(UIWikiApplicationControlArea.class, null, null);
     addChild(UIWikiPageControlArea.class, null, null);
   }
