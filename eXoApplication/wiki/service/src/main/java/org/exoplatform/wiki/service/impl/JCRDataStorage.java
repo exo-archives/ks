@@ -19,41 +19,67 @@ import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
-import org.exoplatform.wiki.service.TitleSearchResult;
+import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.service.DataStorage;
 import org.exoplatform.wiki.service.SearchData;
 import org.exoplatform.wiki.service.SearchResult;
+import org.exoplatform.wiki.service.TitleSearchResult;
+import org.exoplatform.wiki.utils.Utils;
 
 public class JCRDataStorage implements DataStorage{
   private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
   
   public PageList<SearchResult> search(ChromatticSession session, SearchData data) throws Exception {
-    List<SearchResult> resultList = new ArrayList<SearchResult>() ;
-    String statement = data.getStatement() ;
+    List<SearchResult> resultList = new ArrayList<SearchResult>();
+    String statement = data.getStatement();
     QueryManager qm = session.getJCRSession().getWorkspace().getQueryManager();
     Query q = qm.createQuery(statement, Query.SQL);
     QueryResult result = q.execute();
     RowIterator iter = result.getRows();
-    while(iter.hasNext()) {
-      try{resultList.add(getResult(iter.nextRow())) ;} catch(Exception e){}
+    while (iter.hasNext()) {
+      SearchResult tempResult = getResult(iter.nextRow());
+      // If contains, merges with the exist
+      if (!isContains(resultList, tempResult)) {
+        resultList.add(tempResult);
+      }
     }
-    return new ObjectPageList<SearchResult>(resultList, 5) ;
-  }  
+    return new ObjectPageList<SearchResult>(resultList, 5);
+  }
   
   private SearchResult getResult(Row row) throws Exception {
-    String type = row.getValue("jcr:primaryType").getString() ;
-    String path = row.getValue("jcr:path").getString() ;
-    String excerpt = row.getValue("rep:excerpt(.)").getString() ;
-    String title = (row.getValue("title")== null ? null : row.getValue("title").getString()) ;
-    SearchResult result = new SearchResult(excerpt,title, path, type) ;
-    return result ;
+    String type = row.getValue("jcr:primaryType").getString();    
+  
+    String path = row.getValue("jcr:path").getString();
+    String title = (row.getValue("title") == null ? null : row.getValue("title").getString());
+    String excerpt = null;
+   
+    if (WikiNodeType.WIKI_PAGE_CONTENT.equals(type)) {
+      excerpt = row.getValue("rep:excerpt(text)").getString();
+    }   
+    if (WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(type)) {
+      // Transform to Attachment result
+      type = WikiNodeType.WIKI_ATTACHMENT.toString();
+      excerpt = row.getValue("rep:excerpt(jcr:data)").getString();
+      path = path.substring(0, path.lastIndexOf("/"));
+      AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(path,
+                                                                                             WikiNodeType.WIKI_ATTACHMENT);
+
+      title = searchAtt.getTitle();
+    }
+    SearchResult result = new SearchResult(excerpt, title, path, type);
+    return result;
   }
   
   private TitleSearchResult getTitleSearchResult(Row row) throws Exception {
     String type = row.getValue("jcr:primaryType").getString();
     String path = row.getValue("jcr:path").getString();
-    String title = (row.getValue("title") == null ? null : row.getValue("title").getString());
-    TitleSearchResult result = new TitleSearchResult(title, path, type);
+    String fullTitle = (row.getValue(WikiNodeType.Definition.FILE_TYPE) == null ? row.getValue(WikiNodeType.Definition.TITLE)
+                                                                                 .getString()
+                                                                           : row.getValue(WikiNodeType.Definition.TITLE)
+                                                                                .getString()
+                                                                                .concat(row.getValue(WikiNodeType.Definition.FILE_TYPE)
+                                                                                           .getString()));
+    TitleSearchResult result = new TitleSearchResult(fullTitle, path, type);
     return result;
   }
   
@@ -179,5 +205,32 @@ public class JCRDataStorage implements DataStorage{
       if (s != null && s.trim().length() > 0) list.add(s);
     }
     return list;
+  }
+ 
+  private boolean isContains(List<SearchResult> list, SearchResult result) throws Exception {
+    AttachmentImpl att = null;
+    if (WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())) {
+      att = (AttachmentImpl) Utils.getObject(result.getPath(), WikiNodeType.WIKI_ATTACHMENT);
+    } else if (WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(result.getType())) {
+      String attPath = result.getPath().substring(0, result.getPath().lastIndexOf("/"));
+      att = (AttachmentImpl) Utils.getObject(attPath, WikiNodeType.WIKI_ATTACHMENT);
+    }
+    if (att != null) {
+      for (int i = 0; i < list.size(); i++) {
+        SearchResult child = list.get(i);
+        if (WikiNodeType.WIKI_ATTACHMENT.equals(child.getType())) {
+          AttachmentImpl tempAtt = (AttachmentImpl) Utils.getObject(child.getPath(),
+                                                                    WikiNodeType.WIKI_ATTACHMENT);
+          if (att.equals(tempAtt)) {
+            // Merge data
+            if (child.getExcerpt()==null && result.getExcerpt()!=null ){
+              child.setExcerpt(result.getExcerpt());
+            }
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 }

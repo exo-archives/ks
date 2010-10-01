@@ -236,7 +236,7 @@ UIWikiSearchBox.prototype.buildChild = function(dataObject) {
     linkNode.setAttribute('href', this.wikiNodeURI + dataObject.uri);
   }
 
-  linkNode.appendChild(document.createTextNode(dataObject.title));
+  linkNode.appendChild(document.createTextNode(dataObject.fullTitle));
   menuItemNode.appendChild(linkNode.cloneNode(true));
   return menuItemNode;
 };

@@ -238,7 +238,7 @@ public class DefaultWikiService implements WikiService {
     org.exoplatform.wiki.service.WikiService wservice = (org.exoplatform.wiki.service.WikiService) PortalContainer.getComponent(org.exoplatform.wiki.service.WikiService.class);
     PageImpl page;
     try {
-      cleanedFileName = TitleResolver.getPageId(cleanedFileName, false);
+      cleanedFileName = TitleResolver.getObjectId(cleanedFileName, false);
       page = (PageImpl) wservice.getExsitedOrNewDraftPageById(attachmentReference.getWikiName(),
                                                               attachmentReference.getSpaceName(),
                                                               attachmentReference.getPageName());

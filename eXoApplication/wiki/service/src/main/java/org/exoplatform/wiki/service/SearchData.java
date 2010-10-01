@@ -136,7 +136,7 @@ public class SearchData {
   
   public String getStatementForTitle() {
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT jcr:primaryType, jcr:path, title ")
+    statement.append("SELECT jcr:primaryType, jcr:path, title, fileType ")
              .append("FROM nt:base ")
              .append("WHERE ")
              .append(jcrQueryPath)
@@ -144,7 +144,7 @@ public class SearchData {
              .append("LOWER(title) LIKE '%")
              .append(title)
              .append("%' ")
-             .append("ORDER BY jcr:primaryType DESC");
+             .append("ORDER BY jcr:primaryType DESC, jcr:score DESC");
     return statement.toString();
   }
   
@@ -174,7 +174,7 @@ public class SearchData {
           statement.append(" CONTAINS(text, '").append(content).append("') ") ; 
         }
       }
-      statement.append(" ORDER BY jcr:score") ;
+      statement.append(" ORDER BY jcr:primaryType DESC, jcr:score DESC") ;
     }catch(Exception e) {}
     return statement.toString() ;
   }

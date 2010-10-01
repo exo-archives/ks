@@ -47,6 +47,7 @@ import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
+import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiService;
 
 /**
@@ -172,16 +173,20 @@ public abstract class PageImpl implements Page {
   @Create
   public abstract AttachmentImpl createAttachment();
   
-  public AttachmentImpl createAttachment(String fileName, Resource contentResource) {
+  public AttachmentImpl createAttachment(String fileName, Resource contentResource) throws Exception {
     if (fileName == null) {
       throw new NullPointerException();
     }
     AttachmentImpl file = createAttachment();
-    file.setName(fileName) ;
-    addAttachment(file) ;
-    file.setTitle(fileName);
+    file.setName(TitleResolver.getObjectId(fileName, false));
+    addAttachment(file);
+    if (fileName.lastIndexOf(".") > 0) {
+      file.setTitle(fileName.substring(0, fileName.lastIndexOf(".")));
+      file.setFileType(fileName.substring(fileName.lastIndexOf(".")));
+    } else
+      file.setTitle(fileName);
     if (contentResource != null) {
-      file.setContentResource(contentResource);      
+      file.setContentResource(contentResource);
     }
     getChromatticSession().save();
     return file;

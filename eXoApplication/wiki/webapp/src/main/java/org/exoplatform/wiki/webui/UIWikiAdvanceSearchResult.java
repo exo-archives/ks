@@ -45,8 +45,7 @@ import org.exoplatform.wiki.service.WikiService;
 @ComponentConfig(
   lifecycle = UIApplicationLifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiAdvanceSearchResult.gtmpl",
-  events = {
-      @EventConfig(listeners = UIWikiAdvanceSearchResult.DownloadAttachActionListener.class),
+  events = {    
       @EventConfig(listeners = UIWikiAdvanceSearchResult.ViewPageActionListener.class),
       @EventConfig(listeners = UIWikiAdvanceSearchResult.ChangePageActionListener.class),
       @EventConfig(listeners = UIWikiAdvanceSearchResult.NextPageActionListener.class),
@@ -82,21 +81,14 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
         ContentImpl searchContent = (ContentImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(),
                                                                                              result.getType());
         searchWiki = searchContent.getParent().getWiki();
-      } else {
-        // Search Object is attachment 
-        String attPath = result.getPath().substring(0, result.getPath().lastIndexOf("/"));
-        AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(attPath,
+      } else if (WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())) {
+        AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(),
                                                                                                WikiNodeType.WIKI_ATTACHMENT);
         searchWiki = searchAtt.getParentPage().getWiki();
       }
     } catch (Exception e) {
     }
     return searchWiki;
-  } 
-
-  private String getPageTitle(String path) throws Exception {
-    WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
-    return wservice.getPageTitleOfAttachment(path) ;    
   }
   
   private String getWikiNodeUri(SearchResult result) throws Exception {
@@ -115,16 +107,7 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     }
     return sb.toString();
   }
-  
-  static public class DownloadAttachActionListener extends EventListener<UIWikiAdvanceSearchResult> {
-    public void execute(Event<UIWikiAdvanceSearchResult> event) throws Exception {
-      String params = event.getRequestContext().getRequestParameter(OBJECTID);
-      String path = params.substring(0, params.lastIndexOf("/")) ;
-      String fileName = params.substring(params.lastIndexOf("/") + 1) ;
-      String downloadLink = Utils.getDownloadLink(path, fileName, null) ;
-      event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
-    }
-  }
+
   static public class ViewPageActionListener extends EventListener<UIWikiAdvanceSearchResult> {
     @Override
     public void execute(Event<UIWikiAdvanceSearchResult> event) throws Exception {
@@ -132,13 +115,13 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
       wikiPortlet.changeMode(WikiMode.VIEW);
     }
   }
+
   static public class ChangePageActionListener extends EventListener<UIWikiAdvanceSearchResult> {
     @Override
     public void execute(Event<UIWikiAdvanceSearchResult> event) throws Exception {
       UIWikiAdvanceSearchResult uiResult = event.getSource();
       String pageNumber = event.getRequestContext().getRequestParameter(OBJECTID) ;
       uiResult.pageIndex = Integer.parseInt(pageNumber) ;
-      
     }
   }
   

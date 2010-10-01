@@ -28,13 +28,13 @@ import java.util.StringTokenizer;
  */
 public class TitleResolver {
 
-  public static String getPageId(String pageTitle, boolean isEncoded) throws UnsupportedEncodingException{
+  public static String getObjectId(String ObjectTitle, boolean isEncoded) throws UnsupportedEncodingException{
     //TODO: replace space by "+" when update to Gatein 3.0.1-GA to like Confluence 
     //following implement like Creole and Xwiki 2.0
-    if(pageTitle == null){
+    if(ObjectTitle == null){
       return null;
     }
-    String title = pageTitle;
+    String title = ObjectTitle;
     if(isEncoded){
       title = URLDecoder.decode(title, "UTF-8");
     }

@@ -43,7 +43,7 @@
         deleteLink = uicomponent.event(uicomponent.DELETE_ACTION, attachment.getName());
     %>
         <tr class="$rowClass">
-          <td class="Tit"><a title="<%= _ctx.appRes("UIWikiAttachmentArea.label.DownloadAttachment"); %>" href="$downloadLink"><%= attachment.getName() %></a></td>
+          <td class="Tit"><a title="<%= _ctx.appRes("UIWikiAttachmentArea.label.DownloadAttachment"); %>" href="$downloadLink"><%= attachment.getFullTitle() %></a></td>
           <td><%= creator %></td>
           <td><%= df.format(attachment.getUpdatedDate().getTime())%></td>
           <td><img title="<%= _ctx.appRes("UIWikiAttachmentArea.label.RemoveAttachment"); %>" onclick="$deleteLink" alt="" class="RemoveFile" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/></td>

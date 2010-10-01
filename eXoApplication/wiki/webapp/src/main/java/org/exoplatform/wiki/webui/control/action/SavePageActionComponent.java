@@ -119,7 +119,7 @@ public class SavePageActionComponent extends UIComponent {
             page.getContent().setTitle(title);
             ((PageImpl) page).checkin();
             ((PageImpl) page).checkout();
-            String newPageId = TitleResolver.getPageId(title, false) ;
+            String newPageId = TitleResolver.getObjectId(title, false) ;
             wikiService.renamePage(pageParams.getType(), pageParams.getOwner(), page.getName(), newPageId, title) ;
             pageParams.setPageId(newPageId) ;
             event.getSource().redirectToNewPage(pageParams, URLEncoder.encode(newPageId, "UTF-8"));            
@@ -131,7 +131,7 @@ public class SavePageActionComponent extends UIComponent {
           }
                     
         } else if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
-          if(wikiService.isExisting(pageParams.getType(), pageParams.getOwner(), TitleResolver.getPageId(title, false))){
+          if(wikiService.isExisting(pageParams.getType(), pageParams.getOwner(), TitleResolver.getObjectId(title, false))){
             log.error("The title '" + title + "' is already existing!");
             uiApp.addMessage(new ApplicationMessage("SavePageAction.msg.warning-page-title-already-exist", null, ApplicationMessage.WARNING));
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
@@ -147,7 +147,7 @@ public class SavePageActionComponent extends UIComponent {
           ((PageImpl)subPage).checkin();
           ((PageImpl)subPage).checkout();          
           wikiPortlet.changeMode(WikiMode.VIEW);
-          String pageId = TitleResolver.getPageId(title, false);          
+          String pageId = TitleResolver.getObjectId(title, false);          
           event.getSource().redirectToNewPage(pageParams, URLEncoder.encode(pageId, "UTF-8"));
           return;
         }

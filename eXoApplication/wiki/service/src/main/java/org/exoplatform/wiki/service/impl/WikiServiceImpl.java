@@ -47,9 +47,9 @@ import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.BreadcumbData;
-import org.exoplatform.wiki.service.TitleSearchResult;
 import org.exoplatform.wiki.service.SearchData;
 import org.exoplatform.wiki.service.SearchResult;
+import org.exoplatform.wiki.service.TitleSearchResult;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.utils.Utils;
@@ -95,7 +95,7 @@ public class WikiServiceImpl implements WikiService {
   }
 
   public Page createPage(String wikiType, String wikiOwner, String title, String parentId) throws Exception {
-    String pageId = TitleResolver.getPageId(title, false);
+    String pageId = TitleResolver.getObjectId(title, false);
     if(isExisting(wikiType, wikiOwner, pageId)) throw new Exception();
     Model model = getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();

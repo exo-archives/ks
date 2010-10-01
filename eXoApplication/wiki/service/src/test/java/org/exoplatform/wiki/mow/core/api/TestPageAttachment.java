@@ -32,7 +32,7 @@ import org.exoplatform.wiki.service.WikiService;
 
 public class TestPageAttachment extends AbstractMOWTestcase {
   
-  public void testAddPageAttachment() {
+  public void testAddPageAttachment() throws Exception {
     Model model = mowService.getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);

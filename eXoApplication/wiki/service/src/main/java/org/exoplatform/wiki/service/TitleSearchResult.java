@@ -29,7 +29,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
  * Sep 22, 2010  
  */
 public class TitleSearchResult {
-  private String title;
+  private String fullTitle;
 
   private String type;
 
@@ -40,19 +40,19 @@ public class TitleSearchResult {
   public TitleSearchResult() {
   }
 
-  public TitleSearchResult(String title, String path, String type) throws Exception {
-    this.title = title;
+  public TitleSearchResult(String fullTitle, String path, String type) throws Exception {
+    this.fullTitle = fullTitle;
     this.type = type;
     this.path = path;
     setUri();
   }
 
-  public String getTitle() {
-    return title;
+  public String getFullTitle() {
+    return fullTitle;
   }
 
-  public void setTitle(String title) {
-    this.title = title;
+  public void setFullTitle(String fullTitle) {
+    this.fullTitle = fullTitle;
   }
 
   public String getType() {

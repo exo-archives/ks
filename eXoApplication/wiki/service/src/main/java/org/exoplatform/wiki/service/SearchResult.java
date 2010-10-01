@@ -50,16 +50,9 @@ public class SearchResult {
     return type;
   }
   
-  
   private void evaluateNodeName(String path) {
-    if(WikiNodeType.WIKI_PAGE_CONTENT.equals(getType())) {
-      String temp = path.substring(0,path.lastIndexOf("/")) ;
-      this.setNodeName(temp.substring(temp.lastIndexOf("/")));
-    }else if(WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(getType())) {
-      String temp = path.substring(0,path.lastIndexOf("/")) ;
-      temp = temp.substring(0,temp.lastIndexOf("/")) ;
-      this.setNodeName(temp.substring(temp.lastIndexOf("/")));
-    }
+    String temp = path.substring(0, path.lastIndexOf("/"));
+    this.setNodeName(temp.substring(temp.lastIndexOf("/")));
   }
 
   public void setNodeName(String nodeName) {

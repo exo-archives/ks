@@ -37,20 +37,21 @@ import org.exoplatform.wiki.commons.Utils ;
 							<div><strong>$spaceType: </strong><a class="TxtMark" onclick="$viewPage" href="$wikiURI">$space</a></div>
 						</div>
 		      	<%	
-		      } else if (WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(result.getType())){
-		      	String attPath = result.getPath().substring(0, result.getPath().lastIndexOf("/"));
-      			AttachmentImpl att = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(attPath,
-                                                                                               WikiNodeType.WIKI_ATTACHMENT);
-		      	String downloadAction = uicomponent.event("DownloadAttach", result.getPath() + "/" + att.getName()) ;
+		      } else if (WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())){
+		      	att = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject( result.getPath(),
+                                                                                               WikiNodeType.WIKI_ATTACHMENT);		      	
+		      	String downloadlink = att.getDownloadURL();		      	
 		      	String extension = Utils.getExtension(att.getName()) ;
 		      	%>		     
 		      	<div class="BlockResultFeed">
-		      		<a class="$extension TxtTitFeed" href="$downloadAction"><span><%=att.getName()%></span></a>
+		      		<a class="$extension TxtTitFeed" href="$downloadlink"><span><%=att.getFullTitle()%></span></a>
+		      		<% if (result.getExcerpt()!=null){ %>	      		
 							<div class="TxtDetail"><%=result.getExcerpt()%></div>
-							<div><strong>$spaceType: </strong><a class="TxtMark" onclick="$viewPage" href="$wikiURI">$space</a> > <a class="TxtMark" onclick="$viewPage" href="$pageURI"><%=uicomponent.getPageTitle(result.getPath())%></a></div>
+							<% } %>
+							<div><strong>$spaceType: </strong><a class="TxtMark" onclick="$viewPage" href="$wikiURI">$space</a> > <a class="TxtMark" onclick="$viewPage" href="$pageURI"><%=att.getParentPage().getContent().getTitle()%></a></div>
 						</div>    	
 		      	<%
-		      }      
+		      }     
 		    }
 			%>			 	
 			<%

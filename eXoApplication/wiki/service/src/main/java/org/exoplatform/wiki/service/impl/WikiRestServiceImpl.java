@@ -64,10 +64,9 @@ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
-import org.exoplatform.wiki.resolver.TitleResolver;
-import org.exoplatform.wiki.service.TitleSearchResult;
 import org.exoplatform.wiki.service.Relations;
 import org.exoplatform.wiki.service.SearchData;
+import org.exoplatform.wiki.service.TitleSearchResult;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiResource;
@@ -202,7 +201,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
           }
           String mimeType = new MimeTypeResolver().getMimeType(fileName);
           WikiResource attachfile = new WikiResource(mimeType, "UTF-8", imageBytes);
-          attachfile.setName(TitleResolver.getPageId(fileName, false));
+          attachfile.setName(fileName);
           if (attachfile != null) {
             WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
             Page page = wikiService.getExsitedOrNewDraftPageById(wikiType, wikiOwner, pageId);

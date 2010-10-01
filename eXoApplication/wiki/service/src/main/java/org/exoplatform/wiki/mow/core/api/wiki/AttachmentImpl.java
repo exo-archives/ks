@@ -56,6 +56,10 @@ public abstract class AttachmentImpl extends NTFile implements Attachment {
   public abstract String getTitle();
   public abstract void setTitle(String title);
   
+  @Property(name = WikiNodeType.Definition.FILE_TYPE)
+  public abstract String getFileType();
+  public abstract void setFileType(String fileType);
+  
   @Property(name = WikiNodeType.Definition.CREATOR)
   public abstract String getCreator();
   public abstract void setCreator(String creator);
@@ -96,6 +100,10 @@ public abstract class AttachmentImpl extends NTFile implements Attachment {
     return sb.toString();
   }
   
+  public String getFullTitle() {
+    return (getFileType() == null) ? getTitle() : getTitle().concat(getFileType());
+  }
+
   @ManyToOne
   public abstract PageImpl getParentPage();
   

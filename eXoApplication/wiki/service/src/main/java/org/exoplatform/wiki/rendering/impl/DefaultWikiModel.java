@@ -174,7 +174,7 @@ public class DefaultWikiModel implements WikiModel {
       wikiMarkupContext.setOwner(entityReference.extractReference(EntityType.SPACE).getName());
       wikiMarkupContext.setPageTitle(entityReference.extractReference(EntityType.DOCUMENT).getName());
       wikiMarkupContext.setPageId(wikiMarkupContext.getPageTitle());
-      wikiMarkupContext.setPageId(TitleResolver.getPageId(wikiMarkupContext.getPageId(), false));
+      wikiMarkupContext.setPageId(TitleResolver.getObjectId(wikiMarkupContext.getPageId(), false));
       if(entityReference.extractReference(EntityType.ATTACHMENT) != null){
         wikiMarkupContext.setAttachmentName(entityReference.extractReference(EntityType.ATTACHMENT).getName());
       }

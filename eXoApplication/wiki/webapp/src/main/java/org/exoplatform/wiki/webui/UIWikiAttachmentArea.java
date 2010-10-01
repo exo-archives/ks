@@ -132,13 +132,17 @@ public class UIWikiAttachmentArea extends UIWikiForm {
           imageBytes = null;
         }
         attachfile = new WikiResource(uploadResource.getMimeType(), "UTF-8", imageBytes);
-        attachfile.setName(TitleResolver.getPageId(uploadResource.getFileName(), false));
+        attachfile.setName(uploadResource.getFileName());
         attachfile.setResourceId(uploadResource.getUploadId());
       }
       if (attachfile != null) {
         try {
           Page page = wikiAttachmentArea.getCurrentWikiPage();
           AttachmentImpl att = ((PageImpl) page).createAttachment(attachfile.getName(), attachfile);
+          att.setTitle(uploadResource.getFileName());
+          if (uploadResource.getFileName().indexOf(".")>0){
+            att.setTitle(uploadResource.getFileName().substring(0,uploadResource.getFileName().indexOf(".")));
+          }
           att.setCreator(event.getRequestContext().getRemoteUser());
           org.exoplatform.wiki.utils.Utils.reparePermissions(att);
         } catch (ClassNotFoundException e) {

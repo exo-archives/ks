@@ -141,5 +141,7 @@ public interface WikiNodeType {
     public final static String PREFERENCES                = "Preferences";
 
     public final static String PREFERENCES_SYNTAX         = "PreferencesSyntax";
+    
+    public final static String FILE_TYPE                  = "fileType";
   }
 }
