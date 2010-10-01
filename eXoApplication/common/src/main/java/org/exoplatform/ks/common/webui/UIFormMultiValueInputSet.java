@@ -61,6 +61,9 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List>
 
    private Constructor constructor_ = null;
 
+   private List<Integer> listIndexItemRemoved = new ArrayList<Integer>();
+   
+   private int maxOld = 0;
    /**
     * Whether this field is enabled
     */
@@ -232,7 +235,23 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List>
       return inputBase;
    }
 
-   static public class AddActionListener extends EventListener<UIFormMultiValueInputSet>
+  public void resetListIndexItemRemoved() {
+		this.listIndexItemRemoved = new ArrayList<Integer>();
+	}
+
+	public List<Integer> getListIndexItemRemoved() {
+		return listIndexItemRemoved;
+	}
+
+	public void setMaxOld(int maxOld) {
+		this.maxOld = maxOld;
+	}
+
+	public int getMaxOld() {
+		return maxOld;
+	}
+
+	static public class AddActionListener extends EventListener<UIFormMultiValueInputSet>
    {
       public void execute(Event<UIFormMultiValueInputSet> event) throws Exception
       {
@@ -240,16 +259,22 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List>
          String id = event.getRequestContext().getRequestParameter(OBJECTID);
          if (uiSet.getId().equals(id))
          {
-            // get max id
-            List<UIComponent> children = uiSet.getChildren();
-            if (children.size() > 0)
-            {
-               UIFormInputBase uiInput = (UIFormInputBase)children.get(children.size() - 1);
-               String index = uiInput.getId();
-               int maxIndex = Integer.parseInt(index.replaceAll(id, ""));
-               uiSet.createUIFormInput(maxIndex + 1);
-            }
+            	List<UIComponent> children = uiSet.getChildren();
+	            if (children.size() > 0)
+	            {
+	               UIFormInputBase uiInput = (UIFormInputBase)children.get(children.size() - 1);
+	               String index = uiInput.getId();
+	               int maxIndex = Integer.parseInt(index.replaceAll(id, ""));
+	               if(maxIndex < uiSet.maxOld) {
+	              	 maxIndex = uiSet.maxOld;
+	              	 while(uiSet.getChildById(id + String.valueOf(maxIndex)) != null){
+	              		 maxIndex = maxIndex + 1;
+	                 }
+	               }
+	               uiSet.createUIFormInput(maxIndex + 1);
+	            }
          }
+         event.getRequestContext().addUIComponentToUpdateByAjax(uiSet.getParent());
       }
    }
 
@@ -260,6 +285,8 @@ public class UIFormMultiValueInputSet extends UIFormInputContainer<List>
          UIFormMultiValueInputSet uiSet = event.getSource();
          String id = event.getRequestContext().getRequestParameter(OBJECTID);
          uiSet.removeChildById(id);
+         uiSet.listIndexItemRemoved.add(Integer.parseInt(id.replaceAll(uiSet.getId(), "")));
+         event.getRequestContext().addUIComponentToUpdateByAjax(uiSet.getParent());
       }
    }
 

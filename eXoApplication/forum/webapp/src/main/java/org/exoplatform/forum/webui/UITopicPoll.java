@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -32,11 +32,11 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIPollForm;
-import org.exoplatform.poll.service.Poll;
-import org.exoplatform.poll.service.PollService;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.poll.service.Poll;
+import org.exoplatform.poll.service.PollService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -55,7 +55,7 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
-		template =	"app:/templates/forum/webui/UITopicPoll.gtmpl", 
+		template = "app:/templates/forum/webui/UITopicPoll.gtmpl", 
 		events = {
 			@EventConfig(listeners = UITopicPoll.VoteActionListener.class),	
 			@EventConfig(listeners = UITopicPoll.EditPollActionListener.class) ,
@@ -74,6 +74,7 @@ public class UITopicPoll extends BaseForumForm	{
 	private Forum forum ;
 	private UserProfile userProfile;
 	private PollService pollService ;
+	private String pollId;
 	
 	public UITopicPoll() throws Exception {
 		pollService = (PollService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
@@ -84,12 +85,12 @@ public class UITopicPoll extends BaseForumForm	{
 		userProfile = new UserProfile();
 		try {
 			userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-    } catch (Exception e) {
+		} catch (Exception e) {
 			try {
 				userProfile = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), "");
-      } catch (Exception ex) {
-      }
-    }
+			} catch (Exception ex) {
+			}
+		}
 		return userProfile ; 
 	}
 	
@@ -97,8 +98,8 @@ public class UITopicPoll extends BaseForumForm	{
 		if(forum == null){
 			try {
 				this.forum = getForumService().getForum(categoryId, forumId);
-      } catch (Exception e) {
-      }
+			} catch (Exception e) {
+			}
 		} else {
 			this.forum = forum ;
 		}
@@ -143,11 +144,11 @@ public class UITopicPoll extends BaseForumForm	{
 		if(!ForumUtils.isEmpty(categoryId)) {
 			if(userProfile.getUserRole() == 0 || ForumServiceUtils.hasPermission(this.forum.getModerators(), userProfile.getUserId())) this.canViewEditMenu = true ;
 			else this.canViewEditMenu = false ;
-			String pollId = forum.getPath()+"/"+topicId+"/"+topicId.replace(Utils.TOPIC, Utils.POLL);
+			pollId = forum.getPath()+"/"+topicId+"/"+topicId.replace(Utils.TOPIC, Utils.POLL);
 			try {
 				poll_ = pollService.getPoll(pollId) ; 
-      } catch (Exception e) {
-      }
+			} catch (Exception e) {
+			}
 			this.init() ;
 			return poll_ ;
 		}
@@ -160,8 +161,8 @@ public class UITopicPoll extends BaseForumForm	{
 	}
 	
 	public void setEditPoll(boolean isEditPoll) {
-	  this.isEditPoll = isEditPoll;
-  }
+		this.isEditPoll = isEditPoll;
+	}
 	
 	@SuppressWarnings("unused")
 	private boolean getCanViewEditMenu(){
@@ -201,7 +202,7 @@ public class UITopicPoll extends BaseForumForm	{
 		} else {
 			for (int i = 0; i < userVotes.length; i++) {
 				size += userVotes[i].split(":").length -1 ;
-      }
+			}
 		}
 		temp = size;
 		if(size == 0) size = 1;
@@ -214,7 +215,7 @@ public class UITopicPoll extends BaseForumForm	{
 			int t = (int)Math.round(k) ;
 			string = "" + (double) t*100/size ;
 			infoVote[j] = string + ":" + t ;
-    }
+		}
 		infoVote[l] = "" + temp ;
 		if(poll.getIsMultiCheck()) {
 			infoVote[l] = String.valueOf(userVotes.length) ;
@@ -224,7 +225,7 @@ public class UITopicPoll extends BaseForumForm	{
 	
 	
 	@SuppressWarnings("unused")
-  private void reloadTopicDetail(){
+	private void reloadTopicDetail(){
 		UITopicDetailContainer topicDetailContainer = (UITopicDetailContainer)this.getParent() ;
 		topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true) ;
 	}
@@ -233,6 +234,9 @@ public class UITopicPoll extends BaseForumForm	{
 		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicPoll> event) throws Exception {
 			UITopicPoll topicPoll = event.getSource() ;
+			if(!ForumUtils.isEmpty(topicPoll.pollId)){
+				topicPoll.poll_ = topicPoll.pollService.getPoll(topicPoll.pollId) ;
+			}
 			Poll poll = topicPoll.poll_ ; 
 			String[] votes ;
 			String[] setUserVote ;
@@ -294,7 +298,7 @@ public class UITopicPoll extends BaseForumForm	{
 					} else {
 						i = 0;
 						for(String vote : votes) {
-							double a	= Double.parseDouble(vote) ;
+							double a = Double.parseDouble(vote) ;
 							if(i == j) votes[i] = "" + ((a - a/size)+ onePercent) ;
 							else votes[i] = "" + (a - a/size) ;
 							i = i + 1;
@@ -378,10 +382,10 @@ public class UITopicPoll extends BaseForumForm	{
 					}
 					i = 0 ;
 					for(double dv : doubleVote) {
-						if(totalVote > 0)
+						if(totalVote > 0 && dv > 0)
 							votes[i] = ((dv/totalVote)*100) + "" ;
 						else
-							votes[i] = "0" ;
+							votes[i] = "0.0" ;
 						i ++ ;
 					}
 					// save votes:
@@ -403,10 +407,10 @@ public class UITopicPoll extends BaseForumForm	{
 			try {
 				UIForumPortlet forumPortlet = topicPoll.getAncestorOfType(UIForumPortlet.class) ;
 				popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-      } catch (Exception e) {
-      	UIForumPollPortlet forumPollPortlet = topicPoll.getAncestorOfType(UIForumPollPortlet.class) ;
-      	popupAction = forumPollPortlet.getChild(UIPopupAction.class) ;
-      }
+			} catch (Exception e) {
+				UIForumPollPortlet forumPollPortlet = topicPoll.getAncestorOfType(UIForumPollPortlet.class) ;
+				popupAction = forumPollPortlet.getChild(UIPopupAction.class) ;
+			}
 			UIPollForm	pollForm = popupAction.createUIComponent(UIPollForm.class, null, null) ;
 			String path = topicPoll.categoryId + "/" + topicPoll.forumId + "/" + topicPoll.topicId;
 			pollForm.setTopicPath(path) ;
@@ -422,8 +426,8 @@ public class UITopicPoll extends BaseForumForm	{
 			UITopicPoll topicPoll = event.getSource() ;
 			try {
 				topicPoll.pollService.removePoll(topicPoll.poll_.getParentPath()+"/"+topicPoll.poll_.getId()) ;
-      } catch (Exception e) {
-      }
+			} catch (Exception e) {
+			}
 			if(topicPoll.poll_.getIsMultiCheck()) {
 				List<UIComponent> children = topicPoll.getChildren() ;
 				for (int i = 0; i < children.size(); i++) {
@@ -437,15 +441,15 @@ public class UITopicPoll extends BaseForumForm	{
 				topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true) ;
 				topicPoll.isEditPoll = false ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer) ;
-      } catch (Exception e) {
-      	UIForumPollPortlet forumPollPortlet = topicPoll.getAncestorOfType(UIForumPollPortlet.class) ;
-      	topicPoll.setRendered(false);
-      	ActionResponse actionRes = event.getRequestContext().getResponse() ;
+			} catch (Exception e) {
+				UIForumPollPortlet forumPollPortlet = topicPoll.getAncestorOfType(UIForumPollPortlet.class) ;
+				topicPoll.setRendered(false);
+				ActionResponse actionRes = event.getRequestContext().getResponse() ;
 				ForumParameter param = new ForumParameter() ;
 				param.setRenderPoll(true);
 				actionRes.setEvent(new QName("ReLoadPortletEvent"), param) ;
-      	event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet) ;
-      }
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet) ;
+			}
 		}
 	}
 
@@ -469,8 +473,8 @@ public class UITopicPoll extends BaseForumForm	{
 			}
 			try {
 				topicPoll.pollService.setClosedPoll(topicPoll.poll_) ;
-      } catch (Exception e) {
-      }
+			} catch (Exception e) {
+			}
 			topicPoll.isAgainVote = false ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll) ;
 		}

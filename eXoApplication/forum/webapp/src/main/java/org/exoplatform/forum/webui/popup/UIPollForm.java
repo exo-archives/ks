@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,7 +18,9 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -93,6 +95,10 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 		uiFormMultiValue.setName(FIELD_OPTIONS) ;
 		uiFormMultiValue.setType(UIFormStringInput.class) ;
 		uiFormMultiValue.setValue(list) ;
+		if(this.isUpdate){
+			uiFormMultiValue.resetListIndexItemRemoved();
+			uiFormMultiValue.setMaxOld(list.size());
+		}
 		addUIFormInput(uiFormMultiValue) ;
 	}
 	
@@ -108,10 +114,10 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 		}
 		String format = "MM-dd-yyyy";
 		try {
-	    format = this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getShortDateFormat();
-    } catch (NullPointerException e) {
-	    format = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), null).getShortDateFormat();
-    } catch (Exception e) {}
+			format = this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getShortDateFormat();
+		} catch (NullPointerException e) {
+			format = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), null).getShortDateFormat();
+		} catch (Exception e) {}
 		return ForumUtils.getFormatDate(format, date);
 	}
 	
@@ -194,71 +200,127 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 					return ;
 				}
 			}
+			/*
+			 * sizeOption: size option
+			 * newUser: list user after edit poll
+			 * oldUserVote: list user before edit poll
+			 * vote: % vote after edit poll
+			 * oldVote: % old vote before edit poll
+			 * voteRemoved: % vote removed
+			 * rmPecent: % removed
+			*/
 			if(sizeOption >= 2 && sizeOption <= 10) {
-				String[] newUser = new String[] {};
-				String userName = UserHelper.getCurrentUser() ;
+				String[] newUser = null;
 				String[] vote = new String[sizeOption]	;
+				for (int j = 0; j < sizeOption; j++) {
+					vote[j] = "0.0";
+				}
 				if(uiForm.isUpdate) {
+					List<Integer>listIndexItemRemoved = uiForm.uiFormMultiValue.getListIndexItemRemoved();
 					String[] oldVote = uiForm.poll.getVote() ;
-					if(sizeOption < oldVote.length) {
-						List<String> voteRemoved = new ArrayList<String>() ;
-						String[] oldUserVote = uiForm.poll.getUserVote() ; 
-						long temps = oldUserVote.length ;
-						double rmPecent = 0;
-						for(int j = sizeOption; j < oldVote.length; j++) {
-							rmPecent = rmPecent + Double.parseDouble(oldVote[j]) ;
-							voteRemoved.add(String.valueOf(j)) ;
+					String[] oldUserVote = uiForm.poll.getUserVote() ;
+					String[] voteTp = new String[oldVote.length]	;
+					
+					double rmPecent = 0;
+					List<String> voteRemoved = new ArrayList<String>() ;
+					for(Integer integer : listIndexItemRemoved) {
+						if(integer < oldVote.length) {
+							rmPecent = rmPecent + Double.parseDouble(oldVote[integer]) ;
+							voteRemoved.add(String.valueOf(integer)) ;
 						}
-						rmPecent = 100 - rmPecent ;
-						for(int k = 0; k < sizeOption; ++k) {
+					}
+					double leftPecent = 100 - rmPecent ;
+					
+					for(int k = 0; k < oldVote.length; ++k) {
+						if(listIndexItemRemoved.contains(k)) {
+							voteTp[k] = "deleted";
+							continue;
+						}
+						if(leftPecent > 1){
 							double newVote = Double.parseDouble(oldVote[k]) ;
-							vote[k] = String.valueOf((newVote*100)/rmPecent) ;
-						}
-						if(!uiForm.poll.getIsMultiCheck()) {
-							int newSize	= (int) Math.round((temps*rmPecent)/100) ;
-							newUser = new String[newSize] ;
-							int l = 0 ;
-							for (String string : oldUserVote) {
-								boolean check = true ; 
-								for(int j = sizeOption; j < oldVote.length; j++) {
-									String x = ":" + j ;
-									if(string.indexOf(x) > 0) check = false ;
-								}
-								if(check) {newUser[l] = string ; 
-								++l ;}
-							}
+							voteTp[k] = String.valueOf((newVote*100)/leftPecent) ;
 						} else {
-							List<String> newUserVote = new ArrayList<String>() ;
-							
-							
-							for(String uv : oldUserVote) {
-							  StringBuffer sbUserInfo = new StringBuffer();
-								for(String string : uv.split(":")) {
-									if(!voteRemoved.contains(string)) {
-										if(sbUserInfo.length() > 0) sbUserInfo.append(":");
-										sbUserInfo.append(string) ;
+							voteTp[k] = "0.0";
+						}
+					}
+					
+					if(!uiForm.poll.getIsMultiCheck()) {
+						if(leftPecent > 1) {
+							List<String> userL = new ArrayList<String>();
+							for (String string : oldUserVote) {
+								boolean isAdd = true;
+								for(String j : voteRemoved) {
+									if(string.indexOf(":" + j) > 0) {
+										isAdd = false;
 									}
 								}
-								String userInfo = sbUserInfo.toString() ;
-								if(userInfo.split(":").length >= 2)
-									newUserVote.add(userInfo) ;
-								newUser = newUserVote.toArray(new String[]{}) ;
+								if(isAdd)userL.add(string);
 							}
+							
+							newUser = new String[]{} ;
+							i = 0;
+							Map<String, String> mab = new HashMap<String, String>();
+							for (int j = 0; j < voteTp.length; j++) {
+								if(voteTp[j].equals("deleted")) {
+									continue;
+								}
+								vote[i] = voteTp[j];
+								for (String str : userL) {
+									if(str.indexOf(":"+j) > 0){
+										mab.put(str, str.replace(":"+j, ":"+i));
+									} else {
+										if(!mab.containsKey(str)) {
+											mab.put(str, str);
+										}
+									}
+								}
+								++i;
+							}
+							newUser = mab.values().toArray(new String[userL.size()]);
+						} else if(voteRemoved.size() > 0 && rmPecent > 0.0){
+							newUser = new String[]{};
 						}
+						// multi vote
 					} else {
-						for(int j = 0; j < sizeOption; j++) {
-							if( j < oldVote.length) {
-								vote[j] = oldVote[j];
-							} else {
-								vote[j] = "0";
+						List<String> newUserVote = new ArrayList<String>() ;
+						for(String uv : oldUserVote) {
+							StringBuffer sbUserInfo = new StringBuffer();
+							for(String string : uv.split(":")) {
+								if(!voteRemoved.contains(string)) {
+									if(sbUserInfo.length() > 0) sbUserInfo.append(":");
+									sbUserInfo.append(string) ;
+								}
 							}
+							String userInfo = sbUserInfo.toString() ;
+							if(userInfo.split(":").length >= 2)
+								newUserVote.add(userInfo) ;
 						}
-					}
-				} else {
-					for (int j = 0; j < sizeOption; j++) {
-						vote[j] = "0";
+						
+						i = 0;
+						Map<String, String> mab = new HashMap<String, String>();
+						for (int j = 0; j < voteTp.length; j++) {
+							if(voteTp[j].equals("deleted")) {
+								continue;
+							}
+							vote[i] = voteTp[j];
+							for (String str : newUserVote) {
+								if(str.indexOf(":"+j) > 0){
+									if(mab.containsKey(str))
+										mab.put(str, mab.get(str).replace(":"+j, ":"+i));
+									else 
+										mab.put(str, str.replace(":"+j, ":"+i));
+								} else {
+									if(!mab.containsKey(str)) {
+										mab.put(str, str);
+									}
+								}
+							}
+							++i;
+						}
+						newUser = mab.values().toArray(new String[newUserVote.size()]);
 					}
 				}
+				String userName = UserHelper.getCurrentUser() ;
 				uiForm.poll.setOwner(userName) ;
 				uiForm.poll.setQuestion(question) ;
 				uiForm.poll.setModifiedBy(userName) ;
@@ -267,20 +329,22 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 				uiForm.poll.setOption(options) ;
 				uiForm.poll.setVote(vote) ;
 				uiForm.poll.setTimeOut(timeOut) ;
-				uiForm.poll.setUserVote(new String[] {}) ;
 				uiForm.poll.setIsClosed(uiForm.poll.getIsClosed());
 				String[] id = uiForm.TopicPath.trim().split("/") ;
 				try {
 					PollService pollSv = (PollService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
 					if(uiForm.isUpdate) {
-						if(newUser.length > 0)uiForm.poll.setUserVote(newUser) ;
+						if(newUser != null){
+							uiForm.poll.setUserVote(newUser) ;
+						}
 						pollSv.savePoll(uiForm.poll, false, false);
 					} else {
+						uiForm.poll.setUserVote(new String[] {}) ;
 						uiForm.poll.setId(id[id.length - 1].replace(Utils.TOPIC, Utils.POLL));
 						uiForm.poll.setParentPath(uiForm.TopicPath.trim());
 						pollSv.savePoll(uiForm.poll, true, false);
 					}
-				} catch (Exception e) {}
+				} catch (Exception e) {e.printStackTrace();}
 				uiForm.isUpdate = false ;
 				try {
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
@@ -290,12 +354,12 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 					detailContainer.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]) ;
 					detailContainer.getChild(UITopicDetail.class).hasPoll(true);
 					event.getRequestContext().addUIComponentToUpdateByAjax(detailContainer);
-        } catch (Exception e) {
-        	UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class) ;
+				} catch (Exception e) {
+					UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class) ;
 					forumPollPortlet.cancelAction() ;
 					forumPollPortlet.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]);
-        	event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet);
-        }
+					event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet);
+				}
 			}
 			if(!ForumUtils.isEmpty(sms)) {
 				uiForm.warning("UIPollForm.msg." + sms) ;
@@ -323,10 +387,10 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 			try {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;
-      } catch (Exception e) {
-      	UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class) ;
+			} catch (Exception e) {
+				UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class) ;
 				forumPollPortlet.cancelAction() ;
-      }
+			}
 			uiForm.isUpdate = false ;
 		}
 	}

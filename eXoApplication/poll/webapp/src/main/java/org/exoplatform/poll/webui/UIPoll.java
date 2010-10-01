@@ -372,10 +372,10 @@ public class UIPoll extends BasePollForm	{
 					}
 					i = 0 ;
 					for(double dv : doubleVote) {
-						if(totalVote > 0)
+						if(totalVote > 0 && dv > 0)
 							votes[i] = ((dv/totalVote)*100) + "" ;
 						else
-							votes[i] = "0" ;
+							votes[i] = "0.0" ;
 						i ++ ;
 					}
 					// save votes:

@@ -295,7 +295,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 					}
 					pollNode = parentNode.getNode(pollId);
 				}
-				if (poll.getUserVote().length > 0) {
+				if (poll.getUserVote() != null) {
 					pollNode.setProperty(EXO_USER_VOTE, poll.getUserVote());
 				}
 				pollNode.setProperty(EXO_VOTE, poll.getVote());
