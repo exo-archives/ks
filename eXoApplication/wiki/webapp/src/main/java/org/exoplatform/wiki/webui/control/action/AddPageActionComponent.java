@@ -85,10 +85,12 @@ public class AddPageActionComponent extends UIComponent {
     UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class)
                                                .getUIStringInput();
     UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
+    UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
     UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
     titleInput.setValue(UIWikiPageEditForm.UNTITLED);
     titleInput.setEditable(true);
     markupInput.setValue("This is **sample content**");
+    commentInput.setRendered(false);
     WikiService wikiService = wikiPortlet.getApplicationComponent(WikiService.class);
     String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
     wikiService.createDraftNewPage(sessionId);

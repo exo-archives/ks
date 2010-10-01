@@ -109,6 +109,8 @@ public interface WikiNodeType {
     public final static String TITLE                      = "title";
 
     public final static String TEXT                       = "text";
+    
+    public final static String COMMENT                    = "comment";
 
     public final static String SYNTAX                     = "syntax";
 

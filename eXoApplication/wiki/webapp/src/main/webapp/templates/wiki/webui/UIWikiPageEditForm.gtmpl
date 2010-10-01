@@ -24,9 +24,20 @@
   %>
    </div>
    <% uiform.renderChild(uiform.RICHTEXT_AREA);%>
+   <div class="SyntaxType">
+     <span class="SyntaxTypeTitle"><%= _ctx.appRes("UIWikiPageEditForm.label.SyntaxTypeTitle"); %> </span>
+     <% uiform.renderField(uiform.FIELD_SYNTAX); %>
+   </div>
+   <div class="CommentInput">
+     <% if(uiform.getChildById(uiform.FIELD_COMMENT).isRendered()) { %>
+        <span class="CommentTitle"><%= _ctx.appRes("UIWikiPageEditForm.label.CommentTitle"); %></span>
+       <%
+         uiform.renderField(uiform.FIELD_COMMENT);
+       %>
+     <% } %>
+   </div>
 <% if(uiform.getChildById(uiform.HELP_PANEL).isRendered()) { %>
    <div class="ClearRight"></div>
 <% } %>
-<% uiform.renderField(uiform.FIELD_SYNTAX); %>
 <% uiform.end();%>
 </div>

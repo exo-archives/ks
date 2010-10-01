@@ -48,6 +48,10 @@ public abstract class ContentImpl extends AbstractContainerContent implements Co
   public abstract String getText();
   public abstract void setText(String text);
   
+  @Property(name = WikiNodeType.Definition.COMMENT)
+  public abstract String getComment();
+  public abstract void setComment(String comment);
+  
   
   @OneToOne
   @MappedBy(WikiNodeType.Definition.CONTENT)

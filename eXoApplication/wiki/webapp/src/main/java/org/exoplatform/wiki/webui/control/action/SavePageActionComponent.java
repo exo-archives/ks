@@ -92,6 +92,7 @@ public class SavePageActionComponent extends UIComponent {
       UIWikiRichTextArea wikiRichTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);
       UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class).getUIStringInput();
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
+      UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
       UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       
       String title = titleInput.getValue();
@@ -110,6 +111,7 @@ public class SavePageActionComponent extends UIComponent {
         Page page = pageResolver.resolve(requestURL);
         if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
           page.getContent().setText(markup);
+          page.getContent().setComment(commentInput.getValue());
           page.getContent().setSyntax(syntaxTypeSelectBox.getValue());
           pageTitleControlForm.getUIFormInputInfo().setValue(title);
           

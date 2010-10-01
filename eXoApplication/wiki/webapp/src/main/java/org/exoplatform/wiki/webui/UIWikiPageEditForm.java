@@ -28,6 +28,7 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormSelectBox;
+import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.Preferences;
@@ -55,6 +56,7 @@ public class UIWikiPageEditForm extends UIWikiForm {
 
   public static final String UNTITLED      = "Untitled";
   public static final String FIELD_CONTENT = "Markup";
+  public static final String FIELD_COMMENT = "Comment";
   public static final String FIELD_SYNTAX  = "SyntaxType";
   public static final String TITLE_CONTROL = "UIWikiPageTitleControlForm_PageEditForm";
   public static final String PAGE_TOOLBAR  = "UIWikiPageEditForm_PageToolBar";
@@ -74,6 +76,8 @@ public class UIWikiPageEditForm extends UIWikiForm {
     addChild(UIWikiRichTextArea.class, null, RICHTEXT_AREA).setRendered(false);
     UIFormTextAreaInput markupInput = new UIFormTextAreaInput(FIELD_CONTENT, FIELD_CONTENT, "This is **sample content**");
     addUIFormInput(markupInput).setRendered(true);
+    UIFormStringInput commentInput = new UIFormStringInput(FIELD_COMMENT, FIELD_COMMENT, "");
+    addUIFormInput(commentInput);
     List<SelectItemOption<String>> syntaxTypes = new ArrayList<SelectItemOption<String>>();
     syntaxTypes.add(new SelectItemOption<String>(Syntax.XWIKI_1_0.toString(),Syntax.XWIKI_1_0.toIdString()));
     syntaxTypes.add(new SelectItemOption<String>(Syntax.XWIKI_2_0.toString(),Syntax.XWIKI_2_0.toIdString()));

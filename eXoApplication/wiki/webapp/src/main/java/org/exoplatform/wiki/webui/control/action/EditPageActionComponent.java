@@ -67,6 +67,7 @@ public class EditPageActionComponent extends UIComponent {
       UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
       UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class).getUIStringInput();
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
+      UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
       UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       
       Page page = Utils.getCurrentWikiPage();
@@ -74,6 +75,8 @@ public class EditPageActionComponent extends UIComponent {
       titleInput.setEditable(true);
       pageEditForm.setTitle(page.getContent().getTitle()) ;
       markupInput.setValue(page.getContent().getText());
+      commentInput.setValue("");
+      commentInput.setRendered(true);
       syntaxTypeSelectBox.setValue(page.getContent().getSyntax());      
       UIWikiSidePanelArea sidePanelForm = pageEditForm.findFirstComponentOfType(UIWikiSidePanelArea.class);
       sidePanelForm.renderHelpContent(syntaxTypeSelectBox.getValue());     

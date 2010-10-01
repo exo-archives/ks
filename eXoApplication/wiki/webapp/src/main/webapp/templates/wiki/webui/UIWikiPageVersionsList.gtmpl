@@ -82,6 +82,8 @@
             String updatedDate = frozenNode.getUpdatedDate();
             String author = frozenNode.getAuthor();
             author = (author != null) ? author : "anonymous";
+            String comment = frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT).getComment();
+            comment = (comment != null) ? comment : "";
             String restore = (isCurrentVersion) ? "" : _ctx.appRes("UIWikiPageVersionsList.label.Restore");
             String viewLink = uicomponent.event(uicomponent.VIEW_REVISION, version.getName());
             String restoreLink = uicomponent.event(uicomponent.RESTORE_ACTION, version.getName());
@@ -101,7 +103,7 @@
           </td>
           <td><%= updatedDate %></td>
           <td><%= author %></td>
-          <td></td>
+          <td><%= comment %></td>
           <td class="Tit" style="border-right: 1px solid #d7d7d7;">
       	    <a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');" onclick="$restoreLink" title="<%= _ctx.appRes("UIWikiPageVersionsList.label.RestoreRevision"); %>" ><%= restore %></a>      	   
           </td>
