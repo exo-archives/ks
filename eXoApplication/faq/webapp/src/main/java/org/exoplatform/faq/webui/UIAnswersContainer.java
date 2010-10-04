@@ -47,6 +47,7 @@ public class UIAnswersContainer extends UIContainer  {
 	private FAQService faqService_;
 	private boolean isRenderChild = true;
 	private boolean hasPermission = true;
+	private List<String> propetyOfUser = new ArrayList<String>();
   public UIAnswersContainer() throws Exception {
   	faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   	UIBreadcumbs uiBreadcumbs = addChild(UIBreadcumbs.class, null, null) ;
@@ -64,17 +65,24 @@ public class UIAnswersContainer extends UIContainer  {
   	} else {
   		faqSetting_.setIsAdmin("FALSE");
   	}
-  	isRenderChild = isRenderCategory(Utils.CATEGORY_HOME);
+  	String cateIdView = Utils.CATEGORY_HOME;
+  	if(!faqSetting_.isAdmin() && !faqSetting_.isPostQuestionInRootCategory()){
+  		propetyOfUser = UserHelper.getAllGroupAndMembershipOfUser(currentUser_);
+  		List<Category> cates = faqService_.getSubCategories(cateIdView,faqSetting_, false, propetyOfUser);
+  		if(cates != null && cates.size() > 0)
+  			cateIdView = cateIdView + "/" + cates.get(0).getId();
+  	}
+  	isRenderChild = isRenderCategory(cateIdView);
   	hasPermission = isRenderChild;
-  	uiBreadcumbs.setUpdataPath(Utils.CATEGORY_HOME) ;
+  	uiBreadcumbs.setUpdataPath(cateIdView) ;
   	uiQuestions.setFAQService(faqService_);
   	uiQuestions.setFAQSetting(faqSetting_);
-  	uiQuestions.setCategoryId(Utils.CATEGORY_HOME);
+  	uiQuestions.setCategoryId(cateIdView);
   	uiBreadcumbs.setRenderSearch(uiQuestions.isViewRootCate());
   	
   	uiCategories.setFAQSetting(faqSetting_);
   	uiCategories.setFAQService(faqService_);
-  	if(uiCategories.getCategoryPath() == null) uiCategories.setPathCategory(Utils.CATEGORY_HOME) ;
+  	if(uiCategories.getCategoryPath() == null) uiCategories.setPathCategory(cateIdView) ;
   } 
 
   public void setViewRootCate() {
@@ -95,7 +103,6 @@ public class UIAnswersContainer extends UIContainer  {
   
   public boolean isRenderCategory(String categoryId) throws Exception {
   	try {
-  		List<String> propetyOfUser = new ArrayList<String>();
   		Category category = faqService_.getCategoryById(categoryId);
   		if(currentUser_ != null && currentUser_.trim().length() > 0){
   			faqSetting_.setCurrentUser(currentUser_);
@@ -104,7 +111,7 @@ public class UIAnswersContainer extends UIContainer  {
   				faqSetting_.setCanEdit(true);
   			} else if(category.getModerators() != null && category.getModerators().length > 0 
     				&& category.getModerators()[0].trim().length() > 0){
-					propetyOfUser = UserHelper.getAllGroupAndMembershipOfUser(currentUser_);
+  				if(propetyOfUser.isEmpty()) propetyOfUser = UserHelper.getAllGroupAndMembershipOfUser(currentUser_);
 					faqSetting_.setCanEdit(Utils.hasPermission(propetyOfUser, Arrays.asList(category.getModerators())));
   			}
   		}

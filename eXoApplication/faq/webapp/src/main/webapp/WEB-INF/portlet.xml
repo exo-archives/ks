@@ -2,101 +2,106 @@
 <portlet-app version="1.0" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
-  <portlet>
-    <description xml:lang="EN">Answers Portlet</description>
-    <portlet-name>AnswersPortlet</portlet-name>
-    <display-name xml:lang="EN">Answers Portlet</display-name>
-    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
-    
-    <init-param>
-      <name>webui.configuration</name>
-      <value>/WEB-INF/conf/portlet/faq/AnswersPortlet/webui/configuration.xml</value>
-    </init-param>    
+	<portlet>
+		<description xml:lang="EN">Answers Portlet</description>
+		<portlet-name>AnswersPortlet</portlet-name>
+		<display-name xml:lang="EN">Answers Portlet</display-name>
+		<portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>		
+		
+		<init-param>
+			<name>webui.configuration</name>
+			<value>/WEB-INF/conf/portlet/faq/AnswersPortlet/webui/configuration.xml</value>
+		</init-param>		
 
-    <expiration-cache>0</expiration-cache>
-    <supports>
-      <mime-type>text/html</mime-type>
-      <portlet-mode>help</portlet-mode>
-      <portlet-mode>edit</portlet-mode>
-    </supports>
-    <supported-locale>en</supported-locale>
-    <resource-bundle>locale.portlet.faq.AnswersPortlet</resource-bundle>
-    <portlet-info>
-      <title>Answers Portlet</title>
-      <short-title>Answers Portlet</short-title>
-      <keywords>faq</keywords>
-    </portlet-info>
-    
-    <portlet-preferences>
-    	<preference>
-        <name>enableViewAvatar</name>
-        <value>true</value> <!-- true/false -->
-        <read-only>false</read-only>
-      </preference>
-    	<preference>
-        <name>enableAutomaticRSS</name>
-        <value>true</value> <!-- true/false -->
-        <read-only>false</read-only>
-      </preference>
-    	<preference>
-        <name>enanbleVotesAndComments</name>
-        <value>true</value> <!-- true/false -->
-        <read-only>false</read-only>
-      </preference>
-      <preference>
-        <name>enableAnonymousSubmitQuestion</name>
-        <value>true</value>
-        <read-only>false</read-only>
-      </preference>
-    	<preference>
-        <name>display</name>
-        <value>both</value> <!--approved/both -->
-        <read-only>false</read-only>
-      </preference>
-    	<preference>
-        <name>SendMailAddNewQuestion</name>
-        <value> </value>
-        <read-only>false</read-only>
-      </preference>
-    	<preference>
-        <name>SendMailEditResponseQuestion</name>
-        <value> </value>
-        <read-only>false</read-only>
-      </preference>
-    	<preference>
-        <name>emailMoveQuestion</name>
-        <value> </value>
-        <read-only>false</read-only>
-      </preference>
-      <preference>
-        <name>orderBy</name>
-        <value>alphabet</value> <!--alphabet/created -->
-        <read-only>false</read-only>
-      </preference>
-      <preference>
-        <name>orderType</name>
-        <value>asc</value>      <!-- asc/desc -->
-        <read-only>false</read-only>
-      </preference>
-      <preference>
-        <name>isDiscussForum</name>
-        <value>false</value>
-        <read-only>false</read-only>
-      </preference>      
-      <preference>
-        <name>idNameCategoryForum</name>
-        <value> </value>	<!-- id of forum;CategoryName/ForumName -->
-        <read-only>false</read-only>
-      </preference>
-      <preference>
-			  <name>uploadFileSizeLimitMB</name>
-			  <value>20</value>
-			  <read-only>false</read-only>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>help</portlet-mode>
+			<portlet-mode>edit</portlet-mode>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<resource-bundle>locale.portlet.faq.AnswersPortlet</resource-bundle>
+		<portlet-info>
+			<title>Answers Portlet</title>
+			<short-title>Answers Portlet</short-title>
+			<keywords>faq</keywords>
+		</portlet-info>
+		
+		<portlet-preferences>
+			<preference>
+				<name>enableViewAvatar</name>
+				<value>true</value> <!-- true/false -->
+				<read-only>false</read-only>
 			</preference>
-    </portlet-preferences>  
-  </portlet>
-  
-  <portlet>
+			<preference>
+				<name>enableAutomaticRSS</name>
+				<value>true</value> <!-- true/false -->
+				<read-only>false</read-only>
+			</preference>
+			<preference>
+				<name>enanbleVotesAndComments</name>
+				<value>true</value> <!-- true/false -->
+				<read-only>false</read-only>
+			</preference>
+			<preference>
+				<name>enableAnonymousSubmitQuestion</name>
+				<value>true</value>
+				<read-only>false</read-only>
+			</preference>
+			<preference>
+				<name>display</name>
+				<value>both</value> <!--approved/both -->
+				<read-only>false</read-only>
+			</preference>
+			<preference>
+				<name>SendMailAddNewQuestion</name>
+				<value> </value>
+				<read-only>false</read-only>
+			</preference>
+			<preference>
+				<name>SendMailEditResponseQuestion</name>
+				<value> </value>
+				<read-only>false</read-only>
+			</preference>
+			<preference>
+				<name>emailMoveQuestion</name>
+				<value> </value>
+				<read-only>false</read-only>
+			</preference>
+			<preference>
+				<name>orderBy</name>
+				<value>alphabet</value> <!--alphabet/created -->
+				<read-only>false</read-only>
+			</preference>
+			<preference>
+				<name>orderType</name>
+				<value>asc</value>			<!-- asc/desc -->
+				<read-only>false</read-only>
+			</preference>
+			<preference>
+				<name>isDiscussForum</name>
+				<value>false</value>
+				<read-only>false</read-only>
+			</preference>			
+			<preference>
+				<name>idNameCategoryForum</name>
+				<value> </value>	<!-- id of forum;CategoryName/ForumName -->
+				<read-only>false</read-only>
+			</preference>
+			<preference>
+				<name>uploadFileSizeLimitMB</name>
+				<value>20</value>
+				<read-only>false</read-only>
+			</preference>
+			<preference>
+			 <name>isPostQuestionInRootCategory</name>
+			 <value>true</value>
+			 <read-only>false</read-only>
+			</preference>
+		</portlet-preferences>	
+	</portlet>
+	
+	<portlet>
 		<description xml:lang="EN">FAQ Portlet</description>
 		<portlet-name>FAQPortlet</portlet-name>
 		<display-name xml:lang="EN">FAQPortlet</display-name>
@@ -110,7 +115,7 @@
 		<expiration-cache>0</expiration-cache>
 		<supports>
 			<mime-type>text/html</mime-type>
-      <portlet-mode>edit</portlet-mode>
+			<portlet-mode>edit</portlet-mode>
 		</supports>
 		<supported-locale>en</supported-locale>
 		<resource-bundle>locale.portlet.faq.FAQPortlet</resource-bundle>
@@ -122,14 +127,14 @@
 	
 		<portlet-preferences>
 			<preference>
-        <name>displayCategories</name>
-        <value> </value><!-- listing categoryId show in viewer portlet (cate1,cate2,...) -->
-        <read-only>false</read-only>
-      </preference>
-      <preference>
-			  <name>useAjax</name>
-			  <value>false</value><!-- value is true/false -->
-			  <read-only>false</read-only>
+				<name>displayCategories</name>
+				<value> </value><!-- listing categoryId show in viewer portlet (cate1,cate2,...) -->
+				<read-only>false</read-only>
+			</preference>
+			<preference>
+				<name>useAjax</name>
+				<value>false</value><!-- value is true/false -->
+				<read-only>false</read-only>
 			</preference>
 		</portlet-preferences>
 

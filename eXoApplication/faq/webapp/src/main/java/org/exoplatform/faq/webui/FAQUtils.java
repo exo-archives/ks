@@ -387,6 +387,7 @@ public class FAQUtils {
 		faqSetting.setIsDiscussForum(Boolean.parseBoolean(portletPref.getValue("isDiscussForum", ""))) ;
 		faqSetting.setIdNameCategoryForum(portletPref.getValue("idNameCategoryForum", "")) ;
 		faqSetting.setEmailMoveQuestion(portletPref.getValue("emailMoveQuestion", ""));
+		faqSetting.setPostQuestionInRootCategory(Boolean.parseBoolean(portletPref.getValue("isPostQuestionInRootCategory", "true")));
 	}
 
 	public static void getEmailSetting(FAQSetting faqSetting, boolean isNew, boolean isSettingForm) {
@@ -442,7 +443,7 @@ public class FAQUtils {
 			portletPref.setValue("SendMailAddNewQuestion", emailAddNewQuestion);
 			portletPref.setValue("SendMailEditResponseQuestion", emailEditResponseQuestion);
 			portletPref.setValue("emailMoveQuestion", setting.getEmailMoveQuestion());
-			
+			portletPref.setValue("isPostQuestionInRootCategory", setting.isPostQuestionInRootCategory() + "");
 			portletPref.store();
 		} catch (Exception e) {
 		  log.error("Fail to save portlet preferences: ", e);

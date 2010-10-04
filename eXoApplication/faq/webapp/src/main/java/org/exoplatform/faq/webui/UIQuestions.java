@@ -180,6 +180,16 @@ public class UIQuestions extends UIContainer {
 		} catch (Exception e) {}
 	}
 	
+	private boolean isAddQuestion() {
+		if(isViewRootCate && (currentUser_ != null || currentUser_ == null && faqSetting_.isEnableAnonymousSubmitQuestion())){
+			if(isCategoryHome() && !faqSetting_.isPostQuestionInRootCategory()){
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	
 	public String getRSSLink(){
 		String catepath = categoryId_.substring(categoryId_.lastIndexOf("/")+1);
 		return RSS.getRSSLink("faq", getPortalName(), catepath);
