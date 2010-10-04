@@ -58,7 +58,7 @@
 </tr>
 <tr>
 	<td>open</td>
-	<td>/ksdemo/public/classic/forum</td>
+	<td>/ksdemo/private/classic/forum</td>
 	<td></td>
 </tr>
 <tr>
@@ -73,7 +73,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UITopicContainer</td>
+	<td>//form[@id='UITopicContainer']//div[@class='ItemIcon PostnewThreadIcon']/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -83,7 +83,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>ThreaTitle</td>
+	<td>ThreadTitle</td>
 	<td></td>
 </tr>
 <tr>
@@ -92,8 +92,8 @@
 	<td>Topic for Rate</td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//iframe[@id='messageContent___Frame']</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -142,13 +142,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Topic for Rate</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Topic for Rate</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UITopicDetail</td>
+	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[8]/div/div/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -189,6 +194,11 @@
 <tr>
 	<td>echo</td>
 	<td>-Rate again-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Topic for Rate</td>
 	<td></td>
 </tr>
 <tr>
@@ -332,7 +342,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
+	<td>waitForElementPresent</td>
+	<td>link=Live demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Live demo</td>
 	<td></td>
 </tr>
@@ -347,13 +362,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>echo</td>
+	<td>-Delete test data-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>-Delete test data-</td>
+	<td>click</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -384,11 +404,16 @@
 <tr>
 	<td>type</td>
 	<td>password</td>
-	<td>exo</td>
+	<td>gtn</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
 	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
