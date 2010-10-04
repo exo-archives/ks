@@ -235,7 +235,8 @@ UIWikiSearchBox.prototype.buildChild = function(dataObject) {
   } else {
     linkNode.setAttribute('href', this.wikiNodeURI + dataObject.uri);
   }
-  var labelResult = dataObject.fullTitle.replace(this.input.value,"<strong>"+ this.input.value +"</strong>");
+  var keyword=  this.input.value.trim();
+  var labelResult = eXo.wiki.UIWikiSearchBox.doHighLight(dataObject.fullTitle,keyword);  
   linkNode.innerHTML = labelResult;
   menuItemNode.appendChild(linkNode.cloneNode(true));
   return menuItemNode;
@@ -256,6 +257,49 @@ UIWikiSearchBox.prototype.createKeyword = function(str) {
 UIWikiSearchBox.prototype.hideMenu = function(){
   if(this.searchPopup)  this.searchPopup.style.display = "none";
 };
+
+
+UIWikiSearchBox.prototype.doHighLight = function(bodyText, searchTerm,
+    highlightStartTag, highlightEndTag) {
+
+  // the highlightStartTag and highlightEndTag parameters are optional
+  if ((!highlightStartTag) || (!highlightEndTag)) {
+    highlightStartTag = "<strong>";
+    highlightEndTag = "</strong>";
+  }
+
+  // find all occurences of the search term in the given text,
+  // and add some "highlight" tags to them (we're not using a
+  // regular expression search, because we want to filter out
+  // matches that occur within HTML tags and script blocks, so
+  // we have to do a little extra validation)
+  var newText = "";
+  var i = -1;
+  var lcSearchTerm = searchTerm.toLowerCase();
+  var lcBodyText = bodyText.toLowerCase();
+
+  while (bodyText.length > 0) {
+    i = lcBodyText.indexOf(lcSearchTerm, i + 1);
+    if (i < 0) {
+      newText += bodyText;
+      bodyText = "";
+    } else {
+      // skip anything inside an HTML tag
+      if (bodyText.lastIndexOf(">", i) >= bodyText.lastIndexOf("<", i)) {
+        // skip anything inside a <script> block
+        if (lcBodyText.lastIndexOf("/script>", i) >= lcBodyText.lastIndexOf(
+            "<script", i)) {
+          newText += bodyText.substring(0, i) + highlightStartTag
+              + bodyText.substr(i, searchTerm.length) + highlightEndTag;
+          bodyText = bodyText.substr(i + searchTerm.length);
+          lcBodyText = bodyText.toLowerCase();
+          i = -1;
+        }
+      }
+    }
+  }
+  return newText;
+}
 
 eXo.wiki.webservice = eXo.wiki.webservice || {};
 
