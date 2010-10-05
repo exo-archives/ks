@@ -22,13 +22,13 @@ package org.exoplatform.faq.rendering;
  */
 public class RenderingException extends RuntimeException {
 
-  public RenderingException(Exception e) {
-    super(e);
-  }
+	public RenderingException(Exception e) {
+		super(e);
+	}
 
-  /**
+	/**
    * 
    */
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 }

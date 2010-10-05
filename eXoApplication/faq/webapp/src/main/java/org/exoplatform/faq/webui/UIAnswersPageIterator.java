@@ -27,114 +27,119 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
 /**
- * Created by The eXo Platform SARL
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Nov 19, 2007 9:18:18 AM 
+ * Created by The eXo Platform SAS 
+ * Author : Vu Duy Tu 
+ * 					tu.duy@exoplatform.com 
+ * Nov 19, 2007 9:18:18 AM
  */
 
 @ComponentConfig(
-   template = "app:/templates/faq/webui/UIAnswersPageIterator.gtmpl",
-   events = {
-     @EventConfig(listeners = UIAnswersPageIterator.GoPageActionListener.class)
-   }
- )
+		template = "app:/templates/faq/webui/UIAnswersPageIterator.gtmpl",
+		events = { @EventConfig(listeners = UIAnswersPageIterator.GoPageActionListener.class) }
+)
 
 public class UIAnswersPageIterator extends UIContainer {
-  private JCRPageList pageList = null;
-  private long page = 1 ;
-  private int endTabPage = 0;
-  private int beginTabPage = 0;
-  public UIAnswersPageIterator () throws Exception {
-  }
-  
-  public void updatePageList(JCRPageList pageList ) {
-    this.pageList = pageList ;
-    page = 1;
-    endTabPage = 0;
-    beginTabPage = 0;
-  }
-  
-  @SuppressWarnings("unused")
-  private List<String> getTotalpage() throws  Exception {
-  	int max_Page = 1;
-  	if(pageList != null )max_Page = (int)pageList.getAvailablePage() ;
-    if(this.page > max_Page) this.page = max_Page ;
-    long page = this.page ;
-    if(page <= 3) {
-      beginTabPage = 1 ;
-      if(max_Page <= 7)
-        endTabPage = max_Page ;
-      else endTabPage = 7 ;
-    } else {
-      if(max_Page > (page + 3)) {
-        endTabPage = (int) (page + 3) ;
-        beginTabPage = (int) (page - 3) ;
-      } else {
-        endTabPage = max_Page ;
-        if(max_Page > 7) beginTabPage = max_Page - 6 ;
-        else beginTabPage = 1 ;
-      }
-    }
-    List<String> temp = new ArrayList<String>() ;
-    for (int i = beginTabPage; i <= endTabPage; i++) {
-      temp.add("" + i) ;
-    }
-    return temp ;
-  }
+	private JCRPageList pageList = null;
+	private long page = 1;
+	private int endTabPage = 0;
+	private int beginTabPage = 0;
 
-  public List<Long> getInfoPage() throws Exception {
-    List<Long> temp = new ArrayList<Long>() ;
-    if(pageList != null) {
-	    temp.add(pageList.getPageSize()) ;//so item/trang
-	    temp.add(pageList.getCurrentPage()) ;//so trang hien tai
-	    temp.add(pageList.getAvailable()) ;//tong so item
-	    temp.add(pageList.getAvailablePage()) ;// so trang toi da
-    } else {
-    	temp.add((long)0) ; temp.add((long)1) ;
-    	temp.add((long)0) ; temp.add((long)1) ;
-    }
-    return temp ;
-  } 
-  
-  public void setSelectPage(long page) {
-    this.page = page;
-  }
-  
-  @SuppressWarnings("unused")
-  public long getPageSelected() {
-    return this.page ;
-  }
-    
-  static public class GoPageActionListener extends EventListener<UIAnswersPageIterator> {
-    public void execute(Event<UIAnswersPageIterator> event) throws Exception {
-      UIAnswersPageIterator faqPageIterator = event.getSource() ;
-      String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim() ;
-      long maxPage = faqPageIterator.pageList.getAvailablePage() ;
-      long presentPage  = faqPageIterator.page ;
-      if(stateClick.equalsIgnoreCase("next")) {
-        if(presentPage < maxPage){
-          faqPageIterator.page = presentPage + 1 ;
-        }
-      } else if(stateClick.equalsIgnoreCase("previous")){
-        if(presentPage > 1){
-          faqPageIterator.page = presentPage - 1 ;
-        }
-      } else if(stateClick.equalsIgnoreCase("last")) {
-        if(presentPage != maxPage) {
-          faqPageIterator.page = maxPage ;
-        }
-      } else if(stateClick.equalsIgnoreCase("first")) {
-        if(presentPage != 1) {
-          faqPageIterator.page = 1 ;
-        }
-      } else {
-        long temp = Long.parseLong(stateClick) ;
-        if(temp > 0 && temp <= maxPage && temp != presentPage) {
-          faqPageIterator.page = temp ;
-        }
-      }
-      event.getRequestContext().addUIComponentToUpdateByAjax(faqPageIterator.getParent()) ;
-    }
-  }
+	public UIAnswersPageIterator() throws Exception {
+	}
+
+	public void updatePageList(JCRPageList pageList) {
+		this.pageList = pageList;
+		page = 1;
+		endTabPage = 0;
+		beginTabPage = 0;
+	}
+
+	@SuppressWarnings("unused")
+	private List<String> getTotalpage() throws Exception {
+		int max_Page = 1;
+		if (pageList != null)
+			max_Page = (int) pageList.getAvailablePage();
+		if (this.page > max_Page)
+			this.page = max_Page;
+		long page = this.page;
+		if (page <= 3) {
+			beginTabPage = 1;
+			if (max_Page <= 7)
+				endTabPage = max_Page;
+			else
+				endTabPage = 7;
+		} else {
+			if (max_Page > (page + 3)) {
+				endTabPage = (int) (page + 3);
+				beginTabPage = (int) (page - 3);
+			} else {
+				endTabPage = max_Page;
+				if (max_Page > 7)
+					beginTabPage = max_Page - 6;
+				else
+					beginTabPage = 1;
+			}
+		}
+		List<String> temp = new ArrayList<String>();
+		for (int i = beginTabPage; i <= endTabPage; i++) {
+			temp.add("" + i);
+		}
+		return temp;
+	}
+
+	public List<Long> getInfoPage() throws Exception {
+		List<Long> temp = new ArrayList<Long>();
+		if (pageList != null) {
+			temp.add(pageList.getPageSize());// so item/trang
+			temp.add(pageList.getCurrentPage());// so trang hien tai
+			temp.add(pageList.getAvailable());// tong so item
+			temp.add(pageList.getAvailablePage());// so trang toi da
+		} else {
+			temp.add((long) 0);
+			temp.add((long) 1);
+			temp.add((long) 0);
+			temp.add((long) 1);
+		}
+		return temp;
+	}
+
+	public void setSelectPage(long page) {
+		this.page = page;
+	}
+
+	public long getPageSelected() {
+		return this.page;
+	}
+
+	static public class GoPageActionListener extends EventListener<UIAnswersPageIterator> {
+		public void execute(Event<UIAnswersPageIterator> event) throws Exception {
+			UIAnswersPageIterator faqPageIterator = event.getSource();
+			String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim();
+			long maxPage = faqPageIterator.pageList.getAvailablePage();
+			long presentPage = faqPageIterator.page;
+			if (stateClick.equalsIgnoreCase("next")) {
+				if (presentPage < maxPage) {
+					faqPageIterator.page = presentPage + 1;
+				}
+			} else if (stateClick.equalsIgnoreCase("previous")) {
+				if (presentPage > 1) {
+					faqPageIterator.page = presentPage - 1;
+				}
+			} else if (stateClick.equalsIgnoreCase("last")) {
+				if (presentPage != maxPage) {
+					faqPageIterator.page = maxPage;
+				}
+			} else if (stateClick.equalsIgnoreCase("first")) {
+				if (presentPage != 1) {
+					faqPageIterator.page = 1;
+				}
+			} else {
+				long temp = Long.parseLong(stateClick);
+				if (temp > 0 && temp <= maxPage && temp != presentPage) {
+					faqPageIterator.page = temp;
+				}
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(faqPageIterator.getParent());
+		}
+	}
 }

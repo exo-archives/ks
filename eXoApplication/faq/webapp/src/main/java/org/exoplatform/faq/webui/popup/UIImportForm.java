@@ -23,58 +23,63 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormUploadInput;
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class ,
-		template =  "app:/templates/faq/webui/popup/UIImportForm.gtmpl",
+		lifecycle = UIFormLifecycle.class, 
+		template = "app:/templates/faq/webui/popup/UIImportForm.gtmpl", 
 		events = {
-			@EventConfig(listeners = UIImportForm.SaveActionListener.class),
-			@EventConfig(listeners = UIImportForm.CancelActionListener.class)
+				@EventConfig(listeners = UIImportForm.SaveActionListener.class), 
+				@EventConfig(listeners = UIImportForm.CancelActionListener.class) 
 		}
 )
-
-public class UIImportForm extends BaseUIForm implements UIPopupComponent{
+public class UIImportForm extends BaseUIForm implements UIPopupComponent {
 	private final String FILE_UPLOAD = "FileUpload";
-	private String categoryId_ ;
-	public void activate() throws Exception { }
-	public void deActivate() throws Exception { }
+	private String categoryId_;
 
-	public UIImportForm(){
-		int sizeLimit = FAQUtils.getLimitUploadSize() ;
-		if(sizeLimit >= 0) this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD, sizeLimit));
-		else this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD));
+	public void activate() throws Exception {
 	}
 
-	public void setCategoryId(String categoryId){
+	public void deActivate() throws Exception {
+	}
+
+	public UIImportForm() {
+		int sizeLimit = FAQUtils.getLimitUploadSize();
+		if (sizeLimit >= 0)
+			this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD, sizeLimit));
+		else
+			this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD));
+	}
+
+	public void setCategoryId(String categoryId) {
 		this.categoryId_ = categoryId;
 	}
 
 	static public class SaveActionListener extends EventListener<UIImportForm> {
 		public void execute(Event<UIImportForm> event) throws Exception {
-			UIImportForm importForm = event.getSource() ;
-			FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			UIAnswersPortlet portlet = importForm.getAncestorOfType(UIAnswersPortlet.class) ;
-			try{
+			UIImportForm importForm = event.getSource();
+			FAQService service = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+			UIAnswersPortlet portlet = importForm.getAncestorOfType(UIAnswersPortlet.class);
+			try {
 				service.getCategoryById(importForm.categoryId_);
 
-				UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
-				
-				if(uploadInput.getUploadResource() == null){
-					importForm.warning("UIAttachMentForm.msg.file-not-found") ;
+				UIFormUploadInput uploadInput = (UIFormUploadInput) importForm.getChildById(importForm.FILE_UPLOAD);
+
+				if (uploadInput.getUploadResource() == null) {
+					importForm.warning("UIAttachMentForm.msg.file-not-found");
 					return;
 				}
 				String fileName = uploadInput.getUploadResource().getFileName();
 				MimeTypeResolver mimeTypeResolver = new MimeTypeResolver();
 				String mimeType = mimeTypeResolver.getMimeType(fileName);
-				boolean isZip = false ;
-				if("application/zip".equals(mimeType)){
-					isZip = true ;					
-				}else if ("text/xml".equals(mimeType)){
-					isZip = false ;
-				}else{
+				boolean isZip = false;
+				if ("application/zip".equals(mimeType)) {
+					isZip = true;
+				} else if ("text/xml".equals(mimeType)) {
+					isZip = false;
+				} else {
 					importForm.warning("UIImportForm.msg.mimetype-invalid");
 					return;
-				}				
-				try{
-					if(!service.importData(importForm.categoryId_, uploadInput.getUploadDataAsStream(), isZip)){
+				}
+				try {
+					if (!service.importData(importForm.categoryId_, uploadInput.getUploadDataAsStream(), isZip)) {
 						importForm.warning("UIImportForm.msg.import-fail");
 					} else {
 						importForm.info("UIImportForm.msg.import-successful");
@@ -85,37 +90,38 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 					importForm.warning("UIImportForm.msg.constraint-violation-exception");
 				} catch (ItemExistsException ise) {
 					importForm.warning("UIImportForm.msg.CategoryIsExist");
-				} catch(Exception e){
+				} catch (Exception e) {
 					importForm.warning("UIImportForm.msg.filetype-error");
 				}
-				
-				UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
-				uploadService.removeUpload(uploadInput.getUploadId()) ;
-			} catch (Exception e){
+
+				UploadService uploadService = importForm.getApplicationComponent(UploadService.class);
+				uploadService.removeUpload(uploadInput.getUploadId());
+			} catch (Exception e) {
 				FAQUtils.findCateExist(service, portlet.findFirstComponentOfType(UIAnswersContainer.class));
-				importForm.warning("UIQuestions.msg.admin-moderator-removed-action") ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
-			}			
-			
-			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+				importForm.warning("UIQuestions.msg.admin-moderator-removed-action");
+				event.getRequestContext().addUIComponentToUpdateByAjax(portlet);
+			}
+
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
 			UIAnswersContainer faqContainer = portlet.getChild(UIAnswersContainer.class);
-			faqContainer.getChild(UIQuestions.class).setDefaultLanguage() ;
-	    event.getRequestContext().addUIComponentToUpdateByAjax(faqContainer) ;
-			popupAction.deActivate() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			faqContainer.getChild(UIQuestions.class).setDefaultLanguage();
+			event.getRequestContext().addUIComponentToUpdateByAjax(faqContainer);
+			popupAction.deActivate();
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
 		}
 	}
 
 	static public class CancelActionListener extends EventListener<UIImportForm> {
 		public void execute(Event<UIImportForm> event) throws Exception {
-			UIImportForm importForm = event.getSource() ;
-			UIAnswersPortlet portlet = importForm.getAncestorOfType(UIAnswersPortlet.class) ;
-//		remove temp file in upload service and server
-			try{
-				UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
-				UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
-				uploadService.removeUpload(uploadInput.getUploadId()) ;
-			}catch(Exception e) {}
+			UIImportForm importForm = event.getSource();
+			UIAnswersPortlet portlet = importForm.getAncestorOfType(UIAnswersPortlet.class);
+			// remove temp file in upload service and server
+			try {
+				UploadService uploadService = importForm.getApplicationComponent(UploadService.class);
+				UIFormUploadInput uploadInput = (UIFormUploadInput) importForm.getChildById(importForm.FILE_UPLOAD);
+				uploadService.removeUpload(uploadInput.getUploadId());
+			} catch (Exception e) {
+			}
 			portlet.cancelAction();
 		}
 	}

@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -33,7 +32,6 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -44,147 +42,152 @@ import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SARL
- * Author : Truong Nguyen
- *					truong.nguyen@exoplatform.com
+ * Author : Truong Nguyen 
+ *          truong.nguyen@exoplatform.com 
  * May 6, 2008, 4:55:37 PM
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/faq/webui/popup/UIPopupViewQuestion.gtmpl",
+		lifecycle = UIFormLifecycle.class, 
+		template = "app:/templates/faq/webui/popup/UIPopupViewQuestion.gtmpl", 
 		events = {
-			@EventConfig(listeners = UIPopupViewQuestion.DownloadAttachActionListener.class),
-			@EventConfig(listeners = UIPopupViewQuestion.CloseActionListener.class)
+				@EventConfig(listeners = UIPopupViewQuestion.DownloadAttachActionListener.class), 
+				@EventConfig(listeners = UIPopupViewQuestion.CloseActionListener.class) 
 		}
 )
 public class UIPopupViewQuestion extends BaseUIForm implements UIPopupComponent {
-	private String questionId_ = null ;
-  private String language_ = "" ;
-  private static	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-  private String[] sizes = new String[]{"bytes", "KB", "MB"};
-  private RenderHelper renderHelper = new RenderHelper();
-  public UIPopupViewQuestion() throws Exception {this.setActions(new String[]{"Close"}) ;}
-  public String getQuestion(){
-    return this.questionId_ ;
-  }
-  
-  public void setQuestion(String questionId) {
-    this.questionId_ = questionId ;
-  }
-  
+	private String questionId_ = null;
+	private String language_ = "";
+	private static FAQService faqService_ = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+	private String[] sizes = new String[] { "bytes", "KB", "MB" };
+	private RenderHelper renderHelper = new RenderHelper();
+
+	public UIPopupViewQuestion() throws Exception {
+		this.setActions(new String[] { "Close" });
+	}
+
+	public String getQuestion() {
+		return this.questionId_;
+	}
+
+	public void setQuestion(String questionId) {
+		this.questionId_ = questionId;
+	}
+
 	public void setLanguage(String language) {
-    this.language_ = language ;
-  }
-  
+		this.language_ = language;
+	}
+
 	public String renderAnswer(Answer answer) {
 		return renderHelper.renderAnswer(answer);
-  }
-	
-  public Question getViewQuestion() {
-  	Question question = null;
-    try {
-	    question = faqService_.getQuestionById(questionId_);
-	    List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
-	    listQuestionLanguage.addAll(faqService_.getQuestionLanguages(questionId_)) ;
-	    for(QuestionLanguage questionLanguage : listQuestionLanguage) {
-	    	if(questionLanguage.getLanguage().equals(language_)) {
-	    		question.setDetail(questionLanguage.getDetail()) ;
-	    		question.setQuestion(questionLanguage.getQuestion());
-//	    		question.setAnswers(questionLanguage.getAnswers()) ;
-	    	}
-	    }
-    } catch (Exception e) {
-	    log.error("Can not get Question Language, exception: " + e.getMessage());
-    }
-  	return question;
-  }
-  
-  public String getImageUrl(String imagePath) throws Exception {
-  	String url = "";
-  	try {
-  		url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
-    } catch (Exception e) {
-      log.debug("Getting image url fail: ", e);
-    }
-    return url ;
-  }
-  
-  public String getQuestionRelationById(String questionId) {
-    Question question = new Question();
-    try {
-      question = faqService_.getQuestionById(questionId);
-      if(question != null) {
-        return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
-      }
-    } catch (Exception e) {
-    	log.error("Can not get Question Relation by Id, exception: " + e.getMessage());
-    }
-    return "" ;
-  }
-  
-  @SuppressWarnings("unused")
-	private String convertSize(long size){
-    String result = "";
-    long  residual = 0;
-    int i = 0;
-    while(size >= 1000){
-      i ++;
-      residual = size % 1024;
-      size /= 1024;
-    }
-    if(residual > 1000){
-      String str = residual + "";
-      result = size + "." + str.substring(0, 3) + " " + sizes[i];
-    } else {
-      result = size + "." + residual + " " + sizes[i];
-    }
-    return result;
-  }
-  
-  private String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
-    byte[] imageBytes = null;
-    if (input != null) {
-      imageBytes = new byte[input.available()];
-      input.read(imageBytes);
-      ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-      InputStreamDownloadResource dresource = new InputStreamDownloadResource(
-          byteImage, "image");
-      dresource.setDownloadName(fileName);
-      return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-    }
-    return null;
-  }
-  
-  @SuppressWarnings("unused")
+	}
+
+	public Question getViewQuestion() {
+		Question question = null;
+		try {
+			question = faqService_.getQuestionById(questionId_);
+			List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>();
+			listQuestionLanguage.addAll(faqService_.getQuestionLanguages(questionId_));
+			for (QuestionLanguage questionLanguage : listQuestionLanguage) {
+				if (questionLanguage.getLanguage().equals(language_)) {
+					question.setDetail(questionLanguage.getDetail());
+					question.setQuestion(questionLanguage.getQuestion());
+					// question.setAnswers(questionLanguage.getAnswers()) ;
+				}
+			}
+		} catch (Exception e) {
+			log.error("Can not get Question Language, exception: " + e.getMessage());
+		}
+		return question;
+	}
+
+	public String getImageUrl(String imagePath) throws Exception {
+		String url = "";
+		try {
+			url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
+		} catch (Exception e) {
+			log.debug("Getting image url fail: ", e);
+		}
+		return url;
+	}
+
+	public String getQuestionRelationById(String questionId) {
+		Question question = new Question();
+		try {
+			question = faqService_.getQuestionById(questionId);
+			if (question != null) {
+				return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
+			}
+		} catch (Exception e) {
+			log.error("Can not get Question Relation by Id, exception: " + e.getMessage());
+		}
+		return "";
+	}
+
+	@SuppressWarnings("unused")
+	private String convertSize(long size) {
+		String result = "";
+		long residual = 0;
+		int i = 0;
+		while (size >= 1000) {
+			i++;
+			residual = size % 1024;
+			size /= 1024;
+		}
+		if (residual > 1000) {
+			String str = residual + "";
+			result = size + "." + str.substring(0, 3) + " " + sizes[i];
+		} else {
+			result = size + "." + residual + " " + sizes[i];
+		}
+		return result;
+	}
+
+	private String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
+		byte[] imageBytes = null;
+		if (input != null) {
+			imageBytes = new byte[input.available()];
+			input.read(imageBytes);
+			ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+			InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
+			dresource.setDownloadName(fileName);
+			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unused")
 	private String getFileSource(FileAttachment attachment) throws Exception {
-    DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-    try {
-      InputStream input = attachment.getInputStream() ;
-      String fileName = attachment.getName() ;
-      return getFileSource(input, fileName, dservice);
-    } catch (Exception e) {
-    	log.error("Can not get File Source, exception: " + e.getMessage());
-      return null;
-    }
-  }
-  
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	static public class DownloadAttachActionListener extends EventListener<UIPopupViewQuestion> {
-		public void execute(Event<UIPopupViewQuestion> event) throws Exception {
-			UIPopupViewQuestion uiViewQuestion = event.getSource() ; 
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiViewQuestion) ;
+		DownloadService dservice = getApplicationComponent(DownloadService.class);
+		try {
+			InputStream input = attachment.getInputStream();
+			String fileName = attachment.getName();
+			return getFileSource(input, fileName, dservice);
+		} catch (Exception e) {
+			log.error("Can not get File Source, exception: " + e.getMessage());
+			return null;
 		}
 	}
-	
-	static	public class CloseActionListener extends EventListener<UIPopupViewQuestion> {
+
+	public void activate() throws Exception {
+	}
+
+	public void deActivate() throws Exception {
+	}
+
+	static public class DownloadAttachActionListener extends EventListener<UIPopupViewQuestion> {
 		public void execute(Event<UIPopupViewQuestion> event) throws Exception {
-			UIPopupViewQuestion uiViewQuestion = event.getSource() ;
-      UIPopupAction popupAction = uiViewQuestion.getAncestorOfType(UIPopupAction.class).setRendered(false) ;
-      UIPopupWindow popupWindow = popupAction.getChild(UIPopupWindow.class).setRendered(false) ;
-      popupWindow.setUIComponent(null) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			UIPopupViewQuestion uiViewQuestion = event.getSource();
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiViewQuestion);
+		}
+	}
+
+	static public class CloseActionListener extends EventListener<UIPopupViewQuestion> {
+		public void execute(Event<UIPopupViewQuestion> event) throws Exception {
+			UIPopupViewQuestion uiViewQuestion = event.getSource();
+			UIPopupAction popupAction = uiViewQuestion.getAncestorOfType(UIPopupAction.class).setRendered(false);
+			UIPopupWindow popupWindow = popupAction.getChild(UIPopupWindow.class).setRendered(false);
+			popupWindow.setUIComponent(null);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
 		}
 	}
 }
-

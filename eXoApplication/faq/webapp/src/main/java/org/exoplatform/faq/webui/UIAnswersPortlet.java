@@ -38,117 +38,119 @@ import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 
-
-
 /**
- * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
+ * Created by The eXo Platform SARL
+ * Author : Hung Nguyen
+ *          hung.nguyen@exoplatform.com 
  * Mar 04, 2008
  */
 
 @ComponentConfig(
-                 lifecycle = UIApplicationLifecycle.class,
-                 template = "app:/templates/faq/webui/UIAnswersPortlet.gtmpl"
+		lifecycle = UIApplicationLifecycle.class, 
+		template = "app:/templates/faq/webui/UIAnswersPortlet.gtmpl"
 )
+
 public class UIAnswersPortlet extends UIPortletApplication {
-  private boolean isFirstTime = true;
-  public UIAnswersPortlet() throws Exception {
-    addChild(UIAnswersContainer.class, null, null) ;
-    UIPopupAction uiPopup =  addChild(UIPopupAction.class, null, null) ;
-    uiPopup.setId("UIAnswersPopupAction") ;
-    uiPopup.getChild(UIPopupWindow.class).setId("UIAnswersPopupWindow");
-  }
+	private boolean isFirstTime = true;
 
-  public String getSpaceCategoryId(){
+	public UIAnswersPortlet() throws Exception {
+		addChild(UIAnswersContainer.class, null, null);
+		UIPopupAction uiPopup = addChild(UIPopupAction.class, null, null);
+		uiPopup.setId("UIAnswersPopupAction");
+		uiPopup.getChild(UIPopupWindow.class).setId("UIAnswersPopupWindow");
+	}
 
-    try {
-      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-      PortletPreferences pref = pcontext.getRequest().getPreferences();
-      if(pref.getValue("SPACE_URL", null) != null) {
-        String url = pref.getValue("SPACE_URL", null);
-        SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
-        Space space = sService.getSpaceByUrl(url) ;
-        String categoryId = Utils.CATEGORY_PREFIX + space.getId();
-        return categoryId ;
-      }
-      return null;
-    } catch (Exception e) {
-      return null;
-    }
+	public String getSpaceCategoryId() {
 
-  }
+		try {
+			PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+			PortletPreferences pref = pcontext.getRequest().getPreferences();
+			if (pref.getValue("SPACE_URL", null) != null) {
+				String url = pref.getValue("SPACE_URL", null);
+				SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
+				Space space = sService.getSpaceByUrl(url);
+				String categoryId = Utils.CATEGORY_PREFIX + space.getId();
+				return categoryId;
+			}
+			return null;
+		} catch (Exception e) {
+			return null;
+		}
 
-  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
-    PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
-    if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
-      isFirstTime = true;
-      if(getChild(UIAnswersContainer.class) == null){
-        if(getChild(UISettingForm.class) != null) {
-          removeChild(UISettingForm.class);
-        }
-        addChild(UIAnswersContainer.class, null, null) ;
-      }
-      renderPortletById();
-    }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
-      try{
-        if(isFirstTime){
-          isFirstTime = false;
-          UIQuestions questions = getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
-          FAQSetting faqSetting = questions.getFAQSetting();
-          if(getChild(UISettingForm.class) == null) {
-            if(faqSetting.isAdmin()){
-              removeChild(UIAnswersContainer.class);
-              UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
-              settingForm.setRendered(true);
-              settingForm.setIsEditPortlet(true);
-              settingForm.init();
-            }
-          }
-        }
-      } catch (Exception e) {
-        log.error("\nFail to render a WebUIApplication\n", e);
-      }
-    }
+	}
 
-    super.processRender(app, context) ;
-  }
+	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
+		PortletRequestContext portletReqContext = (PortletRequestContext) context;
+		if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+			isFirstTime = true;
+			if (getChild(UIAnswersContainer.class) == null) {
+				if (getChild(UISettingForm.class) != null) {
+					removeChild(UISettingForm.class);
+				}
+				addChild(UIAnswersContainer.class, null, null);
+			}
+			renderPortletById();
+		} else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+			try {
+				if (isFirstTime) {
+					isFirstTime = false;
+					UIQuestions questions = getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
+					FAQSetting faqSetting = questions.getFAQSetting();
+					if (getChild(UISettingForm.class) == null) {
+						if (faqSetting.isAdmin()) {
+							removeChild(UIAnswersContainer.class);
+							UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
+							settingForm.setRendered(true);
+							settingForm.setIsEditPortlet(true);
+							settingForm.init();
+						}
+					}
+				}
+			} catch (Exception e) {
+				log.error("\nFail to render a WebUIApplication\n", e);
+			}
+		}
 
-  private void renderPortletById() throws Exception {
-  	try {
-      String cateId = getSpaceCategoryId() ;
-      PortalRequestContext context = Util.getPortalRequestContext();
-      if(!FAQUtils.isFieldEmpty(cateId) && context.getRequestParameter(OBJECTID) == null && 
-      		!("true".equals(""+context.getRequestParameter("ajaxRequest")))){
-        UIBreadcumbs uiBreadcums = findFirstComponentOfType(UIBreadcumbs.class);
-        UIQuestions uiQuestions = findFirstComponentOfType(UIQuestions.class) ;
-        UICategories categories = findFirstComponentOfType(UICategories.class);
-        uiBreadcums.setUpdataPath(Utils.CATEGORY_HOME+"/"+cateId) ;
-        uiBreadcums.setRenderSearch(true);
-      	uiQuestions.setCategoryId(Utils.CATEGORY_HOME+"/"+cateId);
-      	categories.setPathCategory(Utils.CATEGORY_HOME+"/"+cateId) ;
-      }
-    } catch (Exception e) {
-      System.out.println("can not render the selected category");
-    }
-  }
-  public void renderPopupMessages() throws Exception {
-    UIPopupMessages popupMess = getUIPopupMessages();
-    if(popupMess == null)  return ;
-    WebuiRequestContext  context =  WebuiRequestContext.getCurrentInstance() ;
-    popupMess.processRender(context);
-  }
+		super.processRender(app, context);
+	}
 
-  public void cancelAction() throws Exception {
-    WebuiRequestContext context = RequestContext.getCurrentInstance() ;
-    UIPopupAction popupAction = getChild(UIPopupAction.class) ;
-    popupAction.deActivate() ;
-    context.addUIComponentToUpdateByAjax(popupAction) ;
-  }
+	private void renderPortletById() throws Exception {
+		try {
+			String cateId = getSpaceCategoryId();
+			PortalRequestContext context = Util.getPortalRequestContext();
+			if (!FAQUtils.isFieldEmpty(cateId) && context.getRequestParameter(OBJECTID) == null && !("true".equals("" + context.getRequestParameter("ajaxRequest")))) {
+				UIBreadcumbs uiBreadcums = findFirstComponentOfType(UIBreadcumbs.class);
+				UIQuestions uiQuestions = findFirstComponentOfType(UIQuestions.class);
+				UICategories categories = findFirstComponentOfType(UICategories.class);
+				uiBreadcums.setUpdataPath(Utils.CATEGORY_HOME + "/" + cateId);
+				uiBreadcums.setRenderSearch(true);
+				uiQuestions.setCategoryId(Utils.CATEGORY_HOME + "/" + cateId);
+				categories.setPathCategory(Utils.CATEGORY_HOME + "/" + cateId);
+			}
+		} catch (Exception e) {
+			System.out.println("can not render the selected category");
+		}
+	}
 
-  public static String getPreferenceDisplay() {
-    PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
-    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
-    String repository = portletPref.getValue("display", "") ;
-    return repository ;
-  }
+	public void renderPopupMessages() throws Exception {
+		UIPopupMessages popupMess = getUIPopupMessages();
+		if (popupMess == null)
+			return;
+		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+		popupMess.processRender(context);
+	}
+
+	public void cancelAction() throws Exception {
+		WebuiRequestContext context = RequestContext.getCurrentInstance();
+		UIPopupAction popupAction = getChild(UIPopupAction.class);
+		popupAction.deActivate();
+		context.addUIComponentToUpdateByAjax(popupAction);
+	}
+
+	public static String getPreferenceDisplay() {
+		PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+		String repository = portletPref.getValue("display", "");
+		return repository;
+	}
 }

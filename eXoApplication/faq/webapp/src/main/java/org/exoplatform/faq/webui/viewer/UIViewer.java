@@ -37,16 +37,15 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jun 24, 2009 - 4:32:48 AM  
+ * Created by The eXo Platform SAS 
+ * Author : Vu Duy Tu 
+ * 					tu.duy@exoplatform.com 
+ * Jun 24, 2009 - 4:32:48 AM
  */
 
 @ComponentConfig(
-//		template =	"app:/templates/faq/webui/UIViewer.gtmpl",
-		events = {
-		  	 @EventConfig(listeners = UIViewer.ChangePathActionListener.class)
+		events = { 
+				@EventConfig(listeners = UIViewer.ChangePathActionListener.class)
 		}
 )
 @SuppressWarnings("unused")
@@ -55,56 +54,56 @@ public class UIViewer extends UIContainer {
 	private String path = Utils.CATEGORY_HOME;
 	private boolean useAjax = false;
 	private RenderHelper renderHelper = new RenderHelper();
-	
+
 	private Log log = ExoLogger.getLogger(UIViewer.class);
-	
+
 	public UIViewer() {
-		 fAqService = (FAQService)PortalContainer.getComponent(FAQService.class) ;
-  }
-	
-  private List<String> arrangeList(List<String> list) {
+		fAqService = (FAQService) PortalContainer.getComponent(FAQService.class);
+	}
+
+	private List<String> arrangeList(List<String> list) {
 		List<String> newList = new ArrayList<String>();
-		if(list.isEmpty() || list.size() == 0){
-			newList.add("<img src=\"/faq/skin/DefaultSkin/webui/background/HomeIcon.gif\" alt=\""+Utils.CATEGORY_HOME+"\"/>");
+		if (list.isEmpty() || list.size() == 0) {
+			newList.add("<img src=\"/faq/skin/DefaultSkin/webui/background/HomeIcon.gif\" alt=\"" + Utils.CATEGORY_HOME + "\"/>");
 		} else {
-			for (int i = (list.size()-1); i >= 0; i--) {
-				if(i == (list.size()-1)) {
-					newList.add("<img src=\"/faq/skin/DefaultSkin/webui/background/HomeIcon.gif\" alt=\""+list.get(i)+"\"/>");
+			for (int i = (list.size() - 1); i >= 0; i--) {
+				if (i == (list.size() - 1)) {
+					newList.add("<img src=\"/faq/skin/DefaultSkin/webui/background/HomeIcon.gif\" alt=\"" + list.get(i) + "\"/>");
 				} else {
 					newList.add(list.get(i));
 				}
 			}
 		}
 		return newList;
-	} 
-	
-  public ResourceResolver getTemplateResourceResolver(WebuiRequestContext context, String template) {
-  	return new FAQResourceResolver() ;
-  }
-  
-  public String getTemplate() {
-  	return "FAQViewerTemplate" ;
-  }
-  
-  private CategoryInfo getCategoryInfo() throws Exception {
+	}
+
+	public ResourceResolver getTemplateResourceResolver(WebuiRequestContext context, String template) {
+		return new FAQResourceResolver();
+	}
+
+	public String getTemplate() {
+		return "FAQViewerTemplate";
+	}
+
+	private CategoryInfo getCategoryInfo() throws Exception {
 		CategoryInfo categoryInfo = new CategoryInfo();
 		List<String> list = new ArrayList<String>();
 		list = FAQUtils.getCategoriesIdFAQPortlet();
 		useAjax = FAQUtils.getUseAjaxFAQPortlet();
-		//try {
-			categoryInfo = this.fAqService.getCategoryInfo(this.path, list);
-    //} catch (Exception e) {
-      //log.error("fail to get category info: ", e);
-    //}
+		// try {
+		categoryInfo = this.fAqService.getCategoryInfo(this.path, list);
+		// } catch (Exception e) {
+		// log.error("fail to get category info: ", e);
+		// }
 		return categoryInfo;
 	}
 
 	private String render(String s) {
 		Question question = new Question();
 		question.setDetail(s);
-		return renderHelper.renderQuestion(question) ;
+		return renderHelper.renderQuestion(question);
 	}
-	
+
 	static public class ChangePathActionListener extends EventListener<UIViewer> {
 		public void execute(Event<UIViewer> event) throws Exception {
 			String path = event.getRequestContext().getRequestParameter(OBJECTID);

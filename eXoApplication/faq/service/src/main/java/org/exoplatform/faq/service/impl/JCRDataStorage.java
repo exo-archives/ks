@@ -1083,7 +1083,7 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true);
 			return pageList;
 		} catch (Exception e) {
-			log.error("Failed to get page list comments", e);
+			log.debug("Failed to get page list comments", e);
 			return null;
 		} finally {
 			sProvider.close();

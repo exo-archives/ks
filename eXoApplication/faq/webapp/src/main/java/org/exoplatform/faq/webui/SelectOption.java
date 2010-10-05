@@ -18,78 +18,101 @@ package org.exoplatform.faq.webui;
 
 import org.exoplatform.webui.core.model.SelectItemCategory;
 
-
-
 /**
- * Created by The eXo Platform SARL
- * Author : Philippe Aristote
+ * Created by The eXo Platform SARL 
+ * Author : Philippe Aristote 
  *          philippe.aristote@gmail.com
  * 
- * An item in a UIFormInputItemSelector
- * Each item is actually held in a SelectItemCategory, which is held by the UIFormInputItemSelector
+ * An item in a UIFormInputItemSelector Each item is actually held in a SelectItemCategory, which is held by the UIFormInputItemSelector
+ * 
  * @see SelectItemCategory
  * @see org.exoplatform.webui.form.UIFormInputItemSelector
  */
 public class SelectOption extends SelectItem {
 
-  /**
-   * THe value of the item
-   */
-  protected  String value_ ;
-  /**
-   * The icon url of the item
-   */
-  protected  String icon_;
-  /**
-   * Whether this item is selected
-   */
-  protected boolean selected_ =  false ;
-  /**
-   * A description of the item
-   */
-  protected String description_ ;
-  /**
-   * Whether this item is disabled
-   */
-  protected boolean disabled_ = false;
-  
-  public SelectOption(String label, String value, String icon) {
-    this(label, value, "", icon);
-  }
-  
-  public SelectOption(String label, String value, String desc, String icon) {
-	super(label);
-    value_ = value ;
-    description_ = desc ; 
-    icon_ = icon ;
-  }
-  
-  public SelectOption(String label, String value, String desc, String icon, boolean selected) {
-    this(label, value, desc, icon);
-    selected_ = selected;
-  }
-  
-  public boolean isDisabled() {return disabled_;}
-  public void setDisabled(boolean disabled) {this.disabled_ = disabled;}
+	/**
+	 * THe value of the item
+	 */
+	protected String value_;
+	/**
+	 * The icon url of the item
+	 */
+	protected String icon_;
+	/**
+	 * Whether this item is selected
+	 */
+	protected boolean selected_ = false;
+	/**
+	 * A description of the item
+	 */
+	protected String description_;
+	/**
+	 * Whether this item is disabled
+	 */
+	protected boolean disabled_ = false;
 
-  public SelectOption(String label, String value) {
-    this(label, value, "", null);
-  }
-  
-  public SelectOption(String value) {
-    this(value, value, "", null);
-  }
-  
-  public String getValue() { return value_ ; }
-  public void   setValue(String s) { value_ =  s ; }
-  
-  public  String getDescription() { return description_ ; }
-  public  void   setDescription(String s) { description_ = s ;}
-  
-  public boolean isSelected() { return selected_ ; }
-  public void    setSelected(boolean b) { selected_ = b ; }
+	public SelectOption(String label, String value, String icon) {
+		this(label, value, "", icon);
+	}
 
-  public String getIcon() { return icon_; }
-  public void setIcon(String icon) { this.icon_ = icon; }
+	public SelectOption(String label, String value, String desc, String icon) {
+		super(label);
+		value_ = value;
+		description_ = desc;
+		icon_ = icon;
+	}
+
+	public SelectOption(String label, String value, String desc, String icon, boolean selected) {
+		this(label, value, desc, icon);
+		selected_ = selected;
+	}
+
+	public boolean isDisabled() {
+		return disabled_;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled_ = disabled;
+	}
+
+	public SelectOption(String label, String value) {
+		this(label, value, "", null);
+	}
+
+	public SelectOption(String value) {
+		this(value, value, "", null);
+	}
+
+	public String getValue() {
+		return value_;
+	}
+
+	public void setValue(String s) {
+		value_ = s;
+	}
+
+	public String getDescription() {
+		return description_;
+	}
+
+	public void setDescription(String s) {
+		description_ = s;
+	}
+
+	public boolean isSelected() {
+		return selected_;
+	}
+
+	public void setSelected(boolean b) {
+		selected_ = b;
+	}
+
+	public String getIcon() {
+		return icon_;
+	}
+
+	public void setIcon(String icon) {
+		this.icon_ = icon;
+	}
 
 }

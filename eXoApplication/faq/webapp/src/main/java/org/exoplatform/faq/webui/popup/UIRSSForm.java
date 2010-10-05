@@ -26,43 +26,44 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
+
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
- * Aus 01, 2007 2:48:18 PM 
+ *          hung.nguyen@exoplatform.com 
+ * Aus 01, 2007 2:48:18 PM
  */
 
-@SuppressWarnings({ "unused", "unchecked" })
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class ,
-		template =	"app:/templates/faq/webui/popup/UIRSSForm.gtmpl",
+		lifecycle = UIFormLifecycle.class, 
+		template = "app:/templates/faq/webui/popup/UIRSSForm.gtmpl", 
 		events = {
-				@EventConfig(listeners = UIRSSForm.CancelActionListener.class)
+				@EventConfig(listeners = UIRSSForm.CancelActionListener.class) 
 		}
 )
-public class UIRSSForm extends UIForm	{
+@SuppressWarnings("unused")
+public class UIRSSForm extends UIForm {
 	private String rssLink;
-	 
+
 	public UIRSSForm() throws Exception {
 	}
-	
-	public void setRSSLink(String rssLink){
+
+	public void setRSSLink(String rssLink) {
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
 		String url = portalContext.getRequest().getRequestURL().toString();
-		url = url.replaceFirst("http://", "") ;
-		url = url.substring(0, url.indexOf("/")) ;
+		url = url.replaceFirst("http://", "");
+		url = url.substring(0, url.indexOf("/"));
 		url = "http://" + url;
 		this.rssLink = url + rssLink;
 	}
 
 	static public class CancelActionListener extends EventListener<UIRSSForm> {
-    public void execute(Event<UIRSSForm> event) throws Exception {
-    	UIRSSForm commentForm = event.getSource() ;
-    	UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-    }
-  }
+		public void execute(Event<UIRSSForm> event) throws Exception {
+			UIRSSForm commentForm = event.getSource();
+			UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class);
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
+			popupAction.deActivate();
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+		}
+	}
 }

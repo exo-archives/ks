@@ -1,17 +1,16 @@
 package org.exoplatform.faq.webui;
 
-
 /**
- * Abstract class SelectItem is held by UIFormSelectBox
- * This class is extended by SelectItemOption and SelectItemOptionGroup
+ * Abstract class SelectItem is held by UIFormSelectBox This class is extended by SelectItemOption and SelectItemOptionGroup
+ * 
  * @author philippe
- *
+ * 
  */
 public abstract class SelectItem {
 	/**
 	 * The text that appears on the UI when the item is rendered
 	 */
-	private String label_ ;
+	private String label_;
 
 	public SelectItem(String label) {
 		this.label_ = label;
@@ -24,7 +23,7 @@ public abstract class SelectItem {
 	public void setLabel(String label) {
 		this.label_ = label;
 	}
-	
-//	public abstract void setSelectedValue(String value) ;
-	
+
+	// public abstract void setSelectedValue(String value) ;
+
 }

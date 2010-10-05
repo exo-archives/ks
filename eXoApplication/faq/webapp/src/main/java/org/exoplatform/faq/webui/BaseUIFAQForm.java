@@ -23,48 +23,51 @@ import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.core.UIComponent;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jan 18, 2010 - 4:59:43 AM  
+ * Created by The eXo Platform SAS 
+ * Author : Vu Duy Tu 
+ * 					tu.duy@exoplatform.com
+ * Jan 18, 2010 - 4:59:43 AM
  */
-public class BaseUIFAQForm extends BaseUIForm{
-	 private FAQService faqService ;
-	  
-	  /**
-	   * Get a reference to the faq service
-	   * @return
-	   */
-	  protected FAQService getFAQService() {
-	    if (faqService == null) {
-	    	faqService = (FAQService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FAQService.class) ;
-	    }
-	    return faqService;
-	  }
-	  /**
-	   * Set faq service (used by unit tests)
-	   * @param faqService
-	   */
-	  protected void setFAQService(FAQService faqService) {
-	    this.faqService = faqService;
-	  }
-	  
-	  protected <T extends UIComponent> T  openPopup(Class<T> componentType,  String popupId, int width, int height) throws Exception {
-	    UIFAQPortlet faqPortlet = getAncestorOfType(UIFAQPortlet.class) ;   
-	    return openPopup(faqPortlet, componentType, popupId, width, height);
-	  }
-	  
-	  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
-	  	UIFAQPortlet faqPortlet = getAncestorOfType(UIFAQPortlet.class);
-	    return openPopup(faqPortlet, componentType, width, height);
-	  }
-	  
-	  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
-	    return openPopup(componentType, width, 0);
-	  }
+public class BaseUIFAQForm extends BaseUIForm {
+	private FAQService faqService;
 
-	  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
-	    return openPopup(componentType, popupId, width, 0);
-	  }
+	/**
+	 * Get a reference to the faq service
+	 * 
+	 * @return
+	 */
+	protected FAQService getFAQService() {
+		if (faqService == null) {
+			faqService = (FAQService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FAQService.class);
+		}
+		return faqService;
+	}
+
+	/**
+	 * Set faq service (used by unit tests)
+	 * 
+	 * @param faqService
+	 */
+	protected void setFAQService(FAQService faqService) {
+		this.faqService = faqService;
+	}
+
+	protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
+		UIFAQPortlet faqPortlet = getAncestorOfType(UIFAQPortlet.class);
+		return openPopup(faqPortlet, componentType, popupId, width, height);
+	}
+
+	protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
+		UIFAQPortlet faqPortlet = getAncestorOfType(UIFAQPortlet.class);
+		return openPopup(faqPortlet, componentType, width, height);
+	}
+
+	protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
+		return openPopup(componentType, width, 0);
+	}
+
+	protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
+		return openPopup(componentType, popupId, width, 0);
+	}
 
 }

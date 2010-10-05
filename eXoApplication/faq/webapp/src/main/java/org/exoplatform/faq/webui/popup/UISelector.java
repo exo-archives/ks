@@ -19,9 +19,9 @@ package org.exoplatform.faq.webui.popup;
 /**
  * Created by The eXo Platform SARL
  * Author : Pham Tuan
- *          tuan.pham@exoplatform.com
- * Aug 29, 2007  
+ *          tuan.pham@exoplatform.com 
+ * Aug 29, 2007
  */
 public interface UISelector {
-  public void updateSelect(String selectField, String value) throws Exception ;
+	public void updateSelect(String selectField, String value) throws Exception;
 }
