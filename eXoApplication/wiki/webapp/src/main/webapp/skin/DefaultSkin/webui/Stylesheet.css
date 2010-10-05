@@ -107,7 +107,7 @@
 }
 
 .UIWikiPortlet a {
-	color: #165fb3;
+	color: black;
 }
 
 .UIWikiPortlet a span {
@@ -291,14 +291,20 @@
 .UIWikiPortlet .UIWikiPageControlArea .Icon {
 	float:right;
 	width: 16px;
-	height: 14px;
+	height: 12px;
 	padding: 6px;
 	margin: 0px;	
+}
+
+.UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .MoreItems:hover {
+	background:url("background/MoreItemsIcon.gif") no-repeat left center;
+	-moz-border-radius:0px;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .Icon:hover {
 	background-color: #d0dff0;
 	-moz-border-radius:3px 3px 3px 3px;
+	-webkit-border-radius: 3px;
 	text-decoration: none;
 }
 
@@ -315,6 +321,13 @@
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MoreLink {
+	background:url("background/DownArowWhite.png") no-repeat 38px center;
+  width:40px;
+	color:#535353;
+	height: 14px;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .MoreLink:hover {
   width:40px;
 	color:#535353;
 	height: 14px;
@@ -324,11 +337,16 @@
 	width:100px;
 	top:26px;
 	right:0px;	
+	background:url("background/MoreMenuBG.gif") repeat-x;
+	padding-left: 26px;
+	*padding-left: 6px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MoreItems {
+	background:url("background/MoreItemsIcon.gif") no-repeat left center;
 	width: 88px;
 	color:#535353;		
+	padding-left: 26px;
 }
 
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm{
@@ -1301,4 +1319,23 @@
 	z-index: 1000;
 	border: 1px solid #C1C1C1;
   display: none;
+}
+
+
+.UIWikiPortlet .NodeType{
+	padding: 0px 0px 8px 19px;
+}
+
+.UIWikiPortlet .UIWikiMovePageForm .UIAction{
+	border-top: 1px solid #d7d7d7;
+	margin-top: 4px;
+}
+
+.UIWikiPortlet .UIWikiMovePageForm .UIAction .ActionContainer {
+	float: right;
+	margin-bottom:8px;
+}
+
+.UIWikiPortlet .UIWikiMovePageForm .UIAction .ActionButton {
+	float: right;
 }
