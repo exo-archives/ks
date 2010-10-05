@@ -5,6 +5,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl ;
 import org.exoplatform.commons.utils.PageList ;
 import org.exoplatform.wiki.service.SearchResult;
 import org.exoplatform.wiki.commons.Utils ;
+import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 %>
 
 <%
@@ -58,38 +59,10 @@ import org.exoplatform.wiki.commons.Utils ;
 				String prev = uicomponent.event("PrevPage") ;
 				String next = uicomponent.event("NextPage") ;
 			%>
-			<div class="UIPageIterator ClearFix">
-				<a class="PrevPage" href="$prev"><%= _ctx.appRes("UIWikiAdvanceSearchResult.label.Previous"); %></a>
-				<%
-					for(int i = 1; i <= results.getAvailablePage(); i ++) {
-						if(i == results.getCurrentPage()) {
-						%>
-							<span class="Number Selected">$i</span>
-						<%
-						}else {
-							String changePage = uicomponent.event("ChangePage", String.valueOf(i)) ;
-						%>
-							<a class="Number" href="$changePage">$i</a>
-						<%
-						}					
-					}
-				%>				
-				<a class="NextPage" href="$next"><%= _ctx.appRes("UIWikiAdvanceSearchResult.label.Next"); %></a>
-			</div> 	
+			<% uicomponent.renderChild(UIAdvancePageIterator.class) ; %> 	
 	</div>	
 	
 	<%} else {
 		%><div class="NoSearchResult"><%= _ctx.appRes("UIWikiAdvanceSearchResult.msg.there-is-no-search-result"); %></div><%
 	}
 	%>
-	
-	<!-- Page iterator -->
-			<!-- div class="UIPageIterator ClearFix">
-				<a class="PrevPage" href="">Previous</a>
-				<a class="Number Selected" href="#">1</a>
-				<a class="Number" href="">2</a>
-				<a class="Number" href="#">3</a>
-				<span class="Separator"> ... </span>
-				<a class="Number" href="#">26</a>
-				<a class="NextPage" href="#">Next</a>
-			</div-->

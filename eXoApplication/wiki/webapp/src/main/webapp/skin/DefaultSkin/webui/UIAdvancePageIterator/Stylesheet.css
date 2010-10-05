@@ -1,0 +1,175 @@
+
+.UIAdvancePageIterator {
+  margin-bottom: 20px;
+}
+
+.UIAdvancePageIterator .PageIteratorContainer .RightPageIteratorBlock {
+  float:right;
+  margin-right: 300px;
+}
+
+.UIAdvancePageIterator .PageIteratorContainer .LeftPageIteratorBlock {
+  float:right;
+  line-height:18px;
+  margin-right:15px;
+}
+
+.UIAdvancePageIterator .TotalPages {
+  float:left;
+  line-height:16px;
+}
+
+.UIAdvancePageIterator .PagesTotalNumber {
+  color:#165FB3;
+  float:left;
+  line-height:17px;
+  margin-left:5px;
+  font-weight: bold;
+}
+
+.UIAdvancePageIterator .LastTopPageIcon {
+  background:url("/wiki/skin/DefaultSkin/webui/UIAdvancePageIterator/background/ScrollDoubleBackArrows.gif") no-repeat scroll 0 0 transparent;
+  cursor:pointer;
+  vertical-align:middle;
+}
+
+.UIAdvancePageIterator .DisableLastTopPageIcon {
+  background:url("/wiki/skin/DefaultSkin/webui/UIAdvancePageIterator/background/DoubleBackArrows.gif") no-repeat scroll 0 0 transparent;
+  vertical-align:middle;
+}
+
+.UIAdvancePageIterator .LastPageIcon {
+  background:url("/wiki/skin/DefaultSkin/webui/UIAdvancePageIterator/background/ScrollSingleBackArrow.gif") no-repeat scroll 0 0 transparent;
+  cursor:pointer;
+}
+
+.UIAdvancePageIterator .DisableLastPageIcon {
+  background:url("/wiki/skin/DefaultSkin/webui/UIAdvancePageIterator/background/SingleBackArrow.gif") no-repeat scroll 0 0 transparent;
+}
+
+.UIAdvancePageIterator .Icon {
+  float:left;
+  height:17px;
+  margin:0 2px 0 0;
+  width:18px;
+}
+
+.UIAdvancePageIterator a {
+  color:#000000;
+}
+
+.UIAdvancePageIterator .Number {
+  float:left;
+  line-height:17px;
+  margin:0 2px 0 0;
+  text-align:center;
+}
+
+.UIAdvancePageIterator .Number a {
+  padding:1px 6px 1px 7px;
+}
+
+.UIAdvancePageIterator .PageNormal {
+  background:none repeat scroll 0 0 white;
+  border:1px solid #DFDFDF;
+  color:#165FB3;
+  margin:0;
+  padding:1px 7px;
+  font-weight: bold;
+}
+
+.UIAdvancePageIterator .PageSelected {
+  color:#2A2A2A;
+  font-weight: bold;
+}
+
+.UIAdvancePageIterator .NextPageIcon {
+  background:url("/wiki/skin/DefaultSkin/webui/UIAdvancePageIterator/background/ScrollSingleNextArrow.gif") no-repeat scroll 0 0 transparent;
+  cursor:pointer;
+}
+
+.UIAdvancePageIterator .DisableNextPageIcon {
+  background:url("/wiki/skin/DefaultSkin/webui/UIAdvancePageIterator/background/SingleNextArrow.gif") no-repeat scroll 0 0 transparent;
+}
+
+.UIAdvancePageIterator .NextTopPageIcon {
+  background:url("/wiki/skin/DefaultSkin/webui/UIAdvancePageIterator/background/ScrollDoubleNextArrows.gif") no-repeat scroll 0 0 transparent;
+  cursor:pointer;
+}
+
+.UIAdvancePageIterator .DisableNextTopPageIcon {
+  background:url("/wiki/skin/DefaultSkin/webui/UIAdvancePageIterator/background/DoubleNextArrows.gif") no-repeat scroll 0 0 transparent;
+}
+
+.UIAdvancePageIterator .GotoPageIcon {
+  background:url("/wiki/skin/DefaultSkin/webui/UIAdvancePageIterator/background/OpenPopup17x21.gif") no-repeat scroll 0 0 transparent;
+  float:right;
+  height:17px;
+  width:21px;
+}
+
+.UIAdvancePageIterator .GotoPageIcon .UIPopupCategory {
+  left:-30px;
+  position:absolute;
+  top:2px;
+  width:120px;
+  z-index:1010;
+}
+
+.UIAdvancePageIterator .UIRightClickPopupMenu {
+  display:none;
+  position:absolute;
+}
+
+.UIAdvancePageIterator .UIContextMenuContainer {
+  background:none repeat scroll 0 0 #C4C4C4;
+  border:1px solid #7E7E7F;
+}
+
+.UIAdvancePageIterator .UIRightClickPopupMenu .UIRightPopupMenuContainer {
+  background:none repeat scroll 0 0 #F6F6F6;
+  margin:1px;
+  padding:5px 0;
+}
+
+.UIAdvancePageIterator .GotoPageIcon .UIPopupCategory .InputPage {
+ padding:2px 6px 0 0;
+}
+
+.UIAdvancePageIterator .GotoPageIcon .UIPopupCategory .InputPage input {
+  font-size:12px;
+  height:12px;
+  width:30px;
+}
+
+.UIAdvancePageIterator .UIActionForum {
+  padding:2px 3px;
+}
+
+.UIAdvancePageIterator .UIActionForum .NormalButtom {
+  margin:0;
+}
+
+.UIAdvancePageIterator .UIActionForum .NormalButtom .ButtonLeft {
+  background:url("/wiki/skin/DefaultSkin/webui/UIAdvancePageIterator/background/LeftButtom3x18.gif") no-repeat scroll left top transparent;
+  padding:0 0 0 3px;
+}
+
+.UIAdvancePageIterator .UIActionForum .NormalButtom .ButtonRight {
+  background:url("/wiki/skin/DefaultSkin/webui/UIAdvancePageIterator/background/RightButtom3x18.gif") no-repeat scroll right top transparent;
+  padding:0 3px 0 0;
+}
+
+.UIAdvancePageIterator .UIActionForum .NormalButtom .ButtonMiddle {
+  background:url("/wiki/skin/DefaultSkin/webui/UIAdvancePageIterator/background/MiddleButtom1x18.gif") repeat-x scroll center top transparent;
+  line-height:18px;
+}
+
+.UIAdvancePageIterator .UIRightClickPopupMenu .UIRightPopupMenuContainer a:hover {
+  color: orange;
+  background-color: transparent;
+}
+
+.UIAdvancePageIterator .UIRightClickPopupMenu a {
+  display:block;
+}

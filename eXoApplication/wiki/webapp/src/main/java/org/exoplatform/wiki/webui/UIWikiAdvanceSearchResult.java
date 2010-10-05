@@ -17,7 +17,6 @@
 package org.exoplatform.wiki.webui;
 
 import org.exoplatform.commons.utils.PageList;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.webui.portal.UIPortal;
@@ -28,13 +27,12 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.service.SearchResult;
-import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 
 /**
  * Created by The eXo Platform SAS
@@ -53,21 +51,27 @@ import org.exoplatform.wiki.service.WikiService;
   }    
 )
 public class UIWikiAdvanceSearchResult extends UIContainer {
-  private PageList<SearchResult> results_ ;
+  
   private String keyword ;
-  private int pageIndex = 1 ;
+  
+  public UIWikiAdvanceSearchResult() throws Exception {
+    addChild(UIAdvancePageIterator.class, null, "SearchResultPageIterator");
+  }
   
   public void setResult(PageList<SearchResult> results) {
-    results_ = results ;
-    pageIndex = 1 ;
+    UIAdvancePageIterator pageIterator = this.getChild(UIAdvancePageIterator.class);
+    pageIterator.setPageList(results);
+    pageIterator.setSelectedPage(1);
   }
   
-  private PageList<SearchResult> getResults() {
-    return results_ ;
+  public PageList<SearchResult> getResults() {
+    UIAdvancePageIterator pageIterator = this.getChild(UIAdvancePageIterator.class);
+    return pageIterator.getPageList();
   }
   
-  private int getPageIndex() throws Exception {
-    return pageIndex ;
+  public int getPageIndex() throws Exception {
+    UIAdvancePageIterator pageIterator = this.getChild(UIAdvancePageIterator.class);
+    return pageIterator.getSelectedPage();
   }
   
   public void setKeyword(String keyword) { this.keyword = keyword ;}
@@ -121,7 +125,8 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     public void execute(Event<UIWikiAdvanceSearchResult> event) throws Exception {
       UIWikiAdvanceSearchResult uiResult = event.getSource();
       String pageNumber = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      uiResult.pageIndex = Integer.parseInt(pageNumber) ;
+      UIAdvancePageIterator pageIterator = uiResult.getChild(UIAdvancePageIterator.class);
+      pageIterator.setSelectedPage(Integer.parseInt(pageNumber));
     }
   }
   
@@ -129,8 +134,9 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     @Override
     public void execute(Event<UIWikiAdvanceSearchResult> event) throws Exception {
       UIWikiAdvanceSearchResult uiResult = event.getSource();
-      if(uiResult.pageIndex < uiResult.results_.getAvailablePage()) {
-        uiResult.pageIndex = uiResult.pageIndex + 1 ;
+      UIAdvancePageIterator pageIterator = uiResult.getChild(UIAdvancePageIterator.class);
+      if(uiResult.getPageIndex() < uiResult.getResults().getAvailablePage()) {
+        pageIterator.setSelectedPage(uiResult.getPageIndex() +1 );
       }      
     }
   }
@@ -139,8 +145,9 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     @Override
     public void execute(Event<UIWikiAdvanceSearchResult> event) throws Exception {
       UIWikiAdvanceSearchResult uiResult = event.getSource();
-      if(uiResult.pageIndex > 1) {
-        uiResult.pageIndex = uiResult.pageIndex - 1 ;
+      UIAdvancePageIterator pageIterator = uiResult.getChild(UIAdvancePageIterator.class);
+      if(uiResult.getPageIndex() > 1) {
+        pageIterator.setSelectedPage(uiResult.getPageIndex() - 1);
       }
     }
   }
