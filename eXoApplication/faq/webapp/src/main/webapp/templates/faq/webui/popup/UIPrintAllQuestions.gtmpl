@@ -226,7 +226,7 @@
 														%>
 															<div class="LabelBox" style="margin:10px 10px 0px 12px;">
 																<div class="FalseIcon" style="padding-left:15px;">
-																	<a style="color:red;" href="javaScript:void(0)"><%=_ctx.appRes(uicomponent.getName() + ".label." + "lostFile")%></a>
+																	<a style="color:red;" href="javaScript:void(0)"><%=_ctx.appRes("UIQuestions.label.lostFile")%></a>
 																</div>
 																<div style="clear:left;"><span></span></div>
 															</div>

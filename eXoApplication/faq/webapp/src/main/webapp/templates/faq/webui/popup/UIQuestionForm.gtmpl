@@ -107,8 +107,8 @@
 						     				<%=FAQUtils.getSubString(name, 80)%>
 						     			</a>
 						     	<%}%>
-											<a href="$link" style="color:#058EE6; font-size:12px;" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>">
-												<img class="DustBin" src="/eXoResources/skin/DefaultSkin/background/Blank.gif" alt="<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>"/>
+											<a href="$link" style="color:#058EE6; font-size:12px;" title="<%=_ctx.appRes("UIQuestionForm.label.Remove")%>">
+												<img class="DustBin" src="/eXoResources/skin/DefaultSkin/background/Blank.gif" alt="<%=_ctx.appRes("UIQuestionForm.label.Remove")%>"/>
 											</a>
 										</div>
 						    <%

@@ -10,7 +10,7 @@
 %>
 <div class="UIMoveQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
-	<div class="TitleMoveThreads"><%=_ctx.appRes(uicomponent.getName() + ".label." + "MoveQuestionTo")%>:</div>
+	<div class="TitleMoveThreads"><%=_ctx.appRes("UIMoveQuestionForm.label.MoveQuestionTo")%>:</div>
 	  <div class="ViewQuestionsAtMove" style="margin:5px 0px 5px 0px; padding-top:10px;">
 			<div style="margin-left:30px;">
 				<%
@@ -160,7 +160,7 @@
 		  	  	<div class="ButtonLeft">
 		    	  	<div class="ButtonRight">
 		      	  	<div class="ButtonMiddle">
-		      	  		<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></a>
+		      	  		<a href="javascript:void(0);"><%=_ctx.appRes("UIAnswersPortlet.action.Cancel");%></a>
 		      	  	</div>
 		        	</div>
 		      	</div>

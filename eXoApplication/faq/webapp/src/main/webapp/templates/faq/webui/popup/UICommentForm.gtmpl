@@ -10,7 +10,7 @@
 						%>
 						<tr>
 							<td style="white-space:nowrap; width:120px" align="right"><div style="padding-right:10px;line-height:24px">
-								<%=_ctx.appRes(uicomponent.getName() + ".title.Author")%> : </div>
+								<%=_ctx.appRes("UICommentForm.title.Author")%> : </div>
 							</td>
 							<td>
 								<div style="margin:0px 0px 5px 5px;"></div><% uiform.renderChild(uicomponent.TITLE_USERNAME) %>
@@ -18,7 +18,7 @@
 						</tr>
 						<tr>
 							<td style="white-space:nowrap;" align="right">
-								<div style="padding-right:10px;line-height:24px"><%=_ctx.appRes(uicomponent.getName() + ".title.Language")%>: </div>
+								<div style="padding-right:10px;line-height:24px"><%=_ctx.appRes("UICommentForm.title.Language")%>: </div>
 							</td>
 							<td style="white-space:nowrap;">
 								<div style="padding-right:10px;white-space:normal;line-height:24px"><%=uicomponent.languageSelected%></div>
@@ -26,7 +26,7 @@
 						</tr>
 						<tr>
 							<td style="white-space:nowrap;" align="right">
-								<div style="padding-right:10px;line-height:24px"><%=_ctx.appRes(uicomponent.getName() + ".title.Question")%>: </div>
+								<div style="padding-right:10px;line-height:24px"><%=_ctx.appRes("UICommentForm.title.Question")%>: </div>
 							</td>
 							<td style="white-space:nowrap;">
 								<div style="padding-right:10px;white-space:normal;line-height:24px"><%=uicomponent.questionContent%></div>
@@ -34,7 +34,7 @@
 						</tr>
 						<tr>
 							<td style="white-space:nowrap;" align="right">
-								<div style="padding-right:10px;line-height:24px"><%=_ctx.appRes(uicomponent.getName() + ".title.Detail")%>: </div>
+								<div style="padding-right:10px;line-height:24px"><%=_ctx.appRes("UICommentForm.title.Detail")%>: </div>
 							</td>
 							<td style="white-space:nowrap;">
 								<div class="QuestionDetail">
@@ -43,7 +43,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="white-space:nowrap;" align="right"><div style="padding-right:10px;line-height:24px"><%=_ctx.appRes(uicomponent.getName() + ".title.Comment")%>: </div></td>
+							<td style="white-space:nowrap;" align="right"><div style="padding-right:10px;line-height:24px"><%=_ctx.appRes("UICommentForm.title.Comment")%>: </div></td>
 							<td><% uiform.renderChild(uicomponent.COMMENT_CONTENT) %></td>
 						</tr>
 					</tbody>
@@ -55,7 +55,7 @@
 					<tr>
 						<td align="center">
 		        <% for(action in uicomponent.getActions()) { 
-		        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+		        	 String actionLabel = _ctx.appRes("UICommentForm.action." + action); 
 		           String link = uicomponent.event(action) ;
 		        %>
 		        		<div onclick="$link" class="ActionButton LightBlueStyle">

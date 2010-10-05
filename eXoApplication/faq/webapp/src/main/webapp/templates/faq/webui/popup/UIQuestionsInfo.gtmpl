@@ -49,7 +49,7 @@
 		                          	%>
 		                          		<div onclick="$link">
 				                            <div class="MiddleTab">
-				                            	 <%=_ctx.appRes(uicomponent.getName() + ".label." + "TabQuestionManagement")%> 
+				                            	 <%=_ctx.appRes("UIQuestionsInfo.label.TabQuestionManagement")%> 
 				                            </div>
 			                            </div>
 		                            <%} else {
@@ -57,7 +57,7 @@
 		                            %>
 		                            	<div onclick="$link">
 			                            	<div class="MiddleTab">
-			                            		<%=_ctx.appRes(uicomponent.getName() + ".label." + "TabQuestionNotYetAnswered")%>
+			                            		<%=_ctx.appRes("UIQuestionsInfo.label.TabQuestionNotYetAnswered")%>
 				                            </div>
 			                            </div>
 		                            <%}%>
@@ -85,11 +85,11 @@
 													<div class="UIFormInput">
 														<table class="UIGrid">
 															<tr>
-																<th><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%></b></th>
+																<th><b><%=_ctx.appRes("UIQuestionsInfo.label.Question")%></b></th>
 																<th><b><%=_ctx.appRes("UIUserWatchManager.label.pathCategory");%></b></th>
-																<th style="width:100px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionIsApproved")%></b></th>
-																<th style="width:100px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionIsActivated")%></b></th>
-																<th style="width:60px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Action")%></b></th>
+																<th style="width:100px"><b><%=_ctx.appRes("UIQuestionsInfo.label.QuestionIsApproved")%></b></th>
+																<th style="width:100px"><b><%=_ctx.appRes("UIQuestionsInfo.label.QuestionIsActivated")%></b></th>
+																<th style="width:60px"><b><%=_ctx.appRes("UIQuestionsInfo.label.Action")%></b></th>
 															</tr>
 															<%
 															List questionList = uicomponent.getListQuestion() ;
@@ -110,14 +110,14 @@
 																		<td class="text" style="text-align:center;">
 																		<%if(question.isApproved()) {%>
 																				<div class="TrueIcon">
-																					<div onclick="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "UnApprove")%>" style="cursor:pointer;">
-																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "IsApproved")%>
+																					<div onclick="$actionChangeStatus" title="<%=_ctx.appRes("UIQuestionsInfo.title." + "UnApprove")%>" style="cursor:pointer;">
+																						<%=_ctx.appRes("UIQuestionsInfo.label.IsApproved")%>
 																					</div>
 																				</div>
 																		<%} else {%>
 																				<div class="FalseIcon">
-																					<div onclick="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "Approve")%>" style="cursor:pointer;">
-																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "IsNotApproved")%>
+																					<div onclick="$actionChangeStatus" title="<%=_ctx.appRes("UIQuestionsInfo.title." + "Approve")%>" style="cursor:pointer;">
+																						<%=_ctx.appRes("UIQuestionsInfo.label.IsNotApproved")%>
 																					</dvi>
 																				</div>
 																		<%}%>
@@ -127,26 +127,26 @@
 																		actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "activate" + "/" + question.getPath()) ;
 																		if(question.isActivated()) {%>
 																				<div class="TrueIcon">
-																					<div onclick="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "UnActivated")%>" style="cursor:pointer;">
-																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "IsActivated")%>
+																					<div onclick="$actionChangeStatus" title="<%=_ctx.appRes("UIQuestionsInfo.title." + "UnActivated")%>" style="cursor:pointer;">
+																						<%=_ctx.appRes("UIQuestionsInfo.label.IsActivated")%>
 																					</div>
 																				</div>
 																		<%} else {%>
 																				<div class="FalseIcon">
-																					<div onclick="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "Activate")%>" style="cursor:pointer;">
-																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "IsNotActivated")%>
+																					<div onclick="$actionChangeStatus" title="<%=_ctx.appRes("UIQuestionsInfo.title." + "Activate")%>" style="cursor:pointer;">
+																						<%=_ctx.appRes("UIQuestionsInfo.label.IsNotActivated")%>
 																					</div>
 																				</div>
 																		<%}%>
 																		</td>
 																		<td style="text-align:center;">
-																				<div onclick="$linkEdit" style="float:left; cursor:pointer;" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "EditQuestion")%>">
+																				<div onclick="$linkEdit" style="float:left; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.label.EditQuestion")%>">
 																					<div class="ItemIcon Edit">
 																							<div style="padding-left:20px;"><span></span></div>
 																					</div>
 																				</div>
 																				
-																				<div onclick="$linkDelete" style="float:left; cursor:pointer;" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "DeleteQuestion")%>">
+																				<div onclick="$linkDelete" style="float:left; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.label.DeleteQuestion")%>">
 																					<div class="ItemIcon Delete">
 																							<div style="padding-left:20px;"><span></span></div>
 																					</div>
@@ -157,7 +157,7 @@
 															} else {%>
 																<tr>
 																	<td colspan="4" style="text-align:center;">
-																		<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "ListQuestionIsEmpty")%></b>
+																		<b><%=_ctx.appRes("UIQuestionsInfo.label.ListQuestionIsEmpty")%></b>
 																	</td>
 																</tr>
 														<%}%>
@@ -184,14 +184,14 @@
 													<div class="UIFormInput">
 														<table class="UIGrid">
 															<tr>
-																<th><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%></b></th>
+																<th><b><%=_ctx.appRes("UIQuestionsInfo.label.Question")%></b></th>
 																<th><b>Category</b></th>
 																<th>
 																	<div style="padding-right:4px;">
-																		<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Languages")%></b>
+																		<b><%=_ctx.appRes("UIQuestionsInfo.label.Languages")%></b>
 																	</div>
 																</th>
-																<th style="width:60px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Action")%></b></th>
+																<th style="width:60px"><b><%=_ctx.appRes("UIQuestionsInfo.label.Action")%></b></th>
 															</tr>
 															<%
 															List questionNotAnswered = uicomponent.getListQuestionNotAnswered() ;
@@ -213,20 +213,20 @@
 																			for(String language :question.getLanguagesNotYetAnswered().split(",")){
 																				linkResponseByLanguage = uicomponent.event("ResponseQuestion", question.getPath() + "/" + language ) ;
 																		%>
-																			<div onclick="$linkResponseByLanguage" style="float:left; cursor:pointer" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "ResponseQuestion")%>">
+																			<div onclick="$linkResponseByLanguage" style="float:left; cursor:pointer" title="<%=_ctx.appRes("UIQuestionsInfo.label.ResponseQuestion")%>">
 																				<div style="padding:0px 4px 4px 0px;">- &nbsp;$language</div>
 																			</div>
 																		<%}%>
 																		</td>
 																		<td style="text-align:center">
 																			<div style="float:left">
-																				<div onclick="$linkResponse" style="float:left; cursor:pointer" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "ResponseQuestion")%>">
+																				<div onclick="$linkResponse" style="float:left; cursor:pointer" title="<%=_ctx.appRes("UIQuestionsInfo.label.ResponseQuestion")%>">
 																					<div class="ItemIcon ResponseQuestion">
 																						<div style="padding-left:20px;"><span></span></div>
 																					</div>
 																				</div>
 																				
-																				<div onclick="$linkDelete" style="float:left; cursor:pointer" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "DeleteQuestion")%>">
+																				<div onclick="$linkDelete" style="float:left; cursor:pointer" title="<%=_ctx.appRes("UIQuestionsInfo.label.DeleteQuestion")%>">
 																					<div class="ItemIcon Delete">
 																							<div style="padding-left:20px;"><span></span></div>
 																					</div>
@@ -238,7 +238,7 @@
 															} else {%>
 																<tr>
 																	<td colspan="2" align="center">
-																		<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "ListQuestionIsEmpty")%></b>
+																		<b><%=_ctx.appRes("UIQuestionsInfo.label.ListQuestionIsEmpty")%></b>
 																	</td>
 																</tr>
 														<%}%>
@@ -270,7 +270,7 @@
     
     <!-- View list categories -->
     <div style="overflow:auto;float:right;padding-right:10px;">
-    	<%=_ctx.appRes(uicomponent.getName() + ".label.SelectCategory")%>&nbsp;:&nbsp;
+    	<%=_ctx.appRes("UIQuestionsInfo.label.SelectCategory")%>&nbsp;:&nbsp;
 			<% uicomponent.renderChild("ListCategories") ; %>
 		</div>
     

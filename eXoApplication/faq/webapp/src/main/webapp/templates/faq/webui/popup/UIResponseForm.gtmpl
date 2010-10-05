@@ -66,9 +66,9 @@
 					if(uicomponent.isModerator) {
 					%>
 						<tr>
-							<td style="text-align:right"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Relation")%>  :&nbsp;</td>
+							<td style="text-align:right"><%=_ctx.appRes("UIResponseForm.label.Relation")%>  :&nbsp;</td>
 							<td>
-								<div class="ItemIcon AddIcon" onclick="<%=uicomponent.event("AddRelation")%>" style="margin-left:10px;" title="<%=_ctx.appRes(uicomponent.getName() + ".action.AddRelation")%>"><span></span></div><br/>
+								<div class="ItemIcon AddIcon" onclick="<%=uicomponent.event("AddRelation")%>" style="margin-left:10px;" title="<%=_ctx.appRes("UIResponseForm.action.AddRelation")%>"><span></span></div><br/>
 								<div style="width:100%; margin-top:10px;">
 									<%
 									int i = 0 ;
@@ -81,7 +81,7 @@
 						        }
 									%>
 										<div style="margin:0px 0px 3px 2px;">
-											<div class="ItemIcon DustBinIcon" onclick="$action" style="margin-left:5px; float:left; cursor:pointer;" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>"><span></span></div>
+											<div class="ItemIcon DustBinIcon" onclick="$action" style="margin-left:5px; float:left; cursor:pointer;" title="<%=_ctx.appRes("UIResponseForm.label.Remove")%>"><span></span></div>
 											&nbsp;$viewString  &nbsp;&nbsp;&nbsp;&nbsp;
 										</div>
 								<%}%>
@@ -98,7 +98,7 @@
 					<tr>
 						<td>
 		        <% for(action in uicomponent.getActions()) { 
-		        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+		        	 String actionLabel = _ctx.appRes("UIResponseForm.action." + action); 
 		           String link = uicomponent.event(action) ;
 		        %>
 		        		<div onclick="$link" class="ActionButton LightBlueStyle">

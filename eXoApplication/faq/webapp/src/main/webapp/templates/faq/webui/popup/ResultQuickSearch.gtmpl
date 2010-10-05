@@ -89,7 +89,7 @@
 			  	  	<div class="ButtonLeft">
 			    	  	<div class="ButtonRight">
 			      	  	<div class="ButtonMiddle">
-			      	  		<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></a>
+			      	  		<a href="javascript:void(0);"><%=_ctx.appRes("UIAnswersPortlet.action.Close");%></a>
 			      	  	</div>
 			        	</div>
 			      	</div>

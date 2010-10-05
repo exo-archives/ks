@@ -16,8 +16,8 @@
 				    <div class="Icon DisableLastTopPageIcon"></div>        
 				    <div class="Icon DisableLastPageIcon"><span></span></div>
 				  <% } else { 
-				  		String firstPage = _ctx.appRes(uicomponent.getName() + ".label.BackFirstPage") ;
-				  		String priviousPage = _ctx.appRes(uicomponent.getName() + ".label.PreviousPage") ;
+				  		String firstPage = _ctx.appRes("UIAnswersPageIterator.label.BackFirstPage") ;
+				  		String priviousPage = _ctx.appRes("UIAnswersPageIterator.label.PreviousPage") ;
 				  %>
 				    <a title="$firstPage" class="Icon LastTopPageIcon" href="<%=uicomponent.event("GoPage","first")%>"></a>        
 				    <a title="$priviousPage" class="Icon LastPageIcon" href="<%=uicomponent.event("GoPage","previous")%>"></a>
@@ -36,8 +36,8 @@
 				  	<% } %>
 				  <%} %>
 				  <% if(pageSelected != max_page) {
-				  		String nextPage = _ctx.appRes(uicomponent.getName() + ".label.NextPage") ;
-				  		String lastPage = _ctx.appRes(uicomponent.getName() + ".label.LastPage");
+				  		String nextPage = _ctx.appRes("UIAnswersPageIterator.label.NextPage") ;
+				  		String lastPage = _ctx.appRes("UIAnswersPageIterator.label.LastPage");
 				  %>  
 				    <a title="$nextPage" class="Icon NextPageIcon" href="<%=uicomponent.event("GoPage","next")%>"></a>
 				    <a title="$lastPage" class="Icon NextTopPageIcon" href="<%=uicomponent.event("GoPage","last")%>"></a>
@@ -48,7 +48,7 @@
 				    <div style="clear:left;"><span></span></div>
 				  </div>
 				  <div class="LeftPageIteratorBlock">
-				  	<div class="TotalPages">Total pages:</div>
+				  	<div class="TotalPages"><%=_ctx.appRes("UIAnswersPageIterator.label.TotalPages")%>:</div>
 				  	<div class="PagesTotalNumber"><%=max_page%></div>
 				  	<div style="clear:left;"><span></span></div>
 				  </div>
