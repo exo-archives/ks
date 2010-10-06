@@ -6204,15 +6204,19 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		pendingMessagesQueue.clear() ;
 		return pending;
 	}	
-	
+
 	public void updateForum(String path) throws Exception {
+		if(path == null || path.length() <= 0 || path.equals("/"+dataLocator.getForumHomeLocation())){
+			path = dataLocator.getForumHomeLocation();
+			updateForum(path, true);
+		} else {
+			updateForum(path, false);
+		}
+	}
+	
+	public void updateForum(String path, boolean isReset) throws Exception {
 		Map<String, Long> topicMap = new HashMap<String, Long>() ;
 		Map<String, Long> postMap = new HashMap<String, Long>() ;
-		boolean isUpdateAll = false;
-		if(path == null || path.length() <= 0){
-			path = dataLocator.getForumCategoriesLocation();
-			isUpdateAll = true;
-		}
 		if(path.indexOf("/") > 0) path = "/"+path;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -6224,45 +6228,51 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			query = qm.createQuery(JCR_ROOT + path + "//element(*,exo:post)", Query.XPATH) ;
 			result = query.execute();
 			NodeIterator postIter = result.getNodes();
-			if(isUpdateAll){
-				//Update Forum statistic	
+			
+			//Update Forum statistic	
+			if(isReset){
 				forumStatisticNode.setProperty(EXO_POST_COUNT, postIter.getSize()) ;
 				forumStatisticNode.setProperty(EXO_TOPIC_COUNT, topicIter.getSize()) ;
-				forumStatisticNode.save() ;
-			} else {
-				// put post and topic to maps by user
-				Node node ;
-				while(topicIter.hasNext()) {
-					node = topicIter.nextNode() ;
-					String owner = node.getProperty(EXO_OWNER).getString() ;
-					if(topicMap.containsKey(owner)){
-						long l = topicMap.get(owner) + 1 ;
-						topicMap.put(owner, l) ;
-					}else {
-						long l = 1 ;
-						topicMap.put(owner, l) ;
-					}
+			} else if(path.indexOf(Utils.FORUM) == path.lastIndexOf(Utils.FORUM)){
+				PropertyReader statisticReader = new PropertyReader(forumStatisticNode);
+				forumStatisticNode.setProperty(EXO_POST_COUNT, statisticReader.l(EXO_POST_COUNT, 0) + postIter.getSize()) ;
+				forumStatisticNode.setProperty(EXO_TOPIC_COUNT, statisticReader.l(EXO_TOPIC_COUNT, 0) + topicIter.getSize()) ;
+			}
+			forumStatisticNode.save() ;
+			// put post and topic to maps by user
+			Node node ;
+			while(topicIter.hasNext()) {
+				node = topicIter.nextNode() ;
+				String owner = node.getProperty(EXO_OWNER).getString() ;
+				if(topicMap.containsKey(owner)){
+					long l = topicMap.get(owner) + 1 ;
+					topicMap.put(owner, l) ;
+				}else {
+					long l = 1 ;
+					topicMap.put(owner, l) ;
 				}
-				
-				while(postIter.hasNext()) {
-					node = postIter.nextNode() ;
-					String owner = node.getProperty(EXO_OWNER).getString() ;
-					if(postMap.containsKey(owner)){
-						long l = postMap.get(owner) + 1 ;
-						postMap.put(owner, l) ;
-					}else {
-						long l = 1 ;
-						postMap.put(owner, l) ;
-					}
+			}
+			
+			while(postIter.hasNext()) {
+				node = postIter.nextNode() ;
+				String owner = node.getProperty(EXO_OWNER).getString() ;
+				if(postMap.containsKey(owner)){
+					long l = postMap.get(owner) + 1 ;
+					postMap.put(owner, l) ;
+				}else {
+					long l = 1 ;
+					postMap.put(owner, l) ;
 				}
-				Node profileHome = getUserProfileHome(sProvider);
-				Node profile ;
-				//update topic to user profile
-				Iterator<Entry<String,Long>> it = topicMap.entrySet().iterator() ;
-				String userId ;
-				Calendar cal = getGreenwichMeanTime() ;
-				while(it.hasNext()) {
-					userId = it.next().getKey();
+			}
+			Node profileHome = getUserProfileHome(sProvider);
+			Node profile ;
+			//update topic to user profile
+			Iterator<Entry<String,Long>> it = topicMap.entrySet().iterator() ;
+			String userId ;
+			Calendar cal = getGreenwichMeanTime() ;
+			while(it.hasNext()) {
+				userId = it.next().getKey();
+				if(userId.indexOf(Utils.DELETED) < 0) {
 					if(profileHome.hasNode(userId)) {
 						profile = profileHome.getNode(userId) ;
 					}else {
@@ -6272,19 +6282,22 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 						profile.setProperty(EXO_JOINED_DATE, cal) ; 
 						profile.setProperty(EXO_LAST_POST_DATE, cal) ; 
 					}
-					long l = profile.getProperty(EXO_TOTAL_TOPIC).getLong() + topicMap.get(userId) ;
+					long l = (isReset) ? topicMap.get(userId) : profile.getProperty(EXO_TOTAL_TOPIC).getLong() + topicMap.get(userId) ;
 					profile.setProperty(EXO_TOTAL_TOPIC, l) ;
+					
 					if(postMap.containsKey(userId)) {
-						long t = profile.getProperty(EXO_TOTAL_POST).getLong() + postMap.get(userId) ;
+						long t = (isReset) ? postMap.get(userId) : profile.getProperty(EXO_TOTAL_POST).getLong() + postMap.get(userId) ;
 						profile.setProperty(EXO_TOTAL_POST, t) ;
 						profile.setProperty(EXO_LAST_POST_DATE, cal) ;
 						postMap.remove(userId) ;
 					}
 				}
-				//update post to user profile
-				it = postMap.entrySet().iterator() ;
-				while(it.hasNext()) {
-					userId = it.next().getKey();
+			}
+			//update post to user profile
+			it = postMap.entrySet().iterator() ;
+			while(it.hasNext()) {
+				userId = it.next().getKey();
+				if(userId.indexOf(Utils.DELETED) < 0) {
 					if(profileHome.hasNode(userId)) {
 						profile = profileHome.getNode(userId) ;
 					}else {
@@ -6293,20 +6306,19 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 						profile.setProperty(EXO_LAST_LOGIN_DATE, cal) ;
 						profile.setProperty(EXO_JOINED_DATE, cal) ; 
 					}
-					long t = profile.getProperty(EXO_TOTAL_POST).getLong() + postMap.get(userId) ;
+					long t = (isReset) ? postMap.get(userId) : profile.getProperty(EXO_TOTAL_POST).getLong() + postMap.get(userId) ;
 					profile.setProperty(EXO_TOTAL_POST, t) ;
 					profile.setProperty(EXO_LAST_POST_DATE, cal) ; 
 				}
-				if (profileHome.isNew()) {
-					profileHome.getSession().save();
-				} else {
-					profileHome.save() ;				
-				}
+			}
+			if (profileHome.isNew()) {
+				profileHome.getSession().save();
+			} else {
+				profileHome.save() ;				
 			}
 		}catch(Exception e) {
 			log.error("Failed to update forum",e);
-		}finally{ sProvider.close() ;}		
-		
+		}finally{ sProvider.close() ;}
 	}
 	
 	public SendMessageInfo getMessageInfo(String name) throws Exception {
@@ -6705,10 +6717,10 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		
 		is = new ByteArrayInputStream(bdata) ;
 		Document doc = docBuilder.parse(is);
-		doc.getDocumentElement ().normalize ();
+		doc.getDocumentElement ().normalize();
 		String typeNodeExport = doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0).getTextContent();
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		
+		List<String> patchNodeImport = new ArrayList<String>();
 		try {
 		is = new ByteArrayInputStream(bdata) ;
 		if(!typeNodeExport.equals(EXO_FORUM_CATEGORY) && !typeNodeExport.equals(EXO_FORUM)){
@@ -6771,8 +6783,26 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				nodePath = getCategoryHome(sProvider).getPath();
 			}
 			Session session = getForumHomeNode(sProvider).getSession();
+			NodeIterator iter = ((Node)session.getItem(nodePath)).getNodes();
+			while (iter.hasNext()) {
+				patchNodeImport.add(iter.nextNode().getName());
+			}
 			session.importXML(nodePath, is, typeImport);
-			session.save();	 
+			session.save();
+			iter = ((Node)session.getItem(nodePath)).getNodes();
+			while (iter.hasNext()) {
+				Node node = iter.nextNode();
+				if(patchNodeImport.contains(node.getName()))patchNodeImport.remove(node.getName());
+				else patchNodeImport.add(node.getName());					
+			}
+		}
+		//update forum statistic and profile of owner post.
+		if(typeNodeExport.equals(EXO_FORUM_CATEGORY) || typeNodeExport.equals(EXO_FORUM)){
+			for (String string : patchNodeImport) {
+				updateForum (nodePath+"/"+string, false);
+			}
+		} else if(typeNodeExport.equals(EXO_CATEGORY_HOME)) {
+			updateForum (null);
 		}
 		} finally {
 			sProvider.close() ;
