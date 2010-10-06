@@ -119,7 +119,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 					importForm.warning("UIImportForm.msg.mimetype-invalid");
 					return;
 				}
-				service.updateForum(nodePath);
+//				service.updateForum(nodePath);
 				importForm.info("UIImportForm.msg.import-successful");
   			isUdateForm = true;
   			popupAction.deActivate() ;
