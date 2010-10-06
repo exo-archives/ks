@@ -6,14 +6,10 @@ h1. Overview
 
 h1. Preferences
 
-|| *Preference name* | pollId
-|| *Description* | id of poll which is displayed in Pollgadget.
+|| Preference name || Description || 
+| *pollId* | The id of poll which is displayed in the Polls gadget. |
 
 h1. Links to used REST services
-
-
-Links to used REST services: 
-
 
 * portal/rest/private/ks/poll/viewpoll/\{pollId\}
 * portal/rest/private/ks/poll/votepoll/\{pollId\}/\{indexVote\}

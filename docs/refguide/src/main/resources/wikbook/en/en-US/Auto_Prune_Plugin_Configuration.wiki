@@ -1,16 +1,16 @@
 h1. Overview
 
-The Auto-prune component is to activate the topics in specific Forums which are not activated (not viewed, edited or added post) for a period automatically. 
+The Auto-prune component is to prune inactive topics which have not been viewed, edited or received for a given period. The "prune" operation does not denote to the physical removal of topics, but rather sets them invisible. The function helps you not clutter busy forums from outdated information.
 
-When the Job Schedule Service runs, it will get values which are returned from the Auto-prune plugin component to identify the topics which have to be inactivated in Forum application. These topics will be invisible to users.
+When the Job Scheduler runs, it will get values returned from the Auto-prune plug-in component to identify topics which have to be inactivated in the Forum application. These topics will be invisible to users.
 
 h1. Configuration
 
-The properties of Auto prune plugin is configured in _war:webapp/WEB-INF/ks-extension/ks/forum/prune-configuration.xml_ file.
+The properties of Auto prune plug-in are configured in the _war:webapp/WEB-INF/ks-extension/ks/forum/prune-configuration.xml_ file.
 
 In details:
 
-At the runtime of Job Schedule Service, Auto prune plugin component is called, then _prune-configuration.xml_ file is executed, the component-plugin named _ForumDeactiveJob_ will be referred to _org.exoplatform.forum.service.conf.DeactivePeriodJob_ to inactivate the topics in specific Forums which meet predefined inactivation properties.
+At runtime of Job Scheduler, the Auto prune plug-in component is called, then _prune-configuration.xml_ file is executed. The component-plugin named _ForumDeactiveJob_ will refer to _org.exoplatform.forum.service.conf.DeactivePeriodJob_ to inactivate topics in Forum which meets predefined inactivation properties.
 
 {code:xml}
 <component-plugin>
@@ -42,9 +42,9 @@ At the runtime of Job Schedule Service, Auto prune plugin component is called, t
 
 * In which,
 || Name || Set-method || Type || Description ||
-| ForumDeactiveJob | addPeriodJob | org.exoplatform.forum.service.conf.DeactivePeriodJob | add a Deactive job to the JobSchedulerService |
+| *ForumDeactiveJob* | addPeriodJob | org.exoplatform.forum.service.conf.DeactivePeriodJob | To add a DeactiveJob to the JobSchedulerService. |
 
-* The properties for the Auto-prune plugin are defined in _property_ tag with format like below:
+* The properties for the Auto-prune plug-in are defined in the _property_ tag with format as below:
 
 {code:xml}
 ...
@@ -65,20 +65,20 @@ In details:
 
 || Property name || Possible value || Default value || Description ||
 | *jobname* | {{String}} | {{DeactiveJob}} | The name of job which will be executed. |
-| *groupname* | {{String}} | {{KnowlegedSuite}} | The name of the application which will be executed. |
+| *groupname* | {{String}} | {{KnowlegedSuite}} | The name of application which will be executed. |
 | *job* | {{Class path}} | {{org.exoplatform.forum.service.conf.DeactiveJob}} | The reference function of the job which will be executed. |
-| *repeatCount* | {{Long}} | {{0 }} | The repeat time for the job. It means that how many time the job will be executed. It means that _DecactiveJob_  is called at runtime only. It does not repeat. Assume that the value is 2 or 3, _DecactiveJob_  is called 2 or 3 times.|
-| *period* | {{Long}} | {{72000000}} | The time interval the job will be executed. |
-| *starttime* | {{Integer}} | {{+0}} | The start time when the function will be executed.\\_starttime_ is +0. It means that the time to start executing _DecactiveJob_  is the runtime |
-| *endtime* | {{Integer}} | {{ null}} | The end time when the function will be stopped executing.\\_endtime_ is blank. It means that there is no limitation for the end time for _DecactiveJob_. |
+| *repeatCount* | {{Long}} | {{0 }} | The repeating time for the job. It means that how many times the job will be executed. It means that _DecactiveJob_  is called at runtime only. It does not repeat. Assume that the value is 2 or 3, _DecactiveJob_  is called 2 or 3 times.|
+| *period* | {{Long}} | {{72000000}} | The interval to execute the job. |
+| *starttime* | {{Integer}} | {{+0}} | The start time when the function executes. {{example}}{{example}} the_starttime_ is +0, meaning that the time to start executing _DecactiveJob_ is the runtime. |
+| *endtime* | {{Integer}} | {{ null}} | The end time when the function stops executing. {{example}}{{example}}_endtime_ is blank. meaning that there is no limitation for the end time for _DecactiveJob_. |
 With start and end time, you can give a specific date in format:yyyy-mm-dd HH:mm:ss.sss to define the start and end time for _DecactiveJob_ .
  
 Besides, deactive information is also defined:
 
 || Property name || Possible value || Default value || Description ||
-| *inactiveDays* | {{Integer}} | {{15}} | The number of days the topic has not been activated. _inactivateDays_ is 1. It means that all the topics which have 1 inactivated day, will be set inactivated status. They will be invisible. |
-| *forumname* | {{String}} | {{Live Demo}} | The name of the Forum which will be checked for Auto prune. In case, _forumname_ is blank. It means that all forums will be checked for auto prune. _forumname_ is Live demo. It means that only the forum named 'Live demo' is checked for Auto prune.  |
+| *inactiveDays* | {{Integer}} | {{15}} | The number of days the topic has not been activated. {{example}}{{example}} _inactivateDays_ is 1, meaning that all the topics, which have 1 inactivated day, will be set as inactivated status. They will be invisible. |
+| *forumname* | {{String}} | {{Live Demo}} | The name of Forum which will be checked for Auto-prune. In case, _forumname_ is blank. It means that all forums will be checked for auto prune. _forumname_ is Live demo. It means that only the forum named 'Live demo' is checked for Auto prune. |
 
 By fault, the default properties can only be changed by editing its value in _prune-configuration.xml_ file.
 
-At the runtime, the new changes in the _prune-configuration.xml_ file will be executed and updated, the Auto-prune plugin will be executed, depending on its properties.
+At the runtime, the new changes in the _prune-configuration.xml_ file are executed and updated. After that, the Auto-prune plug-in will be executed, depending on its properties.

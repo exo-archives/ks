@@ -1,0 +1,21 @@
+h1. Overview
+Answers is configured mainly in the file:
+- Portlet preferences: */webapps/faq/WEB-INF/portlet.xml*
+
+{info}
+For general KS configuration information, please refer to [KS Configuration| KS:KS Manual#Configuration] section
+{info}
+
+h1. Configuration
+The Mail templates use a specific syntax, enabling you to create a customized email message in the Edit mode via three templates: New question, Edit/answer, and Move question. 
+
+!EmailTemplate.png!
+
+Parameters are used in templates consist of:
+|| Parameter || Description ||
+| *&categoryName_* | To load the category's name. |
+| *&questionContent_* | To load the question's content. |
+| *&questionResponse_* | To load the question's answer. |
+| *&questionLink_*| To load the link to question in the Answers portlet. |
+
+

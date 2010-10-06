@@ -1,42 +1,34 @@
-h1. Components
-
-h2. Components of KS
+h1. Components of eXo Knowledge 
 
 || Key || Data type || Description ||
-| org.exoplatform.ks.common.jcr.KSDataLocation | org.exoplatform.ks.common.jcr.KSDataLocation | To hold the JCR storage location for KS data. |
-| org.exoplatform.ks.rendering.MarkupRenderingService | org.exoplatform.ks.rendering.MarkupRenderingService |  |
-| org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator | org.exoplatform.services.jcr.ext.hierarchy.impl.NodeHierarchyCreatorImpl |  |
-|  | org.exoplatform.services.scheduler.impl.QuartzSheduler |  |
-|  | org.exoplatform.services.scheduler.QueueTasks |  |
-| org.exoplatform.services.scheduler.JobSchedulerService | org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl |  |
+| *org.exoplatform.ks.common.jcr.KSDataLocation* | org.exoplatform.ks.common.jcr.KSDataLocation | To hold the JCR storage location for KS data. |
+| *org.exoplatform.services.scheduler.JobSchedulerService* | org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl | To define a job to execute a given number of times during a given period. It is used to monitor jobs automatically and continously, to schedule event-driven job and report, and to control performance. |
 
 * Init-params of org.exoplatform.ks.common.jcr.KSDataLocation
 
-|| Name || Possible values || Default values ||
+|| Name || Possible value || Default value ||
 | *repository* | {{string}} | {{repository}} |
 | *workspace* | {{string}} | {{knowledge}} |
 
-h2. Components of Forum
+h1. Components of Forum
 
 || Key || Data type || Description ||
-| org.exoplatform.ks.bbcode.api.BBCodeService | org.exoplatform.ks.bbcode.core.BBCodeServiceImpl | Manages CRUD operations on BBCodes |
-| org.exoplatform.forum.service.DataStorage | org.exoplatform.forum.service.impl.JCRDataStorage |  |
-| org.exoplatform.forum.service.ForumService | org.exoplatform.forum.service.impl.ForumServiceImpl |  |
-| org.exoplatform.forum.service.ForumStatisticsService | org.exoplatform.forum.service.impl.ForumStatisticsServiceImpl |  |
-|  | org.exoplatform.forum.service.ws.ForumWebservice |  |
+| *org.exoplatform.ks.bbcode.api.BBCodeService* | org.exoplatform.ks.bbcode.core.BBCodeServiceImpl | To manage CRUD operations on BBCodes. |
+| *org.exoplatform.forum.service.DataStorage* | org.exoplatform.forum.service.impl.JCRDataStorage | To store data of Forum via the JCR system. |
+| *org.exoplatform.forum.service.ForumService* | org.exoplatform.forum.service.impl.ForumServiceImpl | To include all public APIs to interact with the UI component and database. |
+| *org.exoplatform.forum.service.ForumStatisticsService* | org.exoplatform.forum.service.impl.ForumStatisticsServiceImpl | To include all public APIs to interact with the database of Statistics system. |
 
 
-h2. Components of Answers
+h1. Components of Answers
 || Key || Data type || Description ||
-| org.exoplatform.faq.service.FAQService | org.exoplatform.faq.service.impl.FAQServiceImpl  |  |
-| org.exoplatform.faq.service.DataStorage | org.exoplatform.faq.service.impl.JCRDataStorage |  |
-|  | org.exoplatform.faq.service.ws.FAQWebservice |  |
+| *org.exoplatform.faq.service.FAQService* | org.exoplatform.faq.service.impl.FAQServiceImpl | To include all public APIs to interact with the UI component and database. |
+| *org.exoplatform.faq.service.DataStorage* | org.exoplatform.faq.service.impl.JCRDataStorage | To store data of FAQ via the JCR system. |
 
-h2. Components of Poll
+h1. Components of Polls
 || Key || Data type || Description ||
-| org.exoplatform.poll.service.DataStorage | org.exoplatform.poll.service.impl.JCRDataStorage |  |
-| org.exoplatform.poll.service.PollService | org.exoplatform.poll.service.impl.PollServiceImpl |  |
-|  |  |  org.exoplatform.poll.service.ws.PollWebservice |
+| *org.exoplatform.poll.service.DataStorage* | org.exoplatform.poll.service.impl.JCRDataStorage | To include all public APIs to interact with the UI component and database. |
+| *org.exoplatform.poll.service.PollService* | org.exoplatform.poll.service.impl.PollServiceImpl | To store data of Polls via the JCR system. |
+
 
 
 

@@ -1,13 +1,13 @@
 h1. Init data
 
 || Application || Component || Description ||
-| *Forum* | {{KSDataLocation, ForumServiceImpl}} | Initialize default data of the Forum portlet |
-| *Answer* | {{KSDataLocation, AnswerServiceImpl}} | Initialize default data of the Answers portlet |
-| *Poll* | {{KSDataLocation, PollServiceImpl}} |  Initialize default data of the Poll portlet |
+| *Forum* | {{KSDataLocation, ForumServiceImpl}} | To initialize default data of the Forum portlet. |
+| *Answers* | {{KSDataLocation, AnswerServiceImpl}} | To initialize default data of the Answers portlet. |
+| *Poll* | {{KSDataLocation, PollServiceImpl}} | To initialize default data of the Poll portlet. |
 
-The Init data plug-in is used to define the default data in .xml file. It includes nodes (node of jcr). 
+The Init data plug-in is used to define the default data in the .xml file. It includes nodes (node of jcr). 
 
-When the component _org.exoplatform.services.jcr.config.RepositoryServiceConfiguration_ is initialized, the component _org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin_ will be get and the function _addConfig_ is called. Then, _/ks-extension/jcr/repository-configuration.xml_ will be loaded and the component _org.exoplatform.ks.common.jcr.KSDataLocation_ is initialized. Once the component  _org.exoplatform.ks.common.jcr.KSDataLocation_ has been initialized, the function _setLocation_ is called that will setup workspace and repository for KS. After that, the function _addPlugin_ will be run, generating the DataLocation (some parent nodes) for KS.
+When the component _org.exoplatform.services.jcr.config.RepositoryServiceConfiguration_ is initialized, the component _org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin_ will be get and the function _addConfig_ is called. Then, the _/ks-extension/jcr/repository-configuration.xml_ file is loaded and the component _org.exoplatform.ks.common.jcr.KSDataLocation_ will be initialized. Once the component  _org.exoplatform.ks.common.jcr.KSDataLocation_ has been initialized, the _setLocation_ function is called that will set up the workspace and repository for KS. After that, the _addPlugin_ function will be run, generating the DataLocation (some parent nodes) for KS.
 
 h1. Configuration
 
@@ -15,10 +15,10 @@ h2. Initialize conf-part for loading repository-configuration.xml.
 
 In details: 
 
-When the server starts, the jcr-configuration.xml is initialized. The component-plugin named addConfig will be referred to org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin to load the file war:/ks-extension/jcr/repository-configuration.xml.
+When the server starts, the _jcr-configuration.xml_ file is initialized. The component-plugin named addConfig will be referred to org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin to load the _war:/ks-extension/jcr/repository-configuration.xml_ file.
 
 {code:xml}
-    <component-plugin>
+ <component-plugin>
       <!-- The name of the plugin -->
       <name>Sample RepositoryServiceConfiguration Plugin</name>
       <!-- The name of the method to call on the RepositoryServiceConfiguration in order to add the RepositoryServiceConfigurations -->
@@ -32,23 +32,24 @@ When the server starts, the jcr-configuration.xml is initialized. The component-
           <value>war:/ks-extension/jcr/repository-configuration.xml</value>
         </value-param>
       </init-params>
-    </component-plugin>
+ </component-plugin>
 {code}
 
 * In which:
 || Name || Set-method || Type || Description || 
-| Sample RepositoryServiceConfiguration Plugin | addConfig | org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin | 
+| *RepositoryServiceConfigurationPlugin* | addConfig | org.exoplatform.services.jcr.impl.config.RepositoryServiceConfigurationPlugin | To read configuration of JCR data to initialize data. |
 
 * Init-params
 
 || Name || Possible value || Default value || Description ||
-| conf-part | {{string}} | {{war:/ks-extension/jcr/repository-configuration.xml}} | JCR configuration file |
+| *conf-path* | {{string}} | {{war:/ks-extension/jcr/repository-configuration.xml}} | The path to the _repository-configuration.xml_ file. |
 
-h2. Initialize workspace name and repository name in the file storage-configuration.xml.
+h2. Initialize workspace name and repository name in the _storage-configuration.xml_ file.
 
 In details:
 
-After the file war:/ks-extension/jcr/repository-configuration.xml is initialized, the server will load storage-configuration.xml file, and the function setLocation in the component org.exoplatform.ks.common.conf.DataLocationPlugin will be run. The workspace name and repository name will be initialized. 
+After the _war:/ks-extension/jcr/repository-configuration.xml_ file is initialized, the server will load  the _storage-configuration.xml_ file, and the _setLocation_ function in the _org.exoplatform.ks.common.conf.DataLocationPlugin_ component will be run. The workspace name and repository name will be initialized. 
+
 {code:xml}
   <external-component-plugins>
     <target-component>org.exoplatform.ks.common.jcr.KSDataLocation</target-component>
@@ -73,12 +74,13 @@ After the file war:/ks-extension/jcr/repository-configuration.xml is initialized
 {code}
 
 In which, 
-|| Value- param || Possible values || Default values || Description ||
-| *repository* |{{ }} | {{repository}} | JCR repository for KS data |
-| *workspace* | {{ }} | {{knowledge}} | workspace for KS data |
+|| Value-param || Possible value || Default value || Description ||
+| *repository* | {{string}} | {{repository}} | The JCR repository for KS data. |
+| *workspace* | {{string}} | {{knowledge}} | The workspace for KS data. |
 
 h2. Initialize data
-Once the workspace name and repository name are registered, the server will load org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator and the function addPaths in org.exoplatform.services.jcr.ext.hierarchy.impl.AddPathPlugin is called. Then, the data location will be built. 
+
+Once the workspace name and repository name are registered, the server will load org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator and the _addPaths_ function in org.exoplatform.services.jcr.ext.hierarchy.impl.AddPathPlugin is called. Then, the data location will be built. 
 
 {code:xml}
     <component-plugin>

@@ -25,4 +25,135 @@ h2. Service
 | *getTotalTopicOld*(long date, String forumPatch) | {{date}} is the time in the milisecond format; {{forumPath}} is the path of forum | the total number of old topics | To get the total number of old topics. |
 | *getTopics*(String categoryId, String forumId) | {{categoryId}} the id of category; {{forumId}} is the id of forum | topics | To get the topics. |
 | *getTopic*(String categoryId, String forumId, String topicId, String userRead) | {{categoryId}} is the id of category; {{forumId}} is the id of forum; {{topicId}} is the id of topic; {{userRead}} is the user reading the topic | Topic | To get the topic | 
+| *setViewCountTopic*(String path, String userRead) | {{path}} is the general form of a filename or of a directory name, specifying a unique location in a file system; {{userRead}} is the list of users who have read the topic. |  |  |
+| *getTopicByPath*(String topicPath, boolean isLastPost) | {{topicPath}} is the path of topic; {{isLastPost}} is the newest post | the topic by path | To get the topic by path. |
+| *getTopicSummary*(String topicPath) | {{topicPath}} is the path of topic. |  |  |
+| *modifyTopic*(List<Topic> topics, int type) | {{topics}} are subjects; type is the type |  | To modify the topic. | 
+| void *saveTopic*(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) | {{categoryId}} is the id of category;  {{forumId}} the id of forum; {{topic}} is the subject; {{isNew}} is the new topic; {{isMove}} is the topic moved; {{defaultEmailContent}}|  | Save topic. |
+| *removeTopic*(String categoryId, String forumId, String topicId) | {{categoryId}} is the id of category; {{forumId}} is the id of forum; {{topicId}} is the id of topic | topic | To remove the topic. | 
+| void *moveTopic*(List<Topic> topics, String destForumPath, String mailContent, String link) | {{topics}} are the topics; {{destForumPath}} is the destination path of forum; {{mailContent}} is the content of mail; {{link}} |  | To move the topic | 
+| void *mergeTopic*(String srcTopicPath, String destTopicPath, String mailContent, String link) | {{srcTopicPath}}; {{destTopicPath}}; {{mailContent}}; {{link}} |  |  |
+| JCRPageList *getPostForSplitTopic*(String topicPath) | {{topicPath}} is the path of topic | posts | To get the posts. | 
+| JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) | {{categoryId}} is the id of category; {{forumId}} is the id of forum}}; {{topicId}} is the id of topic; {{isApproved}}; {{isHidden}}; {{strQuery}}; {{userLogin}} | posts |  |
+| long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) | {{categoryId}} is the id of category; {{forumId}} is the id of forum; {{isApproved}}; {{isHidden}}; {{userLogin}} |  |  |
+| long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) | {{path}}; {{isApproved}}; {{isHidden}}; {{userLogin}} |  |  |                       
+| JCRPageList getPagePostByUser(String userName, String userId, boolean isMod, String strOrderBy) | {{userName}} is the name of user that is used to login; {{userId}} is the id of user; {{isMod}}; {{strQuery}} | the page post by user | Gets the page post by user. | 
+| Post getPost(String categoryId, String forumId, String topicId, String postId) | postId the post id; categoryId the category id; forumId the forum id; topicId the topic id | post | This method should: 1. Check the user permission 2. Load the Page Post data from the database. | 
+| void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) | topicId the topic id; post the post; isNew is the new; categoryId the category id; forumId the forum id |  | This method should: 1. Check the user permission 2. Check the madatory field of the post 3. Save the post data into the database 4. Invalidate the TopicView data cache |
+| void modifyPost(List<Post> posts, int type) |  |  |  |
+| Post removePost(String categoryId, String forumId, String topicId, String postId) | @param sProvider is the SessionProvider \\ @param categoryId the category id \\ @param forumId the forum id \\ @param topicId the topic id \\ @param postId the post id | @return the post | Removes the post. | 
+| movePost(String{noformat}[]{noformat} postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) | @param sProvider is the SessionProvider \\ @param posts the posts \\ @param destTopicPath the dest topic path |  | Move post. |
+| Poll getPoll(String categoryId, String forumId, String topicId) | @param sProvider is the SessionProvider \\ @param categoryId the category id \\ @param forumId the forum id \\ @param topicId the topic id | @return the poll | Gets the poll. |
+| void savePoll(String categoryId, String forumId, String topicId, Poll poll, boolean isNew, boolean isVote) | @param sProvider is the SessionProvider \\ @param categoryId the category id \\ @param forumId the forum id \\ @param topicId the topic id \\ @param poll the poll \\ @param isNew is the new \\ @param isVote is the vote |  | Save poll |
+| Poll removePoll(String categoryId, String forumId, String topicId) | @param sProvider is the SessionProvider \\ @param categoryId the category id \\ @param forumId the forum id \\ @param topicId the topic id | @return the poll | Removes the poll. | 
+| void setClosedPoll(String categoryId, String forumId, String topicId, Poll poll) | @param sProvider is the SessionProvider \\ @param categoryId the category id \\ @param forumId the forum id \\ @param topicId the topic id \\ @param poll the poll |  | Sets the closed poll. | 
+| Object getObjectNameByPath(String path) | @param sProvider is the SessionProvider \\ @param path the path \\ @return the object name by path \\ @throws Exception the exception |  | Gets the object name by path. | 
+| Object getObjectNameById(String id, String type) | @param sProvider is the SessionProvider \\ @param path the path | @return the object name by path | Gets the object name by path. | 
+| List<ForumLinkData> getAllLink(String strQueryCate, String strQueryForum) | @param sProvider is the SessionProvider \\ @param strQueryCate TODO \\ @param strQueryForum TODO | @return the all link | Gets the all link. | 
+| String getForumHomePath() | @param sProvider is the SessionProvider | @return the forum home path | Gets the forum home path. |
+| void addTag(List<Tag> tags, String userName, String topicPath) | @param tags the list tag is add \\ @param topicPath the topic path |  | Adds the topic in tag. | 
+| void unTag(String tagId, String userName, String topicPath) | @param tagId the tag id \\ @param userName the user id \\ @param topicPath the topic path |  | UnTag the topic in tag. | 
+| Tag getTag(String tagId) | @param sProvider is the SessionProvider \\ @param tagId the tag id | @return the tag | Gets the tag. | 
+| List<String> getAllTagName(String strQuery, String userAndTopicId) |  |  |  |
+| List<String> getTagNameInTopic(String userAndTopicId) |  |  |  |
+| List<Tag> getAllTags() |  | @return the tags | Gets the tags. | 
+| List<Tag> getMyTagInTopic(String{noformat}[]{noformat} tagIds) | @param tagIds the list tag id of user tag in topic. | @return the tags by user add in topic | Gets the tags by user. |
+| JCRPageList getTopicByMyTag(String userIdAndtagId, String strOrderBy) | @param userIdAndtagId the user id and tag id (userId:tagId) \\ @param strOrderBy the topic order by | @return the topics by tag of user tag | Gets the topics by tag. |
+| void saveTag(Tag newTag) | @param newTag the new tag |  | Save tag. | 
+| void saveUserProfile(UserProfile userProfile, boolean isOption, boolean isBan) | @param sProvider is the SessionProvider \\ @param userProfile the user profile \\ @param isOption is the option \\ @param isBan is the ban |  | Save user profile. |
+| void updateUserProfile(User user) |  |  |  |
+| void saveUserModerator(String userName, List<String> ids, boolean isModeCate) |  |  |  |
+| JCRPageList searchUserProfile(String userSearch) |  |  |  | 
+| UserProfile getUserInfo(String userName) | @param sProvider is the SessionProvider \\ @param userName the user name | @return the user info | Gets the user info. | 
+| List<String> getUserModerator(String userName, boolean isModeCate) |  |  |  |
+| void saveUserBookmark(String userName, String bookMark, boolean isNew) | @param sProvider is the SessionProvider \\ @param userName the user name \\ @param bookMark the book mark \\ @param isNew is the new |  | Save user bookmark | 
+| void saveLastPostIdRead(String userId, String{noformat}[]{noformat} lastReadPostOfForum, String{noformat}[]{noformat} lastReadPostOfTopic) |  |  |  |
+| void saveCollapsedCategories(String userName, String categoryId, boolean isAdd) | @param sProvider is the SessionProvider \\ @param userName the user name \\ @param categoryId the book mark \\ @param isNew is the new |  | Save user collapCategories. | 
+| JCRPageList getPageListUserProfile() | @param sProvider is the SessionProvider | @return the page list user profile | Gets the page list user profile. | 
+| List<ForumSearch> getQuickSearch(String textQuery, String type, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) | @param sProvider is the SessionProvider \\ @param textQuery the text query \\ @param type is type user and type object(forum, topic and post) \\ @param pathQuery the path query \\ @param forumIdsOfModerator TODO | @return the quick search | Gets the quick search. |
+| String getScreenName(String userName) |  |  |  |
+| List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) | @param sProvider is the SessionProvider \\ @param eventQuery the event query | @return the advanced search | Gets the advanced search. | 
+| void saveForumStatistic(ForumStatistic forumStatistic) | @param sProvider is the SessionProvider \\ @param forumStatistic the forum statistic | Save forum statistic. |
+| ForumStatistic getForumStatistic() | @param sProvider is the SessionProvider | @return the forum statistic | Gets the forum statistic. | 
+| void saveForumAdministration(ForumAdministration forumAdministration) | @param sProvider is the SessionProvider \\ @param forumAdministration the forum administration |  | Save forum administration. | 
+| ForumAdministration getForumAdministration() | @param sProvider is the SessionProvider | @return the forum administration | Gets the forum administration. | 
+| void updateStatisticCounts(long topicCoutn, long postCount) |  |  |  |
+| void userLogin(String userId) | @param userId the user id |  | User login. | 
+| void userLogout(String userId) | @param userId the user id |  | User logout. | 
+| boolean isOnline(String userId) | @param userId the user id | @return true, if is online | Checks if is online. |
+| List<String> getOnlineUsers() |  | @return the online users |  Gets the online users. |
+| String getLastLogin() |  | @return the last login | Gets the last login. | 
+| JCRPageList getPrivateMessage(String userName, String type) | @param sProvider is the SessionProvider \\ @param userName the user name \\ @param type the type | @return the private message | Gets the private message. | 
+| long getNewPrivateMessage(String userName) |  |  |  |
+| void savePrivateMessage(ForumPrivateMessage privateMessage) | @param sProvider is the SessionProvider \\ @param privateMessage the private message |  | Save private message. |
+| void saveReadMessage(String messageId, String userName, String type) | @param sProvider is the SessionProvider \\ @param messageId the message id \\ @param userName the user name \\ @param type the type |  | Save read message. | 
+| void removePrivateMessage(String messageId, String userName, String type) | @param sProvider is the SessionProvider \\ @param messageId the message id \\ @param userName the user name \\ @param type the type |  | Removes the private message. |
+| ForumSubscription getForumSubscription(String userId) | @param sProvider is the SessionProvider \\ @param watchType the watch type \\ @param path the path \\ @param values the values |  | Adds the watch. | 
+| void saveForumSubscription(ForumSubscription forumSubscription, String userId) |  |  |  |
+| void addWatch(int watchType, String path, List<String> values, String currentUser) |  |  |  |
+| void removeWatch(int watchType, String path, String values) |  |  |  |
+| List<ForumSearch> getJobWattingForModerator(String{noformat}[]{noformat} paths) |  |  |  |
+| int getJobWattingForModeratorByUser(String userId) |  |  |  |
+| SendMessageInfo getMessageInfo(String name) |  |  |  |
+| Iterator<SendMessageInfo> getPendingMessages() |  |  |  |
+| boolean isAdminRole(String userName) |  |  |  |
+| List<Post> getNewPosts(int number) | @param in number number of post |  | Select number of lasted public post. | 
+| NodeIterator search(String queryString) |  |  |  |
+| void evaluateActiveUsers(String query) |  |  |  |
+| void createUserProfile(User user) |  |  |  |
+| void updateTopicAccess(String userId, String topicId) |  |  |  |
+| void updateForumAccess(String userId, String forumId) |  |  |  |
+| Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll) |  |  |  | 
+| void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) |  |  |  |
+
+// TODO: used updateForum(String path) for update data after imported.
+//  void updateDataImported() throws Exception;
+
+| List<UserProfile> getQuickProfiles(List<String> userList) |  |  |  |
+| UserProfile getQuickProfile(String userName) |  |  |  |
+| UserProfile getUserInformations(UserProfile userProfile) |  |  |  |
+| UserProfile getDefaultUserProfile(String userName, String ip)  |  |  |  |
+| UserProfile updateUserProfileSetting(UserProfile userProfile) |  |  |  |
+| List<String> getBookmarks(String userName) throws Exception |  |  |  |
+| UserProfile getUserSettingProfile(String userName) |  |  |  |
+| UserProfile getUserProfileManagement(String userName) |  |  |  |
+| void saveUserSettingProfile(UserProfile userProfile) |  |  |  |
+| void updateForum(String path) throws Exception |  |  |  |
+| List<String> getBanList() throws Exception |  |  |  |
+| boolean addBanIP(String ip) throws Exception |  |  |  |
+| void removeBan(String ip) throws Exception |  |  |  |
+| List<String> getForumBanList(String forumId) |  |  |  |
+| boolean addBanIPForum(String ip, String forumId) |  |  |  |
+| void removeBanIPForum(String ip, String forumId) |  |  |  |
+| JCRPageList getListPostsByIP(String ip, String strOrderBy) |  |  |  |
+| void registerListenerForCategory(String categoryId) |  |  |  |
+| void unRegisterListenerForCategory(String path) |  |  |  |
+| ForumAttachment getUserAvatar(String userName) |  |  |  |
+| void saveUserAvatar(String userId, ForumAttachment fileAttachment) |  |  |  |
+| void setDefaultAvatar(String userName) |  |  |  |
+| List<Watch> getWatchByUser(String userId) |  |  |  |
+| void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId) |  |  |  |
+| List<PruneSetting> getAllPruneSetting() |  |  |  |
+| PruneSetting getPruneSetting(String forumPath) |  |  |  |
+| void savePruneSetting(PruneSetting pruneSetting) |  |  |  |
+| void runPrune(PruneSetting pSetting) |  |  |  |
+| void runPrune(String forumPath) |  |  |  |
+| long checkPrune(PruneSetting pSetting) |  |  |  |
+| List<TopicType> getTopicTypes() |  |  |  |
+| TopicType getTopicType(String Id) |  |  |  |
+| void saveTopicType(TopicType topicType) |  |  |  |
+| void removeTopicType(String topicTypeId) |  |  |  |
+| JCRPageList getPageTopicByType(String type) |  |  |  |
+| LazyPageList<Topic> getTopicList(String categoryId, String forumId, String string, String strOrderBy, int pageSize |  |  |  | 
+| List<Forum> getForumSummaries(String categoryId, String strQuery) |  |  |  |
+| void updateUserProfileInfo(String name) |  |  |  |
+| void addMember(User user, UserProfile profileTemplate) | @param user user that becomes a new forum member \\ @param profileTemplate user profile template to be used for default settings |  | Add a new member to the forum. The forum profile is created and statistics updated | 
+| void removeMember(User user) | @param user user that leaves forum |  | Removes an existing member from the forum. The forum profile is deleted and statistics updated | 
+| public void updateLoggedinUsers() | @param |  | Update information of logged in users that records in a queue to statistic and profile | 
+| public void calculateDeletedUser(String userName) |  |  |  |
+| public InputStream createForumRss(String objectId, String link) |  |  |  |
+| public InputStream createUserRss(String userId, String link) |  |  |  |
+| public void addListenerPlugin(ForumEventListener listener) |  |  |  |
+
+
 

@@ -1,0 +1,64 @@
+h1. Overview
+
+The Initialization plug-in component is to define the default answers data in the _.xml_ or _.zip_ file. It includes categories of question that should be exported from a Answers application.
+
+When the Answers Service starts, it will get values returned from the Initialization plug-in component to initialize the default Answers data.
+
+h1. Configuration
+
+h2. Default Answers data
+
+The default Answers data is configured in the _services-configuration.xml_ file.
+
+In details:
+
+At run time of Answers Service, Initialization plug-in component is called, then _services-configuration.xml_ file is executed. The component-plugin named _addInitialDataPlugin_ will refer to _org.exoplatform.faq.service.InitializeDataPlugin_ to execute some objects to create default data. 
+
+The default data in the the _.zip_ file is initialized.
+
+{code:xml}
+<component-plugin>
+      <name>technical-faq</name>
+      <set-method>addInitialDataPlugin</set-method>
+      <type>org.exoplatform.faq.service.InitialDataPlugin</type>
+      <description>Initialize</description>
+      <init-params>
+        <value-param>
+          <name>location</name>
+          <description>location where Answers export format file is stored</description>
+          <value>war:/data/Technical-FAQ.zip</value>
+        </value-param>
+      </init-params>
+    </component-plugin>
+{code}
+
+* In which,
+|| Name || Set-Method | Type || Description ||
+| *technical-faq* | addInitialDataPlugin | org.exoplatform.faq.service.InitialDataPlugin | To initialize |
+
+* Init-param
+|| Name || Possible value | Default value || Description ||
+| *location* | {{string}} | {{war:/data/Technical-FAQ.zip}} | The location where Answers export format file is stored. |
+
+If the default data is in the ~~xml~~ format:
+
+{code:xml}
+<value>war:/data/Technical-FAQ.xml</value>
+{code}
+
+By default, the default Answers data can only import if the importing categories does not exist in database.
+
+To initialize default data in multiple files, it is required to declare them in multiple plug-ins.
+
+{code:xml}
+<component-plugin>
+
+.....
+
+</component-plugin>
+{code}
+
+
+
+
+

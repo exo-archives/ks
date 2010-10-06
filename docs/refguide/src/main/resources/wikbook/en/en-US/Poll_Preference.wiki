@@ -1,0 +1,31 @@
+h1. Overview
+
+|| *Portlet name* | PollPortlet
+|| *War name* | poll.war
+|| *Description* | The Polls portlet is the application for users to vote any idea, or activity.
+ 
+	
+h1. Portlet Preferences
+
+|| Preference name || Possible value || Default value || Description ||
+| *pollIdShow* | {{string}} | {{empty}} | The id of poll is displayed in the Polls portlet. |
+
+
+h1. Portlet.xml 
+* See the portlet.xml file in the project following this path: poll/WEB-INF/portlet.xml. 
+{code:xml}
+<portlet-preferences>
+        <preference>
+                <name>pollIdShow</name>
+                <value></value> <!-- PollId -->
+                <read-only>false</read-only>
+        </preference>
+</portlet-preferences>
+{code}
+
+
+
+
+
+
+

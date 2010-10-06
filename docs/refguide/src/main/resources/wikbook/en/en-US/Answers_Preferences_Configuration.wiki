@@ -1,23 +1,24 @@
 h1. Overview
-|| Portlet name || War name || Description ||
-| *AnswersPortlet* | *faq.war* |  |
 
+|| *Portlet name* | AnswersPortlet
+|| *War name* | faq.war
+|| *Description* | The Answers portlet is the application to create answers, to reply and manage questions.
 
 h1. Portlet Preferences
 
 The Answers portlet consists of preferences as follows:
 
 || Preference name || Possible value || Default value || Description ||
-| *enableViewAvatar* | {{true}}, {{false}} | {{true}} | To enable users to view the avatar of owner posting the question. | 
+| *enableViewAvatar* | {{true}}, {{false}} | {{true}} | To enable users to view the avatar of owner posting the question. |
 | *enableAutomaticRSS* | {{true}}, {{false}} | {{true}} | To enable users to get RSS automatically. |
 | *enableVotesAndComments* | {{true}}, {{false}} | {{true}} | To enable users to give votes and comments for the question.|
 | *enableAnonymousSubmitQuestion* | {{true}}, {{false}} | {{true}} | To enable anonymous users to submit questions. |
-| *display* | {{approved}}, {{both}} | {{both}} | To enable admins to view unapproved questions in the questions list in UIQuestions. |
+| *display* | {{approved}}, {{both}} | {{both}} | To enable administrators to view unapproved questions in the questions list in UIQuestions. |
 | *SendMailAddNewQuestion* | {{string}} | {{empty}} | To display the content of sent email when a new question is added. |
 | *SendMailEditResponseQuestion* | {{string}} | {{empty}} | To display the content of email when a response is edited. |
 | *emailMoveQuestion* | {{string}} | {{empty}} | To display the content of email when a question is moved. |
 | *orderBy* | {{alphabet}}, {{created}} | {{alphabet}} | To arrange questions in the alphabet or created date order. |
-| *orderType* | {{asc}}, {{desc}} | {{asc}} | To display questions in the ascending or descending order.|
+| *orderType* | {{asc}}, {{desc}} | {{asc}} | To display questions in the ascending or descending order. |
 | *isDiscussForum* | {{true}}, {{false}} | {{false}} | To enable the DiscussQuestions function. |
 | *idNameCategoryForum* | {{CategoryName, {{ForumName}} | {{empty}} | To select categories and forums for the DiscussionQuestions function. |
 | *uploadFileSizeLimitMB* | {{integer}} | {{20}}| To set the maximum size of uploaded file. |
