@@ -30,11 +30,4 @@ import org.exoplatform.faq.service.Question;
  */
 public abstract class AnswerEventListener extends BaseComponentPlugin implements AnswerEventLifeCycle {
 
-  public abstract void saveAnswer(String questionId, Answer answer);
-
-  public abstract void saveComment(String questionId, Comment comment) ;
-
-  public abstract void saveQuestion(Question question);
-
-  public abstract void saveAnswer(String questionId, Answer[] answers);
 }

@@ -395,7 +395,8 @@ public class ForumServiceImpl implements ForumService, Startable {
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, defaultEmailContent);
     for(ForumEventLifeCycle f : listeners_) {
-      f.saveTopic(topic, forumId);
+      if (isNew) f.addTopic(topic, categoryId, forumId);
+      else f.updateTopic(topic, categoryId, forumId);
     }
   }
 
@@ -506,7 +507,8 @@ public class ForumServiceImpl implements ForumService, Startable {
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
     storage.savePost(categoryId, forumId, topicId, post, isNew, defaultEmailContent);
     for(ForumEventLifeCycle f : listeners_) {
-      f.savePost(post, forumId);
+      if (isNew) f.addPost(post, categoryId, forumId, topicId);
+      else f.updatePost(post, categoryId, forumId, topicId);
     }
   }
   

@@ -38,7 +38,7 @@ import org.exoplatform.social.core.space.spi.SpaceLifeCycleEvent;
 public class ForumDataInitialize extends SpaceListenerPlugin {
 
   private static final Log log = ExoLogger.getLogger(ForumDataInitialize.class);
-
+  
   private final InitParams params;
   
   public ForumDataInitialize(InitParams params) {
@@ -77,7 +77,7 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
 
     Forum forum = new Forum();
     forum.setOwner(space.getId());
-    forum.setId(Utils.FORUM + space.getId());
+    forum.setId(Utils.FORUM_SPACE_ID_PREFIX + space.getId());
     forum.setForumName(space.getName());
     forum.setDescription(space.getDescription());
     //TODO hard text manager should check with portal team

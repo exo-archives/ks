@@ -205,7 +205,7 @@ public class UIForumPortlet extends UIPortletApplication {
 				String url = pref.getValue("SPACE_URL", null);
 				SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
 				Space space = sService.getSpaceByUrl(url) ;
-				String forumId = Utils.FORUM + space.getId();
+				String forumId = Utils.FORUM_SPACE_ID_PREFIX + space.getId();
 				return forumId ;
 			}
 			return null;

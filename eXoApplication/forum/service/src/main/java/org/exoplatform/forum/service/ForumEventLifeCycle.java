@@ -36,16 +36,32 @@ public interface ForumEventLifeCycle {
    */
   public void saveForum(Forum forum);
   /**
-   * This will be call after save topic
+   * This will be call after add topic
    * @param topic
    * @param forumId
    */
-  public void saveTopic(Topic topic, String forumId);
+  public void addTopic(Topic topic, String categoryId, String forumId);
+  
+  /**
+   * This will be call after update topic
+   * @param topic
+   * @param forumId
+   */
+  public void updateTopic(Topic topic, String categoryId, String forumId);
+  
   /**
    * This will be call after save post
    * @param post
    * @param forumId
    */
-  public void savePost(Post post, String forumId);
+  public void addPost(Post post, String categoryId, String forumId, String topicId);
+  
+  /**
+   * This will be call after save post
+   * @param post
+   * @param forumId
+   */
+  public void updatePost(Post post, String categoryId, String forumId, String topicId);
+  
 
 }

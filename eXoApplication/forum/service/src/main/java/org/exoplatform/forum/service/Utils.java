@@ -82,6 +82,12 @@ public class Utils {
 
 	public static final String SPACE = " ".intern() ;
 	
+	/**
+	 * start with forum prefix.
+	 */
+  public static final String FORUM_SPACE_ID_PREFIX = (FORUM + "Space").intern();
+
+	
 	public static final String ADMIN_ROLE = "ADMIN".intern() ;
 
 	public static final String DEFAULT_EMAIL_CONTENT = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +
