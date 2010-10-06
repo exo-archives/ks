@@ -335,27 +335,21 @@ public class JCRDataStorage implements DataStorage {
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsIterator()
    */
-	public NodeIterator getQuestionsIterator() throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider();
-		try {
-			Node faqHome = getFAQServiceHome(sProvider);
-			return getQuestionsIterator(faqHome);
-		} catch (Exception e) {
-			log.error("Failed to get question iterator: ", e);
-		} finally {
-			sProvider.close();
-		}
-		return null;
-	}	
+  public NodeIterator getQuestionsIterator() throws Exception {
+    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node faqHome = getFAQServiceHome(sProvider) ;
+      StringBuffer queryString = new StringBuffer("/jcr:root").append(faqHome.getPath()).append("//element(*,exo:faqQuestion)");
+      QueryManager qm = faqHome.getSession().getWorkspace().getQueryManager();
+      Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+      QueryResult result = query.execute();
+      return result.getNodes() ;
+    }catch(Exception e) {
+      log.error("Failed to get question iterator: ", e);
+    }finally {sProvider.close() ;}
+    return null ;
+  }	
 
-	private NodeIterator getQuestionsIterator(Node parentNode) throws Exception {
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(parentNode.getPath()).append("//element(*,exo:faqQuestion)");
-		QueryManager qm = parentNode.getSession().getWorkspace().getQueryManager();
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		return result.getNodes();
-	}
-  
   //	TODO: remove RSS Listener
   protected void addRSSListener(Node node) throws Exception{
     //		try{
@@ -3118,16 +3112,11 @@ public class JCRDataStorage implements DataStorage {
   public boolean importData(String parentId, InputStream inputStream, boolean isZip) throws Exception{
     SessionProvider sProvider = SessionProvider.createSystemProvider() ;
     try {
-    	List<String> patchNodeImport = new ArrayList<String>();
-    	Node categoryNode = getFAQServiceHome(sProvider).getNode(parentId);
-    	Session session = categoryNode.getSession();
-    	NodeIterator iter = categoryNode.getNodes();
-    	while (iter.hasNext()) {
-    		patchNodeImport.add(iter.nextNode().getName());
-    	}
       if(isZip){ // Import from zipfile
         ZipInputStream zipStream = new ZipInputStream(inputStream) ;
         ZipEntry entry ;
+        Node categoryNode = getFAQServiceHome(sProvider).getNode(parentId);			
+        Session session = categoryNode.getSession();
         while((entry = zipStream.getNextEntry()) != null) {
           ByteArrayOutputStream out= new ByteArrayOutputStream();
           int available = -1;
@@ -3135,37 +3124,21 @@ public class JCRDataStorage implements DataStorage {
           while ((available = zipStream.read(data, 0, 1024)) > -1) {
             out.write(data, 0, available); 
           }						
+
           zipStream.closeEntry();
           out.close();
           InputStream input = new ByteArrayInputStream(out.toByteArray());
           session.importXML(categoryNode.getPath(), input, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
           session.save();
         }
-        zipStream.close();
         calculateImportRootCategory(categoryNode);
+        zipStream.close();
       } else { // import from xml
+        Node categoryNode = getFAQServiceHome(sProvider).getNode(parentId);			
+        Session session = categoryNode.getSession();
         session.importXML(categoryNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
         session.save();
-      }
-			categoryNode = (Node) session.getItem(categoryNode.getPath());
-			iter = categoryNode.getNodes();
-			while (iter.hasNext()) {
-				Node node = iter.nextNode();
-				if (patchNodeImport.contains(node.getName()))
-					patchNodeImport.remove(node.getName());
-				else
-					patchNodeImport.add(node.getName());
-			}
-			for (String string : patchNodeImport) {
-				Node nodeParentQuestion = categoryNode.getNode(string);
-				iter = getQuestionsIterator(nodeParentQuestion);
-				// Update number answers and regeister question node listener
-				while (iter.hasNext()) {
-					Node node = iter.nextNode();
-					reUpdateNumberOfPublicAnswers(node);
-					registerQuestionNodeListener(node);
-				}
-			}
+      }			
     }catch(Exception e) {
       log.error("Failed to import data in category " + parentId, e);
       return false ;
