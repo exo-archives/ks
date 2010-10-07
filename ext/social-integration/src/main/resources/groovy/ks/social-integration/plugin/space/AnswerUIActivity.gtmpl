@@ -142,7 +142,9 @@
         <% if (uicomponent.isQuestionActivity()) { %>
         <div>
           <a  style="cursor: pointer;" onclick="<%=uicomponent.event("ToggleReply", uicomponent.ANSWER);%>" id="ToggleAnswer${activity.id}"><span><%= _ctx.appRes("AnswerUIActivity.label.button.answer")%></span></a>
+           | 
           <a  style="cursor: pointer;" onclick="<%=uicomponent.event("ToggleReply", uicomponent.COMMENT);%>" id="ToggleComment${activity.id}"><span><%= _ctx.appRes("AnswerUIActivity.label.button.comment")%></span></a>
+           | 
           <a  style="cursor: pointer;" href="<%= uicomponent.getActivityParamValue(AnswersSpaceActivityPublisher.LINK_KEY) %>" id="View${activity.id}"><span><%= _ctx.appRes("AnswerUIActivity.label.button.view")%></span></a>
         </div>
         <% } else { %>

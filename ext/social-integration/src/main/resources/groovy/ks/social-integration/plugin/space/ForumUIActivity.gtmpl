@@ -170,6 +170,7 @@
         </div>
         <div>
           <a  style="cursor: pointer;" onclick="<%=uicomponent.event("ToggleReply");%>" id="ToggleReply${activity.id}"><span><%= _ctx.appRes("ForumUIActivity.label.reply")%></span></a>
+           | 
           <a  style="cursor: pointer;" href="$forumlink" id="View${activity.id}"><span><%= _ctx.appRes("ForumUIActivity.label.view")%></span></a>
         </div>
         <% if (uicomponent.isDisplayMoreInfo()) { %>
