@@ -132,6 +132,13 @@
       <js-path>/javascript/eXo/wiki/UIFieldEditableForm.js</js-path>
     </param>
   </javascript>
+  
+   <javascript>
+    <param>
+      <js-module>eXo.wiki.UIWikiPageTitleControlArea</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiPageTitleControlArea.js</js-path>
+    </param>
+  </javascript>
    
 </gatein-resources>
 

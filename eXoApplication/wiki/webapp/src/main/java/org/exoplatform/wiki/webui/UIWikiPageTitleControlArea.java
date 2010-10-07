@@ -24,7 +24,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
+import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.wiki.commons.Utils;
@@ -39,7 +39,7 @@ import org.exoplatform.wiki.service.WikiService;
  * May 14, 2010  
  */
 @ComponentConfig(
-  lifecycle = UIContainerLifecycle.class,
+  lifecycle = UIApplicationLifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPageTitleControlArea.gtmpl"
 )
 public class UIWikiPageTitleControlArea extends UIContainer {

@@ -1,4 +1,11 @@
-<div class="UIWikiPageTitleControlArea ">
+<%
+	 def rcontext = _ctx.getRequestContext();
+	 String inputId=  uicomponent.FIELD_TITLEINPUT;
+	 
+	 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPageTitleControlArea.init('"+ uicomponent.id+"', '" + inputId +"');"); 
+%>
+
+<div class="$uicomponent.id" id="$uicomponent.id" >
  <%	List children = uicomponent.getChildren() ;
     for(component in children) {
       if(component.isRendered()){
