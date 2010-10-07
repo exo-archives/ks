@@ -33,7 +33,4 @@ public abstract class ForumEventListener extends BaseComponentPlugin implements 
 
   public abstract void saveForum(Forum forum);
 
-  public abstract void savePost(Post post, String forumId);
-
-  public abstract void saveTopic(Topic topic, String forumId);
 }

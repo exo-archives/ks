@@ -550,7 +550,7 @@ public class FAQServiceImpl implements FAQService, Startable {
 			}
 		}
 		for(AnswerEventListener ae : listeners_) {
-		  ae.saveQuestion(question);
+		  ae.saveQuestion(question, isAddNew);
 		}
 		return questionNode ;
 	}
@@ -994,7 +994,7 @@ public class FAQServiceImpl implements FAQService, Startable {
 	public void saveAnswer(String questionId, Answer answer, boolean isNew) throws Exception{
 		jcrData_.saveAnswer(questionId, answer, isNew);
 		for(AnswerEventListener ae : listeners_) {
-      ae.saveAnswer(questionId, answer);
+      ae.saveAnswer(questionId, answer, isNew);
     }
 	}
 	
@@ -1006,7 +1006,7 @@ public class FAQServiceImpl implements FAQService, Startable {
 	public void saveComment(String questionId, Comment comment, boolean isNew) throws Exception{
 		jcrData_.saveComment(questionId, comment, isNew);
 		for(AnswerEventListener ae : listeners_) {
-      ae.saveComment(questionId, comment);
+      ae.saveComment(questionId, comment, isNew);
     }
 	}
 	
@@ -1036,7 +1036,7 @@ public class FAQServiceImpl implements FAQService, Startable {
 	public void saveAnswer(String questionId, Answer[] answers) throws Exception{
 		jcrData_.saveAnswer(questionId, answers);
 		for(AnswerEventListener ae : listeners_) {
-      ae.saveAnswer(questionId, answers);
+      ae.saveAnswer(questionId, answers, true);
     }
 	}
 
@@ -1248,7 +1248,7 @@ public class FAQServiceImpl implements FAQService, Startable {
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       MultiLanguages.saveComment(questionNode, comment, languge) ;
       for(AnswerEventListener ae : listeners_) {
-        ae.saveComment(questionNode.getName(), comment);
+        ae.saveComment(questionNode.getName(), comment, true);
       }
     } catch (Exception e) {
       log.error("\nFail to save comment\n ", e);

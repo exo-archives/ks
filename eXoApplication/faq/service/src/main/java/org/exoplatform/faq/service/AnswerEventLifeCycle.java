@@ -24,9 +24,9 @@ package org.exoplatform.faq.service;
  */
 public interface AnswerEventLifeCycle {
 
- public void saveQuestion(Question question);
- public void saveAnswer(String questionId, Answer answer);
- public void saveAnswer(String questionId, Answer[] answers);
- public void saveComment(String questionId, Comment comment);
+ public void saveQuestion(Question question, boolean isNew);
+ public void saveAnswer(String questionId, Answer answer, boolean isNew);
+ public void saveAnswer(String questionId, Answer[] answers, boolean isNew);
+ public void saveComment(String questionId, Comment comment, boolean isNew);
  
 }
