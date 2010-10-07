@@ -30,8 +30,11 @@ import org.exoplatform.container.RootContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
@@ -252,5 +255,41 @@ public class Utils {
     sb.append(pageNodeSelected);   
     return sb.toString();
   }  
- 
+  
+  public static void redirectToNewPage(WikiPageParams currentPageParams, String newPageId) throws Exception {
+    PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
+    String portalURI = portalRequestContext.getPortalURI();
+    UIPortal uiPortal = Util.getUIPortal();
+    String pageNodeSelected = uiPortal.getSelectedNode().getUri();
+    StringBuilder sb = new StringBuilder();
+    sb.append(portalURI);
+    sb.append(pageNodeSelected);
+    sb.append("/");
+    if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(currentPageParams.getType())) {
+      sb.append(currentPageParams.getType().toLowerCase());
+      sb.append("/");
+      sb.append(org.exoplatform.wiki.utils.Utils.validateWikiOwner(currentPageParams.getType(),
+                                                                   currentPageParams.getOwner()));
+      sb.append("/");
+    }
+    sb.append(newPageId);
+    portalRequestContext.setResponseComplete(true);
+    portalRequestContext.sendRedirect(sb.toString());
+  }
+  
+  public static String createFullRequestAction(String formId,
+                                           String action,
+                                           String componentId,
+                                           String beanId) throws Exception {
+    StringBuilder b = new StringBuilder();
+
+    b.append("javascript:eXo.wiki.UIForm.submitPageEvent('").append(formId).append("','");
+    b.append(action).append("','");
+    b.append("&amp;").append(UIForm.SUBCOMPONENT_ID).append("=").append(componentId);
+    if (beanId != null) {
+      b.append("&amp;").append(UIComponent.OBJECTID).append("=").append(beanId);
+    }
+    b.append("')");
+    return b.toString();
+  }
 }

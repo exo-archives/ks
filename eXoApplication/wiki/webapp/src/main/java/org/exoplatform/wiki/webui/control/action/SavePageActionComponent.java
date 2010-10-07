@@ -122,12 +122,12 @@ public class SavePageActionComponent extends UIComponent {
             String newPageId = TitleResolver.getObjectId(title, false) ;
             wikiService.renamePage(pageParams.getType(), pageParams.getOwner(), page.getName(), newPageId, title) ;
             pageParams.setPageId(newPageId) ;
-            event.getSource().redirectToNewPage(pageParams, URLEncoder.encode(newPageId, "UTF-8"));            
+            Utils.redirectToNewPage(pageParams, URLEncoder.encode(newPageId, "UTF-8"));            
           } else {
             ((PageImpl) page).checkin();
             ((PageImpl) page).checkout();
             //the following code line is necessary, otherwise url which is generated from ajax post will be displayed in url bar of browser
-            event.getSource().redirectToNewPage(pageParams, URLEncoder.encode(pageParams.getPageId(), "UTF-8"));
+            Utils.redirectToNewPage(pageParams, URLEncoder.encode(pageParams.getPageId(), "UTF-8"));
           }
                     
         } else if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
@@ -148,7 +148,7 @@ public class SavePageActionComponent extends UIComponent {
           ((PageImpl)subPage).checkout();          
           wikiPortlet.changeMode(WikiMode.VIEW);
           String pageId = TitleResolver.getObjectId(title, false);          
-          event.getSource().redirectToNewPage(pageParams, URLEncoder.encode(pageId, "UTF-8"));
+          Utils.redirectToNewPage(pageParams, URLEncoder.encode(pageId, "UTF-8"));
           return;
         }
         
@@ -164,23 +164,6 @@ public class SavePageActionComponent extends UIComponent {
     }
   }
   
-  private void redirectToNewPage(WikiPageParams currentPageParams, String newPageId) throws Exception {
-    PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
-    String portalURI = portalRequestContext.getPortalURI();
-    UIPortal uiPortal = Util.getUIPortal();
-    String pageNodeSelected = uiPortal.getSelectedNode().getUri();
-    StringBuilder sb = new StringBuilder();
-    sb.append(portalURI);
-    sb.append(pageNodeSelected);
-    sb.append("/");
-    if(!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(currentPageParams.getType())){
-      sb.append(currentPageParams.getType().toLowerCase());
-      sb.append("/");
-      sb.append(org.exoplatform.wiki.utils.Utils.validateWikiOwner(currentPageParams.getType(), currentPageParams.getOwner()));
-      sb.append("/");
-    }
-    sb.append(newPageId);
-    portalRequestContext.sendRedirect(sb.toString());
-  }
+  
   
 }

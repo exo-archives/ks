@@ -173,6 +173,7 @@ public class UIWikiPortlet extends UIPortletApplication {
         this.previousMode = mode;
     if (newMode.equals(WikiMode.VIEW)) {
       findFirstComponentOfType(UIWikiAttachmentArea.class).setRendered(false);
+      findFirstComponentOfType(UIWikiPageTitleControlArea.class).toInfoMode();
     }
     if (newMode.equals(WikiMode.EDITPAGE)||newMode.equals(WikiMode.ADDPAGE)) {
       findFirstComponentOfType(UIWikiSidePanelArea.class).setRendered(true);

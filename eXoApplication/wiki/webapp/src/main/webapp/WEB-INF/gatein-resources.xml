@@ -125,6 +125,13 @@
       <js-path>/javascript/eXo/wiki/UIWikiPageVersionsList.js</js-path>
     </param>
   </javascript>
+  
+   <javascript>
+    <param>
+      <js-module>eXo.wiki.UIFieldEditableForm</js-module>
+      <js-path>/javascript/eXo/wiki/UIFieldEditableForm.js</js-path>
+    </param>
+  </javascript>
    
 </gatein-resources>
 

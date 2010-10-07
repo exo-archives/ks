@@ -4,6 +4,7 @@
 @import url('UIWikiRichTextEditor/Stylesheet.css') ;
 @import url('UITreeExplorer/Stylesheet.css') ;
 @import url('UIWikiToolBar/Stylesheet.css') ;
+@import url('UIFieldEditableForm/Stylesheet.css') ;
 
 .ClearFix:after {
 	content: ".";

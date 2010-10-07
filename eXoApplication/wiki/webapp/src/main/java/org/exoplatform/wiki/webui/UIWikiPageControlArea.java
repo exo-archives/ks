@@ -42,8 +42,8 @@ public class UIWikiPageControlArea extends UIWikiContainer {
   public UIWikiPageControlArea() throws Exception {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.HELP,WikiMode.VIEWREVISION });
     
-    addChild(UIWikiPageTitleControlArea.class, null, TITLE_CONTROL).toInfoMode();
-    addChild(UIPageToolBar.class, null, TOOLBAR_NAME);
+    addChild(UIWikiPageTitleControlArea.class, null, TITLE_CONTROL);
+    addChild(UIPageToolBar.class, null, TOOLBAR_NAME);    
   }
   
 }
