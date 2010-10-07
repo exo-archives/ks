@@ -1,7 +1,4 @@
 <% 
-	import java.text.Format;
-	import java.text.SimpleDateFormat;
-	import java.util.Date;
 	import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.ValidatorDataInput;
@@ -37,8 +34,7 @@
 					if(question.getAnswers() != null && question.getAnswers().length > 0) {
 							for(Answer answer in question.getAnswers()) {
 								responseBy = answer.getResponseBy();
-								Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
-							 	date = formatter.format(answer.getDateResponse());
+							 	date = FAQUtils.getShortDateFormat(answer.getDateResponse());
 								response = uicomponent.renderAnswer(answer);
 								%> 
 								<div style="width:97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>

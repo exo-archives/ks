@@ -741,7 +741,7 @@
 																					%>
 																							$questionDetail
 																				</div>
-																				<span class="QuestionDateTime">&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;</span>
+																				<span class="QuestionDateTime">&nbsp;<%=FAQUtils.getLongDateFormat(question.getCreatedDate())%>&nbsp;</span>
 																					<!-- ===================================== view bottom =============================== -->
 																				<%
 																				if(uicomponent.currentUser_ != null){
@@ -954,7 +954,7 @@
 															if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
 																continue;
 															}
-															date = FAQUtils.getFormatDate(answer.getDateResponse());
+															date = FAQUtils.getLongDateFormat(answer.getDateResponse());
 															responseBy = answer.getFullName();
 															owner = answer.getResponseBy();
 															String userProfile = uicomponent.event("ViewUserProfile", owner);
@@ -1163,7 +1163,7 @@
 																						String commentDetail = uicomponent.render(comment);
 																					%>
 																					<span>$commentDetail</span>
-																					<div style="color:#721d95"><%=FAQUtils.getFormatDate(comment.getDateComment());%></div>
+																					<div style="color:#721d95"><%=FAQUtils.getLongDateFormat(comment.getDateComment());%></div>
 																				</div>
 																				<div style="clear:left;"><span></span></div>
 			
