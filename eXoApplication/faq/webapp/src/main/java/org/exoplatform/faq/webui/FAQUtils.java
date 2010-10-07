@@ -19,6 +19,8 @@ package org.exoplatform.faq.webui;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -33,6 +35,7 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -444,10 +447,34 @@ public class FAQUtils {
 		}
 	}
 	
-	public static String getFormatDate(Date myDate) {
-		if(myDate == null) return null;
+	private static String getFormatDate(int dateFormat, Date myDate) {
+		if(myDate == null) return "";
+		String format = (dateFormat == DateFormat.LONG)?"DDD,MMM dd,yyyy":"MM/dd/yyyy";
+		try {
+			String userName = getCurrentUser();
+			if(!isFieldEmpty(userName)) {
+				org.exoplatform.forum.service.ForumService forumService = (org.exoplatform.forum.service.ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(org.exoplatform.forum.service.ForumService.class);
+				org.exoplatform.forum.service.UserProfile profile = forumService.getUserSettingProfile(userName);
+				format = (dateFormat == DateFormat.LONG)?profile.getLongDateFormat():profile.getShortDateFormat();
+			}
+		} catch (Exception e) {
+			log.debug("no forum settings found for date format. Will use format " + format);
+		}
+		if(!isFieldEmpty(format)) {
+			if(format.indexOf("DDDD") >= 0)format = format.replaceAll("DDDD", "EEEE");
+			if(format.indexOf("DDD") >= 0)format = format.replaceAll("DDD", "EEE");
+		}
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
-		return DateFormat.getDateInstance(DateFormat.LONG, portalContext.getLocale()).format(myDate);
+		Format formatter = new SimpleDateFormat(format, portalContext.getLocale());
+		return formatter.format(myDate);
+	}
+	
+	public static String getLongDateFormat(Date myDate) {
+		return getFormatDate(DateFormat.LONG, myDate);
+	}
+	
+	public static String getShortDateFormat(Date myDate) {
+		return getFormatDate(DateFormat.SHORT, myDate);
 	}
 	
 	private static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
