@@ -165,7 +165,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   //init Calculate Moderators listeners
   	try{
   	  log.info("initializing Calculate Moderators listeners...");
-  		storage.addCalculateModeratorEventListenner();
+  		storage.addCalculateModeratorEventListener();
   	} catch (Exception e){
   	  log.error("Error while initializing Moderators listeners: "+ e.getMessage());
   	}

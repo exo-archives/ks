@@ -68,7 +68,7 @@ public interface DataStorage {
 
   void addRSSEventListenner() throws Exception;
 
-  void addCalculateModeratorEventListenner() throws Exception;
+  void addCalculateModeratorEventListener() throws Exception;
 
   void addDeletedUserCalculateListener() throws Exception;
   
