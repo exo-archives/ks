@@ -78,8 +78,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private static final String RESPONSE_CONTENT = "QuestionRespone" ;
 	private static final String SHOW_ANSWER = "QuestionShowAnswer" ;
 	private static final String IS_APPROVED = "IsApproved" ;
-	private Question question_ = null ;
-	private FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+	private static Question question_ = null ;
+	private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 
 	private String questionDetail = new String();
 	private String questionContent = new String();
@@ -336,15 +336,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		}
 	}
 
-	
-	
-		public Question getQuestion() {
-    return question_;
-  }
-
-
-
-    static public class SaveActionListener extends EventListener<UIResponseForm> {
+		static public class SaveActionListener extends EventListener<UIResponseForm> {
 			@SuppressWarnings("unchecked")
 			public void execute(Event<UIResponseForm> event) throws Exception {
 				UIResponseForm responseForm = event.getSource() ;
@@ -386,7 +378,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				}
 				
 				// set relateion of question:
-				responseForm.getQuestion().setRelations(responseForm.getListIdQuesRela().toArray(new String[]{})) ;
+				question_.setRelations(responseForm.getListIdQuesRela().toArray(new String[]{})) ;
 				
 
 				//link
@@ -396,21 +388,19 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				//Link Question to send mail 
 				String link = FAQUtils.getLink(responseForm.getLink(), responseForm.getId(), "UIQuestions", "AddRelation", "ViewQuestion", "OBJECTID");
 				String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
-				link = link.replaceFirst("OBJECTID", responseForm.getQuestion().getPath());
-				responseForm.getQuestion().setLink(link) ;
+				link = link.replaceFirst("OBJECTID", question_.getPath());
+				question_.setLink(link) ;
 				
 				// set answer to question for discuss forum function  
-				if(responseForm.mapAnswers.containsKey(responseForm.getQuestion().getLanguage())) {
-				  responseForm.getQuestion().setAnswers(new Answer[]{responseForm.mapAnswers.get(responseForm.getQuestion().getLanguage())});
+				if(responseForm.mapAnswers.containsKey(question_.getLanguage())) {
+					question_.setAnswers(new Answer[]{responseForm.mapAnswers.get(question_.getLanguage())});
 				}
 				try{
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
 					//save answers and question
 					Answer[] answers = responseForm.mapAnswers.values().toArray(new Answer[]{}) ;
-					FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-					
-					faqService.saveAnswer(responseForm.getQuestion().getPath(), answers) ;
-					faqService.updateQuestionRelatives(responseForm.getQuestion().getPath(), responseForm.getQuestion().getRelations()) ;
+					faqService.saveAnswer(question_.getPath(), answers) ;
+					faqService.updateQuestionRelatives(question_.getPath(), question_.getRelations()) ;
 					// author: Vu Duy Tu. Make discuss forum
 					responseForm.updateDiscussForum(linkForum);
 				} catch (PathNotFoundException e) {
@@ -437,7 +427,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class) ;
 					if(questionManagerForm.isEditQuestion && responseForm.questionId_.equals(questionForm.getQuestionId())) {
 						questionForm.setIsChildOfManager(true) ;
-						questionForm.setQuestion(responseForm.getQuestion()) ;
+						questionForm.setQuestion(question_) ;
 						questionForm.setIsMode(true);
 					}
 					questionManagerForm.isResponseQuestion = false ;
