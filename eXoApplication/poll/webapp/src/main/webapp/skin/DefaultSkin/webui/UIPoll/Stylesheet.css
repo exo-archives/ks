@@ -136,3 +136,7 @@
 .UIPollPortlet .ViewPollForm .UIAction {
 	padding: 0px;
 }
+
+.UIPollPortlet .UITopicPoll .UITabPane .UITabContentContainer .UITabContent{
+	overflow: auto;
+}

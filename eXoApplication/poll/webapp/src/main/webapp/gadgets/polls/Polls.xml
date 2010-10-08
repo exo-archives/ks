@@ -97,7 +97,7 @@
 																<tr>
 																	<th>__MSG_options__</th>
 																	<th style="width: 35%">__MSG_percentage__</th>
-																	<th style="width: 100px;">__MSG_votes__</th>
+																	<th style="width: 40px;">__MSG_votes__</th>
 																</tr>
 															</thead>
 															<tbody id="dataTable">
