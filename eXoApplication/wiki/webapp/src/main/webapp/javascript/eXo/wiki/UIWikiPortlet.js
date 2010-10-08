@@ -111,4 +111,8 @@ eXo.wiki.UIWikiPortlet = new UIWikiPortlet();
 
 /********************* Other functions ******************/
 
-String.prototype.trim = function() {  return this.replace(/^\s+|\s+$/g, '');  }
+String.prototype.trim = function() {  return this.replace(/^\s+|\s+$/g, '');  };
+
+String.prototype.replaceAll= function(oldText, newText){
+  return this.replace(new RegExp(oldText,"g"),newText);  
+}

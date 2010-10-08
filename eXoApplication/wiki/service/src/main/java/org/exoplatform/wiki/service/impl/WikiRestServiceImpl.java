@@ -19,7 +19,6 @@ package org.exoplatform.wiki.service.impl;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -80,6 +79,7 @@ import org.exoplatform.wiki.service.rest.model.PageSummary;
 import org.exoplatform.wiki.service.rest.model.Pages;
 import org.exoplatform.wiki.service.rest.model.Space;
 import org.exoplatform.wiki.service.rest.model.Spaces;
+import org.exoplatform.wiki.tree.JsonNodeData;
 import org.exoplatform.wiki.tree.PageTreeNode;
 import org.exoplatform.wiki.tree.SpaceTreeNode;
 import org.exoplatform.wiki.tree.TreeNode;
@@ -227,54 +227,54 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
 
   @GET
   @Path("/tree/{currentPath}/{expandPath}")
-  @Produces(MediaType.TEXT_HTML)
-  public Response getWikiTreeData(@PathParam("currentPath") String currentPath,@PathParam("expandPath") String expandPath) {
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getTreeData(@PathParam("currentPath") String currentPath,
+                                  @PathParam("expandPath") String expandPath) {
     try {
-      currentPath= URLDecoder.decode(currentPath, "utf-8").replace(".", "/");
-      expandPath= URLDecoder.decode(expandPath, "utf-8").replace(".", "/");
+      currentPath = URLDecoder.decode(currentPath, "utf-8").replace(".", "/");
+      expandPath = URLDecoder.decode(expandPath, "utf-8").replace(".", "/");
       WikiStoreImpl store = (WikiStoreImpl) mowService.getModel().getWikiStore();
-     
-      WikiPageParams currentPageParams= Utils.getPageParamsFromPath(currentPath);
-      WikiPageParams expandPageParams= Utils.getPageParamsFromPath(expandPath);     
-      StringBuilder responseData = new StringBuilder();
-   
-      String expandWikiType= expandPageParams.getType();
-      String expandWikiOwner= expandPageParams.getOwner();
-      String expandWikiPageId= expandPageParams.getPageId();      
-    
-      responseData.append("<div class=\"NodeGroup\">");
-      if (expandWikiOwner!=null && expandWikiPageId!=null) {      
+
+      WikiPageParams currentPageParams = Utils.getPageParamsFromPath(currentPath);
+      WikiPageParams expandPageParams = Utils.getPageParamsFromPath(expandPath);
+      List<JsonNodeData> responseData = new ArrayList<JsonNodeData>();
+
+      String expandWikiType = expandPageParams.getType();
+      String expandWikiOwner = expandPageParams.getOwner();
+      String expandWikiPageId = expandPageParams.getPageId();
+
+      if (expandWikiOwner != null && expandWikiPageId != null) {
         if (!expandWikiPageId.equals(WikiNodeType.Definition.WIKI_HOME_NAME)) {
-          //Expand a Page Node
-          PageImpl expandPage = (PageImpl) wikiService.getPageById(expandWikiType, expandWikiOwner, expandWikiPageId);
+          // Expand a Page Node
+          PageImpl expandPage = (PageImpl) wikiService.getPageById(expandWikiType,
+                                                                   expandWikiOwner,
+                                                                   expandWikiPageId);
           PageTreeNode expandPageNode = new PageTreeNode(expandPage);
-          expandPageNode.setChildren();                  
-          responseData.append(expandNode(expandPageNode,currentPageParams).toString());
+          expandPageNode.setChildren();
+          responseData = getChildNodeData(expandPageNode, currentPageParams);
         } else {
-          //Expand a WikiHome Node
+          // Expand a WikiHome Node
           Wiki expandWiki = store.getWikiContainer(WikiType.valueOf(expandWikiType.toUpperCase()))
                                  .getWiki(expandWikiOwner);
-          WikiHome wikiHome= (WikiHome)expandWiki.getWikiHome();
+          WikiHome wikiHome = (WikiHome) expandWiki.getWikiHome();
           WikiHomeTreeNode expandWikiHome = new WikiHomeTreeNode((WikiHome) expandWiki.getWikiHome());
-          expandWikiHome.setChildren();                 
-          responseData.append(expandNode(expandWikiHome,currentPageParams).toString());
+          expandWikiHome.setChildren();
+          responseData = getChildNodeData(expandWikiHome, currentPageParams);
         }
-      } else if (expandWikiOwner!=null) {
-        //Expand a Wiki Node
+      } else if (expandWikiOwner != null) {
+        // Expand a Wiki Node
         Wiki dataWiki = store.getWikiContainer(WikiType.valueOf(expandWikiType.toUpperCase()))
                              .getWiki(expandWikiOwner);
         WikiTreeNode expandWikiNode = new WikiTreeNode(dataWiki);
         expandWikiNode.setChildren();
-        responseData.append(expandNode(expandWikiNode, currentPageParams).toString());
+        responseData = getChildNodeData(expandWikiNode, currentPageParams);
       } else {
-        //Expand a Wiki Space Node
+        // Expand a Wiki Space Node
         SpaceTreeNode expandSpaceNode = new SpaceTreeNode(expandWikiType);
         expandSpaceNode.setChildren();
-        responseData.append(expandNode(expandSpaceNode, currentPageParams).toString());
+        responseData = getChildNodeData(expandSpaceNode, currentPageParams);
       }
-
-      responseData.append("</div>");
-      return Response.ok(responseData.toString(), MediaType.TEXT_HTML).cacheControl(cc).build();
+      return Response.ok(new BeanToJsons(responseData), MediaType.APPLICATION_JSON).cacheControl(cc).build();
     } catch (Exception e) {
       // TODO Auto-generated catch block
       log.error(e.getMessage(), e);
@@ -536,10 +536,10 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     return attachment;
   }
 
-  public StringBuilder expandNode(TreeNode treeNode, WikiPageParams currentPageParams) throws Exception {
+  private List<JsonNodeData> getChildNodeData(TreeNode treeNode, WikiPageParams currentPageParams) throws Exception {
     String currentPagePath = Utils.getPathFromPageParams(currentPageParams);
-   
-    StringBuilder responseData = new StringBuilder();
+
+    List<JsonNodeData> children = new ArrayList<JsonNodeData>();
     int counter = 1;
     for (TreeNode child : treeNode.getChildren()) {
       boolean isSelectable = true;
@@ -547,57 +547,25 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       if (counter >= treeNode.getChildren().size()) {
         isLastNode = true;
       }
-      // if (child.getNodeType().equals(TreeNodeType.WIKIHOME)) {   isSelectable = true;}
+      // if (child.getNodeType().equals(TreeNodeType.WIKIHOME)) { isSelectable =
+      // true;}
       if (child.getNodeType().equals(TreeNodeType.WIKI)) {
-        isSelectable = false;    
+        isSelectable = false;
       } else if (child.getNodeType().equals(TreeNodeType.PAGE)) {
         PageImpl page = ((PageTreeNode) child).getPage();
         PageImpl currentPage = (PageImpl) wikiService.getPageById(currentPageParams.getType(),
                                                                   currentPageParams.getOwner(),
-                                                                  currentPageParams.getPageId());      
-        if (currentPage.equals(page) || Utils.isDescendantPage(page, currentPage)) isSelectable = false;
+                                                                  currentPageParams.getPageId());
+        if (currentPage.equals(page) || Utils.isDescendantPage(page, currentPage))
+          isSelectable = false;
       }
-      responseData.append(renderNode(child, isLastNode, isSelectable, currentPagePath));
+
+      children.add(new JsonNodeData(child, isLastNode, isSelectable, currentPagePath));
       counter++;
     }
-    return responseData;
+    return children;
   }
 
-  public String renderNode(TreeNode treeNode, boolean isLastNode, boolean isSelectable, String currentPagePath) throws Exception {
-    currentPagePath= currentPagePath.replace("/",".");   
-    StringBuffer sb = new StringBuffer();
-    String nodeName = treeNode.getName();
-    // Change Type for CSS
-    String nodeType = treeNode.getNodeType().toString();
-    String nodeTypeCSS = nodeType.substring(0, 1).toUpperCase()
-        + nodeType.substring(1).toLowerCase();
-    String iconType = "Expand";
-    String lastNodeClass = "";
-    String absPath = treeNode.getAbsPath();
-    String relPath= treeNode.getRelPath().replace("/",".");
-    if (isLastNode) {
-      lastNodeClass = "LastNode";
-    }
-    if (!treeNode.isHasChild()) {
-      iconType = "Empty";
-    }
-    sb.append("<div  class=\""+lastNodeClass+" Node\" >") ;
-    sb.append("  <div class=\""+iconType+"Icon\" id=\"" + relPath + "\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.expandNode('" +URLEncoder.encode( currentPagePath, "utf-8") + "/"+  URLEncoder.encode( relPath, "utf-8") + "', this)\">") ;
-    sb.append( "    <div id=\"iconTreeExplorer\" onclick=\"event.cancelBubble=true;\"" + "class=\""+nodeTypeCSS+" NodeType Node \""  + ">");
-    sb.append( "      <div class='NodeLabel'>") ;
-    if (isSelectable){
-    sb.append( "        <a  onclick=\"event.cancelBubble=true; eXo.wiki.UITreeExplorer.selectNode('"+absPath+ "')\" style='cursor: pointer;' title=\""+nodeName+"\">"+nodeName+"</a>") ;
-    }
-    else{
-      sb.append( "    <span style=\"cursor:auto\" title=\""+nodeName+"\">"+nodeName+"</span>") ;  
-    }      
-    sb.append( "      </div>") ; 
-    sb.append( "    </div>") ; 
-    sb.append( "  </div>") ; 
-    sb.append( "</div>") ; 
-    return sb.toString();
-  }
-  
   private static void fillPageSummary(PageSummary pageSummary,
                                       ObjectFactory objectFactory,
                                       URI baseUri,
