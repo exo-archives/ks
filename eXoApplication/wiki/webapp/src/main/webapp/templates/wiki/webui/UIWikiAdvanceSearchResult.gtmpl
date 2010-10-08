@@ -18,7 +18,7 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
     resultInfo = resultInfo.replace("{2}", results.getAll().size().toString());
     resultInfo = resultInfo.replace("{3}", "<b>" + uicomponent.getKeyword() + "</b>");
 		%>		
-		<div class="UIWikiAdvanceSearchResult">
+		<div class="UIWikiAdvanceSearchResult" id="$uicomponent.id">
 			<div class="ResultInfo"><%= resultInfo %></div>
 			<%
 				String viewPage = uicomponent.event("ViewPage") ;

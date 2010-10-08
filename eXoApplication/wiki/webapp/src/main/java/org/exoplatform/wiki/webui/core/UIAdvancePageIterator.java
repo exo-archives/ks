@@ -153,10 +153,10 @@ public class UIAdvancePageIterator extends UIForm {
       } else {
         int temp = Integer.parseInt(changeToPage);
         if (temp > 0 && temp <= maxPage && temp != presentPage) {
-          pageIterator.selectedPage = temp;
-          //event.getRequestContext().addUIComponentToUpdateByAjax(pageIterator.getParent());
-        }
+          pageIterator.selectedPage = temp;         
+        }       
       }
+      event.getRequestContext().addUIComponentToUpdateByAjax(pageIterator.getParent());
     }
   }
   
