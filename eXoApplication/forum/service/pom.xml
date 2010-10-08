@@ -13,6 +13,7 @@
     <dependency>
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.rest.core</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.ws.rs</groupId>
@@ -182,17 +183,12 @@
     <dependency>
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.common</artifactId>
       <scope>test</scope>
     </dependency>
-    
-    
-
-    
-     
-    
   </dependencies>
 </project>
