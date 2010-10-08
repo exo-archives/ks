@@ -135,7 +135,7 @@
 								<%
 									}
 								} else {
-									if(isViewRootCate && (uicomponent.currentUser_ != null || uicomponent.currentUser_ == null && uicomponent.faqSetting_.isEnableAnonymousSubmitQuestion())) {
+									if(uicomponent.isAddQuestion()) {
 								%>
 										<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
 											<div onclick="<%=uicomponent.event("AddNewQuestion", cateId);%>" class="SeparatorLine">

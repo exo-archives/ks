@@ -76,6 +76,8 @@ public class FAQSetting {
 	
 	private String emailMoveQuestion = null;
 	
+	private boolean isPostQuestionInRootCategory = true;
+	
 	/** The Current User Login */
 	private String currentUser = "";
 	/**
@@ -292,5 +294,19 @@ public class FAQSetting {
 	public void setCurrentUser(String currentUser) {
   	this.currentUser = currentUser;
   }
+
+	/**
+	 * @param isPostQuestionInRootCategory the isPostQuestionInRootCategory to set
+	 */
+	public void setPostQuestionInRootCategory(boolean isPostQuestionInRootCategory) {
+		this.isPostQuestionInRootCategory = isPostQuestionInRootCategory;
+	}
+
+	/**
+	 * @return the isPostQuestionInRootCategory
+	 */
+	public boolean isPostQuestionInRootCategory() {
+		return isPostQuestionInRootCategory;
+	}
 	
 }
