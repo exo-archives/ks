@@ -14,9 +14,9 @@
   <description>eXo Knowledge Suite (KS) is a suite of collaborative applications oriented to knowledge management. It not only holds on-line discussions and posts user generated content but also answers the most frequently asked questions about sites/services.</description>
   <url>http://wiki.exoplatform.org/xwiki/bin/view/KS/</url>
   <scm>
-   <connection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/2.1.x</connection>
-   <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/2.1.x</developerConnection>
-   <url>http://fisheye.exoplatform.org/browse/ks</url>
+   <connection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/2.1.1_REL</connection>
+   <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/2.1.1_REL</developerConnection>
+   <url>http://fisheye.exoplatform.org/browse/ks/branches/2.1.1_REL</url>
   </scm>
   <issueManagement>
     <system>jira</system>
