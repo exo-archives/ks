@@ -2611,7 +2611,14 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			String forumName = null;
 			Node destForumNode = (Node) forumHomeNode.getSession().getItem(destForumPath);
 			forumName = destForumNode.getProperty(EXO_NAME).getString();
-			List<String> fullNameEmailOwnerDestForum = getFullNameAndEmail(sProvider, destForumNode.getProperty(EXO_OWNER).getString());
+			String owner = destForumNode.getProperty(EXO_OWNER).getString();
+			if(owner.indexOf(":") > 0) {
+				owner = ForumServiceUtils.getUserPermission(new String[]{owner}).get(0);
+				if(Utils.isEmpty(owner)){
+					owner = topics.get(0).getEditReason();
+				}
+			}
+			List<String> fullNameEmailOwnerDestForum = getFullNameAndEmail(sProvider, owner);
 			Message message = new Message();
 			message.setMimeType(TEXT_HTML);
 			String headerSubject = "";
@@ -3847,7 +3854,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			
 			
 			String topicName = destTopicNode.getProperty(EXO_NAME).getString();
-			List<String> fullNameEmailOwnerDestForum = getFullNameAndEmail(sProvider, destForumNode.getProperty(EXO_OWNER).getString());
+			List<String> fullNameEmailOwnerDestTopic = getFullNameAndEmail(sProvider, destTopicNode.getProperty(EXO_OWNER).getString());
 	
 			String headerSubject = "";
 			String objectName = "[" + destForumNode.getParent().getProperty(EXO_NAME).getString() + 
@@ -3876,7 +3883,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				postNode = (Node) forumHomeNode.getSession().getItem(postPaths[i]);
 				Message message = new Message();
 				message.setMimeType(TEXT_HTML);
-				message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
+				message.setFrom(fullNameEmailOwnerDestTopic.get(0) + "<" + fullNameEmailOwnerDestTopic.get(1) + ">");
 				message.setSubject(headerSubject + objectName);
 				message.setBody(mailContent.replace("$OBJECT_NAME", postNode.getProperty(EXO_NAME).getString())
 								.replace("$OBJECT_PARENT_NAME", topicName).replace("$VIEWPOST_LINK", link));

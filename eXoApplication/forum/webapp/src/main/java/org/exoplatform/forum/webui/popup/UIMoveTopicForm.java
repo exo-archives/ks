@@ -101,6 +101,7 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
 		this.topics = topics ;
 		try {
 			this.pathTopic = topics.get(0).getPath();
+			this.topics.get(0).setEditReason(userProfile.getUserId());
     } catch (Exception e) {}
 		this.isFormTopic = isFormTopic ;
 		setCategories() ;

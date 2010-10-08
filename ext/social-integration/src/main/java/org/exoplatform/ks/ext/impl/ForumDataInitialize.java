@@ -71,12 +71,12 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
     Category category = new Category();
     category.setId(Utils.CATEGORY + space.getId());
     category.setCategoryName(SpaceServiceImpl.SPACE_PARENT.split("/")[1]);
-    category.setOwner(space.getId());
+    category.setOwner(SpaceServiceImpl.MANAGER +":"+ space.getGroupId());
     category.setUserPrivate(new String[] {space.getGroupId()});
     category.setDescription("");
 
     Forum forum = new Forum();
-    forum.setOwner(space.getId());
+    forum.setOwner(SpaceServiceImpl.MANAGER +":"+ space.getGroupId());
     forum.setId(Utils.FORUM_SPACE_ID_PREFIX + space.getId());
     forum.setForumName(space.getName());
     forum.setDescription(space.getDescription());
