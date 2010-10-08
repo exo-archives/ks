@@ -347,7 +347,9 @@ public class UIQuestions extends UIContainer {
 	}
 	
 	public void setDefaultLanguage() {
-		language_ = FAQUtils.getDefaultLanguage() ;
+		String language = FAQUtils.getDefaultLanguage();
+		if (languageMap.containsKey(language) || FAQUtils.isFieldEmpty(language_))
+			language_ = language;
 	}
 
 	private String convertSize(long size){
