@@ -54,6 +54,8 @@ public class QuestionPageList extends JCRPageList {
   /** The is not yet answered. */
   private boolean isNotYetAnswered = false;
   
+  private boolean isOpenQuestion = false;
+  
   /** The list questions_. */
   private List<Question> listQuestions_ = null;
   
@@ -96,6 +98,9 @@ public class QuestionPageList extends JCRPageList {
     setTotalQuestion();
   }
   
+  public void setOpenQuestion(boolean isOpenQuestion) {
+  	this.isOpenQuestion = isOpenQuestion;
+	}
   /**
    * get total questions are not yet ansewered. The first, get all questions in faq system
    * then each questions check if property <code>response</code> in default language
@@ -114,28 +119,47 @@ public class QuestionPageList extends JCRPageList {
   	while(nodeIterator.hasNext()){
   		languages = new String();
   		questionNode = nodeIterator.nextNode();
-  		try {
-        if(!questionNode.hasNode(ANSWER_HOME) || questionNode.getNode(ANSWER_HOME).getNodes().getSize() < 1){
-        	languages = questionNode.getProperty("exo:language").getValue().getString();
-        }
-      	if(questionNode.hasNode("languages")){
-      		languageNode = questionNode.getNode("languages");
-      		languageIter = languageNode.getNodes();
-      		while(languageIter.hasNext()){
-      			language = languageIter.nextNode();
-      			if(!language.hasNode(ANSWER_HOME) || language.getNode(ANSWER_HOME).getNodes().getSize() < 1) {
-      				if(languages != null && languages.trim().length() > 0) languages += ",";
-      				languages += language.getProperty("exo:language").getString();
-      			}
-      		}
-      	}
-      	if(languages != null && languages.trim().length() > 0) listQuestions_.add(getQuestion(questionNode).setLanguagesNotYetAnswered(languages));
-      } catch (Exception e) {
-        log.error("Fail to set total questions: ", e);
-      }
+  		if(!isOpenQuestion) {// used for question manager.
+  			try {
+  				if(!questionNode.hasNode(ANSWER_HOME) || questionNode.getNode(ANSWER_HOME).getNodes().getSize() < 1){
+  					languages = questionNode.getProperty("exo:language").getValue().getString();
+  				}
+  				if(questionNode.hasNode("languages")){
+  					languageNode = questionNode.getNode("languages");
+  					languageIter = languageNode.getNodes();
+  					while(languageIter.hasNext()){
+  						language = languageIter.nextNode();
+  						if(!language.hasNode(ANSWER_HOME) || language.getNode(ANSWER_HOME).getNodes().getSize() < 1) {
+  							if(languages != null && languages.trim().length() > 0) languages += ",";
+  							languages += language.getProperty("exo:language").getString();
+  						}
+  					}
+  				}
+  				if(languages != null && languages.trim().length() > 0) listQuestions_.add(getQuestion(questionNode).setLanguagesNotYetAnswered(languages));
+  			} catch (Exception e) {
+  				log.error("Fail to set total questions: ", e);
+  			}
+  		} else {
+  			try {
+  				if(!hasAnswerInQuestion(questionNode)) {
+  					listQuestions_.add(getQuestion(questionNode));
+  				}
+  			} catch (Exception e) {
+  				log.error("Fail to set total questions: ", e);
+  			}
+  		}
   	}
   	setAvailablePage(listQuestions_.size()) ;
   }
+
+	private boolean hasAnswerInQuestion(Node questionNode) throws Exception {
+		QueryManager qm = questionNode.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionNode.getPath()).append("//element(*,exo:answer)[(@exo:approveResponses='true') and (@exo:activateResponses='true')]");
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();
+		return (iter.getSize() > 0)?true:false;
+	}
 
   /**
    * Class constructor specifying iter contain quetion nodes, value,

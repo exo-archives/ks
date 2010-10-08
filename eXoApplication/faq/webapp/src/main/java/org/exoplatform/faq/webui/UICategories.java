@@ -621,6 +621,7 @@ public class UICategories extends UIContainer{
 				if(!uiCategories.isModerator && !isApproved){
 					categoryId = categoryId + " (@exo:author='" + uiCategories.faqSetting_.getCurrentUser() + "')";
 				}
+				categoryId = categoryId + " true";
 				questions.pageList = uiCategories.faqService_.getQuestionsNotYetAnswer(categoryId, isApproved);
 				pos = 1;
 			} else if (typeFilter.equals(uiCategories.FILTER_PENDING_QUESTIONS)){

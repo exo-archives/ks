@@ -1348,9 +1348,16 @@ public class JCRDataStorage implements DataStorage {
       Node categoryHome = getCategoryHome(sProvider, null) ;
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       String qr = "";
+      boolean isOpenQs = false;
       if(categoryId.indexOf(" ") > 0){
         String []strs = categoryId.split(" ");
-        categoryId = strs[0]; qr = strs[1];
+        categoryId = strs[0];
+				if(strs.length == 3) {
+					qr = strs[1];
+					isOpenQs = Boolean.parseBoolean(strs[2]);
+				} else {
+					isOpenQs = Boolean.parseBoolean(strs[1]);
+				}
       }
       StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).append("//element(*,exo:faqQuestion)[") ;
       if(categoryId.equals(Utils.ALL)){
@@ -1371,6 +1378,7 @@ public class JCRDataStorage implements DataStorage {
       QueryResult result = query.execute();
       QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
       pageList.setNotYetAnswered(true);
+      pageList.setOpenQuestion(isOpenQs);
       return pageList ;
     }catch (Exception e) {
       log.error("Get question not yet answer failed: ", e);
@@ -2168,8 +2176,9 @@ public class JCRDataStorage implements DataStorage {
           cateInfo[3] ++ ;// pending
           if(!isShow) cateInfo[1] --;
         }
-        if((!questionNode.hasNode(Utils.ANSWER_HOME) || questionNode.getNode(Utils.ANSWER_HOME).getNodes().getSize() < 1)){
-          if(isShow) cateInfo[2] ++;// open
+        if(isShow) {
+					if(!hasAnswerInQuestion(qm, questionNode))
+						cateInfo[2] ++;// open
         }
       }
     }catch(Exception e) {
@@ -2178,6 +2187,14 @@ public class JCRDataStorage implements DataStorage {
     return cateInfo ;
   }
 
+	private boolean hasAnswerInQuestion(QueryManager qm, Node questionNode) throws Exception {
+		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionNode.getPath()).append("//element(*,exo:answer)[(@exo:approveResponses='true') and (@exo:activateResponses='true')]");
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();
+		return (iter.getSize() > 0)?true:false;
+	}
+	
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#moveCategory(java.lang.String, java.lang.String)
    */
