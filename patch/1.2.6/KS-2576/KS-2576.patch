@@ -1,0 +1,12 @@
+Index: eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_fr.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_fr.properties	(revision 51679)
++++ eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_fr.properties	(working copy)
+@@ -17,6 +17,7 @@
+ UIForumPortlet.label.Close=Fermer
+ UIForumPortlet.label.AddBookmarkLink=Raccourci
+ UIForumPortlet.label.AddWatching=Suivre
++UIForumPortlet.label.UnWatch=Arrêter de suivre
+ UIForumPortlet.label.NoThread=pas de discussions
+ UIForumPortlet.label.GoPage=Aller à la page
+ UIForumPortlet.label.NotModerator=Pas de modérateur
