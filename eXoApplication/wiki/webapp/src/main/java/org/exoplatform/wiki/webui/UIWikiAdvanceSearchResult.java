@@ -22,11 +22,8 @@ import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
-import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
@@ -42,13 +39,7 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
  */
 @ComponentConfig(
   lifecycle = UIApplicationLifecycle.class,
-  template = "app:/templates/wiki/webui/UIWikiAdvanceSearchResult.gtmpl",
-  events = {    
-      @EventConfig(listeners = UIWikiAdvanceSearchResult.ViewPageActionListener.class),
-      @EventConfig(listeners = UIWikiAdvanceSearchResult.ChangePageActionListener.class),
-      @EventConfig(listeners = UIWikiAdvanceSearchResult.NextPageActionListener.class),
-      @EventConfig(listeners = UIWikiAdvanceSearchResult.PrevPageActionListener.class)
-  }    
+  template = "app:/templates/wiki/webui/UIWikiAdvanceSearchResult.gtmpl"  
 )
 public class UIWikiAdvanceSearchResult extends UIContainer {
   
@@ -58,21 +49,16 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     addChild(UIAdvancePageIterator.class, null, "SearchResultPageIterator");
   }
   
-  public void setResult(PageList<SearchResult> results) {
+  public void setResult(PageList<SearchResult> results) throws Exception {
     UIAdvancePageIterator pageIterator = this.getChild(UIAdvancePageIterator.class);
     pageIterator.setPageList(results);
-    pageIterator.setSelectedPage(1);
+    pageIterator.getPageList().getPage(1);  
   }
   
   public PageList<SearchResult> getResults() {
     UIAdvancePageIterator pageIterator = this.getChild(UIAdvancePageIterator.class);
-    return pageIterator.getPageList();
-  }
-  
-  public int getPageIndex() throws Exception {
-    UIAdvancePageIterator pageIterator = this.getChild(UIAdvancePageIterator.class);
-    return pageIterator.getSelectedPage();
-  }
+    return pageIterator.getPageList();   
+  } 
   
   public void setKeyword(String keyword) { this.keyword = keyword ;}
   
@@ -110,45 +96,5 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
       sb.append(wiki.getOwner());
     }
     return sb.toString();
-  }
-
-  static public class ViewPageActionListener extends EventListener<UIWikiAdvanceSearchResult> {
-    @Override
-    public void execute(Event<UIWikiAdvanceSearchResult> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      wikiPortlet.changeMode(WikiMode.VIEW);
-    }
-  }
-
-  static public class ChangePageActionListener extends EventListener<UIWikiAdvanceSearchResult> {
-    @Override
-    public void execute(Event<UIWikiAdvanceSearchResult> event) throws Exception {
-      UIWikiAdvanceSearchResult uiResult = event.getSource();
-      String pageNumber = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      UIAdvancePageIterator pageIterator = uiResult.getChild(UIAdvancePageIterator.class);
-      pageIterator.setSelectedPage(Integer.parseInt(pageNumber));
-    }
-  }
-  
-  static public class NextPageActionListener extends EventListener<UIWikiAdvanceSearchResult> {
-    @Override
-    public void execute(Event<UIWikiAdvanceSearchResult> event) throws Exception {
-      UIWikiAdvanceSearchResult uiResult = event.getSource();
-      UIAdvancePageIterator pageIterator = uiResult.getChild(UIAdvancePageIterator.class);
-      if(uiResult.getPageIndex() < uiResult.getResults().getAvailablePage()) {
-        pageIterator.setSelectedPage(uiResult.getPageIndex() +1 );
-      }      
-    }
-  }
-  
-  static public class PrevPageActionListener extends EventListener<UIWikiAdvanceSearchResult> {
-    @Override
-    public void execute(Event<UIWikiAdvanceSearchResult> event) throws Exception {
-      UIWikiAdvanceSearchResult uiResult = event.getSource();
-      UIAdvancePageIterator pageIterator = uiResult.getChild(UIAdvancePageIterator.class);
-      if(uiResult.getPageIndex() > 1) {
-        pageIterator.setSelectedPage(uiResult.getPageIndex() - 1);
-      }
-    }
-  }
+  } 
 }

@@ -13,8 +13,8 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 	
 	if(results != null &&  results.getAll().size() > 0) {
     String resultInfo = _ctx.appRes("UIWikiAdvanceSearchResult.label.ResultInfo");
-    resultInfo = resultInfo.replace("{0}", "1");
-    resultInfo = resultInfo.replace("{1}", results.getPage(uicomponent.getPageIndex()).size().toString());
+    resultInfo = resultInfo.replace("{0}", String.valueOf(results.getFrom()+1));
+    resultInfo = resultInfo.replace("{1}", results.getTo().toString());
     resultInfo = resultInfo.replace("{2}", results.getAll().size().toString());
     resultInfo = resultInfo.replace("{3}", "<b>" + uicomponent.getKeyword() + "</b>");
 		%>		
@@ -22,7 +22,7 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 			<div class="ResultInfo"><%= resultInfo %></div>
 			<%
 				String viewPage = uicomponent.event("ViewPage") ;
-				for(SearchResult result in results.getPage(uicomponent.getPageIndex())) {
+				for(SearchResult result in results.getPage(results.getCurrentPage())) {
 			    String wikiURI = uicomponent.getWikiNodeUri(result) ;
 			    def wiki= uicomponent.getWiki(result);
 					String space = wiki.getOwner();

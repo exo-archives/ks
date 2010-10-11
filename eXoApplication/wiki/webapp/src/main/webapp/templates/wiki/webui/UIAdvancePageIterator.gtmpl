@@ -1,5 +1,5 @@
 <% 
-    int pageSelected = uicomponent.getSelectedPage() ;
+    int pageSelected = uicomponent.pageList.getCurrentPage() ;
     int maxPage = uicomponent.pageList.getAvailablePage() ;
     String selected = String.valueOf(pageSelected) ;
 %>

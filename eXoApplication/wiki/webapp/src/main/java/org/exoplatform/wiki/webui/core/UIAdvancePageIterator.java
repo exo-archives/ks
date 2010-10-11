@@ -59,9 +59,7 @@ public class UIAdvancePageIterator extends UIForm {
   
   public static String GOTOPPAGE = "goPageTop".intern();
   
-  private PageList pageList;
-
-  private int selectedPage = 1;
+  private PageList pageList;  
 
   private int beginPageRange = 0;
   
@@ -78,24 +76,15 @@ public class UIAdvancePageIterator extends UIForm {
   
   public PageList getPageList() {
     return pageList;
-  }
+  } 
   
-  @SuppressWarnings("unused")
-  public int getSelectedPage() {
-    return this.selectedPage;
-  }
-  
-  public void setSelectedPage(long selectedPage) {
-    this.selectedPage = (int) selectedPage;
-  }
-
   @SuppressWarnings("unused")
   public List<String> getDisplayedRange() throws Exception {
     int max_Page = (int) pageList.getAvailablePage();
-    if (this.selectedPage > max_Page) {
-      this.selectedPage = max_Page;
+    if (this.pageList.getCurrentPage() > max_Page) {
+      this.pageList.getPage(max_Page);
     }
-    long page = this.selectedPage;
+    long page = this.pageList.getCurrentPage();
     if (page <= 3) {
       beginPageRange = 1;
       if (max_Page <= 7) {
@@ -122,38 +111,34 @@ public class UIAdvancePageIterator extends UIForm {
     }
     return temp;
   }
-
+  
   static public class GoPageActionListener extends EventListener<UIAdvancePageIterator> {
     @Override
     public void execute(Event<UIAdvancePageIterator> event) throws Exception {
       UIAdvancePageIterator pageIterator = event.getSource();
       String changeToPage = event.getRequestContext().getRequestParameter(OBJECTID).trim();
       int maxPage = pageIterator.pageList.getAvailablePage();
-      int presentPage = pageIterator.selectedPage;
+      int presentPage = pageIterator.getPageList().getCurrentPage();
       if (UIAdvancePageIterator.NEXT.equalsIgnoreCase(changeToPage)) {
         if (presentPage < maxPage) {
-          pageIterator.selectedPage = presentPage + 1;
-          //event.getRequestContext().addUIComponentToUpdateByAjax(pageIterator.getParent());
+          pageIterator.pageList.getPage(presentPage + 1);         
         }
       } else if (UIAdvancePageIterator.PREVIOUS.equalsIgnoreCase(changeToPage)) {
         if (presentPage > 1) {
-          pageIterator.selectedPage = presentPage - 1;
-          //event.getRequestContext().addUIComponentToUpdateByAjax(pageIterator.getParent());
+          pageIterator.pageList.getPage(presentPage - 1);         
         }
       } else if (UIAdvancePageIterator.LAST.equalsIgnoreCase(changeToPage)) {
         if (presentPage != maxPage) {
-          pageIterator.selectedPage = maxPage;
-          //event.getRequestContext().addUIComponentToUpdateByAjax(pageIterator.getParent());
+          pageIterator.pageList.getPage(maxPage);        
         }
       } else if (UIAdvancePageIterator.FIRST.equalsIgnoreCase(changeToPage)) {
         if (presentPage != 1) {
-          pageIterator.selectedPage = 1;
-          //event.getRequestContext().addUIComponentToUpdateByAjax(pageIterator.getParent());
+          pageIterator.pageList.getPage(1);         
         }
       } else {
         int temp = Integer.parseInt(changeToPage);
         if (temp > 0 && temp <= maxPage && temp != presentPage) {
-          pageIterator.selectedPage = temp;         
+          pageIterator.pageList.getPage(temp);         
         }       
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(pageIterator.getParent());
@@ -170,7 +155,7 @@ public class UIAdvancePageIterator extends UIForm {
       numberPage = stringInput.getValue() ;
       stringInput.setValue("") ;
       int maxPage = pageIterator.pageList.getAvailablePage();
-      int presentPage = pageIterator.selectedPage;
+      int presentPage = pageIterator.getPageList().getCurrentPage();
       int page = 0;
       if (numberPage != null && numberPage.length() > 0) {
         try {
@@ -186,7 +171,7 @@ public class UIAdvancePageIterator extends UIForm {
             } else if (page > pageIterator.pageList.getAvailablePage()) {
               page = pageIterator.pageList.getAvailablePage();
             }
-            pageIterator.selectedPage = page;
+            pageIterator.getPageList().getPage(page);
           }
         } catch (NumberFormatException e) {
           uiApp.addMessage(new ApplicationMessage("NameValidator.msg.Invalid-number",
@@ -196,9 +181,9 @@ public class UIAdvancePageIterator extends UIForm {
         }
       }
       if (page > 0 && page <= maxPage && page != presentPage) {
-        pageIterator.selectedPage = page;
-        // event.getRequestContext().addUIComponentToUpdateByAjax(pageIterator.getParent());
+        pageIterator.getPageList().getPage(page);
       }
+      event.getRequestContext().addUIComponentToUpdateByAjax(pageIterator.getParent());
     }
   }
 
