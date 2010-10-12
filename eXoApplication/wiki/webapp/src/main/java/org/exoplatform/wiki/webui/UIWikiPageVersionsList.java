@@ -133,7 +133,7 @@ public class UIWikiPageVersionsList extends UIForm {
       }
       
       if (uiForm.checkedVersions.size() != 2) {
-        uiApp.addMessage(new ApplicationMessage("UIWikiPageVersionsList.checkGroup-required", null, ApplicationMessage.ERROR));
+        uiApp.addMessage(new ApplicationMessage("UIWikiPageVersionsList.msg.checkGroup-required", null, ApplicationMessage.WARNING));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
         return;
       } else {
