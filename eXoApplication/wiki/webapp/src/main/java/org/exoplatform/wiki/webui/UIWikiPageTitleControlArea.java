@@ -21,13 +21,19 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
@@ -74,7 +80,7 @@ public class UIWikiPageTitleControlArea extends UIContainer {
       if (getChild(UIFieldEditableForm.class) == null)
         addChild(UIFieldEditableForm.class, null, FIELD_EDITABLE);
       getChild(UIFieldEditableForm.class).setEditableFieldId(FIELD_TITLEINFO);
-      Class arg[] = { String.class };
+      Class arg[] = { String.class, Event.class };
       getChild(UIFieldEditableForm.class).setParentFunction(SAVE_TITLE, arg);
     }
     super.processRender(context);
@@ -103,16 +109,33 @@ public class UIWikiPageTitleControlArea extends UIContainer {
     return getChildById(FIELD_TITLEINFO).isRendered();
   }
     
-  public void saveTitle(String newTitle) throws Exception {
+  public void saveTitle(String newTitle, Event event) throws Exception {
+    PortalRequestContext prContext = Util.getPortalRequestContext();
     WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
+    UIApplication uiApp = this.getAncestorOfType(UIApplication.class);
+    UIWikiPortlet wikiPortlet = this.getAncestorOfType(UIWikiPortlet.class);
+    UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
+    UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class)
+                                               .getUIStringInput();
     WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
     String newName = TitleResolver.getObjectId(newTitle, true);
+    boolean isRenameHome = WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageParams.getPageId())
+        && !newName.equals(pageParams.getPageId());
+    if (isRenameHome) {
+      uiApp.addMessage(new ApplicationMessage("SavePageAction.msg.Can-not-rename-Wiki-Home",
+                                              null,
+                                              ApplicationMessage.WARNING));
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+      String requestURL = Utils.getCurrentRequestURL();
+      prContext.getResponse().sendRedirect(requestURL);
+      return;
+    }
     wikiService.renamePage(pageParams.getType(),
                            pageParams.getOwner(),
                            pageParams.getPageId(),
                            newName,
                            newTitle);
     pageParams.setPageId(newName);
-    Utils.redirectToNewPage(pageParams, URLEncoder.encode(pageParams.getPageId(), "UTF-8"));    
+    Utils.redirectToNewPage(pageParams, URLEncoder.encode(pageParams.getPageId(), "UTF-8"));
   }
 }

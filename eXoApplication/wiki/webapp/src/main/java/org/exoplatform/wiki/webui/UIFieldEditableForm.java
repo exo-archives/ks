@@ -139,7 +139,7 @@ public class UIFieldEditableForm extends UIForm {
       Method m = editableForm.getParent()
                              .getClass()
                              .getMethod(editableForm.getParentFunctionName(), editableForm.getFunctionArgType());
-      m.invoke(editableForm.getParent(), titleInput.getValue().trim());
+      m.invoke(editableForm.getParent(), titleInput.getValue().trim(), event);
     
     }
   }

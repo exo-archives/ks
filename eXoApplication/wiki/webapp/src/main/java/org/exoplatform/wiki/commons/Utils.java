@@ -81,6 +81,13 @@ public class Utils {
     return requestURL;
   }
 
+  public static String getCurrentAjaxRequestURL(WikiMode mode) throws Exception {
+    String requestURL = getCurrentRequestURL();
+    String currentAction = Utils.getActionFromWikiMode(mode);
+    requestURL = requestURL.concat('#' + currentAction);
+    return requestURL;
+  }
+
   public static WikiPageParams getCurrentWikiPageParams() throws Exception {
     String requestURL = getCurrentRequestURL();
     PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
@@ -291,5 +298,20 @@ public class Utils {
     }
     b.append("')");
     return b.toString();
+  }
+
+  public static String getActionFromWikiMode(WikiMode mode) {
+    switch (mode) {
+    case EDITPAGE:
+      return "EditPage";
+    case ADDPAGE:
+      return "AddPage";
+    default:
+      return "";
+    }
+  }
+
+  public static WikiMode getWikiModeFromAction(String action) {
+    return WikiMode.valueOf(action.toUpperCase());
   }
 }
