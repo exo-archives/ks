@@ -22,6 +22,34 @@
 @import url(webui/component/UIFooterPortlet/DefaultStylesheet.css);
 @import url(webui/component/UIBannerPortlet/DefaultStylesheet.css);
 
-.UISiteBody .UINavigationPortlet {
- background: none;
+@font-face {
+    font-family: Hattori;
+    src: url("Fonts/HATTORHL.eot");
 }
+   
+@font-face {
+    font-family: Hattori;
+    src: url("Fonts/HATTORHL.TTF");
+}
+
+@font-face {
+    font-family: Lucida;
+    src: url("Fonts/Lucida_Sans_Regular.eot");
+}
+   
+@font-face {
+    font-family: Lucida;
+    src: url("Fonts/Lucida_Sans_Regular.ttf");
+	font-weight:normal;
+}
+
+@font-face {
+    font-family: Lucida;
+    src: url("Fonts/Lucida_Sans_Demibold.ttf");
+ font-weight:bold;
+}
+
+div, table, tr, td, img, form {
+	font-family:Lucida;
+}
+
