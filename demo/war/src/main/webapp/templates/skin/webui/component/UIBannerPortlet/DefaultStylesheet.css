@@ -23,22 +23,21 @@
 
 .UIBannerPortlet {
 	zoom: 100%;
-	
+	background: #20263f;
+	height:60px;
+	padding-top:10px;
 }
 
 .UIBannerPortlet .LeftBanner {
-	border-top: 1px solid #b5b6b6;
 	padding-left: 10px; /* orientation=lt */
 	padding-right: 10px; /* orientation=rt */
 }
 
 .UIBannerPortlet .RightBanner {
-	background: url('DefaultSkin/background/Logo.gif') no-repeat left 11px; /* orientation=lt */
-	background: url('DefaultSkin/background/Logo.gif') no-repeat right -39px; /* orientation=rt */
 }
 
 .UIBannerPortlet .MiddleBanner {
-	height: 43px;
+	
 }
 
 .UIBannerPortlet .LeftLoginContainer {
@@ -91,7 +90,7 @@
 	font-weight: bold;
 	display: block;
 	line-height: 35px;
-	color: white;
+	color: #a8acab;
 	background: none;
 }
 
@@ -102,7 +101,7 @@
 	font-weight: bold;
 	display: block;
 	line-height: 35px;
-	color: white;
+	color: #a8acab;
 	background: none;
 }
  
@@ -112,25 +111,22 @@
 	float: left;
 	display: block;
 	line-height: 35px;
-	color: white;
+	color: #a8acab;
 }
 
 .UIPageBody .BLPagebody {
-background:url("DefaultSkin/background/BgPagebody.gif") no-repeat scroll left top transparent;
+background: none;
 height:16px;
 padding-left:6px;
 }
 .UIPageBody .BRPagebody {
-background:url("DefaultSkin/background/BgPagebody.gif") no-repeat scroll right top transparent;
+background: none;
 height:16px;
 padding-right:6px;
 }
 .UIPageBody .BMPagebody {
-background:url("DefaultSkin/background/BgPagebody.gif") repeat-x scroll center bottom transparent;
+background: none;
 height:16px;
 }
 
-.UIWorkingWorkspace {
-background: #969696;
-}
 

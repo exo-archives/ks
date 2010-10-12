@@ -1,3 +1,4 @@
+
 .sidebarTDContainer {
 	width: 220px;
 	float: right;
@@ -101,7 +102,7 @@
 /***************************************************************************************************/
 
 .UIHomePagePortlet {
-	padding: 1px 0px 4px 4px;
+	padding: 12px 0px 4px 4px;
 }
 
 /*****
@@ -114,18 +115,18 @@
 }
 
 .PortletDecoration .PortletDecorationTL {
-	background: white url('DefaultSkin/background/PortletDecorationTL.gif') no-repeat left top;
-	padding-left: 3px;
+	background: url('DefaultSkin/background/HomePortletKS.png') no-repeat left top;
+	padding-left: 10px;
 }
 
 .PortletDecoration .PortletDecorationTR {
-	background: white url('DefaultSkin/background/PortletDecorationTR.gif') no-repeat right top;
-	padding-right: 3px;
+	background: url('DefaultSkin/background/HomePortletKS.png') no-repeat right -10px;
+	padding-right: 10px;
 }
 
 .PortletDecoration .PortletDecorationTC {
-	background: white ;
-	height: 3px;
+	background: url('DefaultSkin/background/HomePortletKS.png') repeat-x center -22px;
+	height: 9px;
 }
 
 .PortletDecoration .HomePortletAdBackround {
@@ -137,19 +138,35 @@
 	padding: 8px;
 }
 
-.PortletDecoration .PortletDecorationBL {
-	background: url('DefaultSkin/background/PortletDecorationBL.gif') no-repeat left top;
+.PortletDecoration .PortletDecorationML {
+	background: url('DefaultSkin/background/PortletDecorationML.png') repeat-y left;
 	padding-left: 3px;
 }
 
-.PortletDecoration .PortletDecorationBR {
-	background: url('DefaultSkin/background/PortletDecorationBR.gif') no-repeat right top;
+.PortletDecoration .PortletDecorationMR {
+	background: url('DefaultSkin/background/PortletDecorationMR.png') repeat-y right;
 	padding-right: 3px;
 }
 
+.PortletDecoration .PortletDecorationMC {
+	background: white;
+	padding: 8px;
+	height: 312px;
+}
+
+.PortletDecoration .PortletDecorationBL {
+	background: url('DefaultSkin/background/HomePortletKS.png') no-repeat left -33px;
+	padding-left: 10px;
+}
+
+.PortletDecoration .PortletDecorationBR {
+	background: url('DefaultSkin/background/HomePortletKS.png') no-repeat right -46px;
+	padding-right: 10px;
+}
+
 .PortletDecoration .PortletDecorationBC {
-	background: url('DefaultSkin/background/PortletDecorationBC.gif') repeat-x ;
-	height: 5px;
+	background: url('DefaultSkin/background/HomePortletKS.png') repeat-x center -59px;
+	height: 10px;
 }
 
 .UIHomePagePortlet .HomeBackground {
@@ -577,3 +594,336 @@
 	height: 315px;width: 491px;
 	margin: 4px;
 }
+
+
+/*==============Toolbar Container===================*/
+.TxtBlue{
+	color: #0068ff;
+}
+
+.UIToolbarContainer .NormalContainerBlock .ToolbarContainer{
+	background: #343a50;
+	border: none;
+}
+
+.UIToolbarContainer .UIHorizontalTabs .UITab {
+	background: url(DefaultSkin/background/LineToolbar.gif) no-repeat right;
+}
+
+.UIStarToolBarPortlet{
+	background: url(DefaultSkin/background/LogoGTN.png) no-repeat center center;
+	width: auto;
+}
+
+
+.UIWorkingWorkspace {
+	background: #eeeeee;
+	width: 100%;
+}
+
+.UIToolbarContainer .UIStarToolBarPortlet .UIHorizontalTabs .UITab{
+	width: 110px !important;
+}
+
+
+.UIToolbarContainer .ToolbarContainer a{
+	padding:0 5px 0 5px;
+	color: #ffd400;
+	background: none;
+	font-weight: normal;
+}
+
+.UIToolbarContainer .GroupIcon {
+	margin-left:0px;
+}
+
+.UINavigationPortlet .UINavigationBar .LeftNavigationBar{
+	background: none !important;
+	padding:32px 0 0 160px !important;/* orientation=lt */
+	padding:32px 160px 0px 0px !important;/* orientation=rt */
+}
+
+.UINavigationPortlet .UINavigationBar .RightNavigationBar{
+	background: none !important;
+}
+
+.UINavigationPortlet .UINavigationBar .MiddleNavigationBar{
+	background: none !important;
+}
+
+.UISiteBody .UINavigationPortlet {
+	 background: #202640 url(DefaultSkin/background/LogoKS.gif) no-repeat 30px 20px;/* orientation=lt */
+	 background: #202640 url(DefaultSkin/background/LogoKSrt.gif) no-repeat right 20px;/* orientation=rt */
+	 height: 70px;
+}
+
+.UINavigationPortlet .UITab .SelectedNavigationTab .LeftTab {
+	background:none !important;
+}
+
+.UINavigationPortlet .UITab .SelectedNavigationTab .RightTab {
+	background:none !important;
+}
+
+.UINavigationPortlet .UITab .SelectedNavigationTab .MiddleTab {
+	background:none !important;
+}
+
+.UINavigationPortlet .UITab .SelectedNavigationTab .TabIcon{
+	background:none !important;
+}
+
+.UINavigationPortlet .UITab .HighlightNavigationTab a {
+	color:#fbcb0f !important;
+	font-weight: normal;
+}
+
+.UINavigationPortlet .UITab .NormalNavigationTab a {
+	color:#abacb1 !important;
+	font-weight: normal;
+}
+
+.UINavigationPortlet .UITab .SelectedNavigationTab a {
+	color:#fbcb0f !important;
+	font-weight: normal;
+}
+
+.UINavigationPortlet .UITab .HighlightNavigationTab .LeftTab {
+	background:none !important;
+}
+
+.UINavigationPortlet .UITab .HighlightNavigationTab .RightTab {
+	background:none !important;
+}
+
+.UINavigationPortlet .UITab .HighlightNavigationTab .MiddleTab {
+	background:none !important;
+}
+
+.UIBreadcumbsPortlet {
+	display:none;
+}
+
+.UIWorkingWorkspace .UIPageBody {
+	margin:auto;
+	width:985px;
+}
+
+.UIPageBody .VIEW-PAGEBODY .UIPage{
+	padding: 0px;
+}
+
+.UIPageBody .VIEW-PAGEBODY .UIPage .UIComponentBlock {
+	background:none;
+}
+
+/*===================HomePage Portlet=====================*/
+
+.UIHomePagePortlet .HomeImage {
+	background:url("DefaultSkin/background/HomeImage.png") no-repeat center; /* orientation=lt */
+	background:url("DefaultSkin/background/HomeImage-rt.png") no-repeat center; /* orientation=rt */ 
+	height:293px; width:976px;
+	color: white;
+}
+
+.UIHomePagePortlet .HomeImage .Label{
+	font-size: 52px;
+	font-family: Hattori;
+	padding: 54px 0px 0px 640px;/* orientation=lt */
+	padding: 54px 640px 0px 0px;/* orientation=rt */
+}
+
+.UIHomePagePortlet .HomeImage .VersionKS{
+	font-size: 35px;
+	font-family: Hattori;
+	padding: 0px 0px 0px 400px;/* orientation=lt */
+	padding: 0px 400px 0px 0px;/* orientation=rt */
+}
+
+.UIHomePagePortlet .UserSelect{
+	margin: 12px 0px;
+}
+
+.UIHomePagePortlet .UserSelect .CommunityMembers{
+	background:url("DefaultSkin/background/CommunityMembers.png") no-repeat center;/* orientation=lt */
+	background:url("DefaultSkin/background/CommunityMembers-rt.png") no-repeat center;/* orientation=rt */
+	float: left;/* orientation=lt */
+	float: right;/* orientation=rt */
+	width: 490px;
+	height: 94px;
+}
+
+.UIHomePagePortlet .UserSelect .CommunityMembers .Label{
+	padding: 20px 0px 5px 85px;/* orientation=lt */
+	padding: 20px 85px 5px 0px;/* orientation=rt */
+	font-size: 20px;
+	color: black;
+	font-weight: bold;
+}
+
+.UIHomePagePortlet .UserSelect .CommunityMembers .Title{
+	margin: 0px 0px 0px 102px;/* orientation=lt */
+	margin: 0px 102px 0px 0px;/* orientation=rt */
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.UIHomePagePortlet .UserSelect .EOrPUse{
+	background:url("DefaultSkin/background/EOrPUse.png") no-repeat center;/* orientation=lt */
+	background:url("DefaultSkin/background/EOrPUseRT.png") no-repeat center;/* orientation=rt */
+	float: left;/* orientation=lt */
+	float: right;/* orientation=rt */
+	width: 490px;
+	height: 94px;
+}
+
+.UIHomePagePortlet .UserSelect .EOrPUse .Label{
+	padding: 20px 0px 6px 130px;/* orientation=lt */
+	padding: 20px 130px 6px 0px;/* orientation=rt */
+	font-size: 20px;
+	color: black;
+	font-weight: bold;
+}
+
+.UIHomePagePortlet .UserSelect .EOrPUse .Title{
+	margin: 0px 0px 0px 145px;/* orientation=lt */
+	margin: 0px 145px 0px 0px;/* orientation=rt */
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.UIHomePagePortlet .KSPortlet .RightPortlet{
+	float: right;/* orientation=lt */
+	float: left;/* orientation=rt */
+	width: 246px;
+}
+
+.UIHomePagePortlet .KSPortlet .LeftPortlet{
+	margin-right: 250px;/* orientation=lt */
+	margin-left: 250px;/* orientation=rt */
+}
+
+.UIHomePagePortlet .KSPortlet .LeftPortlet p{
+	font-size: 14px;
+	padding-left: 10px;/* orientation=lt */
+	padding-right: 10px;/* orientation=rt */
+}
+
+.UIHomePagePortlet .KSPortlet .IconIM{
+	float: left;
+	width: 105px;
+	padding-top: 60px;
+	text-align: center;
+	margin: 13px 0px 10px 0px;
+	font-weight: bold;
+	color: #565759;
+	display: block;
+}
+
+.UIHomePagePortlet .KSPortlet .BlockWebsite {
+	margin-bottom:20px;
+	text-align:center;
+	white-space:nowrap;
+	width:108px;
+}
+
+.FL {
+	float:left;
+}
+
+.UIHomePagePortlet .KSPortlet .TxtLinkIcon {
+	color:#565759;
+	display:block;
+	font-size:11px;
+	font-weight:bold;
+	margin-top:3px;
+}
+
+.UIHomePagePortlet .KSPortlet .IconWebsite {
+	display:block;
+	height:52px;
+	margin:auto;
+	width:55px;
+}
+
+.UIHomePagePortlet .KSPortlet .QuestionsIM{
+	background:url("DefaultSkin/background/HomePortletKS.png") no-repeat center -74px;
+}
+
+.UIHomePagePortlet .KSPortlet .BlogIM{
+	background:url("DefaultSkin/background/HomePortletKS.png") no-repeat center -128px;
+}
+
+.UIHomePagePortlet .KSPortlet .ResuorceIM{
+	background:url("DefaultSkin/background/HomePortletKS.png") no-repeat center -182px;
+}
+
+.UIHomePagePortlet .KSPortlet .SupportIM{
+	background:url("DefaultSkin/background/HomePortletKS.png") no-repeat center -238px;
+}
+
+.UIHomePagePortlet .KSPortlet .TrainingIM{
+	background:url("DefaultSkin/background/HomePortletKS.png") no-repeat center -294px;
+}
+
+.UIHomePagePortlet .KSPortlet .WebsiteIM{
+	background:url("DefaultSkin/background/HomePortletKS.png") no-repeat center -349px;
+}
+
+.UIHomePagePortlet .KSProduct{
+	padding: 10px;
+	height: 199px;
+}
+
+.UIHomePagePortlet .KSProduct h1{
+	color: #f58220;
+	font-size: 18px;
+	font-weight: normal;
+	margin: 4px 0px;
+}
+
+.UIHomePagePortlet .KSProduct .ForumProduct{
+	float: left;/* orientation=lt */
+	float: right;/* orientation=rt */
+	width: 212px;
+}
+
+.UIHomePagePortlet .KSProduct .AnswersProduct{
+	float: left;/* orientation=lt */
+	float: right;/* orientation=rt */
+	width: 212px;
+	margin-left: 20px;/* orientation=lt */
+	margin-right: 20px;/* orientation=rt */
+}
+
+.UIHomePagePortlet .KSProduct .FAQProduct{
+	float: left;/* orientation=lt */
+	float: right;/* orientation=rt */
+	width: 212px;
+	margin-left: 20px;/* orientation=lt */
+	margin-right: 20px;/* orientation=rt */
+}
+
+.UIHomePagePortlet .KSProduct .ArowGreyIcon{
+	background:url("DefaultSkin/background/ArowGreyIcon.gif") no-repeat left 8px;/* orientation=lt */
+	background:url("DefaultSkin/background/ArowGreyIcon-rt.gif") no-repeat right 8px;/* orientation=rt */
+	padding-left: 16px;/* orientation=lt */
+	padding-right: 16px;/* orientation=rt */
+	font-size: 12px;
+	color: #565759;
+	line-height: 20px;
+}
+
+.UIHomePagePortlet .ArowBlackIcon{
+	background:url("DefaultSkin/background/ArowBlackIcon.gif") no-repeat left 8px;/* orientation=lt */
+	background:url("DefaultSkin/background/ArowBlackIcon-rt.gif") no-repeat right 8px;/* orientation=rt */
+	padding-left: 26px;/* orientation=lt */
+	padding-right: 26px;/* orientation=rt */
+	font-size: 14px;
+	color: #565759;
+	line-height: 26px;
+	margin-left: 10px;/* orientation=lt */
+	margin-right: 10px;/* orientation=rt */
+}
+
+
