@@ -297,11 +297,10 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 							// check for topic:
 							if(!isRead && post.getIsActiveByTopic() && post.getIsApproved() && !post.getIsHidden() && topic.getIsActive() &&
 									topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsWaiting()){
-								if((topic.getCanPost().length == 1 && topic.getCanPost()[0].equals(" ")) || 
-										ForumServiceUtils.hasPermission(topic.getCanPost(),uiForm.userProfile.getUserId()) ||
-										(topic.getCanView().length == 1 && topic.getCanView()[0].equals(" ")) ||
-										ForumServiceUtils.hasPermission(topic.getCanView(),uiForm.userProfile.getUserId())) isRead = true;
-								else isRead = false;
+							  isRead = (ForumUtils.canPost(topic.getCanPost()) || 
+                    ForumServiceUtils.hasPermission(topic.getCanPost(),uiForm.userProfile.getUserId()) ||
+                    ForumUtils.canView(topic.getCanView()) ||
+                    ForumServiceUtils.hasPermission(topic.getCanView(),uiForm.userProfile.getUserId()));
 							} else {
 								isRead = false;
 							}

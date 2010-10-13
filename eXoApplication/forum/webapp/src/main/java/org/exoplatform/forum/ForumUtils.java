@@ -261,6 +261,23 @@ public class ForumUtils {
 		if(str == null || str.trim().length() == 0) return true ;
 		else return false;
 	}
+	
+	
+	public static boolean canView(String[] array) {
+    try {
+      return (array == null || array.length == 0 || array.length == 1 && array[0].equals(" "));
+    } catch (Exception e) {
+     return false;
+    }
+  }
+	
+  public static boolean canPost(String[] array) {
+    try {
+     return (array == null || array.length == 0 || array.length == 1 && array[0].equals(" "));
+    }  catch (Exception e) {
+      return false;
+    }
+  }
 
 	public static String[] addStringToString(String input, String output) throws Exception {
 		List<String> list = new ArrayList<String>();
