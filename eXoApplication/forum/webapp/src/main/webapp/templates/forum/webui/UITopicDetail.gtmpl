@@ -909,7 +909,7 @@
 																<div class="UIRightPopupMenuContainer" style="width:165px; min-width:165px;">
 																	<div class="LineMenu"><span></span></div>
 																	<div title="$title1" class="MenuItem" onclick="$link2">	 
-																		<div class="ItemIcon">
+																		<div class="ItemIcon BanIpToolsIcon">
 																			<a href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
 																		</div>
 																	</div>
@@ -918,7 +918,7 @@
 																		String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "')){" + uicomponent.event("BanIPAllForum", ip).replaceFirst("javascript:", "") + ";}"; 
 																	%>
 																	<div class="MenuItem" onclick="$link">	 
-																		<div class="ItemIcon">
+																		<div class="ItemIcon BanIpToolsIcon">
 																			<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.BanIPAllForum")%></a>
 																		</div>
 																	</div>
@@ -950,8 +950,10 @@
 									%>
 										<input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" type="checkbox" class="checkbox" value="false" name="$postId" $isChecked/>
 									</div>
-									<%}  %>
-									<div style="clear:left;"><span></span></div>
+									<%} else { %>
+									<div style="float:left; width:20px;"><span></span></div>
+									<%}%>
+									<div style="clear:left;"><span></span></div> 
 								</div>
 								<div style="clear:both;"><span></span></div>
 								<% } else { %>
