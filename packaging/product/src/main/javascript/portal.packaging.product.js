@@ -16,9 +16,6 @@ function getProduct(version) {
   var portal = Module.GetModule("portal", {kernel : kernel, ws:ws, core : core, eXoJcr : eXoJcr});
   var ks = Module.GetModule("ks", {portal:portal, ws:ws});
   
-
-  
-  product.addDependencies(portal.web.rest) ;
   product.addDependencies(portal.portlet.exoadmin) ;
   product.addDependencies(portal.portlet.web) ;
   product.addDependencies(portal.portlet.dashboard) ;
@@ -29,7 +26,6 @@ function getProduct(version) {
   product.addDependencies(portal.web.eXoResources);
 
   product.addDependencies(portal.web.portal);
-  //product.addDependencies(portal.sample.extension) ; // CHANGED for KS, we don't want a rogue sample
   
   // Portal extension starter required by KS etension
   //portal.starter = new Project("org.exoplatform.portal", "exo.portal.starter.war", "war", portal.version);
@@ -39,9 +35,6 @@ function getProduct(version) {
   portal.fck = new Project("org.exoplatform.commons", "exo.platform.commons.fck", "war", "${org.exoplatform.commons.version}");
   portal.fck.deployName = "fck";
   product.addDependencies(portal.fck);
-
-  // cometd (requried for KS)
-  product.addDependencies(ks.comet.cometd);
    
   // KS extension
   product.addDependencies(ks.component.common);
