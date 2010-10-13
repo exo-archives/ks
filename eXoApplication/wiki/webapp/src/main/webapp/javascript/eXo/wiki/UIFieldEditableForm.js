@@ -59,10 +59,10 @@ UIFieldEditableForm.prototype.init = function(componentId, parentId, titleId,
   if (me.inputControl) {
     me.inputControl.form.onsubmit = function() {
       return false;
-    }
+    };
     me.inputControl.focus();
     if (me.inputControl.attachEvent)
-      inputControl.attachEvent("onkeyup", me.pressHandler);
+      me.inputControl.attachEvent("onkeyup", me.pressHandler);
     else
       me.inputControl.onkeyup = function(event) {
         me.pressHandler(event);
