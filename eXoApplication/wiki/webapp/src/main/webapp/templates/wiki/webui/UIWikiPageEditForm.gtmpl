@@ -10,19 +10,19 @@
 <% textAreaInput = uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT)
    textAreaInput.setRows(25);
 %>
-<% if(uicomponent.isSidePanelRendered()){
+<% if(uicomponent.isSidePanelRendered() && uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT).isRendered()){
      textAreaInput.setColumns(92);
 %>
    <div class="UIWikiPageContentInputContainer UIWikiPageContentMarginRight HorizontalLayout">
-<% } else {
+     <% uiform.renderField(uiform.FIELD_CONTENT); %>
+   </div>
+<% } else if(uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT).isRendered()) {
      textAreaInput.setColumns(128);
 %>
    <div class="UIWikiPageContentInputContainer HorizontalLayout">
-<% } %>
-  <% if(uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT).isRendered())
-       uiform.renderField(uiform.FIELD_CONTENT);
-  %>
+     <% uiform.renderField(uiform.FIELD_CONTENT); %>
    </div>
+<% } %>
    <% uiform.renderChild(uiform.RICHTEXT_AREA);%>
    <div class="SyntaxType">
      <span class="SyntaxTypeTitle"><%= _ctx.appRes("UIWikiPageEditForm.label.SyntaxTypeTitle"); %> </span>

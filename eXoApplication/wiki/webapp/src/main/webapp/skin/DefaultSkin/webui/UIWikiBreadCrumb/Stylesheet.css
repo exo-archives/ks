@@ -39,7 +39,6 @@
 }
 
 .UIWikiPortlet .BreadcumPopup{
-  width: 100px;
   position: absolute;
   display: none;
 }
@@ -104,6 +103,10 @@
 
 .UIWikiPortlet .BreadcumPopup .MenuItem a:hover {
 	background: white url("background/BreadcumPopupBG.png") no-repeat 12px -77px;
+}
+
+.UIWikiPortlet .BreadcumPopup .MenuItem .MarginLeftDiv {
+  margin-left: 20px;
 }
 
 .UIWikiPortlet .BreadcumPopup .MenuIcon {
