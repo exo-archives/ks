@@ -177,6 +177,13 @@ public abstract class PageImpl implements Page {
     if (fileName == null) {
       throw new NullPointerException();
     }
+    Iterator<AttachmentImpl> attIter= getAttachments().iterator();
+    while (attIter.hasNext()) {
+      AttachmentImpl att = attIter.next();
+      if (att.getName().equals(fileName)) {
+        return null;
+      }
+    }
     AttachmentImpl file = createAttachment();
     file.setName(TitleResolver.getObjectId(fileName, false));
     addAttachment(file);

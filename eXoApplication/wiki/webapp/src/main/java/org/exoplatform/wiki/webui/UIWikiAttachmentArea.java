@@ -69,8 +69,8 @@ public class UIWikiAttachmentArea extends UIWikiForm {
   public UIWikiAttachmentArea() throws Exception {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW,WikiMode.EDITPAGE,WikiMode.ADDPAGE});   
     UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
-    uiInput.setAutoUpload(true);
-    addUIFormInput(uiInput);
+    uiInput.setAutoUpload(true);    
+    addUIFormInput(uiInput);    
   }
 
   private Collection<AttachmentImpl> getAttachmentsList() {
@@ -137,24 +137,33 @@ public class UIWikiAttachmentArea extends UIWikiForm {
       }
       if (attachfile != null) {
         try {
+          wikiAttachmentArea.removeChildById(FIELD_UPLOAD);
+          UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
+          uiInput.setAutoUpload(true);
+          wikiAttachmentArea.addChild(uiInput);
           Page page = wikiAttachmentArea.getCurrentWikiPage();
           AttachmentImpl att = ((PageImpl) page).createAttachment(attachfile.getName(), attachfile);
-          att.setTitle(uploadResource.getFileName());
-          if (uploadResource.getFileName().indexOf(".")>0){
-            att.setTitle(uploadResource.getFileName().substring(0,uploadResource.getFileName().indexOf(".")));
+          if (att == null) {
+            uiApp.addMessage(new ApplicationMessage("UIWikiAttachmentArea.msg.Warning-dupplicate",
+                                                    null,
+                                                    ApplicationMessage.WARNING));
+            event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());           
+          } else {
+            att.setTitle(uploadResource.getFileName());
+            if (uploadResource.getFileName().indexOf(".") > 0) {
+              att.setTitle(uploadResource.getFileName().substring(0,
+                                                                  uploadResource.getFileName()
+                                                                                .indexOf(".")));
+            }
+            att.setCreator(event.getRequestContext().getRemoteUser());
+            org.exoplatform.wiki.utils.Utils.reparePermissions(att);
           }
-          att.setCreator(event.getRequestContext().getRemoteUser());
-          org.exoplatform.wiki.utils.Utils.reparePermissions(att);
         } catch (ClassNotFoundException e) {
           uiApp.addMessage(new ApplicationMessage("UIApplication.msg.unknown-error", null, ApplicationMessage.ERROR));
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
-        }
-        wikiAttachmentArea.removeChildById(FIELD_UPLOAD);
-        UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
-        uiInput.setAutoUpload(true);
-        wikiAttachmentArea.addChild(uiInput);
-      }
-      event.getRequestContext().addUIComponentToUpdateByAjax(wikiAttachmentArea);
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());          
+        }    
+      }      
+      event.getRequestContext().addUIComponentToUpdateByAjax(wikiAttachmentArea);   
     }
   }
 

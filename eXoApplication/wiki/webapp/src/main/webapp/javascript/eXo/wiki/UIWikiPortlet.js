@@ -25,17 +25,17 @@ function UIWikiPortlet() {
   this.changeModeLink = null;
 };
 
+
 UIWikiPortlet.prototype.init = function(portletId, linkId) {
   var me = eXo.wiki.UIWikiPortlet;
   this.wikiportlet = document.getElementById(portletId);
-  this.changeModeLink = linkId = document.getElementById(linkId);
+  this.changeModeLink = document.getElementById(linkId);
 
-  window.onfocus = function(event) {
-    me.changeMode(event);
-  };
+  // window.onload = function(event) {me.changeMode(event);};
   window.onbeforeunload = function(event) {
     me.changeMode(event);
   };
+
   if (document.attachEvent)
     this.wikiportlet.attachEvent("onmouseup", me.onMouseUp);
   else
