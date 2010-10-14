@@ -29,8 +29,8 @@
 }
 
 .UIBannerPortlet .LeftBanner {
-	padding-left: 10px; /* orientation=lt */
-	padding-right: 10px; /* orientation=rt */
+	padding: 0px 130px 0px 0px; /* orientation=lt */
+	padding: 0px 0px 0px 130px; /* orientation=rt */
 }
 
 .UIBannerPortlet .RightBanner {
@@ -62,7 +62,7 @@
 }
 
 .UIBannerPortlet .MiddleLoginContainer a:hover {
-	color: #e7e7e7;
+	color: #FBCB0F ;
 }
 
 .UIBannerPortlet .MiddleLoginContainer .Name {
@@ -87,7 +87,6 @@
 	margin-right: 12px;	
 	cursor: pointer;
 	float: left;	 	
-	font-weight: bold;
 	display: block;
 	line-height: 35px;
 	color: #a8acab;
@@ -98,7 +97,6 @@
 	margin-right: 12px;	
 	cursor: pointer;
 	float: left;	 	
-	font-weight: bold;
 	display: block;
 	line-height: 35px;
 	color: #a8acab;
@@ -107,7 +105,6 @@
  
 .UIBannerPortlet .MiddleLoginContainer .Language {
 	cursor: pointer;
-	font-weight: bold;
 	float: left;
 	display: block;
 	line-height: 35px;
@@ -115,18 +112,18 @@
 }
 
 .UIPageBody .BLPagebody {
-background: none;
-height:16px;
-padding-left:6px;
+	background: none;
+	height:0px;
+	padding-left:0px;
 }
 .UIPageBody .BRPagebody {
-background: none;
-height:16px;
-padding-right:6px;
+	background: none;
+	height:16px;
+	padding-right:6px;
 }
 .UIPageBody .BMPagebody {
-background: none;
-height:16px;
+	background: none;
+	height:16px;
 }
 
 

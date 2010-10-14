@@ -3,149 +3,123 @@
 %>
 <div class="UIHomePagePortlet" id="$uicomponent.id">
 
-	<table cellspacing="0" cellpadding="0" border="0">
-		<tbody>
-			<tr>
-				<td>
-					<div class="UIHomePagePortlet">
-						<div class="PortletDecoration">
-							<div class="PortletDecorationTL">
-								<div class="PortletDecorationTR">
-									<div class="PortletDecorationTC">
-									<span></span>
-									</div>
-								</div>
+	<div class="HomeImage">
+		<div class="Label">eXo Knowledge</div>
+		<div class="VersionKS">An Extended Service of eXo Platform 3.0</div>
+	</div>
+	<div class="UserSelect ClearFix">
+		<div class="CommunityMembers">
+			<div class="Label">Community Members: </div>
+			<a href="http://docs.exoplatform.org" class="Title TxtBlue">Download eXo Knowledge Documentation</a>
+		</div>
+		<div class="EOrPUse">
+			<div class="Label">Enterprise or Production Use? </div>
+			<a href="http://www.exoplatform.com/company/public/website/platform/exo-platform-3" class="Title TxtBlue">Try eXo Platform 3</a>
+		</div>
+	</div>
+	<div class="KSHomeContainer ClearFix">
+		<div class="RightContainer">
+			<div class="PortletDecoration">
+				<div class="PortletDecorationTL">
+					<div class="PortletDecorationTR">
+						<div class="PortletDecorationTC"><span></span></div>
+					</div>
+				</div>
+				<div class="PortletDecorationML">
+					<div class="PortletDecorationMR">
+						<div class="PortletDecorationMC ClearFix">
+							<div class="BlockWebsite FL">
+								<a href="http://www.exoplatform.com/company/public/website/company/contact-us" class="IconWebsite QuestionsIM"> </a>
+								<p>
+									<a href="http://www.exoplatform.com/company/public/website/company/contact-us" class="TxtLinkIcon">Contact</a></p>
 							</div>
-							<div class="PortletDecorationML">
-								<div class="PortletDecorationMR">
-									<div class="HomePortletAdBackround">
-										<div class="AdImage__">
-									<div class="HomeBackground">
-										<div class="HomeImageRight">
-											<div class="HomeImageLeft">
-												<div class="Label1"><%=_ctx.appRes("home.title") %></div>
-											</div>
-										</div>
-									</div>
-									
-									<table style="table-layout: fixed; width: 100%; _width: auto;">
-										<tr>
-											<td>
-											<%String forumuri = Util.getPortalRequestContext().getPortalURI() + "forum" %>
-											<div class="Decorator" style="margin: 8px 4px 0px 0px">
-												
-													<div class="DecoratorML">
-														<div class="DecoratorMR">
-															<div class="DecoratorMC">
-																<div class="TryNowIcon">
-																	<div class="ForumIcon">
-																		<div class="ForumLabel">
-																			<div class="Title"><a href="$forumuri"><%=_ctx.appRes("home.forum") %></a></div>
-																			<div class="Label"><%=_ctx.appRes("home.forum.subtitle1") %></div>
-																			<div class="Label"><%=_ctx.appRes("home.forum.subtitle2") %></div>
-																		</div>
-																	</div>
-																</div>
-																<div style="margin:0px 0px 0px 0px;">
-																	<div class="CheckIcon"><%=_ctx.appRes("home.forum.feature1") %></div>
-																	<div class="CheckIcon"><%=_ctx.appRes("home.forum.feature2") %></div>
-																	<div class="CheckIcon"><%=_ctx.appRes("home.forum.feature3") %></div>
-																	<div class="CheckIcon"><%=_ctx.appRes("home.forum.feature4") %></div>
-																	<div class="CheckIcon"><%=_ctx.appRes("home.forum.feature5") %> </div>
-																</div>
-																	<div style="clear: left;"><span></span></div>
-															</div>
-														</div>
-													</div>
-													
-												</div>
-											</td>
-											
-											<td>
-											<%String answersuri = Util.getPortalRequestContext().getPortalURI() + "answers" %>
-												<div class="Decorator" style="margin: 8px 0px 0px 4px">
-													
-													<div class="DecoratorML">
-														<div class="DecoratorMR">
-															<div class="DecoratorMC">
-																<div class="TryNowIcon">
-																	<div class="AnswersIcon">
-																		<div class="FAQLabel">
-																			<div class="Title"><a href="$answersuri"><%=_ctx.appRes("home.answers")%></a></div>
-																			<div class="Label"><%=_ctx.appRes("home.answers.subtitle1") %></div>
-																			<div class="Label"><%=_ctx.appRes("home.answers.subtitle2") %></div>
-																		</div>
-																	</div>
-																</div>
-																<div style="margin:0px 0px 0px 0px;">
-																	<div class="CheckIcon"><%=_ctx.appRes("home.answers.feature1") %></div>
-																	<div class="CheckIcon"><%=_ctx.appRes("home.answers.feature2") %></div>
-																	<div class="CheckIcon"><%=_ctx.appRes("home.answers.feature3") %></div>
-																	<div class="CheckIcon"><%=_ctx.appRes("home.answers.feature4") %></div>
-																	<div class="CheckIcon"><%=_ctx.appRes("home.answers.feature5") %></div>
-																</div>
-																<div style="clear: left;"><span></span></div>
-															</div>
-														</div>
-													</div>
-													
-												</div>
-											</td>
-											
-											<td>
-											<%String faquri = Util.getPortalRequestContext().getPortalURI() + "faq" %>
-												<div class="Decorator" style="margin: 8px 0px 0px 4px">
-													
-													<div class="DecoratorML">
-														<div class="DecoratorMR">
-															<div class="DecoratorMC">
-																<div class="TryNowIcon">
-																	<div class="FAQIcon">
-																		<div class="FAQLabel">
-																			<div class="Title"><a href="$faquri"><%=_ctx.appRes("home.faq") %></a></div>
-																			<div class="Label"><%=_ctx.appRes("home.faq.subtitle1") %></div>
-																			<div class="Label"><%=_ctx.appRes("home.faq.subtitle2") %></div>
-																		</div>
-																	</div>
-																</div>
-																<div style="margin:0px 0px 0px 0px;">
-																	<div class="CheckIcon"><%=_ctx.appRes("home.faq.feature1") %></div>
-																	<div class="CheckIcon"><%=_ctx.appRes("home.faq.feature2") %></div>
-																	<div class="CheckIcon"></div>
-																	<div class="CheckIcon"></div>
-																	<div class="CheckIcon"></div>
-																</div>
-																<div style="clear: left;"><span></span></div>
-															</div>
-														</div>
-													</div>
-													
-												</div>
-											</td>							
-											
-											
-										</tr>
-									</table>
-								</div>
+							<div class="BlockWebsite FL">
+								<a href="http://www.exoplatform.com/company/public/website/resource-center" class="IconWebsite ResuorceIM"> </a>
+								<p>
+									<a href="http://www.exoplatform.com/company/public/website/resource-center" class="TxtLinkIcon">Resource Center</a></p>
 							</div>
+							<div class="BlockWebsite FL">
+								<a href="http://support.exoplatform.org/" class="IconWebsite SupportIM"> </a>
+								<p>
+									<a href="http://support.exoplatform.org/" class="TxtLinkIcon">Support</a></p>
 							</div>
+							<div class="BlockWebsite FL">
+								<a href="http://www.exoplatform.com/company/public/website/services/development/development-training" class="IconWebsite TrainingIM"> </a>
+								<p>
+									<a href="http://www.exoplatform.com/company/public/website/services/development/development-training" class="TxtLinkIcon">Training</a></p>
 							</div>
-							<div class="PortletDecorationBL">
-								<div class="PortletDecorationBR">
-									<div class="PortletDecorationBC">
-									<span></span>
-									</div>
-								</div>
+							<div class="BlockWebsite FL">
+								<a href="http://blog.exoplatform.org" class="IconWebsite BlogIM"> </a>
+								<p>
+									<a href="http://blog.exoplatform.org" class="TxtLinkIcon">Blog</a></p>
+							</div>
+							<div class="BlockWebsite FL">
+								<a href="http://www.exoplatform.com" class="IconWebsite WebsiteIM"> </a>
+								<p>
+									<a href="http://www.exoplatform.com" class="TxtLinkIcon">Website</a></p>
 							</div>
 						</div>
 					</div>
-				</td>
-				<td style="width:220px;">
-<% 
-	_ctx.include("system:/templates/sidebar.gtmpl");
-%>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+				</div>
+				<div class="PortletDecorationBL">
+					<div class="PortletDecorationBR">
+						<div class="PortletDecorationBC"><span></span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="LeftContainer">
+			<div class="PortletDecoration">
+				<div class="PortletDecorationTL">
+					<div class="PortletDecorationTR">
+						<div class="PortletDecorationTC"><span></span></div>
+					</div>
+				</div>
+				<div class="PortletDecorationML">
+					<div class="PortletDecorationMR">
+						<div class="PortletDecorationMC">
+							<p>New to eXo <strong>Knowledge?</strong></p>
+							<p>Watch the <a href="http://www.exoplatform.com/company/public/website/resource-viewer?path=/website/eXo-Knowledge-GS" class="TxtBlue">Getting Started Guide</a>, or start exploring some of the key features:</p>
+							<div style="border-bottom: 1px solid #eeeeee;"><span></span></div>
+							<div class="KSProduct ClearFix">
+								<div class="ForumProduct">
+									<h1>Forum</h1>
+									<ul>
+										<li class="ArowGreyIcon">Unlimited catgories and forums</li>
+										<li class="ArowGreyIcon">Permissions, preview, quick reply</li>
+										<li class="ArowGreyIcon">Private messages, bookmarks, watches...</li>
+										<li class="ArowGreyIcon">Advanced moderation : lock, close, approve...</li>
+										<li class="ArowGreyIcon">Administration : move, ban, prune,... </li>
+									</ul>
+								</div>
+								<div class="AnswersProduct">
+									<h1>Answers</h1>
+									<ul>
+										<li class="ArowGreyIcon">Categorize questions</li>
+										<li class="ArowGreyIcon">Multiple answers, comments</li>
+										<li class="ArowGreyIcon">Rates, votes</li>
+										<li class="ArowGreyIcon">Moderation</li>
+										<li class="ArowGreyIcon">RSS and Email watch </li>
+									</ul>
+								</div>
+								<div class="FAQProduct">
+									<h1>FAQ</h1>
+									<ul>
+										<li class="ArowGreyIcon">Publish selected categories</li>
+										<li class="ArowGreyIcon">Customizable presentation template</li>
+									</ul>
+								</div>
+							</div>
+							<div class="ArowBlackIcon">Start using eXo Knowledge, <a href="#" class="TxtBlue">login as Root</a></div>
+						</div>
+					</div>
+				</div>
+				<div class="PortletDecorationBL">
+					<div class="PortletDecorationBR">
+						<div class="PortletDecorationBC"><span></span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
