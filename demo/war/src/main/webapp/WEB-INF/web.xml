@@ -165,17 +165,17 @@
 	</servlet>
 	
 	<servlet>
-      <servlet-name>StickyCaptcha</servlet-name>
-      <servlet-class>org.exoplatform.web.security.CaptchaServlet</servlet-class>
-      <init-param>
-         <param-name>width</param-name>
-         <param-value>200</param-value>
-      </init-param>
-      <init-param>
-         <param-name>height</param-name>
-         <param-value>75</param-value>
-      </init-param>
-   </servlet>
+	<servlet-name>StickyCaptcha</servlet-name>
+		<servlet-class>org.exoplatform.web.security.CaptchaServlet</servlet-class>
+		<init-param>
+			<param-name>width</param-name>
+			<param-value>200</param-value>
+		</init-param>
+		<init-param>
+ 			<param-name>height</param-name>
+			<param-value>75</param-value>
+		</init-param>
+ 	</servlet>
 	
 	<!--  =================================================================  -->
 	<servlet-mapping>
@@ -234,10 +234,10 @@
 	</session-config>
 	
 	
-   <servlet-mapping>
-      <servlet-name>StickyCaptcha</servlet-name>
-      <url-pattern>/captcha</url-pattern>
-   </servlet-mapping>
+  	<servlet-mapping>
+		<servlet-name>StickyCaptcha</servlet-name>
+		<url-pattern>/captcha</url-pattern>
+	</servlet-mapping>
 	<!-- The Welcome File List for IBM WebSphere -->
 
 	<welcome-file-list>
