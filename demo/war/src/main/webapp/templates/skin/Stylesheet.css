@@ -40,16 +40,141 @@
 @font-face {
     font-family: Lucida;
     src: url("Fonts/Lucida_Sans_Regular.ttf");
-	font-weight:normal;
 }
 
-@font-face {
-    font-family: Lucida;
-    src: url("Fonts/Lucida_Sans_Demibold.ttf");
- font-weight:bold;
-}
 
 div, table, tr, td, img, form {
 	font-family:Lucida;
+	font-size: 12px;
 }
 
+/*==============Toolbar Container===================*/
+
+
+.UIToolbarContainer .NormalContainerBlock .ToolbarContainer{
+	background: #343a50;
+	border: none;
+}
+
+.UIToolbarContainer .UIHorizontalTabs .UITab {
+	background: url(home/DefaultSkin/background/LineToolbar.gif) no-repeat right;
+	width: auto !important;
+}
+
+.UIStarToolBarPortlet{
+	background: url(home/DefaultSkin/background/LogoGTN.png) no-repeat center center;
+	width: auto;
+}
+
+
+.UIWorkingWorkspace {
+	background: #eeeeee;
+	width: 100%;
+}
+
+.UIToolbarContainer .UIStarToolBarPortlet .UIHorizontalTabs .UITab{
+	width: 110px !important;
+}
+
+
+.UIToolbarContainer .ToolbarContainer a{
+	padding:0 8px 0 8px;
+	color: #ffd400;
+	background: none;
+	font-weight: normal;
+}
+
+.UIToolbarContainer .GroupIcon {
+	margin-left:0px;
+}
+
+
+.UIBreadcumbsPortlet {
+	display:none;
+}
+
+
+.UIPageBody .VIEW-PAGEBODY .UIPage{
+	padding: 0px;
+}
+
+.UIPageBody .VIEW-PAGEBODY .UIPage .UIComponentBlock {
+	background:none;
+}
+
+.UIToolbarContainer .MenuItemContainer{
+	background:none repeat scroll 0 0 #30385c;
+	border:1px solid transparent;
+	margin-top:0;
+}
+
+.UIToolbarContainer .TitleBar {
+	background:none repeat scroll 0 0 #6B75A2;
+	color:#20263F;
+	font-weight:bold;
+	padding:0 5px;
+	opacity:1;
+}
+
+.UIToolbarContainer .MenuItem {
+	background:none repeat scroll 0 0 #30385c;
+	border-bottom:medium none;
+	border-top:1px solid #414760;
+	height:28px;
+	line-height:28px;
+	opacity:1;
+	text-align:left;
+}
+
+.UIToolbarContainer .MenuItem .ArrowIcon {
+	background:url("home/DefaultSkin/background/ArowDarkBlue.gif") no-repeat right;
+}
+
+.UIToolbarContainer .ToolbarContainer .UITab .MenuItemContainer .MenuItem a {
+	color:#8F8F8F;
+	display:block;
+	font-weight:normal;
+	padding:0 24px 0 35px;
+	white-space:nowrap;
+}
+
+.UIToolbarContainer .ToolbarContainer .UITab .MenuItemContainer .MenuItem a:hover{
+	color:#92918f;
+	background-color: #20263F;
+}
+
+.UIToolbarContainer .TitleBar div{
+	font-size: 11px;
+}
+
+.UIToolbarContainer .ToolbarContainer .UITab .MenuItemContainer .SiteIcon{
+	background:url("home/DefaultSkin/background/SiteIcon.gif") no-repeat 10px;
+}
+
+.UIToolbarContainer .MenuItem .DefaultPageIcon {
+	background:url("home/DefaultSkin/background/DefaultIcon.png") no-repeat 10px;
+}
+
+.UIToolbarContainer .ToolbarContainer .UITab .MenuItemContainer .MenuItem .AddPageIcon {
+	background:url("home/DefaultSkin/background/ToolbarContainer.png") no-repeat scroll 5px -734px transparent;
+}
+
+.UIToolbarContainer .ToolbarContainer .UITab .MenuItemContainer .MenuItem .EditPageIcon {
+	background:url("home/DefaultSkin/background/ToolbarContainer.png") no-repeat scroll 5px -453px transparent;
+}
+
+.UIToolbarContainer .ToolbarContainer .UITab .MenuItemContainer .MenuItem .EditSiteIcon {
+	background:url("home/DefaultSkin/background/ToolbarContainer.png") no-repeat scroll 5px -453px transparent;
+}
+
+.UIToolbarContainer .ToolbarContainer .UITab .MenuItemContainer .MenuItem .ChangeLanguageIcon {
+	background:url("home/DefaultSkin/background/ToolbarContainer.png") no-repeat scroll 5px -758px transparent;
+}
+
+.UIToolbarContainer .ToolbarContainer .UITab .MenuItemContainer .MenuItem .ChangeSkinIcon {
+	background:url("home/DefaultSkin/background/ToolbarContainer.png") no-repeat scroll 5px -782px transparent;
+}
+
+.UIToolbarContainer .ToolbarContainer .UITab .MenuItemContainer .MenuItem .SignOutIcon {
+	background:url("home/DefaultSkin/background/ToolbarContainer.png") no-repeat scroll 5px -806px transparent;
+}
