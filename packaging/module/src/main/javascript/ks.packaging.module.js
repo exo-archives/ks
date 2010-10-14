@@ -11,6 +11,20 @@ function getModule(params) {
   module.relativeSRCRepo = "ks";
   module.name = "ks";
   
+  var cometVersion = "${org.exoplatform.commons.version}";
+  module.comet = {};
+  module.comet.cometd =
+    new Project("org.exoplatform.commons", "exo.platform.commons.comet.webapp", "war", cometVersion).
+    addDependency(new Project("org.mortbay.jetty", "cometd-bayeux", "jar", "6.1.11")).
+    addDependency(new Project("org.mortbay.jetty", "jetty-util", "jar", "6.1.11")).
+    addDependency(new Project("org.mortbay.jetty", "cometd-api", "jar", "0.9.20080221")).
+    addDependency(new Project("org.apache.poi", "poi-ooxml", "jar", "3.6")).
+    addDependency(new Project("org.apache.poi", "poi", "jar", "3.6")).
+    addDependency(new Project("org.apache.poi", "poi-scratchpad", "jar", "3.6")).
+    addDependency(new Project("org.apache.xmlbeans", "xmlbeans", "jar", "2.3.0")).
+    addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.comet.service", "jar", cometVersion));
+  module.comet.cometd.deployName = "cometd";
+  
   // KS
 
   // KS components
@@ -109,15 +123,7 @@ function getModule(params) {
   module.demo.portal.deployName = "ksdemo";  
 	
   module.demo.cometd=
-    new Project("org.exoplatform.ks", "exo.ks.demo.cometd-war", "war", module.version).
-    addDependency(new Project("org.mortbay.jetty", "cometd-bayeux", "jar", "6.1.11")).
-    addDependency(new Project("org.mortbay.jetty", "jetty-util", "jar", "6.1.11")).
-    addDependency(new Project("org.mortbay.jetty", "cometd-api", "jar", "0.9.20080221")).
-    addDependency(new Project("org.apache.poi", "poi-ooxml", "jar", "3.6")).
-    addDependency(new Project("org.apache.poi", "poi", "jar", "3.6")).
-    addDependency(new Project("org.apache.poi", "poi-scratchpad", "jar", "3.6")).
-    addDependency(new Project("org.apache.xmlbeans", "xmlbeans", "jar", "2.3.0")).
-    addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.comet.service", "jar", "${org.exoplatform.commons.version}"));
+    new Project("org.exoplatform.ks", "exo.ks.demo.cometd-war", "war", module.version);
   module.demo.cometd.deployName = "cometd-ksdemo";
 	   
   // demo rest endpoint	   
