@@ -10,15 +10,15 @@
 	<div class="UserSelect ClearFix">
 		<div class="CommunityMembers">
 			<div class="Label">Community Members: </div>
-			<a href="#" class="Title TxtBlue">Download eXo Knowledge Documentation</a>
+			<a href="http://docs.exoplatform.org" class="Title TxtBlue">Download eXo Knowledge Documentation</a>
 		</div>
 		<div class="EOrPUse">
 			<div class="Label">Enterprise or Production Use? </div>
-			<a href="#" class="Title TxtBlue">Try eXo Platform 3</a>
+			<a href="http://www.exoplatform.com/company/public/website/platform/exo-platform-3" class="Title TxtBlue">Try eXo Platform 3</a>
 		</div>
 	</div>
-	<div class="KSPortlet ClearFix">
-		<div class="RightPortlet">
+	<div class="KSHomeContainer ClearFix">
+		<div class="RightContainer">
 			<div class="PortletDecoration">
 				<div class="PortletDecorationTL">
 					<div class="PortletDecorationTR">
@@ -29,34 +29,34 @@
 					<div class="PortletDecorationMR">
 						<div class="PortletDecorationMC ClearFix">
 							<div class="BlockWebsite FL">
-								<a href="#" class="IconWebsite QuestionsIM"> </a>
+								<a href="http://www.exoplatform.com/company/public/website/company/contact-us" class="IconWebsite QuestionsIM"> </a>
 								<p>
-									<a href="#" class="TxtLinkIcon">Questions ?</a></p>
+									<a href="http://www.exoplatform.com/company/public/website/company/contact-us" class="TxtLinkIcon">Contact</a></p>
 							</div>
 							<div class="BlockWebsite FL">
-								<a href="#" class="IconWebsite ResuorceIM"> </a>
+								<a href="http://www.exoplatform.com/company/public/website/resource-center" class="IconWebsite ResuorceIM"> </a>
 								<p>
-									<a href="#" class="TxtLinkIcon">Resource Center</a></p>
+									<a href="http://www.exoplatform.com/company/public/website/resource-center" class="TxtLinkIcon">Resource Center</a></p>
 							</div>
 							<div class="BlockWebsite FL">
-								<a href="#" class="IconWebsite SupportIM"> </a>
+								<a href="http://support.exoplatform.org/" class="IconWebsite SupportIM"> </a>
 								<p>
-									<a href="#" class="TxtLinkIcon">Support</a></p>
+									<a href="http://support.exoplatform.org/" class="TxtLinkIcon">Support</a></p>
 							</div>
 							<div class="BlockWebsite FL">
-								<a href="#" class="IconWebsite TrainingIM"> </a>
+								<a href="http://www.exoplatform.com/company/public/website/services/development/development-training" class="IconWebsite TrainingIM"> </a>
 								<p>
-									<a href="#" class="TxtLinkIcon">Training</a></p>
+									<a href="http://www.exoplatform.com/company/public/website/services/development/development-training" class="TxtLinkIcon">Training</a></p>
 							</div>
 							<div class="BlockWebsite FL">
-								<a href="#" class="IconWebsite BlogIM"> </a>
+								<a href="http://blog.exoplatform.org" class="IconWebsite BlogIM"> </a>
 								<p>
-									<a href="#" class="TxtLinkIcon">Blog</a></p>
+									<a href="http://blog.exoplatform.org" class="TxtLinkIcon">Blog</a></p>
 							</div>
 							<div class="BlockWebsite FL">
-								<a href="#" class="IconWebsite WebsiteIM"> </a>
+								<a href="http://www.exoplatform.com" class="IconWebsite WebsiteIM"> </a>
 								<p>
-									<a href="#" class="TxtLinkIcon">Website</a></p>
+									<a href="http://www.exoplatform.com" class="TxtLinkIcon">Website</a></p>
 							</div>
 						</div>
 					</div>
@@ -68,7 +68,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="LeftPortlet">
+		<div class="LeftContainer">
 			<div class="PortletDecoration">
 				<div class="PortletDecorationTL">
 					<div class="PortletDecorationTR">
@@ -79,29 +79,35 @@
 					<div class="PortletDecorationMR">
 						<div class="PortletDecorationMC">
 							<p>New to eXo <strong>Knowledge?</strong></p>
-							<p>Watch the <span class="TxtBlue">Getting Started Guide</span>, or start exploring some of the key features:</p>
+							<p>Watch the <a href="http://www.exoplatform.com/company/public/website/resource-viewer?path=/website/eXo-Knowledge-GS" class="TxtBlue">Getting Started Guide</a>, or start exploring some of the key features:</p>
 							<div style="border-bottom: 1px solid #eeeeee;"><span></span></div>
 							<div class="KSProduct ClearFix">
 								<div class="ForumProduct">
 									<h1>Forum</h1>
-									<div class="ArowGreyIcon">Unlimited catgories and forums</div>
-									<div class="ArowGreyIcon">Permissions, preview, quick reply</div>
-									<div class="ArowGreyIcon">Private messages, bookmarks, watches...</div>
-									<div class="ArowGreyIcon">Advanced moderation : lock, close, approve...</div>
-									<div class="ArowGreyIcon">Administration : move, ban, prune,... </div>
+									<ul>
+										<li class="ArowGreyIcon">Unlimited catgories and forums</li>
+										<li class="ArowGreyIcon">Permissions, preview, quick reply</li>
+										<li class="ArowGreyIcon">Private messages, bookmarks, watches...</li>
+										<li class="ArowGreyIcon">Advanced moderation : lock, close, approve...</li>
+										<li class="ArowGreyIcon">Administration : move, ban, prune,... </li>
+									</ul>
 								</div>
 								<div class="AnswersProduct">
 									<h1>Answers</h1>
-									<div class="ArowGreyIcon">Categorize questions</div>
-									<div class="ArowGreyIcon">Multiple answers, comments</div>
-									<div class="ArowGreyIcon">Rates, votes</div>
-									<div class="ArowGreyIcon">Moderation</div>
-									<div class="ArowGreyIcon">RSS and Email watch </div>
+									<ul>
+										<li class="ArowGreyIcon">Categorize questions</li>
+										<li class="ArowGreyIcon">Multiple answers, comments</li>
+										<li class="ArowGreyIcon">Rates, votes</li>
+										<li class="ArowGreyIcon">Moderation</li>
+										<li class="ArowGreyIcon">RSS and Email watch </li>
+									</ul>
 								</div>
 								<div class="FAQProduct">
 									<h1>FAQ</h1>
-									<div class="ArowGreyIcon">Publish selected categories</div>
-									<div class="ArowGreyIcon">Customizable presentation template</div>
+									<ul>
+										<li class="ArowGreyIcon">Publish selected categories</li>
+										<li class="ArowGreyIcon">Customizable presentation template</li>
+									</ul>
 								</div>
 							</div>
 							<div class="ArowBlackIcon">Start using eXo Knowledge, <a href="#" class="TxtBlue">login as Root</a></div>

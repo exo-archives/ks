@@ -33,25 +33,33 @@
   </properties>
   
  	<portal-layout>
- 	  
- 	  <portlet-application>
-      <portlet>
-        <application-ref>ksdemo</application-ref>
-        <portlet-ref>KSBannerPortlet</portlet-ref>
-      </portlet>
-      <access-permissions>Everyone</access-permissions>
-	    <show-info-bar>false</show-info-bar>
-	  </portlet-application>
-	   
-	  <portlet-application>
-      <portlet>
-        <application-ref>web</application-ref>
-        <portlet-ref>NavigationPortlet</portlet-ref>
-      </portlet>
-      <access-permissions>Everyone</access-permissions>
-	    <show-info-bar>false</show-info-bar>
-	  </portlet-application>
-		
+	  
+	  <container id="KSNavigationBanner" template="system:/groovy/portal/webui/container/UITableColumnContainer.gtmpl">
+        <access-permissions>Everyone</access-permissions>
+	    <container id="KSNavigation" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+          <access-permissions>Everyone</access-permissions>
+          <portlet-application>
+            <portlet>
+              <application-ref>web</application-ref>
+               <portlet-ref>NavigationPortlet</portlet-ref>
+            </portlet>
+            <access-permissions>Everyone</access-permissions>
+	        <show-info-bar>false</show-info-bar>
+	      </portlet-application>
+        </container>
+        <container id="KSBanner" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+          <access-permissions>Everyone</access-permissions>
+          <portlet-application>
+            <portlet>
+              <application-ref>ksdemo</application-ref>
+              <portlet-ref>KSBannerPortlet</portlet-ref>
+            </portlet>
+            <access-permissions>Everyone</access-permissions>
+	        <show-info-bar>false</show-info-bar>
+	      </portlet-application>
+        </container>
+	  </container>
+	  
 	  <portlet-application>
       <portlet>
         <application-ref>web</application-ref>

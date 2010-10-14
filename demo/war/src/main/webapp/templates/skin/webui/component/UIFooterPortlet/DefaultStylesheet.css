@@ -19,7 +19,6 @@
 
 .UIFooterPortlet {
   margin: 0;
-  background: #dedfdf;
 }
 	
 .UIFooterPortlet .RepeatFooter {
@@ -35,6 +34,6 @@
 	text-align: center;
 	line-height: 30px;
 	height: 30px;
-	color:#5A5A5A;
-	font-weight:bold;
+	color:#7b7b7b;
+	font-size: 11px;
 }
