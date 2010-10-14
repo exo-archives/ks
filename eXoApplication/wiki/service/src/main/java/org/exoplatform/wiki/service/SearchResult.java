@@ -1,6 +1,6 @@
 package org.exoplatform.wiki.service;
 
-import org.exoplatform.wiki.mow.api.WikiNodeType;
+import java.util.Calendar;
 
 public class SearchResult {
   private String excerpt ;
@@ -8,16 +8,17 @@ public class SearchResult {
   private String path ;
   private String type ;
   private String nodeName ;
-  
+  private Calendar   updatedDate;  
   
   public SearchResult() {}
   
-  public SearchResult(String excerpt, String title, String path, String type) {
-    this.excerpt = excerpt ;
-    this.title = title ;
-    this.path = path ;
+  public SearchResult(String excerpt, String title, String path, String type, Calendar updatedDate) {
+    this.excerpt = excerpt;
+    this.title = title;
+    this.path = path;
     this.type = type;
-    evaluateNodeName(path) ;
+    this.updatedDate = updatedDate;
+    evaluateNodeName(path);
   }
   
   public void setTitle(String title) {
@@ -62,5 +63,12 @@ public class SearchResult {
   public String getNodeName() {
     return nodeName;
   }
-  
+
+  public Calendar getUpdatedDate() {
+    return updatedDate;
+  }
+
+  public void setUpdatedDate(Calendar updatedDate) {
+    this.updatedDate = updatedDate;
+  }  
 }

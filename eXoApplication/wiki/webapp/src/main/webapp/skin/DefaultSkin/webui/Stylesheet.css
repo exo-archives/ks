@@ -765,8 +765,7 @@
 }
 
 /* Advance search */
-.UIWikiSearchSpaceArea {
-  min-height: 300px;
+.UIWikiSearchSpaceArea {  
 	padding: 8px 20px;
 }
 

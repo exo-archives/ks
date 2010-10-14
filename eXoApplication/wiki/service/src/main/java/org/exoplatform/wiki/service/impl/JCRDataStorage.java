@@ -2,6 +2,8 @@ package org.exoplatform.wiki.service.impl;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -20,6 +22,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.DataStorage;
 import org.exoplatform.wiki.service.SearchData;
 import org.exoplatform.wiki.service.SearchResult;
@@ -47,26 +50,34 @@ public class JCRDataStorage implements DataStorage{
   }
   
   private SearchResult getResult(Row row) throws Exception {
-    String type = row.getValue("jcr:primaryType").getString();    
-  
+    String type = row.getValue("jcr:primaryType").getString();
+
     String path = row.getValue("jcr:path").getString();
     String title = (row.getValue("title") == null ? null : row.getValue("title").getString());
     String excerpt = null;
-   
+    Calendar updateDate = GregorianCalendar.getInstance();
+
     if (WikiNodeType.WIKI_PAGE_CONTENT.equals(type)) {
       excerpt = row.getValue("rep:excerpt(text)").getString();
-    }   
-    if (WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(type)) {
+      String pagepath = path.substring(0, path.lastIndexOf("/"));
+      PageImpl page = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(pagepath,
+                                                                            WikiNodeType.WIKI_PAGE);     
+      updateDate.setTime(page.getUpdatedDate());
+    } else if (WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(type)) {
       // Transform to Attachment result
       type = WikiNodeType.WIKI_ATTACHMENT.toString();
       excerpt = row.getValue("rep:excerpt(jcr:data)").getString();
       path = path.substring(0, path.lastIndexOf("/"));
       AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(path,
                                                                                              WikiNodeType.WIKI_ATTACHMENT);
-
+      updateDate = searchAtt.getUpdatedDate();
       title = searchAtt.getTitle();
+    } else if (WikiNodeType.WIKI_ATTACHMENT.equals(type)) {
+      AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(path,
+                                                                                             WikiNodeType.WIKI_ATTACHMENT);
+      updateDate = searchAtt.getUpdatedDate();
     }
-    SearchResult result = new SearchResult(excerpt, title, path, type);
+    SearchResult result = new SearchResult(excerpt, title, path, type, updateDate);
     return result;
   }
   

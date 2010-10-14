@@ -6,11 +6,17 @@ import org.exoplatform.commons.utils.PageList ;
 import org.exoplatform.wiki.service.SearchResult;
 import org.exoplatform.wiki.commons.Utils ;
 import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
+
+import java.util.Locale;
+import java.text.DateFormat;
+import org.exoplatform.portal.webui.util.Util;
 %>
 
 <%
 	PageList<SearchResult> results = uicomponent.getResults() ;	
-	
+	Locale currentLocale = Util.getPortalRequestContext().getLocale();
+	DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, currentLocale);
+	 
 	if(results != null &&  results.getAll().size() > 0) {
     String resultInfo = _ctx.appRes("UIWikiAdvanceSearchResult.label.ResultInfo");
     resultInfo = resultInfo.replace("{0}", String.valueOf(results.getFrom()+1));
@@ -29,13 +35,17 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 					String wikiType=org.exoplatform.wiki.utils.Utils.getWikiType(wiki);
 					String spaceType = _ctx.appRes("UIWikiAdvanceSearchResult.label.Space");
 					spaceType = spaceType.replace("{0}", wikiType);
-					String pageURI = wikiURI + result.getNodeName() ;					
+					String pageURI = wikiURI + result.getNodeName() ;
+					Calendar updateDate= 	result.getUpdatedDate();				
 					if(WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())){						      	
 		      	%>		      	
 		      	<div class="BlockResultFeed">
 							<a class="TxtTitFeed" onclick="$viewPage" href="$pageURI"><%=result.getTitle()%></a>
 							<div class="TxtDetail"><%=result.getExcerpt()%></div>
-							<div><strong>$spaceType: </strong><a class="TxtMark" onclick="$viewPage" href="$wikiURI">$space</a></div>
+							<div>
+							<strong>$spaceType: </strong><a class="TxtMark" onclick="$viewPage" href="$wikiURI">$space</a>&nbsp;
+							<%= df.format(updateDate.getTime()); %>
+							</div>
 						</div>
 		      	<%	
 		      } else if (WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())){
@@ -49,7 +59,10 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 		      		<% if (result.getExcerpt()!=null){ %>	      		
 							<div class="TxtDetail"><%=result.getExcerpt()%></div>
 							<% } %>
-							<div><strong>$spaceType: </strong><a class="TxtMark" onclick="$viewPage" href="$wikiURI">$space</a> > <a class="TxtMark" onclick="$viewPage" href="$pageURI"><%=att.getParentPage().getContent().getTitle()%></a></div>
+							<div>
+							<strong>$spaceType: </strong><a class="TxtMark" onclick="$viewPage" href="$wikiURI">$space</a> > <a class="TxtMark" onclick="$viewPage" href="$pageURI"><%=att.getParentPage().getContent().getTitle()%></a>&nbsp;
+							<%= df.format(updateDate.getTime()); %>
+							</div>
 						</div>    	
 		      	<%
 		      }     

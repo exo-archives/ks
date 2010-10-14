@@ -411,7 +411,9 @@ public class WikiServiceImpl implements WikiService {
     try {
       Model model = getModel();
       WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
-      if (WikiNodeType.WIKI_PAGE_CONTENT.equals(objectNodeType)) {
+      if (WikiNodeType.WIKI_PAGE.equals(objectNodeType)) {
+        return wStore.getSession().findByPath(PageImpl.class, relPath);
+      } else if (WikiNodeType.WIKI_PAGE_CONTENT.equals(objectNodeType)) {
         return wStore.getSession().findByPath(ContentImpl.class, relPath);
       } else if (WikiNodeType.WIKI_ATTACHMENT.equals(objectNodeType)) {   
         return wStore.getSession().findByPath(AttachmentImpl.class, relPath);
