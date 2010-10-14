@@ -61,8 +61,6 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 import org.exoplatform.webui.organization.account.UIUserSelector;
 
-import com.sun.org.apache.bcel.internal.generic.POP;
-
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -102,6 +100,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 	private boolean isActionBar = false;
 	private boolean isMode = false;
 	private boolean isAddValue = true;
+	private boolean isUpdate = false;
 	private String forumId = "";
 	private String categoryId = "";
 	private String listEmailAutoUpdate = "";
@@ -234,6 +233,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 	}
 	
 	public void setForumValue(Forum forum, boolean isUpdate) throws Exception {
+		this.isUpdate = isUpdate;
 		if(isUpdate) {
 			forumId = forum.getId();
 			forum = getForumService().getForum(categoryId, forumId);
@@ -273,6 +273,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 		getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setEnable(isEditable) ;
 		isCategoriesUpdate = isEditable;
 		this.categoryId = categoryId;
+		isUpdate = false;
 	}
 	
 	public void setForumUpdate(boolean isForumUpdate) {
@@ -457,7 +458,8 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 			
 			forumPortlet.cancelAction() ;
 			WebuiRequestContext context = event.getRequestContext() ;
-			if(!uiForm.isForumUpdate) {
+			
+			if(uiForm.isUpdate && !uiForm.isForumUpdate) {
 				if(uiForm.isCategoriesUpdate) {
 					UICategories uiCategories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
 					uiCategories.setIsgetForumList(true) ;
@@ -470,27 +472,24 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 				if(uiForm.isActionBar) {
 					forumPortlet.findFirstComponentOfType(UICategory.class).setIsEditForum(true) ;
 					forumPortlet.findFirstComponentOfType(UICategories.class).setIsgetForumList(true) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+					context.addUIComponentToUpdateByAjax(forumPortlet) ;
 				}
 			} else {
+				UITopicContainer uiTopicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;
+				if(!uiForm.isForumUpdate){
+					forumPortlet.updateIsRendered(ForumUtils.FORUM);
+					UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+					uiForumContainer.setIsRenderChild(true) ;
+					uiTopicContainer.updateByBreadcumbs(categoryId, newForum.getId(), true, 1);
+					forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId + "/" + newForum.getId());
+				}
 				UIForumDescription forumDescription = forumPortlet.findFirstComponentOfType(UIForumDescription.class); 
 				forumDescription.setForum(newForum) ;
 				UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
-				breadcumbs.setUpdataPath(categoryId + "/" + uiForm.forumId);
+				breadcumbs.setUpdataPath(categoryId + "/" + newForum.getId());
 				forumPortlet.findFirstComponentOfType(UITopicContainer.class).setForum(true);
 				context.addUIComponentToUpdateByAjax(forumPortlet) ;
 			}
-
-			UICategories uiCategories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
-			forumPortlet.updateIsRendered(ForumUtils.FORUM);
-			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-			uiForumContainer.setIsRenderChild(true) ;
-			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-			uiForumContainer.getChild(UIForumDescription.class).setForum(newForum);
-			uiTopicContainer.updateByBreadcumbs(categoryId, newForum.getId(), false, 0) ;
-			forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId + "/" + newForum.getId());
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-			uiCategories.getMaptopicLast().clear();
 		}
 	}
 	
@@ -499,8 +498,6 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 			String[]array = objctId.split("/") ;
 			String childId = array[0] ;
 			if(!ForumUtils.isEmpty(childId)) {
-				UIForumPortlet forumPortlet = forumForm.getAncestorOfType(UIForumPortlet.class);
-				UIPopupAction popupAction1 = forumPortlet.getChild(UIPopupAction.class);
 				UIPopupContainer popupContainer = forumForm.getAncestorOfType(UIPopupContainer.class);
 			
   			UIUserSelect uiUserSelector = forumForm.findFirstComponentOfType(UIUserSelect.class) ;
