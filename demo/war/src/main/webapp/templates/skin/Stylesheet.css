@@ -84,6 +84,10 @@ div, table, tr, td, img, form {
 	font-weight: normal;
 }
 
+.UIToolbarContainer .UITab a:hover{
+	color: #8f8f8f;
+}
+
 .UIToolbarContainer .GroupIcon {
 	margin-left:0px;
 }
