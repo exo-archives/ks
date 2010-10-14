@@ -921,38 +921,40 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 	
 	
 	public void calculateModerator(String nodePath, boolean isNew) throws Exception {
-		JCRSessionManager manager = new JCRSessionManager(repository, workspace);
 		try {
+			JCRSessionManager manager = new JCRSessionManager(repository, workspace);
 			Session session = manager.createSession();
-			Node node = (Node)session.getItem(nodePath);
-			String[] modTemp =	new String[]{};
-			if(node.hasProperty(EXO_TEMP_MODERATORS)) {
-				modTemp = Utils.valuesToArray(node.getProperty(EXO_TEMP_MODERATORS).getValues());
-			}
-			if(node.isNodeType(EXO_FORUM_CATEGORY)){
-				Category category = new Category(node.getName());
-				category.setCategoryName(node.getProperty(EXO_NAME).getString());
-				category.setModerators(Utils.valuesToArray(node.getProperty(EXO_MODERATORS).getValues()));
-				if(isNew || Utils.arraysHaveDifferentContent(modTemp, category.getModerators())){
-					updateModeratorInForums(node, category.getModerators());
-					updateUserProfileModInCategory(session, node, modTemp, category, isNew);
+			try{
+				Node node = (Node)session.getItem(nodePath);
+				String[] modTemp =	new String[]{};
+				if(node.hasProperty(EXO_TEMP_MODERATORS)) {
+					modTemp = Utils.valuesToArray(node.getProperty(EXO_TEMP_MODERATORS).getValues());
 				}
-			} else {
-				Forum forum = new Forum();
-				forum.setId(node.getName());
-				forum.setForumName(node.getProperty(EXO_NAME).getString());
-				forum.setModerators(Utils.valuesToArray(node.getProperty(EXO_MODERATORS).getValues()));
-				if(isNew || Utils.arraysHaveDifferentContent(modTemp, forum.getModerators())){
-					String categoryId = nodePath.substring(nodePath.indexOf(Utils.CATEGORY), nodePath.lastIndexOf("/"));
-					setModeratorForum(session, forum.getModerators(), modTemp, forum, categoryId, isNew);
+				if(node.isNodeType(EXO_FORUM_CATEGORY)){
+					Category category = new Category(node.getName());
+					category.setCategoryName(node.getProperty(EXO_NAME).getString());
+					category.setModerators(Utils.valuesToArray(node.getProperty(EXO_MODERATORS).getValues()));
+					if(isNew || Utils.arraysHaveDifferentContent(modTemp, category.getModerators())){
+						updateModeratorInForums(node, category.getModerators());
+						updateUserProfileModInCategory(session, node, modTemp, category, isNew);
+					}
+				} else {
+					Forum forum = new Forum();
+					forum.setId(node.getName());
+					forum.setForumName(node.getProperty(EXO_NAME).getString());
+					forum.setModerators(Utils.valuesToArray(node.getProperty(EXO_MODERATORS).getValues()));
+					if(isNew || Utils.arraysHaveDifferentContent(modTemp, forum.getModerators())){
+						String categoryId = nodePath.substring(nodePath.indexOf(Utils.CATEGORY), nodePath.lastIndexOf("/"));
+						setModeratorForum(session, forum.getModerators(), modTemp, forum, categoryId, isNew);
+					}
 				}
+				node.setProperty(EXO_TEMP_MODERATORS, new String[]{});
+				node.save();
+			} finally {
+				session.logout();
 			}
-			node.setProperty(EXO_TEMP_MODERATORS, new String[]{});
-			node.save();
 		} catch (Exception e) {
 			log.debug("PathNotFoundException	category node or forum node not found");
-		} finally {
-			manager.closeSession();
 		}
 	}
 	
@@ -7119,20 +7121,24 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 	public void updateStatisticCounts(long topicCount, long postCount) throws Exception {
 		try {
 			JCRSessionManager manager = new JCRSessionManager(repository, workspace);
-			Node forumStatisticNode = manager.createSession().getRootNode().getNode(dataLocator.getForumStatisticsLocation());
-			PropertyReader reader = new PropertyReader(forumStatisticNode);
-			if(topicCount != 0) {				
-				long count = reader.l(EXO_TOPIC_COUNT);
-				if(count < 0) count = 0 ;
-				forumStatisticNode.setProperty(EXO_TOPIC_COUNT, count + topicCount) ;
+			Session session = manager.createSession();
+			try {
+				Node forumStatisticNode = session.getRootNode().getNode(dataLocator.getForumStatisticsLocation());
+				PropertyReader reader = new PropertyReader(forumStatisticNode);
+				if(topicCount != 0) {				
+					long count = reader.l(EXO_TOPIC_COUNT);
+					if(count < 0) count = 0 ;
+					forumStatisticNode.setProperty(EXO_TOPIC_COUNT, count + topicCount) ;
+				}
+				if(postCount != 0){
+					long count = reader.l(EXO_POST_COUNT);
+					if(count < 0) count = 0 ;
+					forumStatisticNode.setProperty(EXO_POST_COUNT, count + postCount) ;
+				}
+				forumStatisticNode.save() ;
+			} finally {
+				session.logout();
 			}
-			if(postCount != 0){
-				long count = reader.l(EXO_POST_COUNT);
-				if(count < 0) count = 0 ;
-				forumStatisticNode.setProperty(EXO_POST_COUNT, count + postCount) ;
-			}
-			forumStatisticNode.save() ;
-			manager.closeSession();
 		}catch(Exception e) {
 			log.debug("Failed to update statistic counts",e);
 		}
