@@ -33,144 +33,151 @@ import javax.mail.internet.InternetAddress;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+
 /**
- * Created by The eXo Platform SARL
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * June 24, 2010 5:35:54 PM 
+ * Created by The eXo Platform SARL 
+ * Author : Vu Duy Tu 
+ *          tu.duy@exoplatform.com 
+ * June 24, 2010 5:35:54 PM
  */
 
 public class Utils {
-	public static final String POLL = "Poll".intern() ;
+	public static final String POLL = "Poll".intern();
+	public static final String POLL_ID_SHOW = "pollIdShow".intern();
 
-	
 	public static final int MAXSIGNATURE = 300;
 	public static final int MAXTITLE = 100;
 	public static final long MAXMESSAGE = 10000;
-	
+
 	public static String getFormatDate(String format, Date myDate) {
-		/*h,hh,H, m, mm, d, dd, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
-		 * */
-		if(myDate == null) return "";
-		if(!isEmpty(format)) {
-			if(format.indexOf("DDDD") >= 0)format = format.replaceAll("DDDD", "EEEE");
-			if(format.indexOf("DDD") >= 0)format = format.replaceAll("DDD", "EEE");
+		/*
+		 * h,hh,H, m, mm, d, dd, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
+		 */
+		if (myDate == null)
+			return "";
+		if (!isEmpty(format)) {
+			if (format.indexOf("DDDD") >= 0)
+				format = format.replaceAll("DDDD", "EEEE");
+			if (format.indexOf("DDD") >= 0)
+				format = format.replaceAll("DDD", "EEE");
 		}
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
 		Locale locale = new Locale(portalContext.getLocale().getLanguage(), portalContext.getLocale().getCountry());
 		Format formatter = new SimpleDateFormat(format, locale);
 		return formatter.format(myDate);
 	}
-	
-	public static Calendar getInstanceTempCalendar() { 
-		Calendar	calendar = GregorianCalendar.getInstance() ;
-		calendar.setLenient(false) ;
-		int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-		calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset) ; 
-		return	calendar;
-	}
-	
+
 	public static boolean isValidEmailAddresses(String addressList) throws Exception {
-		if (isEmpty(addressList))	return true ;
+		if (isEmpty(addressList))
+			return true;
 		addressList = StringUtils.remove(addressList, " ");
 		addressList = StringUtils.replace(addressList, ";", ",");
 		try {
 			InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
-			String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}" ;
-			for (int i = 0 ; i < iAdds.length; i ++) {
-				if(!iAdds[i].getAddress().matches(emailRegex)) return false;
+			String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}";
+			for (int i = 0; i < iAdds.length; i++) {
+				if (!iAdds[i].getAddress().matches(emailRegex))
+					return false;
 			}
-		} catch(AddressException e) {
-			return false ;
+		} catch (AddressException e) {
+			return false;
 		}
-		return true ;
+		return true;
 	}
-	
+
 	public static boolean isEmpty(String str) {
-		if(str == null || str.trim().length() == 0) return true ;
-		else return false;
+		if (str == null || str.trim().length() == 0)
+			return true;
+		else
+			return false;
 	}
 
 	public static String removeZeroFirstNumber(String str) {
-		if(!isEmpty(str)){
+		if (!isEmpty(str)) {
 			str = str.trim();
-			StringBuilder s = new StringBuilder(); int i=0;
-			while((i+1) < str.length() && (str.charAt(i)=='0' || str.charAt(i)==' ')) {
-				s.append(str.charAt(i)); ++i;
+			StringBuilder s = new StringBuilder();
+			int i = 0;
+			while ((i + 1) < str.length() && (str.charAt(i) == '0' || str.charAt(i) == ' ')) {
+				s.append(str.charAt(i));
+				++i;
 			}
-			str = str.replaceFirst(s.toString(), "") ;
+			str = str.replaceFirst(s.toString(), "");
 		}
 		return str;
 	}
-	
+
 	public static String getSubString(String str, int max) {
-		if(!isEmpty(str)) {
-			int l = str.length() ;
-			if(l > max) {
-				str = str.substring(0, max) ;
+		if (!isEmpty(str)) {
+			int l = str.length();
+			if (l > max) {
+				str = str.substring(0, max);
 				int space = str.lastIndexOf(" ");
-				if(space > (max-6))
+				if (space > (max - 6))
 					str = str.substring(0, space) + "...";
-				else str = str + "..." ;
+				else
+					str = str + "...";
 			}
 		}
-		return str ;
+		return str;
 	}
-	
+
 	public static String[] getColor() {
-		return new String[] {"blue", "DarkGoldenRod", "green", "yellow", "BlueViolet", "orange",
-				"darkBlue", "IndianRed","DarkCyan" ,"lawnGreen"} ; 
+		return new String[] { "blue", "DarkGoldenRod", "green", "yellow", "BlueViolet", "orange", "darkBlue", "IndianRed", "DarkCyan", "lawnGreen" };
 	}
-	
+
 	public static String unCodeHTML(String s) {
-		if(s != null && s.trim().length() > 0) {
+		if (s != null && s.trim().length() > 0) {
 			s = s.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#39", "'");
-		} else s = "";
+		} else
+			s = "";
 		return s;
 	}
-	
+
 	public static String enCodeHTML(String s) {
 		StringBuffer buffer = new StringBuffer();
-		if(s != null) {
+		if (s != null) {
 			s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
 			s = s.replaceFirst("(<br/>)*", "");
 			s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
 			for (int j = 0; j < s.trim().length(); j++) {
-				char c = s.charAt(j); 
-				if((int)c == 60){
-					buffer.append("&lt;") ;
-				} else if((int)c == 62){
-					buffer.append("&gt;") ;
-				} else if(c == '\''){
-					buffer.append("&#39") ;
+				char c = s.charAt(j);
+				if ((int) c == 60) {
+					buffer.append("&lt;");
+				} else if ((int) c == 62) {
+					buffer.append("&gt;");
+				} else if (c == '\'') {
+					buffer.append("&#39");
 				} else {
-					buffer.append(c) ;
+					buffer.append(c);
 				}
 			}
 		}
 		return buffer.toString();
 	}
-	
-	public static String getExpire(long timeOut, Date modifiDate, String[]dateUnit ) {
-  	if(timeOut == 0) return dateUnit[0];
-  	else {
-  		Calendar calendar = getGreenwichMeanTime();
-  		long timeEnd = (timeOut < 1000)?(modifiDate.getTime() + timeOut*86400000):timeOut;
-  		long l = timeEnd - calendar.getTimeInMillis();
-  		if(l < 0) return dateUnit[1];
-  		int m = (int)l/60000;
-  		if(m > 60){
-  			int h = (int)m/60;
-  			if(h > 24){
-  				int d = (int)h/24;
-  				return d + " "+dateUnit[2]+", " + (h - d*24) + " "+dateUnit[3]+", " + (m - h*60) + " "+dateUnit[4];
-  			} else {
-  				return h + " "+dateUnit[3]+", " + (m - h*60) + dateUnit[4];
-  			}
-  		} return m + " "+dateUnit[4];
-  	}
-  }
-	
+
+	public static String getExpire(long timeOut, Date modifiDate, String[] dateUnit) {
+		if (timeOut == 0)
+			return dateUnit[0];
+		else {
+			Calendar calendar = getGreenwichMeanTime();
+			long timeEnd = (timeOut < 1000) ? (modifiDate.getTime() + timeOut * 86400000) : timeOut;
+			long l = timeEnd - calendar.getTimeInMillis();
+			if (l < 0)
+				return dateUnit[1];
+			int m = (int) l / 60000;
+			if (m > 60) {
+				int h = (int) m / 60;
+				if (h > 24) {
+					int d = (int) h / 24;
+					return d + " " + dateUnit[2] + ", " + (h - d * 24) + " " + dateUnit[3] + ", " + (m - h * 60) + " " + dateUnit[4];
+				} else {
+					return h + " " + dateUnit[3] + ", " + (m - h * 60) + dateUnit[4];
+				}
+			}
+			return m + " " + dateUnit[4];
+		}
+	}
+
 	public static Calendar getGreenwichMeanTime() {
 		Calendar calendar = GregorianCalendar.getInstance();
 		calendar.setLenient(false);

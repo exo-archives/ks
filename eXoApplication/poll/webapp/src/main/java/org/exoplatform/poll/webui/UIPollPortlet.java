@@ -29,55 +29,55 @@ import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
+ * Created by The eXo Platform SAS 
+ * Author : Vu Duy Tu 
+ *          tu.duy@exoplatform.com 
  * 24 June 2010, 08:00:59
  */
 
 @ComponentConfig(
-   lifecycle = UIApplicationLifecycle.class,
-   template = "app:/templates/poll/webui/UIPollPortlet.gtmpl"
+		lifecycle = UIApplicationLifecycle.class,
+		template = "app:/templates/poll/webui/UIPollPortlet.gtmpl"
 )
-
 public class UIPollPortlet extends UIPortletApplication {
 	private boolean isAdmin = false;
 
 	public UIPollPortlet() throws Exception {
-  	addChild(UIPoll.class, null, null).setRendered(false) ;
-  	addChild(UIPollManagement.class, null, null).setRendered(true) ;
-  	addChild(UIPopupAction.class, null, "UIPollPopupAction") ;
-  }
-  
-	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
+		addChild(UIPoll.class, null, null).setRendered(false);
+		addChild(UIPollManagement.class, null, null).setRendered(true);
+		addChild(UIPopupAction.class, null, "UIPollPopupAction");
+	}
+
+	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
 		PortletRequestContext portletReqContext = (PortletRequestContext) context;
 		if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
-			getChild(UIPoll.class).setRendered(true);
+			UIPoll uipoll = getChild(UIPoll.class).setRendered(true);
+			uipoll.setPollId();
 			getChild(UIPollManagement.class).setRendered(false);
 		} else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
 			getChild(UIPoll.class).setRendered(false);
 			((UIPollManagement) getChild(UIPollManagement.class).setRendered(true)).updateGrid();
 		}
-    super.processRender(app, context) ;
-  }  
-  
-  public void renderPopupMessages() throws Exception {
+		super.processRender(app, context);
+	}
+
+	public void renderPopupMessages() throws Exception {
 		UIPopupMessages popupMess = getUIPopupMessages();
-		if(popupMess == null)	return ;
-		WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
+		if (popupMess == null)
+			return;
+		WebuiRequestContext context = RequestContext.getCurrentInstance();
 		popupMess.processRender(context);
 	}
 
-  public boolean isAdmin() {
-  	return isAdmin;
-  }
-  
-	public void cancelAction() throws Exception {
-		WebuiRequestContext context = RequestContext.getCurrentInstance() ;
-		UIPopupAction popupAction = getChild(UIPopupAction.class) ;
-		popupAction.deActivate() ;
-		context.addUIComponentToUpdateByAjax(popupAction) ;
+	public boolean isAdmin() {
+		return isAdmin;
 	}
 
-	
-} 
+	public void cancelAction() throws Exception {
+		WebuiRequestContext context = RequestContext.getCurrentInstance();
+		UIPopupAction popupAction = getChild(UIPopupAction.class);
+		popupAction.deActivate();
+		context.addUIComponentToUpdateByAjax(popupAction);
+	}
+
+}

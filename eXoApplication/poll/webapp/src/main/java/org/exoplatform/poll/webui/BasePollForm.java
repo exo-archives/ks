@@ -22,50 +22,51 @@ import org.exoplatform.poll.service.PollService;
 import org.exoplatform.webui.core.UIComponent;
 
 /**
- * Base class for UIForm used in poll application.
- * Provides convenience methods to access the service
+ * Base class for UIForm used in poll application. Provides convenience methods to access the service
+ * 
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public class BasePollForm extends BaseUIForm {
 
-  private PollService pollService ;
-  
-  /**
-   * Get a reference to the forum service
-   * @return
-   */
-  protected PollService getPollService() {
-    if (pollService == null) {
-      pollService = (PollService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class) ;
-    }
-    return pollService;
-  }
-  
-  
-  /**
-   * Set poll service (used by unit tests)
-   * @param pollService
-   */
-  protected void setPollService(PollService pollService) {
-    this.pollService = pollService;
-  }
-  
-  protected <T extends UIComponent> T  openPopup(Class<T> componentType,  String popupId, int width, int height) throws Exception {
-    UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class) ;   
-    return openPopup(pollPortlet, componentType, popupId, width, height);
-  }
-  
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
-  	UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class);
-    return openPopup(pollPortlet, componentType, width, height);
-  }
-  
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
-    return openPopup(componentType, width, 0);
-  }
+	private PollService pollService;
 
-  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
-    return openPopup(componentType, popupId, width, 0);
-  }
+	/**
+	 * Get a reference to the forum service
+	 * 
+	 * @return
+	 */
+	protected PollService getPollService() {
+		if (pollService == null) {
+			pollService = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
+		}
+		return pollService;
+	}
+
+	/**
+	 * Set poll service (used by unit tests)
+	 * 
+	 * @param pollService
+	 */
+	protected void setPollService(PollService pollService) {
+		this.pollService = pollService;
+	}
+
+	protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
+		UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class);
+		return openPopup(pollPortlet, componentType, popupId, width, height);
+	}
+
+	protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
+		UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class);
+		return openPopup(pollPortlet, componentType, width, height);
+	}
+
+	protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
+		return openPopup(componentType, width, 0);
+	}
+
+	protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
+		return openPopup(componentType, popupId, width, 0);
+	}
 }
