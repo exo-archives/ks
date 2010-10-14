@@ -181,7 +181,7 @@ public abstract class PageImpl implements Page {
     while (attIter.hasNext()) {
       AttachmentImpl att = attIter.next();
       if (att.getName().equals(fileName)) {
-        return null;
+        att.remove();
       }
     }
     AttachmentImpl file = createAttachment();
