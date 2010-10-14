@@ -52,7 +52,8 @@ public class UIPollPortlet extends UIPortletApplication {
 	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
 		PortletRequestContext portletReqContext = (PortletRequestContext) context;
 		if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
-			getChild(UIPoll.class).setRendered(true);
+			UIPoll uipoll = getChild(UIPoll.class).setRendered(true);
+			uipoll.setPollId();
 			getChild(UIPollManagement.class).setRendered(false);
 		} else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
 			getChild(UIPoll.class).setRendered(false);

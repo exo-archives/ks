@@ -79,36 +79,40 @@ public class UIPoll extends BasePollForm	{
 
 	public void setPollId() throws Exception {
 		if(Utils.isEmpty(pollId)) {
-				PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
-		    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
-		    pollId = portletPref.getValue("pollIdShow", "");
-		    if(Utils.isEmpty(pollId)) {
-//		    	List<String> list = getPollService().getListPollId();
-//		    	if(!list.isEmpty()){
-//		    		pollId = list.get(0);
-//		    	}
-		    }
-				this.isEditPoll = true ;
+			PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		  PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		  pollId = portletPref.getValue("pollIdShow", "");
+		  if(Utils.isEmpty(pollId)) {
+		  	List<String> list = getPollService().getPollSummary().getPollId();
+		  	if(!list.isEmpty()){
+		  		pollId = list.get(0);
+		  	}
+		  }
+			this.isEditPoll = true ;
 		}
 	}
 	
-	public static boolean hasUserInGroup(String groupId, String userId) throws Exception {
-  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  	for (Object object : organizationService.getGroupHandler().findGroupsOfUser(userId)) {
-  		if(((Group)object).getId().equals(groupId)){
-				return true;
+	public boolean hasUserInGroup(String groupId, String userId) throws Exception {
+		try {
+	  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+	  	for (Object object : organizationService.getGroupHandler().findGroupsOfUser(userId)) {
+	  		if(((Group)object).getId().equals(groupId)){
+					return true;
+				}
 			}
+		} catch (Exception e) {
+			log.debug("Failed to check user permission by OrganizationService !", e);
 		}
-  	return false ;
+		return false ;
   }
 	
 	private boolean checkPermission() throws Exception {
 		String path = poll_.getParentPath();
 		if(path.indexOf(PollNodeTypes.APPLICATION_DATA) > 0){
 			String group = path.substring(path.indexOf("/", 3), path.indexOf(PollNodeTypes.APPLICATION_DATA)-1);
-			try {
-				hasPermission = hasUserInGroup(group, userId);
-			} catch (Exception e) {}
+			hasPermission = hasUserInGroup(group, userId);
+		} else {
+			hasPermission = true;
 		}
 		return hasPermission;
 	}
@@ -155,13 +159,14 @@ public class UIPoll extends BasePollForm	{
 	}
 	
 	private Poll getPoll() throws Exception {
-		setPollId();
 		if(isEditPoll && pollId != null && pollId.length() > 0) {
-			poll_ = getPollService().getPoll(pollId) ; 
-			checkPermission();
-			if(poll_.getIsClosed())
-				poll_.setExpire(Utils.getExpire(-1, poll_.getModifiedDate(), dateUnit));
-			else poll_.setExpire(Utils.getExpire(poll_.getTimeOut(), poll_.getModifiedDate(), dateUnit));
+			poll_ = getPollService().getPoll(pollId) ;
+			if(poll_ != null) {
+				checkPermission();
+				if(poll_.getIsClosed())
+					poll_.setExpire(Utils.getExpire(-1, poll_.getModifiedDate(), dateUnit));
+				else poll_.setExpire(Utils.getExpire(poll_.getTimeOut(), poll_.getModifiedDate(), dateUnit));
+			} else hasPermission = false;
 		}
 		this.init() ;
 		return poll_ ;
