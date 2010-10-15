@@ -342,11 +342,19 @@
         <groupId>org.exoplatform.commons</groupId>
         <artifactId>exo.platform.commons.testing</artifactId>
         <version>${org.exoplatform.commons.version}</version>
-      </dependency>   
-	  
-		    
+      </dependency>     
     </dependencies>
   </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk14</artifactId>
+      <version>${org.slf4j.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
   <profiles>
     <profile>
       <id>java-api-compat</id>
