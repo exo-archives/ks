@@ -56,7 +56,7 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 		events = {
 				@EventConfig(listeners = UIPoll.VoteActionListener.class),
 				@EventConfig(listeners = UIPoll.EditPollActionListener.class),
-				@EventConfig(listeners = UIPoll.RemovePollActionListener.class, confirm = "UITopicPoll.msg.confirm-RemovePoll"),
+				@EventConfig(listeners = UIPoll.RemovePollActionListener.class, confirm = "UIPoll.msg.confirm-RemovePoll"),
 				@EventConfig(listeners = UIPoll.ClosedPollActionListener.class),
 				@EventConfig(listeners = UIPoll.VoteAgainPollActionListener.class) 
 		}
@@ -68,10 +68,10 @@ public class UIPoll extends BasePollForm {
 	private boolean isAgainVote = false;
 	private boolean isEditPoll = false;
 	private boolean hasPermission = true;
+	private boolean isAdmin = false;
 	private String[] dateUnit = new String[] { "Never", "Closed", "day(s)", "hour(s)", "minutes" };
 
 	public UIPoll() throws Exception {
-		userId = UserHelper.getCurrentUser();
 		try {
 			dateUnit = new String[] { getLabel("Never"), getLabel("Closed"), getLabel("day"), getLabel("hour"), getLabel("minutes") };
 		} catch (Exception e) {
@@ -79,6 +79,9 @@ public class UIPoll extends BasePollForm {
 	}
 
 	public void setPollId() throws Exception {
+		UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class);
+		isAdmin = pollPortlet.isAdmin();
+		userId = pollPortlet.getUserId();
 		if (Utils.isEmpty(pollId)) {
 			PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
 			PortletPreferences portletPref = pcontext.getRequest().getPreferences();
@@ -188,7 +191,7 @@ public class UIPoll extends BasePollForm {
 	}
 
 	private boolean getCanViewEditMenu() {
-		return getAncestorOfType(UIPollPortlet.class).isAdmin();
+		return isAdmin;
 	}
 
 	private boolean isGuestPermission() throws Exception {
@@ -270,7 +273,7 @@ public class UIPoll extends BasePollForm {
 					}
 				}
 				if (radioInput.getValue().equalsIgnoreCase("vote")) {
-					topicPoll.warning("UITopicPoll.msg.notCheck");
+					topicPoll.warning("UIPoll.msg.notCheck");
 				} else {
 					// order number
 					List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>();
@@ -405,7 +408,7 @@ public class UIPoll extends BasePollForm {
 					poll.setUserVote(setUserVote);
 					poll.setVote(votes);
 				} else {
-					topicPoll.warning("UITopicPoll.msg.notCheck");
+					topicPoll.warning("UIPoll.msg.notCheck");
 				}
 			}
 			topicPoll.getPollService().savePoll(poll, false, true);

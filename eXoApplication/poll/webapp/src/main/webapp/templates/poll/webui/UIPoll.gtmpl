@@ -33,7 +33,7 @@
 					<div class="ForumSeparatorLine"><span></span></div>
 					<div class="ContentAction">
 						<div class="DefaultStyle Forum" onmouseover="eXo.poll.UIPollPortlet.OverButton(this)" onmouseout="eXo.poll.UIPollPortlet.OverButton(this)">
-							<a href="<%=uicomponent.event("RemovePoll","UITopicPoll","poll");%>">
+							<a href="<%=uicomponent.event("RemovePoll","UIPoll","poll");%>">
 								<div class="LeftOverButton">
 									<div class="RightOverButton">
 										<div class="CenterOverButton">

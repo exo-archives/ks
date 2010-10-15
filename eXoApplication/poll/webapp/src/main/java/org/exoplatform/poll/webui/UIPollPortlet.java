@@ -16,9 +16,18 @@
  ***************************************************************************/
 package org.exoplatform.poll.webui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.portlet.PortletMode;
 
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.poll.Utils;
+import org.exoplatform.portal.config.UserACL;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -41,6 +50,7 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 )
 public class UIPollPortlet extends UIPortletApplication {
 	private boolean isAdmin = false;
+	private String userId = "";
 
 	public UIPollPortlet() throws Exception {
 		addChild(UIPoll.class, null, null).setRendered(false);
@@ -52,6 +62,7 @@ public class UIPollPortlet extends UIPortletApplication {
 		PortletRequestContext portletReqContext = (PortletRequestContext) context;
 		if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
 			UIPoll uipoll = getChild(UIPoll.class).setRendered(true);
+			hasGroupAdminOfGatein();
 			uipoll.setPollId();
 			getChild(UIPollManagement.class).setRendered(false);
 		} else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
@@ -71,6 +82,31 @@ public class UIPollPortlet extends UIPortletApplication {
 
 	public boolean isAdmin() {
 		return isAdmin;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+	
+	private void hasGroupAdminOfGatein() {
+		isAdmin = false;
+		try {
+			UserACL userACL = (UserACL)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
+			List<String> list = new ArrayList<String>();
+			Identity identity = ConversationState.getCurrent().getIdentity();
+			userId = identity.getUserId();
+			if(Utils.isEmpty(userId)) {
+				userId = UserHelper.getCurrentUser();
+			} else {
+				list.addAll(identity.getGroups());
+			}
+			list.add(userId);
+			for (String str : list) {
+				if(str.equals(userACL.getSuperUser()) || str.equals(userACL.getAdminGroups())) isAdmin = true;
+			}
+		} catch (Exception e) {
+			log.debug("Failed to check permision for user by component UserACL", e);
+		}
 	}
 
 	public void cancelAction() throws Exception {
