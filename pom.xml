@@ -80,7 +80,7 @@
     
     <selenium-java-client-driver.version>1.0-beta-1</selenium-java-client-driver.version>
      
-    <org.fontbox.version>0.1.0</org.fontbox.version>
+    <org.apache.pdfbox.fontbox.version>1.1.0</org.apache.pdfbox.fontbox.version>
     <jdom.version>1.0</jdom.version>
     
 	<c3p0.version>0.9.1.2</c3p0.version>

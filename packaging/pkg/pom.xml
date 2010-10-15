@@ -470,9 +470,9 @@
       <version>${commons-pool.version}</version>      
     </dependency>
 	<dependency>
-      <groupId>org.fontbox</groupId>
+      <groupId>org.apache.pdfbox</groupId>
       <artifactId>fontbox</artifactId>
-      <version>${org.fontbox.version}</version>      
+      <version>${org.apache.pdfbox.fontbox.version}</version>      
     </dependency>
     <dependency>
       <groupId>commons-dbcp</groupId>
