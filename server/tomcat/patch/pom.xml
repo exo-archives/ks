@@ -38,9 +38,17 @@
             <id>unpack-dependencies</id>
             <phase>compile</phase>
             <goals>
-              <goal>unpack-dependencies</goal>
+              <goal>unpack</goal>
             </goals>
             <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.exoplatform.portal</groupId>
+                  <artifactId>exo.portal.server.tomcat.patch</artifactId>
+                  <version>${org.exoplatform.portal.version}</version>
+                  <type>jar</type>
+                </artifactItem>
+              </artifactItems>
               <outputDirectory>${project.build.outputDirectory}</outputDirectory>
               <excludes>**/GATEIN-README.txt,**/Release_notes.txt,**/conf/jaas.conf,**/Catalina/localhost/rest-ksdemo.xml,**/Catalina/localhost/ksdemo.xml,**/Catalina/localhost/rest.xml</excludes>
               <includes>**</includes>
