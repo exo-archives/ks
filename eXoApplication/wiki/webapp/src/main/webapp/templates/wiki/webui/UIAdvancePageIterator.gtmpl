@@ -6,7 +6,7 @@
 <div class="UIAdvancePageIterator">
 <% uiform.begin() %>
 <% if(maxPage > 1) {%>
-    <div class="PageIteratorContainer">
+    <div class="PageIteratorContainer" align="center">
         <div class="RightPageIteratorBlock">
         <% if(pageSelected == 1) {%>
             <div class="Icon DisableLastTopPageIcon"></div>             

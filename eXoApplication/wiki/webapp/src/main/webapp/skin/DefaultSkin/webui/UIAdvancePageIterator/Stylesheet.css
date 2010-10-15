@@ -1,6 +1,7 @@
 
 .UIAdvancePageIterator {
   margin-bottom: 20px;
+  position: relative;
 }
 
 .UIAdvancePageIterator .PageIteratorContainer .RightPageIteratorBlock {

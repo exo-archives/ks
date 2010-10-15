@@ -32,6 +32,8 @@ import org.exoplatform.wiki.utils.Utils;
 public class JCRDataStorage implements DataStorage{
   private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
   
+  private static final int searchSize = 10;
+  
   public PageList<SearchResult> search(ChromatticSession session, SearchData data) throws Exception {
     List<SearchResult> resultList = new ArrayList<SearchResult>();
     String statement = data.getStatement();
@@ -46,7 +48,7 @@ public class JCRDataStorage implements DataStorage{
         resultList.add(tempResult);
       }
     }
-    return new ObjectPageList<SearchResult>(resultList, 5);
+    return new ObjectPageList<SearchResult>(resultList, searchSize);
   }
   
   private SearchResult getResult(Row row) throws Exception {
