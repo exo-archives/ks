@@ -111,7 +111,7 @@ body, html, div, table, tr, td, img, form {
 }
 
 .UIPollPortlet .DeletePollIcon {
-	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/DustBin.gif') no-repeat;
+	background: url('background/DeletePollIcon.gif') no-repeat;
 }
 
 .UIPollPortlet .ForumToolbar {
@@ -122,7 +122,24 @@ body, html, div, table, tr, td, img, form {
 }
 
 .UIPollPortlet .EditPollIcon {
-	background:url("/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/EditIcon.gif") no-repeat;
+	background:url("background/EditPollIcon.gif") no-repeat;
+}
+
+.UIPollPortlet .ClosePollIcon {
+	background:url("background/ClosePollIcon.gif") no-repeat;
+}
+
+.UIPollPortlet .OpenPollIcon {
+	background:url("background/OpenPollIcon.gif") no-repeat;
+}
+
+.UIPollPortlet .StatusIcon {
+	background-position:left center;
+	height:auto;
+	line-height:22px;
+	margin:0;
+	padding-left:22px;
+	width:auto;
 }
 
 .UIPollPortlet .ForumToolbar .IconRight {
@@ -226,7 +243,89 @@ body, html, div, table, tr, td, img, form {
 	color:#058EE6; 
 }
 
+/******************************	OverButton	***************************************/
+.UIPollPortlet .ForumToolbar .ContentAction {
+	padding: 2px 0px 0px 0px; 
+	margin: 0px;
+	float: right;
+	cursor:pointer;
+}
 
+.UIPollPortlet .DefaultStyle .LeftOverButton {
+	padding-left:5px;
+}
+
+.UIPollPortlet .DefaultStyle .RightOverButton {
+	padding-right:5px;
+}
+
+.UIPollPortlet .DefaultStyle .CenterOverButton {
+	padding-left:3px;
+}
+
+.UIPollPortlet .ButtonHeadBar .CenterOverButton {
+	padding-right: 5px;
+}
+
+.UIPollPortlet .ButtonHeadBar {
+	float:right; 
+	text-align:left; 
+	margin: 0px;
+	white-space:nowrap;
+	padding: 2px 3px 0px 0px; 
+	cursor:pointer;
+}
+
+*html .UIPollPortlet .ButtonHeadBar {
+	width:90px; 
+}
+
+.UIPollPortlet .Forum {
+	background:none;
+	line-height:22px;
+}
+
+.UIPollPortlet .ForumAction .LeftOverButton {
+	background:url('background/LeftOverButton5x22.gif') no-repeat left top;
+}
+
+.UIPollPortlet .ForumAction .RightOverButton {
+	background:url('background/RightOverButton5x22.gif') no-repeat right top;
+}
+
+.UIPollPortlet .ForumAction .CenterOverButton {
+	background:url('background/CenterOverButton1x22.gif') repeat-x top;
+	line-height:22px;
+}
+/*ForumBarAction*/
+.UIPollPortlet .ForumBar {
+	background:none;
+	float:left;
+	line-height:23px;
+	margin:3px 3px 0px 3px; 
+}
+
+.UIPollPortlet .ForumBarAction {
+	float:left;
+	line-height:23px;
+	margin:3px 3px 0px 3px;
+	cursor: pointer;
+}
+
+.UIPollPortlet .ForumBarAction .LeftOverButton {
+	background:url('background/LeftOverButton5x23.gif') no-repeat left top;
+}
+
+.UIPollPortlet .ForumBarAction .RightOverButton {
+	background:url('background/RightOverButton5x23.gif') no-repeat right top;
+}
+
+.UIPollPortlet .ForumBarAction .CenterOverButton {
+	background:url('background/CenterOverButton1x23.gif') repeat-x top;
+	line-height:23px;
+}
+
+/******************************	End OverButton	***************************************/
 
 
 
