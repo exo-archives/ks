@@ -1,5 +1,4 @@
-
-Applications of eXo Knowledge, such as Forum, Answers and Polls, use REST services to communicate with the server. This section describes REST Services of internal API. 
+Applications of eXo Knowledge, such as Forum, Answers and Polls, use REST services to communicate with the server. This section describes REST Services of internal APIs. 
 
 h1. Forum application
 
@@ -10,15 +9,15 @@ The Forum application of eXo Knowledge uses the ForumWebservice to provide all A
 
 * *APIs Usage*
 
-Use the following APIs to build all the functions of Forum application:
+Use the following APIs to build all the functions of the Forum application:
 
-|| Name || Description || Service URL endpoint || Parameters ||	Expected Values ||
+|| Name || Description || Service URL endpoint || Parameters ||	Expected values ||
 | *getMessage* | To get all new posts with the number based on the _maxcount_ value. | {{$portalName/$restcontextname/ks/forum/getmessage/}} | String maxcount | integer |
 | *filterIps* | To ban IPs with no access to Forum. | {{$portalName/$restcontextname/ks/forum/filter/}} | String str | String in the IP format.|
 | *filterIpBanForum* | To ban IPs with no access to a specific Forum. | {{$portalName/$restcontextname/ks/forum/filterIpBanforum/}}| String forumId  {example}{example} String str | string in the IP format, string in the Forum format |
 | *filterTagNameForum* | To do quick search for tags that returns the list of tags. | {{$portalName/$restcontextname/ks/forum/filterTagNameForum/}} | String str  {example}{example}  String userAndTopicId | Tag name  {example}{example}  id of user and topic |
 | *viewrss* | To process the request by the user when he/she wants to view RSS. | {{$portalName/$restcontextname/ks/forum/rss/}} | String resourceid |category id  {example}{example} forum id  {example}{example} topic id |
-| *userrss* | To process the request by the user when he/she wants to view their own collected RSS. | {{$portalName/$restcontextname/ks/forum/rss/user/}} | String resourceid | username id |
+| *userrss* | To process the request by users when they wants to view their own collected RSS. | {{$portalName/$restcontextname/ks/forum/rss/user/}} | String resourceid | username id |
 
 h1. Answers application
 
@@ -31,7 +30,7 @@ The Answers application of eXo Knowledge uses the FAQWebservice to view RSS.
 
 Use the following APIs to build all the functions of Answers application:
 
-|| Name || Description || Service URL endpoint || Parameters ||	Expected Values ||
+|| Name || Description || Service URL endpoint || Parameters ||	Expected values ||
 | *viewrss* | To view RSS | {{$portalName/$restcontextname/ks/faq/rss/}}| String resourceid | category id, question id |
 
 
@@ -44,8 +43,8 @@ The Polls application of eXo Knowledge uses the PollWebservice to create and int
 
 * *APIs Usage*
 
-Use the following APIs to build all the functions of Answers application:
-|| Name || Description || Service URL endpoint || Parameters ||	Expected Values ||
+Use the following APIs to build all functions of the Answers application:
+|| Name || Description || Service URL endpoint || Parameters ||	Expected values ||
 | *viewPoll* | To return data of the Polls system | {{$portalName/$restcontextname/private/ks/poll/viewpoll/}}| String pollId | id of poll |
-| *votePoll* | To update data for the Polls with the returned id | {{$portalName/$restcontextname/private/ks/poll/votepoll/}}| String pollId  {example}{example}  String indexVote | id of poll  {example}{example} integer |
+| *votePoll* | To update data for the Polls with the returned id | {{$portalName/$restcontextname/private/ks/poll/votepoll/}}| String pollId  {example}{example} String indexVote | id of poll  {example}{example} integer |
 

@@ -1,18 +1,16 @@
 h1. Overview
 
-The Auto-count Active Users component is to calculate the number of active users automatically. A user is considered as the active user only when he/she often adds topic/post in Forum and his/her last post date matches the predefined interval time.
+The Auto-count Active Users component is to calculate the number of active users automatically. A user is considered as the active user only when he/she often adds topic/post in the Forum and his/her last post date matches the predefined interval time.
 
-For example, if one user doesnot have any new posts after 15 days, he/she is not considered as an active user.
+For example, if one user does not have any new posts after 15 days, he/she is not considered as an active user.
 
-When Job Scheduler runs, it will get values returned from the Auto-count Active Users plug-in component to identify the number of active users. This value is updated to Active Members information when the user views Forum statistics.
+When the Job Scheduler runs, it will get values returned from the Auto-count Active Users plug-in component to identify the number of active users. This value is updated to Active Members information when the user views Forum statistics.
 
 h1. Configuration
 
 The properties of Auto-count Active Users plug-in is configured in the _war:webapp/WEB-INF/ks-extension/ks/forum/statistics-configuration.xml_ file.
 
-In details:
-
-At runtime of Job Scheduler, the Auto-count Active Users plug-in component is called, then _statistics-configuration.xml_ file is executed. The component-plugin named _RecountActiveUserJob_ will refer to _org.exoplatform.forum.service.conf.RecountActiveUserPeriodJob_ to calculate the number of active users.
+In details, at runtime of Job Scheduler, the Auto-count Active Users plug-in component is called. Then, the _statistics-configuration.xml_ file is executed. The component-plugin named _RecountActiveUserJob_ will refer to _org.exoplatform.forum.service.conf.RecountActiveUserPeriodJob_ to calculate the number of active users.
 
 {code:xml}
  <component-plugin>
@@ -67,17 +65,17 @@ In which:
 | *jobname* | {{String}} | {{RecountActiveUserJob}} | The name of job which will be executed. |
 | *groupname* |{{String}} | {{KnowlegedSuite}} | The name of application which will be executed. |
 | *job* | {{Class path}} | org.exoplatform.forum.service.conf.RecountActiveUserJob | The reference function of job which will be executed. |
-| *repeatCount* | {{Long}} | 0 | The number of times the job is repeated. If *repeatCount* is 0, RecountActiveUserJob is called at runtime only. It does not repeat. If the number is set to 2 or 3, RecountActiveUserJob  will be called two or three times. |
-| *period* | {{Long}} | 7200000 (millisecond) {{example}}{{example}} (equal to 2 hours) | The interval time to execute the job. |
+| *repeatCount* | {{Long}} | 0 | The number of times the job is repeated. If *repeatCount* is set *0*, RecountActiveUserJob is called at runtime only. It does not repeat. If the number is set to *2* or *3*, RecountActiveUserJob  will be called two or three times. |
+| *period* | {{Long}} | 7200000 (millisecond) {{example}}{{example}} (equal to two hours) | The interval time to execute the job. |
 | *starttime* | {{Integer}} | 0 | The start time when the function executes. {{example}}{{example}} _starttime_ is +0, meaning that the time to start executing _RecountActiveUserJob_  is the runtime. |
 | *endtime* | {{Integer}} | null | The end time when the function stops executing. {{example}}{{example}} _endtime_ is blank, meaning that there is no limitation for the end time for _RecountActiveUserJob_.|
 
-With start and end time, you can give a specific date in format:yyyy-mm-dd HH:mm:ss.sss to define the start and end time for _RecountActiveUserJob_ .
+With start and end time, you can give a specific date in the format: yyyy-mm-dd HH:mm:ss.sss to define the start and end time for _RecountActiveUserJob_.
  
 The information of active time is also defined:
 
 || Property name || Possible value || Default value || Description ||
-| *lastPost* | {{Integer}} | 15 | The number of days that the user has added the last post. {{example}}{{example}}_lastPost_ is 15, meaning that all users, who have any new post within 15 days as from their last post date, are active members. |
+| *lastPost* | {{Integer}} | 15 | The number of days that the user has added the last post. {{example}}{{example}}_lastPost_ is 15, meaning that all users, who have any new posts within 15 days as from their last post date, are active members. |
 
 By default, the default properties can only be changed by editing its values in the _statistics-configuration.xml_ file.
 

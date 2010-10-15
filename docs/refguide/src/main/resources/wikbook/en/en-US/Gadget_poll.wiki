@@ -1,13 +1,13 @@
 h1. Overview
+eXo provides a gadget which enables users to see a poll. The Poll Gadget is developed on the combination of Gagget by GateIn and Polls Service. The Poll Gadget enables users to apply functions of Polls, such as viewing and voting Polls. 
 
-|| *Gadget name* | pollslist
-|| *War name* | poll.war
-|| *Description* | The list of polls.
+|| Gadget name || War name || Description ||
+| pollslist | poll.war | The list of Polls. 
 
 h1. Preferences
 
 || Preference name || Description || 
-| *pollId* | The id of poll which is displayed in the Polls gadget. |
+| *pollId* | The id of Polls which is displayed in the Polls gadget. |
 
 h1. Links to used REST services
 

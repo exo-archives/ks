@@ -1,12 +1,11 @@
 h1. Overview
 
-|| *Portlet name* | FAQPortlet 
-|| *War name* | faq.war 
-|| *Description* | The FAQ portlet is the application to show questions and answers.
+|| *Portlet name* || War name || Description ||
+| FAQPortlet | faq.war | The FAQ portlet is the application to show questions and answers. |
 
 h1. Portlet Preferences
 
-FAQ portlet includes some portlet preferences that you can configure to alter the behavior.
+The FAQ portlet includes some portlet preferences that you can configure to alter the behavior.
 
 At runtime, you can use the EDIT mode portlet to set the preferences: 
 
@@ -19,5 +18,4 @@ Alternatively, you can configure the portlet in the _portet-preferences.xml_ fil
 
 h1. Portlet.xml
 * See the portlet.xml file in the project following this path: /webapps/faq/WEB-INF/portlet.xml
-
 

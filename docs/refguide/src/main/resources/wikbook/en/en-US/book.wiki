@@ -1,8 +1,11 @@
 
 h1. Prerequisites
-[http://wiki.exoplatform.org/xwiki/bin/view/Portal/Portal%20Manual#HDevelopment| Portlets & Gadgets]
 
-[http://wiki.exoplatform.org/xwiki/bin/view/WS/|REST APIs]
+To understand and apply this guide effectively, please refer to the following documents: 
+
+[Portlets & Gadgets|http://wiki.exoplatform.org/xwiki/bin/view/Portal/Portal%20Manual#HDevelopment ]
+
+[REST APIs|http://wiki.exoplatform.org/xwiki/bin/view/WS/]
 
 h1. Applications
 
@@ -20,7 +23,7 @@ h3. FAQ Portlet
 h3. Polls Portlet
 {include:document="Poll_Preference.wiki"}
 
-h2. Gadgets
+h2. Poll Gadgets
 {include:document="Gadget_poll.wiki"}
 
 h1. Configuration
@@ -31,7 +34,7 @@ h2. Components
 
 h2. External-component-plugin
 
-h3. Init data configuration
+h3. Init Data Configuration
 
 {include:document="Init_data_KS.wiki"}
 
@@ -42,7 +45,7 @@ h3. Roles Configuration
 
 h3. Forum Configuration
 
-h4. BBCode Configuration
+h4. BBCodes Configuration
 {include:document="BBCode_Configuration.wiki"}
 
 h4. Forums Initializer
@@ -66,12 +69,10 @@ h4. Answers Initializer
 h4. Answers Email Templates Configuration
 {include:document="Answers_Email_Templates_Configuration.wiki"}
 
-h1. Developer reference
+h1. Developer References
 
-h2. Extension points
+h2. Extension Points
 {include:document="Extension_points.wiki"}
 
 h2. Internal API
 {include:document="Internal_API.wiki"}
-
-

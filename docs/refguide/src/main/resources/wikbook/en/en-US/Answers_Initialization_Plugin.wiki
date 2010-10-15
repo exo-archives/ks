@@ -1,20 +1,18 @@
 h1. Overview
 
-The Initialization plug-in component is to define the default answers data in the _.xml_ or _.zip_ file. It includes categories of question that should be exported from a Answers application.
+The Initialization plug-in component is to define the default answers data in the _.xml_ or _.zip_ file. It includes categories of question that should be exported from the Answers application.
 
 When the Answers Service starts, it will get values returned from the Initialization plug-in component to initialize the default Answers data.
 
 h1. Configuration
 
-h2. Default Answers data
+* Default Answers data
 
 The default Answers data is configured in the _services-configuration.xml_ file.
 
-In details:
+In details, at runtime of Answers Service, the Initialization plug-in component is called, the _services-configuration.xml_ file will be executed. The component-plugin named _addInitialDataPlugin_ will refer to _org.exoplatform.faq.service.InitializeDataPlugin_ to execute some objects to create default data. 
 
-At run time of Answers Service, Initialization plug-in component is called, then _services-configuration.xml_ file is executed. The component-plugin named _addInitialDataPlugin_ will refer to _org.exoplatform.faq.service.InitializeDataPlugin_ to execute some objects to create default data. 
-
-The default data in the the _.zip_ file is initialized.
+The default data in the _.zip_ file is initialized as follows:
 
 {code:xml}
 <component-plugin>
@@ -34,11 +32,11 @@ The default data in the the _.zip_ file is initialized.
 
 * In which,
 || Name || Set-Method | Type || Description ||
-| *technical-faq* | addInitialDataPlugin | org.exoplatform.faq.service.InitialDataPlugin | To initialize |
+| *technical-faq* | addInitialDataPlugin | org.exoplatform.faq.service.InitialDataPlugin | To initialize the data plug-in. |
 
 * Init-param
 || Name || Possible value | Default value || Description ||
-| *location* | {{string}} | {{war:/data/Technical-FAQ.zip}} | The location where Answers export format file is stored. |
+| *location* | {{string}} | {{war:/data/Technical-FAQ.zip}} | The location where the Answers export format file is stored. |
 
 If the default data is in the ~~xml~~ format:
 
@@ -57,8 +55,3 @@ To initialize default data in multiple files, it is required to declare them in 
 
 </component-plugin>
 {code}
-
-
-
-
-
