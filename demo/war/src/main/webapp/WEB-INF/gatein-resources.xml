@@ -13,6 +13,31 @@
   </portlet-skin>	
   
   <portlet-skin>
+		<application-name>web</application-name>
+		<portlet-name>BannerPortlet</portlet-name>
+		<skin-name>Default</skin-name>
+		<css-path>/templates/skin/webui/component/UIBannerPortlet/DefaultStylesheet.css</css-path>
+		<overwrite>true</overwrite>
+	</portlet-skin>
+		
+	<!-- FooterPortlet skins -->
+
+	<portlet-skin>
+		<application-name>web</application-name>
+		<portlet-name>FooterPortlet</portlet-name>
+		<skin-name>Default</skin-name>
+		<css-path>/templates/skin/webui/component/UIFooterPortlet/DefaultStylesheet.css</css-path>
+		<overwrite>true</overwrite>
+	</portlet-skin>
+	
+	<portlet-skin>
+		<application-name>web</application-name>
+		<portlet-name>NavigationPortlet</portlet-name>
+		<skin-name>Default</skin-name>
+		<css-path>/templates/skin/webui/component/UINavigationPortlet/DefaultStylesheet.css</css-path>
+		<overwrite>true</overwrite>
+	</portlet-skin>
+  <portlet-skin>
 	<application-name>ksdemo</application-name>
 	<portlet-name>KSDemoCSSControlerPortlet</portlet-name>
 	<skin-name>Default</skin-name>
