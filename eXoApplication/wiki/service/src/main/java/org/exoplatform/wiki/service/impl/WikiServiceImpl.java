@@ -46,7 +46,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
-import org.exoplatform.wiki.service.BreadcumbData;
+import org.exoplatform.wiki.service.BreadcrumbData;
 import org.exoplatform.wiki.service.SearchData;
 import org.exoplatform.wiki.service.SearchResult;
 import org.exoplatform.wiki.service.TitleSearchResult;
@@ -452,7 +452,7 @@ public class WikiServiceImpl implements WikiService {
     return null;
   }
 
-  public List<BreadcumbData> getBreadcumb(String wikiType, String wikiOwner, String pageId) throws Exception {
+  public List<BreadcrumbData> getBreadcumb(String wikiType, String wikiOwner, String pageId) throws Exception {
     return getBreadcumb(null, wikiType, wikiOwner, pageId);
   }
 
@@ -592,12 +592,12 @@ public class WikiServiceImpl implements WikiService {
 
   }
 
-  private List<BreadcumbData> getBreadcumb(List<BreadcumbData> list,
+  private List<BreadcrumbData> getBreadcumb(List<BreadcrumbData> list,
                                            String wikiType,
                                            String wikiOwner,
                                            String pageId) throws Exception {
     if (list == null) {
-      list = new ArrayList<BreadcumbData>(5);
+      list = new ArrayList<BreadcrumbData>(5);
     }
     if (pageId == null) {
       return list;
@@ -606,7 +606,7 @@ public class WikiServiceImpl implements WikiService {
     if (page == null) {
       return list;
     }
-    list.add(0, new BreadcumbData(page.getName(), page.getPath(), page.getContent().getTitle()));
+    list.add(0, new BreadcrumbData(page.getName(), page.getPath(), page.getContent().getTitle()));
     PageImpl parentPage = page.getParentPage();
     if (parentPage != null) {
       getBreadcumb(list, wikiType, wikiOwner, parentPage.getName());

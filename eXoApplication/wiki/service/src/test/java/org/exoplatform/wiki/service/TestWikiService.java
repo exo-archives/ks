@@ -122,7 +122,7 @@ public class TestWikiService extends AbstractMOWTestcase {
     wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "Breadcumb1", "WikiHome") ;
     wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "Breadcumb2", "Breadcumb1") ;
     wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "Breadcumb3", "Breadcumb2") ;
-    List<BreadcumbData> breadCumbs = wService.getBreadcumb(PortalConfig.PORTAL_TYPE, "classic", "Breadcumb3");
+    List<BreadcrumbData> breadCumbs = wService.getBreadcumb(PortalConfig.PORTAL_TYPE, "classic", "Breadcumb3");
     assertEquals(4, breadCumbs.size());
     assertEquals("WikiHome", breadCumbs.get(0).getId());
     assertEquals("Breadcumb1", breadCumbs.get(1).getId());

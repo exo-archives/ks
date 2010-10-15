@@ -27,7 +27,7 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.wiki.commons.Utils;
-import org.exoplatform.wiki.service.BreadcumbData;
+import org.exoplatform.wiki.service.BreadcrumbData;
 import org.exoplatform.wiki.service.WikiPageParams;
 
 /**
@@ -42,16 +42,26 @@ import org.exoplatform.wiki.service.WikiPageParams;
 )
 public class UIWikiBreadCrumb extends UIContainer {
 
-  private List<BreadcumbData> breadCumbs = new ArrayList<BreadcumbData>();
+  private List<BreadcrumbData> breadCumbs = new ArrayList<BreadcrumbData>();
 
-  public List<BreadcumbData> getBreadCumbs() {
+  private String              actionLabel;
+
+  public List<BreadcrumbData> getBreadCumbs() {
     return breadCumbs;
   }
 
-  public void setBreadCumbs(List<BreadcumbData> breadCumbs) {
+  public void setBreadCumbs(List<BreadcrumbData> breadCumbs) {
     this.breadCumbs = breadCumbs;
   }
   
+  public String getActionLabel() {
+    return actionLabel;
+  }
+
+  public void setActionLabel(String actionLabel) {
+    this.actionLabel = actionLabel;
+  }
+
   public String getParentURL() throws Exception {
     if(breadCumbs.size() > 1) {
       return createActionLink(breadCumbs.get(breadCumbs.size() - 2)) ;
@@ -60,7 +70,7 @@ public class UIWikiBreadCrumb extends UIContainer {
     }     
   }
   
-  public String createActionLink(BreadcumbData breadCumbData) throws Exception {
+  public String createActionLink(BreadcrumbData breadCumbData) throws Exception {
     WikiPageParams currentPageParams = Utils.getCurrentWikiPageParams();
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     StringBuilder sb = new StringBuilder(portalRequestContext.getPortalURI());

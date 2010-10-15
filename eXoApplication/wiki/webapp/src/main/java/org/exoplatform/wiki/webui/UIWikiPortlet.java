@@ -141,7 +141,9 @@ public class UIWikiPortlet extends UIPortletApplication {
         findFirstComponentOfType(UIWikiPageContentArea.class).renderVersion();
         UIWikiBreadCrumb wikiBreadCrumb = findFirstComponentOfType(UIWikiBreadCrumb.class);
         WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
+        String currentActionLabel= getCurrentActionLabel();   
         wikiBreadCrumb.setBreadCumbs(wikiService.getBreadcumb(params.getType(), params.getOwner(), page.getName()));
+        wikiBreadCrumb.setActionLabel(currentActionLabel);
       } catch (Exception e) {
         e.printStackTrace();
         context.setAttribute("wikiPage", null);
@@ -218,6 +220,25 @@ public class UIWikiPortlet extends UIPortletApplication {
       portletPreferences.setShowBreadcrumb(Boolean.parseBoolean(portletPref.getValue(WikiPortletPreference.SHOW_BREADCRUMB, "true")));
     } catch (Exception e) {
       log.error("Fail to load wiki portlet's preference: ", e);
+    }
+  }
+  
+  private  String getCurrentActionLabel() {
+    switch (getWikiMode()) {
+    case EDITPAGE:
+      return "UIWikiPortlet.label.Edit-Page";
+    case ADDPAGE:
+      return "UIWikiPortlet.label.Add-Page";
+    case ADVANCEDSEARCH:
+      return "UIWikiPortlet.label.Advanced-Search";
+    case SHOWHISTORY:
+      return "UIWikiPortlet.label.Show-History";
+    case VIEWREVISION:
+      return "UIWikiPortlet.label.View-Revision";
+    case DELETE_CONFIRM:
+      return "UIWikiPortlet.label.Delete-Confirm";
+    default:
+      return "";
     }
   }
   

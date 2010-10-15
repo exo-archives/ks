@@ -26,7 +26,13 @@
                 }
               }
             }
+          String actionLabel= uicomponent.getActionLabel();
+          if (!actionLabel.equals("")){  
+          String label= _ctx.appRes(actionLabel);        
         %>
+          <div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
+          <span class="ActionLabel" >$label</span>
+        <% } %>
         <div class="ClearLeft"><span></span></div>
       </div>
     </div>

@@ -50,7 +50,7 @@ public interface WikiService {
 	public Page getPageByUUID(String uuid) throws Exception ;	
 	
 	public PageList<ContentImpl> searchContent(SearchData data) throws Exception ;
-	public List<BreadcumbData> getBreadcumb(String wikiType, String wikiOwner, String pageId) throws Exception ;
+	public List<BreadcrumbData> getBreadcumb(String wikiType, String wikiOwner, String pageId) throws Exception ;
 	public PageList<SearchResult> search(SearchData data) throws Exception ;
 	public List<SearchResult> searchRenamedPage(String wikiType, String wikiOwner, String pageId) throws Exception  ;
 	public List<TitleSearchResult> searchDataByTitle(SearchData data) throws Exception;

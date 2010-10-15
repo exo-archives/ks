@@ -17,6 +17,10 @@
   padding: 0px;
 }
 
+.UIWikiPortlet .UIWikiBreadCrumb .ActionLabel{
+  color: white;
+}
+
 .UIWikiPortlet .UIWikiBreadCrumb .LeftBreadcumbsBar{
   background: none;
 }
