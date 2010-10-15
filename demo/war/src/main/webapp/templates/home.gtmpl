@@ -110,7 +110,7 @@
 									</ul>
 								</div>
 							</div>
-							<div class="ArowBlackIcon">Start using eXo Knowledge, <a href="#" class="TxtBlue">login as Root</a></div>
+							<div class="ArowBlackIcon">Start using eXo Knowledge, <a href="/ksdemo/login?username=root&amp;password=gtn&amp;initialURI=/ksdemo/private/classic" class="TxtBlue">login as Root</a></div>
 						</div>
 					</div>
 				</div>
