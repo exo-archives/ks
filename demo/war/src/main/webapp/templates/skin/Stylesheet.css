@@ -44,7 +44,7 @@
 
 
 div, table, tr, td, img, form {
-	font-family:Lucida;
+	font-family:Lucida,Tahoma,Verdana,Arial,Helvetica,sans-serif;
 	font-size: 12px;
 }
 
@@ -84,7 +84,7 @@ div, table, tr, td, img, form {
 	font-weight: normal;
 }
 
-.UIToolbarContainer .UITab a:hover{
+.UIToolbarContainer .ToolbarContainer a:hover{
 	color: #8f8f8f;
 }
 
