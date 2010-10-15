@@ -89,7 +89,7 @@ public class AddPageActionComponent extends UIComponent {
     UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
     titleInput.setValue(UIWikiPageEditForm.UNTITLED);
     titleInput.setEditable(true);
-    markupInput.setValue("This is **sample content**");
+    markupInput.setValue("");
     commentInput.setRendered(false);
     WikiService wikiService = wikiPortlet.getApplicationComponent(WikiService.class);
     String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
