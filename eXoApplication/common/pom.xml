@@ -115,11 +115,5 @@
 	  <classifier>jdk15</classifier>
 	   <scope>test</scope>      
     </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>${org.slf4j.version}</version>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
 </project>
