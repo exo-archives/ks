@@ -110,6 +110,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
     @Override
     public void execute(Event<UIWikiAttachmentArea> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
+      UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);
       org.exoplatform.wiki.commons.Utils.reloadWYSIWYGEditor(wikiPortlet);
       UIWikiAttachmentArea wikiAttachmentArea = event.getSource();
       UIApplication uiApp = wikiAttachmentArea.getAncestorOfType(UIApplication.class);
@@ -162,19 +163,24 @@ public class UIWikiAttachmentArea extends UIWikiForm {
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
         }
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(wikiAttachmentArea);
+      event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea);   
     }
   }
 
   static public class RemoveAttachmentActionListener extends EventListener<UIWikiAttachmentArea> {
     public void execute(Event<UIWikiAttachmentArea> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
+      UIWikiPageContentArea contentArea = wikiPortlet.findFirstComponentOfType(UIWikiPageContentArea.class);
+      UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);
+      
       org.exoplatform.wiki.commons.Utils.reloadWYSIWYGEditor(wikiPortlet);
       UIWikiAttachmentArea uiForm = event.getSource();
       String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
       Page page = uiForm.getCurrentWikiPage();
       ((PageImpl) page).removeAttachment(attFileId);
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
+      contentArea.renderVersion();
+      event.getRequestContext().addUIComponentToUpdateByAjax(contentArea);
+      event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea);
     }
   }
   

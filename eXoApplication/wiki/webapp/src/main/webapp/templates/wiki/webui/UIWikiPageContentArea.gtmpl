@@ -1,4 +1,4 @@
-<div class="UIWikiPageContentArea">
+<div class="UIWikiPageContentArea" id="$uicomponent.id">
 	<% uicomponent.renderChildren(); %>
 	${uicomponent.htmlOutput}
 </div>
