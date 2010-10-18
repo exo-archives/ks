@@ -21,15 +21,13 @@ if (!eXo.wiki)
   eXo.wiki = {};
 
 function UIWikiPortlet() {
-  this.wikiportlet = null;
-  this.changeModeLink = null;
 };
 
 
 UIWikiPortlet.prototype.init = function(portletId, linkId) {
   var me = eXo.wiki.UIWikiPortlet;
-  this.wikiportlet = document.getElementById(portletId);
-  this.changeModeLink = document.getElementById(linkId);
+  me.wikiportlet = document.getElementById(portletId);
+  me.changeModeLink = document.getElementById(linkId);
 
   // window.onload = function(event) {me.changeMode(event);};
   window.onbeforeunload = function(event) {
@@ -37,22 +35,23 @@ UIWikiPortlet.prototype.init = function(portletId, linkId) {
   };
 
   if (document.attachEvent)
-    this.wikiportlet.attachEvent("onmouseup", me.onMouseUp);
+    me.wikiportlet.attachEvent("onmouseup", me.onMouseUp);
   else
-    this.wikiportlet.onmouseup = function(event) {
+    me.wikiportlet.onmouseup = function(event) {
       me.onMouseUp(event);
     };
-  this.wikiportlet.onkeypress = function(event) {
-    me.onKeyPress(event);
+  me.wikiportlet.onkeyup = function(event) {
+    me.onKeyUp(event);
   };
 }
 
 UIWikiPortlet.prototype.onMouseUp = function(evt) {
+  var me = eXo.wiki.UIWikiPortlet;
   var evt = evt || window.event;
   var target = evt.target || evt.srcElement;
   if (evt.button == 2)
     return;
-  var searchPopup = eXo.core.DOMUtil.findFirstDescendantByClass(this.wikiportlet, "div", "SearchPopup");
+  var searchPopup = eXo.core.DOMUtil.findFirstDescendantByClass(me.wikiportlet, "div", "SearchPopup");
   if (searchPopup)
     searchPopup.style.display = 'none';
   var breadCrumbPopup = eXo.wiki.UIWikiPortlet.getBreadcrumbPopup();
@@ -65,7 +64,7 @@ UIWikiPortlet.prototype.onMouseUp = function(evt) {
   }
 }
 
-UIWikiPortlet.prototype.onKeyPress = function(evt) {
+UIWikiPortlet.prototype.onKeyUp = function(evt) {
   var evt = evt || window.event;
   var target = evt.target || evt.srcElement;
   if (target.tagName == "INPUT" && target.type == "text")
@@ -74,6 +73,7 @@ UIWikiPortlet.prototype.onKeyPress = function(evt) {
 }
 
 UIWikiPortlet.prototype.changeMode = function(event) {
+  var me = eXo.wiki.UIWikiPortlet;
   var currentURL = document.location.href;
   var mode = "";
   if (currentURL.indexOf("#") > 0) {
@@ -84,7 +84,7 @@ UIWikiPortlet.prototype.changeMode = function(event) {
     if (mode.indexOf("/") > 0)
       mode = mode.substring(0, mode.indexOf("/"));
   }
-  var link = this.changeModeLink;
+  var link = me.changeModeLink;
   var endParamIndex = link.href.lastIndexOf("')");
   var modeIndex = link.href.indexOf("&mode");
   if (modeIndex < 0)

@@ -68,7 +68,7 @@ UIWikiSearchBox.prototype.pressHandler = function(evt, textbox) {
   switch (keyNum) {
   case 13:
     if (textbox.value.trim() != "")
-      me.enterHandler();
+      me.enterHandler(evt);
     break;
   case 27:
     me.escapeHandler();
@@ -101,12 +101,15 @@ UIWikiSearchBox.prototype.pressHandler = function(evt, textbox) {
  * Handler key press
  */
 
-UIWikiSearchBox.prototype.enterHandler = function() {
+UIWikiSearchBox.prototype.enterHandler = function(evt) {
   var me = eXo.wiki.UIWikiSearchBox;
   if (me.currentItem) {
     var link = me.currentItem.firstChild;
     if (link.href) {
-      this.menu.style.display = "none";
+      evt.cancelBubble = true;
+      if (evt.stopPropagation)
+        evt.stopPropagation();
+      this.searchPopup.style.display = "none";
       window.location = link.href;
     }
   } else {
@@ -198,6 +201,12 @@ UIWikiSearchBox.prototype.renderMenu = function(data){
   var searchBox = eXo.core.DOMUtil.findAncestorByClass( this.input, "UIWikiSearchBox");
   this.searchPopup= eXo.core.DOMUtil.findFirstDescendantByClass(searchBox,"div","SearchPopup");
   this.searchPopup.style.display="block";
+  this.searchPopup.onmouseup = function(evt) {
+    this.style.display = "none";
+    evt.cancelBubble = true;
+    if (evt.stopPropagation())
+      evt.stopPropagation();
+  }
   this.menu= eXo.core.DOMUtil.findFirstDescendantByClass(this.searchPopup,"div","SubBlock");
   var resultLength = data.jsonList.length;  
   this.menu.innerHTML= "";

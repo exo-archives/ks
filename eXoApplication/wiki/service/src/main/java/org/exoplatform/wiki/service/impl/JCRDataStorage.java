@@ -68,7 +68,8 @@ public class JCRDataStorage implements DataStorage{
     } else if (WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(type)) {
       // Transform to Attachment result
       type = WikiNodeType.WIKI_ATTACHMENT.toString();
-      excerpt = row.getValue("rep:excerpt(jcr:data)").getString();
+      excerpt = row.getValue("rep:excerpt(.)").getString();
+      
       path = path.substring(0, path.lastIndexOf("/"));
       AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(path,
                                                                                              WikiNodeType.WIKI_ATTACHMENT);
