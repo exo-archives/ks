@@ -26,7 +26,7 @@
 				<a onclick=""><%= _ctx.appRes("UIWikiVersionSelect.label.CompareWithCurrent"); %></a>&nbsp;|&nbsp;
 				<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');" onclick="$restoreLink;"><%= _ctx.appRes("UIWikiVersionSelect.label.RestoreThisVersion"); %></a>&nbsp;|&nbsp;
 				<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.SHOW_HISTORY');"><%= _ctx.appRes("UIWikiVersionSelect.label.ViewPageHistory"); %></a>
-				<a id="$viewHistoryLinkId" onclick="$viewHistoryLink" style="display:none">;
+				<a id="$viewHistoryLinkId" onclick="$viewHistoryLink" style="display:none"></a>
 		</div>
 	</div>
 	<div class="Breadcum">
