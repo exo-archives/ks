@@ -42,6 +42,7 @@ import org.exoplatform.portal.webui.util.Util;
 
 public class Utils {
 	public static final String POLL = "Poll".intern() ;
+	public static final String POLL_ID_SHOW = "pollIdShow".intern() ;
 
 	
 	public static final int MAXSIGNATURE = 300;
