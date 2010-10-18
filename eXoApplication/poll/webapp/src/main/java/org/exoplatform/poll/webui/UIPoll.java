@@ -167,7 +167,7 @@ public class UIPoll extends BasePollForm {
 	}
 
 	private Poll getPoll() throws Exception {
-		if (isEditPoll && pollId != null && pollId.length() > 0) {
+		if (isEditPoll || poll_ == null) {
 			poll_ = getPollService().getPoll(pollId);
 			if (poll_ != null) {
 				checkPermission();
