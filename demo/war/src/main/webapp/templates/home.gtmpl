@@ -1,5 +1,8 @@
 <% 
 	import org.exoplatform.portal.webui.util.Util ;
+	
+  String portalRequestContext = Util.getPortalRequestContext().getRequestContextPath();
+  String autoLoginLink = portalRequestContext + "/" + "login?username=root&amp;password=gtn&amp;initialURI=" + portalRequestContext + "/private/classic";
 %>
 <div class="UIHomePagePortlet" id="$uicomponent.id">
 
@@ -110,7 +113,7 @@
 									</ul>
 								</div>
 							</div>
-							<div class="ArowBlackIcon">Start using eXo Knowledge, <a href="/ksdemo/login?username=root&amp;password=gtn&amp;initialURI=/ksdemo/private/classic" class="TxtBlue">login as Root</a></div>
+							<div class="ArowBlackIcon">Start using eXo Knowledge, <a href="$autoLoginLink" class="TxtBlue">login as Root</a></div>
 						</div>
 					</div>
 				</div>
