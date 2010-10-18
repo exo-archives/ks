@@ -61,6 +61,13 @@
       <version>${project.version}</version>
       <type>js</type>
     </dependency>
+<dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.server.tomcat.patch</artifactId><version>${project.version}</version><type>jar</type></dependency><!-- 2.1.1-SNAPSHOT-->
+<dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.ext.social-integration</artifactId><version>${project.version}</version><type>jar</type></dependency><!-- 2.1.1-SNAPSHOT-->
+<dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.demo.rest-ksdemo</artifactId><version>${project.version}</version><type>war</type></dependency><!-- 2.1.1-SNAPSHOT-->
+<dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.demo.config</artifactId><version>${project.version}</version><type>jar</type></dependency><!-- 2.1.1-SNAPSHOT-->
+<dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.demo.cometd-war</artifactId><version>${project.version}</version><type>war</type></dependency><!-- 2.1.1-SNAPSHOT-->
+<dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.demo.webapp</artifactId><version>${project.version}</version><type>war</type></dependency><!-- 2.1.1-SNAPSHOT-->
+
 	
 	 <dependency>
       <groupId>org.exoplatform.tool</groupId>
