@@ -40,7 +40,7 @@ public enum WikiMode {
 
   PAGE_NOT_FOUND,
 
-  DELETE_CONFIRM,
+  DELETECONFIRM,
 
   HELP,
   

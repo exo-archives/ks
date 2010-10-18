@@ -235,7 +235,7 @@ public class UIWikiPortlet extends UIPortletApplication {
       return "UIWikiPortlet.label.Show-History";
     case VIEWREVISION:
       return "UIWikiPortlet.label.View-Revision";
-    case DELETE_CONFIRM:
+    case DELETECONFIRM:
       return "UIWikiPortlet.label.Delete-Confirm";
     default:
       return "";

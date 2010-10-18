@@ -54,7 +54,7 @@ public class UIWikiDeletePageConfirm extends UIWikiComponent {
   private String pageID ;
   private String owner ;
   public UIWikiDeletePageConfirm() throws Exception{
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.DELETE_CONFIRM});
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.DELETECONFIRM});
     wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
   }
   
