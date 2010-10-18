@@ -82,7 +82,9 @@ public class DeletePageActionComponent extends UIComponent {
         prContext.getResponse().sendRedirect(parentURL);
         return ;        
       }      
-      wikiPortlet.changeMode(WikiMode.DELETE_CONFIRM) ;
+      wikiPortlet.changeMode(WikiMode.DELETE_CONFIRM);
+      String ajaxRequestURL = Utils.getCurrentAjaxRequestURL(wikiPortlet.getWikiMode());
+      prContext.getResponse().sendRedirect(ajaxRequestURL);
     }
   }
 }

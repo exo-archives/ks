@@ -306,6 +306,8 @@ public class Utils {
       return "EditPage";
     case ADDPAGE:
       return "AddPage";
+    case DELETE_CONFIRM:
+      return "DeleteConfirm";
     default:
       return "";
     }
