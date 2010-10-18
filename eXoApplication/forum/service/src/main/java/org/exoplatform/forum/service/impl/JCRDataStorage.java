@@ -314,14 +314,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 				observation.addEventListener(categoryListener, Event.NODE_ADDED | Event.NODE_REMOVED, categoryHome.getPath(), false, null, null, false);
 				listeners.put(categoryHome.getPath(), categoryListener);
 			}
-
+			// register StatisticEventListener for old category.
 			NodeIterator iter = categoryHome.getNodes();
 			while (iter.hasNext()) {
 				Node catNode = iter.nextNode();
 				if (!listeners.containsKey(catNode.getPath())) {
 					StatisticEventListener sListener = new StatisticEventListener(wsName, repoName);
-					observation.addEventListener(sListener, Event.NODE_ADDED + Event.NODE_REMOVED, catNode.getPath(), true, null, new String[] { EXO_TOPIC,
-							EXO_POST }, false);
+					observation.addEventListener(sListener, Event.NODE_ADDED | Event.NODE_REMOVED, catNode.getPath(), true, null, null, false);
 					listeners.put(catNode.getPath(), sListener);
 				}
 			}
@@ -1184,15 +1183,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 	public void unRegisterListenerForCategory(String path) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		try {
-			if (listeners.containsKey(path)) {
-				ObservationManager obserManager = getForumHomeNode(sProvider).getSession().getWorkspace().getObservationManager();
-				obserManager.removeEventListener((StatisticEventListener) listeners.get(path));
-				listeners.remove(path);
-			}
+			unRegisterListenerForCategory(sProvider, path);
 		} catch (Exception e) {
 			log.error("Failed to unregister listener for category " + path, e);
 		} finally {
 			sProvider.close();
+		}
+	}
+	
+	public void unRegisterListenerForCategory(SessionProvider sProvider, String path) throws Exception {
+		if (listeners.containsKey(path)) {
+			ObservationManager obserManager = getForumHomeNode(sProvider).getSession().getWorkspace().getObservationManager();
+			obserManager.removeEventListener((StatisticEventListener) listeners.get(path));
+			listeners.remove(path);
 		}
 	}
 
@@ -1201,6 +1204,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 		try {
 			Node categoryHome = getCategoryHome(sProvider);
 			Node categoryNode = categoryHome.getNode(categoryId);
+			String path = categoryNode.getPath();
 			Map<String, Long> userPostMap = getDeletePostByUser(categoryNode);
 			Category category = getCategory(categoryNode);
 			try {
@@ -1223,8 +1227,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 				addUpdateUserProfileJob(userPostMap);
 			} catch (Exception e) {
 			}
+			unRegisterListenerForCategory(sProvider, path);
 			return category;
-
 		} catch(Exception e) {
 			log.error("failed to remove category " +categoryId);
 			return null ;
