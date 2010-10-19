@@ -25,22 +25,26 @@ function UISavePageConfirmation() {
  * Submits a form with the given action and the given parameters
  */
 
-UISavePageConfirmation.prototype.validateSave = function(pageTitleinputId) {
-  var confirmMask = document.getElementById("ConfirmMask");
+UISavePageConfirmation.prototype.validateSave = function(pageTitleinputId, uicomponentId) {
+  var me= eXo.wiki.UISavePageConfirmation;
+  var uicomponent = document.getElementById(uicomponentId);
   var pageTitleInput = document.getElementById(pageTitleinputId);
-  var confirmEdit = eXo.core.DOMUtil.findFirstDescendantByClass(confirmMask, "div", "ConfirmEdit");
-  var confirmAdd = eXo.core.DOMUtil.findFirstDescendantByClass(confirmMask, "div", "ConfirmAdd");
+  me.confirmBox=  eXo.core.DOMUtil.findFirstDescendantByClass(uicomponent, "div", "ConfirmBox"); 
+  var confirmEdit = eXo.core.DOMUtil.findFirstDescendantByClass(uicomponent, "div", "ConfirmEdit");
+  var confirmAdd = eXo.core.DOMUtil.findFirstDescendantByClass(uicomponent, "div", "ConfirmAdd");
+  if (!uicomponent)
+    eXo.wiki.UISavePageConfirmation.closeConfirm();
   var currentURL= window.location.href;
   if (window.location.href.indexOf("#")>0)
   {
     var currentMode = currentURL.substring(currentURL.indexOf("#")+1, currentURL.length);   
     if ((currentMode.toUpperCase() == "ADDPAGE") && (pageTitleInput.value == "Untitled")) {
-      confirmMask.style.display = "block";
+      this.maskLayer = eXo.core.UIMaskLayer.createMask("UIPortalApplication", me.confirmBox, 30);      
       confirmEdit.style.display = "none";
       confirmAdd.style.display = "block";      
       return false;
     } else if (currentMode.toUpperCase() == "EDITPAGE") {
-      confirmMask.style.display = "block";
+      this.maskLayer = eXo.core.UIMaskLayer.createMask("UIPortalApplication", me.confirmBox, 30);     
       confirmEdit.style.display = "block";
       confirmAdd.style.display = "none";      
       return false;
@@ -52,16 +56,21 @@ UISavePageConfirmation.prototype.validateSave = function(pageTitleinputId) {
 };
 
 UISavePageConfirmation.prototype.closeConfirm = function() {
-  var confirmMask = document.getElementById("ConfirmMask");
-  confirmMask.style.display = "none";
-  return false;
-}
-UISavePageConfirmation.prototype.initDragDrop = function() {
-  var confirmMask = document.getElementById("ConfirmMask");
-  var confirmBox = eXo.core.DOMUtil.findFirstDescendantByClass(confirmMask, "div", "ConfirmBox");
-  var confirmTitle = eXo.core.DOMUtil.findFirstDescendantByClass(confirmMask, "div", "ConfirmTitle");
-  confirmTitle.onmousedown = function(e) {
-    eXo.core.DragDrop.init(null, confirmTitle, confirmBox, e);
-  }
-}
+  eXo.core.UIMaskLayer.removeMask(this.maskLayer);
+  this.maskLayer = null;
+};
+
+UISavePageConfirmation.prototype.resetPosition = function() {
+	var me= eXo.wiki.UISavePageConfirmation;
+	var confirmbox = me.confirmBox ;
+        window.console.info(confirmbox);
+	if (confirmbox && (confirmbox.style.display == "block")) {
+		try{
+			eXo.core.UIMaskLayer.blockContainer = document.getElementById("UIPortalApplication") ;
+			eXo.core.UIMaskLayer.object =  confirmbox;
+			eXo.core.UIMaskLayer.setPosition() ;
+		} catch (e){}
+	}
+};
+
 eXo.wiki.UISavePageConfirmation = new UISavePageConfirmation();

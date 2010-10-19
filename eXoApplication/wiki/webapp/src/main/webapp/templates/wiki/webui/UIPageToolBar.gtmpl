@@ -23,7 +23,9 @@
 <%
 def rcontext = _ctx.getRequestContext() ;
 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(\""+uicomponent.id+"\");");
-rcontext.getJavascriptManager().addJavascript("eXo.wiki.UISavePageConfirmation.initDragDrop();");
+rcontext.getJavascriptManager().addOnResizeJavascript("eXo.wiki.UISavePageConfirmation.resetPosition");
+rcontext.getJavascriptManager().addOnScrollJavascript("eXo.wiki.UISavePageConfirmation.resetPosition");
+
 String saveLink = "";
 String cancelLink = "";
 String pageTitleInputId= uicomponent.getPageTitleInputId();
@@ -68,7 +70,7 @@ for(entry in uicomponent.getActions()) {
 		<%} else if(action.equals("SavePage")){
 			saveLink=link;
 		%>
-		<a href="$link" onclick="return eXo.wiki.UISavePageConfirmation.validateSave('$pageTitleInputId');" 
+		<a href="$link" onclick="return eXo.wiki.UISavePageConfirmation.validateSave('$pageTitleInputId','$uicomponent.id');" 
 		class="Save Icon" title="<%=_ctx.appRes("UIPageToolBar.label.SavePage");%>">&nbsp;</a>
 		<%} else if(action.equals("RichText")){
 		%>
@@ -77,19 +79,17 @@ for(entry in uicomponent.getActions()) {
 		<a onclick="$link" id="$actionId" style="display:none;">&nbsp;</a>
 <%}%>
 
-	<div id="ConfirmMask" class="PopupDiv" align="center">
-		<div class="ConfirmBox">
-			<div class="ConfirmTitle" >
-				<b><%= _ctx.appRes("UISavePageConfirmation.label.Confirmation"); %></b>
-				<a href="" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm();return false;" class="CloseButton"><span></span></a>
+	<div class="ConfirmBox" align="center">
+			<div class="ConfirmBar" >
+				<div class="ConfirmTitle"><%= _ctx.appRes("UISavePageConfirmation.label.Confirmation"); %></div>
+				<a onclick="eXo.wiki.UISavePageConfirmation.closeConfirm();" class="CloseButton">&nbsp;</a>
 			</div>
 			<div>
 				<div class="ConfirmAdd"><%= _ctx.appRes("UISavePageConfirmation.label.ConfirmAdd").replace("{0}", "Untitled"); %></div>
 				<div class="ConfirmEdit"><%= _ctx.appRes("UISavePageConfirmation.label.ConfirmEdit").replace("{0}", "<br/>"); %></div>			
-				<input type="button" value="Confirm" onclick="$saveLink">
-				<input type="button" value="Discard" onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');">
- 			<input type="button" value="Cancel" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm()">
+				<input type="button" value="Confirm" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm();$saveLink">
+				<input type="button" value="Discard" onclick="eXo.wiki.UISavePageConfirmation.closeConfirm();eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');">
+ 			  <input type="button" value="Cancel"  onclick="eXo.wiki.UISavePageConfirmation.closeConfirm()">
 			</div>
 		</div>
-	</div>
 </div> 

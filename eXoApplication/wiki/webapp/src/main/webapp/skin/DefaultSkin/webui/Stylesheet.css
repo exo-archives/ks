@@ -5,6 +5,7 @@
 @import url('UITreeExplorer/Stylesheet.css') ;
 @import url('UIWikiToolBar/Stylesheet.css') ;
 @import url('UIFieldEditableForm/Stylesheet.css') ;
+@import url('UIConfirmation/Stylesheet.css') ;
 
 .ClearFix:after {
 	content: ".";
@@ -463,39 +464,6 @@
 	left:0px;
 	top: 0px;	
 	z-index: 25;		
-}
-
-.UIPageToolBar .ConfirmBox{
-	width:350px;
-	height:auto;
-	background:white;
-	color:black;	
-	border: solid 1px black;	
-	margin-top:250px;
-	margin-left:300px;
-	position:absolute;	
- padding-bottom:5px;
-}
-.UIPageToolBar .ConfirmTitle{
-	background-color: #D7D7D7;
-	height: 25px;
-	text-align:left;
-	font-size:20px;	
-	padding:0px 7px 0;	
-	cursor: pointer;
-}
-
-.UIPageToolBar .ConfirmMessage {
-	margin:10px;
-	font-size:12px
-}
-
-.UIPageToolBar .CloseButton {
-	background: url("/wiki/skin/DefaultSkin/webui/background/CloseIcon.gif") no-repeat right top;
-	float: right;
-	height: 16px;
-	margin: 2px 5px 0 0;
-	width: 16px;
 }
 
 /* wiki homepage */
