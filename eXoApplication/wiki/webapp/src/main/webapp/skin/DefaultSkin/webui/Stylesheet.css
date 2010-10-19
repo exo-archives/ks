@@ -263,7 +263,6 @@
 
 .UIWikiPageEditForm .UIWikiPageContentMarginRight {
   margin-right: 250px;
-  width: 645px;
 }
 
 .UIWikiPageArea .UIWikiPageEditForm .HorizontalLayout {
@@ -380,7 +379,7 @@
 }
 
 .UIWikiPageEditForm .UIForm .HorizontalLayout textarea {
-	width: 885px;
+	width: 99%;
 	height: auto;
 	border: 1px solid #dddddd;
 	padding: 0 0 0 8px;
@@ -388,6 +387,20 @@
 
 .UIWikiPageEditForm .SyntaxType, .UIWikiPageEditForm .CommentInput {
   margin-bottom: 20px;
+}
+
+.UIWikiPageEditForm .SyntaxType .SyntaxTypeTitle{
+	display:block;
+	float:left;
+	line-height:15px;
+	width:60px;
+}
+
+.UIWikiPageEditForm .CommentInput .CommentTitle{
+	display:block;
+	float:left;
+	line-height:15px;
+	width:60px;
 }
 
 .UIWikiPageEditForm .CommentInput input {
@@ -398,7 +411,7 @@
 	border: 1px solid #dddddd;
 	height: auto;
 	padding: 0 0 0 8px;
-	width: 630px;
+	width: 99%;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .Icon {
@@ -1015,16 +1028,20 @@
 .UIWikiAttachmentArea .UIFormGrid th {
 	background: #d7d7d7;
 	color: #636363;
-	text-align: center;
-	line-height: 30px;
-	padding-left: 0px;
+	text-align: left;
+	line-height: 20px;
+	padding-left: 12px;
 	border-right: 1px solid #FFFFFF;
 }
 
 .UIWikiAttachmentArea .UIFormGrid td {
-	text-align: center;
-	padding: 5px 0px;
+	text-align: left;
+	padding: 5px 8px 0px 12px;
 	border-right: 1px solid #FFFFFF;
+}
+
+.UIWikiAttachmentArea .UIFormGrid td a{
+	color: #165eb2;
 }
 
 .UIWikiAttachmentArea .UIFormGrid .EvenRow {

@@ -11,10 +11,10 @@
     <table cellspacing="1" cellpadding="0" border="0" class="UIFormGrid">
       <thead>
         <tr>
-          <th style="width: 40%"><%= _ctx.appRes("UIWikiAttachmentArea.label.File"); %></th>
+          <th><%= _ctx.appRes("UIWikiAttachmentArea.label.File"); %></th>
           <th style="width: 30%"><%= _ctx.appRes("UIWikiAttachmentArea.label.Creator"); %></th>
-          <th style="width: 15%"><%= _ctx.appRes("UIWikiAttachmentArea.label.LastUpdate"); %></th>
-          <th style="width: 15%"></th>
+          <th style="width: 150px;"><%= _ctx.appRes("UIWikiAttachmentArea.label.LastUpdate"); %></th>
+          <th style="width:120px;"></th>
         </tr>
       </thead>
       <tbody>
