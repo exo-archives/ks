@@ -10,6 +10,10 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 import java.util.Locale;
 import java.text.DateFormat;
 import org.exoplatform.portal.webui.util.Util;
+
+def rcontext = _ctx.getRequestContext() ;
+rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.addIconForUnknownMimeType();");
+
 %>
 
 <%
@@ -40,7 +44,7 @@ import org.exoplatform.portal.webui.util.Util;
 					if(WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())){						      	
 		      	%>		      	
 		      	<div class="BlockResultFeed">
-							<a class="TxtTitFeed" onclick="$viewPage" href="$pageURI"><%=result.getTitle()%></a>
+							<a class="page TxtTitFeed" onclick="$viewPage" href="$pageURI"><%=result.getTitle()%></a>
 							<div class="TxtDetail"><%=result.getExcerpt()%></div>
 							<div>
 							<strong>$spaceType: </strong><a class="TxtMark" onclick="$viewPage" href="$wikiURI">$space</a>&nbsp;

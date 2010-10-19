@@ -97,4 +97,21 @@ UIWikiAdvanceSearchForm.prototype.arrowDownHandler = function(){
 UIWikiAdvanceSearchForm.prototype.typeHandler = function(evt,textbox){
 };
 
+UIWikiAdvanceSearchForm.prototype.addIconForUnknownMimeType = function() {
+  var uiSearchResult = document.getElementById('UIWikiAdvanceSearchResult');
+  var resultItems = eXo.core.DOMUtil.findDescendantsByClass(uiSearchResult, 'div', 'BlockResultFeed');
+  for ( var i = 0; i < resultItems.length; i++) {
+    var icon = eXo.core.DOMUtil.findDescendantsByClass(resultItems[i], 'a', 'TxtTitFeed')[0];
+    var bg = false;
+    if (!eXo.core.Browser.isIE7()) {
+      var bg = eXo.core.DOMUtil.getStyle(icon, 'background-image');
+    } else {
+      bg = icon.currentStyle.backgroundImage;
+    }
+    if (!bg || bg.length == 0 || bg == 'none') {
+      eXo.core.DOMUtil.addClass(icon, 'attach');
+    }
+  }
+};
+
 eXo.wiki.UIWikiAdvanceSearchForm = new UIWikiAdvanceSearchForm();

@@ -246,6 +246,7 @@
 .UIWikiPortlet {
 	border: none;
 	color: #333333;
+	background-color: #FFFFFF;
 	font-family: Tahoma,Verdana,Arial,Helvetica,sans-serif;
 	font-size: 11px;
 }
@@ -821,6 +822,14 @@
 	width: 16px;
 }
 
+.UIWikiAdvanceSearchResult .BlockResultFeed .page {
+  background:url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/background/UIWikiSearchBG.png") no-repeat scroll 0px -124px transparent;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .attach {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/AttachFileIcon.gif") no-repeat left top;
+}
+
 .UIWikiAdvanceSearchResult .BlockResultFeed .doc {
 	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/WordFileIcon.png") no-repeat left top;
 }
@@ -879,6 +888,98 @@
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .zip {
 	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/ZipFileIcon.png") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .bmp {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/bmp.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .css {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/css.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .exe {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/exe.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .flash {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/flash.png") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .gif {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/gif.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .jpg {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/jpg.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .js {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/js.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .mp3 {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/mp3.png") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .mp4 {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/mp4.png") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .mpeg {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/mpeg.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .mpp {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/mpp.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .odb {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/odb.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .odf {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/odf.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .odg {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/odg.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .odp {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/odp.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .ods {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/ods.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .odt {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/odt.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .png {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/png.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .rar {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/rar.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .rtf {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/rtf.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .tiff {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/tiff.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .vsd {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/vsd.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .wmv {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/wmv.gif") no-repeat left top;
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .TxtDetail {
