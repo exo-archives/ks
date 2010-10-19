@@ -1136,18 +1136,22 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		} finally{ sProvider.close() ;}
 	}
  	
-	public void unRegisterListenerForCategory(String path) throws Exception{
- 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
- 		try {
- 			if(listeners.containsKey(path)) {
- 				ObservationManager obserManager = getForumHomeNode(sProvider).getSession().getWorkspace().getObservationManager();
- 				obserManager.removeEventListener((StatisticEventListener)listeners.get(path)) ;
- 				listeners.remove(path) ;
- 			} 	 					
-		}catch(Exception e){
-			log.error("Failed to unregister listener for category " +path, e);
-		}finally{
-			sProvider.close() ;
+	public void unRegisterListenerForCategory(String path) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider();
+		try {
+			unRegisterListenerForCategory(sProvider, path);
+		} catch (Exception e) {
+			log.error("Failed to unregister listener for category " + path, e);
+		} finally {
+			sProvider.close();
+		}
+	}
+	
+	private void unRegisterListenerForCategory(SessionProvider sProvider, String path) throws Exception {
+		if (listeners.containsKey(path)) {
+			ObservationManager obserManager = getForumHomeNode(sProvider).getSession().getWorkspace().getObservationManager();
+			obserManager.removeEventListener((StatisticEventListener) listeners.get(path));
+			listeners.remove(path);
 		}
 	}
 	
@@ -1156,6 +1160,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		try {
 			Node categoryHome = getCategoryHome(sProvider);
 			Node categoryNode = categoryHome.getNode(categoryId) ;
+			String path = categoryNode.getPath();
 			Map<String, Long> userPostMap = getDeletePostByUser(categoryNode) ;
 			Category category = getCategory(categoryNode);
 			try {
@@ -1176,6 +1181,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			try {
 				addUpdateUserProfileJob(userPostMap);
 			}catch(Exception e){}			
+			unRegisterListenerForCategory(sProvider, path);
 			return category;
 		} catch(Exception e) {
 			log.error("failed to remove category " +categoryId);

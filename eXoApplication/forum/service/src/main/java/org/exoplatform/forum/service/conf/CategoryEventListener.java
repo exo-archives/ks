@@ -47,13 +47,8 @@ public class CategoryEventListener implements EventListener{
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
 				if(ev.getType() == Event.NODE_ADDED){
-					try {
-						forumService.registerListenerForCategory(ev.getPath());
-          } catch (Exception e) {
-          }
-				}else if(ev.getType() == Event.NODE_REMOVED) {
-					forumService.unRegisterListenerForCategory(ev.getPath()) ;
-				}				
+					forumService.registerListenerForCategory(ev.getPath());
+				}			
 			}			
 		}catch(Exception e) {
 			log.error("Can not init a Category event listener: ",e);
