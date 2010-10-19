@@ -76,8 +76,8 @@
   
   <javascript>
     <param>
-      <js-module>eXo.wiki.UISavePageConfirmation</js-module>
-      <js-path>/javascript/eXo/wiki/UISavePageConfirmation.js</js-path>
+      <js-module>eXo.wiki.UIWikiSavePage</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiSavePage.js</js-path>
     </param>
   </javascript>
   
@@ -137,6 +137,14 @@
     <param>
       <js-module>eXo.wiki.UIWikiPageTitleControlArea</js-module>
       <js-path>/javascript/eXo/wiki/UIWikiPageTitleControlArea.js</js-path>
+    </param>
+  </javascript>
+  
+  <!-- js for Confirm -->
+   <javascript>
+    <param>
+      <js-module>eXo.wiki.UIConfirmBox</js-module>
+      <js-path>/javascript/eXo/wiki/confirm/UIConfirmBox.js</js-path>
     </param>
   </javascript>
    

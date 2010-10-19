@@ -1,0 +1,118 @@
+/**
+ * Copyright (C) 2010 eXo Platform SAS.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF
+ * site: http://www.fsf.org.
+ */
+
+if (!eXo.wiki)
+  eXo.wiki = {};
+
+function UIConfirmBox() {
+};
+
+UIConfirmBox.prototype.render = function(uicomponentId, titleMessage, message,
+    submitClass, submitLabel, discardClass, discardLabel, cancelLabel) {  
+  
+  var me = eXo.wiki.UIConfirmBox;
+  var uicomponent = document.getElementById(uicomponentId);
+  var submitAction = eXo.core.DOMUtil.findFirstDescendantByClass(uicomponent,
+      "a", submitClass);
+  var discardAction = eXo.core.DOMUtil.findFirstDescendantByClass(uicomponent,
+      "a", discardClass);
+  
+  me.confirmBox = document.createElement('div');
+  eXo.core.DOMUtil.addClass(me.confirmBox, 'ConfirmBox');
+  me.confirmBox.setAttribute('align', 'center');
+
+  var confirmBar = document.createElement('div');
+  eXo.core.DOMUtil.addClass(confirmBar, 'ConfirmBar');
+
+  var confirmTitle = document.createElement('div');
+  eXo.core.DOMUtil.addClass(confirmTitle, 'ConfirmTitle');
+  confirmTitle.appendChild(document.createTextNode(titleMessage));
+  confirmBar.appendChild(confirmTitle);
+
+  var closeButton = document.createElement('a');
+  eXo.core.DOMUtil.addClass(closeButton, 'CloseButton');
+  closeButton.setAttribute('href',
+      'javascript:eXo.wiki.UIConfirmBox.closeConfirm()');
+  confirmBar.appendChild(closeButton);
+  me.confirmBox.appendChild(confirmBar);
+
+  var container = document.createElement('div');
+  var divMessage = document.createElement('div');
+  eXo.core.DOMUtil.addClass(divMessage, 'ConfirmMessage');
+  divMessage.appendChild(document.createTextNode(message));
+  container.appendChild(divMessage);
+  if (submitAction && submitLabel) {
+    me.createInput(container, submitAction, submitLabel);
+  }
+  if (discardAction && discardLabel) {
+    me.createInput(container, discardAction, discardLabel);
+  }
+  if (cancelLabel) {
+    me.createInput(container, null, cancelLabel);
+  }
+  me.confirmBox.appendChild(container);
+  uicomponent.appendChild(me.confirmBox);
+
+  eXo.core.DOMUtil.findFirstDescendantByClass(uicomponent, "div", "ConfirmBox");
+  this.maskLayer = eXo.core.UIMaskLayer.createMask("UIPortalApplication",
+      me.confirmBox, 30);
+  return false;
+};
+
+UIConfirmBox.prototype.createInput = function(container, action, message) {
+  var input = document.createElement('input');
+  input.setAttribute('value', message);
+  input.setAttribute('type', 'button');
+  if (input.attachEvent) {
+    input.attachEvent('onclick', function(event) {
+      eXo.wiki.UIConfirmBox.closeConfirm();
+      if (action && action.href)
+        window.location = action.href;
+    });
+  } else {
+    input.onclick = function(event) {
+      eXo.wiki.UIConfirmBox.closeConfirm();
+      if (action && action.href)
+        window.location = action.href;
+    };
+  }
+  container.appendChild(input);
+};
+
+UIConfirmBox.prototype.closeConfirm = function() {
+  eXo.core.UIMaskLayer.removeMask(this.maskLayer);
+  this.maskLayer = null;
+};
+
+UIConfirmBox.prototype.resetPosition = function() {
+  var me = eXo.wiki.UIConfirmBox;
+  var confirmbox = me.confirmBox;
+
+  if (confirmbox && (confirmbox.style.display == "block")) {
+    try {
+      eXo.core.UIMaskLayer.blockContainer = document
+          .getElementById("UIPortalApplication");
+      eXo.core.UIMaskLayer.object = confirmbox;
+      eXo.core.UIMaskLayer.setPosition();
+    } catch (e) {
+    }
+  }
+};
+
+eXo.wiki.UIConfirmBox = new UIConfirmBox();

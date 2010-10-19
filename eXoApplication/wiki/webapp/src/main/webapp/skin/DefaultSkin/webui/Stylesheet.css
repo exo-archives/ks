@@ -5,7 +5,7 @@
 @import url('UITreeExplorer/Stylesheet.css') ;
 @import url('UIWikiToolBar/Stylesheet.css') ;
 @import url('UIFieldEditableForm/Stylesheet.css') ;
-@import url('UIConfirmation/Stylesheet.css') ;
+@import url('UIConfirmBox/Stylesheet.css') ;
 
 .ClearFix:after {
 	content: ".";

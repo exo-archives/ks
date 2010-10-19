@@ -14,8 +14,7 @@
 .ConfirmBox .ConfirmBar {
   background-color: #D7D7D7;
   height: 25px;
-  padding: 0px 7px 0;
-  display: no
+  padding: 0px 7px 0;  
 }
 
 .ConfirmBox .ConfirmTitle {
@@ -26,7 +25,7 @@
 }
 
 .ConfirmBox .ConfirmMessage {
-  margin: 10px;
+  margin: 5px;
   font-size: 12px;
 }
 
