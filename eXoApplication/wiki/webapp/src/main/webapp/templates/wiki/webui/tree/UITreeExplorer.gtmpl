@@ -8,16 +8,22 @@
 %>
 <div class="UITreeExplorer">
 <% 
- String restURL= uicomponent.getRestUrl();
+ def rcontext = _ctx.getRequestContext();
+ 
+ String action = uicomponent.event(uicomponent.SELECT_NODE);
+ String actionClassName = uicomponent.SELECT_NODE;
+ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UITreeExplorer.init('" + uicomponent.id + "', '" + actionClassName + "')");  
+ 
+ String restURL = uicomponent.getRestURL();
  String currentPagePath= uicomponent.getCurrentPagePath();
  
  public void writeNodes(String currentPagePath) {    
-    //Root Tree   
+  //Root Tree   
 	SpaceTreeNode  portalNode =  new SpaceTreeNode(PortalConfig.PORTAL_TYPE);
-    SpaceTreeNode  groupNode =  new SpaceTreeNode(PortalConfig.GROUP_TYPE);
-    SpaceTreeNode  userNode =   new SpaceTreeNode(PortalConfig.USER_TYPE);
+  SpaceTreeNode  groupNode =  new SpaceTreeNode(PortalConfig.GROUP_TYPE);
+  SpaceTreeNode  userNode =   new SpaceTreeNode(PortalConfig.USER_TYPE);
 	//Render Spaces 
-    renderSpaceTreeNode(portalNode,false,currentPagePath );
+  renderSpaceTreeNode(portalNode,false,currentPagePath );
 	renderSpaceTreeNode(groupNode,false, currentPagePath );
 	renderSpaceTreeNode(userNode, true, currentPagePath);	     
  }
@@ -25,7 +31,7 @@
  public void renderSpaceTreeNode(SpaceTreeNode treeNode ,boolean isLastNode, String currentPagePath) {
     currentPagePath= currentPagePath.replace("/",".");   
     String nodeName = treeNode.getName();
-    nodeName = _ctx.appRes("UIWikiMovePageForm.label." + nodeName);
+    nodeName = _ctx.appRes("UITreeExplorer.label." + nodeName);
     String iconType = "Expand";
     String lastNodeClass = "";
     String nodeType = treeNode.getNodeType().toString();
@@ -51,7 +57,7 @@
 %>
 <div class="SideBarContent">  
   <div class="BarContent">
-  <%=_ctx.appRes("UIWikiMovePageForm.label.choose-page-to-move")%>
+  <%=_ctx.appRes("UITreeExplorer.label.Destination")%>
   </div>
   <div class="SideContent">
 	  <div class="UITreeExplorer" id="UITreeExplorer">
@@ -60,7 +66,8 @@
 		      <%		       
 		       writeNodes(currentPagePath);
     	       %>
-    	       <input type="hidden" id="WikiRestURL" value="${restURL}">
+    	       <input type="hidden" id="TreeExplorer_RestURL" value="${restURL}">
+    	       <a href="$action" class="$actionClassName" style="display:none" ></a> 
 		    </div>
 		  </div>   	    
 		</div>

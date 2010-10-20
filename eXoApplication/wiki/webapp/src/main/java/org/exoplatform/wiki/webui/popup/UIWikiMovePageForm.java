@@ -33,13 +33,12 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputInfo;
-import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
-import org.exoplatform.wiki.tree.UITreeExplorer;
 import org.exoplatform.wiki.utils.Utils;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.tree.UITreeExplorer;
 
 /**
  * Created by The eXo Platform SAS
@@ -57,21 +56,32 @@ import org.exoplatform.wiki.webui.UIWikiPortlet;
 )
 public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
   
-  final static public String PAGENAME_INFO= "pageNameInfo";
-  
-  final static public String CURRENT_LOCATION = "currentLocationInput";
+  final static public String PAGENAME_INFO    = "pageNameInfo";
 
-  final static public String NEW_LOCATION     = "newLocationInput";
+  final static public String CURRENT_LOCATION = "currentLocation";
+
+  final static public String NEW_LOCATION     = "newLocation";
 
   final static public String UITREE           = "UITreeExplorer";
 
   public String              MOVE             = "Move";
   
+  
   public UIWikiMovePageForm() throws Exception {
     addChild(new UIFormInputInfo(PAGENAME_INFO, PAGENAME_INFO, null));
-    addChild(new UIFormStringInput(CURRENT_LOCATION, CURRENT_LOCATION, null).setEditable(false));
-    addChild(new UIFormStringInput(NEW_LOCATION, NEW_LOCATION, null));
+    addChild(new UIFormInputInfo(CURRENT_LOCATION, CURRENT_LOCATION, null));
+    addChild(new UIFormInputInfo(NEW_LOCATION, NEW_LOCATION, null));
+    
     addChild(UITreeExplorer.class, null, UITREE).setRendered(true);
+    getChild(UITreeExplorer.class).setRestURL(getRestURL());
+    getChild(UITreeExplorer.class).setFillInput(NEW_LOCATION);
+  }
+
+  private String getRestURL() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("/").append(PortalContainer.getCurrentPortalContainerName()).append("/");
+    sb.append(PortalContainer.getCurrentRestContextName()).append("/wiki/tree/");
+    return sb.toString();
   }
   
   static public class CloseActionListener extends EventListener<UIWikiMovePageForm> {
@@ -80,18 +90,19 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
       UIPopupContainer popupContainer = wikiPortlet.getChild(UIPopupContainer.class);
       popupContainer.cancelPopupAction();    
     }
-  }
+  } 
+  
   static public class MoveActionListener extends EventListener<UIWikiMovePageForm> {
     public void execute(Event<UIWikiMovePageForm> event) throws Exception {   
       WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
       PortalRequestContext prContext = Util.getPortalRequestContext();
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       UIWikiMovePageForm movePageForm = event.getSource();
-      UIFormStringInput currentLocationInput = movePageForm.getUIStringInput(CURRENT_LOCATION);
-      UIFormStringInput newLocationInput = movePageForm.getUIStringInput(NEW_LOCATION);      
-      WikiPageParams currentLocationParams = Utils.getPageParamsFromPath(currentLocationInput.getValue());
+      UIFormInputInfo currentLocation = (UIFormInputInfo) movePageForm.getChildById(CURRENT_LOCATION);
+      UIFormInputInfo newLocation =(UIFormInputInfo) movePageForm.getChildById(NEW_LOCATION);      
+      WikiPageParams currentLocationParams = Utils.getPageParamsFromPath(currentLocation.getValue());
      
-      WikiPageParams newLocationParams = Utils.getPageParamsFromPath(newLocationInput.getValue());
+      WikiPageParams newLocationParams = Utils.getPageParamsFromPath(newLocation.getValue());
       if (newLocationParams==null) {
         uiWikiPortlet.addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.new-location-is-empty", null, ApplicationMessage.ERROR));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPortlet.getUIPopupMessages()) ;
@@ -139,6 +150,7 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
       prContext.sendRedirect(newPageURL.toString());
     }
   }
+
   public void activate() throws Exception {
     // TODO Auto-generated method stub
     
@@ -147,6 +159,5 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
     // TODO Auto-generated method stub
     
   }
-  
   
 }

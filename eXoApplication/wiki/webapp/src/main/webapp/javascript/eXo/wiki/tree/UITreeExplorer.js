@@ -1,5 +1,11 @@
 function UITreeExplorer() {};
 
+UITreeExplorer.prototype.init = function( componentid, actionClassName, param) {
+  var me = eXo.wiki.UITreeExplorer;
+  var component = document.getElementById(componentid);  
+  me.actionLink = eXo.core.DOMUtil.findFirstDescendantByClass(component, "a", actionClassName); 
+};
+
 UITreeExplorer.prototype.collapseExpand = function(element) {
   var node = element.parentNode;
   var subGroup = eXo.core.DOMUtil.findFirstChildByClass(node, "div", "NodeGroup");
@@ -20,14 +26,24 @@ UITreeExplorer.prototype.collapseExpand = function(element) {
 };
 
 UITreeExplorer.prototype.selectNode = function(nodePath) {
-  var newLocationinput = document.getElementById("newLocationInput");
-  newLocationinput.value = nodePath;
+  var me = eXo.wiki.UITreeExplorer;  
+  if(me.actionLink){
+    var link = me.actionLink;
+    var endParamIndex = link.href.lastIndexOf("')");
+    var param = "&param";
+    var modeIndex = link.href.indexOf(param);
+    if (modeIndex < 0)
+      link.href = link.href.substring(0, endParamIndex) + param + "=" + nodePath + "')";
+    else
+      link.href = link.href.substring(0, modeIndex) + param + "=" + nodePath + "')";
+    window.location = link.href;
+  }
 };
 
 UITreeExplorer.prototype.expandNode = function(path, element) {
   var me = eXo.wiki.UITreeExplorer;
   var node = element.parentNode;
-  var RestURLinput = document.getElementById("WikiRestURL");
+  var RestURLinput = document.getElementById("TreeExplorer_RestURL");
   var http = eXo.wiki.UITreeExplorer.getHTTPObject();
   var restURL = RestURLinput.value + escape(path);
 

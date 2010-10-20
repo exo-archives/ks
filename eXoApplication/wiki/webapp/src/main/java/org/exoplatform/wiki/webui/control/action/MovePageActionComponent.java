@@ -30,13 +30,13 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.webui.form.UIFormInputInfo;
-import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 import org.exoplatform.wiki.webui.popup.UIWikiMovePageForm;
+import org.exoplatform.wiki.webui.tree.UITreeExplorer;
 
 /**
  * Created by The eXo Platform SAS
@@ -77,8 +77,10 @@ public class MovePageActionComponent extends UIComponent {
       UIPopupContainer uiPopupContainer = uiWikiPortlet.getChild(UIPopupContainer.class);
       UIWikiMovePageForm movePageForm = uiPopupContainer.activate(UIWikiMovePageForm.class, 600);
       String currentRelativePagePath = Utils.getCurrentHierachyPagePath();
-      UIFormStringInput currentLocationInput = movePageForm.getUIStringInput(UIWikiMovePageForm.CURRENT_LOCATION);
-      currentLocationInput.setValue(currentRelativePagePath);
+      UIFormInputInfo currentLocation = movePageForm.getChildById(UIWikiMovePageForm.CURRENT_LOCATION);
+      currentLocation.setValue(currentRelativePagePath);
+      UITreeExplorer tree = movePageForm.getChildById(UIWikiMovePageForm.UITREE);
+      tree.setCurrentPagePath(currentRelativePagePath);
       UIFormInputInfo pageNameInfo = movePageForm.getUIFormInputInfo(UIWikiMovePageForm.PAGENAME_INFO);
       pageNameInfo.setValue("You are about move page: "
           + Utils.getCurrentWikiPage().getContent().getTitle());
