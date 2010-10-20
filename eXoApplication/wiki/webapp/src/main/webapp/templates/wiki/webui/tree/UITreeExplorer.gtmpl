@@ -12,7 +12,7 @@
  
  String action = uicomponent.event(uicomponent.SELECT_NODE);
  String actionClassName = uicomponent.SELECT_NODE;
- rcontext.getJavascriptManager().addJavascript("eXo.wiki.UITreeExplorer.init('" + uicomponent.id + "', '" + actionClassName + "')");  
+ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UITreeExplorer.init('" + uicomponent.id + "', '" + actionClassName + "');");  
  
  String restURL = uicomponent.getRestURL();
  String currentPagePath= uicomponent.getCurrentPagePath();
