@@ -24,22 +24,22 @@
 
 @font-face {
     font-family: Hattori;
-    src: url("Fonts/HATTORHL.eot");
+    src: url("/ksdemo/templates/skin/Fonts/HATTORHL.eot");
 }
    
 @font-face {
     font-family: Hattori;
-    src: url("Fonts/HATTORHL.TTF");
+    src: url("/ksdemo/templates/skin/Fonts/HATTORHL.TTF");
 }
 
 @font-face {
     font-family: Lucida;
-    src: url("Fonts/Lucida_Sans_Regular.eot");
+    src: url("/ksdemo/templates/skin/Fonts/Lucida_Sans_Regular.eot");
 }
    
 @font-face {
     font-family: Lucida;
-    src: url("Fonts/Lucida_Sans_Regular.ttf");
+    src: url("/ksdemo/templates/skin/Fonts/Lucida_Sans_Regular.ttf");
 }
 
 
