@@ -85,7 +85,9 @@ public class UICategories extends UIContainer	{
 	public void setIsRenderChild(boolean isRenderChild) {
 		this.getChild(UIForumListSearch.class).setRendered(isRenderChild) ;
 		this.isRenderChild = isRenderChild ;
+		if(!isRenderChild) maptopicLast.clear();
 	}
+	
 	public boolean getIsRendered() throws Exception {
 		return isRenderChild ;
 	}
