@@ -1,0 +1,140 @@
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(revision 52400)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(working copy)
+@@ -31,8 +31,10 @@
+ import java.util.Calendar;
+ import java.util.GregorianCalendar;
+ import java.util.HashMap;
++import java.util.HashSet;
+ import java.util.List;
+ import java.util.Map;
++import java.util.Set;
+ import java.util.zip.ZipEntry;
+ import java.util.zip.ZipInputStream;
+ import java.util.zip.ZipOutputStream;
+@@ -2779,18 +2781,16 @@
+ 				//System.out.println("eventQuery.isQuestionLevelSearch() ==>" +	eventQuery.isQuestionLevelSearch() + " - " + listQuestion.size());
+ 				//System.out.println("eventQuery.isAnswerCommentLevelSearch() ==>" +	eventQuery.isAnswerCommentLevelSearch() + " - " + listAnswerandComment.size());
+ 				//System.out.println("eventQuery.isLanguageLevelSearch() ==>" +	eventQuery.isLanguageLevelSearch() + " - " + listLanguage.size());
+-				//if(eventQuery.isQuestionLevelSearch() && listQuestion.isEmpty()) return results ;
+-				//if(eventQuery.isAnswerCommentLevelSearch() && listAnswerandComment.isEmpty()) return results ;
+-				//if(eventQuery.isLanguageLevelSearch() && listLanguage.isEmpty()) return results ;
+ 				
+ 				boolean isInitiated = false ;
++				Set<Node> nodes = new HashSet<Node>();
+ 				if(eventQuery.isQuestionLevelSearch()) {
+ 				//directly return because there is only one this type of search
+ 					if(!eventQuery.isLanguageLevelSearch() && !eventQuery.isAnswerCommentLevelSearch()) {
+ 						for(Node node : listQuestion) {
+-							results.add(getResultObj(node)) ;
++							nodes.add(node);
+ 						}
+-						return results ;
++						return returnResult(nodes) ;
+ 					}
+ 					// merging results
+ 					if(!listQuestion.isEmpty()) {
+@@ -2804,9 +2804,9 @@
+ 				//directly return because there is only one this type of search 
+ 					if(!eventQuery.isQuestionLevelSearch() && !eventQuery.isAnswerCommentLevelSearch()) {
+ 						for(Node node : listLanguage) {
+-							results.add(getResultObj(node)) ;
++							nodes.add(node);
+ 						}
+-						return results ;
++						return returnResult(nodes) ;
+ 					}
+ 					
+ 				// merging results
+@@ -2829,9 +2829,9 @@
+ 					//directly return because there is only one this type of search
+ 					if(!eventQuery.isLanguageLevelSearch() && !eventQuery.isQuestionLevelSearch()) {
+ 						for(Node node : listAnswerandComment.values()) {
+-							results.add(getResultObj(node)) ;
++							nodes.add(node);
+ 						}
+-						return results ;
++						return returnResult(nodes) ;
+ 					}
+ 				// merging results
+ 					if(isInitiated) {
+@@ -2840,7 +2840,7 @@
+ 							for(Node node : listAnswerandComment.values()) {
+ 								String id = node.getProperty("exo:questionId").getString() ;
+ 								if(mergeQuestion2.containsKey(id)) {
+-									results.add(getResultObj(node));
++									nodes.add(node);
+ 								}							
+ 							}
+ 						}else { // search on question level 
+@@ -2848,36 +2848,30 @@
+ 							for(Node node : listAnswerandComment.values()) {
+ 								String id = node.getProperty("exo:questionId").getString() ;
+ 								if(mergeQuestion.containsKey(id)) {
+-									results.add(getResultObj(node));
++									nodes.add(node);
+ 								}							
+ 							}
+ 						}						
+ 					}else {
+ 						for(Node node : listAnswerandComment.values()) {
+-							results.add(getResultObj(node));
++							nodes.add(node);
+ 						}
+ 					}					
+ 				}
+ 				// mix all result for fultext search on questions
+ 				if (!eventQuery.isQuestionLevelSearch() && !eventQuery.isAnswerCommentLevelSearch() 
+ 						&& !eventQuery.isLanguageLevelSearch()) {
+-					Map<String, ObjectSearchResult> tmpResult = new HashMap<String, ObjectSearchResult>() ;
+-					ObjectSearchResult rs ;
+ 					for(Node node : listAnswerandComment.values()) {
+-						rs = getResultObj(node) ;
+-						tmpResult.put(rs.getId(), rs);
++						nodes.add(node);
+ 					}
+ 					for(Node node : listQuestion) {
+-						rs = getResultObj(node) ;
+-						tmpResult.put(rs.getId(), rs);
++						nodes.add(node);
+ 					}
+ 					for(Node node : listLanguage) {
+-						rs = getResultObj(node) ;
+-						tmpResult.put(rs.getId(), rs);
++						nodes.add(node);
+ 					}
+-					results.addAll(tmpResult.values()) ;
+ 				}
+-				return results ;
++				return returnResult(nodes) ;
+ 				
+ 			} else if(eventQuery.getType().equals("categoryAndQuestion")){ // Quick search
+ 				String nodePath = "";
+@@ -2945,6 +2939,14 @@
+ 		return new ArrayList<ObjectSearchResult> () ;
+ 	}
+ 	
++	private List<ObjectSearchResult> returnResult(Set<Node> nodes) throws Exception {
++		List<ObjectSearchResult> results = new ArrayList<ObjectSearchResult> () ;
++		for(Node node : nodes) {
++			results.add(getResultObj(node)) ;
++		}
++		return results;
++	}
++	
+ 	private ObjectSearchResult getResultObj(Node node) throws Exception {
+ 		ObjectSearchResult objectResult = new ObjectSearchResult() ;
+ 		if(node.isNodeType("exo:faqCategory")){
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAdvancedSearchForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAdvancedSearchForm.java	(revision 52400)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAdvancedSearchForm.java	(working copy)
+@@ -418,7 +418,6 @@
+ 				result.setSearchResults(faqService.getSearchResults(eventQuery)) ;
+ 				UIQuickSearch quickSearch = uiPortlet.findFirstComponentOfType(UIQuickSearch.class) ;
+ 			}catch (Exception e){ 
+-				e.printStackTrace();
+ 			}
+ 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+ 		}

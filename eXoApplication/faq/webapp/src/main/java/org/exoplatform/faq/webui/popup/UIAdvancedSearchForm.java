@@ -418,7 +418,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				result.setSearchResults(faqService.getSearchResults(eventQuery)) ;
 				UIQuickSearch quickSearch = uiPortlet.findFirstComponentOfType(UIQuickSearch.class) ;
 			}catch (Exception e){ 
-				e.printStackTrace();
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
