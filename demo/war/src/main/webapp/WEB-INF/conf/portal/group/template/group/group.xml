@@ -37,22 +37,6 @@
      <portlet-application>
        <portlet>
          <application-ref>web</application-ref>
-         <portlet-ref>LogoPortlet</portlet-ref>
-         <preferences>
-           <preference>
-             <name>url</name>
-             <value>/eXoResources/skin/sharedImages/GroupIcon.png</value>
-             <read-only>false</read-only>
-           </preference>
-         </preferences>
-       </portlet>
-       <access-permissions>Everyone</access-permissions>
-       <show-info-bar>false</show-info-bar>
-     </portlet-application>
-
-     <portlet-application>
-       <portlet>
-         <application-ref>web</application-ref>
          <portlet-ref>NavigationPortlet</portlet-ref>
          <preferences>
            <preference>

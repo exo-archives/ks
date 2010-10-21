@@ -1,6 +1,7 @@
 <% 
 	import org.exoplatform.portal.webui.util.Util ;
 	
+  def prContext = _ctx.getRequestContext().getParentAppRequestContext();
   String portalRequestContext = Util.getPortalRequestContext().getRequestContextPath();
   String autoLoginLink = portalRequestContext + "/" + "login?username=root&amp;password=gtn&amp;initialURI=" + portalRequestContext + "/private/classic";
 %>
@@ -113,7 +114,9 @@
 									</ul>
 								</div>
 							</div>
-							<div class="ArowBlackIcon">Start using eXo Knowledge, <a href="$autoLoginLink" class="TxtBlue">login as Root</a></div>
+							<%if(prContext.getRemoteUser() == null) {%>
+							  <div class="ArowBlackIcon">Start using eXo Knowledge, <a href="$autoLoginLink" class="TxtBlue">login as Root</a></div>
+							<% } %>
 						</div>
 					</div>
 				</div>
