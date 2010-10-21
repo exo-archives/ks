@@ -9,7 +9,7 @@
 	User user = uiform.getUser() ;
 	String userName = user.getUserName() ;
 	CommonContact contact = uiform.getContact(userName) ;
-	java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMM dd yyyy - hh:mm");
+	java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat(", hh:mm a");
 	String avatarUrl = "";
 	String birthDay = contact.getBirthday();
 	String location = contact.getCity() ;
@@ -34,7 +34,7 @@
 		}
 	}
 	if(user != null){ 
-		createdDate = dateFormatter.format(user.getCreatedDate());
+		createdDate = FAQUtils.getShortDateFormat(user.getCreatedDate()) + dateFormatter.format(user.getCreatedDate());
 		fullName = user.getFullName();
 	}
 %>
@@ -58,7 +58,7 @@
 								<div class="InfoUser">
 									<div><%=_ctx.appRes("UIViewUserProfile.label.JoinDate");%>: $createdDate</div>
 									<div><%=_ctx.appRes("UIViewUserProfile.label.LastLoginTime");%>: 
-												<%=dateFormatter.format(user.getLastLoginTime())%>
+												<%=FAQUtils.getShortDateFormat(user.getLastLoginTime())%>
 									</div>
 								</div>
 							</div>

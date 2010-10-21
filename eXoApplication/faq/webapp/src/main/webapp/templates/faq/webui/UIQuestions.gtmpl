@@ -254,7 +254,7 @@
 											questionContent = FAQUtils.getSubString(questionContent, 140);
 										%>
 											<div class="ViewQuestionNotApproved" style="color:$colorViewQuestion; float:left; cursor:pointer;" onclick="$linkQuestion" onmouseover="eXo.faq.UIAnswersPortlet.viewTitle('titleQuestion$questionIndex')" onmouseout="eXo.faq.UIAnswersPortlet.hiddenTitle('titleQuestion$questionIndex')">$questionContent &nbsp;&nbsp;</div>
-											<div style="color:#721d95; float:left;">(&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;)</div>
+											<div style="color:#721d95; float:left;">(&nbsp;<%=FAQUtils.getLongDateFormat(question.getCreatedDate())%>&nbsp;)</div>
 											<%if(!question.isApproved()) {%>
 													<div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
 											<%}%>
@@ -263,7 +263,7 @@
 											titleQuestion = "";
 										%>
 											<a class="ViewQuestionNotApproved" href="$linkQuestion" style="color:$colorViewQuestion; float:left;">$questionContent &nbsp;&nbsp;</a>
-											<div style="color:#721d95; float:left;">(&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;)</div>
+											<div style="color:#721d95; float:left;">(&nbsp;<%=FAQUtils.getLongDateFormat(question.getCreatedDate())%>&nbsp;)</div>
 											<%if(!question.isApproved()) {%>
 													<div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
 											<%}%>
@@ -734,7 +734,7 @@
 																							$questionDetail
 																					<%}%>
 																				</div>
-																				<span class="QuestionDateTime">&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;</span>
+																				<span class="QuestionDateTime">&nbsp;<%=FAQUtils.getLongDateFormat(question.getCreatedDate())%>&nbsp;</span>
 																					<!-- ===================================== view bottom =============================== -->
 																				<%
 																				if(uicomponent.currentUser_ != null){
@@ -950,7 +950,7 @@
 															if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
 																continue;
 															}
-															date = FAQUtils.getFormatDate(answer.getDateResponse());
+															date = FAQUtils.getLongDateFormat(answer.getDateResponse());
 															responseBy = answer.getFullName();
 															String userProfile = uicomponent.event("ViewUserProfile", answer.getResponseBy());
 														%>
@@ -1157,7 +1157,7 @@
 																						commentDetail = uicomponent.getReplaceByBBCode(commentDetail);
 																					%>
 																					<span>$commentDetail</span>
-																					<div style="color:#721d95"><%=FAQUtils.getFormatDate(comment.getDateComment());%></div>
+																					<div style="color:#721d95"><%=FAQUtils.getLongDateFormat(comment.getDateComment());%></div>
 																				</div>
 																				<div style="clear:left;"><span></span></div>
 			

@@ -1,0 +1,269 @@
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/FAQUtils.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/FAQUtils.java	(revision 52385)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/FAQUtils.java	(working copy)
+@@ -19,6 +19,8 @@
+ import java.io.ByteArrayInputStream;
+ import java.io.InputStream;
+ import java.text.DateFormat;
++import java.text.Format;
++import java.text.SimpleDateFormat;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.Date;
+@@ -34,6 +36,7 @@
+ 
+ import org.apache.commons.lang.StringUtils;
+ import org.exoplatform.commons.utils.PageList;
++import org.exoplatform.container.ExoContainerContext;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.download.DownloadService;
+ import org.exoplatform.download.InputStreamDownloadResource;
+@@ -535,12 +538,34 @@
+ 		}
+ 	}
+ 	
+-	public static String getFormatDate(Date myDate) {
+-		if(myDate == null) return null;
+-		PortalRequestContext portalContext = Util.getPortalRequestContext();
+-		return DateFormat.getDateInstance(DateFormat.LONG, portalContext.getLocale()).format(myDate);
++	private static String getFormatDate(int dateFormat, Date myDate) {
++		if(myDate == null) return "";
++		String format = (dateFormat == DateFormat.LONG)?"DDD,MMM dd,yyyy":"MM/dd/yyyy";
++		try {
++			String userName = getCurrentUser();
++			if(!isFieldEmpty(userName)) {
++				org.exoplatform.forum.service.ForumService forumService = (org.exoplatform.forum.service.ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(org.exoplatform.forum.service.ForumService.class);
++				org.exoplatform.forum.service.UserProfile profile = forumService.getUserSettingProfile(userName);
++				format = (dateFormat == DateFormat.LONG)?profile.getLongDateFormat():profile.getShortDateFormat();
++			}
++		} catch (Exception e) {}
++		if(!isFieldEmpty(format)) {
++			if(format.indexOf("DDDD") >= 0)format = format.replaceAll("DDDD", "EEEE");
++			if(format.indexOf("DDD") >= 0)format = format.replaceAll("DDD", "EEE");
++		}
++ 		PortalRequestContext portalContext = Util.getPortalRequestContext();
++		Format formatter = new SimpleDateFormat(format, portalContext.getLocale());
++		return formatter.format(myDate);
+ 	}
+ 	
++	public static String getLongDateFormat(Date myDate) {
++		return getFormatDate(DateFormat.LONG, myDate);
++	}
++	
++	public static String getShortDateFormat(Date myDate) {
++		return getFormatDate(DateFormat.SHORT, myDate);
++	}
++	
+ 	private static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
+ 		byte[] imageBytes = null;
+ 		if (input != null) {
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIPrintAllQuestions.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIPrintAllQuestions.gtmpl	(revision 52385)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIPrintAllQuestions.gtmpl	(working copy)
+@@ -15,7 +15,6 @@
+ 	<% uiform.begin() %>
+ 		<div style="padding:5px; border: 1px solid gray; margin:10px 5px;">		
+ 			<%
+-			java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMMM dd yyyy");
+ 			for(Question question : uicomponent.getListQuestion()){
+ 				questionContent = question.getQuestion();
+ 				String responseBy = "..." ;
+@@ -135,7 +134,7 @@
+ 																					$detailQuestion
+ 																			<%}%>
+ 																		</div>
+-																		<span class="QuestionDateTime">&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;</span>
++																		<span class="QuestionDateTime">&nbsp;<%=FAQUtils.getLongDateFormat(question.getCreatedDate())%>&nbsp;</span>
+ 																		
+ 																	</div>
+ 																</div>
+@@ -293,7 +292,7 @@
+ 													if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
+ 														continue;
+ 													}
+-													date = dateFormatter.format(answer.getDateResponse());
++													date = FAQUtils.getLongDateFormat(answer.getDateResponse());
+ 													responseBy = FAQUtils.getFullName(answer.getResponseBy());
+ 													String userProfile = uicomponent.event("ViewUserProfile", answer.getResponseBy());
+ 												%>
+@@ -410,7 +409,7 @@
+ 																				commentDetail = uicomponent.getReplaceByBBCode(commentDetail);
+ 																			%>
+ 																			<span>$commentDetail</span>
+-																			<div style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></div>
++																			<div style="color:#721d95"><%=FAQUtils.getLongDateFormat(comment.getDateComment());%></div>
+ 																		</div>
+ 																		<div style="clear:left;"><span></span></div>
+ 		
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/ResultQuickSearch.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/ResultQuickSearch.gtmpl	(revision 52385)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/ResultQuickSearch.gtmpl	(working copy)
+@@ -2,9 +2,6 @@
+ 	import org.exoplatform.faq.service.Category;
+ 	import org.exoplatform.faq.service.Question;
+ 	import org.exoplatform.faq.webui.FAQUtils;
+-	import java.text.Format;
+-	import java.text.SimpleDateFormat;
+-	import java.util.Date;
+ %>
+ <div class="ResultQuickSearch $uicomponent.id" style="padding:8px">
+ 		<% uiform.begin() %>
+@@ -29,8 +26,7 @@
+  											for(result in searchResults) {
+ 												String Id = result.getId();
+ 												String name = result.getName() ;
+-												Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
+-						 						String date = formatter.format(result.getCreatedDate());
++						 						String date = FAQUtils.getShortDateFormat(result.getCreatedDate());
+ 						 						String icon = result.getIcon() ;
+ 						 						String categoryLink = uicomponent.event("OpenCategory",Id);
+ 						 						String linkQuestion = uicomponent.event("LinkQuestion",Id);
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIPopupViewQuestion.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIPopupViewQuestion.gtmpl	(revision 52385)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIPopupViewQuestion.gtmpl	(working copy)
+@@ -1,7 +1,4 @@
+ <% 
+-	import java.text.Format;
+-	import java.text.SimpleDateFormat;
+-	import java.util.Date;
+ 	import org.exoplatform.web.application.JavascriptManager;
+ 	import org.exoplatform.faq.service.Question;
+ 	import org.exoplatform.faq.webui.ValidatorDataInput;
+@@ -37,8 +34,7 @@
+ 					if(question.getAnswers() != null && question.getAnswers().length > 0) {
+ 							for(Answer answer in question.getAnswers()) {
+ 								responseBy = answer.getResponseBy();
+-								Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
+-							 	date = formatter.format(answer.getDateResponse());
++							 	date = FAQUtils.getShortDateFormat(answer.getDateResponse());
+ 								response = answer.getResponses();
+ 								response = uicomponent.getReplaceByBBCode(response);
+ 								%> 
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/ResultSearchQuestion.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/ResultSearchQuestion.gtmpl	(revision 52385)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/ResultSearchQuestion.gtmpl	(working copy)
+@@ -1,7 +1,4 @@
+ <% 
+-	import java.text.Format;
+-	import java.text.SimpleDateFormat;
+-	import java.util.Date;
+ 	import org.exoplatform.faq.service.Question;
+ 	import org.exoplatform.faq.webui.FAQUtils;
+ %>
+@@ -32,8 +29,7 @@
+ 											String author = question.getAuthor() ;
+ 											String email = question.getEmail() ;
+ 											String questionContent = question.getQuestion() ;
+-											Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
+-						 					String date = formatter.format(question.getCreatedDate());
++						 					date = FAQUtils.getShortDateFormat(question.getCreatedDate());
+ 											String view = uicomponent.event("View", questionId);
+ 											String link = uicomponent.event("Link",questionId) ;
+ 											String icon = "" ;
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/ResultSearchCategory.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/ResultSearchCategory.gtmpl	(revision 52385)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/ResultSearchCategory.gtmpl	(working copy)
+@@ -1,7 +1,4 @@
+ <% 
+-	import java.text.Format;
+-	import java.text.SimpleDateFormat;
+-	import java.util.Date;
+ 	import org.exoplatform.faq.service.Category;
+ 	import org.exoplatform.faq.webui.FAQUtils;
+ %>
+@@ -30,8 +27,7 @@
+ 												String categoryId = category.getId();
+ 												String categoryName = category.getName() ;
+ 												String description = category.getDescription() ;
+-												Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
+-						 						String date = formatter.format(category.getCreatedDate());
++						 						String date = FAQUtils.getShortDateFormat(category.getCreatedDate());
+ 												String link = uicomponent.event("Link", categoryId);
+  										 	%>
+ 	 											<tr class="EvenRow"> 
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIViewUserProfile.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIViewUserProfile.gtmpl	(revision 52385)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIViewUserProfile.gtmpl	(working copy)
+@@ -9,7 +9,7 @@
+ 	User user = uiform.getUser() ;
+ 	String userName = user.getUserName() ;
+ 	CommonContact contact = uiform.getContact(userName) ;
+-	java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMM dd yyyy - hh:mm");
++	java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat(", hh:mm a");
+ 	String avatarUrl = "";
+ 	String birthDay = contact.getBirthday();
+ 	String location = contact.getCity() ;
+@@ -34,7 +34,7 @@
+ 		}
+ 	}
+ 	if(user != null){ 
+-		createdDate = dateFormatter.format(user.getCreatedDate());
++		createdDate = FAQUtils.getShortDateFormat(user.getCreatedDate()) + dateFormatter.format(user.getCreatedDate());
+ 		fullName = user.getFullName();
+ 	}
+ %>
+@@ -58,7 +58,7 @@
+ 								<div class="InfoUser">
+ 									<div><%=_ctx.appRes("UIViewUserProfile.label.JoinDate");%>: $createdDate</div>
+ 									<div><%=_ctx.appRes("UIViewUserProfile.label.LastLoginTime");%>: 
+-												<%=dateFormatter.format(user.getLastLoginTime())%>
++												<%=FAQUtils.getShortDateFormat(user.getLastLoginTime())%>
+ 									</div>
+ 								</div>
+ 							</div>
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/UIQuestions.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/UIQuestions.gtmpl	(revision 52385)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/UIQuestions.gtmpl	(working copy)
+@@ -254,7 +254,7 @@
+ 											questionContent = FAQUtils.getSubString(questionContent, 140);
+ 										%>
+ 											<div class="ViewQuestionNotApproved" style="color:$colorViewQuestion; float:left; cursor:pointer;" onclick="$linkQuestion" onmouseover="eXo.faq.UIAnswersPortlet.viewTitle('titleQuestion$questionIndex')" onmouseout="eXo.faq.UIAnswersPortlet.hiddenTitle('titleQuestion$questionIndex')">$questionContent &nbsp;&nbsp;</div>
+-											<div style="color:#721d95; float:left;">(&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;)</div>
++											<div style="color:#721d95; float:left;">(&nbsp;<%=FAQUtils.getLongDateFormat(question.getCreatedDate())%>&nbsp;)</div>
+ 											<%if(!question.isApproved()) {%>
+ 													<div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
+ 											<%}%>
+@@ -263,7 +263,7 @@
+ 											titleQuestion = "";
+ 										%>
+ 											<a class="ViewQuestionNotApproved" href="$linkQuestion" style="color:$colorViewQuestion; float:left;">$questionContent &nbsp;&nbsp;</a>
+-											<div style="color:#721d95; float:left;">(&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;)</div>
++											<div style="color:#721d95; float:left;">(&nbsp;<%=FAQUtils.getLongDateFormat(question.getCreatedDate())%>&nbsp;)</div>
+ 											<%if(!question.isApproved()) {%>
+ 													<div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
+ 											<%}%>
+@@ -734,7 +734,7 @@
+ 																							$questionDetail
+ 																					<%}%>
+ 																				</div>
+-																				<span class="QuestionDateTime">&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;</span>
++																				<span class="QuestionDateTime">&nbsp;<%=FAQUtils.getLongDateFormat(question.getCreatedDate())%>&nbsp;</span>
+ 																					<!-- ===================================== view bottom =============================== -->
+ 																				<%
+ 																				if(uicomponent.currentUser_ != null){
+@@ -950,7 +950,7 @@
+ 															if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
+ 																continue;
+ 															}
+-															date = FAQUtils.getFormatDate(answer.getDateResponse());
++															date = FAQUtils.getLongDateFormat(answer.getDateResponse());
+ 															responseBy = answer.getFullName();
+ 															String userProfile = uicomponent.event("ViewUserProfile", answer.getResponseBy());
+ 														%>
+@@ -1157,7 +1157,7 @@
+ 																						commentDetail = uicomponent.getReplaceByBBCode(commentDetail);
+ 																					%>
+ 																					<span>$commentDetail</span>
+-																					<div style="color:#721d95"><%=FAQUtils.getFormatDate(comment.getDateComment());%></div>
++																					<div style="color:#721d95"><%=FAQUtils.getLongDateFormat(comment.getDateComment());%></div>
+ 																				</div>
+ 																				<div style="clear:left;"><span></span></div>
+ 			

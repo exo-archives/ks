@@ -15,7 +15,6 @@
 	<% uiform.begin() %>
 		<div style="padding:5px; border: 1px solid gray; margin:10px 5px;">		
 			<%
-			java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMMM dd yyyy");
 			for(Question question : uicomponent.getListQuestion()){
 				questionContent = question.getQuestion();
 				String responseBy = "..." ;
@@ -135,7 +134,7 @@
 																					$detailQuestion
 																			<%}%>
 																		</div>
-																		<span class="QuestionDateTime">&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;</span>
+																		<span class="QuestionDateTime">&nbsp;<%=FAQUtils.getLongDateFormat(question.getCreatedDate())%>&nbsp;</span>
 																		
 																	</div>
 																</div>
@@ -293,7 +292,7 @@
 													if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
 														continue;
 													}
-													date = dateFormatter.format(answer.getDateResponse());
+													date = FAQUtils.getLongDateFormat(answer.getDateResponse());
 													responseBy = FAQUtils.getFullName(answer.getResponseBy());
 													String userProfile = uicomponent.event("ViewUserProfile", answer.getResponseBy());
 												%>
@@ -410,7 +409,7 @@
 																				commentDetail = uicomponent.getReplaceByBBCode(commentDetail);
 																			%>
 																			<span>$commentDetail</span>
-																			<div style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></div>
+																			<div style="color:#721d95"><%=FAQUtils.getLongDateFormat(comment.getDateComment());%></div>
 																		</div>
 																		<div style="clear:left;"><span></span></div>
 		
