@@ -23,6 +23,12 @@ if (!eXo.wiki)
 function UIConfirmBox() {
 };
 
+UIConfirmBox.prototype.init = function(isShow) {
+  if (!isShow){
+    eXo.wiki.UIConfirmBox.closeConfirm();
+  }
+};
+
 UIConfirmBox.prototype.render = function(uicomponentId, titleMessage, message,
     submitClass, submitLabel, discardClass, discardLabel, cancelLabel) {  
   
@@ -96,7 +102,7 @@ UIConfirmBox.prototype.createInput = function(container, action, message) {
 };
 
 UIConfirmBox.prototype.closeConfirm = function() {
-  var me = eXo.wiki.UIConfirmBox;  
+  var me = eXo.wiki.UIConfirmBox;
   eXo.core.UIMaskLayer.removeMask(this.maskLayer);
   this.maskLayer = null;
   if(me.confirmBox)

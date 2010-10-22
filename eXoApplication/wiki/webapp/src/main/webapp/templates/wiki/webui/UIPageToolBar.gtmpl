@@ -22,12 +22,16 @@
 <a class="HoverLink MoreLink Icon" title="<%=_ctx.appRes("UIPageToolBar.label.More");%>"><%= _ctx.appRes("UIPageToolBar.label.More"); %></a>
 <%
 def rcontext = _ctx.getRequestContext() ;
+
+boolean isShow = uicomponent.isNewMode() ||  uicomponent.isEditMode() ;
+
 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(\""+uicomponent.id+"\");");
+rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIConfirmBox.init("+ isShow +");");
 rcontext.getJavascriptManager().addOnResizeJavascript("eXo.wiki.UIConfirmBox.resetPosition");
 rcontext.getJavascriptManager().addOnScrollJavascript("eXo.wiki.UIConfirmBox.resetPosition");
 
 String titleMessage = _ctx.appRes("UIConfirmBox.label.Confirmation");
-String addMessage = _ctx.appRes("UIConfirmBox.label.ConfirmAdd").replace("{0}", "Untitled");
+String addMessage = _ctx.appRes("UIConfirmBox.label.ConfirmAdd");
 String editMessage = _ctx.appRes("UIConfirmBox.label.ConfirmEdit");
 String exitMessage = _ctx.appRes("UIConfirmBox.label.ConfirmExit");
 String confirmLabel = _ctx.appRes("UIConfirmBox.label.Confirm");
