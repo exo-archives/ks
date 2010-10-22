@@ -127,11 +127,13 @@ public class SavePageActionComponent extends UIComponent {
             prContext.getResponse().sendRedirect(ajaxRequestURL);
             return;
           }
-          wikiService.renamePage(pageParams.getType(),
-                                 pageParams.getOwner(),
-                                 page.getName(),
-                                 newPageId,
-                                 title);
+          if (!page.getName().equals(newPageId)) {
+            wikiService.renamePage(pageParams.getType(),
+                                   pageParams.getOwner(),
+                                   page.getName(),
+                                   newPageId,
+                                   title);            
+          }
           page.getContent().setText(markup);
           page.getContent().setComment(commentInput.getValue());
           page.getContent().setSyntax(syntaxTypeSelectBox.getValue());
