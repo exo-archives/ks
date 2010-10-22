@@ -1,4 +1,3 @@
-
 /**
  * Copyright (C) 2003-20010 eXo Platform SAS.
  *
@@ -17,7 +16,7 @@
  **/
 
 =================================================
-    Release Notes eXo Knowledge Suite Version 2.1.0
+    Release Notes - exo-ks - Version 2.1.1
 =================================================
 
 ===============
@@ -30,23 +29,20 @@ forum, frequency answer and question
     * Forum : A full featured message boards application that holds on-line discussions and posts user generated content.
     * Answers : A questions/answers application to help finding solutions
     * FAQ : An Answers-based application to publish questions/answers in public FAQs
-
+	
 =============
 2 What's new?
 =============
 
-
-    * General
-      - create an open social gadget
-      - Syntax coloring for code
-      - Polling Management
-      - Default User preferences
-      - Revamp question list view
-      - Separate Polls from Forum
-      - Forum Integration to Spaces
-      - Answers Integration to Spaces        
+ * General
+      - New home page
+	  - Ear package clean up and support
+	  - Fix bugs 
+	  - Activity pluging for integration of platform 3.0.1
+	  - Optionable when post questions in root category
+	  - Demo online integrated with platform 3.0 http://platform.demo.exoplatform.org
           
-    * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Release+Notes           
+    * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Release+Notes   
           
 =========
 3 INSTALL
@@ -65,12 +61,16 @@ Find the latest install guide here : http://wiki.exoplatform.org/xwiki/bin/view/
 
 Need to set the JAVA_HOME variable for run Knowledge suite's servers.
 +) How to start Knowledge sute:
+   * download ear package 
+   * download gatein jboss package
+   * put ear to the jboss/server/default 
+   
    * First thing first you need to give all script files the executable permission if you are in unix family environment.
    Use command: "chmod +x *.sh" (without quote) to have execute permission on these files.
    
    * NOTE for cygwin's user: the JAVA_HOME must be in MS Windows format like: "C:\Program Files\JDK 1.6"
     Example use: export JAVA_HOME=`cygpath -w "$JAVA_HOME"`; to convert unix like format to MS Windows format.
-    Make sure you set JAVA_OPTS="-Xshare:auto -Xms256m -Xmx1024m -XX:MaxPermSize=256M "
+    
    
    * Start jboss server:
    
@@ -81,9 +81,10 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
      +) On Unix/Linux/cygwin
        Open a terminal, go to jboss/bin and type the command:
          ./run.sh
-         
-+) Edit the file $TOMCAT_HOME/gatein/conf/configuration.properties and configure mail  if you want to enable mail notifications.
-Similarly, if you want to use the ksdemo, you need to edit $TOMCAT_HOME/gatein/conf/portal/ksdemo/ksdemo.properties
+		 
++) Edit the file $JBOSS_HOME/server/default/conf/gatein/configuration.properties and configure mail  if you want to enable mail notifications.
+Similarly
+
 
 To enable mail notifications, quickly you can use your own gmail account for example :
 
@@ -97,25 +98,48 @@ gatein.email.smtp.auth=true
 gatein.email.smtp.socketFactory.port=465
 gatein.email.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
 
-         
+* Enter one of the following addresses into your browser address bar in local pc:   
+   KS demo portal  
+      http://localhost:8080/ksdemo
 
-==============
-4 Known issues 
-==============
-  *  
+You can log into the portal with the following accounts: root, john, mary, demo.
+All those accounts have the default password "gtn". 
+
 ===========================  
-5 Other resources and links
+4 Other resources and links
 ===========================
 * [Community JIRA>http://jira.exoplatform.org/browse/KS]
-* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.1.0]
+* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.0.0-Beta02]
 * [Download>http://download.forge.objectweb.org/exoplatform/]
 * [Live demo>http://ks.demo.exoplatform.org]
 * [Announces>http://blog.exoplatform.org/tags/ks/]
 * [Company site>http://www.exoplatform.com]
 
 ====================
-6 Detailed Changelog 
+5 Detailed Changelog 
 ====================
+
+
+- Version 2.1.1 
+
+** Bug
+    * [KS-2685] - After edit poll the score change wrong option, fix for single vote.
+    * [KS-2703] - Minor typos in the JCRDataStorage.populateUserProfile war message
+    * [KS-2714] - on ksdemo can not register new user because can not see the text validation
+    * [KS-2721] - After edit poll the score change wrong option, fix for multi vote.
+    * [KS-2734] -  [KS-Forum] Total topic/post in Forum statistics isn't updated after import category/forum
+    * [KS-2735] - [KS] Can not move topic to forum that auto-added from Space
+    * [KS-2736] - [KS-Answers] Nothing happen when click on [Watches] icon in User setting
+    * [KS-2753] - In French: Show code error when close "User Setting" pop up in special case
+    * [KS-2755] - Cluster configuration is wrong for Knowledge workspace
+    * [KS-2792] - CLONE -FAQ: date in English format (ks 2.1.x)
+	* [KS-2794] - Register an account, text validation is not display
+
+** Improvement
+    * [KS-2496] - Answers - Possible to configuration  create a question at the root or not
+    * [KS-2607] - Deny users from submitting questions in the root category
+    * [KS-2697] - Social Integration : leverage activity plugin
+
 -Version 2.1.0 GA
 
 ** Bug
@@ -233,7 +257,8 @@ gatein.email.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
     * [KS-2677] - base structure for eXo Knowledge Reference Guide
     * [KS-2690] - Release KS 2.1.0-CR01
 
-- Version 2.0.0 GA
+- Version 2.0.0
+
 
 ** Bug
     * [KS-701] - Post with special format can ruin the font style of the forum 
@@ -301,9 +326,7 @@ gatein.email.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
     * [KS-2551] - Use the new logos
     * [KS-2552] - remove redhat mention in footer
 
-
-
-- Version 2.0.0-CR02 
+- Version 2.0.0-CR2
 
 ** Bug
     * [KS-2195] - RSS from forum and faq generate is not true.
@@ -326,10 +349,10 @@ gatein.email.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
     * [KS-1936] - Manage e.printStacktrace() and replace by logging system for Forum and FAQ
     * [KS-2378] - NPE stacktrace at startup
 
-- Version 2.0.0-CR01
+
+- Version 2.0.0-CR1
   http://jira.exoplatform.org/secure/ReleaseNote.jspa?version=11378&styleName=Text&projectId=10150&Create=Create
 ** Bug
-     
     * [KS-2203] - Show code error in Rss feed content of forum 
     * [KS-2212] - Don't show questions when get RSS of Answer porlet
     * [KS-2217] - Some bugs with Setting and active prune
@@ -358,7 +381,7 @@ gatein.email.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
 ** Improvement
     * [KS-2309] - In category drop down list: should focus to category which opening.
     * [KS-2338] - Need to change from warning message to info message
-    
+
 - Version 2.0.0-Beta02
 * Bug
     * [KS-2236] - Exception throws in console when deleting category and question in Answers 

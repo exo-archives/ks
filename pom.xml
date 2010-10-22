@@ -48,7 +48,7 @@
 	<org.hibernate.version>3.3.2.GA</org.hibernate.version>
 	<commons-collections.version>3.2.1</commons-collections.version>	
 	<org.jboss.version>2.2.9.GA</org.jboss.version>	
-    <org.gatein.shindig.version>1.0-r790473-Patch02</org.gatein.shindig.version>
+    <org.gatein.shindig.version>1.0-r790473-Patch04</org.gatein.shindig.version>
     <commons-lang.version>2.3</commons-lang.version>
     <commons-chain.version>1.0</commons-chain.version>
     <commons-logging.version>1.0.4</commons-logging.version>
