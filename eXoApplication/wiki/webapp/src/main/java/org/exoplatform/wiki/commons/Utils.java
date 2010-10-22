@@ -227,8 +227,6 @@ public class Utils {
   public static void reloadWYSIWYGEditor(UIWikiPortlet wikiPortlet) {
     UIWikiPageArea wikiPageArea = wikiPortlet.getChild(UIWikiPageArea.class);
     UIWikiPageEditForm wikiPageEditForm = wikiPageArea.getChild(UIWikiPageEditForm.class);
-    UIWikiRichTextArea wikiRichTextArea = wikiPageEditForm.getChild(UIWikiRichTextArea.class);
-    wikiRichTextArea.setReloaded(false);
   }
  
   private static WikiContext getCurrentWikiContext(UIWikiPortlet wikiPortlet) throws Exception {

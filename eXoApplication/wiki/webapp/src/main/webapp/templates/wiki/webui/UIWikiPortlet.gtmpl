@@ -20,6 +20,7 @@
   }
   eXo.env.rest.context = '$restContextName';
 </script>
+<% if(!rcontext.useAjax()) { %>
 <!-- This script must to put here to ensure xwe.onScriptLoad is alway called. -->
 <script type="text/javascript" src="/wiki/javascript/eXo/wiki/UIWikiWysiwygLoader.js"></script>
 <!-- This script must to put here to avoid impact submit plugin -->
@@ -33,6 +34,7 @@
 <script type="text/javascript" src="/wiki/resources/js/xwiki/wysiwyg/xwe/sc/modules/ISC_DataBinding.js"></script>
 <script type="text/javascript" src="/wiki/javascript/xwiki/xwiki.js"></script>
 <script type="text/javascript" defer src="/wiki/javascript/xwiki/xwikiexplorer/xwikiexplorer.js"></script>
+<% } %>
 <!--  -->
 <div class="UIWikiPortlet" id="$uicomponent.id" >
   <div class="ParentMaskLayer">

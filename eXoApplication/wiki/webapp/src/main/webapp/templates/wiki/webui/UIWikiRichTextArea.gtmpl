@@ -10,14 +10,7 @@
 <div class="UIWikiRichTextEditor">
   <% uicomponent.renderChild(uicomponent.RICHTEXT_AREA_INPUT); %>
 </div>
-<%
-  if(!uicomponent.isReloaded()) {
-    uicomponent.setReloaded(true);
-%>
-<script type="text/javascript">
-  location.reload(true);
-</script>
-<% } else { %>
+
 <script type="text/javascript">
   eXo.wiki.currentWiki = '$wikiType';
   eXo.wiki.currentSpace = '$wikiOwner';
@@ -72,4 +65,4 @@
   });
   
 </script>
-<% } %>
+

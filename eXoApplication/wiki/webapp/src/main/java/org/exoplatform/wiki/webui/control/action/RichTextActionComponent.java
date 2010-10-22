@@ -66,7 +66,6 @@ public class RichTextActionComponent extends UIComponent {
       if(!isRichTextRendered){
         UIWikiSidePanelArea wikiSidePanelArea = wikiPageEditForm.getChild(UIWikiSidePanelArea.class);
         wikiSidePanelArea.setRendered(false);
-        wikiRichTextArea.setReloaded(false);
       }
       wikiRichTextArea.setRendered(!isRichTextRendered);
       wikiPageEditForm.getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT).setRendered(isRichTextRendered);

@@ -206,14 +206,15 @@
                     <exclude>RichTextArea.css</exclude>
                   </excludes>
                 </aggregation>
+                <!-- 
                 <aggregation>
                   <removeIncluded>true</removeIncluded>
-                  <!-- Rename the CSS aggregation file. -->
                   <output>${xwe.directory}/stylesheets/Wysiwyg.css</output>
                   <includes>
                     <include>Wysiwyg-all.css</include>
                   </includes>
                 </aggregation>
+                -->
               </aggregations>
             </configuration>
           </execution>
