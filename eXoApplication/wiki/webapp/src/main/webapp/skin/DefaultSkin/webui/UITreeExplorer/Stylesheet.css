@@ -18,74 +18,69 @@
 .SideBarContent .SideContent {
   padding-top: 5px;
   background: whiteSmoke;
-  height:270px;
+  height: 270px;
   overflow: auto;
 }
 
- .UITreeExplorer {	
-	_overflow-x: hidden;
-	_width: 183px;
+.UITreeExplorer {
+  _overflow-x: hidden;
+  _width: 183px;
 }
 
- .UITreeExplorer .Node {
-  background: url('DefaultSkin/background/Dotted.gif') repeat-y left; /* orientation=lt */
-  background: url('DefaultSkin/background/Dotted-rt.gif') repeat-y right; /* orientation=rt */
-  clear: both; 
-  margin-left: 14px; /* orientation=lt */
-  margin-right: 14px; /* orientation=rt */
-  padding: 8px 0px 0px 0px;
+.UITreeExplorer .Node {
+  clear: both;
+  margin-left: 15px; /* orientation=lt */
+  margin-right: 20px; /* orientation=rt */  
+  padding-left: 4px;
 }
 
- .UITreeExplorer .Node a {
-	display: block;
-	/*white-space: normal;*/
-	}
-
- .UITreeExplorer .LastNode {
-  background: url('DefaultSkin/background/Dotted.gif') no-repeat left 1px ; /* orientation=lt */
-  background: url('DefaultSkin/background/Dotted-rt.gif') no-repeat right 1px ; /* orientation=rt */
+.UITreeExplorer .Node a {
+  display: block;
+  /*white-space: normal;*/
 }
+
+.UITreeExplorer .LastNode {
   
- .UITreeExplorer .NodeLabel {
-  line-height: 16px;
 }
- .UITreeExplorer .NodeLabel span {
+
+.UITreeExplorer .NodeLabel {
+  line-height: 20px;
+  font-size: 12px;
+  margin-left: 20px;
+}
+
+.UITreeExplorer .NodeLabel span {
   font-style: italic;
+  color: #666;
 }
 
- .UITreeExplorer .ExpandIcon {  
+.UITreeExplorer .ExpandIcon {
   width: auto;
   height: auto;
-  padding-left: 19px; /* orientation=lt */
   padding-right: 19px; /* orientation=rt */
   display: block;
 }
 
- .UITreeExplorer .CollapseIcon {
-  width: auto;  
-  padding-left: 19px; /* orientation=lt */
+.UITreeExplorer .CollapseIcon {
+  width: auto;
   padding-right: 19px; /* orientation=rt */
   display: block;
 }
 
- .UITreeExplorer a:hover {
-  color: blue;
-}
-
- .UITreeExplorer .EmptyIcon {  
+.UITreeExplorer .EmptyIcon {
   width: auto;
   height: auto;
-  padding-left: 19px; /* orientation=lt */
   padding-right: 19px; /* orientation=rt */
   display: block;
 }
 
-.UITreeExplorer .NodeType {
-  margin-left: 0px;
-  padding-left: 19px; /* orientation=lt */
-  padding-right: 20px; /* orientation=rt */
+.UITreeExplorer .TreeNodeType {  
 }
 
+.UITreeExplorer .TreeNodeType a:hover {
+  text-decoration: none;
+  cursor:default;
+}
 
 .UITreeExplorer .Space {
   background: url('DefaultSkin/background/SpaceNode.gif') no-repeat left
@@ -105,4 +100,8 @@
 .UITreeExplorer .Page {
   background: url('DefaultSkin/background/PageNode.gif') no-repeat left
     1px; /* orientation=lt */
+}
+
+.UITreeExplorer .Hover {
+  background-color: #D0DFF0;
 }

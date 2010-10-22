@@ -45,8 +45,8 @@
       iconType = "Empty";
     }  
     println "<div  class=\""+lastNodeClass+" Node\" >" ;
-    println "  <div class=\""+iconType+"Icon\" id=\"" + relPath + "\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.expandNode('" +URLEncoder.encode( currentPagePath, "utf-8") + "/"+  URLEncoder.encode( relPath, "utf-8") + "', this)\">" ;
-    println "    <div id=\"iconTreeExplorer\" onclick=\"event.cancelBubble=true;\"" + "class=\""+ nodeTypeCSS +" NodeType Node \""  + ">";
+    println "  <div class=\""+iconType+"Icon\" id=\"" + relPath + "\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.getChild('" +URLEncoder.encode( currentPagePath, "utf-8") + "/"+  URLEncoder.encode( relPath, "utf-8") + "', this)\">" ;
+    println "    <div id=\"iconTreeExplorer\"  onclick=\"event.cancelBubble=true;\" class=\""+ nodeTypeCSS +" TreeNodeType Node \">";
     println "      <div class='NodeLabel'>" ;
     println "        <span style=\"cursor:auto\" title=\""+nodeName+"\">"+nodeName+"</span>" ;
     println "      </div>" ; 

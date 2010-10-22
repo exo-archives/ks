@@ -1,9 +1,12 @@
+
+eXo.require("eXo.core.EventManager");
+
 function UITreeExplorer() {};
 
 UITreeExplorer.prototype.init = function( componentid, actionClassName, param) {
   var me = eXo.wiki.UITreeExplorer;
-  var component = document.getElementById(componentid);  
-  me.actionLink = eXo.core.DOMUtil.findFirstDescendantByClass(component, "a", actionClassName); 
+  me.component = document.getElementById(componentid);  
+  me.actionLink = eXo.core.DOMUtil.findFirstDescendantByClass(me.component, "a", actionClassName);  
 };
 
 UITreeExplorer.prototype.collapseExpand = function(element) {
@@ -25,8 +28,22 @@ UITreeExplorer.prototype.collapseExpand = function(element) {
   return true;
 };
 
+UITreeExplorer.prototype.onNodeClick = function(node, absPath) {
+  var me = eXo.wiki.UITreeExplorer;
+  var selectableObj = eXo.core.DOMUtil.findDescendantsByTagName(node, "a");
+  if (selectableObj.length > 0) {
+    
+    var selectedNode = eXo.core.DOMUtil.findFirstDescendantByClass(me.component, "div", "Hover");
+    if (selectedNode)    
+    eXo.core.DOMUtil.removeClass(selectedNode, "Hover");
+    if (!eXo.core.DOMUtil.hasClass(node, "Hover"))
+      eXo.core.DOMUtil.addClass(node, "Hover");
+    me.selectNode(absPath);
+  }
+};
+
 UITreeExplorer.prototype.selectNode = function(nodePath) {
-  var me = eXo.wiki.UITreeExplorer;  
+  var me = eXo.wiki.UITreeExplorer;
   if(me.actionLink){
     var link = me.actionLink;
     var endParamIndex = link.href.lastIndexOf("')");
@@ -40,7 +57,7 @@ UITreeExplorer.prototype.selectNode = function(nodePath) {
   }
 };
 
-UITreeExplorer.prototype.expandNode = function(path, element) {
+UITreeExplorer.prototype.getChild = function(path, element) {
   var me = eXo.wiki.UITreeExplorer;
   var node = element.parentNode;
   var RestURLinput = document.getElementById("TreeExplorer_RestURL");
@@ -50,7 +67,7 @@ UITreeExplorer.prototype.expandNode = function(path, element) {
   http.open("GET", restURL, true);
   http.onreadystatechange = function() {
     if (http.readyState == 4) {
-      me.renderTreeNodes(node, http.responseText);
+      me.renderTreeNodes(node, http.responseText);      
     }
   }
   http.send("");
@@ -104,11 +121,11 @@ UITreeExplorer.prototype.buildNode = function(data) {
   }
   var childNode = "";
   childNode += " <div  class=\"" + lastNodeClass + " Node\" >";
-  childNode += "   <div class=\""+iconType+"Icon\" id=\"" + relPath + "\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.expandNode('" +currentPagePath + "/"+ relPath + "', this)\">";
-  childNode += "    <div id=\"iconTreeExplorer\" onclick=\"event.cancelBubble=true;\"" + "class=\""+nodeTypeCSS+" NodeType Node \""  + ">";
+  childNode += "   <div class=\""+iconType+"Icon\" id=\"" + relPath + "\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.getChild('" +currentPagePath + "/"+ relPath + "', this)\">";
+  childNode += "    <div id=\"iconTreeExplorer\"  onclick=\"event.cancelBubble=true; eXo.wiki.UITreeExplorer.onNodeClick(this,'"+absPath+"')\""  + "class=\""+ nodeTypeCSS +" TreeNodeType Node \">";  
   childNode += "      <div class='NodeLabel'>";
   if (data.selectable==true){
-    childNode += "        <a  onclick=\"event.cancelBubble=true; eXo.wiki.UITreeExplorer.selectNode('"+absPath+ "')\" style='cursor: pointer;' title=\""+nodeName+"\">"+nodeName+"</a>";
+    childNode += "        <a title=\""+nodeName+"\">"+nodeName+"</a>";
   }
   else{
     childNode += "         <span style=\"cursor:auto\" title=\""+nodeName+"\">"+nodeName+"</span>";
@@ -116,9 +133,7 @@ UITreeExplorer.prototype.buildNode = function(data) {
   childNode += "      </div>";
   childNode += "    </div>";
   childNode += "  </div>";
-  childNode += " </div>";
-  childNode += "</div>";
+  childNode += " </div>"; 
   return childNode;
 }
-
 eXo.wiki.UITreeExplorer = new UITreeExplorer();
