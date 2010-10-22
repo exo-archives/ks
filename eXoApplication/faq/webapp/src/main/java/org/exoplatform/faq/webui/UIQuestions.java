@@ -986,7 +986,7 @@ public class UIQuestions extends UIContainer {
 			UIPrintAllQuestions uiPrintAll = popupContainer.addChild(UIPrintAllQuestions.class, null, null) ;
 			uiPrintAll.setCategoryId(questions.categoryId_, faqService_, questions.faqSetting_, questions.canEditQuestion);
 			popupContainer.setId("FAQPrintAllQuestion") ;
-			popupAction.activate(popupContainer, 800, 500) ;
+			popupAction.activate(popupContainer, 800, 500, false) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
