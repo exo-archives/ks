@@ -39,7 +39,7 @@
 	
     <org.exoplatform.exopackage.version>1.1.0</org.exoplatform.exopackage.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
-    <version.chromattic>1.0.3</version.chromattic>
+    <version.chromattic>1.0.4</version.chromattic>
 	<!-- Extend service -->
 	<org.exoplatform.social.version>1.1.2-SNAPSHOT</org.exoplatform.social.version>
 	
