@@ -23,10 +23,8 @@ if (!eXo.wiki)
 function UIConfirmBox() {
 };
 
-UIConfirmBox.prototype.init = function(isShow) {
-  if (!isShow){
-    eXo.wiki.UIConfirmBox.closeConfirm();
-  }
+UIConfirmBox.prototype.init = function() {
+  eXo.wiki.UIConfirmBox.closeConfirm();
 };
 
 UIConfirmBox.prototype.render = function(uicomponentId, titleMessage, message,

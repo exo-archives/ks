@@ -23,10 +23,8 @@
 <%
 def rcontext = _ctx.getRequestContext() ;
 
-boolean isShow = uicomponent.isNewMode() ||  uicomponent.isEditMode() ;
-
 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(\""+uicomponent.id+"\");");
-rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIConfirmBox.init("+ isShow +");");
+rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIConfirmBox.init();");
 rcontext.getJavascriptManager().addOnResizeJavascript("eXo.wiki.UIConfirmBox.resetPosition");
 rcontext.getJavascriptManager().addOnScrollJavascript("eXo.wiki.UIConfirmBox.resetPosition");
 
