@@ -1738,7 +1738,7 @@ public class JCRDataStorage {
 					while(iter.hasNext()) {
 						attNode = iter.nextNode() ;
 						if(attNode.isNodeType("exo:faqAttachment")) {
-							attNode.getNode("jcr:content").setProperty("exo:categoryId", catId) ;
+							attNode.setProperty("exo:categoryId", catId) ;
 						}
 					}
 
