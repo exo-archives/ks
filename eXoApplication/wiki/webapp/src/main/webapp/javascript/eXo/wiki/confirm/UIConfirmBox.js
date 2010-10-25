@@ -107,8 +107,10 @@ UIConfirmBox.prototype.closeConfirm = function() {
     eXo.core.UIMaskLayer.removeMask(this.maskLayer);
     this.maskLayer = null;
   }
-  if (me.confirmBox)
+  if (me.confirmBox) {
     eXo.core.DOMUtil.removeElement(me.confirmBox);
+    me.confirmBox = null;
+  }
 };
 
 UIConfirmBox.prototype.resetPosition = function() {
