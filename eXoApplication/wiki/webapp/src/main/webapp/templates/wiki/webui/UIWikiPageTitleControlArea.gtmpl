@@ -1,8 +1,9 @@
 <%
 	 def rcontext = _ctx.getRequestContext();
 	 String inputId=  uicomponent.FIELD_TITLEINPUT;
+	 String untitledLabel = _ctx.appRes("UIWikiPageTitleControlArea.label.Untitled");  ; 
 	 
-	 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPageTitleControlArea.init('"+ uicomponent.id+"', '" + inputId +"');"); 
+	 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPageTitleControlArea.init('"+ uicomponent.id+"', '" + inputId + "', '" + untitledLabel +"');"); 
 %>
 
 <div class="$uicomponent.id" id="$uicomponent.id" >
