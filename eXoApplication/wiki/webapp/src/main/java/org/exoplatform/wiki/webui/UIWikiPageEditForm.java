@@ -48,9 +48,9 @@ import org.xwiki.rendering.syntax.Syntax;
   lifecycle = UIFormLifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPageEditForm.gtmpl",
   events = {
-      @EventConfig(listeners = UIWikiPageEditForm.SelectSyntaxActionListener.class)     
-  }
-  
+      @EventConfig(listeners = UIWikiPageEditForm.SelectSyntaxActionListener.class),
+      @EventConfig(listeners = UIWikiPageEditForm.CloseActionListener.class)      
+  }  
 )
 public class UIWikiPageEditForm extends UIWikiForm {
 
@@ -64,6 +64,8 @@ public class UIWikiPageEditForm extends UIWikiForm {
   public static final String RICHTEXT_AREA = "UIWikiRichTextArea";
   
   private String  title ;
+  
+  public static final String CLOSE = "Close";
   
   public UIWikiPageEditForm() throws Exception{
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.EDITPAGE, WikiMode.ADDPAGE });
@@ -113,6 +115,15 @@ public class UIWikiPageEditForm extends UIWikiForm {
       UIWikiSidePanelArea sidePanelForm = pageEditForm.getChild(UIWikiSidePanelArea.class);
       UIFormSelectBox syntaxTypeSelectBox = pageEditForm.getChild(UIFormSelectBox.class);
       sidePanelForm.renderHelpContent(syntaxTypeSelectBox.getValue());
+    }
+  }  
+  
+  static public class CloseActionListener extends EventListener<UIWikiPageEditForm> {
+    @Override
+    public void execute(Event<UIWikiPageEditForm> event) throws Exception {
+      UIWikiSidePanelArea sidePanelForm = event.getSource().getChild(UIWikiSidePanelArea.class);
+      sidePanelForm.setRendered(false);
+      event.getRequestContext().addUIComponentToUpdateByAjax(event.getSource());
     }
   }
 }

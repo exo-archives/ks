@@ -18,11 +18,8 @@ package org.exoplatform.wiki.webui;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
-import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
@@ -37,14 +34,9 @@ import org.xwiki.rendering.syntax.Syntax;
  */
 @ComponentConfig(
   lifecycle = UIApplicationLifecycle.class,
-  template = "app:/templates/wiki/webui/UIWikiSidePanelArea.gtmpl",
-  events = {
-      @EventConfig(listeners = UIWikiSidePanelArea.CloseActionListener.class)
-    }
+  template = "app:/templates/wiki/webui/UIWikiSidePanelArea.gtmpl"
 )
-public class UIWikiSidePanelArea extends UIContainer {
-
-  public static final String CLOSE = "Close";
+public class UIWikiSidePanelArea extends UIContainer {  
   
   private String syntaxName;
   
@@ -86,14 +78,6 @@ public class UIWikiSidePanelArea extends UIContainer {
     {
       this.htmlOutput = "<h2>None help content</h2>";
       this.syntaxName = syntaxId.replace("/", "").toUpperCase();
-    }
-  }
-  
-  
-  static public class CloseActionListener extends EventListener<UIWikiSidePanelArea> {
-    @Override
-    public void execute(Event<UIWikiSidePanelArea> event) throws Exception {
-      event.getSource().setRendered(false);
     }
   }
   

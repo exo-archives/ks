@@ -59,6 +59,7 @@ public class HelpActionComponent extends UIComponent {
       UIWikiSidePanelArea wikiSidePanelArea = wikiPageEditForm.getChild(UIWikiSidePanelArea.class);
       boolean isRendered = wikiSidePanelArea.isRendered();
       wikiSidePanelArea.setRendered(!isRendered);
+      event.getRequestContext().addUIComponentToUpdateByAjax(wikiPageEditForm);
       super.processEvent(event);
     }
   }
