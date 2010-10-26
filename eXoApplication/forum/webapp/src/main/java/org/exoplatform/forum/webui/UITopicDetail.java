@@ -1765,7 +1765,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	  					} else if((int)c == 62){
 	  						buffer.append("&gt;") ;
 	  					} else if(c == '\''){
-	  						buffer.append("&apos;") ;
+	  						buffer.append("&#39;") ;
 	  					} else if(c == '&' || (int)c == 38){
 	  						buffer.append("&#x26;");
 	  					} else{
