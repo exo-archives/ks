@@ -5,7 +5,7 @@
 		directory_title="Polls"
 		title_url="http://www.exoplatform.org"
 		description="Poll list."
-		thumbnail="/poll/gadgets/polls/skin/thumb.png"
+		thumbnail="http://localhost:8080/poll/gadgets/polls/skin/Polls.png"
 		height="300">
 		<Locale messages="locale/default.xml" />
 		<Locale lang="ar" messages="locale/ar.xml" language_direction="rtl"/>
