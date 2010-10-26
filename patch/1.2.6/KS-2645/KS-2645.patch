@@ -1,0 +1,13 @@
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(revision 61764)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(working copy)
+@@ -1738,7 +1738,7 @@
+ 					while(iter.hasNext()) {
+ 						attNode = iter.nextNode() ;
+ 						if(attNode.isNodeType("exo:faqAttachment")) {
+-							attNode.setProperty("exo:categoryId", catId) ;
++							attNode.getNode("jcr:content").setProperty("exo:categoryId", catId) ;
+ 						}
+ 					}
+ 
