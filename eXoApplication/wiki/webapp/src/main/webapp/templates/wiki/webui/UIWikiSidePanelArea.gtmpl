@@ -2,7 +2,7 @@
   import org.exoplatform.wiki.webui.UIWikiPageEditForm;  
 %>
 
-<div class="UIWikiSidePanelArea">
+<div class="UIWikiSidePanelArea" id="$uicomponent.id">
   <div class="BarTit">
   <% 
   	 String closeLink= uicomponent.getParent().event(UIWikiPageEditForm.CLOSE);
@@ -12,9 +12,13 @@
     <div class="ClearRight"></div>
   </div>
   <div class="Content">
-  <%=uicomponent.getHtmlOutput()%>
-  <br/>
-      <a href="<%=uicomponent.getSyntaxFullPageUrl()%>" onclick="window.open('<%=uicomponent.getSyntaxFullPageUrl()%>','notation_help','width=1000', 'height=580', 'resizable', 'scrollbars'); return false;">
-  Full help syntax</a>
+  <% if (uicomponent.getHtmlOutput()!=null) {%>
+  	<%=uicomponent.getHtmlOutput()%>
+  	<br/>
+    <a href="<%=uicomponent.getSyntaxFullPageUrl()%>" onclick="window.open('<%=uicomponent.getSyntaxFullPageUrl()%>','notation_help','width=1000', 'height=580', 'resizable', 'scrollbars'); return false;">
+  	<%=_ctx.appRes("UIWikiSidePanelArea.label.More");%></a>
+  <%} else {%>
+  	<%=_ctx.appRes("UIWikiSidePanelArea.label.None-help-content");%></a>  	
+  <%} %>
 	</div>
 </div>

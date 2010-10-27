@@ -115,6 +115,7 @@ public class UIWikiPageEditForm extends UIWikiForm {
       UIWikiSidePanelArea sidePanelForm = pageEditForm.getChild(UIWikiSidePanelArea.class);
       UIFormSelectBox syntaxTypeSelectBox = pageEditForm.getChild(UIFormSelectBox.class);
       sidePanelForm.renderHelpContent(syntaxTypeSelectBox.getValue());
+      event.getRequestContext().addUIComponentToUpdateByAjax(pageEditForm);
     }
   }  
   

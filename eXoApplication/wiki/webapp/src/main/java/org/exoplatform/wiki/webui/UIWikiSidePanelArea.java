@@ -67,18 +67,14 @@ public class UIWikiSidePanelArea extends UIContainer {
     RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
     WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
     PageImpl syntaxHelpPage= wikiService.getHelpSyntaxPage(syntaxId);
-    if (syntaxHelpPage!=null)
-    {
-    String markup=syntaxHelpPage.getContent().getText();   
-    this.htmlOutput = renderingService.render(markup, syntaxId, Syntax.XHTML_1_0.toIdString());  
-    this.syntaxName = syntaxId.replace("/", "").toUpperCase();
-    this.syntaxFullPageUrl = Utils.getCurrentRequestURL()+"?action=help&page="+ syntaxId.replace("/", "SLASH").replace(".", "DOT");
+    this.syntaxName = syntaxId.replace("/", " ").toUpperCase();
+    if (syntaxHelpPage != null) {
+      String markup = syntaxHelpPage.getContent().getText();
+      this.htmlOutput = renderingService.render(markup, syntaxId, Syntax.XHTML_1_0.toIdString());      
+      this.syntaxFullPageUrl = Utils.getCurrentRequestURL() + "?action=help&page="
+          + syntaxId.replace("/", "SLASH").replace(".", "DOT");
+    } else {
+      this.htmlOutput = null;
     }
-    else
-    {
-      this.htmlOutput = "<h2>None help content</h2>";
-      this.syntaxName = syntaxId.replace("/", "").toUpperCase();
-    }
-  }
-  
+  }  
 }
