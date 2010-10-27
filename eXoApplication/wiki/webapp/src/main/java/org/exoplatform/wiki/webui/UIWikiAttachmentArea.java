@@ -170,6 +170,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
   static public class RemoveAttachmentActionListener extends EventListener<UIWikiAttachmentArea> {
     public void execute(Event<UIWikiAttachmentArea> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
+      UIWikiPageArea pageArea = wikiPortlet.findFirstComponentOfType(UIWikiPageArea.class);
       UIWikiPageContentArea contentArea = wikiPortlet.findFirstComponentOfType(UIWikiPageContentArea.class);
       UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);
       
@@ -179,7 +180,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
       Page page = uiForm.getCurrentWikiPage();
       ((PageImpl) page).removeAttachment(attFileId);
       contentArea.renderVersion();
-      event.getRequestContext().addUIComponentToUpdateByAjax(contentArea);
+      event.getRequestContext().addUIComponentToUpdateByAjax(pageArea);
       event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea);
     }
   }
