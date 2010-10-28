@@ -78,8 +78,7 @@
             } else {
               versionLabel = "v. " + versionLabel;
             }
-            //String updatedDate = df.format(frozenNode.getProperties().get(WikiNodeType.Definition.UPDATED_DATE));
-            String updatedDate = frozenNode.getUpdatedDate();
+            String updatedDate = df.format(frozenNode.getUpdatedDate());
             String author = frozenNode.getAuthor();
             author = (author != null) ? author : "anonymous";
             String comment = frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT).getComment();

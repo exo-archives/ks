@@ -5,6 +5,7 @@
 <div class="UIWikiVersionSelect">
 	<%
       String viewCurrentVersionLink = uicomponent.event(uicomponent.VIEW_CURRENT_VERSION);
+      String compareLink = uicomponent.event(uicomponent.COMPARE_ACTION);
       String restoreLink = uicomponent.event(uicomponent.RESTORE_ACTION);
       String viewHistoryLink = uicomponent.event(uicomponent.SHOW_HISTORY);
       String previousVersionsLink = uicomponent.isHasPreviousVersion() ? uicomponent.event(uicomponent.PREVIOUS_VERSION) : null;
@@ -23,7 +24,7 @@
 		<span class="Label"><%= _ctx.appRes("UIWikiVersionSelect.label.viewing-old-version-info"); %></span>
 		 <a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');" class="Title"><%= _ctx.appRes("UIWikiVersionSelect.label.CurrentVersion"); %></a>	
 		<div class="ActionLink">
-				<a onclick=""><%= _ctx.appRes("UIWikiVersionSelect.label.CompareWithCurrent"); %></a>&nbsp;|&nbsp;
+				<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.SHOW_HISTORY');" onclick="$compareLink"><%= _ctx.appRes("UIWikiVersionSelect.label.CompareWithCurrent"); %></a>&nbsp;|&nbsp;
 				<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');" onclick="$restoreLink;"><%= _ctx.appRes("UIWikiVersionSelect.label.RestoreThisVersion"); %></a>&nbsp;|&nbsp;
 				<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.SHOW_HISTORY');"><%= _ctx.appRes("UIWikiVersionSelect.label.ViewPageHistory"); %></a>
 				<a id="$viewHistoryLinkId" onclick="$viewHistoryLink" style="display:none"></a>
