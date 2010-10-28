@@ -2141,6 +2141,7 @@ public class JCRDataStorage implements DataStorage {
 	}
 
 	private Category getCategory(Node categoryNode) throws Exception {
+		if(categoryNode == null) return null;
 		Category category = new Category();
 		category.setId(categoryNode.getName());
 		if (categoryNode.hasProperty("exo:name"))
@@ -2322,8 +2323,11 @@ public class JCRDataStorage implements DataStorage {
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).append("//element(*,exo:faqCategory)").append("[fn:name()='").append(categoryId).append("']");
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
-			return result.getNodes().nextNode();
+			NodeIterator iter = result.getNodes();
+			if(iter.getSize() != 0)
+				return iter.nextNode();
 		}
+		return null;
 	}
 
 	/*
@@ -3536,17 +3540,13 @@ public class JCRDataStorage implements DataStorage {
 	 * 
 	 * @see org.exoplatform.faq.service.impl.DataStorage#isExisting(java.lang.String)
 	 */
-	public boolean isExisting(String path) {
+	public boolean isExisting(String path) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		try {
-			getFAQServiceHome(sProvider).getNode(path);
-			return true;
-		} catch (Exception e) {
-			log.error("Failed to check is existing. path:" + path, e);
+			return getFAQServiceHome(sProvider).hasNode(path);
 		} finally {
 			sProvider.close();
 		}
-		return false;
 	}
 
 	/*
@@ -3631,7 +3631,6 @@ public class JCRDataStorage implements DataStorage {
 				node = getCategoryHome(sProvider, null);
 			else
 				node = getCategoryNodeById(sProvider, id);
-			;
 			if (node.isNodeType("exo:faqQuestion"))
 				node = node.getParent().getParent();
 			return new PropertyReader(node).bool("exo:viewAuthorInfor", false);
@@ -3654,7 +3653,6 @@ public class JCRDataStorage implements DataStorage {
 		try {
 			List<String> userGroups = UserHelper.getAllGroupAndMembershipOfUser(user);
 			Node node = getCategoryNodeById(sProvider, categoryId);
-
 			PropertyReader reader = new PropertyReader(node);
 			List<String> values = reader.list("exo:moderators", new ArrayList<String>());
 			if (!values.isEmpty())

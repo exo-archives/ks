@@ -279,28 +279,26 @@ public class UICategories extends UIContainer {
 			UIAnswersContainer container = uiCategories.getAncestorOfType(UIAnswersContainer.class);
 			UIQuestions questions = container.getChild(UIQuestions.class);
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			questions.pageSelect = 0;
-			questions.backPath_ = "";
-			questions.setLanguage(FAQUtils.getDefaultLanguage());
 			UIAnswersPortlet answerPortlet = questions.getAncestorOfType(UIAnswersPortlet.class);
-			try {
+			if(uiCategories.faqService_.isExisting(categoryId)) {
 				questions.setCategoryId(categoryId);
+				questions.pageSelect = 0;
+				questions.backPath_ = "";
+				questions.setLanguage(FAQUtils.getDefaultLanguage());
 				questions.updateCurrentQuestionList();
 				questions.viewingQuestionId_ = "";
 				questions.updateCurrentLanguage();
-
-			} catch (Exception e) {
+				UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class);
+				breadcumbs.setUpdataPath(categoryId);
+				uiCategories.setPathCategory(categoryId);
+				event.getRequestContext().addUIComponentToUpdateByAjax(container);
+			} else {
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class);
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				questions.setDefaultLanguage();
 				event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet);
-				return;
 			}
-			UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class);
-			breadcumbs.setUpdataPath(categoryId);
-			uiCategories.setPathCategory(categoryId);
-			event.getRequestContext().addUIComponentToUpdateByAjax(container);
 		}
 	}
 
