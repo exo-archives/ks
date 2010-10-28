@@ -378,7 +378,7 @@ public class JCRDataStorage implements DataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		try {
 			Node faqHome = getFAQServiceHome(sProvider);
-			return getQuestionsIterator(faqHome);
+			return getQuestionsIterator(faqHome, "", true);
 		} catch (Exception e) {
 			log.error("Failed to get question iterator: ", e);
 		} finally {
@@ -387,8 +387,8 @@ public class JCRDataStorage implements DataStorage {
 		return null;
 	}
 
-	private NodeIterator getQuestionsIterator(Node parentNode) throws Exception {
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(parentNode.getPath()).append("//element(*,exo:faqQuestion)");
+	private NodeIterator getQuestionsIterator(Node parentNode, String strQuery, boolean isAll) throws Exception {
+		StringBuffer queryString = new StringBuffer("/jcr:root").append(parentNode.getPath()).append((isAll)?"//":"/").append("element(*,exo:faqQuestion)").append(strQuery);
 		QueryManager qm = parentNode.getSession().getWorkspace().getQueryManager();
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
@@ -3473,7 +3473,7 @@ public class JCRDataStorage implements DataStorage {
 			}
 			for (String string : patchNodeImport) {
 				Node nodeParentQuestion = categoryNode.getNode(string);
-				iter = getQuestionsIterator(nodeParentQuestion);
+				iter = getQuestionsIterator(nodeParentQuestion, "", true);
 				// Update number answers and regeister question node listener
 				while (iter.hasNext()) {
 					Node node = iter.nextNode();
@@ -4044,7 +4044,8 @@ public class JCRDataStorage implements DataStorage {
 		List<QuestionInfo> questionInfoList = new ArrayList<QuestionInfo>();
 		if (categoryNode.hasNode(Utils.QUESTION_HOME)) {
 			QuestionInfo questionInfo;
-			NodeIterator iter = categoryNode.getNode(Utils.QUESTION_HOME).getNodes();
+			String strQuery = "[@exo:isActivated='true' and @exo:isApproved='true']";
+			NodeIterator iter = getQuestionsIterator(categoryNode.getNode(Utils.QUESTION_HOME), strQuery, false);
 			Node question;
 			while (iter.hasNext()) {
 				question = iter.nextNode();
