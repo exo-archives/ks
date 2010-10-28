@@ -105,7 +105,7 @@ public class SavePageActionComponent extends UIComponent {
                                                        syntaxTypeSelectBox.getValue());
         markupInput.setValue(markupContent);
       }
-      String markup = markupInput.getValue();
+      String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
       try {
         String requestURL = Utils.getCurrentRequestURL();
         String ajaxRequestURL=  Utils.getCurrentAjaxRequestURL(wikiPortlet.getWikiMode());

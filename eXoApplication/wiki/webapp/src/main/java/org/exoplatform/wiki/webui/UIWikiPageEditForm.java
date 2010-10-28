@@ -76,7 +76,7 @@ public class UIWikiPageEditForm extends UIWikiForm {
     addChild(UIPageToolBar.class, null, PAGE_TOOLBAR);
     addChild(UIWikiSidePanelArea.class, null, HELP_PANEL);
     addChild(UIWikiRichTextArea.class, null, RICHTEXT_AREA).setRendered(false);
-    UIFormTextAreaInput markupInput = new UIFormTextAreaInput(FIELD_CONTENT, FIELD_CONTENT, "This is **sample content**");
+    UIFormTextAreaInput markupInput = new UIFormTextAreaInput(FIELD_CONTENT, FIELD_CONTENT, "");
     addUIFormInput(markupInput).setRendered(true);
     UIFormStringInput commentInput = new UIFormStringInput(FIELD_COMMENT, FIELD_COMMENT, "");
     addUIFormInput(commentInput);

@@ -20,9 +20,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -77,6 +79,8 @@ public class AddPageActionComponent extends UIComponent {
 
   public static void processAddPageAction(Map<String, Object> uiExtensionContext) throws Exception {
     WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
+    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+    ResourceBundle res = context.getApplicationResourceBundle() ;  
     
     UIWikiPortlet wikiPortlet = (UIWikiPortlet) uiExtensionContext.get(UIWikiPortlet.class.getName());
     Utils.reloadWYSIWYGEditor(wikiPortlet);
@@ -86,8 +90,9 @@ public class AddPageActionComponent extends UIComponent {
                                                .getUIStringInput();
     UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
     UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
-    UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
-    titleInput.setValue(UIWikiPageEditForm.UNTITLED);
+    UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);    
+    titleInput.setValue(res.getString("UIWikiPageTitleControlArea.label.Untitled"));
+    
     titleInput.setEditable(true);
     markupInput.setValue("");
     commentInput.setRendered(false);

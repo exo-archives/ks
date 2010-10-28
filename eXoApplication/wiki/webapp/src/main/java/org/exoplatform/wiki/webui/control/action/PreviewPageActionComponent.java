@@ -80,7 +80,7 @@ public class PreviewPageActionComponent extends UIComponent {
       } else {
         UIFormTextAreaInput markupInput = wikiPageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
         UIFormSelectBox syntaxTypeSelectBox = wikiPageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
-        String markup = markupInput.getValue();
+        String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
         wikiPagePreview.renderWikiMarkup(markup, syntaxTypeSelectBox.getValue());
       }
 

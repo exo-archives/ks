@@ -35,6 +35,7 @@ import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
@@ -177,10 +178,11 @@ public class Utils {
     HttpSession session = Util.getPortalRequestContext().getRequest().getSession(false);
     if (xhtmlContent == null) {
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
-      String markupContent = pageEditForm.getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT).getValue();
+      UIFormTextAreaInput markupInput = pageEditForm.getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT);
+      String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
       String markupSyntax = pageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
       setUpWikiContext(wikiPortlet, renderingService);
-      String htmlContent = renderingService.render(markupContent, markupSyntax, Syntax.ANNOTATED_XHTML_1_0.toIdString());
+      String htmlContent = renderingService.render(markup, markupSyntax, Syntax.ANNOTATED_XHTML_1_0.toIdString());
       removeWikiContext(renderingService);
       session.setAttribute(UIWikiRichTextArea.SESSION_KEY, htmlContent);
     } else {
