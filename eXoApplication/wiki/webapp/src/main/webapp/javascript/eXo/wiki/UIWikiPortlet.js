@@ -145,7 +145,7 @@ UIWikiPortlet.prototype.renderBreadcrumbs = function() {
         if (index == breadcrumbItems.length - 2) {
           breadcrumbItems[index].innerHTML = ' ... ';
           breadcrumbItems[index].href = '#';
-          breadcrumbItems[index].onmouseover = this.showBreadcrumbPopup;
+          eXo.core.Browser.eventListener(breadcrumbItems[index], 'mouseover', this.showBreadcrumbPopup);
         } else {
           var arrowBlock = eXo.core.DOMUtil.findNextElementByTagName(breadcrumbItems[index], 'div');
           breadcrumbsInfoBar.removeChild(breadcrumbItems[index]);
@@ -179,6 +179,7 @@ UIWikiPortlet.prototype.renderBreadcrumbs = function() {
       itemsBlock[0].appendChild(menuItem);
     }
   }
+  breadcrumbItems[0].title = breadcrumbItems[0].innerHTML;
   this.shortenUntil(breadcrumbItems[0], lessThanContainer);
 };
 
@@ -192,7 +193,9 @@ UIWikiPortlet.prototype.shortenUntil = function(item, condition) {
     isShortent = true;
   }
   if (isShortent) {
-    item.innerHTML = item.innerHTML.substring(0, item.innerHTML.length - 3);
+    if(item.innerHTML.length > 6) {
+      item.innerHTML = item.innerHTML.substring(0, item.innerHTML.length - 3);
+    }
     item.innerHTML = item.innerHTML + ' ... ';
   }
 };
@@ -206,13 +209,10 @@ UIWikiPortlet.prototype.getBreadcrumbPopup = function() {
 
 UIWikiPortlet.prototype.showBreadcrumbPopup = function(evt) {
   var breadcrumbPopup = eXo.wiki.UIWikiPortlet.getBreadcrumbPopup();
-  var ellipsis = evt.target;
+  var ellipsis = evt.target || evt.srcElement;
   var isRTL = eXo.core.I18n.isRT();
-  var offsetLeft = ellipsis.offsetLeft - 20;
-  if (isRTL) {
-    offsetLeft = offsetLeft + ellipsis.offsetWidth;
-  }
-  var offsetTop = ellipsis.offsetTop + 20;
+  var offsetLeft = eXo.core.Browser.findPosX(ellipsis, isRTL) - 20;
+  var offsetTop = eXo.core.Browser.findPosY(ellipsis) + 20;
   breadcrumbPopup.style.display = 'block';
   breadcrumbPopup.style.left = offsetLeft + 'px';
   breadcrumbPopup.style.top = offsetTop + 'px';
