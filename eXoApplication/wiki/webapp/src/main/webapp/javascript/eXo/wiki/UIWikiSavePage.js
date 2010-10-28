@@ -20,32 +20,14 @@
 function UIWikiSavePage() {
 };
 
-/* ie bug you cannot have more than one button tag */
-/**
- * Submits a form with the given action and the given parameters
- */
-
-UIWikiSavePage.prototype.confirm = function(uicomponentId, pageTitleinputId,
-    titleMessage, addMessage, editMessage, submitClass, submitLabel,
-    discardClass, discardLabel, cancelLabel) {
-
-  var pageTitleInput = document.getElementById(pageTitleinputId);
-  var currentURL = window.location.href;
-  if (window.location.href.indexOf("#") > 0) {
-    var currentMode = currentURL.substring(currentURL.indexOf("#") + 1,
-        currentURL.length);
-    if ((currentMode.toUpperCase() == "ADDPAGE")
-        && (pageTitleInput.value == "Untitled")) {
+UIWikiSavePage.prototype.confirm = function(uicomponentId, isNewMode, pageTitleInputId, untitled,
+    titleMessage, addMessage, submitClass, submitLabel, discardClass, discardLabel, cancelLabel) {
+  var pageTitleInput = document.getElementById(pageTitleInputId); 
+    if (isNewMode ==true && (pageTitleInput.value == untitled)) {
       eXo.wiki.UIConfirmBox.render(uicomponentId, titleMessage, addMessage,
           submitClass, submitLabel, discardClass, discardLabel, cancelLabel);
       return false;
-    } else if (currentMode.toUpperCase() == "EDITPAGE") {
-      eXo.wiki.UIConfirmBox.render(uicomponentId, titleMessage, editMessage,
-          submitClass, submitLabel, discardClass, discardLabel, cancelLabel);
-      return false;
-    }
-    return true;
-  }
+    } 
   return true;
 };
 

@@ -28,9 +28,10 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIConfirmBox.init();");
 rcontext.getJavascriptManager().addOnResizeJavascript("eXo.wiki.UIConfirmBox.resetPosition");
 rcontext.getJavascriptManager().addOnScrollJavascript("eXo.wiki.UIConfirmBox.resetPosition");
 
+boolean isNewMode= uicomponent.isNewMode();
 String titleMessage = _ctx.appRes("UIConfirmBox.label.Confirmation");
 String addMessage = _ctx.appRes("UIConfirmBox.label.ConfirmAdd");
-String editMessage = _ctx.appRes("UIConfirmBox.label.ConfirmEdit");
+String untitledMessage = _ctx.appRes("UIWikiPageTitleControlArea.label.Untitled");
 String exitMessage = _ctx.appRes("UIConfirmBox.label.ConfirmExit");
 String confirmLabel = _ctx.appRes("UIConfirmBox.label.Confirm");
 String discardLabel = _ctx.appRes("UIConfirmBox.label.Discard");
@@ -84,8 +85,8 @@ for(entry in uicomponent.getActions()) {
 			saveLink=link;
 		%>
 		<a href="$link" 
-		onclick="return eXo.wiki.UIWikiSavePage.confirm('$uicomponent.id','$pageTitleInputId','$titleMessage',
-		'$addMessage','$editMessage', 'Save Icon','$confirmLabel','Delete Icon','$discardLabel', '$cancelLabel');" 
+		onclick="return eXo.wiki.UIWikiSavePage.confirm('$uicomponent.id', $isNewMode, '$pageTitleInputId', '$untitledMessage',
+		'$titleMessage', '$addMessage', 'Save Icon', '$confirmLabel', 'Delete Icon', '$discardLabel', '$cancelLabel');" 
 		class="Save Icon" title="<%=_ctx.appRes("UIPageToolBar.label.SavePage");%>">&nbsp;</a>
 		<%} else if(action.equals("RichText")){
 		%>
