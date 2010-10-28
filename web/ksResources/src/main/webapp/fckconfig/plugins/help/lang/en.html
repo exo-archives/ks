@@ -396,7 +396,7 @@
 				<td colspan="2" class="tcat">Advanced Lists</td>
 			</tr>
 			<tr>
-				<td style="font-weight: normal;" colspan="2" class="thead">The [list] tag allows you to create advanced lists by specifying an option. The option should have a value of 1 (for a numbered list) or A (for an alphabetic with capital letters list) or a (for an alphabetic with lowercase letters list) or I (for a numbered with capital Roman numeral list) or i (for a numbered with small Roman numeral list).</td>
+				<td style="font-weight: normal;" colspan="2" class="thead">The [list] tag allows you to create advanced lists by specifying an option. The option should have a value of 1 (for a numbered list) or A (for an alphabetic with capital letters list) or a (for an alphabetic with lowercase letters list) or I (for a numbered with capital Roman numeral list) or i (for a numbered with small Roman numeral list) or attributes about css of &lt;li&gt;( for style of li example:disc, circle, square, none... ) .</td>
 			</tr>
 			<tr valign="top">
 				<td width="20%" class="alt1"><strong>Usage</strong></td>
@@ -404,11 +404,17 @@
 			</tr>
 			<tr valign="top">
 				<td width="20%" class="alt2"><strong>Example Usage</strong></td>
-				<td class="alt2">[list=1]<br/>[*]list item 1<br/>[*]list item 2<br/>[/list]<br/><br/>[list=a]<br/>[*]list item 1<br/>[*]list item 2<br/>[/list]<br/><br/>[list=A]<br/>[*]list item 1<br/>[*]list item 2<br/>[/list]</td>
+				<td class="alt2">
+					<span>[list=1]<br/>[*]list item 1<br/>[*]list item 2<br/>[/list]<br/><br/>[list=a]<br/>[*]list item 1<br/>[*]list item 2<br/>[/list]<br/><br/>[list=A]<br/>[*]list item 1<br/>[*]list item 2<br/>[/list]</span><br/><br/>
+					<span>[list=square]<br/>[*]list item 1<br/>[*]list item 2<br/>[/list]</span>
+				</td>
 			</tr>
 			<tr valign="top">
 				<td width="20%" class="alt1"><strong>Example Output</strong></td>
-				<td class="alt1"><ol type="1"><li>list item 1</li><li>list item 2</li></ol><ol type="a"><li>list item 1</li><li>list item 2</li></ol><ol type="I"><li>list item 1</li><li>list item 2</li></ol></td>
+				<td class="alt1">
+					<ol type="1"><li>list item 1</li><li>list item 2</li></ol><ol type="a"><li>list item 1</li><li>list item 2</li></ol><ol type="A"><li>list item 1</li><li>list item 2</li></ol>
+					<ul><li type="square">list item 1</li><li type="square">list item 2</li></ul>
+				</td>
 			</tr>
 		</tbody>
 	</table>

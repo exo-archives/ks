@@ -206,7 +206,12 @@ public class BBCodeRenderer implements Renderer {
           str_ = StringUtils.replace(str_, "<p>", "");
           str_ = StringUtils.replace(str_, "</p>", "");
         }
-        s = StringUtils.replace(s, "[list=" + content + "[/list]", "<ol type=\""+type+"\">" + str_ + "</ol>");
+        if(" 1 i I a A ".indexOf(type) > 0) {
+        	s = StringUtils.replace(s, "[list=" + content + "[/list]", "<ol type=\""+type+"\">" + str_ + "</ol>");
+        } else {
+        	str_ = StringUtils.replace(str_, "<li>", "<li type=\""+type+"\">");
+	        s = StringUtils.replace(s, "[list=" + content + "[/list]", "<ul>" + str_ + "</ul>");
+        }
       } catch (Exception e) {
         continue;
       }
