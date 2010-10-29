@@ -727,8 +727,14 @@ UIAnswersPortlet.prototype.submitSearch = function(id){
 };
 
 UIAnswersPortlet.prototype.submitOnKey = function(event){
-	var key = eXo.core.Keyboard.getKeynum(event);
-	if(key == 13) {
+	var keynum;
+	if(window.event) { // IE
+		keynum = event.keyCode;
+	}
+	else if(event.which)  { // Netscape/Firefox/Opera
+		keynum = event.which;
+	}
+	if(keynum == 13) {
 		var searchLinkElm = eXo.core.DOMUtil.findFirstDescendantByClass(this, "a", "ActionSearch");
 		if(searchLinkElm){
 			var link = String(searchLinkElm.href) ;
