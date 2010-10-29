@@ -11,5 +11,5 @@ h1. Preferences
 
 h1. Links to used REST services
 
-* portal/rest/private/ks/poll/viewpoll/\{pollId\}
-* portal/rest/private/ks/poll/votepoll/\{pollId\}/\{indexVote\}
+* portal/rest/private/ks/poll/viewpoll/{{{pollId}}}
+* portal/rest/private/ks/poll/votepoll/{{{pollId}}}/{{{indexVote}}}

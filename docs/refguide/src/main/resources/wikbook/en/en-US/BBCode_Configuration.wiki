@@ -687,10 +687,10 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
 In which:
 || Field name || Value || Description ||
 | *tagName* | {{string}} | This is the text for the BBCode, which is put between two square brackets ({noformat}[ ]{noformat}). For example, for the bold tag, if you type {noformat}[b]{noformat}, the BBCode tag will be *b* without any square brackets ({noformat}[ ]{noformat}). |
-| *replacement* | {{string}} | This is the HTML code that replaces the BBCode entered by the user. Make sure that you include '\{param\}' (without quotes) to insert the text between opening and closing BBCode tags, and '\{option\}' for the parameter within the BBCode tag. You can only use \{option\} if 'Use Option' is selected. |
+| *replacement* | {{string}} | This is the HTML code that replaces the BBCode entered by the user. Make sure that you include {{{'{param}'}}} (without quotes) to insert the text between opening and closing BBCode tags, and {{{'{option}'}}} for the parameter within the BBCode tag. You can only use _{{{option}}}_ if 'Use Option' is selected. |
 | *description* | {{string}} | This is a piece of text to describe the BBCode tag, including HTML tags if you want.|
 | *example* | {{string}} | This is a sample piece of BBCode to use as an example for the particular BBCode. For example, to demonstrate the usage of {noformat}[b]{noformat} tag, enter {noformat}[b]{noformat}text{noformat}[/b]{noformat}. |
-| *isOption* |  {{true}}, {{false}} | To select the {noformat}[tag=option]{noformat}{noformat}[/tag]{noformat} style tag, rather than just a {noformat}[tag]{noformat}{noformat}[/tag]{noformat} style tag. This function will be created if you select this option. |
+| *isOption* |  {{true}}, {{false}} | To select the {{{[tag=option]}}} {{{[/tag]}}} style tag, rather than just a {noformat}[tag]{noformat}{{{[/tag]}}}style tag. This function will be created if you select this option. |
 | *isActive* | {{true}}, {{false}} | To activate the BBCode tag. |
 
 
