@@ -121,10 +121,12 @@ public class UIWikiAttachmentArea extends UIWikiForm {
       if (uploadResource != null) {
         long fileSize = ((long) uploadResource.getUploadedSize());
         if (fileSize >= MAX_SIZE) {
-          uiApp.addMessage(new ApplicationMessage("UIWikiAttachmentArea.msg.attachment-size-over10M",
+          uiApp.addMessage(new ApplicationMessage("UIWikiAttachmentArea.msg.attachment-exceed-10M",
                                                   null,
                                                   ApplicationMessage.WARNING));
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+          resetUploadInput(event);
+          event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea); 
           return;
         }
         InputStream is = input.getUploadDataAsStream();
@@ -139,11 +141,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
         attachfile.setResourceId(uploadResource.getUploadId());
       }
       if (attachfile != null) {
-        try {
-          wikiAttachmentArea.removeChildById(FIELD_UPLOAD);
-          UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
-          uiInput.setAutoUpload(true);
-          wikiAttachmentArea.addChild(uiInput);
+        try {          
           Page page = wikiAttachmentArea.getCurrentWikiPage();
           AttachmentImpl att = ((PageImpl) page).createAttachment(attachfile.getName(), attachfile);
 
@@ -161,9 +159,22 @@ public class UIWikiAttachmentArea extends UIWikiForm {
                                                   null,
                                                   ApplicationMessage.ERROR));
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        } finally {
+          resetUploadInput(event);        
         }
-      }
-      event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea);   
+      }      
+        
+    }
+
+    private void resetUploadInput(Event<UIWikiAttachmentArea> event) {
+      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
+      UIWikiAttachmentArea wikiAttachmentArea = event.getSource();
+      UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);
+      wikiAttachmentArea.removeChildById(FIELD_UPLOAD);
+      UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
+      uiInput.setAutoUpload(true);
+      wikiAttachmentArea.addChild(uiInput);
+      event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea); 
     }
   }
 
