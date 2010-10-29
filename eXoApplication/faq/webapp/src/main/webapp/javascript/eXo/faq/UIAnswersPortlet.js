@@ -718,4 +718,26 @@ UIAnswersPortlet.prototype.showTreeNode = function(obj, isShow) {
 		}
 	}	
 };
+
+UIAnswersPortlet.prototype.submitSearch = function(id){
+	var parentElm = document.getElementById(id);
+	if(parentElm){
+		parentElm.onkeydown = eXo.faq.UIAnswersPortlet.submitOnKey ;
+	}
+};
+
+UIAnswersPortlet.prototype.submitOnKey = function(event){
+	var key = eXo.core.Keyboard.getKeynum(event);
+	if(key == 13) {
+		var searchLinkElm = eXo.core.DOMUtil.findFirstDescendantByClass(this, "a", "ActionSearch");
+		if(searchLinkElm){
+			var link = String(searchLinkElm.href) ;
+			link = link.replace("javascript:", "");
+			eval(link);
+			eXo.core.EventManager.cancelEvent(event);
+			return false;
+		}
+	}
+};
+
 eXo.faq.UIAnswersPortlet = new UIAnswersPortlet() ;

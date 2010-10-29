@@ -69,7 +69,6 @@ public class UIQuickSearch extends BaseUIForm {
 		} else {
 			faqSetting_.setIsAdmin("FALSE");
 		}
-		this.setSubmitAction(this.event("Search"));
 	}
 
 	static public class SearchActionListener extends EventListener<UIQuickSearch> {
