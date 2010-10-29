@@ -257,7 +257,7 @@
 									String authorOfLastAct = question.getAuthorOfLastActivity();
 									if (authorOfLastAct != null && !authorOfLastAct.isEmpty()) {%>
 																	
-										<p class="Name"><span><%=_ctx.appRes("UIQuestions.label.By")%>&nbsp;</span>
+										<p class="Name"><span><%=_ctx.appRes("UIQuestions.label.By");%>&nbsp;</span>
 										<a style="cursor:pointer" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", authorOfLastAct)%>"><%= FAQUtils.getFullName(authorOfLastAct);%></a> | <%= uicomponent.calculateTimeMessageOfLastActivity(question.getTimeOfLastActivity());%></p>
 										<% } %>
 									</div>

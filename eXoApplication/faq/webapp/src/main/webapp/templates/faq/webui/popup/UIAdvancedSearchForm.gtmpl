@@ -1,3 +1,9 @@
+<% 
+	import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.submitSearch('"+uiform.id+"');") ;
+%>
 <div class="UIAdvancedSearchForm $uicomponent.id">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout">
@@ -36,12 +42,13 @@
 				<% for(action in uicomponent.getActions()) { 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
+					 String classN = (action.equals("Search")) ? "ActionSearch" : "";
 				%>
-						<div onclick="$link" class="ActionButton LightBlueStyle">
+						<div class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
-										<a href="javascript:void(0);">$actionLabel</a>
+										<a class="$classN" href="$link">$actionLabel</a>
 									</div>
 								</div>
 							</div>
