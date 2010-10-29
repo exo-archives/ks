@@ -145,13 +145,13 @@ public class SavePageActionComponent extends UIComponent {
             ((PageImpl) page).checkout();
 
             pageParams.setPageId(newPageId);
-            Utils.redirectToNewPage(pageParams, URLEncoder.encode(newPageId, "UTF-8"));
+            Utils.redirectToNewPage(pageParams, URLEncoder.encode(TitleResolver.encodePlusSign(newPageId), "UTF-8"));
           } else {
             ((PageImpl) page).checkin();
             ((PageImpl) page).checkout();
             // the following code line is necessary, otherwise url which is
             // generated from ajax post will be displayed in url bar of browser
-            Utils.redirectToNewPage(pageParams, URLEncoder.encode(pageParams.getPageId(), "UTF-8"));
+            Utils.redirectToNewPage(pageParams, URLEncoder.encode(TitleResolver.encodePlusSign(pageParams.getPageId()), "UTF-8"));
           }
 
         } else if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
@@ -180,7 +180,7 @@ public class SavePageActionComponent extends UIComponent {
           ((PageImpl) subPage).checkout();
           wikiPortlet.changeMode(WikiMode.VIEW);
           String pageId = TitleResolver.getObjectId(title, false);
-          Utils.redirectToNewPage(pageParams, URLEncoder.encode(pageId, "UTF-8"));
+          Utils.redirectToNewPage(pageParams, URLEncoder.encode(TitleResolver.encodePlusSign(pageId), "UTF-8"));
           return;
         }
 

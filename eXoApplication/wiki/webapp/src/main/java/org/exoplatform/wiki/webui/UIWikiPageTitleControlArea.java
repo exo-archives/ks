@@ -136,6 +136,6 @@ public class UIWikiPageTitleControlArea extends UIContainer {
                            newName,
                            newTitle);
     pageParams.setPageId(newName);
-    Utils.redirectToNewPage(pageParams, URLEncoder.encode(pageParams.getPageId(), "UTF-8"));
+    Utils.redirectToNewPage(pageParams, URLEncoder.encode(TitleResolver.encodePlusSign(pageParams.getPageId()), "UTF-8"));
   }
 }

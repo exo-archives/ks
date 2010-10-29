@@ -28,25 +28,37 @@ import java.util.StringTokenizer;
  */
 public class TitleResolver {
 
-  public static String getObjectId(String ObjectTitle, boolean isEncoded) throws UnsupportedEncodingException{
-    //TODO: replace space by "+" when update to Gatein 3.0.1-GA to like Confluence 
-    //following implement like Creole and Xwiki 2.0
-    if(ObjectTitle == null){
+  public static String getObjectId(String objectTitle, boolean isEncoded) throws UnsupportedEncodingException {
+    if (objectTitle == null) {
       return null;
     }
-    String title = ObjectTitle;
-    if(isEncoded){
+    String title = objectTitle;
+    if (isEncoded) {
       title = URLDecoder.decode(title, "UTF-8");
     }
-    return removeSpaces(title);
+    return encodeDecodeSpace(title, false);
   }
-  
-  private static String removeSpaces(String s) {
-    StringTokenizer st = new StringTokenizer(s," ",false);
+
+  public static String encodePlusSign(String encodedString) {
+    return encodeDecodeSpace(encodedString, true);
+  }
+
+  private static String encodeDecodeSpace(String s, boolean isDecode) {
+    String delim = " ";
+    String udelim = "+";
+    if (isDecode) {
+      delim = "+";
+      udelim = " ";
+    }
+    StringTokenizer st = new StringTokenizer(s, delim, false);
     StringBuilder sb = new StringBuilder();
-    while (st.hasMoreElements()) sb.append(st.nextElement());
+    if (st.hasMoreElements()) {
+      sb.append(st.nextElement());
+    }
+    while (st.hasMoreElements()) {
+      sb.append(udelim).append(st.nextElement());
+    }
     return sb.toString();
   }
 
-  
 }
