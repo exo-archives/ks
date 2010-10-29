@@ -1944,6 +1944,7 @@ public class JCRDataStorage implements DataStorage {
   }
 
   private Category getCategory(Node categoryNode) throws Exception {
+  	if(categoryNode == null) return null;
     Category category = new Category() ;
     category.setId(categoryNode.getName()) ;
     if(categoryNode.hasProperty("exo:name")) category.setName(categoryNode.getProperty("exo:name").getString()) ;
@@ -2096,8 +2097,11 @@ public class JCRDataStorage implements DataStorage {
       append("[fn:name()='").append(categoryId).append("']") ;
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();
-      return result.getNodes().nextNode();
+			NodeIterator iter = result.getNodes();
+			if(iter.getSize() != 0)
+				return iter.nextNode();
     }
+    return null;
   }
 
   /* (non-Javadoc)
@@ -3231,15 +3235,11 @@ public class JCRDataStorage implements DataStorage {
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#isExisting(java.lang.String)
    */
-  public boolean isExisting(String path) {
+  public boolean isExisting(String path) throws Exception {
     SessionProvider sProvider = SessionProvider.createSystemProvider() ;
     try{
-      getFAQServiceHome(sProvider).getNode(path) ;
-      return true ;
-    }catch (Exception e) {			
-      log.error("Failed to check is existing. path:"+path, e);
-    }finally { sProvider.close() ;}
-    return false ;
+    	return getFAQServiceHome(sProvider).hasNode(path);
+    } finally { sProvider.close() ;}
   }
 
   /* (non-Javadoc)

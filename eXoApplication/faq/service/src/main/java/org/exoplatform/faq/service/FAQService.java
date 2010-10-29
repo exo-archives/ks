@@ -593,7 +593,7 @@ public interface FAQService extends FAQServiceLegacy{
 
   public InputStream exportData(String categoryId, boolean createZipFile)  throws Exception;
 
-  public boolean isExisting(String path) ;
+  public boolean isExisting(String path) throws Exception ;
 
   public String getCategoryPathOf(String id) throws Exception ;
 

@@ -198,7 +198,7 @@ public interface DataStorage {
 
   boolean importData(String parentId, InputStream inputStream, boolean isZip) throws Exception;
 
-  boolean isExisting(String path);
+  boolean isExisting(String path) throws Exception;
 
   String getCategoryPathOf(String id) throws Exception;
 

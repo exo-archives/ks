@@ -1122,7 +1122,7 @@ public class FAQServiceImpl implements FAQService, Startable {
 		return jcrData_.getQuestionsIterator() ;
 	}	
 	
-	public boolean isExisting(String path) {
+	public boolean isExisting(String path) throws Exception {
 		return jcrData_.isExisting(path) ;
 	}
 	
