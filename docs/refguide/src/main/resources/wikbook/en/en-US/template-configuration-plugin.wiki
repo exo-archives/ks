@@ -1,12 +1,12 @@
 
 h1. Configuration plug-in
-Configuration plug-in is used to automatically setup a default template for FAQ portlet. When FAQ service starts, it will get values which are returned from the _TemplatePlugin_ component to initialize the template for FAQ portlet.
+Configuration plug-in is used to automatically set up a default template for the FAQ portlet. When the FAQ service starts, it will get values which are returned from the _TemplatePlugin_ component to initialize the template for the FAQ portlet.
 
-The template configuration plug-in is configured in _templates-configuration.xml_ file.
+The template configuration plug-in is configured in the _templates-configuration.xml_ file.
 
 In details:
 
-At the run time of FAQ Service, _FAQService_ component is called, then _templates-configuration.xml_ file is executed, the component-plugin named _addTemplatePlugin_ will be referred to _org.exoplatform.faq.service.TemplatePlugin- to execute some objects and create default data for the *Forum* application.
+At the run time of the FAQ Service, _FAQService_ component is called, then _templates-configuration.xml_ file is executed. The component-plugin named _addTemplatePlugin_ will be referred to _org.exoplatform.faq.service.TemplatePlugin- to execute some objects and create default data for the *Forum* application.
 
 {code:xml}
 <external-component-plugins>
@@ -25,7 +25,7 @@ At the run time of FAQ Service, _FAQService_ component is called, then _template
 </external-component-plugins>
 {code}
 
-The properties of template configuration plug-in are defined in _init-params_ tag like the below:
+The properties of template configuration plug-in are defined in _init-params_ tag as follows:
 
 {code:xml}
     <init-params>
@@ -36,35 +36,35 @@ The properties of template configuration plug-in are defined in _init-params_ ta
     </init-params>
 {code}
 
-||Name || Description || value|| 
+||Name || Description || Value|| 
 |*viewerTemplate* | Path of file template | {{war:/ks-extension/ks/faq/templates/FAQViewerPortlet.gtmpl}}|
 
 
 h1. How to change look and feel
-You can use two ways for changing template FAQ viewer: 
-- By using Plug-in
-- By using *edit mode* to edit template
+You can use two ways to change the template FAQ viewer: 
+* By using Plug-in
+* By using *edit mode* to edit template
 
 h2. Using Plug-in
-- Create a file named *_FAQViewerPortlet.gtmpl_*. The content of the file is the template of FAQ viewer.
+* *Step 1*: Create a file named *_FAQViewerPortlet.gtmpl_*. The content of the file is the template of the FAQ viewer.
 
-- Copy this file and paste into _ks-extension/WEB-INF/ks-extension/ks/faq/templates/_ that is in the *webapps* folder of the server (tomcat, jboss).
+* *Step 2*: Copy this file and paste into _ks-extension/WEB-INF/ks-extension/ks/faq/templates/_ that is in the *webapps* folder of the server (tomcat, jboss).
 
-- When the server runs, _FAQViewerPortlet.gtmpl_ will initialize the template of FAQ viewer.
+* *Step 3*: When the server runs, _FAQViewerPortlet.gtmpl_ will initialize the template of the FAQ viewer.
 
 h2. By using Edit Mode
 
-- Run the server and open FAQ Portlet.
+* *Step 1*: Run the server and open the FAQ Portlet.
 
-- Go to *edit mode* and open the *Edit Template* tab.
+* *Step 2*: Go to *edit mode* and open the *Edit Template* tab.
 
-- Edit the content of *text-area-input* and click *Save*.    
+* *Step 3*: Edit the content of *text-area-input* and click *Save*.    
 
 
 h1. API provided by the UIComponent (UIViewer.java)
 * UIViewer is the child of the component _UIFAQPortlet_. It shows the main content of FAQ portlet.
 
-* List of API:
+* List of APIs:
 
 ||Function name || Param || Return || Description||
 |*getCategoryInfo* | Empty | CategoryInfo object | Get the object *CategoryInfo*|
@@ -107,4 +107,4 @@ h1. API provided by the UIComponent (UIViewer.java)
 |*answers*| {{List<String>}} |The list of the answers for the question|
 
 * The *SubCategoryInfo* class:
-The params of this class is the same as the CategoryInfo class. See [here|#Category-info] for more information.
+The params of this class are the same as the CategoryInfo class. See [here|#Category-info] for more information.
