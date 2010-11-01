@@ -4038,6 +4038,14 @@ public class JCRDataStorage implements DataStorage {
 		return subList;
 	}
 
+	private NodeIterator getNodeIteratorAnswerAccess(Node answerHome) throws Exception {
+		StringBuffer queryString = new StringBuffer("/jcr:root").append(answerHome.getPath()).append("/element(*,exo:answer)[@exo:approveResponses='true' and @exo:activateResponses='true']");
+		QueryManager qm = answerHome.getSession().getWorkspace().getQueryManager();
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		return result.getNodes();
+	}
+	
 	private List<QuestionInfo> getQuestionInfo(Node categoryNode) throws Exception {
 		List<QuestionInfo> questionInfoList = new ArrayList<QuestionInfo>();
 		if (categoryNode.hasNode(Utils.QUESTION_HOME)) {
@@ -4054,7 +4062,7 @@ public class JCRDataStorage implements DataStorage {
 					questionInfo.setId(question.getName());
 					if (question.hasNode(Utils.ANSWER_HOME)) {
 						List<String> answers = new ArrayList<String>();
-						NodeIterator ansIter = question.getNode(Utils.ANSWER_HOME).getNodes();
+						NodeIterator ansIter = getNodeIteratorAnswerAccess(question.getNode(Utils.ANSWER_HOME));
 						while (ansIter.hasNext()) {
 							answers.add(ansIter.nextNode().getProperty("exo:responses").getString());
 						}
