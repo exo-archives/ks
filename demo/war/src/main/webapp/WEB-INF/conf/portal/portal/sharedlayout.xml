@@ -90,6 +90,66 @@
 		    <show-info-bar>false</show-info-bar>
 		  </portlet-application>
 		</container>
+    <container id="UserToolBarForumPortlet" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+      <portlet-application>
+        <portlet>
+          <application-ref>ksdemo</application-ref>
+          <portlet-ref>UserToolBarForumPortlet</portlet-ref>
+        </portlet>
+        <access-permissions>Everyone</access-permissions>
+        <show-info-bar>false</show-info-bar>
+      </portlet-application>
+    </container>
+    <container id="UserToolBarAnswersPortlet" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+      <portlet-application>
+        <portlet>
+          <application-ref>ksdemo</application-ref>
+          <portlet-ref>UserToolBarAnswersPortlet</portlet-ref>
+        </portlet>
+        <access-permissions>Everyone</access-permissions>
+        <show-info-bar>false</show-info-bar>
+      </portlet-application>
+    </container>
+    <container id="UserToolBarFaqPortlet" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+      <portlet-application>
+        <portlet>
+          <application-ref>ksdemo</application-ref>
+          <portlet-ref>UserToolBarFaqPortlet</portlet-ref>
+        </portlet>
+        <access-permissions>Everyone</access-permissions>
+        <show-info-bar>false</show-info-bar>
+      </portlet-application>
+    </container>
+    <container id="UserToolBarPollPortlet" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+      <portlet-application>
+        <portlet>
+          <application-ref>ksdemo</application-ref>
+          <portlet-ref>UserToolBarPollPortlet</portlet-ref>
+        </portlet>
+        <access-permissions>Everyone</access-permissions>
+        <show-info-bar>false</show-info-bar>
+      </portlet-application>
+    </container>
+    <container id="UserToolBarTourPortlet" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+      <portlet-application>
+        <portlet>
+          <application-ref>ksdemo</application-ref>
+          <portlet-ref>UserToolBarTourPortlet</portlet-ref>
+        </portlet>
+        <access-permissions>Everyone</access-permissions>
+        <show-info-bar>false</show-info-bar>
+      </portlet-application>
+    </container>
+    <container id="UserToolBarWikiPortlet" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+      <portlet-application>
+        <portlet>
+          <application-ref>ksdemo</application-ref>
+          <portlet-ref>UserToolBarWikiPortlet</portlet-ref>
+        </portlet>
+        <access-permissions>Everyone</access-permissions>
+        <show-info-bar>false</show-info-bar>
+      </portlet-application>
+    </container>
 	</container>
 	
 	<site-body/>

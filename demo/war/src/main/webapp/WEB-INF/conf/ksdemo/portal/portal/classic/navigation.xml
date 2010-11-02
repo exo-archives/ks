@@ -14,36 +14,42 @@
       <uri>forum</uri>
       <name>forum</name>
       <label>Forum</label>
+      <visibility>SYSTEM</visibility>
       <page-reference>portal::classic::forum</page-reference>
     </node>
     <node>
       <uri>answers</uri>
       <name>answers</name>
       <label>Answers</label>
+      <visibility>SYSTEM</visibility>
       <page-reference>portal::classic::answers</page-reference>
     </node>
     <node>
       <uri>faq</uri>
       <name>faq</name>
       <label>FAQ</label>
+      <visibility>SYSTEM</visibility>
       <page-reference>portal::classic::faq</page-reference>
     </node>
     <node>
       <uri>poll</uri>
       <name>poll</name>
       <label>Poll</label>
+      <visibility>SYSTEM</visibility>
       <page-reference>portal::classic::poll</page-reference>
     </node>   
     <node>
       <uri>tour</uri>
       <name>tour</name>
       <label>Tour</label>
+      <visibility>SYSTEM</visibility>
       <page-reference>portal::classic::tour</page-reference>
     </node>    
     <node>
       <uri>wiki</uri>
       <name>wiki</name>
       <label>Wiki</label>
+      <visibility>SYSTEM</visibility>
       <page-reference>portal::classic::wiki</page-reference>
     </node>
   </page-nodes>

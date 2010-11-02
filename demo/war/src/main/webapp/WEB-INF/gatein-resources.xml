@@ -30,13 +30,6 @@
 		<overwrite>true</overwrite>
 	</portlet-skin>
 	
-	<portlet-skin>
-		<application-name>web</application-name>
-		<portlet-name>NavigationPortlet</portlet-name>
-		<skin-name>Default</skin-name>
-		<css-path>/templates/skin/webui/component/UINavigationPortlet/DefaultStylesheet.css</css-path>
-		<overwrite>true</overwrite>
-	</portlet-skin>
   <portlet-skin>
 	<application-name>ksdemo</application-name>
 	<portlet-name>KSDemoCSSControlerPortlet</portlet-name>
