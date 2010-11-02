@@ -151,6 +151,14 @@ div, table, tr, td, img, form {
 	font-size: 11px;
 }
 
+.UINavigationPortlet .GroupNavigation .UITab .HighlightNavigationTab .DropDownArrowIcon{
+	padding-right: 20px;
+}
+
+.UINavigationPortlet .GroupNavigation .UITab .NormalNavigationTab .DropDownArrowIcon {
+	padding-right: 20px;
+}
+
 .UIToolbarContainer .ToolbarContainer .UITab .MenuItemContainer .SiteIcon{
 	background:url("home/DefaultSkin/background/SiteIcon.gif") no-repeat 10px;
 }
