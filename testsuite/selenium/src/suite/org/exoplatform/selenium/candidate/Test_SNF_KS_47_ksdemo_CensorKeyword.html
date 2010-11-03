@@ -494,6 +494,136 @@
 <tr>
 	<td>type</td>
 	<td>username</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>gtn</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/private/classic/forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=SNF_KS_47_For</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=SNF_KS_47_For</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//tr[2]/td[9]/input</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//tr[2]/td[9]/input</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicContainer']/div[4]/div/div[1]/div/div/div/div[2]/div[1]/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UITopicContainer']/div[4]/div/div[1]/div/div/div/div[2]/div[1]/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Censor</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Censor</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Topic for CTest</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Topic for CTest</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[3]/input</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[3]/input</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicDetail']/div[4]/div[1]/div/div/div/div/div[1]/div[1]/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UITopicDetail']/div[4]/div[1]/div/div/div/div/div[1]/div[1]/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Show</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Show</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-View approved posts by normal user </td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>username</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
 	<td>demo</td>
 </tr>
 <tr>
@@ -512,8 +642,43 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=SNF_KS_47_For</td>
 	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=SNF_KS_47_For</td>
 	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Censor Topic</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Censor Topic</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Topic for CTest</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Topic for CTest</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>censor post</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>censor post</td>
 	<td></td>
 </tr>
 <tr>
