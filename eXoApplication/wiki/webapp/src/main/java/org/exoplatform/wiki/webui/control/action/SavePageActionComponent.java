@@ -32,8 +32,11 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
+import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -80,6 +83,34 @@ public class SavePageActionComponent extends UIComponent {
     return FILTERS;
   }
   
+  public void validate(UIFormInput uiInput) throws Exception {
+    if (uiInput.getValue() == null || ((String) uiInput.getValue()).trim().length() == 0)
+      return;
+    UIComponent uiComponent = (UIComponent) uiInput;
+    UIForm uiForm = uiComponent.getAncestorOfType(UIForm.class);
+    String label;
+    try {
+      label = uiForm.getId() + ".label." + uiInput.getName();
+    } catch (Exception e) {
+      label = uiInput.getName();
+    }
+    String s = (String) uiInput.getValue();
+    for (int i = 0; i < s.length(); i++) {
+      char c = s.charAt(i);
+      // Does not accept the following characters in the title of a page : @ / \ | ^ # ; [ ] { } < > . * ' "
+      if (Character.isLetter(c)
+          || Character.isDigit(c)
+          || (c != ':' && c != '@' && c != '/' && c != '\\' && c != '|' && c != '^' && c != '#'
+              && c != ';' && c != '[' && c != ']' && c != '{' && c != '}' && c != '<' && c != '>'
+              && c != '.' && c != '*' && c != '\'' && c != '\"')
+          ) {
+        continue;
+      }
+      Object[] args = { label };
+      throw new MessageException(new ApplicationMessage("WikiPageNameValidator.msg.Invalid-char", args, ApplicationMessage.WARNING));
+    }
+  }
+  
   public static class SavePageActionListener extends UIPageToolBarActionListener<SavePageActionComponent> {
     @Override
     protected void processEvent(Event<SavePageActionComponent> event) throws Exception {
@@ -92,6 +123,20 @@ public class SavePageActionComponent extends UIComponent {
       UIWikiRichTextArea wikiRichTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);
       UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class)
                                                  .getUIStringInput();
+      
+      String ajaxRequestURL=  Utils.getCurrentAjaxRequestURL(wikiPortlet.getWikiMode());
+      try {
+        event.getSource().validate(titleInput);
+      } catch (MessageException ex) {
+        uiApp.addMessage(ex.getDetailMessage());
+        event.getRequestContext().setProcessRender(true);
+      }
+      if (event.getRequestContext().getProcessRender()) {
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        prContext.getResponse().sendRedirect(ajaxRequestURL);
+        return;
+      }
+      
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
       UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
       UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
@@ -108,7 +153,6 @@ public class SavePageActionComponent extends UIComponent {
       String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
       try {
         String requestURL = Utils.getCurrentRequestURL();
-        String ajaxRequestURL=  Utils.getCurrentAjaxRequestURL(wikiPortlet.getWikiMode());
         PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
         WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
         WikiPageParams pageParams = pageResolver.extractWikiPageParams(requestURL);
