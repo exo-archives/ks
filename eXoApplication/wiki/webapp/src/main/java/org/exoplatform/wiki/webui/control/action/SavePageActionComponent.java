@@ -159,17 +159,8 @@ public class SavePageActionComponent extends UIComponent {
         Page page = pageResolver.resolve(requestURL);
         String newPageId = TitleResolver.getObjectId(title, false);
         if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
-          boolean isRenameHome = WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageParams.getPageId())
-              && !newPageId.equals(pageParams.getPageId());
-          if (isRenameHome) {
-            uiApp.addMessage(new ApplicationMessage("SavePageAction.msg.Can-not-rename-Wiki-Home",
-                                                    null,
-                                                    ApplicationMessage.WARNING));
-            titleInput.setValue(WikiNodeType.Definition.WIKI_HOME_TITLE);
-            event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
-            event.getRequestContext().addUIComponentToUpdateByAjax(titleInput);
-            prContext.getResponse().sendRedirect(ajaxRequestURL);
-            return;
+          if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageParams.getPageId())) {
+            newPageId = WikiNodeType.Definition.WIKI_HOME_NAME;
           }
           if (!page.getName().equals(newPageId)) {
             wikiService.renamePage(pageParams.getType(),
