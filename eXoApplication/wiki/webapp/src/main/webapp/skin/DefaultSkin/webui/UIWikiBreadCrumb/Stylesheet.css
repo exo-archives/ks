@@ -15,6 +15,7 @@
   float:left;
   border: none;
   padding: 0px;
+	width: 70%;
 }
 
 .UIWikiPortlet .UIWikiBreadCrumb .ActionLabel{
