@@ -123,6 +123,169 @@
     
   </portlet>
   
-   
+  <portlet>
+    <description xml:lang="EN">ForumToolbar Portlet</description>
+    <portlet-name>UserToolBarForumPortlet</portlet-name>
+    <display-name xml:lang="EN">ForumToolbar Portlet</display-name>
+    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
+    
+    <init-param>
+      <name>webui.configuration</name>
+      <value>/WEB-INF/conf/portlet/toolbar/UserToolBarForumPortlet/webui/configuration.xml</value>
+    </init-param>    
+
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <supported-locale>en</supported-locale>
+    <resource-bundle>locale.portal.webui</resource-bundle>
+    <portlet-info>
+      <title>ForumToolbar Portlet</title>
+      <short-title>ForumToolbar Portlet</short-title>
+      <keywords>System</keywords>
+    </portlet-info>    
+    
+    <portlet-preferences>
+      <preference>
+        <name>template</name>
+        <value>system:/templates/toolbar/UIUserToolBarForumPortlet.gtmpl</value>
+        <read-only>false</read-only>
+      </preference>
+    </portlet-preferences>
+    
+  </portlet>
+  
+  <portlet>
+    <description xml:lang="EN">AnswersToolbar Portlet</description>
+    <portlet-name>UserToolBarAnswersPortlet</portlet-name>
+    <display-name xml:lang="EN">AnswersToolbar Portlet</display-name>
+    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
+    
+    <init-param>
+      <name>webui.configuration</name>
+      <value>/WEB-INF/conf/portlet/toolbar/UserToolBarAnswersPortlet/webui/configuration.xml</value>
+    </init-param>    
+
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <supported-locale>en</supported-locale>
+    <resource-bundle>locale.portal.webui</resource-bundle>
+    <portlet-info>
+      <title>AnswersToolbar Portlet</title>
+      <short-title>AnswersToolbar Portlet</short-title>
+      <keywords>System</keywords>
+    </portlet-info>    
+    
+    <portlet-preferences>
+      <preference>
+        <name>template</name>
+        <value>system:/templates/toolbar/UIUserToolBarAnswersPortlet.gtmpl</value>
+        <read-only>false</read-only>
+      </preference>
+    </portlet-preferences>
+    
+  </portlet>
+  
+  <portlet>
+    <description xml:lang="EN">FaqToolbar Portlet</description>
+    <portlet-name>UserToolBarFaqPortlet</portlet-name>
+    <display-name xml:lang="EN">FaqToolbar Portlet</display-name>
+    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
+    
+    <init-param>
+      <name>webui.configuration</name>
+      <value>/WEB-INF/conf/portlet/toolbar/UserToolBarFaqPortlet/webui/configuration.xml</value>
+    </init-param>    
+
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <supported-locale>en</supported-locale>
+    <resource-bundle>locale.portal.webui</resource-bundle>
+    <portlet-info>
+      <title>FaqToolbar Portlet</title>
+      <short-title>FaqToolbar Portlet</short-title>
+      <keywords>System</keywords>
+    </portlet-info>    
+    
+    <portlet-preferences>
+      <preference>
+        <name>template</name>
+        <value>system:/templates/toolbar/UIUserToolBarFaqPortlet.gtmpl</value>
+        <read-only>false</read-only>
+      </preference>
+    </portlet-preferences>
+    
+  </portlet>
+  
+  <portlet>
+    <description xml:lang="EN">PollToolbar Portlet</description>
+    <portlet-name>UserToolBarPollPortlet</portlet-name>
+    <display-name xml:lang="EN">PollToolbar Portlet</display-name>
+    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
+    
+    <init-param>
+      <name>webui.configuration</name>
+      <value>/WEB-INF/conf/portlet/toolbar/UserToolBarPollPortlet/webui/configuration.xml</value>
+    </init-param>    
+
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <supported-locale>en</supported-locale>
+    <resource-bundle>locale.portal.webui</resource-bundle>
+    <portlet-info>
+      <title>PollToolbar Portlet</title>
+      <short-title>PollToolbar Portlet</short-title>
+      <keywords>System</keywords>
+    </portlet-info>    
+    
+    <portlet-preferences>
+      <preference>
+        <name>template</name>
+        <value>system:/templates/toolbar/UIUserToolBarPollPortlet.gtmpl</value>
+        <read-only>false</read-only>
+      </preference>
+    </portlet-preferences>
+    
+  </portlet>
+  
+  <portlet>
+    <description xml:lang="EN">TourToolbar Portlet</description>
+    <portlet-name>UserToolBarTourPortlet</portlet-name>
+    <display-name xml:lang="EN">TourToolbar Portlet</display-name>
+    <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
+    
+    <init-param>
+      <name>webui.configuration</name>
+      <value>/WEB-INF/conf/portlet/toolbar/UserToolBarTourPortlet/webui/configuration.xml</value>
+    </init-param>    
+
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <supported-locale>en</supported-locale>
+    <resource-bundle>locale.portal.webui</resource-bundle>
+    <portlet-info>
+      <title>TourToolbar Portlet</title>
+      <short-title>TourToolbar Portlet</short-title>
+      <keywords>System</keywords>
+    </portlet-info>    
+    
+    <portlet-preferences>
+      <preference>
+        <name>template</name>
+        <value>system:/templates/toolbar/UIUserToolBarTourPortlet.gtmpl</value>
+        <read-only>false</read-only>
+      </preference>
+    </portlet-preferences>
+    
+  </portlet>
 
 </portlet-app>

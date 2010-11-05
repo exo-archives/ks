@@ -34,7 +34,7 @@
 
  	<portal-layout>
 
-     <portlet-application>
+    <portlet-application>
        <portlet>
          <application-ref>web</application-ref>
          <portlet-ref>LogoPortlet</portlet-ref>
