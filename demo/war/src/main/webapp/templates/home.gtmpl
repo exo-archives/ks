@@ -8,17 +8,17 @@
 <div class="UIHomePagePortlet" id="$uicomponent.id">
 
 	<div class="HomeImage">
-		<div class="Label">eXo Knowledge</div>
-		<div class="VersionKS">An Extended Service of eXo Platform 3.0</div>
+		<div class="Label"><%=_ctx.appRes("home.title")%></div>
+		<div class="VersionKS"><%=_ctx.appRes("home.subtitle")%></div>
 	</div>
 	<div class="UserSelect ClearFix">
 		<div class="CommunityMembers">
-			<div class="Label">Community Members: </div>
-			<a target="_blank" href="http://docs.exoplatform.org" class="Title TxtBlue">Download eXo Knowledge Documentation</a>
+			<div class="Label"><%=_ctx.appRes("home.communityMembers")%> </div>
+			<a target="_blank" href="http://docs.exoplatform.org" class="Title TxtBlue"><%=_ctx.appRes("home.documentation")%></a>
 		</div>
 		<div class="EOrPUse">
-			<div class="Label">Enterprise or Production Use? </div>
-			<a target="_blank" href="http://www.exoplatform.com/company/public/website/platform/exo-platform-3" class="Title TxtBlue">Try eXo Platform 3</a>
+			<div class="Label"><%=_ctx.appRes("home.usingPurpose")%> </div>
+			<a target="_blank" href="http://www.exoplatform.com/company/public/website/platform/exo-platform-3" class="Title TxtBlue"><%=_ctx.appRes("home.try")%></a>
 		</div>
 	</div>
 	<div class="KSHomeContainer ClearFix">
@@ -35,32 +35,32 @@
 							<div class="BlockWebsite FL">
 								<a target="_blank" href="http://www.exoplatform.com/company/public/website/company/contact-us" class="IconWebsite QuestionsIM"> </a>
 								<p>
-									<a target="_blank"  href="http://www.exoplatform.com/company/public/website/company/contact-us" class="TxtLinkIcon">Contact</a></p>
+									<a target="_blank"  href="http://www.exoplatform.com/company/public/website/company/contact-us" class="TxtLinkIcon"><%=_ctx.appRes("home.contact")%></a></p>
 							</div>
 							<div class="BlockWebsite FL">
 								<a target="_blank" href="http://www.exoplatform.com/company/public/website/resource-center" class="IconWebsite ResuorceIM"> </a>
 								<p>
-									<a target="_blank" href="http://www.exoplatform.com/company/public/website/resource-center" class="TxtLinkIcon">Resource Center</a></p>
+									<a target="_blank" href="http://www.exoplatform.com/company/public/website/resource-center" class="TxtLinkIcon"><%=_ctx.appRes("home.resourceCenter")%></a></p>
 							</div>
 							<div class="BlockWebsite FL">
 								<a target="_blank" href="http://support.exoplatform.org/" class="IconWebsite SupportIM"> </a>
 								<p>
-									<a target="_blank" href="http://support.exoplatform.org/" class="TxtLinkIcon">Support</a></p>
+									<a target="_blank" href="http://support.exoplatform.org/" class="TxtLinkIcon"><%=_ctx.appRes("home.support")%></a></p>
 							</div>
 							<div class="BlockWebsite FL">
 								<a target="_blank" href="http://www.exoplatform.com/company/public/website/services/development/development-training" class="IconWebsite TrainingIM"> </a>
 								<p>
-									<a target="_blank" href="http://www.exoplatform.com/company/public/website/services/development/development-training" class="TxtLinkIcon">Training</a></p>
+									<a target="_blank" href="http://www.exoplatform.com/company/public/website/services/development/development-training" class="TxtLinkIcon"><%=_ctx.appRes("home.training")%></a></p>
 							</div>
 							<div class="BlockWebsite FL">
 								<a target="_blank" href="http://blog.exoplatform.org" class="IconWebsite BlogIM"> </a>
 								<p>
-									<a target="_blank" href="http://blog.exoplatform.org" class="TxtLinkIcon">Blog</a></p>
+									<a target="_blank" href="http://blog.exoplatform.org" class="TxtLinkIcon"><%=_ctx.appRes("home.blog")%></a></p>
 							</div>
 							<div class="BlockWebsite FL">
 								<a target="_blank" href="http://www.exoplatform.com" class="IconWebsite WebsiteIM"> </a>
 								<p>
-									<a target="_blank" href="http://www.exoplatform.com" class="TxtLinkIcon">Website</a></p>
+									<a target="_blank" href="http://www.exoplatform.com" class="TxtLinkIcon"><%=_ctx.appRes("home.website")%></a></p>
 							</div>
 						</div>
 					</div>
@@ -82,40 +82,40 @@
 				<div class="PortletDecorationML">
 					<div class="PortletDecorationMR">
 						<div class="PortletDecorationMC">
-							<p><strong>New to eXo Knowledge?</strong></p>
-							<p>Watch the <a target="_blank" href="http://www.exoplatform.com/company/public/website/resource-viewer?path=/website/eXo-Knowledge-GS" class="TxtBlue">Getting Started Guide</a>, or start exploring some of the key features:</p>
+							<p><strong><%=_ctx.appRes("home.newToeXo")%></strong></p>
+							<p><%=_ctx.appRes("home.watch")%> <a target="_blank" href="http://www.exoplatform.com/company/public/website/resource-viewer?path=/website/eXo-Knowledge-GS" class="TxtBlue"><%=_ctx.appRes("home.gettingStarted")%></a>, <%=_ctx.appRes("home.startExploring")%></p>
 							<div style="border-bottom: 1px solid #eeeeee;"><span></span></div>
 							<div class="KSProduct ClearFix">
 								<div class="ForumProduct">
-									<h1>Forum</h1>
+									<h1><%=_ctx.appRes("home.forum")%></h1>
 									<ul>
-										<li class="ArowGreyIcon">Unlimited catgories and forums</li>
-										<li class="ArowGreyIcon">Permissions, preview, quick reply</li>
-										<li class="ArowGreyIcon">Private messages, bookmarks, watches...</li>
-										<li class="ArowGreyIcon">Advanced moderation : lock, close, approve...</li>
-										<li class="ArowGreyIcon">Administration : move, ban, prune,... </li>
+										<li class="ArowGreyIcon"><%=_ctx.appRes("home.forum.feature1")%></li>
+										<li class="ArowGreyIcon"><%=_ctx.appRes("home.forum.feature2")%></li>
+										<li class="ArowGreyIcon"><%=_ctx.appRes("home.forum.feature3")%></li>
+										<li class="ArowGreyIcon"><%=_ctx.appRes("home.forum.feature4")%></li>
+										<li class="ArowGreyIcon"><%=_ctx.appRes("home.forum.feature5")%></li>
 									</ul>
 								</div>
 								<div class="AnswersProduct">
 									<h1>Answers</h1>
 									<ul>
-										<li class="ArowGreyIcon">Categorize questions</li>
-										<li class="ArowGreyIcon">Multiple answers, comments</li>
-										<li class="ArowGreyIcon">Rates, votes</li>
-										<li class="ArowGreyIcon">Moderation</li>
-										<li class="ArowGreyIcon">RSS and Email watch </li>
+										<li class="ArowGreyIcon"><%=_ctx.appRes("home.answers.feature1")%></li>
+										<li class="ArowGreyIcon"><%=_ctx.appRes("home.answers.feature2")%></li>
+										<li class="ArowGreyIcon"><%=_ctx.appRes("home.answers.feature3")%></li>
+										<li class="ArowGreyIcon"><%=_ctx.appRes("home.answers.feature4")%></li>
+										<li class="ArowGreyIcon"><%=_ctx.appRes("home.answers.feature5")%></li>
 									</ul>
 								</div>
 								<div class="FAQProduct">
 									<h1>FAQ</h1>
 									<ul>
-										<li class="ArowGreyIcon">Publish selected categories</li>
-										<li class="ArowGreyIcon">Customizable presentation template</li>
+										<li class="ArowGreyIcon"><%=_ctx.appRes("home.faq.feature1")%></li>
+										<li class="ArowGreyIcon"><%=_ctx.appRes("home.faq.feature2")%></li>
 									</ul>
 								</div>
 							</div>
 							<%if(prContext.getRemoteUser() == null) {%>
-							  <div class="ArowBlackIcon">Start using eXo Knowledge, <a href="$autoLoginLink" class="TxtBlue">login as Root</a></div>
+							  <div class="ArowBlackIcon"><%=_ctx.appRes("home.startUsing")%>, <a href="$autoLoginLink" class="TxtBlue"><%=_ctx.appRes("home.loginAsRoot")%></a></div>
 							<% } %>
 						</div>
 					</div>
