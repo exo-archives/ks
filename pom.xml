@@ -27,11 +27,11 @@
     <url>http://builder.exoplatform.org/hudson/job/ks-trunk-ci/</url>
   </ciManagement>
    <properties>
-    <org.exoplatform.kernel.version>2.2.4-GA</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>2.3.4-GA</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>2.1.4-GA</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>1.12.4-GA</org.exoplatform.jcr.version>
-    <org.exoplatform.portal.version>3.1.3-PLF</org.exoplatform.portal.version>
+    <org.exoplatform.kernel.version>2.2.5-GA</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>2.3.5-GA</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>2.1.5-GA</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.12.5-GA</org.exoplatform.jcr.version>
+	<org.exoplatform.portal.version>3.1.5-PLF</org.exoplatform.portal.version>
     
     <org.exoplatform.ecms.version>2.1.0-CR03</org.exoplatform.ecms.version> 
     
@@ -41,17 +41,17 @@
     <org.chromattic.version>1.0.3</org.chromattic.version>
     
 	<!--commons dependencies-->
-	<org.exoplatform.commons.version>1.0.0-GA</org.exoplatform.commons.version>
+	<org.exoplatform.commons.version>1.0.1</org.exoplatform.commons.version>
 	      
 	<!-- eXo extended service -->
-	<org.exoplatform.social.version>1.1.0-CR03</org.exoplatform.social.version>
+	<org.exoplatform.social.version>1.1.1</org.exoplatform.social.version>
 	
     <!-- 3rd parties -->
 	<org.testng.version>5.10</org.testng.version>
 	<org.hibernate.version>3.3.2.GA</org.hibernate.version>
 	<commons-collections.version>3.2.1</commons-collections.version>	
 	<org.jboss.version>2.2.9.GA</org.jboss.version>	
-    <org.gatein.shindig.version>1.0-r790473-Patch02</org.gatein.shindig.version>
+     <org.gatein.shindig.version>1.0-r790473-Patch04</org.gatein.shindig.version>
     <commons-chain.version>1.0</commons-chain.version>
     <commons-logging.version>1.0.4</commons-logging.version>
     <commons-httpclient.version>3.0</commons-httpclient.version>
