@@ -84,8 +84,6 @@ public class SavePageActionComponent extends UIComponent {
   }
   
   public void validate(UIFormInput uiInput) throws Exception {
-    if (uiInput.getValue() == null || ((String) uiInput.getValue()).trim().length() == 0)
-      return;
     UIComponent uiComponent = (UIComponent) uiInput;
     UIForm uiForm = uiComponent.getAncestorOfType(UIForm.class);
     String label;
@@ -93,6 +91,10 @@ public class SavePageActionComponent extends UIComponent {
       label = uiForm.getId() + ".label." + uiInput.getName();
     } catch (Exception e) {
       label = uiInput.getName();
+    }
+    Object[] args = { label };
+    if (uiInput.getValue() == null || ((String) uiInput.getValue()).trim().length() == 0) {
+      throw new MessageException(new ApplicationMessage("WikiPageNameValidator.msg.EmptyTitle", args, ApplicationMessage.WARNING));
     }
     String s = (String) uiInput.getValue();
     for (int i = 0; i < s.length(); i++) {
@@ -106,7 +108,6 @@ public class SavePageActionComponent extends UIComponent {
           ) {
         continue;
       }
-      Object[] args = { label };
       throw new MessageException(new ApplicationMessage("WikiPageNameValidator.msg.Invalid-char", args, ApplicationMessage.WARNING));
     }
   }
