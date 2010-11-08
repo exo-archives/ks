@@ -34,7 +34,7 @@ import org.exoplatform.wiki.webui.control.UIWikiToolBar;
 public class UIWikiApplicationControlArea extends UIContainer {
   public UIWikiApplicationControlArea() throws Exception{
     addChild(UIWikiSearchBox.class, null, null);
-    addChild(UIWikiBreadCrumb.class, null, null);
     addChild(UIWikiToolBar.class, null, null);
+    addChild(UIWikiBreadCrumb.class, null, null);
   }
 }
