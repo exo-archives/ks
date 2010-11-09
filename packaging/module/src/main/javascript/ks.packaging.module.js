@@ -63,8 +63,7 @@ function getModule(params) {
   // KS extension for tomcat 
   module.extension = {};
   module.extension.webapp =
-    new Project("org.exoplatform.ks", "exo.ks.extension.webapp", "war", module.version).
-    addDependency(new Project("org.exoplatform.ks", "exo.ks.ext.social-integration", "jar", module.version));
+    new Project("org.exoplatform.ks", "exo.ks.extension.webapp", "war", module.version);
   module.extension.webapp.deployName = "ks-extension";
    
   module.server = {}
@@ -82,8 +81,7 @@ function getModule(params) {
   module.demo.portal =
     new Project("org.exoplatform.ks", "exo.ks.demo.webapp", "war", module.version).
     addDependency(new Project("org.exoplatform.ks", "exo.ks.demo.config", "jar", module.version)).
-    addDependency(new Project("org.apache.pdfbox", "fontbox", "jar",  "${org.apache.pdfbox.fontbox.version}")).
-    addDependency(new Project("org.exoplatform.ks", "exo.ks.ext.social-integration", "jar", module.version));
+    addDependency(new Project("org.apache.pdfbox", "fontbox", "jar",  "${org.apache.pdfbox.fontbox.version}"));
   module.demo.portal.deployName = "ksdemo";  
 	
   module.demo.cometd=
