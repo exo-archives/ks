@@ -3,7 +3,7 @@
 	boolean isAutoUpload = uicomponent.isAutoUpload();
 	String postUploadActionLink = uicomponent.getPostUploadActionLink();
 	def rcontext = _ctx.getRequestContext();
-	rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIUpload');
+	rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIUpload', '/wiki/javascript/');
 	rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIUpload.initUploadEntry('"+uploadId+"',"+isAutoUpload+");");
 %>
 <div class="UIFormUploadInput" id="$uploadId">

@@ -12,6 +12,7 @@
  
  String action = uicomponent.event(uicomponent.SELECT_NODE);
  String actionClassName = uicomponent.SELECT_NODE;
+ rcontext.getJavascriptManager().importJavascript('eXo.wiki.UITreeExplorer', '/wiki/javascript/') ;
  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UITreeExplorer.init('" + uicomponent.id + "', '" + actionClassName + "');");  
  
  String restURL = uicomponent.getRestURL();

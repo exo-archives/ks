@@ -10,7 +10,8 @@
   
   String changeModeLink= uicomponent.event(uicomponent.CHANGE_MODE_ACTION);
   String changeModeLinkId = uicomponent.WIKI_PORTLET_ACTION_PREFIX + uicomponent.CHANGE_MODE_ACTION;
-  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiPortlet') ;
+  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiPortlet', '/wiki/javascript/') ;
+  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiAjaxRequest', '/wiki/javascript/') ;
   rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAjaxRequest.init('" + uicomponent.WIKI_PORTLET_ACTION_PREFIX + "', '" + uicomponent.VIEW_PAGE_ACTION + "');");  
   rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPortlet.init('"+uicomponent.id+ "', '" + changeModeLinkId + "');"); 
 %>

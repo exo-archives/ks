@@ -1,6 +1,8 @@
 /**
  * XWiki's custom WYSIWYG controller.
  */
+if (!eXo.wiki)
+  eXo.wiki = {};
 if (!eXo.wiki.Wysiwyg) {
   eXo.wiki.Wysiwyg = {
     /**

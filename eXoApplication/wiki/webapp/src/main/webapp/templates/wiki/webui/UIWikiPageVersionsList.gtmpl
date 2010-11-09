@@ -11,6 +11,7 @@
 %>
 <%
 	def rcontext = _ctx.getRequestContext() ;
+	rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiPageVersionsList', '/wiki/javascript/') ;
 	rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPageVersionsList.init(\""+uicomponent.id+"\");");
   
   Locale currentLocale = Util.getPortalRequestContext().getLocale();

@@ -8,6 +8,7 @@ import org.exoplatform.wiki.commons.Utils;
   String searchLabel=_ctx.appRes("UIWikiSearchBox.label.Search");
   String wikiNodeURI = Utils.getCurrentWikiNodeUri();
   String restUrl= uicomponent.getRestUrl();
+  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiSearchBox', '/wiki/javascript/') ;
   rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiSearchBox.init(\"" + inputId +"\",\""+searchLabel +"\",\""+restUrl + "\",\""+ wikiNodeURI +"\");");
 %>
 <div class="UIWikiSearchBox">

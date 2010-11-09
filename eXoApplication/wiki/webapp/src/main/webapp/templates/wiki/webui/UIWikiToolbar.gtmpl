@@ -1,5 +1,6 @@
 <%
 def rcontext = _ctx.getRequestContext() ;
+rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiDropdownMenu', '/wiki/javascript/') ;
 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(\""+uicomponent.id+"\");");
 %>
 <div id="$uicomponent.id" class="UIWikiToolBar">

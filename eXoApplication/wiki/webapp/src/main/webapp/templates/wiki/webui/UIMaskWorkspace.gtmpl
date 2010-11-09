@@ -11,8 +11,8 @@
   component = uicomponent.getUIComponent();
   String maskId = uicomponent.getId() ;
   def rcontext = _ctx.getRequestContext() ;
-	rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiMaskWorkspace');	
-	rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiPagePreview');	
+	rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiMaskWorkspace', '/wiki/javascript/');	
+	rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiPagePreview', '/wiki/javascript/');	
 	
 	int width = uicomponent.getWindowWidth();
 	int height = uicomponent.getWindowHeight();

@@ -14,6 +14,7 @@
 <%
   def rcontext = _ctx.getRequestContext() ;
   String inputId = uicomponent.TEXT;
+  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiAdvanceSearchForm', '/wiki/javascript/') ;
   rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.init(\"" + inputId + "\");");
 %>
 

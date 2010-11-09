@@ -22,7 +22,8 @@
 <a class="HoverLink MoreLink Icon" title="<%=_ctx.appRes("UIPageToolBar.label.More");%>"><%= _ctx.appRes("UIPageToolBar.label.More"); %></a>
 <%
 def rcontext = _ctx.getRequestContext() ;
-
+rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiDropdownMenu', '/wiki/javascript/') ;
+rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIConfirmBox', '/wiki/javascript/') ;
 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(\""+uicomponent.id+"\");");
 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIConfirmBox.init();");
 rcontext.getJavascriptManager().addOnResizeJavascript("eXo.wiki.UIConfirmBox.resetPosition");
