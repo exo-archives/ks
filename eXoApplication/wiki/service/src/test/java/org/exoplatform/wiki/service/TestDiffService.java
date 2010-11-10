@@ -20,6 +20,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.exoplatform.wiki.service.diff.DiffResult;
 import org.exoplatform.wiki.service.diff.DiffService;
 import org.suigeneris.jrcs.diff.delta.Chunk;
 import org.suigeneris.jrcs.diff.delta.Delta;
@@ -66,19 +67,22 @@ public class TestDiffService extends TestCase {
   public void testSimpleWordDiffAsHTML() throws Exception {
     String text1 = "A B C D E F";
     String text2 = "A C B D E G";
-    String html = this.diffService.getWordDifferencesAsHTML(text1, text2);
+    DiffResult result = this.diffService.getWordDifferencesAsHTML(text1, text2);
+    String html = result.getDiffHTML();
     assertEquals("Diff is incorrect",
                  "<div class=\"diffmodifiedline\">A <span class=\"diffremoveword\">B</span> C <span class=\"diffaddword\">B</span> D E <span class=\"diffremoveword\">F</span><span class=\"diffaddword\">G</span></div>",
                  html);
+    assertEquals("Diff is incorrect", 3, result.getChanges());
   }
 
   public void testSimpleLineDiffAsHTML() throws Exception {
     String text1 = "A B C\nD E F\nG H I\nJ K L\n";
     String text2 = "A B C\nG H I\nD E F\nJ K L\n";
-    String html = this.diffService.getDifferencesAsHTML(text1, text2, true);
+    DiffResult result = this.diffService.getDifferencesAsHTML(text1, text2, true);
+    String html = result.getDiffHTML();
     assertEquals("Diff is incorrect",
                  "<div class=\"diff\"><div class=\"diffunmodifiedline\">A B C</div><div class=\"diffmodifiedline\"><span class=\"diffremoveword\">D E F</span></div><div class=\"diffunmodifiedline\">G H I</div><div class=\"diffmodifiedline\"><span class=\"diffaddword\">D E F</span></div><div class=\"diffunmodifiedline\">J K L</div></div>",
                  html);
+    assertEquals("Diff is incorrect", 2, result.getChanges());
   }
-
 }

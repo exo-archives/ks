@@ -152,6 +152,7 @@ public class SavePageActionComponent extends UIComponent {
         markupInput.setValue(markupContent);
       }
       String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
+      markup = markup.trim();
       try {
         String requestURL = Utils.getCurrentRequestURL();
         PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);

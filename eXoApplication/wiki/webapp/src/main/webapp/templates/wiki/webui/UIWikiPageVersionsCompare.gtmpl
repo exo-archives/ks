@@ -77,7 +77,7 @@
 	</div>
 	
 	<div class="ChangedForm">
-		<div class="Label"><span style="font-weight: bold;"><%= _ctx.appRes("UIWikiPageVersionsCompare.label.Changes").replace("{0}", "5"); %></span><a style="Color:#165fb3;" href="$link"> <%= _ctx.appRes("UIWikiPageVersionsCompare.label.ViewPageHistory"); %></a></div>
+		<div class="Label"><span style="font-weight: bold;"><%= _ctx.appRes("UIWikiPageVersionsCompare.label.Changes").replace("{0}",  String.valueOf(uicomponent.changes)); %></span><a style="Color:#165fb3;" href="$link"> <%= _ctx.appRes("UIWikiPageVersionsCompare.label.ViewPageHistory"); %></a></div>
 		<%= uicomponent.differencesAsHTML %>
 	</div>
 

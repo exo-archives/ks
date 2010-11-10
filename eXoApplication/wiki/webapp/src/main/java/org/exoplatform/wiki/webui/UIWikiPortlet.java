@@ -182,7 +182,11 @@ public class UIWikiPortlet extends UIPortletApplication {
       findFirstComponentOfType(UIWikiAttachmentArea.class).setRendered(true);
       findFirstComponentOfType(UIWikiRichTextArea.class).setRendered(false);
       findFirstComponentOfType(UIWikiPageEditForm.class).getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT).setRendered(true);
-    }      
+    }
+    if (newMode.equals(WikiMode.SHOWHISTORY)) {
+      findFirstComponentOfType(UIWikiPageVersionsList.class).setRendered(true);
+      findFirstComponentOfType(UIWikiPageVersionsCompare.class).setRendered(false);
+    }
     mode = newMode;
   }
   

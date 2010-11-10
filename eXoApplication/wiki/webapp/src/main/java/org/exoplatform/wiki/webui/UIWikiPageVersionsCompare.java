@@ -52,6 +52,8 @@ public class UIWikiPageVersionsCompare extends UIContainer {
   
   private NTVersion toVersion;
   
+  private int changes;
+  
   public static final String RETURN_VERSIONS_LIST = "ReturnVersionsList";
   
   public static final String VIEW_REVISION  = "ViewRevision";
@@ -92,6 +94,14 @@ public class UIWikiPageVersionsCompare extends UIContainer {
 
   public void setToVersion(NTVersion toVersion) {
     this.toVersion = toVersion;
+  }
+
+  public int getChanges() {   
+    return changes;   
+  }
+
+  public void setChanges(int changes) {
+    this.changes = changes;
   }
 
   static public class ReturnVersionsListActionListener extends EventListener<UIWikiPageVersionsCompare> {

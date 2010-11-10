@@ -25,6 +25,7 @@ import org.apache.ecs.filter.CharacterFilter;
 import org.suigeneris.jrcs.diff.Diff;
 import org.suigeneris.jrcs.diff.DifferentiationFailedException;
 import org.suigeneris.jrcs.diff.Revision;
+import org.suigeneris.jrcs.diff.delta.ChangeDelta;
 import org.suigeneris.jrcs.diff.delta.Chunk;
 import org.suigeneris.jrcs.diff.delta.Delta;
 import org.suigeneris.jrcs.util.ToString;
@@ -66,13 +67,14 @@ public class DiffService {
   }
 
   /**
-   * Return an html blocks representing word diffs between text1 and text2
+   * Return a DiffResult object representing word diffs between text1 and text2
    * @param text1 original content
    * @param text2 revised content
    * @return list of Delta objects
    * @throws DifferentiationFailedException 
    */
-  public String getWordDifferencesAsHTML(String text1, String text2) throws DifferentiationFailedException {
+  public DiffResult getWordDifferencesAsHTML(String text1, String text2) throws DifferentiationFailedException {
+    int changes = 0;
     text1 = "~~PLACEHOLDER~~" + text1 + "~~PLACEHOLDER~~";
     text2 = "~~PLACEHOLDER~~" + text2 + "~~PLACEHOLDER~~";
 
@@ -89,6 +91,7 @@ public class DiffService {
       }
 
       Delta delta = (Delta) list.get(i);
+      boolean isChangeDelta = (delta instanceof ChangeDelta);
       int position = delta.getOriginal().anchor();
       // First we fill in all text that has not been changed
       while (cursor < position) {
@@ -105,8 +108,9 @@ public class DiffService {
           if (j > 0)
             html.append(" ");
           html.append(escape((String) chunks.get(j)));
-          cursor++;
+          cursor++;         
         }
+        changes++;
         html.append("</span>");
         addSpace = true;
       }
@@ -119,8 +123,10 @@ public class DiffService {
         for (int j = 0; j < chunks.size(); j++) {
           if (j > 0)
             html.append(" ");
-          html.append(escape((String) chunks.get(j)));
+          html.append(escape((String) chunks.get(j)));          
         }
+        // If is changeDelta, only add change 1 times
+        if (!isChangeDelta) changes++;
         html.append("</span>");
         addSpace = true;
       }
@@ -136,19 +142,22 @@ public class DiffService {
     }
 
     html.append("</div>");
-    return html.toString().replaceAll("~~PLACEHOLDER~~", "");
+    return new DiffResult(html.toString().replaceAll("~~PLACEHOLDER~~", ""), changes);
   }
   
   /**
-   * Return an html blocks representing line diffs between text1 and text2
+   * Return a DiffResult object representing line diffs between text1 and text2
    * @param text1 original content
    * @param text2 revised content
    * @param allDoc show all document
    * @return list of Delta objects
    * @throws DifferentiationFailedException 
    */
-  public String getDifferencesAsHTML(String text1, String text2, boolean allDoc) throws DifferentiationFailedException {
+  public DiffResult getDifferencesAsHTML(String text1, String text2, boolean allDoc) throws DifferentiationFailedException {
+    
     StringBuffer html = new StringBuffer("<div class=\"diff\">");
+    int changes = 0;
+
     if (text1 == null)
       text1 = "";
     if (text2 == null)
@@ -163,7 +172,7 @@ public class DiffService {
         addBR = false;
       }
 
-      Delta delta = (Delta) list.get(i);
+      Delta delta = (Delta) list.get(i);     
       int position = delta.getOriginal().anchor();
       // First we fill in all text that has not been changed
       while (cursor < position) {
@@ -180,34 +189,38 @@ public class DiffService {
 
       // Then we fill in what has been removed
       Chunk orig = delta.getOriginal();
-      Chunk rev = delta.getRevised();
-      int j1 = 0;
+      Chunk rev = delta.getRevised();     
 
       if (orig.size() > 0) {
         List chunks = orig.chunk();
         int j2 = 0;
         for (int j = 0; j < chunks.size(); j++) {
           String origline = (String) chunks.get(j);
-          if (origline.equals("")) {
-            cursor++;
-            continue;
-          }
           // if (j>0)
           // html.append("<br/>");
           List revchunks = rev.chunk();
           String revline = "";
           while ("".equals(revline)) {
             revline = (j2 >= revchunks.size()) ? null : (String) revchunks.get(j2);
-            j2++;
-            j1++;
+            j2++;           
           }
           if (revline != null) {
-            html.append(getWordDifferencesAsHTML(origline, revline));
+            DiffResult diffLine = getWordDifferencesAsHTML(origline, revline);
+            html.append(diffLine.getDiffHTML());
+            changes += diffLine.getChanges();
           } else {
             html.append("<div class=\"diffmodifiedline\">");
-            html.append("<span class=\"diffremoveword\">");
-            html.append(escape(origline));
-            html.append("</span></div>");
+            if (origline.equals("")) {
+              html.append("<pre class=\"prediffremoveword\">");
+              html.append("&nbsp;");
+              html.append("</pre>");
+            } else {
+              html.append("<span class=\"diffremoveword\">");
+              html.append(escape(origline));
+              html.append("</span>");
+            }
+            html.append("</div>");
+            changes++;
           }
           addBR = true;
           cursor++;
@@ -217,13 +230,20 @@ public class DiffService {
       // Then we fill in what has been added
       if (rev.size() > 0) {
         List chunks = rev.chunk();
-        for (int j = j1; j < chunks.size(); j++) {
-          // if (j>0)
-          // html.append("<br/>");
+        for (int j = 0; j < chunks.size(); j++) {
+          String revline = (String) chunks.get(j);
           html.append("<div class=\"diffmodifiedline\">");
-          html.append("<span class=\"diffaddword\">");
-          html.append(escape((String) chunks.get(j)));
-          html.append("</span></div>");
+          if (revline.equals("")) {
+            html.append("<pre class=\"prediffaddword\">");
+            html.append("&nbsp;");
+            html.append("</pre>");
+          } else {
+            html.append("<span class=\"diffaddword\">");
+            html.append(escape(revline));
+            html.append("</span>");
+          }
+          html.append("</div>");
+          changes++;
         }
         addBR = true;
       }
@@ -242,7 +262,7 @@ public class DiffService {
       }
     }
     html.append("</div>");
-    return html.toString();
+    return new DiffResult(html.toString(), changes);
   }
 
   protected List getDeltas(Revision rev) {
@@ -257,6 +277,6 @@ public class DiffService {
     Filter filter = new CharacterFilter();
     String scontent = filter.process(text);
     return scontent;
-  }
+  }  
 
 }

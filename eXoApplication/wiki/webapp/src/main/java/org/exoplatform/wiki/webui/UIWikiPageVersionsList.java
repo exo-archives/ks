@@ -37,6 +37,7 @@ import org.exoplatform.wiki.commons.VersionNameComparatorDesc;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.service.diff.DiffResult;
 import org.exoplatform.wiki.service.diff.DiffService;
 
 /**
@@ -93,7 +94,9 @@ public class UIWikiPageVersionsList extends UIForm {
     uiPageVersionsCompare.setFromVersion(fromVersion);
     uiPageVersionsCompare.setToVersion(toVersion);
     uiPageVersionsCompare.setCurrentVersionIndex(String.valueOf(this.versionsList.size()));
-    uiPageVersionsCompare.setDifferencesAsHTML(diffService.getDifferencesAsHTML(fromVersionContent, toVersionContent, true));
+    DiffResult diffResult= diffService.getDifferencesAsHTML(fromVersionContent, toVersionContent, true);
+    uiPageVersionsCompare.setDifferencesAsHTML(diffResult.getDiffHTML());
+    uiPageVersionsCompare.setChanges(diffResult.getChanges());
     this.setRendered(false);
   }
   

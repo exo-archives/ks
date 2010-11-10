@@ -1380,6 +1380,16 @@
   text-decoration: line-through;
 }
 
+.UIWikiPageVersionsCompare .prediffaddword  {
+  background: #b5ffbf;
+  margin:0;
+}
+
+.UIWikiPageVersionsCompare .prediffremoveword  {
+  background: #ffd8da;
+  margin:0;
+}
+
 /* Move page form*/
 .UIWikiMovePageForm {
   padding: 10px 0px 0px 10px;
