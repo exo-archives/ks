@@ -278,7 +278,7 @@
 	font-size:18px;
 	font-weight:bold;
 	color: #333333;
-	width: 82%;
+	width: 70%;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea {
@@ -293,10 +293,10 @@
 
 .UIWikiPortlet .UIWikiPageControlArea .Icon {
 	float:right;
-	width: 16px;
 	height: 12px;
-	padding: 6px;
-	margin: 0px;	
+	padding: 6px 8px 6px 25px;
+	margin: 0px;
+	text-transform:capitalize;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .MoreItems:hover {
@@ -312,26 +312,24 @@
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .Delete {
-	background:url("background/UIPageToolBarIcon.png") no-repeat center 1px;
+	background:url("background/UIPageToolBarIcon.png") no-repeat left -304px;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .Edit {
-	background:url("background/UIPageToolBarIcon.png") no-repeat center -23px;
+	background:url("background/UIPageToolBarIcon.png") no-repeat left -261px;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .Add {
-	background:url("background/UIPageToolBarIcon.png") no-repeat center -47px;
+	background:url("background/UIPageToolBarIcon.png") no-repeat left -47px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MoreLink {
-	background:url("background/DownArowWhite.png") no-repeat 38px center;
-  width:40px;
+	background:url("background/UIPageToolBarIcon.png") no-repeat left -282px;
 	color:#535353;
 	height: 14px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MoreLink:hover {
-  width:40px;
 	color:#535353;
 	height: 14px;
 }
@@ -421,34 +419,35 @@
 	float: right;
 	height: 14px;
 	margin: 0;
-	padding: 6px;
-	width: 16px;
+	padding: 6px 8px 6px 25px;
+	text-transform:capitalize;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .Icon:hover {
 	background-color: #d0dff0;
 	-moz-border-radius:3px 3px 3px 3px;
+	-webkit-border-radius:3px 3px 3px 3px;
 	text-decoration: none;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .Delete {
-	background:url("background/UIPageToolBarIcon.png") no-repeat center -72px;
+	background:url("background/UIPageToolBarIcon.png") no-repeat left -72px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .Edit {
-	background:url("background/UIPageToolBarIcon.png") no-repeat center -96px;
+	background:url("background/UIPageToolBarIcon.png") no-repeat left -235px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .FAQ {
-	background:url("background/UIPageToolBarIcon.png") no-repeat center -168px;
+	background:url("background/UIPageToolBarIcon.png") no-repeat left -212px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .View {
-	background:url("background/UIPageToolBarIcon.png") no-repeat center -120px;
+	background:url("background/UIPageToolBarIcon.png") no-repeat left -188px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .Save{
-	background:url("background/UIPageToolBarIcon.png") no-repeat center -144px;
+	background:url("background/UIPageToolBarIcon.png") no-repeat left -144px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .MoreLink {

@@ -62,36 +62,36 @@ for(entry in uicomponent.getActions()) {
 %>
 		<% if(action.equals("AddPage")){
 		%>
-		<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Add Icon" title="<%=_ctx.appRes("UIPageToolBar.label.AddPage");%>">&nbsp;</a>
+		<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Add Icon" title="<%=_ctx.appRes("UIPageToolBar.label.AddPage");%>">add</a>
 		<%} else if(action.equals("EditPage")){
 		%>
-		<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Edit Icon" title="<%=_ctx.appRes("UIPageToolBar.label.EditPage");%>">&nbsp;</a>
+		<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Edit Icon" title="<%=_ctx.appRes("UIPageToolBar.label.EditPage");%>">edit</a>
 		<%} else if(action.equals("DeletePage")){
 		%>
-		<a href="$link" class="Delete Icon" title="<%=_ctx.appRes("UIPageToolBar.label.DeletePage");%>">&nbsp;</a>
+		<a href="$link" class="Delete Icon" title="<%=_ctx.appRes("UIPageToolBar.label.DeletePage");%>">delete</a>
 		<%} else if(action.equals("Cancel")){
 		    cancelLink = uicomponent.isNewMode() ? Utils.getCurrentRequestURL() : "javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');";
 		%>
 		<a href="$cancelLink" 
 		onclick="return eXo.wiki.UIConfirmBox.render('$uicomponent.id','$titleMessage',
 		'$exitMessage', 'Delete Icon','$okLabel',null ,null, '$cancelLabel');"		
-		class="Delete Icon" title="<%=_ctx.appRes("UIPageToolBar.label.Cancel");%>">&nbsp;</a>
+		class="Delete Icon" title="<%=_ctx.appRes("UIPageToolBar.label.Cancel");%>">cancel</a>
 		<%} else if(action.equals("Help")){
 		%>
-		<a href="$link" class="FAQ Icon" title="<%=_ctx.appRes("UIPageToolBar.label.Help");%>">&nbsp;</a>
+		<a href="$link" class="FAQ Icon" title="<%=_ctx.appRes("UIPageToolBar.label.Help");%>">help</a>
 		<%} else if(action.equals("PreviewPage")){
 		%>
-		<a href="$link" class="View Icon" title="<%=_ctx.appRes("UIPageToolBar.label.Preview");%>">&nbsp;</a>
+		<a href="$link" class="View Icon" title="<%=_ctx.appRes("UIPageToolBar.label.Preview");%>">preview</a>
 		<%} else if(action.equals("SavePage")){
 			saveLink=link;
 		%>
 		<a href="$link" 
 		onclick="return eXo.wiki.UIWikiSavePage.confirm('$uicomponent.id', $isNewMode, '$pageTitleInputId', '$untitledMessage',
 		'$titleMessage', '$addMessage', 'Save Icon', '$confirmLabel', 'Delete Icon', '$discardLabel', '$cancelLabel');" 
-		class="Save Icon" title="<%=_ctx.appRes("UIPageToolBar.label.SavePage");%>">&nbsp;</a>
+		class="Save Icon" title="<%=_ctx.appRes("UIPageToolBar.label.SavePage");%>">save</a>
 		<%} else if(action.equals("RichText")){
 		%>
-		<a href="$link" class="Edit Icon" title="<%=_ctx.appRes("UIPageToolBar.label.RichTextEditor");%>">&nbsp;</a>
+		<a href="$link" class="Edit Icon" title="<%=_ctx.appRes("UIPageToolBar.label.RichTextEditor");%>">rich text</a>
 		<%}%>
 		<a onclick="$link" id="$actionId" style="display:none;">&nbsp;</a>
 <%}%>
