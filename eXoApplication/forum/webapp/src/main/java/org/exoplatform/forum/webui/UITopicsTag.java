@@ -72,6 +72,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private boolean isUpdateTag = true ;
 	private String strOrderBy = "";
 	private String userIdAndtagId ;
+	private String linkUserInfo = "";
 	private UserProfile userProfile = null;
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	private List<Topic> topics = new ArrayList<Topic>();
@@ -85,9 +86,16 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		UIForumPortlet forumPortlet	= this.getAncestorOfType(UIForumPortlet.class) ;
 		this.userProfile	= forumPortlet.getUserProfile() ;
 		listWatches = forumPortlet.getWatchingByCurrentUser();
+		linkUserInfo = forumPortlet.getPortletLink();
 		if(!userProfile.getUserId().equals(UserProfile.USER_GUEST)){
 			this.userIdAndtagId = userProfile.getUserId() + ":" + tagId;
 		} else this.userIdAndtagId = tagId;
+	}
+	
+	@SuppressWarnings("unused")
+	private String getActionViewInfoUser(String linkType, String userName) {
+		String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
+		return link;
 	}
 	
 	public void setTag(Tag tag, String userIdAndtagId) throws Exception {
@@ -99,6 +107,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	  UIForumPortlet forumPortlet	= this.getAncestorOfType(UIForumPortlet.class) ;
 		this.userProfile	= forumPortlet.getUserProfile() ;
 		listWatches = forumPortlet.getWatchingByCurrentUser();
+		linkUserInfo = forumPortlet.getPortletLink();
   }
 	
 	private UserProfile getUserProfile() {

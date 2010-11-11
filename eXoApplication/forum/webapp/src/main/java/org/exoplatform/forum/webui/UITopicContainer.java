@@ -116,6 +116,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private String forumId = "";
 	private String categoryId = "";
+	private String linkUserInfo = "";
 	private Forum forum;
 	private List <Topic> topicList ;
 	private List<String> moderators;
@@ -183,6 +184,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		listWatches = forumPortlet.getWatchingByCurrentUser();
 		cleanCheckedList();
 		setForum(true);
+		linkUserInfo = forumPortlet.getPortletLink();
 	}
 	
   public boolean getIsAutoPrune() throws Exception {
@@ -248,8 +250,14 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		}
 		cleanCheckedList();
 		setForum(true);
+		linkUserInfo = forumPortlet.getPortletLink();
 	}
 
+	private String getActionViewInfoUser(String linkType, String userName) {
+		String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
+		return link;
+	}
+	
 	public boolean getCanAddNewThread(){return this.canAddNewThread ; }
 	
 	private void setForumModeratorPortlet() throws Exception {

@@ -49,6 +49,7 @@ import org.exoplatform.webui.event.EventListener;
 public class UICategoryInfo extends UIContainer	{
 	private	ForumService forumService ;
 	private UserProfile userProfile;
+	private String linkUserInfo = "";
 	//private long mostUserOnline_ = 0;
 	
 	public UICategoryInfo() throws Exception {
@@ -66,6 +67,7 @@ public class UICategoryInfo extends UIContainer	{
   private UserProfile getUserProfile() throws Exception {
   	try {
      	UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+     	linkUserInfo = forumPortlet.getPortletLink();
      	userProfile = forumPortlet.getUserProfile();
      } catch (Exception e) {
     	 String userId = UserHelper.getCurrentUser();
@@ -73,6 +75,11 @@ public class UICategoryInfo extends UIContainer	{
      }
     return userProfile;
   }
+  
+  private String getActionViewInfoUser(String linkType, String userName) {
+		String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
+		return link;
+	}
   
   private String getMostUsersOnline(String s, String at) throws Exception {
 		if(ForumUtils.isEmpty(s)) return "";

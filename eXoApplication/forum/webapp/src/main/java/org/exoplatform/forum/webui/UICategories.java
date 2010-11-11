@@ -80,6 +80,7 @@ public class UICategories extends UIContainer	{
 	private UserProfile userProfile;
 	private List<String> collapCategories = null;
 	private List<Watch> listWatches = new ArrayList<Watch>();
+	private String linkUserInfo = "";
 	
 	private Log log = ExoLogger.getLogger(this.getClass());
 	public UICategories() throws Exception {
@@ -122,7 +123,14 @@ public class UICategories extends UIContainer	{
 			collapCategories = new ArrayList<String>();
 		}
 		listWatches = forumPortlet.getWatchingByCurrentUser();
+		linkUserInfo = forumPortlet.getPortletLink();
 		return this.userProfile ;
+	}
+	
+	@SuppressWarnings("unused")
+	private String getActionViewInfoUser(String linkType, String userName) {
+		String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
+		return link;
 	}
 	
 	@SuppressWarnings("unused")

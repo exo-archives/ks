@@ -466,8 +466,7 @@
 																	<div class="UIRightPopupMenuContainer">
 																		
 																	<%
-																		String linkURL = uicomponent.url("OpenLastTopicLink", lastPostBy) ;
-																		String linkProf = ForumUtils.getActionViewInfoUser(linkURL, uiform.id, "OpenLastTopicLink", "ViewPublicUserInfo");
+																		String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", lastPostBy);
 																	%>
 																		<div class="MenuItem" onclick="$linkProf">
 																			<div class="ItemIcon IconsView ViewPublicUserInfo" style="padding-left:30px;">
@@ -475,8 +474,8 @@
 																			</div>
 																		</div>
 																	<%
-																	  if(userProfile.getUserRole() < 3 && linkURL.substring(linkURL.lastIndexOf("objectId=")).indexOf(Utils.DELETED) < 0){
-																			String sendPrSms = ForumUtils.getActionViewInfoUser(linkURL, uiform.id, "OpenLastTopicLink", "PrivateMessage");
+																	  if(userProfile.getUserRole() < 3 && lastPostBy.indexOf(Utils.DELETED) < 0){
+																			String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", lastPostBy);
 																	%>
 																		<div class="MenuItem" onclick="$sendPrSms">
 																			<div class="ItemIcon IconsView PrivateMessage" style="padding-left:30px;">
@@ -485,7 +484,7 @@
 																		</div>
 																	<%
 																		}
-																		String viewPosted = ForumUtils.getActionViewInfoUser(linkURL, uiform.id, "OpenLastTopicLink", "ViewPostedByUser");
+																		String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", lastPostBy);
 																	%>
 																		<div class="MenuItem" onclick="$viewPosted">
 																			<div class="ItemIcon IconsView ViewPostedByUser" style="padding-left:30px;">
@@ -493,7 +492,7 @@
 																			</div>
 																		</div>
 																	<%
-																		String viewThread = ForumUtils.getActionViewInfoUser(linkURL, uiform.id, "OpenLastTopicLink", "ViewThreadByUser");
+																		String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", lastPostBy);
 																	%>
 																		<div class="MenuItem" onclick="$viewThread">
 																			<div class="ItemIcon IconsView ViewThreadByUser" style="padding-left:30px;">

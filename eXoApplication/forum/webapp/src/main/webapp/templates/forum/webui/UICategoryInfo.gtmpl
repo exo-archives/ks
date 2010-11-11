@@ -15,7 +15,7 @@
 	String viewNewMember = uicomponent.getScreenName(newMember);
 	String at = _ctx.appRes("UICategoryInfo.label.at");
 	String mostUserOnline = uicomponent.getMostUsersOnline(forumStatistic.getMostUsersOnline(), at);
-	String userView, linkURL;
+	String userView;
 %>
 <div id="$uicomponent.id" class="ForumInfos UICategoryInfo">
 	<div class="ForumToolbar">
@@ -45,7 +45,6 @@
 								<div class="FloatLeft"><%=_ctx.appRes("UICategoryInfo.label.OnlineUsers");%> :</div> 
 							<% int t = 0 ;
 								for(user in userOnlines) {
-									linkURL = uicomponent.event("CreatedLink", user) ;
 									userView = uicomponent.getScreenName(user);
 								 ++t;
 							%>
@@ -68,7 +67,7 @@
 														<div class="MiddleRightRightClickPopupMenu">
 															<div class="UIRightPopupMenuContainer">
 															<%
-																String linkProf = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "ViewPublicUserInfo");
+																String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", user);
 															%>
 																<div class="MenuItem" onclick="$linkProf">
 																	<div class="ItemIcon IconsView ViewPublicUserInfo" style="padding-left:30px;">
@@ -77,7 +76,7 @@
 																</div>
 															<%
 															  if(userProfile.getUserRole() < 3){
-																	String sendPrSms = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "PrivateMessage");
+																	String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", user);
 															%>
 																<div class="MenuItem" onclick="$sendPrSms">
 																	<div class="ItemIcon IconsView PrivateMessage" style="padding-left:30px;">
@@ -86,7 +85,7 @@
 																</div>
 															<%
 																}
-																String viewPosted = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "ViewPostedByUser");
+																String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", user);
 															%>
 																<div class="MenuItem" onclick="$viewPosted">
 																	<div class="ItemIcon IconsView ViewPostedByUser" style="padding-left:30px;">
@@ -94,7 +93,7 @@
 																	</div>
 																</div>
 															<%
-																String viewThread = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "ViewThreadByUser");
+																String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", user);
 															%>
 																<div class="MenuItem" onclick="$viewThread">
 																	<div class="ItemIcon IconsView ViewThreadByUser" style="padding-left:30px;">
@@ -138,7 +137,6 @@
 							<div class="text" style="padding-bottom:5px;">
 								<span><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>: </span>
 								<a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$viewNewMember</a>
-								<% linkURL = uicomponent.event("CreatedLink", newMember) ; %>
 								<div class="fixPupupMenu">
 									<div class="UIPopupCategory" style="display:none; left:60px; top:0px; width:140px">
 										<div class="UIRightClickPopupMenu" style="display:block;">
@@ -152,7 +150,7 @@
 													<div class="MiddleRightRightClickPopupMenu">
 														<div class="UIRightPopupMenuContainer">
 														<%
-															String linkProf = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "ViewPublicUserInfo");
+															String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", newMember);
 														%>
 															<div class="MenuItem" onclick="$linkProf">
 																<div class="ItemIcon IconsView ViewPublicUserInfo" style="padding-left:30px;">
@@ -161,7 +159,7 @@
 															</div>
 														<%
 														  if(userProfile.getUserRole() < 3){
-																String sendPrSms = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "PrivateMessage");
+																String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", newMember);
 														%>
 															<div class="MenuItem" onclick="$sendPrSms">
 																<div class="ItemIcon IconsView PrivateMessage" style="padding-left:30px;">
@@ -170,7 +168,7 @@
 															</div>
 														<%
 															}
-															String viewPosted = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "ViewPostedByUser");
+															String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", newMember);
 														%>
 															<div class="MenuItem" onclick="$viewPosted">
 																<div class="ItemIcon IconsView ViewPostedByUser" style="padding-left:30px;">
@@ -178,7 +176,7 @@
 																</div>
 															</div>
 														<%
-															String viewThread = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "ViewThreadByUser");
+															String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", newMember);
 														%>
 															<div class="MenuItem" onclick="$viewThread">
 																<div class="ItemIcon IconsView ViewThreadByUser" style="padding-left:30px;">

@@ -4707,8 +4707,8 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 	public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node profileHome = getUserProfileHome(sProvider);
-		Node profileNode = profileHome.getNode(userId);
 		try {
+			Node profileNode = profileHome.getNode(userId);
 			profileNode.setProperty(EXO_LAST_READ_POST_OF_FORUM, lastReadPostOfForum);
 			profileNode.setProperty(EXO_LAST_READ_POST_OF_TOPIC, lastReadPostOfTopic);
 			profileHome.save();

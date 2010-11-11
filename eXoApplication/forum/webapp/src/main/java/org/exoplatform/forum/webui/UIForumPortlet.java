@@ -109,6 +109,7 @@ public class UIForumPortlet extends UIPortletApplication {
   private boolean enableBanIP = false;
   private boolean useAjax = true;
   private int dayForumNewPost = 0;
+  private String linkUserInfo = "";
   private List<String>invisibleForums = new ArrayList<String>();
   private List<String>invisibleCategories = new ArrayList<String>();
   private List<Watch> listWatches = null;
@@ -429,6 +430,16 @@ public class UIForumPortlet extends UIPortletApplication {
     }catch (Exception e) {}
   }
 
+  public String getPortletLink() {
+  	if(ForumUtils.isEmpty(linkUserInfo))
+			try {
+				linkUserInfo = this.event("ViewPublicUserInfo", "userName");
+			} catch (Exception e) {
+				log.debug("Failed to set link to view info user.", e);
+			}
+  	return linkUserInfo;
+  }
+  
   private CommonContact getPersonalContact(String userId) throws Exception {
     CommonContact contact  = ForumSessionUtils.getPersonalContact(userId) ;
     if(contact == null) {
