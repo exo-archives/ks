@@ -19,6 +19,10 @@ package org.exoplatform.forum.service.conf;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.forum.service.ForumService;
@@ -47,7 +51,9 @@ public class SendMailJob implements Job {
         try{
           SendMessageInfo messageInfo = iter.next() ;
           List<String> emailAddresses = messageInfo.getEmailAddresses() ;
-          Message message = messageInfo.getMessage() ;            
+          Message message = messageInfo.getMessage() ;
+          message.setFrom(makeNotificationSender(message.getFrom()));
+          
           if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
             List<String> sentMessages = new ArrayList<String>() ;             
             for(String address : emailAddresses) {
@@ -69,5 +75,45 @@ public class SendMailJob implements Job {
     }catch(Exception e) {
       log_.warn("\n\n Unable send email notification ") ;
     }
+  }
+  
+  
+  /**
+   * This function will change email address in 'from' field by address of mail service which is configured as system property : <code>gatein.email.smtp.from</code> or <code>mail.from</code>. <br>
+   * That ensures that 'emailAddress' part of 'from' field in a message object is always the same identity with authentication of smtp configuration.<br>
+   * It's because of 2 reasons:
+   *    <li> we don't want notification message to show email address of user as sender. Instead, we use mail service of kernel. </li>
+   *    <li> Almost authenticated smtp systems do not allow to separate email address in <code>from</code> field of message from smtp authentication</b> 
+   *    (for now, GMX, MS exchange deny, Gmail efforts to modify the such value)
+   *    </li>
+   * @param from
+   * @return null if can not find suitable sender.
+   */
+  public String makeNotificationSender(String from) {
+    InternetAddress addr = null;
+    if (from == null) return null;
+    try {
+      addr = new InternetAddress(from);
+    } catch (AddressException e) {
+      if (log_.isDebugEnabled()) { log_.debug("value of 'from' field in message made by forum notification feature is not in format of mail address", e); }
+      return null;
+    }
+    Properties props = new Properties(System.getProperties());
+    String mailAddr = props.getProperty("gatein.email.smtp.from");
+    if (mailAddr == null || mailAddr.length() == 0) mailAddr = props.getProperty("mail.from");
+    if (mailAddr != null) {
+      try {
+        InternetAddress serMailAddr = new InternetAddress(mailAddr);
+        addr.setAddress(serMailAddr.getAddress());
+        return addr.toUnicodeString();
+      } catch (AddressException e) {
+        if (log_.isDebugEnabled()) { log_.debug("value of 'gatein.email.smtp.from' or 'mail.from' in configuration file is not in format of mail address", e); }
+        return null;
+      }
+    } else {
+      return null;
+    }
+    
+    
   }
 }
