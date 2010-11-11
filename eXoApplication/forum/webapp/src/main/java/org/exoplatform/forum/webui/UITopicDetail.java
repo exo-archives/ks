@@ -630,7 +630,8 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 				UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.getUserProfile().addLastPostIdReadOfForum(forumId, topicId+"/"+IdLastPost);
 				forumPortlet.getUserProfile().addLastPostIdReadOfTopic(topicId, IdLastPost+","+ForumUtils.getInstanceTempCalendar().getTimeInMillis());
-				getForumService().saveLastPostIdRead(userName, userProfile.getLastReadPostOfForum(), userProfile.getLastReadPostOfTopic());
+				if(!UserProfile.USER_GUEST.equals(userName))
+					getForumService().saveLastPostIdRead(userName, userProfile.getLastReadPostOfForum(), userProfile.getLastReadPostOfTopic());
 			}
 			//updateUserProfiles
 			if(userNames.size() > 0) {

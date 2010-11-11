@@ -337,15 +337,6 @@ public class TestForumUtils extends TestCase {
     //fail("Not yet implemented");
   }
 
-  public void testGetActionViewInfoUser() {
-  	assertEquals("", 
-  			ForumUtils.getActionViewInfoUser("", "conponentId", "actionRepl", "actionWith"));
-  	assertEquals("javascript:eXo.submitAction(/link/UIForumPortlet/actionWith/id=abc)", 
-  			ForumUtils.getActionViewInfoUser("javascript:eXo.submitAction(/link/conponentId/actionRepl/id=abc)", "conponentId", "actionRepl", "actionWith"));
-  	assertEquals("javascript:ajaxGet('/link/UIForumPortlet/actionWith/id=abc&ajaxRequest=true')", 
-  			ForumUtils.getActionViewInfoUser("/link/conponentId/actionRepl/id=abc", "conponentId", "actionRepl", "actionWith"));
-  }
-
   public void testGetCalculateListEmail() throws Exception {
   	String s = "";
   	assertEquals("", ForumUtils.getCalculateListEmail(s));

@@ -26,7 +26,7 @@
 %>
 
 <div class="UIForumPortlet" id="$uicomponent.id">
-	<div class="ParentMaskLayer">
+	<div class="ParentMaskLayer" id="ForumPortlet">
 		<div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
 	</div>
 	<%

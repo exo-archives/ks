@@ -96,7 +96,7 @@ public class UICategory extends BaseForumForm	{
 	private List<Forum> forums = new ArrayList<Forum>() ;
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	private Map<String, Topic> MaptopicLast =new HashMap<String, Topic>(); 
-	
+	private String linkUserInfo = "";
 	static public boolean isUnWatch = false;
 	
 	public static String unwatchEmail = "";
@@ -113,9 +113,15 @@ public class UICategory extends BaseForumForm	{
 		dayForumNewPost = forumPortlet.getDayForumNewPost();
 		userProfile = forumPortlet.getUserProfile() ;
 		listWatches = forumPortlet.getWatchingByCurrentUser();
+		linkUserInfo = forumPortlet.getPortletLink();
 		return this.userProfile ;
 	}
 
+	private String getActionViewInfoUser(String linkType, String userName) {
+		String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
+		return link;
+	}
+  
 	public String getRSSLink(String cateId){
 		PortalContainer pcontainer = PortalContainer.getInstance() ;
 		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
