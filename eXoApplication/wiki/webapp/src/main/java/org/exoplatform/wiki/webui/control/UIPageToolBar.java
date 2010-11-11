@@ -30,6 +30,7 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.ext.UIExtension;
 import org.exoplatform.webui.ext.UIExtensionManager;
 import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.webui.UIWikiPageContentArea;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
@@ -120,6 +121,10 @@ public class UIPageToolBar extends UIContainer {
       return ((PortletRequestContext) context).getWindowId() + "#" + getParent().getId();
     }
     return getParent().getId();
+  }
+  
+  private String getCurrentPageURL() throws Exception {
+    return Utils.getURLFromParams(Utils.getCurrentWikiPageParams());
   }
   
 }

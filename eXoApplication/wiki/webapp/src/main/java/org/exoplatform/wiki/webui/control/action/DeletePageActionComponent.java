@@ -19,7 +19,6 @@ package org.exoplatform.wiki.webui.control.action;
 import java.util.Arrays;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -32,7 +31,6 @@ import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
-import org.exoplatform.wiki.resolver.PageResolver;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
@@ -66,13 +64,10 @@ public class DeletePageActionComponent extends UIComponent {
   
   public static class DeletePageActionListener extends UIPageToolBarActionListener<DeletePageActionComponent> {
     @Override
-    protected void processEvent(Event<DeletePageActionComponent> event) throws Exception {
-      String requestURL = Utils.getCurrentRequestURL();
+    protected void processEvent(Event<DeletePageActionComponent> event) throws Exception {    
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIApplication uiApp = event.getSource().getAncestorOfType(UIApplication.class);
-      PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
-      WikiPageParams params = pageResolver.extractWikiPageParams(requestURL) ;
-      
+      UIApplication uiApp = event.getSource().getAncestorOfType(UIApplication.class);    
+      WikiPageParams params = Utils.getCurrentWikiPageParams();      
       UIWikiBreadCrumb breadcumb = wikiPortlet.findFirstComponentOfType(UIWikiBreadCrumb.class) ;
       PortalRequestContext prContext = Util.getPortalRequestContext();
       String parentURL = breadcumb.getParentURL() ;
@@ -82,9 +77,8 @@ public class DeletePageActionComponent extends UIComponent {
         prContext.getResponse().sendRedirect(parentURL);
         return ;        
       }      
-      wikiPortlet.changeMode(WikiMode.DELETECONFIRM);
-      String ajaxRequestURL = Utils.getCurrentAjaxRequestURL(wikiPortlet.getWikiMode());
-      prContext.getResponse().sendRedirect(ajaxRequestURL);
+      wikiPortlet.changeMode(WikiMode.DELETECONFIRM);    
+      Utils.redirect(params, wikiPortlet.getWikiMode());
     }
   }
 }

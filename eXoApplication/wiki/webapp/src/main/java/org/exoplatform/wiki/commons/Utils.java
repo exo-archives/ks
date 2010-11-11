@@ -18,6 +18,7 @@ package org.exoplatform.wiki.commons;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Set;
 
@@ -48,6 +49,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
 import org.exoplatform.wiki.resolver.PageResolver;
+import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
@@ -72,20 +74,13 @@ public class Utils {
   public static String getCurrentRequestURL() throws Exception {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     HttpServletRequest request = portalRequestContext.getRequest();
-    String requestURL = request.getRequestURL().toString();
+    String requestURL = request.getRequestURL().toString();   
     UIPortal uiPortal = Util.getUIPortal();
     String pageNodeSelected = uiPortal.getSelectedNode().getUri();
     if (!requestURL.contains(pageNodeSelected)) {
       // Happens at the first time processRender() called when add wiki portlet manually
       requestURL = portalRequestContext.getPortalURI() + pageNodeSelected;
-    }
-    return requestURL;
-  }
-
-  public static String getCurrentAjaxRequestURL(WikiMode mode) throws Exception {
-    String requestURL = getCurrentRequestURL();
-    String currentAction = Utils.getActionFromWikiMode(mode);
-    requestURL = requestURL.concat('#' + currentAction);
+    }      
     return requestURL;
   }
 
@@ -111,6 +106,26 @@ public class Utils {
     PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
     Page page = pageResolver.resolve(requestURL);
     return page;
+  }
+  
+  public static String getURLFromParams(WikiPageParams params) throws Exception {
+    PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
+    String portalURI = portalRequestContext.getPortalURI();
+    UIPortal uiPortal = Util.getUIPortal();
+    String pageNodeSelected = uiPortal.getSelectedNode().getUri();
+    StringBuilder sb = new StringBuilder();
+    sb.append(portalURI);
+    sb.append(pageNodeSelected);
+    sb.append("/");
+    if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(params.getType())) {
+      sb.append(params.getType().toLowerCase());
+      sb.append("/");
+      sb.append(org.exoplatform.wiki.utils.Utils.validateWikiOwner(params.getType(),
+                                                                   params.getOwner()));
+      sb.append("/");
+    }
+    sb.append(URLEncoder.encode(TitleResolver.encodePlusSign(params.getPageId()), "UTF-8"));
+    return sb.toString();
   }
   
   public static Page getCurrentNewDraftWikiPage() throws Exception {
@@ -263,23 +278,12 @@ public class Utils {
     return sb.toString();
   }  
   
-  public static void redirectToNewPage(WikiPageParams currentPageParams, String newPageId) throws Exception {
+  public static void redirect(WikiPageParams params, WikiMode mode) throws Exception {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
-    String portalURI = portalRequestContext.getPortalURI();
-    UIPortal uiPortal = Util.getUIPortal();
-    String pageNodeSelected = uiPortal.getSelectedNode().getUri();
-    StringBuilder sb = new StringBuilder();
-    sb.append(portalURI);
-    sb.append(pageNodeSelected);
-    sb.append("/");
-    if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(currentPageParams.getType())) {
-      sb.append(currentPageParams.getType().toLowerCase());
-      sb.append("/");
-      sb.append(org.exoplatform.wiki.utils.Utils.validateWikiOwner(currentPageParams.getType(),
-                                                                   currentPageParams.getOwner()));
-      sb.append("/");
-    }
-    sb.append(newPageId);
+    StringBuffer sb = new StringBuffer();
+    sb.append(getURLFromParams(params));
+    sb.append("#");
+    sb.append(Utils.getActionFromWikiMode(mode));
     portalRequestContext.setResponseComplete(true);
     portalRequestContext.sendRedirect(sb.toString());
   }
@@ -315,5 +319,6 @@ public class Utils {
 
   public static WikiMode getWikiModeFromAction(String action) {
     return WikiMode.valueOf(action.toUpperCase());
-  }
+  }  
+ 
 }

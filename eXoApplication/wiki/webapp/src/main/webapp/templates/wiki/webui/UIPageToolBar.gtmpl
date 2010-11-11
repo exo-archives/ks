@@ -70,7 +70,7 @@ for(entry in uicomponent.getActions()) {
 		%>
 		<a href="$link" class="Delete Icon" title="<%=_ctx.appRes("UIPageToolBar.label.DeletePage");%>">delete</a>
 		<%} else if(action.equals("Cancel")){
-		    cancelLink = uicomponent.isNewMode() ? Utils.getCurrentRequestURL() : "javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');";
+		    cancelLink = uicomponent.isNewMode() ? uicomponent.getCurrentPageURL() : "javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');";
 		%>
 		<a href="$cancelLink" 
 		onclick="return eXo.wiki.UIConfirmBox.render('$uicomponent.id','$titleMessage',

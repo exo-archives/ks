@@ -16,12 +16,10 @@
  */
 package org.exoplatform.wiki.webui.control.action;
 
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -114,18 +112,21 @@ public class SavePageActionComponent extends UIComponent {
   
   public static class SavePageActionListener extends UIPageToolBarActionListener<SavePageActionComponent> {
     @Override
-    protected void processEvent(Event<SavePageActionComponent> event) throws Exception {
-      PortalRequestContext prContext = Util.getPortalRequestContext();
+    protected void processEvent(Event<SavePageActionComponent> event) throws Exception {     
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
+      PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
+      String requestURL = Utils.getCurrentRequestURL();
+      WikiPageParams pageParams = pageResolver.extractWikiPageParams(requestURL);
       Utils.reloadWYSIWYGEditor(wikiPortlet);
       UIApplication uiApp = event.getSource().getAncestorOfType(UIApplication.class);
       UIWikiPageTitleControlArea pageTitleControlForm = wikiPortlet.findComponentById(UIWikiPageControlArea.TITLE_CONTROL);
       UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
       UIWikiRichTextArea wikiRichTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);
-      UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class)
-                                                 .getUIStringInput();
+      UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class).getUIStringInput();   
+      UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
+      UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
+      UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       
-      String ajaxRequestURL=  Utils.getCurrentAjaxRequestURL(wikiPortlet.getWikiMode());
       try {
         event.getSource().validate(titleInput);
       } catch (MessageException ex) {
@@ -134,13 +135,11 @@ public class SavePageActionComponent extends UIComponent {
       }
       if (event.getRequestContext().getProcessRender()) {
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
-        prContext.getResponse().sendRedirect(ajaxRequestURL);
+        Utils.redirect(pageParams, wikiPortlet.getWikiMode());
         return;
       }
       
-      UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
-      UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
-      UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
+     
 
       String title = titleInput.getValue().trim();
       if (wikiRichTextArea.isRendered()) {
@@ -153,11 +152,8 @@ public class SavePageActionComponent extends UIComponent {
       }
       String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
       markup = markup.trim();
-      try {
-        String requestURL = Utils.getCurrentRequestURL();
-        PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
-        WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
-        WikiPageParams pageParams = pageResolver.extractWikiPageParams(requestURL);
+      try {       
+        WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);       
         Page page = pageResolver.resolve(requestURL);
         String newPageId = TitleResolver.getObjectId(title, false);
         if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
@@ -182,13 +178,13 @@ public class SavePageActionComponent extends UIComponent {
             ((PageImpl) page).checkout();
 
             pageParams.setPageId(newPageId);
-            Utils.redirectToNewPage(pageParams, URLEncoder.encode(TitleResolver.encodePlusSign(newPageId), "UTF-8"));
+            Utils.redirect(pageParams, WikiMode.VIEW);
           } else {
             ((PageImpl) page).checkin();
             ((PageImpl) page).checkout();
             // the following code line is necessary, otherwise url which is
             // generated from ajax post will be displayed in url bar of browser
-            Utils.redirectToNewPage(pageParams, URLEncoder.encode(TitleResolver.encodePlusSign(pageParams.getPageId()), "UTF-8"));
+            Utils.redirect(pageParams, WikiMode.VIEW);
           }
 
         } else if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
@@ -200,7 +196,7 @@ public class SavePageActionComponent extends UIComponent {
                                                     null,
                                                     ApplicationMessage.WARNING));
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
-            prContext.getResponse().sendRedirect(ajaxRequestURL);
+            Utils.redirect(pageParams, wikiPortlet.getWikiMode());
             return;
           }
           String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
@@ -217,7 +213,8 @@ public class SavePageActionComponent extends UIComponent {
           ((PageImpl) subPage).checkout();
           wikiPortlet.changeMode(WikiMode.VIEW);
           String pageId = TitleResolver.getObjectId(title, false);
-          Utils.redirectToNewPage(pageParams, URLEncoder.encode(TitleResolver.encodePlusSign(pageId), "UTF-8"));
+          pageParams.setPageId(pageId);
+          Utils.redirect(pageParams, WikiMode.VIEW);
           return;
         }
 
@@ -227,6 +224,7 @@ public class SavePageActionComponent extends UIComponent {
                                                 null,
                                                 ApplicationMessage.ERROR));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        Utils.redirect(pageParams, wikiPortlet.getWikiMode());
         return;
       }
 

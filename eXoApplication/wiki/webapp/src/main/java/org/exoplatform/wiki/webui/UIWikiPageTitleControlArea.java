@@ -16,7 +16,6 @@
  */
 package org.exoplatform.wiki.webui;
 
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 
@@ -126,8 +125,8 @@ public class UIWikiPageTitleControlArea extends UIContainer {
                                               null,
                                               ApplicationMessage.WARNING));
       event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
-      String requestURL = Utils.getCurrentRequestURL();
-      prContext.getResponse().sendRedirect(requestURL);
+    
+      Utils.redirect(pageParams, WikiMode.VIEW);
       return;
     }
     wikiService.renamePage(pageParams.getType(),
@@ -136,6 +135,6 @@ public class UIWikiPageTitleControlArea extends UIContainer {
                            newName,
                            newTitle);
     pageParams.setPageId(newName);
-    Utils.redirectToNewPage(pageParams, URLEncoder.encode(TitleResolver.encodePlusSign(pageParams.getPageId()), "UTF-8"));
+    Utils.redirect(pageParams, WikiMode.VIEW);
   }
 }
