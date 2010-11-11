@@ -63,8 +63,7 @@ public class EditPageActionComponent extends UIComponent {
   public static class EditPageActionListener extends UIPageToolBarActionListener<EditPageActionComponent> {
     @Override
     protected void processEvent(Event<EditPageActionComponent> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      Utils.reloadWYSIWYGEditor(wikiPortlet);
+      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);     
       UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
       UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class).getUIStringInput();
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);

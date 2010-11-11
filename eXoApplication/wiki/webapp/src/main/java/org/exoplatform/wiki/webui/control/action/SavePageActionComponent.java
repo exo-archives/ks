@@ -116,8 +116,7 @@ public class SavePageActionComponent extends UIComponent {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
       String requestURL = Utils.getCurrentRequestURL();
-      WikiPageParams pageParams = pageResolver.extractWikiPageParams(requestURL);
-      Utils.reloadWYSIWYGEditor(wikiPortlet);
+      WikiPageParams pageParams = pageResolver.extractWikiPageParams(requestURL);      
       UIApplication uiApp = event.getSource().getAncestorOfType(UIApplication.class);
       UIWikiPageTitleControlArea pageTitleControlForm = wikiPortlet.findComponentById(UIWikiPageControlArea.TITLE_CONTROL);
       UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);

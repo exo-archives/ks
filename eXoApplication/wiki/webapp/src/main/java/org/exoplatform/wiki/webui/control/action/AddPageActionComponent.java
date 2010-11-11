@@ -82,8 +82,7 @@ public class AddPageActionComponent extends UIComponent {
     WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
     ResourceBundle res = context.getApplicationResourceBundle() ;  
     
-    UIWikiPortlet wikiPortlet = (UIWikiPortlet) uiExtensionContext.get(UIWikiPortlet.class.getName());
-    Utils.reloadWYSIWYGEditor(wikiPortlet);
+    UIWikiPortlet wikiPortlet = (UIWikiPortlet) uiExtensionContext.get(UIWikiPortlet.class.getName());    
     String pageTitle = (String) uiExtensionContext.get(WikiContext.PAGETITLE);
     UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
     UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class)

@@ -63,8 +63,7 @@ public class CancelActionComponent extends UIComponent {
   public static class CancelActionListener extends UIPageToolBarActionListener<CancelActionComponent> {
     @Override
     protected void processEvent(Event<CancelActionComponent> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      Utils.reloadWYSIWYGEditor(wikiPortlet);
+      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);     
       UIWikiPageTitleControlArea pageTitleControlForm = wikiPortlet.findComponentById(UIWikiPageControlArea.TITLE_CONTROL);
       try {
         Page page = Utils.getCurrentWikiPage();

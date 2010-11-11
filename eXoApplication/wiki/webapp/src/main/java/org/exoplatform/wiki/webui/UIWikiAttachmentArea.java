@@ -39,7 +39,6 @@ import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
-import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiResource;
 import org.exoplatform.wiki.webui.core.UIWikiForm;
 import org.exoplatform.wiki.webui.form.UIFormUploadInput;
@@ -110,8 +109,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
     @Override
     public void execute(Event<UIWikiAttachmentArea> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);
-      org.exoplatform.wiki.commons.Utils.reloadWYSIWYGEditor(wikiPortlet);
+      UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);     
       UIWikiAttachmentArea wikiAttachmentArea = event.getSource();
       UIApplication uiApp = wikiAttachmentArea.getAncestorOfType(UIApplication.class);
       UIFormUploadInput input = (UIFormUploadInput) wikiAttachmentArea.getUIInput(FIELD_UPLOAD);
@@ -183,9 +181,8 @@ public class UIWikiAttachmentArea extends UIWikiForm {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       UIWikiPageArea pageArea = wikiPortlet.findFirstComponentOfType(UIWikiPageArea.class);
       UIWikiPageContentArea contentArea = wikiPortlet.findFirstComponentOfType(UIWikiPageContentArea.class);
-      UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);
-      
-      org.exoplatform.wiki.commons.Utils.reloadWYSIWYGEditor(wikiPortlet);
+      UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);      
+     
       UIWikiAttachmentArea uiForm = event.getSource();
       String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
       Page page = uiForm.getCurrentWikiPage();

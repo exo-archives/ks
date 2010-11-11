@@ -241,11 +241,6 @@ public class Utils {
     return currentWiki.getPreferences();
   }
  
-  public static void reloadWYSIWYGEditor(UIWikiPortlet wikiPortlet) {
-    UIWikiPageArea wikiPageArea = wikiPortlet.getChild(UIWikiPageArea.class);
-    UIWikiPageEditForm wikiPageEditForm = wikiPageArea.getChild(UIWikiPageEditForm.class);
-  }
- 
   private static WikiContext getCurrentWikiContext(UIWikiPortlet wikiPortlet) throws Exception {
     //
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();

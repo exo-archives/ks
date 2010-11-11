@@ -66,10 +66,8 @@ public class UIWikiPagePreview extends UIContainer {
   
   static public class CloseActionListener extends EventListener<UIWikiPagePreview> {
     public void execute(Event<UIWikiPagePreview> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      org.exoplatform.wiki.commons.Utils.reloadWYSIWYGEditor(wikiPortlet);
+      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);      
       UIWikiMaskWorkspace uiMaskWS = wikiPortlet.getChild(UIWikiMaskWorkspace.class);
-
       if (uiMaskWS == null || !uiMaskWS.isShow()) {
         return;
       }
