@@ -36,9 +36,8 @@ public class WikiHomeTreeNode extends TreeNode {
   public WikiHomeTreeNode(WikiHome wikiHome) throws Exception {
     super(WikiNodeType.Definition.WIKI_HOME_TITLE, TreeNodeType.WIKIHOME);
     this.wikiHome = wikiHome;
-    this.absPath= getAbsPath();
-    this.relPath= this.absPath;  
-    this.hasChild = wikiHome.getChildPages().size() > 0;   
+    this.relPath = this.getPath();
+    this.hasChild = wikiHome.getChildPages().size() > 0;
   }
 
   public void setChildren() throws Exception
@@ -77,7 +76,7 @@ public class WikiHomeTreeNode extends TreeNode {
     return null;
   }
 
-  public String getAbsPath() {
+  public String getPath() {
     return Utils.getWikiType(this.wikiHome.getWiki()) + "/" + this.wikiHome.getOwner() + "/"
         + WikiNodeType.Definition.WIKI_HOME_NAME;
   }

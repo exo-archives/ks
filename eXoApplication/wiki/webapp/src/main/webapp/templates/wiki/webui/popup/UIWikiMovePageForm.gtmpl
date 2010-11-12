@@ -13,7 +13,7 @@
   <div class="ClearBoth"></div>
   <table>
   	<tr>
-  		<td style="width:20%"><label><%=_ctx.appRes("UIWikiMovePageForm.label.CurrentLocation")%></label></td>
+  		<td style="width:18%"><label><%=_ctx.appRes("UIWikiMovePageForm.label.CurrentLocation")%></label></td>
   		 <td><% uiform.renderChild(uiform.CURRENT_LOCATION);%></td>
   	</tr>
   		<tr>  		

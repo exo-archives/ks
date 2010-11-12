@@ -31,10 +31,9 @@ import org.exoplatform.wiki.utils.Utils;
 public class SpaceTreeNode extends TreeNode {
   
   public SpaceTreeNode(String name) throws Exception {
-    super(name,TreeNodeType.SPACE);   
-    this.absPath= name;
-    this.relPath= this.absPath;
-    this.hasChild = Utils.getWikisByType(WikiType.valueOf(name.toUpperCase())).size()>0;    
+    super(name, TreeNodeType.SPACE);
+    this.relPath = name;
+    this.hasChild = Utils.getWikisByType(WikiType.valueOf(name.toUpperCase())).size() > 0;
   }
   
   public void setChildren() throws Exception

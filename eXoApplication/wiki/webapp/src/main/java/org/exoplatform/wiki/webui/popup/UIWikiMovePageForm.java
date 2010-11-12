@@ -16,13 +16,7 @@
  */
 package org.exoplatform.wiki.webui.popup;
 
-import java.net.URLEncoder;
-
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.config.model.PortalConfig;
-import org.exoplatform.portal.webui.portal.UIPortal;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -36,8 +30,9 @@ import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
-import org.exoplatform.wiki.utils.Utils;
+import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.tree.UITreeExplorer;
 
 /**
@@ -64,17 +59,19 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
 
   final static public String UITREE           = "UITreeExplorer";
 
-  public String              MOVE             = "Move";
-  
+  public String              MOVE             = "Move"; 
   
   public UIWikiMovePageForm() throws Exception {
     addChild(new UIFormInputInfo(PAGENAME_INFO, PAGENAME_INFO, null));
-    addChild(new UIFormInputInfo(CURRENT_LOCATION, CURRENT_LOCATION, null));
-    addChild(new UIFormInputInfo(NEW_LOCATION, NEW_LOCATION, null));
-    
+    addChild(UIWikiBreadCrumb.class, null, CURRENT_LOCATION).setLink(false);
+    addChild(UIWikiBreadCrumb.class, null, NEW_LOCATION).setLink(false);
+    UIWikiBreadCrumb currentLocation = getChildById(CURRENT_LOCATION);
+    UIWikiBreadCrumb newLocation = getChildById(NEW_LOCATION);
+    currentLocation.setShowFull(true);
+    newLocation.setShowFull(true);
     addChild(UITreeExplorer.class, null, UITREE).setRendered(true);
     getChild(UITreeExplorer.class).setRestURL(getRestURL());
-    getChild(UITreeExplorer.class).setFillInput(NEW_LOCATION);
+    getChild(UITreeExplorer.class).setUpdateBreadcrumbId(NEW_LOCATION);
   }
 
   private String getRestURL() {
@@ -94,19 +91,19 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
   
   static public class MoveActionListener extends EventListener<UIWikiMovePageForm> {
     public void execute(Event<UIWikiMovePageForm> event) throws Exception {   
-      WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
-      PortalRequestContext prContext = Util.getPortalRequestContext();
+      WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);    
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
+      
       UIWikiMovePageForm movePageForm = event.getSource();
-      UIFormInputInfo currentLocation = (UIFormInputInfo) movePageForm.getChildById(CURRENT_LOCATION);
-      UIFormInputInfo newLocation =(UIFormInputInfo) movePageForm.getChildById(NEW_LOCATION);      
-      WikiPageParams currentLocationParams = Utils.getPageParamsFromPath(currentLocation.getValue());
-     
-      WikiPageParams newLocationParams = Utils.getPageParamsFromPath(newLocation.getValue());
+      UIWikiBreadCrumb currentLocation = (UIWikiBreadCrumb) movePageForm.getChildById(CURRENT_LOCATION);
+      UIWikiBreadCrumb newLocation =(UIWikiBreadCrumb) movePageForm.getChildById(NEW_LOCATION);     
+      WikiPageParams currentLocationParams = currentLocation.getPageParam();     
+      WikiPageParams newLocationParams = newLocation.getPageParam();
+      
       if (newLocationParams==null) {
-        uiWikiPortlet.addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.new-location-is-empty", null, ApplicationMessage.ERROR));
+        uiWikiPortlet.addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.new-location-can-not-be-empty", null, ApplicationMessage.WARNING));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPortlet.getUIPopupMessages()) ;
-        prContext.getResponse().sendRedirect(org.exoplatform.wiki.commons.Utils.getCurrentRequestURL());
+        org.exoplatform.wiki.commons.Utils.redirect(currentLocationParams, uiWikiPortlet.getWikiMode());
         return;
       }
       //If exist page same with move page name in new location
@@ -119,35 +116,16 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
       if (existPage != null && !existPage.equals(movepage)) {
         uiWikiPortlet.addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.same-name-in-new-location-space",
                                                         null,
-                                                        ApplicationMessage.ERROR));
+                                                        ApplicationMessage.WARNING));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPortlet.getUIPopupMessages());
-        prContext.getResponse()
-                 .sendRedirect(org.exoplatform.wiki.commons.Utils.getCurrentRequestURL());
+        org.exoplatform.wiki.commons.Utils.redirect(currentLocationParams, uiWikiPortlet.getWikiMode());
         return;
-      }
-      
-      wservice.movePage(currentLocationParams, newLocationParams);
-      
-      String portalURI = prContext.getPortalURI();
-      StringBuilder newPageURL = new StringBuilder(portalURI);
-      UIPortal uiPortal = Util.getUIPortal();
-      String pageNodeSelected = uiPortal.getSelectedNode().getUri();
-      newPageURL.append(pageNodeSelected+"/");
-      String encodedPageId= URLEncoder.encode(currentLocationParams.getPageId(),"UTF-8");
-      if (newLocationParams.getType().equals(PortalConfig.PORTAL_TYPE)) {
-        newPageURL.append(encodedPageId);
-      } else if (newLocationParams.getType().equals(PortalConfig.GROUP_TYPE)) {
-        newPageURL.append(PortalConfig.GROUP_TYPE + "/" + newLocationParams.getOwner() + "/"
-            + encodedPageId);
-      } else if (newLocationParams.getType().equals(PortalConfig.USER_TYPE)) {
-        newPageURL.append(PortalConfig.USER_TYPE + "/" + newLocationParams.getOwner() + "/"
-            + encodedPageId);
-      }
-      UIPopupContainer popupContainer = uiWikiPortlet.getChild(UIPopupContainer.class); 
-   
+      }      
+      wservice.movePage(currentLocationParams, newLocationParams);      
+      UIPopupContainer popupContainer = uiWikiPortlet.getChild(UIPopupContainer.class);    
       popupContainer.cancelPopupAction();
-      prContext.setResponseComplete(true);      
-      prContext.sendRedirect(newPageURL.toString());
+      newLocationParams.setPageId(currentLocationParams.getPageId());
+      org.exoplatform.wiki.commons.Utils.redirect(newLocationParams, WikiMode.VIEW);
     }
   }
 

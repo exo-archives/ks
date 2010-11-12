@@ -16,7 +16,7 @@
  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UITreeExplorer.init('" + uicomponent.id + "', '" + actionClassName + "');");  
  
  String restURL = uicomponent.getRestURL();
- String currentPagePath= uicomponent.getCurrentPagePath();
+ String currentPagePath= uicomponent.getCurrentPath();
  
  public void writeNodes(String currentPagePath) {    
   //Root Tree   
@@ -37,8 +37,7 @@
     String lastNodeClass = "";
     String nodeType = treeNode.getNodeType().toString();
     String nodeTypeCSS= nodeType.substring(0,1).toUpperCase() + nodeType.substring(1).toLowerCase();
-    String absPath = treeNode.getAbsPath();
-    String relPath= treeNode.getRelPath().replace("/",".");
+    String relPath= treeNode.getPath().replace("/",".");
     if (isLastNode) {
       lastNodeClass = "LastNode";
     }

@@ -16,13 +16,18 @@
  */
 package org.exoplatform.wiki.webui.tree ;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormInputInfo;
+import org.exoplatform.wiki.resolver.TitleResolver;
+import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.utils.Utils;
+import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 
 /**
  * Created by The eXo Platform SAS
@@ -41,21 +46,21 @@ public class UITreeExplorer extends UIContainer {
   
   final static public String SELECT_NODE = "SelectNode";
 
-  private String             currentPagePath;
+  private String             currentPath;
 
   private String             restURL;
 
-  private String             fillInput;
+  private String             updateBreadcrumbId;  
   
   public UITreeExplorer() throws Exception {
   }
 
-  public String getCurrentPagePath() {
-    return currentPagePath;
+  public String getCurrentPath() {
+    return currentPath;
   }
 
-  public void setCurrentPagePath(String currentPagePath) {
-    this.currentPagePath = currentPagePath;
+  public void setCurrentPath(String currentPath) {
+    this.currentPath = currentPath;
   }
 
   public String getRestURL() {
@@ -66,24 +71,30 @@ public class UITreeExplorer extends UIContainer {
     this.restURL = restURL;
   }
   
-
-  public String getFillInput() {
-    return fillInput;
+  
+  public String getUpdateBreadcrumbId() {
+    return updateBreadcrumbId;
   }
 
-  public void setFillInput(String fillInput) {
-    this.fillInput = fillInput;
+  public void setUpdateBreadcrumbId(String updateBreadcrumbId) {
+    this.updateBreadcrumbId = updateBreadcrumbId;
   }
+
 
   static public class SelectNodeActionListener extends EventListener<UITreeExplorer> {
-    public void execute(Event<UITreeExplorer> event) throws Exception {
+    public void execute(Event<UITreeExplorer> event) throws Exception {      
+      WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
       UITreeExplorer tree = event.getSource();
-      String fillInput = tree.getFillInput();
-      if (fillInput != null) {
-        UIFormInputInfo input = tree.getParent().findComponentById(fillInput);
+      String updateBreadcrumbId = tree.getUpdateBreadcrumbId();
+      if (updateBreadcrumbId != null) {
+        UIWikiBreadCrumb newlocation = tree.getParent().findComponentById(updateBreadcrumbId);
         String value = event.getRequestContext().getRequestParameter("param");
-        input.setValue(value);
-        event.getRequestContext().addUIComponentToUpdateByAjax(input);
+        value = TitleResolver.getObjectId(value, false);
+        WikiPageParams params = Utils.getPageParamsFromPath(value);
+        newlocation.setBreadCumbs(wikiService.getBreadcumb(params.getType(),
+                                                           params.getOwner(),
+                                                           params.getPageId()));
+        event.getRequestContext().addUIComponentToUpdateByAjax(newlocation);
       }
     }
   }

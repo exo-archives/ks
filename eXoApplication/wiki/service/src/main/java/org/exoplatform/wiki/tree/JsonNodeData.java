@@ -27,29 +27,26 @@ import java.net.URLEncoder;
  */
 public class JsonNodeData {  
 
-  protected String         name;
+  protected String       name;
 
-  protected String         absPath;
+  protected String       relPath;
 
-  protected String         relPath;
+  protected boolean      hasChild;
 
-  protected boolean        hasChild;
+  protected TreeNodeType nodeType;
 
-  protected TreeNodeType   nodeType;
+  protected boolean      isLastNode;
 
-  protected boolean        isLastNode;
+  protected boolean      isSelectable;
 
-  protected boolean        isSelectable;
-
-  protected String         currentPagePath;  
+  protected String       currentPagePath;
   
   public JsonNodeData(TreeNode treeNode,
                       boolean isLastNode,
                       boolean isSelectable,
-                      String currentPagePath) throws UnsupportedEncodingException {
-    this.name = treeNode.getName();
-    this.absPath = treeNode.getAbsPath();
-    this.relPath =  URLEncoder.encode(treeNode.getRelPath(), "utf-8");
+                      String currentPagePath) throws UnsupportedEncodingException {    
+    this.name = treeNode.getName();   
+    this.relPath =  URLEncoder.encode(treeNode.getPath(), "utf-8");
     this.hasChild = treeNode.isHasChild();
     this.nodeType = treeNode.getNodeType();
     this.isLastNode = isLastNode;
@@ -63,15 +60,7 @@ public class JsonNodeData {
 
   public void setName(String name) {
     this.name = name;
-  }
-
-  public String getAbsPath() {
-    return absPath;
-  }
-
-  public void setAbsPath(String absPath) {
-    this.absPath = absPath;
-  }
+  } 
 
   public String getRelPath() {
     return relPath;

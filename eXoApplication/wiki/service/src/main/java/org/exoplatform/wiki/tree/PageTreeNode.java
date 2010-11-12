@@ -20,7 +20,6 @@ import java.util.Iterator;
 
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
-import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.utils.Utils;
 
 /**
@@ -35,8 +34,7 @@ public class PageTreeNode extends TreeNode {
   public PageTreeNode(PageImpl page) throws Exception {
     super(page.getContent().getTitle(), TreeNodeType.PAGE);
     this.page = page;
-    this.absPath = getAbsPath();
-    this.relPath = getRelPath();
+    this.relPath = getPath();
     this.hasChild = this.page.getChildPages().size() > 0;
   }
 
@@ -64,7 +62,7 @@ public class PageTreeNode extends TreeNode {
     return null;
   }
 
-  public String getRelPath() {
+  public String getPath() {
     Wiki wiki = (Wiki) this.page.getWiki();
     if (wiki != null) {
       String wikiType = Utils.getWikiType(wiki);
@@ -72,15 +70,6 @@ public class PageTreeNode extends TreeNode {
       return relPath;
     }
     return null;
-  }
-
-  public String getAbsPath() {
-    String wikiName = this.page.getWiki().getOwner();
-    String wikiPath = ((WikiImpl) this.page.getWiki()).getPath();
-    String pagePath = ((PageImpl) this.page).getPath();
-    String prefixPath = Utils.getWikiType(this.page.getWiki()) + "/" + wikiName;
-    String result = pagePath.replace(wikiPath, prefixPath);
-    return result;
   }
 
 }

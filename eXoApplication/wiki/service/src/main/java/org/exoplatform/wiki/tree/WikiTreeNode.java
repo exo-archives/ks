@@ -31,9 +31,8 @@ public class WikiTreeNode extends TreeNode {
 
   public WikiTreeNode(Wiki wiki) throws Exception {
     super(wiki.getOwner(), TreeNodeType.WIKI);
-    this.wiki = wiki;
-    this.absPath=  Utils.getWikiType(wiki) + "/" + wiki.getOwner();
-    this.relPath= this.absPath;   
+    this.wiki = wiki;   
+    this.relPath= Utils.getWikiType(wiki) + "/" + wiki.getOwner();   
     this.hasChild = true;
   }
 

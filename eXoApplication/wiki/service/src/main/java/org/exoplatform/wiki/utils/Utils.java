@@ -155,17 +155,17 @@ public class Utils {
     return store.getWikis().toArray(new Wiki[]{}) ;
   } 
   
-  public static boolean isDescendantPage(PageImpl page, PageImpl parentPage )
-  {
+  public static boolean isDescendantPage(PageImpl page, PageImpl parentPage) {
     Iterator<PageImpl> iter = parentPage.getChildPages().values().iterator();
     while (iter.hasNext()) {
       PageImpl childpage = (PageImpl) iter.next();
       if (childpage.equals(page))
         return true;
-      return isDescendantPage(page,childpage);
+      if (isDescendantPage(page, childpage))
+        return true;
     }
     return false;
-  }  
+  }
 
   public static Object getObject(String path, String type) throws Exception {
     WikiService wservice = (WikiService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);

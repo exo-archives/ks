@@ -9,31 +9,41 @@
 <div class="UIWikiBreadCrumb UIBreadcumbs" id="$uicomponent.id">
   <div class="LeftBreadcumbsBar">
     <div class="RightBreadcumbsBar">
-      <div class="BreadcumbsInfoBar">
-        <%  if(breadCumbs.size() > 0) {
-              String note = "LeftBlock";
-              for(i in 0 .. breadCumbs.size()-1) {
-                breadcumbData = breadCumbs.get(i);
-                String title = breadcumbData.getTitle();
-                String actionLink = uicomponent.createActionLink(breadcumbData);
-                if(i == breadCumbs.size()-1) note = "Selected";
-        %>
-                <a href="<%=(breadcumbData.getId() == null) ? "#" : actionLink%>" class="$note">$title</a>
-        <%      
+      <div class="BreadcumbsInfoBar">  
+        <% if(breadCumbs!=null && breadCumbs.size() > 0) {
+        	 	String note = "LeftBlock";
+        	 		if (uicomponent.isShowFull) { %>
+      	 			<a class="$note"><%= uicomponent.getWikiType(); %> </a>
+         			<div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
+         			<a class="$note"> <%= uicomponent.getWikiName(); %> </a>
+          		<div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
+        	<%}   	  	  
+        	  for(i in 0 .. breadCumbs.size()-1) {
+              breadcumbData = breadCumbs.get(i);
+              String title = breadcumbData.getTitle();
+              String actionLink = uicomponent.createActionLink(breadcumbData);
+              if(uicomponent.isLink && i == breadCumbs.size()-1) note = "Selected";
+        	%>
+        			<% if (uicomponent.isLink) {%>
+                	<a href="<%=(breadcumbData.getId() == null) ? "#" : actionLink%>" class="$note">$title</a>
+        			<%} else {%>
+          		<a class="$note">$title</a>
+        			<% } %>
+        			<%      
                 if(i != breadCumbs.size()-1) {
-        %>
-                <div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
-        <%
-                }
-              }
-            }
-          String actionLabel= uicomponent.getActionLabel();
-          if (!actionLabel.equals("")){  
-          String label= _ctx.appRes(actionLabel);        
-        %>
-          <div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
-          <span class="ActionLabel" >$label</span>
-        <% } %>
+        			%>
+                	<div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
+        			<%
+               	 }
+              	}
+            	}
+          		String actionLabel= uicomponent.getActionLabel();
+          		if (actionLabel!=null && !actionLabel.equals("")){  
+         		 		String label= _ctx.appRes(actionLabel);        
+        			%>
+          			<div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
+          			<span class="ActionLabel" >$label</span>
+        			<% } %>
         <div class="ClearLeft"><span></span></div>
       </div>
     </div>

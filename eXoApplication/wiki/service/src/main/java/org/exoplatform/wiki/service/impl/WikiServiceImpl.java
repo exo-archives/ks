@@ -479,6 +479,13 @@ public class WikiServiceImpl implements WikiService {
     return Syntax.XWIKI_2_0.toIdString();
   }
   
+  public WikiPageParams getWikiPageParams(BreadcrumbData data) {
+    if (data != null) {
+      return new WikiPageParams(data.getWikiType(), data.getWikiOwner(), data.getId());
+    }
+    return null;
+  }
+  
   public List<TitleSearchResult> searchDataByTitle(SearchData data) throws Exception {
     try {
       Model model = getModel();
@@ -606,7 +613,7 @@ public class WikiServiceImpl implements WikiService {
     if (page == null) {
       return list;
     }
-    list.add(0, new BreadcrumbData(page.getName(), page.getPath(), page.getContent().getTitle()));
+    list.add(0, new BreadcrumbData(page.getName(), page.getPath(), page.getContent().getTitle(), wikiType, wikiOwner));
     PageImpl parentPage = page.getParentPage();
     if (parentPage != null) {
       getBreadcumb(list, wikiType, wikiOwner, parentPage.getName());

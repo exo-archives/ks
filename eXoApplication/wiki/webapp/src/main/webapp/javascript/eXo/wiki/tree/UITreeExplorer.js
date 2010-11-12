@@ -110,8 +110,7 @@ UITreeExplorer.prototype.buildNode = function(data) {
   var nodeTypeCSS = nodeType.substring(0, 1).toUpperCase()
       + nodeType.substring(1).toLowerCase();
   var iconType = "Expand";
-  var lastNodeClass = "";
-  var absPath = data.absPath;
+  var lastNodeClass = ""; 
   var relPath = data.relPath.replaceAll("/", ".");
   if (data.lastNode == true) {
     lastNodeClass = "LastNode";
@@ -122,7 +121,7 @@ UITreeExplorer.prototype.buildNode = function(data) {
   var childNode = "";
   childNode += " <div  class=\"" + lastNodeClass + " Node\" >";
   childNode += "   <div class=\""+iconType+"Icon\" id=\"" + relPath + "\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.getChild('" +currentPagePath + "/"+ relPath + "', this)\">";
-  childNode += "    <div id=\"iconTreeExplorer\"  onclick=\"event.cancelBubble=true; eXo.wiki.UITreeExplorer.onNodeClick(this,'"+absPath+"')\""  + "class=\""+ nodeTypeCSS +" TreeNodeType Node \">";  
+  childNode += "    <div id=\"iconTreeExplorer\"  onclick=\"event.cancelBubble=true; eXo.wiki.UITreeExplorer.onNodeClick(this,'"+relPath +"')\""  + "class=\""+ nodeTypeCSS +" TreeNodeType Node \">";  
   childNode += "      <div class='NodeLabel'>";
   if (data.selectable==true){
     childNode += "        <a title=\""+nodeName+"\">"+nodeName+"</a>";

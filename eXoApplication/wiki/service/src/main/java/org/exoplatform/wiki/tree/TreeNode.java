@@ -27,9 +27,7 @@ import java.util.List;
  */
 public class TreeNode { 
 
-  protected String         name;
-
-  protected String         absPath;
+  protected String         name; 
 
   protected String         relPath;
 
@@ -39,7 +37,7 @@ public class TreeNode {
 
   protected List<TreeNode> children = new ArrayList<TreeNode>();
   
-  public TreeNode(String name, TreeNodeType nodeType) {
+  public TreeNode(String name, TreeNodeType nodeType) {    
     this.name = name;
     this.nodeType = nodeType;
   }
@@ -64,14 +62,6 @@ public class TreeNode {
     return children;
   }
 
-  public String getAbsPath() {
-    return absPath;
-  }
-
-  public void setAbsPath(String absPath) {
-    this.absPath = absPath;
-  }
-
   public String getName() {
     return name;
   }
@@ -80,8 +70,8 @@ public class TreeNode {
     this.name = name;
   }
 
-  public String getRelPath() {
+  public String getPath() {
     return relPath;
   }
-
+  
 }

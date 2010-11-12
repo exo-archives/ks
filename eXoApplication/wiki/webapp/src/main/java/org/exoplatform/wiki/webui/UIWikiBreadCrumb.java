@@ -19,6 +19,7 @@ package org.exoplatform.wiki.webui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.webui.portal.UIPortal;
@@ -29,6 +30,7 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.service.BreadcrumbData;
 import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.service.WikiService;
 
 /**
  * Created by The eXo Platform SAS
@@ -44,7 +46,11 @@ public class UIWikiBreadCrumb extends UIContainer {
 
   private List<BreadcrumbData> breadCumbs = new ArrayList<BreadcrumbData>();
 
-  private String              actionLabel;
+  private String               actionLabel;
+
+  private boolean              isLink     = true;
+
+  private boolean              isShowFull = false; 
 
   public List<BreadcrumbData> getBreadCumbs() {
     return breadCumbs;
@@ -60,7 +66,7 @@ public class UIWikiBreadCrumb extends UIContainer {
 
   public void setActionLabel(String actionLabel) {
     this.actionLabel = actionLabel;
-  }
+  }  
 
   public String getParentURL() throws Exception {
     if(breadCumbs.size() > 1) {
@@ -70,18 +76,55 @@ public class UIWikiBreadCrumb extends UIContainer {
     }     
   }
   
-  public String createActionLink(BreadcrumbData breadCumbData) throws Exception {
-    WikiPageParams currentPageParams = Utils.getCurrentWikiPageParams();
+  public boolean isLink() {
+    return isLink;
+  }
+
+  public void setLink(boolean isLink) {
+    this.isLink = isLink;
+  }
+
+  public boolean isShowFull() {
+    return isShowFull;
+  }
+
+  public void setShowFull(boolean isShowFull) {
+    this.isShowFull = isShowFull;
+  }
+  
+  public WikiPageParams getPageParam() throws Exception {
+    if (this.breadCumbs != null && this.breadCumbs.size() > 0) {
+      WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
+      return wservice.getWikiPageParams(breadCumbs.get(breadCumbs.size() - 1));
+    }
+    return null;
+  }
+
+  public String getWikiType() throws Exception {
+    if (getPageParam() != null) {
+      return getPageParam().getType();
+    }
+    return null;
+  }
+
+  public String getWikiName() throws Exception {
+    if (getPageParam() != null) {
+      return getPageParam().getOwner();
+    }
+    return null;
+  }
+
+  public String createActionLink(BreadcrumbData breadCumbData) throws Exception {  
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     StringBuilder sb = new StringBuilder(portalRequestContext.getPortalURI());
     UIPortal uiPortal = Util.getUIPortal();
     String pageNodeSelected = uiPortal.getSelectedNode().getUri();
     sb.append(pageNodeSelected);
     sb.append("/");
-    if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(currentPageParams.getType())) {
-      sb.append(currentPageParams.getType());
+    if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(breadCumbData.getWikiType())) {
+      sb.append(breadCumbData.getWikiType());
       sb.append("/");
-      sb.append(currentPageParams.getOwner());
+      sb.append(breadCumbData.getWikiOwner());
       sb.append("/");
     }
     sb.append(breadCumbData.getId());

@@ -1,0 +1,24 @@
+.UIWikiPortlet .UIWikiMovePageForm {
+  padding: 10px 0px 0px 10px;
+  color: black;
+}
+
+.UIWikiPortlet .UIWikiMovePageForm table {
+  border: none;
+  margin: 0px;
+
+}
+
+.UIWikiPortlet .UIWikiMovePageForm table td {
+  vertical-align: middle; 
+  padding-bottom: 0px;
+}
+
+.UIWikiPortlet .UIWikiMovePageForm .UIWikiBreadCrumb a {
+  color: black;
+}
+
+.UIWikiPortlet .UIWikiMovePageForm .UIWikiBreadCrumb .LeftBreadcumbsBar .RightBlackGridArrowIcon {
+  background: url(/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BreadcumbsArrowIcon.gif);
+  height:16px;
+}

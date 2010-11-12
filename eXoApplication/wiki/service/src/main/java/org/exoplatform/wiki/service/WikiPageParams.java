@@ -17,6 +17,15 @@ public class WikiPageParams {
 
   private Map<String, String[]> parameters = new HashMap<String, String[]>();
 
+  public WikiPageParams() {    
+  }
+
+  public WikiPageParams(String type, String owner, String pageId) {
+    this.type = type;
+    this.owner = owner;
+    this.pageId = pageId;
+  }
+
   public void setType(String type) {
     this.type = type;
   }
