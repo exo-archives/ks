@@ -43,7 +43,6 @@ import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.resolver.PageResolver;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
-import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.control.UIPageToolBar;
 import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
 
@@ -135,15 +134,10 @@ public class UIWikiPortlet extends UIPortletApplication {
       try {
         // TODO: ignore request URL of resources
         context.setAttribute("wikiPage", page);
-        WikiPageParams params = pageResolver.extractWikiPageParams(requestURL);
-
-        ((UIWikiPageTitleControlArea) findComponentById(UIWikiPageControlArea.TITLE_CONTROL)).getUIFormInputInfo().setValue(page.getContent().getTitle());
+        ((UIWikiPageTitleControlArea) findComponentById(UIWikiPageControlArea.TITLE_CONTROL)).getUIFormInputInfo()
+                                                                                             .setValue(page.getContent()
+                                                                                                           .getTitle());
         findFirstComponentOfType(UIWikiPageContentArea.class).renderVersion();
-        UIWikiBreadCrumb wikiBreadCrumb = findFirstComponentOfType(UIWikiBreadCrumb.class);
-        WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
-        String currentActionLabel= getCurrentActionLabel();   
-        wikiBreadCrumb.setBreadCumbs(wikiService.getBreadcumb(params.getType(), params.getOwner(), page.getName()));
-        wikiBreadCrumb.setActionLabel(currentActionLabel);
       } catch (Exception e) {
         e.printStackTrace();
         context.setAttribute("wikiPage", null);
@@ -224,25 +218,6 @@ public class UIWikiPortlet extends UIPortletApplication {
       portletPreferences.setShowBreadcrumb(Boolean.parseBoolean(portletPref.getValue(WikiPortletPreference.SHOW_BREADCRUMB, "true")));
     } catch (Exception e) {
       log.error("Fail to load wiki portlet's preference: ", e);
-    }
-  }
-  
-  private  String getCurrentActionLabel() {
-    switch (getWikiMode()) {
-    case EDITPAGE:
-      return "UIWikiPortlet.label.Edit-Page";
-    case ADDPAGE:
-      return "UIWikiPortlet.label.Add-Page";
-    case ADVANCEDSEARCH:
-      return "UIWikiPortlet.label.Advanced-Search";
-    case SHOWHISTORY:
-      return "UIWikiPortlet.label.Show-History";
-    case VIEWREVISION:
-      return "UIWikiPortlet.label.View-Revision";
-    case DELETECONFIRM:
-      return "UIWikiPortlet.label.Delete-Confirm";
-    default:
-      return "";
     }
   }
   
