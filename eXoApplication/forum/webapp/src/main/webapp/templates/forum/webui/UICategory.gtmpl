@@ -32,7 +32,7 @@
 	String subDescription = ForumUtils.getSubString(description, 35);
 	int rCNB = 0;
 	String actionBookmark = "";
-	
+	String portletId = uicomponent.getParent().getParent().getId();
 %>
 
 <div class="UIForumCategory UICategory" style="padding:2px 10px;">
@@ -461,6 +461,7 @@
 																		
 																	<%
 																		String linkURL = uicomponent.url("OpenLastTopicLink", lastPostBy) ;
+																		linkURL = linkURL.replace(uiform.id, portletId);
 																		String linkProf = ForumUtils.getActionViewInfoUser(linkURL, uiform.id, "OpenLastTopicLink", "ViewPublicUserInfo");
 																	%>
 																		<div class="MenuItem" onclick="$linkProf">

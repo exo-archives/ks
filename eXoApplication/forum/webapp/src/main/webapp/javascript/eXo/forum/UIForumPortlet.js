@@ -386,7 +386,7 @@ UIForumPortlet.prototype.goLastPost = function(idLastPost) {
 			var body = document.getElementsByTagName('body')[0];
 			if(body.scrollTop > 250) {
 				script:scroll(0,0);
-				var viewPage = document.getElementById('UIForumPortlet') ;
+				var viewPage = document.getElementById('MaskLayerForum') ;
 				if(viewPage)viewPage.scrollIntoView(true) ;
 			}
 		} else {

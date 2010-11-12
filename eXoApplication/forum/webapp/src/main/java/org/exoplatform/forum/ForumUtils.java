@@ -444,7 +444,7 @@ public class ForumUtils {
 	
 	static public String getActionViewInfoUser(String link, String conponentId, String actionRepl, String actionWith) {
 		if(isEmpty(link)) return "";
-		link = StringUtils.replace(link, conponentId, "UIForumPortlet");
+//		link = StringUtils.replace(link, conponentId, "UIForumPortlet");
 		link = StringUtils.replace(link, actionRepl, actionWith);
 		if(link.indexOf("javascript") < 0) {
 			link = "javascript:ajaxGet('" + link +"&ajaxRequest=true')";

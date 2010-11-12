@@ -2,6 +2,7 @@
 	import org.exoplatform.forum.ForumUtils;
 	List moderators =	uicomponent.getModeratorsForum() ;
 	int total = moderators.size();
+	String portletId = uicomponent.getParent().getParent().getParent().getParent().getId();
 %>
 <div class="UIForumModerator" id="uicomponent.id">
 	<div class="ForumCategory">
@@ -49,6 +50,7 @@
 											<div class="MiddleRightRightClickPopupMenu">
 												<div class="UIRightPopupMenuContainer">
 												<%
+													linkURL = linkURL.replace(uicomponent.id, portletId);
 													String linkProf = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "ViewPublicUserInfo");
 												%>
 													<div class="MenuItem" onclick="$linkProf">

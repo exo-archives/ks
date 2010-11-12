@@ -16,6 +16,7 @@
 	String at = _ctx.appRes("UICategoryInfo.label.at");
 	String mostUserOnline = uicomponent.getMostUsersOnline(forumStatistic.getMostUsersOnline(), at);
 	String userView, linkURL;
+	String portletId = uicomponent.getParent().getParent().getParent().getId();
 %>
 <div id="$uicomponent.id" class="ForumInfos UICategoryInfo">
 	<div class="ForumToolbar">
@@ -68,6 +69,7 @@
 														<div class="MiddleRightRightClickPopupMenu">
 															<div class="UIRightPopupMenuContainer">
 															<%
+																linkURL = linkURL.replace(uicomponent.id, portletId);
 																String linkProf = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "ViewPublicUserInfo");
 															%>
 																<div class="MenuItem" onclick="$linkProf">
@@ -138,7 +140,10 @@
 							<div class="text" style="padding-bottom:5px;">
 								<span><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>:</span>
 								<a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$viewNewMember</a>
-								<% linkURL = uicomponent.event("CreatedLink", newMember) ; %>
+								<%
+									linkURL = uicomponent.event("CreatedLink", newMember) ;
+									linkURL = linkURL.replace(uicomponent.id, portletId);
+								%>
 								<div class="fixPupupMenu">
 									<div class="UIPopupCategory" style="display:none; left:60px; top:0px; width:140px">
 										<div class="UIRightClickPopupMenu" style="display:block;">

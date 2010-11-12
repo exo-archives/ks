@@ -38,6 +38,7 @@
 	List topics = uicomponent.getTopicPageList() ;
 	String forumName = forum.getForumName();
 	String subForumName = ForumUtils.getSubString(forumName, 35);
+	String portletId = uicomponent.getParent().getParent().getId();
 	UserProfile userProfile = uicomponent.getUserProfile();
 	boolean isShowMenu = true;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
@@ -618,6 +619,7 @@
 																<div class="MiddleRightRightClickPopupMenu">
 																	<div class="UIRightPopupMenuContainer">
 																	<%
+																		linkURL = linkURL.replace(uicomponent.id, portletId);
 																		linkProf = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "ViewPublicUserInfo");
 																	%>
 																		<div class="MenuItem" onclick="$linkProf">
@@ -711,6 +713,7 @@
 																<div class="MiddleRightRightClickPopupMenu">
 																	<div class="UIRightPopupMenuContainer">
 																	<%
+																		linkURL = linkURL.replace(uicomponent.id, portletId);
 																		linkProf = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "ViewPublicUserInfo");
 																	%>
 																		<div class="MenuItem" onclick="$linkProf">

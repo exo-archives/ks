@@ -39,8 +39,8 @@ eXoPlugin.switchToolBar = function(R) {
 	}
 };
 
-var isForum = window.parent.document.getElementById('UIForumPortlet');
-var isFAQ = window.parent.document.getElementById('UIAnswersPortlet');
+var isForum = window.parent.document.getElementById('MaskLayerForum');
+var isFAQ = window.parent.document.getElementById('FAQViewCategoriesColumn');
 if(isForum) {
 	eXoPlugin.switchToolBar({oldBar: "Basic", newBar: "eXoForum"});
 }else if(isFAQ){

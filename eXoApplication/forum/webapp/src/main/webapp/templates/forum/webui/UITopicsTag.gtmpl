@@ -26,6 +26,7 @@
 	boolean canEdit = false;
 	boolean isShowMenu = false;
 	if(userProfile.getUserRole() < 3) isShowMenu = true;
+	String portletId = uicomponent.getParent().getId();
 %>
 <div class="UIForumContainer">
 	<div style="overflow:auto; padding-bottom:2px;">
@@ -252,6 +253,7 @@
 																<div class="MiddleRightRightClickPopupMenu">
 																	<div class="UIRightPopupMenuContainer">
 																	<%
+																		linkURL = linkURL.replace(uicomponent.id, portletId);
 																		linkProf = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "ViewPublicUserInfo");
 																	%>
 																		<div class="MenuItem" onclick="$linkProf">
@@ -342,6 +344,7 @@
 																<div class="MiddleRightRightClickPopupMenu">
 																	<div class="UIRightPopupMenuContainer">
 																	<%
+																		linkURL = linkURL.replace(uicomponent.id, portletId);
 																		linkProf = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "ViewPublicUserInfo");
 																	%>
 																		<div class="MenuItem" onclick="$linkProf">
