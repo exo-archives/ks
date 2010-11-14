@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -553,7 +554,7 @@ public class JCRDataStorage implements DataStorage {
 		return false;
 	}
 
-	private void sendNotifyForQuestionWatcher(Question question, FAQSetting faqSetting) {
+	/*private void sendNotifyForQuestionWatcher(Question question, FAQSetting faqSetting) {
 		List<String> emailsList = new ArrayList<String>();
 		emailsList.add(question.getEmail());
 		try {
@@ -585,40 +586,61 @@ public class JCRDataStorage implements DataStorage {
 		} catch (Exception e) {
 			log.error("Failed to send a notify for question watcher: ", e);
 		}
-	}
+	}*/
 
-	private void sendNotifyForCategoryWatcher(Question question, FAQSetting faqSetting, boolean isNew) {
+	private void sendNotifyWatcher(Question question, FAQSetting faqSetting, boolean isNew) {
 		// Send notification when add new question in watching category
 		List<String> emails = new ArrayList<String>();
+		List<String> users = new ArrayList<String>();
 		List<String> emailsList = new ArrayList<String>();
+		emailsList.add(question.getEmail());
 		try {
 			Node cate = getCategoryNodeById(question.getCategoryId());
-			if (cate.isNodeType("exo:faqWatching")) {
-				emails = org.exoplatform.ks.common.Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues());
-				for (String email : emails) {
-					emailsList.add(email);
-				}
-				if (emailsList != null && emailsList.size() > 0) {
-					Message message = new Message();
-					message.setFrom(question.getAuthor() + "<email@gmail.com>");
-					message.setMimeType(MIMETYPE_TEXTHTML);
-					message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
-					if (isNew) {
-						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString()).replaceAll("&questionContent_", question.getDetail())
-								.replaceAll("&questionLink_", question.getLink()));
-					} else {
-						String contentMail = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion());
-						if (question.getAnswers().length > 0) {
-							contentMail = contentMail.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
-						} else {
-							contentMail = contentMail.replaceAll("&questionResponse_", "");
+			PropertyReader reader = new PropertyReader(cate);
+			//watch in category parent
+			emails.addAll(reader.list("exo:emailWatching", new ArrayList<String>()));
+			users.addAll(reader.list("exo:userWatching", new ArrayList<String>()));
+			//watch in this question
+			if (question.getEmailsWatch() != null && question.getEmailsWatch().length > 0) {
+				emails.addAll(Arrays.asList(question.getEmailsWatch()));
+				users.addAll(Arrays.asList(question.getUsersWatch()));
+			}
+			if (!question.isActivated() || (!question.isApproved() && faqSetting.getDisplayMode().equals("approved"))) {
+				// only send notification to administrations or moderators
+				List<String> moderators = reader.list("exo:moderators", new ArrayList<String>());
+				List<String> temps = new ArrayList<String>();
+				int i = 0;
+				for (String user : users) {
+					if (!temps.contains(user)) {
+						temps.add(user);
+						if (isAdminRole(user) || Utils.hasPermission(moderators, UserHelper.getAllGroupAndMembershipOfUser(user))) {
+							emailsList.add(emails.get(i));
 						}
-						contentMail = contentMail.replaceAll("&questionLink_", question.getLink());
-						message.setBody(contentMail);
 					}
-
-					sendEmailNotification(emailsList, message);
+					++i;
 				}
+			} else {
+				emailsList.addAll(emails);
+			}
+			if (emailsList != null && emailsList.size() > 0) {
+				Message message = new Message();
+				message.setFrom(question.getAuthor() + "<email@gmail.com>");
+				message.setMimeType(MIMETYPE_TEXTHTML);
+				message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
+				if (isNew) {
+					message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
+							.replaceAll("&questionContent_", question.getDetail()).replaceAll("&questionLink_", question.getLink()));
+				} else {
+					String contentMail = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion());
+					if (question.getAnswers().length > 0) {
+						contentMail = contentMail.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
+					} else {
+						contentMail = contentMail.replaceAll("&questionResponse_", "");
+					}
+					contentMail = contentMail.replaceAll("&questionLink_", question.getLink());
+					message.setBody(contentMail);
+				}
+				sendEmailNotification(emailsList, message);
 			}
 		} catch (Exception e) {
 			log.error("Failed to send a nofify for category watcher: ", e);
@@ -1199,10 +1221,11 @@ public class JCRDataStorage implements DataStorage {
 				node.remove();
 		}
 
-		if (!isNew) {
-			String catePath = questionNode.getParent().getParent().getPath();
-			question.setCategoryId(catePath.substring(catePath.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
-		}
+		question.setId(questionNode.getName());
+		String catePath = questionNode.getParent().getParent().getPath();
+		question.setCategoryId(catePath.substring(catePath.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
+		// TODO working now
+/*
 		if (faqSetting.getDisplayMode().equals("approved")) {
 			// Send notification when question response or edited or watching
 			if (question.isApproved() && question.isActivated()) {
@@ -1211,10 +1234,10 @@ public class JCRDataStorage implements DataStorage {
 		} else {
 			// Send notification when add new question in watching category
 			if (isNew || question.isActivated()) {
-				sendNotifyForCategoryWatcher(question, faqSetting, isNew);
 			}
 		}
-
+*/
+		sendNotifyWatcher(question, faqSetting, isNew);
 	}
 
 	/*
