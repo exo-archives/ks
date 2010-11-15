@@ -21,11 +21,14 @@ public class PageResolver {
     resolver = (Resolver)plugin ;
   }
   
-  public WikiPageParams extractWikiPageParams(String requestURI){
+  public WikiPageParams extractWikiPageParams(String requestURI, String wikiPageName){
+    if (wikiPageName == null || wikiPageName.trim().length() == 0) {
+      wikiPageName = "wiki";
+    }
     try {
       WikiPageParams params;
       if (this.resolver != null) {
-        params = this.resolver.extractPageParams(requestURI);
+        params = this.resolver.extractPageParams(requestURI, wikiPageName);
         return params;
       } else {
         LOG.error("Couldn't extract WikiPageParams for URI: " + requestURI + ". ResolverPlugin is not set!");
@@ -37,9 +40,11 @@ public class PageResolver {
     }
   }
   
-  public Page resolve(String requestURI) throws Exception {
-
-    WikiPageParams params = extractWikiPageParams(requestURI);
+  public Page resolve(String requestURI, String wikiPageName) throws Exception {
+    if (wikiPageName == null || wikiPageName.trim().length() == 0) {
+      wikiPageName = "wiki";
+    }
+    WikiPageParams params = extractWikiPageParams(requestURI, wikiPageName);
     if (params == null) {
       LOG.error("Couldn't resolve URI: " + requestURI);
       return null;

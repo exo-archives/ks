@@ -1,7 +1,6 @@
 
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox {
   float: right;
-  width: 210px;
 }
 
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox .AdvancedSearch {
@@ -26,7 +25,7 @@
 
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox .SearchBoxR{
   background: url('background/UIWikiSearchBG.png') no-repeat right -73px;
-  padding-right: 23px;
+  padding-right: 22px;
 }
 
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox .SearchBoxC{

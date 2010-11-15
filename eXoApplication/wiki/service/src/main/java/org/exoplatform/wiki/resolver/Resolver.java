@@ -4,7 +4,13 @@ import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.wiki.service.WikiPageParams;
 
 public abstract class Resolver extends BaseComponentPlugin{
-  
-  public abstract WikiPageParams extractPageParams(String requestURL) throws Exception ;
+  /**
+   * 
+   * @param requestURL URL of incoming request
+   * @param wikiPageName name of the page that contains wiki portlet  
+   * @return
+   * @throws Exception
+   */
+  public abstract WikiPageParams extractPageParams(String requestURL, String wikiPageName) throws Exception ;
   
 }

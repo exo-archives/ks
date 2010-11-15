@@ -83,23 +83,19 @@
 }
 
 .UITreeExplorer .Space {
-  background: url('DefaultSkin/background/SpaceNode.gif') no-repeat left
-    1px; /* orientation=lt */
+  background: url('DefaultSkin/background/SpaceNode.gif') no-repeat left 1px; /* orientation=lt */
 }
 
 .UITreeExplorer .Wiki {
-  background: url('DefaultSkin/background/WikiNode.gif') no-repeat left
-    1px; /* orientation=lt */
+  background: url('DefaultSkin/background/WikiNode.gif') no-repeat left 1px; /* orientation=lt */
 }
 
 .UITreeExplorer .Wikihome {
-  background: url('DefaultSkin/background/PageNode.gif') no-repeat left
-    1px; /* orientation=lt */
+  background: url('DefaultSkin/background/PageNode.gif') no-repeat left 1px; /* orientation=lt */
 }
 
 .UITreeExplorer .Page {
-  background: url('DefaultSkin/background/PageNode.gif') no-repeat left
-    1px; /* orientation=lt */
+  background: url('DefaultSkin/background/PageNode.gif') no-repeat left 1px; /* orientation=lt */
 }
 
 .UITreeExplorer .Hover {

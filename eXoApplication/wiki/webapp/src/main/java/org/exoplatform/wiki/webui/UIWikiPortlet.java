@@ -23,6 +23,7 @@ import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -105,7 +106,7 @@ public class UIWikiPortlet extends UIPortletApplication {
                                      .setRendered(portletPreferences.isShowBreadcrumb());
       String requestURL = Utils.getCurrentRequestURL();
       PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
-      Page page = pageResolver.resolve(requestURL);
+      Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode().getUri());
       if (page == null) {
         changeMode(WikiMode.PAGE_NOT_FOUND);
         super.processRender(app, context);

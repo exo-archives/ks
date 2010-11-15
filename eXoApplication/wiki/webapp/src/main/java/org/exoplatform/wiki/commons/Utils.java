@@ -87,7 +87,7 @@ public class Utils {
   public static WikiPageParams getCurrentWikiPageParams() throws Exception {
     String requestURL = getCurrentRequestURL();
     PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
-    WikiPageParams params = pageResolver.extractWikiPageParams(requestURL);
+    WikiPageParams params = pageResolver.extractWikiPageParams(requestURL, Util.getUIPortal().getSelectedNode().getUri());
     HttpServletRequest request = Util.getPortalRequestContext().getRequest();
     Map<String, String[]> paramsMap = request.getParameterMap();
     Set<String> keys = paramsMap.keySet();
@@ -104,7 +104,7 @@ public class Utils {
       return helpPage;
     }
     PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
-    Page page = pageResolver.resolve(requestURL);
+    Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode().getUri());
     return page;
   }
   

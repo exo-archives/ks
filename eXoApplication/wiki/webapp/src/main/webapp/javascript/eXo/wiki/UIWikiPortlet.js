@@ -130,7 +130,7 @@ UIWikiPortlet.prototype.renderBreadcrumbs = function(uicomponentid, isLink) {
   var itemsBlock = eXo.core.DOMUtil.findDescendantsByClass(breadcrumbPopup, 'div', 'SubBlock');
   var breadcrumbItems = eXo.core.DOMUtil.findDescendantsByTagName(breadcrumb, "a");
   var lessThanContainer = function() {
-    return breadcrumb.offsetWidth < breadcrumb.parentNode.offsetWidth / 2;
+    return breadcrumbsInfoBar.offsetWidth < breadcrumb.parentNode.offsetWidth / 2;
   };
   if (breadcrumbItems.length > 2) {
     var popupItems = new Array();

@@ -14,7 +14,6 @@
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiBreadCrumb {
   border: none;
   padding: 0px;
-  margin-right: 250px;
 }
 
 .UIWikiPortlet .UIWikiBreadCrumb .ActionLabel{
@@ -32,6 +31,7 @@
 .UIWikiPortlet .UIWikiBreadCrumb .BreadcumbsInfoBar{
 	height: auto;	
 	white-space: normal;
+	float:left;
 }
 
 .UIWikiPortlet .UIWikiBreadCrumb .LeftBreadcumbsBar a.Selected {

@@ -46,6 +46,7 @@
         			<% } %>
         <div class="ClearLeft"><span></span></div>
       </div>
+      <div class="ClearLeft"></div>
     </div>
   </div>
 </div>

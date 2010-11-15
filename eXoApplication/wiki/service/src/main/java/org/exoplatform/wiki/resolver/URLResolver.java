@@ -9,9 +9,9 @@ public class URLResolver extends Resolver{
   public URLResolver(OrganizationService orgSerivce) throws Exception {
     this.orgSerivce = orgSerivce ;
   }
-  public WikiPageParams extractPageParams(String requestURL) throws Exception {
+  public WikiPageParams extractPageParams(String requestURL, String wikiPageName) throws Exception {
     WikiPageParams params = new WikiPageParams() ;
-    String uri = extractURI(requestURL) ; 
+    String uri = extractURI(requestURL, wikiPageName) ; 
     if (uri == null) return params ;
     if(uri.indexOf("/") > 0) {
       String[] array = uri.split("/") ;      
@@ -45,12 +45,12 @@ public class URLResolver extends Resolver{
         }
       } else if(array[0].equals(PortalConfig.PORTAL_TYPE)) {
         params.setType(PortalConfig.PORTAL_TYPE)  ;
-        params.setOwner(extractPortalOwner(requestURL)) ;
+        params.setOwner(extractPortalOwner(requestURL, wikiPageName)) ;
         params.setPageId(array[1]) ;
       }
     }else{
       params.setType(PortalConfig.PORTAL_TYPE)  ;      
-      params.setOwner(extractPortalOwner(requestURL)) ;
+      params.setOwner(extractPortalOwner(requestURL, wikiPageName)) ;
       if(uri.length() > 0) params.setPageId(uri) ;
       else params.setPageId(WikiPageParams.WIKI_HOME) ;
     }
@@ -58,14 +58,16 @@ public class URLResolver extends Resolver{
     return params;
   }  
   
-  private String extractURI(String url) throws Exception{
+  private String extractURI(String url, String wikiPageName) throws Exception{
     String uri = null;
-    if(url.indexOf("/wiki/") < 0){
-      if(url.indexOf("/wiki") > 0) {
-        uri = url.substring(url.indexOf("/wiki") + "/wiki".length()) ;
+    String sign1 = "/" + wikiPageName + "/";
+    String sign2 = "/" + wikiPageName;
+    if(url.indexOf(sign1) < 0){
+      if(url.indexOf(sign2) > 0) {
+        uri = url.substring(url.indexOf(sign2) + sign2.length()) ;
       }      
     } else{
-      uri = url.substring(url.indexOf("/wiki/") + "/wiki/".length()) ;
+      uri = url.substring(url.indexOf(sign1) + sign1.length()) ;
     }
     
     if(uri != null && uri.length() > 0 && (uri.lastIndexOf("/") + 1) == uri.length()) 
@@ -73,9 +75,10 @@ public class URLResolver extends Resolver{
     return uri ;
   }
   
-  private String extractPortalOwner(String url) throws Exception{
-    if(url.indexOf("/wiki") > 0){
-      String temp = url.substring(0, url.indexOf("/wiki")) ;
+  private String extractPortalOwner(String url, String wikiPageName) throws Exception{
+    String sign = "/" + wikiPageName;
+    if(url.indexOf(sign) > 0){
+      String temp = url.substring(0, url.indexOf(sign)) ;
       return temp.substring(temp.lastIndexOf("/") + 1) ;
     }
     return null ;
