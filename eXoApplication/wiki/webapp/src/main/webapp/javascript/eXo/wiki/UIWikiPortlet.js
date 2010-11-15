@@ -123,8 +123,8 @@ UIWikiPortlet.prototype.cancel = function(evt) {
 /*
  * Render the breadcrumb again to fit with a half of screen width
  */
-UIWikiPortlet.prototype.renderBreadcrumbs = function() {
-  var breadcrumb = document.getElementById("UIWikiBreadCrumb");
+UIWikiPortlet.prototype.renderBreadcrumbs = function(uicomponentid, isLink) {
+  var breadcrumb = document.getElementById(uicomponentid);
   var breadcrumbsInfoBar = eXo.core.DOMUtil.findDescendantsByClass(breadcrumb, 'div', 'BreadcumbsInfoBar')[0];
   var breadcrumbPopup = eXo.core.DOMUtil.findNextElementByTagName(breadcrumb, 'div');
   var itemsBlock = eXo.core.DOMUtil.findDescendantsByClass(breadcrumbPopup, 'div', 'SubBlock');
@@ -140,12 +140,15 @@ UIWikiPortlet.prototype.renderBreadcrumbs = function() {
         var link = document.createElement('a');
         link.className = 'ItemIcon MenuIcon';
         link.innerHTML = breadcrumbItems[index].innerHTML;
-        link.href = breadcrumbItems[index].href;
+        if(isLink)
+          link.href = breadcrumbItems[index].href;
         popupItems.push(link);
         if (index == breadcrumbItems.length - 2) {
           breadcrumbItems[index].innerHTML = ' ... ';
-          breadcrumbItems[index].href = '#';
-          eXo.core.Browser.eventListener(breadcrumbItems[index], 'mouseover', this.showBreadcrumbPopup);
+          if(isLink){
+            breadcrumbItems[index].href = '#';
+            eXo.core.Browser.eventListener(breadcrumbItems[index], 'mouseover', this.showBreadcrumbPopup);
+          }
         } else {
           var arrowBlock = eXo.core.DOMUtil.findNextElementByTagName(breadcrumbItems[index], 'div');
           breadcrumbsInfoBar.removeChild(breadcrumbItems[index]);
@@ -179,8 +182,10 @@ UIWikiPortlet.prototype.renderBreadcrumbs = function() {
       itemsBlock[0].appendChild(menuItem);
     }
   }
-  breadcrumbItems[0].title = breadcrumbItems[0].innerHTML;
-  this.shortenUntil(breadcrumbItems[0], lessThanContainer);
+  if (breadcrumbItems.length > 0) {
+    breadcrumbItems[0].title = breadcrumbItems[0].innerHTML;
+    this.shortenUntil(breadcrumbItems[0], lessThanContainer);
+  }
 };
 
 /*

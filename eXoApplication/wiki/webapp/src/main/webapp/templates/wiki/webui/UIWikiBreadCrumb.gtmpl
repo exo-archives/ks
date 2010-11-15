@@ -4,7 +4,7 @@
   def rcontext = _ctx.getRequestContext() ;
   List breadCumbs = uicomponent.getBreadCumbs();
   rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiPortlet', '/wiki/javascript/') ;
-  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPortlet.renderBreadcrumbs();"); 
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPortlet.renderBreadcrumbs(\"" + uicomponent.id + "\","+ uicomponent.isLink +");"); 
 %>
 <div class="UIWikiBreadCrumb UIBreadcumbs" id="$uicomponent.id">
   <div class="LeftBreadcumbsBar">
