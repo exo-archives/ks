@@ -16,18 +16,16 @@
  */
 package org.exoplatform.wiki.webui.tree ;
 
-import org.exoplatform.container.PortalContainer;
+import java.util.List;
+
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.wiki.resolver.TitleResolver;
-import org.exoplatform.wiki.service.WikiPageParams;
-import org.exoplatform.wiki.service.WikiService;
-import org.exoplatform.wiki.utils.Utils;
-import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 
 /**
  * Created by The eXo Platform SAS
@@ -50,7 +48,7 @@ public class UITreeExplorer extends UIContainer {
 
   private String             restURL;
 
-  private String             updateBreadcrumbId;  
+  private List<EffectUIComponent> effectComponents;
   
   public UITreeExplorer() throws Exception {
   }
@@ -70,33 +68,38 @@ public class UITreeExplorer extends UIContainer {
   public void setRestURL(String restURL) {
     this.restURL = restURL;
   }
-  
-  
-  public String getUpdateBreadcrumbId() {
-    return updateBreadcrumbId;
+   
+  public List<EffectUIComponent> getEffectComponents() {
+    return effectComponents;
   }
 
-  public void setUpdateBreadcrumbId(String updateBreadcrumbId) {
-    this.updateBreadcrumbId = updateBreadcrumbId;
+  public void setEffectComponents(List<EffectUIComponent> effectComponents) {
+    this.effectComponents = effectComponents;
   }
-
 
   static public class SelectNodeActionListener extends EventListener<UITreeExplorer> {
-    public void execute(Event<UITreeExplorer> event) throws Exception {      
-      WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
+    public void execute(Event<UITreeExplorer> event) throws Exception {
+
+      WebuiRequestContext context = event.getRequestContext();
       UITreeExplorer tree = event.getSource();
-      String updateBreadcrumbId = tree.getUpdateBreadcrumbId();
-      if (updateBreadcrumbId != null) {
-        UIWikiBreadCrumb newlocation = tree.getParent().findComponentById(updateBreadcrumbId);
-        String value = event.getRequestContext().getRequestParameter("param");
-        value = TitleResolver.getObjectId(value, false);
-        WikiPageParams params = Utils.getPageParamsFromPath(value);
-        newlocation.setBreadCumbs(wikiService.getBreadcumb(params.getType(),
-                                                           params.getOwner(),
-                                                           params.getPageId()));
-        event.getRequestContext().addUIComponentToUpdateByAjax(newlocation);
+
+      UIComponent parent = (UIComponent) tree.getParent();
+      List<EffectUIComponent> effectComponents = tree.getEffectComponents();
+      for (int i = 0; i < effectComponents.size(); i++) {
+        EffectUIComponent effectComponent = effectComponents.get(i);
+        UIComponent uiComponent = (UIComponent) parent.findComponentById(effectComponent.getId());
+
+        List<String> eventNames = effectComponent.getEventName();
+        for (int j = 0; j < eventNames.size(); j++) {
+          Event<UIComponent> xEvent = uiComponent.createEvent(eventNames.get(i),
+                                                              event.getExecutionPhase(),
+                                                              context);
+          if (xEvent != null) {
+            xEvent.broadcast();
+          }
+        }
       }
     }
   }
-  
+
 }

@@ -11,16 +11,9 @@
  	  uiform.renderChild(uiform.UITREE);
  %>
   <div class="ClearBoth"></div>
-  <table>
-  	<tr>
-  		<td style="width:18%"><label><%=_ctx.appRes("UIWikiMovePageForm.label.CurrentLocation")%></label></td>
-  		 <td><% uiform.renderChild(uiform.CURRENT_LOCATION);%></td>
-  	</tr>
-  		<tr>  		
-  		<td><label><%=_ctx.appRes("UIWikiMovePageForm.label.NewLocation")%></label></td>
-  		 <td><% uiform.renderChild(uiform.NEW_LOCATION); %></td>
-  	</tr>
-  </table>
+  <%
+ 	  uiform.renderChild(uiform.LOCATION_CONTAINER);
+ %> 
   <div class="ClearBoth"></div>
  <div class="UIAction"> 
 	<table class="ActionContainer">

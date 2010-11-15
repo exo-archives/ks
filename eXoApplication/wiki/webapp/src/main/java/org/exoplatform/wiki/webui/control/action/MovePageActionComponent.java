@@ -35,6 +35,7 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
+import org.exoplatform.wiki.webui.UIWikiLocationContainer;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
@@ -82,8 +83,9 @@ public class MovePageActionComponent extends UIComponent {
       }
       UIPopupContainer uiPopupContainer = uiWikiPortlet.getChild(UIPopupContainer.class);
       UIWikiMovePageForm movePageForm = uiPopupContainer.activate(UIWikiMovePageForm.class, 600);
+      UIWikiLocationContainer locationContainer = movePageForm.findFirstComponentOfType(UIWikiLocationContainer.class);
   
-      UIWikiBreadCrumb currentLocation = movePageForm.getChildById(UIWikiMovePageForm.CURRENT_LOCATION);
+      UIWikiBreadCrumb currentLocation = locationContainer.getChildById(UIWikiLocationContainer.CURRENT_LOCATION);
       currentLocation.setBreadCumbs(wikiService.getBreadcumb(params.getType(), params.getOwner(), params.getPageId()));
       UITreeExplorer tree = movePageForm.getChildById(UIWikiMovePageForm.UITREE);
       tree.setCurrentPath(currentRelativePagePath);

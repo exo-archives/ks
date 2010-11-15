@@ -16,6 +16,10 @@
  */
 package org.exoplatform.wiki.webui.popup;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -31,8 +35,10 @@ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
+import org.exoplatform.wiki.webui.UIWikiLocationContainer;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.WikiMode;
+import org.exoplatform.wiki.webui.tree.EffectUIComponent;
 import org.exoplatform.wiki.webui.tree.UITreeExplorer;
 
 /**
@@ -51,27 +57,23 @@ import org.exoplatform.wiki.webui.tree.UITreeExplorer;
 )
 public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
   
-  final static public String PAGENAME_INFO    = "pageNameInfo";
+  final static public String PAGENAME_INFO      = "pageNameInfo";
 
-  final static public String CURRENT_LOCATION = "currentLocation";
+  final static public String LOCATION_CONTAINER = "UIWikiLocationContainer";
 
-  final static public String NEW_LOCATION     = "newLocation";
+  final static public String UITREE             = "UITreeExplorer";
 
-  final static public String UITREE           = "UITreeExplorer";
-
-  public String              MOVE             = "Move"; 
+  public String              MOVE               = "Move";
   
   public UIWikiMovePageForm() throws Exception {
     addChild(new UIFormInputInfo(PAGENAME_INFO, PAGENAME_INFO, null));
-    addChild(UIWikiBreadCrumb.class, null, CURRENT_LOCATION).setLink(false);
-    addChild(UIWikiBreadCrumb.class, null, NEW_LOCATION).setLink(false);
-    UIWikiBreadCrumb currentLocation = getChildById(CURRENT_LOCATION);
-    UIWikiBreadCrumb newLocation = getChildById(NEW_LOCATION);
-    currentLocation.setShowFull(true);
-    newLocation.setShowFull(true);
-    addChild(UITreeExplorer.class, null, UITREE).setRendered(true);
-    getChild(UITreeExplorer.class).setRestURL(getRestURL());
-    getChild(UITreeExplorer.class).setUpdateBreadcrumbId(NEW_LOCATION);
+    addChild(UIWikiLocationContainer.class, null, LOCATION_CONTAINER);    
+    UITreeExplorer tree = addChild(UITreeExplorer.class, null, UITREE);
+    tree.setRestURL(getRestURL());
+    List<EffectUIComponent> effectComponents = new ArrayList<EffectUIComponent>();   
+    effectComponents.add(new EffectUIComponent(LOCATION_CONTAINER,
+                                               Arrays.asList(new String[] { UIWikiLocationContainer.CHANGE_NEWLOCATION })));
+    tree.setEffectComponents(effectComponents);
   }
 
   private String getRestURL() {
@@ -91,13 +93,13 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
   
   static public class MoveActionListener extends EventListener<UIWikiMovePageForm> {
     public void execute(Event<UIWikiMovePageForm> event) throws Exception {   
-      WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);    
+      WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      
       UIWikiMovePageForm movePageForm = event.getSource();
-      UIWikiBreadCrumb currentLocation = (UIWikiBreadCrumb) movePageForm.getChildById(CURRENT_LOCATION);
-      UIWikiBreadCrumb newLocation =(UIWikiBreadCrumb) movePageForm.getChildById(NEW_LOCATION);     
-      WikiPageParams currentLocationParams = currentLocation.getPageParam();     
+      UIWikiLocationContainer locationContainer = movePageForm.findFirstComponentOfType(UIWikiLocationContainer.class);
+      UIWikiBreadCrumb currentLocation = (UIWikiBreadCrumb) locationContainer.getChildById(UIWikiLocationContainer.CURRENT_LOCATION);
+      UIWikiBreadCrumb newLocation = (UIWikiBreadCrumb) locationContainer.getChildById(UIWikiLocationContainer.NEW_LOCATION);
+      WikiPageParams currentLocationParams = currentLocation.getPageParam();
       WikiPageParams newLocationParams = newLocation.getPageParam();
       
       if (newLocationParams==null) {
