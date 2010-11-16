@@ -31,12 +31,7 @@ UIWikiPageVersionsList.prototype.init = function(formId) {
     var input = inputs[i];
     if (input.type == "checkbox") {
       input.checked=false;
-      if (input.attachEvent)
-        input.attachEvent("onclick", me.onCheck);
-      else
-        input.onclick = function(event) {
-          me.onCheck(event);
-        }
+      eXo.core.Browser.eventListener(input, 'click', me.onCheck);
     }
   }
 };

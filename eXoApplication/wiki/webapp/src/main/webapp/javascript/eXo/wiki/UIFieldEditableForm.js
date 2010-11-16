@@ -27,46 +27,25 @@ UIFieldEditableForm.prototype.init = function(componentId, parentId, titleId,
     inputId) {
   var me = eXo.wiki.UIFieldEditableForm;
   me.parentComponent = document.getElementById(parentId);
-  me.component = eXo.core.DOMUtil.findDescendantById(me.parentComponent,
-      componentId);
-
-  var titleControl = eXo.core.DOMUtil.findDescendantById(me.parentComponent,
-      titleId);
+  me.component = eXo.core.DOMUtil.findDescendantById(me.parentComponent, componentId);
+  var titleControl = eXo.core.DOMUtil.findDescendantById(me.parentComponent, titleId);
   if (titleControl) {
     me.fieldValue = titleControl.firstChild.data;
   }
   me.inputControl = eXo.core.DOMUtil.findDescendantById(me.component, inputId);
-  me.showInputLink = eXo.core.DOMUtil.findFirstChildByClass(me.component, "a",
-      "ShowInput");
-  me.submitLink = eXo.core.DOMUtil.findFirstChildByClass(me.component, "a",
-      "SubmitLink");
+  me.showInputLink = eXo.core.DOMUtil.findFirstChildByClass(me.component, "a", "ShowInput");
+  me.submitLink = eXo.core.DOMUtil.findFirstChildByClass(me.component, "a", "SubmitLink");
+  eXo.core.Browser.eventListener(document, 'click', me.onClick);
 
-  if (document.attachEvent)
-    document.attachEvent("onclick", me.onClick);
-  else
-    document.onclick = function(event) {
-      me.onClick(event);
-    };
-
-  if (titleControl) {
-    if (titleControl.attachEvent)
-      titleControl.attachEvent("ondblclick", me.onDblClick);
-    else
-      titleControl.ondblclick = function(event) {
-        me.onDblClick(event);
-      };
+  if (titleControl) {   
+    eXo.core.Browser.eventListener(titleControl, 'dblclick', me.onDblClick);
   }
   if (me.inputControl) {
     me.inputControl.form.onsubmit = function() {
       return false;
     };
-    me.inputControl.focus();
-    if (me.inputControl.attachEvent)
-      me.inputControl.attachEvent("onkeyup", me.pressHandler);
-    else
-      me.inputControl.onkeyup = function(event) {
-        me.pressHandler(event);
-      };
+    me.inputControl.focus();   
+    eXo.core.Browser.eventListener(me.inputControl, 'keyup', me.pressHandler);
   }
 };
 

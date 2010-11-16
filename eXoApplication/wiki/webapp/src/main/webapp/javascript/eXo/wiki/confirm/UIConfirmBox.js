@@ -83,21 +83,13 @@ UIConfirmBox.prototype.createInput = function(container, action, message) {
   var input = document.createElement('input');
   input.setAttribute('value', message);
   input.setAttribute('type', 'button');
-  if (input.attachEvent) {
-    input.attachEvent('onclick', function(event) {     
-      if (action && action.href)
-        window.location = action.href;
-      else
-        eXo.wiki.UIConfirmBox.closeConfirm();
-    });
-  } else {
-    input.onclick = function(event) {      
-      if (action && action.href)
-        window.location = action.href;
-      else
-        eXo.wiki.UIConfirmBox.closeConfirm();
-    };
-  }
+
+  eXo.core.Browser.eventListener(input, 'click', function(event) {
+    if (action && action.href)
+      window.location = action.href;
+    else
+      eXo.wiki.UIConfirmBox.closeConfirm();
+  });
   container.appendChild(input);
 };
 

@@ -13,7 +13,7 @@ import org.exoplatform.portal.webui.util.Util;
 
 def rcontext = _ctx.getRequestContext() ;
 rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiAdvanceSearchForm', '/wiki/javascript/') ;
-rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.addIconForUnknownMimeType();");
+rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.addIconForUnknownMimeType('"+uicomponent.id+"');");
 
 %>
 

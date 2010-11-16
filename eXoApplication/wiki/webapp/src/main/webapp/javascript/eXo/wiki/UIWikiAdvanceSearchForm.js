@@ -97,8 +97,8 @@ UIWikiAdvanceSearchForm.prototype.arrowDownHandler = function(){
 UIWikiAdvanceSearchForm.prototype.typeHandler = function(evt,textbox){
 };
 
-UIWikiAdvanceSearchForm.prototype.addIconForUnknownMimeType = function() {
-  var uiSearchResult = document.getElementById('UIWikiAdvanceSearchResult');
+UIWikiAdvanceSearchForm.prototype.addIconForUnknownMimeType = function(uiComponentId) {
+  var uiSearchResult = document.getElementById(uiComponentId);
   if (uiSearchResult) {
     var resultItems = eXo.core.DOMUtil.findDescendantsByClass(uiSearchResult, 'div', 'BlockResultFeed');
     if (resultItems) {
