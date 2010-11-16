@@ -554,7 +554,12 @@ public class JCRDataStorage implements DataStorage {
 		return false;
 	}
 
-	/*private void sendNotifyForQuestionWatcher(Question question, FAQSetting faqSetting) {
+	/**
+   * @deprecated use {@link JCRDataStorage#sendNotifyWatcher(Question question, FAQSetting faqSetting, boolean isNew)}
+   */
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void sendNotifyForQuestionWatcher(Question question, FAQSetting faqSetting) {
 		List<String> emailsList = new ArrayList<String>();
 		emailsList.add(question.getEmail());
 		try {
@@ -586,7 +591,7 @@ public class JCRDataStorage implements DataStorage {
 		} catch (Exception e) {
 			log.error("Failed to send a notify for question watcher: ", e);
 		}
-	}*/
+	}
 
 	private void sendNotifyWatcher(Question question, FAQSetting faqSetting, boolean isNew) {
 		// Send notification when add new question in watching category

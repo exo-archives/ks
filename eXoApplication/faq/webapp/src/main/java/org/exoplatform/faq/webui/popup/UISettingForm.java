@@ -169,14 +169,14 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
 			orderType.add(new SelectItemOption<String>(ASC, FAQSetting.ORDERBY_TYPE_ASC));
 			orderType.add(new SelectItemOption<String>(DESC, FAQSetting.ORDERBY_TYPE_DESC));
 
-			FAQUtils.getEmailSetting(faqSetting_, true, true);
+			FAQUtils.getEmailSetting(faqSetting_, true, false);
 			UIFormWYSIWYGInput emailDefaultAdd = new UIFormWYSIWYGInput(EMAIL_DEFAULT_ADD_QUESTION, EMAIL_DEFAULT_ADD_QUESTION, "");
 			emailDefaultAdd.setFCKConfig(org.exoplatform.ks.common.Utils.getFCKConfig());
 			emailDefaultAdd.setToolBarName("Basic");
 			emailDefaultAdd.setValue(faqSetting_.getEmailSettingContent());
 			EmailAddNewQuestion.addUIFormInput(emailDefaultAdd);
 
-			FAQUtils.getEmailSetting(faqSetting_, false, true);
+			FAQUtils.getEmailSetting(faqSetting_, false, false);
 			UIFormWYSIWYGInput emailDefaultEdit = new UIFormWYSIWYGInput(EMAIL_DEFAULT_EDIT_QUESTION, EMAIL_DEFAULT_EDIT_QUESTION, "");
 			emailDefaultEdit.setFCKConfig(org.exoplatform.ks.common.Utils.getFCKConfig());
 			emailDefaultEdit.setToolBarName("Basic");

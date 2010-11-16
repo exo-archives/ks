@@ -440,7 +440,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
 				} else {
 					question.setActivated(!question.isActivated());
 				}
-				FAQUtils.getEmailSetting(questionsInfo.faqSetting_, false, false);
+				FAQUtils.getEmailSetting(questionsInfo.faqSetting_, false, true);
 				questionsInfo.getFAQService().saveQuestion(question, false, questionsInfo.faqSetting_);
 				UIAnswersPortlet portlet = questionsInfo.getAncestorOfType(UIAnswersPortlet.class);
 				UIQuestions questions = portlet.findFirstComponentOfType(UIQuestions.class);
