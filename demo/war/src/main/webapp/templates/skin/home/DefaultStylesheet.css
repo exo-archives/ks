@@ -682,11 +682,12 @@ p, h1, h2, h3, h4, h5, h6 {
 	padding-left:18px; /* orientation=lt */
 	padding-right:18px; /* orientation=rt */
 	color: #0068ff;
-	background: url('DefaultSkin/background/ArrowBlue.gif') no-repeat left center; /* orientation=lt */
-	background: url('DefaultSkin/background/ArrowBlue-rt.gif') no-repeat right center; /* orientation=rt */
+	background: url('DefaultSkin/background/ArrowBlue.gif') no-repeat left 6px; /* orientation=lt */
+	background: url('DefaultSkin/background/ArrowBlue-rt.gif') no-repeat right 6px; /* orientation=rt */
 	line-height: 25px;
 	font-size: 16px;
 	font-weight: bold;
+	display: inline-block;
 }
 
 /*=======================================*/
@@ -747,10 +748,10 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .UIKsHomepage .KSHomeContainer .BlockWebsite {
-	margin-bottom: 20px;
+	margin-bottom: 0 0 20px 7px;
 	text-align: center;
 	white-space: nowrap;
-	width: 108px;
+	width:104px;
 }
 
 .FL {

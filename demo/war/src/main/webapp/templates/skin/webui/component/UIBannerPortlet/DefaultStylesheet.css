@@ -49,7 +49,7 @@
 }
 
 .UIBannerPortlet .MiddleLoginContainer {
-	padding: 10px 15px 1px;
+	padding: 15px 15px 1px;
 }
 
 .UIBannerPortlet .Signin {
@@ -57,58 +57,39 @@
 }
 
 .UIBannerPortlet .MiddleLoginContainer a {
-	color: #0d62af;
-	outline: none;
+	background:none repeat scroll 0 0 transparent;
+	color:#FFD400;
+	cursor:pointer;
+	display:block;
+	float:left;
+	font-size:12px;
+	font-weight:normal;
+	line-height:17px;
+	padding-left:10px;
 }
 
 .UIBannerPortlet .MiddleLoginContainer a:hover {
-	color: #FBCB0F ;
+	color: #8f8f8f ;
 }
 
 .UIBannerPortlet .MiddleLoginContainer .Name {
-	text-align: left;	 
-	color: #666666;
-	margin-bottom: 6px;
-	line-height: 35px;
-	float: left;
+	
 }
 
 .UIBannerPortlet .MiddleLoginContainer .Logout {
-	margin-right: 12px;
-	cursor: pointer;
-	float: left;	
-	font-weight: bold;
-	display: block;
-	line-height: 35px;
-	color: white;
+	
 }
 
 .UIBannerPortlet .MiddleLoginContainer .Login {
-	margin-right: 12px;	
-	cursor: pointer;
-	float: left;	 	
-	display: block;
-	line-height: 35px;
-	color: #a8acab;
-	background: none;
+	
 }
 
 .UIBannerPortlet .MiddleLoginContainer .Register {
-	margin-right: 12px;	
-	cursor: pointer;
-	float: left;	 	
-	display: block;
-	line-height: 35px;
-	color: #a8acab;
-	background: none;
+	
 }
  
 .UIBannerPortlet .MiddleLoginContainer .Language {
-	cursor: pointer;
-	float: left;
-	display: block;
-	line-height: 35px;
-	color: #a8acab;
+	
 }
 
 .UIPageBody .BLPagebody {
