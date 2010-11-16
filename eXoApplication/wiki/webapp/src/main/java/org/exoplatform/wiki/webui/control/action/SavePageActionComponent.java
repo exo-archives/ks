@@ -154,7 +154,7 @@ public class SavePageActionComponent extends UIComponent {
       try {       
         WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);       
         Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode().getUri());
-        String newPageId = TitleResolver.getObjectId(title, false);
+        String newPageId = TitleResolver.getObjectId(title, false, false);
         if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
           if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageParams.getPageId())) {
             newPageId = WikiNodeType.Definition.WIKI_HOME_NAME;
@@ -189,7 +189,7 @@ public class SavePageActionComponent extends UIComponent {
         } else if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
           if (wikiService.isExisting(pageParams.getType(),
                                      pageParams.getOwner(),
-                                     TitleResolver.getObjectId(title, false))) {
+                                     TitleResolver.getObjectId(title, false, false))) {
             log.error("The title '" + title + "' is already existing!");
             uiApp.addMessage(new ApplicationMessage("SavePageAction.msg.warning-page-title-already-exist",
                                                     null,
@@ -211,7 +211,7 @@ public class SavePageActionComponent extends UIComponent {
           ((PageImpl) subPage).checkin();
           ((PageImpl) subPage).checkout();
           wikiPortlet.changeMode(WikiMode.VIEW);
-          String pageId = TitleResolver.getObjectId(title, false);
+          String pageId = TitleResolver.getObjectId(title, false, false);
           pageParams.setPageId(pageId);
           Utils.redirect(pageParams, WikiMode.VIEW);
           return;

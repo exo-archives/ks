@@ -95,7 +95,7 @@ public class WikiServiceImpl implements WikiService {
   }
 
   public Page createPage(String wikiType, String wikiOwner, String title, String parentId) throws Exception {
-    String pageId = TitleResolver.getObjectId(title, false);
+    String pageId = TitleResolver.getObjectId(title, false, false);
     if(isExisting(wikiType, wikiOwner, pageId)) throw new Exception();
     Model model = getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();

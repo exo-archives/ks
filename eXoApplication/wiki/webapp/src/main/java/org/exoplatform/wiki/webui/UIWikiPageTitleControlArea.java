@@ -117,7 +117,7 @@ public class UIWikiPageTitleControlArea extends UIContainer {
     UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class)
                                                .getUIStringInput();
     WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
-    String newName = TitleResolver.getObjectId(newTitle, true);
+    String newName = TitleResolver.getObjectId(newTitle, true, false);
     boolean isRenameHome = WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageParams.getPageId())
         && !newName.equals(pageParams.getPageId());
     if (isRenameHome) {

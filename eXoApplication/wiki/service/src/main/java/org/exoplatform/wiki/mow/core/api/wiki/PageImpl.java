@@ -185,7 +185,7 @@ public abstract class PageImpl implements Page {
       }
     }
     AttachmentImpl file = createAttachment();
-    file.setName(TitleResolver.getObjectId(fileName, false));
+    file.setName(TitleResolver.getObjectId(fileName, false, true));
     addAttachment(file);
     if (fileName.lastIndexOf(".") > 0) {
       file.setTitle(fileName.substring(0, fileName.lastIndexOf(".")));

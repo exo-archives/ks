@@ -28,7 +28,7 @@ import java.util.StringTokenizer;
  */
 public class TitleResolver {
 
-  public static String getObjectId(String objectTitle, boolean isEncoded) throws UnsupportedEncodingException {
+  public static String getObjectId(String objectTitle, boolean isEncoded, boolean isAttachFile) throws UnsupportedEncodingException {
     if (objectTitle == null) {
       return null;
     }
@@ -36,13 +36,25 @@ public class TitleResolver {
     if (isEncoded) {
       title = URLDecoder.decode(title, "UTF-8");
     }
-    return encodeDecodeSpace(title, false);
+    if (isAttachFile) {
+      return removeSpaces(title);
+    } else {
+      return encodeDecodeSpace(title, false);
+    }
   }
 
   public static String encodePlusSign(String encodedString) {
     return encodeDecodeSpace(encodedString, true);
   }
 
+  private static String removeSpaces(String s) {
+    StringTokenizer st = new StringTokenizer(s, " ", false);
+    StringBuilder sb = new StringBuilder();
+    while (st.hasMoreElements())
+      sb.append(st.nextElement());
+    return sb.toString();
+  }
+  
   private static String encodeDecodeSpace(String s, boolean isDecode) {
     String delim = " ";
     String udelim = "+";
