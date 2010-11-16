@@ -663,8 +663,8 @@ p, h1, h2, h3, h4, h5, h6 {
 .UIBox .Container .BoxTry {
 	padding-left: 108px; /* orientation=lt */
 	padding-right: 108px; /* orientation=rt */
-	background: url('DefaultSkin/background/logo.gif') no-repeat left top; /* orientation=lt */	
-	background: url('DefaultSkin/background/logo.gif') no-repeat right top; /* orientation=rt */	
+	background: url('DefaultSkin/background/Logo.gif') no-repeat left top; /* orientation=lt */	
+	background: url('DefaultSkin/background/Logo.gif') no-repeat right top; /* orientation=rt */	
 	margin: 14px 15px 16px;
 	padding-bottom:2px;
 }
