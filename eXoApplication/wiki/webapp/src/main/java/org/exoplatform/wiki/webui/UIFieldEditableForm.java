@@ -51,7 +51,7 @@ public class UIFieldEditableForm extends UIForm {
   
   private Class              functionArgType[];
 
-  public static final String FIELD_TITLEINPUT = "TitleInput";
+  public static final String FIELD_TITLEINPUT = "EdiableInput";
 
   public static final String CHANGE_TITLEMODE = "ChangeTitleMode";
 

@@ -1,9 +1,10 @@
 <%
 	 def rcontext = _ctx.getRequestContext();
 	 String inputId=  uicomponent.FIELD_TITLEINPUT;
-	 String untitledLabel = _ctx.appRes("UIWikiPageTitleControlArea.label.Untitled");  ; 
+	 String untitledLabel = _ctx.appRes("UIWikiPageTitleControlArea.label.Untitled");
+	 boolean isAddMode = uicomponent.isAddMode();
 	 rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiPageTitleControlArea', '/wiki/javascript/') ;
-	 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPageTitleControlArea.init('"+ uicomponent.id+"', '" + inputId + "', '" + untitledLabel +"');"); 
+	 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPageTitleControlArea.init('"+ uicomponent.id+"', '" + inputId + "', '" + untitledLabel +  "', " + isAddMode + ");"); 
 %>
 
 <div class="$uicomponent.id" id="$uicomponent.id" >

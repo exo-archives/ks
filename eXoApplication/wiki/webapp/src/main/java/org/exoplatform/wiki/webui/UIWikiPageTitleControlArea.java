@@ -83,8 +83,7 @@ public class UIWikiPageTitleControlArea extends UIContainer {
       getChild(UIFieldEditableForm.class).setParentFunction(SAVE_TITLE, arg);
     }
     super.processRender(context);
-  }
-
+  }  
   
   public UIFormInputInfo getUIFormInputInfo(){
     return findComponentById(FIELD_TITLEINFO);
@@ -136,5 +135,10 @@ public class UIWikiPageTitleControlArea extends UIContainer {
                            newTitle);
     pageParams.setPageId(newName);
     Utils.redirect(pageParams, WikiMode.VIEW);
+  }
+  
+  private boolean isAddMode() {
+    WikiMode currentMode = (WikiMode) this.getAncestorOfType(UIWikiPortlet.class).getWikiMode();
+    return currentMode.equals(WikiMode.ADDPAGE);
   }
 }

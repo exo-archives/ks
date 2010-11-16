@@ -20,7 +20,7 @@
 function UIWikiPageTitleControlArea() {
 };
 
-UIWikiPageTitleControlArea.prototype.init = function(componentId, inputId, untitledLabel) {
+UIWikiPageTitleControlArea.prototype.init = function(componentId, inputId, untitledLabel, isAddMode) {
   var component = document.getElementById(componentId);
   var input = eXo.core.DOMUtil.findDescendantById(component, inputId);
   if (input) {
@@ -28,7 +28,7 @@ UIWikiPageTitleControlArea.prototype.init = function(componentId, inputId, untit
       return false;
     };
     input.onfocus = function(evt) {
-      if (this.value == untitledLabel)
+      if (this.value == untitledLabel && isAddMode)
         this.value = "";
     };
   }
