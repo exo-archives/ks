@@ -16,6 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,9 +66,12 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.web.application.URLBuilder;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -166,7 +171,7 @@ public class UIQuestions extends UIContainer {
 			setId("UIQuestions");
 	}
 
-	private boolean isCategoryHome() {
+  private boolean isCategoryHome() {
 		return (categoryId_ == null || categoryId_.equals(Utils.CATEGORY_HOME)) ? true : false;
 	}
 
@@ -757,6 +762,7 @@ public class UIQuestions extends UIContainer {
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
 			try {
 				boolean isRelation = false;
+				String answerNow = event.getRequestContext().getRequestParameter("answer-now");
 				if (questionId.indexOf("/language=") > 0) {
 					String[] array = questionId.split("/language=");
 					questionId = array[0];
@@ -797,6 +803,9 @@ public class UIQuestions extends UIContainer {
 					UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
 					categories.setPathCategory(breadcumbs.getPaths());
 					event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs);
+					if("true".equalsIgnoreCase(answerNow)) {
+					   uiQuestions.processResponseQuestionAction(event, questionId);
+					}
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-pending", null, ApplicationMessage.INFO));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
@@ -850,37 +859,47 @@ public class UIQuestions extends UIContainer {
 		}
 	}
 
+	/**
+   * this function is pick up from <code>ResponseQuestionActionListener</code> for reuse in <code>ViewQuestionActionListener</code>
+   * @param event
+   * @param questionId
+   * @throws Exception
+   */
+  private void processResponseQuestionAction(Event<UIQuestions> event, String questionId) throws Exception {
+    boolean isAnswerApproved = false;
+    try{
+      Question question = faqService_.getQuestionById(questionId);
+      isAnswerApproved = !faqService_.isModerateAnswer(questionId);
+      UIAnswersPortlet portlet = getAncestorOfType(UIAnswersPortlet.class);
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
+      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
+      UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null);
+      responseForm.setModertator(canEditQuestion);
+      if (questionId.equals(viewingQuestionId_)) { // response for viewing question or not
+        responseForm.setQuestionId(question, language_, isAnswerApproved);
+      } else {
+        responseForm.setQuestionId(question, "", isAnswerApproved);
+      }
+      responseForm.setFAQSetting(faqSetting_);
+      popupContainer.setId("FAQResponseQuestion");
+      popupAction.activate(popupContainer, 900, 500);
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+    } catch (Exception e) {
+      UIApplication uiApplication = getAncestorOfType(UIApplication.class);
+      uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING));
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+      updateCurrentQuestionList();
+      event.getRequestContext().addUIComponentToUpdateByAjax(getAncestorOfType(UIAnswersContainer.class));
+      return;
+    } 
+  }
+	
 	static public class ResponseQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiForm = event.getSource();
 			Question question = null;
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
-			boolean isAnswerApproved = false;
-			try {
-				question = uiForm.faqService_.getQuestionById(questionId);
-				isAnswerApproved = !uiForm.faqService_.isModerateAnswer(questionId);
-				UIAnswersPortlet portlet = uiForm.getAncestorOfType(UIAnswersPortlet.class);
-				UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-				UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null);
-				responseForm.setModertator(uiForm.canEditQuestion);
-				if (questionId.equals(uiForm.viewingQuestionId_)) { // response for viewing question or not
-					responseForm.setQuestionId(question, uiForm.language_, isAnswerApproved);
-				} else {
-					responseForm.setQuestionId(question, "", isAnswerApproved);
-				}
-				responseForm.setFAQSetting(uiForm.faqSetting_);
-				popupContainer.setId("FAQResponseQuestion");
-				popupAction.activate(popupContainer, 900, 500);
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-			} catch (Exception e) {
-				UIApplication uiApplication = uiForm.getAncestorOfType(UIApplication.class);
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-				uiForm.updateCurrentQuestionList();
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getAncestorOfType(UIAnswersContainer.class));
-				return;
-			}
+			uiForm.processResponseQuestionAction(event, questionId);
 		}
 	}
 

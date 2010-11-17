@@ -65,7 +65,7 @@
   jsManager.addOnLoadJavascript("initUIActivity${activity.id}");
   //make sures commentFormFocused is set to false to prevent any refresh to focus, only focus after post a comment
   uicomponent.setCommentFormFocused(false);
-  def activityUserName, activityUserProfileUri, activityImageSource, activityContentBody, activityPostedTime;
+  def activityUserName, activityUserProfileUri = "#", activityImageSource, activityContentBody, activityPostedTime;
   def commentFormBlockClass = "", listPeopleLikeBlockClass = "", listPeopleBGClass = "";
   if (!commentFormDisplayed) {
     commentFormBlockClass = "DisplayNone";
@@ -97,17 +97,26 @@
   }
 
   activityContentTitle = activity.title;
-  
   activityPostedTime = uicomponent.getPostedTimeString(_ctx, activity.postedTime);
+  def userId = activity.userId;
   activityUserName = uicomponent.getUserFullName(activity.userId);
-  activityUserProfileUri = uicomponent.getUserProfileUri(activity.userId);
+  if (uicomponent.isUserActivity(userId)) {
 
-  activityImageSource = uicomponent.getUserAvatarImageSource(activity.userId);
-  if (!activityImageSource)  {
-    activityImageSource = "/social-resources/skin/ShareImages/SpaceImages/SpaceLogoDefault_61x61.gif";
+    activityUserProfileUri = uicomponent.getUserProfileUri(userId);
+
+    activityImageSource = uicomponent.getUserAvatarImageSource(userId);
+
+    if (!activityImageSource) activityImageSource= "/social-resources/skin/ShareImages/activity/AvatarPeople.gif";
+
+  } else {
+
+    activityImageSource = uicomponent.getSpaceAvatarImageSource(userId);
+
+    if (!activityImageSource) activityImageSource = "/social-resources/skin/ShareImages/SpaceImages/SpaceLogoDefault_61x61.gif";
+
   }
 
-%>
+ %>
 
 <div class="UIActivity">
   <script type="text/javascript">
@@ -139,32 +148,6 @@
         <div class="CommentBox">
         $activity.body
         </div>
-        <% if (uicomponent.isQuestionActivity()) { %>
-        <div>
-          <a  style="cursor: pointer;" onclick="<%=uicomponent.event("ToggleReply", uicomponent.ANSWER);%>" id="ToggleAnswer${activity.id}"><span><%= _ctx.appRes("AnswerUIActivity.label.button.answer")%></span></a>
-           | 
-          <a  style="cursor: pointer;" onclick="<%=uicomponent.event("ToggleReply", uicomponent.COMMENT);%>" id="ToggleComment${activity.id}"><span><%= _ctx.appRes("AnswerUIActivity.label.button.comment")%></span></a>
-           | 
-          <a  style="cursor: pointer;" href="<%= uicomponent.getActivityParamValue(AnswersSpaceActivityPublisher.LINK_KEY) %>" id="View${activity.id}"><span><%= _ctx.appRes("AnswerUIActivity.label.button.view")%></span></a>
-        </div>
-        <% } else { %>
-        <div><a  style="cursor: pointer;" href="<%= uicomponent.getActivityParamValue(AnswersSpaceActivityPublisher.LINK_KEY) %>" id="View${activity.id}"><span><%= _ctx.appRes("AnswerUIActivity.label.button.view")%></span></a></div>
-        <% } %>
-        <% if (uicomponent.replyBlock.equalsIgnoreCase(uicomponent.ANSWER)) { %>
-        <div class="CommentBox">
-          <div><span><%= _ctx.appRes("AnswerUIActivity.label.language")%> </span> ${uicomponent.getActivityParamValue(AnswersSpaceActivityPublisher.LANGUAGE_KEY)} </div>
-          <br />
-          <div><span><%= _ctx.appRes("AnswerUIActivity.label.quick-answer")%> </span><% uicomponent.renderChild(uicomponent.contentArea) %></div>
-          <div><input type="button" onclick="<%=uicomponent.event("Reply", uicomponent.ANSWER);%>" value="<%= _ctx.appRes("AnswerUIActivity.label.button.submit") %>" class="CommentButton" id="ReplyButton${activity.id}" /></div>
-        </div>
-        <% } else if (uicomponent.replyBlock.equalsIgnoreCase(uicomponent.COMMENT)) { %>
-        <div class="CommentBox">
-          <div><span><%= _ctx.appRes("AnswerUIActivity.label.language")%> </span> ${uicomponent.getActivityParamValue(AnswersSpaceActivityPublisher.LANGUAGE_KEY)}</div>
-          <br />
-          <div><span><%= _ctx.appRes("AnswerUIActivity.label.quick-comment")%> </span><% uicomponent.renderChild(uicomponent.contentArea) %></div>
-          <div><input type="button" onclick="<%=uicomponent.event("Reply", uicomponent.COMMENT);%>" value="<%= _ctx.appRes("AnswerUIActivity.label.button.submit") %>" class="CommentButton" id="SubmitReplyButton${activity.id}" /></div>
-         </div>
-        <% } %>
       </div>
       <div class="LinkCM">
         <span class="DateTime">$activityPostedTime *</span>
@@ -181,8 +164,16 @@
       <% } else { %>
         <a onclick="$likeActivityAction" class="LinkCM" id="LikeLink${activity.id}" href="#like">
           $labelLike
+        </a> |
+      <% } %>
+      <% if (uicomponent.isQuestionActivity()) { %>
+        <a class="LinkCM $commentLink" onclick="void();" id="AnswerLink${activity.id}" href="<%= uicomponent.getActivityParamValue(AnswersSpaceActivityPublisher.LINK_KEY) + "&answer-now=true"; %>">
+          <%= _ctx.appRes("AnswerUIActivity.label.button.answer") %>
+        </a> |
+      <% } %>
+        <a class="LinkCM $commentLink" onclick="void();" id="ViewLink${activity.id}" href="<%= uicomponent.getActivityParamValue(AnswersSpaceActivityPublisher.LINK_KEY) %>">
+          <%= _ctx.appRes("AnswerUIActivity.label.button.view") %>
         </a>
-      <% }%>
       </div>
     </div>
 
@@ -275,7 +266,7 @@
         </div>
       </div>
     <%
-      if (uicomponent.isCommentDeletable(it.userId)) {
+      if (!uicomponent.isQuestionActivity() && uicomponent.isCommentDeletable(it.userId)) {
     %>
       <div onclick="<%= uicomponent.event("DeleteComment", uicomponent.id, it.id); %>" class="CloseCMContentHilight"><span></span></div>
     <% } %>
@@ -284,7 +275,11 @@
 
     <div class="CommentBox $commentFormBlockClass clearfix" id="CommentFormBlock${activity.id}">
       <% uicomponent.renderChild("CommentTextarea" + activity.getId()); %>
-      <input type="button" onclick="<%= uicomponent.event("PostComment") %>" value="$labelComment" class="CommentButton DisplayNone" id="CommentButton${activity.id}" />
+      <% if (uicomponent.isQuestionActivity()) { %>
+        <input type="button" onclick="<%= uicomponent.event("CommentQuestion")%>" value="$labelComment" class="CommentButton DisplayNone" id="CommentButton${activity.id}" />
+      <% } else { %>
+      <input type="button" onclick="<%= uicomponent.event("PostComment")%>" value="$labelComment" class="CommentButton DisplayNone" id="CommentButton${activity.id}" />
+      <% } %>
     </div>
 
   </div>

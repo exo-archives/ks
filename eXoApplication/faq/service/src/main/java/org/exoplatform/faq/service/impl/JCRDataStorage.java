@@ -4233,6 +4233,12 @@ public class JCRDataStorage implements DataStorage {
 		return listAnswers;
 	}
 
+	public Comment[] getComments(String questionId) throws Exception {
+    Node questionNode = getQuestionNodeById(questionId);
+    return getComment(questionNode);
+    
+  }
+	
 	private List<String> getComments(Node questionNode) throws Exception {
 		List<String> listComment = new ArrayList<String>();
 		try {

@@ -670,7 +670,8 @@ public interface FAQService extends FAQServiceLegacy{
 
   public void addListenerPlugin(AnswerEventListener listener) throws Exception;
 
-
+  public Comment[] getComments(String questionId) throws Exception;
+  
 }
 
 

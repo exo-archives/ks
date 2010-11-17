@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Answer;
-import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
@@ -31,10 +30,10 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.social.core.activity.model.Activity;
 import org.exoplatform.social.core.identity.model.Identity;
+import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.identity.provider.SpaceIdentityProvider;
 import org.exoplatform.social.core.manager.ActivityManager;
 import org.exoplatform.social.core.manager.IdentityManager;
-import org.exoplatform.social.core.space.spi.SpaceService;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
@@ -83,15 +82,17 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       String msg = "@"+answer.getResponseBy();
       String body = answer.getResponses();
       String spaceId = catId.split(Utils.CATE_SPACE_ID_PREFIX)[1];
-      IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance()
+      IdentityManager identityM = (IdentityManager) PortalContainer.getInstance()
                                                                     .getComponentInstanceOfType(IdentityManager.class);
       ActivityManager activityM = (ActivityManager) PortalContainer.getInstance()
                                                                    .getComponentInstanceOfType(ActivityManager.class);
       
-      Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME,
+      Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME,
                                                               spaceId,
                                                               false);
+      Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, answer.getResponseBy());
       Activity activity = new Activity();
+      activity.setUserId(userIdentity.getId());
       activity.setTitle(msg);
       activity.setBody(body);
       activity.setType(SPACE_APP_ID);
@@ -118,7 +119,7 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
 
   @Override
   public void saveComment(String questionId, Comment comment, boolean isNew) {
-    try {
+    /*try {
       Class.forName("org.exoplatform.social.core.manager.IdentityManager");
       FAQService faqS = (FAQService) PortalContainer.getInstance()
                                                     .getComponentInstanceOfType(FAQService.class);
@@ -166,7 +167,7 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
         LOG.debug("Please check the integrated project does the social deploy? " + e.getMessage());
     } catch (Exception e) {
       LOG.error("Can not record Activity for space when add comment " + e.getMessage());
-    }
+    }*/
   }
 
   @Override
@@ -182,14 +183,16 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       String msg = "@"+question.getAuthor();
       String body = question.getDetail();
       String spaceId = catId.split(Utils.CATE_SPACE_ID_PREFIX)[1];
-      IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance()
+      IdentityManager identityM = (IdentityManager) PortalContainer.getInstance()
                                                                     .getComponentInstanceOfType(IdentityManager.class);
       ActivityManager activityM = (ActivityManager) PortalContainer.getInstance()
                                                                    .getComponentInstanceOfType(ActivityManager.class);
-      Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME,
+      Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME,
                                                               spaceId,
                                                               false);
+      Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, question.getAuthor());
       Activity activity = new Activity();
+      activity.setUserId(userIdentity.getId());
       activity.setTitle(msg);
       activity.setBody(body);
       activity.setType(SPACE_APP_ID);

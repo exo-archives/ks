@@ -11,6 +11,8 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.social.webui.activity.BaseUIActivity;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -39,6 +41,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
      }
 )
 public class ForumUIActivity extends BaseUIActivity {
+  static private final Log LOG = ExoLogger.getLogger(ForumUIActivity.class);
   
   private boolean displayMoreInfo = false;
   
@@ -54,6 +57,18 @@ public class ForumUIActivity extends BaseUIActivity {
    */
   public void setDisplayMoreInfo(boolean displayMoreInfo) {
     this.displayMoreInfo = displayMoreInfo;
+  }
+  
+  public String getUriOfAuthor() {
+    String userId = getActivity().getUserId();
+    try {
+      return "<a href='" + getUserProfileUri(userId) + "'>" + getUserFullName(userId)  + "</a>";
+    } catch (Exception e) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("can not get Url of user " + userId, e);
+      }
+      return "";
+    }
   }
 
   public void doMore() throws Exception {
@@ -218,8 +233,6 @@ public class ForumUIActivity extends BaseUIActivity {
       uiform.setDisplayMoreInfo(false);
       
       
-      uiapp.addMessage(new ApplicationMessage("ForumUIActivity.msg.reply-success", new String[] {uiform.getPostTitle()}));
-      context.addUIComponentToUpdateByAjax(uiapp.getUIPopupMessages());
       context.addUIComponentToUpdateByAjax(uiform.getParent());
     }
     
