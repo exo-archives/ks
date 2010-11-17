@@ -469,7 +469,7 @@
       <artifactId>commons-pool</artifactId>
       <version>${commons-pool.version}</version>      
     </dependency>
-	<dependency>
+    <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>fontbox</artifactId>
       <version>${org.apache.pdfbox.fontbox.version}</version>      
