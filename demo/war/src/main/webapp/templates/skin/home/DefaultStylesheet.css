@@ -749,10 +749,10 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .UIKsHomepage .KSHomeContainer .BlockWebsite {
-	margin-bottom: 0 0 20px 7px;
+	padding: 0 0 20px 13px;
 	text-align: center;
 	white-space: nowrap;
-	width:104px;
+	width: 92px;
 }
 
 .FL {
@@ -764,17 +764,18 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .UIKsHomepage .KSHomeContainer .TxtLinkIcon {
-	color:#565759;
-	display:block;
-	font-weight:bold;
-	margin-top:3px;
+	color: #565759;
+	display: block;
+	font-weight: bold;
+	margin-top: 3px;
+	white-space: normal;
 }
 
 .UIKsHomepage .KSHomeContainer .IconWebsite {
-	display:block;
-	height:52px;
-	margin:auto;
-	width:55px;
+	display: block;
+	height: 52px;
+	margin: auto;
+	width: 55px;
 }
 
 .UIKsHomepage .KSHomeContainer .QuestionsIM{
