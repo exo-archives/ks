@@ -134,56 +134,31 @@
       <%}%>
       </div>
       <div class="Content">
+      <!-- begin content part of forum activity-->
       <%
-        def title, forumlink;
+        def title, linkTag;
       
         if (uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).equalsIgnoreCase(ForumSpaceActivityPublisher.POST_ADDED)) {
           title = _ctx.appRes("ForumUIActivity.label.add-post")
-          forumlink = uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_LINK_KEY)
-          activityContentTitle = title.replace("{0}", uicomponent.getUriOfAuthor()).replace("{1}", "<a href='" 
-                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_LINK_KEY)+ "'>" 
-                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_NAME_KEY) +  "</a>");
+          linkTag = "<a href='" + uicomponent.getViewLink() + "'>" + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_NAME_KEY) + "</a>";
         } else if (uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).equalsIgnoreCase(ForumSpaceActivityPublisher.POST_UPDATED)) {
           title = _ctx.appRes("ForumUIActivity.label.update-post")
-          forumlink = uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_LINK_KEY)
-          activityContentTitle = title.replace("{0}", uicomponent.getUriOfAuthor()).replace("{1}", "<a href='" 
-                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_LINK_KEY)+ "'>" 
-                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_NAME_KEY) +  "</a>");
+          linkTag = "<a href='" + uicomponent.getViewLink() + "'>" + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_NAME_KEY) + "</a>";
         } else if (uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).equalsIgnoreCase(ForumSpaceActivityPublisher.TOPIC_ADDED)) {
           title = _ctx.appRes("ForumUIActivity.label.add-topic")
-          forumlink = uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_LINK_KEY)
-          activityContentTitle = title.replace("{0}", uicomponent.getUriOfAuthor()).replace("{1}", "<a href='" 
-                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_LINK_KEY)+ "'>" 
-                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_NAME_KEY) +  "</a>");
+          linkTag = "<a href='" + uicomponent.getViewLink() + "'>" + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_NAME_KEY) +  "</a>";
         } else if (uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).equalsIgnoreCase(ForumSpaceActivityPublisher.TOPIC_UPDATED)) {
           title = _ctx.appRes("ForumUIActivity.label.update-topic")
-          forumlink = uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_LINK_KEY)
-          activityContentTitle = title.replace("{0}", uicomponent.getUriOfAuthor()).replace("{1}", "<a href='" 
-                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_LINK_KEY)+ "'>" 
-                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_NAME_KEY) +  "</a>");
+          linkTag = "<a href='" + uicomponent.getViewLink() + "'>" + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_NAME_KEY) +  "</a>";
         }
-        
+        activityContentTitle = title.replace("{0}", uicomponent.getUriOfAuthor()).replace("{1}", linkTag);
       %>
         $activityContentTitle<br>
         <div class="CommentBox">
         $activity.body
         </div>
-        <div>
-          <a  style="cursor: pointer;" onclick="<%=uicomponent.event("ToggleReply");%>" id="ToggleReply${activity.id}"><span><%= _ctx.appRes("ForumUIActivity.label.reply")%></span></a>
-           | 
-          <a  style="cursor: pointer;" href="$forumlink" id="View${activity.id}"><span><%= _ctx.appRes("ForumUIActivity.label.view")%></span></a>
-        </div>
-        <% if (uicomponent.isDisplayMoreInfo()) { %>
-          
-        <div class="CommentBox clearfix" id="ReplyFormBlock${activity.id}">
-          <span>title:</span> <div style="width: 99%;"><% uicomponent.renderReplyTitle(); %></div>
-          <div><span>message:</span> <% uicomponent.renderReplyContent(); %></div>
-          <input type="button" onclick="<%=uicomponent.event("Reply");%>" value="<%= _ctx.appRes("ForumUIActivity.label.submit")%>" class="CommentButton" id="ReplyButton${activity.id}" />
-        </div>
-        
-        <% } %>
-        
-      </div>
+       </div>
+       <!-- end content part of forum activity -->
       <div class="LinkCM">
         <span class="DateTime">$activityPostedTime *</span>
       <% def toggleDisplayCommentAction = uicomponent.event('ToggleDisplayCommentForm', null, false);
@@ -195,12 +170,18 @@
       <% if (uicomponent.isLiked()) { %>
         <a onclick="$unlikeActivityAction" class="LinkCM" id="UnLikeLink${activity.id}" href="#unlike">
           $labelUnlike
-        </a>
+        </a> |
       <% } else { %>
         <a onclick="$likeActivityAction" class="LinkCM" id="LikeLink${activity.id}" href="#like">
           $labelLike
-        </a>
-      <% }%>
+        </a> |
+      <% } %>
+        <a class="LinkCM $commentLink" href="${uicomponent.getReplyLink()}" id="ReplyLink${activity.id}">
+        <%= _ctx.appRes("ForumUIActivity.label.reply")%>
+        </a> |
+        <a class="LinkCM $commentLink" href="${uicomponent.getViewLink()}" id="View${activity.id}">
+          <%= _ctx.appRes("ForumUIActivity.label.view") %>
+      </a>
       </div>
     </div>
 
