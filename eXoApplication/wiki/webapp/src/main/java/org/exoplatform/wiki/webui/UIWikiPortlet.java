@@ -106,7 +106,7 @@ public class UIWikiPortlet extends UIPortletApplication {
                                      .setRendered(portletPreferences.isShowBreadcrumb());
       String requestURL = Utils.getCurrentRequestURL();
       PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
-      Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode().getUri());
+      Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode());
       if (page == null) {
         changeMode(WikiMode.PAGE_NOT_FOUND);
         super.processRender(app, context);

@@ -54,7 +54,6 @@ import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.impl.SessionManager;
-import org.exoplatform.wiki.webui.UIWikiPageArea;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
@@ -87,7 +86,7 @@ public class Utils {
   public static WikiPageParams getCurrentWikiPageParams() throws Exception {
     String requestURL = getCurrentRequestURL();
     PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
-    WikiPageParams params = pageResolver.extractWikiPageParams(requestURL, Util.getUIPortal().getSelectedNode().getUri());
+    WikiPageParams params = pageResolver.extractWikiPageParams(requestURL, Util.getUIPortal().getSelectedNode());
     HttpServletRequest request = Util.getPortalRequestContext().getRequest();
     Map<String, String[]> paramsMap = request.getParameterMap();
     Set<String> keys = paramsMap.keySet();
@@ -104,7 +103,7 @@ public class Utils {
       return helpPage;
     }
     PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
-    Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode().getUri());
+    Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode());
     return page;
   }
   

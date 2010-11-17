@@ -1,6 +1,8 @@
 package org.exoplatform.wiki.resolver;
 
+import org.exoplatform.portal.config.model.PageNode;
 import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.portal.pom.config.Utils;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.wiki.service.WikiPageParams;
 
@@ -9,8 +11,14 @@ public class URLResolver extends Resolver{
   public URLResolver(OrganizationService orgSerivce) throws Exception {
     this.orgSerivce = orgSerivce ;
   }
-  public WikiPageParams extractPageParams(String requestURL, String wikiPageName) throws Exception {
+  public WikiPageParams extractPageParams(String requestURL, PageNode portalPageNode) throws Exception {
     WikiPageParams params = new WikiPageParams() ;
+    String wikiPageName;
+    if (portalPageNode == null) {
+      wikiPageName = "wiki";
+    } else {
+      wikiPageName = portalPageNode.getUri();
+    }
     String uri = extractURI(requestURL, wikiPageName) ; 
     if (uri == null) return params ;
     if(uri.indexOf("/") > 0) {
@@ -49,10 +57,19 @@ public class URLResolver extends Resolver{
         params.setPageId(array[1]) ;
       }
     }else{
-      params.setType(PortalConfig.PORTAL_TYPE)  ;      
-      params.setOwner(extractPortalOwner(requestURL, wikiPageName)) ;
-      if(uri.length() > 0) params.setPageId(uri) ;
-      else params.setPageId(WikiPageParams.WIKI_HOME) ;
+      if (portalPageNode != null && portalPageNode.getPageReference() != null
+          && !portalPageNode.getPageReference().startsWith(PortalConfig.PORTAL_TYPE)) {
+        String[] components = Utils.split("::", portalPageNode.getPageReference());
+        params.setType(components[0]);
+        params.setOwner(components[1].substring(components[1].lastIndexOf("/")));
+      } else {
+        params.setType(PortalConfig.PORTAL_TYPE);
+        params.setOwner(extractPortalOwner(requestURL, wikiPageName));
+      }
+      if (uri.length() > 0)
+        params.setPageId(uri);
+      else
+        params.setPageId(WikiPageParams.WIKI_HOME);
     }
     params.setPageId(TitleResolver.getObjectId(params.getPageId(), true, false));
     return params;

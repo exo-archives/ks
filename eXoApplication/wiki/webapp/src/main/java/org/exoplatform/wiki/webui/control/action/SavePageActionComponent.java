@@ -116,7 +116,7 @@ public class SavePageActionComponent extends UIComponent {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
       String requestURL = Utils.getCurrentRequestURL();
-      WikiPageParams pageParams = pageResolver.extractWikiPageParams(requestURL, Util.getUIPortal().getSelectedNode().getUri());      
+      WikiPageParams pageParams = pageResolver.extractWikiPageParams(requestURL, Util.getUIPortal().getSelectedNode());      
       UIApplication uiApp = event.getSource().getAncestorOfType(UIApplication.class);
       UIWikiPageTitleControlArea pageTitleControlForm = wikiPortlet.findComponentById(UIWikiPageControlArea.TITLE_CONTROL);
       UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
@@ -153,7 +153,7 @@ public class SavePageActionComponent extends UIComponent {
       markup = markup.trim();
       try {       
         WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);       
-        Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode().getUri());
+        Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode());
         String newPageId = TitleResolver.getObjectId(title, false, false);
         if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
           if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageParams.getPageId())) {
