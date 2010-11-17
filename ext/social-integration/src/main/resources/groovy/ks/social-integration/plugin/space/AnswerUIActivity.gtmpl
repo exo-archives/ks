@@ -160,7 +160,7 @@
       <% if (uicomponent.isLiked()) { %>
         <a onclick="$unlikeActivityAction" class="LinkCM" id="UnLikeLink${activity.id}" href="#unlike">
           $labelUnlike
-        </a>
+        </a> |
       <% } else { %>
         <a onclick="$likeActivityAction" class="LinkCM" id="LikeLink${activity.id}" href="#like">
           $labelLike
