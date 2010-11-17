@@ -748,10 +748,10 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .UIKsHomepage .KSHomeContainer .BlockWebsite {
-	margin-bottom: 0 0 20px 7px;
 	text-align: center;
 	white-space: nowrap;
-	width:104px;
+	width: 92px;
+	padding: 0 0 20px 13px;
 }
 
 .FL {
@@ -763,10 +763,10 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .UIKsHomepage .KSHomeContainer .TxtLinkIcon {
-	color:#565759;
-	display:block;
-	font-weight:bold;
-	margin-top:3px;
+	color: #565759;
+	display: block;
+	font-weight: bold;
+	margin-top: 3px;
 	white-space: normal;
 }
 
