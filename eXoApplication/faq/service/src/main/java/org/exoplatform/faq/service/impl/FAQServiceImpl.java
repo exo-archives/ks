@@ -292,6 +292,10 @@ public class FAQServiceImpl implements FAQService, Startable {
 		return getQuestionById(questionId);
 	}
 	
+	public Comment[] getComments(String questionId) throws Exception {
+	  return jcrData_.getComments(questionId);
+	}
+	
 	public Question getQuestionById(String questionId) throws Exception {
 		return jcrData_.getQuestionById(questionId);
 	}

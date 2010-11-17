@@ -35,6 +35,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.social.core.activity.model.Activity;
 import org.exoplatform.social.core.identity.model.Identity;
+import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.identity.provider.SpaceIdentityProvider;
 import org.exoplatform.social.core.manager.ActivityManager;
 import org.exoplatform.social.core.manager.IdentityManager;
@@ -89,14 +90,15 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         
         String msg = "@"+post.getOwner();
         String body = ForumTransformHTML.getTitleInHTMLCode(post.getMessage(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-        IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
+        IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
         ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
         SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
         String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
         Space space = spaceS.getSpaceById(spaceId) ;
-        Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
-        
+        Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
+        Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, post.getOwner());
         Activity activity = new Activity();
+        activity.setUserId(userIdentity.getId());
         activity.setTitle(msg);
         activity.setBody(body);
         activity.setType(FORUM_APP_ID);
@@ -131,14 +133,16 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         
         String msg = "@"+topic.getOwner();
         String body = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-        IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
+        IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
         ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
+        Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, topic.getOwner());
         SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
         String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
         Space space = spaceS.getSpaceById(spaceId) ;
-        Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
+        Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
         
         Activity activity = new Activity();
+        activity.setUserId(userIdentity.getId());
         activity.setTitle(msg);
         activity.setBody(body);
         activity.setType(FORUM_APP_ID);
@@ -173,14 +177,16 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         
         String msg = "@" + post.getOwner();
         String body = ForumTransformHTML.getTitleInHTMLCode(post.getMessage(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-        IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
+        IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
         ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
+        Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, post.getOwner());
         SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
         String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
         Space space = spaceS.getSpaceById(spaceId) ;
-        Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
+        Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
         
         Activity activity = new Activity();
+        activity.setUserId(userIdentity.getId());
         activity.setTitle(msg);
         activity.setBody(body);
         activity.setType(FORUM_APP_ID);
@@ -214,14 +220,16 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         
         String msg = "@" + topic.getOwner();
         String body = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-        IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
+        IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
         ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
+        Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, topic.getOwner());
         SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
         String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
         Space space = spaceS.getSpaceById(spaceId) ;
-        Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
+        Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
         
         Activity activity = new Activity();
+        activity.setUserId(userIdentity.getId());
         activity.setTitle(msg);
         activity.setBody(body);
         activity.setType(FORUM_APP_ID);

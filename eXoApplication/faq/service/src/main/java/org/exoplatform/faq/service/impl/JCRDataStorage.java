@@ -965,6 +965,12 @@ public class JCRDataStorage implements DataStorage {
     return null;	
   }
 
+  public Comment[] getComments(String questionId) throws Exception {
+    Node questionNode = getQuestionNodeById(questionId);
+    return getComment(questionNode);
+    
+  }
+  
   private Comment[] getComment(Node questionNode) throws Exception{
     try{
       if(!questionNode.hasNode(Utils.COMMENT_HOME)) return new Comment[]{};

@@ -140,26 +140,26 @@
         if (uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).equalsIgnoreCase(ForumSpaceActivityPublisher.POST_ADDED)) {
           title = _ctx.appRes("ForumUIActivity.label.add-post")
           forumlink = uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_LINK_KEY)
-          activityContentTitle = title.replace("{0}", activity.title).replace("{1}", "<a href=" 
-                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_LINK_KEY)+ ">" 
+          activityContentTitle = title.replace("{0}", uicomponent.getUriOfAuthor()).replace("{1}", "<a href='" 
+                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_LINK_KEY)+ "'>" 
                                                                               + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_NAME_KEY) +  "</a>");
         } else if (uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).equalsIgnoreCase(ForumSpaceActivityPublisher.POST_UPDATED)) {
           title = _ctx.appRes("ForumUIActivity.label.update-post")
           forumlink = uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_LINK_KEY)
-          activityContentTitle = title.replace("{0}", activity.title).replace("{1}", "<a href=" 
-                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_LINK_KEY)+ ">" 
+          activityContentTitle = title.replace("{0}", uicomponent.getUriOfAuthor()).replace("{1}", "<a href='" 
+                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_LINK_KEY)+ "'>" 
                                                                               + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_NAME_KEY) +  "</a>");
         } else if (uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).equalsIgnoreCase(ForumSpaceActivityPublisher.TOPIC_ADDED)) {
           title = _ctx.appRes("ForumUIActivity.label.add-topic")
           forumlink = uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_LINK_KEY)
-          activityContentTitle = title.replace("{0}", activity.title).replace("{1}", "<a href=" 
-                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_LINK_KEY)+ ">" 
+          activityContentTitle = title.replace("{0}", uicomponent.getUriOfAuthor()).replace("{1}", "<a href='" 
+                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_LINK_KEY)+ "'>" 
                                                                               + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_NAME_KEY) +  "</a>");
         } else if (uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).equalsIgnoreCase(ForumSpaceActivityPublisher.TOPIC_UPDATED)) {
           title = _ctx.appRes("ForumUIActivity.label.update-topic")
           forumlink = uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_LINK_KEY)
-          activityContentTitle = title.replace("{0}", activity.title).replace("{1}", "<a href=" 
-                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_LINK_KEY)+ ">" 
+          activityContentTitle = title.replace("{0}", uicomponent.getUriOfAuthor()).replace("{1}", "<a href='" 
+                                                                              + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_LINK_KEY)+ "'>" 
                                                                               + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_NAME_KEY) +  "</a>");
         }
         
