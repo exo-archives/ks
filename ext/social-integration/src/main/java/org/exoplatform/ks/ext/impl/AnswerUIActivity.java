@@ -52,34 +52,6 @@ public class AnswerUIActivity extends BaseUIActivity {
 
   private List<Activity> questionComments_;
 
-  UIFormInputInfo             questionTitle  = null;
-
-  UIFormInputInfo             questionDetail = null;
-
-  UIFormTextAreaInput         contentArea    = null;
-
-  public void renderReplyBlock() {
-    if (questionTitle == null) {
-      questionTitle = new UIFormInputInfo("QuestionTitle" + getId(),
-                                          "QuestionTitle",
-                                          getActivityParamValue(AnswersSpaceActivityPublisher.QUESTION_NAME_KEY));
-      questionDetail = new UIFormInputInfo("QuestionDetail" + getId(),
-                                           "QuestionDetail",
-                                           getActivity().getBody());
-      contentArea = new UIFormTextAreaInput("Content" + getId(), "Content", "");
-//      try {
-//        contentArea.addValidator(MandatoryValidator.class);
-//      } catch (Exception e) {
-//        if (log.isDebugEnabled()) {
-//          log.debug("could not add MandatoryValidator to UIFormTextAreaInput", e);
-//        }
-//      }
-      addChild(questionTitle);
-      addChild(questionDetail);
-      addChild(contentArea);
-    }
-  }
-  
   public String getUriOfAuthor() {
     String userId = getActivity().getUserId();
     try {
