@@ -427,6 +427,7 @@ public class UIForumPortlet extends UIPortletApplication {
       }
       if(!ForumUtils.isEmpty(userId))
         userProfile.setEmail(UserHelper.getUserByUserId(userId).getEmail());
+      if(userProfile.getIsBanned())userProfile.setUserRole((long)3);
     }catch (Exception e) {}
   }
 
