@@ -71,8 +71,8 @@ public class PollServiceImpl implements Startable, PollService {
 		return storage_.getPagePoll();
 	}
 
-	public PollSummary getPollSummary() throws Exception {
-		return storage_.getPollSummary();
+	public PollSummary getPollSummary(List<String> groupOfUser) throws Exception {
+		return storage_.getPollSummary(groupOfUser);
 	}
 
   

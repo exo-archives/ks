@@ -66,5 +66,6 @@ public interface PollNodeTypes {
   public static final String APPLICATION_DATA 							= "ApplicationData".intern() ;
   public static final String EXO_POLLS 											= "eXoPolls".intern() ;
   public static final String POLLS 													= "Polls".intern() ;
+  public static final String GROUPS 													= "Groups".intern() ;
 
 }

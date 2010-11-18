@@ -87,7 +87,7 @@ public class UIPoll extends BasePollForm {
 			PortletPreferences portletPref = pcontext.getRequest().getPreferences();
 			pollId = portletPref.getValue(Utils.POLL_ID_SHOW, "");
 			if (Utils.isEmpty(pollId)) {
-				List<String> list = getPollService().getPollSummary().getPollId();
+				List<String> list = getPollService().getPollSummary(null).getPollId();
 				if (!list.isEmpty()) {
 					pollId = list.get(0);
 				}

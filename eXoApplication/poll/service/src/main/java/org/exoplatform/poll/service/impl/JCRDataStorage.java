@@ -32,15 +32,18 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.poll.service.DataStorage;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollSummary;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 public class JCRDataStorage implements	DataStorage, PollNodeTypes {
-	
+	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
 	private NodeHierarchyCreator nodeHierarchyCreator_;
 	private SessionManager sessionManager;
 	KSDataLocation dataLocator;
@@ -84,13 +87,13 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 			appNode = getNodeByPath(parentId, sProvider);
 		} catch (Exception e) {
 			if (e instanceof PathNotFoundException || e instanceof RepositoryException) {
-				if(parentId.indexOf(APPLICATION_DATA) > 0) {// id = $GROUP/ApplicationData/eXoPolls
+				if(parentId.indexOf(APPLICATION_DATA) > 0) {// id = /Groups/$GROUP/ApplicationData/eXoPolls
 					return getNode(getGroupPollHomeNode(sProvider), parentId);
 				} else if(parentId.indexOf(POLLS) > 0){// id = $PORTAL/Polls
 					return getNode(getPublicPollHomeNode(sProvider), parentId);
 				}
 			} else 
-					e.printStackTrace();
+					log.error("Failed to get parent node of poll: " + parentId, e);
 		}
   	return appNode;
   }
@@ -130,34 +133,20 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 		Poll pollNew = new Poll();
 		pollNew.setId(pollNode.getName());
 		pollNew.setParentPath(pollNode.getParent().getPath());
-		if (pollNode.hasProperty(EXO_OWNER))
-			pollNew.setOwner(pollNode.getProperty(EXO_OWNER).getString());
-		if (pollNode.hasProperty(EXO_CREATED_DATE))
-			pollNew.setCreatedDate(pollNode.getProperty(EXO_CREATED_DATE).getDate().getTime());
-		if (pollNode.hasProperty(EXO_MODIFIED_BY))
-			pollNew.setModifiedBy(pollNode.getProperty(EXO_MODIFIED_BY).getString());
-		if (pollNode.hasProperty(EXO_MODIFIED_DATE))
-			pollNew.setModifiedDate(pollNode.getProperty(EXO_MODIFIED_DATE).getDate().getTime());
-		if (pollNode.hasProperty(EXO_LASTVOTE))
-			pollNew.setLastVote(pollNode.getProperty(EXO_LASTVOTE).getDate().getTime());
-		if (pollNode.hasProperty(EXO_TIME_OUT))
-			pollNew.setTimeOut(pollNode.getProperty(EXO_TIME_OUT).getLong());
-		if (pollNode.hasProperty(EXO_QUESTION))
-			pollNew.setQuestion(pollNode.getProperty(EXO_QUESTION).getString());
-
-		if (pollNode.hasProperty(EXO_OPTION))
-			pollNew.setOption(valuesToArray(pollNode.getProperty(EXO_OPTION).getValues()));
-		if (pollNode.hasProperty(EXO_VOTE))
-			pollNew.setVote(valuesToArray(pollNode.getProperty(EXO_VOTE).getValues()));
-
-		if (pollNode.hasProperty(EXO_USER_VOTE))
-			pollNew.setUserVote(valuesToArray(pollNode.getProperty(EXO_USER_VOTE).getValues()));
-		if (pollNode.hasProperty(EXO_IS_MULTI_CHECK))
-			pollNew.setIsMultiCheck(pollNode.getProperty(EXO_IS_MULTI_CHECK).getBoolean());
-		if (pollNode.hasProperty(EXO_IS_AGAIN_VOTE))
-			pollNew.setIsAgainVote(pollNode.getProperty(EXO_IS_AGAIN_VOTE).getBoolean());
-		if (pollNode.hasProperty(EXO_IS_CLOSED))
-			pollNew.setIsClosed(pollNode.getProperty(EXO_IS_CLOSED).getBoolean());
+		PropertyReader reader = new PropertyReader(pollNode);
+		pollNew.setOwner(reader.string(EXO_OWNER));
+		pollNew.setModifiedBy(reader.string(EXO_MODIFIED_BY));
+		pollNew.setCreatedDate(reader.date(EXO_CREATED_DATE));
+		pollNew.setModifiedDate(reader.date(EXO_MODIFIED_DATE));
+		pollNew.setLastVote(reader.date(EXO_LASTVOTE));
+		pollNew.setTimeOut(reader.l(EXO_TIME_OUT, 0));
+		pollNew.setQuestion(reader.string(EXO_QUESTION));
+		pollNew.setOption(reader.strings(EXO_OPTION, new String[]{}));
+		pollNew.setVote(reader.strings(EXO_VOTE, new String[]{}));
+		pollNew.setUserVote(reader.strings(EXO_USER_VOTE, new String[]{}));
+		pollNew.setIsMultiCheck(reader.bool(EXO_IS_MULTI_CHECK));
+		pollNew.setIsAgainVote(reader.bool(EXO_IS_AGAIN_VOTE, false));
+		pollNew.setIsClosed(reader.bool(EXO_IS_CLOSED, false));
 		return pollNew ;
 	}
 	
@@ -171,7 +160,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 				listPoll.add(getPollNode(node));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to get page poll",e);
 		} finally {
 			sProvider.close();
 		}
@@ -188,7 +177,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 		return result.getNodes();
 	}
 	
-	public PollSummary getPollSummary() throws Exception {
+	public PollSummary getPollSummary(List<String> groupOfUser) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		PollSummary poll = new PollSummary();
 		try {
@@ -196,17 +185,30 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 			List<String> pollId = new ArrayList<String>();
 			List<String> pollName = new ArrayList<String>();
 			List<String> groupPrivate = new ArrayList<String>();
+			String path;
+			boolean isAdd = false;
 			while (iter.hasNext()) {
 				Node node = iter.nextNode();
+				path = node.getPath();
+				if(path.indexOf(APPLICATION_DATA) > 0 && groupOfUser != null){
+					isAdd = false;
+					for (String group : groupOfUser) {
+						if(group.indexOf(path.substring(path.indexOf(GROUPS + "/") + GROUPS.length(), path.indexOf("/" + APPLICATION_DATA))) == 0){
+							isAdd = true;
+							break;
+						}
+					}
+					if(!isAdd) continue;
+				}
 				pollId.add(node.getName());
 				pollName.add(node.getProperty(EXO_QUESTION).getString());
-				groupPrivate.add(node.getPath());
+				groupPrivate.add(path);
 			}
 			poll.setPollId(pollId);
 			poll.setPollName(pollName);
 			poll.setGroupPrivate(groupPrivate);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to get poll summary", e);
 		} finally {
 			sProvider.close();
 		}
@@ -234,7 +236,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 			if(parentNode.isNew()) parentNode.getSession().save();
 			else parentNode.save();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to remove poll: "+pollId, e);
 		} finally {
 			sProvider.close();
 		}
@@ -315,7 +317,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 			if(parentNode.isNew()) parentNode.getSession().save();
 			else parentNode.save();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to save poll: " + poll.getId(), e);
 		} finally {
 			sProvider.close();
 		}
@@ -334,6 +336,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 			}
 			appNode.save();
 		} catch (Exception e) {
+			log.error("Failed to close poll: " + poll.getId(), e);
 		} finally {
 			sProvider.close();
 		}

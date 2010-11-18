@@ -194,7 +194,7 @@ function editUserPrefs() {
 	document.getElementById("TopicPollContent").style.display = "none";
 	document.getElementById("ViewPollForm").style.display = "none";
 	document.getElementById("EditPoll").style.display = "block";
-	var url = createRequestUrl();
+	var url = createRequestUrl() + "_edit";
 	ajaxAsyncGetRequest(url,render);
 	innerData("span", "question", "");
 }
