@@ -46,7 +46,9 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.
 		      	%>		      	
 		      	<div class="BlockResultFeed">
 							<a class="page TxtTitFeed" onclick="$viewPage" href="$pageURI"><%=result.getTitle()%></a>
-							<div class="TxtDetail"><%=result.getExcerpt()%></div>
+								<% if (result.getExcerpt()!=null){ %>	      
+									<div class="TxtDetail"><%=result.getExcerpt()%></div>
+								<% } %>
 							<div>
 							<strong>$spaceType: </strong><a class="TxtMark" onclick="$viewPage" href="$wikiURI">$space</a>&nbsp;
 							<%= df.format(updateDate.getTime()); %>

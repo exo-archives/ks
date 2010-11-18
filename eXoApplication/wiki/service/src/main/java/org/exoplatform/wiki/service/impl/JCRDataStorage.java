@@ -59,11 +59,14 @@ public class JCRDataStorage implements DataStorage{
     String excerpt = null;
     Calendar updateDate = GregorianCalendar.getInstance();
 
-    if (WikiNodeType.WIKI_PAGE_CONTENT.equals(type)) {
-      excerpt = row.getValue("rep:excerpt(text)").getString();
+    if (WikiNodeType.WIKI_PAGE_CONTENT.equals(type)) {      
       String pagepath = path.substring(0, path.lastIndexOf("/"));
       PageImpl page = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(pagepath,
-                                                                            WikiNodeType.WIKI_PAGE);     
+                                                                            WikiNodeType.WIKI_PAGE);
+      String content= page.getContent().getText();
+      if (!content.equals("")) {
+        excerpt = row.getValue("rep:excerpt(text)").getString();
+      }
       updateDate.setTime(page.getUpdatedDate());
     } else if (WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(type)) {
       // Transform to Attachment result
