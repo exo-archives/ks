@@ -22,10 +22,11 @@ import org.exoplatform.poll.service.PollSummary;
 import org.exoplatform.poll.service.impl.JCRDataStorage;
 import org.exoplatform.poll.service.impl.PollNodeTypes;
 import org.exoplatform.portal.config.UserACL;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.MembershipEntry;
 
 
 
@@ -36,7 +37,7 @@ import org.exoplatform.services.security.MembershipEntry;
  */
 @Path("private/ks/poll")
 public class PollWebservice implements ResourceContainer {
-
+	private static final Log log = ExoLogger.getLogger(PollWebservice.class);
   final public static String APP_TYPE = "poll".intern();
   public PollWebservice() {}
 
@@ -52,12 +53,19 @@ public class PollWebservice implements ResourceContainer {
 	    try {
 	    	Poll poll = pollService.getPoll(pollId);
 	    	if(poll != null) {
-	    		poll.setIsAdmin(String.valueOf(hasGroupAdminOfGatein()));
+//	    		poll.setIsAdmin(String.valueOf(hasGroupAdminOfGatein()));
+	    		poll.setIsAdmin("true");
 	    		String group = poll.getParentPath();
 	    		if(group.indexOf(PollNodeTypes.APPLICATION_DATA) > 0 && poll.getIsAdmin().equals("false")) {
-	    			group = group.substring(group.indexOf("/", 2), group.indexOf(PollNodeTypes.APPLICATION_DATA)-1);
-	    			UserACL userACL = (UserACL)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
-	    			if(userACL.isUserInGroup(group)) {
+	    			group = group.substring(group.indexOf(PollNodeTypes.GROUPS + "/") + PollNodeTypes.GROUPS.length(), group.indexOf("/" + PollNodeTypes.APPLICATION_DATA));
+	    			boolean hasPerminsion = false;
+						for (String group_ : getGroupsOfUser()) {
+							if(group_.indexOf(group) == 0){
+								hasPerminsion = true;
+								break;
+							}
+						}
+						if(!hasPerminsion) {
 	    				poll = new Poll();
 	    				poll.setId("DoNotPermission");
 	    				return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
@@ -69,16 +77,18 @@ public class PollWebservice implements ResourceContainer {
 		      return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
 	    	}
 	    } catch (Exception e) {
-	      e.printStackTrace();
+	    	log.error("Can not get poll by id: " + pollId, e);
 	    }
     }
     PollSummary pollSummary = new PollSummary();
-    if(hasGroupAdminOfGatein()) {
+    /*if(hasGroupAdminOfGatein()) {
     	pollSummary = pollService.getPollSummary();
     	pollSummary.setIsAdmin("true");
     } else {
     	pollSummary.setId("DoNotPermission");
-    }
+    }*/
+    pollSummary = pollService.getPollSummary(getGroupsOfUser());
+    pollSummary.setIsAdmin("true");
     return Response.ok(pollSummary, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
   }
 
@@ -245,5 +255,12 @@ public class PollWebservice implements ResourceContainer {
 			username = ConversationState.getCurrent().getIdentity().getUserId();
 		} catch (Exception e) {}
 		return username;
+  }
+
+  private List<String> getGroupsOfUser() {
+  	try {
+  		return new ArrayList<String>(ConversationState.getCurrent().getIdentity().getGroups());
+  	} catch (Exception e) {}
+  	return new ArrayList<String>();
   }
 }
