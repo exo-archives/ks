@@ -188,6 +188,10 @@
           <name>workspace-name</name>
           <value>knowledge</value>
         </value-param>
+        <value-param profiles="all,default">
+          <name>workspace-name</name>
+          <value>collaboration</value>
+        </value-param>
         <values-param>
           <name>entities</name>
           <value>org.exoplatform.wiki.mow.core.api.WikiStoreImpl</value>
