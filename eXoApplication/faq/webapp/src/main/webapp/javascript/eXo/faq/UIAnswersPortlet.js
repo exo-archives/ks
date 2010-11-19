@@ -490,12 +490,17 @@ UIAnswersPortlet.prototype.showImage = function() {
 
 UIAnswersPortlet.prototype.reSizeAvatar = function(imgElm) {
 	imgElm.style.width = "auto" ;
-	if(imgElm.offsetWidth > 130){  
-		imgElm.style.width = "130px" ;
-	}
-	if(imgElm.offsetHeight > 150){  
+	imgElm.style.width = "auto" ;
+	if(imgElm.width > 100){  
+		imgElm.style.width = "100px" ;
+	} else if(imgElm.height > 125){  
 		imgElm.style.height = "150px" ;
 	}
+	parent = imgElm.parentNode;
+	if(parent.tagName != "SPAN" && parent.tagName != "span") {
+		parent = parent.parentNode;
+	} 
+	parent.style.display = "block";
 };
 
 UIAnswersPortlet.prototype.FAQChangeHeightToAuto = function() {
