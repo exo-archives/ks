@@ -43,7 +43,7 @@ In particular, at runtime of ForumService, the roles plug-in component is called
 In which:
 
 || Name || Set-method || Type || Description ||
-| *add.role.rules.plugin* | addRolePlugin | org.exoplatform.ks.common.conf.RoleRulesPlugin | To add role rules. |
+| *add.role.rules.plugin* | addRolePlugin | org.exoplatform.ks. common.conf. RoleRulesPlugin | To add role rules. |
 
 * Init-params:
 

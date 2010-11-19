@@ -3,6 +3,9 @@ h1. Overview
 || *Portlet name* || War name || Description ||
 | FAQPortlet | faq.war | The FAQ portlet is the application to show questions and answers. |
 
+h1. Portlet.xml
+* See the portlet.xml file in the project following this path: /webapps/faq/WEB-INF/portlet.xml
+
 h1. Portlet Preferences
 
 The FAQ portlet includes some portlet preferences that you can configure to alter the behavior.
@@ -16,6 +19,4 @@ Alternatively, you can configure the portlet in the _portet-preferences.xml_ fil
 || Preference name || Possible value || Default value || Description ||
 | *useAjax* | {{true}}, {{false}} | {{false}} | To specify if the ajax load or href load is used. |
 
-h1. Portlet.xml
-* See the portlet.xml file in the project following this path: /webapps/faq/WEB-INF/portlet.xml
 

@@ -40,7 +40,7 @@ In particular, at runtime of Job Scheduler, the Auto-prune plug-in component is 
 
 * In which,
 || Name || Set-method || Type || Description ||
-| *ForumDeactiveJob* | addPeriodJob | org.exoplatform.forum.service.conf.DeactivePeriodJob | To add a DeactiveJob to the JobSchedulerService. |
+| *ForumDeactiveJob* | addPeriodJob | org.exoplatform.forum. service.conf. DeactivePeriodJob | To add a DeactiveJob to the JobSchedulerService. |
 
 * The properties for the Auto-prune plug-in are defined in the _property_ tag with the format as below:
 
@@ -64,7 +64,7 @@ In details:
 || Property name || Possible value || Default value || Description ||
 | *jobname* | {{String}} | {{DeactiveJob}} | The name of job which will be executed. |
 | *groupname* | {{String}} | {{KnowlegedSuite}} | The name of application which will be executed. |
-| *job* | {{Class path}} | {{org.exoplatform.forum.service.conf.DeactiveJob}} | The reference function of the job which will be executed. |
+| *job* | {{Class path}} | org.exoplatform.forum. service.conf.DeactiveJob | The reference function of the job which will be executed. |
 | *repeatCount* | {{Long}} | {{0 }} | The repeating time for the job. It means that how many times the job will be executed. It means that _DecactiveJob_  is called at runtime only. It does not repeat. If the value is set *2* or *3*, _DecactiveJob_  will be called two or three times correspondingly.|
 | *period* | {{Long}} | {{72000000}} | The interval between job executions. |
 | *starttime* | {{Integer}} | {{+0}} | The start time when the function executes. {{example}}{{example}} the_starttime_ is +0, meaning that the time to start executing _DecactiveJob_ is the runtime. |

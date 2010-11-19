@@ -13,6 +13,9 @@ h1. Overview
 	  </portlet>
 	</portlet-application>
 {code}	
+
+h1. Portlet.xml
+* See the portlet.xml file in the project following this path: forum/WEB-INF/portlet.xml.
 	
 h1. Preferences
 
@@ -33,8 +36,6 @@ h1. Preferences
 | *isShowRules* | {{true}}, {{false}} | {{true}} | To specify if the forum rules panel is shown or not. |
 | *isShowStatistics* | {{true}}, {{false}} | {{true}} | To specify if the statistics panel is shown or not. |
 
-h1. Portlet.xml
-* See the portlet.xml file in the project following this path: forum/WEB-INF/portlet.xml.
 
 h1. Events
 
@@ -58,17 +59,17 @@ To receive ForumLinkEvent, you must use the _ForumParameter_ class with two prop
 
 * *Example:*
 {code:java}
-	PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-		ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
-	ForumParameter param = new ForumParameter();
-	String path = forum.getPath();
-		if ( ...condition to render the UIForumLinkPortlet... ) {
-				param.setRenderForumLink(true);
-				param.setPath(path);
-		} else {
-				param.setRenderForumLink(false);
+PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
+ForumParameter param = new ForumParameter();
+String path = forum.getPath();
+	if ( ...condition to render the UIForumLinkPortlet... ) {
+			param.setRenderForumLink(true);
+			param.setPath(path);
+	} else {
+			param.setRenderForumLink(false);
 		}
-		actionRes.setEvent(new QName("ForumLinkEvent"), param) ;
+	actionRes.setEvent(new QName("ForumLinkEvent"), param) ;
 {code}
 
 h2. ReLoadPortletEvent

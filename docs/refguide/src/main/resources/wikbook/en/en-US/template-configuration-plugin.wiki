@@ -36,8 +36,8 @@ The properties of template configuration plug-in are defined in _init-params_ ta
     </init-params>
 {code}
 
-||Name || Description || Value|| 
-|*viewerTemplate* | Path of file template | {{war:/ks-extension/ks/faq/templates/FAQViewerPortlet.gtmpl}}|
+|*Name* | *Description* | *Value*
+|*viewerTemplate* | Path of file template | war:/ks-extension/ks/faq/templates/ FAQViewerPortlet.gtmpl
 
 
 h1. How to change look and feel

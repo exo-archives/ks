@@ -82,11 +82,11 @@ In particular, at runtime of ForumService, the Initialization plug-in component 
 
 * In which,
 || Name || Set-method || Type || Description ||
-| *default.data* | addInitialDataPlugin | org.exoplatform.forum.service.conf.InitializeForumPlugin | The initial default data of Forum. |
+| *default.data* | addInitialDataPlugin | org.exoplatform.forum. service.conf. InitializeForumPlugin | The initial default data of Forum. |
 
 * Init-param
 || Name || Possible value || Default value || Description |
-| *livedemo.default.configuration* | {{object}} | {{org.exoplatform.forum.service.conf.ForumInitialData}} | The initial data for live demo. |
+| *livedemo.default. configuration* | {{object}} | org.exoplatform.forum. service.conf. ForumInitialData | The initial data for live demo. |
   
 
 * Category array
@@ -136,10 +136,10 @@ After the _org.exoplatform.forum.service.conf.InitializeForumPlugin_ object has 
 
 In which:
 
-|| Field || Possible value || Default value || Description ||
-| *owner* | {{user id}} | {{root}} | The creator of Category. |
-| *name* | {{string}} | {{Knowledge Suite}} | The title of Category. | 
-| *description* | {{string}} | {{ All about eXo KS}} | The brief description of Category. | 
+|* Field*| *Possible value* | *Default value* | *Description* 
+| *owner* | {{user id}} | {{root}} | The creator of Category
+| *name* | {{string}} | {{Knowledge Suite}} | The title of Category
+| *description* | {{string}} | {{ All about eXo KS}} | The brief description of Category
 
 * Modify values of Category
 

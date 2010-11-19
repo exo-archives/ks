@@ -41,7 +41,7 @@ In details, at runtime of Job Scheduler, the Auto-count Active Users plug-in com
 
 * In which, 
 || Name || Method || Type || Description ||
-| *RecountActiveUserJob* | addPeriodJob | org.exoplatform.forum.service.conf.RecountActiveUserPeriodJob | To add a RecountActiveUser job to the JobSchedulerService. |
+| *RecountActiveUserJob* | addPeriodJob | org.exoplatform.forum. service.conf. RecountActiveUserPeriodJob | To add a RecountActiveUser job to the JobSchedulerService. |
 
 * The properties for Auto-count Active Members plug-in are defined in the ~~property~~ tag as below:
 
@@ -64,7 +64,7 @@ In which:
 || Property name || Possible value || Default value || Description ||
 | *jobname* | {{String}} | {{RecountActiveUserJob}} | The name of job which will be executed. |
 | *groupname* |{{String}} | {{KnowlegedSuite}} | The name of application which will be executed. |
-| *job* | {{Class path}} | org.exoplatform.forum.service.conf.RecountActiveUserJob | The reference function of job which will be executed. |
+| *job* | {{Class path}} | org.exoplatform.forum. service.conf. RecountActiveUserJob | The reference function of job which will be executed. |
 | *repeatCount* | {{Long}} | 0 | The number of times the job is repeated. If *repeatCount* is set *0*, RecountActiveUserJob is called at runtime only. It does not repeat. If the number is set to *2* or *3*, RecountActiveUserJob  will be called two or three times. |
 | *period* | {{Long}} | 7200000 (millisecond) {{example}}{{example}} (equal to two hours) | The interval time to execute the job. |
 | *starttime* | {{Integer}} | 0 | The start time when the function executes. {{example}}{{example}} _starttime_ is +0, meaning that the time to start executing _RecountActiveUserJob_  is the runtime. |
