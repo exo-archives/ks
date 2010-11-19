@@ -12,7 +12,7 @@ The FAQ portlet includes some portlet preferences that you can configure to alte
 
 At runtime, you can use the EDIT mode portlet to set the preferences: 
 
-!DisplayMode.png!
+!EditModePreference.png!
 
 Alternatively, you can configure the portlet in the _portet-preferences.xml_ file.
 
