@@ -110,7 +110,7 @@
 }
 
 .UIWikiPortlet a {
-	color: black;
+	color: #0068FF;
 }
 
 .UIWikiPortlet a span {
@@ -298,6 +298,7 @@
 	padding: 6px 8px 6px 25px;
 	margin: 0px;
 	text-transform:capitalize;
+	color: black;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .MoreItems:hover {
@@ -422,6 +423,7 @@
 	margin: 0;
 	padding: 6px 8px 6px 25px;
 	text-transform:capitalize;
+	color: black;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .Icon:hover {
