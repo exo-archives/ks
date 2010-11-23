@@ -154,9 +154,13 @@ public class Poll {
 			String string = vote[j];
 			double tmp = Double.parseDouble(string) ;
 			double k = (tmp*size)/100 ;
-			int t = (int)Math.round(k) ;
-			string = "" + (double) t*100/size ;
-			infoVote[j] = string + ":" + t ;
+			double t = (double)Math.round(k) ;
+			string = String.valueOf(t*100/size);
+      int dotPos = string.indexOf(".");
+      int numberAfterDot = string.length() - dotPos -1;
+      if (dotPos > 0 && numberAfterDot > 2)
+        string = string.substring(0, dotPos + 3);
+      infoVote[j] = string + ":" + t;
     }
 		infoVote[l] = "" + temp ;
 		if(this.getIsMultiCheck()) {
