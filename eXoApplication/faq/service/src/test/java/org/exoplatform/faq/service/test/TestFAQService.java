@@ -723,6 +723,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		Question question = faqService_.getQuestionById(categoryId1 + "/" + Utils.QUESTION_HOME + "/" +questionId1);
 		question.setEmail("dttempmail@gmail.com");
 		question.setEmailsWatch(new String[]{"duytucntt@gmail.com, tu.duy@exoplatform.com"});
+		question.setUsersWatch(new String[]{"root, demo"});
 		Answer answer = createAnswer(USER_ROOT, "Answer Content");
 		question.setAnswers(new Answer[]{answer});
 		question.setLink("http://domain.com/portal/public/classic");
