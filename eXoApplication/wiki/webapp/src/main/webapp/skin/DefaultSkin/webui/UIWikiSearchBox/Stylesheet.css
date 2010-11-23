@@ -94,34 +94,32 @@
 
 .UIWikiPortlet .SearchPopup .MenuItem {
 	height:28px;
-	line-height:28px;
-	width:100%;
+	line-height:28px;	
+  color:#3E3E3E;
+	display:block;
+	padding:0 5px 0 35px;
+	white-space:nowrap;        
 }
 
 .UIWikiPortlet .SearchPopup .Horizon {
 	border-top: 1px solid #F0F0F0;
 }
 
-.UIWikiPortlet .SearchPopup .MenuItem a {
-	padding-right:25px;
-	color:#3E3E3E;
-	display:block;
-	padding:0 5px 0 35px;
-	white-space:nowrap;
-	margin-right: 5px;
-	overflow: hidden;	
+.UIWikiPortlet .SearchPopup .MenuItem .MenuText {	
 }
 
-.UIWikiPortlet .SearchPopup .MenuItem a:hover {
-	background:#D0DFF0 url("background/UIWikiSearchBG.png") no-repeat 12px -118px;	
+.UIWikiPortlet .SearchPopup  .TextItem {	
+  background: url("background/UIWikiSearchBG.png") no-repeat 12px -118px;	
 }
 
-.UIWikiPortlet .SearchPopup .MenuIcon {
-	background:url("background/UIWikiSearchBG.png") no-repeat 12px -118px;
-	text-decoration:none;
+.UIWikiPortlet .SearchPopup  .TextItem:hover {	
+  background: #D0DFF0 url("background/UIWikiSearchBG.png") no-repeat 12px -118px;	
+}
+
+.UIWikiPortlet .SearchPopup .MenuItem a:hover {	
+  text-decoration:none;
 }
 
 .UIWikiPortlet .SearchPopup .ItemOver {
-	background:#D0DFF0;	
+	background: #D0DFF0 url("background/UIWikiSearchBG.png") no-repeat 12px -118px;	
 }
-

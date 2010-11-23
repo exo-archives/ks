@@ -104,7 +104,7 @@ UIWikiSearchBox.prototype.pressHandler = function(evt, textbox) {
 UIWikiSearchBox.prototype.enterHandler = function(evt) {
   var me = eXo.wiki.UIWikiSearchBox;
   if (me.currentItem) {
-    var link = me.currentItem.firstChild;
+    var link = me.currentItem.firstChild.firstChild;
     if (link.href) {
       evt.cancelBubble = true;
       if (evt.stopPropagation)
@@ -119,7 +119,8 @@ UIWikiSearchBox.prototype.enterHandler = function(evt) {
 
 UIWikiSearchBox.prototype.escapeHandler = function() {
   var me = eXo.wiki.UIWikiSearchBox;
-  if (me.currentItem) me.currentItem = null;
+  if (me.currentItem)
+    me.currentItem = null;
   eXo.wiki.UIWikiSearchBox.hideMenu();
 };
 
@@ -164,8 +165,8 @@ UIWikiSearchBox.prototype.typeHandler = function(textbox) {
 
 };
 
-UIWikiSearchBox.prototype.makeRequest = function(url,callback){
- var me = eXo.wiki.UIWikiSearchBox;
+UIWikiSearchBox.prototype.makeRequest = function(url, callback) {
+  var me = eXo.wiki.UIWikiSearchBox;
   this.xhr = eXo.core.Browser.createHttpRequest();
   this.xhr.open('GET', url, true);
   this.xhr.setRequestHeader("Cache-Control", "max-age=86400");
@@ -175,68 +176,90 @@ UIWikiSearchBox.prototype.makeRequest = function(url,callback){
         callback(me.xhr.responseText);
     }
   }
-  me.xhr.send(null); 
+  me.xhr.send(null);
 };
 
-UIWikiSearchBox.prototype.typeCallback = function(data){
-  if(!data) return; 
+UIWikiSearchBox.prototype.typeCallback = function(data) {
+  if (!data)
+    return;
   eval("var data = " + data.trim());
-  if(typeof(data) != "object") return ;
+  if (typeof (data) != "object")
+    return;
   eXo.wiki.UIWikiSearchBox.renderMenu(data);
 };
 
-UIWikiSearchBox.prototype.doAdvanceSearch = function(){
-  var action = eXo.core.DOMUtil.findAncestorByClass( this.input, "SearchForm") ;
-  action = eXo.core.DOMUtil.findFirstChildByClass(action,"a","AdvancedSearch");
+UIWikiSearchBox.prototype.doAdvanceSearch = function() {
+  var action = eXo.core.DOMUtil.findAncestorByClass(this.input, "SearchForm");
+  action = eXo.core.DOMUtil.findFirstChildByClass(action, "a", "AdvancedSearch");
   eXo.wiki.UIWikiAjaxRequest.makeNewHash('#AdvancedSearch');
   action.onclick();
 }
-
 
 /**
  * Render Contextual Search Menu
  */
 
-UIWikiSearchBox.prototype.renderMenu = function(data){
-  var searchBox = eXo.core.DOMUtil.findAncestorByClass( this.input, "UIWikiSearchBox");
-  this.searchPopup= eXo.core.DOMUtil.findFirstDescendantByClass(searchBox,"div","SearchPopup");
-  this.searchPopup.style.display="block";
+UIWikiSearchBox.prototype.renderMenu = function(data) {
+  var me = eXo.wiki.UIWikiSearchBox;
+  var searchBox = eXo.core.DOMUtil.findAncestorByClass(this.input, "UIWikiSearchBox");
+  this.searchPopup = eXo.core.DOMUtil.findFirstDescendantByClass(searchBox, "div", "SearchPopup");
+  this.searchPopup.style.display = "block";
   this.searchPopup.onmouseup = function(evt) {
     this.style.display = "none";
     evt.cancelBubble = true;
     if (evt.stopPropagation())
       evt.stopPropagation();
   }
-  this.menu= eXo.core.DOMUtil.findFirstDescendantByClass(this.searchPopup,"div","SubBlock");
-  var resultLength = data.jsonList.length;  
-  this.menu.innerHTML= "";
-  
-  var textNode= document.createTextNode('');
+  this.menu = eXo.core.DOMUtil.findFirstDescendantByClass(this.searchPopup, "div", "SubBlock");
+  var resultLength = data.jsonList.length;
+  this.menu.innerHTML = "";
+
+  var textNode = document.createTextNode('');
   this.menu.appendChild(textNode);
 
   var searchItemNode = document.createElement('div');
-  searchItemNode.className = 'MenuItem Horizon';
+  searchItemNode.className = 'MenuItem TextItem Horizon';
+  var searchText = document.createElement('div');
+  searchText.className = 'MenuText';
   var linkNode = document.createElement("a");
   linkNode.className = 'ItemIcon MenuIcon';
-  linkNode.setAttribute('href', 'javascript:eXo.wiki.UIWikiSearchBox.doAdvanceSearch();'); 
-  linkNode.appendChild(document.createTextNode("Seach for \'"+this.input.value+"\'"));  
-  searchItemNode.appendChild(linkNode);
-  this.menu.insertBefore(searchItemNode,textNode);
+  linkNode.setAttribute('href', 'javascript:eXo.wiki.UIWikiSearchBox.doAdvanceSearch();');
+   linkNode.setAttribute('title', "Seach for \'" + this.input.value + "\'");
+  linkNode.innerHTML = "Seach for \'" + this.input.value + "\'";
+  linkNode.setAttribute('title', "Seach for \'" + this.input.value + "\'");
+  searchText.appendChild(linkNode);  
+  searchItemNode.appendChild(searchText);  
+  this.menu.insertBefore(searchItemNode, textNode);
+  me.shortenWord(linkNode, searchText); 
 
-  for(var i=0; i < resultLength; i++) {
-    this.menu.insertBefore(this.buildChild(data.jsonList[i]),searchItemNode);
+  for ( var i = 0; i < resultLength; i++) {
+    var itemNode = this.buildChild(data.jsonList[i]);
+    this.menu.insertBefore(itemNode, searchItemNode);
+    // Check if title is outside of the container
+    var linkContainer = itemNode.firstChild;
+    var link = linkContainer.firstChild;
+    var keyword = this.input.value.trim();    
+    var origin =  link.innerHTML;   
+    var shorten =  me.shortenWord(link, linkContainer);
+    if (origin!= shorten && keyword.length >= shorten.length-3)
+      link.innerHTML = me.doHighLight(shorten, shorten.substring(0,shorten.length-3));
+    else
+      link.innerHTML = me.doHighLight(shorten, keyword);
   }
- this.menu.removeChild(this.menu.lastChild);
+  this.menu.removeChild(this.menu.lastChild);
 };
 
 UIWikiSearchBox.prototype.buildChild = function(dataObject) {
   var menuItemNode = document.createElement('div');
-  menuItemNode.className = 'MenuItem';
+  menuItemNode.className = 'MenuItem TextItem';
   // Create Horizon div
   if (this.searchType != dataObject.type) {
-    menuItemNode.className = 'MenuItem Horizon';
+    menuItemNode.className = 'MenuItem TextItem Horizon';
   }
   this.searchType = dataObject.type;
+  var searchText = document.createElement('div');
+  searchText.className = 'MenuText ';
+
   var linkNode = document.createElement("a");
   linkNode.className = 'ItemIcon MenuIcon';
   if (dataObject.type == "wiki:attachment") {
@@ -244,10 +267,12 @@ UIWikiSearchBox.prototype.buildChild = function(dataObject) {
   } else {
     linkNode.setAttribute('href', this.wikiNodeURI + dataObject.uri);
   }
-  var keyword=  this.input.value.trim();
-  var labelResult = eXo.wiki.UIWikiSearchBox.doHighLight(dataObject.fullTitle,keyword);  
+  var keyword = this.input.value.trim();
+  var labelResult = dataObject.fullTitle;
+  linkNode.setAttribute('title', labelResult);
   linkNode.innerHTML = labelResult;
-  menuItemNode.appendChild(linkNode.cloneNode(true));
+  searchText.appendChild(linkNode);
+  menuItemNode.appendChild(searchText);
   return menuItemNode;
 };
 
@@ -263,52 +288,29 @@ UIWikiSearchBox.prototype.createKeyword = function(str) {
   return str;
 };
 
-UIWikiSearchBox.prototype.hideMenu = function(){
-  if(this.searchPopup)  this.searchPopup.style.display = "none";
+UIWikiSearchBox.prototype.hideMenu = function() {
+  if (this.searchPopup)
+    this.searchPopup.style.display = "none";
 };
 
-
-UIWikiSearchBox.prototype.doHighLight = function(bodyText, searchTerm,
-    highlightStartTag, highlightEndTag) {
-
-  // the highlightStartTag and highlightEndTag parameters are optional
-  if ((!highlightStartTag) || (!highlightEndTag)) {
-    highlightStartTag = "<strong>";
-    highlightEndTag = "</strong>";
-  }
-
-  // find all occurences of the search term in the given text,
-  // and add some "highlight" tags to them (we're not using a
-  // regular expression search, because we want to filter out
-  // matches that occur within HTML tags and script blocks, so
-  // we have to do a little extra validation)
-  var newText = "";
-  var i = -1;
-  var lcSearchTerm = searchTerm.toLowerCase();
-  var lcBodyText = bodyText.toLowerCase();
-
-  while (bodyText.length > 0) {
-    i = lcBodyText.indexOf(lcSearchTerm, i + 1);
-    if (i < 0) {
-      newText += bodyText;
-      bodyText = "";
-    } else {
-      // skip anything inside an HTML tag
-      if (bodyText.lastIndexOf(">", i) >= bodyText.lastIndexOf("<", i)) {
-        // skip anything inside a <script> block
-        if (lcBodyText.lastIndexOf("/script>", i) >= lcBodyText.lastIndexOf(
-            "<script", i)) {
-          newText += bodyText.substring(0, i) + highlightStartTag
-              + bodyText.substr(i, searchTerm.length) + highlightEndTag;
-          bodyText = bodyText.substr(i + searchTerm.length);
-          lcBodyText = bodyText.toLowerCase();
-          i = -1;
-        }
-      }
-    }
-  }
-  return newText;
+UIWikiSearchBox.prototype.doHighLight = function(text, keyword) {
+  var hiRE = new RegExp("(" + keyword + ")", "gi");
+  text = text.replace(hiRE, "<b>$1</b>");  
+  return text;
 }
+
+UIWikiSearchBox.prototype.shortenWord = function(source, container) {
+  var isCut = false;
+  while (source.offsetWidth > container.offsetWidth) {
+    isCut = true;
+    var size = source.innerHTML.length;
+    source.innerHTML = source.innerHTML.substring(0, size - 1);
+  }
+  if (isCut) {    
+    source.innerHTML = source.innerHTML.substring(0, source.innerHTML.length - 8) + "...";
+  }
+  return source.innerHTML;
+};
 
 eXo.wiki.webservice = eXo.wiki.webservice || {};
 
