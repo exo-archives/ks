@@ -15,9 +15,9 @@ function getModule(params) {
   module.comet = {};
   module.comet.cometd =
     new Project("org.exoplatform.commons", "exo.platform.commons.comet.webapp", "war", cometVersion).
-    addDependency(new Project("org.mortbay.jetty", "cometd-bayeux", "jar", "6.1.11")).
-    addDependency(new Project("org.mortbay.jetty", "jetty-util", "jar", "6.1.11")).
-    addDependency(new Project("org.mortbay.jetty", "cometd-api", "jar", "0.9.20080221")).
+    addDependency(new Project("org.mortbay.jetty", "cometd-bayeux", "jar", "${org.mortbay.jetty.cometd-bayeux.version}")).
+    addDependency(new Project("org.mortbay.jetty", "jetty-util", "jar", "${org.mortbay.jetty.jetty-util.version}")).
+    addDependency(new Project("org.mortbay.jetty", "cometd-api", "jar", "${org.mortbay.jetty.cometd-api.version}")).
     addDependency(new Project("org.apache.poi", "poi-ooxml", "jar", "3.6")).
     addDependency(new Project("org.apache.poi", "poi", "jar", "3.6")).
     addDependency(new Project("org.apache.poi", "poi-scratchpad", "jar", "3.6")).
