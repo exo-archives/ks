@@ -135,8 +135,8 @@
 									</div>
 									<% 
 										int lengths = (String.valueOf(numberOfNewMessage)+ priMessage+pending+String.valueOf(total)).length(); 
-										lengths = (numberOfNewMessage > 0)?lengths+3:lengths;
-										lengths = (total > 0)?lengths+1:lengths;
+										lengths = (numberOfNewMessage > 0)?lengths+4:lengths;
+										lengths = (total > 0)?lengths+3:lengths;
 									%>
 									<div id="lengthStr" style="display:none; float:right;">$lengths</div>
 									<script type="text/javascript">
