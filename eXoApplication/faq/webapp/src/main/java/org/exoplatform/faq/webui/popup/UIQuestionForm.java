@@ -520,7 +520,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
 	      
 	      //For discuss in forum
 	      try{        
-	        FAQUtils.getEmailSetting(questionForm.faqSetting_, isNew, !isNew);
+	        FAQUtils.getEmailSetting(questionForm.faqSetting_, isNew, false);
 	      	FAQSetting faqSetting = new FAQSetting();
 					FAQUtils.getPorletPreference(faqSetting);
 					if(faqSetting.getIsDiscussForum()) {

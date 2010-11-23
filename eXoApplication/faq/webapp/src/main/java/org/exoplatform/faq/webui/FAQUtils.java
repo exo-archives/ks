@@ -395,22 +395,18 @@ public class FAQUtils {
 		if(isNew){
 			emailContent = portletPref.getValue("SendMailAddNewQuestion", "");
 		} else {
-			if(isSettingForm)
-				emailContent = portletPref.getValue("SendMailEditResponseQuestion", "");
+			emailContent = portletPref.getValue("SendMailEditResponseQuestion", "");
 		}
-		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-		ResourceBundle res = context.getApplicationResourceBundle();
-		// if(!isSettingForm){
-		if (emailContent == null || emailContent.trim().length() < 1) {
-			if (isNew) {
-				emailContent = res.getString("SendEmail.AddNewQuestion.Default");
-			} else {
-				if(isSettingForm)
-					emailContent = res.getString("SendEmail.EditQuestion.Default");
-				else 
-					emailContent = res.getString("SendEmail.ResponseQuestion.Default");
+		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+		ResourceBundle res = context.getApplicationResourceBundle() ;
+		//if(!isSettingForm){
+			if(emailContent == null || emailContent.trim().length() < 1){
+				if(isNew){
+					emailContent =  res.getString("SendEmail.AddNewQuestion.Default");
+				} else {
+					emailContent =  res.getString("SendEmail.EditOrResponseQuestion.Default");
+				}
 			}
-		}
 		//}
 		faqSetting.setEmailSettingSubject(res.getString("SendEmail.Default.Subject"));
 		faqSetting.setEmailSettingContent(emailContent) ;
