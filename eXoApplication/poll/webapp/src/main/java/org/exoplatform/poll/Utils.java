@@ -164,11 +164,11 @@ public class Utils {
 			long l = timeEnd - calendar.getTimeInMillis();
 			if (l < 0)
 				return dateUnit[1];
-			int m = (int) l / 60000;
+			long m = (long) l / 60000;
 			if (m > 60) {
-				int h = (int) m / 60;
+			  long h = (long) m / 60;
 				if (h > 24) {
-					int d = (int) h / 24;
+				  long d = (long) h / 24;
 					return d + " " + dateUnit[2] + ", " + (h - d * 24) + " " + dateUnit[3] + ", " + (m - h * 60) + " " + dateUnit[4];
 				} else {
 					return h + " " + dateUnit[3] + ", " + (m - h * 60) + dateUnit[4];
