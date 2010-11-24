@@ -154,9 +154,10 @@ public class Poll {
 			String string = vote[j];
 			double tmp = Double.parseDouble(string) ;
 			double k = (tmp*size)/100 ;
-			int t = (int)Math.round(k) ;
+			double t = (double)Math.round(k) ;
+			string = String.valueOf(t*100/size);
       int dotPos = string.indexOf(".");
-      int numberAfterDot = string.length() - dotPos - 1;
+      int numberAfterDot = string.length() - dotPos -1;
       if (dotPos > 0 && numberAfterDot > 2)
         string = string.substring(0, dotPos + 3);
       infoVote[j] = string + ":" + t;
@@ -171,7 +172,6 @@ public class Poll {
 	public void setExpire(String expire) {this.expire = expire;}
 	public String getExpire() { return expire;}
 }
-
 
 
 
