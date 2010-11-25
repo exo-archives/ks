@@ -250,11 +250,11 @@
 
      <div class="TitleContent clearfix">
 
-       <div class="Text">
+       <!-- div class="Text">
 
          <a title="$activityUserName" href="$activityUserProfileUri">$activityUserName</a>
 
-       </div>
+       </div -->
 
      <% if (activityDeletable) {%>
 
