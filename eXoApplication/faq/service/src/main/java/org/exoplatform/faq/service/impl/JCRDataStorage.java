@@ -633,7 +633,7 @@ public class JCRDataStorage implements DataStorage {
 				message.setMimeType(MIMETYPE_TEXTHTML);
 				message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
 				if (isNew) {
-					message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
+					message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", reader.string("exo:name", ""))
 							.replaceAll("&questionContent_", question.getDetail()).replaceAll("&questionLink_", question.getLink()));
 				} else {
 					String contentMail = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion());
