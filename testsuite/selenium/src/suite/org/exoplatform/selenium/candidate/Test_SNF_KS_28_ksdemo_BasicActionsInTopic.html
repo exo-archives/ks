@@ -52,23 +52,128 @@
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>-Add Topic for topic actions test-</td>
-	<td></td>
-</tr>
-<tr>
 	<td>open</td>
 	<td>/ksdemo/private/classic/forum</td>
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Add Category for Test-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>//a/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>//a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>CategoryTitle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>CategoryTitle</td>
+	<td>Cate1_SNF_KS_28</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Description</td>
+	<td>Category 1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Cate1_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Cate1_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add Forum-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[3]/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[3]/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>ForumTitle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>ForumTitle</td>
+	<td>For1_SNF_KS_28</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Description</td>
+	<td>prepare forum data</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Cate1_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Cate1_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>For1_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>For1_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add Topic for topic actions test-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=For1_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=For1_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>
@@ -83,13 +188,13 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
+	<td>ThreadTitle</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>ThreadTitle</td>
-	<td>Topic for Forum Actions Test</td>
+	<td>Top1_SNF_KS_28</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -109,7 +214,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>Topic for Actions Test</td>
+	<td>Top1_SNF_KS_28_Content</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -128,12 +233,12 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>Topic for Forum Actions Test</td>
+	<td>Top1_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>Topic for Forum Actions Test</td>
+	<td>Top1_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>
@@ -143,7 +248,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Topic for Forum Actions Test</td>
+	<td>link=Top1_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>
@@ -169,17 +274,17 @@
 <tr>
 	<td>waitForElementPresent</td>
 	<td>ThreadTitle</td>
-	<td>Topic for Forum Actions Test</td>
+	<td>Top1_SNF_KS_28</td>
 </tr>
 <tr>
 	<td>verifyValue</td>
 	<td>ThreadTitle</td>
-	<td>Topic for Forum Actions Test</td>
+	<td>Top1_SNF_KS_28</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>ThreadTitle</td>
-	<td>Topic for Forum Actions Test Edit</td>
+	<td>Top1_SNF_KS_28_Update</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -199,7 +304,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>Topic for Actions Test Edit</td>
+	<td>Top1_SNF_KS_28_Content_Update</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -218,12 +323,12 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>Topic for Forum Actions Test Edit</td>
+	<td>Top1_SNF_KS_28_Update</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>Topic for Forum Actions Test Edit</td>
+	<td>Top1_SNF_KS_28_Update</td>
 	<td></td>
 </tr>
 <tr>
@@ -232,18 +337,23 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=Knowledge Suite</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[3]/div/div/div/div/a/span</td>
+	<td>link=Cate1_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[3]/div/div/div/div/a/span</td>
+	<td>link=Cate1_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='AddForum']/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
 <tr>
@@ -254,7 +364,7 @@
 <tr>
 	<td>type</td>
 	<td>ForumTitle</td>
-	<td>Forum Destination</td>
+	<td>For2_SNF_KS_28</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -262,23 +372,33 @@
 	<td>Destination Forum</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Knowledge Suite</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=Cate1_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=Cate1_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>For2_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>For2_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>
@@ -288,12 +408,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Topic for Forum Actions Test Edit</td>
+	<td>link=For1_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Topic for Forum Actions Test Edit</td>
+	<td>link=For1_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Top1_SNF_KS_28_Update</td>
 	<td></td>
 </tr>
 <tr>
@@ -308,7 +438,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Move</td>
+	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[11]</td>
 	<td></td>
 </tr>
 <tr>
@@ -318,22 +448,32 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Forum Destination</td>
+	<td>link=For2_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Forum Destination</td>
+	<td>link=For2_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Forum Destination</td>
+	<td>pause</td>
+	<td>2000</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Forum Destination</td>
+	<td>link=For2_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Top1_SNF_KS_28_Update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Top1_SNF_KS_28_Update</td>
 	<td></td>
 </tr>
 <tr>
@@ -342,13 +482,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Topic for Forum Actions Test Edit</td>
-	<td></td>
-</tr>
-<tr>
 	<td>click</td>
-	<td>link=Topic for Forum Actions Test Edit</td>
+	<td>link=Top1_SNF_KS_28_Update</td>
 	<td></td>
 </tr>
 <tr>
@@ -359,6 +494,11 @@
 <tr>
 	<td>click</td>
 	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[5]/div[1]/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
 	<td></td>
 </tr>
 <tr>
@@ -388,27 +528,47 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UITopicContainer']/div[4]/div/div[1]/div/div/div/div[6]/div[1]/div/div/div/div/div</td>
+	<td>link=Cate1_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UITopicContainer']/div[4]/div/div[1]/div/div/div/div[6]/div[2]/div/div/div/div[2]/div/div/div[8]/a</td>
+	<td>link=Cate1_SNF_KS_28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Delete</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertConfirmation</td>
-	<td>Are you sure you want to delete this forum?</td>
+	<td>Are you sure you want to delete this category?</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>Forum Destination</td>
+	<td>Cate1_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>Forum Destination</td>
+	<td>Cate1_SNF_KS_28</td>
 	<td></td>
 </tr>
 <tr>

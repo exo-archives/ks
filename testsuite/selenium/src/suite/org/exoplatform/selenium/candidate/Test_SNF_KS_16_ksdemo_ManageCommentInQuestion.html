@@ -52,23 +52,88 @@
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>-Add Question -</td>
-	<td></td>
-</tr>
-<tr>
 	<td>open</td>
 	<td>/ksdemo/private/classic/answers</td>
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Add Category-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>link=Technical FAQ</td>
+	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Technical FAQ</td>
+	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Add category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Add category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>eventCategoryName</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>eventCategoryName</td>
+	<td>SNF_KS_16</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>description</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>SNF_KS_16 des</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=SNF_KS_16</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>link=SNF_KS_16</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add Question -</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=SNF_KS_16</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=SNF_KS_16</td>
 	<td></td>
 </tr>
 <tr>
@@ -89,7 +154,7 @@
 <tr>
 	<td>type</td>
 	<td>QuestionTitle</td>
-	<td>SNF_KS_14 English</td>
+	<td>SNF_KS_16 English</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -114,16 +179,16 @@
 <tr>
 	<td>type</td>
 	<td>QuestionTitle</td>
-	<td>SNF_KS_14 French</td>
+	<td>SNF_KS_16 French</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>mouseDown</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
@@ -143,12 +208,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=SNF_KS_14 English</td>
+	<td>link=SNF_KS_16 English</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=SNF_KS_14 English</td>
+	<td>link=SNF_KS_16 English</td>
 	<td></td>
 </tr>
 <tr>
@@ -442,8 +507,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=French</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=French</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[4]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -524,6 +599,11 @@
 <tr>
 	<td>click</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=French</td>
 	<td></td>
 </tr>
 <tr>
@@ -632,6 +712,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[2]/a</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[2]/a</td>
 	<td></td>
@@ -673,12 +758,67 @@
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>SNF_KS_14 English</td>
+	<td>SNF_KS_16 English</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>SNF_KS_14 English</td>
+	<td>SNF_KS_16 English</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Delete Category Test-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//img[@alt='categories']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//img[@alt='categories']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[6]/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseOver</td>
+	<td>//div[6]/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>contextMenu</td>
+	<td>//div[6]/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDownRight</td>
+	<td>//div[@id='UIFAQPopupCategories2']/div/div/div/div/div[6]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure you want to delete this category ?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextNotPresent</td>
+	<td>SNF_KS_16</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>SNF_KS_16</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>

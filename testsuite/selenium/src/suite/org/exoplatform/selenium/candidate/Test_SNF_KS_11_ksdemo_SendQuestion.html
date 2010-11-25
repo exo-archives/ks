@@ -52,18 +52,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>open</td>
+	<td>/ksdemo/private/classic/answers</td>
+	<td></td>
+</tr>
+<tr>
 	<td>echo</td>
 	<td>-Add Question-</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Answers</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Answers</td>
 	<td></td>
 </tr>
 <tr>
@@ -97,6 +92,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
 	<td>selectFrame</td>
 	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
 	<td></td>
@@ -118,12 +118,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>mouseDown</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
@@ -222,7 +222,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>

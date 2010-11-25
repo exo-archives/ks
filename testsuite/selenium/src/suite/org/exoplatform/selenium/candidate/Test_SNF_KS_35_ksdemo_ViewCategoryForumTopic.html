@@ -12,11 +12,6 @@
 <tr><td rowspan="1" colspan="3">Test_SNF_KS_35_ksdemo_ViewCategoryForumTopic</td></tr>
 </thead><tbody>
 <tr>
-	<td>echo</td>
-	<td>-View the Forum by admin-</td>
-	<td></td>
-</tr>
-<tr>
 	<td>open</td>
 	<td>/ksdemo/public/classic/</td>
 	<td></td>
@@ -24,6 +19,11 @@
 <tr>
 	<td>windowMaximize</td>
 	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-View the Category/Forum/Topic by admin-</td>
 	<td></td>
 </tr>
 <tr>
@@ -62,8 +62,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>Knowledge Suite</td>
+	<td>pause</td>
+	<td>2000</td>
 	<td></td>
 </tr>
 <tr>
@@ -72,8 +72,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -82,8 +82,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Demo data policy</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -129,26 +129,21 @@
 <tr>
 	<td>click</td>
 	<td>link=Demo data policy</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-View the Forum by nornal user-</td>
+	<td>-View the Category/Forum/Topic by nornal user-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -187,18 +182,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Knowledge Suite</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>Knowledge Suite</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Live demo</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -207,8 +192,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -217,8 +202,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Demo data policy</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>

@@ -4,26 +4,26 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Test_SNF_KS_35_defaultportal_ViewCategoryForumTopic</title>
+<title>Test_SMOKE_KS_01_BasicActionsOnForum</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_35_defaultportal_ViewCategoryForumTopic</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SMOKE_KS_01_BasicActionsOnForum</td></tr>
 </thead><tbody>
 <tr>
+	<td>echo</td>
+	<td>Step 1: Login</td>
+	<td></td>
+</tr>
+<tr>
 	<td>open</td>
-	<td>/portal/public/classic/</td>
+	<td>/ksdemo/public/classic/</td>
 	<td></td>
 </tr>
 <tr>
 	<td>windowMaximize</td>
 	<td></td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>-Add the Category/Forum/Topic by admin-</td>
 	<td></td>
 </tr>
 <tr>
@@ -39,7 +39,7 @@
 <tr>
 	<td>waitForElementPresent</td>
 	<td>username</td>
-	<td></td>
+	<td>root</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -53,43 +53,43 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>Step 2: Add category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>open</td>
-	<td>/portal/private/classic/forum</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>-Add category-</td>
+	<td>/ksdemo/private/classic/forum</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//a/span</td>
+	<td>//div[@id='AddCategory']/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//a/span</td>
+	<td>//div[@id='AddCategory']/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
 	<td>CategoryTitle</td>
-	<td></td>
+	<td>Smoke_01_Category</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>CategoryTitle</td>
-	<td>Category 1</td>
+	<td>Smoke_01_Category</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>Description</td>
-	<td>Every one can see</td>
+	<td>Add category for smoke test 01</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -103,92 +103,107 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>//div[@id='UIBreadcumbs']/div/div/div/div[1]/a</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>//div[@id='UIBreadcumbs']/div/div/div/div[1]/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Category 1</td>
+	<td>waitForElementPresent</td>
+	<td>link=Smoke_01_Category</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>Category 1</td>
+	<td>verifyElementPresent</td>
+	<td>link=Smoke_01_Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Add forum-</td>
+	<td>Step 3: Add Forum</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[3]/div/div/div/div/a/span</td>
+	<td>link=Smoke_01_Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[3]/div/div/div/div/a/span</td>
+	<td>link=Smoke_01_Category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AddForum']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='AddForum']/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
 	<td>ForumTitle</td>
-	<td></td>
+	<td>Smoke_01_Forum</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>ForumTitle</td>
-	<td>For 1</td>
+	<td>Smoke_01_Forum</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>Description</td>
-	<td>For 1</td>
+	<td>Add forum for smoke test 01</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Category 1</td>
+	<td>link=Smoke_01_Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Category 1</td>
+	<td>link=Smoke_01_Category</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>For 1</td>
+	<td>waitForElementPresent</td>
+	<td>link=Smoke_01_Forum</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>For 1</td>
+	<td>verifyElementPresent</td>
+	<td>link=Smoke_01_Forum</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Add topic-</td>
+	<td>Step 4: Add Topic</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Smoke_01_Forum</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=For 1</td>
+	<td>link=Smoke_01_Forum</td>
 	<td></td>
 </tr>
 <tr>
@@ -204,12 +219,12 @@
 <tr>
 	<td>waitForElementPresent</td>
 	<td>ThreadTitle</td>
-	<td></td>
+	<td>Smoke_01_topic</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>ThreadTitle</td>
-	<td>Topic test</td>
+	<td>Smoke_01_topic</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -229,7 +244,82 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>Topic test</td>
+	<td>Topic content for smoke 01</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Smoke_01_topic</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>link=Smoke_01_topic</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>Step 5: Post Reply</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Smoke_01_topic</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Smoke_01_topic</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicDetail']/div[5]/div[1]/div/div/div/div/div/div/div/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UITopicDetail']/div[5]/div[1]/div/div/div/div/div/div/div/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='MessageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//iframe[@id='MessageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
+	<td>Post reply for smoke 01</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -248,182 +338,37 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>Topic test</td>
+	<td>Re: Smoke_01_topic</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>Topic test</td>
+	<td>Re: Smoke_01_topic</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-View Category/Forum-</td>
+	<td>-Delete test data-</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Category 1</td>
+	<td>link=Smoke_01_Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Category 1</td>
+	<td>link=Smoke_01_Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>Link=For 1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementPresent</td>
-	<td>link=For 1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>-View Category/Forum/Topic by normal user-</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Sign in</td>
+	<td>//form[@id='UICategory']/div[3]/div/div/div/div[4]/div[1]/div/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Sign in</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>username</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>username</td>
-	<td>demo</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>password</td>
-	<td>gtn</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>open</td>
-	<td>/portal/private/classic/forum</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Category 1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Category 1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=For 1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=For 1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Topic test</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Topic test</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Sign in</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Sign in</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>username</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>username</td>
-	<td>root</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>password</td>
-	<td>gtn</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>-Delete Test Data-</td>
-	<td></td>
-</tr>
-<tr>
-	<td>open</td>
-	<td>/portal/private/classic/forum</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Category 1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Category 1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td>//form[@id='UICategory']/div[3]/div/div/div/div[4]/div[1]/div/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -442,13 +387,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextNotPresent</td>
-	<td>Category 1</td>
+	<td>verifyElementNotPresent</td>
+	<td>link=Smoke_01_Category</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextNotPresent</td>
-	<td>Category 1</td>
+	<td>echo</td>
+	<td>Step 6: Logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -457,8 +407,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
+	<td>waitForElementPresent</td>
+	<td>link=Sign in</td>
 	<td></td>
 </tr>
 
