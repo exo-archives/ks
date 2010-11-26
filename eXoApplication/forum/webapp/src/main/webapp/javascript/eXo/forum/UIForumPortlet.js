@@ -462,6 +462,8 @@ UIForumPortlet.prototype.hidePicture = function() {
 } ;
 
 UIForumPortlet.prototype.showPicture = function(src) {
+  eXo.ks.MaskLayerControl.showPicture(src);
+	/*
   var containerNode = document.createElement('div') ;
   var imageNode = document.createElement('img') ;
   imageNode.src = src ;
@@ -474,6 +476,7 @@ UIForumPortlet.prototype.showPicture = function(src) {
 	this.showFullScreen(imageNode,containerNode);
   var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
 	eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.ks.MaskLayerControl.scrollHandler) ;
+	*/
 };
 
 UIForumPortlet.prototype.getImageSize = function(imageNode){

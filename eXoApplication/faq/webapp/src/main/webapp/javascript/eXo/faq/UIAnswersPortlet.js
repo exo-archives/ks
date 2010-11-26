@@ -186,7 +186,23 @@ UIAnswersPortlet.prototype.hidePicture = function() {
 
 UIAnswersPortlet.prototype.showPicture = function(src) {
 	if(this.viewImage){
-		var containerNode = document.createElement('div') ;
+		eXo.ks.MaskLayerControl.showPicture(src);
+	/*
+  var containerNode = document.createElement('div') ;
+  var imageNode = document.createElement('img') ;
+  imageNode.src = src ;
+  imageNode.setAttribute('alt', 'Click to close') ;
+  containerNode.appendChild(imageNode) ;
+  containerNode.setAttribute('title', 'Click to close') ;
+  containerNode.setAttribute('style', 'text-align:center;') ;
+  containerNode.setAttribute('align', 'center') ;
+  containerNode.onclick = eXo.forum.UIForumPortlet.hidePicture ;
+	this.showFullScreen(imageNode,containerNode);
+  var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
+	eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.ks.MaskLayerControl.scrollHandler) ;
+	*/
+		/*
+		 var containerNode = document.createElement('div') ;
 	  var imageNode = document.createElement('img') ;
 	  imageNode.src = src ;
 	  imageNode.setAttribute('alt', 'Click to close') ;
@@ -198,6 +214,7 @@ UIAnswersPortlet.prototype.showPicture = function(src) {
 		this.showFullScreen(imageNode,containerNode);
 	  var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
 	  containerNode.style.top = "10px";
+	  */
 //		eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.ks.MaskLayerControl.scrollHandler) ;
 	}
 };
@@ -422,7 +439,6 @@ UIAnswersPortlet.prototype.initActionScroll = function() {
   uiNav.scrollMgr["UIQuestions"].checkAvailableSpace() ;
   uiNav.scrollMgr["UIQuestions"].renderElements() ;
 } ;
-
 
 UIAnswersPortlet.prototype.controlWorkSpace = function() {
 	var slidebar = document.getElementById('ControlWorkspaceSlidebar');
