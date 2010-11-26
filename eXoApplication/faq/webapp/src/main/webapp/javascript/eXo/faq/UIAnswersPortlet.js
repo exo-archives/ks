@@ -512,7 +512,7 @@ UIAnswersPortlet.prototype.reSizeAvatar = function(imgElm) {
 	} else if(imgElm.height > 125){  
 		imgElm.style.height = "150px" ;
 	}
-	parent = imgElm.parentNode;
+	var parent = imgElm.parentNode;
 	if(parent.tagName != "SPAN" && parent.tagName != "span") {
 		parent = parent.parentNode;
 	} 
