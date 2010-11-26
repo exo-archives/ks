@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2003-20010 eXo Platform SAS.
+ * Copyright (C) 2003-2010 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -15,9 +15,9 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  **/
  
-=================================================
-    Release Notes eXo Knowledge Suite Version 2.2.0
-=================================================
+=====================================================
+    Release Notes eXo Knowledge Suite Version 2.1.1.1
+=====================================================
 
 ===============
 1 Introduction
@@ -36,7 +36,12 @@ forum, frequency answer and question
 
 
     * General
-        o         
+      - New home page
+	  - Ear package clean up and support
+	  - Fix bugs 
+	  - Activity pluging for integration of platform 3.0.1
+	  - Optionable when post questions in root category
+	  - Demo online integrated with platform 3.0 http://platform.demo.exoplatform.org
           
     * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Release+Notes
           
@@ -81,9 +86,8 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
          "./gatein.sh run" for production
          "./gatein-dev.sh run" for development
          
-+) Edit the file $TOMCAT_HOME/gatein/conf/configuration.properties and configure mail  if you want to enable mail notifications.
-Similarly, if you want to use the ksdemo, you need to edit $TOMCAT_HOME/gatein/conf/portal/ksdemo/ksdemo.properties
-
++) Edit the file $JBOSS_HOME/server/default/conf/gatein/configuration.properties and configure mail  if you want to enable mail notifications.
+Similarly
 To enable mail notifications, quickly you can use your own gmail account for example :
 
 # EMail
@@ -96,26 +100,172 @@ gatein.email.smtp.auth=true
 gatein.email.smtp.socketFactory.port=465
 gatein.email.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
 
+* Enter one of the following addresses into your browser address bar in local pc:   
+   KS demo portal  
+      http://localhost:8080/ksdemo
+
+You can log into the portal with the following accounts: root, john, mary, demo.
+All those accounts have the default password "gtn". 
+
 ==============
 4 Known issues 
 ==============
  *  
+ 
 ===========================  
 5 Other resources and links
 ===========================
 
-* [Community JIRA>http://jira.exoplatform.org/browse/KS]
-* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.2.0]
-* [Download>http://download.forge.objectweb.org/exoplatform/]
-* [Live demo>http://ks.demo.exoplatform.org]
-* [Announces>http://blog.exoplatform.org/tags/ks/]
-* [Company site>http://www.exoplatform.com]
+     Company site        http://www.exoplatform.com
+     Community JIRA      http://jira.exoplatform.org/browse/KS
+     Community site      http://www.exoplatform.org
+     Community forum     http://forums.exoplatform.org
+     Community gatein    http://www.jboss.org/gatein/ 
+     Developers wiki     http://wiki.exoplatform.org/xwiki/bin/view/KS/
+     Blog                http://blog.exoplatform.org/tags/ks/
+     Download            http://sourceforge.net/projects/exo-knowledge/
+     Source              http://svn.exoplatform.org/projects/ks/tags
 
 ====================
 6 Detailed Changelog
 ==================== 
-- Version 2.2.0
-- Version 2.1.0
+
+- Version 2.1.1 
+
+** Bug
+    * [KS-2685] - After edit poll the score change wrong option, fix for single vote.
+    * [KS-2703] - Minor typos in the JCRDataStorage.populateUserProfile war message
+    * [KS-2714] - on ksdemo can not register new user because can not see the text validation
+    * [KS-2721] - After edit poll the score change wrong option, fix for multi vote.
+    * [KS-2734] -  [KS-Forum] Total topic/post in Forum statistics isn't updated after import category/forum
+    * [KS-2735] - [KS] Can not move topic to forum that auto-added from Space
+    * [KS-2736] - [KS-Answers] Nothing happen when click on [Watches] icon in User setting
+    * [KS-2753] - In French: Show code error when close "User Setting" pop up in special case
+    * [KS-2755] - Cluster configuration is wrong for Knowledge workspace
+    * [KS-2792] - CLONE -FAQ: date in English format (ks 2.1.x)
+	* [KS-2794] - Register an account, text validation is not display
+
+** Improvement
+    * [KS-2496] - Answers - Possible to configuration  create a question at the root or not
+    * [KS-2607] - Deny users from submitting questions in the root category
+    * [KS-2697] - Social Integration : leverage activity plugin
+
+-Version 2.1.0 GA
+
+** Bug
+    * [KS-2259] - javascript errors on first drop of Forum app
+    * [KS-2411] - Error when open form to edit information of watcher
+    * [KS-2529] - Cannot select a role
+    * [KS-2530] - erroneous warning while going to a restricted category via breadcrumb, despite user is allowed
+    * [KS-2537] - Normal user can not search topics in Forum default after move topic in special case
+    * [KS-2553] - user registering a past username can steal previous user profile
+    * [KS-2554] - User is still view last read post although without view permission.
+    * [KS-2556] - "< font" gets inserted in tag autosuggest
+    * [KS-2559] - KS, Answer: Do not list Open/Pending question when click on the link
+    * [KS-2560] - Error when delete topic after moved
+    * [KS-2561] - Forum: User management: error when search user at the second page
+    * [KS-2563] - Show message "The target of this link could not be found. The item may have been moved or deleted" when discuss question
+    * [KS-2573] - Category/Forum/Topic is still watched although removed all emails  in watches list 
+    * [KS-2575] - Normal user don't see topic after topic is rated by other users
+    * [KS-2577] - Save moderators in category is not update to forums
+    * [KS-2585] - Can not open question in search list.
+    * [KS-2587] - Can not open category, forum and topic by permlink when setup host name same selectedNode of navigation.
+    * [KS-2590] - In user management form: can not search user in other pages except on page 1 
+    * [KS-2600] - Problem for auto prune topic.
+    * [KS-2603] - Answer portlet error when view 
+    * [KS-2610] - KS Memory Leak caused by unclosed JCR sessions
+    * [KS-2615] - Forums statistics are wrong after the import of old messages (zip type)
+    * [KS-2632] - Bug unknown error when discuss question
+    * [KS-2633] - Bug in Platform when using social's component
+    * [KS-2651] - FAQ can not get viewer template and can not how FAQ portlet
+    * [KS-2653] - Edit poll in topic isn't updated
+    * [KS-2661] - Can not load fck editor 
+    * [KS-2662] - Post counter doesn't work after set permissions for forum
+    * [KS-2663] - initialize application data wrong when adding KS application to Social Space.
+    * [KS-2668] - Can not add Poll to topic inside Forum porlet
+    * [KS-2670] -  Rated topic don't shown in RSS feed
+    * [KS-2673] - ANS: Lack of : for initial permission on added category for space
+    * [KS-2680] - Wrong URL generated in Forum
+    * [KS-2687] - Watch email does not show in watches list of topic
+    * [KS-2688] - Typo : "Maximum numer of online users was :...
+    * [KS-2696] - remove borders on Forum and Answers portlets
+    * [KS-2700] - Total answers in question is increased after edit an answer or discuss this question
+    * [KS-2706] - Exception when create a new space
+    * [KS-2718] - IE6 UI problems
+
+** Documentation
+    * [KS-2698] - Reference Guide
+
+** Improvement
+    * [KS-2258] - Jump into category/forum after creation
+    * [KS-2538] - display "Last Posts" according to current user
+    * [KS-2695] - Optimize code in Forum and Answer Listeners in social integration package
+
+** New Feature
+    * [KS-602] - create an opensocial gadget
+    * [KS-1042] - Syntax coloring for code
+    * [KS-1193] - Polling Management
+    * [KS-1731] - Default User preferences
+    * [KS-1921] - Revamp question list view
+    * [KS-1925] - Separate Polls from Forum
+    * [KS-2592] - Forum Integration to Spaces
+    * [KS-2593] - Answers Integration to Spaces
+
+** Task
+    * [KS-2378] - NPE stacktrace at startup
+    * [KS-2566] - Multi-tenant compliant repository access
+    * [KS-2578] - move all components declared in jars in extension
+    * [KS-2583] - Upgrade to Gatein 3.1
+    * [KS-2591] - Add plugin to initialize default data when space in social created 
+    * [KS-2606] - Improment code for code commited by issue: KS-2258
+    * [KS-2652] - update commons version 
+    * [KS-2665] - CLONE -Organize css following the introduction of gatein 3.1
+    * [KS-2723] - English mistake in activity stream when posting in forum
+    
+ 
+- Version 2.1.0-CR03
+
+** Bug
+    * [KS-2609] - English label error : "Not moderator"
+** Task
+    * [KS-2708] - Server console log when add new space in platform
+    * [KS-2710] - Remove extension config jar from the ear
+    * [KS-2711] - Remove jboss-web.xml from extension war
+    * [KS-2713] - Do not create .tar.gz packages
+    * [KS-2719] - Release Knowledge 2.1.0-CR03   
+    
+- Version 2.1.0-CR02
+** Bug
+    * [KS-2573] - Category/Forum/Topic is still watched although removed all emails  in watches list 
+    * [KS-2590] - In user management form: can not search user in other pages except on page 1 
+    * [KS-2662] - Post counter doesn't work after set permissions for forum
+    * [KS-2670] -  Rated topic don't shown in RSS feed
+    * [KS-2688] - Typo : "Maximum numer of online users was :...
+    * [KS-2692] - KS not compatible with Java5
+
+** Task
+    * [KS-2517] - Temp folder in test phase has been created, when build product  
+    * [KS-2702] - Release KS 2.1.0-CR02
+
+
+
+- Version 2.1.0-CR01
+
+** Bug
+    * [KS-2575] - Normal user don't see topic after topic is rated by other users
+    * [KS-2585] - Can not open question in search list.
+    * [KS-2653] - Edit poll in topic isn't updated
+    * [KS-2661] - Can not load fck editor 
+    * [KS-2663] - initialize application data wrong when adding KS application to Social Space.
+    * [KS-2668] - Can not add Poll to topic inside Forum porlet
+    * [KS-2672] - Can not view post in a forum of space from activity stream
+    * [KS-2673] - ANS: Lack of : for initial permission on added category for space
+    * [KS-2680] - Wrong URL generated in Forum
+
+** Task
+    * [KS-2652] - update commons version 
+    * [KS-2677] - base structure for eXo Knowledge Reference Guide
+    * [KS-2690] - Release KS 2.1.0-CR01
 
 - Version 2.0.0
 
