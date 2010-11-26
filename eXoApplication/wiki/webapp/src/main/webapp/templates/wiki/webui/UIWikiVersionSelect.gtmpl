@@ -24,8 +24,8 @@
 		<span class="Label"><%= _ctx.appRes("UIWikiVersionSelect.label.viewing-old-version-info"); %></span>
 		 <a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');" class="Title"><%= _ctx.appRes("UIWikiVersionSelect.label.CurrentVersion"); %></a>	
 		<div class="ActionLink">
-				<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.SHOW_HISTORY');" onclick="$compareLink"><%= _ctx.appRes("UIWikiVersionSelect.label.CompareWithCurrent"); %></a>&nbsp;|&nbsp;
-				<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');" onclick="$restoreLink;"><%= _ctx.appRes("UIWikiVersionSelect.label.RestoreThisVersion"); %></a>&nbsp;|&nbsp;
+				<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeHash('#$uicomponent.SHOW_HISTORY');" onclick="$compareLink"><%= _ctx.appRes("UIWikiVersionSelect.label.CompareWithCurrent"); %></a>&nbsp;|&nbsp;
+				<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeHash('#');" onclick="$restoreLink;"><%= _ctx.appRes("UIWikiVersionSelect.label.RestoreThisVersion"); %></a>&nbsp;|&nbsp;
 				<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.SHOW_HISTORY');"><%= _ctx.appRes("UIWikiVersionSelect.label.ViewPageHistory"); %></a>
 				<a id="$viewHistoryLinkId" onclick="$viewHistoryLink" style="display:none"></a>
 		</div>

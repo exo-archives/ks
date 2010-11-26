@@ -137,8 +137,7 @@ public class UIWikiPortlet extends UIPortletApplication {
         context.setAttribute("wikiPage", page);
         ((UIWikiPageTitleControlArea) findComponentById(UIWikiPageControlArea.TITLE_CONTROL)).getUIFormInputInfo()
                                                                                              .setValue(page.getContent()
-                                                                                                           .getTitle());
-        findFirstComponentOfType(UIWikiPageContentArea.class).renderVersion();
+                                                                                                           .getTitle());      
       } catch (Exception e) {
         e.printStackTrace();
         context.setAttribute("wikiPage", null);

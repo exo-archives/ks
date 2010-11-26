@@ -23,6 +23,7 @@ function UIWikiAjaxRequest() {
   this.actionPrefix = false;
   this.defaultAction = false;
   this.currentAnchor = null;
+  this.isEnableCheck = true;
 };
 
 UIWikiAjaxRequest.prototype.init = function(actionPrefix, defaultAction) {
@@ -68,6 +69,10 @@ UIWikiAjaxRequest.prototype.checkAnchor = function() {
   // Check if it has changes
   if (this.currentAnchor != this.getCurrentHash()) {
     this.currentAnchor = this.getCurrentHash();
+    if (this.isEnableCheck == false){
+      this.isEnableCheck = true;
+      return;
+    }
     var action = null;
     if (this.currentAnchor && this.currentAnchor.length > 0) {
       var splits = this.currentAnchor.split('&');
@@ -114,6 +119,14 @@ UIWikiAjaxRequest.prototype.makeNewHash = function(hash) {
   } else {
     this.onFrameLoaded(hash);
   }
+};
+
+/**
+ * Make hash and disable auto check
+ */
+UIWikiAjaxRequest.prototype.makeHash = function(hash) {
+  this.isEnableCheck = false;
+  eXo.wiki.UIWikiAjaxRequest.makeNewHash(hash);
 };
 
 /**

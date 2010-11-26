@@ -22,6 +22,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTFrozenNode;
@@ -64,8 +65,15 @@ public class UIWikiPageContentArea extends UIWikiContainer {
 
   public void setHtmlOutput(String output) {
     this.htmlOutput = output;
-  }
+  }  
   
+  @Override
+  public void processRender(WebuiRequestContext context) throws Exception {
+    // TODO Auto-generated method stub
+    renderVersion();
+    super.processRender(context);
+  }
+
   public void renderVersion() throws Exception {
     String currentVersionName= this.getChild(UIWikiVersionSelect.class).getVersionName();
     
