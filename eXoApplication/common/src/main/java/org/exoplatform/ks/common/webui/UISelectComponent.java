@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  **/
-package org.exoplatform.forum.webui.popup;
+package org.exoplatform.ks.common.webui;
 
 import org.exoplatform.webui.core.UIComponent;
 
@@ -28,5 +28,7 @@ public interface UISelectComponent {
 	final public static String TYPE_USER = "0".intern() ;
 	final public static String TYPE_MEMBERSHIP = "1".intern() ;
 	final public static String TYPE_GROUP = "2".intern() ;
+	final public static String TREE_GROUP_ID = "UITreeGroupSelector";
+	final public static String BREADCUMB_GROUP_ID = "BreadcumbGroupSelector";
 	public void setComponent(UIComponent uicomponent, String[] initParams) ;
 }

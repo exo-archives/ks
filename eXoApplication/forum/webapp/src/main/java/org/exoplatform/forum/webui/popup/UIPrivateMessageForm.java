@@ -32,9 +32,14 @@ import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.ks.common.webui.UISelector;
+import org.exoplatform.ks.common.webui.UIUserSelect;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
+import org.exoplatform.webui.core.UIPopupWindow;
+import org.exoplatform.webui.core.UITree;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -45,6 +50,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
+import org.exoplatform.webui.organization.account.UIUserSelector;
 
 /**
  * Created by The eXo Platform SAS
@@ -52,16 +58,32 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
  *					tu.duy@exoplatform.com
  * May 9, 2008 - 8:19:24 AM	
  */
-@ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIPrivateMessegeForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIPrivateMessageForm.CloseActionListener.class, phase=Phase.DECODE),
-			@EventConfig(listeners = UIPrivateMessageForm.SendPrivateMessageActionListener.class),
-			@EventConfig(listeners = UIPrivateMessageForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
-			@EventConfig(listeners = UIPrivateMessageForm.SelectTabActionListener.class, phase=Phase.DECODE)
-		}
+@ComponentConfigs ( 
+	{
+		@ComponentConfig(
+			lifecycle = UIFormLifecycle.class,
+			template = "app:/templates/forum/webui/popup/UIPrivateMessegeForm.gtmpl",
+			events = {
+				@EventConfig(listeners = UIPrivateMessageForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
+				@EventConfig(listeners = UIPrivateMessageForm.AddUserActionListener.class, phase=Phase.DECODE),
+				@EventConfig(listeners = UIPrivateMessageForm.SelectTabActionListener.class, phase=Phase.DECODE),
+				@EventConfig(listeners = UIPrivateMessageForm.CancelActionListener.class, phase=Phase.DECODE),
+				@EventConfig(listeners = UIPrivateMessageForm.SendPrivateMessageActionListener.class)
+			}
+		),
+		@ComponentConfig(
+			 id = "UIPMUserPopupWindow",
+			 type = UIPopupWindow.class,
+			 template = "system:/groovy/webui/core/UIPopupWindow.gtmpl",
+			 events = {
+				 @EventConfig(listeners = UIPrivateMessageForm.ClosePopupActionListener.class, name = "ClosePopup")	,
+				 @EventConfig(listeners = UIPrivateMessageForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
+				 @EventConfig(listeners = UIPrivateMessageForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
+			}
+		)
+	}
 )
+
 public class UIPrivateMessageForm extends BaseUIForm implements UIPopupComponent, UISelector {
 	private ForumService forumService ;
 	private UserProfile userProfile ;
@@ -74,6 +96,7 @@ public class UIPrivateMessageForm extends BaseUIForm implements UIPopupComponent
 	public static final String FIELD_SENDMESSAGE_TAB = "MessageTab" ;
 	public static final String FIELD_REPLY_LABEL = "Reply" ;
 	public static final String FIELD_FORWARD_LABEL = "Forward" ;
+	public static final String USER_SELECTOR_POPUPWINDOW = "UIPMUserPopupWindow" ;
 	public UIPrivateMessageForm() throws Exception {
 		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		UIFormTextAreaInput SendTo = new UIFormTextAreaInput(FIELD_SENDTO_TEXTAREA, FIELD_SENDTO_TEXTAREA, null);
@@ -94,7 +117,8 @@ public class UIPrivateMessageForm extends BaseUIForm implements UIPopupComponent
 		List<ActionData> actions = new ArrayList<ActionData>() ;
 		for(String string : strings) {
 			ad = new ActionData() ;
-			ad.setActionListener("AddValuesUser") ;
+			if(i==0) ad.setActionListener("AddUser") ;
+			else ad.setActionListener("AddValuesUser") ;
 			ad.setActionParameter(String.valueOf(i)) ;
 			ad.setCssIconClass(string + "Icon") ;
 			ad.setActionName(string);
@@ -220,13 +244,22 @@ public class UIPrivateMessageForm extends BaseUIForm implements UIPopupComponent
 			if(!ForumUtils.isEmpty(type)) {
 				UIPopupContainer popupContainer = messageForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
-				if(type.equals("1")) uiGroupSelector.setId("UIMemberShipSelector");
-				else if(type.equals("2")) uiGroupSelector.setId("GroupSelector");
-				else uiGroupSelector.setId("UIUserSelector");
+				UIUserSelect uiUserSelect = popupContainer.findFirstComponentOfType(UIUserSelect.class) ;
+				if(uiUserSelect != null){
+					UIPopupWindow popupWindow = uiUserSelect.getParent();
+					popupWindow.setShow(false);
+					popupWindow.setUIComponent(null);
+					popupWindow.setRendered(false);
+					event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent()) ;
+				}
+				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 600) ;
+				if(type.equals(UIGroupSelector.TYPE_MEMBERSHIP)) uiGroupSelector.setId("UIMemberShipSelector");
+				else if(type.equals(UIGroupSelector.TYPE_GROUP)) uiGroupSelector.setId("UIGroupSelector");
 				uiGroupSelector.setType(type) ;
 				uiGroupSelector.setSelectedGroups(null) ;
 				uiGroupSelector.setComponent(messageForm, new String[]{FIELD_SENDTO_TEXTAREA}) ;
+				uiGroupSelector.getChild(UITree.class).setId(UIGroupSelector.TREE_GROUP_ID);
+				uiGroupSelector.getChild(org.exoplatform.webui.core.UIBreadcumbs.class).setId(UIGroupSelector.BREADCUMB_GROUP_ID);
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 			}
 		}
@@ -258,18 +291,84 @@ public class UIPrivateMessageForm extends BaseUIForm implements UIPopupComponent
 		message.setValue(content) ;
 		this.id = 2;
 	}
-	
-	static	public class CloseActionListener extends EventListener<UIPrivateMessageForm> {
-		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-		}
-	}
 
 	public boolean isFullMessage() {
 		return fullMessage;
 	}
 	public void setFullMessage(boolean fullMessage) {
 		this.fullMessage = fullMessage;
+	}
+	
+	static	public class CancelActionListener extends EventListener<UIPrivateMessageForm> {
+		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
+			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+			forumPortlet.cancelAction() ;
+		}
+	}
+	
+	static public class CloseActionListener extends EventListener<UIUserSelector> {
+		public void execute(Event<UIUserSelector> event) throws Exception {
+			UIUserSelector uiUserSelector = event.getSource() ;
+			UIPopupWindow popupWindow = uiUserSelector.getParent() ;
+			popupWindow.setUIComponent(null);
+			popupWindow.setShow(false);
+			popupWindow.setRendered(false);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent()) ;
+		}
+	}
+
+	static public class ClosePopupActionListener extends EventListener<UIPopupWindow> {
+		public void execute(Event<UIPopupWindow> event) throws Exception {
+			UIPopupWindow popupWindow = event.getSource() ;
+			popupWindow.setUIComponent(null);
+			popupWindow.setShow(false);
+			popupWindow.setRendered(false);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent()) ;
+		}
+	}
+	
+	static	public class AddActionListener extends EventListener<UIUserSelect> {
+		public void execute(Event<UIUserSelect> event) throws Exception {
+			UIUserSelect uiUserSelector = event.getSource() ;
+			String values = uiUserSelector.getSelectedUsers();
+			UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
+			UIPrivateMessageForm messageForm = forumPortlet.findFirstComponentOfType(UIPrivateMessageForm.class);
+			UIPopupWindow popupWindow = uiUserSelector.getParent();
+			if(messageForm != null){
+				messageForm.updateSelect(FIELD_SENDTO_TEXTAREA, values) ;
+			}
+			popupWindow.setUIComponent(null);
+			popupWindow.setShow(false);
+			popupWindow.setRendered(false);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent()) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(messageForm) ;
+		}
+	}
+
+	static	public class AddUserActionListener extends EventListener<UIPrivateMessageForm> {
+		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
+			UIPrivateMessageForm messageForm = event.getSource() ;
+			UIPopupContainer uiPopupContainer = messageForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIGroupSelector uiGroupSelector = uiPopupContainer.findFirstComponentOfType(UIGroupSelector.class) ;
+			if(uiGroupSelector != null){
+				UIPopupWindow popupWindow = uiGroupSelector.getAncestorOfType(UIPopupWindow.class);
+				popupWindow.setUIComponent(null);
+				popupWindow.setShow(false);
+				popupWindow.setRendered(false);
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+			}
+			UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById(USER_SELECTOR_POPUPWINDOW);
+			if(uiPopupWindow == null)uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, USER_SELECTOR_POPUPWINDOW, USER_SELECTOR_POPUPWINDOW) ;
+			UIUserSelect uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelect.class, null, "UIUserSelector");
+			uiUserSelector.setShowSearch(true);
+			uiUserSelector.setShowSearchUser(true);
+			uiUserSelector.setShowSearchGroup(false);
+			uiPopupWindow.setUIComponent(uiUserSelector);
+			uiPopupWindow.setShow(true);
+			uiPopupWindow.setWindowSize(740, 400);
+			uiPopupWindow.setRendered(true);
+			uiPopupContainer.setRendered(true);
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);
+		}
 	}
 }

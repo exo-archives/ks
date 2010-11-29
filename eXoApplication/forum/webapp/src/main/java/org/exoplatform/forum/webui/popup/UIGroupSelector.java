@@ -23,6 +23,8 @@ import java.util.List;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.ks.common.webui.UISelectComponent;
+import org.exoplatform.ks.common.webui.UISelector;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -43,6 +45,7 @@ import org.exoplatform.webui.organization.UIGroupMembershipSelector;
  *					phamtuanchip@yahoo.de
  * Aug 29, 2007 11:57:56 AM 
  */
+
 @ComponentConfigs({ 
 	@ComponentConfig(
 			template = "app:/templates/forum/webui/popup/UIGroupSelector.gtmpl",
@@ -63,7 +66,6 @@ import org.exoplatform.webui.organization.UIGroupMembershipSelector;
 			events = @EventConfig(listeners = UIBreadcumbs.SelectPathActionListener.class)
 	)
 })
-
 public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopupComponent, UISelectComponent {
 
 	private UIComponent uiComponent ;
@@ -202,12 +204,9 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
 
 	static	public class SelectPathActionListener extends EventListener<UIBreadcumbs> {
 		public void execute(Event<UIBreadcumbs> event) throws Exception {
-			UIBreadcumbs uiBreadcumbs = event.getSource() ;
-			UIGroupSelector uiGroupSelector = uiBreadcumbs.getParent() ;
-			//String objectId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			uiBreadcumbs.setSelectPath(uiGroupSelector.getCurrentGroup().getId());		 
-			//String selectGroupId = uiBreadcumbs.getSelectLocalPath().getId() ;
-			uiGroupSelector.changeGroup(uiGroupSelector.getCurrentGroup().getId()) ;
+			UIGroupSelector uiGroupSelector = event.getSource().getParent() ;
+			String objectId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			uiGroupSelector.changeGroup(objectId) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiGroupSelector) ;
 		}
 	}
