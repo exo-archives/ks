@@ -28,48 +28,24 @@ import java.util.StringTokenizer;
  */
 public class TitleResolver {
 
-  public static String getObjectId(String objectTitle, boolean isEncoded, boolean isAttachFile) throws UnsupportedEncodingException {
-    if (objectTitle == null) {
+  public static String getId(String title, boolean isEncoded) throws UnsupportedEncodingException {
+    if (title == null) {
       return null;
     }
-    String title = objectTitle;
     if (isEncoded) {
       title = URLDecoder.decode(title, "UTF-8");
     }
-    if (isAttachFile) {
-      return removeSpaces(title);
-    } else {
-      return encodeDecodeSpace(title, false);
-    }
+    return replaceSpacebyUnderscore(title);
   }
 
-  public static String encodePlusSign(String encodedString) {
-    return encodeDecodeSpace(encodedString, true);
-  }
-
-  private static String removeSpaces(String s) {
+  private static String replaceSpacebyUnderscore(String s) {
     StringTokenizer st = new StringTokenizer(s, " ", false);
-    StringBuilder sb = new StringBuilder();
-    while (st.hasMoreElements())
-      sb.append(st.nextElement());
-    return sb.toString();
-  }
-  
-  private static String encodeDecodeSpace(String s, boolean isDecode) {
-    String delim = " ";
-    String udelim = "+";
-    if (isDecode) {
-      delim = "+";
-      udelim = " ";
-    }
-    StringTokenizer st = new StringTokenizer(s, delim, false);
     StringBuilder sb = new StringBuilder();
     if (st.hasMoreElements()) {
       sb.append(st.nextElement());
     }
-    while (st.hasMoreElements()) {
-      sb.append(udelim).append(st.nextElement());
-    }
+    while (st.hasMoreElements())
+      sb.append("_").append(st.nextElement());
     return sb.toString();
   }
 

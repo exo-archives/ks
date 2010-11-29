@@ -49,7 +49,6 @@ import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
 import org.exoplatform.wiki.resolver.PageResolver;
-import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
@@ -123,7 +122,7 @@ public class Utils {
                                                                    params.getOwner()));
       sb.append("/");
     }
-    sb.append(URLEncoder.encode(TitleResolver.encodePlusSign(params.getPageId()), "UTF-8"));
+    sb.append(URLEncoder.encode(params.getPageId(), "UTF-8"));
     return sb.toString();
   }
   

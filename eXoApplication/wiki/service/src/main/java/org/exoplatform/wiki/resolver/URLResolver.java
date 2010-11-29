@@ -75,7 +75,7 @@ public class URLResolver extends Resolver{
       else
         params.setPageId(WikiPageParams.WIKI_HOME);
     }
-    params.setPageId(TitleResolver.getObjectId(params.getPageId(), true, false));
+    params.setPageId(TitleResolver.getId(params.getPageId(), true));
     return params;
   }  
   

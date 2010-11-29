@@ -83,12 +83,8 @@ for(entry in uicomponent.getActions()) {
 		%>
 		<a href="$link" class="View Icon" title="<%=_ctx.appRes("UIPageToolBar.label.Preview");%>">preview</a>
 		<%} else if(action.equals("SavePage")){
-			saveLink=link;
 		%>
-		<a href="$link" 
-		onclick="return eXo.wiki.UIWikiSavePage.confirm('$uicomponent.id', $isNewMode, '$pageTitleInputId', '$untitledMessage',
-		'$titleMessage', '$addMessage', 'Save Icon', '$confirmLabel', 'Delete Icon', '$discardLabel', '$cancelLabel');" 
-		class="Save Icon" title="<%=_ctx.appRes("UIPageToolBar.label.SavePage");%>">save</a>
+		<a href="$link" class="Save Icon" title="<%=_ctx.appRes("UIPageToolBar.label.SavePage");%>">save</a>
 		<%} else if(action.equals("RichText")){
 		%>
 		<a href="$link" class="Edit Icon" title="<%=_ctx.appRes("UIPageToolBar.label.RichTextEditor");%>">rich text</a>

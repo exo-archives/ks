@@ -20,8 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -108,15 +106,10 @@ public class UIWikiPageTitleControlArea extends UIContainer {
   }
     
   public void saveTitle(String newTitle, Event event) throws Exception {
-    PortalRequestContext prContext = Util.getPortalRequestContext();
     WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
     UIApplication uiApp = this.getAncestorOfType(UIApplication.class);
-    UIWikiPortlet wikiPortlet = this.getAncestorOfType(UIWikiPortlet.class);
-    UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
-    UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class)
-                                               .getUIStringInput();
     WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
-    String newName = TitleResolver.getObjectId(newTitle, true, false);
+    String newName = TitleResolver.getId(newTitle, true);
     boolean isRenameHome = WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageParams.getPageId())
         && !newName.equals(pageParams.getPageId());
     if (isRenameHome) {

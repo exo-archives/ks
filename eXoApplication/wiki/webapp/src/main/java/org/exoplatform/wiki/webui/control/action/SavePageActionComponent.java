@@ -33,7 +33,6 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -43,7 +42,6 @@ import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
-import org.exoplatform.wiki.resolver.PageResolver;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
@@ -82,27 +80,22 @@ public class SavePageActionComponent extends UIComponent {
   }
   
   public void validate(UIFormInput uiInput) throws Exception {
-    UIComponent uiComponent = (UIComponent) uiInput;
-    UIForm uiForm = uiComponent.getAncestorOfType(UIForm.class);
-    String label;
-    try {
-      label = uiForm.getId() + ".label." + uiInput.getName();
-    } catch (Exception e) {
-      label = uiInput.getName();
-    }
-    Object[] args = { label };
+    String invalidCharacters = ": @ / \\ | ^ # ; [ ] { } < > * ' \" +"; // and .
+    Object[] args = { invalidCharacters };
+    
     if (uiInput.getValue() == null || ((String) uiInput.getValue()).trim().length() == 0) {
       throw new MessageException(new ApplicationMessage("WikiPageNameValidator.msg.EmptyTitle", args, ApplicationMessage.WARNING));
     }
+    
     String s = (String) uiInput.getValue();
     for (int i = 0; i < s.length(); i++) {
       char c = s.charAt(i);
-      // Does not accept the following characters in the title of a page : @ / \ | ^ # ; [ ] { } < > . * ' "
+      // Does not accept the following characters in the title of a page : @ / \ | ^ # ; [ ] { } < > . * ' " +
       if (Character.isLetter(c)
           || Character.isDigit(c)
           || (c != ':' && c != '@' && c != '/' && c != '\\' && c != '|' && c != '^' && c != '#'
               && c != ';' && c != '[' && c != ']' && c != '{' && c != '}' && c != '<' && c != '>'
-              && c != '.' && c != '*' && c != '\'' && c != '\"')
+              && c != '.' && c != '*' && c != '\'' && c != '\"' && c != '+')
           ) {
         continue;
       }
@@ -114,9 +107,7 @@ public class SavePageActionComponent extends UIComponent {
     @Override
     protected void processEvent(Event<SavePageActionComponent> event) throws Exception {     
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
-      String requestURL = Utils.getCurrentRequestURL();
-      WikiPageParams pageParams = pageResolver.extractWikiPageParams(requestURL, Util.getUIPortal().getSelectedNode());      
+      WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
       UIApplication uiApp = event.getSource().getAncestorOfType(UIApplication.class);
       UIWikiPageTitleControlArea pageTitleControlForm = wikiPortlet.findComponentById(UIWikiPageControlArea.TITLE_CONTROL);
       UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
@@ -137,8 +128,6 @@ public class SavePageActionComponent extends UIComponent {
         Utils.redirect(pageParams, wikiPortlet.getWikiMode());
         return;
       }
-      
-     
 
       String title = titleInput.getValue().trim();
       if (wikiRichTextArea.isRendered()) {
@@ -153,8 +142,8 @@ public class SavePageActionComponent extends UIComponent {
       markup = markup.trim();
       try {       
         WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);       
-        Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode());
-        String newPageId = TitleResolver.getObjectId(title, false, false);
+        Page page = Utils.getCurrentWikiPage();
+        String newPageId = TitleResolver.getId(title, false);
         if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
           if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageParams.getPageId())) {
             newPageId = WikiNodeType.Definition.WIKI_HOME_NAME;
@@ -189,7 +178,7 @@ public class SavePageActionComponent extends UIComponent {
         } else if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
           if (wikiService.isExisting(pageParams.getType(),
                                      pageParams.getOwner(),
-                                     TitleResolver.getObjectId(title, false, false))) {
+                                     TitleResolver.getId(title, false))) {
             log.error("The title '" + title + "' is already existing!");
             uiApp.addMessage(new ApplicationMessage("SavePageAction.msg.warning-page-title-already-exist",
                                                     null,
@@ -211,7 +200,7 @@ public class SavePageActionComponent extends UIComponent {
           ((PageImpl) subPage).checkin();
           ((PageImpl) subPage).checkout();
           wikiPortlet.changeMode(WikiMode.VIEW);
-          String pageId = TitleResolver.getObjectId(title, false, false);
+          String pageId = TitleResolver.getId(title, false);
           pageParams.setPageId(pageId);
           Utils.redirect(pageParams, WikiMode.VIEW);
           return;

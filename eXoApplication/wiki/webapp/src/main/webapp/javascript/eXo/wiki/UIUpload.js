@@ -24,72 +24,88 @@ function UIUpload() {
   this.isAutoUpload = false;
   //this.listLimitMB = new Array();
 };
-
+/**
+ * Initialize upload and create a upload request to server
+ * @param {String} uploadId identifier upload
+ * @param {boolean} isAutoUpload auto upload or none
+ */
 UIUpload.prototype.initUploadEntry = function(uploadId, isAutoUpload) {
-	var url = eXo.env.server.context + "/command?" ;
-	url += "type=org.exoplatform.web.command.handler.UploadHandler&action=progress&uploadId="+uploadId ;
-	var responseText = ajaxAsyncGetRequest(url, false);
-	
-	var response;
+  var url = eXo.env.server.context + "/upload?" ;
+  url += "action=progress&uploadId="+uploadId ;
+  var responseText = ajaxAsyncGetRequest(url, false);
+  
+  var response;
    try{
     eval("response = "+responseText);
   }catch(err){
     return;  
   }
   UIUpload.isAutoUpload = isAutoUpload;
-	if(response.upload[uploadId] == undefined || response.upload[uploadId].percent == undefined) {
-		//eXo.wiki.UIUpload.listLimitMB.push();
-		this.createUploadEntry(uploadId, isAutoUpload);
-	} else if(response.upload[uploadId].percent == 100)  {
-		this.showUploaded(uploadId, decodeURIComponent(response.upload[uploadId].fileName));
-	} 
+  if(response.upload[uploadId] == undefined || response.upload[uploadId].percent == undefined) {
+    //eXo.wiki.UIUpload.listLimitMB.push();
+    this.createUploadEntry(uploadId, isAutoUpload);
+  } else if(response.upload[uploadId].percent == 100)  {
+    this.showUploaded(uploadId, decodeURIComponent(response.upload[uploadId].fileName));
+  } 
 };
 
 
 UIUpload.prototype.createUploadEntry = function(uploadId, isAutoUpload) {
   var iframe = document.getElementById(uploadId+'uploadFrame');
   var idoc = iframe.contentWindow.document ;
-  var uploadAction = eXo.env.server.context + "/command?" ;
-  uploadAction += "type=org.exoplatform.web.command.handler.UploadHandler";
-  uploadAction += "&uploadId=" + uploadId+"&action=upload" ;
-  idoc.open();
-	idoc.write("<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>");
-  idoc.write("<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='" +eXo.core.I18n.lang+ "' dir='" +eXo.core.I18n.dir+ "'>");
-  idoc.write("<head>");
-  idoc.write("<style type='text/css'>");
-  idoc.write(".UploadButton {width: 20px; height: 25px; cursor: pointer; vertical-align: bottom;");
-  idoc.write(" background: url('/wiki/skin/DefaultSkin/webui/background/UploadBtn.gif') no-repeat 3px 0; }");
-  idoc.write(".UIUploadForm {position: relative; }");
-  idoc.write(".FileHidden {position: relative; width: 220px; text-align: right; -moz-opacity:0 ; filter:alpha(opacity: 0); opacity: 0; z-index: 2; }");
-  idoc.write(".StylingFileUpload {position: absolute; width: 220px; top: 0px; left: 0px; z-index: 1; }");
-  idoc.write(".FileName {width: 145px; padding: 1px 0 0; }");
-  idoc.write(".BrowseButton {float: right; width: 65px; text-align: center; color: #ffffff; font-family: Arial; font-size: 12px; padding: 3px 0; background: url('/wiki/skin/DefaultSkin/webui/background/BtnSearch.gif') no-repeat left; }");
-  idoc.write(".ClearRight {clear: right; }");
-  idoc.write("</style>");
-  idoc.write("<script type='text/javascript'>var eXo = parent.eXo</script>");
-  idoc.write("</head>");
-  idoc.write("<body style='margin: 0px; border: 0px;'>");
-  idoc.write("  <form id='"+uploadId+"' class='UIUploadForm' style='margin: 0px; padding: 0px' action='"+uploadAction+"' enctype='multipart/form-data' method='post'>");
+  var uploadAction = eXo.env.server.context + "/upload?" ;
+  uploadAction += "uploadId=" + uploadId+"&action=upload" ; 
+  
+  var uploadHTML = "";
+  uploadHTML += "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>";
+  uploadHTML += "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='" +eXo.core.I18n.lang+ "' dir='" +eXo.core.I18n.dir+ "'>";
+  uploadHTML += "<head>";
+  uploadHTML += "<style type='text/css'>";
+  uploadHTML += ".UploadButton {width: 20px; height: 25px; cursor: pointer; vertical-align: bottom;";
+  uploadHTML += " background: url('/wiki/skin/DefaultSkin/webui/background/UploadBtn.gif') no-repeat 3px 0; }";
+  uploadHTML += ".UIUploadForm {position: relative; }";
+  uploadHTML += ".FileHidden {position: relative; width: 220px; text-align: right; -moz-opacity:0 ; filter:alpha(opacity: 0); opacity: 0; z-index: 2; }";
+  uploadHTML += ".StylingFileUpload {position: absolute; width: 220px; top: 0px; left: 0px; z-index: 1; }";
+  uploadHTML += ".FileName {width: 145px; padding: 1px 0 0; }";
+  uploadHTML += ".BrowseButton {float: right; width: 65px; text-align: center; color: #ffffff; font-family: Arial; font-size: 12px; padding: 3px 0; background: url('/wiki/skin/DefaultSkin/webui/background/BtnSearch.gif') no-repeat left; }";
+  uploadHTML += ".ClearRight {clear: right; }";
+  uploadHTML += "</style>";
+  uploadHTML += "<script type='text/javascript'>var eXo = parent.eXo</script>";
+  uploadHTML += "</head>";
+  uploadHTML += "<body style='margin: 0px; border: 0px;'>";
+  uploadHTML += "  <form id='"+uploadId+"' class='UIUploadForm' style='margin: 0px; padding: 0px' action='"+uploadAction+"' enctype='multipart/form-data' method='post'>";
   if(isAutoUpload){
-  	idoc.write("    <input type='file' name='file' id='file' value='' onchange='eXo.wiki.UIUpload.upload(this, "+uploadId+")' onkeypress='return false;' />");
+    uploadHTML += "    <input type='file' name='file' id='file' value='' onchange='eXo.wiki.UIUpload.upload(this, "+uploadId+")' onkeypress='return false;' />";
   }else{
-		idoc.write("    <input type='file' name='file' id='file' value='' onkeypress='return false;' />");
-	  idoc.write("    <img class='UploadButton' onclick='eXo.wiki.UIUpload.upload(this, "+uploadId+")' alt='' src='/eXoResources/skin/sharedImages/Blank.gif'/>");  	
+    uploadHTML += "    <input type='file' name='file' id='file' value='' onkeypress='return false;' />";
+    uploadHTML += "    <img class='UploadButton' onclick='eXo.wiki.UIUpload.upload(this, "+uploadId+")' alt='' src='/eXoResources/skin/sharedImages/Blank.gif'/>";   
   }
-  idoc.write("  </form>");
-  idoc.write("</body>");
-  idoc.write("</html>");
-  idoc.close();
+  uploadHTML += "  </form>";
+  uploadHTML += "</body>";
+  uploadHTML += "</html>";  
+  
+  if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
+    //workaround for Chrome
+    //When submit in iframe with Chrome, the iframe.contentWindow.document seems not be reconstructed correctly
+    idoc.open();
+    idoc.close();
+    idoc.documentElement.innerHTML = uploadHTML;      
+  } else {
+    idoc.open();
+    idoc.write(uploadHTML);
+    idoc.close();
+  }
+  
   this.stylingUploadEntry(uploadId);
 };
 
 UIUpload.prototype.stylingUploadEntry = function(uploadId){
-  var DOMUtil = eXo.core.DOMUtil;  
-  var container = document.getElementById(uploadId);  
+  var DOMUtil = eXo.core.DOMUtil;
+  var container = document.getElementById(uploadId);
   var uploadFrame = document.getElementById(uploadId+"uploadFrame");
   var form = uploadFrame.contentWindow.document.getElementById(uploadId);
   var file  = DOMUtil.findDescendantById(form, "file");
-  
+     
   var fdocument = uploadFrame.contentWindow.document;
   var stylingFileUpload = fdocument.createElement('div');
   stylingFileUpload.className = 'StylingFileUpload';
@@ -114,13 +130,17 @@ UIUpload.prototype.stylingUploadEntry = function(uploadId){
   file.onmouseout = function () {
     this.relatedElement.value = this.value;
   }
-}
+};
 
+/**
+ * Refresh progress bar to update state of upload progress
+ * @param {String} elementId identifier of upload bar frame
+ */
 UIUpload.prototype.refeshProgress = function(elementId) {
   var list =  eXo.wiki.UIUpload.listUpload;
   if(list.length < 1) return;
-  var url = eXo.env.server.context + "/command?" ;
-	url += "type=org.exoplatform.web.command.handler.UploadHandler&action=progress" ;
+  var url = eXo.env.server.context + "/upload?" ;
+  url += "action=progress" ;
 //  var url =  eXo.env.server.context + "/upload?action=progress";  
   for(var i = 0; i < list.length; i++){
     url = url + "&uploadId=" + list[i];
@@ -140,13 +160,13 @@ UIUpload.prototype.refeshProgress = function(elementId) {
   
   for(id in response.upload) {
     var container = parent.document.getElementById(elementId);
-  	if (response.upload[id].status == "failed") {
-  		this.abortUpload(id);
-  		var message = eXo.core.DOMUtil.findFirstChildByClass(container, "div", "LimitMessage").innerHTML ;
-  		alert(message.replace("{0}", response.upload[id].size)) ;
-//  		alert(response.upload[id].message);
-  		continue;
-  	}
+    if (response.upload[id].status == "failed") {
+      this.abortUpload(id);
+      var message = eXo.core.DOMUtil.findFirstChildByClass(container, "div", "LimitMessage").innerHTML ;
+      alert(message.replace("{0}", response.upload[id].size)) ;
+//      alert(response.upload[id].message);
+      continue;
+    }
     var element = document.getElementById(id+"ProgressIframe");
     var percent  =   response.upload[id].percent;
     var progressBarMiddle = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ProgressBarMiddle") ;
@@ -158,7 +178,7 @@ UIUpload.prototype.refeshProgress = function(elementId) {
     if(percent == 100) {
       var postUploadActionNode = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "PostUploadAction") ;
       if(postUploadActionNode) {
-    	eXo.wiki.UIUpload.listUpload.remove(elementId);
+        eXo.wiki.UIUpload.listUpload.remove(elementId);
         postUploadActionNode.onclick();
       } else {
         this.showUploaded(id, "");
@@ -173,10 +193,14 @@ UIUpload.prototype.refeshProgress = function(elementId) {
                         "<span onclick='parent.eXo.wiki.UIUpload.abortUpload("+id+")'>Abort</span>";
   }
 };
-
+/**
+ * Show uploaded state when upload has just finished a file
+ * @param {String} id uploaded identifier
+ * @param {String} fileName uploaded file name
+ */
 UIUpload.prototype.showUploaded = function(id, fileName) {
-	eXo.wiki.UIUpload.listUpload.remove(id);
-	var container = parent.document.getElementById(id);
+  eXo.wiki.UIUpload.listUpload.remove(id);
+  var container = parent.document.getElementById(id);
   var element = document.getElementById(id+"ProgressIframe");
   element.innerHTML =  "<span></span>";
   
@@ -195,13 +219,16 @@ UIUpload.prototype.showUploaded = function(id, fileName) {
   var temp = tmp.parentNode;
   //TODO: dang.tung - always return true even we reload browser
   var  input = parent.document.getElementById('input' + id);
-	input.value = "true" ;  
+  input.value = "true" ;  
 };
-
+/**
+ * Abort upload process
+ * @param {String} id upload identifier
+ */
 UIUpload.prototype.abortUpload = function(id) {
   eXo.wiki.UIUpload.listUpload.remove(id);
-  var url = eXo.env.server.context + "/command?" ;
-	url += "type=org.exoplatform.web.command.handler.UploadHandler&uploadId=" +id+"&action=abort" ;
+  var url = eXo.env.server.context + "/upload?" ;
+  url += "uploadId=" +id+"&action=abort" ;
 //  var url = eXo.env.server.context + "/upload?uploadId=" +id+"&action=abort" ;
   var request =  eXo.core.Browser.createHttpRequest();
   request.open('GET', url, false);
@@ -227,10 +254,13 @@ UIUpload.prototype.abortUpload = function(id) {
   var  input = parent.document.getElementById('input' + id);
   input.value = "false";
 };
-
+/**
+ * Delete uploaded file
+ * @param {String} id upload identifier
+ */
 UIUpload.prototype.deleteUpload = function(id) {
-	var url = eXo.env.server.context + "/command?";
-	url += "type=org.exoplatform.web.command.handler.UploadHandler&uploadId=" +id+"&action=delete" ;
+  var url = eXo.env.server.context + "/upload?";
+  url += "uploadId=" +id+"&action=delete" ;
 //  var url = eXo.env.server.context + "/upload?uploadId=" +id+"&action=delete" ;
   var request =  eXo.core.Browser.createHttpRequest();
   request.open('GET', url, false);
@@ -255,9 +285,13 @@ UIUpload.prototype.deleteUpload = function(id) {
   input.value = "false";
 } ;
 
-
+/**
+ * Start upload file
+ * @param {Object} clickEle
+ * @param {String} id
+ */
 UIUpload.prototype.upload = function(clickEle, id) {
-	var DOMUtil = eXo.core.DOMUtil;  
+  var DOMUtil = eXo.core.DOMUtil;  
   var container = parent.document.getElementById(id);  
   var uploadFrame = parent.document.getElementById(id+"uploadFrame");
   var form = uploadFrame.contentWindow.document.getElementById(id);

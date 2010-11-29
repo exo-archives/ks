@@ -18,7 +18,6 @@ package org.exoplatform.wiki.service.wysiwyg;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
@@ -43,8 +42,6 @@ import org.xwiki.gwt.wysiwyg.client.wiki.EntityConfig;
 import org.xwiki.gwt.wysiwyg.client.wiki.WikiPage;
 import org.xwiki.gwt.wysiwyg.client.wiki.WikiService;
 import org.xwiki.model.reference.DocumentReference;
-import org.xwiki.model.reference.DocumentReferenceResolver;
-import org.xwiki.model.reference.EntityReference;
 
 /**
  * Created by The eXo Platform SAS
@@ -56,12 +53,6 @@ import org.xwiki.model.reference.EntityReference;
 public class DefaultWikiService implements WikiService {
 
   private static Log log = ExoLogger.getLogger("wiki:GWTWikiService");
-
-  /**
-   * Used to construct a valid document reference.
-   */
-  @Requirement("default/reference")
-  private DocumentReferenceResolver<EntityReference> defaultReferenceDocumentReferenceResolver;
 
   /** Execution context handler, needed for accessing the WikiContext. */
   @Requirement
@@ -114,17 +105,6 @@ public class DefaultWikiService implements WikiService {
       spaceNames.add(wiki.getOwner());
     }
     return spaceNames;
-  }
-
-  /**
-   * Helper function to retrieve the blacklisted spaces
-   * 
-   * @return the list of blacklisted spaces from the session
-   */
-  @SuppressWarnings("unchecked")
-  private List<String> getBlackListedSpaces() {
-    List<String> blacklistedSpaces = Collections.emptyList();
-    return blacklistedSpaces;
   }
 
   /**
@@ -238,7 +218,7 @@ public class DefaultWikiService implements WikiService {
     org.exoplatform.wiki.service.WikiService wservice = (org.exoplatform.wiki.service.WikiService) PortalContainer.getComponent(org.exoplatform.wiki.service.WikiService.class);
     PageImpl page;
     try {
-      cleanedFileName = TitleResolver.getObjectId(cleanedFileName, false, false);
+      cleanedFileName = TitleResolver.getId(cleanedFileName, false);
       page = (PageImpl) wservice.getExsitedOrNewDraftPageById(attachmentReference.getWikiName(),
                                                               attachmentReference.getSpaceName(),
                                                               attachmentReference.getPageName());

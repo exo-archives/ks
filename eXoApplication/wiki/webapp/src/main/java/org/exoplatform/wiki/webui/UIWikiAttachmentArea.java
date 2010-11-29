@@ -33,8 +33,9 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
@@ -72,6 +73,25 @@ public class UIWikiAttachmentArea extends UIWikiForm {
     addUIFormInput(uiInput);    
   }
 
+  public void validate(String fileName) throws Exception {
+    String invalidCharacters = ": @ / \\ | ^ # ; [ ] { } < > * ' \" +";
+    Object[] args = { invalidCharacters };
+    
+    for (int i = 0; i < fileName.length(); i++) {
+      char c = fileName.charAt(i);
+      // Does not accept the following characters in the title of a page : @ / \ | ^ # ; [ ] { } < > * ' " +
+      if (Character.isLetter(c)
+          || Character.isDigit(c)
+          || (c != ':' && c != '@' && c != '/' && c != '\\' && c != '|' && c != '^' && c != '#'
+              && c != ';' && c != '[' && c != ']' && c != '{' && c != '}' && c != '<' && c != '>'
+              && c != '*' && c != '\'' && c != '\"' && c != '+')
+          ) {
+        continue;
+      }
+      throw new MessageException(new ApplicationMessage("AttachmentNameValidator.msg.Invalid-char", args , ApplicationMessage.WARNING));
+    }
+  }
+  
   private Collection<AttachmentImpl> getAttachmentsList() {
     Collection<AttachmentImpl> attachments = null;
     try {
@@ -114,6 +134,19 @@ public class UIWikiAttachmentArea extends UIWikiForm {
       UIApplication uiApp = wikiAttachmentArea.getAncestorOfType(UIApplication.class);
       UIFormUploadInput input = (UIFormUploadInput) wikiAttachmentArea.getUIInput(FIELD_UPLOAD);
       UploadResource uploadResource = input.getUploadResource();
+      
+      try {
+        event.getSource().validate(uploadResource.getFileName());
+      } catch (MessageException ex) {
+        uiApp.addMessage(ex.getDetailMessage());
+        event.getRequestContext().setProcessRender(true);
+      }
+      if (event.getRequestContext().getProcessRender()) {
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        resetUploadInput(event);
+        return;
+      }
+      
       byte[] imageBytes;
       WikiResource attachfile = null;
       if (uploadResource != null) {
@@ -124,7 +157,6 @@ public class UIWikiAttachmentArea extends UIWikiForm {
                                                   ApplicationMessage.WARNING));
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
           resetUploadInput(event);
-          event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea); 
           return;
         }
         InputStream is = input.getUploadDataAsStream();
