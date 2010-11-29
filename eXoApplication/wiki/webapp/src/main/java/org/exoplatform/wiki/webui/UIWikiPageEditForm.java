@@ -70,8 +70,6 @@ public class UIWikiPageEditForm extends UIWikiForm {
   public UIWikiPageEditForm() throws Exception{
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.EDITPAGE, WikiMode.ADDPAGE });
     
-    WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
-    
     addChild(UIWikiPageTitleControlArea.class, null, TITLE_CONTROL).toInputMode();
     addChild(UIPageToolBar.class, null, PAGE_TOOLBAR);
     addChild(UIWikiSidePanelArea.class, null, HELP_PANEL);
@@ -90,15 +88,6 @@ public class UIWikiPageEditForm extends UIWikiForm {
     syntaxTypes.add(new SelectItemOption<String>(Syntax.TWIKI_1_0.toString(),Syntax.TWIKI_1_0.toIdString()));
     UIFormSelectBox syntaxTypeSelectBox = new UIFormSelectBox(FIELD_SYNTAX,FIELD_SYNTAX,syntaxTypes);
     syntaxTypeSelectBox.setOnChange("SelectSyntax");
-    
-    Preferences currentPreferences= ((WikiImpl)Utils.getCurrentWiki()).getPreferences();
-    String currentDefaultSyntaxt = currentPreferences.getPreferencesSyntax().getDefaultSyntax();
-    if (currentDefaultSyntaxt == null) {
-      currentDefaultSyntaxt = wservice.getDefaultWikiSyntaxId();
-    }
-    syntaxTypeSelectBox.setValue(currentDefaultSyntaxt);
-    boolean allowSelect= currentPreferences.getPreferencesSyntax().getAllowMutipleSyntaxes();
-    syntaxTypeSelectBox.setEnable(allowSelect);
     addUIFormInput(syntaxTypeSelectBox);
   }   
   
@@ -108,16 +97,29 @@ public class UIWikiPageEditForm extends UIWikiForm {
   public boolean isSidePanelRendered(){
     return getChild(UIWikiSidePanelArea.class).isRendered();
   }
+  
+  public void reloadSyntax() throws Exception {
+    WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
+    WikiMode currentMode = getCurrentMode();
+    UIFormSelectBox syntaxTypeSelectBox = getUIFormSelectBox(FIELD_SYNTAX);
+    Preferences currentPreferences = ((WikiImpl) Utils.getCurrentWiki()).getPreferences();
+    boolean allowSelect = currentPreferences.getPreferencesSyntax().getAllowMutipleSyntaxes();
+    syntaxTypeSelectBox.setEnable(allowSelect);
+    if (currentMode.equals(WikiMode.ADDPAGE)) {
+      String currentDefaultSyntaxt = currentPreferences.getPreferencesSyntax().getDefaultSyntax();
+      if (currentDefaultSyntaxt == null) {
+        currentDefaultSyntaxt = wservice.getDefaultWikiSyntaxId();
+      }
+      syntaxTypeSelectBox.setValue(currentDefaultSyntaxt);
+    }
+  }
+  
   public static class SelectSyntaxActionListener extends EventListener<UIWikiPageEditForm> {
     @Override
     public void execute(Event<UIWikiPageEditForm> event) throws Exception {
-      UIWikiPageEditForm pageEditForm = event.getSource();
-      UIWikiSidePanelArea sidePanelForm = pageEditForm.getChild(UIWikiSidePanelArea.class);
-      UIFormSelectBox syntaxTypeSelectBox = pageEditForm.getChild(UIFormSelectBox.class);
-      sidePanelForm.renderHelpContent(syntaxTypeSelectBox.getValue());
-      event.getRequestContext().addUIComponentToUpdateByAjax(pageEditForm);
+      event.getRequestContext().addUIComponentToUpdateByAjax(event.getSource());
     }
-  }  
+  }
   
   static public class CloseActionListener extends EventListener<UIWikiPageEditForm> {
     @Override

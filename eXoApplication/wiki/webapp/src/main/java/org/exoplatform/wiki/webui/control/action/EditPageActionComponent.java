@@ -35,7 +35,6 @@ import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
-import org.exoplatform.wiki.webui.UIWikiSidePanelArea;
 import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
@@ -81,9 +80,8 @@ public class EditPageActionComponent extends UIComponent {
       markupInput.setValue(page.getContent().getText());
       commentInput.setValue("");
       commentInput.setRendered(true);
-      syntaxTypeSelectBox.setValue(page.getContent().getSyntax());      
-      UIWikiSidePanelArea sidePanelForm = pageEditForm.findFirstComponentOfType(UIWikiSidePanelArea.class);
-      sidePanelForm.renderHelpContent(syntaxTypeSelectBox.getValue());     
+      syntaxTypeSelectBox.setValue(page.getContent().getSyntax());
+      syntaxTypeSelectBox.setEnable(Utils.getCurrentPreferences().getPreferencesSyntax().getAllowMutipleSyntaxes());
       UIWikiRichTextArea wikiRichTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);
       if (wikiRichTextArea.isRendered()) {
         Utils.feedDataForWYSIWYGEditor(pageEditForm, null);

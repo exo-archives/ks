@@ -17,9 +17,11 @@
 package org.exoplatform.wiki.webui;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
@@ -61,20 +63,26 @@ public class UIWikiSidePanelArea extends UIContainer {
   
   public String getSyntaxFullPageUrl() {
     return syntaxFullPageUrl;
-  }  
-    
-  public void renderHelpContent(String syntaxId) throws Exception {
+  }
+  
+  @Override
+  public void processRender(WebuiRequestContext context) throws Exception {
+    // TODO Auto-generated method stub
     RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
     WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
-    PageImpl syntaxHelpPage= wikiService.getHelpSyntaxPage(syntaxId);
+    UIWikiPageEditForm editForm = this.getAncestorOfType(UIWikiPageEditForm.class);    
+    UIFormSelectBox syntaxTypeSelectBox = editForm.getChild(UIFormSelectBox.class);
+    String syntaxId = syntaxTypeSelectBox.getValue();
+    PageImpl syntaxHelpPage = wikiService.getHelpSyntaxPage(syntaxId);
     this.syntaxName = syntaxId.replace("/", " ").toUpperCase();
     if (syntaxHelpPage != null) {
       String markup = syntaxHelpPage.getContent().getText();
-      this.htmlOutput = renderingService.render(markup, syntaxId, Syntax.XHTML_1_0.toIdString());      
+      this.htmlOutput = renderingService.render(markup, syntaxId, Syntax.XHTML_1_0.toIdString());
       this.syntaxFullPageUrl = Utils.getCurrentRequestURL() + "?action=help&page="
           + syntaxId.replace("/", "SLASH").replace(".", "DOT");
     } else {
       this.htmlOutput = null;
     }
-  }  
+    super.processRender(context);
+  }
 }

@@ -41,7 +41,6 @@ import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
-import org.exoplatform.wiki.webui.UIWikiSidePanelArea;
 import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
@@ -106,8 +105,6 @@ public class AddPageActionComponent extends UIComponent {
     
     syntaxTypeSelectBox.setValue(currentDefaultSyntaxt);
     syntaxTypeSelectBox.setEnable(Utils.getCurrentPreferences().getPreferencesSyntax().getAllowMutipleSyntaxes());
-    UIWikiSidePanelArea sidePanelForm = pageEditForm.findFirstComponentOfType(UIWikiSidePanelArea.class);
-    sidePanelForm.renderHelpContent(syntaxTypeSelectBox.getValue());
     if (pageTitle != null && pageTitle.length() > 0) {
       titleInput.setValue(pageTitle);
       titleInput.setEditable(false);
