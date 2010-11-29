@@ -85,7 +85,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
 	private String categoryId_ = "";
 	private String parentId_;
 	// protected long index_ = 0;
-	final private static String CATEGORY_DETAIL_TAB = "CategoryDetailTab";
+	final private static String CATEGORY_DETAIL_TAB = "UIAddCategoryForm";
 	final private static String FIELD_NAME_INPUT = "eventCategoryName";
 	final private static String FIELD_DESCRIPTION_INPUT = "description";
 	final private static String FIELD_USERPRIVATE_INPUT = "userPrivate";
