@@ -1,15 +1,18 @@
 
 .UIWikiPortlet .UIWikiToolBar{
   float:right;
+  width: 100px;
 }
 
 .UIWikiPortlet .UIWikiToolBar .BrowseLink {
 	color:white;
+	background: url(../background/BrowseDownIcon.png) no-repeat right center;
+	padding-right: 12px;
 }
 
 .UIWikiPortlet .UIWikiToolBar .BrowseMenu {
 	width: 100px;
-	top: 26px;
+	top: 20px;
 	right: -1px;  
 }
 
@@ -17,16 +20,67 @@
 	line-height: 25px; 
 	padding-left:5px;
 	margin: 0;
-  float: left;	
 }
 
-.UIWikiPortlet .UIWikiToolBar .Icon:hover {
+.UIWikiPortlet .UIWikiToolBar .HoverMenu {
+	border:none;
+	background: none;
+}
+
+.UIWikiPortlet .UIWikiToolBar a { 
+	display: block;
+}
+
+.UIWikiPortlet .UIWikiToolBar a:hover { 
+	text-decoration: none;
+}
+
+.UIWikiPortlet .UIWikiToolBar .BrowseMenu .Icon:hover {
   text-decoration: none;
   background: #1a7fdf;
   color: white;				
 }
 
-.UIWikiPortlet .UIWikiToolBar .Preferences {
-  width:92px;
-	margin:1px;		
+.UIWikiPortlet .UIWikiToolBar .BrowseMenuTL {
+	background: url(../background/MenuBrowseBG.png) no-repeat left top;
+	padding-left: 5px;
+}
+
+.UIWikiPortlet .UIWikiToolBar .BrowseMenuTR {
+	background: url(../background/MenuBrowseBG.png) no-repeat right -6px;
+	padding-right: 5px;
+}
+
+.UIWikiPortlet .UIWikiToolBar .BrowseMenuTC {
+	background: url(../background/MenuBrowseBG.png) repeat-x center -12px;
+	height: 5px;
+}
+
+.UIWikiPortlet .UIWikiToolBar .BrowseMenuML {
+	background: url(../background/MenuBrowseML.png) repeat-y left;
+	padding-left: 5px;
+}
+
+.UIWikiPortlet .UIWikiToolBar .BrowseMenuMR {
+	background: url(../background/MenuBrowseMR.png) repeat-y right;
+	padding-right: 5px;
+}
+
+.UIWikiPortlet .UIWikiToolBar .BrowseMenuMC {
+	background: white;
+}
+
+.UIWikiPortlet .UIWikiToolBar .BrowseMenuBL {
+	background: url(../background/MenuBrowseBG.png) no-repeat left -18px;
+	padding-left: 5px;
+}
+
+.UIWikiPortlet .UIWikiToolBar .BrowseMenuBR {
+	background: url(../background/MenuBrowseBG.png) no-repeat right -24px;
+	padding-right: 5px;
+}
+
+.UIWikiPortlet .UIWikiToolBar .BrowseMenuBC {
+	background: url(../background/MenuBrowseBG.png) repeat-x center -30px;
+	height: 5px;
 }

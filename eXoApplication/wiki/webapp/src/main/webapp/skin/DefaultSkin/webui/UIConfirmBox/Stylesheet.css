@@ -4,28 +4,39 @@
   display: none;
   width: 350px;
   height: auto;
-  background: white;
+  background: #b3b3b3;
   color: black;
-  border: solid 1px black;
   position: relative;
-  padding-bottom: 5px;
+  padding: 3px;
+}
+
+.ConfirmBox div{
+  background: white;
+  padding: 12px 0px;
+}
+
+.ConfirmBox div div{
+  background: none;
+  padding: 0px;
 }
 
 .ConfirmBox .ConfirmBar {
-  background-color: #D7D7D7;
-  height: 25px;
-  padding: 0px 7px 0;  
+  background-color: #e1e1e1;
+  line-height: 21px;
+  height: 23px;
+  padding: 3px 7px 0px 7px;  
 }
 
 .ConfirmBox .ConfirmTitle {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
   text-align: left;
   float: left;
+  color:#165fb3;
 }
 
 .ConfirmBox .ConfirmMessage {
-  margin: 5px;
+  padding: 2px 0px 10px 0px;
   font-size: 12px;
 }
 

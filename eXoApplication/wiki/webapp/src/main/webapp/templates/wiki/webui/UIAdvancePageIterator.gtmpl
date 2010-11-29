@@ -7,13 +7,18 @@
 <% uiform.begin() %>
 <% if(maxPage > 1) {%>
     <div class="PageIteratorContainer" align="center">
+		<div class="LeftPageIteratorBlock">
+            <div class="TotalPages"><%=_ctx.appRes("UIAdvancePageIterator.label.Totalpages");%>:</div>
+            <div class="PagesTotalNumber"><%=maxPage%></div>
+            <div style="clear:left;"><span></span></div>
+        </div>
         <div class="RightPageIteratorBlock">
         <% if(pageSelected == 1) {%>
-            <div class="Icon DisableLastTopPageIcon"></div>             
-            <div class="Icon DisableLastPageIcon"><span></span></div>
+            <div class="Number DisableLastTopPage Disable"><< First</div>             
+            <div class="Number DisableLastPage Disable">< Privious</div>
         <% } else { %>
-            <a title="<%=_ctx.appRes("UIAdvancePageIterator.label.BackFirstPage");%>" class="Icon LastTopPageIcon" href="<%=uicomponent.event(uicomponent.GOPAGE, uicomponent.FIRST)%>"></a>               
-            <a title="<%=_ctx.appRes("UIAdvancePageIterator.label.PreviousPage");%>" class="Icon LastPageIcon" href="<%=uicomponent.event(uicomponent.GOPAGE,uicomponent.PREVIOUS)%>"></a>
+            <a title="<%=_ctx.appRes("UIAdvancePageIterator.label.BackFirstPage");%>" class="LastTopPage PageNormal Number" href="<%=uicomponent.event(uicomponent.GOPAGE, uicomponent.FIRST)%>"><< First</a>               
+            <a title="<%=_ctx.appRes("UIAdvancePageIterator.label.PreviousPage");%>" class="LastPage PageNormal Number" href="<%=uicomponent.event(uicomponent.GOPAGE,uicomponent.PREVIOUS)%>">< Privious</a>
         <% } %>
         <% 
             for(number in uicomponent.getDisplayedRange()) {
@@ -29,11 +34,11 @@
             <% } %>
         <%} %>
         <% if(pageSelected != maxPage) {%> 
-            <a title="<%=_ctx.appRes("UIAdvancePageIterator.label.NextPage");%>" class="Icon NextPageIcon" href="<%=uicomponent.event(uicomponent.GOPAGE, uicomponent.NEXT)%>"></a>
-            <a title="<%=_ctx.appRes("UIAdvancePageIterator.label.ReturnLastPage");%>" class="Icon NextTopPageIcon" href="<%=uicomponent.event(uicomponent.GOPAGE, uicomponent.LAST)%>"></a>
+            <a title="<%=_ctx.appRes("UIAdvancePageIterator.label.NextPage");%>" class="NextPage PageNormal Number" href="<%=uicomponent.event(uicomponent.GOPAGE, uicomponent.NEXT)%>">Next ></a>
+            <a title="<%=_ctx.appRes("UIAdvancePageIterator.label.ReturnLastPage");%>" class="NextTopPage PageNormal Number" href="<%=uicomponent.event(uicomponent.GOPAGE, uicomponent.LAST)%>">Last >></a>
         <% } else { %>  
-            <div class="Icon DisableNextPageIcon"><span></span></div>
-            <div class="Icon DisableNextTopPageIcon"><span></span></div>
+            <div class="Number DisableNextPage Disable">Next ></div>
+            <div class="Number DisableNextTopPage Disable">Last >></div>
         <% } %>
         <div title="<%=_ctx.appRes("UIAdvancePageIterator.label.GoPageNumber");%>" class="GotoPageIcon">
             <div onclick="eXo.wiki.UIWikiPortlet.showPopup(this, event);" style="width:20px; height:16px;"><span></span></div>
@@ -81,11 +86,7 @@
         </div>
             <div style="clear:left;"><span></span></div>
         </div>
-        <div class="LeftPageIteratorBlock">
-            <div class="TotalPages"><%=_ctx.appRes("UIAdvancePageIterator.label.Totalpages");%>:</div>
-            <div class="PagesTotalNumber"><%=maxPage%></div>
-            <div style="clear:left;"><span></span></div>
-        </div>
+        
     </div>
     <div style="clear:right;"><span></span></div>
 <% } %>

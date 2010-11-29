@@ -1,6 +1,7 @@
 
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox {
   float: right;
+  width: 185px;
 }
 
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox .AdvancedSearch {
@@ -38,7 +39,9 @@
 	margin-top:2px;
 	padding:0px;
 	background: none;
+	width: 143px;
 }
+
 
 .UIWikiPortlet .SearchPopup{
   width: 200px;
@@ -113,7 +116,7 @@
 }
 
 .UIWikiPortlet .SearchPopup  .TextItem:hover {	
-  background: #D0DFF0 url("background/UIWikiSearchBG.png") no-repeat 12px -118px;	
+  background: #ececec url("background/UIWikiSearchBG.png") no-repeat 12px -118px;	
 }
 
 .UIWikiPortlet .SearchPopup .MenuItem a:hover {	

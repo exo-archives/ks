@@ -835,7 +835,7 @@
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .doc {
-	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/WordFileIcon.png") no-repeat left top;
+	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/doc.gif") no-repeat left top;
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .mdb {
@@ -843,7 +843,7 @@
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .xml {
-	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/XmlFileIcon.png") no-repeat left top;
+	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/xml.gif") no-repeat left top;
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .xls {
@@ -863,7 +863,7 @@
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .html {
-	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/HtmlFileIcon.png") no-repeat left top;
+	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/html.gif") no-repeat left top;
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .jpg {
@@ -875,7 +875,7 @@
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .pdf {
-	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/PdfFileIcon.png") no-repeat left top;
+	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/pdf.gif") no-repeat left top;
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .psd {
@@ -883,7 +883,7 @@
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .ppt {
-	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/PptFileIcon.png") no-repeat left top;
+	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/ppt.gif") no-repeat left top;
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .txt {
@@ -984,6 +984,10 @@
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .wmv {
   background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/wmv.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .asc {
+  background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/txt.gif") no-repeat left top;
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .TxtDetail {
@@ -1425,4 +1429,9 @@
 
 .UIWikiPortlet .UIWikiMovePageForm .UIAction .ActionButton {
 	float: right;
+}
+
+.MaskLayer{
+	opacity: 0.5 !important;
+	filter: alpha(opacity=50) !important;
 }

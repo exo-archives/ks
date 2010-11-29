@@ -10,20 +10,36 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(
 	%>
 		<a class="HoverLink BrowseLink Icon"><%= _ctx.appRes(uicomponent.getName() + ".action." + browseActionComponent.getActionName()) %></a>	
 		<div style="position:relative;margin-top:-1px">
-			<div class="HoverMenu BrowseMenu">		
-			<%
-				for(entry in uicomponent.getActions()) {
-				def actionComponent= entry.getActionComponent();
-				String actionName = entry.getActionName();
-	 			String actionLabel=_ctx.appRes(uicomponent.getName() + ".action." + actionName);
- 				String link = actionComponent.event(actionName);
-			%>
-				<% if(actionName.equals("Preferences")){%>
-					<a href="$link" class="Preferences Icon">$actionLabel</a>
-		<%			}
-					}
-			}
-	%>
+			<div class="HoverMenu BrowseMenu">
+				<div class="BrowseMenuTL">
+					<div class="BrowseMenuTR">
+						<div class="BrowseMenuTC"><span></span></div>
+					</div>
+				</div>
+				<div class="BrowseMenuML">
+					<div class="BrowseMenuMR">
+						<div class="BrowseMenuMC">
+							<%
+								for(entry in uicomponent.getActions()) {
+								def actionComponent= entry.getActionComponent();
+								String actionName = entry.getActionName();
+					 			String actionLabel=_ctx.appRes(uicomponent.getName() + ".action." + actionName);
+				 				String link = actionComponent.event(actionName);
+							%>
+								<% if(actionName.equals("Preferences")){%>
+									<a href="$link" class="Preferences Icon">$actionLabel</a>
+						<%			}
+									}
+							}
+					%>
+						</div>
+					</div>
+				</div>
+				<div class="BrowseMenuBL">
+					<div class="BrowseMenuBR">
+						<div class="BrowseMenuBC"><span></span></div>
+					</div>
+				</div>
 		</div>
 	</div>
 </div>
