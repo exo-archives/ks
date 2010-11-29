@@ -83,6 +83,8 @@ UIWikiPortlet.prototype.changeMode = function(event) {
     }
     if (mode.indexOf("/") > 0)
       mode = mode.substring(0, mode.indexOf("/"));
+  } else if(currentURL.indexOf("action=AddPage") > 0) {
+    mode = "AddPage";
   }
   var link = me.changeModeLink;
   var endParamIndex = link.href.lastIndexOf("')");
