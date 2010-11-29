@@ -505,11 +505,14 @@ UIAnswersPortlet.prototype.showImage = function() {
 } ;
 
 UIAnswersPortlet.prototype.reSizeAvatar = function(imgElm) {
-	imgElm.style.width = "auto" ;
-	imgElm.style.width = "auto" ;
-	if(imgElm.width > 100){  
+	if (!imgElm) return;
+	var imgObj = new Image();
+	imgObj.src = imgElm.src;
+	var height = imgObj.height;
+	var width = imgObj.width;
+	if(width > 100){  
 		imgElm.style.width = "100px" ;
-	} else if(imgElm.height > 125){  
+	} else if(height > 150){  
 		imgElm.style.height = "150px" ;
 	}
 	var parent = imgElm.parentNode;
