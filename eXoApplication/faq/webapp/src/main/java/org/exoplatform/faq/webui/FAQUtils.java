@@ -43,6 +43,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JcrInputProperty;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
@@ -493,6 +494,16 @@ public class FAQUtils {
 			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
 		}
 		return null;
+	}
+	
+	public static String getUserAvatar(String userName) throws Exception {
+	  String url = "";
+	  FAQService service =  getFAQService();
+	  FileAttachment avatar = service.getUserAvatar(userName);
+	  if (avatar != null) {
+	    url = Utils.getImageUrl(avatar.getPath());
+	  }
+	  return url;
 	}
 	
 	public static String getFileSource(FileAttachment attachment, DownloadService dservice){
