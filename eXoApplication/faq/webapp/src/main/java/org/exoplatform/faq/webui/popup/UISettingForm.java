@@ -39,6 +39,7 @@ import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -265,17 +266,22 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
 
 			addUIFormInput((new UIFormCheckBoxInput<Boolean>(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
 
-			avatarUrl = FAQUtils.getFileSource(((FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class)).getUserAvatar(FAQUtils.getCurrentUser()),
-					getApplicationComponent(DownloadService.class));
+			setAvatarUrl(FAQUtils.getUserAvatar(FAQUtils.getCurrentUser()));
 
 			if (avatarUrl == null || avatarUrl.trim().length() < 1)
 				avatarUrl = Utils.DEFAULT_AVATAR_URL;
 		}
 	}
 
-	public void setAvatarUrl(String url) {
-		this.avatarUrl = url;
-	}
+  public void setAvatarUrl(String url) {
+    if (url != null && url.trim().length() > 0) {
+      // add random id to avoid caching image on Firefox.
+      this.avatarUrl = url + "?avatarRandomId=" + IdGenerator.generate();
+    } else {
+      this.avatarUrl = url;
+    }
+
+  }
 
 	public FAQSetting getFaqSetting() {
 		return faqSetting_;

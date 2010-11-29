@@ -45,6 +45,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JcrInputProperty;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
@@ -507,6 +508,17 @@ public class FAQUtils {
 		return calendar;
 	}
 
+  public static String getUserAvatar(String userName) throws Exception {
+    String url = "";
+    FAQService service = getFAQService();
+    FileAttachment avatar = service.getUserAvatar(userName);
+    if (avatar != null) {
+      url = Utils.getImageUrl(avatar.getPath());
+    }
+    return url;
+  }
+	
+	
 	private static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
 		byte[] imageBytes = null;
 		if (input != null) {

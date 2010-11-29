@@ -132,8 +132,8 @@ public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
 				}
 				FAQService service = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
 				service.saveUserAvatar(FAQUtils.getCurrentUser(), listFileAttachment.get(0));
-				String avatarUrl = FAQUtils.getFileSource(((FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class)).getUserAvatar(FAQUtils.getCurrentUser()), attachMentForm
-						.getApplicationComponent(DownloadService.class));
+				String currentUser = FAQUtils.getCurrentUser();
+				String avatarUrl = FAQUtils.getUserAvatar(currentUser);
 				if (avatarUrl == null || avatarUrl.trim().length() < 1)
 					avatarUrl = attachMentForm.getLabel("AvatarURL");
 				UISettingForm settingForm = portlet.findFirstComponentOfType(UISettingForm.class);
