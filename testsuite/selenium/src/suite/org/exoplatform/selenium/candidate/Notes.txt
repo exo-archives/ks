@@ -1,7 +1,6 @@
 SNF_KS_02 : The script is valid but have error from selenium that cause the system work invidly. This problem only happen in /ksdemo, OK in /defaultportal
 SNF_KS_03 : Because of pop up interation, Import/Export can not be recorded and verified result. 
 SNF_KS_06 : Because of pop up interation, RSS Feed can not be record and verified result.  
-SNF_KS_14 : The script is valid but this function has bug that causes the system work invidly(KS-2605)
 SNF_KS_23 : Because of pop up interation, Import/Export can not be recorded and verified result.
 SNF_KS_24 : The script is valid but have error from selenium that cause the system work invidly
 SNF_KS_32 : The script is valid but this function has bug that causes the system work invidly(KS-2653)
