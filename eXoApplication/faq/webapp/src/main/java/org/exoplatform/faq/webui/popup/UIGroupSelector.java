@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -23,6 +23,8 @@ import java.util.List;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.ks.common.webui.UISelectComponent;
+import org.exoplatform.ks.common.webui.UISelector;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -183,14 +185,12 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
     }
   }
 
-  static  public class SelectPathActionListener extends EventListener<UIBreadcumbs> {
-    public void execute(Event<UIBreadcumbs> event) throws Exception {
-      UIBreadcumbs uiBreadcumbs = event.getSource() ;
-      UIGroupSelector uiGroupSelector = uiBreadcumbs.getParent() ;
-      uiBreadcumbs.setSelectPath(uiGroupSelector.getCurrentGroup().getId());     
-      uiGroupSelector.changeGroup(uiGroupSelector.getCurrentGroup().getId()) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiGroupSelector) ;
-    }
-  }
-
+  static	public class SelectPathActionListener extends EventListener<UIBreadcumbs> {
+		public void execute(Event<UIBreadcumbs> event) throws Exception {
+			UIGroupSelector uiGroupSelector = event.getSource().getParent() ;
+			String objectId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			uiGroupSelector.changeGroup(objectId) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiGroupSelector) ;
+		}
+	}
 }

@@ -22,6 +22,8 @@ import java.util.List;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.ks.common.webui.UISelectComponent;
+import org.exoplatform.ks.common.webui.UISelector;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;

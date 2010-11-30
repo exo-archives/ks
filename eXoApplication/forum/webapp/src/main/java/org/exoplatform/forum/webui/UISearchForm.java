@@ -29,10 +29,11 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.webui.popup.UISelector;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.ks.common.webui.UISelector;
+import org.exoplatform.ks.common.webui.UIUserSelect;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -53,7 +54,6 @@ import org.exoplatform.webui.form.UIFormInput;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.organization.account.UIUserSelector;
 
 /**
  * Created by The eXo Platform SARL
@@ -79,7 +79,7 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
              type = UIPopupWindow.class,
              template =  "system:/groovy/webui/core/UIPopupWindow.gtmpl",
              events = {
-               @EventConfig(listeners = UIPopupWindow.CloseActionListener.class, name = "ClosePopup")  ,
+            	 @EventConfig(listeners = UISearchForm.ClosePopupActionListener.class, name = "ClosePopup")	,
                @EventConfig(listeners = UISearchForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
                @EventConfig(listeners = UISearchForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
              }
@@ -116,6 +116,7 @@ public class UISearchForm extends UIForm implements UISelector {
 	private boolean isSearchCate = false;
 	private boolean isSearchTopic = false;
 	private String path = "";
+	private final static String USER_SEARCH_POPUP_WINDOW_ID = "UIUserSearchPopupWindow";
 	private ForumService forumService;
 	private List<TopicType> listTT = new ArrayList<TopicType>();
 	public UISearchForm() throws Exception {
@@ -459,69 +460,75 @@ public class UISearchForm extends UIForm implements UISelector {
 		}
 	}
 
-  static  public class CloseActionListener extends EventListener<UIUserSelector> {
-    public void execute(Event<UIUserSelector> event) throws Exception {
-      UIUserSelector uiUserSelector = event.getSource() ;
-      UIPopupWindow uiPoupPopupWindow = uiUserSelector.getParent() ;
-      UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
-      uiPoupPopupWindow.setUIComponent(null);
-			uiPoupPopupWindow.setShow(false);
-      forumPortlet.cancelAction();
-    }
-  }
-  
-  static  public class AddActionListener extends EventListener<UIUserSelector> {
-  	public void execute(Event<UIUserSelector> event) throws Exception {
-  		UIUserSelector uiUserSelector = event.getSource() ;
-  		String values = uiUserSelector.getSelectedUsers();
-  		UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
-  		UISearchForm searchForm = forumPortlet.findFirstComponentOfType(UISearchForm.class);
-  		UIPopupWindow uiPoupPopupWindow = uiUserSelector.getParent();
-  		UIPopupContainer uiContainer = uiPoupPopupWindow.getAncestorOfType(UIPopupContainer.class);
-  		String id = uiContainer.getId();
-  		if(id.equals("PopupContainer"+FIELD_SEARCHUSER_INPUT)){
-  			UIFormStringInput searchUser = searchForm.getUIStringInput(FIELD_SEARCHUSER_INPUT);
-  			String vls = searchUser.getValue();
-  			if(!ForumUtils.isEmpty(vls)) {
-  				values = values + "," + vls;
-  				values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
-  			}
-  			searchUser.setValue(values);
-  		} else {
-  			UIFormStringInput moderators = searchForm.getUIStringInput(FIELD_MODERATOR_INPUT);
-  			String vls = moderators.getValue();
-  			if(!ForumUtils.isEmpty(vls)) {
-  				values = values + "," + vls;
-  				values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
-  			}
-  			moderators.setValue(values);
-  		}
-			uiPoupPopupWindow.setUIComponent(null);
-			uiPoupPopupWindow.setShow(false);
-  		forumPortlet.cancelAction();
+	static	public class CloseActionListener extends EventListener<UIUserSelect> {
+		public void execute(Event<UIUserSelect> event) throws Exception {
+			UIUserSelect uiUserSelector = event.getSource() ;
+			UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			popupAction.removeChild(UIPopupContainer.class);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+
+	static	public class ClosePopupActionListener extends EventListener<UIPopupWindow> {
+		public void execute(Event<UIPopupWindow> event) throws Exception {
+			UIPopupWindow popupWindow = event.getSource() ;
+			UIForumPortlet forumPortlet = popupWindow.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			popupAction.removeChild(UIPopupContainer.class);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static	public class AddActionListener extends EventListener<UIUserSelect> {
+		public void execute(Event<UIUserSelect> event) throws Exception {
+			UIUserSelect uiUserSelector = event.getSource() ;
+			String values = uiUserSelector.getSelectedUsers();
+			UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UISearchForm searchForm = forumPortlet.findFirstComponentOfType(UISearchForm.class);
+			String id = uiUserSelector.getPermisionType();
+			if(id.equals(FIELD_SEARCHUSER_INPUT)){
+				UIFormStringInput searchUser = searchForm.getUIStringInput(FIELD_SEARCHUSER_INPUT);
+				String vls = searchUser.getValue();
+				if(!ForumUtils.isEmpty(vls)) {
+					values = values + "," + vls;
+					values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+				}
+				searchUser.setValue(values);
+			} else {
+				UIFormStringInput moderators = searchForm.getUIStringInput(FIELD_MODERATOR_INPUT);
+				String vls = moderators.getValue();
+				if(!ForumUtils.isEmpty(vls)) {
+					values = values + "," + vls;
+					values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+				}
+				moderators.setValue(values);
+			}
+			popupAction.removeChild(UIPopupContainer.class);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(searchForm) ;
-  	}
-  }
-  
+		}
+	}
+	
 	static	public class AddValuesUserActionListener extends EventListener<UISearchForm> {
 		public void execute(Event<UISearchForm> event) throws Exception {
+			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UISearchForm searchForm = event.getSource() ;
 			UIForumPortlet forumPortlet = searchForm.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true) ;
-			String id = "PopupContainer" + event.getRequestContext().getRequestParameter(OBJECTID)	;
-			UIPopupContainer uiPopupContainer = popupAction.getChild(UIPopupContainer.class);
-			if(uiPopupContainer == null)uiPopupContainer = popupAction.addChild(UIPopupContainer.class, null, null);
-			uiPopupContainer.setId(id);
-			UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById("UIUserSearchPopupWindow");
-			if(uiPopupWindow == null)uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, "UIUserSearchPopupWindow", "UIUserSearchPopupWindow") ;
-			UIUserSelector uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelector.class, null, null);
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIPopupWindow uiPopupWindow = popupContainer.getChildById(USER_SEARCH_POPUP_WINDOW_ID);
+			if(uiPopupWindow == null)uiPopupWindow = popupContainer.addChild(UIPopupWindow.class, USER_SEARCH_POPUP_WINDOW_ID, USER_SEARCH_POPUP_WINDOW_ID) ;
+			UIUserSelect uiUserSelector = popupContainer.createUIComponent(UIUserSelect.class, null, "UIUserSelector");
 			uiUserSelector.setShowSearch(true);
 			uiUserSelector.setShowSearchUser(true);
 			uiUserSelector.setShowSearchGroup(false);
+			uiUserSelector.setPermisionType(id);
 			uiPopupWindow.setUIComponent(uiUserSelector);
 			uiPopupWindow.setShow(true);
 			uiPopupWindow.setWindowSize(740, 400);
-			uiPopupContainer.setRendered(true);
+			popupAction.addChild(popupContainer);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
 		}
 	}
