@@ -276,15 +276,24 @@
 
 .UIWikiPortlet .UIWikiPageTitleControlForm_PageControlArea {
 	float:left;
-	font-size:18px;
+	font-size:24px;
 	font-weight:bold;
-	color: #333333;
+	color: #555555;
 	width: 70%;
+	padding: 2px 0px;
+}
+
+.UIWikiPortlet .UIWikiPageTitleControlForm_PageControlArea .TitleInfo{
+	background:none repeat scroll 0 0 #F3F6FB;
+	border:1px dashed #D1DEEF;
+	margin:0 0 4px;
+	padding:0 12px;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea {
 	margin: 10px 15px;
 	border-bottom:1px solid #C7C7C7;
+	height: 37px;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar{
