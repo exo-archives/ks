@@ -3864,8 +3864,6 @@ public class JCRDataStorage implements DataStorage {
 				categoryInfo.setSubCateInfos(subList);
 			}
 		} catch (Exception e) {
-			// log.error("Failed to get categoryInfo ", e);
-			// categoryInfo = new CategoryInfo() ;
 			return null;
 		} finally {
 			sProvider.close();
