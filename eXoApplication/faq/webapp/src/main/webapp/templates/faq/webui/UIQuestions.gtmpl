@@ -18,7 +18,7 @@
 	jsmanager.addJavascript('eXo.faq.UIAnswersPortlet.initContextMenu("'+compId+'") ;') ;
 	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
 	jsmanager.addCustomizedOnLoadScript('eXo.faq.UIAnswersPortlet.loadActionScroll();');
-	
+	jsmanager.addJavascript('eXo.faq.UIAnswersPortlet.updateContainersHeight();') ;
 	String url = uicomponent.url("Setting", "OBJECTID");
 	uicomponent.setLink(url);
 	String cateId = uicomponent.getCategoryId();
@@ -55,7 +55,7 @@
 									 	String linkRss = uicomponent.getRSSLink() ;
 									%>
 										<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-											<div onclick="$linkRss" class="SeparatorLine">
+											<div class="SeparatorLine">
 												<div class="LeftOverButton">
 													<div class="RightOverButton">
 														<div class="CenterOverButton">
@@ -1264,10 +1264,3 @@
 	
 <%/* End View category*/ %>
 </div>
-<script type="text/javascript">
-	var ansCt = document.getElementById('AnswersContainer');
-	var ansVCt = document.getElementById('AnswersViewContent');
-	if(ansVCt && ansCt){
-		ansCt.style.height = (ansVCt.offsetHeight-61) + "px";
-	}
-</script>

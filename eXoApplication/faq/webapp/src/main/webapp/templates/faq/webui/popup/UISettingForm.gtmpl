@@ -7,7 +7,6 @@ if(!uicomponent.isEditPortlet_){
 %>
 <div class="UISettingForm $uicomponent.id">
 	<% uiform.begin() %>
- 					<form class="UIForm">
 	 					<div class="HorizontalLayout">
 			 					<table class="UIFormGrid">								
 									<tbody>
@@ -70,7 +69,6 @@ if(!uicomponent.isEditPortlet_){
 									</tbody>
 								</table>
 				 		</div>
-				 	</form>
 			 	<div class="UIAction">
 			<table class="ActionContainer" style="text-align:center">
 				<tr>
