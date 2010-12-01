@@ -347,7 +347,7 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 			try {
 				UICategory uiCategory = categoryContainer.getChild(UICategory.class) ;
 				uiCategory.setIsEditForum(true) ;
-				uiCategory.updateByLink(cat) ;
+				uiCategory.updateByBreadcumbs(cat.getId()) ;
 				categoryContainer.updateIsRender(false) ;
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 				forumPortlet.findFirstComponentOfType(UIBreadcumbs.class).setUpdataPath(cat.getId());
