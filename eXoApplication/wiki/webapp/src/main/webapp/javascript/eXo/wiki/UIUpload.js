@@ -82,19 +82,14 @@ UIUpload.prototype.createUploadEntry = function(uploadId, isAutoUpload) {
   }
   uploadHTML += "  </form>";
   uploadHTML += "</body>";
-  uploadHTML += "</html>";  
-  
-  if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
-    //workaround for Chrome
-    //When submit in iframe with Chrome, the iframe.contentWindow.document seems not be reconstructed correctly
-    idoc.open();
-    idoc.close();
-    idoc.documentElement.innerHTML = uploadHTML;      
-  } else {
-    idoc.open();
-    idoc.write(uploadHTML);
-    idoc.close();
+  uploadHTML += "</html>";
+
+  idoc.open();
+  idoc.write(uploadHTML);
+  if (eXo.core.Browser.gecko) {
+    history.back();
   }
+  idoc.close(); 
   
   this.stylingUploadEntry(uploadId);
 };
