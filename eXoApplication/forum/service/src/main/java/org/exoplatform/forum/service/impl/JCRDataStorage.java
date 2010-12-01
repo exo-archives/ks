@@ -2265,104 +2265,107 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 
 	public void modifyTopic(List<Topic> topics, int type) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node forumHomeNode = getForumHomeNode(sProvider);
-		List<String>userIdsp = new ArrayList<String>();
-		long topicCount = 0;
-		long postCount = 0;
-		Node forumNode = null;
 		try {
-			String topicPath = topics.get(0).getPath();
-			forumNode = (Node) forumHomeNode.getSession().getItem(topicPath).getParent();
-			topicCount = forumNode.getProperty(EXO_TOPIC_COUNT).getLong();
-			postCount = forumNode.getProperty(EXO_POST_COUNT).getLong();
-			if(forumNode.hasProperty(EXO_MODERATORS)) {
-				userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
-			}
-			userIdsp.addAll(getAllAdministrator(sProvider));
-		} catch (PathNotFoundException e) {
-		}
-		for (Topic topic : topics) {
+			Node forumHomeNode = getForumHomeNode(sProvider);
+			List<String>userIdsp = new ArrayList<String>();
+			long topicCount = 0;
+			long postCount = 0;
+			Node forumNode = null;
 			try {
-				String topicPath = topic.getPath();
-				Node topicNode = (Node) forumHomeNode.getSession().getItem(topicPath);
-				switch (type) {
-				case 1: {
-					topicNode.setProperty(EXO_IS_CLOSED, topic.getIsClosed());
-					setActivePostByTopic(sProvider, topicNode, !(topic.getIsClosed()));
-					break;
+				String topicPath = topics.get(0).getPath();
+				forumNode = (Node) forumHomeNode.getSession().getItem(topicPath).getParent();
+				topicCount = forumNode.getProperty(EXO_TOPIC_COUNT).getLong();
+				postCount = forumNode.getProperty(EXO_POST_COUNT).getLong();
+				if(forumNode.hasProperty(EXO_MODERATORS)) {
+					userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
 				}
-				case 2: {
-					topicNode.setProperty(EXO_IS_LOCK, topic.getIsLock());
-					break;
-				}
-				case 3: {
-					topicNode.setProperty(EXO_IS_APPROVED, topic.getIsApproved());
-					sendNotification(topicNode.getParent(), topic, null, "", true);
-					setActivePostByTopic(sProvider, topicNode, topic.getIsApproved());
-					getTotalJobWatting(userIdsp);
-					break;
-				}
-				case 4: {
-					topicNode.setProperty(EXO_IS_STICKY, topic.getIsSticky());
-					break;
-				}
-				case 5: {
-					boolean isWaiting = topic.getIsWaiting();
-					topicNode.setProperty(EXO_IS_WAITING, isWaiting);
-					setActivePostByTopic(sProvider, topicNode, !(isWaiting));
-					if(!isWaiting){
-						sendNotification(topicNode.getParent(), topic, null, "", true);
-					}
-					getTotalJobWatting(userIdsp);
-					break;
-				}
-				case 6: {
-					topicNode.setProperty(EXO_IS_ACTIVE, topic.getIsActive());
-					setActivePostByTopic(sProvider, topicNode, topic.getIsActive());
-					getTotalJobWatting(userIdsp);
-					break;
-				}
-				case 7: {
-					topicNode.setProperty(EXO_NAME, topic.getTopicName());
-					try {
-						Node nodeFirstPost = topicNode.getNode(topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST));
-						nodeFirstPost.setProperty(EXO_NAME, topic.getTopicName());
-					} catch (PathNotFoundException e) {
-					}
-					break;
-				}
-				case 8: {
-					topicNode.setProperty(EXO_USER_VOTE_RATING, topic.getUserVoteRating());
-					topicNode.setProperty(EXO_VOTE_RATING, topic.getVoteRating());
-					break;
-				}
-				default:
-					break;
-				}
-				if(type == 3 || type == 5) {
-					if(!topic.getIsWaiting() && topic.getIsApproved()) {
-						topicCount = topicCount + 1;
-						postCount = postCount + (topicNode.getProperty(EXO_POST_COUNT).getLong()+1);
-					}
-				}
-				if (type != 2 && type != 4 && type != 7 && type != 8 && 
-						forumNode.hasProperty(EXO_LAST_TOPIC_PATH) && (forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString().equals(topicNode.getName()) ||
-						Utils.isEmpty(forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString()))) {
-					queryLastTopic(sProvider, forumNode.getPath());
-				}
+				userIdsp.addAll(getAllAdministrator(sProvider));
 			} catch (PathNotFoundException e) {
 			}
+			for (Topic topic : topics) {
+				try {
+					String topicPath = topic.getPath();
+					Node topicNode = (Node) forumHomeNode.getSession().getItem(topicPath);
+					switch (type) {
+					case 1: {
+						topicNode.setProperty(EXO_IS_CLOSED, topic.getIsClosed());
+						setActivePostByTopic(sProvider, topicNode, !(topic.getIsClosed()));
+						break;
+					}
+					case 2: {
+						topicNode.setProperty(EXO_IS_LOCK, topic.getIsLock());
+						break;
+					}
+					case 3: {
+						topicNode.setProperty(EXO_IS_APPROVED, topic.getIsApproved());
+						sendNotification(topicNode.getParent(), topic, null, "", true);
+						setActivePostByTopic(sProvider, topicNode, topic.getIsApproved());
+						getTotalJobWatting(sProvider, userIdsp);
+						break;
+					}
+					case 4: {
+						topicNode.setProperty(EXO_IS_STICKY, topic.getIsSticky());
+						break;
+					}
+					case 5: {
+						boolean isWaiting = topic.getIsWaiting();
+						topicNode.setProperty(EXO_IS_WAITING, isWaiting);
+						setActivePostByTopic(sProvider, topicNode, !(isWaiting));
+						if(!isWaiting){
+							sendNotification(topicNode.getParent(), topic, null, "", true);
+						}
+						getTotalJobWatting(sProvider, userIdsp);
+						break;
+					}
+					case 6: {
+						topicNode.setProperty(EXO_IS_ACTIVE, topic.getIsActive());
+						setActivePostByTopic(sProvider, topicNode, topic.getIsActive());
+						getTotalJobWatting(sProvider, userIdsp);
+						break;
+					}
+					case 7: {
+						topicNode.setProperty(EXO_NAME, topic.getTopicName());
+						try {
+							Node nodeFirstPost = topicNode.getNode(topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST));
+							nodeFirstPost.setProperty(EXO_NAME, topic.getTopicName());
+						} catch (PathNotFoundException e) {
+						}
+						break;
+					}
+					case 8: {
+						topicNode.setProperty(EXO_USER_VOTE_RATING, topic.getUserVoteRating());
+						topicNode.setProperty(EXO_VOTE_RATING, topic.getVoteRating());
+						break;
+					}
+					default:
+						break;
+					}
+					if(type == 3 || type == 5) {
+						if(!topic.getIsWaiting() && topic.getIsApproved()) {
+							topicCount = topicCount + 1;
+							postCount = postCount + (topicNode.getProperty(EXO_POST_COUNT).getLong()+1);
+						}
+					}
+					if (type != 2 && type != 4 && type != 7 && type != 8 && 
+							forumNode.hasProperty(EXO_LAST_TOPIC_PATH) && (forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString().equals(topicNode.getName()) ||
+							Utils.isEmpty(forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString()))) {
+						queryLastTopic(sProvider, forumNode.getPath());
+					}
+				} catch (PathNotFoundException e) {
+				}
+			}
+			if(type == 3 || type == 5) {
+				forumNode.setProperty(EXO_TOPIC_COUNT, topicCount);
+				forumNode.setProperty(EXO_POST_COUNT, postCount);
+			}
+			if(forumNode.isNew()){
+				forumNode.getSession().save();
+			} else {
+				forumNode.save();
+			}
+		}finally {
+			sProvider.close() ;
 		}
-		if(type == 3 || type == 5) {
-			forumNode.setProperty(EXO_TOPIC_COUNT, topicCount);
-			forumNode.setProperty(EXO_POST_COUNT, postCount);
-		}
-		if(forumNode.isNew()){
-			forumNode.getSession().save();
-		} else {
-			forumNode.save();
-		}
-		sProvider.close() ;
 	}
 
 	public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
@@ -2454,7 +2457,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
 				}
 				userIdsp.addAll(getAllAdministrator(sProvider));
-				getTotalJobWatting(userIdsp);
+				getTotalJobWatting(sProvider, userIdsp);
 				isGetLastTopic = true;
 			}
 			if(!isNew && (isGetLastTopic || topic.getIsActive() || topic.getIsClosed())) {
@@ -2582,7 +2585,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
 				}
 				userIdsp.addAll(getAllAdministrator(sProvider));
-				getTotalJobWatting(userIdsp);
+				getTotalJobWatting(sProvider, userIdsp);
 			}
 			try {
 				queryLastTopic(sProvider, forumNode.getPath());
@@ -3206,7 +3209,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
 				}
 				userIdsp.addAll(getAllAdministrator(sProvider));
-				getTotalJobWatting(userIdsp);
+				getTotalJobWatting(sProvider, userIdsp);
 			}
 		} catch (Exception e) {
 			log.error("Failed to save post" + post.getName(),e);
@@ -3678,7 +3681,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					if (isGetLastPost){
 						queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")));
 					}
-					getTotalJobWatting(userIdsp) ;
+					getTotalJobWatting(sProvider, userIdsp) ;
 				} catch (PathNotFoundException e) {
 					log.error("Failed to modify post" + post.getName(),e);
 				}
@@ -3762,7 +3765,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					list.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
 				}
 				list.addAll(getAllAdministrator(sProvider));
-				getTotalJobWatting(list);
+				getTotalJobWatting(sProvider, list);
 			}
 			return post;			
 		} catch (Exception e) {
@@ -3924,7 +3927,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				}
 			}
 			if(!userIdsp.isEmpty()) {
-				getTotalJobWatting(userIdsp);
+				getTotalJobWatting(sProvider, userIdsp);
 			}
 		}catch (Exception e) {
 			throw e;
@@ -6288,9 +6291,9 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			while(it.hasNext()) {
 				userId = it.next().getKey();
 				if(userId.indexOf(Utils.DELETED) < 0) {
-					if(profileHome.hasNode(userId)) {
+					try {
 						profile = profileHome.getNode(userId) ;
-					}else {
+					} catch (Exception e) {
 						profile = profileHome.addNode(userId, Utils.USER_PROFILES_TYPE) ;
 						profile.setProperty(EXO_USER_ID, userId) ;
 						profile.setProperty(EXO_LAST_LOGIN_DATE, cal) ;
@@ -6299,7 +6302,6 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					}
 					long l = (isReset) ? topicMap.get(userId) : profile.getProperty(EXO_TOTAL_TOPIC).getLong() + topicMap.get(userId) ;
 					profile.setProperty(EXO_TOTAL_TOPIC, l) ;
-					
 					if(postMap.containsKey(userId)) {
 						long t = (isReset) ? postMap.get(userId) : profile.getProperty(EXO_TOTAL_POST).getLong() + postMap.get(userId) ;
 						profile.setProperty(EXO_TOTAL_POST, t) ;
@@ -6308,14 +6310,19 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					}
 				}
 			}
+			if (profileHome.isNew()) {
+				profileHome.getSession().save();
+			} else {
+				profileHome.save() ;				
+			}
 			//update post to user profile
 			it = postMap.entrySet().iterator() ;
 			while(it.hasNext()) {
 				userId = it.next().getKey();
 				if(userId.indexOf(Utils.DELETED) < 0) {
-					if(profileHome.hasNode(userId)) {
+					try {
 						profile = profileHome.getNode(userId) ;
-					}else {
+					} catch (Exception e) {
 						profile = profileHome.addNode(userId, Utils.USER_PROFILES_TYPE) ;
 						profile.setProperty(EXO_USER_ID, userId) ;
 						profile.setProperty(EXO_LAST_LOGIN_DATE, cal) ;
@@ -6494,9 +6501,8 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		}
 		return totalJob;
 	}
-//	TODO: JUnit test is fall.
-	public void getTotalJobWatting(List<String> userIds) {
-		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
+
+	private void getTotalJobWatting (SessionProvider sProvider, List<String> userIds) {
 		try {
 			JsonGeneratorImpl generatorImpl = new JsonGeneratorImpl();
 			Category cat = new Category();
@@ -6514,11 +6520,17 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			}
 		} catch (Exception e) {
 			log.error("Failed to get total job waiting for moderator",e);
-		}finally {
-			sProvider.close();
 		}
 	}
 
+	public void getTotalJobWatting(List<String> userIds) {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			getTotalJobWatting(sProvider, userIds);
+		} finally {
+			sProvider.close() ;
+		}
+	}
 	
 	protected ContinuationService getContinuationService() {
 		ContinuationService continuation = (ContinuationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ContinuationService.class);
