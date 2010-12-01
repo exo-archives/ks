@@ -5,6 +5,14 @@ function UIAnswersPortlet() {
 	this.scrollMgr = [];
 };
 
+UIAnswersPortlet.prototype.updateContainersHeight = function() {
+	var ansCt = document.getElementById('AnswersContainer');
+		var ansVCt = document.getElementById('AnswersViewContent');
+		if(ansVCt && ansCt){
+			ansCt.style.height = (ansVCt.offsetHeight-61) + "px";
+	    }
+};
+
 UIAnswersPortlet.prototype.checkedNode = function(elm){
 	var input = elm.getElementsByTagName("input")[0];
   var DOMUtil = eXo.core.DOMUtil;
