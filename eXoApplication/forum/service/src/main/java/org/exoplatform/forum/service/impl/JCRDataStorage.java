@@ -6781,7 +6781,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 			}
 		} catch (Exception e) {
 			log.error("Failed to get total job waiting for moderator",e);
-		}finally {sProvider.close();}
+		}
 	}
 
 	protected ContinuationService getContinuationService() {
