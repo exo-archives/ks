@@ -52,23 +52,128 @@
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>-Add Topic-</td>
-	<td></td>
-</tr>
-<tr>
 	<td>open</td>
 	<td>/ksdemo/private/classic/forum</td>
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Add Category for Test-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>//a/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>//a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>CategoryTitle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>CategoryTitle</td>
+	<td>Cate1_SNF_KS_34</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Description</td>
+	<td>Category 1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Cate1_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Cate1_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add Forum-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[3]/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[3]/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>ForumTitle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>ForumTitle</td>
+	<td>For1_SNF_KS_34</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Description</td>
+	<td>prepare forum data</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Cate1_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Cate1_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>For1_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>For1_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add Topic-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=For1_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
@@ -89,7 +194,7 @@
 <tr>
 	<td>type</td>
 	<td>ThreadTitle</td>
-	<td>Topic for&nbsp;&nbsp;post actions 01</td>
+	<td>Top1_SNF_KS_34</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -127,6 +232,16 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForTextPresent</td>
+	<td>Top1_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Top1_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Start topic</td>
 	<td></td>
@@ -144,7 +259,7 @@
 <tr>
 	<td>type</td>
 	<td>ThreadTitle</td>
-	<td>Topic for&nbsp;&nbsp;post actions 02</td>
+	<td>Top2_SNF_KS_34</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -182,18 +297,28 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForTextPresent</td>
+	<td>Top2_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Top2_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
 	<td>echo</td>
 	<td>-Add Quick Reply-</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//a[contains(text(),'Topic for&nbsp;&nbsp;post actions 02')]</td>
+	<td>//a[contains(text(),'Top2_SNF_KS_34')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//a[contains(text(),'Topic for&nbsp;&nbsp;post actions 02')]</td>
+	<td>//a[contains(text(),'Top2_SNF_KS_34')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -298,12 +423,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIMovePostForm']/div[@class='UITree ScrollArea']/div/div/div[4]/div/div[4]/div[2]/div[@class='NodeLabel']/a</td>
+	<td>//a[contains(text(),'Top1_SNF_KS_34')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIMovePostForm']/div[@class='UITree ScrollArea']/div/div/div[4]/div/div[4]/div[2]/div[@class='NodeLabel']/a</td>
+	<td>//a[contains(text(),'Top1_SNF_KS_34')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Post 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Post 1</td>
 	<td></td>
 </tr>
 <tr>
@@ -353,12 +488,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
@@ -379,7 +514,7 @@
 <tr>
 	<td>type</td>
 	<td>ThreadTitle</td>
-	<td>Topic for approve post</td>
+	<td>Top3_SNF_KS_34</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -429,6 +564,16 @@
 <tr>
 	<td>click</td>
 	<td>link=Submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Top3_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Top3_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
@@ -488,12 +633,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
@@ -503,7 +648,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Topic for approve post</td>
+	<td>link=Top3_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
@@ -538,12 +683,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
@@ -623,22 +768,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Topic for approve post</td>
+	<td>link=Top3_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Topic for approve post</td>
+	<td>link=Top3_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
@@ -698,12 +843,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
@@ -808,22 +953,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Topic for approve post</td>
+	<td>link=Top3_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Topic for approve post</td>
+	<td>link=Top3_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
@@ -838,12 +983,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
@@ -918,22 +1063,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Topic for approve post</td>
+	<td>link=Top3_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Topic for approve post</td>
+	<td>link=Top3_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
@@ -948,12 +1093,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
@@ -1023,42 +1168,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=Cate1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=Cate1_SNF_KS_34</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//td[9]/input</td>
+	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//td[9]/input</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//tr[2]/td[9]/input</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//tr[3]/td[9]/input</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//form[@id='UITopicContainer']/div[4]/div/div[1]/div/div/div/div[2]/div[1]/div/div/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//form[@id='UITopicContainer']/div[4]/div/div[1]/div/div/div/div[2]/div[1]/div/div/div/div/div</td>
+	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
 	<td></td>
 </tr>
 <tr>
@@ -1073,12 +1198,32 @@
 </tr>
 <tr>
 	<td>assertConfirmation</td>
-	<td>Are you sure you want to delete these 3 topics?</td>
+	<td>Are you sure you want to delete this category?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextNotPresent</td>
+	<td>Cate1_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>Cate1_SNF_KS_34</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Sign in</td>
 	<td></td>
 </tr>
 

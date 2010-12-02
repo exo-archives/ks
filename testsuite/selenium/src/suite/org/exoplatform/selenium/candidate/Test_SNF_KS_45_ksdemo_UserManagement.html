@@ -39,6 +39,166 @@
 <tr>
 	<td>type</td>
 	<td>username</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>gtn</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/private/classic/forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add Category for Test-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>CategoryTitle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>CategoryTitle</td>
+	<td>Cate1_SNF_KS_45</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Description</td>
+	<td>Category 1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Cate1_SNF_KS_45</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Cate1_SNF_KS_45</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add Forum-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[3]/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[3]/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>ForumTitle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>ForumTitle</td>
+	<td>For1_SNF_KS_45</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Description</td>
+	<td>prepare forum data</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Cate1_SNF_KS_45</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Cate1_SNF_KS_45</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>For1_SNF_KS_45</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>For1_SNF_KS_45</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add Topic-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>username</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
 	<td>demo</td>
 </tr>
 <tr>
@@ -58,17 +218,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UIForumActionBar</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_45</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_45</td>
 	<td></td>
 </tr>
 <tr>
@@ -109,7 +264,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>Topic Test</td>
+	<td>Test</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -172,6 +327,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>- Login by root to manage-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
@@ -179,11 +339,6 @@
 <tr>
 	<td>waitForTextPresent</td>
 	<td>Sign in</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>- Login by root to manage-</td>
 	<td></td>
 </tr>
 <tr>
@@ -382,6 +537,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Login by banned Demo to check-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
@@ -389,11 +549,6 @@
 <tr>
 	<td>waitForTextPresent</td>
 	<td>Sign in</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>-Login by banned Demo to check-</td>
 	<td></td>
 </tr>
 <tr>
@@ -443,12 +598,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_45</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_45</td>
 	<td></td>
 </tr>
 <tr>
@@ -502,6 +657,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>- Login by root to unban demo and verify changes value-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
@@ -509,11 +669,6 @@
 <tr>
 	<td>waitForTextPresent</td>
 	<td>Sign in</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>- Login by root to unban demo and verify changes value-</td>
 	<td></td>
 </tr>
 <tr>
@@ -682,6 +837,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Login demo to check unban or not-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
@@ -689,11 +849,6 @@
 <tr>
 	<td>waitForTextPresent</td>
 	<td>Sign in</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>-Login demo to check unban or not-</td>
 	<td></td>
 </tr>
 <tr>
@@ -743,12 +898,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_45</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Live demo</td>
+	<td>link=For1_SNF_KS_45</td>
 	<td></td>
 </tr>
 <tr>
@@ -858,37 +1013,47 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Demo Topic</td>
+	<td>link=Cate1_SNF_KS_45</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Demo Topic</td>
+	<td>link=Cate1_SNF_KS_45</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UITopicDetail</td>
+	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[5]/div[1]/div/div/div/div/div</td>
+	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
+	<td>link=Delete</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
+	<td>link=Delete</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertConfirmation</td>
-	<td>Are you sure you want to delete this topic?</td>
+	<td>Are you sure you want to delete this category?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextNotPresent</td>
+	<td>Cate1_SNF_KS_45</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>Cate1_SNF_KS_45</td>
 	<td></td>
 </tr>
 <tr>
@@ -1011,7 +1176,6 @@
 	<td>Sign in</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>

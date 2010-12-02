@@ -58,38 +58,33 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Add Forum for sorting-</td>
+	<td>-Add Category for Test-</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Add forum</td>
+	<td>//a/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Add forum</td>
+	<td>//a/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>ForumTitle</td>
+	<td>CategoryTitle</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>ForumTitle</td>
-	<td>Forum Setting</td>
+	<td>CategoryTitle</td>
+	<td>Cate1_SNF_KS_46</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>Description</td>
-	<td>Forum for Forum Setting</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Save</td>
-	<td></td>
+	<td>Category 1</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -97,23 +92,73 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForTextPresent</td>
+	<td>Cate1_SNF_KS_46</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Cate1_SNF_KS_46</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add Forum for Sorting-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>link=Knowledge Suite</td>
+	<td>//div[3]/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Knowledge Suite</td>
+	<td>//div[3]/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Forum Setting</td>
+	<td>ForumTitle</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>link=Forum Setting</td>
+	<td>type</td>
+	<td>ForumTitle</td>
+	<td>For1_SNF_KS_46</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Description</td>
+	<td>Test forum sorting</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Cate1_SNF_KS_46</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Cate1_SNF_KS_46</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>For1_SNF_KS_46</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>For1_SNF_KS_46</td>
 	<td></td>
 </tr>
 <tr>
@@ -153,12 +198,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Knowledge Suite</td>
+	<td>link=Cate1_SNF_KS_46</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Knowledge Suite</td>
+	<td>link=Cate1_SNF_KS_46</td>
 	<td></td>
 </tr>
 <tr>
@@ -208,12 +253,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Knowledge Suite</td>
+	<td>link=Cate1_SNF_KS_46</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Knowledge Suite</td>
+	<td>link=Cate1_SNF_KS_46</td>
 	<td></td>
 </tr>
 <tr>
@@ -517,68 +562,53 @@
 	<td>X Topic</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Delete test data-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon RemoveForumIcon']/a</td>
+	<td>link=Cate1_SNF_KS_46</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon RemoveForumIcon']/a</td>
+	<td>link=Cate1_SNF_KS_46</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Delete</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertConfirmation</td>
-	<td>Are you sure you want to delete this forum?</td>
+	<td>Are you sure you want to delete this category?</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=ASort Forum</td>
+	<td>waitForTextNotPresent</td>
+	<td>Cate1_SNF_KS_46</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=ASort Forum</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon RemoveForumIcon']/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon RemoveForumIcon']/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertConfirmation</td>
-	<td>Are you sure you want to delete this forum?</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Forum Setting</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Forum Setting</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon RemoveForumIcon']/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon RemoveForumIcon']/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertConfirmation</td>
-	<td>Are you sure you want to delete this forum?</td>
+	<td>verifyTextNotPresent</td>
+	<td>Cate1_SNF_KS_46</td>
 	<td></td>
 </tr>
 <tr>
@@ -656,7 +686,6 @@
 	<td>Sign in</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>
