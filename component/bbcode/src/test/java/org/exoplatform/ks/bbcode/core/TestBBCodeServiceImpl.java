@@ -34,6 +34,7 @@ import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.spi.BBCodeData;
 import org.exoplatform.ks.bbcode.spi.BBCodePlugin;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -52,7 +53,8 @@ public class TestBBCodeServiceImpl extends AbstractJCRTestCase {
   @BeforeMethod
   protected void setUp() throws Exception {
     bbcodeService = new BBCodeServiceImpl();
-    KSDataLocation locator = new KSDataLocation(getRepository(), getWorkspace());
+    RepositoryService repos = getComponent(RepositoryService.class);
+    KSDataLocation locator = new KSDataLocation(getWorkspace(), repos);
     bbcodeService.setDataLocator(locator);
     
     bbcodesPath = bbcodeService.getDataLocator().getBBCodesLocation();

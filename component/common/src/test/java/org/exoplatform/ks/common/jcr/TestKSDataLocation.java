@@ -32,7 +32,7 @@ public class TestKSDataLocation extends TestCase {
 
   public void testGetUserSubscriptionLocation() {
 
-    KSDataLocation location = new KSDataLocation("","");
+    KSDataLocation location = new KSDataLocation("");
     String expected = Locations.USER_PROFILE_HOME + "/FOO/forumSubscriptionFOO";
     
     assertEquals(expected, location.getUserSubscriptionLocation("FOO"));

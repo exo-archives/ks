@@ -27,6 +27,7 @@ import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.rss.ForumFeedGenerator;
 import org.exoplatform.ks.rss.RSS;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -45,7 +46,7 @@ public class TestForumFeedGenerator extends AbstractJCRTestCase {
   KSDataLocation locator = null;
   @BeforeMethod
   protected void setUp() throws Exception {
-    locator = new KSDataLocation(getRepository(), getWorkspace());
+    locator = new KSDataLocation(getWorkspace(), getComponent(RepositoryService.class));
     generator = new ForumFeedGenerator(locator);
   }
 

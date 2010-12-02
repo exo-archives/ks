@@ -78,22 +78,22 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
   @BeforeMethod
   protected void setUp() throws Exception {
     storage = new JCRDataStorage();
-    KSDataLocation locator = new KSDataLocation(getRepository(), getWorkspace());
+    KSDataLocation locator = new KSDataLocation(getWorkspace());
     storage.setDataLocator(locator);
   }
   
   @Test
   public void testConstructor() {
-    KSDataLocation location = new KSDataLocation("foo", "bar");
+    KSDataLocation location = new KSDataLocation("bar");
     JCRDataStorage storage = new JCRDataStorage(location);
-    assertEquals(storage.getRepository(), "foo");
+//    assertEquals(storage.getRepository(), "foo");
     assertEquals(storage.getWorkspace(), "bar");
     assertEquals(storage.getPath(), location.getForumHomeLocation());
   }
   
   @Test
   public void testPlugins() {
-    KSDataLocation location = new KSDataLocation("foo", "bar");
+    KSDataLocation location = new KSDataLocation("bar");
     JCRDataStorage storage = new JCRDataStorage(location);
     storage.getDefaultPlugins();
   }
@@ -354,7 +354,7 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
 
   public void _testDefaultAvatarWithMocks() throws Exception {
     JCRDataStorage storage = new JCRDataStorage();
-    KSDataLocation locator = new KSDataLocation((String)null, (String)null);
+    KSDataLocation locator = new KSDataLocation("wp");
     JCRSessionManager sessionManager = stubJCRSessionManager();
     locator.setSessionManager(sessionManager);
     storage.setDataLocator(locator);

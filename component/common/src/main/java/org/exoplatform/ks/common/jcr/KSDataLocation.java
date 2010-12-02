@@ -18,6 +18,7 @@ package org.exoplatform.ks.common.jcr;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ks.common.conf.DataLocationPlugin;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -38,7 +39,7 @@ public class KSDataLocation {
   /**
    * Parameter name use to designate the name of the repository where the data is stored. Should be passed in constructor's {@link InitParams}
    */
-  public static final String REPOSITORY_PARAM = "repository";
+//  public static final String REPOSITORY_PARAM = "repository";
   
   /**
    * Parameter name use to designate the name of the workspace in the repository where the data is stored. Should be passed in constructor's {@link InitParams}
@@ -76,36 +77,39 @@ public class KSDataLocation {
   private String faqTemplatesLocation;
   
   private NodeHierarchyCreator creator;
-  private String repository;
   private String workspace;
   private SessionManager sessionManager;
-
+  private RepositoryService repositoryService;
   
   /**
    * Creates a new {@link KSDataLocation} and initializes pathes.
    * @param params {@link #REPOSITORY_PARAM} and {@link #WORKSPACE_PARAM} are expected as value-param 
    * @param creator used to resolve path names. It is also declared here to ensure that the data structure has been initalized before.
    */
-  public KSDataLocation(InitParams params, NodeHierarchyCreator creator) {
+  public KSDataLocation(InitParams params, NodeHierarchyCreator creator, RepositoryService repositoryService) {
     this.creator = creator;
-    this.repository = getParam(params, REPOSITORY_PARAM, DEFAULT_REPOSITORY_NAME);
     this.workspace = getParam(params, WORKSPACE_PARAM, DEFAULT_WORKSPACE_NAME);
-    this.sessionManager = new JCRSessionManager(repository, workspace);
+    this.repositoryService = repositoryService;
+    this.sessionManager = new JCRSessionManager(workspace, repositoryService);
     initPathes();
   }
   
   /**
    * Mainly used for tests
-   * @param repository
    * @param workspace
    */
-  public KSDataLocation(String repository, String workspace) {
-    this.repository = repository;
-    this.workspace = workspace;
-    this.sessionManager = new JCRSessionManager(repository, workspace);
+  public KSDataLocation(String workspace, RepositoryService repositoryService) {
+  	this.workspace = workspace;
+  	this.repositoryService = repositoryService; 
+    this.sessionManager = new JCRSessionManager(workspace, repositoryService);
     initPathes();
   }
 
+  public KSDataLocation(String workspace) {
+  	this.workspace = workspace;
+    this.sessionManager = new JCRSessionManager(workspace, null);
+    initPathes();
+  }
   /**
    * Initializes all pathes with {@link #getPath(String)}
    */
@@ -139,9 +143,8 @@ public class KSDataLocation {
    * @param plugin plugin defining repository and workspace location for the data storage
    */
   public void setLocation(DataLocationPlugin plugin) {
-    this.repository = plugin.getRepository();
     this.workspace = plugin.getWorkspace();
-    this.sessionManager = new JCRSessionManager(repository, workspace);
+    this.sessionManager = new JCRSessionManager(workspace, repositoryService);
   } 
   
   /**
@@ -178,7 +181,11 @@ public class KSDataLocation {
   }
 
   public String getRepository() {
-    return repository;
+  	try {
+  		return repositoryService.getCurrentRepository().getConfiguration().getName();
+		} catch (Exception e) {
+			return DEFAULT_REPOSITORY_NAME;
+		}
   }
 
   public String getWorkspace() {
@@ -349,7 +356,7 @@ public class KSDataLocation {
   
   
   public String toString() {
-    return  repository + "/" + workspace;
+    return workspace;
   }
   
   /**

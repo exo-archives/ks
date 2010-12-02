@@ -922,7 +922,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 	
 	public void calculateModerator(String nodePath, boolean isNew) throws Exception {
 		try {
-			JCRSessionManager manager = new JCRSessionManager(repository, workspace);
+			JCRSessionManager manager = new JCRSessionManager(workspace);
 			Session session = manager.createSession();
 			try{
 				Node node = (Node)session.getItem(nodePath);
@@ -7138,7 +7138,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 	
 	public void updateStatisticCounts(long topicCount, long postCount) throws Exception {
 		try {
-			JCRSessionManager manager = new JCRSessionManager(repository, workspace);
+			JCRSessionManager manager = new JCRSessionManager(workspace);
 			Session session = manager.createSession();
 			try {
 				Node forumStatisticNode = session.getRootNode().getNode(dataLocator.getForumStatisticsLocation());
