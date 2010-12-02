@@ -59,7 +59,7 @@ if(!uicomponent.isEditPortlet_){
 														if(!uicomponent.avatarUrl.equals(Utils.DEFAULT_AVATAR_URL)){%>
 															|
 															<a href="javaScript:void(0);" onclick="<%=uiform.event("SetDefaultAvatar", uicomponent.id,"")%>" style="cursor:pointer; color:blue;">
-																<%=_ctx.appRes("UISettingForm.label.resetAvatar")%> ABC
+																<%=_ctx.appRes("UISettingForm.label.resetAvatar")%>
 															</a>
 														<%
 														}%>

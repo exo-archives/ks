@@ -32,7 +32,7 @@ public class ForumRSSEventListener implements EventListener{
 	public ForumRSSEventListener(KSDataLocation dataLocator) throws Exception {
 		this.locator = dataLocator;
 		workspace_ = dataLocator.getWorkspace();
-		repository_ = dataLocator.DEFAULT_WORKSPACE_NAME;
+		repository_ = dataLocator.DEFAULT_REPOSITORY_NAME;
 	}
 	
   public String getSrcWorkspace(){  return workspace_ ; }
