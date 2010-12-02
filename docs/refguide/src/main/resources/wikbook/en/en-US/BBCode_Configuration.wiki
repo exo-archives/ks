@@ -13,7 +13,7 @@ The default BBCode data is configured in the _bbcodes-configuration.xml_ file.
 
 In particular, at runtime of BBCode Service, the BBCode plug-in component is called. Then, the _bbcodes-configuration.xml_ file will be executed, and the component-plugin named _registerBBCodePlugin_ will be referred to _org.exoplatform.ks.bbcode.spi.BBCodePlugin_ to execute some objects that will generate default data. 
 
-{code:xml}
+{code:html}
 <component-plugin>
       <name>forum.default.bbcodes</name>
       <set-method>registerBBCodePlugin</set-method>
@@ -28,7 +28,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>I</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<i>\{param\}</i>]]></string>
+              <string><![CDATA[<i>{param}</i>]]></string>
             </field>
             <field name="description">
               <string>Set text in italic</string>
@@ -53,7 +53,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>B</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<b>\{param\}</b>]]></string>
+              <string><![CDATA[<b>{param}</b>]]></string>
             </field>
             <field name="description">
               <string>Set text in bold</string>
@@ -73,13 +73,12 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
         <object-param>
           <name>U</name>
           <description></description>
-                
           <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>U</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<u>\{param\}</u>]]></string>
+              <string><![CDATA[<u>{param}</u>]]></string>
             </field>
             <field name="description">
               <string>Set text in underline</string>
@@ -104,7 +103,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>COLOR</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<font color="\{option\}">\{param\}</font>]]></string>
+              <string><![CDATA[<font color="{option}">{param}</font>]]></string>
             </field>
             <field name="description">
               <string>The [color=option] tag allows you to change the color of your text.</string>
@@ -129,7 +128,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>SIZE</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<font size="\{option\}">\{param\}</font>]]></string>
+              <string><![CDATA[<font size="{option}">{param}</font>]]></string>
             </field>
             <field name="description">
               <string>The [size=option] tag allows you to change the size of your text.</string>
@@ -154,7 +153,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>FONT</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<font face="\{option\}">\{param\}</font>]]></string>
+              <string><![CDATA[<font face="{option}">{param}</font>]]></string>
             </field>
             <field name="description">
               <string>The [font=option] tag allows you to change the font of your text.</string>
@@ -179,7 +178,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>HIGHLIGHT</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<span style="font-weight: bold; color: blue;">\{param\}</span>]]></string>
+              <string><![CDATA[<span style="font-weight: bold; color: blue;">{param}</span>]]></string>
             </field>
             <field name="description">
               <string>The [highlight] tag allows you to make highlight of your text.</string>
@@ -204,7 +203,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>LEFT</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<div align="left">\{param\}</div>]]></string>
+              <string><![CDATA[<div align="left">{param}</div>]]></string>
             </field>
             <field name="description">
               <string>The [left] tag allows aligntment text to left. </string>
@@ -229,7 +228,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>RIGHT</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<div align="right">\{param\}</div>]]></string>
+              <string><![CDATA[<div align="right">{param}</div>]]></string>
             </field>
             <field name="description">
               <string>The [right] tag allows aligntment text to right.</string>
@@ -254,7 +253,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>CENTER</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<div align="center">\{param\}</div>]]></string>
+              <string><![CDATA[<div align="center">{param}</div>]]></string>
             </field>
             <field name="description">
               <string>The [center] allows aligntment text to center.</string>
@@ -279,7 +278,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>JUSTIFY</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<div align="justify">\{param\}</div>]]></string>
+              <string><![CDATA[<div align="justify">{param}</div>]]></string>
             </field>
             <field name="description">
               <string>The [justify] tag allows aligntment text to justify.</string>
@@ -304,7 +303,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>EMAIL</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<a href="mailto:\{param\}">\{param\}</a>]]></string>
+              <string><![CDATA[<a href="mailto:{param}">{param}</a>]]></string>
             </field>
             <field name="description">
               <string>The [email] tag allows you to link to an email address.</string>
@@ -329,7 +328,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>EMAIL</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<a href="mailto:\{option\}">\{param\}</a>]]></string>
+              <string><![CDATA[<a href="mailto:{option}">{param}</a>]]></string>
             </field>
             <field name="description">
               <string>The [email=option] tag allows link to an email address and use an optional parameter to 'name' of this link.</string>
@@ -354,7 +353,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>URL</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<a target='_blank' href="\{param\}">\{param\}</a>]]></string>
+              <string><![CDATA[<a target='_blank' href="{param}">{param}</a>]]></string>
             </field>
             <field name="description">
               <string>The [url] tag allows link to other websites and files.</string>
@@ -379,7 +378,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>URL</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<a target='_blank' href="\{option\}">\{param\}</a>]]></string>
+              <string><![CDATA[<a target='_blank' href="{option}">{param}</a>]]></string>
             </field>
             <field name="description">
               <string>The [url=option] tag allows link to other websites and files and usean optional parameter to 'name' of thislink.</string>
@@ -404,7 +403,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>GOTO</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<a href="\{option\}">\{param\}</a>]]></string>
+              <string><![CDATA[<a href="{option}">{param}</a>]]></string>
             </field>
             <field name="description">
               <string>Allows goto directly to link instead of open a new window or a new tab. </string>
@@ -479,7 +478,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>IMG</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<img border="0" alt="" src="\{param\}" class="inlineimg"/>]]></string>
+              <string><![CDATA[<img border="0" alt="" src="{param}" class="inlineimg"/>]]></string>
             </field>
             <field name="description">
               <string>The [img] tag allows you to shows the image indicated by {url}</string>
@@ -504,7 +503,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>QUOTE</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<div style="background:#ededf7; border:1px solid #d8d8d8; padding:6px 6px 6px 15px; margin:2px 0px;">\{param\}</div>]]></string>
+              <string><![CDATA[<div style="background:#ededf7; border:1px solid #d8d8d8; padding:6px 6px 6px 15px; margin:2px 0px;">{param}</div>]]></string>
             </field>
             <field name="description">
               <string>The [quote] tag allows attribute content of post.</string>
@@ -529,7 +528,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>QUOTE</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<div style="background:#ededf7; border:1px solid #d8d8d8; padding:6px 6px 6px 15px; margin:2px 0px;"><div>Originally Posted by <strong>\{option\}</strong></div><div>\{param\}</div></div>]]></string>
+              <string><![CDATA[<div style="background:#ededf7; border:1px solid #d8d8d8; padding:6px 6px 6px 15px; margin:2px 0px;"><div>Originally Posted by <strong>{option}</strong></div><div>{param}</div></div>]]></string>
             </field>
             <field name="description">
               <string>The [quote=option] tag allows attibute content and user name of poster.</string>
@@ -554,7 +553,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>CODE</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<div style="background:#ededed; border:1px inset #7b7b7b; margin:5px; overflow:auto;"><pre style="margin: 0px; padding: 0px; overflow: auto; text-align: left;" dir="ltr"><div>\{param\}</div></pre></div>]]></string>
+              <string><![CDATA[<div style="background:#ededed; border:1px inset #7b7b7b; margin:5px; overflow:auto;"><pre style="margin: 0px; padding: 0px; overflow: auto; text-align: left;" dir="ltr"><div>{param}</div></pre></div>]]></string>
             </field>
             <field name="description">
               <string>The [code] tag allows you to view source code html.</string>
@@ -579,7 +578,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>CSS</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<span class="\{option\}">\{param\}</span>]]></string>
+              <string><![CDATA[<span class="{option}">{param}</span>]]></string>
             </field>
             <field name="description">
               <string>The [css=option] tag allows you to add div tag and set class Name for this it.</string>
@@ -607,13 +606,13 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
               <string>
               <![CDATA[<div style="width:425px; height:355px;" align="center">
               <object style="margin:0px" width="425" height="355">
-                <param name="movie" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=\{option\}&rel=0"/>
+                <param name="movie" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc={option}&rel=0"/>
                 <param name="allowFullScreen" value="true"/>
                 <param name="allowScriptAccess" value="always"/>
-                <embed src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=\{option\}&rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="355">
+                <embed src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc={option}&rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="355">
                 </embed>
               </object>
-              <b>\{param\}</b></div>]]>
+              <b>{param}</b></div>]]>
               </string>
             </field>
             <field name="description">
@@ -640,13 +639,13 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
 | *forum.default.bbcodes* | registerBBCodePlugin | org.exoplatform.ks.bbcode. spi.BBCodePlugin | To define formats for data displayed on UI. |
 
 - The BBCode array is defined by the _org.exoplatform.ks.bbcode.spi.BBCodeData_ object as below:
-{code:xml}
+{code:html}
            <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>I</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<i>\{param\}</i>]]></string>
+              <string><![CDATA[<i>{param}</i>]]></string>
             </field>
             <field name="description">
               <string>Set text in italic</string>
@@ -663,12 +662,12 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
           </object> 
 {code}
 - The BBCode includes basic data which are defined in the field tag with a specific name as below:
-{code:xml}
+{code:html}
             <field name="tagName">
               <string>I</string>
             </field>
             <field name="replacement">
-              <string><![CDATA[<i>\{param\}</i>]]></string>
+              <string><![CDATA[<i>{param}</i>]]></string>
             </field>
             <field name="description">
               <string>Set text in italic</string>

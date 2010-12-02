@@ -51,16 +51,15 @@ In particular, at runtime of ForumService, the Initialization plug-in component 
                                     <field name="icon"><string>Shield</string></field>
                                     <field name="owner"><string>root</string></field>
                                     <field name="content"><string>
-                                    Welcome to eXo Knowledge Suite live demo!\n\n\n 
-
+                                    Welcome to eXo Knowledge Suite live demo!
                                     We hope you enjoy discovering eXo Forum and FAQ applications features. 
                                     You don't need to be logged in to see the applications in action.
-				    But the power of KS lies in the rich set of admin/moderation features.\n\n
+                                    But the power of KS lies in the rich set of admin/moderation features.
                                     We didn't want you to miss them so, when you [b][url="/portal/public/classic/register"]
-				    create a demo account[/url][/b], you will be granted full permissions.
-                                    Anybody can become an administrator or a moderator and play in the sandbox!\n
-                                    As a consequence, the data for this forum (including the accounts) is not meant to stay.\n\n
-                                    [b][center]WE MAY RESET FORUMS AND FAQS ANYTIME[/center][/b]\n\n
+                                    create a demo account[/url][/b], you will be granted full permissions.
+                                    Anybody can become an administrator or a moderator and play in the sandbox!
+                                    As a consequence, the data for this forum (including the accounts) is not meant to stay.
+                                    [b][center]WE MAY RESET FORUMS AND FAQS ANYTIME[/center][/b]
                                     Enjoy and don't forget to send feedback at [email]ks@exoplatform.com[/email]</string></field>
                                   </object>
                                 </value>
