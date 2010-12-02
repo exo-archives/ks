@@ -23,10 +23,12 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
+import org.apache.poi.hssf.record.formula.DeletedArea3DPtg;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.impl.AnswerEventListener;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.rest.impl.header.Language;
 
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 
@@ -59,6 +61,11 @@ public interface FAQService extends FAQServiceLegacy{
    */
   public void addInitialDataPlugin(InitialDataPlugin plugin) throws Exception ;
 
+  /**
+   * Plugin to initialize default FAQ RSS
+   * @param plugin
+   * @throws Exception
+   */
   public void addInitRssPlugin(ComponentPlugin plugin) throws Exception ;
 
   /**
@@ -71,20 +78,24 @@ public interface FAQService extends FAQServiceLegacy{
    * when paretId = null so this category is parent category else sub category  
    * @param  	cat is properties that user input to interface will save on data
    * @param		isAddNew is true when add new category else update category
-   * @param		sProvider is session provider
    * @return  List parent category or list sub category
    * @see     list category
    * @throws Exception the exception
    */
-  public void saveCategory(String parentId, Category cat, boolean isAddNew) throws Exception ;  
-
+  public void saveCategory(String parentId, Category cat, boolean isAddNew) throws Exception ;
+  
+  /**
+   * This method should change view of category
+   * 
+   * @param   listCateIds is address ids of the category need to change 
+   * @throws Exception the exception
+   */
   public void changeStatusCategoryView(List<String> listCateIds) throws Exception;
 
   /**
    * This method should check exists of category and remove it
    * 
    * @param  	categoryId is address id of the category need remove 
-   * @param  	sProvider is session provider
    * @throws Exception the exception
    */
   public void removeCategory(String categoryId) throws Exception ;
@@ -94,7 +105,6 @@ public interface FAQService extends FAQServiceLegacy{
    * and convert to Category object and return
    * 
    * @param  	categoryId is address id of the category so you want get
-   * @param  	sProvider is session provider
    * @return  category is id = categoryId
    * @see     current category
    * @throws Exception the exception
@@ -105,7 +115,6 @@ public interface FAQService extends FAQServiceLegacy{
    * This method should lookup all the category
    * and convert to category object and return list of category object
    * 
-   * @param  sProvider is session provider
    * @return Category list
    * 
    * @throws Exception the exception
@@ -119,7 +128,6 @@ public interface FAQService extends FAQServiceLegacy{
    * into a list category object
    * 
    * @param user      the name of user
-   * @param sProvider the session provider
    * 
    * @return Category list
    * 
@@ -133,13 +141,18 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @param categoryId the category id
    * @param userView TODO
-   * @param sProvider the s provider
    * @return Category list
    * 
    * @throws Exception the exception
    */
   public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> userView) throws Exception ;
 
+  /**
+   * This method should move a category.
+   * @param categoryId the category id should move
+   * @param destCategoryId : category is moved
+   * @throws Exception the exception
+   */
   public void moveCategory(String categoryId, String destCategoryId) throws Exception ;
 
   /**
@@ -151,7 +164,6 @@ public interface FAQService extends FAQServiceLegacy{
    * @param question  the question
    * @param isAddNew  is <code>true</code> if create new question node
    *                  and is <code>false</code> if edit question node
-   * @param sProvider the sesison provider
    * 
    * @return the question node
    * 
@@ -163,7 +175,6 @@ public interface FAQService extends FAQServiceLegacy{
    * Delete question by question's id. Check question if it's existed then remove it
    * 
    * @param questionId  the id of question is deleted
-   * @param sProvider the s provider
    * 
    * @throws Exception  if question not found
    */
@@ -173,7 +184,6 @@ public interface FAQService extends FAQServiceLegacy{
    * Lookup the question node via identify, convert to question object and return
    * 
    * @param questionId the question id
-   * @param sProvider the s provider
    * 
    * @return Question
    * 
@@ -184,7 +194,6 @@ public interface FAQService extends FAQServiceLegacy{
   /**
    * Get all questions
    * 
-   * @param sProvider the s provider
    * 
    * @return List of question
    * 
@@ -197,7 +206,6 @@ public interface FAQService extends FAQServiceLegacy{
    * which have property response is null (have not yet answer) then
    * convert to list of question object
    * 
-   * @param sProvider   the session provider
    * 
    * @return List of question
    * 
@@ -212,7 +220,6 @@ public interface FAQService extends FAQServiceLegacy{
    * via category identify, the last convert to list of question object
    * 
    * @param categoryId  the category id
-   * @param sProvider   the session provider
    * 
    * @return Question list
    * 
@@ -226,7 +233,6 @@ public interface FAQService extends FAQServiceLegacy{
    * then get all questions of this category and put them into an question page list object
    * 
    * @param categoryId    the id of category
-   * @param sProvider     the session provider
    * 
    * @return Question page list
    * 
@@ -239,7 +245,6 @@ public interface FAQService extends FAQServiceLegacy{
    * and count sub-categories and questions are contained in this category.
    * 
    * @param categoryId the category id
-   * @param sProvider the s provider
    * 
    * @return              number of sub-categories
    * number of questions
@@ -262,7 +267,6 @@ public interface FAQService extends FAQServiceLegacy{
    * @param listCategoryId  the list category id
    * @param isNotYetAnswer  is <code>true</code> if get qeustions not yet answered
    *                        is <code>false</code> if want get all questions in list categories
-   * @param sProvider       the session provider
    * 
    * @return Question page list
    * 
@@ -274,7 +278,6 @@ public interface FAQService extends FAQServiceLegacy{
    * Get path of question. For example question A is included in category C and C is child of
    * category B, then, this function will be return C > B
    * @param categoryId	id of category is contain question
-   * @param sProvider		the Session provider
    * @return	name of categories
    * @throws Exception
    */
@@ -291,7 +294,6 @@ public interface FAQService extends FAQServiceLegacy{
    * </ul>
    * 
    * @param questionId  the id of question
-   * @param sProvider   the session provider
    * 
    * @return list languages are support by the question
    * 
@@ -307,7 +309,6 @@ public interface FAQService extends FAQServiceLegacy{
    * @param 	Question list
    * @param 	langage want search
    * @param 	term content want search in all field question
-   * @param		sProvider 
    * @return 	Question list
    * @throws Exception the exception
    */
@@ -337,7 +338,6 @@ public interface FAQService extends FAQServiceLegacy{
    * @param languageSearch  the name of language node
    * @param questionSearch  the question's content, if <code>null</code> then bypassing this property
    * @param responseSearch  the response's content, if <code>null</code> then bypassing this property
-   * @param sProvider       the session provider
    * 
    * @return                Question list
    * 
@@ -352,7 +352,6 @@ public interface FAQService extends FAQServiceLegacy{
    * @param destCategoryId the dest category id
    * @param questionLink TODO
    * @param faqSetting TODO
-   * @param sProvider the s provider
    * @throws Exception the exception
    */
   public void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception ;  
@@ -361,7 +360,6 @@ public interface FAQService extends FAQServiceLegacy{
    * This method to update FAQ setting.
    * 
    * @param newSetting the new setting
-   * @param sProvider the session provider
    * @throws Exception the exception
    */
   public void saveFAQSetting(FAQSetting faqSetting,String userName) throws Exception;  
@@ -373,7 +371,6 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @param		id of category with user want add watch on that category 
    * @param		value, this address email (multiple value) with input to interface will save on data
-   * @param		sProvider the session provider
    * @throws Exception the exception
    *  
    */
@@ -384,7 +381,6 @@ public interface FAQService extends FAQServiceLegacy{
    * edit or delete mail if need
    * 
    * @param		CategoryId is id of category
-   * @param		sProvider the session provider
    * @return	list email of current category
    * @see			list email where user manager	
    * @throws Exception the exception				
@@ -395,7 +391,6 @@ public interface FAQService extends FAQServiceLegacy{
    * This method will delete watch in one category 
    * 
    * @param	 categoryId is id of current category
-   * @param	 sProvider the session provider
    * @param	 emails is location current of one watch with user want delete 
    * @throws Exception the exception
    */
@@ -405,7 +400,6 @@ public interface FAQService extends FAQServiceLegacy{
    * This method will un watch in one category 
    * 
    * @param	 categoryId is id of current category
-   * @param	 sProvider the session provider
    * @param	 userCurrent is user current then you un watch
    * @throws Exception the exception
    */
@@ -415,7 +409,6 @@ public interface FAQService extends FAQServiceLegacy{
    * This method will un watch in one question 
    * 
    * @param	 questionId is id of current category
-   * @param	 sProvider the session provider
    * @param	 userCurrent is user current then you un watch
    * @throws Exception the exception
    */
@@ -428,7 +421,6 @@ public interface FAQService extends FAQServiceLegacy{
    * So to support to users can find their categories more quickly and accurate,
    *  user can use 'Search Category' function
    * 
-   * @param	 sProvider the session provider
    * @param	 eventQuery is object save value in form advanced search 
    * @throws Exception the exception
    */
@@ -440,7 +432,6 @@ public interface FAQService extends FAQServiceLegacy{
    * and convert to category object and return list of category object
    * 
    * @param  user is name when user login
-   * @param	 sProvider the session provider 
    * @return Category list
    * @throws Exception the exception
    */
@@ -456,7 +447,6 @@ public interface FAQService extends FAQServiceLegacy{
    * and convert to category object and return list of category object
    * 
    * @param  user is name when user login
-   * @param	 sProvider the session provider 
    * @return Category list
    * @throws Exception the exception
    */
@@ -465,7 +455,6 @@ public interface FAQService extends FAQServiceLegacy{
   /**
    * This method return path of category identify
    * @param  category identify
-   * @param	 sProvider the session provider 
    * @return list category name is sort(path of this category)
    * @throws Exception the exception
    */
@@ -479,6 +468,10 @@ public interface FAQService extends FAQServiceLegacy{
    */
   public void sendMessage(Message message) throws Exception ;
 
+  /**
+   * This method will get messages to send notify
+   * @throws Exception the exception
+   */
   public Iterator<NotifyInfo> getPendingMessages() throws Exception ;
 
   /**
@@ -504,13 +497,18 @@ public interface FAQService extends FAQServiceLegacy{
    * system will create setting for user (automatically) base on setting of admin 
    * (Default setting of FAQ system). After that, when user login again, his setting is getted.
    * 
-   * @param sProvider	system provider
    * @param userName	the name of user
    * @param faqSetting	the setting of user
    * @throws Exception	when can't find user or faqSetting
    */
   public void getUserSetting(String userName, FAQSetting faqSetting) throws Exception ;
 
+  /**
+   * Get informations about message
+   * @param name  key of message
+   * @return informations contain message and email addresses. 
+   * @throws Exception
+   */
   public NotifyInfo getMessageInfo(String name) throws Exception  ;
 
   /**
@@ -537,139 +535,533 @@ public interface FAQService extends FAQServiceLegacy{
    */
   public void addRolePlugin(ComponentPlugin plugin) throws Exception;
 
+  /**
+   * Add watch for a question
+   * @param questionId id of question
+   * @param watch contains information of users
+   * @param isNew add new or edit 
+   * @throws Exception
+   */
   public void addWatchQuestion(String questionId, Watch watch, boolean isNew) throws Exception;
 
+  /** 
+   * Save topic
+   * @param questionId Question to discuss
+   * @param pathDiscuss path to discussion 
+   * @throws Exception
+   */
   public void saveTopicIdDiscussQuestion(String questionId, String pathDiscuss) throws Exception;
 
   //public QuestionPageList getListMailInWatchQuestion(String questionId) throws Exception;
 
+  /**
+   * Get list of questions that user watches 
+   * @param faqSetting setting of user
+   * @param currentUser username
+   * @return List of questions 
+   * @throws Exception
+   */
   public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser) throws Exception;
 
+  /**
+   * Get category node
+   * @param categoryId id of category
+   * @return node of category 
+   * @throws Exception
+   */
   public Node getCategoryNodeById(String categoryId) throws Exception;
 
   //public List<String> getListPathQuestionByCategory(String categoryId) throws Exception;
 
+  /**
+   * Import data to category
+   * @param name  key of message
+   * @return informations contain message and email addresses. 
+   * @throws Exception
+   */
   public boolean importData(String categoryId, InputStream inputStream, boolean isZip) throws Exception;
 
   //public boolean categoryAlreadyExist(String categoryId) throws Exception ;
 
+  /**
+   * Swap two categories
+   * @param cateId1 id of category 1
+   * @param cateId2 id of category 2 
+   * @throws Exception
+   */
   public void swapCategories(String cateId1, String cateId2) throws Exception;
 
   //public Node getQuestionNodeById(String questionId) throws Exception;
 
+  /**
+   * Get max index of categories
+   * @param parentId id of parent
+   * @return index 
+   * @throws Exception
+   */
   public long getMaxindexCategory(String parentId) throws Exception;
 
+  /**
+   * Remove an answer
+   * @param questionId id of question
+   * @param answerId id of answer 
+   * @throws Exception
+   */
   public void deleteAnswer(String questionId, String answerId) throws Exception;
 
+  /**
+   * Remove comment of question
+   * @param questionId id of question
+   * @param commentId id of comment 
+   * @throws Exception
+   */
   public void deleteComment(String questionId, String commentId) throws Exception;
 
+  /**
+   * Save an answer
+   * @param questionId id of question
+   * @param answer saved answer
+   * @param isNew save new or edit 
+   * @throws Exception
+   */
   public void saveAnswer(String questionId, Answer answer, boolean isNew) throws Exception;
 
+  /**
+   * Save comment of question
+   * @param questionId id of question
+   * @param comment saved comment
+   * @param isNew save new or edit 
+   * @throws Exception
+   */
   public void saveComment(String questionId, Comment comment, boolean isNew) throws Exception;
 
+  /**
+   * Get comment of question
+   * @param questionId id of question
+   * @param commentId id of comment
+   * @return comment 
+   * @throws Exception
+   */
   public Comment getCommentById(String questionId, String commentId) throws Exception;
 
+  /**
+   * Get answer of question
+   * @param questionId id of question
+   * @param answerid id of answer
+   * @return an Answer 
+   * @throws Exception
+   */
   public Answer getAnswerById(String questionId, String answerid) throws Exception;
 
+  /**
+   * Save an answer
+   * @param questionId id of question
+   * @param answers saved answers 
+   * @throws Exception
+   */
   public void saveAnswer(String questionId, Answer[] answers) throws Exception;
 
+  /**
+   * Get comments of question
+   * @param questionId id of question
+   * @return comment page list 
+   * @throws Exception
+   */
   public JCRPageList getPageListComment(String questionId) throws Exception;
 
+  /**
+   * Get answers of question
+   * @param questionId id of question
+   * @param isSortByVote sort by vote
+   * @return answers page list 
+   * @throws Exception
+   */
   public JCRPageList getPageListAnswer(String questionId, Boolean isSortByVote) throws Exception;
 
+  /**
+   * Get list questions that user watches
+   * @param userId username 
+   * @return question page list 
+   * @throws Exception
+   */
   public QuestionPageList getWatchedCategoryByUser(String userId) throws Exception ;
 
+  /**
+   * Get avatar of user
+   * @param userName username
+   * @return avatar of user 
+   * @throws Exception
+   */
   public FileAttachment getUserAvatar(String userName) throws Exception;
 
+  /**
+   * Save avatar of an user
+   * @param userId username
+   * @param fileAttachment avatar of user 
+   * @throws Exception
+   */
   public void saveUserAvatar(String userId, FileAttachment fileAttachment) throws Exception;
 
+  /**
+   * Check that user is watching a category
+   * @param userId username
+   * @param cateId id of category
+   * @return true if user is watching and false if isn't 
+   * @throws Exception
+   */
   public boolean isUserWatched(String userId, String cateId) ;
 
+  /**
+   * set default avatar for an user
+   * @param userName username 
+   * @throws Exception
+   */
   public void setDefaultAvatar(String userName)throws Exception;
 
+  /**
+   * Get collection of questions
+   * @return list of all questions 
+   * @throws Exception
+   */
   public NodeIterator getQuestionsIterator() throws Exception ; 
 
+  /**
+   * Get list pending questions in a category
+   * @param categoryId id of category
+   * @param faqSetting settings
+   * @return question page list 
+   * @throws Exception
+   */
   public QuestionPageList getPendingQuestionsByCategory(String categoryId, FAQSetting faqSetting) throws Exception;
 
+  /**
+   * Export category to stream
+   * @param categoryId id of category
+   * @param createZipFile create zip file or not
+   * @return input stream of category 
+   * @throws Exception
+   */
   public InputStream exportData(String categoryId, boolean createZipFile)  throws Exception;
 
+  /**
+   * Check a path exist or not
+   * @param path path need check
+   * @return exist or not 
+   * @throws Exception
+   */
   public boolean isExisting(String path) throws Exception;
 
+  /**
+   * get path of Category by id
+   * @param id category id 
+   * @return path of category
+   * @throws Exception
+   */
   public String getCategoryPathOf(String id) throws Exception ;
 
+  /**
+   * Get titles of questions
+   * @param paths  path of questions
+   * @return list titles of questions 
+   * @throws Exception
+   */
   public List<String> getQuestionContents(List<String> paths) throws Exception ;
 
+  /**
+   * Check moderate answer or not
+   * @param id id of category
+   * @return answer or not 
+   * @throws Exception
+   */
   public boolean isModerateAnswer(String id) throws Exception ;
 
+  /**
+   * Get question node
+   * @param path id of question
+   * @return question node 
+   * @throws Exception
+   */
   public Node getQuestionNodeById(String path) throws Exception ;
 
+  /**
+   * Get name of parent category
+   * @param path id of category
+   * @return name of parent category 
+   * @throws Exception
+   */
   public String getParentCategoriesName(String path) throws Exception ;
 
+  /**
+   * Get email addresses that watch in a category
+   * @param categoryId id of category
+   * @return question page list 
+   * @throws Exception
+   */
   public QuestionPageList getListMailInWatch(String categoryId) throws Exception ;
 
+  /**
+   * Check user is moderator or not
+   * @param categoryId id of category
+   * @param user username
+   * @return user is moderator or not 
+   * @throws Exception
+   */
   public boolean isCategoryModerator(String categoryId, String user) throws Exception  ;
 
-  //Multi language apis
+  /**
+   * Add language to a question
+   * @param questionPath patch of question
+   * @param language question language 
+   * @throws Exception
+   */
   public void addLanguage(String questionPath, QuestionLanguage language) throws Exception ;
 
+  /**
+   * Delete language in a answer
+   * @param questionPath path of question
+   * @param answerId id of answer
+   * @param language deleted language 
+   * @throws Exception
+   */
   public void deleteAnswerQuestionLang(String questionPath, String answerId, String language) throws Exception  ;
 
+  /**
+   * Delete language in a comment
+   * @param questionPath path of question
+   * @param commentId id of comment
+   * @param language deleted language 
+   * @throws Exception
+   */
   public void deleteCommentQuestionLang(String questionPath, String commentId, String language) throws Exception ;
 
+  /**
+   * Get language of question
+   * @param questionPath path of question
+   * @param language got language
+   * @return Language of question 
+   * @throws Exception
+   */
   public QuestionLanguage getQuestionLanguageByLanguage(String questionPath, String language) throws Exception ;
 
+  /**
+   * Get Comment of question
+   * @param questionPath path of question
+   * @param commentId id of comment
+   * @param language
+   * @return comment of question 
+   * @throws Exception
+   */
   public Comment getCommentById(String questionPath, String commentId, String language) throws Exception ;
 
+  /**
+   * Get answer object
+   * @param questionPath path of question
+   * @param answerid id of answer
+   * @param language  
+   * @return answer has inputed id  
+   * @throws Exception
+   */
   public Answer getAnswerById(String questionPath, String answerid, String language) throws Exception ;
 
+  /**
+   * Save an answer of question
+   * @param questionPath path of question
+   * @param answer object answer want to save
+   * @param languge language of answer 
+   * @throws Exception
+   */
   public void saveAnswer(String questionPath, Answer answer, String languge) throws Exception ;
 
+  /**
+   * Save an answer of question
+   * @param questionPath path of question
+   * @param questionLanguage language of answer 
+   * @throws Exception
+   */
   public void saveAnswer(String questionPath, QuestionLanguage questionLanguage) throws Exception ;
 
+  /**
+   * Save comment of a question
+   * @param questionPath path of question
+   * @param comment comment want to save
+   * @param languge language of comment 
+   * @throws Exception
+   */
   public void saveComment(String questionPath, Comment comment, String languge) throws Exception;  
 
+  /**
+   * Remove languages from question
+   * @param questionPath path of question
+   * @param listLanguage removed languages 
+   * @throws Exception
+   */
   public void removeLanguage(String questionPath, List<String> listLanguage) ;
 
+  /**
+   * vote for an answer
+   * @param answerPath path of answer
+   * @param userName username of user vote for answer
+   * @param isUp up or not 
+   * @throws Exception
+   */
   public void voteAnswer(String answerPath, String userName, boolean isUp) throws Exception ;
 
+  /**
+   * vote for a question
+   * @param questionPath path of question
+   * @param userName username of user vote for question
+   * @param number value user vote 
+   * @throws Exception
+   */
   public void voteQuestion(String questionPath, String userName, int number) throws Exception ;
 
+  /**
+   * Get moderators of question or category
+   * @param path path of question or category
+   * @return array users are moderator 
+   * @throws Exception
+   */
   public String[] getModeratorsOf(String path) throws Exception ;
 
+  /**
+   * Remove vote for question
+   * @param questionPath path of question
+   * @param userName username remove vote 
+   * @throws Exception
+   */
   public void unVoteQuestion(String questionPath, String userName) throws Exception ;
 
+  /**
+   * Check view author information or not
+   * @param id id of question
+   * @return is view author information or not 
+   * @throws Exception
+   */
   public boolean isViewAuthorInfo(String id) throws Exception ; 
 
+  /**
+   * Get number of categories
+   * @return number of categories 
+   * @throws Exception
+   */
   public long existingCategories() throws Exception ;
 
+  /**
+   * Get name of category
+   * @param categoryPath path of category
+   * @return name of category
+   * @throws Exception
+   */
   public String getCategoryNameOf(String categoryPath) throws Exception ;
 
+  /**
+   * Get quick questions
+   * @param listCategoryId id of some categories
+   * @param isNotYetAnswer is answer or not
+   * @return list of questions 
+   * @throws Exception
+   */
   public List<Question> getQuickQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception ;
 
+  /**
+   * Get list of categories
+   * @return list of categories 
+   * @throws Exception
+   */
   public List<Cate> listingCategoryTree() throws Exception ;
 
+  /**
+   * Get list of watches
+   * @param categoryId id of category
+   * @return list of watches in a category 
+   * @throws Exception
+   */
   public List<Watch> getWatchByCategory(String categoryId) throws Exception  ;
 
+  /**
+   * Get information has watch or not
+   * @param categoryPath path of category
+   * @return has watch or has not 
+   * @throws Exception
+   */
   public boolean hasWatch(String categoryPath) ;
 
+  /**
+   * Get informations about category
+   * @param categoryPath path of category
+   * @param categoryIdScoped list sub of category
+   * @return informations in CategoryInfo object 
+   * @throws Exception
+   */
   public CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception ;
 
+  /**
+   * Get template of questions
+   * @return template 
+   * @throws Exception
+   */
   public byte[] getTemplate() throws Exception ;
 
+  /**
+   * Save a template
+   * @param str template 
+   * @throws Exception
+   */
   public void saveTemplate(String str) throws Exception;
 
+  /**
+   * Check category is exist or not
+   * @param name name of category
+   * @param path path of category
+   * @return is exist or not 
+   * @throws Exception
+   */
   public boolean isCategoryExist(String name, String path) ;
 
+  /**
+   * Update relatives for a question
+   * @param questionPath path of question
+   * @param relatives input relatives 
+   * @throws Exception
+   */
   public void updateQuestionRelatives( String questionPath, String[] relatives) throws Exception ;
 
+  /**
+   * Check question has moderator or not
+   * @param id id of question
+   * @return is moderate or not 
+   * @throws Exception
+   */
   public boolean isModerateQuestion(String id) throws Exception  ;
 
+  /**
+   * Create RSS for answer
+   * @param cateId id of category
+   * @return stream of answer rss 
+   * @throws Exception
+   */
   public InputStream createAnswerRSS(String cateId) throws Exception ;
 
+  /**
+   * Save last active information of question 
+   * @param absPathOfItem path of question 
+   * @throws Exception
+   */
   public void reCalculateLastActivityOfQuestion(String absPathOfItem) throws Exception;
 
+  /**
+   * Add listener for answer 
+   * @param listener answer event listener 
+   * @throws Exception
+   */
   public void addListenerPlugin(AnswerEventListener listener) throws Exception;
 
+  /**
+   * Get comments of a question 
+   * @param questionId id of question
+   * @return comments of question 
+   * @throws Exception
+   */
   public Comment[] getComments(String questionId) throws Exception;
   
 }

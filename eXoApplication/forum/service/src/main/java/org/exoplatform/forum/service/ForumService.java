@@ -58,6 +58,12 @@ public interface ForumService extends ForumServiceLegacy {
    */
   void addInitialDataPlugin(ComponentPlugin plugin) throws Exception;
 
+  /**
+   * Adds RSS plugin.
+   * 
+   * @param plugin the plugin
+   * @throws Exception the exception
+   */
   void addInitRssPlugin(ComponentPlugin plugin) throws Exception;
 
   /**
@@ -77,6 +83,13 @@ public interface ForumService extends ForumServiceLegacy {
    */
   Category getCategory(String categoryId) throws Exception;
 
+  /**
+   * Get user and group have edit permission in a category
+   * 
+   * @param categoryId id of category
+   * @param type type of category
+   * @throws Exception the exception
+   */
   String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception;
 
   /**
@@ -90,8 +103,21 @@ public interface ForumService extends ForumServiceLegacy {
    */
   void saveCategory(Category category, boolean isNew) throws Exception;
 
+  /**
+   * Save moderator information for category
+   * 
+   * @param categoryPath path of category
+   * @param isNew is calculate new or not
+   * @throws Exception the exception
+   */
   void calculateModerator(String categoryPath, boolean isNew) throws Exception;
-
+  
+  /**
+   * Adds the plugin.
+   * 
+   * @param plugin the plugin
+   * @throws Exception the exception
+   */
   void saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd);
 
   /**
@@ -135,7 +161,6 @@ public interface ForumService extends ForumServiceLegacy {
    * Save forum.Check exists forum, if not to create new else update exists
    * forum
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId is the id of category identify.
    * @param forum is the object forum need save.
    * @param isNew is the new
@@ -146,7 +171,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Save user is moderator of list forum
    * 
-   * @param sProvider is the SessionProvider
    * @param forumPaths is the list path of forums, one forum have only path.
    * @param userName is the userId of Account login of portal system.
    * @param isDelete is false when you want to add userId into list moderator of
@@ -159,7 +183,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Remove the forum in category identify.
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId is the id of category.
    * @param forumId is the id of forum need remove.
    * @return the forum
@@ -170,7 +193,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Move forum. Move list forum to category by path of category
    * 
-   * @param sProvider is the SessionProvider
    * @param forums is the list object forum
    * @param destCategoryPath is the destination path of category
    * @throws Exception the exception
@@ -180,7 +202,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the page topic in forum identify.
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId is the id of category
    * @param forumId is the id of forum
    * @param isApproved is a string that presents status isApproved of object
@@ -203,7 +224,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the page topic by user.
    * 
-   * @param sProvider is the SessionProvider
    * @param userName the user name
    * @param strOrderBy TODO
    * @return the page topic by user
@@ -216,20 +236,34 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param date the date
    * @param forumPatch TODO
-   * @param sProvider is the SessionProvider
    * @return the page topic old
    * @throws Exception the exception
    */
   JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception;
 
+  /**
+   * Gets the list topic old.
+   * 
+   * @param date the date
+   * @param forumPatch path of forum
+   * @return list of topics
+   * @throws Exception the exception
+   */
   List<Topic> getAllTopicsOld(long date, String forumPatch) throws Exception;
 
+  /**
+   * Gets number of the topics old.
+   * 
+   * @param date the date
+   * @param forumPatch path of forum
+   * @return number of topics old
+   * @throws Exception the exception
+   */
   long getTotalTopicOld(long date, String forumPatch);
 
   /**
    * Gets the topics.
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId the category id
    * @param forumId the forum id
    * @return the topics
@@ -240,7 +274,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the topic.
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId the category id
    * @param forumId the forum id
    * @param topicId the topic id
@@ -250,12 +283,18 @@ public interface ForumService extends ForumServiceLegacy {
    */
   Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception;
 
+  /**
+   * Update number of topic viewers 
+   * 
+   * @param path path of topic
+   * @param userRead the user read
+   * @throws Exception the exception
+   */
   void setViewCountTopic(String path, String userRead) throws Exception;
 
   /**
    * Gets the topic by path.
    * 
-   * @param sProvider is the SessionProvider
    * @param topicPath the topic path
    * @param isLastPost is the last post
    * @return the topic by path
@@ -263,13 +302,27 @@ public interface ForumService extends ForumServiceLegacy {
    */
   Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception;
 
+  /**
+   * Get main informations of topic
+   * 
+   * @param topicPath the topic path
+   * @return the topic by path
+   * @throws Exception the exception
+   */
   Topic getTopicSummary(String topicPath) throws Exception;
 
+  /**
+   * Gets the updated topic
+   * 
+   * @param topic input topic
+   * @param isSummary get main informations or not
+   * @return the updated topic
+   * @throws Exception the exception
+   */
   Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception;
   /**
    * Modify topic.
    * 
-   * @param sProvider is the SessionProvider
    * @param topics the topics
    * @param type the type
    * @throws Exception the exception
@@ -279,7 +332,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Save topic.
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId the category id
    * @param forumId the forum id
    * @param topic the topic
@@ -297,7 +349,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Removes the topic.
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId the category id
    * @param forumId the forum id
    * @param topicId the topic id
@@ -309,19 +360,28 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Move topic.
    * 
-   * @param sProvider is the SessionProvider
    * @param topics the topics
-   * @param destForumPath the dest forum path
+   * @param destForumPath the target of forum path
+   * @param mailContent mail to send notification
+   * @param link to topic
    * @throws Exception the exception
    */
   void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception;
 
+  /**
+   * Move topic.
+   * 
+   * @param srcTopicPath path of moved topic
+   * @param destTopicPath the target of topic
+   * @param mailContent mail to send notification
+   * @param link to topic
+   * @throws Exception the exception
+   */
   void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception;
 
   /**
    * Gets the posts.
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId the category id
    * @param forumId the forum id
    * @param topicId the topic id
@@ -332,8 +392,6 @@ public interface ForumService extends ForumServiceLegacy {
    * @return the posts
    * @throws Exception the exception
    */
-  JCRPageList getPostForSplitTopic(String topicPath) throws Exception;
-
   JCRPageList getPosts(String categoryId,
                        String forumId,
                        String topicId,
@@ -342,6 +400,27 @@ public interface ForumService extends ForumServiceLegacy {
                        String strQuery,
                        String userLogin) throws Exception;
 
+  /**
+   * Gets posts of topic.
+   * 
+   * @param topicPath path of topic
+   * @return the posts
+   * @throws Exception the exception
+   */
+  JCRPageList getPostForSplitTopic(String topicPath) throws Exception;
+  
+  /**
+   * Gets number of the posts.
+   * 
+   * @param categoryId the category id
+   * @param forumId the forum id
+   * @param topicId the topic id
+   * @param isApproved is the approved
+   * @param isHidden is the hidden
+   * @param userLogin the user login
+   * @return number of the posts
+   * @throws Exception the exception
+   */
   long getAvailablePost(String categoryId,
                         String forumId,
                         String topicId,
@@ -349,12 +428,21 @@ public interface ForumService extends ForumServiceLegacy {
                         String isHidden,
                         String userLogin) throws Exception;
 
+  /**
+   * Gets index of last read post.
+   * 
+   * @param path path of post
+   * @param isApproved is the approved
+   * @param isHidden is the hidden
+   * @param userLogin the user login
+   * @return index of the post
+   * @throws Exception the exception
+   */
   long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) throws Exception;
 
   /**
    * Gets the page post by user.
    * 
-   * @param sProvider is the SessionProvider
    * @param userName the user name
    * @param userId TODO
    * @param isMod TODO
@@ -369,7 +457,6 @@ public interface ForumService extends ForumServiceLegacy {
    * from the database
    * 
    * @param postId the post id
-   * @param sProvider is the SessionProvider
    * @param categoryId the category id
    * @param forumId the forum id
    * @param topicId the topic id
@@ -386,7 +473,6 @@ public interface ForumService extends ForumServiceLegacy {
    * @param topicId the topic id
    * @param post the post
    * @param isNew is the new
-   * @param sProvider is the SessionProvider
    * @param categoryId the category id
    * @param forumId the forum id
    * @throws Exception the exception
@@ -398,12 +484,18 @@ public interface ForumService extends ForumServiceLegacy {
                 boolean isNew,
                 String defaultEmailContent) throws Exception;
 
+  /**
+   * Modify posts.
+   * 
+   * @param posts the posts
+   * @param type type of post
+   * @throws Exception the exception
+   */
   void modifyPost(List<Post> posts, int type) throws Exception;
 
   /**
    * Removes the post.
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId the category id
    * @param forumId the forum id
    * @param topicId the topic id
@@ -416,7 +508,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Move post.
    * 
-   * @param sProvider is the SessionProvider
    * @param posts the posts
    * @param destTopicPath the dest topic path
    * @throws Exception the exception
@@ -430,7 +521,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the poll.
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId the category id
    * @param forumId the forum id
    * @param topicId the topic id
@@ -442,7 +532,6 @@ public interface ForumService extends ForumServiceLegacy {
   *//**
    * Save poll.
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId the category id
    * @param forumId the forum id
    * @param topicId the topic id
@@ -461,7 +550,6 @@ public interface ForumService extends ForumServiceLegacy {
   *//**
    * Removes the poll.
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId the category id
    * @param forumId the forum id
    * @param topicId the topic id
@@ -473,7 +561,6 @@ public interface ForumService extends ForumServiceLegacy {
   *//**
    * Sets the closed poll.
    * 
-   * @param sProvider is the SessionProvider
    * @param categoryId the category id
    * @param forumId the forum id
    * @param topicId the topic id
@@ -485,7 +572,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the object name by path.
    * 
-   * @param sProvider is the SessionProvider
    * @param path the path
    * @return the object name by path
    * @throws Exception the exception
@@ -495,7 +581,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the object name by path.
    * 
-   * @param sProvider is the SessionProvider
    * @param path the path
    * @return the object name by path
    * @throws Exception the exception
@@ -505,7 +590,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the all link.
    * 
-   * @param sProvider is the SessionProvider
    * @param strQueryCate TODO
    * @param strQueryForum TODO
    * @return the all link
@@ -516,7 +600,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the forum home path.
    * 
-   * @param sProvider is the SessionProvider
    * @return the forum home path
    * @throws Exception the exception
    */
@@ -544,15 +627,29 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the tag.
    * 
-   * @param sProvider is the SessionProvider
    * @param tagId the tag id
    * @return the tag
    * @throws Exception the exception
    */
   Tag getTag(String tagId) throws Exception;
 
+  /**
+   * Gets all the tag names.
+   * 
+   * @param strQuery query to get tags
+   * @param userAndTopicId input id
+   * @return the list names of tags
+   * @throws Exception the exception
+   */
   List<String> getAllTagName(String strQuery, String userAndTopicId) throws Exception;
 
+  /**
+   * Gets all the tag name in topic.
+   * 
+   * @param userAndTopicId input id
+   * @return the list names of tags
+   * @throws Exception the exception
+   */
   List<String> getTagNameInTopic(String userAndTopicId) throws Exception;
 
   /**
@@ -593,7 +690,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Save user profile.
    * 
-   * @param sProvider is the SessionProvider
    * @param userProfile the user profile
    * @param isOption is the option
    * @param isBan is the ban
@@ -601,28 +697,55 @@ public interface ForumService extends ForumServiceLegacy {
    */
   void saveUserProfile(UserProfile userProfile, boolean isOption, boolean isBan) throws Exception;
 
+  /**
+   * Save user profile.
+   * 
+   * @param user user want to update
+   * @throws Exception the exception
+   */
   void updateUserProfile(User user) throws Exception;
 
+  /**
+   * Save user moderator.
+   * 
+   * @param userName username of a user
+   * @param ids ids of categories or forums
+   * @param isModeCate save for category or not
+   * @throws Exception the exception
+   */
   void saveUserModerator(String userName, List<String> ids, boolean isModeCate) throws Exception;
 
+  /**
+   * Search for user profile
+   * 
+   * @param userSearch user want to search
+   * @return forum page list
+   * @throws Exception the exception
+   */
   JCRPageList searchUserProfile(String userSearch) throws Exception;
 
   /**
    * Gets the user info.
    * 
-   * @param sProvider is the SessionProvider
    * @param userName the user name
    * @return the user info
    * @throws Exception the exception
    */
   UserProfile getUserInfo(String userName) throws Exception;
 
+  /**
+   * Gets all moderators.
+   * 
+   * @param userName the user name
+   * @param isModeCate is category or not
+   * @return list of users
+   * @throws Exception the exception
+   */
   List<String> getUserModerator(String userName, boolean isModeCate) throws Exception;
 
   /**
    * Save user bookmark.
    * 
-   * @param sProvider is the SessionProvider
    * @param userName the user name
    * @param bookMark the book mark
    * @param isNew is the new
@@ -630,12 +753,20 @@ public interface ForumService extends ForumServiceLegacy {
    */
   void saveUserBookmark(String userName, String bookMark, boolean isNew) throws Exception;
 
+
+  /**
+   * Save to post if this post has an user read
+   * 
+   * @param userId the user name
+   * @param lastReadPostOfForum last post was read
+   * @param lastReadPostOfTopic last post was read
+   * @throws Exception the exception
+   */
   void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception;
 
   /**
    * Save user collapCategories.
    * 
-   * @param sProvider is the SessionProvider
    * @param userName the user name
    * @param categoryId the book mark
    * @param isNew is the new
@@ -646,7 +777,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the page list user profile.
    * 
-   * @param sProvider is the SessionProvider
    * @return the page list user profile
    * @throws Exception the exception
    */
@@ -655,7 +785,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the quick search.
    * 
-   * @param sProvider is the SessionProvider
    * @param textQuery the text query
    * @param type is type user and type object(forum, topic and post)
    * @param pathQuery the path query
@@ -671,12 +800,18 @@ public interface ForumService extends ForumServiceLegacy {
                                    List<String> listForumIds,
                                    List<String> forumIdsOfModerator) throws Exception;
 
+  /**
+   * Gets screen name
+   * 
+   * @param userName username of user
+   * @return screen name
+   * @throws Exception the exception
+   */
   String getScreenName(String userName) throws Exception;
 
   /**
    * Gets the advanced search.
    * 
-   * @param sProvider is the SessionProvider
    * @param eventQuery the event query
    * @return the advanced search
    * @throws Exception the exception
@@ -688,7 +823,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Save forum statistic.
    * 
-   * @param sProvider is the SessionProvider
    * @param forumStatistic the forum statistic
    * @throws Exception the exception
    */
@@ -697,7 +831,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the forum statistic.
    * 
-   * @param sProvider is the SessionProvider
    * @return the forum statistic
    * @throws Exception the exception
    */
@@ -706,7 +839,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Save forum administration.
    * 
-   * @param sProvider is the SessionProvider
    * @param forumAdministration the forum administration
    * @throws Exception the exception
    */
@@ -715,12 +847,18 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the forum administration.
    * 
-   * @param sProvider is the SessionProvider
    * @return the forum administration
    * @throws Exception the exception
    */
   ForumAdministration getForumAdministration() throws Exception;
 
+  /**
+   * Update informations for topics and posts
+   * 
+   * @param topicCoutn number of  topics
+   * @param postCount number of posts
+   * @throws Exception the exception
+   */
   void updateStatisticCounts(long topicCoutn, long postCount) throws Exception;
 
   /**
@@ -767,7 +905,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Gets the private message.
    * 
-   * @param sProvider is the SessionProvider
    * @param userName the user name
    * @param type the type
    * @return the private message
@@ -775,12 +912,18 @@ public interface ForumService extends ForumServiceLegacy {
    */
   JCRPageList getPrivateMessage(String userName, String type) throws Exception;
 
+  /**
+   * Gets new private message.
+   * 
+   * @param userName the user name
+   * @return number of private messages
+   * @throws Exception the exception
+   */
   long getNewPrivateMessage(String userName) throws Exception;
 
   /**
    * Save private message.
    * 
-   * @param sProvider is the SessionProvider
    * @param privateMessage the private message
    * @throws Exception the exception
    */
@@ -789,7 +932,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Save read message.
    * 
-   * @param sProvider is the SessionProvider
    * @param messageId the message id
    * @param userName the user name
    * @param type the type
@@ -800,7 +942,6 @@ public interface ForumService extends ForumServiceLegacy {
   /**
    * Removes the private message.
    * 
-   * @param sProvider is the SessionProvider
    * @param messageId the message id
    * @param userName the user name
    * @param type the type
@@ -809,30 +950,85 @@ public interface ForumService extends ForumServiceLegacy {
   void removePrivateMessage(String messageId, String userName, String type) throws Exception;
 
   /**
+   * Get descriptions of forum
+   * 
+   * @param userId username of an user
+   * @return subscription of forum
+   * @throws Exception the exception
+   */
+  ForumSubscription getForumSubscription(String userId) throws Exception;
+
+  /**
+   * Save descriptions of forum
+   * 
+   * @param forumSubscription informations want to save
+   * @param userId username of an user
+   * @throws Exception the exception
+   */
+  void saveForumSubscription(ForumSubscription forumSubscription, String userId) throws Exception;
+
+  /**
    * Adds the watch.
    * 
-   * @param sProvider is the SessionProvider
    * @param watchType the watch type
    * @param path the path
    * @param values the values
    * @throws Exception the exception
    */
-  ForumSubscription getForumSubscription(String userId) throws Exception;
-
-  void saveForumSubscription(ForumSubscription forumSubscription, String userId) throws Exception;
-
   void addWatch(int watchType, String path, List<String> values, String currentUser) throws Exception;
 
+  /**
+   * Remove the watch.
+   * 
+   * @param watchType the watch type
+   * @param path the path
+   * @param values the values
+   * @throws Exception the exception
+   */
   void removeWatch(int watchType, String path, String values) throws Exception;
 
+  /**
+   * Get job waiting for moderator.
+   * 
+   * @param paths the paths
+   * @return list of forum
+   * @throws Exception the exception
+   */
   List<ForumSearch> getJobWattingForModerator(String[] paths) throws Exception;
 
+  /**
+   * Get number of jobs are waiting for moderator.
+   * 
+   * @param userId username of an user
+   * @return number of jobs
+   * @throws Exception the exception
+   */
   int getJobWattingForModeratorByUser(String userId) throws Exception;
 
+  /**
+   * Get information of message
+   * 
+   * @param name name of message
+   * @return message information
+   * @throws Exception the exception
+   */
   SendMessageInfo getMessageInfo(String name) throws Exception;
   
+  /**
+   * Get messages are pending
+   * 
+   * @return pending messages
+   * @throws Exception the exception
+   */
   Iterator<SendMessageInfo> getPendingMessages() throws Exception;
 
+  /**
+   * Check admin role
+   * 
+   * @param userName username of an user
+   * @return is admin or not
+   * @throws Exception the exception
+   */
   boolean isAdminRole(String userName) throws Exception;
 
   /**
@@ -843,16 +1039,60 @@ public interface ForumService extends ForumServiceLegacy {
    */
   List<Post> getNewPosts(int number) throws Exception;
 
+  /**
+   * Search  node
+   * 
+   * @param queryString query
+   * @return iterator of nodes
+   * @throws Exception the exception
+   */
   NodeIterator search(String queryString) throws Exception;
 
+  /**
+   * evaluate active of users 
+   * 
+   * @param query input a query
+   * @throws Exception the exception
+   */
   void evaluateActiveUsers(String query) throws Exception;
 
+  /**
+   * create a user profile
+   * 
+   * @param user saved user
+   * @throws Exception the exception
+   */
   void createUserProfile(User user) throws Exception;
 
+  /**
+   * update user access a topic 
+   * 
+   * @param userId username of an user
+   * @param topicId id of a topic
+   * @throws Exception the exception
+   */
   void updateTopicAccess(String userId, String topicId) throws Exception;
 
+  /**
+   * update user access a forum 
+   * 
+   * @param userId username of an user
+   * @param forumId id of a forum
+   * @throws Exception the exception
+   */
   void updateForumAccess(String userId, String forumId) throws Exception;
 
+  /**
+   * export to xml object 
+   * 
+   * @param categoryId id of category
+   * @param forumId id of forum
+   * @param objectIds ids
+   * @param nodePath path of node
+   * @param bos byte array output stream
+   * @param isExportAll is export all or not
+   * @throws Exception the exception
+   */
   Object exportXML(String categoryId,
                    String forumId,
                    List<String> objectIds,
@@ -860,88 +1100,352 @@ public interface ForumService extends ForumServiceLegacy {
                    ByteArrayOutputStream bos,
                    boolean isExportAll) throws Exception;
 
+  /**
+   * import a stream 
+   * 
+   * @param nodePath path of node
+   * @param bis byte array input stream
+   * @param typeImport type of import
+   * @throws Exception the exception
+   */
   void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) throws Exception;
 // TODO: used updateForum(String path) for update data after imported.
 //  void updateDataImported() throws Exception;
 
+  /**
+   * get profiles of users
+   * 
+   * @param userList list of users
+   * @return list of profiles
+   * @throws Exception the exception
+   */
   List<UserProfile> getQuickProfiles(List<String> userList) throws Exception;
 
+  /**
+   * get profile of an user
+   * 
+   * @param userName username
+   * @return object user profile
+   * @throws Exception the exception
+   */
   UserProfile getQuickProfile(String userName) throws Exception;
 
+  /**
+   * get more informations of user 
+   * 
+   * @param userProfile profile of user
+   * @return user profile
+   * @throws Exception the exception
+   */
   UserProfile getUserInformations(UserProfile userProfile) throws Exception;
 
+  /**
+   * get default user profile
+   * 
+   * @param userName username of a user
+   * @param ip current ip
+   * @return user profile
+   * @throws Exception the exception
+   */
   UserProfile getDefaultUserProfile(String userName, String ip) throws Exception;
 
+  /**
+   * update user profile
+   * 
+   * @param userProfile input user profile
+   * @return user profile
+   * @throws Exception the exception
+   */
   UserProfile updateUserProfileSetting(UserProfile userProfile) throws Exception;
 
+  /**
+   * get bookmarks of user
+   * 
+   * @param userName username of a user
+   * @return bookmarks
+   * @throws Exception the exception
+   */
   List<String> getBookmarks(String userName) throws Exception;
 
+  /**
+   * get user profile
+   * 
+   * @param userName username of a user
+   * @return user profile
+   * @throws Exception the exception
+   */
   UserProfile getUserSettingProfile(String userName) throws Exception;
 
+  /**
+   * get user profile manager
+   * 
+   * @param userName username of a user
+   * @return user profile
+   * @throws Exception the exception
+   */
   UserProfile getUserProfileManagement(String userName) throws Exception;
 
+  /**
+   * save user profile
+   * 
+   * @param userProfile saved user profile
+   * @throws Exception the exception
+   */
   void saveUserSettingProfile(UserProfile userProfile) throws Exception;
 
+  /**
+   * update forum
+   * 
+   * @param path path to forum
+   * @throws Exception the exception
+   */
   void updateForum(String path) throws Exception;
 
+  /**
+   * get list of banded ips
+   * 
+   * @return list banded ips
+   * @throws Exception the exception
+   */
   List<String> getBanList() throws Exception;
 
+  /**
+   * add ip to ban
+   * 
+   * @param ip add ip
+   * @throws Exception the exception
+   */
   boolean addBanIP(String ip) throws Exception;
 
+  /**
+   * remove banded ip
+   * 
+   * @param ip removed banded ip
+   * @throws Exception the exception
+   */
   void removeBan(String ip) throws Exception;
 
+  /**
+   * get list of band ips in forum
+   * 
+   * @param forumId id of forum
+   * @return list band ips
+   * @throws Exception the exception
+   */
   List<String> getForumBanList(String forumId) throws Exception;
 
+  /**
+   * add ip to list of band ips in forum
+   * 
+   * @param ip add ip
+   * @param forumId id of forum
+   * @throws Exception the exception
+   */
   boolean addBanIPForum(String ip, String forumId) throws Exception;
 
+  /**
+   * remove ip from list of band ips in forum
+   * 
+   * @param ip removed ip
+   * @param forumId id of forum
+   * @throws Exception the exception
+   */
   void removeBanIPForum(String ip, String forumId) throws Exception;
 
+  /**
+   * get list of posts
+   * 
+   * @param ip input ip
+   * @param strOrderBy input order
+   * @return list of posts
+   * @throws Exception the exception
+   */
   JCRPageList getListPostsByIP(String ip, String strOrderBy) throws Exception;
 
+  /**
+   * register listener
+   * 
+   * @param categoryId id of category
+   * @throws Exception the exception
+   */
   void registerListenerForCategory(String categoryId) throws Exception;
 
+  /**
+   * remove listener
+   * 
+   * @param path path of category
+   * @throws Exception the exception
+   */
   void unRegisterListenerForCategory(String path) throws Exception;
 
+  /**
+   * get avatar
+   * 
+   * @param userName username
+   * @return avatar
+   * @throws Exception the exception
+   */
   ForumAttachment getUserAvatar(String userName) throws Exception;
 
+  /**
+   * save avatar for user
+   * 
+   * @param userId username
+   * @param fileAttachment avatar
+   * @throws Exception the exception
+   */
   void saveUserAvatar(String userId, ForumAttachment fileAttachment) throws Exception;
 
+  /**
+   * set default avatar
+   * 
+   * @param userName username
+   * @throws Exception the exception
+   */
   void setDefaultAvatar(String userName) throws Exception;
 
+  /**
+   * get watches
+   * 
+   * @param userId username
+   * @return watches by user
+   * @throws Exception the exception
+   */
   List<Watch> getWatchByUser(String userId) throws Exception;
 
+  /**
+   * update watch email addresss for user 
+   * 
+   * @param listNodeId watch node
+   * @param newEmailAdd watch email address
+   * @param userId username
+   * @throws Exception the exception
+   */
   void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId) throws Exception;
 
+  /**
+   * get prune settings
+   * @return list of prune settings
+   * @throws Exception the exception
+   */
   List<PruneSetting> getAllPruneSetting() throws Exception;
 
+  /**
+   * get prune setting
+   * 
+   * @param forumPath path of forum
+   * @return prune setting
+   * @throws Exception the exception
+   */
   PruneSetting getPruneSetting(String forumPath) throws Exception;
 
+  /**
+   * save a prune setting
+   * 
+   * @param pruneSetting input prune setting
+   * @throws Exception the exception
+   */
   void savePruneSetting(PruneSetting pruneSetting) throws Exception;
 
+  /**
+   * run prune setting
+   * 
+   * @param pSetting input prune setting
+   * @throws Exception the exception
+   */
   void runPrune(PruneSetting pSetting) throws Exception;
 
+  /**
+   * run prune setting
+   * 
+   * @param forumPath path of forum
+   * @throws Exception the exception
+   */
   void runPrune(String forumPath) throws Exception;
 
+  /**
+   * check prune setting
+   * 
+   * @param pSetting input prune setting
+   * @return prune setting
+   * @throws Exception the exception
+   */
   long checkPrune(PruneSetting pSetting) throws Exception;
 
+  /**
+   * get list types of topic
+   * 
+   * @return list of topic type
+   * @throws Exception the exception
+   */
   List<TopicType> getTopicTypes() throws Exception;
 
+  /**
+   * get type of a topic
+   * 
+   * @param Id id of topic
+   * @return object topic type
+   * @throws Exception the exception
+   */
   TopicType getTopicType(String Id) throws Exception;
 
+  /**
+   * save type of a topic
+   * 
+   * @param topicType object topic type
+   * @throws Exception the exception
+   */
   void saveTopicType(TopicType topicType) throws Exception;
 
+  /**
+   * remove type of a topic
+   * 
+   * @param topicTypeId id of topic type
+   * @throws Exception the exception
+   */
   void removeTopicType(String topicTypeId) throws Exception;
 
+  /**
+   * get page list of topics
+   * 
+   * @param type type of topic
+   * @return page list of topics
+   * @throws Exception the exception
+   */
   JCRPageList getPageTopicByType(String type) throws Exception;
 
+  /**
+   * get list of topics
+   * 
+   * @param categoryId id of category
+   * @param forumId id of forum
+   * @param string condition
+   * @param strOrderBy input order
+   * @return topic page list
+   * @throws Exception the exception
+   */
   LazyPageList<Topic> getTopicList(String categoryId,
                                    String forumId,
                                    String string,
                                    String strOrderBy,
                                    int pageSize) throws Exception;
 
+  /**
+   * get summaries
+   * 
+   * @param categoryId id of category
+   * @param strQuery query
+   * @return page list of forums
+   * @throws Exception the exception
+   */
   List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
 
+  /**
+   * update user profile
+   * 
+   * @param name username
+   * @throws Exception the exception
+   */
   void updateUserProfileInfo(String name) throws Exception;
 
   /**
@@ -977,10 +1481,39 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception
    */
   public void updateLoggedinUsers() throws Exception ;
+  
+  /**
+   * update when delete an user
+   * 
+   * @param userName username
+   * @throws Exception the exception
+   */
   public void calculateDeletedUser(String userName) throws Exception ;
   
+  /**
+   * create RSS
+   * 
+   * @param objectId id of forum
+   * @return input stream
+   * @throws Exception the exception
+   */
   public InputStream createForumRss(String objectId, String link) throws Exception ;
+  
+  /**
+   * create RSS of user
+   * 
+   * @param userId username
+   * @param link link of RSS
+   * @return input stream
+   * @throws Exception the exception
+   */
   public InputStream createUserRss(String userId, String link) throws Exception ;
   
+  /**
+   * add listener
+   * 
+   * @param listener add listener
+   * @throws Exception the exception
+   */
   public void addListenerPlugin(ForumEventListener listener) throws Exception ;
 }

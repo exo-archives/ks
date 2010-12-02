@@ -30,7 +30,6 @@ public interface PollService {
 	/**
    * Gets the poll.
    * 
-   * @param sProvider is the SessionProvider
    * @param pollId
    * @return the poll
    * @throws Exception the exception
@@ -39,8 +38,6 @@ public interface PollService {
 
   /**
    * Save poll.
-   * 
-   * @param sProvider is the SessionProvider
    * @param poll the poll
    * @param isNew is the new
    * @param isVote is the vote
@@ -51,7 +48,6 @@ public interface PollService {
   /**
    * Removes the poll.
    * 
-   * @param sProvider is the SessionProvider
    * @param pollId
    * @return the poll
    * @throws Exception the exception
@@ -61,13 +57,25 @@ public interface PollService {
   /**
    * Sets the closed poll.
    * 
-   * @param sProvider is the SessionProvider
    * @param poll
    * @throws Exception the exception
    */
   void setClosedPoll(Poll poll) throws Exception;
   
+  /**
+   * Gets list polls.
+   * 
+   * @return the list of polls
+   * @throws Exception the exception
+   */
   public List<Poll>getPagePoll() throws Exception ;
   
+  /**
+   * Gets the poll summary.
+   * 
+   * @param groupOfUser group
+   * @return the poll summary
+   * @throws Exception the exception
+   */
   public PollSummary getPollSummary(List<String> groupOfUser) throws Exception ;
 }
