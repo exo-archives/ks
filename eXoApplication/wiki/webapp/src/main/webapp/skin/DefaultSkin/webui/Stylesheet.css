@@ -264,11 +264,12 @@
 }
 
 .UIWikiPageEditForm .UIWikiPageContentMarginRight {
-  margin-right: 250px;
+  margin-right: 290px;
 }
 
 .UIWikiPageArea .UIWikiPageEditForm .HorizontalLayout {
   margin-bottom: 20px;
+  margin-top: 4px;
 	padding: 0px;
 	border: none;
 	background: none;
@@ -279,21 +280,13 @@
 	font-size:24px;
 	font-weight:bold;
 	color: #555555;
-	width: 70%;
+	width: 50%;
 	padding: 2px 0px;
-}
-
-.UIWikiPortlet .UIWikiPageTitleControlForm_PageControlArea .TitleInfo{
-	background:none repeat scroll 0 0 #F3F6FB;
-	border:1px dashed #D1DEEF;
-	margin:0 0 4px;
-	padding:0 12px;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea {
 	margin: 10px 15px;
 	border-bottom:1px solid #C7C7C7;
-	height: 37px;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar{
@@ -367,26 +360,25 @@
 }
 
 .UIWikiPageEditForm .UIPageToolBar{
-	margin: 14px 0 0;
+	margin: 10px 0 0;
 	float: right;
-	width: 60%;	
 }
 
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm {
 	float: left;
-	width: 30%;
+	width: 50%;
 	font-weight: bold;
 	font-size: 18px;
 	color: #636363;
 }
 
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm #TitleInput {
-	width: 317px;
+	width: 100%;
 	border: 1px solid #dddddd;
 	background-color: #ffffff;
 	font-size: 24px;
 	color: #636363;
-	padding-left: 10px;
+	padding-left: 8px;
 }
 
 .UIWikiPageEditForm .UIForm .HorizontalLayout textarea {
@@ -421,7 +413,7 @@
 .UIWikiPageEditForm .UIForm .UIWikiPageContentMarginRight textarea {
 	border: 1px solid #dddddd;
 	height: auto;
-	padding: 0 0 0 8px;
+	padding: 6px 8px;
 	width: 99%;
 	*width: 98.2%;
 }
@@ -707,10 +699,10 @@
 /* Wiki help */
 
 .UIWikiSidePanelArea {
-	margin: 0 0 10px;
+	margin: 4px 0 10px;
 	padding: 0;
 	line-height: 16px;
-	width: 235px;
+	width: 270px;
 	float: right;
 	border: 1px solid #dddddd;
 	border-top: none;
