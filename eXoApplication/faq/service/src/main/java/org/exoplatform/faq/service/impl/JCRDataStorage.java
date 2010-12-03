@@ -523,7 +523,7 @@ public class JCRDataStorage implements DataStorage {
 			} catch (Exception e) {
 				nodeContent = fileNode.getNode("jcr:content");
 			}
-			nodeContent.setProperty("jcr:mimeType", "gtmpl");
+			nodeContent.setProperty("jcr:mimeType", "application/x-groovy+html");
 			nodeContent.setProperty("jcr:data", inputStream);
 			nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
 			if (templateHome.isNew()) {
