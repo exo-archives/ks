@@ -97,14 +97,13 @@
 						      } else {
 						      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
 						      }
-						       	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
 						     	if(name.length() < 80){
 							     %>
-							    
+							     	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
 						     			$name
 						     	<%} else {%>
-							     	
-							     		<a href="javaScript:void(0);" title="$name" style="color:black;">
+							     	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
+							     		<a href="javaScript:void(0);" title="$name" style="color:black;" title="">
 						     				<%=FAQUtils.getSubString(name, 80)%>
 						     			</a>
 						     	<%}%>
@@ -116,7 +115,7 @@
 						  	}
 							}
 							%>
-							<a style="padding-left:5px; color:blue; font-style:italic; text-decoration:underline" href='<%=uicomponent.event("Attachment")%>'>
+							<a style="padding-left:5px; color:blue; font-style:italic; text-decoration:underline" href="<%=uicomponent.event("Attachment")%>">
 								<%=_ctx.appRes("UIQuestionForm.label.AttachAFile")%>
 							</a>
 						</td>
