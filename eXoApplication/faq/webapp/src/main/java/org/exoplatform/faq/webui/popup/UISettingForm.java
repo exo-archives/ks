@@ -18,6 +18,7 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javax.portlet.PortletPreferences;
@@ -273,16 +274,29 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
 		}
 	}
 
-  public void setAvatarUrl(String url) {
-    if (url != null && url.trim().length() > 0) {
-      // add random id to avoid caching image on Firefox.
-      this.avatarUrl = url + "?avatarRandomId=" + IdGenerator.generate();
-    } else {
-      this.avatarUrl = url;
-    }
 
+  boolean isDefaultAvatar() {
+    return avatarUrl != null && avatarUrl.indexOf(Utils.DEFAULT_AVATAR_URL) >= 0;
   }
 
+  private Random random = new Random();
+
+  /**
+   * @return the avatarUrl
+   */
+  public String getAvatarUrl() {
+    String tempUrl = avatarUrl;
+    if (!isDefaultAvatar()) {
+      // add random id to avoid caching image on Firefox.
+      tempUrl = tempUrl + "?avatarRandomId=" + random.nextLong();
+    }
+    return tempUrl;
+  }
+
+  public void setAvatarUrl(String url) {
+    this.avatarUrl = url;
+  }
+  
 	public FAQSetting getFaqSetting() {
 		return faqSetting_;
 	}
