@@ -1,0 +1,25 @@
+Index: eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/Stylesheet.css
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/Stylesheet.css	(revision 63613)
++++ eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/Stylesheet.css	(working copy)
+@@ -656,3 +656,20 @@
+ 	position: absolute; 
+ 	*position: relative;
+ }
++
++
++.UIForumPortlet .UIAttachFileForm .UIFormGrid {
++	table-layout: fixed;
++}
++
++.UIForumPortlet .UIAttachFileForm .FieldLabel {
++	*width: 120px;
++}
++
++.UIForumPortlet .FORUMImportCategoryForm .UIFormGrid {
++	table-layout: fixed;
++}
++
++.UIForumPortlet .FORUMImportCategoryForm .FieldLabel {
++	width: 75px;
++}

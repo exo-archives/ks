@@ -656,3 +656,20 @@
 	position: absolute; 
 	*position: relative;
 }
+
+
+.UIForumPortlet .UIAttachFileForm .UIFormGrid {
+	table-layout: fixed;
+}
+
+.UIForumPortlet .UIAttachFileForm .FieldLabel {
+	*width: 120px;
+}
+
+.UIForumPortlet .FORUMImportCategoryForm .UIFormGrid {
+	table-layout: fixed;
+}
+
+.UIForumPortlet .FORUMImportCategoryForm .FieldLabel {
+	width: 75px;
+}
