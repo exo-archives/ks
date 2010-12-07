@@ -751,8 +751,150 @@
       <artifactId>ecs</artifactId>
       <version>${ecs.version}</version>
     </dependency>
-    <!--  -->
-
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.server.tomcat.patch</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.demo.rest-ksdemo</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.poll.service</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.common</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.web.ksResources</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.component.bbcode</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-core-rendering-macro-toc</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+      <type>jar</type>
+    </dependency><!-- 2.4-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.component.rendering</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.component.common</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.wiki.service</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.demo.cometd-war</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.extension.webapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.poll.webapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.demo.config</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.faq.webapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.wiki.webapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.demo.webapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency><!-- 2.2.0-SNAPSHOT-->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${org.slf4j.version}</version>
+      <type>jar</type>
+    </dependency><!-- 1.5.6-->
+    <dependency>
+      <groupId>org.reflext</groupId>
+      <artifactId>reflext.jlr</artifactId>
+      <version>${org.reflext.version}</version>
+      <type>jar</type>
+    </dependency><!-- 1.0.0-->
+    <dependency>
+      <groupId>org.chromattic</groupId>
+      <artifactId>chromattic.core</artifactId>
+      <version>${org.chromattic.version}</version>
+      <type>jar</type>
+    </dependency><!-- 1.0.4-->
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>${xerces.version}</version>
+      <type>jar</type>
+    </dependency><!-- 2.9.1-->
   </dependencies>
   <build>
     <plugins>
