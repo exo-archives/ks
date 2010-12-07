@@ -141,14 +141,12 @@
 }
 
 .UIWikiPortlet th {
-	background: #165fb3;
-	color: #ffffff;
-	text-align: left;
-	line-height: 30px;
-	padding-left: 10px;
-	border-left: none;
-	border-top: none;
-	border-bottom: none;
+	background:none repeat scroll 0 0 #D7D7D7;
+	border-right:1px solid #FFFFFF;
+	color:#636363;
+	line-height:20px;
+	padding-left:12px;
+	text-align:left;
 }
 
 .UIWikiPortlet td {
