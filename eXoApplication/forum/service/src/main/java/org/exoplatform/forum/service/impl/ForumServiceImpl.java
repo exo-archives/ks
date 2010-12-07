@@ -196,6 +196,14 @@ public class ForumServiceImpl implements ForumService, Startable {
     } catch (Exception e) {
       log.error("Error while initializing Management view: "+ e.getMessage());
     }
+    
+    try {
+      log.info("updating Forum data ...");
+      // update data for whole forum.
+      updateForum(null) ;
+    } catch (Exception e) {
+      log.error("Error while updating Forum data: ", e);
+    }
 	}
 
   private void manageStorage() {

@@ -28,7 +28,9 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
+/**
+ * @deprecated moved process to {@link ForumServiceImpl#start()}
+ */
 public class UpdateDataJob implements Job {
 	private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
   public UpdateDataJob() throws Exception {}
