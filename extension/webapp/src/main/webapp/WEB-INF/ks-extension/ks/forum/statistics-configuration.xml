@@ -61,7 +61,7 @@
           <property name="jobName" value="UpdateDataJob"/>
           <property name="groupName" value="KnowledgeSuite-forum"/>
           <property name="job" value="org.exoplatform.forum.service.conf.UpdateDataJob"/>
-          <property name="repeatCount" value="0"/>
+          <property name="repeatCount" value="1"/>
           <property name="period" value="30000"/> <!-- 2 mins-->    
           <property name="startTime" value="+0"/>
           <property name="endTime" value=""/>               
