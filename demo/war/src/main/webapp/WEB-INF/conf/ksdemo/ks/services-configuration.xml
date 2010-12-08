@@ -109,8 +109,23 @@
     </component-plugin>
     
     <component-plugin>
-      <name>default.data</name>
+      <name>technical.forum</name>
       <set-method>addInitialDataPlugin</set-method>
+      <type>org.exoplatform.forum.service.conf.ForumInitialDataPlugin</type>
+      <description>Initialize</description>
+      <init-params>
+        <values-param>
+          <name>locations</name>
+          <description>location where Forum export format file is stored</description>
+          <value>war:/data/forum/data-full-forum.zip</value>
+          <value>war:/data/forum/forumCategory5aa6d1aa0afb96bf46961df695e0c3cf.xml</value>
+        </values-param>
+      </init-params>
+    </component-plugin> 
+    
+    <component-plugin>
+      <name>default.data</name>
+      <set-method>addInitialDefaultDataPlugin</set-method>
       <type>org.exoplatform.forum.service.conf.InitializeForumPlugin</type>
       <description>description</description>
       <init-params>

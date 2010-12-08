@@ -63,6 +63,7 @@ public interface DataStorage {
   void addRolePlugin(ComponentPlugin plugin) throws Exception;
 
   void addInitialDataPlugin(ComponentPlugin plugin) throws Exception;
+  void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception;
 
   void addInitRssPlugin(ComponentPlugin plugin) throws Exception;
 
@@ -391,6 +392,7 @@ public interface DataStorage {
 
   public void calculateDeletedUser(String userName) throws Exception ;
 
+  void initDataPlugin() throws Exception;
   void initDefaultData() throws Exception;
 
   List<RoleRulesPlugin> getRulesPlugins();

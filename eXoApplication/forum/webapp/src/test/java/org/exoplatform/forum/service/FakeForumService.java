@@ -61,6 +61,9 @@ public class FakeForumService implements ForumService {
   public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception {
   }
 
+  public void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception {
+  }
+
   public void addMember(User user, UserProfile profileTemplate) throws Exception {
   }
 

@@ -124,9 +124,14 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
+  public void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception {
+  	storage.addInitialDefaultDataPlugin(plugin) ;
+  }
+
   public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception {
   	storage.addInitialDataPlugin(plugin) ;
   }
+
 
 
   public void start() {
@@ -137,14 +142,21 @@ public class ForumServiceImpl implements ForumService, Startable {
   	}catch (Exception e) {
   	  log.error("Error while updating category listeners "+ e.getMessage());
   	}
-
+  	
   	try{
-  	  log.info("initializing default data...");
+  		log.info("initializing default data...");
   		storage.initDefaultData() ;
-
+  		
   	}catch(Exception e) {
-  	  log.error("Error while initializing default data: "+ e.getMessage());
+  		log.error("Error while initializing default data: "+ e.getMessage());
   	}  	
+  	
+  	try {
+  		log.info("initializing data...");
+  		storage.initDataPlugin();			
+		} catch (Exception e) {
+			log.error("Error while initializing data plugin: "+ e.getMessage());
+		}
 
   	try{
   	  log.info("Calculating active users...");

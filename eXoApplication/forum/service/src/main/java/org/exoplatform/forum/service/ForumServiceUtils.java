@@ -117,6 +117,13 @@ public class ForumServiceUtils {
 		return ((expr.indexOf("/") >= 0)  && (expr.indexOf(":") >= 0));
 	}
 
+	private static PageList getUserByGroup(OrganizationService organizationService, String group) throws Exception {
+		try {
+			return organizationService.getUserHandler().findUsersByGroup(group) ;
+		} catch (Exception e) {
+			return null;
+		}
+	}
 	/**
 	 * Find usernames matching user, group or membership expressions
 	 * @param userGroupMembership list that may contain usernames or group names or membership expressions in the form MEMBERSHIPTYPE:GROUP
@@ -139,8 +146,9 @@ public class ForumServiceUtils {
 			str = str.trim();
 			if (isMembershipExpression(str)) {
 				String[] array = str.split(":") ;
-				//List<User> userList = organizationService.getUserHandler().findUsersByGroup(array[1]).getAll() ;
-				PageList pageList = organizationService.getUserHandler().findUsersByGroup(array[1]) ;
+				//List<User> userList = organipageListzationService.getUserHandler().findUsersByGroup(array[1]).getAll() ;
+				PageList pageList = getUserByGroup(organizationService, array[1]) ;
+				if(pageList == null) continue;
 				if(array[0].length() > 1){
 				  List<User> userList = new ArrayList<User>() ;
 			    for(int i = 1; i <= pageList.getAvailablePage(); i++) {
@@ -171,7 +179,8 @@ public class ForumServiceUtils {
 					}*/
 				}else {
 					if(array[0].charAt(0)== 42) {
-					  pageList = organizationService.getUserHandler().findUsersByGroup(array[1]) ;
+					  pageList = getUserByGroup(organizationService, array[1]) ;
+					  if(pageList == null) continue;
 					  List<User> userList = new ArrayList<User>() ;					  
 	          for(int i = 1; i <= pageList.getAvailablePage(); i++) {
 	            userList.clear() ;
@@ -191,7 +200,8 @@ public class ForumServiceUtils {
 				}			
 
 			} else if (isGroupExpression(str)) {
-			  PageList pageList = organizationService.getUserHandler().findUsersByGroup(str) ;
+			  PageList pageList = getUserByGroup(organizationService, str) ;
+			  if(pageList == null) continue;
 			  List<User> userList = new ArrayList<User>() ;
 			  for(int i = 1; i <= pageList.getAvailablePage(); i++) {
           userList.clear() ;
