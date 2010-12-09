@@ -37,6 +37,7 @@ import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 import org.exoplatform.wiki.webui.UIWikiLocationContainer;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.control.filter.DeniedOnWikiHomePageFilter;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 import org.exoplatform.wiki.webui.popup.UIWikiMovePageForm;
@@ -55,7 +56,7 @@ import org.exoplatform.wiki.webui.tree.UITreeExplorer;
 )
 public class MovePageActionComponent extends UIComponent {  
   
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsViewModeFilter() });
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsViewModeFilter(), new DeniedOnWikiHomePageFilter() });
 
   public MovePageActionComponent() {
     
