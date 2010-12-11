@@ -1,0 +1,11 @@
+<% 
+import org.exoplatform.wiki.webui.UIWikiNavigationContainer;
+import org.exoplatform.wiki.webui.UIWikiPageContainer;
+ %>
+
+<div class="UIWikiMiddleArea">
+ 	<% uicomponent.renderChild(UIWikiNavigationContainer.class); %>
+ 	<div class="Spliter" onmousedown="eXo.wiki.Spliter.exeRowSplit(event,this);"></div>
+ 	<% uicomponent.renderChild(UIWikiPageContainer.class); %>
+</div>
+

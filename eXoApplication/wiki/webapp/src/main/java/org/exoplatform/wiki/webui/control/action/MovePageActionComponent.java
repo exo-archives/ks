@@ -41,7 +41,6 @@ import org.exoplatform.wiki.webui.control.filter.DeniedOnWikiHomePageFilter;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 import org.exoplatform.wiki.webui.popup.UIWikiMovePageForm;
-import org.exoplatform.wiki.webui.tree.UITreeExplorer;
 
 /**
  * Created by The eXo Platform SAS
@@ -73,8 +72,7 @@ public class MovePageActionComponent extends UIComponent {
       ResourceBundle res = event.getRequestContext().getApplicationResourceBundle();
       WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      WikiPageParams params = Utils.getCurrentWikiPageParams();
-      String currentRelativePagePath = Utils.getCurrentHierachyPagePath();
+      WikiPageParams params = Utils.getCurrentWikiPageParams();     
       if (Utils.getCurrentWikiPage().getName().equals(WikiNodeType.Definition.WIKI_HOME_NAME)) {
         uiWikiPortlet.addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.can-not-move-wikihome",
                                                         null,
@@ -85,12 +83,9 @@ public class MovePageActionComponent extends UIComponent {
       UIPopupContainer uiPopupContainer = uiWikiPortlet.getChild(UIPopupContainer.class);
       UIWikiMovePageForm movePageForm = uiPopupContainer.activate(UIWikiMovePageForm.class, 600);
       UIWikiLocationContainer locationContainer = movePageForm.findFirstComponentOfType(UIWikiLocationContainer.class);
-  
       UIWikiBreadCrumb currentLocation = locationContainer.getChildById(UIWikiLocationContainer.CURRENT_LOCATION);
       currentLocation.setBreadCumbs(wikiService.getBreadcumb(params.getType(), params.getOwner(), params.getPageId()));
-      UITreeExplorer tree = movePageForm.getChildById(UIWikiMovePageForm.UITREE);
-      tree.setCurrentPath(currentRelativePagePath);
-      UIFormInputInfo pageNameInfo = movePageForm.getUIFormInputInfo(UIWikiMovePageForm.PAGENAME_INFO);     
+      UIFormInputInfo pageNameInfo = movePageForm.getUIFormInputInfo(UIWikiMovePageForm.PAGENAME_INFO);
       pageNameInfo.setValue(res.getString("UIWikiMovePageForm.msg.you-are-about-move-page")
           +" "+ Utils.getCurrentWikiPage().getContent().getTitle());
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);

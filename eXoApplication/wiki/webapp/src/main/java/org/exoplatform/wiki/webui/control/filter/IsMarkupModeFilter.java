@@ -44,9 +44,9 @@ public class IsMarkupModeFilter extends UIExtensionAbstractFilter {
   @Override
   public boolean accept(Map<String, Object> context) throws Exception {
     UIWikiPortlet wikiPortlet = (UIWikiPortlet) context.get(UIWikiPortlet.class.getName());
-    UIWikiPageArea wikiPageArea = wikiPortlet.getChild(UIWikiPageArea.class);
-    UIWikiPageEditForm wikiPageEditForm = wikiPageArea.getChild(UIWikiPageEditForm.class);
-    UIWikiRichTextArea wikiRichTextArea = wikiPageEditForm.getChild(UIWikiRichTextArea.class);
+    UIWikiPageArea wikiPageArea = wikiPortlet.findFirstComponentOfType(UIWikiPageArea.class);
+    UIWikiPageEditForm wikiPageEditForm = wikiPageArea.findFirstComponentOfType(UIWikiPageEditForm.class);
+    UIWikiRichTextArea wikiRichTextArea = wikiPageEditForm.findFirstComponentOfType(UIWikiRichTextArea.class);
     return !wikiRichTextArea.isRendered();
   }
 

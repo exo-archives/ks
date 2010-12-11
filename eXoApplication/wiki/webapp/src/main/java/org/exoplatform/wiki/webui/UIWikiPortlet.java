@@ -78,16 +78,13 @@ public class UIWikiPortlet extends UIPortletApplication {
     super();
     try {
       addChild(UIWikiPortletPreferences.class, null, null);
+      addChild(UIWikiUpperArea.class, null, null);
+      addChild(UIWikiMiddleArea.class, null, null);
       addChild(UIWikiEmptyAjaxBlock.class, null, null);
+      addChild(UIWikiMaskWorkspace.class, null, "UIWikiMaskWorkspace");
       UIPopupContainer uiPopupContainer = addChild(UIPopupContainer.class, null, null);
       uiPopupContainer.setId("UIWikiPopupContainer");
       uiPopupContainer.getChild(UIPopupWindow.class).setId("UIWikiPopupWindow");
-      addChild(UIWikiUpperArea.class, null, null);
-      addChild(UIWikiPageArea.class, null, null);
-      addChild(UIWikiBottomArea.class, null, null);
-      addChild(UIWikiSearchSpaceArea.class, null, null);
-      addChild(UIWikiHistorySpaceArea.class, null, null);
-      addChild(UIWikiMaskWorkspace.class, null, "UIWikiMaskWorkspace");
       loadPreferences();
     } catch (Exception e) {
       log.error("An exception happens when init WikiPortlet", e);

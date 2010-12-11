@@ -1,17 +1,17 @@
 .ExpandIcon {  
   width: 16px;
-  background: url('DefaultSkin/tree_plus.gif') no-repeat left center; /* orientation=lt */
-  background: url('DefaultSkin/tree_plus.gif') no-repeat right center; /* orientation=rt */ 
+  background: url('DefaultSkin/tree_plus.gif') no-repeat left 5px; /* orientation=lt */
+  background: url('DefaultSkin/tree_plus.gif') no-repeat right 5px; /* orientation=rt */ 
 }
 
 .EmptyIcon { 
   width: 16px;
-  background: url('DefaultSkin/tree_square.gif') no-repeat left center; /* orientation=lt */
-  background: url('DefaultSkin/tree_square.gif') no-repeat right center; /* orientation=rt */ 
+  background: url('DefaultSkin/tree_square.gif') no-repeat left 5px; /* orientation=lt */
+  background: url('DefaultSkin/tree_square.gif') no-repeat right 5px; /* orientation=rt */ 
 }
 
 .CollapseIcon  {  
   width: 16px;
-  background: url('DefaultSkin/tree_minus.gif') no-repeat left center; /* orientation=lt */
-  background: url('DefaultSkin/tree_minus.gif') no-repeat right center; /* orientation=rt */ 
+  background: url('DefaultSkin/tree_minus.gif') no-repeat left 5px; /* orientation=lt */
+  background: url('DefaultSkin/tree_minus.gif') no-repeat right 5px; /* orientation=rt */ 
 }

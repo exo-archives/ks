@@ -24,12 +24,17 @@ import java.util.List;
  *          hieu.lai@exoplatform.com
  * 15 Nov 2010  
  */
-public class EffectUIComponent {
+public class EventUIComponent {
   private String   Id;
 
   private List<String> eventName;
 
-  public EffectUIComponent(String id, List<String> eventName) {   
+  public EventUIComponent() {
+    super();
+    // TODO Auto-generated constructor stub
+  }
+
+  public EventUIComponent(String id, List<String> eventName) {   
     Id = id;
     this.eventName = eventName;
   }

@@ -221,16 +221,23 @@ public class Utils {
     }
     return null;
   }
-  public static String getCurrentHierachyPagePath() throws Exception
-  {
-    String currentWikiName = getCurrentWiki().getOwner();
-    String currentWikiPath = ((WikiImpl) getCurrentWiki()).getPath();
-    String currentPagePath = ((PageImpl) getCurrentWikiPage()).getPath();    
-    String prefixPath = getCurrentWikiPageParams().getType()+ "/" + currentWikiName;
-    String result = currentPagePath.replace(currentWikiPath, prefixPath);    
-    if (result.equals(prefixPath) ||result.equals(prefixPath +"/"+WikiNodeType.Definition.WIKI_HOME_NAME)) {
-      return "";
-    }   
+
+  public static String getCurrentWikiPagePath() throws Exception {
+    String result = null;
+    Wiki currentWiki = getCurrentWiki();
+    String currentWikiName = currentWiki.getOwner();
+    String currentWikiPath = ((WikiImpl) currentWiki).getPath();
+    String currentPagePath = null;
+    PageImpl currentPage = ((PageImpl) getCurrentWikiPage());
+    if (currentPage != null) {
+      currentPagePath = currentPage.getPath();
+      String prefixPath = getCurrentWikiPageParams().getType() + "/" + currentWikiName;
+      result = currentPagePath.replace(currentWikiPath, prefixPath);
+      if (result.equals(prefixPath)
+          || result.equals(prefixPath + "/" + WikiNodeType.Definition.WIKI_HOME_NAME)) {
+        return prefixPath + "/" + WikiNodeType.Definition.WIKI_HOME_NAME;
+      }
+    }
     return result;
   }
 
@@ -275,9 +282,11 @@ public class Utils {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     StringBuffer sb = new StringBuffer();
     sb.append(getURLFromParams(params));
-    sb.append("#");
-    sb.append(Utils.getActionFromWikiMode(mode));
-    portalRequestContext.setResponseComplete(true);
+    if (!mode.equals(WikiMode.VIEW)) {
+      sb.append("#");
+      sb.append(Utils.getActionFromWikiMode(mode));
+      portalRequestContext.setResponseComplete(true);
+    }
     portalRequestContext.sendRedirect(sb.toString());
   }
   
@@ -312,6 +321,13 @@ public class Utils {
 
   public static WikiMode getWikiModeFromAction(String action) {
     return WikiMode.valueOf(action.toUpperCase());
-  }  
+  }
+ 
+  public static String getCurrentRestURL() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("/").append(PortalContainer.getCurrentPortalContainerName()).append("/");
+    sb.append(PortalContainer.getCurrentRestContextName());
+    return sb.toString();
+  }
  
 }

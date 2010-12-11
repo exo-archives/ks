@@ -57,7 +57,7 @@ public class UIWikiSearchBox extends UIForm {
     @Override
     public void execute(Event<UIWikiSearchBox> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIWikiSearchSpaceArea searchSpaceArea = wikiPortlet.getChild(UIWikiSearchSpaceArea.class);
+      UIWikiSearchSpaceArea searchSpaceArea = wikiPortlet.findFirstComponentOfType(UIWikiSearchSpaceArea.class);
       UIWikiAdvanceSearchForm advanceSearchForm = searchSpaceArea.getChild(UIWikiAdvanceSearchForm.class);
       advanceSearchForm.resetWikiSpaces() ;
       String searchValue = event.getRequestContext().getRequestParameter(FIELD_SEARCHVALUE);

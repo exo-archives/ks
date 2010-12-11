@@ -6,71 +6,25 @@
   import org.exoplatform.wiki.tree.SpaceTreeNode;
   import org.exoplatform.portal.config.model.PortalConfig;  
 %>
-<div class="UITreeExplorer">
 <% 
  def rcontext = _ctx.getRequestContext();
- 
- String action = uicomponent.event(uicomponent.SELECT_NODE);
+ String initParam = uicomponent.initParam;
+ String initURL = uicomponent.initURL;
+ String childrenURL = uicomponent.childrenURL;
  String actionClassName = uicomponent.SELECT_NODE;
- rcontext.getJavascriptManager().importJavascript('eXo.wiki.UITreeExplorer', '/wiki/javascript/') ;
- rcontext.getJavascriptManager().addJavascript("eXo.wiki.UITreeExplorer.init('" + uicomponent.id + "', '" + actionClassName + "');");  
- 
- String restURL = uicomponent.getRestURL();
- String currentPagePath= uicomponent.getCurrentPath();
- 
- public void writeNodes(String currentPagePath) {    
-  //Root Tree   
-	SpaceTreeNode  portalNode =  new SpaceTreeNode(PortalConfig.PORTAL_TYPE);
-  SpaceTreeNode  groupNode =  new SpaceTreeNode(PortalConfig.GROUP_TYPE);
-  SpaceTreeNode  userNode =   new SpaceTreeNode(PortalConfig.USER_TYPE);
-	//Render Spaces 
-  renderSpaceTreeNode(portalNode,false,currentPagePath );
-	renderSpaceTreeNode(groupNode,false, currentPagePath );
-	renderSpaceTreeNode(userNode, true, currentPagePath);	     
+ String action = uicomponent.event(uicomponent.SELECT_NODE);
+ if (uicomponent.eventComponents == null){
+   actionClassName = uicomponent.REDIRECT;
+   action = "javascript:eXo.wiki.UIForm.submitPageEvent('"+ uicomponent.getParentFormId()  + "','"+ actionClassName +"','&subComponentId="+uicomponent.getId() +"&objectId=')";
  }
-  
- public void renderSpaceTreeNode(SpaceTreeNode treeNode ,boolean isLastNode, String currentPagePath) {
-    currentPagePath= currentPagePath.replace("/",".");   
-    String nodeName = treeNode.getName();
-    nodeName = _ctx.appRes("UITreeExplorer.label." + nodeName);
-    String iconType = "Expand";
-    String lastNodeClass = "";
-    String nodeType = treeNode.getNodeType().toString();
-    String nodeTypeCSS= nodeType.substring(0,1).toUpperCase() + nodeType.substring(1).toLowerCase();
-    String relPath= treeNode.getPath().replace("/",".");
-    if (isLastNode) {
-      lastNodeClass = "LastNode";
-    }
-    if (!treeNode.isHasChild()) {
-      iconType = "Empty";
-    }  
-    println "<div  class=\""+lastNodeClass+" Node\" >" ;
-    println "  <div class=\""+iconType+"Icon\" id=\"" + relPath + "\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.getChild('" +URLEncoder.encode( currentPagePath, "utf-8") + "/"+  URLEncoder.encode( relPath, "utf-8") + "', this)\">" ;
-    println "    <div id=\"iconTreeExplorer\"  onclick=\"event.cancelBubble=true;\" class=\""+ nodeTypeCSS +" TreeNodeType Node \">";
-    println "      <div class='NodeLabel'>" ;
-    println "        <span style=\"cursor:auto\" title=\""+nodeName+"\">"+nodeName+"</span>" ;
-    println "      </div>" ; 
-    println "    </div>" ; 
-    println "  </div>" ; 
-    println "</div>" ;  
- } 
-%>
-<div class="SideBarContent">  
-  <div class="BarContent">
-  <%=_ctx.appRes("UITreeExplorer.label.Destination")%>
-  </div>
-  <div class="SideContent">
-	  <div class="UITreeExplorer" id="UITreeExplorer">
-		  <div style="white-space: nowrap; -moz-user-select: none;">
-		    <div class="NodeGroup">
-		      <%		       
-		       writeNodes(currentPagePath);
-    	       %>
-    	       <input type="hidden" id="TreeExplorer_RestURL" value="${restURL}">
+ rcontext.getJavascriptManager().importJavascript('eXo.wiki.UITreeExplorer', '/wiki/javascript/') ;
+ if (initParam!=null && initURL!=null && childrenURL!=null)
+ 	rcontext.getJavascriptManager().addJavascript("eXo.wiki.UITreeExplorer.init('" + uicomponent.id + "', '" + initURL + "', '" + childrenURL + "', '"+ initParam + "', '"+ actionClassName + "');"); 
+%>  
+	 <div class="UITreeExplorer" id="$uicomponent.id">	 
+		 <div style="white-space: nowrap; -moz-user-select: none;">
+		   <div class="NodeGroup">
     	       <a href="$action" class="$actionClassName" style="display:none" ></a> 
-		    </div>
-		  </div>   	    
-		</div>
-  </div>
-</div>
+		   </div>
+		 </div>
 </div>

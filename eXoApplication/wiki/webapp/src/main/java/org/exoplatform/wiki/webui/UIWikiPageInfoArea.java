@@ -103,7 +103,7 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
       }
     }
     Collections.sort(versionsList, new VersionNameComparatorDesc());
-    UIWikiHistorySpaceArea historySpaceArea = wikiPortlet.getChild(UIWikiHistorySpaceArea.class);
+    UIWikiHistorySpaceArea historySpaceArea = wikiPortlet.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
     UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class);
     pageVersionsList.setVersionsList(versionsList);
     wikiPortlet.changeMode(WikiMode.SHOWHISTORY);

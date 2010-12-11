@@ -31,6 +31,7 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputInfo;
+import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
@@ -38,7 +39,7 @@ import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 import org.exoplatform.wiki.webui.UIWikiLocationContainer;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.WikiMode;
-import org.exoplatform.wiki.webui.tree.EffectUIComponent;
+import org.exoplatform.wiki.webui.tree.EventUIComponent;
 import org.exoplatform.wiki.webui.tree.UITreeExplorer;
 
 /**
@@ -61,27 +62,26 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
 
   final static public String LOCATION_CONTAINER = "UIWikiLocationContainer";
 
-  final static public String UITREE             = "UITreeExplorer";
+  final static public String UITREE             = "UIMoveTree";
 
   public String              MOVE               = "Move";
   
   public UIWikiMovePageForm() throws Exception {
     addChild(new UIFormInputInfo(PAGENAME_INFO, PAGENAME_INFO, null));
-    addChild(UIWikiLocationContainer.class, null, LOCATION_CONTAINER);    
-    UITreeExplorer tree = addChild(UITreeExplorer.class, null, UITREE);
-    tree.setRestURL(getRestURL());
-    List<EffectUIComponent> effectComponents = new ArrayList<EffectUIComponent>();   
-    effectComponents.add(new EffectUIComponent(LOCATION_CONTAINER,
-                                               Arrays.asList(new String[] { UIWikiLocationContainer.CHANGE_NEWLOCATION })));
-    tree.setEffectComponents(effectComponents);
-  }
-
-  private String getRestURL() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("/").append(PortalContainer.getCurrentPortalContainerName()).append("/");
-    sb.append(PortalContainer.getCurrentRestContextName()).append("/wiki/tree/");
-    return sb.toString();
-  }
+    addChild(UIWikiLocationContainer.class, null, LOCATION_CONTAINER);
+    UITreeExplorer uiTree = addChild(UITreeExplorer.class, null, UITREE);
+    StringBuilder initParam = new StringBuilder();
+    String currentPath = Utils.getCurrentWikiPagePath().replaceAll("/", ".");
+    initParam.append(currentPath).append("/").append(currentPath);
+    List<EventUIComponent> eventComponents = new ArrayList<EventUIComponent>();
+    eventComponents.add(new EventUIComponent(LOCATION_CONTAINER,
+                                             Arrays.asList(new String[] { UIWikiLocationContainer.CHANGE_NEWLOCATION })));
+    StringBuilder initURLSb = new StringBuilder(Utils.getCurrentRestURL());
+    initURLSb.append("/wiki/tree/all/");
+    StringBuilder childrenURLSb = new StringBuilder(Utils.getCurrentRestURL());
+    childrenURLSb.append("/wiki/tree/children/");
+    uiTree.init(initURLSb.toString(), childrenURLSb.toString(), initParam.toString(), eventComponents);   
+  }  
   
   static public class CloseActionListener extends EventListener<UIWikiMovePageForm> {
     public void execute(Event<UIWikiMovePageForm> event) throws Exception {  

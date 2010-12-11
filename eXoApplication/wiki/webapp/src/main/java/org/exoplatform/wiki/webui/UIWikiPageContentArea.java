@@ -56,6 +56,7 @@ public class UIWikiPageContentArea extends UIWikiContainer {
   
   public UIWikiPageContentArea() throws Exception{
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.HELP, WikiMode.VIEWREVISION });
+    this.addChild(UIWikiPageControlArea.class, null, null);
     this.addChild(UIWikiVersionSelect.class, null, null);
   }  
   

@@ -147,6 +147,14 @@
       <js-path>/javascript/eXo/wiki/confirm/UIConfirmBox.js</js-path>
     </param>
   </javascript>
+  
+   <!-- js for Spliter -->
+   <javascript>
+    <param>
+      <js-module>eXo.wiki.Spliter</js-module>
+      <js-path>/javascript/eXo/wiki/spliter/Spliter.js</js-path>
+    </param>
+  </javascript>
    
 </gatein-resources>
 

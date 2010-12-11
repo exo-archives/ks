@@ -325,6 +325,38 @@
 	background:url("background/UIPageToolBarIcon.png") no-repeat left -47px;
 }
 
+.UIWikiPortlet .UIWikiMiddleArea {
+  display:block;
+  height:500px;  
+}
+
+.UIWikiPortlet .UIWikiMiddleArea .UIWikiNavigationContainer{        
+  float:left;
+  padding-top:8px;
+	width: 25%; 
+	height:492px;	
+	visibility:'';
+	overflow: auto;
+}
+
+.UIWikiPortlet .UIWikiMiddleArea .Spliter{  
+  background-color: #CCC;
+  float:left;
+  width:0.5%;
+  height: 500px; 
+}
+
+.UIWikiPortlet .UIWikiMiddleArea .Spliter:hover{  
+  cursor:e-resize; 
+}
+
+.UIWikiPortlet .UIWikiMiddleArea .UIWikiPageContainer{
+  float:left;
+  width: 74.5%;
+	height: 500px;
+	overflow: auto;	
+}
+
 .UIWikiPageControlArea .UIPageToolBar .MoreLink {
 	background:url("background/UIPageToolBarIcon.png") no-repeat left -282px;
 	color:#535353;
@@ -486,7 +518,7 @@
 /* wiki homepage */
 .UIWikiPageArea {
   padding: 0 15px;
-  min-height: 300px;
+  min-height: 400px;
 }
 
 .UIWikiPageContentArea .DecorationVersion{

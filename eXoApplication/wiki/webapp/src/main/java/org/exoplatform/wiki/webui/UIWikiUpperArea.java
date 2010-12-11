@@ -38,6 +38,5 @@ public class UIWikiUpperArea extends UIWikiContainer {
         WikiMode.ADDPAGE, WikiMode.ADVANCEDSEARCH, WikiMode.SHOWHISTORY, WikiMode.PAGE_NOT_FOUND,
         WikiMode.DELETECONFIRM, WikiMode.VIEWREVISION });
     addChild(UIWikiApplicationControlArea.class, null, null);
-    addChild(UIWikiPageControlArea.class, null, null);
   }
 }

@@ -63,7 +63,7 @@ public class UIWikiLocationContainer extends UIContainer {
       WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
       UIWikiLocationContainer container = event.getSource();
       UIWikiBreadCrumb newlocation = container.getChildById(NEW_LOCATION);
-      String value = event.getRequestContext().getRequestParameter("param");
+      String value = event.getRequestContext().getRequestParameter(OBJECTID);
       value = TitleResolver.getId(value, false);
       WikiPageParams params = Utils.getPageParamsFromPath(value);
       newlocation.setBreadCumbs(wikiService.getBreadcumb(params.getType(),
