@@ -16,8 +16,11 @@
  */
 package org.exoplatform.wiki.tree;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.List;
+
+import org.exoplatform.wiki.utils.Utils;
 
 /**
  * Created by The eXo Platform SAS
@@ -27,31 +30,45 @@ import java.net.URLEncoder;
  */
 public class JsonNodeData {  
 
-  protected String       name;
+  protected String           name;
 
-  protected String       relPath;
+  protected String           path;
 
-  protected boolean      hasChild;
+  protected String           extendParam;
 
-  protected TreeNodeType nodeType;
+  protected boolean          hasChild;
 
-  protected boolean      isLastNode;
+  protected TreeNodeType     nodeType;
 
-  protected boolean      isSelectable;
+  protected boolean          isLastNode;
 
-  protected String       currentPagePath;
-  
+  protected boolean          isSelectable;
+
+  protected boolean          isExpanded   = false;
+
+  protected boolean          isSelected   = false;
+
+  public static final String EXTEND_PARAM = "extendParam";
+
+  public List<JsonNodeData>  children;
+    
   public JsonNodeData(TreeNode treeNode,
                       boolean isLastNode,
                       boolean isSelectable,
-                      String currentPagePath) throws UnsupportedEncodingException {    
-    this.name = treeNode.getName();   
-    this.relPath =  URLEncoder.encode(treeNode.getPath(), "utf-8");
+                      String extendParam,
+                      HashMap<String, Object> context) throws Exception {
+    this.name = treeNode.getName();
+    this.path = URLEncoder.encode(treeNode.getPath(), "utf-8");
+    if (extendParam != null)
+      this.extendParam = URLEncoder.encode(extendParam, "utf-8");
     this.hasChild = treeNode.isHasChild();
     this.nodeType = treeNode.getNodeType();
     this.isLastNode = isLastNode;
     this.isSelectable = isSelectable;
-    this.currentPagePath = URLEncoder.encode( currentPagePath, "utf-8");
+    this.children = Utils.getJSONData(treeNode, context);
+    this.isSelected = treeNode.isSelected();
+    if (this.children.size() > 0)
+      this.isExpanded = true;
   }
 
   public String getName() {
@@ -62,12 +79,12 @@ public class JsonNodeData {
     this.name = name;
   } 
 
-  public String getRelPath() {
-    return relPath;
+  public String getPath() {
+    return path;
   }
 
-  public void setRelPath(String relPath) {
-    this.relPath = relPath;
+  public void setPath(String path) {
+    this.path = path;
   }
 
   public boolean isHasChild() {
@@ -102,11 +119,36 @@ public class JsonNodeData {
     this.isSelectable = isSelectable;
   }
 
-  public String getCurrentPagePath() {
-    return currentPagePath;
+  public String getExtendParam() {
+    return extendParam;
   }
 
-  public void setCurrentPagePath(String currentPagePath) {
-    this.currentPagePath = currentPagePath;
-  }  
+  public void setExtendParam(String extendParam) {
+    this.extendParam = extendParam;
+  }
+  
+  public boolean isExpanded() {
+    return isExpanded;
+  }
+
+  public void setExpanded(boolean isExpanded) {
+    this.isExpanded = isExpanded;
+  }
+
+  public boolean isSelected() {
+    return isSelected;
+  }
+
+  public void setSelected(boolean isSelected) {
+    this.isSelected = isSelected;
+  }
+
+  public List<JsonNodeData> getChildren() {
+    return children;
+  }
+
+  public void setChildren(List<JsonNodeData> children) {
+    this.children = children;
+  }
+ 
 }

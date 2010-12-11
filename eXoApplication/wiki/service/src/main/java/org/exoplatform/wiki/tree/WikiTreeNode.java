@@ -16,6 +16,8 @@
  */
 package org.exoplatform.wiki.tree;
 
+import java.util.HashMap;
+
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.utils.Utils;
@@ -32,16 +34,26 @@ public class WikiTreeNode extends TreeNode {
   public WikiTreeNode(Wiki wiki) throws Exception {
     super(wiki.getOwner(), TreeNodeType.WIKI);
     this.wiki = wiki;   
-    this.relPath= Utils.getWikiType(wiki) + "/" + wiki.getOwner();   
+    this.path= Utils.getWikiType(wiki) + "/" + wiki.getOwner();   
     this.hasChild = true;
   }
 
   public WikiHomeTreeNode getWikiHomeTreeNode() {
     return (WikiHomeTreeNode) children.get(0);
-  }
+  } 
+  
+  @Override
+  public void pushDescendants(HashMap<String, Object> context) throws Exception {
+    // TODO Auto-generated method stub
+    pushChildren();
+    super.pushDescendants(context);
+  }  
 
-  public void setChildren() throws Exception {
+  @Override
+  public void pushChildren() throws Exception {
+    // TODO Auto-generated method stub
     this.children.add(new WikiHomeTreeNode((WikiHome) wiki.getWikiHome()));
+    super.pushChildren();
   }
 
   public Wiki getWiki() {

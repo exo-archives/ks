@@ -16,12 +16,38 @@
  */
 package org.exoplatform.wiki.tree;
 
+import java.util.HashMap;
+
 /**
  * Created by The eXo Platform SAS
  * Author : Lai Trung Hieu
  *          hieu.lai@exoplatform.com
- * Aug 11, 2010  
+ * 9 Dec 2010  
  */
-public enum TreeNodeType {
-  ROOT, SPACE, WIKI, WIKIHOME, PAGE
+public class RootTreeNode extends TreeNode {
+
+  public RootTreeNode() {
+    super();
+    // TODO Auto-generated constructor stub
+  }
+
+  @Override
+  public void pushChildren() throws Exception {
+    // TODO Auto-generated method stub
+    SpaceTreeNode portalNode = new SpaceTreeNode("portal");
+    SpaceTreeNode groupNode = new SpaceTreeNode("group");
+    SpaceTreeNode userNode = new SpaceTreeNode("user");
+    this.children.add(portalNode);
+    this.children.add(groupNode);
+    this.children.add(userNode);
+    super.pushChildren();
+  }
+
+  @Override
+  public void pushDescendants(HashMap<String, Object> context) throws Exception {
+    // TODO Auto-generated method stub
+    pushChildren();
+    super.pushDescendants(context);
+  }  
+
 }

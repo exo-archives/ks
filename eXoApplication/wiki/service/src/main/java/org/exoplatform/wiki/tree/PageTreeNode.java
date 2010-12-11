@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.tree;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.exoplatform.wiki.mow.api.Wiki;
@@ -34,7 +35,7 @@ public class PageTreeNode extends TreeNode {
   public PageTreeNode(PageImpl page) throws Exception {
     super(page.getContent().getTitle(), TreeNodeType.PAGE);
     this.page = page;
-    this.relPath = getPath();
+    this.path = getPath();
     this.hasChild = this.page.getChildPages().size() > 0;
   }
 
@@ -46,12 +47,22 @@ public class PageTreeNode extends TreeNode {
     this.page = page;
   }
 
-  public void setChildren() throws Exception {
+  @Override
+  public void pushDescendants(HashMap<String, Object> context) throws Exception {
+    // TODO Auto-generated method stub
+    pushChildren();
+    super.pushDescendants(context);
+  }
+
+  @Override
+  public void pushChildren() throws Exception {
+    // TODO Auto-generated method stub
     Iterator<PageImpl> childPageIterator = page.getChildPages().values().iterator();
     while (childPageIterator.hasNext()) {
       PageTreeNode child = new PageTreeNode(childPageIterator.next());
       this.children.add(child);
     }
+    super.pushChildren();
   }
 
   public PageTreeNode getChildByName(String name) throws Exception {
