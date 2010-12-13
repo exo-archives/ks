@@ -56,7 +56,7 @@
     var iframe = eXo.core.DOMUtil.findFirstDescendantByClass(editForm, 'iframe', 'gwt-RichTextArea');
     var doc = iframe.contentWindow.document;
     doc.body.id = 'body';
-    doc.body.className = 'UIWikiPortlet';
+    doc.body.className = 'UIWikiPortlet UIWikiPortletWysiwygCss';
     var css = doc.createElement("link");
     css.setAttribute("rel", "stylesheet");
     css.setAttribute("type", "text/css");

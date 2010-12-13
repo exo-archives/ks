@@ -135,15 +135,15 @@
 }
 
 .UIWikiPortlet table {
-	width: 100%;
+  width: auto;
 	border-collapse: collapse;
 	table-layout: fixed;
 }
 
 .UIWikiPortlet th {
-	background:none repeat scroll 0 0 #D7D7D7;
-	border-right:1px solid #FFFFFF;
-	color:#636363;
+	background:none repeat scroll 0 0 #F0F0F0;
+	border:1px solid #DDDDDD;
+	color:#333333;
 	line-height:20px;
 	padding-left:12px;
 	text-align:left;
@@ -154,9 +154,10 @@
 	padding: 5px 10px;
 }
 
-.UIWikiPortlet .UIWikiPageArea td {
+.UIWikiPortlet .UIWikiPageArea td , .UIWikiPortletWysiwygCss td , .UIWikiPagePreview .UIWikiPortlet td  {
 	border: 1px solid #DDDDDD;
 }
+
 /*===========================*/
 
 .UIWikiPortlet .wikicreatelink a {
@@ -283,7 +284,7 @@
 }
 
 .UIWikiPortlet .UIWikiPageControlArea {
-	margin: 10px 15px;
+	margin: 10px 0px;
 	border-bottom:1px solid #C7C7C7;
 }
 
