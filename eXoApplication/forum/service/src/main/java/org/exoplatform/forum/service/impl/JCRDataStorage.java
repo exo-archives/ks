@@ -6293,7 +6293,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				if(userId.indexOf(Utils.DELETED) < 0) {
 					try {
 						profile = profileHome.getNode(userId) ;
-					} catch (Exception e) {
+					} catch (PathNotFoundException e) {
 						profile = profileHome.addNode(userId, Utils.USER_PROFILES_TYPE) ;
 						profile.setProperty(EXO_USER_ID, userId) ;
 						profile.setProperty(EXO_LAST_LOGIN_DATE, cal) ;
@@ -6322,7 +6322,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				if(userId.indexOf(Utils.DELETED) < 0) {
 					try {
 						profile = profileHome.getNode(userId) ;
-					} catch (Exception e) {
+					} catch (PathNotFoundException e) {
 						profile = profileHome.addNode(userId, Utils.USER_PROFILES_TYPE) ;
 						profile.setProperty(EXO_USER_ID, userId) ;
 						profile.setProperty(EXO_LAST_LOGIN_DATE, cal) ;
