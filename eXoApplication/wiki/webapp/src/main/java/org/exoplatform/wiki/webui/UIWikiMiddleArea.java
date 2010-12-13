@@ -16,9 +16,11 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.Arrays;
+
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -30,10 +32,13 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
                  lifecycle = UIApplicationLifecycle.class,
                  template = "app:/templates/wiki/webui/UIWikiMiddleArea.gtmpl"
                )
-public class UIWikiMiddleArea extends UIContainer {
+public class UIWikiMiddleArea extends UIWikiContainer {
 
-  public UIWikiMiddleArea() throws Exception {
+  public UIWikiMiddleArea() throws Exception {    
     super();
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE,
+        WikiMode.ADDPAGE, WikiMode.ADVANCEDSEARCH, WikiMode.SHOWHISTORY, WikiMode.PAGE_NOT_FOUND,
+        WikiMode.DELETECONFIRM, WikiMode.VIEWREVISION });
     // TODO Auto-generated constructor stub
     addChild(UIWikiNavigationContainer.class, null, null);
     addChild(UIWikiPageContainer.class, null, null);    

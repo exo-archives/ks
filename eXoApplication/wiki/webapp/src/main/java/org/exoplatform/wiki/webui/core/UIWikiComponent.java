@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.webui.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -30,7 +31,7 @@ import org.exoplatform.wiki.webui.WikiMode;
  * Aug 31, 2010  
  */
 public class UIWikiComponent extends UIComponent {
-  public List<WikiMode> accept_Modes;
+  protected List<WikiMode> accept_Modes = new ArrayList<WikiMode>();
 
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {

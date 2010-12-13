@@ -46,6 +46,8 @@ import org.exoplatform.wiki.WikiPortletPreference;
 public class UIWikiPortletPreferencesForm extends UIForm implements UIPopupComponent {
 
   private static String SHOW_BREADCRUMB = "ShowBreadcrumb";
+  
+  private static String SHOW_NAVIGATIONTREE = "ShowNavigationTree";
 
   private static String SAVE = "Save";
 
@@ -53,6 +55,7 @@ public class UIWikiPortletPreferencesForm extends UIForm implements UIPopupCompo
 
   public UIWikiPortletPreferencesForm() throws Exception {
     addUIFormInput(new UIFormCheckBoxInput<Boolean>(SHOW_BREADCRUMB, SHOW_BREADCRUMB, null));
+    addUIFormInput(new UIFormCheckBoxInput<Boolean>(SHOW_NAVIGATIONTREE, SHOW_NAVIGATIONTREE, null));
     setActions(new String[] { SAVE });
     initComponents();
   }
@@ -62,6 +65,7 @@ public class UIWikiPortletPreferencesForm extends UIForm implements UIPopupCompo
     public void execute(Event<UIWikiPortletPreferencesForm> event) throws Exception {
       UIWikiPortletPreferencesForm portletPreferencesForm = event.getSource();
       portletPreferencesForm.portletPreference.setShowBreadcrumb((Boolean)portletPreferencesForm.getUIFormCheckBoxInput(SHOW_BREADCRUMB).getValue());
+      portletPreferencesForm.portletPreference.setShowNavigationTree((Boolean)portletPreferencesForm.getUIFormCheckBoxInput(SHOW_NAVIGATIONTREE).getValue());
       portletPreferencesForm.savePortletPreferences(portletPreferencesForm.portletPreference);
     }
   }
@@ -81,6 +85,7 @@ public class UIWikiPortletPreferencesForm extends UIForm implements UIPopupCompo
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
     preference.setShowBreadcrumb(Boolean.parseBoolean(portletPref.getValue(WikiPortletPreference.SHOW_BREADCRUMB, "true")));
+    preference.setShowNavigationTree(Boolean.parseBoolean(portletPref.getValue(WikiPortletPreference.SHOW_NAVIGATIONTREE, "true")));
     return preference;
   }
 
@@ -88,12 +93,14 @@ public class UIWikiPortletPreferencesForm extends UIForm implements UIPopupCompo
     PortletRequestContext portletRequestContext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = portletRequestContext.getRequest().getPreferences();
     portletPref.setValue(WikiPortletPreference.SHOW_BREADCRUMB, String.valueOf(preference.isShowBreadcrumb()));
+    portletPref.setValue(WikiPortletPreference.SHOW_NAVIGATIONTREE, String.valueOf(preference.isShowNavigationTree()));    
     portletPref.store();
   }
   
   private void initComponents() throws Exception {
     portletPreference = getPorletPreferences();
     getUIFormCheckBoxInput(SHOW_BREADCRUMB).setValue(portletPreference.isShowBreadcrumb());
+    getUIFormCheckBoxInput(SHOW_NAVIGATIONTREE).setValue(portletPreference.isShowNavigationTree());
   }
 
 }

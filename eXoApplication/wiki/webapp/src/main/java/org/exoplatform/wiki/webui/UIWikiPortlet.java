@@ -101,6 +101,8 @@ public class UIWikiPortlet extends UIPortletApplication {
       getChild(UIWikiUpperArea.class).getChild(UIWikiApplicationControlArea.class)
                                      .getChild(UIWikiBreadCrumb.class)
                                      .setRendered(portletPreferences.isShowBreadcrumb());
+      getChild(UIWikiMiddleArea.class).findFirstComponentOfType(UIWikiNavigationContainer.class)
+                                      .setRendered(portletPreferences.isShowNavigationTree());
       String requestURL = Utils.getCurrentRequestURL();
       PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
       Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode());
@@ -213,6 +215,7 @@ public class UIWikiPortlet extends UIPortletApplication {
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
     try {
       portletPreferences.setShowBreadcrumb(Boolean.parseBoolean(portletPref.getValue(WikiPortletPreference.SHOW_BREADCRUMB, "true")));
+      portletPreferences.setShowNavigationTree(Boolean.parseBoolean(portletPref.getValue(WikiPortletPreference.SHOW_NAVIGATIONTREE, "true")));
     } catch (Exception e) {
       log.error("Fail to load wiki portlet's preference: ", e);
     }

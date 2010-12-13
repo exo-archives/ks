@@ -33,7 +33,11 @@
         <value>true</value>
         <read-only>false</read-only>
       </preference>
-    </portlet-preferences>
-      
+       <preference>
+        <name>showNavigationTree</name>
+        <value>true</value>
+        <read-only>false</read-only>
+      </preference>
+    </portlet-preferences>      
   </portlet>  
 </portlet-app>

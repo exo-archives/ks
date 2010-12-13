@@ -25,8 +25,12 @@ package org.exoplatform.wiki;
 public class WikiPortletPreference {
 
   public static String SHOW_BREADCRUMB = "showBreadcrumb";
+  
+  public static String SHOW_NAVIGATIONTREE = "showNavigationTree";
 
   private boolean showBreadcrumb  = true;
+  
+  private boolean showNavigationTree  = true;
 
   public boolean isShowBreadcrumb() {
     return showBreadcrumb;
@@ -34,6 +38,14 @@ public class WikiPortletPreference {
 
   public void setShowBreadcrumb(boolean isShowBreadcrumb) {
     this.showBreadcrumb = isShowBreadcrumb;
+  }
+
+  public boolean isShowNavigationTree() {
+    return showNavigationTree;
+  }
+
+  public void setShowNavigationTree(boolean showNavigationTree) {
+    this.showNavigationTree = showNavigationTree;
   }
 
 }
