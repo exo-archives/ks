@@ -142,7 +142,7 @@
 		<portlet-info>
 			<title>Forum Statistic Portlet</title>
 			<short-title>Forum Statistic Portlet</short-title>
-			<keywords>forum statistic</keywords>
+			<keywords>forum</keywords>
 		</portlet-info>
 	
 		<portlet-preferences></portlet-preferences>
@@ -170,7 +170,7 @@
 		<portlet-info>
 			<title>Forum Poll Portlet</title>
 			<short-title>Forum Poll Portlet</short-title>
-			<keywords>forum poll</keywords>
+			<keywords>forum</keywords>
 		</portlet-info>
 	
 		<portlet-preferences></portlet-preferences>
@@ -203,7 +203,7 @@
 		<portlet-info>
 			<title>Forum Moderate Portlet</title>
 			<short-title>Forum Moderate Portlet</short-title>
-			<keywords>forum moderate</keywords>
+			<keywords>forum</keywords>
 		</portlet-info>
 		<portlet-preferences></portlet-preferences>
 		
@@ -234,7 +234,7 @@
 		<portlet-info>
 			<title>Forum Rule Portlet</title>
 			<short-title>Forum Rule Portlet</short-title>
-			<keywords>forum rule</keywords>
+			<keywords>forum</keywords>
 		</portlet-info>
 	
 		<portlet-preferences></portlet-preferences>
@@ -266,7 +266,7 @@
 		<portlet-info>
 			<title>Forum Quick Reply Portlet</title>
 			<short-title>Forum Quick Reply Portlet</short-title>
-			<keywords>forum quick reply</keywords>
+			<keywords>forum</keywords>
 		</portlet-info>
 		<portlet-preferences></portlet-preferences>
 		
@@ -297,7 +297,7 @@
 		<portlet-info>
 			<title>Forum Icon State Portlet</title>
 			<short-title>Forum Icon State Portlet</short-title>
-			<keywords>forum icon state</keywords>
+			<keywords>forum</keywords>
 		</portlet-info>
 	
 		<portlet-preferences></portlet-preferences>
@@ -324,7 +324,7 @@
 		<portlet-info>
 			<title>Forum Link Portlet</title>
 			<short-title>Forum Link Portlet</short-title>
-			<keywords>forum link</keywords>
+			<keywords>forum</keywords>
 		</portlet-info>
 	
 		<portlet-preferences></portlet-preferences>
