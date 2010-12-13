@@ -90,10 +90,12 @@
 
 .UITreeExplorer .Space {
   background: url('DefaultSkin/background/SpaceNode.gif') no-repeat left 1px; /* orientation=lt */
+  text-transform: capitalize;
 }
 
 .UITreeExplorer .Wiki {
   background: url('DefaultSkin/background/WikiNode.gif') no-repeat left 1px; /* orientation=lt */
+  text-transform: capitalize;
 }
 
 .UITreeExplorer .Wikihome {

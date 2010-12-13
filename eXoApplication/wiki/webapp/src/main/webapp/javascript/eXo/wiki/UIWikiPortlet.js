@@ -134,10 +134,10 @@ UIWikiPortlet.prototype.renderBreadcrumbs = function(uicomponentid, isLink) {
   var lessThanContainer = function() {
     return breadcrumbsInfoBar.offsetWidth < breadcrumb.parentNode.offsetWidth / 2;
   };
-  if (breadcrumbItems.length > 2) {
+  if (breadcrumbItems.length > 3) {
     var popupItems = new Array();
     // Move breadcrumb items to an array to prepair to insert to popup menu
-    for ( var index = breadcrumbItems.length - 2; index > 0; index--) {
+    for ( var index = breadcrumbItems.length - 2; index > 1; index--) {
       if (!lessThanContainer()) {
         var link = document.createElement('a');
         link.className = 'ItemIcon MenuIcon';
@@ -183,10 +183,6 @@ UIWikiPortlet.prototype.renderBreadcrumbs = function(uicomponentid, isLink) {
       }
       itemsBlock[0].appendChild(menuItem);
     }
-  }
-  if (breadcrumbItems.length > 0) {
-    breadcrumbItems[0].title = breadcrumbItems[0].innerHTML;
-    this.shortenUntil(breadcrumbItems[0], lessThanContainer);
   }
 };
 

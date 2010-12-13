@@ -11,14 +11,10 @@
     <div class="RightBreadcumbsBar">
       <div class="BreadcumbsInfoBar">  
         <% if(breadCumbs!=null && breadCumbs.size() > 0) {
-        	 	String note = "LeftBlock";
-        	 		if (uicomponent.isShowFull) { %>
-      	 			<a class="$note"><%= uicomponent.getWikiType(); %> </a>
-         			<div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
-         			<a class="$note"> <%= uicomponent.getWikiName(); %> </a>
-          		<div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
-        	<%}   	  	  
-        	  for(i in 0 .. breadCumbs.size()-1) {
+        	 	String note = "LeftBlock"; %>
+        	 	<a class="$note" style="text-transform:capitalize;"><%= uicomponent.getWikiType(); %> : <%= uicomponent.getWikiName(); %> </a>
+        	 	<div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
+        	  <% for(i in 0 .. breadCumbs.size()-1) {
               breadcumbData = breadCumbs.get(i);
               String title = breadcumbData.getTitle();
               String actionLink = uicomponent.createActionLink(breadcumbData);

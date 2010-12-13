@@ -49,8 +49,6 @@ public class UIWikiBreadCrumb extends UIContainer {
 
   private boolean              isLink     = true;
 
-  private boolean              isShowFull = false; 
-
   public List<BreadcrumbData> getBreadCumbs() {
     return breadCumbs;
   }
@@ -81,14 +79,6 @@ public class UIWikiBreadCrumb extends UIContainer {
 
   public void setLink(boolean isLink) {
     this.isLink = isLink;
-  }
-
-  public boolean isShowFull() {
-    return isShowFull;
-  }
-
-  public void setShowFull(boolean isShowFull) {
-    this.isShowFull = isShowFull;
   }
   
   public WikiPageParams getPageParam() throws Exception {
