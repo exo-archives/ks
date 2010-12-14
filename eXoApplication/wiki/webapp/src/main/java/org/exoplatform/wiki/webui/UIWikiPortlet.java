@@ -194,7 +194,15 @@ public class UIWikiPortlet extends UIPortletApplication {
   public static class ViewPageActionListener extends EventListener<UIWikiPortlet> {
     @Override
     public void execute(Event<UIWikiPortlet> event) throws Exception {
-      event.getSource().changeMode(WikiMode.VIEW);
+      UIWikiPortlet wikiPortlet = event.getSource();
+      WikiMode currentMode = wikiPortlet.getWikiMode();
+      if (currentMode.equals(WikiMode.VIEW)) {
+        event.getRequestContext()
+             .addUIComponentToUpdateByAjax(wikiPortlet.findFirstComponentOfType(UIWikiEmptyAjaxBlock.class));
+      } else {
+        event.getSource().changeMode(WikiMode.VIEW);
+      }
+
     }
   }
   public static class ChangeModeActionListener extends EventListener<UIWikiPortlet> {
