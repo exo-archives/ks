@@ -83,7 +83,7 @@ UIWikiAjaxRequest.prototype.checkAnchor = function() {
         return;
       }
       action = document.getElementById(this.actionPrefix + action);
-    } else if (!this.urlHasActionParameters()) {
+    } else if (!this.urlHasActionParameters() && this.currentAnchor!="") {
       action = document.getElementById(this.actionPrefix + this.defaultAction);
     }
     if (action) {
