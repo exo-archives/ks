@@ -30,7 +30,6 @@ import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
-import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
@@ -71,11 +70,7 @@ public class EditPageActionComponent extends UIComponent {
       
       Page page = Utils.getCurrentWikiPage();
       titleInput.setValue(page.getContent().getTitle());
-      if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(page.getName())) {
-        titleInput.setEditable(false);
-      } else {
-        titleInput.setEditable(true);
-      }
+      titleInput.setEditable(true);
       pageEditForm.setTitle(page.getContent().getTitle()) ;
       markupInput.setValue(page.getContent().getText());
       commentInput.setValue("");

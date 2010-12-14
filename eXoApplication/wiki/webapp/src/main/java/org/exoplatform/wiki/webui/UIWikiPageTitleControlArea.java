@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -30,6 +29,7 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -110,22 +110,18 @@ public class UIWikiPageTitleControlArea extends UIContainer {
     UIApplication uiApp = this.getAncestorOfType(UIApplication.class);
     WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
     String newName = TitleResolver.getId(newTitle, true);
-    boolean isRenameHome = WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageParams.getPageId())
+    Page page = Utils.getCurrentWikiPage();
+    boolean isRenameHome = WikiNodeType.Definition.WIKI_HOME_NAME.equals(page.getName())
         && !newName.equals(pageParams.getPageId());
     if (isRenameHome) {
-      uiApp.addMessage(new ApplicationMessage("SavePageAction.msg.Can-not-rename-Wiki-Home",
-                                              null,
-                                              ApplicationMessage.WARNING));
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
-    
-      Utils.redirect(pageParams, WikiMode.VIEW);
-      return;
+      page.getContent().setTitle(newTitle);
+    } else {
+      wikiService.renamePage(pageParams.getType(),
+                             pageParams.getOwner(),
+                             pageParams.getPageId(),
+                             newName,
+                             newTitle);
     }
-    wikiService.renamePage(pageParams.getType(),
-                           pageParams.getOwner(),
-                           pageParams.getPageId(),
-                           newName,
-                           newTitle);
     pageParams.setPageId(newName);
     Utils.redirect(pageParams, WikiMode.VIEW);
   }

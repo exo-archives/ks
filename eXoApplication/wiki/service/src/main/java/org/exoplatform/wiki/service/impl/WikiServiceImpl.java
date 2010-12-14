@@ -154,7 +154,15 @@ public class WikiServiceImpl implements WikiService {
       .where(statement)
       .get()
       .objects();
-      return result.hasNext() ;
+      boolean isExisted = result.hasNext();
+      if (!isExisted) {
+        Page page = getWikiHome(wikiType, wikiOwner);
+        String wikiHomeId = TitleResolver.getId(page.getContent().getTitle(), true);
+        if (wikiHomeId.equals(pageId)) {
+          isExisted = true;
+        }
+      }
+      return isExisted;
     }
     return false;
   }
@@ -315,6 +323,13 @@ public class WikiServiceImpl implements WikiService {
       // page.setChromatticSession(wStore.getSession()) ;
       if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageId) || pageId == null) {
         return getWikiHome(wikiType, wikiOwner);
+      }
+      if (page == null) {
+        page = getWikiHome(wikiType, wikiOwner);
+        String wikiHomeId = TitleResolver.getId(page.getContent().getTitle(), true);
+        if (!wikiHomeId.equals(pageId)) {
+          page = null;
+        }
       }
       return page;
     }

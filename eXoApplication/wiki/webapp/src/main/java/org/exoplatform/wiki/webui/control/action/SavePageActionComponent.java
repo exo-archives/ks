@@ -39,7 +39,6 @@ import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
-import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.resolver.TitleResolver;
@@ -145,9 +144,6 @@ public class SavePageActionComponent extends UIComponent {
         Page page = Utils.getCurrentWikiPage();
         String newPageId = TitleResolver.getId(title, false);
         if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
-          if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageParams.getPageId())) {
-            newPageId = WikiNodeType.Definition.WIKI_HOME_NAME;
-          }
           if (!page.getName().equals(newPageId)) {
             wikiService.renamePage(pageParams.getType(),
                                    pageParams.getOwner(),
