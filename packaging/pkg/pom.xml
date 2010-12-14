@@ -613,7 +613,18 @@
         <artifactId>wsrp-consumer</artifactId>
         <version>${org.gatein.wsrp.version}</version>
 	</dependency>
-	
+   <dependency>
+     <groupId>org.exoplatform.core</groupId>
+     <artifactId>exo.core.component.organization.jdbc</artifactId>
+     <version>${org.exoplatform.core.version}</version>
+     <type>jar</type>
+   </dependency><!-- 2.3.6-GA-SNAPSHOT-->
+   <dependency>
+     <groupId>org.exoplatform.kernel</groupId>
+     <artifactId>exo.kernel.component.ext.cache.impl.jboss.v3</artifactId>
+     <version>${org.exoplatform.kernel.version}</version>
+     <type>jar</type>
+   </dependency><!-- 2.2.6-GA-SNAPSHOT-->
   </dependencies>
   <build>
     <plugins>
