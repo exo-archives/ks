@@ -51,8 +51,13 @@ UIUpload.prototype.initUploadEntry = function(uploadId, isAutoUpload) {
 
 
 UIUpload.prototype.createUploadEntry = function(uploadId, isAutoUpload) {
+  var me = eXo.wiki.UIUpload;
   var iframe = document.getElementById(uploadId+'uploadFrame');
   var idoc = iframe.contentWindow.document ;
+  if (eXo.core.Browser.gecko) {
+    me.createUploadEntryForFF(idoc, uploadId, isAutoUpload);
+    return;
+  }
   var uploadAction = eXo.env.server.context + "/upload?" ;
   uploadAction += "uploadId=" + uploadId+"&action=upload" ; 
   
@@ -61,18 +66,54 @@ UIUpload.prototype.createUploadEntry = function(uploadId, isAutoUpload) {
   uploadHTML += "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='" +eXo.core.I18n.lang+ "' dir='" +eXo.core.I18n.dir+ "'>";
   uploadHTML += "<head>";
   uploadHTML += "<style type='text/css'>";
-  uploadHTML += ".UploadButton {width: 20px; height: 25px; cursor: pointer; vertical-align: bottom;";
-  uploadHTML += " background: url('/wiki/skin/DefaultSkin/webui/background/UploadBtn.gif') no-repeat 3px 0; }";
-  uploadHTML += ".UIUploadForm {position: relative; }";
-  uploadHTML += ".FileHidden {position: relative; width: 220px; text-align: right; -moz-opacity:0 ; filter:alpha(opacity: 0); opacity: 0; z-index: 2; }";
-  uploadHTML += ".StylingFileUpload {position: absolute; width: 220px; top: 0px; left: 0px; z-index: 1; }";
-  uploadHTML += ".FileName {width: 145px; padding: 1px 0 0; }";
-  uploadHTML += ".BrowseButton {float: right; width: 65px; text-align: center; color: #ffffff; font-family: Arial; font-size: 12px; padding: 3px 0; background: url('/wiki/skin/DefaultSkin/webui/background/BtnSearch.gif') no-repeat left; }";
-  uploadHTML += ".ClearRight {clear: right; }";
+  uploadHTML += this.getStyleSheetContent();
   uploadHTML += "</style>";
   uploadHTML += "<script type='text/javascript'>var eXo = parent.eXo</script>";
   uploadHTML += "</head>";
   uploadHTML += "<body style='margin: 0px; border: 0px;'>";
+  uploadHTML += this.getUploadContent(uploadId, uploadAction, isAutoUpload);
+  uploadHTML += "</body>";
+  uploadHTML += "</html>";
+
+  idoc.open();
+  idoc.write(uploadHTML);
+  idoc.close(); 
+  
+  this.stylingUploadEntry(uploadId);
+};
+
+UIUpload.prototype.createUploadEntryForFF = function(idoc, uploadId, isAutoUpload){
+  var uploadAction = eXo.env.server.context + "/upload?" ;
+  uploadAction += "uploadId=" + uploadId+"&action=upload" ; 
+    
+  var newDoctype = document.implementation.createDocumentType('html','-//W3C//DTD XHTML 1.0 Transitional//EN','http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'); 
+  if (idoc.doctype) {
+    idoc.replaceChild(newDoctype, idoc.doctype);
+  }
+  idoc.lang = eXo.core.I18n.lang;
+  idoc.xmlns = 'http://www.w3.org/1999/xhtml';
+  idoc.dir = eXo.core.I18n.dir;
+   
+  idoc.head = idoc.head || idoc.getElementsByTagName('head')[0];
+  var script = document.createElement('script');
+  script.type = "text/javascript";
+  script.text = "var eXo = parent.eXo";
+  idoc.head = idoc.head || idoc.getElementsByTagName('head')[0];
+  idoc.head.appendChild(script);
+
+  var style = document.createElement('style');
+  style.type = "text/css"; 
+  var styleText = this.getStyleSheetContent();
+  var cssText = document.createTextNode(styleText);
+  style.appendChild(cssText);
+  idoc.head.appendChild(style);
+  
+  idoc.body.innerHTML= this.getUploadContent(uploadId, uploadAction, isAutoUpload);
+  this.stylingUploadEntry(uploadId);
+}
+
+UIUpload.prototype.getUploadContent = function(uploadId, uploadAction, isAutoUpload){
+  var uploadHTML = "";  
   uploadHTML += "  <form id='"+uploadId+"' class='UIUploadForm' style='margin: 0px; padding: 0px' action='"+uploadAction+"' enctype='multipart/form-data' method='post'>";
   if(isAutoUpload){
     uploadHTML += "    <input type='file' name='file' id='file' value='' onchange='eXo.wiki.UIUpload.upload(this, "+uploadId+")' onkeypress='return false;' />";
@@ -81,18 +122,21 @@ UIUpload.prototype.createUploadEntry = function(uploadId, isAutoUpload) {
     uploadHTML += "    <img class='UploadButton' onclick='eXo.wiki.UIUpload.upload(this, "+uploadId+")' alt='' src='/eXoResources/skin/sharedImages/Blank.gif'/>";   
   }
   uploadHTML += "  </form>";
-  uploadHTML += "</body>";
-  uploadHTML += "</html>";
+  return uploadHTML;
+}
 
-  idoc.open();
-  idoc.write(uploadHTML);
-  if (eXo.core.Browser.gecko) {
-    history.back();
-  }
-  idoc.close(); 
-  
-  this.stylingUploadEntry(uploadId);
-};
+UIUpload.prototype.getStyleSheetContent = function(){
+  var styleText = "";
+  styleText += ".UploadButton {width: 20px; height: 25px; cursor: pointer; vertical-align: bottom;";
+  styleText += " background: url('/wiki/skin/DefaultSkin/webui/background/UploadBtn.gif') no-repeat 3px 0; } ";
+  styleText += ".UIUploadForm {position: relative; } ";
+  styleText += ".FileHidden {position: relative; width: 220px; text-align: right; -moz-opacity:0 ; filter:alpha(opacity: 0); opacity: 0; z-index: 2; } ";
+  styleText += ".StylingFileUpload {position: absolute; width: 220px; top: 0px; left: 0px; z-index: 1; } ";
+  styleText += ".FileName {width: 145px; padding: 1px 0 0; } ";
+  styleText += ".BrowseButton {float: right; width: 65px; text-align: center; color: #ffffff; font-family: Arial; font-size: 12px; padding: 3px 0; background: url('/wiki/skin/DefaultSkin/webui/background/BtnSearch.gif') no-repeat left; }";
+  styleText += ".ClearRight {clear: right; }";
+  return styleText;
+}
 
 UIUpload.prototype.stylingUploadEntry = function(uploadId){
   var DOMUtil = eXo.core.DOMUtil;
