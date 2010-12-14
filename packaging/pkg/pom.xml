@@ -129,6 +129,18 @@
       <artifactId>exo.kernel.component.remote</artifactId>
       <version>${org.exoplatform.kernel.version}</version>
     </dependency>
+    <dependency>
+     <groupId>org.exoplatform.core</groupId>
+     <artifactId>exo.core.component.organization.jdbc</artifactId>
+     <version>${org.exoplatform.core.version}</version>
+     <type>jar</type>
+    </dependency>
+    <dependency>
+     <groupId>org.exoplatform.kernel</groupId>
+     <artifactId>exo.kernel.component.ext.cache.impl.jboss.v3</artifactId>
+     <version>${org.exoplatform.kernel.version}</version>
+     <type>jar</type>
+    </dependency>
 
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
