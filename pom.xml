@@ -39,7 +39,7 @@
     <org.chromattic.version>1.0.4</org.chromattic.version>
     
 	<!--commons dependencies-->
-	<org.exoplatform.commons.version>1.0.2-SNAPSHOT</org.exoplatform.commons.version>
+	<org.exoplatform.commons.version>1.0.3-SNAPSHOT</org.exoplatform.commons.version>
 	      
 	<!-- eXo extended service -->
 	<org.exoplatform.social.version>1.1.2-SNAPSHOT</org.exoplatform.social.version>
