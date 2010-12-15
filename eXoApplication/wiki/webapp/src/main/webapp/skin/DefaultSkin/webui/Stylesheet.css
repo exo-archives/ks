@@ -171,6 +171,7 @@
   margin:4px 0;
   padding:8px 28px;
   text-align:justify;
+  display: block;
 }
 
 .UIWikiPortlet .notemessage {
