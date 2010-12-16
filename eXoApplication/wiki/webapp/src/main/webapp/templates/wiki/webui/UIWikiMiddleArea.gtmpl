@@ -3,9 +3,15 @@ import org.exoplatform.wiki.webui.UIWikiNavigationContainer;
 import org.exoplatform.wiki.webui.UIWikiPageContainer;
  %>
 
-<div class="UIWikiMiddleArea">
+<% 
+	String showHideAction = uicomponent.event(uicomponent.SHOW_HIDE_ACTION);
+ %>
+<div class="UIWikiMiddleArea" id="$uicomponent.id">
  	<% uicomponent.renderChild(UIWikiNavigationContainer.class); %>
- 	<div class="Spliter" onmousedown="eXo.wiki.Spliter.exeRowSplit(event,this);"></div>
+ 	<div class="Spliter" onmousedown="eXo.wiki.Spliter.exeRowSplit(event,this);">
+ 		<div class="Resizer" ondblclick="$showHideAction">
+ 	</div>
+ 	</div>
  	<% uicomponent.renderChild(UIWikiPageContainer.class); %>
 </div>
 

@@ -91,6 +91,14 @@ public class UIWikiPortlet extends UIPortletApplication {
     }
   }
 
+  public WikiPortletPreference getPortletPreferences() {
+    return portletPreferences;
+  }
+
+  public void setPortletPreferences(WikiPortletPreference portletPreferences) {
+    this.portletPreferences = portletPreferences;
+  }
+
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
     PortletRequestContext portletReqContext = (PortletRequestContext) context;
     if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
@@ -100,9 +108,7 @@ public class UIWikiPortlet extends UIPortletApplication {
       }
       getChild(UIWikiUpperArea.class).getChild(UIWikiApplicationControlArea.class)
                                      .getChild(UIWikiBreadCrumb.class)
-                                     .setRendered(portletPreferences.isShowBreadcrumb());
-      getChild(UIWikiMiddleArea.class).findFirstComponentOfType(UIWikiNavigationContainer.class)
-                                      .setRendered(portletPreferences.isShowNavigationTree());
+                                     .setRendered(portletPreferences.isShowBreadcrumb());     
       String requestURL = Utils.getCurrentRequestURL();
       PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
       Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode());

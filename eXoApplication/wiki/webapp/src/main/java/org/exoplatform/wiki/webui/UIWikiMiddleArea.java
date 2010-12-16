@@ -19,7 +19,10 @@ package org.exoplatform.wiki.webui;
 import java.util.Arrays;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
@@ -30,18 +33,32 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
  */
 @ComponentConfig(
                  lifecycle = UIApplicationLifecycle.class,
-                 template = "app:/templates/wiki/webui/UIWikiMiddleArea.gtmpl"
+                 template = "app:/templates/wiki/webui/UIWikiMiddleArea.gtmpl",
+                 events = {
+                     @EventConfig(listeners = UIWikiMiddleArea.ShowHideActionListener.class)                     
+                   }
                )
 public class UIWikiMiddleArea extends UIWikiContainer {
 
-  public UIWikiMiddleArea() throws Exception {    
+  public static String SHOW_HIDE_ACTION = "ShowHide";
+
+  public UIWikiMiddleArea() throws Exception {
     super();
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE,
         WikiMode.ADDPAGE, WikiMode.ADVANCEDSEARCH, WikiMode.SHOWHISTORY, WikiMode.PAGE_NOT_FOUND,
         WikiMode.HELP, WikiMode.DELETECONFIRM, WikiMode.VIEWREVISION });
     // TODO Auto-generated constructor stub
     addChild(UIWikiNavigationContainer.class, null, null);
-    addChild(UIWikiPageContainer.class, null, null);    
+    addChild(UIWikiPageContainer.class, null, null);
   }
 
+  public static class ShowHideActionListener extends EventListener<UIWikiMiddleArea> {
+    @Override
+    public void execute(Event<UIWikiMiddleArea> event) throws Exception {
+      UIWikiMiddleArea middleArea = event.getSource();
+      UIWikiNavigationContainer navigation = middleArea.getChild(UIWikiNavigationContainer.class);
+      navigation.setRendered(!navigation.isRendered());
+      event.getRequestContext().addUIComponentToUpdateByAjax(middleArea);
+    }
+  }
 }

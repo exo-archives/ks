@@ -21,6 +21,7 @@ import java.util.Arrays;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.wiki.WikiPortletPreference;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.webui.core.UIWikiForm;
 import org.exoplatform.wiki.webui.tree.UITreeExplorer;
@@ -57,7 +58,10 @@ public class UIWikiNavigationContainer extends UIWikiForm {
     if (initParam != null) {
       this.getChild(UITreeExplorer.class).setInitParam(initParam);
     }
-    super.processRender(context);
+    WikiPortletPreference preferences = this.getAncestorOfType(UIWikiPortlet.class).getPortletPreferences();
+    if (preferences.isShowNavigationTree()) {
+      super.processRender(context);
+    }
   }
   
   private String getInitParam() throws Exception {
