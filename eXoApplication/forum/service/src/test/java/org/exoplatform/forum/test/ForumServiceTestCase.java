@@ -9,7 +9,12 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.RootContainer;
 import org.exoplatform.container.StandaloneContainer;
+import org.exoplatform.ks.common.jcr.JCRSessionManager;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -96,8 +101,13 @@ public abstract class ForumServiceTestCase extends BasicTestCase {
       assertEquals(message, expected[i], actual[i]);
     }
   }
-  private static void initContainer() {
+	private static void initContainer() {
     try {
+    	ExoContainer container_ = RootContainer.getInstance();;
+    	if(container_ != null) {
+    		container_.stop();
+    		container_.dispose();
+    	}
       String containerConf = ForumServiceTestCase.class.getResource("/conf/portal/test-configuration.xml").toString();
       StandaloneContainer.addConfigurationURL(containerConf);
       container = StandaloneContainer.getInstance();      
@@ -105,6 +115,7 @@ public abstract class ForumServiceTestCase extends BasicTestCase {
       
       if (System.getProperty("java.security.auth.login.config") == null)
         System.setProperty("java.security.auth.login.config", loginConf);
+      ExoContainerContext.setCurrentContainer(container);
     }
     catch (Exception e) {
       log.error("Failed to initialize standalone container: ",e);
@@ -118,7 +129,11 @@ public abstract class ForumServiceTestCase extends BasicTestCase {
     // Initialize datas
     Session session = repositoryService.getRepository(REPO_NAME).getSystemSession(KNOWLEDGE_WS);
     root_ = session.getRootNode();   
-    sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;   
+    sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ; 
+    
+    JCRSessionManager sessionManager = new JCRSessionManager(KNOWLEDGE_WS, repositoryService);
+    KSDataLocation ksDataLocation = (KSDataLocation)container.getComponentInstanceOfType(KSDataLocation.class);
+    ksDataLocation.setSessionManager(sessionManager);
     }
     catch (Exception e) {
       throw new RuntimeException("Failed to initialize JCR: ",e);

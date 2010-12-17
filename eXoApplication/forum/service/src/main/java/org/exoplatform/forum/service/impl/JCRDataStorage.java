@@ -1621,7 +1621,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 					forumNode.setProperty(EXO_TEMP_MODERATORS, oldUserNamesModerate);
 					if (cateNode.hasProperty(EXO_USER_PRIVATE)) {
 						list = Utils.valuesToList(cateNode.getProperty(EXO_USER_PRIVATE).getValues());
-						if (!Utils.isEmpty(list.get(0)) && !list.contains(userName)) {
+						if (list.size() > 0 && !Utils.isEmpty(list.get(0)) && !list.contains(userName)) {
 							String[] strings = new String[list.size() + 1];
 							int i = 0;
 							for (String string : list) {

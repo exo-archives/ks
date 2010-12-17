@@ -1,7 +1,7 @@
 <repository-service default-repository="repository">
    <repositories>
 
-    <repository name="repository" system-workspace="system" default-workspace="knowledge">
+    <repository name="repository" system-workspace="system" default-workspace="collaboration">
      <security-domain>gatein-domain</security-domain>
      <access-control>optional</access-control>
      <authentication-policy>org.exoplatform.services.jcr.impl.core.access.JAASAuthenticator</authentication-policy>
@@ -17,12 +17,12 @@
               <property name="multi-db" value="false"/>
               <property name="update-storage" value="true"/>
               <property name="max-buffer-size" value="204800"/>
-              <property name="swap-directory" value="../temp/swap/system"/>
+              <property name="swap-directory" value="target/temp/swap/system"/>
             </properties>
             <value-storages>
               <value-storage id="system" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
                 <properties>
-                  <property name="path" value="../temp/values/system"/>
+                  <property name="path" value="target/temp/values/system"/>
                 </properties>
                 <filters>
                   <filter property-type="Binary"/>
@@ -30,24 +30,22 @@
               </value-storage>
             </value-storages>
           </container>
-          <!-- 
-         <cache enabled="false">
+         <cache enabled="true">
           <properties>
             <property name="maxSize" value="20000"/>
             <property name="liveTime" value="30000"/>
           </properties>
          </cache>
-          -->
          <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
           <properties>
-            <property name="indexDir" value="../temp/jcrlucenedb/index/system"/>
+            <property name="indexDir" value="target/temp/jcrlucenedb/index/system"/>
           </properties>
          </query-handler>
          <lock-manager>
 			    <time-out>900000</time-out><!-- 15min -->
 			     <persister class="org.exoplatform.services.jcr.impl.core.lock.FileSystemLockPersister">
 			       <properties>
-			         <property name="path" value="../temp/lock/system"/>
+			         <property name="path" value="target/temp/lock/system"/>
 			       </properties>
 			     </persister>
 			   </lock-manager>
@@ -63,12 +61,12 @@
               <property name="multi-db" value="false"/>
               <property name="update-storage" value="true"/>
               <property name="max-buffer-size" value="204800"/>
-              <property name="swap-directory" value="../temp/swap/knowledge"/>
+              <property name="swap-directory" value="target/temp/swap/knowledge"/>
             </properties>
             <value-storages>
               <value-storage id="knowledge" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
                 <properties>
-                  <property name="path" value="../temp/values/knowledge"/>
+                  <property name="path" value="target/temp/values/knowledge"/>
                 </properties>
                 <filters>
                   <filter property-type="Binary"/>
@@ -76,24 +74,22 @@
               </value-storage>
             </value-storages>
           </container>
-          <!-- 
-         <cache enabled="false">
+         <cache enabled="true">
           <properties>
             <property name="maxSize" value="20000"/>
             <property name="liveTime" value="30000"/>
           </properties>
          </cache>
-          -->
          <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
           <properties>
-            <property name="indexDir" value="../temp/jcrlucenedb/index/knowledge"/>
+            <property name="indexDir" value="target/temp/jcrlucenedb/index/knowledge"/>
           </properties>
          </query-handler>
          <lock-manager>
 			    <time-out>900000</time-out><!-- 15min -->
 			     <persister class="org.exoplatform.services.jcr.impl.core.lock.FileSystemLockPersister">
 			       <properties>
-			         <property name="path" value="../temp/lock/knowledge"/>
+			         <property name="path" value="target/temp/lock/knowledge"/>
 			       </properties>
 			     </persister>
 			   </lock-manager>
