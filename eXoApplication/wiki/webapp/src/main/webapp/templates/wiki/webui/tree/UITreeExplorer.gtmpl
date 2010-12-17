@@ -18,13 +18,15 @@
    action = "javascript:eXo.wiki.UIForm.submitPageEvent('"+ uicomponent.getParentFormId()  + "','"+ actionClassName +"','&subComponentId="+uicomponent.getId() +"&objectId=')";
  }
  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UITreeExplorer', '/wiki/javascript/') ;
- if (initParam!=null && initURL!=null && childrenURL!=null)
- 	rcontext.getJavascriptManager().addJavascript("eXo.wiki.UITreeExplorer.init('" + uicomponent.id + "', '" + initURL + "', '" + childrenURL + "', '"+ initParam + "', '"+ actionClassName + "');"); 
-%>  
+ if (initParam!=null)
+ 	rcontext.getJavascriptManager().addJavascript("eXo.wiki.UITreeExplorer.init('" + uicomponent.id  +"','"+ initParam + "');"); 
+%>
 	 <div class="UITreeExplorer" id="$uicomponent.id">	 
 		 <div style="white-space: nowrap; -moz-user-select: none;">
 		   <div class="NodeGroup">
-    	       <a href="$action" class="$actionClassName" style="display:none" ></a> 
+    	       <a href="$action" class="SelectNode" style="display:none" ></a>
+    	       <input class="InitURL" type="hidden" value="$initURL" />
+    	       <input class="ChildrenURL" type="hidden" value="$childrenURL" />
 		   </div>
 		 </div>
 </div>

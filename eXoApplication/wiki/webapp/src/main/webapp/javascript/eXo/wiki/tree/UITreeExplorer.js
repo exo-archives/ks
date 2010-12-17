@@ -3,13 +3,12 @@ eXo.require("eXo.core.EventManager");
 
 function UITreeExplorer() {};
 
-UITreeExplorer.prototype.init = function( componentid, initURL, childrenURL , initParam, actionClassName) {
+UITreeExplorer.prototype.init = function( componentid, initParam ) {
   var me = eXo.wiki.UITreeExplorer;
-  me.component = document.getElementById(componentid);  
-  me.childrenURL = childrenURL;
-  me.actionClassName = actionClassName;
-  var initNode =  eXo.core.DOMUtil.findFirstDescendantByClass(me.component,"div","NodeGroup");  
-  me.render(initURL, initParam, initNode);
+  var component = document.getElementById(componentid);
+  var initURL = eXo.core.DOMUtil.findFirstDescendantByClass(component, "input", "InitURL");
+  var initNode =  eXo.core.DOMUtil.findFirstDescendantByClass(component,"div","NodeGroup");
+  me.render(initParam, initNode, true);
 };
 
 UITreeExplorer.prototype.collapseExpand = function(element) {
@@ -31,7 +30,7 @@ UITreeExplorer.prototype.collapseExpand = function(element) {
   return true;
 };
 
-UITreeExplorer.prototype.onNodeClick = function(node, absPath, actionName) {
+UITreeExplorer.prototype.onNodeClick = function(node, absPath) {
   var me = eXo.wiki.UITreeExplorer;
   var selectableObj = eXo.core.DOMUtil.findDescendantsByTagName(node, "a");
   if (selectableObj.length > 0) {
@@ -41,14 +40,14 @@ UITreeExplorer.prototype.onNodeClick = function(node, absPath, actionName) {
     eXo.core.DOMUtil.removeClass(selectedNode, "Hover");
     if (!eXo.core.DOMUtil.hasClass(node, "Hover"))
       eXo.core.DOMUtil.addClass(node, "Hover");
-    me.selectNode(node, absPath, actionName);
+    me.selectNode(node, absPath);
   }
 };
 
-UITreeExplorer.prototype.selectNode = function(node, nodePath, actionName) {
+UITreeExplorer.prototype.selectNode = function(node, nodePath) {
   var me = eXo.wiki.UITreeExplorer;
   var component = eXo.core.DOMUtil.findAncestorByClass(node, "UITreeExplorer");
-  var link = eXo.core.DOMUtil.findFirstDescendantByClass(component, "a", actionName);
+  var link = eXo.core.DOMUtil.findFirstDescendantByClass(component, "a", "SelectNode");
   var endParamIndex = link.href.lastIndexOf("')");
   var param = "&objectId";
   var modeIndex = link.href.indexOf(param);
@@ -59,10 +58,15 @@ UITreeExplorer.prototype.selectNode = function(node, nodePath, actionName) {
   window.location = link.href;
 };
 
-UITreeExplorer.prototype.render = function(url, param, element) {
+UITreeExplorer.prototype.render = function(param, element, isFullRender) {
   var me = eXo.wiki.UITreeExplorer;
-  var node = element.parentNode;  
-  var http = eXo.wiki.UITreeExplorer.getHTTPObject();
+  var node = element.parentNode;
+  var component = eXo.core.DOMUtil.findAncestorByClass(node, "UITreeExplorer");
+  var url =  eXo.core.DOMUtil.findFirstDescendantByClass(component, "input", "ChildrenURL").value;
+  if (isFullRender){
+    url =  eXo.core.DOMUtil.findFirstDescendantByClass(component, "input", "InitURL").value;
+  }
+  var http = eXo.wiki.UITreeExplorer.getHTTPObject();  
   var restURL = url + escape(param);
 
   http.open("GET", restURL, true);
@@ -139,8 +143,8 @@ UITreeExplorer.prototype.buildNode = function(data) {
   }
   var childNode = "";
   childNode += " <div  class=\"" + lastNodeClass + " Node\" >";
-  childNode += "   <div class=\""+iconType+"Icon\" id=\"" + path + "\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('"+ me.childrenURL +"','"+ param + "', this)\">";
-  childNode += "    <div id=\"iconTreeExplorer\"  onclick=\"event.cancelBubble=true; eXo.wiki.UITreeExplorer.onNodeClick(this,'"+path +"','"+ me.actionClassName + "')\""  + "class=\""+ nodeTypeCSS +" TreeNodeType Node "+ hoverClass +" \">";  
+  childNode += "   <div class=\""+iconType+"Icon\" id=\"" + path + "\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('"+ param + "', this)\">";
+  childNode += "    <div id=\"iconTreeExplorer\"  onclick=\"event.cancelBubble=true; eXo.wiki.UITreeExplorer.onNodeClick(this,'"+path+"', false " + ")\""  + "class=\""+ nodeTypeCSS +" TreeNodeType Node "+ hoverClass +" \">";  
   childNode += "      <div class='NodeLabel'>";
   
   if (data.selectable == true){
