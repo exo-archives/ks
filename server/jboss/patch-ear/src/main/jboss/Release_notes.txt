@@ -17,7 +17,7 @@
  **/
 
 =================================================
-    Release Notes eXo Knowledge Suite Version 2.1.0
+    Release Notes eXo Knowledge Suite Version 2.1.2_CP01
 =================================================
 
 ===============
@@ -37,15 +37,7 @@ forum, frequency answer and question
 
 
     * General
-      - create an open social gadget
-      - Syntax coloring for code
-      - Polling Management
-      - Default User preferences
-      - Revamp question list view
-      - Separate Polls from Forum
-      - Forum Integration to Spaces
-      - Answers Integration to Spaces        
-          
+                
     * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Release+Notes           
           
 =========
@@ -116,6 +108,68 @@ gatein.email.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
 ====================
 6 Detailed Changelog 
 ====================
+
+- Version 2.1.2_CP01
+** Bug
+    * [KS-2926] - Exception when start tomcat server , update forum jo
+- Version 2.1.2
+** Bug
+    * [KS-2362] - IE7: Error when upload avatar in special case
+    * [KS-2582] - Displaying content of [FAQ] page is empty after delete category
+    * [KS-2605] - In First time, must to double click on  "Sort" icon to sort answer in question
+    * [KS-2634] - [Chrome] Forum attachments are downloaded with wrong names
+    * [KS-2733] - Counting the number of answer in question of imported category is incorrect.
+    * [KS-2769] - Interface not one inline in space
+    * [KS-2800] - [KS] Show message error when add forum from Moderation menu
+    * [KS-2806] - Lost ks tour page css content 
+    * [KS-2810] - with Banned user, should synchronize right click and action bar 
+    * [KS-2813] - Show code error in UI when view category that moved to another position
+    * [KS-2843] - Error UI in navigation bar. Detail see file attach
+    * [KS-2853] - Poll gadget does not work on ksdemo
+    * [KS-2860] - exo.ks.ext.social-integration.jar is missing in ear extension packaging
+    * [KS-2862] - Can not approve a censor post from pending list
+    * [KS-2871] - Stacktrace on startup
+    * [KS-2873] - [KS-Forum] Error UI when there are some private message in Inbox 
+    * [KS-2890] - social integration: update new template of activity
+    * [KS-2895] - Permission tab: existing role/group is not listed after select user
+    * [KS-2896] - UI error with 3.33333333 percent  of poll vote gadget 
+    * [KS-2898] - [PLF] Groovy templates mimetype is "application/x-groovy+html"
+    * [KS-2901] - [Poll] Display wrong expired date time
+    * [KS-2902] - mask layer has error because of changes from portal.
+    * [KS-2908] - IE7: Error upload form and can not upload
+    * [KS-2918] - [Answer] UI component has errors when visited by IE7. 
+    * [KS-2921] - Show error when add new category in case watching an existing category 
+    * [KS-2923] - FF: uploaded avatar isn't displayed after refresh browser (F5)
+
+** Improvement
+    * [KS-2678] - Design new application registry icons for portlets
+    * [KS-2764] - Change content of message when don't select any option to vote
+    * [KS-2767] - Social Integration : leverage activity plugin improve for ks
+    * [KS-2904] - Make Security Domain configurable
+    * [KS-2919] - backport- In forum, do not use transfer the email address of the creator of a message
+
+- Version 2.1.1 
+
+** Bug
+    * [KS-2685] - After edit poll the score change wrong option, fix for single vote.
+    * [KS-2703] - Minor typos in the JCRDataStorage.populateUserProfile war message
+    * [KS-2714] - on ksdemo can not register new user because can not see the text validation
+    * [KS-2721] - After edit poll the score change wrong option, fix for multi vote.
+    * [KS-2734] -  [KS-Forum] Total topic/post in Forum statistics isn't updated after import category/forum
+    * [KS-2735] - [KS] Can not move topic to forum that auto-added from Space
+    * [KS-2736] - [KS-Answers] Nothing happen when click on [Watches] icon in User setting
+    * [KS-2753] - In French: Show code error when close "User Setting" pop up in special case
+    * [KS-2755] - Cluster configuration is wrong for Knowledge workspace
+    * [KS-2792] - CLONE -FAQ: date in English format (ks 2.1.x)
+	* [KS-2794] - Register an account, text validation is not display
+
+** Improvement
+    * [KS-2496] - Answers - Possible to configuration  create a question at the root or not
+    * [KS-2607] - Deny users from submitting questions in the root category
+    * [KS-2697] - Social Integration : leverage activity plugin
+
+
+
 -Version 2.1.0 GA
 
 ** Bug

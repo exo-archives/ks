@@ -16,7 +16,7 @@
  **/
  
 =====================================================
-    Release Notes eXo Knowledge Suite Version 2.1.1.1
+    Release Notes eXo Knowledge Suite Version 2.1.2_CP01
 =====================================================
 
 ===============
@@ -36,12 +36,7 @@ forum, frequency answer and question
 
 
     * General
-      - New home page
-	  - Ear package clean up and support
-	  - Fix bugs 
-	  - Activity pluging for integration of platform 3.0.1
-	  - Optionable when post questions in root category
-	  - Demo online integrated with platform 3.0 http://platform.demo.exoplatform.org
+     
           
     * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Release+Notes
           
@@ -129,6 +124,44 @@ All those accounts have the default password "gtn".
 ====================
 6 Detailed Changelog
 ==================== 
+- Version 2.1.2_CP01
+** Bug
+    * [KS-2926] - Exception when start tomcat server , update forum jo
+- Version 2.1.2
+** Bug
+    * [KS-2362] - IE7: Error when upload avatar in special case
+    * [KS-2582] - Displaying content of [FAQ] page is empty after delete category
+    * [KS-2605] - In First time, must to double click on  "Sort" icon to sort answer in question
+    * [KS-2634] - [Chrome] Forum attachments are downloaded with wrong names
+    * [KS-2733] - Counting the number of answer in question of imported category is incorrect.
+    * [KS-2769] - Interface not one inline in space
+    * [KS-2800] - [KS] Show message error when add forum from Moderation menu
+    * [KS-2806] - Lost ks tour page css content 
+    * [KS-2810] - with Banned user, should synchronize right click and action bar 
+    * [KS-2813] - Show code error in UI when view category that moved to another position
+    * [KS-2843] - Error UI in navigation bar. Detail see file attach
+    * [KS-2853] - Poll gadget does not work on ksdemo
+    * [KS-2860] - exo.ks.ext.social-integration.jar is missing in ear extension packaging
+    * [KS-2862] - Can not approve a censor post from pending list
+    * [KS-2871] - Stacktrace on startup
+    * [KS-2873] - [KS-Forum] Error UI when there are some private message in Inbox 
+    * [KS-2890] - social integration: update new template of activity
+    * [KS-2895] - Permission tab: existing role/group is not listed after select user
+    * [KS-2896] - UI error with 3.33333333 percent  of poll vote gadget 
+    * [KS-2898] - [PLF] Groovy templates mimetype is "application/x-groovy+html"
+    * [KS-2901] - [Poll] Display wrong expired date time
+    * [KS-2902] - mask layer has error because of changes from portal.
+    * [KS-2908] - IE7: Error upload form and can not upload
+    * [KS-2918] - [Answer] UI component has errors when visited by IE7. 
+    * [KS-2921] - Show error when add new category in case watching an existing category 
+    * [KS-2923] - FF: uploaded avatar isn't displayed after refresh browser (F5)
+
+** Improvement
+    * [KS-2678] - Design new application registry icons for portlets
+    * [KS-2764] - Change content of message when don't select any option to vote
+    * [KS-2767] - Social Integration : leverage activity plugin improve for ks
+    * [KS-2904] - Make Security Domain configurable
+    * [KS-2919] - backport- In forum, do not use transfer the email address of the creator of a message
 
 - Version 2.1.1 
 
