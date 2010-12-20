@@ -88,8 +88,7 @@ public class UIWikiAdvanceSearchForm extends UIForm {
     if (getGroupSpacesOptions().getOptions().size() > 0)
       listOptions.add(getGroupSpacesOptions());
     if (getUserSpacesOptions().getOptions().size() > 0)
-      listOptions.add(getUserSpacesOptions());    
-    String currentWikiOwner = org.exoplatform.wiki.commons.Utils.getCurrentWikiPageParams().getOwner();    
+      listOptions.add(getUserSpacesOptions());
     return listOptions;
   }
 
@@ -134,8 +133,7 @@ public class UIWikiAdvanceSearchForm extends UIForm {
   
   public void processSearchAction() throws Exception {
     WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
-    String text = getUIStringInput(TEXT).getValue().trim();
-    UIFormSelectBoxWithGroups spaces= getChild(UIFormSelectBoxWithGroups.class);   
+    String text = getUIStringInput(TEXT).getValue().trim();       
     String path = getChild(UIFormSelectBoxWithGroups.class).getValue();
     String wikiType = null;
     String wikiOwner = null;

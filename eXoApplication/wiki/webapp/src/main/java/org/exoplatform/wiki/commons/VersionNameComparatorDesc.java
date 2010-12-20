@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.commons;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
@@ -26,7 +27,7 @@ import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
  *          viet.nguyen@exoplatform.com
  * Aug 3, 2010  
  */
-public class VersionNameComparatorDesc implements Comparator<NTVersion> {
+public class VersionNameComparatorDesc implements Comparator<NTVersion>,Serializable {
 
   public int compare(NTVersion version1, NTVersion version2) {
     if (version1.getName().length() == version2.getName().length()) {

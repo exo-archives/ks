@@ -42,7 +42,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiResource;
 import org.exoplatform.wiki.webui.core.UIWikiForm;
-import org.exoplatform.wiki.webui.form.UIFormUploadInput;
+import org.exoplatform.wiki.webui.form.UIWikiFormUploadInput;
 
 /**
  * Created by The eXo Platform SAS
@@ -68,7 +68,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
   
   public UIWikiAttachmentArea() throws Exception {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW,WikiMode.EDITPAGE,WikiMode.ADDPAGE});   
-    UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
+    UIWikiFormUploadInput uiInput = new UIWikiFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
     uiInput.setAutoUpload(true);    
     addUIFormInput(uiInput);    
   }
@@ -127,16 +127,19 @@ public class UIWikiAttachmentArea extends UIWikiForm {
   
   static public class UploadActionListener extends EventListener<UIWikiAttachmentArea> {
     @Override
-    public void execute(Event<UIWikiAttachmentArea> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);     
+    public void execute(Event<UIWikiAttachmentArea> event) throws Exception {                 
       UIWikiAttachmentArea wikiAttachmentArea = event.getSource();
       UIApplication uiApp = wikiAttachmentArea.getAncestorOfType(UIApplication.class);
-      UIFormUploadInput input = (UIFormUploadInput) wikiAttachmentArea.getUIInput(FIELD_UPLOAD);
+      UIWikiFormUploadInput input = (UIWikiFormUploadInput) wikiAttachmentArea.getUIInput(FIELD_UPLOAD);
       UploadResource uploadResource = input.getUploadResource();
       
       try {
-        event.getSource().validate(uploadResource.getFileName());
+        if (uploadResource != null) {
+          String fileName = uploadResource.getFileName();
+          if (fileName != null) {
+            event.getSource().validate(fileName);
+          }
+        }
       } catch (MessageException ex) {
         uiApp.addMessage(ex.getDetailMessage());
         event.getRequestContext().setProcessRender(true);
@@ -201,7 +204,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
       UIWikiAttachmentArea wikiAttachmentArea = event.getSource();
       UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);
       wikiAttachmentArea.removeChildById(FIELD_UPLOAD);
-      UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
+      UIWikiFormUploadInput uiInput = new UIWikiFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
       uiInput.setAutoUpload(true);
       wikiAttachmentArea.addChild(uiInput);
       event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea); 

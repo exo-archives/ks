@@ -125,8 +125,8 @@ public class UITreeExplorer extends UIContainer {
 
       UIComponent parent = (UIComponent) tree.getParent();
       List<EventUIComponent> eventComponents = tree.getEventComponents();
-      EventUIComponent eventComponent = new EventUIComponent();
-      List<String> eventNames = new ArrayList<String>();
+      EventUIComponent eventComponent = null;
+      List<String> eventNames = null;
       Event<UIComponent> xEvent = null;
       UIComponent uiComponent = null;
       for (int i = 0; i < eventComponents.size(); i++) {

@@ -67,4 +67,12 @@ public class WikiPageParams {
     return (values == null) ? null : values[0];
   }
 
+  public Map<String, String[]> getParameters() {
+    return parameters;
+  }
+
+  public void setParameters(Map<String, String[]> parameters) {
+    this.parameters = parameters;
+  }
+
 }

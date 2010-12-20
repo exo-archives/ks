@@ -18,6 +18,7 @@ package org.exoplatform.wiki.webui.form;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.form.UIFormUploadInput;
 
 /**
  * Created by The eXo Platform SAS
@@ -26,18 +27,18 @@ import org.exoplatform.webui.core.UIComponent;
  * May 19, 2010  
  */
 @ComponentConfig(template = "app:/templates/wiki/webui/form/UIFormUploadInput.gtmpl")
-public class UIFormUploadInput extends org.exoplatform.webui.form.UIFormUploadInput {
+public class UIWikiFormUploadInput extends UIFormUploadInput {
 
   final static public String UPLOAD = "Upload" ; 
   
-  public UIFormUploadInput(String name, String bindingExpression) {
+  public UIWikiFormUploadInput(String name, String bindingExpression) {
     super(name, bindingExpression);
-    setComponentConfig(UIFormUploadInput.class, null);
+    setComponentConfig(UIWikiFormUploadInput.class, null);
   }
   
-  public UIFormUploadInput(String name, String bindingExpression, int limit) {
+  public UIWikiFormUploadInput(String name, String bindingExpression, int limit) {
     super(name, bindingExpression, limit);
-    setComponentConfig(UIFormUploadInput.class, null);
+    setComponentConfig(UIWikiFormUploadInput.class, null);
   }
   
   public String getPostUploadActionLink() throws Exception {

@@ -106,8 +106,7 @@ public class UIWikiPageTitleControlArea extends UIContainer {
   }
     
   public void saveTitle(String newTitle, Event event) throws Exception {
-    WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
-    UIApplication uiApp = this.getAncestorOfType(UIApplication.class);
+    WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);    
     WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
     String newName = TitleResolver.getId(newTitle, true);
     Page page = Utils.getCurrentWikiPage();

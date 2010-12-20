@@ -88,10 +88,7 @@ public class Utils {
     WikiPageParams params = pageResolver.extractWikiPageParams(requestURL, Util.getUIPortal().getSelectedNode());
     HttpServletRequest request = Util.getPortalRequestContext().getRequest();
     Map<String, String[]> paramsMap = request.getParameterMap();
-    Set<String> keys = paramsMap.keySet();
-    for (String key : keys) {
-      params.setParameter(key, paramsMap.get(key));
-    }
+    params.setParameters(paramsMap);
     return params;
   }
 
