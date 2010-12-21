@@ -18,6 +18,8 @@ package org.exoplatform.poll.service;
 
 import java.util.List;
 
+import org.exoplatform.container.component.ComponentPlugin;
+
 
 
 
@@ -27,6 +29,13 @@ import java.util.List;
  * @version $Revision$
  */
 public interface PollService {
+  /**
+   * Adds the plugin.
+   * 
+   * @param plugin the plugin
+   * @throws Exception the exception
+   */
+	void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception;
 	/**
    * Gets the poll.
    * 

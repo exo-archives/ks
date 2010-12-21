@@ -188,4 +188,70 @@
     </component-plugin -->
   </external-component-plugins>  
   
+  <!-- 
+  
+  poll.setQuestion(question);
+				poll.setIsAgainVote(isAgainVote);
+				poll.setIsMultiCheck(isMultiVote);
+				poll.setOption(options);
+				poll.setVote(vote);
+				poll.setTimeOut(timeOut);
+				poll.setIsClosed(uiForm.poll.getIsClosed());
+  
+   -->
+  
+  <!-- Poll plugins -->
+  <external-component-plugins>
+    <target-component>org.exoplatform.poll.service.PollService</target-component>   
+
+    <component-plugin>
+      <name>default.data</name>
+      <set-method>addInitialDefaultDataPlugin</set-method>
+      <type>org.exoplatform.poll.service.InitialDefaultDataPlugin</type>
+      <description>Initialize</description>
+      <init-params>
+        <object-param>
+          <name>livedemo.default.configuration</name>
+          <description>initial data for live demo</description>
+          <object type="org.exoplatform.poll.service.PollInitialData">
+            <field name="pollDatas">
+              <collection type="java.util.ArrayList">
+                <value>
+                  <object type="org.exoplatform.poll.service.PollData">
+                    <field name="parentPath">
+                      <string>ksdemo/Polls</string>
+                    </field>
+                    <field name="owner">
+                      <string>root</string>
+                    </field>
+                    <field name="question">
+                      <string>What color do you like ?</string>
+                    </field>
+                    <field name="isMultiCheck">
+                      <string>false</string>
+                    </field>
+                    <field name="isAgainVote">
+                      <string>false</string>
+                    </field>
+                    <field name="isClosed">
+                      <string>false</string>
+                    </field>
+                     <field name="options">
+	                    <collection type="java.util.ArrayList">
+	                    	<value> <string>blue</string></value>
+	                    	<value> <string>red</string></value>
+	                    	<value> <string>black</string></value>
+	                    </collection>
+                    </field>
+                   </object>
+                 </value>
+               </collection>
+             </field>
+           </object>
+         </object-param>
+      </init-params>
+    </component-plugin>    
+      
+  </external-component-plugins>
+  
 </configuration>  

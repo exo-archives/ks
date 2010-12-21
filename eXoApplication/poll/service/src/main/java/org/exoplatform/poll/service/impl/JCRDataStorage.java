@@ -31,10 +31,12 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.poll.service.DataStorage;
+import org.exoplatform.poll.service.InitialDefaultDataPlugin;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollSummary;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -44,6 +46,7 @@ import org.exoplatform.services.log.Log;
 
 public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
+	private List<InitialDefaultDataPlugin> defaultDataPlugins = new ArrayList<InitialDefaultDataPlugin>();
 	private NodeHierarchyCreator nodeHierarchyCreator_;
 	private SessionManager sessionManager;
 	KSDataLocation dataLocator;
@@ -54,6 +57,11 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
     this.sessionManager = dataLocator.getSessionManager();
   }
   
+  void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception {
+  	if (plugin instanceof InitialDefaultDataPlugin) {
+			defaultDataPlugins.add((InitialDefaultDataPlugin) plugin);
+		}
+  }
 
 	public Node getNodeByPath(String nodePath, SessionProvider sessionProvider) throws Exception {
     return (Node) getSession(sessionProvider).getItem(nodePath);
@@ -96,6 +104,16 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 					log.error("Failed to get parent node of poll: " + parentId, e);
 		}
   	return appNode;
+  }
+  
+  public void initDefaultData() throws Exception {
+		try {
+			for (InitialDefaultDataPlugin pln : defaultDataPlugins) {
+			
+			}
+			
+		}catch (Exception e) {
+		}
   }
   
 	public Poll getPoll(String pollId) throws Exception {

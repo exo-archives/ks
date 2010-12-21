@@ -19,6 +19,7 @@ package org.exoplatform.poll.service.impl;
 
 import java.util.List;
 
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.SessionManager;
@@ -27,7 +28,6 @@ import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollService;
 import org.exoplatform.poll.service.PollSummary;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.picocontainer.Startable;
 
@@ -43,7 +43,16 @@ public class PollServiceImpl implements Startable, PollService {
   	storage_ = new JCRDataStorage(nodeHierarchyCreator, dataLocator);
   }
   
+  public void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception {
+  	storage_.addInitialDefaultDataPlugin(plugin);
+  }
+  
   public void start() {
+  	//
+  	try {
+			storage_.initDefaultData();
+		} catch (Exception e) {
+		}
   	
   }
 
