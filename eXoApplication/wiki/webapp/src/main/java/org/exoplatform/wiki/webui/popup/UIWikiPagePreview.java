@@ -59,7 +59,7 @@ public class UIWikiPagePreview extends UIContainer {
     } else {
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
       Utils.setUpWikiContext(this.getAncestorOfType(UIWikiPortlet.class), renderingService);
-      this.htmlOutput = renderingService.render(markup, syntaxId, Syntax.XHTML_1_0.toIdString());
+      this.htmlOutput = renderingService.render(markup, syntaxId, Syntax.XHTML_1_0.toIdString(), false);
       Utils.removeWikiContext(renderingService);
     }
   }

@@ -75,7 +75,7 @@ public class PreviewPageActionComponent extends UIComponent {
         Utils.feedDataForWYSIWYGEditor(wikiPageEditForm, htmlContent);
         String markupSyntax = wikiPageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
         RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
-        String markupContent = renderingService.render(htmlContent, Syntax.XHTML_1_0.toIdString(), markupSyntax);
+        String markupContent = renderingService.render(htmlContent, Syntax.XHTML_1_0.toIdString(), markupSyntax, false);
         wikiPagePreview.renderWikiMarkup(markupContent, markupSyntax);
       } else {
         UIFormTextAreaInput markupInput = wikiPageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);

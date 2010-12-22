@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2009 eXo Platform SAS.
+ * Copyright (C) 2003-2010 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -14,18 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.rendering;
+package org.exoplatform.wiki.webui;
 
 /**
- * Created by The eXo Platform SAS Author : eXoPlatform exo@exoplatform.com Nov
- * 5, 2009
+ * Created by The eXo Platform SAS
+ * Author : viet nguyen
+ *          viet.nguyen@exoplatform.com
+ * Dec 21, 2010  
  */
-public interface RenderingService {
+public enum EditMode {
 
-  public String render(String markup, String sourceSyntax, String targetSyntax, boolean supportSectionEdit) throws Exception;
+  ALL,
 
-  public String getContentOfSection(String markup, String sourceSyntax, String sectionIndex) throws Exception;
-
-  public String updateContentOfSection(String markup, String sourceSyntax, String sectionIndex, String newSectionContent) throws Exception;
+  SECTION
 
 }

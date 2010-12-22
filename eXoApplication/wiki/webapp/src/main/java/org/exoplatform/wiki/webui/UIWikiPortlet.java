@@ -63,6 +63,10 @@ import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
 public class UIWikiPortlet extends UIPortletApplication {
   
   private WikiMode mode = WikiMode.VIEW;
+  
+  private EditMode editmode = EditMode.ALL;
+  
+  private String sectionIndex = "";
 
   private WikiMode previousMode;
   
@@ -169,6 +173,18 @@ public class UIWikiPortlet extends UIPortletApplication {
     return mode;
   }
   
+  public EditMode getEditMode() {
+    return editmode;
+  }
+  
+  public String getSectionIndex() {
+    return sectionIndex;
+  }
+
+  public void setSectionIndex(String sectionIndex) {
+    this.sectionIndex = sectionIndex;
+  }
+
   public void changeMode(WikiMode newMode) {
     if (newMode== WikiMode.HELP)
         this.previousMode = mode;
@@ -187,6 +203,10 @@ public class UIWikiPortlet extends UIPortletApplication {
       findFirstComponentOfType(UIWikiPageVersionsCompare.class).setRendered(false);
     }
     mode = newMode;
+  }
+  
+  public void changeEditMode(EditMode newEditMode) {
+    editmode = newEditMode;
   }
   
   public void renderPopupMessages() throws Exception {

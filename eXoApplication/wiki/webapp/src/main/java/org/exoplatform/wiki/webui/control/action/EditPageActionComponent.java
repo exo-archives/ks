@@ -19,6 +19,7 @@ package org.exoplatform.wiki.webui.control.action;
 import java.util.Arrays;
 import java.util.List;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -30,6 +31,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
+import org.exoplatform.wiki.rendering.RenderingService;
+import org.exoplatform.wiki.webui.EditMode;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
@@ -51,6 +54,7 @@ import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 )
 public class EditPageActionComponent extends UIComponent {
 
+  public static final String SECTION = "section";
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsViewModeFilter() });
 
   @UIExtensionFilters
@@ -61,7 +65,14 @@ public class EditPageActionComponent extends UIComponent {
   public static class EditPageActionListener extends UIPageToolBarActionListener<EditPageActionComponent> {
     @Override
     protected void processEvent(Event<EditPageActionComponent> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);     
+      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
+      String sectionIndex = event.getRequestContext().getRequestParameter(SECTION);
+      if (sectionIndex == null || sectionIndex.length() == 0) {
+        wikiPortlet.changeEditMode(EditMode.ALL);
+      } else {
+        wikiPortlet.changeEditMode(EditMode.SECTION);
+        wikiPortlet.setSectionIndex(sectionIndex);
+      }
       UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
       UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class).getUIStringInput();
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
@@ -69,14 +80,22 @@ public class EditPageActionComponent extends UIComponent {
       UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       
       Page page = Utils.getCurrentWikiPage();
-      titleInput.setValue(page.getContent().getTitle());
+      String title = page.getContent().getTitle();
+      String content = page.getContent().getText();
       titleInput.setEditable(true);
-      pageEditForm.setTitle(page.getContent().getTitle()) ;
-      markupInput.setValue(page.getContent().getText());
-      commentInput.setValue("");
-      commentInput.setRendered(true);
       syntaxTypeSelectBox.setValue(page.getContent().getSyntax());
       syntaxTypeSelectBox.setEnable(Utils.getCurrentPreferences().getPreferencesSyntax().getAllowMutipleSyntaxes());
+      if (wikiPortlet.getEditMode() == EditMode.SECTION) {
+        RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
+        content = renderingService.getContentOfSection(content, page.getContent().getSyntax(), sectionIndex);
+        titleInput.setEditable(false);
+        syntaxTypeSelectBox.setEnable(false);
+      }
+      titleInput.setValue(title);
+      pageEditForm.setTitle(title) ;
+      markupInput.setValue(content);
+      commentInput.setValue("");
+      commentInput.setRendered(true);
       UIWikiRichTextArea wikiRichTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);
       if (wikiRichTextArea.isRendered()) {
         Utils.feedDataForWYSIWYGEditor(pageEditForm, null);

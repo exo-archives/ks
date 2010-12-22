@@ -41,6 +41,13 @@
   
   <javascript>
     <param>
+      <js-module>eXo.wiki.UIWikiEditParagraph</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiEditParagraph.js</js-path>
+    </param>
+  </javascript>
+  
+  <javascript>
+    <param>
       <js-module>eXo.wiki.UIWikiSearchBox</js-module>
       <js-path>/javascript/eXo/wiki/UIWikiSearchBox.js</js-path>
     </param>

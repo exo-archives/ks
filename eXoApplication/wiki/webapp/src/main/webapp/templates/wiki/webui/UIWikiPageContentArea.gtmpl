@@ -1,3 +1,10 @@
+<%
+  import org.exoplatform.wiki.webui.UIWikiPortlet;
+  
+  def rcontext = _ctx.getRequestContext() ;
+  String editActionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + "EditPage";
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiEditParagraph.init('" + uicomponent.id +"', '" + editActionId + "');");
+%>
 <div class="UIWikiPageContentArea" id="$uicomponent.id">
 	<% uicomponent.renderChildren(); %>
 	${uicomponent.htmlOutput}

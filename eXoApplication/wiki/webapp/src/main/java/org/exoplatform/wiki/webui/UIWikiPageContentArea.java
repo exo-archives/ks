@@ -103,10 +103,11 @@ public class UIWikiPageContentArea extends UIWikiContainer {
     }
     
     // Render current content
-    if (currentMode.equals(WikiMode.VIEW)|| currentMode.equals(WikiMode.HELP) ) {
-      this.htmlOutput = renderingService.render(wikipage.getContent().getText(),
-                                                wikipage.getContent().getSyntax(),
-                                                Syntax.XHTML_1_0.toIdString());
+    if (currentMode.equals(WikiMode.VIEW)) {
+      this.htmlOutput = renderingService.render(wikipage.getContent().getText(), wikipage.getContent().getSyntax(), Syntax.XHTML_1_0.toIdString(), true);
+    }
+    if (currentMode.equals(WikiMode.HELP)) {
+      this.htmlOutput = renderingService.render(wikipage.getContent().getText(), wikipage.getContent().getSyntax(), Syntax.XHTML_1_0.toIdString(), false);
     }
     // Render select version content
     if (currentMode.equals(WikiMode.VIEWREVISION) && currentVersionName != null) {
@@ -115,7 +116,7 @@ public class UIWikiPageContentArea extends UIWikiContainer {
       ContentImpl content = (ContentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT));
       String pageContent = content.getText();
       String pageSyntax = content.getSyntax();
-      this.htmlOutput = renderingService.render(pageContent, pageSyntax, Syntax.XHTML_1_0.toIdString());
+      this.htmlOutput = renderingService.render(pageContent, pageSyntax, Syntax.XHTML_1_0.toIdString(), false);
     }
     //Remove wiki context
     ec.removeContext();

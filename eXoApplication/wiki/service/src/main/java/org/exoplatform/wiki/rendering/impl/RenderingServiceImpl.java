@@ -16,9 +16,12 @@
  */
 package org.exoplatform.wiki.rendering.impl;
 
-import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -30,9 +33,15 @@ import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentRepositoryException;
 import org.xwiki.context.Execution;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.FormatBlock;
+import org.xwiki.rendering.block.HeaderBlock;
+import org.xwiki.rendering.block.LinkBlock;
+import org.xwiki.rendering.block.SectionBlock;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.converter.ConversionException;
-import org.xwiki.rendering.converter.Converter;
+import org.xwiki.rendering.listener.Format;
+import org.xwiki.rendering.listener.Link;
+import org.xwiki.rendering.listener.LinkType;
 import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.renderer.BlockRenderer;
@@ -64,24 +73,76 @@ public class RenderingServiceImpl implements RenderingService, Startable {
   
   /*
    * (non-Javadoc)
-   * @see poc.wiki.rendering.Renderer#render(java.lang.String)
+   * @see org.exoplatform.wiki.rendering.RenderingService#render(java.lang.String, java.lang.String, java.lang.String)
    */
-  public String render(String markup, String sourceSyntax, String targetSyntax) throws Exception {
+  public String render(String markup, String sourceSyntax, String targetSyntax, boolean supportSectionEdit) throws Exception {
 
+    XDOM xdom = parse(markup, sourceSyntax);
     Syntax sSyntax = (sourceSyntax == null) ? Syntax.XWIKI_2_0 : getSyntax(sourceSyntax);
     Syntax tSyntax = (targetSyntax == null) ? Syntax.XHTML_1_0 : getSyntax(targetSyntax);
-    
-    if (sSyntax == Syntax.XHTML_1_0 || sSyntax == Syntax.ANNOTATED_XHTML_1_0) {
-      markup = clean(markup);
+
+    if (supportSectionEdit) {
+      List<HeaderBlock> filteredHeaders = getFilteredHeaders(xdom);
+      int sectionIndex = 1;
+      for (HeaderBlock block : filteredHeaders) {
+        SectionBlock section = block.getSection();
+        Link link = new Link();
+        link.setReference("section=" + sectionIndex);
+        sectionIndex++;
+        link.setType(LinkType.URI);
+        List<Block> emtyList = Collections.emptyList();
+        Map<String, String> linkParameters = new LinkedHashMap<String, String>();
+        linkParameters.put("title", "Edit section: " + renderXDOM(new XDOM(block.getChildren()), sSyntax));
+        LinkBlock linkBlock = new LinkBlock(emtyList, link, true, linkParameters);
+        Map<String, String> spanParameters = new LinkedHashMap<String, String>();
+        spanParameters.put("class", "EditSection");
+        FormatBlock spanBlock = new FormatBlock(Collections.singletonList((Block) linkBlock), Format.NONE, spanParameters);
+        section.insertChildAfter(spanBlock, block);
+      }
     }
-    
-    // Step 1: Find the parser and generate a XDOM
-    XDOM xdom = parse(new StringReader(markup), sSyntax);
-    if (LOG.isDebugEnabled()) {
-      outputTree(xdom, 0);
-    }
+
     WikiPrinter printer = convert(xdom, sSyntax, tSyntax);
     return printer.toString();
+  }
+  
+  public String getContentOfSection(String markup, String sourceSyntax, String sectionIndex) throws Exception {
+
+    XDOM xdom = parse(markup, sourceSyntax);
+    Syntax sSyntax = (sourceSyntax == null) ? Syntax.XWIKI_2_0 : getSyntax(sourceSyntax);
+
+    List<HeaderBlock> headers = getFilteredHeaders(xdom);
+    int index = Integer.parseInt(sectionIndex);
+    String content = null;
+    if (headers.size() >= index) {
+      SectionBlock section = headers.get(index - 1).getSection();
+      content = renderXDOM(new XDOM(Collections.<Block> singletonList(section)), sSyntax);
+    }
+    return content;
+  }
+
+  public String updateContentOfSection(String markup, String sourceSyntax, String sectionIndex, String newSectionContent) throws Exception {
+
+    XDOM xdom = parse(markup, sourceSyntax);
+    Syntax sSyntax = (sourceSyntax == null) ? Syntax.XWIKI_2_0 : getSyntax(sourceSyntax);
+
+    List<HeaderBlock> headers = getFilteredHeaders(xdom);
+    int index = Integer.parseInt(sectionIndex);
+    String content = null;
+    if (headers.size() >= index) {
+      HeaderBlock header = headers.get(index - 1);
+      List<Block> blocks = parse(newSectionContent, sourceSyntax).getChildren();
+      int sectionLevel = header.getLevel().getAsInt();
+      for (int level = 1; level < sectionLevel && blocks.size() == 1
+          && blocks.get(0) instanceof SectionBlock; ++level) {
+        blocks = blocks.get(0).getChildren();
+      }
+      // replace old current SectionBlock with new Blocks
+      Block section = header.getSection();
+      section.getParent().replaceChild(blocks, section);
+      // render back XDOM to document's content syntax
+      content = renderXDOM(xdom, sSyntax);
+    }
+    return content;
   }
 
   private String clean(String dirtyHTML)
@@ -115,11 +176,6 @@ public class RenderingServiceImpl implements RenderingService, Startable {
     }
 
     return component;
-  }
-  
-  private Converter getConverter() throws Exception {
-    Converter converter = componentManager.lookup(Converter.class);
-    return converter;
   }
 
   private void outputTree(Block parent, int level) {
@@ -170,17 +226,50 @@ public class RenderingServiceImpl implements RenderingService, Startable {
 
   }
 
-  private XDOM parse(Reader source, Syntax sourceSyntax) throws Exception {
+  private XDOM parse(String markup, String sourceSyntax) throws Exception {
     XDOM xdom;
+    Syntax sSyntax = (sourceSyntax == null) ? Syntax.XWIKI_2_0 : getSyntax(sourceSyntax);
+    if (sSyntax == Syntax.XHTML_1_0 || sSyntax == Syntax.ANNOTATED_XHTML_1_0) {
+      markup = clean(markup);
+    }
     try {
-      Parser parser = componentManager.lookup(Parser.class, sourceSyntax.toIdString());
-      xdom = parser.parse(source);
+      Parser parser = componentManager.lookup(Parser.class, sSyntax.toIdString());
+      xdom = parser.parse(new StringReader(markup));
     } catch (ComponentLookupException e) {
-      throw new ConversionException("Failed to locate Parser for syntax [" + sourceSyntax + "]", e);
+      throw new ConversionException("Failed to locate Parser for syntax [" + sSyntax + "]", e);
     } catch (ParseException e) {
       throw new ConversionException("Failed to parse input source", e);
     }
+    if (LOG.isDebugEnabled()) {
+      outputTree(xdom, 0);
+    }
     return xdom;
+  }
+
+  private String renderXDOM(XDOM content, Syntax targetSyntax) throws Exception {
+    try {
+      BlockRenderer renderer = componentManager.lookup(BlockRenderer.class, targetSyntax.toIdString());
+      WikiPrinter printer = new DefaultWikiPrinter();
+      renderer.render(content, printer);
+      return printer.toString();
+    } catch (Exception e) {
+      throw new ConversionException("Failed to render document to syntax [" + targetSyntax + "]", e);
+    }
+  }
+
+  private List<HeaderBlock> getFilteredHeaders(XDOM xdom) {
+    List<HeaderBlock> filteredHeaders = new ArrayList<HeaderBlock>();
+    // get the headers
+    List<HeaderBlock> headers = xdom.getChildrenByType(HeaderBlock.class, true);
+    // get the maximum header level
+    int sectionDepth = 3;
+    // filter the headers
+    for (HeaderBlock header : headers) {
+      if (header.getLevel().getAsInt() <= sectionDepth) {
+        filteredHeaders.add(header);
+      }
+    }
+    return filteredHeaders;
   }
   
   private Syntax getSyntax(String syntaxId) {

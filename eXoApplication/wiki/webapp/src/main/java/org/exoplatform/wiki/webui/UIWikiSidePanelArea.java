@@ -77,7 +77,7 @@ public class UIWikiSidePanelArea extends UIContainer {
     this.syntaxName = syntaxId.replace("/", " ").toUpperCase();
     if (syntaxHelpPage != null) {
       String markup = syntaxHelpPage.getContent().getText();
-      this.htmlOutput = renderingService.render(markup, syntaxId, Syntax.XHTML_1_0.toIdString());
+      this.htmlOutput = renderingService.render(markup, syntaxId, Syntax.XHTML_1_0.toIdString(), false);
       this.syntaxFullPageUrl = Utils.getCurrentRequestURL() + "?action=help&page="
           + syntaxId.replace("/", "SLASH").replace(".", "DOT");
     } else {

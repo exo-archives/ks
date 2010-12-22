@@ -529,6 +529,32 @@
   min-height: 400px;
 }
 
+.UIWikiPageContentArea span.EditSection {
+  background:none repeat scroll 0 0 #CCCCCC;
+  border:1px solid red;
+  display:block;
+  height:24px;
+  line-height:24px;
+  margin-bottom:-1em;
+  margin-top:-20px !important;
+  overflow:hidden;
+  position:relative;
+  visibility:hidden;
+}
+
+.UIWikiPageContentArea span.EditSection a {
+  background:url("/wiki/skin/DefaultSkin/webui/background/black-edit.png") no-repeat scroll left top transparent;
+  border:0 solid blue;
+  line-height:24px;
+  margin:0 -52px 0 0;
+  overflow:hidden;
+  padding-left:50px;
+  position:absolute;
+  right:0;
+  top:0;
+  visibility:visible;
+}
+
 .UIWikiPageContentArea .DecorationVersion{
 	background: #eeeeee;
 	-moz-border-radius: 3px;

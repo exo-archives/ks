@@ -192,7 +192,7 @@ public class Utils {
       String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
       String markupSyntax = pageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
       setUpWikiContext(wikiPortlet, renderingService);
-      String htmlContent = renderingService.render(markup, markupSyntax, Syntax.ANNOTATED_XHTML_1_0.toIdString());
+      String htmlContent = renderingService.render(markup, markupSyntax, Syntax.ANNOTATED_XHTML_1_0.toIdString(), false);
       removeWikiContext(renderingService);
       session.setAttribute(UIWikiRichTextArea.SESSION_KEY, htmlContent);
     } else {
