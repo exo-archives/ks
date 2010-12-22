@@ -59,7 +59,7 @@ public class UIWikiPageTitleControlArea extends UIContainer {
   
   public UIWikiPageTitleControlArea() throws Exception {
     UIFormInputInfo titleInfo = new UIFormInputInfo(FIELD_TITLEINFO, FIELD_TITLEINFO, FIELD_TITLEINFO);
-    titleInfo.setRendered(false);
+    titleInfo.setRendered(true);
     addChild(titleInfo);
     UIFormStringInput titleInput = new UIFormStringInput(FIELD_TITLEINPUT, FIELD_TITLEINPUT, FIELD_TITLEINPUT);
     titleInput.setRendered(false);
