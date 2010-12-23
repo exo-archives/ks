@@ -37,6 +37,20 @@
 }
 
 /**************************** Fix UIRightClickPopupMenu *********************************/
+
+.UIForumPortlet .UIRightClickPopupMenu .UIContextMenuContainer {
+    border: 1px solid #c6c7c9;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer {
+    margin: 0px;
+}
+
+.UIForumPortlet .UIForumActionBar .SearchPopup .UIRightClickPopupMenu .UIRightPopupMenuContainer {
+    min-width: 140px !important;
+	width: 140px !important;
+}
+
 *html .UIForumPortlet  .SearchPopup .UIRightClickPopupMenu .UIRightPopupMenuContainer {
 	width:170px;
 }
