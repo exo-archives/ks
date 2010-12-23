@@ -16,6 +16,10 @@
  */
 package org.exoplatform.poll.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -24,4 +28,76 @@ package org.exoplatform.poll.service;
  */
 public class PollData {
 
+  private String       parentPath;
+
+  private String       owner;
+
+  private String       question;
+
+  private List<String> options = new ArrayList<String>();
+
+  private String       isMultiCheck;
+
+  private String       isClosed;
+
+  private String       isAgainVote;
+
+  public PollData() {
+  }
+
+  public String getParentPath() {
+    return parentPath;
+  }
+
+  public void setParentPath(String parentPath) {
+    this.parentPath = parentPath;
+  }
+
+  public String getOwner() {
+    return owner;
+  }
+
+  public void setOwner(String owner) {
+    this.owner = owner;
+  }
+
+  public String getQuestion() {
+    return question;
+  }
+
+  public void setQuestion(String question) {
+    this.question = question;
+  }
+
+  public List<String> getOptions() {
+    return options;
+  }
+
+  public void setOptions(List<String> options) {
+    this.options = options;
+  }
+
+  public String getIsMultiCheck() {
+    return isMultiCheck;
+  }
+
+  public void setIsMultiCheck(String isMultiCheck) {
+    this.isMultiCheck = isMultiCheck;
+  }
+
+  public String getIsClosed() {
+    return isClosed;
+  }
+
+  public void setIsClosed(String isClosed) {
+    this.isClosed = isClosed;
+  }
+
+  public String getIsAgainVote() {
+    return isAgainVote;
+  }
+
+  public void setIsAgainVote(String isAgainVote) {
+    this.isAgainVote = isAgainVote;
+  }
 }
