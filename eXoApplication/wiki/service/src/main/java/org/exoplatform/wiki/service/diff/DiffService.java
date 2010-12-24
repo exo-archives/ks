@@ -172,7 +172,8 @@ public class DiffService {
         addBR = false;
       }
 
-      Delta delta = (Delta) list.get(i);     
+      Delta delta = (Delta) list.get(i);
+     
       int position = delta.getOriginal().anchor();
       // First we fill in all text that has not been changed
       while (cursor < position) {
@@ -207,11 +208,12 @@ public class DiffService {
           if (revline != null) {
             DiffResult diffLine = getWordDifferencesAsHTML(origline, revline);
             html.append(diffLine.getDiffHTML());
+            rev.chunk().remove(revline);
             changes += diffLine.getChanges();
           } else {
             html.append("<div class=\"diffmodifiedline\">");
             if (origline.equals("")) {
-              html.append("<pre class=\"prediffremoveword\">");
+              html.append("<pre class=\"diffremoveword\">");
               html.append("&nbsp;");
               html.append("</pre>");
             } else {
@@ -228,13 +230,13 @@ public class DiffService {
       }
 
       // Then we fill in what has been added
-      if (rev.size() > 0) {
+      if (rev.size() > 0 ) {
         List chunks = rev.chunk();
         for (int j = 0; j < chunks.size(); j++) {
           String revline = (String) chunks.get(j);
           html.append("<div class=\"diffmodifiedline\">");
           if (revline.equals("")) {
-            html.append("<pre class=\"prediffaddword\">");
+            html.append("<pre class=\"diffaddword\">");
             html.append("&nbsp;");
             html.append("</pre>");
           } else {

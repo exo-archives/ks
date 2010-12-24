@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.ks.common.notify.NotifyJob;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
@@ -37,7 +38,7 @@ import org.exoplatform.services.scheduler.PeriodInfo;
  */
 public class Common {
 	
-	public Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
+	public static Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
   
 	public Common (){}
 	
@@ -46,7 +47,7 @@ public class Common {
     Calendar cal = new GregorianCalendar();
     PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
     String name = String.valueOf(cal.getTime().getTime()) ;
-    Class clazz = Class.forName("org.exoplatform.ks.common.notify.NotifyJob");
+    Class clazz = NotifyJob.class;
     JobInfo info = new JobInfo(name, gruopName, clazz);
     ExoContainer container = ExoContainerContext.getCurrentContainer();
     JobSchedulerService schedulerService = 

@@ -17,10 +17,17 @@
 package org.exoplatform.wiki.service.impl;
 
 import org.chromattic.api.event.LifeCycleListener;
+import org.chromattic.api.event.StateChangeListener;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTFrozenNode;
+import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersionHistory;
+import org.exoplatform.wiki.mow.api.Wiki;
+import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
+import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.WatchedMixin;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.utils.Utils;
 
 /**
  * Created by The eXo Platform SAS
@@ -28,8 +35,8 @@ import org.exoplatform.wiki.service.WikiService;
  *          viet.nguyen@exoplatform.com
  * Aug 10, 2010  
  */
-public class Injector implements LifeCycleListener {
-
+public class Injector implements LifeCycleListener, StateChangeListener {
+  
   private final MOWService mowService;
 
   private final WikiService wService;
@@ -83,4 +90,30 @@ public class Injector implements LifeCycleListener {
     }
   }
 
+  @Override
+  public void propertyChanged(String id, Object o, String propertyName, Object propertyValue) {
+    // TODO Auto-generated method stub
+    if (o instanceof ContentImpl) {
+      if (propertyName.equals(WikiNodeType.Definition.TEXT.toString())) {
+        ContentImpl content = (ContentImpl) o;
+        try {
+          PageImpl page = content.getParent();
+          WatchedMixin mixin = page.getWatchedMixin();
+          if (mixin != null) {
+            boolean isWatched = !mixin.getWatchers().isEmpty();
+            Wiki wiki = page.getWiki();
+            if (wiki != null && isWatched) {
+              NTVersionHistory history = page.getVersionableMixin().getVersionHistory();
+              if (history != null && history.getChildren().size() > 1) {
+                Utils.sendMailOnChangeContent(content);
+              }
+            }
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+ 
 }

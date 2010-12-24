@@ -13,8 +13,12 @@
 		%>
 			<% if(action.equals("MovePage")){
 			%>
-			<a href="$link" class="MoreItems Icon" title="<%=_ctx.appRes("UIPageToolBar.label.MovePage");%>"><%= _ctx.appRes("UIPageToolBar.label.MovePage"); %></a>
+			<a href="$link" class="MovePage MoreItems Icon" title="<%=_ctx.appRes("UIPageToolBar.label.MovePage");%>"><%= _ctx.appRes("UIPageToolBar.label.MovePage"); %></a>
 			<%}%>
+			<% if(action.equals("WatchPage")){
+			    uicomponent.renderChild(actionComponent.getId());
+			   }
+			%>		
 		<%}%>
 		</div>
 	</div>

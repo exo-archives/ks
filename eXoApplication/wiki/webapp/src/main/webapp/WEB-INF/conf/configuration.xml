@@ -117,6 +117,15 @@
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.CancelActionComponent</string></field>
           </object>
         </object-param>
+        <object-param>
+          <name>WatchPage</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="rank"><int>40</int></field>
+            <field name="name"><string>WatchPage</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.WatchPageActionComponent</string></field>
+          </object>
+        </object-param>
          <object-param>
           <name>Browse</name>
           <object type="org.exoplatform.webui.ext.UIExtension">

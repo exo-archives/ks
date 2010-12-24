@@ -1,0 +1,28 @@
+.UIWikiPageControlArea .UIPageToolBar .MoreItems:hover {	
+	-moz-border-radius:0px;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .MovePage {
+	background:url("background/MovePage.gif") no-repeat 5px center;	
+}
+
+.UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .MovePage:hover {
+	background: #D0DFF0 url("background/MovePage.gif") no-repeat 5px  center;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .WatchPage {
+	background:url("background/watch_off.png") no-repeat 5px center;	
+}
+
+.UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .WatchPage:hover {
+	background: #D0DFF0 url("background/watch_off.png") no-repeat 5px center;
+	
+}
+
+.UIWikiPageControlArea .UIPageToolBar .UnWatchPage {
+	background: url("background/watch_on.png") no-repeat 5px center;	
+}
+
+.UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .UnWatchPage:hover {
+	background: #D0DFF0 url("background/watch_on.png") no-repeat 5px center;	
+}

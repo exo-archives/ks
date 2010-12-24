@@ -19,15 +19,12 @@ package org.exoplatform.ks.common.notify;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.services.log.Log;
 import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.RootContainer;
 import org.exoplatform.ks.common.Common;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.Utils;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
@@ -59,7 +56,7 @@ public class NotifyJob implements Job {
 	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
 	    Message message = messageInfo.getMessage() ;
 		  JobSchedulerService schedulerService = (JobSchedulerService)exoContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
-		  JobInfo info = new JobInfo(name, "KnowledgeSuite-faq", context.getJobDetail().getJobClass());
+		  JobInfo info = new JobInfo(name, "KnowledgeSuite", context.getJobDetail().getJobClass());
 		  if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
 		  	List<String> sentMessages = new ArrayList<String>() ;
 		  	int countEmail = 0;
@@ -70,9 +67,6 @@ public class NotifyJob implements Job {
 			  		sentMessages.add(address) ;
 			  		countEmail ++;
 		  		}
-		  	}
-		  	if (log_.isDebugEnabled()) {
-		  		log_.debug("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
 		  	}
 		  }
 		  schedulerService.removeJob(info) ;		  

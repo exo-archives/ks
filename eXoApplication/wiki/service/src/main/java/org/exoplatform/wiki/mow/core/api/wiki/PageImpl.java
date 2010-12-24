@@ -136,6 +136,23 @@ public abstract class PageImpl implements Page {
   
   @OneToOne(type = RelationshipType.EMBEDDED)
   @Owner
+  public abstract WatchedMixin getWatchedMixin();
+  public abstract void setWatchedMixin(WatchedMixin mix);
+  
+  @Create
+  protected abstract WatchedMixin createWatchedMixin();
+  
+  public void makeWatched() {
+    WatchedMixin watchedMixin = getWatchedMixin();
+    if (watchedMixin == null) {
+      watchedMixin = createWatchedMixin();
+      setWatchedMixin(watchedMixin);
+    }
+  }
+  
+  
+  @OneToOne(type = RelationshipType.EMBEDDED)
+  @Owner
   public abstract VersionableMixin getVersionableMixin();
   protected abstract void setVersionableMixin(VersionableMixin mix);
   @Create
@@ -273,24 +290,31 @@ public abstract class PageImpl implements Page {
   }
   
   public Wiki getWiki() {
+    WikiHome wikiHome = getWikiHome();
+    if (wikiHome != null) {
+      PortalWiki portalWiki = wikiHome.getPortalWiki();
+      GroupWiki groupWiki = wikiHome.getGroupWiki();
+      UserWiki userWiki = wikiHome.getUserWiki();
+      if (portalWiki != null) {
+        return portalWiki;
+      } else if (groupWiki != null) {
+        return groupWiki;
+      } else {
+        return userWiki;
+      }
+    }
+    return null;
+  }
+
+  public WikiHome getWikiHome() {
     PageImpl parent = this.getParentPage();
-    if (parent == null) {
+    if (this instanceof WikiHome) {
       parent = this;
-    }
-    while (!parent.getName().equals(WikiNodeType.Definition.WIKI_HOME_NAME)) {
-      parent = parent.getParentPage();
-    }
-    WikiHome wikiHome = (WikiHome) parent;
-    PortalWiki portalWiki = wikiHome.getPortalWiki();
-    GroupWiki groupWiki = wikiHome.getGroupWiki();
-    UserWiki userWiki = wikiHome.getUserWiki();
-    if (portalWiki != null) {
-      return portalWiki;
-    } else if (groupWiki != null) {
-      return groupWiki;
-    } else {
-      return userWiki;
-    }
+    } else
+      while (parent != null && !(parent instanceof WikiHome)) {
+        parent = parent.getParentPage();
+      }
+    return (WikiHome) parent;
   }
   
   @Destroy

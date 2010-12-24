@@ -463,7 +463,14 @@
       </propertyDefinition>     
     </propertyDefinitions>
     <childNodeDefinitions/>
-  </nodeType> 
-    
+  </nodeType>
+  
+  <nodeType name="wiki:watched" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
+    <propertyDefinitions>
+      <propertyDefinition name="watcher" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+        <valueConstraints/>
+      </propertyDefinition>                  
+    </propertyDefinitions>
+  </nodeType>    
 </nodeTypes>
   

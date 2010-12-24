@@ -5,23 +5,35 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Stack;
 
 import javax.jcr.Node;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
+import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.ks.common.Common;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
+import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.GroupWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
@@ -31,6 +43,8 @@ import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.service.diff.DiffResult;
+import org.exoplatform.wiki.service.diff.DiffService;
 import org.exoplatform.wiki.tree.JsonNodeData;
 import org.exoplatform.wiki.tree.PageTreeNode;
 import org.exoplatform.wiki.tree.TreeNode;
@@ -38,7 +52,11 @@ import org.exoplatform.wiki.tree.TreeNodeType;
 
 public class Utils {
   
+  private static final Log      log_               = ExoLogger.getLogger(Utils.class);
+  
   private static final String JCR_WEBDAV_SERVICE_BASE_URI = "/jcr";
+
+  final private static String MIMETYPE_TEXTHTML = "text/html";
   
   //The path should get from NodeHierarchyCreator 
   public static String getPortalWikisPath() {    
@@ -142,7 +160,7 @@ public class Utils {
   }
   
   public static String getPathFromPageParams(WikiPageParams param) {
-    if (param.getType() != null & param.getOwner() != null && param.getPageId() != null)
+    if (param.getType() != null && param.getOwner() != null && param.getPageId() != null)
       return param.getType() + "/" + param.getOwner() + "/" + param.getPageId();
     return null;
   }
@@ -267,5 +285,91 @@ public class Utils {
       counter++;
     }
     return children;
+  }
+  
+  public static void sendMailOnChangeContent(ContentImpl content) throws Exception {
+    ExoContainer container = ExoContainerContext.getCurrentContainer();
+    DiffService diffService = (DiffService) container.getComponentInstanceOfType(DiffService.class);
+    Common common = new Common();
+    Message message = new Message();
+    ConversationState conversationState = ConversationState.getCurrent();
+    // Get author
+    String author = conversationState.getIdentity().getUserId();
+
+    // Get watchers' mails
+    PageImpl page = content.getParent();
+    List<String> list = page.getWatchedMixin().getWatchers();
+    List<String> emailList = new ArrayList<String>();
+    for (int i = 0; i < list.size(); i++) {
+      emailList.add(UserHelper.getEmailUser(list.get(i)));
+    }   
+    
+    // Get differences
+    String pageTitle = content.getTitle();
+    String currentVersionContent = content.getText();
+    NTVersion previousVersion = page.getVersionableMixin().getBaseVersion();
+    String previousVersionContent = ((ContentImpl) previousVersion.getNTFrozenNode()
+                                                                  .getChildren()
+                                                                  .get(WikiNodeType.Definition.CONTENT)).getText();
+    DiffResult diffResult = diffService.getDifferencesAsHTML(previousVersionContent,
+                                                             currentVersionContent,
+                                                             false);
+    StringBuilder sb = new StringBuilder();
+    sb.append("The page \"" + pageTitle + "\" has been modifed by <b>" + author + "</b>")
+      .append("<br/><br/>")
+      .append("Changes are:")
+      .append("<br/><br/>")
+      .append(insertStyle(diffResult.getDiffHTML()));
+    
+    // Create message
+    message.setFrom(makeNotificationSender(author));    
+    message.setSubject("\"" + pageTitle + "\" page was modified");
+    message.setMimeType(MIMETYPE_TEXTHTML);
+    message.setBody(sb.toString());
+    try {
+      JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+      if (schedulerService != null)
+        common.sendEmailNotification(emailList, message, "KnowledgeSuite");
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+
+    }
+  }
+
+  private static String insertStyle(String rawHTML) {
+    String result = rawHTML;
+    result = result.replaceAll("class=\"diffaddword\"", "style=\"background: #b5ffbf;\"");
+    result = result.replaceAll("<span class=\"diffremoveword\">",
+                               "<span style=\" background: #ffd8da;text-decoration: line-through;\">");
+    result = result.replaceAll("<pre class=\"diffremoveword\">",
+                               "<pre style=\" background: #ffd8da;\">");
+    return result;
+  }
+  
+  private static String makeNotificationSender(String from) {
+    InternetAddress addr = null;
+    if (from == null) return null;
+    try {
+      addr = new InternetAddress(from);
+    } catch (AddressException e) {
+      if (log_.isDebugEnabled()) { log_.debug("value of 'from' field in message made by forum notification feature is not in format of mail address", e); }
+      return null;
+    }
+    Properties props = new Properties(System.getProperties());
+    String mailAddr = props.getProperty("gatein.email.smtp.from");
+    if (mailAddr == null || mailAddr.length() == 0) mailAddr = props.getProperty("mail.from");
+    if (mailAddr != null) {
+      try {
+        InternetAddress serMailAddr = new InternetAddress(mailAddr);
+        addr.setAddress(serMailAddr.getAddress());
+        return addr.toUnicodeString();
+      } catch (AddressException e) {
+        if (log_.isDebugEnabled()) { log_.debug("value of 'gatein.email.smtp.from' or 'mail.from' in configuration file is not in format of mail address", e); }
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 }

@@ -7,6 +7,7 @@
 @import url('UIFieldEditableForm/Stylesheet.css') ;
 @import url('UIConfirmBox/Stylesheet.css') ;
 @import url('UIWikiMovePageForm/Stylesheet.css') ;
+@import url('action/Stylesheet.css') ;
 
 .ClearFix:after {
 	content: ".";
@@ -304,7 +305,6 @@
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .MoreItems:hover {
-	background:url("background/MoreItemsIcon.gif") no-repeat left center;
 	-moz-border-radius:0px;
 }
 
@@ -380,14 +380,12 @@
 	width:100px;
 	top:26px;
 	right:0px;	
-	background:url("background/MoreMenuBG.gif") repeat-x;
 	padding-left: 26px;
 	*padding-left: 6px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MoreItems {
-	background:url("background/MoreItemsIcon.gif") no-repeat left center;
-	width: 88px;
+	width: 92px;
 	color:#535353;		
 	padding-left: 26px;
 }

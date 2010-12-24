@@ -68,7 +68,9 @@ public interface WikiNodeType {
 
   public final static String WIKI_PREFERENCES        = "wiki:preferences";
   
-  public final static String WIKI_PREFERENCES_SYNTAX        = "wiki:preferencessyntax";
+  public final static String WIKI_PREFERENCES_SYNTAX = "wiki:preferencessyntax";
+
+  public final static String WIKI_WATCHED            = "wiki:watched";
 
   public interface Definition {
 
@@ -143,5 +145,7 @@ public interface WikiNodeType {
     public final static String PREFERENCES_SYNTAX         = "PreferencesSyntax";
     
     public final static String FILE_TYPE                  = "fileType";
+    
+    public final static String WATCHER                    = "watcher";
   }
 }
