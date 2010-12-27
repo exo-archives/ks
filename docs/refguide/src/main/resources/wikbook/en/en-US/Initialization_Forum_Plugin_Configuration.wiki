@@ -318,7 +318,7 @@ The default data in the .zip or .xml file is initialized as follows:
 | *technical.forum* | {{addInitialDataPlugin}} | {{org.exoplatform.forum.service.conf.ForumInitialDataPlugin}} | To initialize the data plugin |
 
 - Init-params
-|| Name || Possible values || Default valuse || Description ||
+|| Name || Possible values || Default value || Description ||
 | *locations* | {{String}} | {{war:/data/forum/data-full-forum.zip}} | location where Forum export format file is stored |
 
 
