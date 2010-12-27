@@ -53,6 +53,9 @@ h4. Auto-prune
 h4. User Statistics
 {include:document="Auto-count_Active_Users_Plugin_Configuration.wiki"}
 
+h4. Update Statistic Data
+{include:document="UpdateForumStatistics.wiki"}
+
 h4. Default User Profile
 {include:document="Forum_Default_User_Profile_Setting.wiki"}
 
