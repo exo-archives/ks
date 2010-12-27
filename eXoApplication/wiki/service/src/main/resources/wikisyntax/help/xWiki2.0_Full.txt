@@ -518,6 +518,8 @@ java content
 \\
 | Panel Macro| ~{~{panel title="Panel Title"}}Panel Content~{~{/panel}} | ((({{panel title="Panel Title"}}Panel Content{{/panel}})))
 \\
+| Anchor Macro| ~{~{anchor name="anchor_name"}}~{~{/anchor}} | ((({{anchor name="anchor_name"}}{{/anchor}})))
+\\
 | Section and cloumn macro| ~{~{section justify="true"}}\\\\~{~{column}}column1~{~{/column}}\\\\~{~{column}}column2~{~{/column}}\\\\~{~{/section}}
  | ((({{section justify="true"}}
 
