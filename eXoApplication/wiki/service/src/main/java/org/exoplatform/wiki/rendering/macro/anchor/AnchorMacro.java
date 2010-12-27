@@ -23,6 +23,7 @@ public class AnchorMacro extends AbstractMacro<AnchorMacroParameters> {
   private static final String DESCRIPTION = "render an anchor";
   public AnchorMacro() {
     super("Anchor", DESCRIPTION, new DefaultContentDescriptor(), AnchorMacroParameters.class);
+    setDefaultCategory(DEFAULT_CATEGORY_NAVIGATION);
   }
   
   @Override
