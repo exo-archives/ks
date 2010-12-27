@@ -62,6 +62,8 @@ public abstract class PageImpl implements Page {
   private MOWService mowService;
   
   private WikiService wService;
+  
+  private boolean isMinorEdit = false;
 
   public void setMOWService(MOWService mowService) {
     this.mowService = mowService;
@@ -317,6 +319,14 @@ public abstract class PageImpl implements Page {
     return (WikiHome) parent;
   }
   
+  public boolean isMinorEdit() {
+    return isMinorEdit;
+  }
+
+  public void setMinorEdit(boolean isMinorEdit) {
+    this.isMinorEdit = isMinorEdit;
+  }
+
   @Destroy
   public abstract void remove();
 }

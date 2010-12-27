@@ -57,8 +57,8 @@ for(entry in uicomponent.getActions()) {
      		link = actionComponent.url(action);
      }
 	   if(uicomponent.parentIsForm()){
-	     if(uicomponent.getSaveAction().equals(action)){
-	       link = uicomponent.getUrlToSavePage(actionComponent.getId(), action);
+	     if(uicomponent.isSaveAction(action) ){
+	       link = Utils.createFullRequestAction(uicomponent.getParentFormId(), action, actionComponent.getId(), action);
 	     }else{
 	       link = uicomponent.getParent().event(action, actionComponent.getId(), action);
 	     }
@@ -89,6 +89,9 @@ for(entry in uicomponent.getActions()) {
 		<%} else if(action.equals("SavePage")){
 		%>
 		<a href="$link" class="Save Icon" title="<%=_ctx.appRes("UIPageToolBar.label.SavePage");%>">save</a>
+		<%} else if(action.equals("MinorEdit")){
+		%>
+		<a href="$link" class="MinorEdit Icon" title="<%=_ctx.appRes("UIPageToolBar.label.MinorEdit");%>">minor edit</a>
 		<%} else if(action.equals("RichText")){
 		%>
 		<a href="$link" class="Edit Icon" title="<%=_ctx.appRes("UIPageToolBar.label.RichTextEditor");%>">rich text</a>

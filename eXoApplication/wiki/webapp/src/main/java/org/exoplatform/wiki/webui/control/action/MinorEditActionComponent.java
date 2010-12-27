@@ -19,6 +19,7 @@ package org.exoplatform.wiki.webui.control.action;
 import java.util.Arrays;
 import java.util.List;
 
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -26,40 +27,45 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
-import org.exoplatform.wiki.webui.UIWikiPageEditForm;
-import org.exoplatform.wiki.webui.UIWikiSidePanelArea;
+import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
-import org.exoplatform.wiki.webui.control.filter.IsMarkupModeFilter;
+import org.exoplatform.wiki.webui.control.filter.IsEditModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 
 /**
  * Created by The eXo Platform SAS
- * Author : viet nguyen
- *          viet.nguyen@exoplatform.com
- * Apr 26, 2010  
+ * Author : Lai Trung Hieu
+ *          hieu.lai@exoplatform.com
+ * Dec 12, 2010  
  */
 @ComponentConfig(
   events = {
-    @EventConfig(listeners = HelpActionComponent.HelpActionListener.class, phase = Phase.DECODE)
+    @EventConfig(listeners = MinorEditActionComponent.MinorEditActionListener.class, phase = Phase.DECODE)
   }
 )
-public class HelpActionComponent extends UIComponent {
+public class MinorEditActionComponent extends UIComponent {  
 
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditAddModeFilter(), new IsMarkupModeFilter() });
+  public static final String                   ACTION = "MinorEdit";
+  
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditModeFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
   }
-  
-  public static class HelpActionListener extends UIPageToolBarActionListener<HelpActionComponent> {
+  public static class MinorEditActionListener extends UIPageToolBarActionListener<MinorEditActionComponent> {
     @Override
-    protected void processEvent(Event<HelpActionComponent> event) throws Exception {
-      UIWikiPageEditForm wikiPageEditForm = event.getSource().getAncestorOfType(UIWikiPageEditForm.class);
-      UIWikiSidePanelArea wikiSidePanelArea = wikiPageEditForm.getChild(UIWikiSidePanelArea.class);
-      boolean isRendered = wikiSidePanelArea.isRendered();
-      wikiSidePanelArea.setRendered(!isRendered);
-      event.getRequestContext().addUIComponentToUpdateByAjax(wikiPageEditForm);
+    protected void processEvent(Event<MinorEditActionComponent> event) throws Exception {
+      WebuiRequestContext context = event.getRequestContext();
+      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
+      SavePageActionComponent saveAction = wikiPortlet.findFirstComponentOfType(SavePageActionComponent.class);
+      Event<UIComponent> xEvent = saveAction.createEvent(saveAction.ACTION,
+                                                         Event.Phase.DECODE,
+                                                         context);
+      xEvent.getRequestContext().setAttribute(ACTION, true);
+      if (xEvent != null) {
+        xEvent.broadcast();
+      }
       super.processEvent(event);
     }
   }

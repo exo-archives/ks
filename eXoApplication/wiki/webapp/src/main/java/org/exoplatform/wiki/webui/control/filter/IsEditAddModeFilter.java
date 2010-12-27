@@ -25,24 +25,24 @@ import org.exoplatform.wiki.webui.WikiMode;
 
 /**
  * Created by The eXo Platform SAS
- * Author : Lai Trung Hieu
- *          hieu.lai@exoplatform.com
- * Dec 27, 2010  
+ * Author : viet nguyen
+ *          viet.nguyen@exoplatform.com
+ * Apr 26, 2010  
  */
-public class IsEditModeFilter extends UIExtensionAbstractFilter {
+public class IsEditAddModeFilter extends UIExtensionAbstractFilter {
 
-  public IsEditModeFilter() {
+  public IsEditAddModeFilter() {
     this(null);
   }
   
-  public IsEditModeFilter(String messageKey) {
+  public IsEditAddModeFilter(String messageKey) {
     super(messageKey, UIExtensionFilterType.MANDATORY);
   }
   
   @Override
   public boolean accept(Map<String, Object> context) throws Exception {
     UIWikiPortlet wikiPortlet = (UIWikiPortlet) context.get(UIWikiPortlet.class.getName());
-    return (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE);
+    return(wikiPortlet.getWikiMode() == WikiMode.EDITPAGE || wikiPortlet.getWikiMode() == WikiMode.ADDPAGE);
   }
 
   @Override

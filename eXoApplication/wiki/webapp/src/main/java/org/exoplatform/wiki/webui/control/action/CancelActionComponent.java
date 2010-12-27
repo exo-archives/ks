@@ -36,7 +36,7 @@ import org.exoplatform.wiki.webui.UIWikiPageControlArea;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.WikiMode;
-import org.exoplatform.wiki.webui.control.filter.IsEditModeFilter;
+import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 
 /**
@@ -54,7 +54,7 @@ public class CancelActionComponent extends UIComponent {
 
   private static final Log log = ExoLogger.getLogger("wiki:CancelActionComponent");
   
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditModeFilter() });
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditAddModeFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {

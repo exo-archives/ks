@@ -31,8 +31,8 @@ import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.WatchedMixin;
-import org.exoplatform.wiki.webui.control.filter.IsEditModeFilter;
 import org.exoplatform.wiki.webui.control.filter.IsUserFilter;
+import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 
 /**
@@ -51,7 +51,7 @@ public class WatchPageActionComponent extends UIComponent {
   
   private static final String                  WATCH_PAGE = "WatchPage";
   
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsUserFilter() });
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsUserFilter(), new IsViewModeFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {

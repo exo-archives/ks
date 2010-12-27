@@ -17,6 +17,7 @@
 package org.exoplatform.wiki.webui.control;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ import org.exoplatform.wiki.webui.UIWikiPageContentArea;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.WikiMode;
+import org.exoplatform.wiki.webui.control.action.MinorEditActionComponent;
 import org.exoplatform.wiki.webui.control.action.SavePageActionComponent;
 
 /**
@@ -83,8 +85,10 @@ public class UIPageToolBar extends UIContainer {
     return false;
   }
   
-  public String getSaveAction() {
-    return SavePageActionComponent.ACTION;
+  public boolean isSaveAction(String action) {
+    List<String> saveActions = Arrays.asList(new String[] { SavePageActionComponent.ACTION,
+        MinorEditActionComponent.ACTION });
+    return saveActions.contains(action);
   }
 
   public boolean isNewMode() {
@@ -95,24 +99,8 @@ public class UIPageToolBar extends UIContainer {
     return UIWikiPageTitleControlArea.FIELD_TITLEINPUT;
   }
 
-  public String getCurrentMode()
-  {
-    return getAncestorOfType(UIWikiPortlet.class).getWikiMode().toString();    
-  }
-
-  public String getUrlToSavePage(String componentId, String beanId) throws Exception {
-    StringBuilder b = new StringBuilder();
-    
-    b.append("javascript:eXo.wiki.UIForm.submitPageEvent('")
-     .append(getParentFormId())
-     .append("','");
-    b.append(SavePageActionComponent.ACTION).append("','");
-    b.append("&amp;").append(UIForm.SUBCOMPONENT_ID).append("=").append(componentId);
-    if (beanId != null) {
-      b.append("&amp;").append(OBJECTID).append("=").append(beanId);
-    }
-    b.append("')");
-    return b.toString();
+  public String getCurrentMode() {
+    return getAncestorOfType(UIWikiPortlet.class).getWikiMode().toString();
   }
 
   private String getParentFormId() {

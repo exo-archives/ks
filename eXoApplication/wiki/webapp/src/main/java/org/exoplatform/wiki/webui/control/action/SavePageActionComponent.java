@@ -51,7 +51,7 @@ import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.WikiMode;
-import org.exoplatform.wiki.webui.control.filter.IsEditModeFilter;
+import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 import org.xwiki.rendering.syntax.Syntax;
 
@@ -72,7 +72,7 @@ public class SavePageActionComponent extends UIComponent {
   
   private static final Log log = ExoLogger.getLogger("wiki:SavePageActionComponent");
   
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditModeFilter() });
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditAddModeFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
@@ -149,8 +149,13 @@ public class SavePageActionComponent extends UIComponent {
             title = page.getContent().getTitle();
             markup = renderingService.updateContentOfSection(page.getContent().getText(), page.getContent().getSyntax(), wikiPortlet.getSectionIndex(), markup);
           }
+          
           if (!page.getName().equals(newPageId)) {
             wikiService.renamePage(pageParams.getType(), pageParams.getOwner(), page.getName(), newPageId, title);            
+          }
+          Object minorAtt = event.getRequestContext().getAttribute(MinorEditActionComponent.ACTION);
+          if (minorAtt != null) {
+            ((PageImpl) page).setMinorEdit(Boolean.parseBoolean(minorAtt.toString()));
           }
           page.getContent().setText(markup);
           page.getContent().setComment(commentInput.getValue());

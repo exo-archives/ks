@@ -81,6 +81,15 @@
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.SavePageActionComponent</string></field>
           </object>
         </object-param>
+         <object-param>
+          <name>MinorEdit</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="rank"><int>450</int></field>
+            <field name="name"><string>MinorEdit</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.MinorEditActionComponent</string></field>
+          </object>
+        </object-param>
         <object-param>
           <name>PreviewPage</name>
           <object type="org.exoplatform.webui.ext.UIExtension">

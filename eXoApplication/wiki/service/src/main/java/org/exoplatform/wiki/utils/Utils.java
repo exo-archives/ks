@@ -314,6 +314,9 @@ public class Utils {
     DiffResult diffResult = diffService.getDifferencesAsHTML(previousVersionContent,
                                                              currentVersionContent,
                                                              false);
+    if (diffResult.getChanges() == 0) {
+      diffResult.setDiffHTML("No changes, new revision is created.");
+    }    
     StringBuilder sb = new StringBuilder();
     sb.append("The page \"" + pageTitle + "\" has been modifed by <b>" + author + "</b>")
       .append("<br/><br/>")

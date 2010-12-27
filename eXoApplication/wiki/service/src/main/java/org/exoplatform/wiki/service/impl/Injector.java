@@ -102,7 +102,8 @@ public class Injector implements LifeCycleListener, StateChangeListener {
           if (mixin != null) {
             boolean isWatched = !mixin.getWatchers().isEmpty();
             Wiki wiki = page.getWiki();
-            if (wiki != null && isWatched) {
+            boolean isMinorEdit = page.isMinorEdit();
+            if (wiki != null && isWatched && !isMinorEdit) {
               NTVersionHistory history = page.getVersionableMixin().getVersionHistory();
               if (history != null && history.getChildren().size() > 1) {
                 Utils.sendMailOnChangeContent(content);

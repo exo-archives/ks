@@ -35,7 +35,7 @@ import org.exoplatform.wiki.webui.UIWikiMaskWorkspace;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
-import org.exoplatform.wiki.webui.control.filter.IsEditModeFilter;
+import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 import org.exoplatform.wiki.webui.popup.UIWikiPagePreview;
 import org.xwiki.rendering.syntax.Syntax;
@@ -53,7 +53,7 @@ import org.xwiki.rendering.syntax.Syntax;
 )
 public class PreviewPageActionComponent extends UIComponent {
 
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditModeFilter() });
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditAddModeFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {

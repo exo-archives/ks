@@ -32,7 +32,7 @@ import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.UIWikiSidePanelArea;
-import org.exoplatform.wiki.webui.control.filter.IsEditModeFilter;
+import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 import org.xwiki.rendering.syntax.Syntax;
 
@@ -49,7 +49,7 @@ import org.xwiki.rendering.syntax.Syntax;
 )
 public class RichTextActionComponent extends UIComponent {
 
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditModeFilter() });
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditAddModeFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
