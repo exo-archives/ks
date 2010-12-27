@@ -12,6 +12,7 @@ function getModule(params) {
   module.name = "ks";
   
   var cometVersion = "${org.exoplatform.commons.version}";
+  var webuiExtVersion = "${org.exoplatform.commons.version}";
   module.comet = {};
   module.comet.cometd =
     new Project("org.exoplatform.commons", "exo.platform.commons.comet.webapp", "war", cometVersion).
@@ -24,6 +25,8 @@ function getModule(params) {
     addDependency(new Project("org.apache.xmlbeans", "xmlbeans", "jar", "2.3.0")).
     addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.comet.service", "jar", cometVersion));
   module.comet.cometd.deployName = "cometd";
+  
+  module.webuiExt = new Project("org.exoplatform.commons", "exo.platform.commons.webui.ext", "jar", webuiExtVersion);
   
   // KS
 
@@ -56,7 +59,6 @@ function getModule(params) {
   module.eXoApplication.wiki = 
     new Project("org.exoplatform.ks", "exo.ks.eXoApplication.wiki.webapp", "war", module.version).
     addDependency(new Project("org.exoplatform.ks", "exo.ks.eXoApplication.wiki.service", "jar",  module.version)).
-    addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.webui.ext", "jar",  "${org.exoplatform.commons.version}")).
     addDependency(new Project("com.google.gwt", "gwt-servlet", "jar",  "${gwt.version}")).
     addDependency(new Project("com.google.gwt", "gwt-user", "jar",  "${gwt.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-web-gwt-wysiwyg-client", "jar",  "${org.xwiki.platform.version}")).

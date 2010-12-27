@@ -38,6 +38,8 @@ function getProduct(version) {
   
   //cometd (requried for KS)
   product.addDependencies(ks.comet.cometd);
+  
+  product.addDependencies(ks.webuiExt);
    
   // KS extension
   product.addDependencies(ks.component.common);
