@@ -20,6 +20,7 @@ function getModule(params) {
     addDependency(new Project("org.mortbay.jetty", "jetty-util", "jar", "${org.mortbay.jetty.jetty-util.version}")).
     addDependency(new Project("org.mortbay.jetty", "cometd-api", "jar", "${org.mortbay.jetty.cometd-api.version}")).
     addDependency(new Project("org.apache.poi", "poi-ooxml", "jar", "3.6")).
+    addDependency(new Project("org.apache.poi", "poi-ooxml-schemas", "jar", "3.6")).
     addDependency(new Project("org.apache.poi", "poi", "jar", "3.6")).
     addDependency(new Project("org.apache.poi", "poi-scratchpad", "jar", "3.6")).
     addDependency(new Project("org.apache.xmlbeans", "xmlbeans", "jar", "2.3.0")).

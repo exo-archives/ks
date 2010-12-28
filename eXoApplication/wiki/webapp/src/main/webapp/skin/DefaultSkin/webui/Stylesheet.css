@@ -905,6 +905,10 @@
 	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/doc.gif") no-repeat left top;
 }
 
+.UIWikiAdvanceSearchResult .BlockResultFeed .docx {
+	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/doc.gif") no-repeat left top;
+}
+
 .UIWikiAdvanceSearchResult .BlockResultFeed .mdb {
 	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/AccessFileIcon.png") no-repeat left top;
 }
@@ -914,6 +918,10 @@
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .xls {
+	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/ExcelFileIcon.png") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .xlsx {
 	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/ExcelFileIcon.png") no-repeat left top;
 }
 
@@ -950,6 +958,10 @@
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .ppt {
+	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/ppt.gif") no-repeat left top;
+}
+
+.UIWikiAdvanceSearchResult .BlockResultFeed .pptx {
 	background: url("/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/ppt.gif") no-repeat left top;
 }
 
