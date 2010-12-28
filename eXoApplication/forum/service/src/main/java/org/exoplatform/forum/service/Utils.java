@@ -76,11 +76,13 @@ public class Utils {
 	public static final String GUEST = "Guest".intern() ;
 	
 	public static final String ADMIN_ROLE = "ADMIN".intern() ;
+	public static final String SEMICOLON = ";".intern();
 
-	public static final String DEFAULT_EMAIL_CONTENT = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +
-			"Watching notification.<br/>We would like to inform that $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> " +
-			"has been added new $ADD_TYPE with content below: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, <b>$POSTER</b> posted</div> " +
-			"For more detail, you can view at link : $LINK".intern();
+	public static final String DEFAULT_EMAIL_CONTENT = "Hi,</br> You receive this email because you registered for eXo Forum and Topic Watching notification." +
+			"<br/>We would like to inform you that there is a new $ADD_TYPE in the $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> with the following content: " +
+			"<div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, posted by <b>$POSTER</b> .</div><div>Go directly to the post: " +
+			"<a target=\"_blank\" href=\"$VIEWPOST_LINK\">Click here.</a> <br/>Or go to reply to the post: <a target=\"_blank\" href=\"$REPLYPOST_LINK\">" +
+			"Click here.</a></div>".intern();
 	
 	public static String getReplacementByBBcode(String s, List<BBCode> bbcodes) throws Exception {
 		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;

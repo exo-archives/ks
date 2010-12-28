@@ -1,0 +1,596 @@
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/Utils.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/Utils.java	(revision 52154)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/Utils.java	(working copy)
+@@ -76,11 +76,13 @@
+ 	public static final String GUEST = "Guest".intern() ;
+ 	
+ 	public static final String ADMIN_ROLE = "ADMIN".intern() ;
++	public static final String SEMICOLON = ";".intern();
+ 
+-	public static final String DEFAULT_EMAIL_CONTENT = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +
+-			"Watching notification.<br/>We would like to inform that $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> " +
+-			"has been added new $ADD_TYPE with content below: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, <b>$POSTER</b> posted</div> " +
+-			"For more detail, you can view at link : $LINK".intern();
++	public static final String DEFAULT_EMAIL_CONTENT = "Hi,</br> You receive this email because you registered for eXo Forum and Topic Watching notification." +
++			"<br/>We would like to inform you that there is a new $ADD_TYPE in the $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> with the following content: " +
++			"<div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, posted by <b>$POSTER</b> .</div><div>Go directly to the post: " +
++			"<a target=\"_blank\" href=\"$VIEWPOST_LINK\">Click here.</a> <br/>Or go to reply to the post: <a target=\"_blank\" href=\"$REPLYPOST_LINK\">" +
++			"Click here.</a></div>".intern();
+ 	
+ 	public static String getReplacementByBBcode(String s, List<BBCode> bbcodes) throws Exception {
+ 		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java	(revision 52154)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java	(working copy)
+@@ -155,6 +155,10 @@
+ 	List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
+ 	Map<String, EventListener> listeners_ = new HashMap<String, EventListener>();
+ 	private boolean isInitRssListener_ = true ;	
++	private static int TYPE_CATEGORY=0;
++	private static int TYPE_FORUM=1;
++	private static int TYPE_TOPIC=2;
++	private static int TYPE_POST=3;
+ 	
+ 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService rService) throws Exception {
+ 		nodeHierarchyCreator_ = nodeHierarchyCreator;
+@@ -2188,7 +2192,7 @@
+ 				}
+ 				case 3: {
+ 					topicNode.setProperty("exo:isApproved", topic.getIsApproved());
+-					sendNotification(topicNode.getParent(), topic, null, "", true);
++					sendNotification(sProvider, topicNode.getParent(), topic, null, "", true);
+ 					setActivePostByTopic(sProvider, topicNode, topic.getIsApproved());
+ 					getTotalJobWatting(userIdsp);
+ 					break;
+@@ -2202,7 +2206,7 @@
+ 					topicNode.setProperty("exo:isWaiting", isWaiting);
+ 					setActivePostByTopic(sProvider, topicNode, !(isWaiting));
+ 					if(!isWaiting){
+-						sendNotification(topicNode.getParent(), topic, null, "", true);
++						sendNotification(sProvider, topicNode.getParent(), topic, null, "", true);
+ 					}
+ 					getTotalJobWatting(userIdsp);
+ 					break;
+@@ -2297,7 +2301,7 @@
+ 				if(userProfileNode.isNew())
+ 					userProfileNode.getSession().save();
+ 				else userProfileNode.save();
+-				sendNotification(forumNode, topic, null, defaultEmailContent, true);
++				sendNotification(sProvider, forumNode, topic, null, defaultEmailContent, true);
+ 			} else {
+ 				topicNode = forumNode.getNode(topic.getId());
+ 			}
+@@ -3092,7 +3096,7 @@
+ 			}
+ 			try {
+ 				if(!isFistPost && isNew) {
+-					sendNotification(topicNode, null, post, defaultEmailContent, true);
++					sendNotification(sProvider, topicNode, null, post, defaultEmailContent, true);
+ 				}
+ 			} catch (Exception e) {
+ 			}
+@@ -3111,10 +3115,9 @@
+     }
+ 	}
+ 
+-	private void sendNotification(Node node, Topic topic, Post post, String defaultEmailContent, boolean isApprovePost) throws Exception {
++	private void sendNotification(SessionProvider sProvider, Node node, Topic topic, Post post, String defaultEmailContent, boolean isApprovePost) throws Exception {
+ 		Node forumAdminNode = null;
+ 		String headerSubject="",catName="",forumName="",topicName="";
+-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+ 		BBCodeOperator bbcodeObject = new BBCodeOperator(nodeHierarchyCreator_, rService_) ;
+ 		try {
+ 			try {
+@@ -3122,6 +3125,11 @@
+       } catch (Exception e) {
+       }
+ 			String content = "";
++			String []types = new String[]{};
++			if(defaultEmailContent.lastIndexOf(Utils.SEMICOLON) > 0) {
++				types = defaultEmailContent.substring(defaultEmailContent.lastIndexOf(Utils.SEMICOLON)+1).split("/");
++				defaultEmailContent = defaultEmailContent.substring(0, defaultEmailContent.lastIndexOf(";"));
++			}
+ 			if (forumAdminNode != null) {
+ 				if (forumAdminNode.hasProperty("exo:notifyEmailContent"))
+ 					content = forumAdminNode.getProperty("exo:notifyEmailContent").getString();
+@@ -3140,7 +3148,6 @@
+ 			List<String> listUser = new ArrayList<String>();
+ 			List<String> emailList = new ArrayList<String>();
+ 			List<String> emailListCate = new ArrayList<String>();
+-			//SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
+ 			Node userProfileHome = null;
+ 			userProfileHome = getUserProfileHome(sProvider);
+ 	    
+@@ -3191,9 +3198,19 @@
+ 	          while(emailList.contains(string)) emailList.remove(string);
+           }
+ 					if (emailList.size() > 0) {
+-						Message message = new Message();
+-						message.setMimeType("text/html");
+ 						String owner = topic.getOwner();
++						String postFistId = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
++						post = new Post();
++						post.setId(postFistId);	
++						post.setOwner(owner);
++						post.setMessage(topic.getDescription()); 
++						post.setCreatedDate(topic.getCreatedDate());
++						post.setLink(topic.getLink()); 
++						String watchType = (node.isNodeType("exo:forum"))?types[TYPE_FORUM]:types[TYPE_CATEGORY];
++
++						String content_ = node.getProperty("exo:name").getString();
++						Message message = setContentEmail(post, bbcodeObject, headerSubject, content, content_, watchType, types[TYPE_TOPIC], catName, forumName, topicName);
++						message.setMimeType("text/html");
+ 						try {
+ 							Node userNode = userProfileHome.getNode(owner);
+ 							String email = userNode.getProperty("exo:email").getString();
+@@ -3201,41 +3218,8 @@
+ 							if(email != null && email.length() > 0) {
+ 								message.setFrom(fullName + "<" + email + ">");
+ 							}
+-						} catch (Exception e) {
+-						}
+-						String content_ = node.getProperty("exo:name").getString();
+-						if(headerSubject != null && headerSubject.length() > 0) {
+-							headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
+-							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
+-							headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
+-						}else {
+-							headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
+-						}
+-						message.setSubject(headerSubject);
+-						if(node.isNodeType("exo:forum")){
+-							content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
+-							content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
+-						} else {
+-							content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
+-							content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
+-						}
+-						String postFistId = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
+-						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Topic");
+-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription(), bbcodeObject.getActiveBBCode()));
+-						Date createdDate = topic.getCreatedDate();
+-						Format formatter = new SimpleDateFormat("HH:mm");
+-						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+-						formatter = new SimpleDateFormat("MM/dd/yyyy");
+-						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+-						content_ = StringUtils.replace(content_, "$POSTER", topic.getOwner());
+-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink().replace("public", "private") + "/" + postFistId + "/true\">click here</a><br/>");
++						} catch (Exception e) {}
+ 						
+-						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
+-						content_ = StringUtils.replace(content_, "$FORUM", forumName);
+-						content_ = StringUtils.replace(content_, "$TOPIC", topicName);
+-						
+-						message.setBody(content_);
+ 						sendEmailNotification(emailList, message);
+ 					}
+ 					if(node.isNodeType("exo:forum") || count > 1) break;
+@@ -3365,41 +3349,14 @@
+ 					} catch (Exception e) {
+ 					}
+ //					send email by category
+-					String content_ = "";
+ 					if (emailListCategory.size() > 0) {
+-						Message message = new Message();
++						String categoryName = categoryNode.getProperty("exo:name").getString();
++						Message message = setContentEmail(post, bbcodeObject, headerSubject, content, categoryName, types[TYPE_CATEGORY], types[TYPE_POST], catName, forumName, topicName);
+ 						if(email != null && email.length() > 0) {
+ 							message.setFrom(fullName + " <" + email + ">");
+ 						}
+ 						message.setMimeType("text/html");
+-						String categoryName = categoryNode.getProperty("exo:name").getString();
+-						content_ = node.getProperty("exo:name").getString();
+-						if(headerSubject != null && headerSubject.length() > 0) {
+-							headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
+-							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
+-							headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
+-						}else {
+-							headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
+-						}
+-						message.setSubject(headerSubject);
+-						content_ = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
+-						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
+-						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
+-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject.getActiveBBCode()));
+-						Date createdDate = post.getCreatedDate();
+-						Format formatter = new SimpleDateFormat("HH:mm");
+-						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+-						formatter = new SimpleDateFormat("MM/dd/yyyy");
+-						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+-						content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
+-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
+-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") + "/" + post.getId() + "/true\">click here</a><br/>");
+ 						
+-						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
+-						content_ = StringUtils.replace(content_, "$FORUM", forumName);
+-						content_ = StringUtils.replace(content_, "$TOPIC", topicName);
+-						
+-						message.setBody(content_);
+ 						sendEmailNotification(emailListCategory, message);
+ 					}
+ 					for (String string : emailListCategory) {
+@@ -3408,37 +3365,12 @@
+ 					
+ //				send email by forum
+ 					if (emailListForum.size() > 0) {
+-						Message message = new Message();
++						Message message = setContentEmail(post, bbcodeObject, headerSubject, content, forumName, types[TYPE_FORUM], types[TYPE_POST], catName, forumName, topicName);
++						message.setMimeType("text/html");
+ 						if(email != null && email.length() > 0) {
+ 							message.setFrom(fullName + " <" + email + ">");
+ 						}
+-						message.setMimeType("text/html");
+-						if(headerSubject != null && headerSubject.length() > 0) {
+-							headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
+-							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
+-							headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
+-						}else {
+-							headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
+-						}
+-						message.setSubject(headerSubject);
+-						content_ = StringUtils.replace(content, "$OBJECT_NAME", forumNode.getProperty("exo:name").getString());
+-						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
+-						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
+-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject.getActiveBBCode()));
+-						Date createdDate = post.getCreatedDate();
+-						Format formatter = new SimpleDateFormat("HH:mm");
+-						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+-						formatter = new SimpleDateFormat("MM/dd/yyyy");
+-						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+-						content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
+-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
+-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") +"/"+post.getId()+ "/true\">click here</a><br/>");
+ 						
+-						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
+-						content_ = StringUtils.replace(content_, "$FORUM", forumName);
+-						content_ = StringUtils.replace(content_, "$TOPIC", topicName);
+-						
+-						message.setBody(content_);
+ 						sendEmailNotification(emailListForum, message);
+ 					}
+ 					for (String string : emailListCategory) {
+@@ -3450,37 +3382,12 @@
+ 					
+ //				send email by topic					
+ 					if (emailList.size() > 0) {
+-						Message message = new Message();
++						Message message = setContentEmail(post, bbcodeObject, headerSubject, content, topicName, types[TYPE_TOPIC], types[TYPE_POST], catName, forumName, topicName);
+ 						if(email != null && email.length() > 0) {
+ 							message.setFrom(fullName + " <" + email + ">");
+ 						}
+ 						message.setMimeType("text/html");
+-						if(headerSubject != null && headerSubject.length() > 0) {
+-							headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
+-							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
+-							headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
+-						}else {
+-							headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
+-						}
+-						message.setSubject(headerSubject);
+-						content_ = StringUtils.replace(content, "$OBJECT_NAME", topicName);
+-						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
+-						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
+-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject.getActiveBBCode()));
+-						Date createdDate = post.getCreatedDate();
+-						Format formatter = new SimpleDateFormat("HH:mm");
+-						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+-						formatter = new SimpleDateFormat("MM/dd/yyyy");
+-						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+-						content_ = StringUtils.replace(content_, "$POSTER", owner);
+-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
+-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private")+"/"+post.getId()+ "/true\">click here</a><br/>");
+-						
+-						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
+-						content_ = StringUtils.replace(content_, "$FORUM", forumName);
+-						content_ = StringUtils.replace(content_, "$TOPIC", topicName);
+-						
+-						message.setBody(content_);
++
+ 						sendEmailNotification(emailList, message);
+ 					}
+ 				}
+@@ -3489,10 +3396,40 @@
+ 			e.printStackTrace();
+ 		} finally {
+ 			bbcodeObject = null ;
+-			sProvider.close() ;
+ 		}
+ 	}
+ 
++	private Message setContentEmail(Post post, BBCodeOperator bbcodeObject, String headerSubject, String content, String objName, 
++			String watchType, String addType, String catName, String forumName, String topicName) throws Exception {
++		Message message = new Message();
++		if(headerSubject != null && headerSubject.length() > 0) {
++			headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
++			headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
++			headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
++		}else {
++			headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
++		}
++		message.setSubject(headerSubject);
++		String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);
++		content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", watchType);
++		content_ = StringUtils.replace(content_, "$ADD_TYPE", addType);
++		content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject.getActiveBBCode()));
++		Date createdDate = post.getCreatedDate();
++		Format formatter = new SimpleDateFormat("HH:mm");
++		content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
++		formatter = new SimpleDateFormat("MM/dd/yyyy");
++		content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
++		content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
++		content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", post.getLink() + "/" + post.getId());
++		content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", post.getLink().replace("public", "private")+"/"+post.getId()+ "/true");
++		
++		content_ = StringUtils.replace(content_, "$CATEGORY", catName);
++		content_ = StringUtils.replace(content_, "$FORUM", forumName);
++		content_ = StringUtils.replace(content_, "$TOPIC", topicName);
++		message.setBody(content_);
++		return message;
++	}
++
+ 	public void modifyPost(List<Post> posts, int type) throws Exception {
+ 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+ 		Node forumHomeNode = getForumHomeNode(sProvider);
+@@ -3522,7 +3459,7 @@
+ 				case 1: {
+ 					postNode.setProperty("exo:isApproved", true);
+ 					post.setIsApproved(true);
+-					sendNotification(topicNode, null, post, "", false);
++					sendNotification(sProvider, topicNode, null, post, "", false);
+ 					break;
+ 				}
+ 				case 2: {
+@@ -3542,7 +3479,7 @@
+ 						forumNode.setProperty("exo:postCount", forumPostCount - 1);
+ 					} else {
+ 						postNode.setProperty("exo:isHidden", false);
+-						sendNotification(topicNode, null, post, "", false);
++						sendNotification(sProvider, topicNode, null, post, "", false);
+ 					}
+ 					break;
+ 				}
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/ForumUtils.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/ForumUtils.java	(revision 52154)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/ForumUtils.java	(working copy)
+@@ -39,6 +39,7 @@
+ import org.apache.commons.lang.StringUtils;
+ import org.exoplatform.forum.service.Post;
+ import org.exoplatform.forum.service.TopicType;
++import org.exoplatform.forum.service.Utils;
+ import org.exoplatform.portal.application.PortalRequestContext;
+ import org.exoplatform.portal.webui.util.Util;
+ import org.exoplatform.webui.application.WebuiRequestContext;
+@@ -74,6 +75,7 @@
+ 	
+ 	private String key;
+ 	private String id;
++	 
+ 	public ForumUtils() {
+   }
+ 	
+@@ -325,7 +327,7 @@
+ 	public static String getDefaultMail(){
+ 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+ 		ResourceBundle res = context.getApplicationResourceBundle() ;
+-		return res.getString("UIForumAdministrationForm.label.notifyEmailContentDefault");
++		return res.getString("UIForumAdministrationForm.label.notifyEmailContentDefault") + Utils.SEMICOLON + res.getString("UIForumAdministrationForm.label.notifyType");
+ 	}
+ 	
+ 	public static boolean enableIPLogging(){
+Index: eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_en.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_en.properties	(revision 52154)
++++ eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_en.properties	(working copy)
+@@ -17,7 +17,7 @@
+ UIForumPortlet.label.Close=Close
+ UIForumPortlet.label.AddBookmarkLink=Bookmark
+ UIForumPortlet.label.AddWatching=Watch
+-UIForumPortlet.label.UnWatch=UnWatch
++UIForumPortlet.label.UnWatch=Unwatch
+ UIForumPortlet.label.NoThread=No topics.
+ UIForumPortlet.label.GoPage=Go Page
+ UIForumPortlet.label.NotModerator=No moderator
+@@ -123,7 +123,7 @@
+ UIForumChildPopupWindow.title.UIViewPrivateMessageForm=Private Message
+ 
+ #############################################################################
+-#							UIGroupSelector																							 #
++#							UIUserSelector																							 #
+ #############################################################################
+ UICategoryUserPopupWindow.title.UIUserSelector=User Selector
+ UIForumUserPopupWindow.title.UIUserSelector=User Selector
+@@ -429,7 +429,8 @@
+ UIForumAdministrationForm.label.enableHeaderSubject=Add a prefix to notifications
+ UIForumAdministrationForm.label.headerSubject=Notification subject template
+ UIForumAdministrationForm.label.censorKeyword=Censored keywords: <br/><br/><span style="text-align: center;"><i>(comma separated)</i></span>
+-UIForumAdministrationForm.label.notifyEmailContentDefault=Hi,</br> You receive this email because you registered for eXo Forum and Topic Watching notification.<br/>We would like to inform you that there is a new $ADD_TYPE in the $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> with the following content: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, posted by <b>$POSTER</b> .</div> Go directly to the post: $VIEWPOST_LINK <br/>Or go to reply to the post: $REPLYPOST_LINK
++UIForumAdministrationForm.label.notifyEmailContentDefault=Hi,</br> You receive this email because you registered for eXo Forum and Topic Watching notification.<br/>We would like to inform you that there is a new $ADD_TYPE in the $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> with the following content: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, posted by <b>$POSTER</b> .</div><div>Go directly to the post: <a target="_blank" href="$VIEWPOST_LINK">Click here.</a> <br/>Or go to reply to the post: <a target="_blank" href="$REPLYPOST_LINK">Click here.</a></div>
++UIForumAdministrationForm.label.notifyType=#{UIForumPortlet.label.category}/#{UIForumPortlet.label.forum}/#{UIForumPortlet.label.topic}/#{UIForumPortlet.label.post}
+ UIForumAdministrationForm.label.EmailToAuthorMoved=<p>Your $OBJECT_TYPE: "<b>$OBJECT_NAME</b>" has been moved to $OBJECT_PARENT_TYPE "<b>$OBJECT_PARENT_NAME</b>"</p><p>Go directly to the topic : $VIEWPOST_LINK</p> 
+ UIForumAdministrationForm.label.notifyEmailHeaderSubjectDefault=[$CATEGORY][$FORUM] $TOPIC
+ # Label of select Box#
+@@ -457,7 +458,7 @@
+ UIForumAdministrationForm.sms.ipBanSuccessful=The IP address has been added to the banned IPs.
+ UIForumAdministrationForm.sms.ipBanFalse=IP {0} is already banned or can not be added. Please contact an administrator.
+ UIForumAdministrationForm.sms.not-set-activeDay=Please configure prune settings for this item.
+-UIForumAdministrationForm.msg.inactiveAllBBCode=The BBCodes can not be deactivated all. Please activate some  BBCode tags.
++UIForumAdministrationForm.msg.inactiveAllBBCode=All the BBCodes cannot be deactivated. Please activate some BBCode tags.
+ #############################################################################
+ #							UISearchForm     																							#
+ #############################################################################
+@@ -957,7 +958,7 @@
+ UIAddWatchingForm.label.userName=Name
+ UIAddWatchingForm.label.emails=Email Address
+ UIAddWatchingForm.msg.successfully=You are now watching this item.
+-UIAddWatchingForm.msg.UnWatchSuccessfully=You are unwatch this item.
++UIAddWatchingForm.msg.UnWatchSuccessfully=You are not watching this item.
+ UIAddWatchingForm.msg.fall=Failed to add watch.
+ UIAddWatchingForm.msg.UnWatchfall=Failed to unwatch.
+ #############################################################################
+Index: eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_fr.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_fr.properties	(revision 52154)
++++ eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_fr.properties	(working copy)
+@@ -424,7 +424,8 @@
+ UIForumAdministrationForm.label.enableHeaderSubject=Ajouter un préfixe aux notifications
+ UIForumAdministrationForm.label.headerSubject=Modèle de sujet
+ UIForumAdministrationForm.label.censorKeyword=Mots censurés: <br/><br/><span style="text-align: center;"><i>(séparés par des virgules)</i></span>
+-UIForumAdministrationForm.label.notifyEmailContentDefault=Bonjour ,</br> Vous recevez ce message car vous suivez ce forum.<br/>Nous vous informons que le $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> contient un nouveau $ADD_TYPE: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>Posté par <b>$POSTER</b> le $DATE à <b>$TIME</b>,</div> Pour plus de détails, suivez ce lien : $LINK 
++UIForumAdministrationForm.label.notifyEmailContentDefault=Bonjour,</br> Vous recevez cet email car vous êtes enregistrés sur eXo Forum et que vous avez activé les notifications sur les sujets que vous suivez.<br/>Nous vous informons qu'il y a un nouveau $ADD_TYPE dans le $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> qui contient: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>Posté à $TIME le $DATE, par <b>$POSTER</b> .</div> Ouvrir le sujet: <a target="_blank" href="$VIEWPOST_LINK">Cliquez ici</a> <br/>Répondre au sujet: <a target="_blank" href="$REPLYPOST_LINK">Cliquez ici</a>
++UIForumAdministrationForm.label.notifyType=#{UIForumPortlet.label.category}/#{UIForumPortlet.label.forum}/#{UIForumPortlet.label.topic}/#{UIForumPortlet.label.post}  
+ UIForumAdministrationForm.label.EmailToAuthorMoved=<p>Votre $OBJECT_TYPE: "<b>$OBJECT_NAME</b>" a été déplacé dans $OBJECT_PARENT_TYPE "<b>$OBJECT_PARENT_NAME</b>"</p><p>Pour vous y rendre, $VIEWPOST_LINK</p> 
+ UIForumAdministrationForm.label.notifyEmailHeaderSubjectDefault=[$CATEGORY][$FORUM] $TOPIC
+ # Label of select Box#
+@@ -1230,4 +1231,7 @@
+ #												UIAddTopicTypeForm    														  #
+ #############################################################################
+ UIForumChildPopupWindow.title.UISelectCategoryForm=Choisir des catégories
+-UISelectCategoryForm.label.ChooseDestinationCategory=Sélectionnez les catégories
+\ No newline at end of file
++UISelectCategoryForm.label.ChooseDestinationCategory=Sélectionnez les catégories
++
++
++
+Index: eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet.properties	(revision 52154)
++++ eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet.properties	(working copy)
+@@ -17,6 +17,7 @@
+ UIForumPortlet.label.Close=Close
+ UIForumPortlet.label.AddBookmarkLink=Bookmark
+ UIForumPortlet.label.AddWatching=Watch
++UIForumPortlet.label.UnWatch=Unwatch
+ UIForumPortlet.label.NoThread=No topics.
+ UIForumPortlet.label.GoPage=Go Page
+ UIForumPortlet.label.NotModerator=No moderator
+@@ -31,10 +32,9 @@
+ UIForumPortlet.label.post=Post
+ UIForumPortlet.label.AdvancedSearch=Advanced Search
+ UIForumPortlet.label.GoLastRead=Go to last read post.
+-UIForumPortlet.label.TopicRatingVotes=Rated <keyWord>/5
+ 
+ UIForumPortlet.msg.topicEmpty=This topic no longer exists.
+-UIForumPortlet.msg.do-not-permission==This link is not visible anymore.
++UIForumPortlet.msg.do-not-permission=This link is not visible anymore.
+ UIForumPortlet.msg.catagory-deleted=This category no longer exists.
+ UIForumPortlet.msg.save-successfully=Your portlet settings have been saved.
+ UIForumPortlet.msg.save-fail=The portlet settings were not saved properly.
+@@ -86,7 +86,7 @@
+ UIForumActionBar.label.OpenBookMark=Bookmarks
+ UIForumActionBar.label.OpenAdministration=Administration
+ UIForumActionBar.label.TagManager=Tags
+-UIForumActionBar.label.ImportCategory=Import
++UIForumActionBar.label.ImportCategory=Import category
+ #The message you have entered is too short. Please lengthen your message to at least {1} characters.#		
+ 
+ #############################################################################
+@@ -123,10 +123,15 @@
+ UIForumChildPopupWindow.title.UIViewPrivateMessageForm=Private Message
+ 
+ #############################################################################
+-#							UIGroupSelector																							 #
++#							UIUserSelector																							 #
+ #############################################################################
++UICategoryUserPopupWindow.title.UIUserSelector=User Selector
++UIForumUserPopupWindow.title.UIUserSelector=User Selector
++UITopicUserPopupWindow.title.UIUserSelector=User Selector
++UISearchUserPopupWindow.title.UIUserSelector=User Selector
++
+ UIForumPopupWindow.title.UIUserSelector=Select a user
+-UIForumPopupWindow.title.UIMemberShipSelector=Select a membership
++UIForumPopupWindow.title.UIMemberShipSelector=Select a role
+ UIForumPopupWindow.title.UIGroupSelector=Select a group
+ UIForumChildPopupWindow.title.UIUserSelector=Select a user
+ UIForumChildPopupWindow.title.UIMemberShipSelector=Select a role
+@@ -279,7 +284,7 @@
+ UIPostForm.action.PreviewPost=Preview
+ UIPostForm.action.SubmitPost=Submit
+ UIPostForm.action.Cancel=Cancel
+-UIPostForm.action.Attachment=Attachments
++UIPostForm.action.Attachment=Attach a file
+ UIPostForm.action.RemoveAttachment=Remove attachment
+ UIViewPost.action.OpenTopicLink=Open topic
+ UIPostForm.label.action.remove=Remove
+@@ -424,7 +429,8 @@
+ UIForumAdministrationForm.label.enableHeaderSubject=Add a prefix to notifications
+ UIForumAdministrationForm.label.headerSubject=Notification subject template
+ UIForumAdministrationForm.label.censorKeyword=Censored keywords: <br/><br/><span style="text-align: center;"><i>(comma separated)</i></span>
+-UIForumAdministrationForm.label.notifyEmailContentDefault=Hi,</br> You receive this email because you registered for eXo Forum and Topic Watching notification.<br/>We would like to inform you that there is a new $ADD_TYPE in the $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> with the following content: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, posted by <b>$POSTER</b> .</div> Go directly to the topic: $VIEWPOST_LINK <br/>Or go to reply to the post: $REPLYPOST_LINK
++UIForumAdministrationForm.label.notifyEmailContentDefault=Hi,</br> You receive this email because you registered for eXo Forum and Topic Watching notification.<br/>We would like to inform you that there is a new $ADD_TYPE in the $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> with the following content: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, posted by <b>$POSTER</b> .</div><div>Go directly to the post: <a target="_blank" href="$VIEWPOST_LINK">Click here.</a> <br/>Or go to reply to the post: <a target="_blank" href="$REPLYPOST_LINK">Click here.</a></div>
++UIForumAdministrationForm.label.notifyType=Category/Forum/Topic/Post
+ UIForumAdministrationForm.label.EmailToAuthorMoved=<p>Your $OBJECT_TYPE: "<b>$OBJECT_NAME</b>" has been moved to $OBJECT_PARENT_TYPE "<b>$OBJECT_PARENT_NAME</b>"</p><p>Go directly to the topic : $VIEWPOST_LINK</p> 
+ UIForumAdministrationForm.label.notifyEmailHeaderSubjectDefault=[$CATEGORY][$FORUM] $TOPIC
+ # Label of select Box#
+@@ -452,7 +458,7 @@
+ UIForumAdministrationForm.sms.ipBanSuccessful=The IP address has been added to the banned IPs.
+ UIForumAdministrationForm.sms.ipBanFalse=IP {0} is already banned or can not be added. Please contact an administrator.
+ UIForumAdministrationForm.sms.not-set-activeDay=Please configure prune settings for this item.
+-UIForumAdministrationForm.msg.inactiveAllBBCode=BBCodes can not be all deactivated. Please activate some  BBCode tags.
++UIForumAdministrationForm.msg.inactiveAllBBCode=All the BBCodes cannot be deactivated. Please activate some BBCode tags.
+ #############################################################################
+ #							UISearchForm     																							#
+ #############################################################################
+@@ -575,7 +581,7 @@
+ UICategory.action.MoveForum=Move
+ UICategory.action.RemoveForum=Remove
+ UICategory.action.AddWatching=Watch
+-UICategory.action.ExportCategory=Export
++UICategory.action.ExportCategory=Export forum(s)
+ UICategory.action.ImportForum=Import forum
+ UICategory.action.WatchOption=Watches
+ UICategory.label.GotoFirstNewPost=Go to first new post in topic '<keyWord>'
+@@ -611,7 +617,7 @@
+ UITopicContainer.action.MoveForum=Move
+ UITopicContainer.action.RemoveForum=Delete
+ UITopicContainer.action.WatchOption=Watches
+-UITopicContainer.action.ExportForum=Export
++UITopicContainer.action.ExportForum=Export forum
+ UITopicContainer.action.BanIpForumTools=Banned IPs
+ 
+ UITopicContainer.action.EditTopic=Edit
+@@ -952,7 +958,9 @@
+ UIAddWatchingForm.label.userName=Name
+ UIAddWatchingForm.label.emails=Email Address
+ UIAddWatchingForm.msg.successfully=You are now watching this item.
++UIAddWatchingForm.msg.UnWatchSuccessfully=You are not watching this item.
+ UIAddWatchingForm.msg.fall=Failed to add watch.
++UIAddWatchingForm.msg.UnWatchfall=Failed to unwatch.
+ #############################################################################
+ #								 UIAddMultiValueForm     																		#
+ #############################################################################
+@@ -1077,7 +1085,7 @@
+ UIImportForm.msg.import-false=The data you attempted to import seems to already exist.
+ UIImportForm.msg.access-denied=File could not be read. 
+ UIImportForm.msg.constraint-violation-exception=The import has failed. Is this data from the same version?
+-UIImportForm.msg.filetype-error=The type of file is invalid. Please check again, only import xml file
++UIImportForm.msg.filetype-error=The type of file is invalid. Please check again, only import xml file.
+ UIImportForm.msg.ObjectIsExist=Can not import data because at least one item already exists.
+ UIImportForm.msg.CategoryNoLongerExist=This category no longer exists.
+ UIImportForm.msg.file-not-found=Please make sure that you have uploaded the selected file to the server using the upload icon. 
+@@ -1085,7 +1093,7 @@
+ #############################################################################
+ #												UIExtportForm																	 #
+ #############################################################################
+-UIForumPopupWindow.title.UIExportForm=Export
++UIForumPopupWindow.title.UIExportForm=Export Forums
+ UIForumPopupWindow.title.FORUMExportCategoryForm=Export Categories
+ UIForumChildPopupWindow.title.FORUMExportCategoryForm=Export Categories
+ UIExportForm.label.FileName=File name
+@@ -1097,11 +1105,12 @@
+ UIExportForm.label.createZip=Compress
+ UIExportForm.label.Categories=Categories
+ UIExportForm.label.Selectcategories=Select categories
++UIExportForm.label.SelectForums=Select forums
+ 
+ UIExportForm.action.Save=Save
+ UIExportForm.action.Cancel=Cancel
+ UIExportForm.msg.nameFileExport= File name is invalid.
+-UIForumActionBar.label.ExportCategory=Export
++UIForumActionBar.label.ExportCategory=Export category
+ UIImportForm.msg.ObjectIsNoLonagerExist=Data no longer exists.
+  
+ #############################################################################

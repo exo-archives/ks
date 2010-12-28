@@ -39,6 +39,7 @@ import javax.portlet.PortletPreferences;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.TopicType;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -74,6 +75,7 @@ public class ForumUtils {
 	
 	private String key;
 	private String id;
+	 
 	public ForumUtils() {
   }
 	
@@ -342,7 +344,7 @@ public class ForumUtils {
 	public static String getDefaultMail(){
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 		ResourceBundle res = context.getApplicationResourceBundle() ;
-		return res.getString("UIForumAdministrationForm.label.notifyEmailContentDefault");
+		return res.getString("UIForumAdministrationForm.label.notifyEmailContentDefault") + Utils.SEMICOLON + res.getString("UIForumAdministrationForm.label.notifyType");
 	}
 	
 	public static boolean enableIPLogging(){
