@@ -12,7 +12,6 @@ import org.xwiki.rendering.block.LinkBlock;
 import org.xwiki.rendering.listener.Link;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
-import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 
 @Component("anchor")
@@ -22,7 +21,7 @@ public class AnchorMacro extends AbstractMacro<AnchorMacroParameters> {
    */
   private static final String DESCRIPTION = "render an anchor";
   public AnchorMacro() {
-    super("Anchor", DESCRIPTION, new DefaultContentDescriptor(), AnchorMacroParameters.class);
+    super("Anchor", DESCRIPTION, AnchorMacroParameters.class);
     setDefaultCategory(DEFAULT_CATEGORY_NAVIGATION);
   }
   
