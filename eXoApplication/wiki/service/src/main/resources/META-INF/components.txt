@@ -19,3 +19,4 @@ org.exoplatform.wiki.rendering.macro.table.TableCellMacro
 org.exoplatform.wiki.rendering.macro.table.TableHeaderCellMacro
 org.exoplatform.wiki.rendering.macro.anchor.AnchorMacro
 org.exoplatform.wiki.rendering.macro.textcolor.ColorMacro
+org.exoplatform.wiki.rendering.macro.floatmacro.FloatMacro

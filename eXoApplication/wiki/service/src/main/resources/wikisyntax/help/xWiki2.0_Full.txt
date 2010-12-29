@@ -520,7 +520,9 @@ java content
 \\
 | Anchor Macro| ~{~{anchor name="anchor_name"}}~{~{/anchor}} | ((({{anchor name="anchor_name"}}{{/anchor}})))
 \\
-| Section and cloumn macro| ~{~{section justify="true"}}\\\\~{~{column}}column1~{~{/column}}\\\\~{~{column}}column2~{~{/column}}\\\\~{~{/section}}
+| Float Macro| ~{~{float cssClass="css_class" side="left_or_right" width="css_width" background="css_color" border="css_border" margin="css_margin" padding="css_padding"}}Content to float~{~{/float}} | ((({{float side="right"}}Content to float{{/float}})))
+\\
+| Section and column macro| ~{~{section justify="true"}}\\\\~{~{column}}column1~{~{/column}}\\\\~{~{column}}column2~{~{/column}}\\\\~{~{/section}}
  | ((({{section justify="true"}}
 
 {{column}}column1{{/column}}
