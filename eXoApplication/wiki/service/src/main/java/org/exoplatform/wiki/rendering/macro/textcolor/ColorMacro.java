@@ -21,6 +21,7 @@ import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
 import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
+import org.xwiki.rendering.util.ParserUtils;
 
 @Component("color")
 public class ColorMacro extends AbstractMacro<ColorMacroParameters> {
@@ -30,12 +31,6 @@ public class ColorMacro extends AbstractMacro<ColorMacroParameters> {
    */
   @Requirement
   private ComponentManager componentManager;
-  
-  /**
-   * Used to parse content when language="none".
-   */
-  @Requirement("plain/1.0")
-  private Parser plainTextParser;
   
   /**
    * The description of the macro.
@@ -53,17 +48,19 @@ public class ColorMacro extends AbstractMacro<ColorMacroParameters> {
                              MacroTransformationContext context) throws MacroExecutionException {
     XDOM parsedDom;
     String color = parameters.getName();
+    Parser parser = getSyntaxParser(context.getSyntax().toIdString());
     try {
       // parse the content of the wiki macro that has been injected by the component manager the content of the macro call itself is ignored.
-      parsedDom = this.plainTextParser.parse(new StringReader(content));
+      parsedDom = parser.parse(new StringReader(content));
     } catch (ParseException e) {
-      throw new MacroExecutionException("Failed to parse content [" + content + "] with Syntax parser [" + this.plainTextParser.getSyntax() + "]", e);
+      throw new MacroExecutionException("Failed to parse content [" + content + "] with Syntax parser [" + parser.getSyntax() + "]", e);
     }
     
     Map<String, String> params = new HashMap<String, String>();
     params.put("style", "color:" + color + ";");
     List<Block> children = new ArrayList<Block>();
-    children.addAll(parsedDom.getChildren().get(0).getChildren());
+    children.addAll(parsedDom.getChildren());
+    (new ParserUtils()).removeTopLevelParagraph(children);
     Block spanBlock = new FormatBlock(children, Format.NONE, params);
     return Collections.singletonList(spanBlock);
   }
