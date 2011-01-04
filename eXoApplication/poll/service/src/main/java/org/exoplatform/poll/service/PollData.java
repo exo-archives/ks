@@ -19,6 +19,8 @@ package org.exoplatform.poll.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.poll.service.impl.PollNodeTypes;
+
 
 /**
  * Created by The eXo Platform SAS
@@ -27,25 +29,20 @@ import java.util.List;
  * Dec 21, 2010  
  */
 public class PollData {
-
+	public static final String DEFAULT_ID = PollNodeTypes.POLL + "DefaultDataPlugin";
+	
   private String       parentPath;
-
   private String       owner;
-
   private String       question;
-
   private List<String> options = new ArrayList<String>();
-
+  private String       timeOut;
   private String       isMultiCheck;
-
   private String       isClosed;
-
   private String       isAgainVote;
 
-  public PollData() {
-  }
+  public PollData() {}
 
-  public String getParentPath() {
+	public String getParentPath() {
     return parentPath;
   }
 
@@ -77,7 +74,15 @@ public class PollData {
     this.options = options;
   }
 
-  public String getIsMultiCheck() {
+  public void setTimeOut(String timeOut) {
+		this.timeOut = timeOut;
+	}
+
+	public String getTimeOut() {
+		return timeOut;
+	}
+
+	public String getIsMultiCheck() {
     return isMultiCheck;
   }
 

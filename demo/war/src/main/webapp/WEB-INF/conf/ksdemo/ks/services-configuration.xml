@@ -187,23 +187,10 @@
       </init-params>
     </component-plugin -->
   </external-component-plugins>  
-  
-  <!-- 
-  
-  poll.setQuestion(question);
-				poll.setIsAgainVote(isAgainVote);
-				poll.setIsMultiCheck(isMultiVote);
-				poll.setOption(options);
-				poll.setVote(vote);
-				poll.setTimeOut(timeOut);
-				poll.setIsClosed(uiForm.poll.getIsClosed());
-  
-   -->
-  
+
   <!-- Poll plugins -->
   <external-component-plugins>
     <target-component>org.exoplatform.poll.service.PollService</target-component>   
-
     <component-plugin>
       <name>default.data</name>
       <set-method>addInitialDefaultDataPlugin</set-method>
@@ -227,6 +214,9 @@
                     <field name="question">
                       <string>What color do you like ?</string>
                     </field>
+                    <field name="timeOut">
+                      <string>0</string>
+                    </field>
                     <field name="isMultiCheck">
                       <string>false</string>
                     </field>
@@ -238,9 +228,12 @@
                     </field>
                      <field name="options">
 	                    <collection type="java.util.ArrayList">
-	                    	<value> <string>blue</string></value>
-	                    	<value> <string>red</string></value>
-	                    	<value> <string>black</string></value>
+	                    	<value><string>Green</string></value>
+	                    	<value><string>Blue</string></value>
+	                    	<value><string>Red</string></value>
+	                    	<value><string>Yellow</string></value>
+	                    	<value><string>Orange</string></value>
+	                    	<value><string>Purple</string></value>
 	                    </collection>
                     </field>
                    </object>

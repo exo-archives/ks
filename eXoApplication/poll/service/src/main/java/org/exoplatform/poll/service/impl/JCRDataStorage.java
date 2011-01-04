@@ -18,6 +18,7 @@ package org.exoplatform.poll.service.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -38,6 +39,8 @@ import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.poll.service.DataStorage;
 import org.exoplatform.poll.service.InitialDefaultDataPlugin;
 import org.exoplatform.poll.service.Poll;
+import org.exoplatform.poll.service.PollData;
+import org.exoplatform.poll.service.PollInitialData;
 import org.exoplatform.poll.service.PollSummary;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
@@ -107,12 +110,47 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
   }
   
   public void initDefaultData() throws Exception {
+  	SessionProvider sProvider = SessionProvider.createSystemProvider();
 		try {
 			for (InitialDefaultDataPlugin pln : defaultDataPlugins) {
-			
+				PollInitialData initialData =  pln.getPollInitialData();
+				List<PollData> datas = initialData.getPollDatas();
+				if(datas.size() > 0) {
+					String parentPath = datas.get(0).getParentPath();
+					Node parentNode = getParentNode(sProvider, parentPath);
+					if(parentNode.hasNode(PollData.DEFAULT_ID)) return;
+					else {
+						boolean first = true;
+						int size, j;
+						for (PollData pollData : datas) {
+							Poll poll = new Poll();
+							if(first)poll.setId(PollData.DEFAULT_ID);
+							first = false;
+							size = pollData.getOptions().size();
+							String[] vote = new String[size];
+							for (j = 0; j < size; j++) {
+								vote[j] = "0.0";
+							}
+							poll.setParentPath(pollData.getParentPath());
+							poll.setQuestion(pollData.getQuestion());
+							poll.setOption(pollData.getOptions().toArray(new String[size]));
+							poll.setVote(vote);
+							poll.setOwner(pollData.getOwner());
+							poll.setModifiedBy(pollData.getOwner());
+							poll.setCreatedDate(new Date());
+							poll.setModifiedDate(new Date());
+							poll.setUserVote(new String[] {});
+							poll.setTimeOut(Long.parseLong(pollData.getTimeOut()));
+							poll.setIsAgainVote(Boolean.parseBoolean(pollData.getIsAgainVote()));
+							poll.setIsMultiCheck(Boolean.parseBoolean(pollData.getIsMultiCheck()));
+							poll.setIsClosed(Boolean.parseBoolean(pollData.getIsClosed()));
+							savePoll(poll, true, false);
+						}
+					}					
+				}
 			}
-			
-		}catch (Exception e) {
+		} finally {
+			sProvider.close();
 		}
   }
   
