@@ -49,7 +49,7 @@ public class PollServiceImpl implements Startable, PollService {
   
   public void start() {
   	try {
-  		log.info("initializing default data...");
+  		log.info("initializing Poll default data...");
 			storage_.initDefaultData();
 		} catch (Exception e) {
 			log.error("Failed to initializing default data for poll: ", e);
