@@ -31,7 +31,7 @@ import org.exoplatform.management.jmx.annotations.Property;
  */
 	@Managed
 	@NameTemplate({@Property(key="service", value="poll"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
-	@ManagedDescription("Plugin that allows to initialize default data for the forum")
+	@ManagedDescription("Plugin that allows to initialize default data for the poll")
 	public class InitialDefaultDataPlugin extends ManagedPlugin {
 		private PollInitialData initialData = new PollInitialData();
 
