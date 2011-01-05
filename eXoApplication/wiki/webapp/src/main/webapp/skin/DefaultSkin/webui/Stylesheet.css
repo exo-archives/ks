@@ -1330,6 +1330,7 @@
 .UIWikiPageNotFound .BlockResultFeed .TxtMark {
 	color: #B7B7B7;
 	font-size: 11px;
+	text-transform:capitalize;
 }
 
 /* Wiki delete page confirm */

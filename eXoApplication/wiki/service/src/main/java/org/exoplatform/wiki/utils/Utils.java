@@ -287,6 +287,13 @@ public class Utils {
     return children;
   }
   
+  public static WikiPageParams getWikiPageParams(Page page) {
+    Wiki wiki = ((PageImpl) page).getWiki();
+    String wikiType = getWikiType(wiki);
+    WikiPageParams params = new WikiPageParams(wikiType, wiki.getOwner(), page.getName());
+    return params;
+  }
+  
   public static void sendMailOnChangeContent(ContentImpl content) throws Exception {
     ExoContainer container = ExoContainerContext.getCurrentContainer();
     DiffService diffService = (DiffService) container.getComponentInstanceOfType(DiffService.class);

@@ -17,18 +17,13 @@
 package org.exoplatform.wiki.webui;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
-import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.commons.Utils;
-import org.exoplatform.wiki.service.SearchResult;
+import org.exoplatform.wiki.mow.api.Page;
+import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.core.UIWikiComponent;
@@ -41,11 +36,7 @@ import org.exoplatform.wiki.webui.core.UIWikiComponent;
  */
 @ComponentConfig(
   lifecycle = UIApplicationLifecycle.class,
-  template = "app:/templates/wiki/webui/UIWikiPageNotFound.gtmpl",
-  events = {
-      @EventConfig(listeners = UIWikiPageNotFound.HomeActionListener.class),
-      @EventConfig(listeners = UIWikiPageNotFound.OpenPageActionListener.class)
-    }
+  template = "app:/templates/wiki/webui/UIWikiPageNotFound.gtmpl"
 )
 
 public class UIWikiPageNotFound extends UIWikiComponent {
@@ -55,38 +46,18 @@ public class UIWikiPageNotFound extends UIWikiComponent {
     wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
   }
   
-  private List<SearchResult> getRelativePages() {
-    try{
-      WikiPageParams params = Utils.getCurrentWikiPageParams() ;
-      return wservice.searchRenamedPage(params.getType(), params.getOwner(), params.getPageId()) ;
-    }catch(Exception e) {
-      e.printStackTrace() ;
-    }    
-    return null ;
+  private Page getRelatedPage() {
+    try {
+      WikiPageParams params = Utils.getCurrentWikiPageParams();
+      return wservice.getRelatedPage(params.getType(), params.getOwner(), params.getPageId());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
   }
   
-  private String getHomeURL() {
-    return Util.getPortalRequestContext().getPortalURI() + "wiki";
-  }
-  
-  static public class HomeActionListener extends EventListener<UIWikiPageNotFound> {
-    public void execute(Event<UIWikiPageNotFound> event) throws Exception {
-      UIWikiPageNotFound component = event.getSource() ;
-      component.getAncestorOfType(UIWikiPortlet.class).changeMode(WikiMode.VIEW) ; 
-      PortalRequestContext prContext = Util.getPortalRequestContext();
-      prContext.setResponseComplete(true);
-      prContext.getResponse().sendRedirect(component.getHomeURL()) ;
-    }
-  }  
-  
-  static public class OpenPageActionListener extends EventListener<UIWikiPageNotFound> {
-    public void execute(Event<UIWikiPageNotFound> event) throws Exception {
-      UIWikiPageNotFound component = event.getSource() ;
-      String pageId = event.getRequestContext().getRequestParameter(OBJECTID);
-      component.getAncestorOfType(UIWikiPortlet.class).changeMode(WikiMode.VIEW) ; 
-      PortalRequestContext prContext = Util.getPortalRequestContext();
-      prContext.setResponseComplete(true);
-      prContext.getResponse().sendRedirect(component.getHomeURL()+ "/" + pageId) ;
-    }
+  private String getHomeURL(WikiPageParams param) throws Exception {
+    param.setPageId(WikiNodeType.Definition.WIKI_HOME_NAME);
+    return Utils.getURLFromParams(param);
   }
 }

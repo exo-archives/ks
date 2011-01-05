@@ -1,30 +1,37 @@
 <%
-import org.exoplatform.wiki.service.SearchResult ;
+import org.exoplatform.wiki.mow.api.Page;
+import org.exoplatform.wiki.mow.api.Wiki;
+import org.exoplatform.wiki.utils.Utils;
+import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.mow.api.WikiNodeType;
+import org.exoplatform.wiki.commons.DateTimeFomatter;
 %>
 <div class="UIWikiPageNotFound">
 
 <%
-	String home = uicomponent.url("Home") ;
-				
-		List relativeList = uicomponent.getRelativePages() ;
-		if(relativeList != null && relativeList.size() > 0) {
+	  WikiPageParams currentParam =  org.exoplatform.wiki.commons.Utils.getCurrentWikiPageParams();	  
+	  String currentHomeUrl = uicomponent.getHomeURL(currentParam);	  
+		Page relatedPage = uicomponent.getRelatedPage() ;	
+		
+		if(relatedPage != null) {
+			WikiPageParams param = Utils.getWikiPageParams(relatedPage);
+			Wiki relatedWiki = relatedPage.getWiki();
+			String relatedLocation = Utils.getWikiType(relatedWiki) +" : " +relatedWiki.getOwner();
+			String content = relatedPage.getContent().getText();
+			String summaryContent =  (content.length() >100) ? content.substring(0,100) + " ..." : content ;
+			String url = org.exoplatform.wiki.commons.Utils.getURLFromParams(param);
+			String updateDate =  DateTimeFomatter.getLongFormatted(relatedPage.getUpdatedDate());
+			String homeUrl = uicomponent.getHomeURL(param);
 		%>
 			<h2>Page Not Found</h2>
 			<p>The page you were trying to reach could not be found: it may have been renamed or moved to another space, or the name you requested may be incomplete.</p>
-			<div class="ResultInfo"><b>In this space :</b> The page you were looking for may have been renamed to the following:</div>
-	
-			<%
-				for(relative in relativeList){
-					String url = uicomponent.url("OpenPage", relative.getNodeName()) ;
-					%>
-						<div class="BlockResultFeed">
-							<a href="$url" class="Page TxtTitFeed"><%=relative.getTitle()%></a>
-							<div class="TxtDetail"><%=relative.getExcerpt()%></div>
-							<div><a href="" class="TxtMark">Industrial trends ,Dec 02 2009</div>
-						</div>						
-					<%
-				}
-			%><p><a href="$home">home page</a></p><%
+			<div class="ResultInfo"><b>Note :</b> The page you were looking for may have been renamed or moved to the following location</div>			
+			<div class="BlockResultFeed">
+			  <a href="$url" class="Page TxtTitFeed"><%=relatedPage.getContent().getTitle()%></a>
+				<div class="TxtDetail"><%=summaryContent%></div>
+				<div><a href="$homeUrl" class="TxtMark"><%=relatedLocation %></a> Last Modified: <%= updateDate %> </div>
+			</div>						
+  	<%
 		} else {
 			%>
 			<h2>Page Not Found</h2>
@@ -32,12 +39,11 @@ import org.exoplatform.wiki.service.SearchResult ;
 			<ul>
 				<li>The page does not exist.</li>
 				<li>The page exists, but you do not have permission to view it.</li>
-			</ul>
-			<p><a href="$home" class="BackHome">Home page</a></p>
+			</ul>		
 			<%	
 		}
 	%>
-	
+		<p>Or you can back to <a href="$currentHomeUrl" class="BackHome">Home page</a></p>
 
 <!-- scene 1 
 	<h2>Page Not Found</h2>
