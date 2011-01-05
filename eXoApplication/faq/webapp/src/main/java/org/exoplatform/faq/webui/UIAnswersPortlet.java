@@ -37,6 +37,7 @@ import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.form.UIFormInputInfo;
 
 
 
@@ -52,7 +53,15 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 )
 public class UIAnswersPortlet extends UIPortletApplication {
   private boolean isFirstTime = true;
+  /**
+   * ui component for displaying message when changing mode.
+   */
+  private UIFormInputInfo changeModeMessage;
+  
   public UIAnswersPortlet() throws Exception {
+    changeModeMessage = new UIFormInputInfo("UIMessageEditMode", "UIMessageEditMode", "");
+    changeModeMessage.setRendered(false);
+    addChild(changeModeMessage);
     addChild(UIAnswersContainer.class, null, null) ;
     UIPopupAction uiPopup =  addChild(UIPopupAction.class, null, null) ;
     uiPopup.setId("UIAnswersPopupAction") ;
@@ -81,6 +90,7 @@ public class UIAnswersPortlet extends UIPortletApplication {
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
     PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
     if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+      changeModeMessage.setRendered(false);
       isFirstTime = true;
       if(getChild(UIAnswersContainer.class) == null){
         if(getChild(UISettingForm.class) != null) {
@@ -91,17 +101,20 @@ public class UIAnswersPortlet extends UIPortletApplication {
       renderPortletById();
     }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
       try{
+        changeModeMessage.setValue(context.getApplicationResourceBundle().getString("UIAnswersPortlet.label.deny-access-edit-mode"));
         if(isFirstTime){
           isFirstTime = false;
           UIQuestions questions = getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
           FAQSetting faqSetting = questions.getFAQSetting();
+          removeChild(UIAnswersContainer.class);
           if(getChild(UISettingForm.class) == null) {
             if(faqSetting.isAdmin()){
-              removeChild(UIAnswersContainer.class);
               UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
               settingForm.setRendered(true);
               settingForm.setIsEditPortlet(true);
               settingForm.init();
+            } else {
+              changeModeMessage.setRendered(true);
             }
           }
         }
