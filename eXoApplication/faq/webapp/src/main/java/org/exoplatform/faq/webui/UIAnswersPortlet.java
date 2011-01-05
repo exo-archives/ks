@@ -106,8 +106,8 @@ public class UIAnswersPortlet extends UIPortletApplication {
 					isFirstTime = false;
 					UIQuestions questions = getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
 					FAQSetting faqSetting = questions.getFAQSetting();
+					removeChild(UIAnswersContainer.class);
 					if (getChild(UISettingForm.class) == null) {
-					  removeChild(UIAnswersContainer.class);
 						if (faqSetting.isAdmin()) {
 							UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
 							settingForm.setRendered(true);
