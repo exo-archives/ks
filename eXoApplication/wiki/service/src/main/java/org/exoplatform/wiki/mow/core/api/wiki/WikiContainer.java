@@ -50,20 +50,28 @@ public abstract class WikiContainer<T extends Wiki> {
   }
 
   public T getWiki(String wikiOwner) {
-    wikiOwner = validateWikiOwner(wikiOwner);
-    if(wikiOwner == null){
-      return null;
-    }
-    for(T wiki : getWikis()){
-      if(wiki.getOwner().equals(wikiOwner)){
-        return wiki;
-      }
-    }
-    return addWiki(wikiOwner);
+    T wiki = contains(wikiOwner);
+    if (wiki != null)
+      return wiki;
+    else
+      return addWiki(wikiOwner);
   }
 
   public Collection<T> getAllWikis() {
     return getWikis();
   }
+  
+  public T contains(String wikiOwner) {
+    wikiOwner = validateWikiOwner(wikiOwner);
+    if (wikiOwner == null) {
+      return null;
+    }
+    for (T wiki : getWikis()) {
+      if (wiki.getOwner().equals(wikiOwner)) {
+        return wiki;
+      }
+    }
+    return null;
+  } 
 
 }

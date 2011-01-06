@@ -32,6 +32,7 @@ import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
+import org.exoplatform.wiki.mow.core.api.ModelImpl;
 import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
 import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
@@ -39,6 +40,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.GroupWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PortalWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.UserWiki;
+import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -197,7 +199,7 @@ public class Utils {
 
   public static Object getObject(String path, String type) throws Exception {
     WikiService wservice = (WikiService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);
-    return wservice.findByPath(path, type) ;    
+    return wservice.findByPath(path, type) ;
   }
   
   public static Object getObjectFromParams(WikiPageParams param) throws Exception {
@@ -345,6 +347,17 @@ public class Utils {
       e.printStackTrace();
 
     }
+  }
+  
+
+  
+  public static boolean isWikiAvailable(String wikiType, String wikiOwner) {
+    MOWService mowService = (MOWService) ExoContainerContext.getCurrentContainer()
+                                                            .getComponentInstanceOfType(MOWService.class);
+    ModelImpl model = mowService.getModel();
+    WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+    WikiContainer<Wiki> container = wStore.getWikiContainer(WikiType.valueOf(wikiType.toUpperCase()));
+    return (container.contains(wikiOwner) != null);
   }
 
   private static String insertStyle(String rawHTML) {

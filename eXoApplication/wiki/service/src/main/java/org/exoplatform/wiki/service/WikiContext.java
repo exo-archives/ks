@@ -31,6 +31,10 @@ public class WikiContext extends WikiPageParams {
   public static final String ADDPAGE     = "AddPage";
 
   public static final String PAGETITLE   = "pageTitle";
+
+  public static final String WIKITYPE    = "wikiType";
+
+  public static final String WIKI        = "wiki";
   
   private String             pageTitle;
   

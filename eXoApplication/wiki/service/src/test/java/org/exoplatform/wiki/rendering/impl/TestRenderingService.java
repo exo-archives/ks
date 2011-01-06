@@ -84,7 +84,7 @@ public class TestRenderingService extends AbstractRenderingTestCase {
     
     ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
     
-    String expectedHtml = "<p><span class=\"wikicreatelink\"><a href=\"http://loclahost:8080/portal/classic/wiki/WikiHome?action=AddPage&amp;pageTitle=NonExistedWikiPage-001\">NonExistedWikiPage-001</a></span></p>";
+    String expectedHtml = "<p><span class=\"wikicreatelink\"><a href=\"http://loclahost:8080/portal/classic/wiki/WikiHome?action=AddPage&amp;pageTitle=NonExistedWikiPage-001&amp;wiki=classic&amp;wikiType=portal\">NonExistedWikiPage-001</a></span></p>";
     assertEquals(expectedHtml, renderingService.render("[[NonExistedWikiPage-001>>NonExistedWikiPage-001]]", Syntax.XWIKI_2_0.toIdString(), Syntax.XHTML_1_0.toIdString(), false));
     assertEquals(expectedHtml, renderingService.render("[[NonExistedWikiPage-001>>classic.NonExistedWikiPage-001]]", Syntax.XWIKI_2_0.toIdString(), Syntax.XHTML_1_0.toIdString(), false));
     assertEquals(expectedHtml, renderingService.render("[[NonExistedWikiPage-001>>portal:classic.NonExistedWikiPage-001]]", Syntax.XWIKI_2_0.toIdString(), Syntax.XHTML_1_0.toIdString(), false));

@@ -21,8 +21,13 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
+import org.exoplatform.wiki.mow.api.WikiType;
+import org.exoplatform.wiki.mow.core.api.MOWService;
+import org.exoplatform.wiki.mow.core.api.ModelImpl;
+import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiService;
@@ -96,18 +101,30 @@ public class DefaultWikiModel implements WikiModel {
     if (ec != null) {
       wikiContext = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
     }
+    WikiContext wikiMarkupContext = getWikiMarkupContext(documentName);
     if (wikiContext != null) {
       String viewURL = getDocumentViewURL(wikiContext);
       StringBuilder sb = new StringBuilder(viewURL);
-      sb.append("?");
-      sb.append(WikiContext.ACTION);
-      sb.append("=");
-      sb.append(WikiContext.ADDPAGE);
-      sb.append("&");
-      sb.append(WikiContext.PAGETITLE);
-      sb.append("=");
-      WikiContext wikiMarkupContext = getWikiMarkupContext(documentName);
-      sb.append(wikiMarkupContext.getPageTitle());
+      String pageTitle = wikiMarkupContext.getPageTitle();
+      String wikiType = wikiMarkupContext.getType();
+      String wiki = wikiMarkupContext.getOwner();     
+      sb.append("?")
+        .append(WikiContext.ACTION)
+        .append("=")
+        .append(WikiContext.ADDPAGE)
+        .append("&")
+        .append(WikiContext.PAGETITLE)
+        .append("=")
+        .append(pageTitle)
+        .append("&")
+        .append(WikiContext.WIKI)
+        .append("=")
+        .append(wiki)
+        .append("&")
+        .append(WikiContext.WIKITYPE)
+        .append("=")
+        .append(wikiType);
+      
       return sb.toString();
     }
     return "";
@@ -123,16 +140,19 @@ public class DefaultWikiModel implements WikiModel {
     // (Page.findPageByTitle())
     Page page = null;
     try {
-    WikiContext wikiMarkupContext = getWikiMarkupContext(documentName);
-    WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);
-    page = wikiService.getPageById(wikiMarkupContext.getType(),wikiMarkupContext.getOwner(),wikiMarkupContext.getPageId());
+      WikiContext wikiMarkupContext = getWikiMarkupContext(documentName);
+      WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);
+      if (!Utils.isWikiAvailable(wikiMarkupContext.getType(), wikiMarkupContext.getOwner())) {
+        return false;
+      }
+      page = wikiService.getPageById(wikiMarkupContext.getType(),wikiMarkupContext.getOwner(),wikiMarkupContext.getPageId());
       if (page == null) {
         page = wikiService.getRelatedPage(wikiMarkupContext.getType(), wikiMarkupContext.getOwner(), wikiMarkupContext.getPageId());
       }
     } catch (Exception e) {
-      if(LOG.isWarnEnabled()){
-        LOG.warn("An exception happened when checking available status of document: "+ documentName, e);
-      }
+        if(LOG.isWarnEnabled()){
+          LOG.warn("An exception happened when checking available status of document: "+ documentName, e);
+        }
     }
     return (page != null);
   }
@@ -205,4 +225,5 @@ public class DefaultWikiModel implements WikiModel {
     }
     return wikiMarkupContext;
   }
+  
 }
