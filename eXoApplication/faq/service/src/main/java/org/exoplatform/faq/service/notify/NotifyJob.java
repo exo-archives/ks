@@ -24,11 +24,13 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.Utils;
+import org.exoplatform.ks.common.notify.SendEmailPeriodJob;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.quartz.Job;
+import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
@@ -43,12 +45,15 @@ public class NotifyJob implements Job{
       MailService mailService = (MailService)exoContainer.getComponentInstanceOfType(MailService.class) ;
       FAQService faqService =(FAQService)exoContainer.getComponentInstanceOfType(FAQService.class) ;        
       Iterator<NotifyInfo> iter = faqService.getPendingMessages() ;
+      JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
+      String emailDefault = jdatamap.getString(SendEmailPeriodJob.EMAIL_DEFAULT);
       int countEmail = 0;
       while(iter.hasNext()) {
         try {
           NotifyInfo messageInfo = iter.next() ;
           List<String> emailAddresses = messageInfo.getEmailAddresses() ;
           Message message = messageInfo.getMessage() ;
+          message.setFrom(Utils.makeNotificationSender(message.getFrom(), emailDefault));
           if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
             List<String> sentMessages = new ArrayList<String>() ;
             for(String address : emailAddresses) {
