@@ -577,7 +577,7 @@ public class JCRDataStorage implements DataStorage {
 			if (emailsList != null && emailsList.size() > 0) {
 				Message message = new Message();
 				message.setMimeType(MIMETYPE_TEXTHTML);
-				message.setFrom(question.getAuthor() + "<email@gmail.com>");
+				message.setFrom(question.getAuthor());
 				message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
 				String body = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getDetail()).replaceAll("&questionLink_", question.getLink());
 				if (question.getAnswers() != null && question.getAnswers().length > 0) {
@@ -629,7 +629,7 @@ public class JCRDataStorage implements DataStorage {
 			}
 			if (emailsList != null && emailsList.size() > 0) {
 				Message message = new Message();
-				message.setFrom(question.getAuthor() + "<email@gmail.com>");
+				message.setFrom(question.getAuthor());
 				message.setMimeType(MIMETYPE_TEXTHTML);
 				message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
 				if (isNew) {
@@ -1894,7 +1894,7 @@ public class JCRDataStorage implements DataStorage {
 		}
 		Message message = new Message();
 		message.setMimeType(MIMETYPE_TEXTHTML);
-		message.setFrom(questionNode.getProperty("exo:author").getString() + "<email@gmail.com>");
+		message.setFrom(questionNode.getProperty("exo:author").getString());
 		message.setSubject(faqSetting.getEmailSettingSubject() + ": " + questionNode.getProperty("exo:title").getString());
 		if (categoryName == null || categoryName.trim().length() < 1)
 			categoryName = "Root";

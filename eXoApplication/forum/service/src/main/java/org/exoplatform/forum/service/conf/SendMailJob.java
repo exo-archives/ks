@@ -19,14 +19,11 @@ package org.exoplatform.forum.service.conf;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
-
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.ks.common.Utils;
+import org.exoplatform.ks.common.notify.SendEmailPeriodJob;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
@@ -37,87 +34,46 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 public class SendMailJob implements Job {
-	private static Log log_ = ExoLogger.getLogger("job.forum.SendMailJob");
-  public SendMailJob() throws Exception {}
-		
-	
-  public void execute(JobExecutionContext context) throws JobExecutionException {
-    try {
-    	ExoContainer exoContainer = Utils.getExoContainer(context);
-      MailService mailService = (MailService)exoContainer.getComponentInstanceOfType(MailService.class) ;
-      ForumService forumService =(ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
-      int countEmail = 0;
-      JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
-	    String emailDefault = jdatamap.getString(SendEmailPeriodJob.EMAIL_DEFAULT);
-      Iterator<SendMessageInfo> iter = forumService.getPendingMessages() ;
-      while (iter.hasNext()) {
-        try{
-          SendMessageInfo messageInfo = iter.next() ;
-          List<String> emailAddresses = messageInfo.getEmailAddresses() ;
-          Message message = messageInfo.getMessage() ;
-          message.setFrom(makeNotificationSender(message.getFrom(), emailDefault));
-          
-          if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
-            List<String> sentMessages = new ArrayList<String>() ;             
-            for(String address : emailAddresses) {
-              if(!sentMessages.contains(address)) {
-                message.setTo(address) ;
-                mailService.sendMessage(message) ;
-                sentMessages.add(address) ;
-                countEmail ++;
-              }
-            }	              
-          }
-        } catch(Exception e) {
-          log_.error("Could not send email notification", e);  	
-        }	          	          
-      }
-      if (log_.isInfoEnabled() && countEmail > 0) {
-        log_.info("\n\nEmail notifications has been sent to " + countEmail + " addresses");
-      }
-    }catch(Exception e) {
-      log_.warn("\n\n Unable send email notification ") ;
-    }
-  }
-  
-  
-  /**
-   * This function will change email address in 'from' field by address of mail service which is configured as system property : <code>gatein.email.smtp.from</code> or <code>mail.from</code>. <br>
-   * That ensures that 'emailAddress' part of 'from' field in a message object is always the same identity with authentication of smtp configuration.<br>
-   * It's because of 2 reasons:
-   *    <li> we don't want notification message to show email address of user as sender. Instead, we use mail service of kernel. </li>
-   *    <li> Almost authenticated smtp systems do not allow to separate email address in <code>from</code> field of message from smtp authentication</b> 
-   *    (for now, GMX, MS exchange deny, Gmail efforts to modify the such value)
-   *    </li>
-   * @param from
-   * @param emailDefault
-   * @return null if can not find suitable sender.
-   */
-  public String makeNotificationSender(String from, String emailDefault) {
-    if (from == null) return null;
-    InternetAddress addr = null;
-    try {
-      addr = new InternetAddress(from + "<" + emailDefault + ">");
-    } catch (AddressException e) {
-      if (log_.isDebugEnabled()) { log_.debug("value of 'from' field in message made by forum notification feature is not in format of mail address", e); }
-      return null;
-    }
-    Properties props = new Properties(System.getProperties());
-    String mailAddr = props.getProperty("gatein.email.smtp.from");
-    if (mailAddr == null || mailAddr.length() == 0) mailAddr = props.getProperty("mail.from");
-    if (mailAddr != null) {
-      try {
-        InternetAddress serMailAddr = new InternetAddress(mailAddr);
-        addr.setAddress(serMailAddr.getAddress());
-        return addr.toUnicodeString();
-      } catch (AddressException e) {
-        if (log_.isDebugEnabled()) { log_.debug("value of 'gatein.email.smtp.from' or 'mail.from' in configuration file is not in format of mail address", e); }
-        return null;
-      }
-    } else {
-      return null;
-    }
-    
-    
-  }
+	private static Log	log_	= ExoLogger.getLogger("job.forum.SendMailJob");
+
+	public SendMailJob() throws Exception {
+	}
+
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		try {
+			ExoContainer exoContainer = Utils.getExoContainer(context);
+			MailService mailService = (MailService) exoContainer.getComponentInstanceOfType(MailService.class);
+			ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
+			JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
+			String emailDefault = jdatamap.getString(SendEmailPeriodJob.EMAIL_DEFAULT);
+			Iterator<SendMessageInfo> iter = forumService.getPendingMessages();
+			int countEmail = 0;
+			while (iter.hasNext()) {
+				try {
+					SendMessageInfo messageInfo = iter.next();
+					List<String> emailAddresses = messageInfo.getEmailAddresses();
+					Message message = messageInfo.getMessage();
+					message.setFrom(Utils.makeNotificationSender(message.getFrom(), emailDefault));
+					if (message != null && emailAddresses != null && emailAddresses.size() > 0) {
+						List<String> sentMessages = new ArrayList<String>();
+						for (String address : emailAddresses) {
+							if (!sentMessages.contains(address)) {
+								message.setTo(address);
+								mailService.sendMessage(message);
+								sentMessages.add(address);
+								countEmail++;
+							}
+						}
+					}
+				} catch (Exception e) {
+					log_.error("Could not send email notification", e);
+				}
+			}
+			if (log_.isInfoEnabled() && countEmail > 0) {
+				log_.info("\n\nEmail notifications has been sent to " + countEmail + " addresses");
+			}
+		} catch (Exception e) {
+			log_.warn("\n\n Unable send email notification ");
+		}
+	}
 }

@@ -24,49 +24,56 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.Utils;
+import org.exoplatform.ks.common.notify.SendEmailPeriodJob;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.quartz.Job;
+import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class NotifyJob implements Job{
-  private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
-  
-  public NotifyJob() throws Exception {}
+public class NotifyJob implements Job {
+	private static Log	log_	= ExoLogger.getLogger("job.RecordsJob");
 
-  public void execute(JobExecutionContext context) throws JobExecutionException {
-    ExoContainer exoContainer = Utils.getExoContainer(context);
-    try{
-      MailService mailService = (MailService)exoContainer.getComponentInstanceOfType(MailService.class) ;
-      FAQService faqService =(FAQService)exoContainer.getComponentInstanceOfType(FAQService.class) ;        
-      Iterator<NotifyInfo> iter = faqService.getPendingMessages() ;
-      int countEmail = 0;
-      while(iter.hasNext()) {
-        try {
-          NotifyInfo messageInfo = iter.next() ;
-          List<String> emailAddresses = messageInfo.getEmailAddresses() ;
-          Message message = messageInfo.getMessage() ;
-          if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
-            List<String> sentMessages = new ArrayList<String>() ;
-            for(String address : emailAddresses) {
-              if(!sentMessages.contains(address)) {
-                message.setTo(address) ;
-                mailService.sendMessage(message) ;
-                sentMessages.add(address) ;
-                countEmail ++;
-              }
-            }              
-          }
-        }catch(Exception e) {}
-      }
-      if (log_.isInfoEnabled() && countEmail > 0) {
-        log_.info("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
-      }
-    }catch(Exception e) {
-      log_.warn("\n\n Unable send email notification ") ;
-    }
-  }
+	public NotifyJob() throws Exception {
+	}
+
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		ExoContainer exoContainer = Utils.getExoContainer(context);
+		try {
+			MailService mailService = (MailService) exoContainer.getComponentInstanceOfType(MailService.class);
+			FAQService faqService = (FAQService) exoContainer.getComponentInstanceOfType(FAQService.class);
+			Iterator<NotifyInfo> iter = faqService.getPendingMessages();
+			JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
+			String emailDefault = jdatamap.getString(SendEmailPeriodJob.EMAIL_DEFAULT);
+			int countEmail = 0;
+			while (iter.hasNext()) {
+				try {
+					NotifyInfo messageInfo = iter.next();
+					List<String> emailAddresses = messageInfo.getEmailAddresses();
+					Message message = messageInfo.getMessage();
+					message.setFrom(Utils.makeNotificationSender(message.getFrom(), emailDefault));
+					if (message != null && emailAddresses != null && emailAddresses.size() > 0) {
+						List<String> sentMessages = new ArrayList<String>();
+						for (String address : emailAddresses) {
+							if (!sentMessages.contains(address)) {
+								message.setTo(address);
+								mailService.sendMessage(message);
+								sentMessages.add(address);
+								countEmail++;
+							}
+						}
+					}
+				} catch (Exception e) {
+				}
+			}
+			if (log_.isInfoEnabled() && countEmail > 0) {
+				log_.info("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
+			}
+		} catch (Exception e) {
+			log_.warn("\n\n Unable send email notification ");
+		}
+	}
 }
