@@ -2602,13 +2602,8 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		} finally {sProvider.close() ;}
 	}
 
-
-	private List<String> getFullNameAndEmail(SessionProvider sProvider, String userId) throws Exception {
-		List<String> list = new ArrayList<String>();
-		Node userProfile = getUserProfileHome(sProvider).getNode(userId);
-		list.add(userProfile.getProperty(EXO_FULL_NAME).getString());
-		list.add(userProfile.getProperty(EXO_EMAIL).getString());
-		return list;
+	private String getEmailUser(SessionProvider sProvider, String userId) throws Exception {
+		return new PropertyReader(getUserProfileHome(sProvider).getNode(userId)).string(EXO_EMAIL, "");
 	}
 	
 	public void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
@@ -2629,7 +2624,6 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					owner = topics.get(0).getEditReason();
 				}
 			}
-			List<String> fullNameEmailOwnerDestForum = getFullNameAndEmail(sProvider, owner);
 			Message message = new Message();
 			message.setMimeType(TEXT_HTML);
 			String headerSubject = "";
@@ -2653,7 +2647,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			} catch (Exception e) {		}
 			mailContent =	StringUtils.replace(mailContent, "$OBJECT_TYPE", Utils.TOPIC);
 			mailContent =	StringUtils.replace(mailContent, "$OBJECT_PARENT_TYPE", Utils.FORUM);
-			message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
+			message.setFrom(getScreenName(sProvider, owner));
 			// ----------------------- finish ----------------------
 			String destForumId = destForumNode.getName(), srcForumId = "";
 			for (Topic topic : topics) {
@@ -2695,7 +2689,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				message.setBody(mailContent.replace("$OBJECT_NAME", topic.getTopicName()).replace("$OBJECT_PARENT_NAME", forumName).replace("$VIEWPOST_LINK", link.replaceFirst("pathId", topic.getId())));
 				Set<String> set = new HashSet<String>();
 				// set email author this topic
-				set.add(getFullNameAndEmail(sProvider, topic.getOwner()).get(1));
+				set.add(getEmailUser(sProvider, topic.getOwner()));
 				// set email watch this topic, forum, category parent of this topic
 				set.addAll(calculateMoveEmail(topicNode));
 				// set email watch old category, forum parent of this topic
@@ -3307,12 +3301,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 						message.setMimeType(TEXT_HTML);
 						String owner = topic.getOwner();
 						try {
-							Node userNode = userProfileHome.getNode(owner);
-							String email = userNode.getProperty(EXO_EMAIL).getString();
-							String fullName = userNode.getProperty(EXO_FULL_NAME).getString();
-							if(email != null && email.length() > 0) {
-								message.setFrom(fullName + "<" + email + ">");
-							}
+								message.setFrom(getScreenName(sProvider, owner));
 						} catch (Exception e) {
 						}
 						String content_ = node.getProperty(EXO_NAME).getString();
@@ -3468,22 +3457,12 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 						}
 					}
 					
-					String email = "";
-					String fullName = "";
-					String owner =post.getOwner();
-					try {
-						Node userNode = userProfileHome.getNode(owner);
-						email = userNode.getProperty(EXO_EMAIL).getString();
-						fullName = userNode.getProperty(EXO_FULL_NAME).getString();
-					} catch (Exception e) {
-					}
+					String fullName = getScreenName(sProvider, post.getOwner());
 //					send email by category
 					String content_ = "";
 					if (emailListCategory.size() > 0) {
 						Message message = new Message();
-						if(email != null && email.length() > 0) {
-							message.setFrom(fullName + " <" + email + ">");
-						}
+						message.setFrom(fullName);
 						message.setMimeType(TEXT_HTML);
 						String categoryName = categoryNode.getProperty(EXO_NAME).getString();
 						content_ = node.getProperty(EXO_NAME).getString();
@@ -3522,9 +3501,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 //				send email by forum
 					if (emailListForum.size() > 0) {
 						Message message = new Message();
-						if(email != null && email.length() > 0) {
-							message.setFrom(fullName + " <" + email + ">");
-						}
+						message.setFrom(fullName);
 						message.setMimeType(TEXT_HTML);
 						if(headerSubject != null && headerSubject.length() > 0) {
 							headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
@@ -3564,9 +3541,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 //				send email by topic					
 					if (emailList.size() > 0) {
 						Message message = new Message();
-						if(email != null && email.length() > 0) {
-							message.setFrom(fullName + " <" + email + ">");
-						}
+						message.setFrom(fullName);
 						message.setMimeType(TEXT_HTML);
 						if(headerSubject != null && headerSubject.length() > 0) {
 							headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
@@ -3585,7 +3560,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
 						formatter = new SimpleDateFormat("MM/dd/yyyy");
 						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-						content_ = StringUtils.replace(content_, "$POSTER", owner);
+						content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
 						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
 						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private")+"/"+post.getId()+ "/true\">click here</a><br/>");
 						
@@ -3865,7 +3840,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			
 			
 			String topicName = destTopicNode.getProperty(EXO_NAME).getString();
-			List<String> fullNameEmailOwnerDestTopic = getFullNameAndEmail(sProvider, destTopicNode.getProperty(EXO_OWNER).getString());
+			String ownerTopic = destTopicNode.getProperty(EXO_OWNER).getString() ;
 	
 			String headerSubject = "";
 			String objectName = "[" + destForumNode.getParent().getProperty(EXO_NAME).getString() + 
@@ -3894,13 +3869,13 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				postNode = (Node) forumHomeNode.getSession().getItem(postPaths[i]);
 				Message message = new Message();
 				message.setMimeType(TEXT_HTML);
-				message.setFrom(fullNameEmailOwnerDestTopic.get(0) + "<" + fullNameEmailOwnerDestTopic.get(1) + ">");
+				message.setFrom(getScreenName(sProvider, ownerTopic));
 				message.setSubject(headerSubject + objectName);
 				message.setBody(mailContent.replace("$OBJECT_NAME", postNode.getProperty(EXO_NAME).getString())
 								.replace("$OBJECT_PARENT_NAME", topicName).replace("$VIEWPOST_LINK", link));
 				Set<String> set = new HashSet<String>();
 				// set email author this topic
-				set.add(getFullNameAndEmail(sProvider, postNode.getProperty(EXO_OWNER).getString()).get(1));
+				set.add(getEmailUser(sProvider, postNode.getProperty(EXO_OWNER).getString()));
 				// set email watch this topic, forum, category parent of this post
 				set.addAll(calculateMoveEmail(destTopicNode));
 				// set email watch old category, forum, topic parent of this post
@@ -4587,19 +4562,26 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 	
 	public String getScreenName(String userName) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
+		try {
+			return getScreenName(sProvider, userName);
+		} catch (Exception e) {
+			return userName;
+		} finally {
+			sProvider.close();
+		}
+	}
+
+	private String getScreenName(SessionProvider sProvider, String userName) throws Exception {
 		String userTemp = userName;
 		try {
 			Node userProfile = getUserProfileNode(getUserProfileHome(sProvider), userName);
 			PropertyReader reader = new PropertyReader(userProfile);
-			userName = reader.string(EXO_SCREEN_NAME, userName);
+			userName = reader.string(EXO_SCREEN_NAME, reader.string(EXO_FULL_NAME, userName));
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			sProvider.close();
+			log.debug("Failed to get scrennName for user " + userName, e);
 		}
 		return (userTemp.contains(Utils.DELETED)) ? "<s>"
-				+ ((userName.contains(Utils.DELETED)) ? 
-						userName.substring(0, userName.indexOf(Utils.DELETED)) : userName) + "</s>" : userName;
+				+ ((userName.contains(Utils.DELETED)) ? userName.substring(0, userName.indexOf(Utils.DELETED)) : userName) + "</s>" : userName;
 	}
 	
 	private boolean isBanIp(String ip) throws Exception {
