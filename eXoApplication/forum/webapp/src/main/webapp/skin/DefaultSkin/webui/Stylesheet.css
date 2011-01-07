@@ -47,7 +47,7 @@
 }
 
 .UIForumPortlet .UIForumActionBar .SearchPopup .UIRightClickPopupMenu .UIRightPopupMenuContainer {
-  min-width: 140px !important;
+	min-width: 140px !important;
 	width: 160px !important;
 }
 
