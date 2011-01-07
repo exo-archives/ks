@@ -32,6 +32,7 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.quartz.Job;
+import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
@@ -46,13 +47,15 @@ public class SendMailJob implements Job {
       MailService mailService = (MailService)exoContainer.getComponentInstanceOfType(MailService.class) ;
       ForumService forumService =(ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
       int countEmail = 0;
+      JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
+	    String emailDefault = jdatamap.getString(SendEmailPeriodJob.EMAIL_DEFAULT);
       Iterator<SendMessageInfo> iter = forumService.getPendingMessages() ;
       while (iter.hasNext()) {
         try{
           SendMessageInfo messageInfo = iter.next() ;
           List<String> emailAddresses = messageInfo.getEmailAddresses() ;
           Message message = messageInfo.getMessage() ;
-          message.setFrom(makeNotificationSender(message.getFrom()));
+          message.setFrom(makeNotificationSender(message.getFrom(), emailDefault));
           
           if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
             List<String> sentMessages = new ArrayList<String>() ;             
@@ -87,13 +90,14 @@ public class SendMailJob implements Job {
    *    (for now, GMX, MS exchange deny, Gmail efforts to modify the such value)
    *    </li>
    * @param from
+   * @param emailDefault
    * @return null if can not find suitable sender.
    */
-  public String makeNotificationSender(String from) {
-    InternetAddress addr = null;
+  public String makeNotificationSender(String from, String emailDefault) {
     if (from == null) return null;
+    InternetAddress addr = null;
     try {
-      addr = new InternetAddress(from);
+      addr = new InternetAddress(from + "<" + emailDefault + ">");
     } catch (AddressException e) {
       if (log_.isDebugEnabled()) { log_.debug("value of 'from' field in message made by forum notification feature is not in format of mail address", e); }
       return null;
