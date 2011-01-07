@@ -61,11 +61,7 @@ public class URLResolver extends Resolver{
           && !portalPageNode.getPageReference().startsWith(PortalConfig.PORTAL_TYPE)) {
         String[] components = Utils.split("::", portalPageNode.getPageReference());
         params.setType(components[0]);
-        if (PortalConfig.GROUP_TYPE.equals(components[0])) {
-          params.setOwner(components[1].substring(components[1].lastIndexOf("/")));
-        } else {
-          params.setOwner(components[1]);
-        }
+        params.setOwner(components[1]);
       } else {
         params.setType(PortalConfig.PORTAL_TYPE);
         params.setOwner(extractPortalOwner(requestURL, wikiPageName));
