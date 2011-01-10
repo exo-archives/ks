@@ -178,31 +178,30 @@ public class TreeNode {
   
   private void pushChildren(HashMap<String, Object> context) throws Exception {
     // TODO Auto-generated method stub
-    Stack<WikiPageParams> paramsStk = (Stack<WikiPageParams>) context.get(this.STACK_PARAMS);    
-    if (children.size() > 0) {
-      if (paramsStk == null) {
-        pushChild(context);
+    Stack<WikiPageParams> paramsStk = (Stack<WikiPageParams>) context.get(this.STACK_PARAMS);
+
+    if (paramsStk == null) {
+      pushChild(context);
+    } else {
+      if (paramsStk.empty()) {
+        this.isSelected = true;
       } else {
-        if (paramsStk.empty()) {
-          this.isSelected = true;
-        } else {
-          WikiPageParams params = new WikiPageParams();
-          params = paramsStk.pop();
-          context.put(this.STACK_PARAMS, paramsStk);
-          if (this instanceof RootTreeNode) {
-            SpaceTreeNode spaceNode = new SpaceTreeNode(params.getType());
-            pushChild(spaceNode, context);
-          } else if (this instanceof SpaceTreeNode) {
-            Wiki wiki = (Wiki) Utils.getObjectFromParams(params);
-            WikiTreeNode wikiNode = new WikiTreeNode(wiki);
-            pushChild(wikiNode, context);
-          } else if (this instanceof WikiTreeNode) {
-            pushChild(context);
-          } else if (this instanceof WikiHomeTreeNode || this instanceof PageTreeNode) {
-            PageImpl page = (PageImpl) Utils.getObjectFromParams(params);
-            PageTreeNode pageNode = new PageTreeNode(page);
-            pushChild(pageNode, context);
-          }
+        WikiPageParams params = new WikiPageParams();
+        params = paramsStk.pop();
+        context.put(this.STACK_PARAMS, paramsStk);
+        if (this instanceof RootTreeNode) {
+          SpaceTreeNode spaceNode = new SpaceTreeNode(params.getType());
+          pushChild(spaceNode, context);
+        } else if (this instanceof SpaceTreeNode) {
+          Wiki wiki = (Wiki) Utils.getObjectFromParams(params);
+          WikiTreeNode wikiNode = new WikiTreeNode(wiki);
+          pushChild(wikiNode, context);
+        } else if (this instanceof WikiTreeNode) {
+          pushChild(context);
+        } else if (this instanceof WikiHomeTreeNode || this instanceof PageTreeNode) {
+          PageImpl page = (PageImpl) Utils.getObjectFromParams(params);
+          PageTreeNode pageNode = new PageTreeNode(page);
+          pushChild(pageNode, context);
         }
       }
     }
