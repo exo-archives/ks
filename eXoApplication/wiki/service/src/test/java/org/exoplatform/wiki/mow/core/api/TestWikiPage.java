@@ -49,7 +49,7 @@ public class TestWikiPage extends AbstractMOWTestcase {
     wikipage.setName("AddWikiPage");
     
     wikiHomePage.addWikiPage(wikipage);
-    assertSame(wikipage, wikiHomePage.getChildPages().values().iterator().next());
+    assertSame(wikipage, wikiHomePage.getChildPages().get(wikipage.getName()));
   }
   
   public void testGetWikiPageById() throws Exception {

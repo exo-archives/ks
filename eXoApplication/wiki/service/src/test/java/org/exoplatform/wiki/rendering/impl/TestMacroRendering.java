@@ -16,6 +16,17 @@
  */
 package org.exoplatform.wiki.rendering.impl;
 
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.wiki.mow.api.Model;
+import org.exoplatform.wiki.mow.api.WikiType;
+import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.PortalWiki;
+import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
+import org.exoplatform.wiki.service.WikiContext;
+import org.exoplatform.wiki.service.WikiService;
+import org.xwiki.context.Execution;
+import org.xwiki.context.ExecutionContext;
 import org.xwiki.rendering.syntax.Syntax;
 
 
@@ -26,7 +37,6 @@ import org.xwiki.rendering.syntax.Syntax;
  * Jun 15, 2010  
  */
 public class TestMacroRendering extends AbstractRenderingTestCase {
-  
   public void testRenderNoteMacro() throws Exception {
     String expectedHtml = "<div class=\"box notemessage\">This is a note.</div>";
     assertEquals(expectedHtml, renderingService.render("{{note}}This is a note.{{/note}}", Syntax.XWIKI_2_0.toIdString(), Syntax.XHTML_1_0.toIdString(), false));
@@ -85,6 +95,38 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
     String confluenceExpectedHtml = "<ol><li><span class=\"wikilink\"><a href=\"#HH1\">H1&nbsp;</a></span><ol><li><span class=\"wikilink\"><a href=\"#HH2\">H2&nbsp;</a></span><ol><li><span class=\"wikilink\"><a href=\"#HH3\">H3&nbsp;</a></span></li></ol></li></ol></li></ol><h1 id=\"HH1\"><span>H1&nbsp;</span></h1><h2 id=\"HH2\"><span>H2&nbsp;</span></h2><h3 id=\"HH3\"><span>H3&nbsp;</span></h3>";
     assertEquals(xwikiExpectedHtml, renderingService.render("{{toc numbered=\"true\"}} {{/toc}}\n= H1 = \n == H2 == \n === H3 ===", Syntax.XWIKI_2_0.toIdString(), Syntax.XHTML_1_0.toIdString(), false));
     assertEquals(confluenceExpectedHtml, renderingService.render("{toc:numbered=\"true\"}\nh1. H1 \nh2. H2 \nh3. H3 ", Syntax.CONFLUENCE_1_0.toIdString(), Syntax.XHTML_1_0.toIdString(), false));
+  }
+
+  public void testChildrenMacro() throws Exception {
+    WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
+                                                               .getComponentInstanceOfType(WikiService.class);
+    Model model = mowService.getModel();
+    WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+    WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
+    PortalWiki wiki = portalWikiContainer.addWiki("classic");
+    wiki.getWikiHome();
+    model.save();
+    wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "samplePage", "WikiHome");
+    wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "childPage1", "samplePage");
+    wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "childPage2", "samplePage");
+    wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "testPage", "childPage1");
+
+    Execution ec = renderingService.getExecutionContext();
+    ec.setContext(new ExecutionContext());
+    WikiContext wikiContext = new WikiContext();
+    wikiContext.setPortalURI("http://localhost:8080/portal/classic/");
+    wikiContext.setPortletURI("wiki");
+    wikiContext.setType("portal");
+    wikiContext.setOwner("classic");
+    wikiContext.setPageId("samplePage");
+    ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
+
+    String xwikiExpectedHtml = "<div><ul><li><span class=\"wikilink\"><a href=\"http://localhost:8080/portal/classic/wiki/childPage1\">childPage1</a></span><ul><li><span class=\"wikilink\"><a href=\"http://localhost:8080/portal/classic/wiki/testPage\">testPage</a></span><ul></ul></li></ul></li><li><span class=\"wikilink\"><a href=\"http://localhost:8080/portal/classic/wiki/childPage2\">childPage2</a></span><ul></ul></li></ul></div>";
+
+    assertEquals(xwikiExpectedHtml, renderingService.render("{{children descendant=\"true\"/}}",
+                                                            Syntax.XWIKI_2_0.toIdString(),
+                                                            Syntax.XHTML_1_0.toIdString(),
+                                                            false));
   }
   
 }

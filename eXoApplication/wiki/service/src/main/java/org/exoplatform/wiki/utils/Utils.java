@@ -2,7 +2,6 @@ package org.exoplatform.wiki.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -48,10 +47,6 @@ import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.diff.DiffResult;
 import org.exoplatform.wiki.service.diff.DiffService;
-import org.exoplatform.wiki.tree.JsonNodeData;
-import org.exoplatform.wiki.tree.PageTreeNode;
-import org.exoplatform.wiki.tree.TreeNode;
-import org.exoplatform.wiki.tree.TreeNodeType;
 
 public class Utils {
   
@@ -222,7 +217,8 @@ public class Utils {
   public static Object getObjectFromParams(WikiPageParams param) throws Exception {
     WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
                                                                .getComponentInstanceOfType(WikiService.class);
-    MOWService mowService = (MOWService) PortalContainer.getComponent(MOWService.class);
+    MOWService mowService = (MOWService) ExoContainerContext.getCurrentContainer()
+                                                            .getComponentInstanceOfType(MOWService.class);
     WikiStoreImpl store = (WikiStoreImpl) mowService.getModel().getWikiStore();
     String wikiType = param.getType();
     String wikiOwner = param.getOwner();
@@ -265,46 +261,6 @@ public class Utils {
     return stack;
   }
   
-  public static List<JsonNodeData> getJSONData(TreeNode treeNode, HashMap<String, Object> context) throws Exception {
-    WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
-                                                               .getComponentInstanceOfType(WikiService.class);
-    List<JsonNodeData> children = new ArrayList<JsonNodeData>();
-    int counter = 1;
-    boolean isSelectable = true;
-    boolean isLastNode = false;
-    PageImpl page = null;
-    PageImpl currentPage = null;
-    WikiPageParams currentPageParams = null;
-    String currentPath = "";
-    if (context != null) {
-      currentPath = (String) context.get(TreeNode.CURRENT_PATH);
-    }
-    currentPageParams = Utils.getPageParamsFromPath(currentPath);
-    
-    for (TreeNode child : treeNode.getChildren()) {
-      isSelectable = true;
-      isLastNode = false;
-      if (counter >= treeNode.getChildren().size()) {
-        isLastNode = true;
-      }
-      // if (child.getNodeType().equals(TreeNodeType.WIKIHOME)) { isSelectable =
-      // true;}
-      if (child.getNodeType().equals(TreeNodeType.WIKI)) {
-        isSelectable = false;
-      } else if (currentPath != "" && child.getNodeType().equals(TreeNodeType.PAGE)) {
-        page = ((PageTreeNode) child).getPage();
-        currentPage = (PageImpl) wikiService.getPageById(currentPageParams.getType(),
-                                                                  currentPageParams.getOwner(),
-                                                                  currentPageParams.getPageId());
-        if (currentPage != null
-            && (currentPage.equals(page) || Utils.isDescendantPage(page, currentPage)))
-          isSelectable = false;
-      }
-      children.add(new JsonNodeData(child, isLastNode, isSelectable, currentPath, context));
-      counter++;
-    }
-    return children;
-  }
   
   public static WikiPageParams getWikiPageParams(Page page) {
     Wiki wiki = ((PageImpl) page).getWiki();

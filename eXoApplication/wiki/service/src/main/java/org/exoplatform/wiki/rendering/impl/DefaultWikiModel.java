@@ -178,7 +178,7 @@ public class DefaultWikiModel implements WikiModel {
     return Utils.getDocumentURL(context);
   }
   
-  private WikiContext getWikiMarkupContext(String documentName) {
+  public WikiContext getWikiMarkupContext(String documentName) {
     WikiContext wikiMarkupContext = new WikiContext();
     try {
       DocumentReferenceResolver<String> stringDocumentReferenceResolver = componentManager.lookup(DocumentReferenceResolver.class);

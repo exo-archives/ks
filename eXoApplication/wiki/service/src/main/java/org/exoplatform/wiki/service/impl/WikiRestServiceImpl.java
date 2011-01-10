@@ -61,7 +61,6 @@ import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
-import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
 import org.exoplatform.wiki.service.Relations;
@@ -81,12 +80,9 @@ import org.exoplatform.wiki.service.rest.model.Pages;
 import org.exoplatform.wiki.service.rest.model.Space;
 import org.exoplatform.wiki.service.rest.model.Spaces;
 import org.exoplatform.wiki.tree.JsonNodeData;
-import org.exoplatform.wiki.tree.PageTreeNode;
 import org.exoplatform.wiki.tree.RootTreeNode;
-import org.exoplatform.wiki.tree.SpaceTreeNode;
 import org.exoplatform.wiki.tree.TreeNode;
-import org.exoplatform.wiki.tree.WikiHomeTreeNode;
-import org.exoplatform.wiki.tree.WikiTreeNode;
+import org.exoplatform.wiki.tree.TreeUtils;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.context.Execution;
 import org.xwiki.context.ExecutionContext;
@@ -230,8 +226,8 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
   @Path("/tree/{type}/{path}/{currentPath:.*}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getTreeData(@PathParam("type") String type,
-                                   @PathParam("path") String path,
-                                   @PathParam("currentPath") String currentPath) {
+                              @PathParam("path") String path,
+                              @PathParam("currentPath") String currentPath) {
     try {
       List<JsonNodeData> responseData = new ArrayList<JsonNodeData>();
       path = URLDecoder.decode(path, "utf-8").replace(".", "/");
@@ -241,11 +237,20 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       if (currentPath != "") {
         context.put(TreeNode.CURRENT_PATH, currentPath);
       }
-      if (type.equals("children")) {
+      if (type.equals("all")) {
+        WikiPageParams pageParam = new WikiPageParams();
+        pageParam = Utils.getPageParamsFromPath(path);
+        PageImpl page = (PageImpl) wikiService.getPageById(pageParam.getType(),
+                                                           pageParam.getOwner(),
+                                                           pageParam.getPageId());
+        Stack<WikiPageParams> stk = Utils.getStackParams(page);
+        context.put(TreeNode.STACK_PARAMS, stk);
+        responseData = getJsonTree(context);
+      } else if (type.equals("children")) {
+        // Get children only
+        context.put(TreeNode.DEPTH, "0");
         WikiPageParams pageParams = Utils.getPageParamsFromPath(path);
-        responseData = getChildData(pageParams, context);
-      } else if (type.equals("all")) {
-        responseData = getTreeData(path, context);
+        responseData = getJsonDescendants(pageParams, context);
       }
       return Response.ok(new BeanToJsons(responseData), MediaType.APPLICATION_JSON)
                      .cacheControl(cc)
@@ -511,6 +516,26 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     return attachment;
   }
 
+  private List<JsonNodeData> getJsonTree(HashMap<String, Object> context) throws Exception {
+    List<JsonNodeData> responseData = new ArrayList<JsonNodeData>();
+    String currentPath = (String) context.get(TreeNode.CURRENT_PATH);
+    RootTreeNode rootNode = new RootTreeNode();
+    rootNode.pushDescendants(context);
+    List<TreeNode> children = rootNode.getChildren();
+    for (int i = 0; i < children.size(); i++) {
+      boolean isLastNode = false;
+      if (i == children.size() - 1)
+        isLastNode = true;
+      responseData.add(new JsonNodeData(children.get(i), isLastNode, false, currentPath, context));
+    }
+    return responseData;
+  }
+
+  private List<JsonNodeData> getJsonDescendants(WikiPageParams params,
+                                                HashMap<String, Object> context) throws Exception {
+    TreeNode treeNode = TreeUtils.getDescendants(params, context);
+    return TreeUtils.tranformToJson(treeNode, context);
+  }
 
   private static void fillPageSummary(PageSummary pageSummary,
                                       ObjectFactory objectFactory,
@@ -624,57 +649,4 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     attachment.getLink().add(pageLink);
   }
   
-  private List<JsonNodeData> getTreeData(String path, HashMap<String, Object> context) throws Exception {
-    WikiPageParams pageParam = new WikiPageParams();  
-    List<JsonNodeData> responseData = new ArrayList<JsonNodeData>();  
-    pageParam = Utils.getPageParamsFromPath(path);
-    PageImpl page = (PageImpl) wikiService.getPageById(pageParam.getType(),
-                                                       pageParam.getOwner(),
-                                                       pageParam.getPageId());
-    Stack<WikiPageParams> stk = Utils.getStackParams(page);   
-    context.put(TreeNode.STACK_PARAMS, stk);
-    responseData = getChildData(null, context);
-    return responseData;
-  }  
-  
-  private List<JsonNodeData> getChildData(WikiPageParams params, HashMap<String, Object> context) throws Exception {
-    List<JsonNodeData> responseData = new ArrayList<JsonNodeData>();
-    if (params == null) {
-      // Get all tree
-      String currentPath = (String) context.get(TreeNode.CURRENT_PATH);
-      RootTreeNode rootNode = new RootTreeNode();
-      rootNode.pushDescendants(context);
-      List<TreeNode> children = rootNode.getChildren();     
-      for(int i=0;i <children.size();i++ ){
-        boolean isLastNode = false;
-        if (i==children.size()-1)
-          isLastNode = true;
-        responseData.add(new JsonNodeData(children.get(i), isLastNode, false, currentPath, context));
-      }
-    } else {
-      // Get children
-      Object wikiObject = Utils.getObjectFromParams(params);
-      if (wikiObject instanceof WikiHome) {
-        WikiHome wikiHome = (WikiHome) wikiObject;
-        WikiHomeTreeNode wikiHomeNode = new WikiHomeTreeNode(wikiHome);
-        wikiHomeNode.pushChildren();
-        responseData = Utils.getJSONData(wikiHomeNode, context);
-      } else if (wikiObject instanceof Page) {
-        PageImpl page = (PageImpl) wikiObject;
-        PageTreeNode pageNode = new PageTreeNode(page);
-        pageNode.pushChildren();
-        responseData = Utils.getJSONData(pageNode, context);
-      } else if (wikiObject instanceof Wiki) {
-        Wiki wiki = (Wiki) wikiObject;
-        WikiTreeNode wikiNode = new WikiTreeNode(wiki);
-        wikiNode.pushChildren();
-        responseData = Utils.getJSONData(wikiNode, context);
-      } else if (wikiObject instanceof String) {
-        SpaceTreeNode spaceNode = new SpaceTreeNode((String) wikiObject);       
-        spaceNode.pushChildren();
-        responseData = Utils.getJSONData(spaceNode, context);
-      }
-    }
-    return responseData;
-  }
 }

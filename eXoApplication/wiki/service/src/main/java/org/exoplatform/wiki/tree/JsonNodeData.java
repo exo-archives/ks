@@ -20,8 +20,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 
-import org.exoplatform.wiki.utils.Utils;
-
 /**
  * Created by The eXo Platform SAS
  * Author : Lai Trung Hieu
@@ -65,7 +63,7 @@ public class JsonNodeData {
     this.nodeType = treeNode.getNodeType();
     this.isLastNode = isLastNode;
     this.isSelectable = isSelectable;
-    this.children = Utils.getJSONData(treeNode, context);
+    this.children = TreeUtils.tranformToJson(treeNode, context);
     this.isSelected = treeNode.isSelected();
     if (this.children.size() > 0)
       this.isExpanded = true;

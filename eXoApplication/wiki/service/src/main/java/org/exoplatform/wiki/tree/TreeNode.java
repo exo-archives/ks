@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -41,13 +42,19 @@ public class TreeNode {
 
   protected TreeNodeType     nodeType;
 
-  protected List<TreeNode>   children     = new ArrayList<TreeNode>();
+  protected List<TreeNode>   children        = new ArrayList<TreeNode>();
 
-  final static public String STACK_PARAMS = "stackParams";
+  final static public String STACK_PARAMS    = "stackParams";
 
-  final static public String CURRENT_PATH = "currentPath";
+  final static public String CURRENT_PATH    = "currentPath";
 
-  protected boolean          isSelected   = false;
+  public static final String SHOW_DESCENDANT = "showDes";
+
+  public static final String CHILDREN_NUMBER = "childrenNumber";
+
+  public static final String DEPTH           = "Depth";
+
+  protected boolean          isSelected      = false;
   
   public TreeNode() {    
   }
@@ -152,40 +159,63 @@ public class TreeNode {
   
   public void pushDescendants(HashMap<String, Object> context) throws Exception {
     // TODO Auto-generated method stub
-    Stack<WikiPageParams> paramsStk = (Stack<WikiPageParams>) context.get(this.STACK_PARAMS);
-    if (paramsStk.empty()) {
-      this.isSelected = true;
-    }
-    if (children.size() > 0 && !paramsStk.empty()) {
-      WikiPageParams params = new WikiPageParams();
-      params = paramsStk.pop();
-      context.put(this.STACK_PARAMS, paramsStk);    
-      if (this instanceof RootTreeNode) {
-        SpaceTreeNode spaceNode = new SpaceTreeNode(params.getType());
-        pushChild(spaceNode, context);
-      } else if (this instanceof SpaceTreeNode) {
-        Wiki wiki = (Wiki) Utils.getObjectFromParams(params);
-        WikiTreeNode wikiNode = new WikiTreeNode(wiki);
-        pushChild(wikiNode, context);
-      } else if (this instanceof WikiTreeNode) {
+    Stack<WikiPageParams> paramsStk = (Stack<WikiPageParams>) context.get(this.STACK_PARAMS);    
+    if (children.size() > 0) {
+      if (paramsStk == null) {
         pushChild(context);
-      } else if (this instanceof WikiHomeTreeNode || this instanceof PageTreeNode) {
-        PageImpl page = (PageImpl) Utils.getObjectFromParams(params);
-        PageTreeNode pageNode = new PageTreeNode(page);        
-        pushChild(pageNode, context);
+      } else {
+        if (paramsStk.empty()) {
+          this.isSelected = true;
+        } else {
+          WikiPageParams params = new WikiPageParams();
+          params = paramsStk.pop();
+          context.put(this.STACK_PARAMS, paramsStk);
+          if (this instanceof RootTreeNode) {
+            SpaceTreeNode spaceNode = new SpaceTreeNode(params.getType());
+            pushChild(spaceNode, context);
+          } else if (this instanceof SpaceTreeNode) {
+            Wiki wiki = (Wiki) Utils.getObjectFromParams(params);
+            WikiTreeNode wikiNode = new WikiTreeNode(wiki);
+            pushChild(wikiNode, context);
+          } else if (this instanceof WikiTreeNode) {
+            pushChild(context);
+          } else if (this instanceof WikiHomeTreeNode || this instanceof PageTreeNode) {
+            PageImpl page = (PageImpl) Utils.getObjectFromParams(params);
+            PageTreeNode pageNode = new PageTreeNode(page);
+            pushChild(pageNode, context);
+          }
+        }
       }
     }
   }
   
   private void pushChild(TreeNode child, HashMap<String, Object> context) throws Exception {
+    Boolean showDesCdt = (Boolean) context.get(SHOW_DESCENDANT);
+    String childNumCdt = (String) context.get(CHILDREN_NUMBER);
+    String depthCdt = (String) context.get(DEPTH);
+    boolean showDes = (showDesCdt == null) ? true : showDesCdt;
+    int childrenNUm = (childNumCdt == null || StringUtils.EMPTY.equals(childNumCdt)) ? -1
+                                                                                    : Integer.valueOf(childNumCdt);
+    int depth = (depthCdt == null || StringUtils.EMPTY.equals(depthCdt)) ? -1
+                                                                        : Integer.valueOf(depthCdt);
+    context.remove(CHILDREN_NUMBER);
+
     TreeNode temp = new TreeNode();
-    for (int i = 0; i < children.size(); i++) {
-      temp = children.get(i);
-      if (child == null) {
-        temp.pushDescendants(context);
-      } else if (child.equals(temp)) {
-        temp.pushDescendants(context);
-        return;
+    if (showDes) {
+      if (depth != 0) {
+        context.put(DEPTH, String.valueOf(--depth));
+        if (childrenNUm < 0 || childrenNUm > children.size()) {
+          childrenNUm = children.size();
+          for (int i = 0; i < childrenNUm; i++) {
+            temp = children.get(i);
+            if (child == null) {
+              temp.pushDescendants(context);
+            } else if (child.equals(temp)) {
+              temp.pushDescendants(context);
+              return;
+            }
+          }
+        }
       }
     }
   }
