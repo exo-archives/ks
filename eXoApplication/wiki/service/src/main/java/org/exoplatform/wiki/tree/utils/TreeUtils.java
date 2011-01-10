@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.tree;
+package org.exoplatform.wiki.tree.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +27,13 @@ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.tree.JsonNodeData;
+import org.exoplatform.wiki.tree.PageTreeNode;
+import org.exoplatform.wiki.tree.SpaceTreeNode;
+import org.exoplatform.wiki.tree.TreeNode;
+import org.exoplatform.wiki.tree.TreeNodeType;
+import org.exoplatform.wiki.tree.WikiHomeTreeNode;
+import org.exoplatform.wiki.tree.WikiTreeNode;
 import org.exoplatform.wiki.utils.Utils;
 
 /**
@@ -36,12 +43,6 @@ import org.exoplatform.wiki.utils.Utils;
  * 7 Jan 2011  
  */
 public class TreeUtils {
-  
-  public static List<JsonNodeData> getBlockDescendants(WikiPageParams params,
-                                                       HashMap<String, Object> context) throws Exception {
-    TreeNode treeNode = getDescendants(params, context);
-    return tranformToBlock(treeNode, context);
-  }
   
   public static TreeNode getDescendants(WikiPageParams params, HashMap<String, Object> context) throws Exception {
     Object wikiObject = Utils.getObjectFromParams(params);
@@ -66,47 +67,6 @@ public class TreeUtils {
       return spaceNode;
     }
     return null;
-  }
-  
-  public static List<JsonNodeData> tranformToBlock(TreeNode treeNode, HashMap<String, Object> context) throws Exception {
-    WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
-                                                               .getComponentInstanceOfType(WikiService.class);
-    List<JsonNodeData> children = new ArrayList<JsonNodeData>();
-    int counter = 1;
-    boolean isSelectable = true;
-    boolean isLastNode = false;
-    PageImpl page = null;
-    PageImpl currentPage = null;
-    WikiPageParams currentPageParams = null;
-    String currentPath = "";
-    if (context != null) {
-      currentPath = (String) context.get(TreeNode.CURRENT_PATH);
-    }
-    currentPageParams = Utils.getPageParamsFromPath(currentPath);
-
-    for (TreeNode child : treeNode.getChildren()) {
-      isSelectable = true;
-      isLastNode = false;
-      if (counter >= treeNode.getChildren().size()) {
-        isLastNode = true;
-      }
-      // if (child.getNodeType().equals(TreeNodeType.WIKIHOME)) { isSelectable =
-      // true;}
-      if (child.getNodeType().equals(TreeNodeType.WIKI)) {
-        isSelectable = false;
-      } else if (currentPath != "" && child.getNodeType().equals(TreeNodeType.PAGE)) {
-        page = ((PageTreeNode) child).getPage();
-        currentPage = (PageImpl) wikiService.getPageById(currentPageParams.getType(),
-                                                         currentPageParams.getOwner(),
-                                                         currentPageParams.getPageId());
-        if (currentPage != null
-            && (currentPage.equals(page) || Utils.isDescendantPage(page, currentPage)))
-          isSelectable = false;
-      }
-      children.add(new JsonNodeData(child, isLastNode, isSelectable, currentPath, context));
-      counter++;
-    }
-    return children;
   }
   
   public static List<JsonNodeData> tranformToJson(TreeNode treeNode, HashMap<String, Object> context) throws Exception {

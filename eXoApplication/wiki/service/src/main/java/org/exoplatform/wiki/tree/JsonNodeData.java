@@ -20,6 +20,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 
+import org.exoplatform.wiki.tree.utils.TreeUtils;
+
 /**
  * Created by The eXo Platform SAS
  * Author : Lai Trung Hieu

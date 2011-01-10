@@ -18,6 +18,7 @@ package org.exoplatform.wiki.tree;
 
 import java.util.HashMap;
 
+
 /**
  * Created by The eXo Platform SAS
  * Author : Lai Trung Hieu
@@ -32,7 +33,7 @@ public class RootTreeNode extends TreeNode {
   }
 
   @Override
-  public void pushChildren() throws Exception {
+  protected void addChildren(HashMap<String, Object> context) throws Exception {
     // TODO Auto-generated method stub
     SpaceTreeNode portalNode = new SpaceTreeNode("portal");
     SpaceTreeNode groupNode = new SpaceTreeNode("group");
@@ -40,14 +41,7 @@ public class RootTreeNode extends TreeNode {
     this.children.add(portalNode);
     this.children.add(groupNode);
     this.children.add(userNode);
-    super.pushChildren();
+    super.addChildren(context);
   }
-
-  @Override
-  public void pushDescendants(HashMap<String, Object> context) throws Exception {
-    // TODO Auto-generated method stub
-    pushChildren();
-    super.pushDescendants(context);
-  }  
 
 }

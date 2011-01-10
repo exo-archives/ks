@@ -82,7 +82,7 @@ import org.exoplatform.wiki.service.rest.model.Spaces;
 import org.exoplatform.wiki.tree.JsonNodeData;
 import org.exoplatform.wiki.tree.RootTreeNode;
 import org.exoplatform.wiki.tree.TreeNode;
-import org.exoplatform.wiki.tree.TreeUtils;
+import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.context.Execution;
 import org.xwiki.context.ExecutionContext;

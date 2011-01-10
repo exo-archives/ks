@@ -40,20 +40,13 @@ public class WikiTreeNode extends TreeNode {
 
   public WikiHomeTreeNode getWikiHomeTreeNode() {
     return (WikiHomeTreeNode) children.get(0);
-  } 
-  
-  @Override
-  public void pushDescendants(HashMap<String, Object> context) throws Exception {
-    // TODO Auto-generated method stub
-    pushChildren();
-    super.pushDescendants(context);
-  }  
+  }
 
   @Override
-  public void pushChildren() throws Exception {
+  protected void addChildren(HashMap<String, Object> context) throws Exception {
     // TODO Auto-generated method stub
     this.children.add(new WikiHomeTreeNode((WikiHome) wiki.getWikiHome()));
-    super.pushChildren();
+    super.addChildren(context);
   }
 
   public Wiki getWiki() {

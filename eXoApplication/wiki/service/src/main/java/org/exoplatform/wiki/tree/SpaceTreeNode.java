@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.tree;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -35,26 +36,21 @@ public class SpaceTreeNode extends TreeNode {
     super(name, TreeNodeType.SPACE);
     this.path = name;
     this.hasChild = Utils.getWikisByType(WikiType.valueOf(name.toUpperCase())).size() > 0;
-  }
+  }  
   
   @Override
-  public void pushDescendants(HashMap<String, Object> context) throws Exception {   
+  protected void addChildren(HashMap<String, Object> context) throws Exception {
     // TODO Auto-generated method stub
-    pushChildren();
-    super.pushDescendants(context);
-  }
-  
-  
-  @Override
-  public void pushChildren() throws Exception {
-    // TODO Auto-generated method stub
-    Iterator<Wiki> childWikiIterator = Utils.getWikisByType(WikiType.valueOf(name.toUpperCase()))
-                                            .iterator();
-    while (childWikiIterator.hasNext()) {
+    Collection<Wiki> wikis = Utils.getWikisByType(WikiType.valueOf(name.toUpperCase()));
+    Iterator<Wiki> childWikiIterator = wikis.iterator();
+    int count = 0;
+    int size = getNumberOfChildren(context, wikis.size());
+    while (childWikiIterator.hasNext() && count < size) {
       WikiTreeNode child = new WikiTreeNode(childWikiIterator.next());
       this.children.add(child);
+      count++;
     }
-    super.pushChildren();
+    super.addChildren(context);
   }
 
   public WikiTreeNode getChildByName(String name) throws Exception {
