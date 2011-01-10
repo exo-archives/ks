@@ -198,6 +198,7 @@ public class TreeNode {
                                                                                     : Integer.valueOf(childNumCdt);
     int depth = (depthCdt == null || StringUtils.EMPTY.equals(depthCdt)) ? -1
                                                                         : Integer.valueOf(depthCdt);
+    --depth;
     context.remove(CHILDREN_NUMBER);
 
     TreeNode temp = new TreeNode();
