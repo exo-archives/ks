@@ -248,7 +248,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
         responseData = getJsonTree(context);
       } else if (type.equals("children")) {
         // Get children only
-        context.put(TreeNode.DEPTH, "0");
+        context.put(TreeNode.DEPTH, "1");
         WikiPageParams pageParams = Utils.getPageParamsFromPath(path);
         responseData = getJsonDescendants(pageParams, context);
       }

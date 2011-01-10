@@ -204,7 +204,7 @@ public class TreeNode {
     TreeNode temp = new TreeNode();
     if (showDes) {
       if (depth != 0) {
-        context.put(DEPTH, String.valueOf(--depth));
+        context.put(DEPTH, String.valueOf(depth));
         if (childrenNUm < 0 || childrenNUm > children.size()) {
           childrenNUm = children.size();
           for (int i = 0; i < childrenNUm; i++) {
