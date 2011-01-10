@@ -67,6 +67,13 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
+    
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.wiki.service</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
    
    	<dependency>
       <groupId>org.exoplatform.ks</groupId>

@@ -15,12 +15,8 @@
 				</value-param>
 			</init-params>
     </component-plugin>
-  </external-component-plugins>
-
-   <external-component-plugins>
-    <target-component>org.exoplatform.social.core.space.spi.SpaceService</target-component>
     <component-plugin>
-      <name>ForumDataInitialize</name>
+      <name>AnswerDataInitialize</name>
       <set-method>addSpaceListener</set-method>
       <type>org.exoplatform.ks.ext.impl.AnswerDataInitialize</type>
       <init-params>
@@ -31,7 +27,22 @@
 			</init-params>
     </component-plugin>
   </external-component-plugins>
-
+	
+	<external-component-plugins>
+    <target-component>org.exoplatform.wiki.service.WikiService</target-component>
+    <component-plugin>
+      <name>Wiki listener for Social Space</name>
+      <set-method>addComponentPlugin</set-method>
+      <type>org.exoplatform.ks.ext.impl.WikiSpaceActivityPublisher</type>
+      <init-params>
+				<value-param>
+					<name>wikiPortletName</name>
+					<value>WikiPortlet</value>
+				</value-param>
+			</init-params>
+    </component-plugin>
+  </external-component-plugins>
+	
    <external-component-plugins>
     <target-component>org.exoplatform.forum.service.ForumService</target-component>
     <component-plugin>
@@ -61,6 +72,7 @@
                 <name>portletsPrefsRequired</name>
                 <value>ForumPortlet</value>
                 <value>AnswersPortlet</value>
+                <value>WikiPortlet</value>
               </values-param>
             </init-params>
     </component-plugin>
@@ -97,6 +109,22 @@
             <field name="name"><string>ks-answer:spaces</string></field>
             <field name="component"><string>org.exoplatform.ks.ext.impl.AnswerUIActivity</string></field>
             <field name="activityBuiderClass"><string>org.exoplatform.ks.ext.impl.AnswerSpaceUIActivityBuilder</string></field>
+          </object>
+        </object-param>
+      </init-params>
+    </component-plugin>
+    <component-plugin>
+      <name>add.ks.wiki.activity.plugin</name>
+      <set-method>registerUIExtensionPlugin</set-method>
+      <type>org.exoplatform.webui.ext.UIExtensionPlugin</type>
+      <init-params>
+        <object-param>
+          <name>Wiki Space Activity</name>
+          <object type="org.exoplatform.social.webui.activity.UIActivityExtension">
+            <field name="type"><string>org.exoplatform.social.webui.activity.BaseUIActivity</string></field>
+            <field name="name"><string>ks-wiki:spaces</string></field>
+            <field name="component"><string>org.exoplatform.ks.ext.impl.WikiUIActivity</string></field>
+            <field name="activityBuiderClass"><string>org.exoplatform.ks.ext.impl.WikiSpaceUIActivityBuilder</string></field>
           </object>
         </object-param>
       </init-params>

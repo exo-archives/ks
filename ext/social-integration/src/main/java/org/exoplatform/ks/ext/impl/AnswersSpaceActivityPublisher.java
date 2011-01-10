@@ -106,7 +106,7 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       params.put(LANGUAGE_KEY, q.getLanguage());
       activity.setTemplateParams(params);
       
-      activityM.recordActivity(spaceIdentity, activity);
+      activityM.saveActivity(spaceIdentity, activity);
 
     } catch (ClassNotFoundException e) {
       if (LOG.isDebugEnabled())
@@ -204,7 +204,7 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       params.put(LANGUAGE_KEY, question.getLanguage());
       activity.setTemplateParams(params);
       
-      activityM.recordActivity(spaceIdentity, activity);
+      activityM.saveActivity(spaceIdentity, activity);
     } catch (ClassNotFoundException e) {
       if (LOG.isDebugEnabled())
         LOG.debug("Please check the integrated project does the social deploy? " + e.getMessage());

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
@@ -14,6 +15,7 @@ import org.chromattic.api.ChromatticSession;
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
@@ -52,6 +54,7 @@ import org.exoplatform.wiki.service.SearchResult;
 import org.exoplatform.wiki.service.TitleSearchResult;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.service.listener.PageWikiListener;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.rendering.syntax.Syntax;
 
@@ -78,6 +81,8 @@ public class WikiServiceImpl implements WikiService {
   private Iterator<ValuesParam> syntaxHelpParams;
 
   private PropertiesParam           preferencesParams;
+  
+  private List<ComponentPlugin> plugins_ = new ArrayList<ComponentPlugin>();
 
   private static final Log      log               = ExoLogger.getLogger(WikiServiceImpl.class);
 
@@ -130,6 +135,18 @@ public class WikiServiceImpl implements WikiService {
     newEntry.setNewLink(newEntry);
     
     model.save();
+    
+    // execute wiki listeners
+    List<PageWikiListener> pageListeners = getPageListeners();
+    for (PageWikiListener l : pageListeners) {
+      try {
+        l.postAddPage(wikiType, wikiOwner, pageId);
+      } catch (Exception e) {
+        if (log.isWarnEnabled()) {
+          log.warn(String.format("executing listener %s in addPage phase failed", l.toString()), e);
+        }
+      }
+    }
     return page;
   }
   
@@ -692,6 +709,24 @@ public class WikiServiceImpl implements WikiService {
   
   private String getLinkEntryAlias(String wikiType, String wikiOwner, String pageId) {
     return wikiType + "@" + wikiOwner + "@" + pageId;
+  }
+
+  @Override
+  public void addComponentPlugin(ComponentPlugin plugin) {
+    if (plugin != null) {
+      plugins_.add(plugin);
+    }
+  }
+
+  @Override
+  public List<PageWikiListener> getPageListeners() {
+    List<PageWikiListener> pageListeners = new ArrayList<PageWikiListener>();
+    for (ComponentPlugin c : plugins_) {
+      if (c instanceof PageWikiListener) {
+        pageListeners.add((PageWikiListener) c);
+      }
+    }
+    return pageListeners;
   }
   
 }

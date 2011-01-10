@@ -113,7 +113,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         templateParams.put(ACTIVITY_TYPE_KEY, POST_ADDED);
         activity.setTemplateParams(templateParams);
         
-        activityM.recordActivity(spaceIdentity, activity);
+        activityM.saveActivity(spaceIdentity, activity);
 
       } catch (ClassNotFoundException e) {
         if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
@@ -157,7 +157,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         params.put(ACTIVITY_TYPE_KEY, TOPIC_ADDED);
         activity.setTemplateParams(params);
         
-        activityM.recordActivity(spaceIdentity, activity);
+        activityM.saveActivity(spaceIdentity, activity);
       } catch (ClassNotFoundException e) {
         if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
       } catch (Exception e) {
@@ -201,7 +201,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         templateParams.put(ACTIVITY_TYPE_KEY, POST_UPDATED);
         activity.setTemplateParams(templateParams);
         
-        activityM.recordActivity(spaceIdentity, activity);
+        activityM.saveActivity(spaceIdentity, activity);
 
       } catch (ClassNotFoundException e) {
         if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
@@ -244,7 +244,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         params.put(ACTIVITY_TYPE_KEY, TOPIC_UPDATED);
         activity.setTemplateParams(params);
         
-        activityM.recordActivity(spaceIdentity, activity);
+        activityM.saveActivity(spaceIdentity, activity);
       } catch (ClassNotFoundException e) {
         if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
       } catch (Exception e) {

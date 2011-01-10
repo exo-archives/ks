@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
+import java.util.UnknownFormatFlagsException;
 
 import javax.jcr.Node;
 import javax.mail.internet.AddressException;
@@ -66,6 +67,22 @@ public class Utils {
     + WikiNodeType.Definition.WIKI_APPLICATION + "/"
     + WikiNodeType.Definition.WIKIS ; 
     return path ;
+  }
+  
+  /**
+   * @param jcrPath absolute jcr path of page node.
+   * @return type of wiki page. 
+   */
+  public static String getWikiType(String jcrPath) throws IllegalArgumentException {
+    if (jcrPath.startsWith("/exo:applications/")) {
+      return PortalConfig.PORTAL_TYPE;
+    } else if (jcrPath.startsWith("/Groups/")) {
+      return PortalConfig.GROUP_TYPE;
+    } else if (jcrPath.startsWith("/Users/")) {
+      return PortalConfig.USER_TYPE;
+    } else {
+      throw new IllegalArgumentException(jcrPath + " is not jcr path of a wiki page node!");
+    }
   }
   
   public static String validateWikiOwner(String wikiType, String wikiOwner){

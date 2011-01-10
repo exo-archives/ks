@@ -20,9 +20,11 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.service.listener.PageWikiListener;
 
 /**
  * Created by The eXo Platform SARL.
@@ -61,6 +63,16 @@ public interface WikiService {
 	public InputStream getAttachmentAsStream(String path) throws Exception ;
 	public PageImpl getHelpSyntaxPage(String syntaxId) throws Exception;
 	public boolean isExisting(String wikiType, String wikiOwner, String pageId) throws Exception ;
+	
+	/**
+	 * register a {@link PageWikiListener}
+	 * @param listener
+	 */
+	public void addComponentPlugin(ComponentPlugin plugin);
+	/**
+	 * @return list of {@link PageWikiListener}
+	 */
+	public List<PageWikiListener> getPageListeners();
 
 }
 
