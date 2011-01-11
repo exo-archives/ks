@@ -136,17 +136,6 @@ public class WikiServiceImpl implements WikiService {
     
     model.save();
     
-    // execute wiki listeners
-    List<PageWikiListener> pageListeners = getPageListeners();
-    for (PageWikiListener l : pageListeners) {
-      try {
-        l.postAddPage(wikiType, wikiOwner, pageId);
-      } catch (Exception e) {
-        if (log.isWarnEnabled()) {
-          log.warn(String.format("executing listener %s in addPage phase failed", l.toString()), e);
-        }
-      }
-    }
     return page;
   }
   

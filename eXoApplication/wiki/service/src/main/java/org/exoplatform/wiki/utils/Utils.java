@@ -64,6 +64,16 @@ public class Utils {
     return path ;
   }
   
+  public static String getGroupIdByJcrPath(String jcrPath) throws IllegalArgumentException {
+    int pos1 = jcrPath.indexOf("/Groups/");
+    int pos2 = jcrPath.indexOf("/ApplicationData");
+    if (pos1 >= 0 && pos2 > 0) {
+      return jcrPath.substring(pos1 + "/Groups/".length(), pos2);
+    } else {
+      throw new IllegalArgumentException(jcrPath + " is not jcr path of a group wiki page node!");
+    }
+  }
+  
   /**
    * @param jcrPath absolute jcr path of page node.
    * @return type of wiki page. 
