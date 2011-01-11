@@ -23,13 +23,11 @@ import java.util.List;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.ks.common.Utils;
-import org.exoplatform.ks.common.notify.SendEmailPeriodJob;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.quartz.Job;
-import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
@@ -44,8 +42,6 @@ public class SendMailJob implements Job {
 			ExoContainer exoContainer = Utils.getExoContainer(context);
 			MailService mailService = (MailService) exoContainer.getComponentInstanceOfType(MailService.class);
 			ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
-			JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
-			String emailDefault = jdatamap.getString(SendEmailPeriodJob.EMAIL_DEFAULT);
 			Iterator<SendMessageInfo> iter = forumService.getPendingMessages();
 			int countEmail = 0;
 			while (iter.hasNext()) {
@@ -53,7 +49,7 @@ public class SendMailJob implements Job {
 					SendMessageInfo messageInfo = iter.next();
 					List<String> emailAddresses = messageInfo.getEmailAddresses();
 					Message message = messageInfo.getMessage();
-					message.setFrom(Utils.makeNotificationSender(message.getFrom(), emailDefault));
+					message.setFrom(Utils.makeNotificationSender(message.getFrom()));
 					if (message != null && emailAddresses != null && emailAddresses.size() > 0) {
 						List<String> sentMessages = new ArrayList<String>();
 						for (String address : emailAddresses) {

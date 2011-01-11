@@ -141,7 +141,7 @@
     <component-plugin>
       <name>ForumSendNotificationJob</name>
       <set-method>addPeriodJob</set-method>
-      <type>org.exoplatform.ks.common.notify.SendEmailPeriodJob</type>
+      <type>org.exoplatform.services.scheduler.PeriodJob</type>
       <description>update logged in user information to forum service</description>
       <init-params>
         <properties-param>
@@ -155,11 +155,6 @@
           <property name="startTime" value="+0"/>
           <property name="endTime" value=""/>
         </properties-param>
-        <properties-param>
-        	<name>email.info</name>
-        	<description>Email default for send notification.</description>
-          <property name="emailDefault" value="noreply@exoplatform.com"/>
-        </properties-param>
       </init-params>
     </component-plugin>
 
@@ -167,7 +162,7 @@
     <component-plugin>
       <name>FAQSendNotificationJob</name>
       <set-method>addPeriodJob</set-method>
-      <type>org.exoplatform.ks.common.notify.SendEmailPeriodJob</type>
+      <type>org.exoplatform.services.scheduler.PeriodJob</type>
       <description>update logged in user information to forum service</description>
       <init-params>
         <properties-param>
@@ -180,11 +175,6 @@
           <property name="period" value="120000"/> <!-- 2 mins-->
           <property name="startTime" value="+0"/>
           <property name="endTime" value=""/>
-        </properties-param>
-        <properties-param>
-        	<name>email.info</name>
-        	<description>Email default for send notification.</description>
-          <property name="emailDefault" value="noreply@exoplatform.com"/>
         </properties-param>
       </init-params>
     </component-plugin>
