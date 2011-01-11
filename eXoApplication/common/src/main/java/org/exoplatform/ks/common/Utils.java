@@ -219,30 +219,18 @@ public class Utils {
 	 * efforts to modify the such value)</li>
 	 * 
 	 * @param from
-	 * @param emailDefault
 	 * @return null if can not find suitable sender.
 	 */
-	public static String makeNotificationSender(String from, String emailDefault) {
+	public static String makeNotificationSender(String from) {
 		if (from == null)
 			return null;
-		InternetAddress addr = null;
-		try {
-			addr = new InternetAddress(from + "<" + emailDefault + ">");
-		} catch (AddressException e) {
-			if (log.isDebugEnabled()) {
-				log.debug("value of 'from' field in message made by forum notification feature is not in format of mail address", e);
-			}
-			return null;
-		}
 		Properties props = new Properties(System.getProperties());
 		String mailAddr = props.getProperty("gatein.email.smtp.from");
 		if (mailAddr == null || mailAddr.length() == 0)
 			mailAddr = props.getProperty("mail.from");
 		if (mailAddr != null) {
 			try {
-				InternetAddress serMailAddr = new InternetAddress(mailAddr);
-				addr.setAddress(serMailAddr.getAddress());
-				return addr.toUnicodeString();
+				return new InternetAddress(from + "<" + mailAddr + ">").toUnicodeString();
 			} catch (AddressException e) {
 				if (log.isDebugEnabled()) {
 					log.debug("value of 'gatein.email.smtp.from' or 'mail.from' in configuration file is not in format of mail address", e);
