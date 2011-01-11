@@ -376,6 +376,7 @@
     <module>server/tomcat/patch</module>
     <module>server/jboss/patch-ear</module>
     <module>docs</module>
-    <module>packaging</module>	
+    <module>packaging</module>
+    <module>testsuite</module>		
   </modules>
 </project>
