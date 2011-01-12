@@ -21,7 +21,6 @@ import org.exoplatform.webui.application.portlet.PortletApplication;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
@@ -33,7 +32,6 @@ import org.exoplatform.webui.event.EventListener;
  */
 
 @ComponentConfig(
-		lifecycle = UIApplicationLifecycle.class,
 		template =	"app:/templates/forum/webui/UIForumIconState.gtmpl",
 		events = {
       @EventConfig(listeners = UIForumIconState.IconStateParamActionListener.class)      
