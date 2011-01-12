@@ -59,9 +59,6 @@ import org.xwiki.rendering.wiki.WikiModel;
 
 @Component("children")
 public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
-  private static final String wikiSpaceSeparator = ":";
-
-  private static final String spacePageSeparator = ".";
   
   /**
    * The description of the macro
@@ -77,6 +74,8 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
   @Requirement
   private Execution execution;
   
+  private DefaultWikiModel model;
+  
   public ChildrenMacro() {
     super("Chilren", DESCRIPTION, ChildrenMacroParameters.class);
     setDefaultCategory(DEFAULT_CATEGORY_NAVIGATION);
@@ -90,7 +89,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     String documentName = parameters.getParent();
     String childrenNum = parameters.getChildrenNum();
     String depth = parameters.getDepth();
-    DefaultWikiModel model = (DefaultWikiModel) getWikiModel(context);
+    model = (DefaultWikiModel) getWikiModel(context);
     WikiPageParams params = model.getWikiMarkupContext(documentName);
     if (StringUtils.EMPTY.equals(documentName)) {
       ExecutionContext ec = execution.getContext();
@@ -124,7 +123,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     return block;
   }
 
-  public static ListItemBlock trankformToBlock(TreeNode node) throws Exception {
+  public ListItemBlock trankformToBlock(TreeNode node) throws Exception {
     WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
                                                                .getComponentInstanceOfType(WikiService.class);
     Link link = new Link();
@@ -132,13 +131,8 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     PageImpl page = (PageImpl) wikiService.getPageById(params.getType(),
                                                        params.getOwner(),
                                                        params.getPageId());
-    StringBuilder sb = new StringBuilder();
-    sb.append(params.getType())
-      .append(wikiSpaceSeparator)
-      .append(params.getOwner())
-      .append(spacePageSeparator)
-      .append(params.getPageId());
-    link.setReference(sb.toString());
+    
+    link.setReference(model.getDocumentName(params));
     link.setType(LinkType.DOCUMENT);
     List<Block> label = new ArrayList<Block>();
     label.add(new WordBlock(page.getContent().getTitle()));
@@ -146,7 +140,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     return new ListItemBlock(Collections.<Block> singletonList(linkBlock));
   }
 
-  public static void addBlock(Block block, TreeNode node) throws Exception {
+  public void addBlock(Block block, TreeNode node) throws Exception {
     List<TreeNode> children = node.getChildren();
     Block childrenBlock = new BulletedListBlock(Collections.<Block> emptyList());
     int size = children.size();

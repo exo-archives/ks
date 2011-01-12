@@ -129,4 +129,36 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
                                                             false));
   }
   
+  public void testPageTreeMacro() throws Exception {
+
+    WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
+                                                               .getComponentInstanceOfType(WikiService.class);
+    Model model = mowService.getModel();
+    WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+    WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
+    PortalWiki wiki = portalWikiContainer.addWiki("classic");
+    wiki.getWikiHome();
+    model.save();
+    wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "rootPage", "WikiHome");
+    wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "testPageTree1", "rootPage");
+    wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "testPageTree2", "rootPage");
+    wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "testPageTree11", "testPageTree1");
+
+    Execution ec = renderingService.getExecutionContext();
+    ec.setContext(new ExecutionContext());
+    WikiContext wikiContext = new WikiContext();
+    wikiContext.setPortalURI("http://localhost:8080/portal/classic/");
+    wikiContext.setTreeRestURI("/wiki/tree/children/");
+    wikiContext.setPortletURI("wiki");
+    wikiContext.setType("portal");
+    wikiContext.setOwner("classic");
+    wikiContext.setPageId("rootPage");
+    ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
+    String xwikiExpectedHtml = "<div class=\"UITreeExplorer\">   <input class=\"ChildrenURL\" type=\"hidden\" value=\"/wiki/tree/children/\" /><div class=\"NodeGroup\"><div  class=\" Node\" >  <div class=\"CollapseIcon\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('portal%2Fclassic%2FtestPageTree1/', this)\" >    <div class=\"Page TreeNodeType Node \">      <div class=\"NodeLabel\"><a title=\"testPageTree1\" href=\"http://localhost:8080/portal/classic/wiki/testPageTree1\">testPageTree1</a>      </div>    </div>  </div><div class=\"NodeGroup\"><div  class=\"LastNode Node\" >  <div class=\"EmptyIcon\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('portal%2Fclassic%2FtestPageTree11/', this)\" >    <div class=\"Page TreeNodeType Node \">      <div class=\"NodeLabel\"><a title=\"testPageTree11\" href=\"http://localhost:8080/portal/classic/wiki/testPageTree11\">testPageTree11</a>      </div>    </div>  </div></div></div></div><div  class=\"LastNode Node\" >  <div class=\"EmptyIcon\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('portal%2Fclassic%2FtestPageTree2/', this)\" >    <div class=\"Page TreeNodeType Node \">      <div class=\"NodeLabel\"><a title=\"testPageTree2\" href=\"http://localhost:8080/portal/classic/wiki/testPageTree2\">testPageTree2</a>      </div>    </div>  </div></div></div></div>";    
+    assertEquals(xwikiExpectedHtml, renderingService.render("{{pagetree}}",
+                                                            Syntax.XWIKI_2_0.toIdString(),
+                                                            Syntax.XHTML_1_0.toIdString(),
+                                                            false));
+  }
+  
 }

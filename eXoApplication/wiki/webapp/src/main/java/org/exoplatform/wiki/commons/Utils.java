@@ -249,9 +249,11 @@ public class Utils {
     UIPortal uiPortal = Util.getUIPortal();
     String portalURI = portalRequestContext.getPortalURI();
     String pageNodeSelected = uiPortal.getSelectedNode().getUri();
+    String treeRestURL = getCurrentRestURL().concat("/wiki/tree/children/");
     //
     WikiContext wikiContext = new WikiContext();
     wikiContext.setPortalURI(portalURI);
+    wikiContext.setTreeRestURI(treeRestURL);
     wikiContext.setPortletURI(pageNodeSelected);
     WikiPageParams params = Utils.getCurrentWikiPageParams();
     wikiContext.setType(params.getType());

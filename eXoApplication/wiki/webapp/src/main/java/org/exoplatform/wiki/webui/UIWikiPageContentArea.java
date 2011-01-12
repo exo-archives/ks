@@ -95,6 +95,7 @@ public class UIWikiPageContentArea extends UIWikiContainer {
       WikiContext wikiContext = new WikiContext();
       wikiContext.setPortalURI(portalURI);
       wikiContext.setPortletURI(pageNodeSelected);
+      wikiContext.setTreeRestURI(Utils.getCurrentRestURL().concat("/wiki/tree/children/"));
       WikiPageParams params = Utils.getCurrentWikiPageParams();
       wikiContext.setType(params.getType());
       wikiContext.setOwner(params.getOwner());

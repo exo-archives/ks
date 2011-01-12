@@ -21,15 +21,11 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
-import org.exoplatform.wiki.mow.api.WikiType;
-import org.exoplatform.wiki.mow.core.api.MOWService;
-import org.exoplatform.wiki.mow.core.api.ModelImpl;
-import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
-import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiContext;
+import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.annotation.Component;
@@ -64,6 +60,10 @@ public class DefaultWikiModel implements WikiModel {
   private static final String DEFAULT_PAGE = "WebHome";
       
   private static final String DEFAULT_ATTACHMENT = "filename";
+
+  private static final String wikiSpaceSeparator = ":";
+
+  private static final String spacePageSeparator = ".";
   
   public String getAttachmentURL(String documentName, String attachmentName) {
     WikiContext wikiMarkupContext = getWikiMarkupContext(documentName);
@@ -224,6 +224,16 @@ public class DefaultWikiModel implements WikiModel {
       }
     }
     return wikiMarkupContext;
+  }
+  
+  public String getDocumentName(WikiPageParams params) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(params.getType())
+      .append(wikiSpaceSeparator)
+      .append(params.getOwner())
+      .append(spacePageSeparator)
+      .append(params.getPageId());
+    return (sb.toString());
   }
   
 }
