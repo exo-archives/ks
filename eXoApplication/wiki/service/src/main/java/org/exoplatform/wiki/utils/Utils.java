@@ -63,7 +63,31 @@ public class Utils {
     + WikiNodeType.Definition.WIKIS ; 
     return path ;
   }
+  /**
+   * @return 
+   *      <li> portal name if wiki is portal type</li>
+   *      <li> groupid if wiki is group type</li>
+   *      <li> userid if wiki is personal type</li>
+   * @throws IllegalArgumentException if jcr path is not of a wiki page node.
+   */
+  public static String getSpaceIdByJcrPath(String jcrPath) throws IllegalArgumentException {
+    String wikiType = getWikiType(jcrPath);
+    if (PortalConfig.PORTAL_TYPE.equals(wikiType)) {
+      return getPortalIdByJcrPath(jcrPath);
+    } else if (PortalConfig.GROUP_TYPE.equals(wikiType)) {
+      return getGroupIdByJcrPath(jcrPath);
+    } else if (PortalConfig.USER_TYPE.equals(wikiType)) {
+      return getUserIdByJcrPath(jcrPath);
+    } else {
+      throw new IllegalArgumentException(jcrPath + " is not jcr path of a wiki page node!");
+    }
+  }
   
+  /**
+   * @param jcrPath follows the format /Groups/$GROUP/ApplicationData/eXoWiki/[wikipage]
+   * @return $GROUP of jcrPath
+   * @throws IllegalArgumentException if jcrPath is not as expected.
+   */
   public static String getGroupIdByJcrPath(String jcrPath) throws IllegalArgumentException {
     int pos1 = jcrPath.indexOf("/Groups/");
     int pos2 = jcrPath.indexOf("/ApplicationData");
@@ -71,6 +95,38 @@ public class Utils {
       return jcrPath.substring(pos1 + "/Groups/".length(), pos2);
     } else {
       throw new IllegalArgumentException(jcrPath + " is not jcr path of a group wiki page node!");
+    }
+  }
+  
+  /**
+   * @param jcrPath follows the format /Users/$USERNAME/ApplicationData/eXoWiki/...
+   * @return $USERNAME of jcrPath
+   * @throws IllegalArgumentException if jcrPath is not as expected.
+   */
+  public static String getUserIdByJcrPath(String jcrPath) throws IllegalArgumentException {
+    int pos1 = jcrPath.indexOf("/Users/");
+    int pos2 = jcrPath.indexOf("/ApplicationData");
+    if (pos1 >= 0 && pos2 > 0) {
+      return jcrPath.substring(pos1 + "/Users/".length(), pos2);
+    } else {
+      throw new IllegalArgumentException(jcrPath + " is not jcr path of a personal wiki page node!");
+    }
+  }
+  
+  /**
+   * @param jcrPath follows the format /exo:applications/eXoWiki/wikis/$PORTAL/...
+   * @return $PORTAL of jcrPath
+   * @throws IllegalArgumentException if jcrPath is not as expected.
+   */
+  public static String getPortalIdByJcrPath(String jcrPath) throws IllegalArgumentException {
+    String portalPath = getPortalWikisPath();
+    int pos1 = jcrPath.indexOf(portalPath);
+    
+    if (pos1 >= 0) {
+      String restPath = jcrPath.substring(pos1 + portalPath.length() + 1);
+      return restPath.substring(0, restPath.indexOf("/"));
+    } else {
+      throw new IllegalArgumentException(jcrPath + " is not jcr path of a portal wiki page node!");
     }
   }
   

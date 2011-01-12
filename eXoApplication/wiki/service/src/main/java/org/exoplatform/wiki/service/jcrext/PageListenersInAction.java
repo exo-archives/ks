@@ -63,7 +63,7 @@ public class PageListenersInAction implements Action {
     WikiService wikiService = (WikiService) container.getComponentInstanceOfType(WikiService.class);
     String jcrPathOfPage = ancestor.getPath();
     String wikiType = Utils.getWikiType(jcrPathOfPage);
-    String owner = Utils.getGroupIdByJcrPath(jcrPathOfPage);
+    String owner = Utils.getSpaceIdByJcrPath(jcrPathOfPage);
     String pageId = ancestor.getName();
     
     if (Integer.parseInt(eventObj.toString()) == ExtendedEvent.PROPERTY_ADDED) {
