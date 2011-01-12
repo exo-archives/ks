@@ -23,8 +23,11 @@ import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PortalWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
+import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiService;
+import org.xwiki.component.manager.ComponentLookupException;
+import org.xwiki.component.manager.ComponentRepositoryException;
 import org.xwiki.context.Execution;
 import org.xwiki.context.ExecutionContext;
 import org.xwiki.rendering.syntax.Syntax;
@@ -36,7 +39,15 @@ import org.xwiki.rendering.syntax.Syntax;
  *          viet.nguyen@exoplatform.com
  * Jun 15, 2010  
  */
-public class TestMacroRendering extends AbstractRenderingTestCase {
+public class TestMacroRendering extends AbstractRenderingTestCase {  
+  
+  @Override
+  protected void setUp() throws Exception {
+    // TODO Auto-generated method stub    
+    super.setUp();
+    setupDefaultWikiContext();
+  }
+
   public void testRenderNoteMacro() throws Exception {
     String expectedHtml = "<div class=\"box notemessage\">This is a note.</div>";
     assertEquals(expectedHtml, renderingService.render("{{note}}This is a note.{{/note}}", Syntax.XWIKI_2_0.toIdString(), Syntax.XHTML_1_0.toIdString(), false));
@@ -96,6 +107,22 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
     assertEquals(xwikiExpectedHtml, renderingService.render("{{toc numbered=\"true\"}} {{/toc}}\n= H1 = \n == H2 == \n === H3 ===", Syntax.XWIKI_2_0.toIdString(), Syntax.XHTML_1_0.toIdString(), false));
     assertEquals(confluenceExpectedHtml, renderingService.render("{toc:numbered=\"true\"}\nh1. H1 \nh2. H2 \nh3. H3 ", Syntax.CONFLUENCE_1_0.toIdString(), Syntax.XHTML_1_0.toIdString(), false));
   }
+  
+  public void testIncludePageMacro() throws Exception {
+    Model model = mowService.getModel();
+    WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+    WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
+    PortalWiki wiki = portalWikiContainer.addWiki("classic");
+    WikiHome home = wiki.getWikiHome();
+    String content = "Test include contents of a page";
+    home.getContent().setText(content);
+    String expectedHtml = "<div class=\"IncludePage \" ><p>" + content + "</p></div>";
+    model.save();
+    assertEquals(expectedHtml, renderingService.render("{{includepage page=\"Wiki Home\"/}}",
+                                                       Syntax.XWIKI_2_0.toIdString(),
+                                                       Syntax.XHTML_1_0.toIdString(),
+                                                       false));
+  }
 
   public void testChildrenMacro() throws Exception {
     WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
@@ -110,17 +137,10 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
     wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "childPage1", "samplePage");
     wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "childPage2", "samplePage");
     wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "testPage", "childPage1");
-
     Execution ec = renderingService.getExecutionContext();
-    ec.setContext(new ExecutionContext());
-    WikiContext wikiContext = new WikiContext();
-    wikiContext.setPortalURI("http://localhost:8080/portal/classic/");
-    wikiContext.setPortletURI("wiki");
-    wikiContext.setType("portal");
-    wikiContext.setOwner("classic");
+    WikiContext wikiContext = (WikiContext) ec.getContext().getProperty(WikiContext.WIKICONTEXT);
     wikiContext.setPageId("samplePage");
     ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
-
     String xwikiExpectedHtml = "<div><ul><li><span class=\"wikilink\"><a href=\"http://localhost:8080/portal/classic/wiki/childPage1\">childPage1</a></span><ul><li><span class=\"wikilink\"><a href=\"http://localhost:8080/portal/classic/wiki/testPage\">testPage</a></span><ul></ul></li></ul></li><li><span class=\"wikilink\"><a href=\"http://localhost:8080/portal/classic/wiki/childPage2\">childPage2</a></span><ul></ul></li></ul></div>";
 
     assertEquals(xwikiExpectedHtml, renderingService.render("{{children descendant=\"true\"/}}",
@@ -143,7 +163,18 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
     wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "testPageTree1", "rootPage");
     wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "testPageTree2", "rootPage");
     wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "testPageTree11", "testPageTree1");
-
+    Execution ec = renderingService.getExecutionContext();
+    WikiContext wikiContext = (WikiContext) ec.getContext().getProperty(WikiContext.WIKICONTEXT);
+    wikiContext.setPageId("rootPage");
+    ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
+    String xwikiExpectedHtml = "<div class=\"UITreeExplorer\">   <input class=\"ChildrenURL\" type=\"hidden\" value=\"/wiki/tree/children/\" /><div class=\"NodeGroup\"><div  class=\" Node\" >  <div class=\"CollapseIcon\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('portal%2Fclassic%2FtestPageTree1/', this)\" >    <div class=\"Page TreeNodeType Node \">      <div class=\"NodeLabel\"><a title=\"testPageTree1\" href=\"http://localhost:8080/portal/classic/wiki/testPageTree1\">testPageTree1</a>      </div>    </div>  </div><div class=\"NodeGroup\"><div  class=\"LastNode Node\" >  <div class=\"EmptyIcon\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('portal%2Fclassic%2FtestPageTree11/', this)\" >    <div class=\"Page TreeNodeType Node \">      <div class=\"NodeLabel\"><a title=\"testPageTree11\" href=\"http://localhost:8080/portal/classic/wiki/testPageTree11\">testPageTree11</a>      </div>    </div>  </div></div></div></div><div  class=\"LastNode Node\" >  <div class=\"EmptyIcon\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('portal%2Fclassic%2FtestPageTree2/', this)\" >    <div class=\"Page TreeNodeType Node \">      <div class=\"NodeLabel\"><a title=\"testPageTree2\" href=\"http://localhost:8080/portal/classic/wiki/testPageTree2\">testPageTree2</a>      </div>    </div>  </div></div></div></div>";    
+    assertEquals(xwikiExpectedHtml, renderingService.render("{{pagetree /}}",
+                                                            Syntax.XWIKI_2_0.toIdString(),
+                                                            Syntax.XHTML_1_0.toIdString(),
+                                                            false));
+  }
+  
+  private void setupDefaultWikiContext() throws ComponentLookupException, ComponentRepositoryException {
     Execution ec = renderingService.getExecutionContext();
     ec.setContext(new ExecutionContext());
     WikiContext wikiContext = new WikiContext();
@@ -152,13 +183,8 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
     wikiContext.setPortletURI("wiki");
     wikiContext.setType("portal");
     wikiContext.setOwner("classic");
-    wikiContext.setPageId("rootPage");
+    wikiContext.setPageId("WikiHome");
     ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
-    String xwikiExpectedHtml = "<div class=\"UITreeExplorer\">   <input class=\"ChildrenURL\" type=\"hidden\" value=\"/wiki/tree/children/\" /><div class=\"NodeGroup\"><div  class=\" Node\" >  <div class=\"CollapseIcon\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('portal%2Fclassic%2FtestPageTree1/', this)\" >    <div class=\"Page TreeNodeType Node \">      <div class=\"NodeLabel\"><a title=\"testPageTree1\" href=\"http://localhost:8080/portal/classic/wiki/testPageTree1\">testPageTree1</a>      </div>    </div>  </div><div class=\"NodeGroup\"><div  class=\"LastNode Node\" >  <div class=\"EmptyIcon\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('portal%2Fclassic%2FtestPageTree11/', this)\" >    <div class=\"Page TreeNodeType Node \">      <div class=\"NodeLabel\"><a title=\"testPageTree11\" href=\"http://localhost:8080/portal/classic/wiki/testPageTree11\">testPageTree11</a>      </div>    </div>  </div></div></div></div><div  class=\"LastNode Node\" >  <div class=\"EmptyIcon\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('portal%2Fclassic%2FtestPageTree2/', this)\" >    <div class=\"Page TreeNodeType Node \">      <div class=\"NodeLabel\"><a title=\"testPageTree2\" href=\"http://localhost:8080/portal/classic/wiki/testPageTree2\">testPageTree2</a>      </div>    </div>  </div></div></div></div>";    
-    assertEquals(xwikiExpectedHtml, renderingService.render("{{pagetree}}",
-                                                            Syntax.XWIKI_2_0.toIdString(),
-                                                            Syntax.XHTML_1_0.toIdString(),
-                                                            false));
   }
   
 }

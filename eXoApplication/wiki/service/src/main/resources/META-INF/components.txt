@@ -22,3 +22,4 @@ org.exoplatform.wiki.rendering.macro.textcolor.ColorMacro
 org.exoplatform.wiki.rendering.macro.floatmacro.FloatMacro
 org.exoplatform.wiki.rendering.macro.children.ChildrenMacro
 org.exoplatform.wiki.rendering.macro.pagetree.PageTreeMacro
+org.exoplatform.wiki.rendering.macro.include.IncludePageMacro
