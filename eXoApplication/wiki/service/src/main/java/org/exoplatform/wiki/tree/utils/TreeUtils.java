@@ -25,6 +25,7 @@ import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
+import org.exoplatform.wiki.rendering.macro.MacroUtils;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.tree.JsonNodeData;
@@ -76,12 +77,15 @@ public class TreeUtils {
     int counter = 1;
     boolean isSelectable = true;
     boolean isLastNode = false;
+    Boolean showExcerpt = false;
+    String excerpt = null;
     PageImpl page = null;
     PageImpl currentPage = null;
     WikiPageParams currentPageParams = null;
-    String currentPath = "";
+    String currentPath = null;
     if (context != null) {
       currentPath = (String) context.get(TreeNode.CURRENT_PATH);
+      showExcerpt = (Boolean) context.get(TreeNode.SHOW_EXCERPT);
     }
     currentPageParams = Utils.getPageParamsFromPath(currentPath);
 
@@ -95,7 +99,7 @@ public class TreeUtils {
       // true;}
       if (child.getNodeType().equals(TreeNodeType.WIKI)) {
         isSelectable = false;
-      } else if (currentPath != "" && child.getNodeType().equals(TreeNodeType.PAGE)) {
+      } else if (currentPath != null && child.getNodeType().equals(TreeNodeType.PAGE)) {
         page = ((PageTreeNode) child).getPage();
         currentPage = (PageImpl) wikiService.getPageById(currentPageParams.getType(),
                                                          currentPageParams.getOwner(),
@@ -104,7 +108,11 @@ public class TreeUtils {
             && (currentPage.equals(page) || Utils.isDescendantPage(page, currentPage)))
           isSelectable = false;
       }
-      children.add(new JsonNodeData(child, isLastNode, isSelectable, currentPath, context));
+      if (showExcerpt != null && showExcerpt) {
+        WikiPageParams params = Utils.getPageParamsFromPath(child.getPath());
+        excerpt = MacroUtils.getExcerpts(params);
+      }
+      children.add(new JsonNodeData(child, isLastNode, isSelectable, currentPath, excerpt, context));
       counter++;
     }
     return children;

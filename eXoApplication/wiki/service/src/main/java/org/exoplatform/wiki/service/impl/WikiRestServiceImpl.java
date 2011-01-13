@@ -526,7 +526,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       boolean isLastNode = false;
       if (i == children.size() - 1)
         isLastNode = true;
-      responseData.add(new JsonNodeData(children.get(i), isLastNode, false, currentPath, context));
+      responseData.add(new JsonNodeData(children.get(i), isLastNode, false, currentPath, null, context));
     }
     return responseData;
   }

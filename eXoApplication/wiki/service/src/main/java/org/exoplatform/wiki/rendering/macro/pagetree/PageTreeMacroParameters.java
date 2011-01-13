@@ -39,6 +39,11 @@ public class PageTreeMacroParameters {
   private String startDepth = StringUtils.EMPTY;
 
   /**
+   * Show excerpt or not
+   */
+  private boolean excerpt = false;  
+
+  /**
    * @return root page of children
    */
   public String getRoot() {
@@ -71,5 +76,20 @@ public class PageTreeMacroParameters {
       throw new ParameterValueTooLowException(1);
     }
     this.startDepth = depth;
+  }
+
+  /**
+   * @return the value allow hide excerpt or not
+   */
+  public boolean isExcerpt() {
+    return excerpt;
+  }
+
+  /**
+   * @param hidden the value show excerpt to set
+   */
+  @PropertyDescription("Include Excerpts")
+  public void setExcerpt(boolean excerpt) {
+    this.excerpt = excerpt;
   }
 }

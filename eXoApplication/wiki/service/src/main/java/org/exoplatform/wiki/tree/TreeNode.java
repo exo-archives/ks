@@ -47,6 +47,8 @@ public class TreeNode {
   final static public String STACK_PARAMS    = "stackParams";
 
   final static public String CURRENT_PATH    = "currentPath";
+  
+  public static final String SHOW_EXCERPT    = "showExcerpt";
 
   public static final String SHOW_DESCENDANT = "showDes";
 

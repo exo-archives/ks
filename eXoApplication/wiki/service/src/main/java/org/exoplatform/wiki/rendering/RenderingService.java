@@ -16,6 +16,8 @@
  */
 package org.exoplatform.wiki.rendering;
 
+import org.xwiki.rendering.block.XDOM;
+
 /**
  * Created by The eXo Platform SAS Author : eXoPlatform exo@exoplatform.com Nov
  * 5, 2009
@@ -27,5 +29,7 @@ public interface RenderingService {
   public String getContentOfSection(String markup, String sourceSyntax, String sectionIndex) throws Exception;
 
   public String updateContentOfSection(String markup, String sourceSyntax, String sectionIndex, String newSectionContent) throws Exception;
+  
+  public XDOM parse(String markup, String sourceSyntax) throws Exception;
 
 }

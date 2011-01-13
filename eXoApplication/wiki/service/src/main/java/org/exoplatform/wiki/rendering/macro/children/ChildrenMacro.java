@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
+import org.exoplatform.wiki.rendering.macro.MacroUtils;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
@@ -42,11 +43,13 @@ import org.xwiki.rendering.block.BulletedListBlock;
 import org.xwiki.rendering.block.GroupBlock;
 import org.xwiki.rendering.block.LinkBlock;
 import org.xwiki.rendering.block.ListItemBlock;
+import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.block.WordBlock;
 import org.xwiki.rendering.listener.Link;
 import org.xwiki.rendering.listener.LinkType;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
+import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.rendering.wiki.WikiModel;
 
@@ -76,6 +79,8 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
   
   private DefaultWikiModel model;
   
+  private boolean excerpt;
+  
   public ChildrenMacro() {
     super("Chilren", DESCRIPTION, ChildrenMacroParameters.class);
     setDefaultCategory(DEFAULT_CATEGORY_NAVIGATION);
@@ -86,6 +91,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
                              String content,
                              MacroTransformationContext context) throws MacroExecutionException {
     boolean descendant = parameters.isDescendant();
+    excerpt = parameters.isExcerpt();
     String documentName = parameters.getParent();
     String childrenNum = parameters.getChildrenNum();
     String depth = parameters.getDepth();
@@ -126,18 +132,27 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
   public ListItemBlock trankformToBlock(TreeNode node) throws Exception {
     WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
                                                                .getComponentInstanceOfType(WikiService.class);
+    List<Block> blocks = new ArrayList<Block>();
     Link link = new Link();
     WikiPageParams params = Utils.getPageParamsFromPath(node.getPath());
     PageImpl page = (PageImpl) wikiService.getPageById(params.getType(),
                                                        params.getOwner(),
                                                        params.getPageId());
-    
+
     link.setReference(model.getDocumentName(params));
     link.setType(LinkType.DOCUMENT);
-    List<Block> label = new ArrayList<Block>();
-    label.add(new WordBlock(page.getContent().getTitle()));
-    LinkBlock linkBlock = new LinkBlock(label, link, true);
-    return new ListItemBlock(Collections.<Block> singletonList(linkBlock));
+    List<Block> content = new ArrayList<Block>();
+    content.add(new WordBlock(page.getContent().getTitle()));
+
+    LinkBlock linkBlock = new LinkBlock(content, link, true);
+    blocks.add(linkBlock);
+    if (excerpt) {
+      String excerpts = MacroUtils.getExcerpts(params);
+      if (!StringUtils.EMPTY.equals(excerpts)) {
+        blocks.add(new RawBlock(excerpts, Syntax.XHTML_1_0));
+      }
+    }
+    return new ListItemBlock(blocks);
   }
 
   public void addBlock(Block block, TreeNode node) throws Exception {

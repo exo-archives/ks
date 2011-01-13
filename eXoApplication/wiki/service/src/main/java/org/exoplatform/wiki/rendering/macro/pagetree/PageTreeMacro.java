@@ -75,6 +75,8 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
   
   private DefaultWikiModel model;
   
+  private boolean excerpt;
+  
   public PageTreeMacro() {
     super("Page Tree", DESCRIPTION, PageTreeMacroParameters.class);
     setDefaultCategory(DEFAULT_CATEGORY_NAVIGATION);
@@ -84,9 +86,9 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
   public List<Block> execute(PageTreeMacroParameters parameters,
                              String content,
                              MacroTransformationContext context) throws MacroExecutionException {
-
     String documentName = parameters.getRoot();
     String startDepth = parameters.getStartDepth();
+    excerpt = parameters.isExcerpt();
     model = (DefaultWikiModel) getWikiModel(context);
     WikiPageParams params = model.getWikiMarkupContext(documentName);
     if (StringUtils.EMPTY.equals(documentName)) {
@@ -129,10 +131,11 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
   private Block generateTree(WikiPageParams params, String startDepth) throws Exception {
     HashMap<String, Object> context = new HashMap<String, Object>();
     context.put(TreeNode.DEPTH, startDepth);
+    context.put(TreeNode.SHOW_EXCERPT, excerpt);
     TreeNode node = TreeUtils.getDescendants(params, context);
     StringBuilder sb = new StringBuilder();
-    WikiContext wikiContext = getWikiContext();   
-    List<JsonNodeData> jsonData = TreeUtils.tranformToJson(node, null);
+    WikiContext wikiContext = getWikiContext();
+    List<JsonNodeData> jsonData = TreeUtils.tranformToJson(node, context);
     String treeRestURI = wikiContext.getTreeRestURI();
     sb.append("<div class=\"UITreeExplorer\"> ")
       .append("  <input class=\"ChildrenURL\" type=\"hidden\" value=\"").append(treeRestURI).append("\" />")   
@@ -155,16 +158,19 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
 
   private String createNode(JsonNodeData jsonData) throws Exception{
     StringBuilder sb = new StringBuilder();
-    
     String nodeType = jsonData.getNodeType().toString();
     String nodeTypeCSS = nodeType.substring(0, 1).toUpperCase() + nodeType.substring(1).toLowerCase();
     String iconType = (jsonData.isExpanded() == true) ? "Collapse" : "Expand";
     String lastNodeClass = "";   
     String path = jsonData.getPath().replaceAll("/", ".");
     String param = path +"/";
+    String excerptData = jsonData.getExcerpt();
     String extendParam = jsonData.getExtendParam();
     if (extendParam!=null)
       param += extendParam.replaceAll("/", ".");
+    if (excerptData!=null) {
+      param += "/?excerpt=true";
+    }
     if (jsonData.isLastNode()) {
       lastNodeClass = "LastNode";
     }
@@ -178,8 +184,11 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
       .append("  <div class=\"").append(iconType).append("Icon\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('"+ param + "', this)\" >")
       .append("    <div class=\"").append(nodeTypeCSS).append(" TreeNodeType Node \">")
       .append("      <div class=\"NodeLabel\">")
-      .append(         getPageURI(jsonData))
-      .append("      </div>")
+      .append(         getPageURI(jsonData));
+    if (excerptData != null) {
+      sb.append(excerptData);
+    }
+    sb.append("      </div>")
       .append("    </div>")
       .append("  </div>");
     if (size > 0) {

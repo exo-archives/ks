@@ -173,6 +173,13 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
                                                             Syntax.XHTML_1_0.toIdString(),
                                                             false));
   }
+  public void testExcerptMacro() throws Exception {    
+    String expectedHtml = "<div style=\"display: block\" class=\"ExcerptClass\"><div class=\"box tipmessage\">Test excerpt</div></div>";
+    assertEquals(expectedHtml, renderingService.render("{{excerpt}}{{tip}}Test excerpt{{/tip}}{{/excerpt}}",
+                                                            Syntax.XWIKI_2_0.toIdString(),
+                                                            Syntax.XHTML_1_0.toIdString(),
+                                                            false));
+  }
   
   private void setupDefaultWikiContext() throws ComponentLookupException, ComponentRepositoryException {
     Execution ec = renderingService.getExecutionContext();

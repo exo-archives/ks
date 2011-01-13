@@ -23,3 +23,4 @@ org.exoplatform.wiki.rendering.macro.floatmacro.FloatMacro
 org.exoplatform.wiki.rendering.macro.children.ChildrenMacro
 org.exoplatform.wiki.rendering.macro.pagetree.PageTreeMacro
 org.exoplatform.wiki.rendering.macro.include.IncludePageMacro
+org.exoplatform.wiki.rendering.macro.excerpt.ExcerptMacro

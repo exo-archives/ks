@@ -226,7 +226,7 @@ public class RenderingServiceImpl implements RenderingService, Startable {
 
   }
 
-  private XDOM parse(String markup, String sourceSyntax) throws Exception {
+  public XDOM parse(String markup, String sourceSyntax) throws Exception {
     XDOM xdom;
     Syntax sSyntax = (sourceSyntax == null) ? Syntax.XWIKI_2_0 : getSyntax(sourceSyntax);
     if (sSyntax == Syntax.XHTML_1_0 || sSyntax == Syntax.ANNOTATED_XHTML_1_0) {
@@ -246,7 +246,7 @@ public class RenderingServiceImpl implements RenderingService, Startable {
     return xdom;
   }
 
-  private String renderXDOM(XDOM content, Syntax targetSyntax) throws Exception {
+  private String renderXDOM(Block content, Syntax targetSyntax) throws Exception {
     try {
       BlockRenderer renderer = componentManager.lookup(BlockRenderer.class, targetSyntax.toIdString());
       WikiPrinter printer = new DefaultWikiPrinter();

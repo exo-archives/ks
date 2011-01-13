@@ -20,6 +20,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
 
 /**
@@ -47,6 +48,8 @@ public class JsonNodeData {
   protected boolean          isExpanded   = false;
 
   protected boolean          isSelected   = false;
+  
+  protected String           excerpt      = StringUtils.EMPTY;
 
   public static final String EXTEND_PARAM = "extendParam";
 
@@ -55,7 +58,7 @@ public class JsonNodeData {
   public JsonNodeData(TreeNode treeNode,
                       boolean isLastNode,
                       boolean isSelectable,
-                      String extendParam,
+                      String extendParam, String excerpt,
                       HashMap<String, Object> context) throws Exception {
     this.name = treeNode.getName();
     this.path = URLEncoder.encode(treeNode.getPath(), "utf-8");
@@ -65,6 +68,7 @@ public class JsonNodeData {
     this.nodeType = treeNode.getNodeType();
     this.isLastNode = isLastNode;
     this.isSelectable = isSelectable;
+    this.excerpt = excerpt;
     this.children = TreeUtils.tranformToJson(treeNode, context);
     this.isSelected = treeNode.isSelected();
     if (this.children.size() > 0)
@@ -143,6 +147,14 @@ public class JsonNodeData {
     this.isSelected = isSelected;
   }
 
+  public String getExcerpt() {
+    return excerpt;
+  }
+
+  public void setExcerpt(String excerpt) {
+    this.excerpt = excerpt;
+  }
+
   public List<JsonNodeData> getChildren() {
     return children;
   }
@@ -150,5 +162,4 @@ public class JsonNodeData {
   public void setChildren(List<JsonNodeData> children) {
     this.children = children;
   }
- 
 }

@@ -33,12 +33,12 @@ public class ChildrenMacroParameters {
 //    h1, h2, h3, h4, h5, h6,
 //
 //  };
-
-  public enum SORTBY {
-
-    Author, Title, Modified
-
-  };
+//
+//  public enum SORTBY {
+//
+//    Author, Title, Modified
+//
+//  };
 
   /**
    * Show descendant or not
@@ -59,6 +59,11 @@ public class ChildrenMacroParameters {
    * Depth of tree page
    */
   private String     depth       = StringUtils.EMPTY;
+
+  /**
+   * Show excerpt or not
+   */
+  private boolean excerpt = false;
 
 //  /**
 //   * Style of heading
@@ -141,6 +146,21 @@ public class ChildrenMacroParameters {
       throw new ParameterValueTooLowException(1);
     }
     this.depth = depth;
+  }  
+
+  /**
+   * @return the value allow hide excerpt or not
+   */
+  public boolean isExcerpt() {
+    return excerpt;
+  }
+
+  /**
+   * @param hidden the value show excerpt to set
+   */
+  @PropertyDescription("Include Excerpts")
+  public void setExcerpt(boolean excerpt) {
+    this.excerpt = excerpt;
   }
 //
 //  /**
