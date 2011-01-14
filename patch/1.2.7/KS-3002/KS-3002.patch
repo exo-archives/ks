@@ -1,0 +1,13 @@
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java	(revision 64980)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java	(working copy)
+@@ -3407,7 +3407,7 @@
+ 			headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
+ 			headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
+ 		}else {
+-			headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
++			headerSubject = "["+catName+"]["+forumName+"]"+topicName;
+ 		}
+ 		message.setSubject(headerSubject);
+ 		String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);

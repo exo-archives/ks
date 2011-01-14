@@ -3407,7 +3407,7 @@ public class JCRDataStorage {
 			headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
 			headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
 		}else {
-			headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
+			headerSubject = "["+catName+"]["+forumName+"]"+topicName;
 		}
 		message.setSubject(headerSubject);
 		String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);
