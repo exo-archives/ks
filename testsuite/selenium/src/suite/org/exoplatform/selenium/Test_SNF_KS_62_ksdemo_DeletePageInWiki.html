@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8080/ksdemo/public/classic/" />
-<title>Test_SNF_KS_66_ksdemo_SyntaxHelpInWiki</title>
+<title>Test_SNF_KS_62_BasicActionsInWiki</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_66_ksdemo_SyntaxHelpInWiki</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_62_BasicActionsInWiki</td></tr>
 </thead><tbody>
 <tr>
 	<td>echo</td>
@@ -19,6 +19,11 @@
 <tr>
 	<td>open</td>
 	<td>/ksdemo/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>windowMaximize</td>
+	<td></td>
 	<td></td>
 </tr>
 <tr>
@@ -63,7 +68,7 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>- Add page and Verify Syntax Help panel</td>
+	<td>- Create Page</td>
 	<td></td>
 </tr>
 <tr>
@@ -74,66 +79,131 @@
 <tr>
 	<td>click</td>
 	<td>link=add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>TitleInput</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>TitleInput</td>
+	<td>Page1_SNF_KS_62</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>Markup</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Markup</td>
+	<td>Page1 Content</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Page1_SNF_KS_62</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Page1_SNF_KS_62</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Page1 Content</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Page1 Content</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- View Page</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/private/classic/wiki/WikiHome</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Page1_SNF_KS_62</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Page1_SNF_KS_62</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForText</td>
-	<td>//h3[@id='HHelpTips']/span</td>
-	<td>Help Tips</td>
+	<td>TitleInfo</td>
+	<td>Page1_SNF_KS_62</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//h3[@id='HHelpTips']/span</td>
-	<td>Help Tips</td>
+	<td>TitleInfo</td>
+	<td>Page1_SNF_KS_62</td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[@id='UIWikiPageContentArea']/p</td>
+	<td>Page1 Content</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='UIWikiPageContentArea']/p</td>
+	<td>Page1 Content</td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>- Click X to close the panel then click Help to open it again</td>
+	<td>- Delete page</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIWikiSidePanelArea']/div[1]/a</td>
+	<td>link=delete</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//div[@id='UIWikiSidePanelArea']/div[1]/a</td>
+	<td>clickAt</td>
+	<td>link=delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>//h3[@id='HHelpTips']/span</td>
-	<td>Help Tips</td>
+	<td>Page1_SNF_KS_62</td>
+	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>//h3[@id='HHelpTips']/span</td>
-	<td>Help Tips</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=help</td>
+	<td>Page1_SNF_KS_62</td>
 	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=help</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForText</td>
-	<td>//h3[@id='HHelpTips']/span</td>
-	<td>Help Tips</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>//h3[@id='HHelpTips']/span</td>
-	<td>Help Tips</td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>- Sign out and finish</td>
+	<td>- Sign out</td>
 	<td></td>
 </tr>
 <tr>

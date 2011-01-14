@@ -107,8 +107,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Page1_SNF_KS_64</td>
+	<td>waitForTextPresent</td>
+	<td>Page1_SNF_KS_64</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Page1_SNF_KS_64</td>
 	<td></td>
 </tr>
 <tr>
@@ -137,13 +142,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>You started watching this page now.</td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>link=OK</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=OK</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
@@ -162,83 +172,23 @@
 	<td></td>
 </tr>
 <tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>You stopped watching this page now.</td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>link=OK</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=OK</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
 	<td>- Delete test data</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>open</td>
-	<td>/ksdemo/public/classic</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Sign in</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Sign in</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>username</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>username</td>
-	<td>root</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>password</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>password</td>
-	<td>gtn</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>open</td>
-	<td>/ksdemo/private/classic/wiki/WikiHome</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Page1_SNF_KS_64</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Page1_SNF_KS_64</td>
 	<td></td>
 </tr>
 <tr>
@@ -263,12 +213,12 @@
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>Page1</td>
+	<td>Page1_SNF_KS_64</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>Page1</td>
+	<td>Page1_SNF_KS_64</td>
 	<td></td>
 </tr>
 <tr>

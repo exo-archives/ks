@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8080/ksdemo/public/classic/" />
-<title>Test_SNF_KS_69_ksdemo_ViewVersionInWiki</title>
+<title>Test_SNF_KS_61_ksdemo_QuickEditTitleWiki</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_69_ksdemo_ViewVersionInWiki</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_61_ksdemo_QuickEditTitleWiki</td></tr>
 </thead><tbody>
 <tr>
 	<td>echo</td>
@@ -68,7 +68,7 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>- Create the 1st version</td>
+	<td>- Create page</td>
 	<td></td>
 </tr>
 <tr>
@@ -89,7 +89,7 @@
 <tr>
 	<td>type</td>
 	<td>TitleInput</td>
-	<td>Page1_SNF_KS_69</td>
+	<td>Page1_SNF_KS_61</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -99,7 +99,7 @@
 <tr>
 	<td>type</td>
 	<td>Markup</td>
-	<td>The 1st revision</td>
+	<td>Page1 Content</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -107,184 +107,69 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Page1_SNF_KS_69</td>
-	<td></td>
-</tr>
-<tr>
 	<td>waitForTextPresent</td>
-	<td>The 1st revision</td>
+	<td>Page1_SNF_KS_61</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>The 1st revision</td>
+	<td>Page1_SNF_KS_61</td>
 	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>- Create the 2nd version</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=edit</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=edit</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>TitleInput</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>TitleInput</td>
-	<td>Page1_SNF_KS_69</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>Markup</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>Markup</td>
-	<td>The 2nd revision</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=save</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForText</td>
-	<td>TitleInfo</td>
-	<td>Page1_SNF_KS_69</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>TitleInfo</td>
-	<td>Page1_SNF_KS_69</td>
-</tr>
-<tr>
-	<td>waitForText</td>
-	<td>//div[@id='UIWikiPageContentArea']/p</td>
-	<td>The 2nd revision</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>//div[@id='UIWikiPageContentArea']/p</td>
-	<td>The 2nd revision</td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>- View the 1st version</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=(view change)</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=(view change)</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=v. 1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=v. 1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForText</td>
-	<td>//div[@id='UIWikiPageContentArea']/p</td>
-	<td>The 1st revision</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>//div[@id='UIWikiPageContentArea']/p</td>
-	<td>The 1st revision</td>
-</tr>
-<tr>
-	<td>waitForText</td>
-	<td>TitleInfo</td>
-	<td>Page1_SNF_KS_69</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>TitleInfo</td>
-	<td>Page1_SNF_KS_69</td>
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>You're viewing an old version of this page</td>
+	<td>Page1 Content</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>You're viewing an old version of this page</td>
+	<td>Page1 Content</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForText</td>
-	<td>link=current version</td>
-	<td>current version</td>
+	<td>echo</td>
+	<td>- Edit Title</td>
+	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>link=current version</td>
-	<td>current version</td>
+	<td>waitForElementPresent</td>
+	<td>TitleInfo</td>
+	<td></td>
 </tr>
 <tr>
-	<td>waitForText</td>
-	<td>link=Compare with current</td>
-	<td>Compare with current</td>
+	<td>doubleClick</td>
+	<td>TitleInfo</td>
+	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>link=Compare with current</td>
-	<td>Compare with current</td>
+	<td>waitForElementPresent</td>
+	<td>EdiableInput</td>
+	<td></td>
 </tr>
 <tr>
-	<td>waitForText</td>
-	<td>link=Restore this version</td>
-	<td>Restore this version</td>
+	<td>type</td>
+	<td>EdiableInput</td>
+	<td>Page1_SNF_KS_61_Edited</td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>link=Restore this version</td>
-	<td>Restore this version</td>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='Editable']//a[@class='SubmitLink']</td>
+	<td></td>
 </tr>
 <tr>
-	<td>waitForText</td>
-	<td>link=View page history</td>
-	<td>View page history</td>
+	<td>click</td>
+	<td>//form[@id='Editable']//a[@class='SubmitLink']</td>
+	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>link=View page history</td>
-	<td>View page history</td>
+	<td>waitForTextPresent</td>
+	<td>Page1_SNF_KS_61_Edited</td>
+	<td></td>
 </tr>
 <tr>
-	<td>waitForText</td>
-	<td>link=Next</td>
-	<td>Next</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>link=Next</td>
-	<td>Next</td>
+	<td>verifyTextPresent</td>
+	<td>Page1_SNF_KS_61_Edited</td>
+	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -298,12 +183,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Page1_SNF_KS_69</td>
+	<td>link=Page1_SNF_KS_61_Edited</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Page1_SNF_KS_69</td>
+	<td>link=Page1_SNF_KS_61_Edited</td>
 	<td></td>
 </tr>
 <tr>
@@ -328,17 +213,17 @@
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>Page1</td>
+	<td>link=Page1_SNF_KS_61_Edited</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>Page1</td>
+	<td>link=Page1_SNF_KS_61_Edited</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>- Sign out &amp; finish</td>
+	<td>- Sign out and finish</td>
 	<td></td>
 </tr>
 <tr>
@@ -361,7 +246,6 @@
 	<td>- End of test</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>

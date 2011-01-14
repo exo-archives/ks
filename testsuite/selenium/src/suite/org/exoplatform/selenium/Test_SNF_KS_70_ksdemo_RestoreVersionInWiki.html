@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8080/ksdemo/public/classic/" />
-<title>Test_SNF_KS_59_BasicActionsInWiki</title>
+<title>Test_SNF_KS_70_ksdemo_RestoreVersionInWiki</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_59_BasicActionsInWiki</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_70_ksdemo_RestoreVersionInWiki</td></tr>
 </thead><tbody>
 <tr>
 	<td>echo</td>
@@ -68,7 +68,7 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>- Create page</td>
+	<td>- Create the 1st revision</td>
 	<td></td>
 </tr>
 <tr>
@@ -89,7 +89,7 @@
 <tr>
 	<td>type</td>
 	<td>TitleInput</td>
-	<td>Page1_SNF_KS_59</td>
+	<td>Page1_SNF_KS_70</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -99,67 +99,37 @@
 <tr>
 	<td>type</td>
 	<td>Markup</td>
-	<td>Page1 Content</td>
+	<td>The 1st revision</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
 	<td>link=save</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Page1_SNF_KS_59</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>Page1 Content</td>
+	<td>Page1_SNF_KS_70</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>Page1 Content</td>
+	<td>Page1_SNF_KS_70</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>The 1st revision</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>The 1st revision</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>- Edit page</td>
+	<td>- Create the 2nd revision</td>
 	<td></td>
-</tr>
-<tr>
-	<td>open</td>
-	<td>/ksdemo/private/classic/wiki/WikiHome</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Page1_SNF_KS_59</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Page1_SNF_KS_59</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForText</td>
-	<td>TitleInfo</td>
-	<td>Page1_SNF_KS_59</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>TitleInfo</td>
-	<td>Page1_SNF_KS_59</td>
-</tr>
-<tr>
-	<td>waitForText</td>
-	<td>//div[@id='UIWikiPageContentArea']/p</td>
-	<td>Page1 Content</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>//div[@id='UIWikiPageContentArea']/p</td>
-	<td>Page1 Content</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -179,7 +149,7 @@
 <tr>
 	<td>type</td>
 	<td>TitleInput</td>
-	<td>Page1_SNF_KS_59_Edited</td>
+	<td>Page1_SNF_KS_70</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -189,7 +159,7 @@
 <tr>
 	<td>type</td>
 	<td>Markup</td>
-	<td>Page1 Content Edited</td>
+	<td>The 2nd revision</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -199,41 +169,81 @@
 <tr>
 	<td>waitForText</td>
 	<td>TitleInfo</td>
-	<td>Page1_SNF_KS_59_Edited</td>
+	<td>Page1_SNF_KS_70</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>TitleInfo</td>
-	<td>Page1_SNF_KS_59_Edited</td>
+	<td>Page1_SNF_KS_70</td>
 </tr>
 <tr>
 	<td>waitForText</td>
 	<td>//div[@id='UIWikiPageContentArea']/p</td>
-	<td>Page1 Content Edited</td>
+	<td>The 2nd revision</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='UIWikiPageContentArea']/p</td>
-	<td>Page1 Content Edited</td>
+	<td>The 2nd revision</td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>- Delete test data</td>
+	<td>- Restore to the 1st revision</td>
 	<td></td>
 </tr>
 <tr>
-	<td>open</td>
-	<td>/ksdemo/private/classic/wiki/WikiHome</td>
+	<td>waitForTextPresent</td>
+	<td>2 revisions</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>2 revisions</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Page1_SNF_KS_59_Edited</td>
+	<td>link=(view change)</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Page1_SNF_KS_59_Edited</td>
+	<td>link=(view change)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Restore</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Restore</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>The 1st revision</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>The 1st revision</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>3 revisions</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>3 revisions</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Delete test data</td>
 	<td></td>
 </tr>
 <tr>
@@ -243,7 +253,7 @@
 </tr>
 <tr>
 	<td>clickAt</td>
-	<td>//a[@title='Delete page']</td>
+	<td>link=delete</td>
 	<td></td>
 </tr>
 <tr>
@@ -258,12 +268,12 @@
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>Page1</td>
+	<td>Page1_SNF_KS_70</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>Page1</td>
+	<td>Page1_SNF_KS_70</td>
 	<td></td>
 </tr>
 <tr>

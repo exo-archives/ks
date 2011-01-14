@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8080/ksdemo/public/classic/" />
-<title>Test_SNF_KS_65_ksdemo_PreviewPageInWiki</title>
+<title>Test_SNF_KS_59_BasicActionsInWiki</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_65_ksdemo_PreviewPageInWiki</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_59_BasicActionsInWiki</td></tr>
 </thead><tbody>
 <tr>
 	<td>echo</td>
@@ -68,7 +68,7 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>- Add page, Preview then Save</td>
+	<td>- Create page</td>
 	<td></td>
 </tr>
 <tr>
@@ -89,7 +89,7 @@
 <tr>
 	<td>type</td>
 	<td>TitleInput</td>
-	<td>Page1_SNF_KS_65</td>
+	<td>Page1_SNF_KS_59</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -100,41 +100,6 @@
 	<td>type</td>
 	<td>Markup</td>
 	<td>Page1 Content</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=preview</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=preview</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id='UIWikiMaskWorkspace']/div[1]/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementPresent</td>
-	<td>//div[@id='UIWikiMaskWorkspace']/div[1]/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForText</td>
-	<td>//div[@id='UIWikiMaskWorkspace']/div[2]/div/div/div/div/p</td>
-	<td>Page1 Content</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>//div[@id='UIWikiMaskWorkspace']/div[2]/div/div/div/div/p</td>
-	<td>Page1 Content</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@id='UIWikiMaskWorkspace']/div[1]/div/div/a</td>
-	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -143,7 +108,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Page1_SNF_KS_65</td>
+	<td>link=Page1_SNF_KS_59</td>
 	<td></td>
 </tr>
 <tr>
@@ -158,73 +123,73 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>- Edit, Preview then Save</td>
+	<td>- Edit page</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/private/classic/wiki/WikiHome</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=edit</td>
+	<td>link=Page1_SNF_KS_59</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=edit</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>TitleInput</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>TitleInput</td>
-	<td>Page1_SNF_KS_65_Edited</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>Markup</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>Markup</td>
-	<td>Page1 Content Edited</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=preview</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=preview</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id='UIWikiMaskWorkspace']/div[1]/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementPresent</td>
-	<td>//div[@id='UIWikiMaskWorkspace']/div[1]/div/div/div</td>
+	<td>clickAndWait</td>
+	<td>link=Page1_SNF_KS_59</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForText</td>
-	<td>//div[@id='UIWikiMaskWorkspace']/div[2]/div/div/div/div/p</td>
-	<td>Page1 Content Edited</td>
+	<td>TitleInfo</td>
+	<td>Page1_SNF_KS_59</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//div[@id='UIWikiMaskWorkspace']/div[2]/div/div/div/div/p</td>
-	<td>Page1 Content Edited</td>
+	<td>TitleInfo</td>
+	<td>Page1_SNF_KS_59</td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[@id='UIWikiPageContentArea']/p</td>
+	<td>Page1 Content</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='UIWikiPageContentArea']/p</td>
+	<td>Page1 Content</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=edit</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIWikiMaskWorkspace']/div[1]/div/div/a</td>
+	<td>link=edit</td>
 	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>TitleInput</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>TitleInput</td>
+	<td>Page1_SNF_KS_59_Edited</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>Markup</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Markup</td>
+	<td>Page1 Content Edited</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -234,12 +199,12 @@
 <tr>
 	<td>waitForText</td>
 	<td>TitleInfo</td>
-	<td>Page1_SNF_KS_65_Edited</td>
+	<td>Page1_SNF_KS_59_Edited</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>TitleInfo</td>
-	<td>Page1_SNF_KS_65_Edited</td>
+	<td>Page1_SNF_KS_59_Edited</td>
 </tr>
 <tr>
 	<td>waitForText</td>
@@ -263,12 +228,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Page1_SNF_KS_65_Edited</td>
+	<td>link=Page1_SNF_KS_59_Edited</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Page1_SNF_KS_65_Edited</td>
+	<td>link=Page1_SNF_KS_59_Edited</td>
 	<td></td>
 </tr>
 <tr>
@@ -278,7 +243,7 @@
 </tr>
 <tr>
 	<td>clickAt</td>
-	<td>link=delete</td>
+	<td>//a[@title='Delete page']</td>
 	<td></td>
 </tr>
 <tr>
@@ -293,12 +258,12 @@
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>Page1</td>
+	<td>link=Page1_SNF_KS_59_Edited</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>Page1</td>
+	<td>link=Page1_SNF_KS_59_Edited</td>
 	<td></td>
 </tr>
 <tr>
