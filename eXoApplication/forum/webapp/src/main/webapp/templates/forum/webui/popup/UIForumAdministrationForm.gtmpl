@@ -77,7 +77,7 @@
 												<table class="UIGrid" width="100%">
 													<tbody>
 														<tr >
-															<th style="text-align:center">IP</th>
+															<th style="text-align:center"><%=_ctx.appRes("UIForumAdministrationForm.label.IP")%></th>
 															<th><span></span></th>
 														</tr>	
 														<tr style="background:#edf3ee">
@@ -133,10 +133,10 @@
 												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 													<thead>
 														<tr>
-															<th style="width:80px; text-align:center">TAG</th>
-															<th>Description</th>
-															<th width="40px">Active</th>
-															<th width="60px">Edit/Delete</th>
+															<th style="width:80px; text-align:center"><%=_ctx.appRes("UIForumAdministrationForm.label.TAG");%></th>
+															<th><%=_ctx.appRes("UIForumAdministrationForm.label.Description");%></th>
+															<th width="40px"><%=_ctx.appRes("UIForumAdministrationForm.label.Active");%></th>
+															<th width="60px"><%=_ctx.appRes("UIForumAdministrationForm.label.Action");%></th>
 														</tr>
 													</thead>
 												</table>
@@ -162,7 +162,7 @@
 															<td style="width:80px;text-align:center">
 																<span><%=bbcode.getTagName();%></span>
 																<% if(bbcode.isOption()) {%>
-																<span>(Option)</span>
+																<span>(<%=_ctx.appRes("UIForumAdministrationForm.label.Option");%>)</span>
 																<% } %>
 															</td>
 															<td style="text-align:left"><%=bbcode.getDescription();%></td>
@@ -170,10 +170,10 @@
 															<td style="width:60px;text-align:center">
 																<div class="ActionContainer" style="margin:0px auto; width:42px;">
 																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("EditBBCode", tagId)%>">
-																		 <div title="Edit BBCode" class="Icon16x16 EditIcon"><span></span></div>							
+																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.EditBBCode");%>" class="Icon16x16 EditIcon"><span></span></div>							
 																	</div>
 																	<div style="cursor:pointer; float:left; margin:2px;" onclick="if(confirm('<%=_ctx.appRes("UIForumAdministrationForm.msg.confirm-delete-BBCode")%>')){<%=uiform.event("DeleteBBCode", tagId)%>;}">
-																		 <div title="Delete BBCode" class="Icon16x16 DeleteIcon"><span></span></div>							
+																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.DeleteBBCode");%>" class="Icon16x16 DeleteIcon"><span></span></div>							
 																	</div>
 																	<div style="clear:left;"><span></span></div>
 																</div>
@@ -188,14 +188,13 @@
 													<tr>
 														<td align="center">
 														<%	
-															 String actionLabel = "Add BBcode"; 
 															 String link = uiform.event("AddNewBBCode") ;
 														%>
 															 <div onclick="$link" class="ActionButton LightBlueStyle">
 																 <div class="ButtonLeft">
 																	 <div class="ButtonRight">
 																	 	 <div class="ButtonMiddle">
-																		 	 <a href="javascript:void(0);">$actionLabel</a>
+																		 	 <a href="javascript:void(0);"><%=_ctx.appRes("UIForumAdministrationForm.label.AddBBcode");%></a>
 																	 	 </div>
 																	 </div>
 																 </div>
@@ -211,11 +210,11 @@
 												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 													<thead>
 														<tr>
-															<th style="width:120px; text-align:center">Category</th>
-															<th style="width:120px; text-align:center">Forum</th>
-															<th width="40px">Active</th>
-															<th>Last Run</th>
-															<th width="60px">Action</th>
+															<th style="width:120px; text-align:center"><%=_ctx.appRes("UIForumAdministrationForm.label.Category");%></th>
+															<th style="width:120px; text-align:center"><%=_ctx.appRes("UIForumAdministrationForm.label.Forum");%></th>
+															<th width="40px"><%=_ctx.appRes("UIForumAdministrationForm.label.Active");%></th>
+															<th><%=_ctx.appRes("UIForumAdministrationForm.label.LastRun");%> </th>
+															<th width="60px"><%=_ctx.appRes("UIForumAdministrationForm.label.Action");%></th>
 														</tr>
 													</thead>
 												</table>
@@ -254,10 +253,10 @@
 															<td width="60px">
 																<div class="ActionContainer" style="margin:0px auto; width:52px;">
 																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
-																		 <div title="Prune Setting" class="PruneSettingIcon"><span></span></div>							
+																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.PruneSetting");%>" class="PruneSettingIcon"><span></span></div>							
 																	</div>
 																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
-																		 <div title="Run" class="RunIcon"><span></span></div>							
+																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.Run");%>" class="RunIcon"><span></span></div>							
 																	</div>
 																	<div style="clear:left;"><span></span></div>
 																</div>
@@ -284,10 +283,10 @@
 															<td width="60px">
 																<div class="ActionContainer" style="margin:0px auto; width:52px;">
 																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
-																		 <div title="Prune Setting" class="PruneSettingIcon"><span></span></div>							
+																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.PruneSetting");%>" class="PruneSettingIcon"><span></span></div>							
 																	</div>
 																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
-																		 <div title="Run" class="RunIcon"><span></span></div>							
+																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.Run");%>" class="RunIcon"><span></span></div>							
 																	</div>
 																	<div style="clear:left;"><span></span></div>
 																</div>
@@ -308,9 +307,9 @@
 												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 													<thead>
 														<tr>
-															<th style="width:60px; text-align:center">Icon</th>
-															<th style="text-align:left">Type Name</th>
-															<th width="80px">Action</th>
+															<th style="width:60px; text-align:center"><%=_ctx.appRes("UIForumAdministrationForm.label.Icon");%></th>
+															<th style="text-align:left"><%=_ctx.appRes("UIForumAdministrationForm.label.TypeName");%></th>
+															<th width="80px"><%=_ctx.appRes("UIForumAdministrationForm.label.Action");%></th>
 														</tr>
 													</thead>
 												</table>
@@ -333,10 +332,10 @@
 															<td width="80px">
 																<div class="ActionContainer" style="margin:0px auto; width:60px;">
 																	<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("EditTopicType", topicTId)%>">
-																		 <div title="Edit this topic type." class="Icon16x16 EditIcon"><span></span></div>							
+																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.EditThisTopicType");%>." class="Icon16x16 EditIcon"><span></span></div>							
 																	</div>
 																	<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("DeleteTopicType", topicTId)%>">
-																		 <div title="Delete this topic type." class="Icon16x16 DeleteIcon"><span></span></div>							
+																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.DeleteThisTopicType");%>" class="Icon16x16 DeleteIcon"><span></span></div>							
 																	</div>
 																	<div style="clear:left;"><span></span></div>
 																</div>
@@ -350,15 +349,11 @@
 												<table class="ActionContainer">
 													<tr>
 														<td align="center">
-														<%	
-															 String actionLabel = "Add Topic Type"; 
-															 String link = uiform.event("AddTopicType") ;
-														%>
-															 <div onclick="$link" class="ActionButton LightBlueStyle">
+															 <div onclick="<%=uiform.event("AddTopicType");%>" class="ActionButton LightBlueStyle">
 																 <div class="ButtonLeft">
 																	 <div class="ButtonRight">
 																	 	 <div class="ButtonMiddle">
-																		 	 <a href="javascript:void(0);">$actionLabel</a>
+																		 	 <a href="javascript:void(0);"><%=_ctx.appRes("UIForumAdministrationForm.label.AddTopicType");%></a>
 																	 	 </div>
 																	 </div>
 																 </div>
@@ -400,9 +395,7 @@
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
 								<div class="ButtonMiddle">
-									<a href="javascript:void(0);">
-										$actionLabel
-									</a>
+									<a href="javascript:void(0);">$actionLabel</a>
 								</div>
 							</div>
 						</div>

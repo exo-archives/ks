@@ -1,0 +1,537 @@
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UITopicForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UITopicForm.java	(revision 64658)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UITopicForm.java	(working copy)
+@@ -169,7 +169,7 @@
+ 		
+ 		setTopicType();
+ 		ls = new ArrayList<SelectItemOption<String>>();
+-		ls.add(new SelectItemOption<String>("none", getLabel("None")));
++		ls.add(new SelectItemOption<String>(getLabel("None"), "none"));
+ 		for (TopicType topicType : listTT) {
+ 			ls.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
+     }
+@@ -270,7 +270,7 @@
+ 	public void addNewTopicType() throws Exception {
+ 		setTopicType();
+ 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
+-		ls.add(new SelectItemOption<String>("none", getLabel("None")));
++		ls.add(new SelectItemOption<String>(getLabel("None"), "none"));
+ 		for (TopicType topicType : listTT) {
+ 			ls.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
+     }
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIAutoPruneSettingForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIAutoPruneSettingForm.java	(revision 64658)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIAutoPruneSettingForm.java	(working copy)
+@@ -18,10 +18,13 @@
+ 
+ import java.util.ArrayList;
+ import java.util.List;
++import java.util.Locale;
+ 
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.forum.service.ForumService;
+ import org.exoplatform.forum.service.PruneSetting;
++import org.exoplatform.portal.application.PortalRequestContext;
++import org.exoplatform.portal.webui.util.Util;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+@@ -63,6 +66,7 @@
+ 	public static final String FIELD_VALUEMONTHS = "Months" ;
+ 	
+ 	private PruneSetting pruneSetting;
++	private Locale locale ;
+ 	private long topicOld = 0;
+ 	private boolean isTest = false;
+ 	private boolean isActivate = false;
+@@ -93,6 +97,29 @@
+ 		setActions(new String[]{"Save", "Close"});
+   }
+ 	
++	private void setLocale() throws Exception {
++		PortalRequestContext portalContext = Util.getPortalRequestContext();
++		Locale locale = portalContext.getLocale();
++		if(this.locale == null || !locale.getLanguage().equals(this.locale.getLanguage())) {
++			initDefaultContent();
++			this.locale = locale;
++		}
++	}
++	
++	private void initDefaultContent() throws Exception {
++		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
++		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEDAY), FIELD_VALUEDAY)) ;
++		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEWEEKS), FIELD_VALUEWEEKS)) ;
++		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEMONTHS), FIELD_VALUEMONTHS)) ;
++		getUIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX).setOptions(list) ;
++		
++		list = new ArrayList<SelectItemOption<String>>() ;
++		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEDAY), FIELD_VALUEDAY+"_Id")) ;
++		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEWEEKS), FIELD_VALUEWEEKS+"_Id")) ;
++		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEMONTHS), FIELD_VALUEMONTHS+"_Id")) ;
++		getUIFormSelectBox(FIELD_JOBDAY_SELECTBOX).setOptions(list) ;
++	}
++	
+   public boolean isActivate() {
+   	return isActivate;
+   }
+@@ -102,6 +129,7 @@
+ 
+ 	@SuppressWarnings("unused")
+   private void setInitForm() throws Exception{
++		this.setLocale();
+ 		if(!isTest) {
+ 			long i = pruneSetting.getInActiveDay();
+ 			String type = FIELD_VALUEDAY;
+Index: eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_en.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_en.properties	(revision 64658)
++++ eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_en.properties	(working copy)
+@@ -32,6 +32,7 @@
+ UIForumPortlet.label.post=Post
+ UIForumPortlet.label.AdvancedSearch=Advanced Search
+ UIForumPortlet.label.GoLastRead=Go to last read post.
++UIForumPortlet.label.TopicRatingVotes=Rated <keyWord>/5.
+ 
+ UIForumPortlet.msg.topicEmpty=This topic no longer exists.
+ UIForumPortlet.msg.do-not-permission=This link is not visible anymore.
+@@ -223,11 +224,11 @@
+ UITopicForm.action.Cancel=Cancel
+ UITopicForm.action.Attachment=Attachments
+ UITopicForm.action.RemoveAttachment=Remove
+-UITopicForm.action.AddTypeTopic=Add Topic type
+ 
+-UITopicForm.label.action.SelectUser=Select a user
+-UITopicForm.label.action.SelectMemberShip=Select a role
+-UITopicForm.label.action.SelectGroup=Select a group
++UITopicForm.label.AddTypeTopic=Add Topic type
++UITopicForm.label.SelectUser=Select a user
++UITopicForm.label.SelectMemberShip=Select a role
++UITopicForm.label.SelectGroup=Select a group
+ UITopicForm.label.None=Untyped
+ UITopicForm.label.ThreadTitle=Title
+ UITopicForm.label.editReason=Reason
+@@ -412,12 +413,35 @@
+ UIForumAdministrationForm.label.Add=Add
+ UIForumAdministrationForm.label.Posts=Posts
+ UIForumAdministrationForm.label.ipBanTab=IP Bans
++UIForumAdministrationForm.label.IP=IP
+ UIForumAdministrationForm.label.forumSortTab=Sort
+ UIForumAdministrationForm.label.forumCensorTab=Censor
+ UIForumAdministrationForm.label.notifyEmailTab=Notification
++
+ UIForumAdministrationForm.label.bbcodesTab=BB Codes
++UIForumAdministrationForm.label.TAG=TAG
++UIForumAdministrationForm.label.Description=Description
++UIForumAdministrationForm.label.Active=Active
++UIForumAdministrationForm.label.EditBBCode=Edit BBCode
++UIForumAdministrationForm.label.DeleteBBCode=Delete BBCode
++UIForumAdministrationForm.label.AddBBcode=Add BBcode
++UIForumAdministrationForm.label.Option=Option
++
+ UIForumAdministrationForm.label.autoPruneTab=Auto-Prune
++UIForumAdministrationForm.label.Category=#{UIForumPortlet.label.category}
++UIForumAdministrationForm.label.Forum=#{UIForumPortlet.label.forum}
++UIForumAdministrationForm.label.LastRun=Last Run
++UIForumAdministrationForm.label.Action=Action
++UIForumAdministrationForm.label.PruneSetting=Prune Setting
++UIForumAdministrationForm.label.Run=Run
++
+ UIForumAdministrationForm.label.topicTypeManagerTab=Topic Types
++UIForumAdministrationForm.label.TypeName=Type Name
++UIForumAdministrationForm.label.Icon=Icon
++UIForumAdministrationForm.label.EditThisTopicType=Edit this topic type.
++UIForumAdministrationForm.label.DeleteThisTopicType=Delete this topic type.
++UIForumAdministrationForm.label.AddTopicType=Add Topic Type
++
+ UIForumAdministrationForm.label.activeAbout=Edit topics inactive for
+ UIForumAdministrationForm.label.setActive=DesActivate
+ UIForumAdministrationForm.label.forumSortBy=Sort forums by
+@@ -500,6 +524,11 @@
+ UISearchForm.label.Posts=Posts
+ UISearchForm.label.Views=Views
+ 
++UISearchForm.label.Category=#{UIForumPortlet.label.category}
++UISearchForm.label.Forum=#{UIForumPortlet.label.forum}
++UISearchForm.label.Topic=#{UIForumPortlet.label.topic}
++UISearchForm.label.Post=#{UIForumPortlet.label.post}
++
+ UISearchForm.msg.checkEmpty=Please enter a search term.
+ UIQuickSearchForm.msg.checkEmpty=Please enter a search term.
+ UIQuickSearchForm.msg.failure=Please enter a simpler search term.
+@@ -791,6 +820,7 @@
+ UITopicDetail.label.Message=Message
+ UITopicDetail.label.Moderation=Moderation
+ UITopicDetail.label.Tag=Tag
++UITopicDetail.label.AddTag=Add Tag
+ UITopicDetail.label.VoteThread=Rate
+ UITopicDetail.label.SearchThisThread=Search this topic
+ UITopicDetail.label.ThreadTools=More actions
+@@ -1235,6 +1265,9 @@
+ EditTopicTypeForm.label.topicTypeIcon=Icon
+ EditTopicTypeForm.label.default=Default
+ 
++UIAddTopicTypeForm.action.Save=Save
++UIAddTopicTypeForm.action.Cancel=Cancel
++
+ UIAddTopicTypeForm.smg.SameNameType=Topic type is existing.
+ UIAddTopicTypeForm.smg.SameIconType=Icon was selected.
+ #############################################################################
+Index: eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet.properties	(revision 64658)
++++ eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet.properties	(working copy)
+@@ -32,6 +32,7 @@
+ UIForumPortlet.label.post=Post
+ UIForumPortlet.label.AdvancedSearch=Advanced Search
+ UIForumPortlet.label.GoLastRead=Go to last read post.
++UIForumPortlet.label.TopicRatingVotes=Rated <keyWord>/5.
+ 
+ UIForumPortlet.msg.topicEmpty=This topic no longer exists.
+ UIForumPortlet.msg.do-not-permission=This link is not visible anymore.
+@@ -223,11 +224,11 @@
+ UITopicForm.action.Cancel=Cancel
+ UITopicForm.action.Attachment=Attachments
+ UITopicForm.action.RemoveAttachment=Remove
+-UITopicForm.action.AddTypeTopic=Add Topic type
+ 
+-UITopicForm.label.action.SelectUser=Select a user
+-UITopicForm.label.action.SelectMemberShip=Select a role
+-UITopicForm.label.action.SelectGroup=Select a group
++UITopicForm.label.AddTypeTopic=Add Topic type
++UITopicForm.label.SelectUser=Select a user
++UITopicForm.label.SelectMemberShip=Select a role
++UITopicForm.label.SelectGroup=Select a group
+ UITopicForm.label.None=Untyped
+ UITopicForm.label.ThreadTitle=Title
+ UITopicForm.label.editReason=Reason
+@@ -412,12 +413,35 @@
+ UIForumAdministrationForm.label.Add=Add
+ UIForumAdministrationForm.label.Posts=Posts
+ UIForumAdministrationForm.label.ipBanTab=IP Bans
++UIForumAdministrationForm.label.IP=IP
+ UIForumAdministrationForm.label.forumSortTab=Sort
+ UIForumAdministrationForm.label.forumCensorTab=Censor
+ UIForumAdministrationForm.label.notifyEmailTab=Notification
++
+ UIForumAdministrationForm.label.bbcodesTab=BB Codes
++UIForumAdministrationForm.label.TAG=TAG
++UIForumAdministrationForm.label.Description=Description
++UIForumAdministrationForm.label.Active=Active
++UIForumAdministrationForm.label.EditBBCode=Edit BBCode
++UIForumAdministrationForm.label.DeleteBBCode=Delete BBCode
++UIForumAdministrationForm.label.AddBBcode=Add BBcode
++UIForumAdministrationForm.label.Option=Option
++
+ UIForumAdministrationForm.label.autoPruneTab=Auto-Prune
++UIForumAdministrationForm.label.Category=#{UIForumPortlet.label.category}
++UIForumAdministrationForm.label.Forum=#{UIForumPortlet.label.forum}
++UIForumAdministrationForm.label.LastRun=Last Run
++UIForumAdministrationForm.label.Action=Action
++UIForumAdministrationForm.label.PruneSetting=Prune Setting
++UIForumAdministrationForm.label.Run=Run
++
+ UIForumAdministrationForm.label.topicTypeManagerTab=Topic Types
++UIForumAdministrationForm.label.TypeName=Type Name
++UIForumAdministrationForm.label.Icon=Icon
++UIForumAdministrationForm.label.EditThisTopicType=Edit this topic type.
++UIForumAdministrationForm.label.DeleteThisTopicType=Delete this topic type.
++UIForumAdministrationForm.label.AddTopicType=Add Topic Type
++
+ UIForumAdministrationForm.label.activeAbout=Edit topics inactive for
+ UIForumAdministrationForm.label.setActive=DesActivate
+ UIForumAdministrationForm.label.forumSortBy=Sort forums by
+@@ -430,7 +454,7 @@
+ UIForumAdministrationForm.label.headerSubject=Notification subject template
+ UIForumAdministrationForm.label.censorKeyword=Censored keywords: <br/><br/><span style="text-align: center;"><i>(comma separated)</i></span>
+ UIForumAdministrationForm.label.notifyEmailContentDefault=Hi,</br> You receive this email because you registered for eXo Forum and Topic Watching notification.<br/>We would like to inform you that there is a new $ADD_TYPE in the $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> with the following content: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, posted by <b>$POSTER</b> .</div><div>Go directly to the post: <a target="_blank" href="$VIEWPOST_LINK">Click here.</a> <br/>Or go to reply to the post: <a target="_blank" href="$REPLYPOST_LINK">Click here.</a></div>
+-UIForumAdministrationForm.label.notifyType=Category/Forum/Topic/Post
++UIForumAdministrationForm.label.notifyType=#{UIForumPortlet.label.category}/#{UIForumPortlet.label.forum}/#{UIForumPortlet.label.topic}/#{UIForumPortlet.label.post}
+ UIForumAdministrationForm.label.EmailToAuthorMoved=<p>Your $OBJECT_TYPE: "<b>$OBJECT_NAME</b>" has been moved to $OBJECT_PARENT_TYPE "<b>$OBJECT_PARENT_NAME</b>"</p><p>Go directly to the topic : $VIEWPOST_LINK</p> 
+ UIForumAdministrationForm.label.notifyEmailHeaderSubjectDefault=[$CATEGORY][$FORUM] $TOPIC
+ # Label of select Box#
+@@ -500,6 +524,11 @@
+ UISearchForm.label.Posts=Posts
+ UISearchForm.label.Views=Views
+ 
++UISearchForm.label.Category=#{UIForumPortlet.label.category}
++UISearchForm.label.Forum=#{UIForumPortlet.label.forum}
++UISearchForm.label.Topic=#{UIForumPortlet.label.topic}
++UISearchForm.label.Post=#{UIForumPortlet.label.post}
++
+ UISearchForm.msg.checkEmpty=Please enter a search term.
+ UIQuickSearchForm.msg.checkEmpty=Please enter a search term.
+ UIQuickSearchForm.msg.failure=Please enter a simpler search term.
+@@ -791,6 +820,7 @@
+ UITopicDetail.label.Message=Message
+ UITopicDetail.label.Moderation=Moderation
+ UITopicDetail.label.Tag=Tag
++UITopicDetail.label.AddTag=Add Tag
+ UITopicDetail.label.VoteThread=Rate
+ UITopicDetail.label.SearchThisThread=Search this topic
+ UITopicDetail.label.ThreadTools=More actions
+@@ -1235,6 +1265,9 @@
+ EditTopicTypeForm.label.topicTypeIcon=Icon
+ EditTopicTypeForm.label.default=Default
+ 
++UIAddTopicTypeForm.action.Save=Save
++UIAddTopicTypeForm.action.Cancel=Cancel
++
+ UIAddTopicTypeForm.smg.SameNameType=Topic type is existing.
+ UIAddTopicTypeForm.smg.SameIconType=Icon was selected.
+ #############################################################################
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicDetail.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicDetail.gtmpl	(revision 64658)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicDetail.gtmpl	(working copy)
+@@ -564,7 +564,7 @@
+ 																			<div class="ButtonLeft">
+ 																				<div class="ButtonRight">
+ 																					<div class="ButtonMiddle">
+-																					 <div onclick="<%=uicomponent.event("AddTagTopic")%>">Add Tag</div>
++																					 <div onclick="<%=uicomponent.event("AddTagTopic")%>"><%=_ctx.appRes("UITopicDetail.label.AddTag");%></div>
+ 																					</div>
+ 																				</div>
+ 																			</div>
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIPageListPostByIP.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIPageListPostByIP.gtmpl	(revision 64658)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIPageListPostByIP.gtmpl	(working copy)
+@@ -27,19 +27,19 @@
+ 						<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+ 							<thead>
+ 								<tr>
+-									<th><span></span></th>
++									<th style="width:80px">><span></span></th>
+ 									<th style="width:40px"></th>
+ 									<th>
+ 										<div onclick="<%=uicomponent.event("SetOrderBy","name");%>">
+ 											<div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></div>
+ 										</div>
+ 									</th>
+-									<th style="width:120px">
++									<th style="width:130px">
+ 										<div onclick="<%=uicomponent.event("SetOrderBy","createdDate");%>">
+ 											<div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></div>
+ 										</div>
+ 									</th>
+-									<th style="width:40px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
++									<th style="width:60px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
+ 								</tr>
+ 							</thead>
+ 							<tbody>
+@@ -64,9 +64,9 @@
+ 										<td class="Tdbox">
+ 										<%
+ 											if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())){%>
+-												<%=_ctx.appRes("UIPageListPostByIP.label.Topic");%>
++												<%=_ctx.appRes("UIForumPortlet.label.topic");%>
+ 										<%} else {%>
+-												<%=_ctx.appRes("UIPageListPostByIP.label.Post");%>
++												<%=_ctx.appRes("UIForumPortlet.label.post");%>
+ 										<%}
+ 										%>
+ 										</td>
+@@ -119,20 +119,17 @@
+ 			<table class="ActionContainer">
+ 				<tr>
+ 					<td align="center">
+-	        <% for(action in uicomponent.getActions()) { 
+-	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+-	           String link = uicomponent.event(action) ;
+-	        %>
+-	        		<div onclick="$link" class="ActionButton LightBlueStyle">
++	        <% for(action in uicomponent.getActions()) { %>
++	        		<div onclick="<%=uicomponent.event(action);%>" class="ActionButton LightBlueStyle">
+ 		      	  	<div class="ButtonLeft">
+ 		        	  	<div class="ButtonRight">
+ 		          	  	<div class="ButtonMiddle">
+-			          	  	<a href="javascript:void(0);">$actionLabel</a>
++			          	  	<a href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+ 		          	  	</div>
+ 		            	</div>
+ 		          	</div>
+ 		        	</div>
+-	          <%}%>
++	        <% } %>
+ 	      	</td>
+ 				</tr>
+ 		  </table> 
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIForumAdministrationForm.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIForumAdministrationForm.gtmpl	(revision 64658)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIForumAdministrationForm.gtmpl	(working copy)
+@@ -77,7 +77,7 @@
+ 												<table class="UIGrid" width="100%">
+ 													<tbody>
+ 														<tr >
+-															<th style="text-align:center">IP</th>
++															<th style="text-align:center"><%=_ctx.appRes("UIForumAdministrationForm.label.IP")%></th>
+ 															<th><span></span></th>
+ 														</tr>	
+ 														<tr style="background:#edf3ee">
+@@ -133,10 +133,10 @@
+ 												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+ 													<thead>
+ 														<tr>
+-															<th style="width:80px; text-align:center">TAG</th>
+-															<th>Description</th>
+-															<th width="40px">Active</th>
+-															<th width="60px">Edit/Delete</th>
++															<th style="width:80px; text-align:center"><%=_ctx.appRes("UIForumAdministrationForm.label.TAG");%></th>
++															<th><%=_ctx.appRes("UIForumAdministrationForm.label.Description");%></th>
++															<th width="40px"><%=_ctx.appRes("UIForumAdministrationForm.label.Active");%></th>
++															<th width="60px"><%=_ctx.appRes("UIForumAdministrationForm.label.Action");%></th>
+ 														</tr>
+ 													</thead>
+ 												</table>
+@@ -162,7 +162,7 @@
+ 															<td style="width:80px;text-align:center">
+ 																<span><%=bbcode.getTagName();%></span>
+ 																<% if(bbcode.isOption()) {%>
+-																<span>(Option)</span>
++																<span>(<%=_ctx.appRes("UIForumAdministrationForm.label.Option");%>)</span>
+ 																<% } %>
+ 															</td>
+ 															<td style="text-align:left"><%=bbcode.getDescription();%></td>
+@@ -170,10 +170,10 @@
+ 															<td style="width:60px;text-align:center">
+ 																<div class="ActionContainer" style="margin:0px auto; width:42px;">
+ 																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("EditBBCode", tagId)%>">
+-																		 <div title="Edit BBCode" class="Icon16x16 EditIcon"><span></span></div>							
++																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.EditBBCode");%>" class="Icon16x16 EditIcon"><span></span></div>							
+ 																	</div>
+ 																	<div style="cursor:pointer; float:left; margin:2px;" onclick="if(confirm('<%=_ctx.appRes("UIForumAdministrationForm.msg.confirm-delete-BBCode")%>')){<%=uiform.event("DeleteBBCode", tagId)%>;}">
+-																		 <div title="Delete BBCode" class="Icon16x16 DeleteIcon"><span></span></div>							
++																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.DeleteBBCode");%>" class="Icon16x16 DeleteIcon"><span></span></div>							
+ 																	</div>
+ 																	<div style="clear:left;"><span></span></div>
+ 																</div>
+@@ -188,14 +188,13 @@
+ 													<tr>
+ 														<td align="center">
+ 														<%	
+-															 String actionLabel = "Add BBcode"; 
+ 															 String link = uiform.event("AddNewBBCode") ;
+ 														%>
+ 															 <div onclick="$link" class="ActionButton LightBlueStyle">
+ 																 <div class="ButtonLeft">
+ 																	 <div class="ButtonRight">
+ 																	 	 <div class="ButtonMiddle">
+-																		 	 <a href="javascript:void(0);">$actionLabel</a>
++																		 	 <a href="javascript:void(0);"><%=_ctx.appRes("UIForumAdministrationForm.label.AddBBcode");%></a>
+ 																	 	 </div>
+ 																	 </div>
+ 																 </div>
+@@ -211,11 +210,11 @@
+ 												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+ 													<thead>
+ 														<tr>
+-															<th style="width:120px; text-align:center">Category</th>
+-															<th style="width:120px; text-align:center">Forum</th>
+-															<th width="40px">Active</th>
+-															<th>Last Run</th>
+-															<th width="60px">Action</th>
++															<th style="width:120px; text-align:center"><%=_ctx.appRes("UIForumAdministrationForm.label.Category");%></th>
++															<th style="width:120px; text-align:center"><%=_ctx.appRes("UIForumAdministrationForm.label.Forum");%></th>
++															<th width="40px"><%=_ctx.appRes("UIForumAdministrationForm.label.Active");%></th>
++															<th><%=_ctx.appRes("UIForumAdministrationForm.label.LastRun");%> </th>
++															<th width="60px"><%=_ctx.appRes("UIForumAdministrationForm.label.Action");%></th>
+ 														</tr>
+ 													</thead>
+ 												</table>
+@@ -254,10 +253,10 @@
+ 															<td width="60px">
+ 																<div class="ActionContainer" style="margin:0px auto; width:52px;">
+ 																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
+-																		 <div title="Prune Setting" class="PruneSettingIcon"><span></span></div>							
++																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.PruneSetting");%>" class="PruneSettingIcon"><span></span></div>							
+ 																	</div>
+ 																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
+-																		 <div title="Run" class="RunIcon"><span></span></div>							
++																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.Run");%>" class="RunIcon"><span></span></div>							
+ 																	</div>
+ 																	<div style="clear:left;"><span></span></div>
+ 																</div>
+@@ -284,10 +283,10 @@
+ 															<td width="60px">
+ 																<div class="ActionContainer" style="margin:0px auto; width:52px;">
+ 																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
+-																		 <div title="Prune Setting" class="PruneSettingIcon"><span></span></div>							
++																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.PruneSetting");%>" class="PruneSettingIcon"><span></span></div>							
+ 																	</div>
+ 																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
+-																		 <div title="Run" class="RunIcon"><span></span></div>							
++																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.Run");%>" class="RunIcon"><span></span></div>							
+ 																	</div>
+ 																	<div style="clear:left;"><span></span></div>
+ 																</div>
+@@ -308,9 +307,9 @@
+ 												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+ 													<thead>
+ 														<tr>
+-															<th style="width:60px; text-align:center">Icon</th>
+-															<th style="text-align:left">Type Name</th>
+-															<th width="80px">Action</th>
++															<th style="width:60px; text-align:center"><%=_ctx.appRes("UIForumAdministrationForm.label.Icon");%></th>
++															<th style="text-align:left"><%=_ctx.appRes("UIForumAdministrationForm.label.TypeName");%></th>
++															<th width="80px"><%=_ctx.appRes("UIForumAdministrationForm.label.Action");%></th>
+ 														</tr>
+ 													</thead>
+ 												</table>
+@@ -333,10 +332,10 @@
+ 															<td width="80px">
+ 																<div class="ActionContainer" style="margin:0px auto; width:60px;">
+ 																	<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("EditTopicType", topicTId)%>">
+-																		 <div title="Edit this topic type." class="Icon16x16 EditIcon"><span></span></div>							
++																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.EditThisTopicType");%>." class="Icon16x16 EditIcon"><span></span></div>							
+ 																	</div>
+ 																	<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("DeleteTopicType", topicTId)%>">
+-																		 <div title="Delete this topic type." class="Icon16x16 DeleteIcon"><span></span></div>							
++																		 <div title="<%=_ctx.appRes("UIForumAdministrationForm.label.DeleteThisTopicType");%>" class="Icon16x16 DeleteIcon"><span></span></div>							
+ 																	</div>
+ 																	<div style="clear:left;"><span></span></div>
+ 																</div>
+@@ -350,15 +349,11 @@
+ 												<table class="ActionContainer">
+ 													<tr>
+ 														<td align="center">
+-														<%	
+-															 String actionLabel = "Add Topic Type"; 
+-															 String link = uiform.event("AddTopicType") ;
+-														%>
+-															 <div onclick="$link" class="ActionButton LightBlueStyle">
++															 <div onclick="<%=uiform.event("AddTopicType");%>" class="ActionButton LightBlueStyle">
+ 																 <div class="ButtonLeft">
+ 																	 <div class="ButtonRight">
+ 																	 	 <div class="ButtonMiddle">
+-																		 	 <a href="javascript:void(0);">$actionLabel</a>
++																		 	 <a href="javascript:void(0);"><%=_ctx.appRes("UIForumAdministrationForm.label.AddTopicType");%></a>
+ 																	 	 </div>
+ 																	 </div>
+ 																 </div>
+@@ -400,9 +395,7 @@
+ 						<div class="ButtonLeft">
+ 							<div class="ButtonRight">
+ 								<div class="ButtonMiddle">
+-									<a href="javascript:void(0);">
+-										$actionLabel
+-									</a>
++									<a href="javascript:void(0);">$actionLabel</a>
+ 								</div>
+ 							</div>
+ 						</div>
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIMoveTopicForm.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIMoveTopicForm.gtmpl	(revision 64658)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIMoveTopicForm.gtmpl	(working copy)
+@@ -6,7 +6,7 @@
+ 
+ <div class="UIMoveTopicForm">
+ 	<% uiform.begin() %>
+-	<div class="TitleMoveThreads">Choose a Destination Forum:</div>
++	<div class="TitleMoveThreads"><%=_ctx.appRes("UISelectItemForum.label.ChooseDestinationForum")%>:</div>
+ 	<div class="UITree ScrollArea">
+ 		<div class="TreeContainer ParentNode">
+ 		<% 

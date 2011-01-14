@@ -18,10 +18,13 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.PruneSetting;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -63,6 +66,7 @@ public class UIAutoPruneSettingForm extends UIForm implements UIPopupComponent {
 	public static final String FIELD_VALUEMONTHS = "Months" ;
 	
 	private PruneSetting pruneSetting;
+	private Locale locale ;
 	private long topicOld = 0;
 	private boolean isTest = false;
 	private boolean isActivate = false;
@@ -93,6 +97,29 @@ public class UIAutoPruneSettingForm extends UIForm implements UIPopupComponent {
 		setActions(new String[]{"Save", "Close"});
   }
 	
+	private void setLocale() throws Exception {
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		Locale locale = portalContext.getLocale();
+		if(this.locale == null || !locale.getLanguage().equals(this.locale.getLanguage())) {
+			initDefaultContent();
+			this.locale = locale;
+		}
+	}
+	
+	private void initDefaultContent() throws Exception {
+		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
+		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEDAY), FIELD_VALUEDAY)) ;
+		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEWEEKS), FIELD_VALUEWEEKS)) ;
+		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEMONTHS), FIELD_VALUEMONTHS)) ;
+		getUIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX).setOptions(list) ;
+		
+		list = new ArrayList<SelectItemOption<String>>() ;
+		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEDAY), FIELD_VALUEDAY+"_Id")) ;
+		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEWEEKS), FIELD_VALUEWEEKS+"_Id")) ;
+		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEMONTHS), FIELD_VALUEMONTHS+"_Id")) ;
+		getUIFormSelectBox(FIELD_JOBDAY_SELECTBOX).setOptions(list) ;
+	}
+	
   public boolean isActivate() {
   	return isActivate;
   }
@@ -102,6 +129,7 @@ public class UIAutoPruneSettingForm extends UIForm implements UIPopupComponent {
 
 	@SuppressWarnings("unused")
   private void setInitForm() throws Exception{
+		this.setLocale();
 		if(!isTest) {
 			long i = pruneSetting.getInActiveDay();
 			String type = FIELD_VALUEDAY;
