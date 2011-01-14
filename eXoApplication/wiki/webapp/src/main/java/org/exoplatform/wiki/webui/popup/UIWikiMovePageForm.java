@@ -16,10 +16,6 @@
  */
 package org.exoplatform.wiki.webui.popup;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -35,12 +31,15 @@ import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.tree.TreeNode;
+import org.exoplatform.wiki.tree.TreeNode.TREETYPE;
 import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 import org.exoplatform.wiki.webui.UIWikiLocationContainer;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.tree.EventUIComponent;
 import org.exoplatform.wiki.webui.tree.UITreeExplorer;
+import org.exoplatform.wiki.webui.tree.EventUIComponent.EVENTTYPE;
 
 /**
  * Created by The eXo Platform SAS
@@ -70,17 +69,15 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
     addChild(new UIFormInputInfo(PAGENAME_INFO, PAGENAME_INFO, null));
     addChild(UIWikiLocationContainer.class, null, LOCATION_CONTAINER);
     UITreeExplorer uiTree = addChild(UITreeExplorer.class, null, UITREE);
-    StringBuilder initParam = new StringBuilder();
-    String currentPath = Utils.getCurrentWikiPagePath().replaceAll("/", ".");
-    initParam.append(currentPath).append("/").append(currentPath);
-    List<EventUIComponent> eventComponents = new ArrayList<EventUIComponent>();
-    eventComponents.add(new EventUIComponent(LOCATION_CONTAINER,
-                                             Arrays.asList(new String[] { UIWikiLocationContainer.CHANGE_NEWLOCATION })));
+
+    EventUIComponent eventComponent = new EventUIComponent(LOCATION_CONTAINER,
+                                                           UIWikiLocationContainer.CHANGE_NEWLOCATION,
+                                                           EVENTTYPE.EVENT);
     StringBuilder initURLSb = new StringBuilder(Utils.getCurrentRestURL());
-    initURLSb.append("/wiki/tree/all/");
+    initURLSb.append("/wiki/tree/").append(TREETYPE.ALL.toString());
     StringBuilder childrenURLSb = new StringBuilder(Utils.getCurrentRestURL());
-    childrenURLSb.append("/wiki/tree/children/");
-    uiTree.init(initURLSb.toString(), childrenURLSb.toString(), initParam.toString(), eventComponents);   
+    childrenURLSb.append("/wiki/tree/").append(TREETYPE.CHILDREN.toString());
+    uiTree.init(initURLSb.toString(), childrenURLSb.toString(), getInitParam(), eventComponent);
   }  
   
   static public class CloseActionListener extends EventListener<UIWikiMovePageForm> {
@@ -138,6 +135,20 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
   public void deActivate() throws Exception {
     // TODO Auto-generated method stub
     
+  }
+  
+  private String getInitParam() throws Exception {
+    StringBuilder sb = new StringBuilder();
+    String currentPath = Utils.getCurrentWikiPagePath().replaceAll("/", ".");
+    sb.append("?")
+      .append(TreeNode.PATH)
+      .append("=")
+      .append(currentPath)
+      .append("&")
+      .append(TreeNode.CURRENT_PATH)
+      .append("=")
+      .append(currentPath);
+    return sb.toString();
   }
   
 }

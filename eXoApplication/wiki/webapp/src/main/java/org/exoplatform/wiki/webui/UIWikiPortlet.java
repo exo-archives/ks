@@ -42,6 +42,7 @@ import org.exoplatform.wiki.WikiPortletPreference;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.resolver.PageResolver;
+import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.webui.control.UIPageToolBar;
@@ -57,26 +58,29 @@ import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
   template = "app:/templates/wiki/webui/UIWikiPortlet.gtmpl",
   events = {
     @EventConfig(listeners = UIWikiPortlet.ViewPageActionListener.class),
-    @EventConfig(listeners = UIWikiPortlet.ChangeModeActionListener.class)
+    @EventConfig(listeners = UIWikiPortlet.ChangeModeActionListener.class),
+    @EventConfig(listeners = UIWikiPortlet.RedirectActionListener.class)
   }
 )
 public class UIWikiPortlet extends UIPortletApplication {
   
-  private WikiMode mode = WikiMode.VIEW;
-  
-  private EditMode editmode = EditMode.ALL;
-  
-  private String sectionIndex = "";
+  private WikiMode              mode                       = WikiMode.VIEW;
 
-  private WikiMode previousMode;
-  
-  private WikiPortletPreference portletPreferences = new WikiPortletPreference();
+  private EditMode              editmode                   = EditMode.ALL;
 
-  public static String VIEW_PAGE_ACTION           = "ViewPage";
+  private String                sectionIndex               = "";
 
-  public static String CHANGE_MODE_ACTION         = "ChangeMode";
+  private WikiMode              previousMode;
 
-  public static String WIKI_PORTLET_ACTION_PREFIX = "UIWikiPortlet_";  
+  private WikiPortletPreference portletPreferences         = new WikiPortletPreference();
+
+  public static String          VIEW_PAGE_ACTION           = "ViewPage";
+
+  public static String          CHANGE_MODE_ACTION         = "ChangeMode";
+
+  public static String          REDIRECT_ACTION            = "Redirect";
+
+  public static String          WIKI_PORTLET_ACTION_PREFIX = "UIWikiPortlet_";
   
   public UIWikiPortlet() throws Exception {
     super();
@@ -216,6 +220,17 @@ public class UIWikiPortlet extends UIPortletApplication {
     WebuiRequestContext context = RequestContext.getCurrentInstance();
     popupMess.processRender(context);
   }
+  
+  private void loadPreferences() {
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+    try {
+      portletPreferences.setShowBreadcrumb(Boolean.parseBoolean(portletPref.getValue(WikiPortletPreference.SHOW_BREADCRUMB, "true")));
+      portletPreferences.setShowNavigationTree(Boolean.parseBoolean(portletPref.getValue(WikiPortletPreference.SHOW_NAVIGATIONTREE, "true")));
+    } catch (Exception e) {
+      log.error("Fail to load wiki portlet's preference: ", e);
+    }
+  }
  
   public static class ViewPageActionListener extends EventListener<UIWikiPortlet> {
     @Override
@@ -231,6 +246,7 @@ public class UIWikiPortlet extends UIPortletApplication {
 
     }
   }
+  
   public static class ChangeModeActionListener extends EventListener<UIWikiPortlet> {
     @Override
     public void execute(Event<UIWikiPortlet> event) throws Exception {      
@@ -244,14 +260,13 @@ public class UIWikiPortlet extends UIPortletApplication {
     }
   }
   
-  private void loadPreferences() {
-    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    try {
-      portletPreferences.setShowBreadcrumb(Boolean.parseBoolean(portletPref.getValue(WikiPortletPreference.SHOW_BREADCRUMB, "true")));
-      portletPreferences.setShowNavigationTree(Boolean.parseBoolean(portletPref.getValue(WikiPortletPreference.SHOW_NAVIGATIONTREE, "true")));
-    } catch (Exception e) {
-      log.error("Fail to load wiki portlet's preference: ", e);
+  public static class RedirectActionListener extends EventListener<UIWikiPortlet> {
+    @Override
+    public void execute(Event<UIWikiPortlet> event) throws Exception {      
+      String value = event.getRequestContext().getRequestParameter(OBJECTID);
+      value = TitleResolver.getId(value, false);
+      WikiPageParams params = org.exoplatform.wiki.utils.Utils.getPageParamsFromPath(value);
+      Utils.redirect(params, WikiMode.VIEW);
     }
   }
   

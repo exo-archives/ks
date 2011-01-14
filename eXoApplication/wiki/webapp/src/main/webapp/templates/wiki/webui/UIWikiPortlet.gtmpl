@@ -9,7 +9,7 @@
   String restContextName = PortalContainer.getInstance().getRestContextName();
   
   String changeModeLink= uicomponent.event(uicomponent.CHANGE_MODE_ACTION);
-  String changeModeLinkId = uicomponent.WIKI_PORTLET_ACTION_PREFIX + uicomponent.CHANGE_MODE_ACTION;
+  String changeModeLinkId = uicomponent.WIKI_PORTLET_ACTION_PREFIX + uicomponent.CHANGE_MODE_ACTION; 
   rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiPortlet', '/wiki/javascript/') ;
   rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiAjaxRequest', '/wiki/javascript/') ;
   rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAjaxRequest.init('" + uicomponent.WIKI_PORTLET_ACTION_PREFIX + "', '" + uicomponent.VIEW_PAGE_ACTION + "');");  
@@ -52,5 +52,5 @@
   %>
   <%uicomponent.renderPopupMessages();%>
   <a onclick="$viewLink" id="$actionId" style="display:none;">&nbsp;</a>
-  <a href="$changeModeLink" id="$changeModeLinkId" style="display:none;">&nbsp;</a> 
+  <a href="$changeModeLink" id="$changeModeLinkId" style="display:none;">&nbsp;</a>
 </div>

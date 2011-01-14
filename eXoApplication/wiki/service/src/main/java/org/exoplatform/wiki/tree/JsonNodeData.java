@@ -35,7 +35,7 @@ public class JsonNodeData {
 
   protected String           path;
 
-  protected String           extendParam;
+  protected String           currentPath;
 
   protected boolean          hasChild;
 
@@ -51,19 +51,19 @@ public class JsonNodeData {
   
   protected String           excerpt      = StringUtils.EMPTY;
 
-  public static final String EXTEND_PARAM = "extendParam";
+  public static final String CURRENT_PATH = "currentPath";
 
   public List<JsonNodeData>  children;
     
   public JsonNodeData(TreeNode treeNode,
                       boolean isLastNode,
                       boolean isSelectable,
-                      String extendParam, String excerpt,
+                      String currentPath, String excerpt,
                       HashMap<String, Object> context) throws Exception {
     this.name = treeNode.getName();
     this.path = URLEncoder.encode(treeNode.getPath(), "utf-8");
-    if (extendParam != null)
-      this.extendParam = URLEncoder.encode(extendParam, "utf-8");
+    if (currentPath != null)
+      this.currentPath = URLEncoder.encode(currentPath, "utf-8");
     this.hasChild = treeNode.isHasChild();
     this.nodeType = treeNode.getNodeType();
     this.isLastNode = isLastNode;
@@ -123,12 +123,12 @@ public class JsonNodeData {
     this.isSelectable = isSelectable;
   }
 
-  public String getExtendParam() {
-    return extendParam;
+  public String getCurrentPath() {
+    return currentPath;
   }
 
-  public void setExtendParam(String extendParam) {
-    this.extendParam = extendParam;
+  public void setCurrentPath(String currentPath) {
+    this.currentPath = currentPath;
   }
   
   public boolean isExpanded() {

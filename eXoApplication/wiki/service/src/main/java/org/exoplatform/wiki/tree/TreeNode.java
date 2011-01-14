@@ -45,16 +45,22 @@ public class TreeNode {
   protected List<TreeNode>   children        = new ArrayList<TreeNode>();
 
   final static public String STACK_PARAMS    = "stackParams";
-
-  final static public String CURRENT_PATH    = "currentPath";
   
-  public static final String SHOW_EXCERPT    = "showExcerpt";
+  final static public String PATH            = "path";
+
+  final static public String CURRENT_PATH    = "current";
+  
+  public static final String SHOW_EXCERPT    = "excerpt";
 
   public static final String SHOW_DESCENDANT = "showDes";
 
   public static final String CHILDREN_NUMBER = "childrenNumber";
 
-  public static final String DEPTH           = "Depth";
+  public static final String DEPTH           = "depth";
+  
+  public enum TREETYPE {
+    ALL, CHILDREN
+  }
 
   protected boolean          isSelected      = false;
   

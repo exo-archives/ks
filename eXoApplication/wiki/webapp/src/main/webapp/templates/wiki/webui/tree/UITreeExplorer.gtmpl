@@ -5,6 +5,8 @@
   
   import org.exoplatform.wiki.tree.SpaceTreeNode;
   import org.exoplatform.portal.config.model.PortalConfig;  
+  import org.exoplatform.wiki.webui.UIWikiPortlet;
+  import org.exoplatform.wiki.webui.tree.EventUIComponent.EVENTTYPE;
 %>
 <% 
  def rcontext = _ctx.getRequestContext();
@@ -12,17 +14,17 @@
  String initURL = uicomponent.initURL;
  String childrenURL = uicomponent.childrenURL;
  String actionClassName = uicomponent.SELECT_NODE;
- String action = uicomponent.event(uicomponent.SELECT_NODE);
- if (uicomponent.eventComponents == null){
-   actionClassName = uicomponent.REDIRECT;
-   action = "javascript:eXo.wiki.UIForm.submitPageEvent('"+ uicomponent.getParentFormId()  + "','"+ actionClassName +"','&subComponentId="+uicomponent.getId() +"&objectId=')";
- }
+ boolean isEvent = uicomponent.getEventComponent().getType().equals(EVENTTYPE.EVENT);
+ String action = uicomponent.event(uicomponent.SELECT_NODE); 
+ if (!isEvent){
+   action = uicomponent.url(uicomponent.SELECT_NODE);
+ } 
  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UITreeExplorer', '/wiki/javascript/') ;
  if (initParam!=null)
- 	rcontext.getJavascriptManager().addJavascript("eXo.wiki.UITreeExplorer.init('" + uicomponent.id  +"','"+ initParam + "');"); 
+ 	rcontext.getJavascriptManager().addJavascript("eXo.wiki.UITreeExplorer.init('" + uicomponent.id  +"','"+ initParam + "',true);"); 
 %>
 	 <div class="UITreeExplorer" id="$uicomponent.id">	 
-		 <div style="white-space: nowrap; -moz-user-select: none;">
+		 <div>
 		   <div class="NodeGroup">
     	       <a href="$action" class="SelectNode" style="display:none" ></a>
     	       <input class="InitURL" type="hidden" value="$initURL" />

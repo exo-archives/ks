@@ -16,22 +16,17 @@
  */
 package org.exoplatform.wiki.rendering.macro.pagetree;
 
-import java.net.URLDecoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
-import org.exoplatform.wiki.service.WikiService;
-import org.exoplatform.wiki.tree.JsonNodeData;
 import org.exoplatform.wiki.tree.TreeNode;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
-import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
@@ -129,93 +124,47 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
   }
   
   private Block generateTree(WikiPageParams params, String startDepth) throws Exception {
+    StringBuilder treeSb = new StringBuilder();
+    StringBuilder initSb = new StringBuilder();
     HashMap<String, Object> context = new HashMap<String, Object>();
     context.put(TreeNode.DEPTH, startDepth);
     context.put(TreeNode.SHOW_EXCERPT, excerpt);
-    TreeNode node = TreeUtils.getDescendants(params, context);
-    StringBuilder sb = new StringBuilder();
-    WikiContext wikiContext = getWikiContext();
-    List<JsonNodeData> jsonData = TreeUtils.tranformToJson(node, context);
+    TreeNode node = TreeUtils.getDescendants(params, context);      
+    WikiContext wikiContext = getWikiContext();   
+    String treeID = "PageTree"+ wikiContext.getPageTreeId();
     String treeRestURI = wikiContext.getTreeRestURI();
-    sb.append("<div class=\"UITreeExplorer\"> ")
-      .append("  <input class=\"ChildrenURL\" type=\"hidden\" value=\"").append(treeRestURI).append("\" />")   
-      .append(   buildHierachyNode(jsonData))
-      .append("</div>");
-    RawBlock testRaw = new RawBlock(sb.toString(), XHTML_SYNTAX);
+    String redirectURI = wikiContext.getRedirectURI();
+    initSb.append("?")
+          .append(TreeNode.PATH)
+          .append("=")
+          .append(node.getPath().replaceAll("/", "."))
+          .append("&")
+          .append(TreeNode.SHOW_EXCERPT)
+          .append("=")
+          .append(excerpt)
+          .append("&")
+          .append(TreeNode.DEPTH)
+          .append("=")
+          .append(startDepth);
+    treeSb.append("<div class=\"UITreeExplorer\" id =\"").append(treeID).append("\">")
+          .append("  <div>")
+          .append("   <input class=\"ChildrenURL\" type=\"hidden\" value=\"").append(treeRestURI).append("\" />")   
+          .append("   <a class=\"SelectNode\" style=\"display:none\" href=\"").append(redirectURI).append("\" /></a>")
+          .append(     buildHierachyNode(treeID,initSb.toString()))
+          .append("  </div>")
+          .append("</div>");
+    RawBlock testRaw = new RawBlock(treeSb.toString(), XHTML_SYNTAX);
     return testRaw;
   }  
 
-  public String buildHierachyNode(List<JsonNodeData> jsonData) throws Exception {
-    StringBuilder sb = new StringBuilder();
-    int size = jsonData.size();
+  public String buildHierachyNode(String treeId, String initParam) throws Exception {
+    StringBuilder sb = new StringBuilder();   
     sb.append("<div class=\"NodeGroup\">");
-    for (int i = 0; i < size; i++) {
-      sb.append(createNode(jsonData.get(i)));
-    }
+    sb.append("  <script> eXo.wiki.UITreeExplorer.init(\"" + treeId  +"\",\""+ initParam + "\",false ); </script>");
     sb.append("</div>");
     return sb.toString();
   }
-
-  private String createNode(JsonNodeData jsonData) throws Exception{
-    StringBuilder sb = new StringBuilder();
-    String nodeType = jsonData.getNodeType().toString();
-    String nodeTypeCSS = nodeType.substring(0, 1).toUpperCase() + nodeType.substring(1).toLowerCase();
-    String iconType = (jsonData.isExpanded() == true) ? "Collapse" : "Expand";
-    String lastNodeClass = "";   
-    String path = jsonData.getPath().replaceAll("/", ".");
-    String param = path +"/";
-    String excerptData = jsonData.getExcerpt();
-    String extendParam = jsonData.getExtendParam();
-    if (extendParam!=null)
-      param += extendParam.replaceAll("/", ".");
-    if (excerptData!=null) {
-      param += "/?excerpt=true";
-    }
-    if (jsonData.isLastNode()) {
-      lastNodeClass = "LastNode";
-    }
-    if (!jsonData.isHasChild()) {
-      iconType = "Empty";
-    }
-    int size = jsonData.getChildren().size();
-    
-  
-    sb.append("<div  class=\"").append(lastNodeClass).append(" Node\" >")
-      .append("  <div class=\"").append(iconType).append("Icon\" onclick=\"event.cancelBubble=true;  if(eXo.wiki.UITreeExplorer.collapseExpand(this)) return;  eXo.wiki.UITreeExplorer.render('"+ param + "', this)\" >")
-      .append("    <div class=\"").append(nodeTypeCSS).append(" TreeNodeType Node \">")
-      .append("      <div class=\"NodeLabel\">")
-      .append(         getPageURI(jsonData));
-    if (excerptData != null) {
-      sb.append(excerptData);
-    }
-    sb.append("      </div>")
-      .append("    </div>")
-      .append("  </div>");
-    if (size > 0) {
-      sb.append(buildHierachyNode(jsonData.getChildren()));
-    }
-    sb.append("</div>");
-    return sb.toString();
-  }
-  
-  private String getPageURI(JsonNodeData jsonData) throws Exception{
-    StringBuilder sb = new StringBuilder();
-    WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
-                                                               .getComponentInstanceOfType(WikiService.class);
-    WikiPageParams params = Utils.getPageParamsFromPath(URLDecoder.decode(jsonData.getPath(),
-                                                                          "utf-8")
-                                                                  .replace(".", "/"));
-    PageImpl page = (PageImpl) wikiService.getPageById(params.getType(),
-                                                       params.getOwner(),
-                                                       params.getPageId());
-    String pageTitle = page.getContent().getTitle();
-    String pageURL = model.getDocumentViewURL(model.getDocumentName(params), null, null);   
-    sb.append("<a title=\"").append(pageTitle).append("\" href=\"").append(pageURL).append("\">")
-      .append(  pageTitle)
-      .append("</a>");
-    return sb.toString();
-  }  
-  
+ 
   private WikiContext getWikiContext() {
     ExecutionContext ec = execution.getContext();
     if (ec != null) {

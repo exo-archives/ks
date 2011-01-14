@@ -23,8 +23,12 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.wiki.WikiPortletPreference;
 import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.tree.TreeNode;
+import org.exoplatform.wiki.tree.TreeNode.TREETYPE;
 import org.exoplatform.wiki.webui.core.UIWikiForm;
+import org.exoplatform.wiki.webui.tree.EventUIComponent;
 import org.exoplatform.wiki.webui.tree.UITreeExplorer;
+import org.exoplatform.wiki.webui.tree.EventUIComponent.EVENTTYPE;
 
 /**
  * Created by The eXo Platform SAS
@@ -43,12 +47,16 @@ public class UIWikiNavigationContainer extends UIWikiForm {
     // TODO Auto-generated constructor stub 
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE, WikiMode.ADDPAGE,
          WikiMode.DELETECONFIRM, WikiMode.VIEWREVISION, WikiMode.SHOWHISTORY, WikiMode.ADVANCEDSEARCH });
+   
+    EventUIComponent eventComponent = new EventUIComponent("UIWikiPortlet",
+                                                           UIWikiPortlet.REDIRECT_ACTION,
+                                                           EVENTTYPE.URL);
     UITreeExplorer uiTree = addChild(UITreeExplorer.class, null, null);
     StringBuilder initURLSb = new StringBuilder(Utils.getCurrentRestURL());
-    initURLSb.append("/wiki/tree/all/");
+    initURLSb.append("/wiki/tree/").append(TREETYPE.ALL.toString());
     StringBuilder childrenURLSb = new StringBuilder(Utils.getCurrentRestURL());
-    childrenURLSb.append("/wiki/tree/children/");
-    uiTree.init(initURLSb.toString(), childrenURLSb.toString(), getInitParam(), null);   
+    childrenURLSb.append("/wiki/tree/").append(TREETYPE.CHILDREN.toString());
+    uiTree.init(initURLSb.toString(), childrenURLSb.toString(), getInitParam(), eventComponent);
   }
   
   @Override
@@ -67,9 +75,8 @@ public class UIWikiNavigationContainer extends UIWikiForm {
   private String getInitParam() throws Exception {
     StringBuilder initParamSb = new StringBuilder();
     String currentPath = Utils.getCurrentWikiPagePath();
-    if (currentPath != null) {
-      currentPath = currentPath.replaceAll("/", ".");
-      initParamSb.append(currentPath).append("/");
+    if (currentPath != null) {    
+      initParamSb.append("?").append(TreeNode.PATH).append("=").append(currentPath.replaceAll("/", "."));
       return initParamSb.toString();
     }
     return null;

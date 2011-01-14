@@ -16,24 +16,15 @@
  */
 package org.exoplatform.wiki.webui.tree ;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.webui.application.WebuiRequestContext;
-import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.wiki.commons.Utils;
-import org.exoplatform.wiki.resolver.TitleResolver;
-import org.exoplatform.wiki.service.WikiPageParams;
-import org.exoplatform.wiki.webui.UIWikiPortlet;
-import org.exoplatform.wiki.webui.WikiMode;
 
 /**
  * Created by The eXo Platform SAS
@@ -45,23 +36,20 @@ import org.exoplatform.wiki.webui.WikiMode;
                  lifecycle = UIApplicationLifecycle.class, 
                  template = "app:/templates/wiki/webui/tree/UITreeExplorer.gtmpl",
                  events = {
-                     @EventConfig(listeners = UITreeExplorer.SelectNodeActionListener.class),
-                     @EventConfig(listeners = UITreeExplorer.RedirectActionListener.class, phase = Phase.DECODE)
+                     @EventConfig(listeners = UITreeExplorer.SelectNodeActionListener.class)
                      }
 )
 public class UITreeExplorer extends UIContainer {
   
-  final static public String     SELECT_NODE      = "SelectNode";
+  final static public String SELECT_NODE = "SelectNode";
 
-  final static public String     REDIRECT         = "Redirect";
+  private String             initParam;
 
-  private String                 initParam;
+  private String             initURL;
 
-  private String                 initURL;
+  private String             childrenURL;
 
-  private String                 childrenURL;  
-
-  private List<EventUIComponent> eventComponents;
+  private EventUIComponent   eventComponent;
     
   public UITreeExplorer() {
     super();
@@ -70,11 +58,11 @@ public class UITreeExplorer extends UIContainer {
   public void init(String initURL,
                    String childrenURL,
                    String initParam,
-                   List<EventUIComponent> eventComponents) throws Exception {
+                   EventUIComponent eventComponent) throws Exception {
     this.initURL = initURL;
     this.childrenURL = childrenURL;
     this.initParam = initParam;
-    this.eventComponents = eventComponents;
+    this.eventComponent = eventComponent;
   }
 
   public String getInitURL() {
@@ -93,14 +81,6 @@ public class UITreeExplorer extends UIContainer {
     this.childrenURL = childrenURL;
   }
 
-  public List<EventUIComponent> getEventComponents() {
-    return eventComponents;
-  }
-
-  public void setEventComponents(List<EventUIComponent> effectComponents) {
-    this.eventComponents = effectComponents;
-  }
-
   public String getInitParam() {
     return initParam;
   }
@@ -108,13 +88,13 @@ public class UITreeExplorer extends UIContainer {
   public void setInitParam(String initParam) {
     this.initParam = initParam;
   }
-  
-  private String getParentFormId() {
-    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-    if (context instanceof PortletRequestContext) {
-      return ((PortletRequestContext) context).getWindowId() + "#" + getParent().getId();
-    }
-    return getParent().getId();
+
+  public EventUIComponent getEventComponent() {
+    return eventComponent;
+  }
+
+  public void setEventComponent(EventUIComponent eventComponent) {
+    this.eventComponent = eventComponent;
   }
 
   static public class SelectNodeActionListener extends EventListener<UITreeExplorer> {
@@ -122,40 +102,19 @@ public class UITreeExplorer extends UIContainer {
 
       WebuiRequestContext context = event.getRequestContext();
       UITreeExplorer tree = event.getSource();
-
-      UIComponent parent = (UIComponent) tree.getParent();
-      List<EventUIComponent> eventComponents = tree.getEventComponents();
-      EventUIComponent eventComponent = null;
-      List<String> eventNames = null;
-      Event<UIComponent> xEvent = null;
+      UIPortletApplication root = tree.getAncestorOfType(UIPortletApplication.class);
+      EventUIComponent eventComponent = tree.getEventComponent();
       UIComponent uiComponent = null;
-      for (int i = 0; i < eventComponents.size(); i++) {
-        eventComponent = eventComponents.get(i);
-        if (eventComponent.getId() != null) {
-          uiComponent = (UIComponent) parent.findComponentById(eventComponent.getId());
-        } else {
-          uiComponent = parent;
-        }
-
-        eventNames = eventComponent.getEventName();
-        for (int j = 0; j < eventNames.size(); j++) {
-          xEvent = uiComponent.createEvent(eventNames.get(i), Event.Phase.PROCESS, context);
-          if (xEvent != null) {
-            xEvent.broadcast();
-          }
-        }
+      if (eventComponent.getId() != null) {
+        uiComponent = (UIComponent) root.findComponentById(eventComponent.getId());
+      } else {
+        uiComponent = root;
       }
-    }    
-  }
-  
-  static public class RedirectActionListener extends EventListener<UITreeExplorer> {
-    public void execute(Event<UITreeExplorer> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      String value = event.getRequestContext().getRequestParameter(OBJECTID);     
-      value = TitleResolver.getId(value, false);
-      WikiPageParams params = org.exoplatform.wiki.utils.Utils.getPageParamsFromPath(value);    
-      wikiPortlet.changeMode(WikiMode.VIEW);
-      Utils.redirect(params, WikiMode.VIEW);
+      String eventName = eventComponent.getEventName();
+      Event<UIComponent> xEvent = uiComponent.createEvent(eventName, Event.Phase.PROCESS, context);
+      if (xEvent != null) {
+        xEvent.broadcast();
+      }
     }
   }
   

@@ -22,6 +22,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
@@ -35,6 +36,8 @@ import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.tree.TreeNode;
+import org.exoplatform.wiki.tree.TreeNode.TREETYPE;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
 import org.xwiki.context.Execution;
 import org.xwiki.context.ExecutionContext;
@@ -95,7 +98,11 @@ public class UIWikiPageContentArea extends UIWikiContainer {
       WikiContext wikiContext = new WikiContext();
       wikiContext.setPortalURI(portalURI);
       wikiContext.setPortletURI(pageNodeSelected);
-      wikiContext.setTreeRestURI(Utils.getCurrentRestURL().concat("/wiki/tree/children/"));
+      wikiContext.setTreeRestURI(Utils.getCurrentRestURL()
+                                      .concat("/wiki/tree/")
+                                      .concat(TREETYPE.CHILDREN.toString()));
+      wikiContext.setPageTreeId(IdGenerator.generate());
+      wikiContext.setRedirectURI(getAncestorOfType(UIWikiPortlet.class).url(UIWikiPortlet.REDIRECT_ACTION));
       WikiPageParams params = Utils.getCurrentWikiPageParams();
       wikiContext.setType(params.getType());
       wikiContext.setOwner(params.getOwner());

@@ -82,6 +82,7 @@ import org.exoplatform.wiki.service.rest.model.Spaces;
 import org.exoplatform.wiki.tree.JsonNodeData;
 import org.exoplatform.wiki.tree.RootTreeNode;
 import org.exoplatform.wiki.tree.TreeNode;
+import org.exoplatform.wiki.tree.TreeNode.TREETYPE;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.context.Execution;
@@ -223,21 +224,21 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
   }
 
   @GET
-  @Path("/tree/{type}/{path}/{currentPath:.*}")
+  @Path("/tree/{type}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getTreeData(@PathParam("type") String type,
-                              @PathParam("path") String path,
-                              @PathParam("currentPath") String currentPath) {
+                              @QueryParam(TreeNode.PATH) String path,
+                              @QueryParam(TreeNode.CURRENT_PATH) String currentPath,
+                              @QueryParam(TreeNode.SHOW_EXCERPT) Boolean showExcerpt,
+                              @QueryParam(TreeNode.DEPTH) String depth) {
     try {
       List<JsonNodeData> responseData = new ArrayList<JsonNodeData>();
       path = URLDecoder.decode(path, "utf-8").replace(".", "/");
-      currentPath = URLDecoder.decode(currentPath, "utf-8").replace(".", "/");
-
+      if (currentPath != null)
+        currentPath = URLDecoder.decode(currentPath, "utf-8").replace(".", "/");
       HashMap<String, Object> context = new HashMap<String, Object>();
-      if (currentPath != "") {
-        context.put(TreeNode.CURRENT_PATH, currentPath);
-      }
-      if (type.equals("all")) {
+      context.put(TreeNode.SHOW_EXCERPT, showExcerpt);
+      if (type.equalsIgnoreCase(TREETYPE.ALL.toString())) {
         WikiPageParams pageParam = new WikiPageParams();
         pageParam = Utils.getPageParamsFromPath(path);
         PageImpl page = (PageImpl) wikiService.getPageById(pageParam.getType(),
@@ -246,9 +247,11 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
         Stack<WikiPageParams> stk = Utils.getStackParams(page);
         context.put(TreeNode.STACK_PARAMS, stk);
         responseData = getJsonTree(context);
-      } else if (type.equals("children")) {
+      } else if (type.equalsIgnoreCase(TREETYPE.CHILDREN.toString())) {
         // Get children only
-        context.put(TreeNode.DEPTH, "1");
+        if (depth == null)
+          depth = "1";
+        context.put(TreeNode.DEPTH, depth);        
         WikiPageParams pageParams = Utils.getPageParamsFromPath(path);
         responseData = getJsonDescendants(pageParams, context);
       }

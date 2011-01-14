@@ -3,12 +3,12 @@ eXo.require("eXo.core.EventManager");
 
 function UITreeExplorer() {};
 
-UITreeExplorer.prototype.init = function( componentid, initParam ) {
+UITreeExplorer.prototype.init = function( componentid, initParam , isFullRender ) {
   var me = eXo.wiki.UITreeExplorer;
   var component = document.getElementById(componentid);
   var initURL = eXo.core.DOMUtil.findFirstDescendantByClass(component, "input", "InitURL");
   var initNode =  eXo.core.DOMUtil.findFirstDescendantByClass(component,"div","NodeGroup");
-  me.render(initParam, initNode, true);
+  me.render(initParam, initNode, isFullRender);
 };
 
 UITreeExplorer.prototype.collapseExpand = function(element) {
@@ -47,15 +47,29 @@ UITreeExplorer.prototype.onNodeClick = function(node, absPath) {
 UITreeExplorer.prototype.selectNode = function(node, nodePath) {
   var me = eXo.wiki.UITreeExplorer;
   var component = eXo.core.DOMUtil.findAncestorByClass(node, "UITreeExplorer");
-  var link = eXo.core.DOMUtil.findFirstDescendantByClass(component, "a", "SelectNode");
+  var root =  eXo.core.DOMUtil.findAncestorByClass(node, "UITreeExplorer");
+  var link = eXo.core.DOMUtil.findFirstDescendantByClass(component, "a",
+      "SelectNode");
+
   var endParamIndex = link.href.lastIndexOf("')");
   var param = "&objectId";
   var modeIndex = link.href.indexOf(param);
-  if (modeIndex < 0)
-    link.href = link.href.substring(0, endParamIndex) + param + "=" + nodePath + "')";
-  else
-    link.href = link.href.substring(0, modeIndex) + param + "=" + nodePath + "')";
+  if (endParamIndex > 0) {
+    if (modeIndex < 0)
+      link.href = link.href.substring(0, endParamIndex) + param + "="
+          + nodePath + "')";
+    else
+      link.href = link.href.substring(0, modeIndex) + param + "=" + nodePath
+          + "')";
+  } else {
+    if (modeIndex < 0)
+      link.href = link.href.substring(0, link.href.length) + param + "="
+          + nodePath;
+    else
+      link.href = link.href.substring(0, modeIndex) + param + "=" + nodePath;
+  }
   window.location = link.href;
+
 };
 
 UITreeExplorer.prototype.render = function(param, element, isFullRender) {
@@ -67,7 +81,7 @@ UITreeExplorer.prototype.render = function(param, element, isFullRender) {
     url =  eXo.core.DOMUtil.findFirstDescendantByClass(component, "input", "InitURL").value;
   }
   var http = eXo.wiki.UITreeExplorer.getHTTPObject();  
-  var restURL = url + escape(param);
+  var restURL = url + param;
 
   http.open("GET", restURL, true);
   http.onreadystatechange = function() {
@@ -128,10 +142,14 @@ UITreeExplorer.prototype.buildNode = function(data) {
   var iconType = (data.expanded ==true)? "Collapse":"Expand" ;
   var lastNodeClass = "";
   var hoverClass = "";
+  var excerptData = data.excerpt;
   var path = data.path.replaceAll("/", ".");
-  var param = path +"/";
+  var param = "?path=" + path;
+  if (excerptData!=null) {
+    param += "&excerpt=true";
+  }
   if (data.extendParam)
-    param += data.extendParam.replaceAll("/",".");
+    param += "&current=" + data.extendParam.replaceAll("/",".");
   if (data.lastNode == true) {
     lastNodeClass = "LastNode";
   }
@@ -152,7 +170,10 @@ UITreeExplorer.prototype.buildNode = function(data) {
   }
   else{
     childNode += "         <span style=\"cursor:auto\" title=\""+nodeName+"\">"+nodeName+"</span>";
-  }      
+  }
+  if (excerptData != null) {
+    childNode += excerptData;
+  }
   childNode += "      </div>";
   childNode += "    </div>";
   childNode += "  </div>";

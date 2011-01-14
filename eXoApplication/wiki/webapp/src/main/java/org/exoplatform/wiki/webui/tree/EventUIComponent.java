@@ -16,7 +16,6 @@
  */
 package org.exoplatform.wiki.webui.tree;
 
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS
@@ -25,18 +24,27 @@ import java.util.List;
  * 15 Nov 2010  
  */
 public class EventUIComponent {
-  private String   Id;
 
-  private List<String> eventName;
+  public enum EVENTTYPE {
+    EVENT, URL
+  };
+
+  private String    Id;
+
+  private String    eventName;
+
+  private EVENTTYPE type;
 
   public EventUIComponent() {
     super();
     // TODO Auto-generated constructor stub
   }
 
-  public EventUIComponent(String id, List<String> eventName) {   
+  public EventUIComponent(String id, String eventName, EVENTTYPE type) {
+    super();
     Id = id;
     this.eventName = eventName;
+    this.type = type;
   }
 
   public String getId() {
@@ -47,12 +55,20 @@ public class EventUIComponent {
     Id = id;
   }
 
-  public List<String> getEventName() {
+  public String getEventName() {
     return eventName;
   }
 
-  public void setEventName(List<String> eventName) {
+  public void setEventName(String eventName) {
     this.eventName = eventName;
+  }
+
+  public EVENTTYPE getType() {
+    return type;
+  }
+
+  public void setType(EVENTTYPE type) {
+    this.type = type;
   }
 
 }
