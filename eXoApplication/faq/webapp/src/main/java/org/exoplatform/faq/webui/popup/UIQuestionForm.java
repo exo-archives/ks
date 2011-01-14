@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
@@ -37,6 +38,9 @@ import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.resources.LocaleConfig;
+import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -115,6 +119,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private boolean isChildOfManager = false ;
   private boolean isModerate = false;
   private boolean isAddCheckBox = false;
+  private Locale currentLocale = null;
   private FAQSetting faqSetting_ ;
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
@@ -132,7 +137,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     actionField_ = new HashMap<String, List<ActionData>>() ;
     questionId_ = new String() ;
     question_ = null ;
-    
     this.setActions(new String[]{"Save", "Cancel"});
   }
   
@@ -140,23 +144,47 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 		listFileAttach_.clear() ;
 	}
 	
+	private String capitalizeFirstLetter(String word)
+  {
+     if (word == null)
+     {
+        return null;
+     }
+     if (word.length() == 0)
+     {
+        return word;
+     }
+     StringBuilder result = new StringBuilder(word);
+     result.replace(0, 1, result.substring(0, 1).toUpperCase());
+     return result.toString();
+  }
+	
+	public void setLanguages() throws Exception{
+		Locale currentLocale = Util.getPortalRequestContext().getLocale();
+		if(this.currentLocale == null || !this.currentLocale.getLanguage().equals(currentLocale.getLanguage())) {
+			this.currentLocale = currentLocale;
+			setListSystemLanguages();
+		}
+	}
+	
 	private void setListSystemLanguages() throws Exception{
-		listSystemLanguages.clear();
-		List<String> languages = FAQUtils.getAllLanguages(this) ;
-    for(String lang : languages) {      
-      if(lang.equals(defaultLanguage_))
-      	listSystemLanguages.add(new SelectItemOption<String>(lang + " (default) ", lang)) ;
-      else
-      	listSystemLanguages.add(new SelectItemOption<String>(lang, lang)) ;
-    }
+		try {
+			listSystemLanguages.clear();
+			LocaleConfigService localeConfigService = getApplicationComponent(LocaleConfigService.class);
+			String displyByLocal, lang;
+	    for(LocaleConfig localeConfig : localeConfigService.getLocalConfigs()) {      
+	      lang = localeConfig.getLocale().getDisplayLanguage();
+	      displyByLocal = capitalizeFirstLetter(localeConfig.getLocale().getDisplayLanguage(currentLocale));
+	      if(lang.equals(defaultLanguage_))
+	      	listSystemLanguages.add(new SelectItemOption<String>(displyByLocal + " ("+ getLabel("default") + ") ", lang)) ;
+	      else
+	      	listSystemLanguages.add(new SelectItemOption<String>(displyByLocal, lang)) ;
+	    }
+		} catch (Exception e) {}
 	}
 
   public void initPage(boolean isEdit) throws Exception {
-  	try {
-	    setListSystemLanguages();
-    } catch (Exception e1) {
-	    e1.printStackTrace();
-    }
+    setLanguages() ;
     inputAuthor = new UIFormStringInput(AUTHOR, AUTHOR, author_) ;
     if(author_.trim().length() > 0) inputAuthor.setEditable(false);
     inputEmailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_) ;
