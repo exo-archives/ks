@@ -44,6 +44,8 @@ public enum WikiMode {
 
   HELP,
   
-  VIEWREVISION
+  VIEWREVISION,
+  
+  PAGEINFO
 
 }

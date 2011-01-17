@@ -15,7 +15,7 @@
 			%>
 			<a href="$link" class="MovePage MoreItems Icon" title="<%=_ctx.appRes("UIPageToolBar.label.MovePage");%>"><%= _ctx.appRes("UIPageToolBar.label.MovePage"); %></a>
 			<%}%>
-			<% if(action.equals("WatchPage")){
+			<% if(action.equals("WatchPage") || action.equals("PageInfo")) {
 			    uicomponent.renderChild(actionComponent.getId());
 			   }
 			%>		

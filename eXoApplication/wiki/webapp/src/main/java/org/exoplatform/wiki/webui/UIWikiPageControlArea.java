@@ -40,7 +40,7 @@ public class UIWikiPageControlArea extends UIWikiContainer {
   public static final String TOOLBAR_NAME= "UIWikiPageControlArea_PageToolBar";
   
   public UIWikiPageControlArea() throws Exception {
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.VIEWREVISION });
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.VIEWREVISION, WikiMode.PAGEINFO });
     addChild(UIWikiPageTitleControlArea.class, null, TITLE_CONTROL);
     addChild(UIPageToolBar.class, null, TOOLBAR_NAME);    
   }

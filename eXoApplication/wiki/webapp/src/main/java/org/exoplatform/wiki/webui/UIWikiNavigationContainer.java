@@ -46,7 +46,7 @@ public class UIWikiNavigationContainer extends UIWikiForm {
     super();
     // TODO Auto-generated constructor stub 
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE, WikiMode.ADDPAGE,
-         WikiMode.DELETECONFIRM, WikiMode.VIEWREVISION, WikiMode.SHOWHISTORY, WikiMode.ADVANCEDSEARCH });
+         WikiMode.DELETECONFIRM, WikiMode.VIEWREVISION, WikiMode.SHOWHISTORY, WikiMode.ADVANCEDSEARCH, WikiMode.PAGEINFO });
    
     EventUIComponent eventComponent = new EventUIComponent("UIWikiPortlet",
                                                            UIWikiPortlet.REDIRECT_ACTION,

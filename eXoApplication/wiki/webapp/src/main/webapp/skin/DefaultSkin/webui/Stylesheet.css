@@ -8,6 +8,7 @@
 @import url('UIConfirmBox/Stylesheet.css') ;
 @import url('UIWikiMovePageForm/Stylesheet.css') ;
 @import url('action/Stylesheet.css') ;
+@import url('UIWikiPageInfo/Stylesheet.css') ;
 
 .ClearFix:after {
 	content: ".";

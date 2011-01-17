@@ -1,0 +1,61 @@
+<%
+  import java.util.Locale;
+  import java.text.DateFormat;
+  import org.exoplatform.wiki.webui.UIWikiPortlet;
+  
+  def currentVersions = uicomponent.getVersionList(currentWikiPage);
+  def rcontext = _ctx.getRequestContext() ;
+  DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, rcontext.getLocale());
+  def rowClass = "OldClass";
+  def isOddRow = true;
+%>
+
+<div class="UIPageInfoItem UIPageInfoChanges">
+  <div class="UIPageInfoItemTitle">Recent Changes</div>
+  <div class="UIPageInfoItemBody">
+    <table class="tableview" width="100%" cellspacing="0" cellpadding="0">
+      <thead>
+        <tr>
+          <th style="width: 40%">Time</th>
+          <th style="width: 30%">Editor</th>
+          <th style="width: 30%">&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% currentVersions.each {version ->
+        def isCurrentVersion = true;
+        def frozenNode = version.getNTFrozenNode();
+        def versionLabel = version.getName();
+        def versionNumber= versionLabel;
+        if(isCurrentVersion){
+          versionLabel = _ctx.appRes("UIWikiPageVersionsList.label.Current") + " (v. " + versionLabel + ")";
+        } else {
+          versionLabel = "v. " + versionLabel;
+        }
+        def viewLinkId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + "ViewRevision/"+versionNumber;
+        def viewLink = uicomponent.event("ViewRevision", version.getName());
+        def updatedDate = df.format(frozenNode.getUpdatedDate());
+        def author = frozenNode.getAuthor();
+        if (isOddRow) {
+          rowClass = "OddClass";
+        } else {
+          rowClass = "EvenClass";
+        }
+        isOddRow = !isOddRow;
+        %>
+        <tr class="$rowClass">
+          <td style="width: 40%">
+            <a href="#ViewRevision/$versionNumber" title="$versionLabel" >$versionLabel</a>
+          </td>
+          <td style="width: 30%">$author</td>
+          <td style="width: 30%"><a href="">View change</a></td>
+        </tr>
+      <% } %>
+      </tbody>
+    </table>
+    <% if (currentVersions.size() > 0) { %>
+      <div align="right" style="padding: 5px;"><a href="#ShowHistory">View Page History</a></div>
+    <% } %>
+  </div>
+
+</div>

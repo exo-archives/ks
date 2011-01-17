@@ -1,0 +1,7 @@
+<%
+def actionId = uicomponent.getId();
+def event = uicomponent.event("PageInfo");
+%>
+
+<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('#PageInfo');" class="Info MoreItems Icon" title="Info">Info</a>
+<a onclick="$event" id="$actionId" style="display:none;">&nbsp;</a>

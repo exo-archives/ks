@@ -37,5 +37,6 @@ public class UIWikiPageContainer extends UIContainer {
     addChild(UIWikiBottomArea.class, null, null);
     addChild(UIWikiSearchSpaceArea.class, null, null);
     addChild(UIWikiHistorySpaceArea.class, null, null);
+    addChild(UIWikiPageInfo.class, null, null);
   }
 }

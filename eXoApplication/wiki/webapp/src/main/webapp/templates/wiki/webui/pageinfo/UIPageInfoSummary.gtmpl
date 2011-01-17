@@ -1,0 +1,57 @@
+<%
+  import java.util.Locale;
+  import java.text.DateFormat;
+  
+  def context = _ctx.getRequestContext();
+  Locale currentLocale = context.getLocale();
+  DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, currentLocale);
+  def title = currentWikiPage.getContent().getTitle();
+  def author = currentWikiPage.getOwner();
+  def editor = currentWikiPage.getAuthor();
+  def updateDate = df.format(currentWikiPage.getUpdatedDate());
+  def wordlink = "";
+  def pdflink = "";
+  def copylink = "";
+  def movelink = "";
+%>
+<div class="UIPageInfoItem UIPageInfoSummary">
+  <div class="UIPageInfoItemTitle">Summary</div>
+  <div class="UIPageInfoItemBody">
+    <table>
+      <tbody>
+        <tr class="OddClass">
+          <td class="label" width="40%">Title</td>
+          <td colspan="2">$title</td>
+        </tr>
+        
+        <tr class="EvenClass">
+          <td class="label" width="40%">Author</td>
+          <td colspan="2"><a href="">$author</a></td>
+        </tr>
+        
+        <tr class="OddClass">
+          <td class="label" width="40%">Last changed by</td>
+          <td width="30%"><a href="">$editor</a></td>
+          <td align="right">$updateDate</td>
+        </tr>
+        
+        <tr class="EvenClass">
+          <td class="label" width="40%">Link</td>
+          <td colspan="2"><a href="http://abc" >http:</a></td>
+        </tr>
+        
+        <tr class="OddClass">
+          <td class="label" width="40%">Export as:</td>
+          <td colspan="2"><a href="$wordlink">Word</a>&nbsp;|&nbsp;<a href="$pdflink">PDF</a></td>
+        </tr>
+        
+        <tr class="EvenClass">
+        <td class="label" width="40%">Operations:</td>
+        <td colspan="2"><a href="$copylink" >Copy</a>&nbsp;|&nbsp;<a href="$movelink" >Move</a></td>
+      </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+</div>

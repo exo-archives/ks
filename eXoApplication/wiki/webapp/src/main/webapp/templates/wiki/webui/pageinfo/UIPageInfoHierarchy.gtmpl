@@ -1,0 +1,25 @@
+<%
+  import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+  def pageImpl = (PageImpl) currentWikiPage;
+  def parentPage = pageImpl.getParentPage();
+  def parentLink = parentPage != null ? uicomponent.getPageLink(parentPage) : "";
+  def parentTitle = parentPage != null ? parentPage.getContent().getTitle() : "";
+%>
+
+<div class="UIPageInfoItem UIPageInfoHierarchy">
+<div class="UIPageInfoItemTitle">Hierarchy</div>
+  <% if (parentPage != null) { %>
+  <span class="label">Parent page</span>
+  <br>
+  <div class="content">
+    <div class="NodeLabel">
+      <a href="$parentLink" title="$parentTitle">$parentTitle</a>
+    </div>
+  </div>
+  <br>
+  <% } %>
+  <span class="label">Child pages</span>
+  <div class="content">
+    ${uicomponent.renderHierarchy()}
+  </div>
+</div>

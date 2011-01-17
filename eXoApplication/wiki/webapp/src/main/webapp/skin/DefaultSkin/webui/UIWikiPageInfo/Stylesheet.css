@@ -1,0 +1,72 @@
+.UIWikiPageInfo {
+
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIWikiPageInfoLayoutTable {
+	width: 100%;	
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIWikiPageInfoLayoutCell {
+	width: 50%;	
+}
+
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem {
+	border-width: 1px;
+	border-color: #3C78B5;
+	border-style: solid;
+	margin-top: 2px;
+	margin-bottom: 8px;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemTitle {
+	padding: 5px;
+	font-weight: bold;
+	color: black;
+	background-color: #F0F0F0;
+	margin: 0;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody {
+	padding: 5px;
+	margin: 0;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .tableview {
+	padding: 5px;
+	width: 100%;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .tableview tr {
+	background: none;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .tableview .EvenClass {
+	background-color: #F7F7F7;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .tableview th {
+	border-bottom-color: #3C78B5;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	font-size: 12px;
+	padding: 5px 15px 2px 0;
+	width: 100%;
+	background: none; 
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy {
+	
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .label {
+	color: #666666;
+	font-size: 12px;
+	padding: 5px;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .content {
+	color: #666666;
+	font-size: 12px;
+	border-left: 15px;
+}
