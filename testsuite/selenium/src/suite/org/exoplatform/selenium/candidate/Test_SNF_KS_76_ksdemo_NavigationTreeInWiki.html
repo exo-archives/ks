@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8080/ksdemo/public/classic/" />
+<title>Test_SNF_KS_76_ksdemo_NavigationTreeInWiki</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_76_ksdemo_NavigationTreeInWiki</td></tr>
+</thead><tbody>
+<tr>
+	<td>echo</td>
+	<td>- Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>windowMaximize</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>username</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>password</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>gtn</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/private/classic/wiki</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Verify the initial state of the tree:</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--------------- Portal and Classic nodes are being expanded</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='portal' and @class='CollapseIcon']//span[@title='portal']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='portal' and @class='CollapseIcon']//span[@title='portal']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='portal%2Fclassic' and @class='CollapseIcon']//span[@title='classic']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='portal%2Fclassic' and @class='CollapseIcon']//span[@title='classic']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--------------- A node labeled Wiki Home is highlighted</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='portal%2Fclassic%2FWikiHome']/div[@id='iconTreeExplorer' and @class='Wikihome TreeNodeType Node Hover ']/div/a[@title='Wiki Home']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='portal%2Fclassic%2FWikiHome']/div[@id='iconTreeExplorer' and @class='Wikihome TreeNodeType Node Hover ']/div/a[@title='Wiki Home']</td>
+	<td>Wiki Home</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--------------- Group and User nodes are there</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='group']//span[@title='group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='group']//span[@title='group']</td>
+	<td>group</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='user']//span[@title='user']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='user']//span[@title='user']</td>
+	<td>user</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Verify that a click on Portal node will expand/collapse the node group</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='portal']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='portal' and @class='ExpandIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='portal' and @class='ExpandIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='portal']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='portal' and @class='CollapseIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='portal' and @class='CollapseIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Create a page node</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>TitleInput</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>TitleInput</td>
+	<td>Page1_SNF_KS_76</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>Markup</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Markup</td>
+	<td>Page1 Content</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Page1_SNF_KS_76</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Page1 Content</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Page1 Content</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Verify that the newly created node is childless and is highlighted</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76' and @class='EmptyIcon']/div[contains(@class, 'Page TreeNodeType Node Hover')]/div/a[@title='Page1_SNF_KS_76']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76' and @class='EmptyIcon']/div[@class='Page TreeNodeType Node Hover ']/div/a[@title='Page1_SNF_KS_76']</td>
+	<td>Page1_SNF_KS_76</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Create a child page node</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>TitleInput</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>TitleInput</td>
+	<td>Page2_SNF_KS_76</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>Markup</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Markup</td>
+	<td>Page2 Content</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Page2_SNF_KS_76</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Page2 Content</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Page2 Content</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Verify that your first node now have a child node and is not highlighted</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76' and @class='CollapseIcon']/div[contains(@class,'Page TreeNodeType Node') and not(contains(@class,'Hover'))]/div/a[@title='Page1_SNF_KS_76']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76' and @class='CollapseIcon']/div[contains(@class,'Page TreeNodeType Node') and not(contains(@class,'Hover'))]/div/a[@title='Page1_SNF_KS_76']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementNotPresent</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76' and @class='CollapseIcon']/div[contains(@class,'Hover')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Click the icon of the parent node and verify ...</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--------------- that the Page Area still shows the child page not the parent</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>TitleInfo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>TitleInfo</td>
+	<td>Page2_SNF_KS_76</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPageContentArea']/p</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='UIWikiPageContentArea']/p</td>
+	<td>Page2 Content</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--------------- that the node group is collapsed</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76' and @class='ExpandIcon']/div[contains(@class,'Page TreeNodeType Node') and not(contains(@class,'Hover'))]/div/a[@title='Page1_SNF_KS_76']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76' and @class='ExpandIcon']/div[contains(@class,'Page TreeNodeType Node') and not(contains(@class,'Hover'))]/div/a[@title='Page1_SNF_KS_76']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementNotPresent</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76' and @class='CollapseIcon']/div[contains(@class,'Page TreeNodeType Node') and not(contains(@class,'Hover'))]/div/a[@title='Page1_SNF_KS_76']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Click the link of the parent node and verify ...</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76']//a[@title='Page1_SNF_KS_76']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--------------- that the Page Area now shows the parent page</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>TitleInfo</td>
+	<td>Page1_SNF_KS_76</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>TitleInfo</td>
+	<td>Page1_SNF_KS_76</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPageContentArea']/p</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='UIWikiPageContentArea']/p</td>
+	<td>Page1 Content</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--------------- that this click also expands the group</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76' and @class='CollapseIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76' and @class='CollapseIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementNotPresent</td>
+	<td>//div[@id='portal%2Fclassic%2FPage1_SNF_KS_76' and @class='ExpandIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Delete test data</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/private/classic/wiki/Page2_SNF_KS_76</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextNotPresent</td>
+	<td>Page2_SNF_KS_76</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>Page2_SNF_KS_76</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/private/classic/wiki/Page1_SNF_KS_76</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextNotPresent</td>
+	<td>Page1_SNF_KS_76</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>Page1_SNF_KS_76</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Sign out &amp; finish</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- End of test</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
