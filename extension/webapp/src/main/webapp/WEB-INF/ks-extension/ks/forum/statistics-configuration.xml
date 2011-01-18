@@ -49,6 +49,7 @@
       </init-params>
     </component-plugin>
     
+    <!-- 
     <component-plugin>
       <name>UpdateDataJob</name>
       <set-method>addPeriodJob</set-method>
@@ -61,13 +62,14 @@
           <property name="jobName" value="UpdateDataJob"/>
           <property name="groupName" value="KnowledgeSuite-forum"/>
           <property name="job" value="org.exoplatform.forum.service.conf.UpdateDataJob"/>
-          <property name="repeatCount" value="0"/>
-          <property name="period" value="30000"/> <!-- 2 mins-->    
+          <property name="repeatCount" value="1"/>
+          <property name="period" value="30000"/>    
           <property name="startTime" value="+0"/>
           <property name="endTime" value=""/>               
         </properties-param>        
       </init-params>
     </component-plugin>
+     -->
     
   </external-component-plugins>  
   
