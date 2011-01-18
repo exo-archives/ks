@@ -1,0 +1,483 @@
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIFormDateTimePicker.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIFormDateTimePicker.java	(revision 65243)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIFormDateTimePicker.java	(working copy)
+@@ -23,6 +23,7 @@
+ import java.util.Calendar;
+ import java.util.Date;
+ import java.util.GregorianCalendar;
++import java.util.Locale;
+ 
+ import org.exoplatform.webui.application.WebuiRequestContext;
+ import org.exoplatform.webui.form.UIFormInputBase;
+@@ -39,52 +40,122 @@
+   /**
+    * The DateFormat
+    */
+-  private DateFormat dateFormat_ ;
+-  /**
+-   * Whether to display the full time (with hours, minutes and seconds), not only the date
+-   */
++  private String titleShowCalendar = "Show Calendar";
++  private String dateStyle_ = "MM/dd/yyyy" ;
++  private String timeStyle_ = "HH:mm:ss" ;
++  private Date date_ ;
+   private boolean isDisplayTime_ ;
+-  private String titleShowCalendar = "Show Calendar";
+-  public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime, String titleShowCalendar) {
++  private Locale locale_  ;
++
++  public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime) {
+     super(name, bindField, String.class) ;
+-    setDisplayTime(isDisplayTime) ;
+-    if(date != null) value_ = dateFormat_.format(date) ;
+-    setTitleShowCalendar(titleShowCalendar);
++    date_ = date ;
++    isDisplayTime_ = isDisplayTime ; 
++    if(date != null) value_ = getFormater().format(date) ;
++    if(date != null) value_ = getFormater().format(date) ;
+   }
+-  
+-  public void setTitleShowCalendar(String titleShowCalendar) {
+-	  this.titleShowCalendar = titleShowCalendar;
++
++  public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime, Locale locale) {
++    super(name, bindField, String.class) ;
++    date_ = date ;
++    isDisplayTime_ = isDisplayTime ; 
++    locale_ = locale ;
++    if(date != null) value_ = getFormater().format(date) ;
++    if(date != null) value_ = getFormater().format(date) ;
+   }
++
++  public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime, String titleShowCalendar, Locale locale, String dateStyle) {
++    super(name, bindField, String.class) ;
++    dateStyle_ = dateStyle ;
++    isDisplayTime_ = isDisplayTime ;
++    locale_ = locale ;
++    date_ = date ;
++    this.titleShowCalendar = titleShowCalendar;
++    if(date != null) value_ = getFormater().format(date) ;
++  }
++  public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime, String titleShowCalendar, Locale locale, String dateStyle, String timeStyle) {
++    super(name, bindField, String.class) ;
++    dateStyle_ = dateStyle ;
++    timeStyle_ = timeStyle ;
++    locale_ = locale ;
++    date_ = date ;
++    isDisplayTime_ = isDisplayTime ;
++    this.titleShowCalendar = titleShowCalendar;
++    if(date != null) value_ = getFormater().format(date) ;
++  }
+   public UIFormDateTimePicker(String name, String bindField, Date date) {
+-    this(name, bindField, date, true, "") ;
++    this(name, bindField, date, true) ;
+   }
+-  /**
+-   * By default, creates a date of format Month/Day/Year
+-   * If isDisplayTime is true, adds the time of format Hours:Minutes:Seconds
+-   * TODO : Display time depending on the locale of the client.
+-   * @param isDisplayTime
+-   */
++  public UIFormDateTimePicker(String name, String bindField, Date date, String dateStyle) {
++    this(name, bindField, date, false, "Show Calendar", null, dateStyle) ;
++  }
++  public UIFormDateTimePicker(String name, String bindField, Date date, String dateStyle, String timeStyle) {
++    this(name, bindField, date, true, "Show Calendar", null, dateStyle, timeStyle) ;
++  }
+   public void setDisplayTime(boolean isDisplayTime) {
+     isDisplayTime_ = isDisplayTime;
+-    if(isDisplayTime_) dateFormat_ = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+-    else dateFormat_ = new SimpleDateFormat("MM/dd/yyyy");
+   }
+   
+-  public void setCalendar(Calendar date) { value_ = dateFormat_.format(date.getTime()) ; }
++  public void setTitleShowCalendar(String titleShowCalendar) {
++		this.titleShowCalendar = titleShowCalendar;
++	}
++
++  public void setCalendar(Calendar date) { 
++    date_ = date.getTime() ;
++    value_ = getFormater().format(date.getTime()) ; 
++  }
+   public Calendar getCalendar() {
+     try {
+       Calendar calendar = new GregorianCalendar() ;
+-      calendar.setTime(dateFormat_.parse(value_ + " 0:0:0")) ;
++      calendar.setTime(getFormater().parse(value_ + " 0:0:0")) ;
+       return calendar ;
+     } catch (ParseException e) {
+       return null;
+     }
+   }
+-  
++  public Date getDateValue() {
++    try {
++      Calendar calendar = new GregorianCalendar() ;
++      calendar.setTime(getFormater().parse(value_ + " 0:0:0")) ;
++      return calendar.getTime() ;
++    } catch (ParseException e) {
++      return null;
++    }
++  }
++  public void setDateFormatStyle(String dateStyle) {
++    dateStyle_ = dateStyle ;
++    value_ = getFormater().format(date_) ;
++
++  }
++  public void setTimeFormatStyle(String timeStyle) {
++    timeStyle_ = timeStyle ;
++    value_ = getFormater().format(date_) ;
++  }
++  @SuppressWarnings("unused")
+   public void decode(Object input, WebuiRequestContext context) throws Exception {
+     if(input != null) value_ = ((String)input).trim();
+   }
+-
++  public String getFormatStyle() {
++    if(isDisplayTime_) return dateStyle_ + " " + timeStyle_ ;
++    return dateStyle_ ;
++  }
++  private String getLang() {
++    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
++    Locale locale = context.getParentAppRequestContext().getLocale() ;
++    return locale.getLanguage();
++  }
++  private DateFormat getFormater() {
++    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
++    Locale locale = context.getParentAppRequestContext().getLocale() ;
++    if(locale_ == null) locale_ = locale ;
++    return new SimpleDateFormat(getFormatStyle(), locale_) ;
++  }
++  public void setInfo(String titleShowCalendar, Locale locale, String dateStyle, String timeStyle) {
++  	this.titleShowCalendar = titleShowCalendar;
++  	dateStyle_ = dateStyle ;
++    timeStyle_ = timeStyle ;
++    locale_ = locale ;
++  }
+   public void processRender(WebuiRequestContext context) throws Exception {
+   	context.getJavascriptManager().importJavascript("eXo.ks.UIDateTimePicker","/ksResources/javascript/") ;
+     Writer w = context.getWriter();
+@@ -95,7 +166,7 @@
+       w.write(" value='"); w.write(value_.toString()); w.write('\'');
+     }
+     w.write("/>");
+-    w.write("<div class='CalendarIcons' onclick='eXo.ks.UIDateTimePicker.init(this,");
++    w.write("<div class='CalendarIcons' lang='"+getLang()+"' format='" + getFormatStyle() + "' onclick='eXo.ks.UIDateTimePicker.init(this,");
+     w.write(String.valueOf(isDisplayTime_)+");' title='"+titleShowCalendar+"'><span></span></div>");
+   }
+ }
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UISearchForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UISearchForm.java	(revision 65243)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UISearchForm.java	(working copy)
+@@ -19,6 +19,7 @@
+ import java.util.ArrayList;
+ import java.util.Calendar;
+ import java.util.List;
++import java.util.Locale;
+ import java.util.ResourceBundle;
+ 
+ import org.exoplatform.container.PortalContainer;
+@@ -31,9 +32,11 @@
+ import org.exoplatform.forum.service.UserProfile;
+ import org.exoplatform.forum.service.Utils;
+ import org.exoplatform.forum.webui.popup.UIPopupAction;
+-import org.exoplatform.forum.webui.popup.UIPopupContainer;
+ import org.exoplatform.forum.webui.popup.UISelector;
++import org.exoplatform.portal.application.PortalRequestContext;
++import org.exoplatform.portal.webui.util.Util;
+ import org.exoplatform.web.application.ApplicationMessage;
++import org.exoplatform.webui.application.WebuiRequestContext;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.ComponentConfigs;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+@@ -116,42 +119,32 @@
+ 	private String path = "";
+ 	private ForumService forumService;
+ 	private List<TopicType> listTT = new ArrayList<TopicType>();
++	private Locale locale ;
+ 	public UISearchForm() throws Exception {
+ 		setId("UISearchForm");
+ 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+ 		UIFormStringInput searchValue = new UIFormStringInput(FIELD_SEARCHVALUE_INPUT, FIELD_SEARCHVALUE_INPUT, null) ;
+ 		UIFormStringInput searchUser = new UIFormStringInput(FIELD_SEARCHUSER_INPUT, FIELD_SEARCHUSER_INPUT, null) ;
+ 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
+-		list.add(new SelectItemOption<String>(ForumUtils.CATEGORY, Utils.CATEGORY)) ;
+-		list.add(new SelectItemOption<String>(ForumUtils.FORUM, Utils.FORUM)) ;
+-		list.add(new SelectItemOption<String>(ForumUtils.THREAD, Utils.TOPIC)) ;
+-		list.add(new SelectItemOption<String>(ForumUtils.POST, Utils.POST)) ;
++		list.add(new SelectItemOption<String>(getLabel("Category"), Utils.CATEGORY)) ;
++		list.add(new SelectItemOption<String>(getLabel("Forum"), Utils.FORUM)) ;
++		list.add(new SelectItemOption<String>(getLabel("Topic"), Utils.TOPIC)) ;
++		list.add(new SelectItemOption<String>(getLabel("Post"), Utils.POST)) ;
+ 		UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX, FIELD_SEARCHTYPE_SELECTBOX, list) ;
+ 		searchType.setOnChange("Onchange") ;
++
++		UIFormSelectBox topicType = new UIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX, FIELD_TOPICTYPE_SELECTBOX, null) ;
++
++		UIFormRadioBoxInput boxInput = new UIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX, FIELD_SCOPE_RADIOBOX, null);
+ 		
+-		list = new ArrayList<SelectItemOption<String>>() ;
+-		list.add(new SelectItemOption<String>(getLabel("All"), "all")) ;
+-		for (TopicType topicType : listTT) {
+-			list.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
+-    }
+-		UIFormSelectBox topicType = new UIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX, FIELD_TOPICTYPE_SELECTBOX, list) ;
+-		topicType.setValue(TopicType.DEFAULT_ID);
+-		
+-		list = new ArrayList<SelectItemOption<String>>() ;
+-		list.add(new SelectItemOption<String>(getLabel("Full"), "entire")) ;
+-		list.add(new SelectItemOption<String>(getLabel("Titles"), "title")) ;
+-		UIFormRadioBoxInput boxInput = new UIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX, FIELD_SCOPE_RADIOBOX, list);
+-		boxInput.setValue("entire");
+-		
+ 		UIFormCheckBoxInput<Boolean> isLock = new UIFormCheckBoxInput<Boolean>(FIELD_ISLOCK_CHECKBOX, FIELD_ISLOCK_CHECKBOX, false);
+ 		UIFormCheckBoxInput<Boolean> isUnLock = new UIFormCheckBoxInput<Boolean>(FIELD_ISUNLOCK_CHECKBOX, FIELD_ISUNLOCK_CHECKBOX, false);
+ 		UIFormCheckBoxInput<Boolean> isClosed = new UIFormCheckBoxInput<Boolean>(FIELD_ISCLOSED_CHECKBOX, FIELD_ISCLOSED_CHECKBOX, false);
+ 		UIFormCheckBoxInput<Boolean> isOpent = new UIFormCheckBoxInput<Boolean>(FIELD_ISOPEN_CHECKBOX, FIELD_ISOPEN_CHECKBOX, false);
+-		String showCalendar = getLabel("ShowCalendar");
+-		UIFormDateTimePicker FromDateCreated = new UIFormDateTimePicker(FROMDATECREATED, FROMDATECREATED, null, false, showCalendar) ;
+-		UIFormDateTimePicker ToDateCreated = new UIFormDateTimePicker(TODATECREATED, TODATECREATED, null, false, showCalendar) ;
+-		UIFormDateTimePicker FromDateCreatedLastPost = new UIFormDateTimePicker(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false, showCalendar) ;
+-		UIFormDateTimePicker ToDateCreatedLastPost = new UIFormDateTimePicker(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false, showCalendar) ;
++		UIFormDateTimePicker FromDateCreated = new UIFormDateTimePicker(FROMDATECREATED, FROMDATECREATED, null, false) ;
++		UIFormDateTimePicker ToDateCreated = new UIFormDateTimePicker(TODATECREATED, TODATECREATED, null, false) ;
++		UIFormDateTimePicker FromDateCreatedLastPost = new UIFormDateTimePicker(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false) ;
++		UIFormDateTimePicker ToDateCreatedLastPost = new UIFormDateTimePicker(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false) ;
+ 
+     UISliderControl topicCountMin = new UISliderControl(FIELD_TOPICCOUNTMIN_SLIDER, FIELD_TOPICCOUNTMIN_SLIDER, "0") ;//Sliders 
+ 
+@@ -182,6 +175,46 @@
+ 		setActions(new String[]{"Search","ResetField", "Cancel"});
+ 	}
+ 	
++	@SuppressWarnings("unused")
++	private void setLocale() throws Exception {
++		PortalRequestContext portalContext = Util.getPortalRequestContext();
++		Locale locale = portalContext.getLocale();
++		if(this.locale == null || !locale.getLanguage().equals(this.locale.getLanguage())) {
++			initDefaultContent();
++			this.locale = locale;
++		}
++	}
++	
++	public void initDefaultContent() throws Exception {
++		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
++		list.add(new SelectItemOption<String>(getLabel("Category"), Utils.CATEGORY)) ;
++		list.add(new SelectItemOption<String>(getLabel("Forum"), Utils.FORUM)) ;
++		list.add(new SelectItemOption<String>(getLabel("Topic"), Utils.TOPIC)) ;
++		list.add(new SelectItemOption<String>(getLabel("Post"), Utils.POST)) ;
++		this.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(list);
++		
++		list = new ArrayList<SelectItemOption<String>>() ;
++		list.add(new SelectItemOption<String>(getLabel("Full"), "entire")) ;
++		list.add(new SelectItemOption<String>(getLabel("Titles"), "title")) ;
++		UIFormRadioBoxInput boxInput = this.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setOptions(list);
++		boxInput.setValue("entire");
++		
++		list = new ArrayList<SelectItemOption<String>>() ;
++		list.add(new SelectItemOption<String>(getLabel("All"), "all")) ;
++		for (TopicType topicType : listTT) {
++			list.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
++    }
++		UIFormSelectBox topicType = this.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setOptions(list);
++		topicType.setValue(TopicType.DEFAULT_ID);
++		
++		if(userProfile == null) setUserProfile(null);
++		String showCalendar = getLabel("ShowCalendar");
++		getUIFormDateTimePicker(FROMDATECREATED).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
++		getUIFormDateTimePicker(TODATECREATED).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
++		getUIFormDateTimePicker(FROMDATECREATEDLASTPOST).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
++		getUIFormDateTimePicker(TODATECREATEDLASTPOST).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
++	}
++	
+ 	public boolean getIsSearchCate() {return isSearchCate;}
+ 	public boolean getIsSearchForum() { return isSearchForum;}
+ 	public void setIsSearchForum(boolean isSearchForum){this.isSearchForum = isSearchForum;}
+@@ -195,12 +228,9 @@
+ 	}
+ 	
+ 	public void setUserProfile(UserProfile userProfile) throws Exception {
+-		try {
+-			this.userProfile = userProfile ;
+-		} catch (Exception e) {
+-			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+-		}
++			this.userProfile = (userProfile != null)?userProfile : this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+ 	}
++	
+ 	private boolean getIsMod() {
+ 		if(this.userProfile != null) {
+ 			if(this.userProfile.getUserRole() < 2) return true ;
+@@ -251,6 +281,12 @@
+ 			return id ;
+ 		}
+ 	}
++
++	public String getLabel(String id) throws Exception {
++		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
++		ResourceBundle res = context.getApplicationResourceBundle() ;
++		return getLabel(res, id);
++	}
+ 	
+ 	private String checkValue(String input) throws Exception {
+ 		if(!ForumUtils.isEmpty(input)){
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UISearchForm.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UISearchForm.gtmpl	(revision 65243)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UISearchForm.gtmpl	(working copy)
+@@ -1,3 +1,6 @@
++<%
++	uicomponent.setLocale();
++%>
+ <div class="UIFormForum UIAdvancedSearchForm">
+ 	<% uiform.begin() %>
+ 		<div class="HorizontalLayout">
+Index: web/ksResources/src/main/webapp/javascript/eXo/ks/lang/fr.js
+===================================================================
+--- web/ksResources/src/main/webapp/javascript/eXo/ks/lang/fr.js	(revision 0)
++++ web/ksResources/src/main/webapp/javascript/eXo/ks/lang/fr.js	(revision 0)
+@@ -0,0 +1,6 @@
++// ISO standard language abbreviation
++[
++	['Janvier','Février','Mars','Avril ','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
++	['D','L', 'M', 'M', 'J', 'V', 'S'],
++	['Année précédente', 'Mois précédent', 'Mois prochain', 'L\'année prochaine']
++]
+Index: web/ksResources/src/main/webapp/javascript/eXo/ks/lang/de.js
+===================================================================
+--- web/ksResources/src/main/webapp/javascript/eXo/ks/lang/de.js	(revision 0)
++++ web/ksResources/src/main/webapp/javascript/eXo/ks/lang/de.js	(revision 0)
+@@ -0,0 +1,6 @@
++// ISO standard language abbreviation
++[
++	[ 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
++	['S','M','D','M','D','F','S'],
++	[ 'Vorjahr', 'Vorhergehender Monat', 'Next Month', 'Nächstes Jahr']
++]
+Index: web/ksResources/src/main/webapp/javascript/eXo/ks/lang/vi.js
+===================================================================
+--- web/ksResources/src/main/webapp/javascript/eXo/ks/lang/vi.js	(revision 0)
++++ web/ksResources/src/main/webapp/javascript/eXo/ks/lang/vi.js	(revision 0)
+@@ -0,0 +1,5 @@
++[
++	['Tháng một','tháng hai','tháng ba','Tháng tư','tháng năm','tháng sáu','tháng bảy','tháng tám','tháng chín','tháng mười','tháng mười một','tháng mười hai'],
++	['C','H','B','B','N','S','B'],
++	['Năm trước', 'Tháng trước', 'Tháng sau', 'Năm sau']
++]
+Index: web/ksResources/src/main/webapp/javascript/eXo/ks/lang/EN.js
+===================================================================
+--- web/ksResources/src/main/webapp/javascript/eXo/ks/lang/EN.js	(revision 0)
++++ web/ksResources/src/main/webapp/javascript/eXo/ks/lang/EN.js	(revision 0)
+@@ -0,0 +1,6 @@
++// ISO standard language abbreviation
++[
++	['January','February','March','April','May','June','July','August','September','October','November','December'],
++	['S','M','T','W','T','F','S'],
++	['Previous Year', 'Previous Month', 'Next Month', 'Next Year']
++]
+Index: web/ksResources/src/main/webapp/javascript/eXo/ks/UIDateTimePicker.js
+===================================================================
+--- web/ksResources/src/main/webapp/javascript/eXo/ks/UIDateTimePicker.js	(revision 65245)
++++ web/ksResources/src/main/webapp/javascript/eXo/ks/UIDateTimePicker.js	(working copy)
+@@ -5,15 +5,38 @@
+   														// if selectedDate is invalid, currentDate deals with system time;
+   this.selectedDate = null ; //Datetime value of input date&time field
+   this.months = ['January','February','March','April','May','June','July','August','September','October','November','December'] ;
++  this.weekdays = ['S','M','T','W','T','F','S'] ;
++  this.tooltip = ['Previous Year', 'Previous Month', 'Next Month', 'Next Year'];
++  this.pathResource = "/ksResources/javascript/eXo/ks/lang/";
++  this.lang = "";
+ }
+ 
++UIDateTimePicker.prototype.getLang = function() {
++       try {
++               var lang = this.dateField.getAttribute('lang'); 
++               if (this.lang == lang) 
++                       return;
++               this.lang = lang;
++               var languages = eval(ajaxAsyncGetRequest(this.pathResource + this.lang.toLowerCase() + ".js", false));
++               if (!languages || (typeof(languages) != "object")) 
++                       return;
++       this.months = languages[0];
++       this.weekdays = languages[1];
++       this.tooltip = languages[2];
++       } 
++       catch (e) {}
++} ;
++
+ UIDateTimePicker.prototype.init = function(field, isDisplayTime) {
+ 	this.isDisplayTime = isDisplayTime ;
+ 	if (this.dateField) {
+ 		this.dateField.parentNode.style.position = '' ;
+ 	}
+ 	this.dateField = field ;
+-	if (!document.getElementById(this.calendarId)) this.create() ;
++        eXo.ks.UIDateTimePicker.getLang() ;
++        if (!document.getElementById(this.calendarId)) {
++               this.create() ;
++        }
+ //	field.parentNode.style.position = 'relative' ;
+   field.parentNode.insertBefore(document.getElementById(this.calendarId), field) ;
+   this.show() ;
+@@ -34,7 +57,7 @@
+ UIDateTimePicker.prototype.show = function() {
+ 	document.onmousedown = new Function('eXo.ks.UIDateTimePicker.hide()') ;
+ 	var re = /^(\d{1,2}\/\d{1,2}\/\d{1,4})\s*(\s+\d{1,2}:\d{1,2}:\d{1,2})?$/i ;
+-  this.selectedDate = new Date() ;
++        this.selectedDate = new Date() ;
+ 	if (re.test(this.dateField.value)) {
+ 	  var dateParts = this.dateField.value.split(" ") ;
+ 	  var arr = dateParts[0].split("/") ;
+@@ -99,17 +122,17 @@
+ 	table += 		'<div class="UICalendar" onmousedown="event.cancelBubble = true">' ;
+ 	table += 		'	<table class="MonthYearBox">' ;
+ 	table += 		'	  <tr>' ;
+-	table += 		'			<td class="MonthButton"><a class="PreviousMonth" href="javascript:eXo.ks.UIDateTimePicker.changeMonth(-1);"></a></td>' ;
+-	table += 		'			<td class="YearButton"><a class="PreviousYear" href="javascript:eXo.ks.UIDateTimePicker.changeYear(-1);"></a></td>' ;
++	table += 		'			<td class="MonthButton"><a class="PreviousMonth" title="' + this.tooltip[1]+ '" href="javascript:eXo.ks.UIDateTimePicker.changeMonth(-1);"></a></td>' ;
++	table += 		'			<td class="YearButton"><a class="PreviousYear" title="' + this.tooltip[0]+ '" href="javascript:eXo.ks.UIDateTimePicker.changeYear(-1);"></a></td>' ;
+ 	table += 		'			<td><font color="#f89302">' + this.months[this.currentDate.getMonth()] + '</font> - ' + this.currentDate.getFullYear() + '</td>' ;
+-	table += 		'			<td class="YearButton"><a class="NextYear" href="javascript:eXo.ks.UIDateTimePicker.changeYear(1);"></a></td>' ;
+-	table += 		'			<td class="MonthButton"><a class="NextMonth" href="javascript:eXo.ks.UIDateTimePicker.changeMonth(1);"></a></td>' ;
++	table += 		'			<td class="YearButton"><a class="NextYear" title="' + this.tooltip[3]+ '" href="javascript:eXo.ks.UIDateTimePicker.changeYear(1);"></a></td>' ;
++	table += 		'			<td class="MonthButton"><a class="NextMonth" title="' + this.tooltip[2]+ '" href="javascript:eXo.ks.UIDateTimePicker.changeMonth(1);"></a></td>' ;
+ 	table += 		'		</tr>' ;
+ 	table += 		'	</table>' ;
+ 	table += 		'	<div style="margin-top: 6px;padding: 0px 5px;">' ;
+ 	table += 		'		<table>' ;
+ 	table += 		'			<tr>' ;
+-	table += 		'				<td><font color="red">S</font></td><td>M</td><td>T</td><td>W</td><td>T</td><td>F</td><td>S</td>' ;
++	table += 		'				<td><font color="red">' + this.weekdays[0] + '</font></td><td>' + this.weekdays[1] + '</td><td>' + this.weekdays[2] + '</td><td>' + this.weekdays[3] + '</td><td>' + this.weekdays[4] + '</td><td>' + this.weekdays[5] + '</td><td>' + this.weekdays[6] + '</td>' ;
+ 	table += 		'			</tr>' ;
+ 	table += 		'		</table>' ;
+ 	table += 		'	</div>' ;
+@@ -163,8 +186,8 @@
+ UIDateTimePicker.prototype.changeMonth = function(change) {
+ 	this.currentDate.setDate(1);
+ 	this.currentDate.setMonth(this.currentDate.getMonth() + change) ;
+-  var clndr = document.getElementById(this.calendarId) ;
+-  clndr.firstChild.lastChild.innerHTML = this.renderCalendar() ;
++	var clndr = document.getElementById(this.calendarId) ;
++	clndr.firstChild.lastChild.innerHTML = this.renderCalendar() ;
+ };
+ 
+ UIDateTimePicker.prototype.changeYear = function(change) {
+@@ -268,14 +291,4 @@
+ 	return [31, ((!(year % 4 ) && ( (year % 100 ) || !( year % 400 ) ))? 29:28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+ };
+ 
+-//UIDateTimePicker.prototype.getChangedTime = function(input, type) {
+-//	var time = input.value ;
+-//	if (isNaN(time)) {
+-//		return ; 
+-//	}
+-//	if (type == 'h') this.currentHours = time ;
+-//	else if (type == 'm') this.currentMinutes = time ;
+-//	else if (type == 's') this.currentSeconds = time ;
+-//}
+-
+-eXo.ks.UIDateTimePicker = new UIDateTimePicker('UICalendarControl') ;
+\ No newline at end of file
++eXo.ks.UIDateTimePicker = new UIDateTimePicker('UICalendarControl') ;
