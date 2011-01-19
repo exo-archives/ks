@@ -65,7 +65,7 @@ public class PageListenersInAction implements Action {
     String wikiType = Utils.getWikiType(jcrPathOfPage);
     String owner = Utils.getSpaceIdByJcrPath(jcrPathOfPage);
     String pageId = ancestor.getName();
-    
+    boolean moreVersionsThan1 = ancestor.getVersionHistory().getAllVersions().getSize() > 1;
     if (Integer.parseInt(eventObj.toString()) == ExtendedEvent.PROPERTY_ADDED) {
       List<PageWikiListener> listeners = wikiService.getPageListeners();
       for (PageWikiListener l : listeners) {
@@ -77,7 +77,7 @@ public class PageListenersInAction implements Action {
           }
         }
       }
-    } else if (Integer.parseInt(eventObj.toString()) == ExtendedEvent.PROPERTY_CHANGED) {
+    } else if (Integer.parseInt(eventObj.toString()) == ExtendedEvent.PROPERTY_CHANGED && moreVersionsThan1) {
       List<PageWikiListener> listeners = wikiService.getPageListeners();
       for (PageWikiListener l : listeners) {
         try {
