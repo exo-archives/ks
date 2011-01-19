@@ -1,0 +1,20 @@
+<%
+  import org.exoplatform.wiki.service.PermissionEntry;
+  import org.exoplatform.wiki.service.Permission;
+  
+  PermissionEntry permissionEntry = uicomponent.getPermissionEntry();
+  Permission[] permissions = permissionEntry.getPermissions();
+%>
+<td><div title="managers in Administrators" class="Text"><%= uicomponent.getPermissionEntry().getId(); %></div><div title="manager:/platform/administrators" class="Text"><%= uicomponent.getPermissionEntry().getId(); %></div></td>
+<%
+  for(permission in permissions){
+    checkboxField = uicomponent.getChildById(permission.getPermissionType().toString() + permissionEntry.getId()) ;
+    %>
+    <td><% uicomponent.renderChild(checkboxField); %></td>
+<%  }
+%>
+<td>
+  <div class="ActionContainer">
+    <img class="DeleteUserIcon" src="/eXoResources/skin/sharedImages/Blank.gif" title="Delete Permission" alt="DeletePermission" onclick="javascript:alert('Feature is not implemented')">
+  </div>
+</td>

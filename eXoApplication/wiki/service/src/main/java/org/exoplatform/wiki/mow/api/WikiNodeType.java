@@ -90,6 +90,8 @@ public interface WikiNodeType {
 
     public final static String LINK_REGISTRY              = "LinkRegistry";
     
+    public final static String WIKI_PERMISSIONS           = "wikiPermissions";
+    
     public final static String NEW_LINK                   = "newlink";
     
     public final static String WIKI_HOME_NAME             = "WikiHome";
@@ -117,6 +119,8 @@ public interface WikiNodeType {
     public final static String SYNTAX                     = "syntax";
 
     public final static String UPDATED_DATE               = "updatedDate";
+    
+    public final static String OVERRIDEPERMISSION         = "isOverridePermission";
 
     public final static String CREATED                    = "jcr:created";
 

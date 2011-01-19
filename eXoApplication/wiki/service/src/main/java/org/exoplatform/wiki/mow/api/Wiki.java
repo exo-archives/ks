@@ -16,6 +16,8 @@
  */
 package org.exoplatform.wiki.mow.api;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
  *         Lamarque</a>
@@ -60,5 +62,17 @@ public interface Wiki {
    * @return
    */
   Page getPageByID(String id);
+  
+  /**
+   * 
+   * @return
+   */
+  List<String> getWikiPermissions();
+  
+  /**
+   * 
+   * @param permissions
+   */
+  void setWikiPermissions(List<String> permissions);
 
 }

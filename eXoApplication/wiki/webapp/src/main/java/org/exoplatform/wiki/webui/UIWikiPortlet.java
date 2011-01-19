@@ -43,6 +43,7 @@ import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.resolver.PageResolver;
 import org.exoplatform.wiki.resolver.TitleResolver;
+import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.webui.control.UIPageToolBar;
@@ -82,6 +83,12 @@ public class UIWikiPortlet extends UIPortletApplication {
 
   public static String          WIKI_PORTLET_ACTION_PREFIX = "UIWikiPortlet_";
   
+  public static enum PopupLevel {
+    L1,
+    L2
+  }
+
+  
   public UIWikiPortlet() throws Exception {
     super();
     try {
@@ -90,9 +97,10 @@ public class UIWikiPortlet extends UIPortletApplication {
       addChild(UIWikiMiddleArea.class, null, null);
       addChild(UIWikiEmptyAjaxBlock.class, null, null);
       addChild(UIWikiMaskWorkspace.class, null, "UIWikiMaskWorkspace");
-      UIPopupContainer uiPopupContainer = addChild(UIPopupContainer.class, null, null);
-      uiPopupContainer.setId("UIWikiPopupContainer");
-      uiPopupContainer.getChild(UIPopupWindow.class).setId("UIWikiPopupWindow");
+      UIPopupContainer uiPopupContainer = addChild(UIPopupContainer.class, null, "UIWikiPopupContainer" + PopupLevel.L1);
+      uiPopupContainer.getChild(UIPopupWindow.class).setId("UIWikiPopupWindow" + PopupLevel.L1);
+      uiPopupContainer = uiPopupContainer.addChild(UIPopupContainer.class, null, "UIWikiPopupContainer" + PopupLevel.L2);
+      uiPopupContainer.getChild(UIPopupWindow.class).setId("UIWikiPopupWindow" + PopupLevel.L2);
       loadPreferences();
     } catch (Exception e) {
       log.error("An exception happens when init WikiPortlet", e);
@@ -120,7 +128,7 @@ public class UIWikiPortlet extends UIPortletApplication {
       String requestURL = Utils.getCurrentRequestURL();
       PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
       Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode());
-      if (page == null) {
+      if (page == null || (page != null && !page.hasPermission(PermissionType.VIEWPAGE))) {
         changeMode(WikiMode.PAGE_NOT_FOUND);
         super.processRender(app, context);
         return;
@@ -173,6 +181,14 @@ public class UIWikiPortlet extends UIPortletApplication {
     }
   }
 
+  public UIPopupContainer getPopupContainer(PopupLevel level) {
+    UIPopupContainer popupContainer = getChildById("UIWikiPopupContainer" + PopupLevel.L1);
+    if (level == PopupLevel.L2) {
+      popupContainer = popupContainer.getChildById("UIWikiPopupContainer" + PopupLevel.L2);
+    }
+    return popupContainer;
+  }
+  
   public WikiMode getWikiMode() {
     return mode;
   }

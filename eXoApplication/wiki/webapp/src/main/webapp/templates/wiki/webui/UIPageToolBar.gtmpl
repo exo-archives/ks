@@ -19,6 +19,9 @@
 			    uicomponent.renderChild(actionComponent.getId());
 			   }
 			%>		
+			<% if(action.equals("PagePermission")){ %>
+			  <a href="$link" class="PagePermission MoreItems Icon" title="<%=_ctx.appRes("UIPageToolBar.label.PagePermission");%>"><%= _ctx.appRes("UIPageToolBar.label.PagePermission"); %></a>
+			<%}%>
 		<%}%>
 		</div>
 	</div>

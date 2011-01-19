@@ -16,6 +16,8 @@
  */
 package org.exoplatform.wiki.mow.core.api.wiki;
 
+import java.util.List;
+
 import org.chromattic.api.UndeclaredRepositoryException;
 import org.chromattic.api.annotations.Create;
 import org.chromattic.api.annotations.MappedBy;
@@ -97,6 +99,10 @@ public abstract class WikiImpl implements Wiki {
 
   @Path
   public abstract String getPath();
+  
+  @Property(name = WikiNodeType.Definition.WIKI_PERMISSIONS)
+  public abstract List<String> getWikiPermissions();
+  public abstract void setWikiPermissions(List<String> permissions);
 
   public PageImpl getPageByID(String id) {
     throw new UnsupportedOperationException();

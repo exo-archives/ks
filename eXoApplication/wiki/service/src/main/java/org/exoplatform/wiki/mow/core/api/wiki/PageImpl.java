@@ -16,9 +16,13 @@
  */
 package org.exoplatform.wiki.mow.core.api.wiki;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
@@ -40,6 +44,12 @@ import org.chromattic.api.annotations.PrimaryType;
 import org.chromattic.api.annotations.Property;
 import org.chromattic.api.annotations.WorkspaceName;
 import org.chromattic.ext.ntdef.Resource;
+import org.exoplatform.services.jcr.access.AccessControlEntry;
+import org.exoplatform.services.jcr.access.AccessControlList;
+import org.exoplatform.services.jcr.access.SystemIdentity;
+import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.chromattic.ext.ntdef.VersionableMixin;
 import org.exoplatform.wiki.mow.api.Page;
@@ -48,7 +58,9 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
+import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.utils.Utils;
 
 /**
  * Created by The eXo Platform SAS
@@ -254,6 +266,66 @@ public abstract class PageImpl implements Page {
   @OneToMany
   public abstract Map<String, PageImpl> getChildPages();
   
+  @Property(name = WikiNodeType.Definition.OVERRIDEPERMISSION)
+  public abstract boolean getOverridePermission();
+  public abstract void setOverridePermission(boolean isOverridePermission);
+  
+  public boolean hasPermission(PermissionType permissionType) throws Exception {
+    String[] permission = new String[] {};
+    if (PermissionType.VIEWPAGE.equals(permissionType)) {
+      permission = new String[] { org.exoplatform.services.jcr.access.PermissionType.READ };
+    } else if (PermissionType.EDITPAGE.equals(permissionType)) {
+      permission = new String[] { org.exoplatform.services.jcr.access.PermissionType.ADD_NODE,
+          org.exoplatform.services.jcr.access.PermissionType.REMOVE,
+          org.exoplatform.services.jcr.access.PermissionType.SET_PROPERTY };
+    }
+
+    ExtendedNode pageNode = (ExtendedNode) getJCRPageNode();
+    AccessControlList acl = pageNode.getACL();
+
+    ConversationState conversationState = ConversationState.getCurrent();
+    Identity user = null;
+    if (conversationState != null) {
+      user = conversationState.getIdentity();
+    } else {
+      user = new Identity(SystemIdentity.ANY);
+    }
+    return Utils.hasPermission(acl, permission, user);
+  }
+  
+  public HashMap<String, String[]> getPagePermission() throws Exception {
+    ExtendedNode pageNode = (ExtendedNode) getJCRPageNode();
+    HashMap<String, String[]> perm = new HashMap<String, String[]>();
+    AccessControlList acl = pageNode.getACL();
+    List<AccessControlEntry> aceList = acl.getPermissionEntries();
+    for (int i = 0, length = aceList.size(); i < length; i++) {
+      AccessControlEntry ace = aceList.get(i);
+      String[] nodeActions = perm.get(ace.getIdentity());
+      List<String> actions = null;
+      if (nodeActions != null) {
+        actions = new ArrayList<String>(Arrays.asList(nodeActions));
+        Arrays.asList(nodeActions);
+      } else {
+        actions = new ArrayList<String>();
+      }
+      actions.add(ace.getPermission());
+      perm.put(ace.getIdentity(), actions.toArray(new String[5]));
+    }
+    return perm;
+  }
+
+  public void setPagePermission(HashMap<String, String[]> permissions) throws Exception {
+    ExtendedNode pageNode = (ExtendedNode) getJCRPageNode();
+    if (pageNode.canAddMixin("exo:privilegeable")) {
+      pageNode.addMixin("exo:privilegeable");
+    }
+    if (permissions.size() > 0) {
+      pageNode.setPermissions(permissions);
+    } else {
+      pageNode.clearACL();
+    }
+  }
+  
   /*public void addWikiPage(PageImpl wikiPage) throws DuplicateNameException {
     getChildPages().add(wikiPage);
   }*/
@@ -329,4 +401,5 @@ public abstract class PageImpl implements Page {
 
   @Destroy
   public abstract void remove();
+  
 }

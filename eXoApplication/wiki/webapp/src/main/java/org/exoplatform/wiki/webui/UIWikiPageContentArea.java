@@ -34,6 +34,7 @@ import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
+import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.tree.TreeNode;
@@ -112,7 +113,7 @@ public class UIWikiPageContentArea extends UIWikiContainer {
     
     // Render current content
     if (currentMode.equals(WikiMode.VIEW)) {
-      this.htmlOutput = renderingService.render(wikipage.getContent().getText(), wikipage.getContent().getSyntax(), Syntax.XHTML_1_0.toIdString(), true);
+      this.htmlOutput = renderingService.render(wikipage.getContent().getText(), wikipage.getContent().getSyntax(), Syntax.XHTML_1_0.toIdString(), wikipage.hasPermission(PermissionType.EDITPAGE));
     }
     if (currentMode.equals(WikiMode.HELP)) {
       this.htmlOutput = renderingService.render(wikipage.getContent().getText(), wikipage.getContent().getSyntax(), Syntax.XHTML_1_0.toIdString(), false);

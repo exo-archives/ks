@@ -259,6 +259,11 @@
   font-size: 11px;
 }
 
+.UIWikiPortlet .Add {
+	background:url("background/UIPageToolBarIcon.png") no-repeat left -47px;
+	padding:10px 0 16px 25px;
+}
+
 .Border {
   border: solid 1px #B5B6B6;
   margin: 2px 2px 2px 2px;

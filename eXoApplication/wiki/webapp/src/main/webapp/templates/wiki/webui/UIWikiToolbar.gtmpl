@@ -26,8 +26,8 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(
 					 			String actionLabel=_ctx.appRes(uicomponent.getName() + ".action." + actionName);
 				 				String link = actionComponent.event(actionName);
 							%>
-								<% if(actionName.equals("Preferences")){%>
-									<a href="$link" class="Preferences Icon">$actionLabel</a>
+								<% if(!actionName.equals(browseActionComponent)){%>
+									<a href="$link" class="$actionName Icon">$actionLabel</a>
 						<%			}
 									}
 							}

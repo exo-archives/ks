@@ -1,0 +1,40 @@
+<%
+  import org.exoplatform.wiki.webui.UIWikiPermissionForm.Scope;
+  
+  def uiParent = uicomponent.getParent();
+%>
+<div id="$uicomponent.id">
+  <table cellspacing="0" class="UIGrid">
+    <thead>
+      <tr>
+      <%
+        if(Scope.WIKI.equals(uiParent.getScope())){
+      %>
+        <th>Owner</th>
+        <th>View Pages</th>
+        <th>Edit Pages</th>
+        <th>Admin Pages</th>
+        <th>Admin Space</th>
+        <th>Action</th>
+      <% } else { %>
+        <th>Owner</th>
+        <th>View Pages</th>
+        <th>Edit Pages</th>
+        <th>Action</th>
+      <%}%>
+      </tr>
+    </thead>
+    <tbody class="FeedBox">
+    <%
+  List children = uicomponent.getChildren() ;
+  for(component in children) {
+    if(component.isRendered()){%>
+      <tr class="EvenRow"><% uicomponent.renderChild(component); %></tr>
+      
+   <% }
+  }
+%>
+    </tbody>
+  </table>
+  
+</div>

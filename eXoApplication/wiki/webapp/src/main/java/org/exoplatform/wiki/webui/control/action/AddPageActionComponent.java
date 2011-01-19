@@ -42,6 +42,7 @@ import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.WikiMode;
+import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 
@@ -58,7 +59,8 @@ import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 )
 public class AddPageActionComponent extends UIComponent {
   
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsViewModeFilter() });
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] {
+      new IsViewModeFilter(), new EditPagesPermissionFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {

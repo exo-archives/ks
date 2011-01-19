@@ -26,37 +26,49 @@ import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
+import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.webui.UIWikiPermissionForm;
+import org.exoplatform.wiki.webui.UIWikiPermissionForm.Scope;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
+import org.exoplatform.wiki.webui.control.filter.AdminSpacePermissionFilter;
 import org.exoplatform.wiki.webui.control.listener.UIWikiToolBarActionListener;
-import org.exoplatform.wiki.webui.popup.UIWikiEditPreferencesForm;
 
 /**
  * Created by The eXo Platform SAS
- * Author : Lai Trung Hieu
- *          hieu.lai@exoplatform.com
- * Aug 25, 2010  
+ * Author : viet.nguyen
+ *          viet.nguyen@exoplatform.com
+ * Dec 29, 2010  
  */
-@ComponentConfig(events = { @EventConfig(listeners = PreferencesActionComponent.PreferencesActionListener.class) })
-public class PreferencesActionComponent extends UIComponent {
+@ComponentConfig(
+  events = {
+    @EventConfig(listeners = WikiPermissionActionComponent.WikiPermissionActionListener.class)
+  }
+)
+public class WikiPermissionActionComponent extends UIComponent {
   
-  
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList();
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new AdminSpacePermissionFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
   }
-  
-  public static class PreferencesActionListener extends UIWikiToolBarActionListener<PreferencesActionComponent> {
+
+  public static class WikiPermissionActionListener extends UIWikiToolBarActionListener<WikiPermissionActionComponent> {
     @Override
-    protected void processEvent(Event<PreferencesActionComponent> event) throws Exception {
+    protected void processEvent(Event<WikiPermissionActionComponent> event) throws Exception {
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       UIPopupContainer uiPopupContainer = uiWikiPortlet.getPopupContainer(PopupLevel.L1);
-      uiPopupContainer.activate(UIWikiEditPreferencesForm.class, 500);
+      UIWikiPermissionForm uiWikiPermissionForm = uiPopupContainer.activate(UIWikiPermissionForm.class, 800);
+      uiWikiPermissionForm.setScope(Scope.WIKI);
+      WikiService wikiService = uiWikiPermissionForm.getApplicationComponent(WikiService.class);
+      WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
+      uiWikiPermissionForm.setPermission(wikiService.getWikiPermission(pageParams.getType(), pageParams.getOwner()));
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);
       super.processEvent(event);
     }
   }
-  
+
 }

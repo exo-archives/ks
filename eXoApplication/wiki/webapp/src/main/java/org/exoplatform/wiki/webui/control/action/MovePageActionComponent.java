@@ -37,7 +37,9 @@ import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 import org.exoplatform.wiki.webui.UIWikiLocationContainer;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.control.filter.DeniedOnWikiHomePageFilter;
+import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 import org.exoplatform.wiki.webui.popup.UIWikiMovePageForm;
@@ -55,7 +57,8 @@ import org.exoplatform.wiki.webui.popup.UIWikiMovePageForm;
 )
 public class MovePageActionComponent extends UIComponent {  
   
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsViewModeFilter(), new DeniedOnWikiHomePageFilter() });
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] {
+      new IsViewModeFilter(), new DeniedOnWikiHomePageFilter(), new EditPagesPermissionFilter() });
 
   public MovePageActionComponent() {
     
@@ -80,7 +83,7 @@ public class MovePageActionComponent extends UIComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPortlet.getUIPopupMessages());        
         return;
       }
-      UIPopupContainer uiPopupContainer = uiWikiPortlet.getChild(UIPopupContainer.class);
+      UIPopupContainer uiPopupContainer = uiWikiPortlet.getPopupContainer(PopupLevel.L1);
       UIWikiMovePageForm movePageForm = uiPopupContainer.activate(UIWikiMovePageForm.class, 600);
       UIWikiLocationContainer locationContainer = movePageForm.findFirstComponentOfType(UIWikiLocationContainer.class);
       UIWikiBreadCrumb currentLocation = locationContainer.getChildById(UIWikiLocationContainer.CURRENT_LOCATION);

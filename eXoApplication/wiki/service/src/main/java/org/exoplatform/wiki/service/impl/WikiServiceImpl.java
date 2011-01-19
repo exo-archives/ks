@@ -5,11 +5,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.chromattic.api.ChromatticSession;
 import org.exoplatform.commons.utils.ObjectPageList;
@@ -49,6 +51,10 @@ import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.BreadcrumbData;
+import org.exoplatform.wiki.service.IDType;
+import org.exoplatform.wiki.service.Permission;
+import org.exoplatform.wiki.service.PermissionEntry;
+import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.SearchData;
 import org.exoplatform.wiki.service.SearchResult;
 import org.exoplatform.wiki.service.TitleSearchResult;
@@ -306,12 +312,104 @@ public class WikiServiceImpl implements WikiService {
     return true;
   }
 
-  /*
-   * public List<Space> getSpaces(String wikiType) throws Exception { return
-   * jcrDataStorage.getSpaces(wikiType, null) ; } public List<Space>
-   * getAllSpaces() throws Exception { return jcrDataStorage.getAllSpaces(null)
-   * ; }
-   */
+  public List<PermissionEntry> getWikiPermission(String wikiType, String wikiOwner) throws Exception {
+    Model model = getModel();
+    WikiImpl wiki = (WikiImpl) getWiki(wikiType, wikiOwner, model);
+    List<String> permissions = wiki.getWikiPermissions();
+    List<PermissionEntry> permissionEntries = new ArrayList<PermissionEntry>();
+    for (String perm : permissions) {
+      String[] actions = perm.substring(0, perm.indexOf(":")).split(",");
+      perm = perm.substring(perm.indexOf(":") + 1);
+      String idType = perm.substring(0, perm.indexOf(":"));
+      String id = perm.substring(perm.indexOf(":") + 1);
+
+      PermissionEntry entry = new PermissionEntry();
+      if (IDType.USER.equals(idType)) {
+        entry.setIdType(IDType.USER);
+      } else if (IDType.GROUP.equals(idType)) {
+        entry.setIdType(IDType.GROUP);
+      } else if (IDType.MEMBERSHIP.equals(idType)) {
+        entry.setIdType(IDType.MEMBERSHIP);
+      }
+      entry.setId(id);
+      Permission[] perms = new Permission[4];
+      perms[0] = new Permission();
+      perms[0].setPermissionType(PermissionType.VIEWPAGE);
+      perms[1] = new Permission();
+      perms[1].setPermissionType(PermissionType.EDITPAGE);
+      perms[2] = new Permission();
+      perms[2].setPermissionType(PermissionType.ADMINPAGE);
+      perms[3] = new Permission();
+      perms[3].setPermissionType(PermissionType.ADMINSPACE);
+      for (String action : actions) {
+        if ("VIEWPAGE".equals(action)) {
+          perms[0].setAllowed(true);
+        } else if ("EDITPAGE".equals(action)) {
+          perms[1].setAllowed(true);
+        } else if ("ADMINPAGE".equals(action)) {
+          perms[2].setAllowed(true);
+        } else if ("ADMINSPACE".equals(action)) {
+          perms[3].setAllowed(true);
+        }
+      }
+      entry.setPermissions(perms);
+
+      permissionEntries.add(entry);
+    }
+    return permissionEntries;
+  }
+  
+  public void setWikiPermission(String wikiType, String wikiOwner, List<PermissionEntry> permissionEntries) throws Exception {
+    Model model = getModel();
+    WikiImpl wiki = (WikiImpl) getWiki(wikiType, wikiOwner, model);
+    List<String> permissions = new ArrayList<String>();
+    HashMap<String, String[]> permMap = new HashMap<String, String[]>();
+    for (PermissionEntry entry : permissionEntries) {
+      StringBuilder actions = new StringBuilder();
+      Permission[] pers = entry.getPermissions();
+      List<String> permlist = new ArrayList<String>();
+      // Permission strings has the format:
+      // VIEWPAGE,EDITPAGE,ADMINPAGE,ADMINSPACE:USER:john
+      // VIEWPAGE:GROUP:/platform/users
+      // VIEWPAGE,EDITPAGE,ADMINPAGE,ADMINSPACE:MEMBERSHIP:manager:/platform/administrators
+      for (int i = 0; i < pers.length; i++) {
+        Permission perm = pers[i];
+        if (perm.isAllowed()) {
+          actions.append(perm.getPermissionType().toString());
+          if (i < pers.length - 1) {
+            actions.append(",");
+          }
+          if (perm.getPermissionType().equals(PermissionType.VIEWPAGE)) {
+            permlist.add(org.exoplatform.services.jcr.access.PermissionType.READ);
+          } else if (perm.getPermissionType().equals(PermissionType.EDITPAGE)) {
+            permlist.add(org.exoplatform.services.jcr.access.PermissionType.ADD_NODE);
+            permlist.add(org.exoplatform.services.jcr.access.PermissionType.REMOVE);
+            permlist.add(org.exoplatform.services.jcr.access.PermissionType.SET_PROPERTY);
+          }
+        }
+      }
+      actions.append(":").append(entry.getIdType()).append(":").append(entry.getId());
+      permissions.add(actions.toString());
+      if (permlist.size() > 0) {
+        permMap.put(entry.getId(), permlist.toArray(new String[permlist.size()]));
+      }
+    }
+    wiki.setWikiPermissions(permissions);
+    // TODO: study performance
+    PageImpl page = getWikiHome(wikiType, wikiOwner);
+    Queue<PageImpl> queue = new LinkedList<PageImpl>();
+    queue.add(page);
+    while (queue.peek() != null) {
+      PageImpl p = (PageImpl) queue.poll();
+      if (!p.getOverridePermission()) {
+        p.setPagePermission(permMap);
+      }
+      Iterator<PageImpl> iter = p.getChildPages().values().iterator();
+      while (iter.hasNext()) {
+        queue.add(iter.next());
+      }
+    }
+  }
 
   private boolean isHasCreatePagePermission(String userId, String destSpace) {
 

@@ -18,8 +18,10 @@ package org.exoplatform.wiki.mow.api;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.exoplatform.wiki.mow.api.content.Content;
+import org.exoplatform.wiki.service.PermissionType;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
@@ -60,4 +62,22 @@ public interface Page {
    * @return
    */
   Collection<? extends Attachment> getAttachments();
+  
+  boolean hasPermission(PermissionType permissionType) throws Exception; 
+  
+  /**
+   * 
+   * @return
+   * @throws Exception
+   */
+  HashMap<String, String[]> getPagePermission() throws Exception;
+  
+  /**
+   * 
+   * @param permissions
+   * @throws Exception
+   */
+  void setPagePermission(HashMap<String, String[]> permissions) throws Exception;
+  
+  
 }

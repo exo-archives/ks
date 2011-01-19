@@ -43,8 +43,8 @@ public interface WikiService {
 	public void deleteDraftNewPage(String draftNewPageId) throws Exception ;
 	public boolean renamePage(String wikiType, String wikiOwner, String pageName, String newName, String newTitle) throws Exception ;
 	public boolean movePage(WikiPageParams currentLocationParams, WikiPageParams newLocationParams) throws Exception ;
-	/*public List<Space> getSpaces(String wikiType) throws Exception ;
-	public List<Space> getAllSpaces() throws Exception ;*/
+	public List<PermissionEntry> getWikiPermission(String wikiType, String wikiOwner) throws Exception ;
+	public void setWikiPermission(String wikiType, String wikiOwner, List<PermissionEntry> permissionEntries) throws Exception ;
 	
 	public Page getPageById(String wikiType, String wikiOwner, String pageId) throws Exception ;
 	public Page getRelatedPage(String wikiType, String wikiOwner, String pageId) throws Exception;

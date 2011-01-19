@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
-import java.util.UnknownFormatFlagsException;
 
 import javax.jcr.Node;
 import javax.mail.internet.AddressException;
@@ -19,13 +18,17 @@ import org.exoplatform.ks.common.Common;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.access.AccessControlEntry;
+import org.exoplatform.services.jcr.access.AccessControlList;
 import org.exoplatform.services.jcr.access.PermissionType;
+import org.exoplatform.services.jcr.access.SystemIdentity;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
@@ -397,6 +400,71 @@ public class Utils {
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     WikiContainer<Wiki> container = wStore.getWikiContainer(WikiType.valueOf(wikiType.toUpperCase()));
     return (container.contains(wikiOwner) != null);
+  }
+  
+  /**
+   * Has permission.
+   * 
+   * @param acl
+   *          access control list
+   * @param permission
+   *          permissions array
+   * @param user
+   *          user Identity
+   * @return boolean
+   */
+  public static boolean hasPermission(AccessControlList acl, String[] permission, Identity user) {
+
+    String userId = user.getUserId();
+    if (userId.equals(SystemIdentity.SYSTEM)) {
+      // SYSTEM has permission everywhere
+      return true;
+    } else if (userId.equals(acl.getOwner())) {
+      // Current user is owner of node so has all privileges
+      return true;
+    } else if (userId.equals(SystemIdentity.ANONIM)) {
+      List<String> anyPermissions = acl.getPermissions(SystemIdentity.ANY);
+
+      if (anyPermissions.size() < permission.length)
+        return false;
+
+      for (int i = 0; i < permission.length; i++) {
+        if (!anyPermissions.contains(permission[i]))
+          return false;
+      }
+      return true;
+    } else {
+      if (acl.getPermissionsSize() > 0 && permission.length > 0) {
+        // check permission to perform all of the listed actions
+        for (int i = 0; i < permission.length; i++) {
+          // check specific actions
+          if (!isPermissionMatch(acl.getPermissionEntries(), permission[i], user))
+            return false;
+        }
+        return true;
+      }
+      return false;
+    }
+  }
+  
+  private static boolean isPermissionMatch(List<AccessControlEntry> existedPermission, String testPermission, Identity user) {
+    for (int i = 0, length = existedPermission.size(); i < length; i++) {
+      AccessControlEntry ace = existedPermission.get(i);
+      // match action
+      if (ace.getPermission().equals(testPermission)) {
+        // match any
+        if (ace.getIdentity().equals(SystemIdentity.ANY))
+          return true;
+        else if (ace.getIdentity().indexOf(":") == -1) {
+          // just user
+          if (ace.getIdentity().equals(user.getUserId()))
+            return true;
+
+        } else if (user.isMemberOf(ace.getMembershipEntry()))
+          return true;
+      }
+    }
+    return false;
   }
 
   private static String insertStyle(String rawHTML) {

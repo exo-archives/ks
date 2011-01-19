@@ -32,6 +32,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.PreferencesSyntax;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.UIWikiSyntaxPreferences;
 
 /**
@@ -66,7 +67,7 @@ public class UIWikiEditPreferencesForm extends UIForm implements UIPopupComponen
       preferencesSyntax.setAllowMutipleSyntaxes(allowCheckBox.isChecked());
       preferencesSyntax.setDefaultSyntax(defaultSyntaxSelect.getValue());
       wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class).reloadSyntax();
-      UIPopupContainer popupContainer = wikiPortlet.getChild(UIPopupContainer.class);     
+      UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);     
       popupContainer.deActivate();
     }
   }
@@ -74,7 +75,7 @@ public class UIWikiEditPreferencesForm extends UIForm implements UIPopupComponen
   static public class CancelActionListener extends EventListener<UIWikiEditPreferencesForm> {
     public void execute(Event<UIWikiEditPreferencesForm> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIPopupContainer popupContainer = wikiPortlet.getChild(UIPopupContainer.class);
+      UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);
       popupContainer.cancelPopupAction();
     }
   }

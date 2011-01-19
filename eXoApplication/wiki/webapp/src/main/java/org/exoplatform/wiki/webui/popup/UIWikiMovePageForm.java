@@ -36,6 +36,7 @@ import org.exoplatform.wiki.tree.TreeNode.TREETYPE;
 import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 import org.exoplatform.wiki.webui.UIWikiLocationContainer;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.tree.EventUIComponent;
 import org.exoplatform.wiki.webui.tree.UITreeExplorer;
@@ -83,7 +84,7 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
   static public class CloseActionListener extends EventListener<UIWikiMovePageForm> {
     public void execute(Event<UIWikiMovePageForm> event) throws Exception {  
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIPopupContainer popupContainer = wikiPortlet.getChild(UIPopupContainer.class);
+      UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);
       popupContainer.cancelPopupAction();    
     }
   } 
@@ -121,7 +122,7 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
         return;
       }      
       wservice.movePage(currentLocationParams, newLocationParams);      
-      UIPopupContainer popupContainer = uiWikiPortlet.getChild(UIPopupContainer.class);    
+      UIPopupContainer popupContainer = uiWikiPortlet.getPopupContainer(PopupLevel.L1);    
       popupContainer.cancelPopupAction();
       newLocationParams.setPageId(currentLocationParams.getPageId());
       org.exoplatform.wiki.commons.Utils.redirect(newLocationParams, WikiMode.VIEW);
