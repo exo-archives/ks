@@ -7,9 +7,9 @@
 %>
 
 <div class="UIPageInfoItem UIPageInfoHierarchy">
-<div class="UIPageInfoItemTitle">Hierarchy</div>
+<div class="UIPageInfoItemTitle"><%= _ctx.appRes("UIWikiPageInfo.label.hierarchy")%></div>
   <% if (parentPage != null) { %>
-  <span class="label">Parent page</span>
+  <span class="label"><%= _ctx.appRes("UIWikiPageInfo.label.parent-page")%></span>
   <br>
   <div class="content">
     <div class="NodeLabel">
@@ -18,7 +18,7 @@
   </div>
   <br>
   <% } %>
-  <span class="label">Child pages</span>
+  <span class="label"><%= _ctx.appRes("UIWikiPageInfo.label.child-pages")%></span>
   <div class="content">
     ${uicomponent.renderHierarchy()}
   </div>

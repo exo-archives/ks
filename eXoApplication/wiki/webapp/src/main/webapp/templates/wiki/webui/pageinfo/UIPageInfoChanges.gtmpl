@@ -11,13 +11,13 @@
 %>
 
 <div class="UIPageInfoItem UIPageInfoChanges">
-  <div class="UIPageInfoItemTitle">Recent Changes</div>
+  <div class="UIPageInfoItemTitle"><%= _ctx.appRes("UIWikiPageInfo.label.recent-changes")%></div>
   <div class="UIPageInfoItemBody">
     <table class="tableview" width="100%" cellspacing="0" cellpadding="0">
       <thead>
         <tr>
-          <th style="width: 40%">Time</th>
-          <th style="width: 30%">Editor</th>
+          <th style="width: 40%"><%= _ctx.appRes("UIWikiPageInfo.label.time")%></th>
+          <th style="width: 30%"><%= _ctx.appRes("UIWikiPageInfo.label.editor")%></th>
           <th style="width: 30%">&nbsp;</th>
         </tr>
       </thead>
@@ -48,13 +48,13 @@
             <a href="#ViewRevision/$versionNumber" title="$versionLabel" >$versionLabel</a>
           </td>
           <td style="width: 30%">$author</td>
-          <td style="width: 30%"><a href="">View change</a></td>
+          <td style="width: 30%"><a href=""><%= _ctx.appRes("UIWikiPageInfo.label.view-change")%></a></td>
         </tr>
       <% } %>
       </tbody>
     </table>
     <% if (currentVersions.size() > 0) { %>
-      <div align="right" style="padding: 5px;"><a href="#ShowHistory">View Page History</a></div>
+      <div align="right" style="padding: 5px;"><a href="#ShowHistory"><%= _ctx.appRes("UIWikiPageInfo.label.view-page-history")%></a></div>
     <% } %>
   </div>
 

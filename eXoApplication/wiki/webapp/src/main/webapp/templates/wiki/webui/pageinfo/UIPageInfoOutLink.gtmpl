@@ -1,6 +1,6 @@
 <div class="UIPageInfoItem UIPageInfoOutLink">
-  <div class="UIPageInfoItemTitle">Outgoing Links</div>
-  <span class="label">External links</span>
+  <div class="UIPageInfoItemTitle"><%= _ctx.appRes("UIWikiPageInfo.label.out-link")%></div>
+  <span class="label"><%= _ctx.appRes("UIWikiPageInfo.label.ext-link")%></span>
   <br>
   
 </div>
