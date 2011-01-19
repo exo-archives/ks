@@ -19,17 +19,15 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.impl.ForumNodeTypes;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -37,7 +35,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
@@ -58,16 +55,22 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		}
 )
 public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator implements UIPopupComponent {
-	private ForumService forumService ;
 	private String categoryId, forumId ;
+	private int typeApprove = Utils.APPROVE ;
 	private List<Topic> topics ;
 	public UIPageListTopicUnApprove() throws Exception {
-		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		this.setActions(new String[]{"ApproveTopic","Cancel"});
 	}
 	public void activate() throws Exception {	}
 	public void deActivate() throws Exception {	}
 	
+	public int getTypeApprove() {
+		return typeApprove;
+	}
+	public void setTypeApprove(int typeApprove) {
+		this.typeApprove = typeApprove;
+	}
+
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
 		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
@@ -84,7 +87,10 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsUnApprove() throws Exception {
-		pageList = forumService.getPageTopic(this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
+		String type = (typeApprove == Utils.WAITING)?ForumNodeTypes.EXO_IS_WAITING:
+										(typeApprove == Utils.APPROVE)?ForumNodeTypes.EXO_IS_APPROVED:ForumNodeTypes.EXO_IS_ACTIVE;
+		pageList = getForumService().getPageTopic(this.categoryId, this.forumId, "@"+type+"='"+
+		                                          ((typeApprove == Utils.WAITING)?"true":"false")+"'", "") ;
 		pageList.setPageSize(6) ;
 		maxPage = pageList.getAvailablePage();
 		topics = pageList.getPage(pageSelect);
@@ -104,7 +110,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 		for (Topic topic : topics) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
-		return (Topic)forumService.getObjectNameById(topicId, Utils.TOPIC)	;
+		return (Topic)getForumService().getObjectNameById(topicId, Utils.TOPIC)	;
 	}
 	
 	
@@ -112,32 +118,33 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 		public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
 		}
 	}
-
 	
 	static	public class ApproveTopicActionListener extends EventListener<UIPageListTopicUnApprove> {
 		public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
-			UIPageListTopicUnApprove topicUnApprove = event.getSource() ;
+			UIPageListTopicUnApprove uiConponent = event.getSource() ;
 			List<Topic> listTopic = new ArrayList<Topic>() ;
-			for(String topicId : topicUnApprove.getIdSelected()) {
-				Topic topic = topicUnApprove.getTopic(topicId) ;
+			for(String topicId : uiConponent.getIdSelected()) {
+				Topic topic = uiConponent.getTopic(topicId) ;
 				if (topic != null) {
-					topic.setIsApproved(true);
+					if(uiConponent.typeApprove == Utils.WAITING)topic.setIsWaiting(false);
+					else if(uiConponent.typeApprove == Utils.APPROVE)topic.setIsApproved(true);
+					else topic.setIsActive(true);
 					listTopic.add(topic) ;
 				}
 			}
 			if(!listTopic.isEmpty()) {
-				topicUnApprove.forumService.modifyTopic(listTopic, Utils.APPROVE) ;
+				uiConponent.getForumService().modifyTopic(listTopic, uiConponent.typeApprove) ;
 			} else {
-				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UIPageListTopicUnApprove.sms.notCheck", args, ApplicationMessage.WARNING)) ;
+				uiConponent.warning(uiConponent.getId()+".sms.notCheck");
+				return;
 			}
-			if(listTopic.size() == topicUnApprove.topics.size()) {
-				UIForumPortlet forumPortlet = topicUnApprove.getAncestorOfType(UIForumPortlet.class) ;
+			if(listTopic.size() == uiConponent.topics.size()) {
+				UIForumPortlet forumPortlet = uiConponent.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;
 				UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 			}else{
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicUnApprove.getParent()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiConponent.getParent()) ;
 			}
 		}
 	}

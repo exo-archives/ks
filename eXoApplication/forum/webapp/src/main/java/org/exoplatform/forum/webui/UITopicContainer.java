@@ -798,13 +798,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				}
 			}
 			if(topics.size() > 0) {
-				try {
-					uiTopicContainer.getForumService().modifyTopic(topics, Utils.APPROVE) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer) ;
-				} catch(Exception e) {
-				}
+				uiTopicContainer.getForumService().modifyTopic(topics, Utils.APPROVE) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer) ;
 			} else {
-				UIPageListTopicUnApprove pageListTopicUnApprove = uiTopicContainer.openPopup(UIPageListTopicUnApprove.class, 500, 365) ;
+				UIPageListTopicUnApprove pageListTopicUnApprove = uiTopicContainer.openPopup(UIPageListTopicUnApprove.class, "PageListTopicUnApprove", 500, 365) ;
+				pageListTopicUnApprove.setTypeApprove(Utils.APPROVE);
 				pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
 			}
 		}
@@ -825,11 +823,13 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			if(topics.size() > 0) {
-				try {
-					uiTopicContainer.getForumService().modifyTopic(topics, Utils.ACTIVE) ;
-				} catch(Exception e) {
-				}
+				uiTopicContainer.getForumService().modifyTopic(topics, Utils.ACTIVE) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			} else {
+				UIPageListTopicUnApprove pageListTopicUnApprove = uiTopicContainer.openPopup(UIPageListTopicUnApprove.class, "PageListTopicInActive", 500, 365) ;
+				pageListTopicUnApprove.setId("UIPageListTopicInActive");
+				pageListTopicUnApprove.setTypeApprove(Utils.ACTIVE);
+				pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
 			}
 		}
 	}	
@@ -1123,9 +1123,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 					uiTopicContainer.getForumService().modifyTopic(topics, Utils.WAITING) ;
 				} catch(Exception e) {
 				}
-			} 
-			if(topics.size() == 0){
-				warning("UITopicContainer.sms.notCheckUnWait") ;
+			} else {
+				UIPageListTopicUnApprove pageListTopicUnApprove = uiTopicContainer.openPopup(UIPageListTopicUnApprove.class, "PageListTopicWaiting", 500, 365) ;
+				pageListTopicUnApprove.setId("UIPageListTopicWaiting");
+				pageListTopicUnApprove.setTypeApprove(Utils.WAITING);
+				pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

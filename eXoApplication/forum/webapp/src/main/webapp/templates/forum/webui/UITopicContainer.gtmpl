@@ -173,13 +173,15 @@
 														 		if(action.length() < 11) classIcon = action + "Icon";
 														 		else classIcon = action.replaceFirst("Topic", "Icon");
 														 		if(!isApproveTopic && action.indexOf("Approve") > -1) {	
-														 			classMenu = "DisableMenuItem";
-														 			link = "javaScript: void(0)" ;
+														 			continue;
+														 			//classMenu = "DisableMenuItem";
+														 			//link = "javaScript: void(0)" ;
 														 		}
 														 		if(action.indexOf("ActivateTopics") >= 0){
 														 			if(!uicomponent.getIsAutoPrune()){
-														 				classMenu = "DisableMenuItem";
-														 				link = "javaScript: void(0)" ;
+														 				continue; 
+														 				//classMenu = "DisableMenuItem";
+														 				//link = "javaScript: void(0)" ;
 														 			}
 														 		}
 														 		if(!action.equals("SetDeleteTopic")){

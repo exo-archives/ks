@@ -7,7 +7,7 @@
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	List topics = uicomponent.getTopicsUnApprove() ;
 %>
-<div class="$uicomponent.id">
+<div class="<%=uicomponent.getName();%>">
 	<% uiform.begin() %>
 	<div class="UITopicContainer">
 	 	<div class="UIForumContainer">
@@ -103,16 +103,14 @@
 			<tr>
 				<td align="center">
 				<% for(action in uicomponent.getActions()) { 
-					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String actionLabel = _ctx.appRes(uicomponent.id + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>
 						<div onclick="$link" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
-										<a href="javascript:void(0);">
-											$actionLabel
-										</a>
+										<a href="javascript:void(0);">$actionLabel</a>
 									</div>
 								</div>
 							</div>

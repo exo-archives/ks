@@ -235,10 +235,11 @@ UIForumPortlet.prototype.visibleAction = function(id) {
 
 UIForumPortlet.prototype.checkActionTopic = function(obj, evt) {
 	eXo.webui.UIPopupSelectCategory.show(obj, evt) ;
+	var DOMUtil = eXo.core.DOMUtil;
 	var parentMenu = document.getElementById("ModerationMenu") ;
 	var menuItems = parentMenu.getElementsByTagName("a") ;
 	var parentContent = document.getElementById("UITopicContent") ;
-	var checkBoxs = eXo.core.DOMUtil.findDescendantsByClass(parentContent, "input", "checkbox") ;
+	var checkBoxs = DOMUtil.findDescendantsByClass(parentContent, "input", "checkbox") ;
 	var clen = checkBoxs.length ;
 	var mlen = menuItems.length ;
 	var divChecked = document.getElementById('divChecked'); 
@@ -251,12 +252,14 @@ UIForumPortlet.prototype.checkActionTopic = function(obj, evt) {
 		}
 	}
 	if(j === 0) {
-		for(var k = 0; k < mlen-1; k ++) {
+		for(var k = 0; k < mlen; k ++) {
+			if(DOMUtil.findAncestorByClass(menuItems[k], "SetUnWaiting") != null) break;
 			if(!menuItems[k].getAttribute("tmpClass")) {
 				menuItems[k].setAttribute("tmpClass",menuItems[k].className) ;
 				menuItems[k].setAttribute("tmpHref",menuItems[k].href) ;
 				menuItems[k].className = "DisableMenuItem" ;
 				menuItems[k].href = "javascript:void(0);" ;
+				DOMUtil.findAncestorByClass(menuItems[k], "ItemIcon").onclick = eXo.forum.UIForumPortlet.cancel;
 			}	
 		}	
 	} else {
