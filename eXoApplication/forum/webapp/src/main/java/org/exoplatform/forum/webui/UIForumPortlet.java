@@ -592,6 +592,7 @@ public class UIForumPortlet extends UIPortletApplication {
 						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
 						this.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
 						uiTopicDetail.setIdPostView(postId) ;
+						uiTopicDetail.setLastPostId(postId) ;
 						if(isReply || isQuote){
 							if(uiTopicDetail.getCanPost()) {
 								uiTopicDetail.setIdPostView("top") ;
@@ -603,7 +604,7 @@ public class UIForumPortlet extends UIPortletApplication {
 									postForm.setPostIds(id[0], id[1], topic.getId(), topic) ;
 									postForm.setMod(isMod);
 									if(isQuote){
-										uiTopicDetail.setLastPostId(postId) ;
+										//uiTopicDetail.setLastPostId(postId) ;
 										Post post = this.forumService.getPost(id[0], id[1], topic.getId(), postId);
 										if(post != null) {
 											postForm.updatePost(postId, true, false, post) ;

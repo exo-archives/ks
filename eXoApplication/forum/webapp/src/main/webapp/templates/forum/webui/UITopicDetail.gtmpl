@@ -85,6 +85,7 @@
 			linkGest = ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId()+"/false").replaceFirst("/public/", "/private/");
 		}	
 	}
+	String idLastPost = uicomponent.getIdPostView() ;
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>
@@ -875,7 +876,11 @@
 	<!-- Start PostViewContainer -->
 						<td class="PostViewContainer">
 							
-							<div class="PostViewHeader">
+						<% if (idLastPost.equals(postId)) { %>
+							<div class="PostViewHeader" style="background-color:#d0e4fe;">
+						<% } else {  %>							
+								<div class="PostViewHeader">
+						<% } %>
 							<% if(canEdit) {%>
 								<div class="PostViewTitle" style="float:left;">
 									<div class="PostViewIcon $classIconPost">$namePost $alert</div>
@@ -1112,7 +1117,6 @@
 			</table>
 		</div>
 		<% }//end for
-			String idLastPost = uicomponent.getIdPostView() ;
 			jsmanager.addJavascript("setTimeout('eXo.forum.UIForumPortlet.goLastPost(\""+idLastPost+"\")', 700);");
 		 } else {
 		 uicomponent.renderPoll();
