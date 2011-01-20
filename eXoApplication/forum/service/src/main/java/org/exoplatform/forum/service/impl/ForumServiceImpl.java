@@ -103,13 +103,6 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
    */
-  public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
-    storage.addInitRssPlugin(plugin) ;
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
   public void addPlugin(ComponentPlugin plugin) throws Exception {
     storage.addPlugin(plugin) ;
   }
@@ -164,15 +157,6 @@ public class ForumServiceImpl implements ForumService, Startable {
   	}catch (Exception e) {
   	  log.error("Error while calculating active users: "+ e.getMessage());  		
   	}
-  	
-//  	//init RSS generate listener 
-//  	try{
-//  	  log.info("initializing RSS listeners...");
-//  		storage.addRSSEventListenner();  
-//  		
-//  	} catch (Exception e){
-//  	  log.error("Error while RSS listeners: "+ e.getMessage());
-//  	}
   	
   //init Calculate Moderators listeners
   	try{

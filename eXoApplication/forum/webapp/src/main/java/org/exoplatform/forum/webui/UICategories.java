@@ -33,7 +33,6 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -102,7 +101,7 @@ public class UICategories extends UIContainer	{
 	}
 	
 	public String getRSSLink(String cateId){
-		return RSS.getRSSLink("forum", getPortalName(), cateId);
+		return org.exoplatform.ks.common.Utils.getRSSLink("forum", getPortalName(), cateId);
 	}
 	
 	@SuppressWarnings("unused")

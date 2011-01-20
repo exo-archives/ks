@@ -105,7 +105,6 @@ import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
-import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
@@ -165,7 +164,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 	private List<InitializeForumPlugin> defaultPlugins = new ArrayList<InitializeForumPlugin>();
 	private List<ForumInitialDataPlugin> dataPlugins = new ArrayList<ForumInitialDataPlugin>();
 	private Map<String, EventListener> listeners = new HashMap<String, EventListener>();
-	private boolean isInitRssListener = true;
 	private SessionManager sessionManager;
 	private KSDataLocation dataLocator;
 	private String repository;
@@ -224,28 +222,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 		}
 	}
 
-	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
-		if (plugin instanceof InitialRSSListener) {
-			isInitRssListener = ((InitialRSSListener) plugin).isInitRssListener();
-		}
-	}
-
-	public void addRSSEventListenner() throws Exception {
-		return;
-		//		
-		// if(!isInitRssListener) return ;s
-		// SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		// Node categoryHome = getCategoryHome(sProvider) ;
-		// try{
-		// ObservationManager observation = categoryHome.getSession().getWorkspace().getObservationManager() ;
-		// ForumRSSEventListener forumRSSListener = new ForumRSSEventListener(dataLocator) ;
-		// observation.addEventListener(forumRSSListener, Event.NODE_ADDED +
-		// Event.NODE_REMOVED + Event.PROPERTY_CHANGED ,categoryHome.getPath(), true, null, null, false) ;
-		// }catch(Exception e){ log.error(e);}
-		// finally{ sProvider.close() ;}
-	}
-
-	
 	public void addCalculateModeratorEventListener() throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node categoryHome = getCategoryHome(sProvider) ;
@@ -6275,11 +6251,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 					}
 					watchingNode.setProperty(EXO_EMAIL_WATCHING, Utils.getStringsInList(values));
 					watchingNode.setProperty(EXO_USER_WATCHING, Utils.getStringsInList(listUsers));
-					// try {
-					// watchingNode.setProperty(EXO_RSS_WATCHING, new String[]{currentUser});
-					// } catch (Exception e) {
-					// e.printStackTrace();
-					// }
 				} else { // add RSS watching
 					watchingNode.setProperty(EXO_RSS_WATCHING, new String[] { currentUser });
 				}
@@ -8169,14 +8140,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 		repository = dataLocator.getRepository();
 		workspace = dataLocator.getWorkspace();
 		log.info("JCR Data Storage for forum initialized to " + dataLocator);
-	}
-
-	public boolean isInitRssListener() {
-		return isInitRssListener;
-	}
-
-	public void setInitRssListener(boolean isInitRssListener) {
-		this.isInitRssListener = isInitRssListener;
 	}
 
 }

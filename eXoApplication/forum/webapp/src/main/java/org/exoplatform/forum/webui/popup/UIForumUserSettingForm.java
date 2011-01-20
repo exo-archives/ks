@@ -47,7 +47,6 @@ import org.exoplatform.forum.webui.UITopicsTag;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
-import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -293,7 +292,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
 		String url = portalContext.getRequest().getRequestURL().toString();
 		url = url.substring(0, url.indexOf("/", 8)) ;
-		rssLink = url + RSS.getUserRSSLink(ForumWebservice.APP_TYPE, userProfile.getUserId());
+		rssLink = url + org.exoplatform.ks.common.Utils.getUserRSSLink(ForumWebservice.APP_TYPE, userProfile.getUserId());
 		formStringInput.setValue(rssLink);
 		formStringInput.setEditable(false);
 		
@@ -547,7 +546,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 				url = url.replaceFirst("http://", "") ;
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
-				rssLink = url + RSS.getRSSLink("forum", uiForm.getPortalName(), listObjectId);
+				rssLink = url + org.exoplatform.ks.common.Utils.getRSSLink("forum", uiForm.getPortalName(), listObjectId);
 				((UIFormStringInput)inputUserWatchManger.getChildById(RSS_LINK)).setValue(rssLink);
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;

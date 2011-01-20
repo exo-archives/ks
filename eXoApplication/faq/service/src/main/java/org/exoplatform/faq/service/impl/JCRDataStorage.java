@@ -159,17 +159,6 @@ public class JCRDataStorage implements DataStorage {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.exoplatform.faq.service.impl.DataStorage#addInitRssPlugin(org.exoplatform.container.component.ComponentPlugin)
-	 */
-	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
-		/*
-		 * if(plugin instanceof InitialRSSListener) { isInitRssListener_ = ((InitialRSSListener)plugin).isInitRssListener() ; }
-		 */
-	}
-
 	private List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception {
 		List<String> listOfUser = new ArrayList<String>();
 		listOfUser.add(userId);
@@ -394,44 +383,6 @@ public class JCRDataStorage implements DataStorage {
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		return result.getNodes();
-	}
-
-	// TODO: remove RSS Listener
-	protected void addRSSListener(Node node) throws Exception {
-		// try{
-		// if(!isInitRssListener_)return;
-		// if(rssListenerMap_.containsKey(node.getPath())) return ;
-		// String path = node.getPath() ;
-		// ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
-		// FAQRSSEventListener questionRSS = new FAQRSSEventListener(dataLocator) ;
-		// questionRSS.setPath(path) ;
-		// observation.addEventListener(questionRSS, Event.NODE_ADDED & Event.PROPERTY_CHANGED & Event.NODE_REMOVED,
-		// path, true, null, null, false) ;
-		// rssListenerMap_.put(path, questionRSS) ;
-		// }catch(Exception e) {
-		// log.error("Fail to listen when add RSS: ", e);
-		// }
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.exoplatform.faq.service.impl.DataStorage#reInitRSSEvenListener()
-	 */
-	// remove
-	public void reInitRSSEvenListener() throws Exception {
-		// if(!isInitRssListener_)return;
-		// SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		// Node faqHome = getFAQServiceHome(sProvider) ;
-		// QueryManager qm = faqHome.getSession().getWorkspace().getQueryManager();
-		// StringBuffer queryString = new StringBuffer("/jcr:root").append(faqHome.getPath()).append("//element(*,exo:faqQuestionHome)") ;
-		// Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		// QueryResult result = query.execute();
-		// NodeIterator iter = result.getNodes() ;
-		// rssListenerMap_.clear() ;
-		// while(iter.hasNext()) {
-		// addRSSListener(iter.nextNode()) ;
-		// }
 	}
 
 	public void reInitQuestionNodeListeners() throws Exception {
@@ -1263,7 +1214,6 @@ public class JCRDataStorage implements DataStorage {
 				} catch (PathNotFoundException ex) {
 					// TODO: JUnit test is fall
 					questionHome = category.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome");
-					addRSSListener(questionHome);
 				}
 				questionNode = questionHome.addNode(question.getId(), "exo:faqQuestion");
 				/*
@@ -2095,7 +2045,6 @@ public class JCRDataStorage implements DataStorage {
 				newCategory.addMixin("mix:faqSubCategory");
 				// TODO: JUnit test is fall
 				Node questionHome = newCategory.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome");
-				addRSSListener(questionHome);
 			} else {
 				newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath());
 			}
@@ -2426,7 +2375,6 @@ public class JCRDataStorage implements DataStorage {
 				id = categoryId;
 			NodeIterator iter = parentCategory.getNodes();
 			cateInfo[0] = iter.getSize();
-			// if(parentCategory.hasNode(FAQ_RSS)) cateInfo[0]--;
 			QueryManager qm = parentCategory.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath()).append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).append(
 					"') and (@exo:isActivated='true')").append("]").append("order by @exo:createdDate ascending");

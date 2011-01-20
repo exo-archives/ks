@@ -39,8 +39,6 @@ public interface DataStorage {
 
   void addRolePlugin(ComponentPlugin plugin) throws Exception;
 
-  void addInitRssPlugin(ComponentPlugin plugin) throws Exception;
-
   boolean isAdminRole(String userName) throws Exception;
 
   List<String> getAllFAQAdmin() throws Exception;
@@ -56,8 +54,6 @@ public interface DataStorage {
   void setDefaultAvatar(String userName) throws Exception;
 
   NodeIterator getQuestionsIterator() throws Exception;
-
-  void reInitRSSEvenListener() throws Exception;
 
   boolean initRootCategory() throws Exception;
 

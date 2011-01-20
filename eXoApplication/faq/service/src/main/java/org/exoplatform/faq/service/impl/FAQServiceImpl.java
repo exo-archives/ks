@@ -107,10 +107,6 @@ public class FAQServiceImpl implements FAQService, Startable {
 	  initDataPlugins.add(plugin);
 	}
 	
-	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
-		jcrData_.addInitRssPlugin(plugin) ;
-  }
-	
 	public void addTemplatePlugin(ComponentPlugin plugin) throws Exception {
 		if(plugin instanceof TemplatePlugin) template_ = (TemplatePlugin)plugin ;
 	}
@@ -133,13 +129,6 @@ public class FAQServiceImpl implements FAQService, Startable {
       }   
     }
     
-		try{
-		  log.info("initializing FAQ RSS listeners...");
-			jcrData_.reInitRSSEvenListener();			
-		} catch (Exception e) {
-			log.error("Error while initializing FAQ RSS listeners", e);
-		}		
-
     try{
       log.info("initializing FAQ template...");
       initViewerTemplate() ;      

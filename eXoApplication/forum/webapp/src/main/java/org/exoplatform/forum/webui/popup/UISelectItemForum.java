@@ -81,7 +81,6 @@ public class UISelectItemForum extends BaseForumForm implements UIPopupComponent
 		String categoryId = "" , forumId = "";
 		boolean isPut = true ;
 		List<ForumLinkData> linkForum = new ArrayList<ForumLinkData>() ;
-		List<ForumLinkData> linkTopic = new ArrayList<ForumLinkData>() ;
 		String cateId = "" ;
 		for (ForumLinkData forumLink : this.forumLinks) {
 			if(forumLink.getType().equals(Utils.CATEGORY)){

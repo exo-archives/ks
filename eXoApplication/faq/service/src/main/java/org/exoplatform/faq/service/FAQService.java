@@ -23,12 +23,10 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
-import org.apache.poi.hssf.record.formula.DeletedArea3DPtg;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.impl.AnswerEventListener;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.mail.Message;
-import org.exoplatform.services.rest.impl.header.Language;
 
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 
@@ -60,13 +58,6 @@ public interface FAQService extends FAQServiceLegacy{
    * @throws Exception
    */
   public void addInitialDataPlugin(InitialDataPlugin plugin) throws Exception ;
-
-  /**
-   * Plugin to initialize default FAQ RSS
-   * @param plugin
-   * @throws Exception
-   */
-  public void addInitRssPlugin(ComponentPlugin plugin) throws Exception ;
 
   /**
    * This method should check exists category or NOT to create new or update exists category

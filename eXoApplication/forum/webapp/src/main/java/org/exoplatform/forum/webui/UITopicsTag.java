@@ -36,7 +36,6 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -123,7 +122,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	}
 	public String getRSSLink(String cateId){
 		PortalContainer pcontainer = PortalContainer.getInstance() ;
-		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
+		return org.exoplatform.ks.common.Utils.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
 	}
 	@SuppressWarnings("unused")
 	private String getTitleInHTMLCode(String s) {

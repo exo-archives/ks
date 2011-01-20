@@ -9,30 +9,5 @@
     <key>org.exoplatform.ks.common.user.ContactProvider</key>
     <type>org.exoplatform.ks.common.user.DefaultContactProvider</type>
   </component>
-  <!--
-    Use this provider to display CS contact information in forum profile
-  -->
-  <!--
-    component>
-    <key>org.exoplatform.forum.service.user.ContactProvider</key>
-    <type>org.exoplatform.forum.provider.cs.CSContactProvider</type>
-    </component>
-  -->
-  
-  <!-- Use this provider to display personal information from the profile  -->
-  <!-- 
-  <component>
-    <key>org.exoplatform.ks.common.user.ContactProvider</key>
-    <type>org.exoplatform.ks.common.user.PersonalProfileContactProvider</type>
-  </component>
-   -->
-   
-   <!-- Use this provider to display business information from the profile  -->
-   <!-- 
-    <component>
-    <key>org.exoplatform.ks.common.user.ContactProvider</key>
-    <type>org.exoplatform.ks.common.user.BusinessProfileContactProvider</type>
-  </component>
-   -->
  
 </configuration>

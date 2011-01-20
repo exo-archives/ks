@@ -26,10 +26,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertNotNull;
 import static org.testng.AssertJUnit.assertNull;
-import static org.testng.AssertJUnit.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -61,7 +59,6 @@ import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
-import org.exoplatform.ks.rss.ForumRSSEventListener;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -205,22 +202,6 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     AssertUtils.assertNotEmpty(storage.getRulesPlugins());
   }
   
-
-  public void testAddRSSEventListener() throws Exception {
-    // fixture
-    addNode(storage.getDataLocation().getForumCategoriesLocation(), "exo:categoryHome");
-
-    storage.setInitRssListener(false);
-    storage.addRSSEventListenner();
-    ObservationManager manager = super.getSession().getWorkspace().getObservationManager();
-    assertFalse(hasListenerOfType(manager, ForumRSSEventListener.class));
-
-    storage.setInitRssListener(true);
-    storage.addRSSEventListenner();
-    manager = super.getSession().getWorkspace().getObservationManager();
-    assertTrue(hasListenerOfType(manager, ForumRSSEventListener.class));
-    
-  }
 
   private <T extends EventListener>boolean hasListenerOfType(ObservationManager manager, Class<T> clazz) throws RepositoryException {
     EventListenerIterator it = manager.getRegisteredEventListeners();

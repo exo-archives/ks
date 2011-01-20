@@ -274,4 +274,12 @@ public class Utils {
 	  fckconfig.put("CustomConfigurationsPath", "/ksResources/fckconfig/fckconfig.js");
 	  return fckconfig;
   }
+  
+	public static String getRSSLink(String appType, String portalName, String objectId) {
+		return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + appType + "/rss/" + objectId;
+	}
+
+	public static String getUserRSSLink(String apptype, String userId) {
+		return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + apptype + "/rss/user/" + userId;
+	}
 }

@@ -143,10 +143,6 @@ public class ForumWebservice implements ResourceContainer {
     	ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       InputStream is = forumService.createForumRss(resourceid, "http://www.exoplatform.com");
       return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cacheControl).build();
-//      FeedResolver feedResolver = (FeedResolver) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FeedResolver.class);
-//      FeedContentProvider provider = feedResolver.resolve(APP_TYPE);
-//      InputStream is = provider.getFeedContent(resourceid);
-//      return Response.ok(is, MediaType.TEXT_XML).cacheControl(cacheControl).build();
     } catch (Exception e) {
       log.trace("\nView RSS fail: " +  e.getMessage() + "\n" + e.getCause());
       return Response.status(Status.INTERNAL_SERVER_ERROR).build() ;
@@ -164,11 +160,6 @@ public class ForumWebservice implements ResourceContainer {
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       InputStream is = forumService.createUserRss(resourceid, "http://www.exoplatform.com");
       return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cacheControl).build();
-      
-//      FeedResolver feedResolver = (FeedResolver) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FeedResolver.class);
-//      FeedContentProvider provider = feedResolver.resolve("");
-//      InputStream is = provider.getFeedContent(resourceid);
-//      return Response.ok(is, MediaType.TEXT_XML).cacheControl(cacheControl).build();
     } catch (Exception e) {
       log.trace("\nGet UserRSS fail: ", e);
       return Response.status(Status.INTERNAL_SERVER_ERROR).build() ;

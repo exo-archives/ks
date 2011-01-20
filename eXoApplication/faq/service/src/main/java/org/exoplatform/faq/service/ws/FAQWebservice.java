@@ -43,13 +43,6 @@ public class FAQWebservice implements ResourceContainer {
     	FAQService faqService = (FAQService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FAQService.class);
     	InputStream is = faqService.createAnswerRSS(resourceid);
       return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cacheControl).build();
-    	
-//      ExoContainer container = ExoContainerContext.getCurrentContainer();
-//      FeedResolver feedResolver = (FeedResolver) container.getComponentInstanceOfType(FeedResolver.class);
-//      FeedContentProvider provider = feedResolver.resolve(APP_TYPE);
-//      resourceid = resourceid.replace("_", "/");
-//      InputStream is = provider.getFeedContent(resourceid);
-//      return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cacheControl).build();
     } catch (Exception e) {
       e.printStackTrace();
       return Response.status(Status.INTERNAL_SERVER_ERROR).build() ;

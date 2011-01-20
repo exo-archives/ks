@@ -15,7 +15,7 @@
   
   <component>
     <key>org.exoplatform.forum.service.user.ContactProvider</key>
-    <type>org.exoplatform.ks.common.user.PersonalProfileContactProvider</type>    
+    <type>org.exoplatform.ks.common.user.DefaultContactProvider</type>    
   </component>
   
   

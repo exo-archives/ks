@@ -49,7 +49,6 @@ import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
-import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -155,7 +154,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
 	public String getRSSLink(String cateId){
 		PortalContainer pcontainer = PortalContainer.getInstance() ;
-		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
+		return org.exoplatform.ks.common.Utils.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
 	}
 	
 	public String getLastPostIdReadOfTopic(String topicId) throws Exception {

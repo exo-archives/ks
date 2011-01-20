@@ -129,6 +129,7 @@ public class BBCodeRenderer implements Renderer {
         option = str.substring(0, str.indexOf("]"));
         if(option.indexOf("+")==0)option = option.replaceFirst("\\+", "");
         if(option.indexOf("\"")==0)option = option.replaceAll("\"", "");
+        if(option.indexOf("'")==0)option = option.replaceAll("'", "");
         if(option.indexOf("&quot;")==0)option = option.replaceAll("&quot;", "");
         param = str.substring(str.indexOf("]")+1);
         while(bbc.equals("CODE") && (param.indexOf("<br") >= 0)) {
@@ -191,7 +192,7 @@ public class BBCodeRenderer implements Renderer {
         String content = s.substring(tagIndex + 6, clsIndex);
         int clsType = content.indexOf("]");
         String type = content.substring(0, clsType);
-        type.replaceAll("\"", "").replaceAll("'", "");
+        type = type.replaceAll("\"", "").replaceAll("'", "");
         str = content.substring(clsType + 1);
         String str_ =  "";
         str_ = StringUtils.replaceOnce(str, "[*]", "<li>");

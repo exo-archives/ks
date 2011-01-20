@@ -22,28 +22,18 @@ import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.annotations.ManagedName;
 
 public class DataLocationPlugin extends ManagedPlugin {
-  
-  private String repository;
 
-  private String workspace;
+	private String	workspace;
 
-  public DataLocationPlugin(InitParams params) throws Exception {
-//    this.repository = params.getValueParam("repository").getValue();
-    this.workspace = params.getValueParam("workspace").getValue();
-  }
+	public DataLocationPlugin(InitParams params) throws Exception {
+		this.workspace = params.getValueParam("workspace").getValue();
+	}
 
-  @Managed
-  @ManagedName("repository")
-  @ManagedDescription("Repository where data is located")
-  public String getRepository() {
-    return repository;
-  }
-
-  @Managed
-  @ManagedName("workspace")
-  @ManagedDescription("workspace in repository where data is located")
-  public String getWorkspace() {
-    return workspace;
-  }
+	@Managed
+	@ManagedName("workspace")
+	@ManagedDescription("workspace in repository where data is located")
+	public String getWorkspace() {
+		return workspace;
+	}
 
 }

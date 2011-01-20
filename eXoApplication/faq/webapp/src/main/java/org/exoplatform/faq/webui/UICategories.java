@@ -40,7 +40,6 @@ import org.exoplatform.faq.webui.popup.UIWatchManager;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
-import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -229,7 +228,7 @@ public class UICategories extends UIContainer {
 
 	public String getRSSLink(String cateId) {
 		cateId = cateId.substring(cateId.lastIndexOf("/") + 1);
-		return RSS.getRSSLink("faq", portalName, cateId);
+		return org.exoplatform.ks.common.Utils.getRSSLink("faq", portalName, cateId);
 	}
 
 	private String getPortalName() {

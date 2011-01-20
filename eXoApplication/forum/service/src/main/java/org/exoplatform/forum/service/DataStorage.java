@@ -65,10 +65,6 @@ public interface DataStorage {
   void addInitialDataPlugin(ComponentPlugin plugin) throws Exception;
   void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception;
 
-  void addInitRssPlugin(ComponentPlugin plugin) throws Exception;
-
-  void addRSSEventListenner() throws Exception;
-
   void addCalculateModeratorEventListener() throws Exception;
 
   void addDeletedUserCalculateListener() throws Exception;

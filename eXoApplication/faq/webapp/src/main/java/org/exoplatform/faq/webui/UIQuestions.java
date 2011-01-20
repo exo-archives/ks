@@ -16,8 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,17 +59,13 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
-import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.web.application.URLBuilder;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -202,7 +196,7 @@ public class UIQuestions extends UIContainer {
 
 	public String getRSSLink() {
 		String catepath = categoryId_.substring(categoryId_.lastIndexOf("/") + 1);
-		return RSS.getRSSLink("faq", getPortalName(), catepath);
+		return org.exoplatform.ks.common.Utils.getRSSLink("faq", getPortalName(), catepath);
 	}
 
 	public String getPortalName() {

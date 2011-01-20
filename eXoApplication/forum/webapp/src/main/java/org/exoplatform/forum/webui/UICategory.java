@@ -37,7 +37,6 @@ import org.exoplatform.forum.webui.popup.UIImportForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -124,7 +123,7 @@ public class UICategory extends BaseForumForm	{
   
 	public String getRSSLink(String cateId){
 		PortalContainer pcontainer = PortalContainer.getInstance() ;
-		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
+		return org.exoplatform.ks.common.Utils.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
 	}
 	
 	private int getDayForumNewPost() {

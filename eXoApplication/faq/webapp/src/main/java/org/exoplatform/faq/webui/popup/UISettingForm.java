@@ -23,8 +23,6 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletPreferences;
 
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
@@ -40,7 +38,6 @@ import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
-import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;

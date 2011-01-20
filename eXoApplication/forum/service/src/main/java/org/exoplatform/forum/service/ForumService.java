@@ -60,14 +60,6 @@ public interface ForumService extends ForumServiceLegacy {
   void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception;
 
   /**
-   * Adds RSS plugin.
-   * 
-   * @param plugin the plugin
-   * @throws Exception the exception
-   */
-  void addInitRssPlugin(ComponentPlugin plugin) throws Exception;
-
-  /**
    * Gets the categories.
    * 
    * @return the list category
