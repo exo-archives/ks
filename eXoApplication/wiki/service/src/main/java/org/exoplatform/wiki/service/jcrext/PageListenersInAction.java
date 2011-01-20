@@ -62,8 +62,16 @@ public class PageListenersInAction implements Action {
     
     WikiService wikiService = (WikiService) container.getComponentInstanceOfType(WikiService.class);
     String jcrPathOfPage = ancestor.getPath();
-    String wikiType = Utils.getWikiType(jcrPathOfPage);
-    String owner = Utils.getSpaceIdByJcrPath(jcrPathOfPage);
+    String wikiType = "", owner = "";
+    try {
+      wikiType = Utils.getWikiType(jcrPathOfPage);
+      owner = Utils.getSpaceIdByJcrPath(jcrPathOfPage);
+    } catch (IllegalArgumentException ie) {
+      if (log.isDebugEnabled()) {
+        log.debug(String.format("can not get wikiType and owner from [%s]", jcrPathOfPage), ie);
+      }
+      return false;
+    }
     String pageId = ancestor.getName();
     boolean moreVersionsThan1 = ancestor.getVersionHistory().getAllVersions().getSize() > 1;
     if (Integer.parseInt(eventObj.toString()) == ExtendedEvent.PROPERTY_ADDED) {

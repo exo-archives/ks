@@ -5,14 +5,15 @@
   import org.exoplatform.wiki.webui.UIWikiPortlet;
   
   Locale currentLocale = Util.getPortalRequestContext().getLocale();
-  DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, currentLocale);
+  DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, currentLocale);
   
   currentWikiPage = uicomponent.getCurrentWikiPage();
   String creator = currentWikiPage.getOwner();
   creator = (creator != null) ? creator : "anonymous";
   String author = currentWikiPage.getAuthor();
   author = (author != null) ? author : "anonymous";
-  String updatedDate = df.format(currentWikiPage.getUpdatedDate());
+  def createdDate = df.format(currentWikiPage.getCreatedDate());
+  def updatedDate = df.format(currentWikiPage.getUpdatedDate());
   int attachmentsTotal =  currentWikiPage.getAttachments().size();
   int versionsTotal = currentWikiPage.getVersionableMixin().getVersionHistory().getChildren().size() -1 ;
   
@@ -20,16 +21,14 @@
   String historyActionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + uicomponent.SHOW_HISTORY;
   String togglelink= uicomponent.event(uicomponent.TOGGLE_ATTACHMENTS_ACTION);
   
-  String addedByLabel = _ctx.appRes("UIWikiPageInfoArea.label.AddedBy").replace("{0}", "<a class=\"Link\" href=\"\">" + creator + "</a>,");
-  String lastModifiedByLabel = _ctx.appRes("UIWikiPageInfoArea.label.LastModifiedBy").replace("{0}", "<a class=\"Link\" href=\"\">" + author + "</a>");
-  lastModifiedByLabel = lastModifiedByLabel.replace("{1}", updatedDate);
+  String addedByLabel = _ctx.appRes("UIWikiPageInfoArea.label.AddedBy").replace("{0}", "<a class=\"Link\" href=\"\">" + creator + "</a>").replace("{1}", createdDate);
+  String lastModifiedByLabel = _ctx.appRes("UIWikiPageInfoArea.label.LastModifiedBy").replace("{0}", "<a class=\"Link\" href=\"\">" + author + "</a>").replace("{1}", updatedDate);
   String totalAttachmentsLabel = _ctx.appRes("UIWikiPageInfoArea.label.TotalAttachments").replace("{0}", "<div class=\"TxtFeed\"><b>" + attachmentsTotal + "</b><a class=\"Link\" href=\"" + togglelink + "\">");
   String totalRevisionsLabel = _ctx.appRes("UIWikiPageInfoArea.label.TotalRevisions").replace("{0}", versionsTotal + "</b> <a class=\"Link\" href=\"\">");
 %>
 <div class="UIWikiPageInfoArea">
 	<div class="TxtFeed">
-	  <%= addedByLabel %>
-	  <%= lastModifiedByLabel %>
+	  ${addedByLabel}&nbsp;-&nbsp;$lastModifiedByLabel
 	  <a class="Link" href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('$historyAnchor');"><%= "(" + _ctx.appRes("UIWikiPageInfoArea.label.ViewChange") + ")"; %></a>
 	  <a onclick="<%=uicomponent.event(uicomponent.SHOW_HISTORY);%>" id="$historyActionId" style="display:none;">&nbsp;</a>
 	</div>

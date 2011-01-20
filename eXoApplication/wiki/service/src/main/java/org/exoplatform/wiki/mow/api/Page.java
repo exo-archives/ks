@@ -45,6 +45,11 @@ public interface Page {
   String getAuthor();
   
   /**
+   * The date when creating page.
+   */
+  Date getCreatedDate();
+  
+  /**
    * The date when any part of the document changes (content, attachments).
    */
   Date getUpdatedDate();

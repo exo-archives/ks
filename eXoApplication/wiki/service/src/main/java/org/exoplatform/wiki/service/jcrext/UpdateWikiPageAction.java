@@ -16,13 +16,19 @@
  */
 package org.exoplatform.wiki.service.jcrext;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
+import javax.jcr.UnsupportedRepositoryOperationException;
 
 import org.apache.commons.chain.Context;
 import org.exoplatform.services.command.action.Action;
+import org.exoplatform.services.ext.action.InvocationContext;
+import org.exoplatform.services.jcr.observation.ExtendedEvent;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 
@@ -33,9 +39,15 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
  * Jun 10, 2010  
  */
 public class UpdateWikiPageAction implements Action {
+  
+  private static final Log      log               = ExoLogger.getLogger(UpdateWikiPageAction.class);
+  
   @Override
   public boolean execute(Context context) throws Exception {
     Object item = context.get("currentItem");
+    Object eventObj = context.get(InvocationContext.EVENT);
+    int eventCode = Integer.parseInt(eventObj.toString());
+    
     Node wikiPageNode = (item instanceof Property) ? ((Property) item).getParent() : (Node) item;
     if (wikiPageNode.isNodeType(WikiNodeType.WIKI_PAGE_CONTENT) || wikiPageNode.isNodeType(WikiNodeType.WIKI_ATTACHMENT)) {
       wikiPageNode = wikiPageNode.getParent();
@@ -48,7 +60,14 @@ public class UpdateWikiPageAction implements Action {
     if (conversationState != null && conversationState.getIdentity() != null) {
       userName = conversationState.getIdentity().getUserId();
     }
-    wikiPageNode.setProperty(WikiNodeType.Definition.UPDATED_DATE, new GregorianCalendar());
+    
+    Calendar calendar = GregorianCalendar.getInstance();
+    
+    if (eventCode == ExtendedEvent.NODE_ADDED && item instanceof Node && ((Node) item).isNodeType(WikiNodeType.WIKI_PAGE)) {
+      wikiPageNode.setProperty(WikiNodeType.Definition.CREATED_DATE, calendar);
+    }
+    
+    wikiPageNode.setProperty(WikiNodeType.Definition.UPDATED_DATE, calendar);
     wikiPageNode.setProperty(WikiNodeType.Definition.AUTHOR, userName);
     return false;
   }

@@ -130,9 +130,13 @@ public abstract class PageImpl implements Page {
   @Property(name = WikiNodeType.Definition.AUTHOR)
   public abstract String getAuthor();
 
+  @Property(name = WikiNodeType.Definition.CREATED_DATE)
+  public abstract Date getCreatedDate();
+  public abstract void setCreatedDate(Date date);
+  
   @Property(name = WikiNodeType.Definition.UPDATED_DATE)
   public abstract Date getUpdatedDate();
-
+  
   @OneToOne(type = RelationshipType.EMBEDDED)
   @Owner
   public abstract MovedMixin getMovedMixin();

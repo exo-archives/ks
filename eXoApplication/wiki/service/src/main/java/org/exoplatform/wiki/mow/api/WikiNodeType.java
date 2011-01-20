@@ -117,6 +117,8 @@ public interface WikiNodeType {
     public final static String COMMENT                    = "comment";
 
     public final static String SYNTAX                     = "syntax";
+    
+    public final static String CREATED_DATE               = "createdDate";
 
     public final static String UPDATED_DATE               = "updatedDate";
     
