@@ -13,7 +13,7 @@
   <br>
   <div class="content">
     <div class="NodeLabel">
-      <a href="$parentLink" title="$parentTitle">$parentTitle</a>
+      <a href="$parentLink" title="$parentTitle" style="margin-left:15px;">$parentTitle</a>
     </div>
   </div>
   <br>

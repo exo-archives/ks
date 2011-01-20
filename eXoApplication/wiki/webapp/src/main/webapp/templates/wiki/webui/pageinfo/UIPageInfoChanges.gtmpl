@@ -5,7 +5,7 @@
   
   def currentVersions = uicomponent.getVersionList(currentWikiPage);
   def rcontext = _ctx.getRequestContext() ;
-  DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, rcontext.getLocale());
+  DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, rcontext.getLocale());
   def rowClass = "OldClass";
   def isOddRow = true;
 %>
@@ -47,8 +47,8 @@
           <td style="width: 40%">
             <a href="#ViewRevision/$versionNumber" title="$versionLabel" >$versionLabel</a>
           </td>
-          <td style="width: 30%">$author</td>
-          <td style="width: 30%"><a href=""><%= _ctx.appRes("UIWikiPageInfo.label.view-change")%></a></td>
+          <td colspan="2" >$author</td>
+          <!-- td style="width: 30%"><a href="$viewLinkId"><%= _ctx.appRes("UIWikiPageInfo.label.view-change")%></a></td -->
         </tr>
       <% } %>
       </tbody>

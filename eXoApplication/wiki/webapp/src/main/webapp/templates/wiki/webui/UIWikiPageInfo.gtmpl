@@ -8,7 +8,9 @@
     <tr class="UIWikiPageInfoLayoutRow">
         <td class="UIWikiPageInfoLayoutCell">
           <% _ctx.include("app:/templates/wiki/webui/pageinfo/UIPageInfoSummary.gtmpl"); %>
-          <% _ctx.include("app:/templates/wiki/webui/pageinfo/UIPageInfoOutLink.gtmpl"); %>
+          <% 
+            // _ctx.include("app:/templates/wiki/webui/pageinfo/UIPageInfoOutLink.gtmpl"); 
+          %>
           
         </td>
         <td class="UIWikiPageInfoLayoutCell">
