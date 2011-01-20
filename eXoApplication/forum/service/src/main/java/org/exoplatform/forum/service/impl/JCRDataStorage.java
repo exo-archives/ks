@@ -159,12 +159,17 @@ public class JCRDataStorage {
 	private static int TYPE_FORUM=1;
 	private static int TYPE_TOPIC=2;
 	private static int TYPE_POST=3;
+	private String emailDefault = "";
 	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService rService) throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator;
 		rService_ = rService ;
 	}
 	public JCRDataStorage() {}
+	
+	public void setEmailDefault(String emailDefault) {
+		this.emailDefault = emailDefault;
+	}
 	
   @Managed
   @ManagedDescription("repository for forum storage")
@@ -2534,7 +2539,7 @@ public class JCRDataStorage {
 			} catch (Exception e) {		}
 			mailContent =  StringUtils.replace(mailContent, "$OBJECT_TYPE", Utils.TOPIC);
 			mailContent =  StringUtils.replace(mailContent, "$OBJECT_PARENT_TYPE", Utils.FORUM);
-			message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
+			message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + emailDefault + ">");
 			// ----------------------- finish ----------------------
 			String destForumId = destForumNode.getName(), srcForumId = "";
 			for (Topic topic : topics) {
@@ -3213,12 +3218,11 @@ public class JCRDataStorage {
 						message.setMimeType("text/html");
 						try {
 							Node userNode = userProfileHome.getNode(owner);
-							String email = userNode.getProperty("exo:email").getString();
 							String fullName = userNode.getProperty("exo:fullName").getString();
-							if(email != null && email.length() > 0) {
-								message.setFrom(fullName + "<" + email + ">");
-							}
-						} catch (Exception e) {}
+							message.setFrom(fullName + "<" + emailDefault + ">");
+						} catch (Exception e) {
+							log.debug("Failed to set from email, because can not get user profile of poster.", e);
+						}
 						
 						sendEmailNotification(emailList, message);
 					}
@@ -3339,12 +3343,10 @@ public class JCRDataStorage {
 						}
 					}
 					
-					String email = "";
 					String fullName = "";
 					String owner =post.getOwner();
 					try {
 						Node userNode = userProfileHome.getNode(owner);
-						email = userNode.getProperty("exo:email").getString();
 						fullName = userNode.getProperty("exo:fullName").getString();
 					} catch (Exception e) {
 					}
@@ -3352,9 +3354,7 @@ public class JCRDataStorage {
 					if (emailListCategory.size() > 0) {
 						String categoryName = categoryNode.getProperty("exo:name").getString();
 						Message message = setContentEmail(post, bbcodeObject, headerSubject, content, categoryName, types[TYPE_CATEGORY], types[TYPE_POST], catName, forumName, topicName);
-						if(email != null && email.length() > 0) {
-							message.setFrom(fullName + " <" + email + ">");
-						}
+						message.setFrom(fullName + " <" + emailDefault + ">");
 						message.setMimeType("text/html");
 						
 						sendEmailNotification(emailListCategory, message);
@@ -3367,9 +3367,7 @@ public class JCRDataStorage {
 					if (emailListForum.size() > 0) {
 						Message message = setContentEmail(post, bbcodeObject, headerSubject, content, forumName, types[TYPE_FORUM], types[TYPE_POST], catName, forumName, topicName);
 						message.setMimeType("text/html");
-						if(email != null && email.length() > 0) {
-							message.setFrom(fullName + " <" + email + ">");
-						}
+						message.setFrom(fullName + " <" + emailDefault + ">");
 						
 						sendEmailNotification(emailListForum, message);
 					}
@@ -3383,9 +3381,7 @@ public class JCRDataStorage {
 //				send email by topic					
 					if (emailList.size() > 0) {
 						Message message = setContentEmail(post, bbcodeObject, headerSubject, content, topicName, types[TYPE_TOPIC], types[TYPE_POST], catName, forumName, topicName);
-						if(email != null && email.length() > 0) {
-							message.setFrom(fullName + " <" + email + ">");
-						}
+						message.setFrom(fullName + " <" + emailDefault + ">");
 						message.setMimeType("text/html");
 
 						sendEmailNotification(emailList, message);
@@ -3714,7 +3710,7 @@ public class JCRDataStorage {
 				postNode = (Node) forumHomeNode.getSession().getItem(postPaths[i]);
 				message = new Message();
 				message.setMimeType("text/html");
-				message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
+				message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + emailDefault + ">");
 				message.setSubject(headerSubject + objectName);
 				message.setBody(mailContent.replace("$OBJECT_NAME", postNode.getProperty("exo:name").getString())
 								.replace("$OBJECT_PARENT_NAME", topicName).replace("$VIEWPOST_LINK", link));
@@ -3722,7 +3718,7 @@ public class JCRDataStorage {
 				fullNameEmailOwnerPost.remove(0);
 				sendEmailNotification(fullNameEmailOwnerPost, message);
 			}
-			
+
 			List<String>userIdsp = new ArrayList<String>();
 			if(destModeratePost && srcModeratePost) {
 				if(srcForumNode.hasProperty("exo:moderators")) {

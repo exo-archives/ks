@@ -102,6 +102,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService rService, InitParams params)throws Exception {
   	storage_ = new JCRDataStorage(nodeHierarchyCreator, rService);
   	bbcodeObject_ = new BBCodeOperator(nodeHierarchyCreator, rService) ;
+  	storage_.setEmailDefault(params.getValueParam("emailDefault").getValue()) ; 
   }
 
 

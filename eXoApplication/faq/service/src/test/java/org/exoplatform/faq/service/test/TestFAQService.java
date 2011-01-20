@@ -89,6 +89,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqSetting_.setSortQuestionByVote(true);
 		faqSetting_.setIsAdmin("TRUE");
 		faqSetting_.setEmailMoveQuestion("content email move question");
+		faqSetting_.setEmailSettingContent("content email &categoryName_ &questionContent_ &questionResponse_ &questionLink_");
 	}
 
 	public void testFAQService() throws Exception {
@@ -115,7 +116,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question.setQuestion("What is FAQ?");
 		question.setDetail("Add new question 1") ;
 		question.setAuthor("root") ;
-		question.setEmail("maivanha1610@gmail.com") ;
+		question.setEmail("") ;
 		question.setActivated(true) ;
 		question.setApproved(true) ;
 		question.setCreatedDate(new Date()) ;
@@ -229,7 +230,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question2.setRelations(new String[]{}) ;
 		question2.setLanguage("English") ;
 		question2.setAuthor("root") ;
-		question2.setEmail("truong_tb1984@yahoo.com") ;
+		question2.setEmail("") ;
 		question2.setDetail("Nguyen van truong test question 2222222 ?") ;
 		question2.setCreatedDate(new Date()) ;
 		questionId2 = question2.getId();
@@ -238,7 +239,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question3.setRelations(new String[]{}) ;
 		question3.setLanguage("English") ;
 		question3.setAuthor("Phung Hai Nam") ;
-		question3.setEmail("phunghainam@yahoo.com") ;
+		question3.setEmail("") ;
 		question3.setDetail("Nguyen van truong test question 33333333 nguyenvantruong ?") ;
 		question3.setCreatedDate(new Date()) ;
 		questionId3 = question3.getId();
@@ -247,7 +248,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question4.setRelations(new String[]{}) ;
 		question4.setLanguage("English") ;
 		question4.setAuthor("Pham Dinh Tan") ;
-		question4.setEmail("phamdinhtan@yahoo.com") ;
+		question4.setEmail("") ;
 		question4.setDetail("Nguyen van truong test question nguyenvantruong ?") ;
 		question4.setCreatedDate(new Date()) ;
 		questionId4 = question4.getId();
@@ -256,7 +257,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question5.setRelations(new String[]{}) ;
 		question5.setLanguage("English") ;
 		question5.setAuthor("Ly Dinh Quang") ;
-		question5.setEmail("lydinhquang@yahoo.com") ;
+		question5.setEmail("") ;
 		question5.setDetail("Nguyen van truong test question 55555555555 ?") ;
 		question5.setCreatedDate(new Date()) ;
 		questionId5 = question5.getId();

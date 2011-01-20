@@ -407,6 +407,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
 					//save answers and question
 					Answer[] answers = responseForm.mapAnswers.values().toArray(new Answer[]{}) ;
+					//Fix for problem: can not send email when add new answers.
+					if(answers.length > 0){
+						answers[0].setPath(link +"///"+responseForm.faqSetting_.getEmailSettingSubject()+"///"+responseForm.faqSetting_.getEmailSettingContent());
+					}
 					FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 					
 					faqService.saveAnswer(responseForm.getQuestion().getPath(), answers) ;

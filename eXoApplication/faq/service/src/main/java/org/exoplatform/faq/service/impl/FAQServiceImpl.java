@@ -83,6 +83,7 @@ public class FAQServiceImpl implements FAQService, Startable{
 		multiLanguages_ = new MultiLanguages() ;
 		initDataPlugins = new ArrayList<InitialDataPlugin>();
 		bbcodeObject_ = new BBCodeOperator(nodeHierarchy, rService) ;
+		jcrData_.setEmailDefault("<"+params.getValueParam("emailDefault").getValue()+">") ; 
 	}
 	
 	public void addPlugin(ComponentPlugin plugin) throws Exception {

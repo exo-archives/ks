@@ -4,6 +4,13 @@
 	<component>
     <key>org.exoplatform.forum.service.ForumService</key>
     <type>org.exoplatform.forum.service.impl.ForumServiceImpl</type>
+    <init-params>
+	      <value-param>
+	        <name>emailDefault</name>
+	        <description>Email default for send notification.</description>
+	        <value>noreply@exoplatform.com</value>
+	      </value-param>
+	  </init-params>
   </component>    
  <!-- 
     <component>

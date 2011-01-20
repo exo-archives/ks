@@ -120,6 +120,7 @@ public class JCRDataStorage {
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 	private boolean isInitRssListener_ = true ;
 	private RepositoryService rService_ ;
+	private String emailDefault = "";
 	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService rService)throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator ;
@@ -127,6 +128,10 @@ public class JCRDataStorage {
 	}	
 	
 	public JCRDataStorage() {}
+	
+	public void setEmailDefault(String emailDefault) {
+		this.emailDefault = emailDefault;
+	}
 	
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
 		try{
@@ -535,7 +540,11 @@ public class JCRDataStorage {
 		if(questionNode.hasNode(Utils.COMMENT_HOME) && questionNode.getNode(Utils.COMMENT_HOME).hasNodes()) return true;
 		return false;
 	}
-
+	 /**
+   * @deprecated use {@link JCRDataStorage#sendNotifyForCategoryWatcher(Question question, FAQSetting faqSetting, boolean isNew)}
+   */
+	@SuppressWarnings("unused")
+	@Deprecated
 	private void sendNotifyForQuestionWatcher (Question question, FAQSetting faqSetting) {
 		List<String> emailsList = new ArrayList<String>() ;
 		emailsList.add(question.getEmail()) ;
@@ -552,7 +561,7 @@ public class JCRDataStorage {
 			if(emailsList != null && emailsList.size() > 0) {
 				Message message = new Message();
 				message.setMimeType(MIMETYPE_TEXTHTML) ;
-				message.setFrom(question.getAuthor() + "<email@gmail.com>");
+				message.setFrom(question.getAuthor() + emailDefault);
 				message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
 				message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getDetail())
 																													 .replaceAll("&questionResponse_", question.getAnswers()[0].getResponses())
@@ -563,42 +572,63 @@ public class JCRDataStorage {
 			log.error("Failed to send notify for question wather", e);
 		}
 	}
+	
 	private void sendNotifyForCategoryWatcher (Question question, FAQSetting faqSetting, boolean isNew) {
 	//Send notification when add new question in watching category
 		List<String> emails = new ArrayList<String>() ;
 		List<String> emailsList = new ArrayList<String>() ;
+		List<String> users = new ArrayList<String>();
+		if(question.getEmail() != null && question.getEmail().length() > 0)emailsList.add(question.getEmail());
 		try {
-			Node cate = getCategoryNodeById(question.getCategoryId()) ;
-			if(cate.isNodeType("exo:faqWatching")){
-				emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
-				for(String email: emails) {
-					emailsList.add(email) ;
-				}
-				if(emailsList != null && emailsList.size() > 0) {
-					Message message = new Message();
-					message.setFrom(question.getAuthor() + "<email@gmail.com>");
-					message.setMimeType(MIMETYPE_TEXTHTML) ;
-					message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
-					if (isNew) {
-						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
-								 .replaceAll("&questionContent_", question.getDetail())
-								 .replaceAll("&questionLink_", question.getLink()));
-					}else {
-						String contentMail = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion());
-						if(question.getAnswers().length > 0){
-							contentMail = contentMail.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
-						} else {
-							contentMail = contentMail.replaceAll("&questionResponse_", "");
-						}
-						contentMail = contentMail.replaceAll("&questionLink_", question.getLink());
-						message.setBody(contentMail);
-					}
-					
-					sendEmailNotification(emailsList, message) ;
-				}
+			Node cate = getCategoryNodeById(question.getCategoryId());
+			PropertyReader reader = new PropertyReader(cate);
+			// watch in category parent
+			emails.addAll(reader.list("exo:emailWatching", new ArrayList<String>()));
+			users.addAll(reader.list("exo:userWatching", new ArrayList<String>()));
+			// watch in this question
+			if (question.getEmailsWatch() != null && question.getEmailsWatch().length > 0) {
+				emails.addAll(Arrays.asList(question.getEmailsWatch()));
+				users.addAll(Arrays.asList(question.getUsersWatch()));
 			}
-		} catch(Exception e) {
-			log.debug("Failed to send notify for category wather", e);
+			if (!question.isActivated() || (!question.isApproved() && faqSetting.getDisplayMode().equals("approved"))) {
+				// only send notification to administrations or moderators
+				List<String> moderators = FAQServiceUtils.getUserPermission(reader.strings("exo:moderators", new String[]{}));
+				List<String> temps = new ArrayList<String>();
+				int i = 0;
+				for (String user : users) {
+					if (!temps.contains(user)) {
+						temps.add(user);
+						if (isAdminRole(user) || moderators.contains(user)) {
+							emailsList.add(emails.get(i));
+						}
+					}
+					++i;
+				}
+			} else {
+				emailsList.addAll(emails);
+			}
+			if (emailsList != null && emailsList.size() > 0) {
+				Message message = new Message();
+				message.setFrom(question.getAuthor() + emailDefault);
+				message.setMimeType(MIMETYPE_TEXTHTML);
+				message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
+				if (isNew) {
+					message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString()).replaceAll("&questionContent_", question.getDetail())
+							.replaceAll("&questionLink_", question.getLink()));
+				} else {
+					String contentMail = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion());
+					if (question.getAnswers().length > 0) {
+						contentMail = contentMail.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
+					} else {
+						contentMail = contentMail.replaceAll("&questionResponse_", "");
+					}
+					contentMail = contentMail.replaceAll("&questionLink_", question.getLink());
+					message.setBody(contentMail);
+				}
+				sendEmailNotification(emailsList, message);
+			}
+		} catch (Exception e) {
+			log.error("Failed to send a nofify for category watcher: ", e);
 		}
 	}
 	
@@ -775,9 +805,49 @@ public class JCRDataStorage {
 				saveAnswer(answer, answerHome, qId, categoryId) ;
 			}
 			quesNode.save() ;
+			try {
+				sendEmailNotificaionByAnwser(quesNode, answers[0]);
+			} catch (Exception e) {
+				log.error("Failed to send notification when add/edit answers.", e);
+			}
 		}catch (Exception e) {
 			log.error("Failed to save answer", e);
 		}finally { sProvider.close() ;}
+	}
+//Fix for problem: can not send email when add new answers.
+	private void sendEmailNotificaionByAnwser(Node questionNode, Answer answer) throws Exception {
+		// set summary for question.
+		String []infos = answer.getPath().split("///");
+		if(infos.length != 3) return;
+		Question question = new Question();
+		question.setId(questionNode.getName()) ;
+		PropertyReader reader = new PropertyReader(questionNode);
+		question.setDetail(reader.string("exo:name", "")) ;
+		question.setAuthor(reader.string("exo:author", "")) ;
+		question.setEmail(reader.string("exo:email", "")) ;
+		question.setQuestion(reader.string("exo:title", "")) ;
+		String path = questionNode.getParent().getParent().getPath() ;
+		question.setCategoryId(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
+		question.setActivated(reader.bool("exo:isActivated", true)) ;
+		question.setApproved(reader.bool("exo:isApproved", true)) ;
+		question.setEmailsWatch(reader.strings("exo:emailWatching", new String[]{})) ;
+		question.setUsersWatch(reader.strings("exo:userWatching", new String[]{})) ;
+		
+		NodeIterator iter = questionNode.getNode(Utils.ANSWER_HOME).getNodes();
+		if(iter.getSize() > 0){
+			Answer []answers = new Answer[] {getAnswerByNode(iter.nextNode())};
+			question.setAnswers(answers);
+		}
+		path = questionNode.getPath() ;
+		question.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
+		question.setLink(infos[0]);
+		// set summary for faqSetting
+		FAQSetting faqSetting = new FAQSetting();
+		faqSetting.setDisplayMode("approved");
+		faqSetting.setEmailSettingSubject(infos[1]);
+		faqSetting.setEmailSettingContent(infos[2]);
+		// send email.
+		sendNotifyForCategoryWatcher(question, faqSetting, false);
 	}
 	
 	private void saveAnswer(Answer answer, Node answerHome, String questionId, String categoryId) throws Exception {
@@ -1178,7 +1248,7 @@ public class JCRDataStorage {
 			String catePath = questionNode.getParent().getParent().getPath() ;
 			question.setCategoryId(catePath.substring(catePath.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
 		}
-		if(faqSetting.getDisplayMode().equals("approved")) {
+		/*if(faqSetting.getDisplayMode().equals("approved")) {
 			// Send notification when question response or edited or watching
 			if(question.isApproved() && question.isActivated()) {
 				sendNotifyForQuestionWatcher (question, faqSetting) ;
@@ -1188,24 +1258,8 @@ public class JCRDataStorage {
 			if(isNew || question.isActivated()) {
 				sendNotifyForCategoryWatcher(question, faqSetting, isNew) ;
 			}
-		}
-		
-		//TODO: move this notify to move function
-		// Send mail for author question when question is moved to another category
-		/*if(!isNew && isMoveQuestion){
-			Message message = new Message();
-			message.setMimeType(MIMETYPE_TEXTHTML) ;
-			message.setFrom(question.getAuthor() + "<email@gmail.com>");
-			message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
-			String contentMail = faqSetting.getEmailMoveQuestion();
-			String categoryName = getCategoryById(question.getCategoryId()).getName();
-			if(categoryName == null || categoryName.trim().length() < 1) categoryName = "Root";
-			contentMail = contentMail.replace("&questionContent_", question.getQuestion()).
-																replace("&categoryName_", categoryName).
-																replace("&questionLink_", question.getLink());
-			message.setBody(contentMail);
-			sendEmailNotification(Arrays.asList(new String[]{question.getEmail()}), message) ;
 		}*/
+		sendNotifyForCategoryWatcher(question, faqSetting, isNew) ;
 	}
 	
 	public Node saveQuestion(Question question, boolean isAddNew, FAQSetting faqSetting) throws Exception {
@@ -1772,7 +1826,7 @@ public class JCRDataStorage {
 		String categoryName = questionNode.getParent().getParent().getProperty("exo:name").getString();
 		Message message = new Message();
 		message.setMimeType(MIMETYPE_TEXTHTML) ;
-		message.setFrom(questionNode.getProperty("exo:author").getString() + "<email@gmail.com>");
+		message.setFrom(questionNode.getProperty("exo:author").getString() + emailDefault);
 		message.setSubject(faqSetting.getEmailSettingSubject() + ": " + questionNode.getProperty("exo:title").getString());
 		if(categoryName == null || categoryName.trim().length() < 1) categoryName = "Root";
 		String questionDetail = questionNode.getProperty("exo:title").getString();

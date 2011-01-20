@@ -4,6 +4,13 @@
 	<component>
     <key>org.exoplatform.faq.service.FAQService</key>
     <type>org.exoplatform.faq.service.impl.FAQServiceImpl</type>
+    <init-params>
+	      <value-param>
+	        <name>emailDefault</name>
+	        <description>Email default for send notification.</description>
+	        <value>noreply@exoplatform.com</value>
+	      </value-param>
+	  </init-params>
   </component>    
   
   <!--external-component-plugins>

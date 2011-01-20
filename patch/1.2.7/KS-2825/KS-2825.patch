@@ -1,0 +1,509 @@
+Index: eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/test/TestFAQService.java
+===================================================================
+--- eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/test/TestFAQService.java	(revision 65243)
++++ eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/test/TestFAQService.java	(working copy)
+@@ -89,6 +89,7 @@
+ 		faqSetting_.setSortQuestionByVote(true);
+ 		faqSetting_.setIsAdmin("TRUE");
+ 		faqSetting_.setEmailMoveQuestion("content email move question");
++		faqSetting_.setEmailSettingContent("content email &categoryName_ &questionContent_ &questionResponse_ &questionLink_");
+ 	}
+ 
+ 	public void testFAQService() throws Exception {
+@@ -115,7 +116,7 @@
+ 		question.setQuestion("What is FAQ?");
+ 		question.setDetail("Add new question 1") ;
+ 		question.setAuthor("root") ;
+-		question.setEmail("maivanha1610@gmail.com") ;
++		question.setEmail("") ;
+ 		question.setActivated(true) ;
+ 		question.setApproved(true) ;
+ 		question.setCreatedDate(new Date()) ;
+@@ -229,7 +230,7 @@
+ 		question2.setRelations(new String[]{}) ;
+ 		question2.setLanguage("English") ;
+ 		question2.setAuthor("root") ;
+-		question2.setEmail("truong_tb1984@yahoo.com") ;
++		question2.setEmail("") ;
+ 		question2.setDetail("Nguyen van truong test question 2222222 ?") ;
+ 		question2.setCreatedDate(new Date()) ;
+ 		questionId2 = question2.getId();
+@@ -238,7 +239,7 @@
+ 		question3.setRelations(new String[]{}) ;
+ 		question3.setLanguage("English") ;
+ 		question3.setAuthor("Phung Hai Nam") ;
+-		question3.setEmail("phunghainam@yahoo.com") ;
++		question3.setEmail("") ;
+ 		question3.setDetail("Nguyen van truong test question 33333333 nguyenvantruong ?") ;
+ 		question3.setCreatedDate(new Date()) ;
+ 		questionId3 = question3.getId();
+@@ -247,7 +248,7 @@
+ 		question4.setRelations(new String[]{}) ;
+ 		question4.setLanguage("English") ;
+ 		question4.setAuthor("Pham Dinh Tan") ;
+-		question4.setEmail("phamdinhtan@yahoo.com") ;
++		question4.setEmail("") ;
+ 		question4.setDetail("Nguyen van truong test question nguyenvantruong ?") ;
+ 		question4.setCreatedDate(new Date()) ;
+ 		questionId4 = question4.getId();
+@@ -256,7 +257,7 @@
+ 		question5.setRelations(new String[]{}) ;
+ 		question5.setLanguage("English") ;
+ 		question5.setAuthor("Ly Dinh Quang") ;
+-		question5.setEmail("lydinhquang@yahoo.com") ;
++		question5.setEmail("") ;
+ 		question5.setDetail("Nguyen van truong test question 55555555555 ?") ;
+ 		question5.setCreatedDate(new Date()) ;
+ 		questionId5 = question5.getId();
+@@ -683,4 +684,4 @@
+ 		assertNull(faqService_.getUserAvatar(USER_ROOT));
+ 	}
+ 
+-}
+\ No newline at end of file
++}
+Index: eXoApplication/faq/service/src/main/java/conf/portal/configuration.xml
+===================================================================
+--- eXoApplication/faq/service/src/main/java/conf/portal/configuration.xml	(revision 65243)
++++ eXoApplication/faq/service/src/main/java/conf/portal/configuration.xml	(working copy)
+@@ -4,6 +4,13 @@
+ 	<component>
+     <key>org.exoplatform.faq.service.FAQService</key>
+     <type>org.exoplatform.faq.service.impl.FAQServiceImpl</type>
++    <init-params>
++	      <value-param>
++	        <name>emailDefault</name>
++	        <description>Email default for send notification.</description>
++	        <value>noreply@exoplatform.com</value>
++	      </value-param>
++	  </init-params>
+   </component>    
+   
+   <!--external-component-plugins>
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/FAQServiceImpl.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/FAQServiceImpl.java	(revision 65243)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/FAQServiceImpl.java	(working copy)
+@@ -83,6 +83,7 @@
+ 		multiLanguages_ = new MultiLanguages() ;
+ 		initDataPlugins = new ArrayList<InitialDataPlugin>();
+ 		bbcodeObject_ = new BBCodeOperator(nodeHierarchy, rService) ;
++		jcrData_.setEmailDefault("<"+params.getValueParam("emailDefault").getValue()+">") ; 
+ 	}
+ 	
+ 	public void addPlugin(ComponentPlugin plugin) throws Exception {
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(revision 65243)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(working copy)
+@@ -120,6 +120,7 @@
+ 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
+ 	private boolean isInitRssListener_ = true ;
+ 	private RepositoryService rService_ ;
++	private String emailDefault = "";
+ 	
+ 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService rService)throws Exception {
+ 		nodeHierarchyCreator_ = nodeHierarchyCreator ;
+@@ -128,6 +129,10 @@
+ 	
+ 	public JCRDataStorage() {}
+ 	
++	public void setEmailDefault(String emailDefault) {
++		this.emailDefault = emailDefault;
++	}
++	
+ 	public void addPlugin(ComponentPlugin plugin) throws Exception {
+ 		try{
+ 			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
+@@ -535,7 +540,11 @@
+ 		if(questionNode.hasNode(Utils.COMMENT_HOME) && questionNode.getNode(Utils.COMMENT_HOME).hasNodes()) return true;
+ 		return false;
+ 	}
+-
++	 /**
++   * @deprecated use {@link JCRDataStorage#sendNotifyForCategoryWatcher(Question question, FAQSetting faqSetting, boolean isNew)}
++   */
++	@SuppressWarnings("unused")
++	@Deprecated
+ 	private void sendNotifyForQuestionWatcher (Question question, FAQSetting faqSetting) {
+ 		List<String> emailsList = new ArrayList<String>() ;
+ 		emailsList.add(question.getEmail()) ;
+@@ -552,7 +561,7 @@
+ 			if(emailsList != null && emailsList.size() > 0) {
+ 				Message message = new Message();
+ 				message.setMimeType(MIMETYPE_TEXTHTML) ;
+-				message.setFrom(question.getAuthor() + "<email@gmail.com>");
++				message.setFrom(question.getAuthor() + emailDefault);
+ 				message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
+ 				message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getDetail())
+ 																													 .replaceAll("&questionResponse_", question.getAnswers()[0].getResponses())
+@@ -563,42 +572,63 @@
+ 			log.error("Failed to send notify for question wather", e);
+ 		}
+ 	}
++	
+ 	private void sendNotifyForCategoryWatcher (Question question, FAQSetting faqSetting, boolean isNew) {
+ 	//Send notification when add new question in watching category
+ 		List<String> emails = new ArrayList<String>() ;
+ 		List<String> emailsList = new ArrayList<String>() ;
++		List<String> users = new ArrayList<String>();
++		if(question.getEmail() != null && question.getEmail().length() > 0)emailsList.add(question.getEmail());
+ 		try {
+-			Node cate = getCategoryNodeById(question.getCategoryId()) ;
+-			if(cate.isNodeType("exo:faqWatching")){
+-				emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
+-				for(String email: emails) {
+-					emailsList.add(email) ;
+-				}
+-				if(emailsList != null && emailsList.size() > 0) {
+-					Message message = new Message();
+-					message.setFrom(question.getAuthor() + "<email@gmail.com>");
+-					message.setMimeType(MIMETYPE_TEXTHTML) ;
+-					message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
+-					if (isNew) {
+-						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
+-								 .replaceAll("&questionContent_", question.getDetail())
+-								 .replaceAll("&questionLink_", question.getLink()));
+-					}else {
+-						String contentMail = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion());
+-						if(question.getAnswers().length > 0){
+-							contentMail = contentMail.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
+-						} else {
+-							contentMail = contentMail.replaceAll("&questionResponse_", "");
++			Node cate = getCategoryNodeById(question.getCategoryId());
++			PropertyReader reader = new PropertyReader(cate);
++			// watch in category parent
++			emails.addAll(reader.list("exo:emailWatching", new ArrayList<String>()));
++			users.addAll(reader.list("exo:userWatching", new ArrayList<String>()));
++			// watch in this question
++			if (question.getEmailsWatch() != null && question.getEmailsWatch().length > 0) {
++				emails.addAll(Arrays.asList(question.getEmailsWatch()));
++				users.addAll(Arrays.asList(question.getUsersWatch()));
++			}
++			if (!question.isActivated() || (!question.isApproved() && faqSetting.getDisplayMode().equals("approved"))) {
++				// only send notification to administrations or moderators
++				List<String> moderators = FAQServiceUtils.getUserPermission(reader.strings("exo:moderators", new String[]{}));
++				List<String> temps = new ArrayList<String>();
++				int i = 0;
++				for (String user : users) {
++					if (!temps.contains(user)) {
++						temps.add(user);
++						if (isAdminRole(user) || moderators.contains(user)) {
++							emailsList.add(emails.get(i));
+ 						}
+-						contentMail = contentMail.replaceAll("&questionLink_", question.getLink());
+-						message.setBody(contentMail);
+ 					}
+-					
+-					sendEmailNotification(emailsList, message) ;
++					++i;
+ 				}
++			} else {
++				emailsList.addAll(emails);
+ 			}
+-		} catch(Exception e) {
+-			log.debug("Failed to send notify for category wather", e);
++			if (emailsList != null && emailsList.size() > 0) {
++				Message message = new Message();
++				message.setFrom(question.getAuthor() + emailDefault);
++				message.setMimeType(MIMETYPE_TEXTHTML);
++				message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
++				if (isNew) {
++					message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString()).replaceAll("&questionContent_", question.getDetail())
++							.replaceAll("&questionLink_", question.getLink()));
++				} else {
++					String contentMail = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion());
++					if (question.getAnswers().length > 0) {
++						contentMail = contentMail.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
++					} else {
++						contentMail = contentMail.replaceAll("&questionResponse_", "");
++					}
++					contentMail = contentMail.replaceAll("&questionLink_", question.getLink());
++					message.setBody(contentMail);
++				}
++				sendEmailNotification(emailsList, message);
++			}
++		} catch (Exception e) {
++			log.error("Failed to send a nofify for category watcher: ", e);
+ 		}
+ 	}
+ 	
+@@ -775,10 +805,50 @@
+ 				saveAnswer(answer, answerHome, qId, categoryId) ;
+ 			}
+ 			quesNode.save() ;
++			try {
++				sendEmailNotificaionByAnwser(quesNode, answers[0]);
++			} catch (Exception e) {
++				log.error("Failed to send notification when add/edit answers.", e);
++			}
+ 		}catch (Exception e) {
+ 			log.error("Failed to save answer", e);
+ 		}finally { sProvider.close() ;}
+ 	}
++//Fix for problem: can not send email when add new answers.
++	private void sendEmailNotificaionByAnwser(Node questionNode, Answer answer) throws Exception {
++		// set summary for question.
++		String []infos = answer.getPath().split("///");
++		if(infos.length != 3) return;
++		Question question = new Question();
++		question.setId(questionNode.getName()) ;
++		PropertyReader reader = new PropertyReader(questionNode);
++		question.setDetail(reader.string("exo:name", "")) ;
++		question.setAuthor(reader.string("exo:author", "")) ;
++		question.setEmail(reader.string("exo:email", "")) ;
++		question.setQuestion(reader.string("exo:title", "")) ;
++		String path = questionNode.getParent().getParent().getPath() ;
++		question.setCategoryId(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
++		question.setActivated(reader.bool("exo:isActivated", true)) ;
++		question.setApproved(reader.bool("exo:isApproved", true)) ;
++		question.setEmailsWatch(reader.strings("exo:emailWatching", new String[]{})) ;
++		question.setUsersWatch(reader.strings("exo:userWatching", new String[]{})) ;
++		
++		NodeIterator iter = questionNode.getNode(Utils.ANSWER_HOME).getNodes();
++		if(iter.getSize() > 0){
++			Answer []answers = new Answer[] {getAnswerByNode(iter.nextNode())};
++			question.setAnswers(answers);
++		}
++		path = questionNode.getPath() ;
++		question.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
++		question.setLink(infos[0]);
++		// set summary for faqSetting
++		FAQSetting faqSetting = new FAQSetting();
++		faqSetting.setDisplayMode("approved");
++		faqSetting.setEmailSettingSubject(infos[1]);
++		faqSetting.setEmailSettingContent(infos[2]);
++		// send email.
++		sendNotifyForCategoryWatcher(question, faqSetting, false);
++	}
+ 	
+ 	private void saveAnswer(Answer answer, Node answerHome, String questionId, String categoryId) throws Exception {
+ 		Node answerNode;
+@@ -1178,7 +1248,7 @@
+ 			String catePath = questionNode.getParent().getParent().getPath() ;
+ 			question.setCategoryId(catePath.substring(catePath.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
+ 		}
+-		if(faqSetting.getDisplayMode().equals("approved")) {
++		/*if(faqSetting.getDisplayMode().equals("approved")) {
+ 			// Send notification when question response or edited or watching
+ 			if(question.isApproved() && question.isActivated()) {
+ 				sendNotifyForQuestionWatcher (question, faqSetting) ;
+@@ -1188,24 +1258,8 @@
+ 			if(isNew || question.isActivated()) {
+ 				sendNotifyForCategoryWatcher(question, faqSetting, isNew) ;
+ 			}
+-		}
+-		
+-		//TODO: move this notify to move function
+-		// Send mail for author question when question is moved to another category
+-		/*if(!isNew && isMoveQuestion){
+-			Message message = new Message();
+-			message.setMimeType(MIMETYPE_TEXTHTML) ;
+-			message.setFrom(question.getAuthor() + "<email@gmail.com>");
+-			message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
+-			String contentMail = faqSetting.getEmailMoveQuestion();
+-			String categoryName = getCategoryById(question.getCategoryId()).getName();
+-			if(categoryName == null || categoryName.trim().length() < 1) categoryName = "Root";
+-			contentMail = contentMail.replace("&questionContent_", question.getQuestion()).
+-																replace("&categoryName_", categoryName).
+-																replace("&questionLink_", question.getLink());
+-			message.setBody(contentMail);
+-			sendEmailNotification(Arrays.asList(new String[]{question.getEmail()}), message) ;
+ 		}*/
++		sendNotifyForCategoryWatcher(question, faqSetting, isNew) ;
+ 	}
+ 	
+ 	public Node saveQuestion(Question question, boolean isAddNew, FAQSetting faqSetting) throws Exception {
+@@ -1772,7 +1826,7 @@
+ 		String categoryName = questionNode.getParent().getParent().getProperty("exo:name").getString();
+ 		Message message = new Message();
+ 		message.setMimeType(MIMETYPE_TEXTHTML) ;
+-		message.setFrom(questionNode.getProperty("exo:author").getString() + "<email@gmail.com>");
++		message.setFrom(questionNode.getProperty("exo:author").getString() + emailDefault);
+ 		message.setSubject(faqSetting.getEmailSettingSubject() + ": " + questionNode.getProperty("exo:title").getString());
+ 		if(categoryName == null || categoryName.trim().length() < 1) categoryName = "Root";
+ 		String questionDetail = questionNode.getProperty("exo:title").getString();
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIResponseForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIResponseForm.java	(revision 65243)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIResponseForm.java	(working copy)
+@@ -407,6 +407,10 @@
+ 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
+ 					//save answers and question
+ 					Answer[] answers = responseForm.mapAnswers.values().toArray(new Answer[]{}) ;
++					//Fix for problem: can not send email when add new answers.
++					if(answers.length > 0){
++						answers[0].setPath(link +"///"+responseForm.faqSetting_.getEmailSettingSubject()+"///"+responseForm.faqSetting_.getEmailSettingContent());
++					}
+ 					FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+ 					
+ 					faqService.saveAnswer(responseForm.getQuestion().getPath(), answers) ;
+Index: eXoApplication/faq/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/faq/AnswersPortlet.properties
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/faq/AnswersPortlet.properties	(revision 65243)
++++ eXoApplication/faq/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/faq/AnswersPortlet.properties	(working copy)
+@@ -575,7 +575,7 @@
+  ############################################################################################
+  SendEmail.Default.Subject=eXo Answers Notification
+  SendEmail.AddNewQuestion.Default=<p>A new question has been posted <strong>&categoryName_</strong>: </p><p><em>&questionContent_</em><p><p>Click <a href=&questionLink_>here</a> for more details.</p>
+- SendEmail.EditOrResponseQuestion.Default=<p>The following question has received an answer: </p><p><strong>&questionContent_</strong></p><p><em>&questionResponse_</em></p><p>Click <a href=&questionLink_>here</a> for more details.</p>
++ SendEmail.EditOrResponseQuestion.Default=<p>The following question has been edited or received an answer: </p><p><strong>&questionContent_</strong></p><p><em>&questionResponse_</em></p><p>Click <a href=&questionLink_>here</a> for more details.</p>
+  SendEmail.MoveQuetstion.Default=<p>Your question:</p><p><strong>&questionContent_</strong></p><p> has been moved to category " <strong>&categoryName_</strong> "</p><p>Click <a href=&questionLink_>here</a> for more details.</p>
+  #############################################################################
+  #												UIUserWatchManager															 #
+Index: eXoApplication/faq/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/faq/AnswersPortlet_en.properties
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/faq/AnswersPortlet_en.properties	(revision 65243)
++++ eXoApplication/faq/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/faq/AnswersPortlet_en.properties	(working copy)
+@@ -577,7 +577,7 @@
+  ############################################################################################
+  SendEmail.Default.Subject=eXo Answers Notification
+  SendEmail.AddNewQuestion.Default=<p>A new question has been posted <strong>&categoryName_</strong>: </p><p><em>&questionContent_</em><p><p>Click <a href=&questionLink_>here</a> for more details.</p>
+- SendEmail.EditOrResponseQuestion.Default=<p>The following question has received an answer: </p><p><strong>&questionContent_</strong></p><p><em>&questionResponse_</em></p><p>Click <a href=&questionLink_>here</a> for more details.</p>
++ SendEmail.EditOrResponseQuestion.Default=<p>The following question has been edited or received an answer: </p><p><strong>&questionContent_</strong></p><p><em>&questionResponse_</em></p><p>Click <a href=&questionLink_>here</a> for more details.</p>
+  SendEmail.MoveQuetstion.Default=<p>Your question:</p><p><strong>&questionContent_</strong></p><p> has been moved to category " <strong>&categoryName_</strong> "</p><p>Click <a href=&questionLink_>here</a> for more details.</p>
+  #############################################################################
+  #												UIUserWatchManager															 #
+Index: eXoApplication/forum/service/src/main/java/conf/portal/configuration.xml
+===================================================================
+--- eXoApplication/forum/service/src/main/java/conf/portal/configuration.xml	(revision 65243)
++++ eXoApplication/forum/service/src/main/java/conf/portal/configuration.xml	(working copy)
+@@ -4,6 +4,13 @@
+ 	<component>
+     <key>org.exoplatform.forum.service.ForumService</key>
+     <type>org.exoplatform.forum.service.impl.ForumServiceImpl</type>
++    <init-params>
++	      <value-param>
++	        <name>emailDefault</name>
++	        <description>Email default for send notification.</description>
++	        <value>noreply@exoplatform.com</value>
++	      </value-param>
++	  </init-params>
+   </component>    
+  <!-- 
+     <component>
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/ForumServiceImpl.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/ForumServiceImpl.java	(revision 65243)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/ForumServiceImpl.java	(working copy)
+@@ -102,6 +102,7 @@
+   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService rService, InitParams params)throws Exception {
+   	storage_ = new JCRDataStorage(nodeHierarchyCreator, rService);
+   	bbcodeObject_ = new BBCodeOperator(nodeHierarchyCreator, rService) ;
++  	storage_.setEmailDefault(params.getValueParam("emailDefault").getValue()) ; 
+   }
+ 
+ 
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java	(revision 65243)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java	(working copy)
+@@ -159,6 +159,7 @@
+ 	private static int TYPE_FORUM=1;
+ 	private static int TYPE_TOPIC=2;
+ 	private static int TYPE_POST=3;
++	private String emailDefault = "";
+ 	
+ 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService rService) throws Exception {
+ 		nodeHierarchyCreator_ = nodeHierarchyCreator;
+@@ -166,6 +167,10 @@
+ 	}
+ 	public JCRDataStorage() {}
+ 	
++	public void setEmailDefault(String emailDefault) {
++		this.emailDefault = emailDefault;
++	}
++	
+   @Managed
+   @ManagedDescription("repository for forum storage")
+   public String getRepository() throws Exception {
+@@ -2534,7 +2539,7 @@
+ 			} catch (Exception e) {		}
+ 			mailContent =  StringUtils.replace(mailContent, "$OBJECT_TYPE", Utils.TOPIC);
+ 			mailContent =  StringUtils.replace(mailContent, "$OBJECT_PARENT_TYPE", Utils.FORUM);
+-			message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
++			message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + emailDefault + ">");
+ 			// ----------------------- finish ----------------------
+ 			String destForumId = destForumNode.getName(), srcForumId = "";
+ 			for (Topic topic : topics) {
+@@ -3213,12 +3218,11 @@
+ 						message.setMimeType("text/html");
+ 						try {
+ 							Node userNode = userProfileHome.getNode(owner);
+-							String email = userNode.getProperty("exo:email").getString();
+ 							String fullName = userNode.getProperty("exo:fullName").getString();
+-							if(email != null && email.length() > 0) {
+-								message.setFrom(fullName + "<" + email + ">");
+-							}
+-						} catch (Exception e) {}
++							message.setFrom(fullName + "<" + emailDefault + ">");
++						} catch (Exception e) {
++							log.debug("Failed to set from email, because can not get user profile of poster.", e);
++						}
+ 						
+ 						sendEmailNotification(emailList, message);
+ 					}
+@@ -3339,12 +3343,10 @@
+ 						}
+ 					}
+ 					
+-					String email = "";
+ 					String fullName = "";
+ 					String owner =post.getOwner();
+ 					try {
+ 						Node userNode = userProfileHome.getNode(owner);
+-						email = userNode.getProperty("exo:email").getString();
+ 						fullName = userNode.getProperty("exo:fullName").getString();
+ 					} catch (Exception e) {
+ 					}
+@@ -3352,9 +3354,7 @@
+ 					if (emailListCategory.size() > 0) {
+ 						String categoryName = categoryNode.getProperty("exo:name").getString();
+ 						Message message = setContentEmail(post, bbcodeObject, headerSubject, content, categoryName, types[TYPE_CATEGORY], types[TYPE_POST], catName, forumName, topicName);
+-						if(email != null && email.length() > 0) {
+-							message.setFrom(fullName + " <" + email + ">");
+-						}
++						message.setFrom(fullName + " <" + emailDefault + ">");
+ 						message.setMimeType("text/html");
+ 						
+ 						sendEmailNotification(emailListCategory, message);
+@@ -3367,9 +3367,7 @@
+ 					if (emailListForum.size() > 0) {
+ 						Message message = setContentEmail(post, bbcodeObject, headerSubject, content, forumName, types[TYPE_FORUM], types[TYPE_POST], catName, forumName, topicName);
+ 						message.setMimeType("text/html");
+-						if(email != null && email.length() > 0) {
+-							message.setFrom(fullName + " <" + email + ">");
+-						}
++						message.setFrom(fullName + " <" + emailDefault + ">");
+ 						
+ 						sendEmailNotification(emailListForum, message);
+ 					}
+@@ -3383,9 +3381,7 @@
+ //				send email by topic					
+ 					if (emailList.size() > 0) {
+ 						Message message = setContentEmail(post, bbcodeObject, headerSubject, content, topicName, types[TYPE_TOPIC], types[TYPE_POST], catName, forumName, topicName);
+-						if(email != null && email.length() > 0) {
+-							message.setFrom(fullName + " <" + email + ">");
+-						}
++						message.setFrom(fullName + " <" + emailDefault + ">");
+ 						message.setMimeType("text/html");
+ 
+ 						sendEmailNotification(emailList, message);
+@@ -3714,7 +3710,7 @@
+ 				postNode = (Node) forumHomeNode.getSession().getItem(postPaths[i]);
+ 				message = new Message();
+ 				message.setMimeType("text/html");
+-				message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
++				message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + emailDefault + ">");
+ 				message.setSubject(headerSubject + objectName);
+ 				message.setBody(mailContent.replace("$OBJECT_NAME", postNode.getProperty("exo:name").getString())
+ 								.replace("$OBJECT_PARENT_NAME", topicName).replace("$VIEWPOST_LINK", link));
+@@ -3722,7 +3718,7 @@
+ 				fullNameEmailOwnerPost.remove(0);
+ 				sendEmailNotification(fullNameEmailOwnerPost, message);
+ 			}
+-			
++
+ 			List<String>userIdsp = new ArrayList<String>();
+ 			if(destModeratePost && srcModeratePost) {
+ 				if(srcForumNode.hasProperty("exo:moderators")) {
