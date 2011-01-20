@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8080/ksdemo/public/classic/" />
+<title>Test_SNF_KS_58_ksdemo_CreatePageWithRichTextEditor</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_58_ksdemo_CreatePageWithRichTextEditor</td></tr>
+</thead><tbody>
+<tr>
+	<td>echo</td>
+	<td>- Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>windowMaximize</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>username</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>password</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>gtn</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/private/classic/wiki</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Create Page using Rich Text Editor</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=add</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>TitleInput</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>TitleInput</td>
+	<td>Page1_SNF_KS_58</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>Markup</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=rich text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=rich text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-- Insert Hyperlink</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//td[@id='gwt-uid-16']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//td[@id='gwt-uid-16']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//td[@id='gwt-uid-10']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//td[@id='gwt-uid-10']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div/div[2]/div/div[1]/input</td>
+	<td>http://google.co.uk</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div/div[2]/div/div[1]/input</td>
+	<td>http://google.co.uk</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[2]/div/div[2]/input[1]</td>
+	<td>Google UK</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[2]/input[2]</td>
+	<td>Google UK</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//button[@type='button']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//button[@type='button']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Page1_SNF_KS_58</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-- Insert table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=rich text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=rich text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//td[@id='gwt-uid-9']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//td[@id='gwt-uid-9']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//td[@id='gwt-uid-1']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//td[@id='gwt-uid-1']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div/div[2]/div/div[1]/input</td>
+	<td>4</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[2]/div/div[2]/input</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>uncheck</td>
+	<td>gwt-uid-29</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//button[@type='button']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//body[@id='body']/table//tr[3]/td[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//body[@id='body']/table//tr[3]/td[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//body[@id='body']/table/tbody/tr[4]/td[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>typeKeys</td>
+	<td>//body[@id='body']/table/tbody/tr[4]/td[3]</td>
+	<td>TopLeft</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Page1_SNF_KS_58</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-- Insert macro</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=rich text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=rich text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[contains(@id,'UIWikiRichTextArea_TextArea_container')]/div[@class='xRichTextEditor']//td[4]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[contains(@id,'UIWikiRichTextArea_TextArea_container')]/div[@class='xRichTextEditor']//td[4]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@class='gwt-MenuBarPopup']//table//table//td</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[1]/select</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>//div[1]/select</td>
+	<td>label=Formatting</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[3]/div/div[4]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[3]/div/div[4]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//button[@type='button']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>pd-content-input</td>
+	<td>Gunless but still dangerous!</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//button[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Page1_SNF_KS_58</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Verify the Rich Text content</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Gunless but still dangerous!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Gunless but still dangerous!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[@id='UIWikiPageContentArea']/table/tbody/tr[1]/td[1]</td>
+	<td>TopLeft</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='UIWikiPageContentArea']/table/tbody/tr[1]/td[1]</td>
+	<td>TopLeft</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Google UK</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>link=Google UK</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Clean test data</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/ksdemo/private/classic/wiki/WikiHome</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Page1_SNF_KS_58</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Page1_SNF_KS_58</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextNotPresent</td>
+	<td>Page1_SNF_KS_58</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>Page1_SNF_KS_58</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- End of test</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
