@@ -29,6 +29,8 @@ import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.user.ContactProvider;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 /**
  * Created by The eXo Platform SAS
@@ -38,18 +40,33 @@ import org.exoplatform.portal.webui.util.Util;
 
 public class ForumSessionUtils {
 	
+  static private final Log LOG = ExoLogger.getLogger(ForumSessionUtils.class);
+  
+  /**
+   * create an avatar link for user. 
+   * Firstly, the function tries to load avatar resource from user profile of forum.
+   * if the resource is not found, try to get it from {@link ContactProvider}
+   * else, return default url: <a>/forum/skin/DefaultSkin/webui/background/Avatar1.gif</a>.
+   * @param userName
+   * @param forumService
+   * @param dservice
+   * @return
+   */
 	public static String getUserAvatarURL(String userName, ForumService forumService, DownloadService dservice){
-		String url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+		String url = null;
 		try{
 			ForumAttachment attachment = forumService.getUserAvatar(userName);
 			url = ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
-			if(url == null || url.trim().length() < 1){
-				CommonContact contact = getPersonalContact(userName) ;
-				if(contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0){
-					url = contact.getAvatarUrl();
-				}
-			}
+			return url;
 		}catch (Exception e){
+		  if (LOG.isDebugEnabled()) LOG.debug(String.format("can not load avatar of [%s] as file resource", userName), e);
+		}
+    CommonContact contact = getPersonalContact(userName);
+    if (contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0) {
+      url = contact.getAvatarUrl();
+    }
+		if(url == null || url.trim().length() < 1){
+		  url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 		}
 		return url;
 	}
@@ -68,7 +85,7 @@ public class ForumSessionUtils {
 		return null;
 	}
 	
-	public static CommonContact getPersonalContact(String userId) throws Exception {
+	public static CommonContact getPersonalContact(String userId) {
 		try {
 			if(userId.indexOf(Utils.DELETED) > 0) return new CommonContact();
 			ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
