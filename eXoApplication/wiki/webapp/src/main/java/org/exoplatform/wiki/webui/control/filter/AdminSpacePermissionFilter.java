@@ -18,8 +18,6 @@ package org.exoplatform.wiki.webui.control.filter;
 
 import java.util.Map;
 
-import org.exoplatform.portal.config.UserACL;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.ext.filter.UIExtensionAbstractFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilterType;
 import org.exoplatform.wiki.commons.Utils;
@@ -43,20 +41,6 @@ public class AdminSpacePermissionFilter extends UIExtensionAbstractFilter {
 
   @Override
   public boolean accept(Map<String, Object> context) throws Exception {
-    // If an user is the super user or in the administration group or has the
-    // create portal permission then he also has the admin space permission
-    UserACL userACL = Util.getUIPortalApplication().getApplicationComponent(UserACL.class);
-    if (userACL.hasCreatePortalPermission()) {
-      return true;
-    }
-    String expAdminGroup = userACL.getAdminGroups();
-    if (expAdminGroup != null) {
-      expAdminGroup = expAdminGroup.startsWith("/") ? expAdminGroup : "/" + expAdminGroup;
-      if (userACL.isUserInGroup(expAdminGroup)) {
-        return true;
-      }
-    }
-
     return Utils.hasPermission(new String[] { PermissionType.ADMINSPACE.toString() });
   }
 

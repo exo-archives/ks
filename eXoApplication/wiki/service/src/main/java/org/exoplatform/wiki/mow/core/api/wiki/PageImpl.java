@@ -292,7 +292,7 @@ public abstract class PageImpl implements Page {
     if (conversationState != null) {
       user = conversationState.getIdentity();
     } else {
-      user = new Identity(SystemIdentity.ANY);
+      user = new Identity(SystemIdentity.ANONIM);
     }
     return Utils.hasPermission(acl, permission, user);
   }
@@ -319,14 +319,16 @@ public abstract class PageImpl implements Page {
   }
 
   public void setPagePermission(HashMap<String, String[]> permissions) throws Exception {
+    getChromatticSession().save();
     ExtendedNode pageNode = (ExtendedNode) getJCRPageNode();
     if (pageNode.canAddMixin("exo:privilegeable")) {
       pageNode.addMixin("exo:privilegeable");
     }
-    if (permissions.size() > 0) {
+    if (permissions != null && permissions.size() > 0) {
       pageNode.setPermissions(permissions);
     } else {
       pageNode.clearACL();
+      pageNode.setPermission(SystemIdentity.ANY, org.exoplatform.services.jcr.access.PermissionType.ALL);
     }
   }
   

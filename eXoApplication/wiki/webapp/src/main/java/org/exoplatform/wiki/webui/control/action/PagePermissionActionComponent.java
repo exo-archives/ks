@@ -71,7 +71,13 @@ public class PagePermissionActionComponent extends UIComponent {
       UIWikiPermissionForm uiWikiPermissionForm = uiPopupContainer.activate(UIWikiPermissionForm.class, 800);
       uiWikiPermissionForm.setScope(Scope.PAGE);
       PageImpl page = (PageImpl) Utils.getCurrentWikiPage();
-      List<PermissionEntry> permissionEntries = convertToPermissionEntryList(page.getPagePermission());
+      HashMap<String, String[]> permissionMap = page.getPagePermission();
+      HashMap<String, String[]> adminsACLMap = org.exoplatform.wiki.utils.Utils.getACLForAdmins();
+      // Filter out ACL for administrators
+      for(String id: adminsACLMap.keySet()){
+        permissionMap.remove(id);
+      }
+      List<PermissionEntry> permissionEntries = convertToPermissionEntryList(permissionMap);
       uiWikiPermissionForm.setPermission(permissionEntries);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);
       super.processEvent(event);

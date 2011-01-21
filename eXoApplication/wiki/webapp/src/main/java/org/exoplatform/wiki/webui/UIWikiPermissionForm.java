@@ -18,6 +18,7 @@ package org.exoplatform.wiki.webui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -37,6 +38,7 @@ import org.exoplatform.webui.organization.UIGroupMembershipSelector;
 import org.exoplatform.webui.organization.account.UIGroupSelector;
 import org.exoplatform.webui.organization.account.UIUserSelector;
 import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.IDType;
 import org.exoplatform.wiki.service.Permission;
 import org.exoplatform.wiki.service.PermissionEntry;
@@ -60,6 +62,7 @@ import org.exoplatform.wiki.webui.core.UIWikiForm;
     @EventConfig(listeners = UIWikiPermissionForm.SelectUserActionListener.class),
     @EventConfig(listeners = UIWikiPermissionForm.SelectGroupActionListener.class),
     @EventConfig(listeners = UIWikiPermissionForm.SelectMembershipActionListener.class),
+    @EventConfig(listeners = UIWikiPermissionForm.DeleteOwnerActionListener.class),
     @EventConfig(listeners = UIWikiPermissionForm.SaveActionListener.class),
     @EventConfig(listeners = UIWikiPermissionForm.CloseActionListener.class)
   }
@@ -69,6 +72,8 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
   private List<PermissionEntry> permissionEntries = new ArrayList<PermissionEntry>();
   
   private Scope scope;
+  
+  public static String DELETE_ACTION = "DeleteOwner";
 
   public static enum Scope {
     WIKI, PAGE
@@ -160,6 +165,30 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     setPermission(permEntries);
   }
   
+  private HashMap<String, String[]> convertToPermissionMap(List<PermissionEntry> permissionEntries) {
+    HashMap<String, String[]> permissionMap = new HashMap<String, String[]>();
+    for (PermissionEntry permissionEntry : permissionEntries) {
+      Permission[] permissions = permissionEntry.getPermissions();
+      List<String> permlist = new ArrayList<String>();
+      for (int i = 0; i < permissions.length; i++) {
+        Permission permission = permissions[i];
+        if (permission.isAllowed()) {
+          if (permission.getPermissionType().equals(PermissionType.VIEWPAGE)) {
+            permlist.add(org.exoplatform.services.jcr.access.PermissionType.READ);
+          } else if (permission.getPermissionType().equals(PermissionType.EDITPAGE)) {
+            permlist.add(org.exoplatform.services.jcr.access.PermissionType.ADD_NODE);
+            permlist.add(org.exoplatform.services.jcr.access.PermissionType.REMOVE);
+            permlist.add(org.exoplatform.services.jcr.access.PermissionType.SET_PROPERTY);
+          }
+        }
+      }
+      if (permlist.size() > 0) {
+        permissionMap.put(permissionEntry.getId(), permlist.toArray(new String[permlist.size()]));
+      }
+    }
+    return permissionMap;
+  }
+  
   static public class AddOwnerActionListener extends EventListener<UIWikiPermissionForm> {
     @Override
     public void execute(Event<UIWikiPermissionForm> event) throws Exception {
@@ -241,15 +270,41 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     }
   }
   
+  static public class DeleteOwnerActionListener extends EventListener<UIWikiPermissionForm> {
+    @Override
+    public void execute(Event<UIWikiPermissionForm> event) throws Exception {
+      UIWikiPermissionForm uiWikiPermissionForm = event.getSource();
+      String ownerId = event.getRequestContext().getRequestParameter(OBJECTID);
+      for (PermissionEntry permissionEntry : uiWikiPermissionForm.permissionEntries) {
+        if (permissionEntry.getId().equals(ownerId)) {
+          uiWikiPermissionForm.permissionEntries.remove(permissionEntry);
+          break;
+        }
+      }
+      uiWikiPermissionForm.setPermission(uiWikiPermissionForm.permissionEntries);
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
+    }
+  }
+  
   static public class SaveActionListener extends EventListener<UIWikiPermissionForm> {
     @Override
     public void execute(Event<UIWikiPermissionForm> event) throws Exception {
       UIWikiPermissionForm uiWikiPermissionForm = event.getSource();
+      Scope scope = uiWikiPermissionForm.getScope();
       UIWikiPortlet wikiPortlet = uiWikiPermissionForm.getAncestorOfType(UIWikiPortlet.class);
       uiWikiPermissionForm.processPostAction();
-      WikiService wikiService = uiWikiPermissionForm.getApplicationComponent(WikiService.class);
-      WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
-      wikiService.setWikiPermission(pageParams.getType(), pageParams.getOwner(), uiWikiPermissionForm.permissionEntries);
+      if (Scope.WIKI.equals(scope)) {
+        WikiService wikiService = uiWikiPermissionForm.getApplicationComponent(WikiService.class);
+        WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
+        wikiService.setWikiPermission(pageParams.getType(), pageParams.getOwner(), uiWikiPermissionForm.permissionEntries);
+      } else if (Scope.PAGE.equals(scope)) {
+        PageImpl page = (PageImpl) Utils.getCurrentWikiPage();
+        HashMap<String, String[]> permissionMap = uiWikiPermissionForm.convertToPermissionMap(uiWikiPermissionForm.permissionEntries);
+        // Include ACL for administrators
+        permissionMap.putAll(org.exoplatform.wiki.utils.Utils.getACLForAdmins());
+        page.setPagePermission(permissionMap);
+        page.setOverridePermission(true);
+      }
       UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);
       popupContainer.cancelPopupAction();
     }

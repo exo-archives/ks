@@ -3,18 +3,21 @@
   import org.exoplatform.wiki.service.Permission;
   
   PermissionEntry permissionEntry = uicomponent.getPermissionEntry();
+  String id = permissionEntry.getId();
   Permission[] permissions = permissionEntry.getPermissions();
+  def uiPermissionForm = uicomponent.getParent().getParent();
+  def deleteLink = uiPermissionForm.event(uiPermissionForm.DELETE_ACTION, id);
 %>
-<td><div title="managers in Administrators" class="Text"><%= uicomponent.getPermissionEntry().getId(); %></div><div title="manager:/platform/administrators" class="Text"><%= uicomponent.getPermissionEntry().getId(); %></div></td>
+<td><div title="managers in Administrators" class="Text"><%= id %></div><div title="manager:/platform/administrators" class="Text"><%= id %></div></td>
 <%
   for(permission in permissions){
-    checkboxField = uicomponent.getChildById(permission.getPermissionType().toString() + permissionEntry.getId()) ;
+    checkboxField = uicomponent.getChildById(permission.getPermissionType().toString() + id) ;
     %>
     <td><% uicomponent.renderChild(checkboxField); %></td>
 <%  }
 %>
 <td>
   <div class="ActionContainer">
-    <img class="DeleteUserIcon" src="/eXoResources/skin/sharedImages/Blank.gif" title="Delete Permission" alt="DeletePermission" onclick="javascript:alert('Feature is not implemented')">
+    <img class="DeleteUserIcon" src="/eXoResources/skin/sharedImages/Blank.gif" title="Delete Permission" alt="DeletePermission" onclick="$deleteLink">
   </div>
 </td>

@@ -73,7 +73,14 @@ public class PageListenersInAction implements Action {
       return false;
     }
     String pageId = ancestor.getName();
-    boolean moreVersionsThan1 = ancestor.getVersionHistory().getAllVersions().getSize() > 1;
+    boolean moreVersionsThan1 = false;
+    try {
+      moreVersionsThan1 = ancestor.getVersionHistory().getAllVersions().getSize() > 1;
+    } catch (NullPointerException e) {
+      if (log.isDebugEnabled()) {
+        log.debug(String.format("can not count the number of versions of page [%s]", pageId), e);
+      }
+    }
     if (Integer.parseInt(eventObj.toString()) == ExtendedEvent.PROPERTY_ADDED) {
       List<PageWikiListener> listeners = wikiService.getPageListeners();
       for (PageWikiListener l : listeners) {

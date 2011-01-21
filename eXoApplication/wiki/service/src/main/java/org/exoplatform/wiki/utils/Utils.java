@@ -2,6 +2,7 @@ package org.exoplatform.wiki.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -16,6 +17,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.common.Common;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
@@ -400,6 +402,17 @@ public class Utils {
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     WikiContainer<Wiki> container = wStore.getWikiContainer(WikiType.valueOf(wikiType.toUpperCase()));
     return (container.contains(wikiOwner) != null);
+  }
+  
+  public static HashMap<String, String[]> getACLForAdmins() {
+    HashMap<String, String[]> permissionMap = new HashMap<String, String[]>();
+    UserACL userACL = (UserACL) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
+    permissionMap.put(userACL.getSuperUser(), org.exoplatform.services.jcr.access.PermissionType.ALL);
+    permissionMap.put(userACL.getAdminGroups(), org.exoplatform.services.jcr.access.PermissionType.ALL);
+    for (String group : userACL.getPortalCreatorGroups()) {
+      permissionMap.put(group, org.exoplatform.services.jcr.access.PermissionType.ALL);
+    }
+    return permissionMap;
   }
   
   /**

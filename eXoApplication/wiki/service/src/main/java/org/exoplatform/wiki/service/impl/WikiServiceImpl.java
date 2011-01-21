@@ -396,6 +396,8 @@ public class WikiServiceImpl implements WikiService {
     }
     wiki.setWikiPermissions(permissions);
     // TODO: study performance
+    // Include ACL for administrators
+    permMap.putAll(Utils.getACLForAdmins());
     PageImpl page = getWikiHome(wikiType, wikiOwner);
     Queue<PageImpl> queue = new LinkedList<PageImpl>();
     queue.add(page);
