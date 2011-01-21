@@ -58,7 +58,7 @@ public class JCRDataStorage implements DataStorage{
     String title = (row.getValue("title") == null ? null : row.getValue("title").getString());
     String excerpt = null;
     Calendar updateDate = GregorianCalendar.getInstance();
-
+    Calendar createdDate = GregorianCalendar.getInstance();
     if (WikiNodeType.WIKI_PAGE_CONTENT.equals(type)) {      
       String pagepath = path.substring(0, path.lastIndexOf("/"));
       PageImpl page = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(pagepath,
@@ -68,6 +68,7 @@ public class JCRDataStorage implements DataStorage{
         excerpt = row.getValue("rep:excerpt(text)").getString();
       }
       updateDate.setTime(page.getUpdatedDate());
+      createdDate.setTime(page.getCreatedDate());
     } else if (WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(type)) {
       // Transform to Attachment result
       type = WikiNodeType.WIKI_ATTACHMENT.toString();
@@ -77,13 +78,17 @@ public class JCRDataStorage implements DataStorage{
       AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(path,
                                                                                              WikiNodeType.WIKI_ATTACHMENT);
       updateDate = searchAtt.getUpdatedDate();
+      PageImpl page = searchAtt.getParentPage();
+      createdDate.setTime(page.getCreatedDate());
       title = searchAtt.getTitle();
     } else if (WikiNodeType.WIKI_ATTACHMENT.equals(type)) {
       AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(path,
                                                                                              WikiNodeType.WIKI_ATTACHMENT);
       updateDate = searchAtt.getUpdatedDate();
+      PageImpl page = searchAtt.getParentPage();
+      createdDate.setTime(page.getCreatedDate());
     }
-    SearchResult result = new SearchResult(excerpt, title, path, type, updateDate);
+    SearchResult result = new SearchResult(excerpt, title, path, type, updateDate, createdDate);
     return result;
   }
   

@@ -9,15 +9,17 @@ public class SearchResult {
   private String type ;
   private String nodeName ;
   private Calendar   updatedDate;  
+  private Calendar createdDate;
   
   public SearchResult() {}
   
-  public SearchResult(String excerpt, String title, String path, String type, Calendar updatedDate) {
+  public SearchResult(String excerpt, String title, String path, String type, Calendar updatedDate, Calendar createdDate) {
     this.excerpt = excerpt;
     this.title = title;
     this.path = path;
     this.type = type;
     this.updatedDate = updatedDate;
+    this.createdDate = createdDate;
     evaluateNodeName(path);
   }
   
@@ -70,5 +72,20 @@ public class SearchResult {
 
   public void setUpdatedDate(Calendar updatedDate) {
     this.updatedDate = updatedDate;
+  }
+
+  /**
+   * @return the createdDate
+   */
+  public Calendar getCreatedDate() {
+    return createdDate;
+  }
+
+  /**
+   * @param createdDate the createdDate to set
+   */
+  public void setCreatedDate(Calendar createdDate) {
+    this.createdDate = createdDate;
   }  
+  
 }
