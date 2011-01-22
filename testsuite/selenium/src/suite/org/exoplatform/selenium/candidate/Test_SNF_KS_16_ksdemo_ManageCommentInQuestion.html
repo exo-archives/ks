@@ -112,16 +112,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=SNF_KS_16</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementPresent</td>
-	<td>link=SNF_KS_16</td>
-	<td></td>
-</tr>
-<tr>
 	<td>echo</td>
 	<td>-Add Question -</td>
 	<td></td>
@@ -308,12 +298,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICommentForm']/div[2]/div[2]/table//div[1]/div/div/div</td>
+	<td>//form[@id='UICommentForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICommentForm']/div[2]/div[2]/table//div[1]/div/div/div</td>
+	<td>//form[@id='UICommentForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -342,13 +332,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Edit comment English</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[3]/a</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Edit comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[3]/a</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Edit comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -377,6 +372,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Save</td>
 	<td></td>
@@ -402,13 +402,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Edit comment French</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[3]/a</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Edit comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[3]/a</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Edit comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -482,13 +487,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Delete comment French</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Delete comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Delete comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -517,13 +527,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Delete comment French</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Delete comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Delete comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -647,8 +662,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UICommentForm']//a[text()=&quot;Save&quot;]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//form[@id='UICommentForm']/div[2]/div[2]/table//div[1]/div/div/div</td>
+	<td>//form[@id='UICommentForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -678,12 +698,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[2]/a</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Promote as answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[2]/a</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Promote as answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -713,12 +733,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[2]/a</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Promote as answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[2]/a</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Promote as answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -783,17 +803,17 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_16&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseOver</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_16&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>contextMenu</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_16&quot;]</td>
 	<td></td>
 </tr>
 <tr>
