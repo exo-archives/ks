@@ -327,9 +327,7 @@ public class UIPageListPostByUser extends UIContainer {
 			String topicId = path[length - 2];
 			String forumId = path[length - 3];
 			String categoryId = path[length - 4];
-			try {
-				uiForm.forumService.removePost(categoryId, forumId, topicId, postId);
-			}catch (Exception e) {}
+			uiForm.forumService.removePost(categoryId, forumId, topicId, postId);
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}

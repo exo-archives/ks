@@ -122,9 +122,7 @@ public class UIListInBoxPrivateMessage extends UIContainer{
 			UIListInBoxPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			if(!ForumUtils.isEmpty(objctId)) {
-				try {
-					uicontainer.forumService.removePrivateMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
-				} catch (Exception e) {}
+				uicontainer.forumService.removePrivateMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
 				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.getUserProfile() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

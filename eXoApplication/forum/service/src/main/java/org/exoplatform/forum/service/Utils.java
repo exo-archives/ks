@@ -140,8 +140,7 @@ public class Utils {
 	 */
 	public static boolean arraysHaveDifferentContent(String[] a, String[]b) {
 		if(a.length == b.length) {
-			List<String> list = new ArrayList<String>();
-			list = Arrays.asList(b);
+			List<String> list = Arrays.asList(b);
 			for (int i = 0; i < a.length; i++) {
 				if(!list.contains(a[i])) {
 					return true;
@@ -182,11 +181,9 @@ public class Utils {
 	 */
 	public static String[] mapToArray(Map<String, String> map) {
 		if (map.isEmpty()) return new String[]{" "};
-		String[] strs = new String[map.size()];
 		String str = map.toString().replace(" ", "").replace("{", "").replace("}", "");
 		str = str.replace(",", ";").replace("=", ",");
-		strs = str.split(";");
-		return strs;
+		return str.split(";");
 	}
 	
 	/**

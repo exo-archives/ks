@@ -125,10 +125,8 @@ public class UIListTopicOld extends UIContainer {
 			topic.setIsActive(!isActive) ;
 			List<Topic> topics = new ArrayList<Topic>();
 			topics.add(topic);
-			try {
-				administration.forumService.modifyTopic(topics, Utils.ACTIVE) ;
-				administration.isUpdate = true ;
-			} catch (Exception e) {}
+			administration.forumService.modifyTopic(topics, Utils.ACTIVE) ;
+			administration.isUpdate = true ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(administration);
 		}
 	}
@@ -139,9 +137,7 @@ public class UIListTopicOld extends UIContainer {
 			String ids = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = ids.split("/") ;
 			int l = id.length ;
-			try {
-				listTopicOld.forumService.removeTopic(id[l-3], id[l-2],id[l-1]) ;
-			} catch (Exception e) {}
+			listTopicOld.forumService.removeTopic(id[l-3], id[l-2],id[l-1]) ;
 			listTopicOld.isUpdate = true ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(listTopicOld.getAncestorOfType(UIForumPortlet.class));
 		}

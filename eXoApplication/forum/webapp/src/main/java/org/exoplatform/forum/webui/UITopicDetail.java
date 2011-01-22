@@ -1478,12 +1478,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 		String stringKey = forumAdministration.getCensoredKeyword();
 		if(stringKey != null && stringKey.length() > 0) {
 			stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",") ;
-			if(stringKey.contains(",")){ 
-				stringKey.replaceAll(";", ",") ;
-				return stringKey.trim().split(",") ;
-			} else { 
-				return stringKey.trim().split(";") ;
-			}
+			return ForumUtils.splitForForum(stringKey);
 		}
 		return new String[0];
 	}
@@ -1527,7 +1522,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 								buffer.append("&gt;") ;
 							} else if(c == '\''){
 								buffer.append("&apos;") ;
-							} else if(c == '&' || (int)c == 38){
+							} else if(c == '&'){
 								buffer.append("&#x26;");
 							} else{
 								buffer.append(c) ;
@@ -1610,7 +1605,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 						buffer.append("&lt;") ;
 					} else if((int)c == 62){
 						buffer.append("&gt;") ;
-					} else if(c == '&' || (int)c == 38){
+					} else if(c == '&'){
 						buffer.append("&#x26;");
 					} else {
 						buffer.append(c) ;

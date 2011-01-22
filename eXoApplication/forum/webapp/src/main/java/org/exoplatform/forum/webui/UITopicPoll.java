@@ -424,10 +424,7 @@ public class UITopicPoll extends BaseForumForm	{
 	static public class RemovePollActionListener extends EventListener<UITopicPoll> {
 		public void execute(Event<UITopicPoll> event) throws Exception {
 			UITopicPoll topicPoll = event.getSource() ;
-			try {
-				topicPoll.pollService.removePoll(topicPoll.poll_.getParentPath()+"/"+topicPoll.poll_.getId()) ;
-			} catch (Exception e) {
-			}
+			topicPoll.pollService.removePoll(topicPoll.poll_.getParentPath()+"/"+topicPoll.poll_.getId()) ;
 			if(topicPoll.poll_.getIsMultiCheck()) {
 				List<UIComponent> children = topicPoll.getChildren() ;
 				for (int i = 0; i < children.size(); i++) {

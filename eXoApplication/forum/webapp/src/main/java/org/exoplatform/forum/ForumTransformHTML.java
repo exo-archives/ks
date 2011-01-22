@@ -142,20 +142,20 @@ public class ForumTransformHTML {
 		String start;
 		String end;
 		String text_ = "";
-		StringBuilder builder = new StringBuilder();
+		StringBuilder builder;
 		String[] tagBBcode = new String[] { "quote", "code", "QUOTE", "CODE" };
 		for (int i = 0; i < tagBBcode.length; i++) {
 			start = "[" + tagBBcode[i];
 			end = "[/" + tagBBcode[i] + "]";
 			while ((tagIndex = b.indexOf(start, lastIndex)) != -1) {
 				lastIndex = tagIndex + 1;
+				builder = new StringBuilder();
 				try {
 					int clsIndex = b.indexOf(end, tagIndex);
 					String text = b.substring(tagIndex, clsIndex);
 					if (text == null || text.trim().length() == 0)
 						continue;
 					text_ = text;
-					builder = new StringBuilder();
 					if (text.indexOf('<' + "p") > text.indexOf('<' + "/p")) {
 						text = StringUtils.replaceOnce(text, "</p>", "");
 						int t = text.lastIndexOf('<' + "p>");

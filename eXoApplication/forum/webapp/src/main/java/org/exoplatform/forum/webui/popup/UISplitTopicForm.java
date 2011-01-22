@@ -82,7 +82,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 	}
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getListPost() throws Exception {
-		List<Post> posts = new ArrayList<Post>() ;
 		String path = this.topic.getPath();
 		path = path.substring(path.indexOf(Utils.CATEGORY));
 		if(isSetPage){
@@ -90,7 +89,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 		}
 		pageList.setPageSize(6);
 		maxPage = pageList.getAvailablePage() ;
-		posts = pageList.getPage(pageSelect);
+		List<Post> posts = pageList.getPage(pageSelect);
 		pageSelect = pageList.getCurrentPage();
 		if(maxPage <= 1) isRender = false ;
 		String checkBoxId;

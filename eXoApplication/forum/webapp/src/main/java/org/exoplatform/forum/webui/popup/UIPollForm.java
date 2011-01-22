@@ -117,7 +117,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 			format = this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getShortDateFormat();
 		} catch (NullPointerException e) {
 			format = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), null).getShortDateFormat();
-		} catch (Exception e) {}
+		}
 		return ForumUtils.getFormatDate(format, date);
 	}
 	

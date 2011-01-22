@@ -46,7 +46,7 @@ public class Topic {
 	private long numberAttachments = 0 ;
 	
 	private boolean isModeratePost = false ;
-	private String isNotifyWhenAddPost = new String() ;	
+	private String isNotifyWhenAddPost = "";	
 	private boolean isClosed = false ;
 	private boolean isLock = false ;
 	private boolean isApproved = true ;

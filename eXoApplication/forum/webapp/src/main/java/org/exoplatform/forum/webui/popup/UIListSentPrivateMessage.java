@@ -103,15 +103,13 @@ public class UIListSentPrivateMessage extends UIContainer {
 			UIListSentPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
 			if(!ForumUtils.isEmpty(objctId)) {
-				try {
-					uicontainer.forumService.saveReadMessage(objctId, uicontainer.userName, Utils.SEND_MESSAGE);
-					ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
-					UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class) ;
-					UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-					UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 670) ;
-					privateMessageForm.setPrivateMessage(privateMessage);
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
-				} catch (Exception e) {}
+				uicontainer.forumService.saveReadMessage(objctId, uicontainer.userName, Utils.SEND_MESSAGE);
+				ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
+				UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class) ;
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+				UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 670) ;
+				privateMessageForm.setPrivateMessage(privateMessage);
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 			}
 		}
 	}
@@ -121,9 +119,7 @@ public class UIListSentPrivateMessage extends UIContainer {
 			UIListSentPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			if(!ForumUtils.isEmpty(objctId)) {
-				try {
-					uicontainer.forumService.removePrivateMessage(objctId, uicontainer.userName, Utils.SEND_MESSAGE);
-				} catch (Exception e) {}
+				uicontainer.forumService.removePrivateMessage(objctId, uicontainer.userName, Utils.SEND_MESSAGE);
 				event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer.getParent());
 			}
 		}

@@ -345,7 +345,7 @@ public class UIForumActionBar extends UIContainer	{
 			UIForumActionBar uiActionBar = event.getSource() ;
 			UIPopupAction popupAction = ((UIForumPortlet)uiActionBar.getParent()).getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIAutoPruneForm pruneForm = popupContainer.addChild(UIAutoPruneForm.class, null, null) ;
+			popupContainer.addChild(UIAutoPruneForm.class, null, null) ;
 			popupContainer.setId("AutoPruneForm");
 			popupAction.activate(popupContainer, 600, 400) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -357,7 +357,7 @@ public class UIForumActionBar extends UIContainer	{
 			UIForumActionBar uiActionBar = event.getSource() ;
 			UIPopupAction popupAction = ((UIForumPortlet)uiActionBar.getParent()).getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UITopicTypeManagerForm topicTypeManager = popupContainer.addChild(UITopicTypeManagerForm.class, null, null) ;
+			popupContainer.addChild(UITopicTypeManagerForm.class, null, null) ;
 			popupContainer.setId("TopicTypeManagerForm");
 			popupAction.activate(popupContainer, 600, 400) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -369,7 +369,7 @@ public class UIForumActionBar extends UIContainer	{
 			UIForumActionBar uiActionBar = event.getSource() ;
 			UIPopupAction popupAction = ((UIForumPortlet)uiActionBar.getParent()).getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIBanIPForumManagerForm openIPBanForm = popupContainer.addChild(UIBanIPForumManagerForm.class, null, null) ;
+			popupContainer.addChild(UIBanIPForumManagerForm.class, null, null) ;
 			popupContainer.setId("BanIPForumManagerForm");
 			popupAction.activate(popupContainer, 450, 500) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

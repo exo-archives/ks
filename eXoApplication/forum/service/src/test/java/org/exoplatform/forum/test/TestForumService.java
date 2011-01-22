@@ -42,9 +42,9 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * July 3, 2007  
  */
 public class TestForumService extends ForumServiceTestCase{
-	private final String USER_ROOT = "root";
-	private final String USER_DEMO = "demo";
-	private final String USER_JOHN = "john";
+	private static final String USER_ROOT = "root";
+	private static final String USER_DEMO = "demo";
+	private static final String USER_JOHN = "john";
 	
 	public TestForumService() throws Exception {
 	  super();
@@ -375,7 +375,7 @@ public class TestForumService extends ForumServiceTestCase{
     assertEquals(page3.size(), 6);
     // getPost by Ip
     JCRPageList pageIpPosts = forumService_.getListPostsByIP("192.168.1.11", null);
-  	//assertEquals(pageIpPosts.getAvailable(), 150);// size = 25 (not content first post)
+  	assertEquals(pageIpPosts.getAvailable(), 25);// size = 25 (not content first post)
 		// update Post First
 		Post newPost = (Post)pagePosts.getPage(1).get(1);
 		newPost.setMessage("New message");
@@ -588,11 +588,11 @@ public class TestForumService extends ForumServiceTestCase{
   	//watch by user
   	List<Watch> watchs = forumService_.getWatchByUser("root");
   	//TODO KS-2374
-  	//assertEquals(watchs.get(0).getEmail(), values.get(0));
+  	assertEquals(watchs.get(0).getEmail(), values.get(0));
   	forumService_.removeWatch(1, topicPath, "/" + values.get(0));
   	watchs = forumService_.getWatchByUser("root");
   	//TODO KS-2439
-  	//assertEquals(watchs.size(), 0);
+  	assertEquals(watchs.size(), 0); 
   }
   
   public void testIpBan()throws Exception {

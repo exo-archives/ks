@@ -163,10 +163,8 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
 			int i = 0 ;
 			UIFormUploadInput input ;
 			while(i++ < uiForm.maxField) {
-				try {
-					input = (UIFormUploadInput)uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
-					uploadService.removeUpload(input.getUploadId()) ;
-				}catch(Exception e) {}				
+				input = (UIFormUploadInput)uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
+				uploadService.removeUpload(input.getUploadId()) ;
 			}
 			uiForm.cancelChildPopupAction();
 		}

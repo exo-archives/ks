@@ -72,7 +72,7 @@ public class UIPageListTopicByUser extends UIContainer{
 	private UserProfile userProfile ;
 	private JCRPageList pageList;
 	private String strOrderBy = "";
-	private String userName = new String() ;
+	private String userName = "";
 	private boolean isUseAjax = true;
 	private List<Topic> topics = new ArrayList<Topic>(); 
 	

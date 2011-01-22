@@ -87,7 +87,6 @@ public class UIForumListSearch extends UIContainer {
 			list.addAll(pageList.getPageSearch(pageSelect, this.listEvent)) ;
 		} catch (Exception e) {
 		}
-		pageSelect = pageList.getCurrentPage();
 		return list ;
 	}
 	

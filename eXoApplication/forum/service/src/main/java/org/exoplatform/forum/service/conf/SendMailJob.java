@@ -49,8 +49,8 @@ public class SendMailJob implements Job {
 					SendMessageInfo messageInfo = iter.next();
 					List<String> emailAddresses = messageInfo.getEmailAddresses();
 					Message message = messageInfo.getMessage();
-					message.setFrom(Utils.makeNotificationSender(message.getFrom()));
 					if (message != null && emailAddresses != null && emailAddresses.size() > 0) {
+						message.setFrom(Utils.makeNotificationSender(message.getFrom()));
 						List<String> sentMessages = new ArrayList<String>();
 						for (String address : emailAddresses) {
 							if (!sentMessages.contains(address)) {

@@ -304,12 +304,13 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 		String stringKey = forumAdministration.getCensoredKeyword();
 		if(stringKey != null && stringKey.length() > 0) {
 			stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",") ;
-			if(stringKey.contains(",")){ 
-				stringKey.replaceAll(";", ",") ;
-				return stringKey.trim().split(",") ;
-			} else { 
-				return stringKey.trim().split(";") ;
-			}
+			return ForumUtils.splitForForum(stringKey);
+//			if(stringKey.contains(",")){ 
+//				stringKey.replaceAll(";", ",") ;
+//				return stringKey.trim().split(",") ;
+//			} else { 
+//				return stringKey.trim().split(";") ;
+//			}
 		}
 		return new String[]{};
 	}
@@ -404,7 +405,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 										isNew = true;
 									} catch (PathNotFoundException e) {
 										isParentDelete = true;
-									} catch (Exception ex) {}
+									}
 									topicDetail.setIdPostView("lastpost");
 								} else{
 									//post.setId(uiForm.postId) ;
@@ -415,7 +416,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 										uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, ForumUtils.getDefaultMail()) ;
 									} catch (PathNotFoundException e) {
 										isParentDelete = true;
-									} catch (Exception ex) {}
+									}
 									topicDetail.setIdPostView(uiForm.postId);
 								}
 							} else {

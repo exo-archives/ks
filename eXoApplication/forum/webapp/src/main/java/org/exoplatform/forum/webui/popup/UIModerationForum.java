@@ -126,7 +126,6 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 			list.addAll(pageList.getPageSearch(pageSelect, list_)) ;
 		} catch (Exception e) {
 		}
-		pageSelect = pageList.getCurrentPage();
 		return list ;
 	}
 	

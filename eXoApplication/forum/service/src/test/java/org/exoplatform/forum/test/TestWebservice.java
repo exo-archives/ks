@@ -55,9 +55,7 @@ public class TestWebservice extends AbstractResourceTest {
 		ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
 		ContainerResponse response = service("GET", "http", baseURI, h, null, writer);
 		response = service("GET", "http", baseURI, h, null, writer);
-		//assertNotNull(response);
-		//assertEquals(HTTPStatus.OK, response.getStatus());
-		response = service("GET", "http", baseURI, h, null, writer);
+		assertNotNull(response);
 	}
 	
 	public void testGetLastpost() throws Exception {

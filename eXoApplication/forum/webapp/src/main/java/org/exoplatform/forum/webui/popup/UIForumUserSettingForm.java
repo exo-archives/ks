@@ -109,6 +109,9 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 	public static final String FIELD_ISDISPLAYAVATAR_CHECKBOX = "IsDisplayAvatar" ;
 	public static final String RSS_LINK = "RSSLink";
 	public static final String EMAIL_ADD = "EmailAddress";
+	public static final String RSS = "RSS";
+	public static final String EMAIL = "EMAIL";
+	public static final String ID = "id";
 	
 	public final String WATCHES_ITERATOR = "WatchChesPageIterator";
 	
@@ -188,17 +191,17 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 		timeFormat.setValue(userProfile.getTimeFormat().replace(' ', '='));
 		list = new ArrayList<SelectItemOption<String>>() ;
 		for(int i=5; i <= 45; i = i + 5) {
-			list.add(new SelectItemOption<String>(String.valueOf(i),("id" + i))) ;
+			list.add(new SelectItemOption<String>(String.valueOf(i),(ID + i))) ;
 		}
 		UIFormSelectBox maximumThreads = new UIFormSelectBox(FIELD_MAXTOPICS_SELECTBOX, FIELD_MAXTOPICS_SELECTBOX, list) ;
-		maximumThreads.setValue("id" + userProfile.getMaxTopicInPage());
+		maximumThreads.setValue(ID + userProfile.getMaxTopicInPage());
 		list = new ArrayList<SelectItemOption<String>>() ;
 		for(int i=5; i <= 35; i = i + 5) {
-			list.add(new SelectItemOption<String>(String.valueOf(i), ("id" + i))) ;
+			list.add(new SelectItemOption<String>(String.valueOf(i), (ID + i))) ;
 		}
 	
 		UIFormSelectBox maximumPosts = new UIFormSelectBox(FIELD_MAXPOSTS_SELECTBOX, FIELD_MAXPOSTS_SELECTBOX, list) ;
-		maximumPosts.setValue("id" + userProfile.getMaxPostInPage());
+		maximumPosts.setValue(ID + userProfile.getMaxPostInPage());
 		boolean isJump = userProfile.getIsShowForumJump() ;
 		UIFormCheckBoxInput isShowForumJump = new UIFormCheckBoxInput<Boolean>(FIELD_FORUMJUMP_CHECKBOX, FIELD_FORUMJUMP_CHECKBOX, isJump);
 		isShowForumJump.setChecked(isJump) ;
@@ -267,7 +270,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 			if(listObjectId.trim().length() > 0) listObjectId += "/";
 			watchId = watch.getId();
 			listObjectId += watchId;
-			formCheckBoxRSS = new UIFormCheckBoxInput<Boolean>("RSS" + watch.getId(), "RSS" + watch.getId(), false);
+			formCheckBoxRSS = new UIFormCheckBoxInput<Boolean>(RSS + watch.getId(), RSS + watch.getId(), false);
 			isAddWatchRSS = watch.isAddWatchByRS();
 			formCheckBoxRSS.setEnable(isAddWatchRSS);
 			if(isAddWatchRSS){
@@ -278,7 +281,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 			}
 			inputUserWatchManger.addChild(formCheckBoxRSS);
 			
-			formCheckBoxEMAIL = new UIFormCheckBoxInput<Boolean>("EMAIL" + watch.getId(), "EMAIL" + watch.getId(), watch.isAddWatchByEmail());
+			formCheckBoxEMAIL = new UIFormCheckBoxInput<Boolean>(EMAIL + watch.getId(), EMAIL + watch.getId(), watch.isAddWatchByEmail());
 			formCheckBoxEMAIL.setChecked(watch.isAddWatchByEmail());
 			formCheckBoxEMAIL.setEnable(watch.isAddWatchByEmail());
 			inputUserWatchManger.addChild(formCheckBoxEMAIL);
@@ -327,7 +330,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 		UIFormCheckBoxInput formCheckBoxRSS = null;
 		UIFormInputWithActions inputUserWatchManger = this.getChildById(FIELD_USERWATCHMANGER_FORM);
 		for(Watch watch : listWatches){
-			formCheckBoxRSS = inputUserWatchManger.getChildById("RSS" + watch.getId());
+			formCheckBoxRSS = inputUserWatchManger.getChildById(RSS + watch.getId());
 			watchId = watch.getId();
 			if(formCheckBoxRSS.isChecked()){
 				if(watchId.indexOf(Utils.CATEGORY)==0) {
@@ -485,12 +488,10 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-//			UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UIAttachFileForm attachFileForm = uiForm.openPopup(popupContainer, UIAttachFileForm.class, 500, 0) ;
 			attachFileForm.updateIsTopicForm(false) ;
 			attachFileForm.setIsChangeAvatar(true);
 			attachFileForm.setMaxField(1);
-//			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}
 	
@@ -528,25 +529,24 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 	static public class ResetRSSActionListener extends EventListener<UIForumUserSettingForm> {
 		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIFormInputWithActions inputUserWatchManger = uiForm.getChildById(FIELD_USERWATCHMANGER_FORM);
 			UIFormCheckBoxInput<Boolean> formCheckBoxRSS = null;
-			String listObjectId = "";
+			StringBuilder listObjectId = new StringBuilder();
 			for(int i = 0; i < uiForm.listWatches.size(); i ++){
-				formCheckBoxRSS = inputUserWatchManger.getChildById("RSS" + uiForm.listWatches.get(i).getId());
+				formCheckBoxRSS = inputUserWatchManger.getChildById(RSS + uiForm.listWatches.get(i).getId());
 				if(formCheckBoxRSS.isChecked()) {
-					if(listObjectId.trim().length() > 0) listObjectId += "/";
-					listObjectId += uiForm.listWatches.get(i).getId();
+					if(listObjectId.length() > 0) listObjectId.append("/");
+					listObjectId.append(uiForm.listWatches.get(i).getId());
 				}
 			}
-			if(listObjectId.trim().length() > 0){
+			if(listObjectId.length() > 0){
 				String rssLink = "";
 				PortalRequestContext portalContext = Util.getPortalRequestContext();
 				String url = portalContext.getRequest().getRequestURL().toString();
 				url = url.replaceFirst("http://", "") ;
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
-				rssLink = url + org.exoplatform.ks.common.Utils.getRSSLink("forum", uiForm.getPortalName(), listObjectId);
+				rssLink = url + org.exoplatform.ks.common.Utils.getRSSLink("forum", uiForm.getPortalName(), listObjectId.toString());
 				((UIFormStringInput)inputUserWatchManger.getChildById(RSS_LINK)).setValue(rssLink);
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
@@ -565,7 +565,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 			UIFormCheckBoxInput<Boolean> formCheckBoxEMAIL = null;
 			List<String> listObjectId = new ArrayList<String>();
 			for(Watch watch : uiForm.listWatches){
-				formCheckBoxEMAIL = inputUserWatchManger.getChildById("EMAIL" + watch.getId());
+				formCheckBoxEMAIL = inputUserWatchManger.getChildById(EMAIL + watch.getId());
 				if(formCheckBoxEMAIL.isChecked()) {
 					listObjectId.add(watch.getId());
 					watch.setEmail(newEmailAdd);

@@ -215,12 +215,9 @@ public class UICategories extends UIContainer	{
 	
 	private List<Forum> getForumList(String categoryId) throws Exception {
 		if(isCollapCategories(categoryId)) return new ArrayList<Forum>();
-		List<Forum> forumList = new ArrayList<Forum>() ;
 		String strQuery = "";
 		if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
-
-		forumList = forumService.getForumSummaries(categoryId, strQuery);
-			
+		List<Forum> forumList = forumService.getForumSummaries(categoryId, strQuery);
 		if(mapListForum.containsKey(categoryId)) {
 			mapListForum.remove(categoryId) ;
 		}
@@ -498,15 +495,6 @@ public class UICategories extends UIContainer	{
 			if(!currentUser.equals(UserProfile.USER_GUEST)){
 				categories.forumService.addWatch(-1, cateId, null, currentUser);
 			}
-			/*String rssLink = categories.getRSSLink(cateId);
-			UIForumPortlet portlet = categories.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			popupContainer.setId("ForumRSSForm") ;
-			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
-			popupAction.activate(popupContainer, 560, 170) ;
-			exportForm.setRSSLink(rssLink);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;*/
 		}
 	}
 	

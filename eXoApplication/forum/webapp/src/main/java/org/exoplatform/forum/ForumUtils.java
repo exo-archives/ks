@@ -97,7 +97,6 @@ public class ForumUtils {
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
 		String url = portalContext.getRequest().getRequestURL().toString();
 		String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-		//String portalName = "/" + Util.getUIPortal().getName() ;
 		String portalName = portalContext.getPortalOwner();
 		return buildForumLink(url, selectedNode, portalName, type, id);
 	}
@@ -198,10 +197,10 @@ public class ForumUtils {
 		if(!isEmpty(str)) {
 			str = StringUtils.remove(str, " ");
 			if(str.contains(",")){ 
-				str.replaceAll(";", ",") ;
+				str = str.replaceAll(";", ",") ;
 				return str.trim().split(",") ;
 			} else { 
-				str.replaceAll(",", ";") ;
+				str = str.replaceAll(",", ";") ;
 				return str.trim().split(";") ;
 			}
 		} else return new String[] {""} ;
@@ -253,14 +252,15 @@ public class ForumUtils {
 		List<String> list = new ArrayList<String>();
 		if(!isEmpty(s)) {
 			String temp[] = splitForForum(s) ;
-			s = ""; int l = temp.length;
+			StringBuilder builder = new StringBuilder(); 
+			int l = temp.length;
 			for (int i = 0; i < l; ++i) {
 				if(list.contains(temp[i]) || temp[i].trim().length() == 0) continue ;
 				list.add(temp[i]) ;
-				if(i == (l-1))s += temp[i];
-				else s += temp[i] + ",";
+				if(i == (l-1))builder.append(temp[i]);
+				else builder.append(temp[i]).append(",");
 			}
-			return s;
+			return builder.toString();
 		} else return "";
 	}
 	

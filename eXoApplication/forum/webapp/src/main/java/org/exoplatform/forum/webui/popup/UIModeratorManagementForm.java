@@ -233,17 +233,17 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 	public void deActivate() throws Exception {}
 	
 	private String stringProcess(List<String> values) {
-		String outPut = "" ;
+		StringBuilder outPut = new StringBuilder() ;
 		if(!values.isEmpty()) {
 			for(String value : values) {
 				if(!ForumUtils.isEmpty(value)) {
 					if(value.indexOf('(') > 0){
-						outPut += value.substring(0, value.lastIndexOf('(')) + "\n" ;
+						outPut.append(value.substring(0, value.lastIndexOf('(')) + "\n") ;
 					}
 				}
 			}
 		}
-		return outPut ;
+		return outPut.toString() ;
 	}
 	
 	private List<String> setListCategoryIds(){
@@ -837,10 +837,8 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 	static	public class AddValuesAreaActionListener extends BaseEventListener<UIModeratorManagementForm> {
 		public void onEvent(Event<UIModeratorManagementForm> event, UIModeratorManagementForm uiForm, String userId) throws Exception {
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-//			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UISelectItemForum selectItemForum = openPopup(popupContainer, UISelectItemForum.class, 400, 0) ;
 			selectItemForum.setForumLinks(uiForm.setListForumIds()) ;
-//			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}
 	

@@ -26,7 +26,6 @@ import javax.jcr.Node;
 
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.services.cache.CacheService;

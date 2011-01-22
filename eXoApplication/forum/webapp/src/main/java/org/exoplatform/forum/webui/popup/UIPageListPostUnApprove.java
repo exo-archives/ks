@@ -126,32 +126,33 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 
 	static	public class UnApproveActionListener extends BaseEventListener<UIPageListPostUnApprove> {
 		public void onEvent(Event<UIPageListPostUnApprove> event, UIPageListPostUnApprove uiForm, final String objectId) throws Exception {
-			UIPageListPostUnApprove postUnApprove = event.getSource() ;
-			Post post = new Post() ;
-			boolean haveCheck = false ;
+			UIPageListPostUnApprove postUnApprove = event.getSource();
+			Post post;
+			boolean haveCheck = false;
 			List<Post> posts = new ArrayList<Post>();
 			for (String postId : postUnApprove.getIdSelected()) {
-				haveCheck = true ;
-				post = postUnApprove.getPost(postId) ;
-				if(post != null) {
-					post.setIsApproved(true) ;
-					posts.add(post) ;
+				haveCheck = true;
+				post = postUnApprove.getPost(postId);
+				if (post != null) {
+					post.setIsApproved(true);
+					posts.add(post);
 				}
 			}
-			if(!haveCheck) {
-				warning("UIPageListPostUnApprove.sms.notCheck") ;
+			if (!haveCheck) {
+				warning("UIPageListPostUnApprove.sms.notCheck");
 			} else {
 				try {
-					postUnApprove.forumService.modifyPost(posts, Utils.APPROVE) ;
-				}catch (Exception e) {}
+					postUnApprove.forumService.modifyPost(posts, Utils.APPROVE);
+				} catch (Exception e) {
+				}
 			}
-			if(posts.size() == postUnApprove.listAllPost.size()) {
-				UIForumPortlet forumPortlet = postUnApprove.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.cancelAction() ;
-				UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+			if (posts.size() == postUnApprove.listAllPost.size()) {
+				UIForumPortlet forumPortlet = postUnApprove.getAncestorOfType(UIForumPortlet.class);
+				forumPortlet.cancelAction();
+				UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
 			} else {
-				event.getRequestContext().addUIComponentToUpdateByAjax(postUnApprove.getParent()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(postUnApprove.getParent());
 			}
 		}
 	}

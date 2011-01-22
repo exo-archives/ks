@@ -726,16 +726,13 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
 			Forum forum = uiTopicContainer.getForum() ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			try {
-				uiTopicContainer.getForumService().removeForum(uiTopicContainer.categoryId, forum.getId()) ;
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
-				categoryContainer.updateIsRender(false) ;
-				categoryContainer.getChild(UICategory.class).updateByBreadcumbs(uiTopicContainer.categoryId) ;
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(uiTopicContainer.categoryId) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-			} catch(Exception e) {
-			}
+			uiTopicContainer.getForumService().removeForum(uiTopicContainer.categoryId, forum.getId()) ;
+			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+			forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
+			categoryContainer.updateIsRender(false) ;
+			categoryContainer.getChild(UICategory.class).updateByBreadcumbs(uiTopicContainer.categoryId) ;
+			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(uiTopicContainer.categoryId) ;
+			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}	

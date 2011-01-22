@@ -316,18 +316,15 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	static public class AddBookMarkActionListener extends	BaseEventListener<UITopicsTag> {
 		public void onEvent(Event<UITopicsTag> event, UITopicsTag topicTag, final String topicId) throws Exception {	;
 			if(!ForumUtils.isEmpty(topicId)) {
-				try{
-					Topic topic = topicTag.getTopic(topicId);
-					String path = topic.getPath();
-					path = path.substring(path.indexOf(Utils.CATEGORY));
-					StringBuffer buffer = new StringBuffer();
-					buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(path) ;
-					String userName = topicTag.userProfile.getUserId() ;
-					topicTag.getForumService().saveUserBookmark(userName, buffer.toString(), true) ;
-					UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
-					forumPortlet.updateUserProfileInfo() ;
-				} catch (Exception e) {
-				}
+				Topic topic = topicTag.getTopic(topicId);
+				String path = topic.getPath();
+				path = path.substring(path.indexOf(Utils.CATEGORY));
+				StringBuffer buffer = new StringBuffer();
+				buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(path) ;
+				String userName = topicTag.userProfile.getUserId() ;
+				topicTag.getForumService().saveUserBookmark(userName, buffer.toString(), true) ;
+				UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.updateUserProfileInfo() ;
 			}
 		}
 	}

@@ -129,13 +129,13 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
 	 * @return null if the address is not valid
 	 */
 	public String checkIpAddress(String[] ipAdd){
-		String ip = "";
+		StringBuilder ip = new StringBuilder();
 		if(ipAdd.length < 4) return null;
 		try{
 			int[] ips = new int[4];
 			for(int t = 0; t < ipAdd.length; t ++){
-				if(t>0) ip += ".";
-				ip += ipAdd[t];
+				if(t>0) ip.append(".");
+				ip.append(ipAdd[t]);
 				ips[t] = Integer.parseInt(ipAdd[t]);
 			}
 			for(int i = 0; i < 4; i ++){
@@ -143,7 +143,7 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
 			}
 			if(ips[0] == 255 && ips[1] == 255 && ips[2] == 255 && ips[3] == 255) return null;
 			if(ips[0] == 0 && ips[1] == 0 && ips[2] == 0 && ips[3] == 0) return null;
-			return ip;
+			return ip.toString();
 		} catch (Exception e){
 			log.error("failed to check IP address, Ip is not format number.");
 			return null;

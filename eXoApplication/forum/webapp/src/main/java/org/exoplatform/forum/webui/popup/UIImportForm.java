@@ -60,7 +60,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 
 	private void extractFromZipFile(ZipInputStream zipStream, String nodePath, ForumService service) throws Exception {
 		try {
-			ByteArrayOutputStream out= new ByteArrayOutputStream();
+			ByteArrayOutputStream out ;
 			byte[] data = new byte[5120];	 
 			ZipEntry entry = zipStream.getNextEntry();
 			ByteArrayInputStream inputStream = null;
@@ -172,11 +172,9 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 		public void execute(Event<UIImportForm> event) throws Exception {
 			UIImportForm importForm = event.getSource() ;
 //		remove temp file in upload service and server
-			try{
-				UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
-				UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
-				uploadService.removeUpload(uploadInput.getUploadId()) ;
-			}catch(Exception e) {}
+			UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
+			UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
+			uploadService.removeUpload(uploadInput.getUploadId()) ;
 			
 			UIForumPortlet portlet = importForm.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;

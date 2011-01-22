@@ -48,9 +48,9 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 	private final static String LIST_CATEGORIES = "listCategories";
 	private final static String CREATE_ZIP = "createZip";
 	private final static String FILE_NAME = "FileName";
-	private static String EXPORT_MODE = "ExportMode";
-	private static String EXPORT_ALL = "ExportAll";
-	private static String EXPORT_CATEGORIES = "ExportCategories";
+	private final static String EXPORT_MODE = "ExportMode";
+	private final static String EXPORT_ALL = "ExportAll";
+	private final static String EXPORT_CATEGORIES = "ExportCategories";
 	List<Object> listObjects = new ArrayList<Object>();
 	private Object object_ = "";
 	
@@ -97,11 +97,8 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 			
 			if(object == null ){
 				List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
-				EXPORT_ALL = getLabel("ExportAll");
-				EXPORT_CATEGORIES = getLabel("ExportCategories");
-				EXPORT_MODE = getLabel("ExportMode");
-				list.add(new SelectItemOption<String>(EXPORT_ALL));
-				list.add(new SelectItemOption<String>(EXPORT_CATEGORIES));
+				list.add(new SelectItemOption<String>(getLabel(EXPORT_ALL), EXPORT_ALL));
+				list.add(new SelectItemOption<String>(getLabel(EXPORT_CATEGORIES), EXPORT_CATEGORIES));
 				UIFormRadioBoxInput exportMode = new UIFormRadioBoxInput(EXPORT_MODE, EXPORT_MODE, list);
 				exportMode.setValue(EXPORT_CATEGORIES);
 				addChild(exportMode);

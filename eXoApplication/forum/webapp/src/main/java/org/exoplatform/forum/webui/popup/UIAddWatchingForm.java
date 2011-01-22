@@ -125,14 +125,15 @@ public class UIAddWatchingForm	extends BaseUIForm	implements UIPopupComponent {
 			boolean isEmail = true;
 			List<String> values_ = new ArrayList<String>();
 			if(values.size() > 0) {
-				String value = values.get(0);
-				values_.add(value) ;
+				StringBuilder builder = new StringBuilder();
+				builder.append(values.get(0));
+				values_.add(builder.toString()) ;
 				for (String string : values) {
 					if(values_.contains(string)) continue ;
 					values_.add(string) ;
-					value = value + "," +string;
+					builder.append(",").append(string);
 				}
-				isEmail = ForumUtils.isValidEmailAddresses(value) ;
+				isEmail = ForumUtils.isValidEmailAddresses(builder.toString()) ;
 				if(isEmail) {
 				} else {
 					warning("UIAddMultiValueForm.msg.invalid-field") ;

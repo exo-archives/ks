@@ -310,7 +310,7 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     assertPropertyEquals(admin.getNotifyEmailMoved(), adminNode, "exo:notifyEmailMoved");
   }
   
-  class TextForumAttachment extends ForumAttachment {
+  static class TextForumAttachment extends ForumAttachment {
     private String text;
 
     public TextForumAttachment(String content) {

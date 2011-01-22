@@ -132,10 +132,10 @@ import org.exoplatform.forum.service.Utils;
 																	</a>
 																</td>
 																<td  class="text" style="text-align:left" width="32px">
-																	<div style="width:17px; margin:auto;"><%uicomponent.renderUIComponent(tabconten.getChildById("RSS" + watch.getId()))%></div>
+																	<div style="width:17px; margin:auto;"><%uicomponent.renderUIComponent(tabconten.getChildById(uicomponent.RSS + watch.getId()))%></div>
 																</td>
 																<td width="32" class="text" style="text-align:left">
-																	<%uicomponent.renderUIComponent(tabconten.getChildById("EMAIL" + watch.getId()))%>
+																	<%uicomponent.renderUIComponent(tabconten.getChildById(uicomponent.EMAIL + watch.getId()))%>
 																	<%=watch.getEmail()%>
 																</td>
 																<td class="text" style="text-align:left">

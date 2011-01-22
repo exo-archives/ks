@@ -471,12 +471,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 		String stringKey = forumAdministration.getCensoredKeyword();
 		if(stringKey != null && stringKey.length() > 0) {
 			stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",") ;
-			if(stringKey.contains(",")){ 
-				stringKey.replaceAll(";", ",") ;
-				return stringKey.trim().split(",") ;
-			} else { 
-				return stringKey.trim().split(";") ;
-			}
+			return ForumUtils.splitForForum(stringKey);
 		}
 		return new String[]{};
 	}

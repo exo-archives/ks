@@ -125,7 +125,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 
 	static public class UnHiddenActionListener extends BaseEventListener<UIPageListPostHidden> {
 		public void onEvent(Event<UIPageListPostHidden> event, UIPageListPostHidden postHidden, final String objectId) throws Exception {
-			Post post = new Post();
+			Post post;
 			List<Post> posts = new ArrayList<Post>();
 			boolean haveCheck = false;
 			for (String postId : postHidden.getIdSelected()) {

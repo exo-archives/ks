@@ -33,6 +33,5 @@ public class UIForumSummary extends UIContainer	{
 	public UIForumSummary() throws Exception {
 		addChild(UIForumInfos.class, null, null).setRendered(true);
 		addChild(UIForumIconState.class, null, null).updateInfor(false) ;
-//		getChild(UIForumIconState.class);
 	}	
 }
