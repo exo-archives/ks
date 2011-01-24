@@ -104,6 +104,10 @@ public abstract class WikiImpl implements Wiki {
   @Property(name = WikiNodeType.Definition.WIKI_PERMISSIONS)
   public abstract List<String> getWikiPermissions();
   public abstract void setWikiPermissions(List<String> permissions);
+  
+  @Property(name = WikiNodeType.Definition.DEFAULT_PERMISSIONS_INITED)
+  public abstract boolean getDefaultPermissionsInited();
+  public abstract void setDefaultPermissionsInited(boolean isInited);
 
   public PageImpl getPageByID(String id) {
     throw new UnsupportedOperationException();

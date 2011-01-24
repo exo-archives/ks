@@ -34,13 +34,13 @@ public class URLResolver extends Resolver{
         }        
       }else if(array[0].equals(PortalConfig.GROUP_TYPE)) {
         params.setType(PortalConfig.GROUP_TYPE)  ;
-        String groupId = uri.substring(uri.indexOf("/") + 1) ;
+        String groupId = uri.substring(uri.indexOf("/")) ;
         
-        if(orgSerivce.getGroupHandler().findGroupById("/"+groupId) != null) {
+        if(orgSerivce.getGroupHandler().findGroupById(groupId) != null) {
           params.setOwner(groupId) ;
           params.setPageId(WikiPageParams.WIKI_HOME) ;
         }else {
-          if(groupId.indexOf("/") > 0) {
+          if(groupId.substring(1).indexOf("/") > 0) {
             String pageId = groupId.substring(groupId.lastIndexOf("/")+ 1) ;
             String owner = groupId.substring(0, groupId.lastIndexOf("/")) ;
             params.setOwner(owner) ;

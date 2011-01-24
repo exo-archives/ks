@@ -67,39 +67,39 @@ public class TestURLResolver extends AbstractMOWTestcase {
     String url = "http://hostname/$CONTAINER/$ACCESS/$SITE/wiki/group/platform/" ;
     WikiPageParams params = resolver.extractPageParams(url, null) ;
     assertEquals(PortalConfig.GROUP_TYPE, params.getType()) ;
-    assertEquals("platform", params.getOwner()) ;
+    assertEquals("/platform", params.getOwner()) ;
     assertEquals("WikiHome", params.getPageId()) ;  
     
     
     url = "http://hostname/$CONTAINER/$ACCESS/$SITE/wiki/group/platform" ;
     params = resolver.extractPageParams(url, null) ;
     assertEquals(PortalConfig.GROUP_TYPE, params.getType()) ;
-    assertEquals("platform", params.getOwner()) ;
+    assertEquals("/platform", params.getOwner()) ;
     assertEquals("WikiHome", params.getPageId()) ;
     
     
     url = "http://hostname/$CONTAINER/$ACCESS/$SITE/wiki/group/platform/users/pageId/" ;
     params = resolver.extractPageParams(url, null) ;
     assertEquals(PortalConfig.GROUP_TYPE, params.getType()) ;
-    assertEquals("platform/users", params.getOwner()) ;
+    assertEquals("/platform/users", params.getOwner()) ;
     assertEquals("pageId", params.getPageId()) ;
     
     url = "http://hostname/$CONTAINER/$ACCESS/$SITE/wiki/group/platform/users/pageId" ;
     params = resolver.extractPageParams(url, null) ;
     assertEquals(PortalConfig.GROUP_TYPE, params.getType()) ;
-    assertEquals("platform/users", params.getOwner()) ;
+    assertEquals("/platform/users", params.getOwner()) ;
     assertEquals("pageId", params.getPageId()) ;
     
     url = "http://hostname/$CONTAINER/$ACCESS/$SITE/wiki/group/platform/users/WikiHome" ;
     params = resolver.extractPageParams(url, null) ;
     assertEquals(PortalConfig.GROUP_TYPE, params.getType()) ;
-    assertEquals("platform/users", params.getOwner()) ;
+    assertEquals("/platform/users", params.getOwner()) ;
     assertEquals("WikiHome", params.getPageId()) ;
     
     url = "http://hostname/$CONTAINER/$ACCESS/$SITE/wiki/group/platform/users" ;
     params = resolver.extractPageParams(url, null) ;
     assertEquals(PortalConfig.GROUP_TYPE, params.getType()) ;
-    assertEquals("platform/users", params.getOwner()) ;
+    assertEquals("/platform/users", params.getOwner()) ;
     assertEquals("WikiHome", params.getPageId()) ;
   }
   

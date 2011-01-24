@@ -341,9 +341,9 @@ public class Utils {
   }
   
   public static boolean hasPermission(String[] permissions) throws Exception {
-    // If an user is the super user or in the administration group or has the
-    // create portal permission then he has all permissions
     UserACL userACL = Util.getUIPortalApplication().getApplicationComponent(UserACL.class);
+    /*// If an user is the super user or in the administration group or has the
+    // create portal permission then he has all permissions
     if (userACL.hasCreatePortalPermission()) {
       return true;
     }
@@ -353,7 +353,7 @@ public class Utils {
       if (userACL.isUserInGroup(expAdminGroup)) {
         return true;
       }
-    }
+    }*/
     WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);
     WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
     List<PermissionEntry> permissionEntries = wikiService.getWikiPermission(pageParams.getType(), pageParams.getOwner());

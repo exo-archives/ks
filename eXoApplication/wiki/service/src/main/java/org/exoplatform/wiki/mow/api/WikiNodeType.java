@@ -92,6 +92,8 @@ public interface WikiNodeType {
     
     public final static String WIKI_PERMISSIONS           = "wikiPermissions";
     
+    public final static String DEFAULT_PERMISSIONS_INITED = "isDefaultPermissionsInited";
+    
     public final static String NEW_LINK                   = "newlink";
     
     public final static String WIKI_HOME_NAME             = "WikiHome";
