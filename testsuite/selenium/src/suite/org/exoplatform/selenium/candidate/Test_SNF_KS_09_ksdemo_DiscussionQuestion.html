@@ -47,18 +47,13 @@
 	<td>gtn</td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>echo</td>
+	<td>-Add Question for Discuss-</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>-Add Question for Discuss-</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -128,12 +123,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td>//div[@id=&quot;UIAnswersPortlet&quot;]//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td>//div[@id=&quot;UIAnswersPortlet&quot;]//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -158,27 +153,27 @@
 </tr>
 <tr>
 	<td>mouseOver</td>
-	<td>//div[@id='UIPage']/div/div/div/div/div/div/div</td>
+	<td>//div[@id='UIPage']//a[@title=&quot;Edit Portlet&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div/div/div[2]/div/div/div/div/div/div/a[1]</td>
+	<td>//div[@id='UIPage']//a[@title=&quot;Edit Portlet&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div/div/div[2]/div/div/div/div/div/div/a[1]</td>
+	<td>//div[@id='UIPage']//a[@title=&quot;Edit Portlet&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[2]/div[1]/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div[3]/div/div/div/div</td>
+	<td>//div[text()=&quot;Discussion&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//div[2]/div[1]/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div[3]/div/div/div/div</td>
+	<td>mouseDown</td>
+	<td>//div[text()=&quot;Discussion&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -187,7 +182,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>check</td>
 	<td>EnableDiscuss</td>
 	<td></td>
 </tr>
@@ -223,12 +218,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIAnswersPortlet']//div[@class='ExoMessageDecorator']//table[@class='ActionContainer']//div</td>
+	<td>//div[@id='UIAnswersPortlet']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIAnswersPortlet']//div[@class='ExoMessageDecorator']//table[@class='ActionContainer']//div</td>
+	<td>//div[@id='UIAnswersPortlet']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -243,12 +238,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIPageEditor']/div[1]/div/div/div/a[2]</td>
+	<td>//div[@id='UIPageEditor']//a[@title=&quot;Finish&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIPageEditor']/div[1]/div/div/div/a[2]</td>
+	<td>//div[@id='UIPageEditor']//a[@title=&quot;Finish&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -268,17 +263,52 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']/div/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[7]/a/div[@class='DiscussForum']</td>
+	<td>//td[7]/a/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']/div/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[7]/a/div[@class='DiscussForum']</td>
+	<td>//td[7]/a/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPopUp</td>
+	<td></td>
+	<td>30000</td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>name=undefined</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>name=undefined</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
 	<td>-Goto Forum To Check-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyLocation</td>
+	<td>http://localhost:8080/ksdemo/private/classic/forum/topic/topicb7a27dab7f00010101af135a3a93c374</td>
+	<td></td>
+</tr>
+<tr>
+	<td>close</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td>null</td>
 	<td></td>
 </tr>
 <tr>
@@ -506,7 +536,6 @@
 	<td>Sign in</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>
