@@ -86,12 +86,8 @@ public class UIViewer extends UIContainer {
 	}
 
 	private CategoryInfo getCategoryInfo() throws Exception {
-		CategoryInfo categoryInfo = new CategoryInfo();
-		List<String> list = new ArrayList<String>();
-		list = FAQUtils.getCategoriesIdFAQPortlet();
 		useAjax = FAQUtils.getUseAjaxFAQPortlet();
-		categoryInfo = this.fAqService.getCategoryInfo(this.path, list);
-		return categoryInfo;
+		return fAqService.getCategoryInfo(path, FAQUtils.getCategoriesIdFAQPortlet());
 	}
 
 	private String render(String s) {

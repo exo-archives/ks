@@ -1033,12 +1033,12 @@ public class FAQServiceImpl implements FAQService, Startable {
     }
 	}
 
-	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId, Boolean isSortByVote) throws Exception {
+	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId, boolean isSortByVote) throws Exception {
 		sProvider.close() ;
 	  return getPageListAnswer(questionId, isSortByVote);
   }
 	
-	public JCRPageList getPageListAnswer(String questionId, Boolean isSortByVote) throws Exception {
+	public JCRPageList getPageListAnswer(String questionId, boolean isSortByVote) throws Exception {
 	  return jcrData_.getPageListAnswer(questionId, isSortByVote);
   }
 

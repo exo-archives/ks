@@ -78,8 +78,8 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 	private static final String IS_APPROVED = "IsApproved";
 	private Question question_ = null;
 
-	private String questionDetail = new String();
-	private String questionContent = new String();
+	private String questionDetail = "";
+	private String questionContent = "";
 	private boolean isModerator = true;
 
 	public void setModertator(boolean isMod) {
@@ -89,12 +89,11 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 	// form input :
 	private UIFormSelectBox questionLanguages_;
 	private UIFormWYSIWYGInput inputResponseQuestion_;
-	@SuppressWarnings("unchecked")
 	private UIFormCheckBoxInput<Boolean> checkShowAnswer_;
 	private UIFormCheckBoxInput<Boolean> isApproved_;
 
 	// question infor :
-	public String questionId_ = new String();
+	public String questionId_ = "";
 	private List<String> listRelationQuestion = new ArrayList<String>();
 	private List<String> listQuestIdRela = new ArrayList<String>();
 

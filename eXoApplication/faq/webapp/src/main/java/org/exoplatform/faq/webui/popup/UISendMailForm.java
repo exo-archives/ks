@@ -87,7 +87,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
 	private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>();
 	private List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>();
 	private String languageIsResponsed = "";
-	private String questionChanged_ = new String();
+	private String questionChanged_ = "";
 	private String link_ = "";
 	public List<User> toUsers = new ArrayList<User>();
 	public List<User> addCCUsers = new ArrayList<User>();
@@ -475,7 +475,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
 						if (!link_.contains("language")) {
 							link_ = link_ + "/language=" + language;
 						}
-						strBuilder.append(sendMailForm.getLabel("Link").replaceFirst("<link>", sendMailForm.link_));
+						strBuilder.append(sendMailForm.getLabel("Link").replaceFirst("<link>", link_));
 					}
 					body.setValue(strBuilder.toString());
 					subject.setValue(sendMailForm.getLabel("change-title") + contenQuestion);

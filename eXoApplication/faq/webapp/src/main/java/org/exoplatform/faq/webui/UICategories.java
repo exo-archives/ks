@@ -219,8 +219,6 @@ public class UICategories extends UIContainer {
 			}
 			if (currentCategoryName == null || currentCategoryName.trim().length() < 1)
 				currentCategoryName = FAQUtils.getResourceBundle("UIBreadcumbs.label." + Utils.CATEGORY_HOME);
-			UIBreadcumbs breadcumbs = this.getAncestorOfType(UIAnswersContainer.class).getChild(UIBreadcumbs.class);
-			String[] listId = breadcumbs.getPath(breadcumbs.getBreadcumbs().size() - 1).split("/");
 			setIsModerators(userName);
 		}
 		isSwap = false;

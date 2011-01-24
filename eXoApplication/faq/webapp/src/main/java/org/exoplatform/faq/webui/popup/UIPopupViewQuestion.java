@@ -111,9 +111,8 @@ public class UIPopupViewQuestion extends BaseUIForm implements UIPopupComponent 
 	}
 
 	public String getQuestionRelationById(String questionId) {
-		Question question = new Question();
 		try {
-			question = faqService_.getQuestionById(questionId);
+			Question question = faqService_.getQuestionById(questionId);
 			if (question != null) {
 				return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
 			}

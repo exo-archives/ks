@@ -81,7 +81,7 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 	final static private String ITEM_MODERATEQUESTION_FALSE = "false";
 
 	private FAQSetting faqSetting_ = new FAQSetting();
-	private String defaultLanguage_ = new String();
+	private String defaultLanguage_ = "";
 
 	public UIAdvancedSearchForm() throws Exception {
 		faqSetting_ = new FAQSetting();
@@ -323,8 +323,8 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 				advancedSearch.warning("UIAdvancedSearchForm.msg.email-invalid");
 				return;
 			}
-			if (FAQUtils.CheckSpecial(text) || FAQUtils.CheckSpecial(categoryName) || FAQUtils.CheckSpecial(moderator) || FAQUtils.CheckSpecial(author) || FAQUtils.CheckSpecial(emailAddress)
-					|| FAQUtils.CheckSpecial(question) || FAQUtils.CheckSpecial(response) || FAQUtils.CheckSpecial(comment)) {
+			if (FAQUtils.checkSpecial(text) || FAQUtils.checkSpecial(categoryName) || FAQUtils.checkSpecial(moderator) || FAQUtils.checkSpecial(author) || FAQUtils.checkSpecial(emailAddress)
+					|| FAQUtils.checkSpecial(question) || FAQUtils.checkSpecial(response) || FAQUtils.checkSpecial(comment)) {
 				advancedSearch.warning("UIAdvancedSearchForm.msg.failure");
 				return;
 			}
@@ -363,7 +363,6 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 			eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(userName));
 			eventQuery.setAdmin(Boolean.parseBoolean(advancedSearch.faqSetting_.getIsAdmin()));
 
-			UIAnswersPortlet uiPortlet = advancedSearch.getAncestorOfType(UIAnswersPortlet.class);
 			UIPopupContainer popupContainer = advancedSearch.getAncestorOfType(UIPopupContainer.class);
 			ResultQuickSearch result = popupContainer.getChild(ResultQuickSearch.class);
 			if (result == null)

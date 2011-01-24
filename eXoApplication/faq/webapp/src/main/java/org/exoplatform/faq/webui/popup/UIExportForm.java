@@ -54,7 +54,6 @@ public class UIExportForm extends BaseUIForm implements UIPopupComponent {
 			UIExportForm exportForm = event.getSource();
 
 			String fileName = ((UIFormStringInput) exportForm.getChildById(exportForm.FILE_NAME)).getValue();
-			ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 			UIAnswersPortlet portlet = exportForm.getAncestorOfType(UIAnswersPortlet.class);
 			if (!ValidatorDataInput.fckContentIsNotEmpty(fileName)) {
 				exportForm.warning("UIExportForm.msg.nameFileExport");

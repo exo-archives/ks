@@ -49,10 +49,10 @@ public class Answer {
   private Date dateResponse = null ;
   
   /** The activate answers. */
-  private Boolean activateAnswers;
+  private boolean activateAnswers;
   
   /** The approved answers. */
-  private Boolean approvedAnswers;
+  private boolean approvedAnswers;
   
   /** The users vote answer. */
   private String[] usersVoteAnswer;
@@ -182,7 +182,7 @@ public class Answer {
 	 * 
 	 * @return the activate answers
 	 */
-	public Boolean getActivateAnswers() {
+	public boolean getActivateAnswers() {
 		return activateAnswers;
 	}
 	
@@ -191,7 +191,7 @@ public class Answer {
 	 * 
 	 * @param activateAnswers the new activate answers
 	 */
-	public void setActivateAnswers(Boolean activateAnswers) {
+	public void setActivateAnswers(boolean activateAnswers) {
 		this.activateAnswers = activateAnswers;
 	}
 	
@@ -200,7 +200,7 @@ public class Answer {
 	 * 
 	 * @return the approved answers
 	 */
-	public Boolean getApprovedAnswers() {
+	public boolean getApprovedAnswers() {
 		return approvedAnswers;
 	}
 	
@@ -209,7 +209,7 @@ public class Answer {
 	 * 
 	 * @param approvedAnswers the new approved answers
 	 */
-	public void setApprovedAnswers(Boolean approvedAnswers) {
+	public void setApprovedAnswers(boolean approvedAnswers) {
 		this.approvedAnswers = approvedAnswers;
 	}
 	

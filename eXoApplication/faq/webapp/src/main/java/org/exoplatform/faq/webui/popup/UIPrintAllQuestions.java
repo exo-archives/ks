@@ -81,9 +81,8 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
 	}
 
 	private String getQuestionRelationById(String questionId) {
-		Question question = new Question();
 		try {
-			question = faqService_.getQuestionById(questionId);
+			Question question = faqService_.getQuestionById(questionId);
 			if (question != null) {
 				return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
 			}
@@ -144,7 +143,6 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
 			size /= 1024;
 		}
 		if (residual > 500) {
-			String str = residual + "";
 			result = (size + 1) + " " + sizes_[i];
 		} else {
 			result = size + " " + sizes_[i];

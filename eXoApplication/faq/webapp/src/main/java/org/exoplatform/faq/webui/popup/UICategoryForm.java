@@ -197,15 +197,15 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
 			getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).setChecked(cat.isModerateQuestions());
 			getUIFormCheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).setChecked(cat.isModerateAnswers());
 			getUIFormCheckBoxInput(VIEW_AUTHOR_INFOR).setChecked(cat.isViewAuthorInfor());
-			String moderator = "";
+			StringBuilder moderator = new StringBuilder();
 			if (cat.getModerators() != null && cat.getModerators().length > 0)
 				for (String str : cat.getModerators()) {
-					if (moderator != null && moderator.trim().length() > 0)
-						moderator += ",";
-					moderator += str;
+					if (moderator.length() > 0)
+						moderator.append(",");
+					moderator.append(str);
 				}
-			if (moderator.trim().length() > 0)
-				getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).setValue(moderator);
+			if (moderator.length() > 0)
+				getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).setValue(moderator.toString());
 			else
 				getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).setValue(FAQUtils.getCurrentUser());
 		}

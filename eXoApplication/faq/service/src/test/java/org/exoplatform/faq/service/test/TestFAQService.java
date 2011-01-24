@@ -138,7 +138,6 @@ public class TestFAQService extends FAQServiceTestCase{
 		question.setUsersVote(new String[]{});
 		question.setMarkVote(0.0);
 		question.setUsersWatch(new String[]{});
-		question.setEmail(new String());
 		question.setEmailsWatch(new String[]{});
 		question.setTopicIdDiscuss(null);
 		return question ;
@@ -526,13 +525,13 @@ public class TestFAQService extends FAQServiceTestCase{
 								faqService_.getAnswerById(questionId, answer1.getId()).getResponses(), content);
 
 //		Get all answers of question:
-		JCRPageList pageList = faqService_.getPageListAnswer(questionId, null);
+		JCRPageList pageList = faqService_.getPageListAnswer(questionId, false);
 		pageList.setPageSize(10);
 		assertEquals("Question have 2 answers", pageList.getPageItem(0).size(), 2);
 
 //		Delete answer
 		faqService_.deleteAnswer(questionId, answer1.getId());
-		pageList = faqService_.getPageListAnswer(questionId, null);
+		pageList = faqService_.getPageListAnswer(questionId, false);
 		pageList.setPageSize(10);
 		assertEquals("Answer 1 have not been removed, question only have one answer", pageList.getPageItem(0).size(), 1);
 
@@ -592,7 +591,6 @@ public class TestFAQService extends FAQServiceTestCase{
 	public void testWatchCategory() throws Exception {
 //	add default data
 		defaultData();
-		List<Watch> listWatchs = new ArrayList<Watch>();
 //		add  watch
 		faqService_.addWatchCategory(categoryId1, createNewWatch(USER_ROOT, "maivanha1610@gmail.com")) ;
 		faqService_.addWatchCategory(categoryId1, createNewWatch(USER_DEMO, "maivanha1610@yahoo.com")) ;

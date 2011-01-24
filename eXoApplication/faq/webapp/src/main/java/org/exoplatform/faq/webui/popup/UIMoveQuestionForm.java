@@ -54,7 +54,7 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
-	private String questionId_ = new String();
+	private String questionId_ = "";
 	private String homeCategoryName = "";
 	private String link;
 	private String categoryId_;

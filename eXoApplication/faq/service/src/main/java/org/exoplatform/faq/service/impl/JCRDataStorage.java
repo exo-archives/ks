@@ -760,13 +760,13 @@ public class JCRDataStorage implements DataStorage {
 	 * 
 	 * @see org.exoplatform.faq.service.impl.DataStorage#getPageListAnswer(java.lang.String, java.lang.Boolean)
 	 */
-	public JCRPageList getPageListAnswer(String questionId, Boolean isSortByVote) throws Exception {
+	public JCRPageList getPageListAnswer(String questionId, boolean isSortByVote) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		try {
 			Node answerHome = getFAQServiceHome(sProvider).getNode(questionId + "/" + Utils.ANSWER_HOME);
 			QueryManager qm = answerHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(answerHome.getPath()).append("//element(*,exo:answer)");
-			if (isSortByVote == null)
+			if ((Boolean)isSortByVote == null)
 				queryString.append("order by @exo:dateResponse ascending");
 			else if (isSortByVote)
 				queryString.append("order by @exo:MarkVotes ascending");
@@ -2043,8 +2043,8 @@ public class JCRDataStorage implements DataStorage {
 				Node parentNode = getFAQServiceHome(sProvider).getNode(parentId);
 				newCategory = parentNode.addNode(cat.getId(), "exo:faqCategory");
 				newCategory.addMixin("mix:faqSubCategory");
-				// TODO: JUnit test is fall
-				Node questionHome = newCategory.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome");
+				newCategory.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome");
+				newCategory.getSession().save();
 			} else {
 				newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath());
 			}
@@ -2523,7 +2523,7 @@ public class JCRDataStorage implements DataStorage {
 			if (category.hasProperty("exo:userWatching"))
 				userWatch = Utils.valuesToArray(category.getProperty("exo:userWatching").getValues());
 			if (userWatch != null && userWatch.length > 0) {
-				Watch watch = new Watch();
+				Watch watch ;
 				for (int i = 0; i < userWatch.length; i++) {
 					watch = new Watch();
 					watch.setEmails(emails[i]);
@@ -2613,7 +2613,7 @@ public class JCRDataStorage implements DataStorage {
 				if (category.hasProperty("exo:userWatching"))
 					userWatch = Utils.valuesToArray(category.getProperty("exo:userWatching").getValues());
 				if (userWatch != null && userWatch.length > 0) {
-					Watch watch = new Watch();
+					Watch watch ;
 					for (int i = 0; i < userWatch.length; i++) {
 						watch = new Watch();
 						watch.setEmails(emails[i]);

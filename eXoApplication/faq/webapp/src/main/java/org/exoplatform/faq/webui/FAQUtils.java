@@ -164,8 +164,8 @@ public class FAQUtils {
 		return text;
 	}
 
-	public static boolean CheckSpecial(String text) {
-		Boolean check = false;
+	public static boolean checkSpecial(String text) {
+		boolean check = false;
 		if (text != null && text.trim().length() > 0) {
 			int i = 0;
 			while (i < text.length()) {
@@ -185,7 +185,7 @@ public class FAQUtils {
 	}
 
 	public static InternetAddress[] getInternetAddress(String addressList) throws Exception {
-		if (addressList == null || addressList == "")
+		if (isFieldEmpty(addressList))
 			return new InternetAddress[1];
 		try {
 			return InternetAddress.parse(addressList);

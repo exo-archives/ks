@@ -88,15 +88,12 @@ public class UIWatchForm extends BaseUIForm implements UIPopupComponent {
 		public void execute(Event<UIWatchForm> event) throws Exception {
 			UIWatchForm uiWatchForm = event.getSource();
 			String name = uiWatchForm.getUIStringInput(USER_NAME).getValue();
-			String listEmail = "";
-			List<String> values = (List<String>) uiWatchForm.emailAddress.getValue();
-			for (String str : values) {
-				listEmail += str.trim() + ",";
-			}
 			if (FAQUtils.isFieldEmpty(name)) {
 				uiWatchForm.warning("UIWatchForm.msg.name-field-empty");
 				return;
 			}
+			List<String> values = (List<String>) uiWatchForm.emailAddress.getValue();
+			String listEmail = values.toString().replace("[", "").replace("]", "").replaceAll(", ", ",").replaceAll(" ,", ",");
 			if (FAQUtils.isFieldEmpty(listEmail)) {
 				uiWatchForm.warning("UIWatchForm.msg.to-field-empty");
 				return;

@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
-import javax.portlet.PortletPreferences;
-
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
@@ -135,13 +133,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
 	}
 
 	private void setListCate() throws Exception {
-		String userName = FAQUtils.getCurrentUser();
-		List<String> userPrivates = null;
-		if (userName != null) {
-			userPrivates = UserHelper.getAllGroupAndMembershipOfUser(userName);
-		}
 		this.listCate.addAll(FAQUtils.getFAQService().listingCategoryTree());
-
 	}
 
 	public void init() throws Exception {
@@ -421,7 +413,6 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
 	static public class SetDefaultAvatarActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource();
-			UIAnswersPortlet uiPortlet = settingForm.getAncestorOfType(UIAnswersPortlet.class);
 			settingForm.faqService_.setDefaultAvatar(FAQUtils.getCurrentUser());
 			settingForm.setAvatarUrl(Utils.DEFAULT_AVATAR_URL);
 			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm.getParent());
@@ -432,10 +423,8 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource();
 			String id = event.getRequestContext().getRequestParameter(OBJECTID);
-			PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-			PortletPreferences portletPref = pcontext.getRequest().getPreferences();
 			String emailContent = "";
-			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+			WebuiRequestContext context = event.getRequestContext();
 			ResourceBundle res = context.getApplicationResourceBundle();
 			UIFormInputWithActions formInputWithActions = settingForm.getChildById(settingForm.SET_DEFAULT_EMAIL_TAB);
 			UIFormWYSIWYGInput input = null;
@@ -444,7 +433,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
 				input = (UIFormWYSIWYGInput) ((UIFormInputWithActions) formInputWithActions.getChildById(settingForm.SET_DEFAULT_ADDNEW_QUESTION_TAB)).getChildById(EMAIL_DEFAULT_ADD_QUESTION);
 				input.setValue(emailContent);
 			} else if (id.equals("1")) {
-				emailContent = res.getString("SendEmail.EditOrResponseQuestion.Default");
+				emailContent = res.getString("SendEmail.ResponseQuestion.Default");
 				input = (UIFormWYSIWYGInput) ((UIFormInputWithActions) formInputWithActions.getChildById(settingForm.SET_DEFAULT_EDIT_QUESTION_TAB)).getChildById(EMAIL_DEFAULT_EDIT_QUESTION);
 				input.setValue(emailContent);
 			} else {
@@ -455,8 +444,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
 
 			settingForm.isResetMail = true;
 			settingForm.indexOfTab = Integer.parseInt(id);
-
-			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm);
+			context.addUIComponentToUpdateByAjax(settingForm);
 		}
 	}
 

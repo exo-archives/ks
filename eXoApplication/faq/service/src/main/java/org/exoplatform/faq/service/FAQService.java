@@ -667,7 +667,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return answers page list 
    * @throws Exception
    */
-  public JCRPageList getPageListAnswer(String questionId, Boolean isSortByVote) throws Exception;
+  public JCRPageList getPageListAnswer(String questionId, boolean isSortByVote) throws Exception;
 
   /**
    * Get list questions that user watches

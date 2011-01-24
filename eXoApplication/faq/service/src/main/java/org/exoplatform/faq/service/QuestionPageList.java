@@ -18,16 +18,17 @@ package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Session;
-import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -68,7 +69,7 @@ public class QuestionPageList extends JCRPageList {
 	private List<Category> listCategories_ = null;
 
 	/** The question query_. */
-	private String questionQuery_ = new String();
+	private String questionQuery_ = "";
 
 	/** The node category_. */
 	private Node nodeCategory_ = null;
@@ -111,14 +112,14 @@ public class QuestionPageList extends JCRPageList {
 		Node questionNode = null;
 		Node languageNode = null;
 		Node language;
-		String languages = null;
+		StringBuilder languages ;
 		while (nodeIterator.hasNext()) {
-			languages = new String();
+			languages = new StringBuilder();
 			questionNode = nodeIterator.nextNode();
 			if (!isOpenQuestion) {// used for question manager.
 				try {
 					if (!questionNode.hasNode(ANSWER_HOME) || questionNode.getNode(ANSWER_HOME).getNodes().getSize() < 1) {
-						languages = questionNode.getProperty("exo:language").getValue().getString();
+						languages.append(questionNode.getProperty("exo:language").getValue().getString());
 					}
 					if (questionNode.hasNode("languages")) {
 						languageNode = questionNode.getNode("languages");
@@ -126,14 +127,14 @@ public class QuestionPageList extends JCRPageList {
 						while (languageIter.hasNext()) {
 							language = languageIter.nextNode();
 							if (!language.hasNode(ANSWER_HOME) || language.getNode(ANSWER_HOME).getNodes().getSize() < 1) {
-								if (languages != null && languages.trim().length() > 0)
-									languages += ",";
-								languages += language.getProperty("exo:language").getString();
+								if (languages.length() > 0)
+									languages.append(",");
+								languages.append(language.getProperty("exo:language").getString());
 							}
 						}
 					}
-					if (languages != null && languages.trim().length() > 0)
-						listQuestions_.add(getQuestion(questionNode).setLanguagesNotYetAnswered(languages));
+					if (languages.length() > 0)
+						listQuestions_.add(getQuestion(questionNode).setLanguagesNotYetAnswered(languages.toString()));
 				} catch (Exception e) {
 					log.error("Fail to set total questions: ", e);
 				}
@@ -592,45 +593,29 @@ public class QuestionPageList extends JCRPageList {
 	private Question getQuestion(Node questionNode) throws Exception {
 		Question question = new Question();
 		question.setId(questionNode.getName());
-		if (questionNode.hasProperty("exo:language"))
-			question.setLanguage(questionNode.getProperty("exo:language").getString());
-		if (questionNode.hasProperty("exo:name"))
-			question.setDetail(questionNode.getProperty("exo:name").getString());
-		if (questionNode.hasProperty("exo:author"))
-			question.setAuthor(questionNode.getProperty("exo:author").getString());
-		if (questionNode.hasProperty("exo:email"))
-			question.setEmail(questionNode.getProperty("exo:email").getString());
-		if (questionNode.hasProperty("exo:title"))
-			question.setQuestion(questionNode.getProperty("exo:title").getString());
-		if (questionNode.hasProperty("exo:createdDate"))
-			question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime());
-		if (questionNode.hasProperty("exo:categoryId"))
-			question.setCategoryId(questionNode.getProperty("exo:categoryId").getString());
+		PropertyReader reader = new PropertyReader(questionNode);
+
+		question.setLanguage(reader.string("exo:language", ""));
+		question.setDetail(reader.string("exo:name", ""));
+		question.setAuthor(reader.string("exo:author", ""));
+		question.setEmail(reader.string("exo:email", ""));
+		question.setQuestion(reader.string("exo:title", ""));
+		question.setCreatedDate(reader.date("exo:createdDate", new Date()));
+		question.setCategoryId(reader.string("exo:categoryId", ""));
 		/*
 		 * String catePath = questionNode.getParent().getParent().getPath() ; question.setCategoryId(catePath.substring(catePath.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
 		 */
-		if (questionNode.hasProperty("exo:isActivated"))
-			question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean());
-		if (questionNode.hasProperty("exo:isApproved"))
-			question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean());
-		if (questionNode.hasProperty("exo:relatives"))
-			question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues()));
-		if (questionNode.hasProperty("exo:nameAttachs"))
-			question.setNameAttachs(ValuesToStrings(questionNode.getProperty("exo:nameAttachs").getValues()));
-		if (questionNode.hasProperty("exo:usersVote"))
-			question.setUsersVote(ValuesToStrings(questionNode.getProperty("exo:usersVote").getValues()));
-		if (questionNode.hasProperty("exo:markVote"))
-			question.setMarkVote(questionNode.getProperty("exo:markVote").getValue().getDouble());
-		if (questionNode.hasProperty("exo:emailWatching"))
-			question.setEmailsWatch(ValuesToStrings(questionNode.getProperty("exo:emailWatching").getValues()));
-		if (questionNode.hasProperty("exo:userWatching"))
-			question.setUsersWatch(ValuesToStrings(questionNode.getProperty("exo:userWatching").getValues()));
-		if (questionNode.hasProperty("exo:topicIdDiscuss"))
-			question.setTopicIdDiscuss(questionNode.getProperty("exo:topicIdDiscuss").getString());
-		if (questionNode.hasProperty("exo:lastActivity"))
-			question.setLastActivity(questionNode.getProperty("exo:lastActivity").getString());
-		if (questionNode.hasProperty("exo:numberOfPublicAnswers"))
-			question.setNumberOfPublicAnswers(questionNode.getProperty("exo:numberOfPublicAnswers").getLong());
+		question.setActivated(reader.bool("exo:isActivated", true));
+		question.setApproved(reader.bool("exo:isApproved", true));
+		question.setRelations(reader.strings("exo:relatives", new String[] {}));
+		question.setNameAttachs(reader.strings("exo:nameAttachs", new String[] {}));
+		question.setUsersVote(reader.strings("exo:usersVote", new String[] {}));
+		question.setMarkVote(reader.d("exo:markVote"));
+		question.setEmailsWatch(reader.strings("exo:emailWatching", new String[] {}));
+		question.setUsersWatch(reader.strings("exo:userWatching", new String[] {}));
+		question.setTopicIdDiscuss(reader.string("exo:topicIdDiscuss"));
+		question.setLastActivity(reader.string("exo:lastActivity", ""));
+		question.setNumberOfPublicAnswers(reader.l("exo:numberOfPublicAnswers"));
 		String path = questionNode.getPath();
 		question.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
 
@@ -690,24 +675,16 @@ public class QuestionPageList extends JCRPageList {
 	public Answer getAnswerByNode(Node answerNode) throws Exception {
 		Answer answer = new Answer();
 		answer.setId(answerNode.getName());
-		if (answerNode.hasProperty("exo:responses"))
-			answer.setResponses((answerNode.getProperty("exo:responses").getValue().getString()));
-		if (answerNode.hasProperty("exo:responseBy"))
-			answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString()));
-		if (answerNode.hasProperty("exo:fullName"))
-			answer.setFullName((answerNode.getProperty("exo:fullName").getValue().getString()));
-		if (answerNode.hasProperty("exo:dateResponse"))
-			answer.setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime()));
-		if (answerNode.hasProperty("exo:usersVoteAnswer"))
-			answer.setUsersVoteAnswer(ValuesToStrings(answerNode.getProperty("exo:usersVoteAnswer").getValues()));
-		if (answerNode.hasProperty("exo:MarkVotes"))
-			answer.setMarkVotes(answerNode.getProperty("exo:MarkVotes").getValue().getLong());
-		if (answerNode.hasProperty("exo:approveResponses"))
-			answer.setApprovedAnswers((answerNode.getProperty("exo:approveResponses").getValue().getBoolean()));
-		if (answerNode.hasProperty("exo:activateResponses"))
-			answer.setActivateAnswers((answerNode.getProperty("exo:activateResponses").getValue().getBoolean()));
-		if (answerNode.hasProperty("exo:postId"))
-			answer.setPostId(answerNode.getProperty("exo:postId").getString());
+		PropertyReader reader = new PropertyReader(answerNode);
+		answer.setResponses(reader.string("exo:responses", ""));
+		answer.setResponseBy(reader.string("exo:responseBy", ""));
+		answer.setFullName(reader.string("exo:fullName", ""));
+		answer.setDateResponse(reader.date("exo:dateResponse", new Date()));
+		answer.setUsersVoteAnswer(reader.strings("exo:usersVoteAnswer", new String[] {}));
+		answer.setMarkVotes(reader.l("exo:MarkVotes"));
+		answer.setApprovedAnswers(reader.bool("exo:approveResponses", true));
+		answer.setActivateAnswers(reader.bool("exo:activateResponses", true));
+		answer.setPostId(reader.string("exo:postId", ""));
 		String path = answerNode.getPath();
 		answer.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
 		return answer;
@@ -736,16 +713,12 @@ public class QuestionPageList extends JCRPageList {
 	public Comment getCommentByNode(Node commentNode) throws Exception {
 		Comment comment = new Comment();
 		comment.setId(commentNode.getName());
-		if (commentNode.hasProperty("exo:comments"))
-			comment.setComments((commentNode.getProperty("exo:comments").getString()));
-		if (commentNode.hasProperty("exo:commentBy"))
-			comment.setCommentBy((commentNode.getProperty("exo:commentBy").getString()));
-		if (commentNode.hasProperty("exo:fullName"))
-			comment.setFullName((commentNode.getProperty("exo:fullName").getValue().getString()));
-		if (commentNode.hasProperty("exo:dateComment"))
-			comment.setDateComment((commentNode.getProperty("exo:dateComment").getDate().getTime()));
-		if (commentNode.hasProperty("exo:postId"))
-			comment.setPostId(commentNode.getProperty("exo:postId").getString());
+		PropertyReader reader = new PropertyReader(commentNode);
+		comment.setComments(reader.string("exo:comments", ""));
+		comment.setCommentBy(reader.string("exo:commentBy", ""));
+		comment.setFullName(reader.string("exo:fullName", ""));
+		comment.setDateComment(reader.date("exo:dateComment", new Date()));
+		comment.setPostId(reader.string("exo:postId", ""));
 		return comment;
 	}
 
@@ -760,36 +733,27 @@ public class QuestionPageList extends JCRPageList {
 	 */
 	private Category getCategory(Node categoryNode) throws Exception {
 		Category cat = new Category();
+		PropertyReader reader = new PropertyReader(categoryNode);
 		cat.setId(categoryNode.getName());
-		if (categoryNode.hasProperty("exo:name"))
-			cat.setName(categoryNode.getProperty("exo:name").getString());
-		if (categoryNode.hasProperty("exo:description"))
-			cat.setDescription(categoryNode.getProperty("exo:description").getString());
-		if (categoryNode.hasProperty("exo:createdDate"))
-			cat.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime());
-		if (categoryNode.hasProperty("exo:moderators"))
-			cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues()));
-		if (categoryNode.hasProperty("exo:userPrivate"))
-			cat.setUserPrivate(ValuesToStrings(categoryNode.getProperty("exo:userPrivate").getValues()));
-		if (categoryNode.hasProperty("exo:isModerateQuestions"))
-			cat.setModerateQuestions(categoryNode.getProperty("exo:isModerateQuestions").getBoolean());
+		cat.setName(reader.string("exo:name", ""));
+		cat.setDescription(reader.string("exo:description", ""));
+		cat.setCreatedDate(reader.date("exo:createdDate", new Date()));
+		cat.setModerators(reader.strings("exo:moderators", new String[] {}));
+		cat.setUserPrivate(reader.strings("exo:userPrivate", new String[] {}));
+		cat.setModerateQuestions(reader.bool("exo:isModerateQuestions", false));
 		String path = categoryNode.getPath();
 		cat.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
 		return cat;
 	}
 
 	private List<Watch> getWatchs(Node watchNode, boolean isGetAll, int start, int max) throws Exception {
-		Watch watch = new Watch();
+		Watch watch;
 		List<Watch> listWatches = new ArrayList<Watch>();
-		String[] userWatch = null;
-		String[] emails = null;
-		String[] RSS = null;
-		if (watchNode.hasProperty("exo:emailWatching"))
-			emails = ValuesToStrings(watchNode.getProperty("exo:emailWatching").getValues());
-		if (watchNode.hasProperty("exo:userWatching"))
-			userWatch = ValuesToStrings(watchNode.getProperty("exo:userWatching").getValues());
-		if (watchNode.hasProperty("exo:rssWatching"))
-			RSS = ValuesToStrings(watchNode.getProperty("exo:rssWatching").getValues());
+		String[] userWatch, emails, RSS;
+		PropertyReader reader = new PropertyReader(watchNode);
+		emails = reader.strings("exo:emailWatching", new String[] {});
+		userWatch = reader.strings("exo:userWatching", new String[] {});
+		RSS = reader.strings("exo:rssWatching", new String[] {});
 		if (userWatch != null)
 			if (isGetAll) {
 				start = 0;
@@ -802,28 +766,11 @@ public class QuestionPageList extends JCRPageList {
 			watch = new Watch();
 			watch.setEmails(emails[i]);
 			watch.setUser(userWatch[i]);
+			if (i < RSS.length)
+				watch.setRSS(RSS[i]);
 			listWatches.add(watch);
 		}
 		return listWatches;
-	}
-
-	/**
-	 * Convert all values of a node's property from type Property to String and return them in to string array. These values will be setted for a question object
-	 * 
-	 * @param Val list values of node's property
-	 * 
-	 * @return values of node's property after convert form type Property to String
-	 * 
-	 * @throws Exception if an valueFormat or Repository exception occur
-	 */
-	private String[] ValuesToStrings(Value[] Val) throws Exception {
-		if (Val.length == 1)
-			return new String[] { Val[0].getString() };
-		String[] Str = new String[Val.length];
-		for (int i = 0; i < Val.length; ++i) {
-			Str[i] = Val[i].getString();
-		}
-		return Str;
 	}
 
 	/**

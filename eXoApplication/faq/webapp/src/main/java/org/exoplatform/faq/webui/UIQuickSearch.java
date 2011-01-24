@@ -78,7 +78,7 @@ public class UIQuickSearch extends BaseUIForm {
 			UIAnswersPortlet uiPortlet = uiQuickSearch.getAncestorOfType(UIAnswersPortlet.class);
 			String text = formStringInput.getValue();
 			if (text != null && text.trim().length() > 0) {
-				if (FAQUtils.CheckSpecial(text)) {
+				if (FAQUtils.checkSpecial(text)) {
 					uiQuickSearch.warning("UIAdvancedSearchForm.msg.failure");
 					return;
 				}

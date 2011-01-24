@@ -47,7 +47,6 @@ import org.exoplatform.faq.webui.popup.UIMoveQuestionForm;
 import org.exoplatform.faq.webui.popup.UIPrintAllQuestions;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIQuestionManagerForm;
-import org.exoplatform.faq.webui.popup.UIRSSForm;
 import org.exoplatform.faq.webui.popup.UIResponseForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
@@ -107,7 +106,6 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIQuestions.SortAnswerActionListener.class),
 				@EventConfig(listeners = UIQuestions.ExportActionListener.class) , 
 				@EventConfig(listeners = UIQuestions.ImportActionListener.class) , 
-				@EventConfig(listeners = UIQuestions.RSSActionListener.class),
 				@EventConfig(listeners = UIQuestions.EditCategoryActionListener.class) , 
 				@EventConfig(listeners = UIQuestions.VoteAnswerActionListener.class),
 				@EventConfig(listeners = UIQuestions.PrintAllQuestionActionListener.class) , 
@@ -370,7 +368,6 @@ public class UIQuestions extends UIContainer {
 			size /= 1024;
 		}
 		if (residual > 500) {
-			String str = residual + "";
 			result = (size + 1) + " " + sizes_[i];
 		} else {
 			result = size + " " + sizes_[i];
@@ -650,21 +647,6 @@ public class UIQuestions extends UIContainer {
 			UIExportForm exportForm = popupContainer.addChild(UIExportForm.class, null, null);
 			popupAction.activate(popupContainer, 500, 200);
 			exportForm.setObjectId(categoryId);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-		}
-	}
-
-	static public class RSSActionListener extends EventListener<UIQuestions> {
-		public void execute(Event<UIQuestions> event) throws Exception {
-			UIQuestions questions = event.getSource();
-			String rssLink = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class);
-			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-			popupContainer.setId("FAQRSSForm");
-			UIRSSForm exportRss = popupContainer.addChild(UIRSSForm.class, null, null);
-			popupAction.activate(popupContainer, 560, 170);
-			exportRss.setRSSLink(rssLink);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
 		}
 	}
@@ -1282,7 +1264,6 @@ public class UIQuestions extends UIContainer {
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class);
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());

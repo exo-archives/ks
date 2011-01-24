@@ -146,7 +146,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
 		listFileAttach_ = new ArrayList<FileAttachment>();
 		actionField_ = new HashMap<String, List<ActionData>>();
-		questionId_ = new String();
+		questionId_ = "";
 		question_ = null;
 
 		this.setActions(new String[] { "Save", "Cancel" });
@@ -268,14 +268,13 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 	}
 
 	public void setQuestion(Question question) throws Exception {
-		List<QuestionLanguage> questionLanguages = new ArrayList<QuestionLanguage>();
 		questionId_ = question.getPath();
 		categoryId_ = question.getCategoryId();
 		try {
 			question_ = question;
 			defaultLanguage_ = question_.getLanguage();
 			lastLanguage_ = defaultLanguage_;
-			questionLanguages = getFAQService().getQuestionLanguages(questionId_);
+			List<QuestionLanguage> questionLanguages = getFAQService().getQuestionLanguages(questionId_);
 			for (QuestionLanguage questionLanguage : questionLanguages) {
 				mapLanguage.put(questionLanguage.getLanguage(), questionLanguage);
 			}

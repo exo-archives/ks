@@ -232,8 +232,6 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
 				UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class);
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-				UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class);
-				// uiQuestions.setIsNotChangeLanguage();
 				UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 				popupAction.deActivate();
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);

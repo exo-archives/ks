@@ -71,7 +71,7 @@ public interface DataStorage {
 
   void deleteComment(String questionId, String commentId) throws Exception;
 
-  JCRPageList getPageListAnswer(String questionId, Boolean isSortByVote) throws Exception;
+  JCRPageList getPageListAnswer(String questionId, boolean isSortByVote) throws Exception;
 
   void saveAnswer(String questionId, Answer answer, boolean isNew) throws Exception;
 
