@@ -463,12 +463,18 @@ public class FAQEventQuery {
     }
     if(fromDate != null){
     	if(isAnd) propertiesSearch.append(" and ") ;
-    	propertiesSearch.append("@exo:createdDate").append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')") ;
+    	//propertiesSearch.append("@exo:createdDate").append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')") ;
+    	propertiesSearch.append("((@exo:createdDate >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')) " +
+      "or (@exo:dateResponse >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')) " +
+      "or (@exo:dateComment >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')))") ;
     	isAnd = true ;
     }
     if(toDate != null){
     	if(isAnd) propertiesSearch.append(" and ") ;
-    	propertiesSearch.append("@exo:createdDate").append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("')") ;
+    	//propertiesSearch.append("@exo:createdDate").append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("')") ;
+    	propertiesSearch.append("((@exo:createdDate <= xs:dateTime('").append(ISO8601.format(toDate)).append("')) " +
+      "or (@exo:dateResponse <= xs:dateTime('").append(ISO8601.format(toDate)).append("')) " +
+      "or (@exo:dateComment <= xs:dateTime('").append(ISO8601.format(toDate)).append("')))") ;
     	isAnd = true ;
     }
     propertiesSearch.append(")") ;
@@ -490,12 +496,12 @@ public class FAQEventQuery {
     StringBuilder answerSearch = new StringBuilder("") ;  		
     if (response != null && response.length() > 0) {
     	answerSearch.append("( exo:responseLanguage='").append(language).append("'");
-    	answerSearch.append(" and jcr:contains(@exo:responses,'" + response + "')") ;  			
+    	answerSearch.append(" and jcr:contains(@exo:responses,'" + response + "')") ;  			  
     	answerSearch.append(")") ;
     	isAnswerCommentLevelSearch = true ;
     }  		
     
-    //search on answers
+    //search on comments
     StringBuilder commentSearch = new StringBuilder() ;  		
     if (comment != null && comment.length() > 0) {
     	commentSearch.append("( exo:commentLanguage='").append(language).append("'");
@@ -680,11 +686,16 @@ public class FAQEventQuery {
   			queryString.append(" and not(@exo:userPrivate)") ;
   		}*/
     	
+    	// add condition for exo:dateResponse and exo:dateComment to search on answers & comments
     	if(fromDate != null){
-  			queryString.append(" and (@exo:createdDate >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))") ;
+    	  queryString.append(" and ((@exo:createdDate >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')) " +
+  					                      "or (@exo:dateResponse >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')) " +
+  					                      "or (@exo:dateComment >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')))") ;
   		}
-  		if(toDate != null){
-  			queryString.append(" and (@exo:createdDate <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))") ;
+    	if(toDate != null){
+    	  queryString.append(" and ((@exo:createdDate <= xs:dateTime('").append(ISO8601.format(toDate)).append("')) " + 
+  			                          "or (@exo:dateResponse <= xs:dateTime('").append(ISO8601.format(toDate)).append("')) " + 
+  			                          "or (@exo:dateComment <= xs:dateTime('").append(ISO8601.format(toDate)).append("')))");                                                                                
   		}
 	    queryString.append("]");
     return queryString;

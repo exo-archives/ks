@@ -119,12 +119,16 @@ public class TestFAQEventQuery extends TestCase {
 		
 		Calendar calendar = GregorianCalendar.getInstance();
 		eventQuery.setFromDate(calendar) ;
-		predicate += " and @exo:createdDate >= xs:dateTime('"+ISO8601.format(calendar)+"')";
+		predicate += " and ((@exo:createdDate >= xs:dateTime('"+ISO8601.format(calendar)+"')) " +
+				                "or (@exo:dateResponse >= xs:dateTime('" + ISO8601.format(calendar) + "')) " +
+				                "or (@exo:dateComment >= xs:dateTime('" + ISO8601.format(calendar) + "')))";
 		assertEquals(selector + predicate + ")]".trim(), eventQuery.getQuery().trim());
 		
 		calendar = GregorianCalendar.getInstance();
 		eventQuery.setToDate(calendar) ;
-		predicate += " and @exo:createdDate <= xs:dateTime('"+ISO8601.format(calendar)+"')";
+		predicate += " and ((@exo:createdDate <= xs:dateTime('"+ISO8601.format(calendar)+"')) " +
+                        "or (@exo:dateResponse <= xs:dateTime('" + ISO8601.format(calendar) + "')) " +
+                        "or (@exo:dateComment <= xs:dateTime('" + ISO8601.format(calendar) + "')))";
 		assertEquals(selector + predicate + ")]".trim(), eventQuery.getQuery().trim());
 		
 		eventQuery.setLanguage("English");
