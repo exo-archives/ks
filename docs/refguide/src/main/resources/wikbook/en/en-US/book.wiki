@@ -1,0 +1,82 @@
+
+h1. Prerequisites
+[http://wiki.exoplatform.org/xwiki/bin/view/Portal/Portal%20Manual#HDevelopment| Portlets & Gadgets]
+
+[http://wiki.exoplatform.org/xwiki/bin/view/WS/|REST APIs]
+
+h1. Applications
+
+h2. Portlets
+
+h3. Forum Portlet
+{include:document="portlet_forum.wiki"}
+
+h3. Answers Portlet
+{include:document="Answers_Preferences_Configuration.wiki"}
+
+h3. FAQ Portlet
+{include:document="FAQ_Preferences.wiki"}
+
+h3. Polls Portlet
+{include:document="Poll_Preference.wiki"}
+
+h2. Gadgets
+{include:document="Gadget_poll.wiki"}
+
+h1. Configuration
+
+h2. Components
+{include:document="Components.wiki"}
+
+h2. External-component-plugin
+
+h3. Init data configuration
+{include:document="Init_data_KS.wiki"}
+
+h3. Roles Configuration
+{include:document="Roles_Plugin_Configuration.wiki"}
+
+h3. ProfileProvider Configuration
+{include:document="Profile_Provider_Configuration.wiki"}
+
+h3. Forum Configuration
+
+h4. BBCode Configuration
+{include:document="BBCode_Configuration.wiki"}
+
+h4. Forums Initializer
+{include:document="Initialization_Forum_Plugin_Configuration.wiki"}
+
+h4. Auto-prune
+{include:document="Auto_Prune_Plugin_Configuration.wiki"}
+
+h4. User Statistics
+{include:document="Auto-count_Active_Users_Plugin_Configuration.wiki"}
+
+h4. Update Statistic Data
+{include:document="UpdateForumStatistics.wiki"}
+
+h4. Default User Profile
+{include:document="Forum_Default_User_Profile_Setting.wiki"}
+
+h3. Answer Configuration
+
+h4. Answers Initializer
+{include:document="Answers_Initialization_Plugin.wiki"}
+
+h4. Answers Email Templates Configuration
+{include:document="Answers_Email_Templates_Configuration.wiki"}
+
+h1. Developer reference
+
+h2. Extension points
+{include:document="Extension_points.wiki"}
+
+h2. Internal API
+{include:document="Internal_API.wiki"}
+
+h2. FAQ Template Configuration
+{include:document="template-configuration-plugin.wiki"}
+
+
+
