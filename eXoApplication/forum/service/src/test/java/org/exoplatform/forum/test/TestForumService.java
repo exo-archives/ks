@@ -17,6 +17,7 @@ import javax.jcr.ImportUUIDBehavior;
 
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumPrivateMessage;
@@ -256,7 +257,7 @@ public class TestForumService extends ForumServiceTestCase{
     	topic = createdTopic("Owner");
       list.add(topic);
       listTopicId.add(topic.getId());
-      forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, "");
+      forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, new MessageBuilder());
     }
     topic = list.get(8);
     
@@ -271,7 +272,7 @@ public class TestForumService extends ForumServiceTestCase{
 		// update Topic
     topica.setIsSticky(true) ;
     topica.setTopicName("topic 8") ;
-    forumService_.saveTopic(cat.getId(), forum.getId(), topica, false, false, "") ;
+    forumService_.saveTopic(cat.getId(), forum.getId(), topica, false, false, new MessageBuilder()) ;
     assertEquals("This topic name not is 'topic 8'","topic 8", forumService_.getTopic(cat.getId(), forum.getId(), topic.getId(), "").getTopicName());
     
     // modifyTopic
@@ -291,7 +292,7 @@ public class TestForumService extends ForumServiceTestCase{
 
     // get Topic By User
     topic = createdTopic("demo");
-    forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, "");
+    forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, new MessageBuilder());
     // We have 11 topic: 10 by Owner and 1 by demo
     pagelist = forumService_.getPageTopicByUser("Owner", true, "");
     assertEquals(pagelist.getAvailable(), 10);
@@ -340,7 +341,7 @@ public class TestForumService extends ForumServiceTestCase{
 		this.forumId = forum.getId();
 		forumService_.saveForum(categoryId, forum, true);
 		Topic topic = createdTopic("root");
-		forumService_.saveTopic(categoryId, forumId, topic, true, false, "");
+		forumService_.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
 		this.topicId = topic.getId();
   }
   
@@ -361,7 +362,7 @@ public class TestForumService extends ForumServiceTestCase{
 		for (int i = 0; i < 25; ++i) {
 		  Post post = createdPost();
 		  posts.add(post);
-		  forumService_.savePost(categoryId, forumId, topicId, post, true, "");
+		  forumService_.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
 		}
 		// getPost
 		assertNotNull(forumService_.getPost(categoryId, forumId, topicId, posts.get(0).getId()));
@@ -379,12 +380,12 @@ public class TestForumService extends ForumServiceTestCase{
 		// update Post First
 		Post newPost = (Post)pagePosts.getPage(1).get(1);
 		newPost.setMessage("New message");
-		forumService_.savePost(categoryId, forumId, topicId, newPost, false, "");
+		forumService_.savePost(categoryId, forumId, topicId, newPost, false, new MessageBuilder());
 		assertEquals("New message", forumService_.getPost(categoryId, forumId, topicId, newPost.getId()).getMessage());
 		
 		//test movePost
 		Topic topicnew = createdTopic("root");
-		forumService_.saveTopic(categoryId, forumId, topicnew, true, false, "");
+		forumService_.saveTopic(categoryId, forumId, topicnew, true, false, new MessageBuilder());
 		topicnew = forumService_.getTopic(categoryId, forumId, topicnew.getId(), "root");
 	
 		forumService_.movePost(new String [] {newPost.getPath()}, topicnew.getPath(), false, "test mail content", "");

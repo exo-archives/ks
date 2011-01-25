@@ -337,7 +337,7 @@ public interface ForumService extends ForumServiceLegacy {
                  Topic topic,
                  boolean isNew,
                  boolean isMove,
-                 String defaultEmailContent) throws Exception;
+                 MessageBuilder messageBuilder) throws Exception;
 
   /**
    * Removes the topic.
@@ -475,7 +475,7 @@ public interface ForumService extends ForumServiceLegacy {
                 String topicId,
                 Post post,
                 boolean isNew,
-                String defaultEmailContent) throws Exception;
+                MessageBuilder messageBuilder) throws Exception;
 
   /**
    * Modify posts.
@@ -510,57 +510,6 @@ public interface ForumService extends ForumServiceLegacy {
                 boolean isCreatNewTopic,
                 String mailContent,
                 String link) throws Exception;
-
-  /**
-   * Gets the poll.
-   * 
-   * @param categoryId the category id
-   * @param forumId the forum id
-   * @param topicId the topic id
-   * @return the poll
-   * @throws Exception the exception
-   */
- /* Poll getPoll(String categoryId, String forumId, String topicId) throws Exception;
-
-  *//**
-   * Save poll.
-   * 
-   * @param categoryId the category id
-   * @param forumId the forum id
-   * @param topicId the topic id
-   * @param poll the poll
-   * @param isNew is the new
-   * @param isVote is the vote
-   * @throws Exception the exception
-   *//*
-  void savePoll(String categoryId,
-                String forumId,
-                String topicId,
-                Poll poll,
-                boolean isNew,
-                boolean isVote) throws Exception;
-
-  *//**
-   * Removes the poll.
-   * 
-   * @param categoryId the category id
-   * @param forumId the forum id
-   * @param topicId the topic id
-   * @return the poll
-   * @throws Exception the exception
-   *//*
-  Poll removePoll(String categoryId, String forumId, String topicId) throws Exception;
-
-  *//**
-   * Sets the closed poll.
-   * 
-   * @param categoryId the category id
-   * @param forumId the forum id
-   * @param topicId the topic id
-   * @param poll the poll
-   * @throws Exception the exception
-   *//*
-  void setClosedPoll(String categoryId, String forumId, String topicId, Poll poll) throws Exception;*/
 
   /**
    * Gets the object name by path.

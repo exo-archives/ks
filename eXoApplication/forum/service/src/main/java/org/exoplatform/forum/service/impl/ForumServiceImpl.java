@@ -34,6 +34,7 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.DataStorage;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -386,14 +387,20 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   /**
-   * {@inheritDoc}
-   */
+	 * 
+	 * @deprecated use {@link #saveTopic(String, String, Topic, boolean, boolean, MessageBuilder)}
+	 */
+	@Deprecated
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
-    storage.saveTopic(categoryId, forumId, topic, isNew, isMove, defaultEmailContent);
-    for(ForumEventLifeCycle f : listeners_) {
-      if (isNew) f.addTopic(topic, categoryId, forumId);
-      else f.updateTopic(topic, categoryId, forumId);
-    }
+		saveTopic(categoryId, forumId, topic, isNew, isMove, new MessageBuilder());
+  }
+
+  public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {
+  	storage.saveTopic(categoryId, forumId, topic, isNew, isMove, messageBuilder);
+  	for(ForumEventLifeCycle f : listeners_) {
+  		if (isNew) f.addTopic(topic, categoryId, forumId);
+  		else f.updateTopic(topic, categoryId, forumId);
+  	}
   }
 
   /**
@@ -498,14 +505,20 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
   
   /**
-   * {@inheritDoc}
-   */
+	 * 
+	 * @deprecated use {@link #savePost(String, String, String, Post, boolean, MessageBuilder)}
+	 */
+	@Deprecated
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
-    storage.savePost(categoryId, forumId, topicId, post, isNew, defaultEmailContent);
-    for(ForumEventLifeCycle f : listeners_) {
-      if (isNew) f.addPost(post, categoryId, forumId, topicId);
-      else f.updatePost(post, categoryId, forumId, topicId);
-    }
+  	savePost(categoryId, forumId, topicId, post, isNew, new MessageBuilder());
+  }
+  
+  public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
+  	storage.savePost(categoryId, forumId, topicId, post, isNew, messageBuilder);
+  	for(ForumEventLifeCycle f : listeners_) {
+  		if (isNew) f.addPost(post, categoryId, forumId, topicId);
+  		else f.updatePost(post, categoryId, forumId, topicId);
+  	}
   }
   
   /**

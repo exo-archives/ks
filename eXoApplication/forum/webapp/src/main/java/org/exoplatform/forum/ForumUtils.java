@@ -39,11 +39,14 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 /**
@@ -54,6 +57,7 @@ import org.exoplatform.webui.application.portlet.PortletRequestContext;
  */
 
 public class ForumUtils {
+	protected static Log log = ExoLogger.getLogger(ForumUtils.class);
 	public static final String FIELD_EXOFORUM_LABEL = "eXoForum".intern() ;
 	public static final String FIELD_SEARCHFORUM_LABEL = "SearchForum".intern() ;
 	public static String UPLOAD_FILE_SIZE = "uploadFileSizeLimitMB".intern() ;
@@ -345,10 +349,23 @@ public class ForumUtils {
 				"darkBlue", "IndianRed","DarkCyan" ,"lawnGreen"} ; 
 	}
 	
-	public static String getDefaultMail(){
-		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-		ResourceBundle res = context.getApplicationResourceBundle() ;
-		return res.getString("UINotificationForm.label.notifyEmailContentDefault");
+	public static MessageBuilder getDefaultMail(){
+		MessageBuilder messageBuilder = new MessageBuilder();
+		try {
+			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+			ResourceBundle res = context.getApplicationResourceBundle() ;
+			messageBuilder.setContent(res.getString("UINotificationForm.label.notifyEmailContentDefault"));
+			String header = res.getString("UINotificationForm.label.notifyEmailHeaderSubjectDefault");
+			messageBuilder.setHeaderSubject((isEmpty(header))?"":header);
+			
+			messageBuilder.setTypes(res.getString("UIForumPortlet.label.category"),
+			                           res.getString("UIForumPortlet.label.forum"),
+			                           res.getString("UIForumPortlet.label.topic"),
+			                           res.getString("UIForumPortlet.label.post"));
+		} catch (Exception e) {
+			log.debug("Failed to get resource bundle for default content email notification !", e);
+		}
+		return messageBuilder;
 	}
 
 	public static boolean enableIPLogging(){

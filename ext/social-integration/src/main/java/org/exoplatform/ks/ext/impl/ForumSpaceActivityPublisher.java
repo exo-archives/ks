@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.ks.ext.impl.ForumTransformHTML;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.Post;

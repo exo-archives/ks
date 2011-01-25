@@ -28,6 +28,7 @@ import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
@@ -190,7 +191,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 							post.setIsApproved(!topic.getIsModeratePost());
 							post.setRemoteAddr(remoteAddr);
 							try {
-								forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, true, "");
+								forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, true, new MessageBuilder());
 							} catch (Exception e) {
 								event.getSource().log.debug("Saving post fail: ", e);
 							}
@@ -213,7 +214,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 								}
 								post.setIsApproved(!topic.getIsModeratePost());
 								post.setMessage(comment);
-								forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, isNew, "");
+								forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, isNew, new MessageBuilder());
 							} catch (Exception e) {
 								event.getSource().log.debug("Saving post fail: ", e);
 							}

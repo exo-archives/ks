@@ -2,7 +2,6 @@ package org.exoplatform.ks.ext.impl;
 
 import java.util.Map;
 
-
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.social.webui.activity.BaseUIActivity;

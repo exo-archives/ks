@@ -33,6 +33,7 @@ import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
@@ -564,7 +565,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 									topic.setTopicName(question.getQuestion());
 									topic.setDescription(question.getDetail());
 									topic.setIsApproved(!forumService.getForum(ids[t - 3], ids[t - 2]).getIsModerateTopic());
-									forumService.saveTopic(ids[t - 3], ids[t - 2], topic, false, false, "");
+									forumService.saveTopic(ids[t - 3], ids[t - 2], topic, false, false, new MessageBuilder());
 								}
 							} catch (Exception e) {
 								e.printStackTrace();

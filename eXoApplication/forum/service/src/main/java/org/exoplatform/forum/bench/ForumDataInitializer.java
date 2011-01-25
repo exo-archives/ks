@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
@@ -79,7 +80,7 @@ public class ForumDataInitializer implements Startable {
 				int topicNum = 0;
 				for (Topic topic : topics) {
 		
-					forumService.saveTopic(categoryId, forumId, topic, true, false, "");
+					forumService.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
 					//log.info("Created topic " + topic.getTopicName());
 					
 					String topicId = topic.getId();
@@ -90,7 +91,7 @@ public class ForumDataInitializer implements Startable {
 					long t1 = System.currentTimeMillis();
 					for (Post post : posts) {
 		
-						forumService.savePost(categoryId, forumId, topicId, post, true, "");
+						forumService.savePost(categoryId, forumId, topicId, post, true,  new MessageBuilder());
 						long messageWeight = post.getMessage().length()*2; // in bytes
 						postsWeight += messageWeight;
 	

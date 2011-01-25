@@ -754,4 +754,16 @@ public class FakeForumService implements ForumService {
 		return null;
 	}
 
+	@Override
+	public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

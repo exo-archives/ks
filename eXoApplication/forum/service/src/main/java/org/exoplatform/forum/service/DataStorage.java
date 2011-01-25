@@ -154,7 +154,7 @@ public interface DataStorage {
                  Topic topic,
                  boolean isNew,
                  boolean isMove,
-                 String defaultEmailContent) throws Exception;
+                 MessageBuilder messageBuilder) throws Exception;
 
   Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception;
 
@@ -188,25 +188,12 @@ public interface DataStorage {
                 String topicId,
                 Post post,
                 boolean isNew,
-                String defaultEmailContent) throws Exception;
+                MessageBuilder messageBuilder) throws Exception;
 
   void modifyPost(List<Post> posts, int type) throws Exception;
 
   Post removePost(String categoryId, String forumId, String topicId, String postId) throws Exception;
 
-/*  Poll getPoll(String categoryId, String forumId, String topicId) throws Exception;
-
-  Poll removePoll(String categoryId, String forumId, String topicId) throws Exception;
-
-  void savePoll(String categoryId,
-                String forumId,
-                String topicId,
-                Poll poll,
-                boolean isNew,
-                boolean isVote) throws Exception;
-
-  void setClosedPoll(String categoryId, String forumId, String topicId, Poll poll) throws Exception;
-*/
   void addTag(List<Tag> tags, String userName, String topicPath) throws Exception;
 
   void unTag(String tagId, String userName, String topicPath) throws Exception;

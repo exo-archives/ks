@@ -36,6 +36,7 @@ import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
@@ -305,11 +306,11 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 									post.setLink(linkForum);
 									post.setIsApproved(!topic.getIsModeratePost());
 									post.setRemoteAddr(remoteAddr);
-									forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, true, "");
+									forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, true, new MessageBuilder());
 								} else {
 									post.setIsApproved(!topic.getIsModeratePost());
 									post.setMessage(answers[i].getResponses());
-									forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, false, "");
+									forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, false, new MessageBuilder());
 								}
 							} else {
 								post = new Post();
@@ -320,7 +321,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 								post.setLink(linkForum);
 								post.setIsApproved(!topic.getIsModeratePost());
 								post.setRemoteAddr(remoteAddr);
-								forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, true, "");
+								forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, true, new MessageBuilder());
 								answers[i].setPostId(post.getId());
 							}
 						} catch (Exception e) {

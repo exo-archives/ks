@@ -11,6 +11,7 @@ import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -33,7 +34,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.lifecycle.WebuiBindingContext;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 
 @ComponentConfig(lifecycle = UIFormLifecycle.class, template = "classpath:groovy/ks/social-integration/plugin/space/AnswerUIActivity.gtmpl", events = {
@@ -233,7 +233,7 @@ public class AnswerUIActivity extends BaseUIActivity {
             post.setLink(linkForum);
             post.setIsApproved(!topic.getIsModeratePost());
             post.setRemoteAddr(remoteAddr);
-            forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, true, "");
+            forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, true, new MessageBuilder());
             comment.setPostId(post.getId());
           } else {
             Post post = forumService.getPost(ids[t - 3], ids[t - 2], topicId, postId);
@@ -252,7 +252,7 @@ public class AnswerUIActivity extends BaseUIActivity {
             }
             post.setIsApproved(!topic.getIsModeratePost());
             post.setMessage(comment.getComments());
-            forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, isNew, "");
+            forumService.savePost(ids[t - 3], ids[t - 2], topicId, post, isNew, new MessageBuilder());
           }
 
         }

@@ -51,6 +51,7 @@ import org.exoplatform.faq.webui.popup.UIResponseForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.faq.webui.popup.UIViewUserProfile;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
@@ -1322,7 +1323,7 @@ public class UIQuestions extends UIContainer {
 				topic.setRemoteAddr(remoteAddr);
 				topic.setIsApproved(!forum.getIsModerateTopic());
 				topic.setCanView(new String[] { "" });
-				forumService.saveTopic(categoryId, forumId, topic, true, false, "");
+				forumService.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
 				uiForm.faqService_.saveTopicIdDiscussQuestion(questionId, topicId);
 				Post post = new Post();
 
@@ -1337,7 +1338,7 @@ public class UIQuestions extends UIContainer {
 						post.setLink(link);
 						post.setIsApproved(false);
 						post.setRemoteAddr(remoteAddr);
-						forumService.savePost(categoryId, forumId, topicId, post, true, "");
+						forumService.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
 						answers[i].setPostId(post.getId());
 						answers[i].setNew(true);
 						if (answers[i].getLanguage() == null)
@@ -1356,7 +1357,7 @@ public class UIQuestions extends UIContainer {
 					post.setLink(link);
 					post.setIsApproved(false);
 					post.setRemoteAddr(remoteAddr);
-					forumService.savePost(categoryId, forumId, topicId, post, true, "");
+					forumService.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
 					comments[i].setPostId(post.getId());
 					uiForm.faqService_.saveComment(questionId, comments[i], false);
 				}

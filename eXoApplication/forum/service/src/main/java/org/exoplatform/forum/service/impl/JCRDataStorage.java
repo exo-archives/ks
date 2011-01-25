@@ -22,8 +22,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -69,6 +67,7 @@ import org.exoplatform.forum.service.CalculateModeratorEventListener;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.DeletedUserCalculateEventListener;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -739,7 +738,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 							topic.setDescription(ct);
 							topic.setOwner(topicData.getOwner());
 							topic.setIcon(topicData.getIcon());
-							this.saveTopic(category.getId(), forum.getId(), topic, true, false, " ");
+							this.saveTopic(category.getId(), forum.getId(), topic, true, false, new MessageBuilder());
 							set.add(topic.getOwner());
 
 							List<PostData> posts = topicData.getPosts();
@@ -752,7 +751,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 								post.setMessage(ct);
 								post.setOwner(postData.getOwner());
 								post.setIcon(postData.getIcon());
-								this.savePost(category.getId(), forum.getId(), topic.getId(), post, true, " ");
+								this.savePost(category.getId(), forum.getId(), topic.getId(), post, true, new MessageBuilder());
 								set.add(post.getOwner());
 							}
 						}
@@ -2363,7 +2362,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 					}
 					case Utils.APPROVE: {
 						topicNode.setProperty(EXO_IS_APPROVED, topic.getIsApproved());
-						sendNotification(topicNode.getParent(), topic, null, "", true);
+						sendNotification(topicNode.getParent(), topic, null, new MessageBuilder(), true);
 						setActivePostByTopic(sProvider, topicNode, topic.getIsApproved());
 						getTotalJobWatting(sProvider, userIdsp);
 						break;
@@ -2377,7 +2376,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 						topicNode.setProperty(EXO_IS_WAITING, isWaiting);
 						setActivePostByTopic(sProvider, topicNode, !(isWaiting));
 						if (!isWaiting) {
-							sendNotification(topicNode.getParent(), topic, null, "", true);
+							sendNotification(topicNode.getParent(), topic, null, new MessageBuilder(), true);
 						}
 						getTotalJobWatting(sProvider, userIdsp);
 						break;
@@ -2439,7 +2438,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 		}
 	}
 
-	public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
+	public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		try {
 			Node forumNode = getCategoryHome(sProvider).getNode(categoryId + "/" + forumId);
@@ -2488,7 +2487,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 					userProfileNode.getSession().save();
 				else
 					userProfileNode.save();
-				sendNotification(forumNode, topic, null, defaultEmailContent, true);
+				sendNotification(forumNode, topic, null, messageBuilder, true);
 			} else {
 				topicNode = forumNode.getNode(topic.getId());
 			}
@@ -2553,7 +2552,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 					post.setUserPrivate(new String[] { EXO_USER_PRI });
 					post.setLink(topic.getLink());
 					post.setRemoteAddr(topic.getRemoteAddr());
-					savePost(categoryId, forumId, topic.getId(), post, true, defaultEmailContent);
+					savePost(categoryId, forumId, topic.getId(), post, true, messageBuilder);
 				} else {
 					String id = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
 					if (topicNode.hasNode(id)) {
@@ -2566,7 +2565,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 						post.setMessage(topic.getDescription());
 						post.setIcon(topic.getIcon());
 						post.setAttachments(topic.getAttachments());
-						savePost(categoryId, forumId, topic.getId(), post, false, defaultEmailContent);
+						savePost(categoryId, forumId, topic.getId(), post, false, messageBuilder);
 					}
 				}
 			}
@@ -3101,7 +3100,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 		return postNew;
 	}
 
-	public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
+	public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		try {
 			Node CategoryNode = getCategoryHome(sProvider).getNode(categoryId);
@@ -3292,7 +3291,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 						sendAlertJob = true;
 					}
 				}
-				if (isNew && defaultEmailContent.length() == 1)
+				if (isNew && messageBuilder.getLink().length() == 0)
 					sendAlertJob = false; // initDefaulDate
 			} else {
 				if (post.getIsApproved() && !post.getIsHidden())
@@ -3307,7 +3306,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 				forumNode.save();
 			}
 			if (!isFistPost && isNew) {
-				sendNotification(topicNode, null, post, defaultEmailContent.trim(), true);
+				sendNotification(topicNode, null, post, messageBuilder, true);
 			}
 			if (sendAlertJob) {
 				List<String> userIdsp = new ArrayList<String>();
@@ -3343,31 +3342,26 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 			return false;
 	}
 
-	private void sendNotification(Node node, Topic topic, Post post, String defaultEmailContent, boolean isApprovePost) throws Exception {
+	private void sendNotification(Node node, Topic topic, Post post, MessageBuilder messageBuilder, boolean isApprovePost) throws Exception {
 		Node forumAdminNode = null;
-		String headerSubject = "", catName = "", forumName = "", topicName = "";
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		try {
 			try {
 				forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
 			} catch (Exception e) {
 			}
-			String content = "";
 			if (forumAdminNode != null) {
 				if (forumAdminNode.hasProperty(EXO_NOTIFY_EMAIL_CONTENT))
-					content = forumAdminNode.getProperty(EXO_NOTIFY_EMAIL_CONTENT).getString();
+					messageBuilder.setContent(forumAdminNode.getProperty(EXO_NOTIFY_EMAIL_CONTENT).getString());
 				if (forumAdminNode.hasProperty(EXO_ENABLE_HEADER_SUBJECT)) {
 					if (forumAdminNode.getProperty(EXO_ENABLE_HEADER_SUBJECT).getBoolean()) {
 						if (forumAdminNode.hasProperty(EXO_HEADER_SUBJECT)) {
-							headerSubject = forumAdminNode.getProperty(EXO_HEADER_SUBJECT).getString();
+							messageBuilder.setHeaderSubject(forumAdminNode.getProperty(EXO_HEADER_SUBJECT).getString());
 						}
 					}
 				}
-			} else if (defaultEmailContent != null && defaultEmailContent.length() > 0) {
-				content = defaultEmailContent;
-			} else {
-				content = Utils.DEFAULT_EMAIL_CONTENT;
 			}
+			
 			List<String> listUser = new ArrayList<String>();
 			List<String> emailList = new ArrayList<String>();
 			List<String> emailListCate = new ArrayList<String>();
@@ -3377,10 +3371,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 			int count = 0;
 			if (post == null) {
 				Node forumNode = node;
-				forumName = node.getProperty(EXO_NAME).getString();
+				messageBuilder.setForumName(node.getProperty(EXO_NAME).getString());
 				node = node.getParent();
-				catName = node.getProperty(EXO_NAME).getString();
-				topicName = topic.getTopicName();
+				messageBuilder.setCatName(node.getProperty(EXO_NAME).getString());
+				messageBuilder.setTopicName(topic.getTopicName());
 				while (true) {
 					emailListCate.addAll(emailList);
 					emailList = new ArrayList<String>();
@@ -3423,48 +3417,20 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 							emailList.remove(string);
 					}
 					if (emailList.size() > 0) {
-						Message message = new Message();
-						message.setMimeType(TEXT_HTML);
-						String owner = topic.getOwner();
-						try {
-								message.setFrom(getScreenName(sProvider, owner));
-						} catch (Exception e) {
-						}
-						String content_ = node.getProperty(EXO_NAME).getString();
-						if (headerSubject != null && headerSubject.length() > 0) {
-							headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
-							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
-							headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
-						} else {
-							headerSubject = "[" + catName + "][" + forumName + "]" + topicName;
-						}
-						message.setSubject(headerSubject);
+						String owner = getScreenName(sProvider, topic.getOwner());
+						messageBuilder.setObjName(node.getProperty(EXO_NAME).getString());
 						if (node.isNodeType(EXO_FORUM)) {
-							content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
-							content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
+							messageBuilder.setWatchType(Utils.FORUM) ;
 						} else {
-							content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
-							content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
+							messageBuilder.setWatchType(Utils.CATEGORY) ;
 						}
-						String postFistId = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
-						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Topic");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", org.exoplatform.ks.common.Utils.convertCodeHTML(topic.getDescription()));
-						Date createdDate = topic.getCreatedDate();
-						Format formatter = new SimpleDateFormat("HH:mm");
-						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate) + " GMT+0");
-						formatter = new SimpleDateFormat("MM/dd/yyyy");
-						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-						content_ = StringUtils.replace(content_, "$POSTER", topic.getOwner());
-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink().replace("public", "private")
-								+ "/" + postFistId + "/true\">click here</a><br/>");
-
-						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
-						content_ = StringUtils.replace(content_, "$FORUM", forumName);
-						content_ = StringUtils.replace(content_, "$TOPIC", topicName);
-
-						message.setBody(content_);
-						sendEmailNotification(emailList, message);
+						messageBuilder.setId(topic.getId().replaceFirst(Utils.TOPIC, Utils.POST));
+						messageBuilder.setAddType(Utils.TOPIC);
+						messageBuilder.setMessage(topic.getDescription());
+						messageBuilder.setCreatedDate(topic.getCreatedDate());
+						messageBuilder.setOwner(owner);
+						messageBuilder.setLink(topic.getLink());
+						sendEmailNotification(emailList, messageBuilder.getContentEmail());
 					}
 					if (node.isNodeType(EXO_FORUM) || count > 1)
 						break;
@@ -3478,9 +3444,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 					 */
 					Node forumNode = node.getParent();
 					Node categoryNode = forumNode.getParent();
-					catName = categoryNode.getProperty(EXO_NAME).getString();
-					forumName = forumNode.getProperty(EXO_NAME).getString();
-					topicName = node.getProperty(EXO_NAME).getString();
+					messageBuilder.setForumName(categoryNode.getProperty(EXO_NAME).getString());
+					messageBuilder.setCatName(forumNode.getProperty(EXO_NAME).getString());
+					messageBuilder.setTopicName(node.getProperty(EXO_NAME).getString());
 					boolean isSend = false;
 					if (post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
 						isSend = true;
@@ -3588,41 +3554,17 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 					}
 
 					String fullName = getScreenName(sProvider, post.getOwner());
+					messageBuilder.setOwner(fullName);
+					messageBuilder.setId(post.getId());
+					messageBuilder.setAddType(Utils.POST);
+					messageBuilder.setMessage(post.getMessage());
+					messageBuilder.setCreatedDate(post.getCreatedDate());
+					messageBuilder.setLink(post.getLink());
 					// send email by category
-					String content_ = "";
 					if (emailListCategory.size() > 0) {
-						Message message = new Message();
-						message.setFrom(fullName);
-						message.setMimeType(TEXT_HTML);
-						String categoryName = categoryNode.getProperty(EXO_NAME).getString();
-						content_ = node.getProperty(EXO_NAME).getString();
-						if (headerSubject != null && headerSubject.length() > 0) {
-							headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
-							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
-							headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
-						} else {
-							headerSubject = "[" + catName + "][" + forumName + "]" + topicName;
-						}
-						message.setSubject(headerSubject);
-						content_ = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
-						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
-						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", org.exoplatform.ks.common.Utils.convertCodeHTML(post.getMessage()));
-						Date createdDate = post.getCreatedDate();
-						Format formatter = new SimpleDateFormat("HH:mm");
-						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate) + " GMT+0");
-						formatter = new SimpleDateFormat("MM/dd/yyyy");
-						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-						content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") + "/" + post.getId() + "/true\">click here</a><br/>");
-
-						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
-						content_ = StringUtils.replace(content_, "$FORUM", forumName);
-						content_ = StringUtils.replace(content_, "$TOPIC", topicName);
-
-						message.setBody(content_);
-						sendEmailNotification(emailListCategory, message);
+						messageBuilder.setObjName(messageBuilder.getCatName());
+						messageBuilder.setWatchType(Utils.CATEGORY) ;
+						sendEmailNotification(emailListCategory, messageBuilder.getContentEmail());
 					}
 					for (String string : emailListCategory) {
 						while (emailListForum.contains(string))
@@ -3631,36 +3573,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
 					// send email by forum
 					if (emailListForum.size() > 0) {
-						Message message = new Message();
-						message.setFrom(fullName);
-						message.setMimeType(TEXT_HTML);
-						if (headerSubject != null && headerSubject.length() > 0) {
-							headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
-							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
-							headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
-						} else {
-							headerSubject = "[" + catName + "][" + forumName + "]" + topicName;
-						}
-						message.setSubject(headerSubject);
-						content_ = StringUtils.replace(content, "$OBJECT_NAME", forumNode.getProperty(EXO_NAME).getString());
-						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
-						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", org.exoplatform.ks.common.Utils.convertCodeHTML(post.getMessage()));
-						Date createdDate = post.getCreatedDate();
-						Format formatter = new SimpleDateFormat("HH:mm");
-						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate) + " GMT+0");
-						formatter = new SimpleDateFormat("MM/dd/yyyy");
-						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-						content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") + "/" + post.getId() + "/true\">click here</a><br/>");
-
-						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
-						content_ = StringUtils.replace(content_, "$FORUM", forumName);
-						content_ = StringUtils.replace(content_, "$TOPIC", topicName);
-
-						message.setBody(content_);
-						sendEmailNotification(emailListForum, message);
+						messageBuilder.setObjName(messageBuilder.getForumName());
+						messageBuilder.setWatchType(Utils.FORUM) ;
+						sendEmailNotification(emailListForum, messageBuilder.getContentEmail());
 					}
 					for (String string : emailListCategory) {
 						while (emailList.contains(string))
@@ -3673,38 +3588,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
 					// send email by topic
 					if (emailList.size() > 0) {
-						Message message = new Message();
-						message.setFrom(fullName);
-						message.setMimeType(TEXT_HTML);
-						if (headerSubject != null && headerSubject.length() > 0) {
-							headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
-							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
-							headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
-						} else {
-							headerSubject = "[" + catName + "][" + forumName + "]" + topicName;
-						}
-						message.setSubject(headerSubject);
-						content_ = StringUtils.replace(content, "$OBJECT_NAME", topicName);
-						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
-						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", org.exoplatform.ks.common.Utils.convertCodeHTML(post.getMessage()));
-						Date createdDate = post.getCreatedDate();
-						Format formatter = new SimpleDateFormat("HH:mm");
-						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate) + " GMT+0");
-						formatter = new SimpleDateFormat("MM/dd/yyyy");
-						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-						content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId()
-								+ "\">click here</a><br/>");
-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private")
-								+ "/" + post.getId() + "/true\">click here</a><br/>");
-
-						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
-						content_ = StringUtils.replace(content_, "$FORUM", forumName);
-						content_ = StringUtils.replace(content_, "$TOPIC", topicName);
-
-						message.setBody(content_);
-						sendEmailNotification(emailList, message);
+						messageBuilder.setObjName(messageBuilder.getTopicName());
+						messageBuilder.setWatchType(Utils.TOPIC) ;
+						sendEmailNotification(emailList, messageBuilder.getContentEmail());
 					}
 				}
 			}
@@ -3745,7 +3631,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 					case Utils.APPROVE: {
 						postNode.setProperty(EXO_IS_APPROVED, true);
 						post.setIsApproved(true);
-						sendNotification(topicNode, null, post, "", false);
+						sendNotification(topicNode, null, post, new MessageBuilder(), false);
 						break;
 					}
 					case Utils.HIDDEN: {
@@ -3765,7 +3651,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 							forumNode.setProperty(EXO_POST_COUNT, forumPostCount - 1);
 						} else {
 							postNode.setProperty(EXO_IS_HIDDEN, false);
-							sendNotification(topicNode, null, post, "", false);
+							sendNotification(topicNode, null, post, new MessageBuilder(), false);
 						}
 						break;
 					}
