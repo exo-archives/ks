@@ -28,6 +28,7 @@ import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
@@ -220,34 +221,6 @@ public class Utils {
     MOWService mowService = (MOWService) PortalContainer.getComponent(MOWService.class);
     WikiStoreImpl store = (WikiStoreImpl) mowService.getModel().getWikiStore();   
     return store.getWikiContainer(wikiType).getAllWikis();     
-  }
-  
-  public static WikiPageParams getPageParamsFromPath(String path) {  
-    if (path == null) {
-      return null;
-    }
-    WikiPageParams result = new WikiPageParams();
-    path= path.trim();
-    if (path.indexOf("/") < 0) {
-      result.setType(path);
-    } else {
-      String[] array = path.split("/");
-      if (array.length >= 2) {
-        result.setType(array[0]);
-        result.setOwner(array[1]);
-        if (array.length >= 3) {
-          result.setPageId(array[array.length - 1]);
-        }
-      }
-
-    }
-    return result;
-  }
-  
-  public static String getPathFromPageParams(WikiPageParams param) {
-    if (param.getType() != null && param.getOwner() != null && param.getPageId() != null)
-      return param.getType() + "/" + param.getOwner() + "/" + param.getPageId();
-    return null;
   }
 
   public static String getWikiType(Wiki wiki) {

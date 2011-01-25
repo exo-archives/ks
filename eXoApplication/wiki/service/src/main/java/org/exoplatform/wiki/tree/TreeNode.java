@@ -48,7 +48,7 @@ public class TreeNode {
   
   final static public String PATH            = "path";
 
-  final static public String CURRENT_PATH    = "current";
+  final static public String CURRENT_PATH    = "page";
   
   public static final String SHOW_EXCERPT    = "excerpt";
 

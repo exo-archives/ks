@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
@@ -87,7 +89,7 @@ public class TreeUtils {
       currentPath = (String) context.get(TreeNode.CURRENT_PATH);
       showExcerpt = (Boolean) context.get(TreeNode.SHOW_EXCERPT);
     }
-    currentPageParams = Utils.getPageParamsFromPath(currentPath);
+    currentPageParams = getPageParamsFromPath(currentPath);
 
     for (TreeNode child : treeNode.getChildren()) {
       isSelectable = true;
@@ -109,12 +111,59 @@ public class TreeUtils {
           isSelectable = false;
       }
       if (showExcerpt != null && showExcerpt) {
-        WikiPageParams params = Utils.getPageParamsFromPath(child.getPath());
+        WikiPageParams params = getPageParamsFromPath(child.getPath());
         excerpt = MacroUtils.getExcerpts(params);
       }
       children.add(new JsonNodeData(child, isLastNode, isSelectable, currentPath, excerpt, context));
       counter++;
     }
     return children;
+  }
+  
+
+  
+  public static WikiPageParams getPageParamsFromPath(String path) throws Exception {
+    if (path == null) {
+      return null;
+    }
+    WikiPageParams result = new WikiPageParams();
+    path = path.trim();
+    if (path.indexOf("/") < 0) {
+      result.setType(path);
+    } else {
+      String[] array = path.split("/");
+      result.setType(array[0]);
+      if (array.length < 3) {
+        result.setOwner(array[1]);
+      } else if (array.length >= 3) {
+        if (array[0].equals(PortalConfig.GROUP_TYPE)) {
+          OrganizationService oService = (OrganizationService) ExoContainerContext.getCurrentContainer()
+                                                                                  .getComponentInstanceOfType(OrganizationService.class);
+          String groupId = path.substring(path.indexOf("/") + 1);
+          if (oService.getGroupHandler().findGroupById(groupId) != null) {
+            result.setOwner(groupId);
+          } else {
+            result.setPageId(path.substring(path.lastIndexOf("/") + 1));
+            String owner = path.substring(path.indexOf("/") + 1, path.lastIndexOf("/"));
+            while (oService.getGroupHandler().findGroupById(owner) == null) {
+              owner = owner.substring(0,owner.lastIndexOf("/"));
+            }
+            result.setOwner(owner);
+          }
+        } else {
+          // if (array[0].equals(PortalConfig.PORTAL_TYPE) || array[0].equals(PortalConfig.USER_TYPE))
+          result.setOwner(array[1]);
+          result.setPageId(array[array.length-1]);
+        }
+      }
+    }
+    return result;
+  }
+ 
+  
+  public static String getPathFromPageParams(WikiPageParams param) {
+    if (param.getType() != null && param.getOwner() != null && param.getPageId() != null)
+      return param.getType() + "/" + param.getOwner() + "/" + param.getPageId();
+    return null;
   }
 }

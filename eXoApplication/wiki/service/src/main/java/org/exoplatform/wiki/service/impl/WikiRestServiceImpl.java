@@ -233,14 +233,16 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
                               @QueryParam(TreeNode.DEPTH) String depth) {
     try {
       List<JsonNodeData> responseData = new ArrayList<JsonNodeData>();
-      path = URLDecoder.decode(path, "utf-8").replace(".", "/");
-      if (currentPath != null)
-        currentPath = URLDecoder.decode(currentPath, "utf-8").replace(".", "/");
       HashMap<String, Object> context = new HashMap<String, Object>();
+      path = URLDecoder.decode(path, "utf-8").replace(".", "/");
+      if (currentPath != null){
+        currentPath = URLDecoder.decode(currentPath, "utf-8").replace(".", "/");
+        context.put(TreeNode.CURRENT_PATH, currentPath);
+      }   
       context.put(TreeNode.SHOW_EXCERPT, showExcerpt);
       if (type.equalsIgnoreCase(TREETYPE.ALL.toString())) {
         WikiPageParams pageParam = new WikiPageParams();
-        pageParam = Utils.getPageParamsFromPath(path);
+        pageParam = TreeUtils.getPageParamsFromPath(path);
         PageImpl page = (PageImpl) wikiService.getPageById(pageParam.getType(),
                                                            pageParam.getOwner(),
                                                            pageParam.getPageId());
@@ -252,7 +254,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
         if (depth == null)
           depth = "1";
         context.put(TreeNode.DEPTH, depth);        
-        WikiPageParams pageParams = Utils.getPageParamsFromPath(path);
+        WikiPageParams pageParams = TreeUtils.getPageParamsFromPath(path);
         responseData = getJsonDescendants(pageParams, context);
       }
       return Response.ok(new BeanToJsons(responseData), MediaType.APPLICATION_JSON)

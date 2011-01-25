@@ -26,6 +26,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.utils.Utils;
 
 /**
@@ -61,7 +62,7 @@ public class UIWikiLocationContainer extends UIContainer {
       UIWikiBreadCrumb newlocation = container.getChildById(NEW_LOCATION);
       String value = event.getRequestContext().getRequestParameter(OBJECTID);
       value = TitleResolver.getId(value, false);
-      WikiPageParams params = Utils.getPageParamsFromPath(value);
+      WikiPageParams params = TreeUtils.getPageParamsFromPath(value);
       newlocation.setBreadCumbs(wikiService.getBreadcumb(params.getType(),
                                                          params.getOwner(),
                                                          params.getPageId()));

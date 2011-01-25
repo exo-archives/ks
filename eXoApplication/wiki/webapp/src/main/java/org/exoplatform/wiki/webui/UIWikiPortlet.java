@@ -46,6 +46,7 @@ import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.webui.control.UIPageToolBar;
 import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
 
@@ -281,7 +282,7 @@ public class UIWikiPortlet extends UIPortletApplication {
     public void execute(Event<UIWikiPortlet> event) throws Exception {      
       String value = event.getRequestContext().getRequestParameter(OBJECTID);
       value = TitleResolver.getId(value, false);
-      WikiPageParams params = org.exoplatform.wiki.utils.Utils.getPageParamsFromPath(value);
+      WikiPageParams params = TreeUtils.getPageParamsFromPath(value);
       Utils.redirect(params, WikiMode.VIEW);
     }
   }

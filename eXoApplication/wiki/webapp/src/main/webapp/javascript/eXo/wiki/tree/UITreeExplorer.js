@@ -8,6 +8,7 @@ UITreeExplorer.prototype.init = function( componentid, initParam , isFullRender 
   var component = document.getElementById(componentid);
   var initURL = eXo.core.DOMUtil.findFirstDescendantByClass(component, "input", "InitURL");
   var initNode =  eXo.core.DOMUtil.findFirstDescendantByClass(component,"div","NodeGroup");
+  initParam = me.cleanParam(initParam);
   me.render(initParam, initNode, isFullRender);
 };
 
@@ -183,4 +184,10 @@ UITreeExplorer.prototype.buildNode = function(data) {
   childNode += " </div>"; 
   return childNode;
 }
+
+
+UITreeExplorer.prototype.cleanParam = function(data){
+  return data.replace(/&amp;/g, "&");
+}
+
 eXo.wiki.UITreeExplorer = new UITreeExplorer();

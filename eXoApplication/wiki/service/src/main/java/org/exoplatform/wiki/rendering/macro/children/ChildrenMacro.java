@@ -31,7 +31,6 @@ import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.tree.TreeNode;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
-import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
@@ -134,7 +133,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
                                                                .getComponentInstanceOfType(WikiService.class);
     List<Block> blocks = new ArrayList<Block>();
     Link link = new Link();
-    WikiPageParams params = Utils.getPageParamsFromPath(node.getPath());
+    WikiPageParams params = TreeUtils.getPageParamsFromPath(node.getPath());
     PageImpl page = (PageImpl) wikiService.getPageById(params.getType(),
                                                        params.getOwner(),
                                                        params.getPageId());
