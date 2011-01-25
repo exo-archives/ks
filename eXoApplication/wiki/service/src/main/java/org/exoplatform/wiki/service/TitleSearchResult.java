@@ -21,6 +21,7 @@ import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
+import org.exoplatform.wiki.utils.Utils;
 
 /**
  * Created by The eXo Platform SAS
@@ -105,13 +106,13 @@ public class TitleSearchResult {
     StringBuilder sb = new StringBuilder();
     if (WikiNodeType.WIKI_PAGE_CONTENT.equals(getType())) {
       String temp = path.substring(0, path.lastIndexOf("/"));
-      String wikiType= getWikiType();
+      String wikiType = getWikiType();
       if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(wikiType)) {
         sb.append("/");
         sb.append(wikiType);
         sb.append("/");
-        sb.append(getWiki().getOwner());
-      }      
+        sb.append(Utils.validateWikiOwner(wikiType, getWiki().getOwner()));
+      }
       sb.append(temp.substring(temp.lastIndexOf("/")));
     } else if (WikiNodeType.WIKI_ATTACHMENT.equals(getType())) {
       AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(getPath(),

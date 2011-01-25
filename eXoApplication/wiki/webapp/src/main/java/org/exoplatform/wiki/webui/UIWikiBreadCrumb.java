@@ -30,6 +30,7 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.wiki.service.BreadcrumbData;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.utils.Utils;
 
 /**
  * Created by The eXo Platform SAS
@@ -113,7 +114,7 @@ public class UIWikiBreadCrumb extends UIContainer {
     if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(breadCumbData.getWikiType())) {
       sb.append(breadCumbData.getWikiType());
       sb.append("/");
-      sb.append(breadCumbData.getWikiOwner());
+      sb.append(Utils.validateWikiOwner(breadCumbData.getWikiType(), breadCumbData.getWikiOwner()));
       sb.append("/");
     }
     sb.append(breadCumbData.getId());

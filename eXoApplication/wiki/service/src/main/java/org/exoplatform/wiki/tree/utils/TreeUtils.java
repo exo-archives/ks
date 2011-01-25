@@ -139,7 +139,7 @@ public class TreeUtils {
         if (array[0].equals(PortalConfig.GROUP_TYPE)) {
           OrganizationService oService = (OrganizationService) ExoContainerContext.getCurrentContainer()
                                                                                   .getComponentInstanceOfType(OrganizationService.class);
-          String groupId = path.substring(path.indexOf("/") + 1);
+          String groupId = path.substring(path.indexOf("/"));
           if (oService.getGroupHandler().findGroupById(groupId) != null) {
             result.setOwner(groupId);
           } else {
