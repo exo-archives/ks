@@ -1346,6 +1346,10 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -393px;
 }
 
+.UIAnswersPortlet .AddWatchIcon {
+	height: 22px; width: 22px;
+}
+
 .UIAnswersPortlet .MenuItem .Watch {
 	background: url('background/FAQPortlet.gif') no-repeat 10px -393px;
 }

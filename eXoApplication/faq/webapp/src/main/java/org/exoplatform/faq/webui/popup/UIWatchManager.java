@@ -23,6 +23,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Watch;
+import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPageIterator;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
@@ -58,6 +59,7 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIWatchManager extends BaseUIForm implements UIPopupComponent {
 	private String categoryId_ = "";
+	private static String ADD = "add";
 	private List<Watch> listWatchs_ = new ArrayList<Watch>();
 	private String LIST_EMAILS_WATCH = "listEmailsWatch";
 	private UIAnswersPageIterator pageIterator;
@@ -116,14 +118,6 @@ public class UIWatchManager extends BaseUIForm implements UIPopupComponent {
 		}
 	}
 
-	/*
-	 * public List<Watch> getListWatch() throws Exception { long pageSelected ; if(check_ == false) { if(curentPage_ > 1){ pageSelected = curentPage_ ; curentPage_ = 0; } else pageSelected =
-	 * pageIterator.getPageSelected(); } else pageSelected = pageIterator.getPageSelected(); listWatchs_ = new ArrayList<Watch>(); try { listWatchs_.addAll(pageList.getPageListWatch(pageSelected,
-	 * FAQUtils.getCurrentUser())); if(listWatchs_.isEmpty()){ UIAnswersPageIterator pageIterator = null ; while(listWatchs_.isEmpty() && pageSelected > 1) { pageIterator =
-	 * this.getChildById(LIST_EMAILS_WATCH) ; listWatchs_.addAll(pageList.getPageListWatch(pageSelected, FAQUtils.getCurrentUser())); pageIterator.setSelectPage(--pageSelected) ; } } else
-	 * pageIterator.setSelectPage(pageSelected) ; } catch (Exception e) { } check_ = false ; return listWatchs_ ; }
-	 */
-
 	@SuppressWarnings("unused")
 	private List<Watch> getListWatch() throws Exception {
 		return this.listWatchs_;
@@ -133,11 +127,13 @@ public class UIWatchManager extends BaseUIForm implements UIPopupComponent {
 		public void onEvent(Event<UIWatchManager> event, UIWatchManager watchManager, String user) throws Exception {
 			UIPopupContainer popupContainer = watchManager.getParent();
 			UIWatchForm watchForm = openPopup(popupContainer, UIWatchForm.class, 450, 0);
-			for (Watch watch : watchManager.listWatchs_) {
-				if (watch.getUser().equals(user)) {
-					watchForm.setWatch(watch);
-					watchForm.setCategoryID(watchManager.getCategoryID());
-					break;
+			watchForm.setCategoryID(watchManager.getCategoryID());
+			if(!user.equals(ADD)) {
+				for (Watch watch : watchManager.listWatchs_) {
+					if (watch.getUser().equals(user)) {
+						watchForm.setWatch(watch);
+						break;
+					}
 				}
 			}
 		}

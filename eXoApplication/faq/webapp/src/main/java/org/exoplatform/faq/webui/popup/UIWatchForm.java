@@ -81,6 +81,7 @@ public class UIWatchForm extends BaseUIForm implements UIPopupComponent {
 		emailAddress.setValue(new ArrayList<String>(Arrays.asList(values)));
 		UIFormStringInput user = getChildById(USER_NAME);
 		user.setValue(watch.getUser());
+		user.setEditable(false);
 	}
 
 	static public class SaveActionListener extends EventListener<UIWatchForm> {
