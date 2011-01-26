@@ -877,7 +877,7 @@
 						<td class="PostViewContainer">
 							
 						<% if (idLastPost.equals(postId)) { %>
-							<div class="PostViewHeader" style="background-color:#d0e4fe;">
+							<div class="PostViewHeader BackgroundHeader">
 						<% } else {  %>							
 								<div class="PostViewHeader">
 						<% } %>

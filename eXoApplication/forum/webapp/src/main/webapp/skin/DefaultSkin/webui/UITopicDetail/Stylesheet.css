@@ -155,12 +155,16 @@
 .UITopicDetail .PostViewContainer {
 	color: #2c2c2c;
 	border-left: solid 1px #c4c4c4;
-	padding: 0px 8px;
+	padding: 0px;
 }
 
 .UITopicDetail .PostViewContainer .PostViewHeader {
 	border-bottom: 1px solid #d8d8d8;
-	padding: 5px 0px 3px 0px;
+	padding: 5px 8px 3px 8px;
+}
+
+.UITopicDetail .PostViewContainer .BackgroundHeader {
+	background-color:#d0e4fe;
 }
 
 .UITopicDetail .PostViewContainer .PostViewIcon {
@@ -173,6 +177,10 @@
 
 .UITopicDetail .PostViewContainer .PostTime {
 	padding: 2px 0px 0px 20px;
+}
+
+.UITopicDetail .PostViewContainer .PostContentContainer {
+	padding: 0px 8px;
 }
 
 .UITopicDetail .PostViewContainer .PostContent {
@@ -260,7 +268,7 @@
 
 .UITopicDetail .PostViewContainer .FootPost {
 	border-top: 1px dotted #9b9b9b;
-	padding: 5px 0px 0px 0px;
+	padding: 5px 8px 0px 8px;
 	width: auto;
 }
 
@@ -400,11 +408,3 @@
 .UITopicDetail .MenuTagContainer .TagItem{
 	float: left;
 }
-
-
-
-
-
-
-
-
