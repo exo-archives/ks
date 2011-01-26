@@ -386,6 +386,9 @@
           <defaultValue>false</defaultValue>
         </defaultValues>
       </propertyDefinition>
+      <propertyDefinition name="exo:relation" requiredType="Reference" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+        <valueConstraints/>
+      </propertyDefinition>
     </propertyDefinitions>
     <childNodeDefinitions>
       <childNodeDefinition name="content" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">

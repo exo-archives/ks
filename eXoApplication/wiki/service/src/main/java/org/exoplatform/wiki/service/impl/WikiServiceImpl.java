@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -869,5 +870,31 @@ public class WikiServiceImpl implements WikiService {
     }
     return pageListeners;
   }
+
+  @Override
+  public boolean addRelatedPage(WikiPageParams orginaryPageParams, WikiPageParams relatedPageParams) throws Exception {
+    
+    PageImpl orginary = (PageImpl) getPageById(orginaryPageParams.getType(), orginaryPageParams.getOwner(), orginaryPageParams.getPageId());
+    PageImpl related = (PageImpl) getPageById(relatedPageParams.getType(), relatedPageParams.getOwner(), relatedPageParams.getPageId());
+    
+    return orginary.addRelatedPage(related) != null;
+  }
+
+  @Override
+  public List<Page> getRelatedPage(WikiPageParams pageParams) throws Exception {
+    PageImpl page = (PageImpl) getPageById(pageParams.getType(), pageParams.getOwner(), pageParams.getPageId());
+    List<PageImpl> pages = page.getRelatedPages();
+    return new ArrayList<Page>(pages);
+  }
+
+  @Override
+  public boolean removeRelatedPage(WikiPageParams orginaryPageParams,
+                                   WikiPageParams relatedPageParams) throws Exception {
+    PageImpl orginary = (PageImpl) getPageById(orginaryPageParams.getType(), orginaryPageParams.getOwner(), orginaryPageParams.getPageId());
+    PageImpl related = (PageImpl) getPageById(relatedPageParams.getType(), relatedPageParams.getOwner(), relatedPageParams.getPageId());
+    return orginary.removeRelatedPage(related) != null;
+  }
+  
+  
   
 }

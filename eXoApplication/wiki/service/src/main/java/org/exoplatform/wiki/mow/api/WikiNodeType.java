@@ -155,5 +155,7 @@ public interface WikiNodeType {
     public final static String FILE_TYPE                  = "fileType";
     
     public final static String WATCHER                    = "watcher";
+    
+    public final static String RELATION                    = "exo:relation";
   }
 }

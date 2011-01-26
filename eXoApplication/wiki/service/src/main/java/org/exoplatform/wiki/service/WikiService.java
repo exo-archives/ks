@@ -65,7 +65,7 @@ public interface WikiService {
 	public boolean isExisting(String wikiType, String wikiOwner, String pageId) throws Exception ;
 	
 	/**
-	 * register a {@link PageWikiListener}
+	 * register a {@link PageWikiListener} 
 	 * @param listener
 	 */
 	public void addComponentPlugin(ComponentPlugin plugin);
@@ -73,7 +73,12 @@ public interface WikiService {
 	 * @return list of {@link PageWikiListener}
 	 */
 	public List<PageWikiListener> getPageListeners();
-
+	
+	public boolean addRelatedPage(WikiPageParams orginaryPageParams, WikiPageParams relatedPageParams) throws Exception;
+	
+	public List<Page> getRelatedPage(WikiPageParams pageParams) throws Exception;
+	
+	public boolean removeRelatedPage(WikiPageParams orginaryPageParams, WikiPageParams relatedPageParams) throws Exception;
 }
 
 

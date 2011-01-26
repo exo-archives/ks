@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.Session;
+import javax.jcr.Value;
 import javax.jcr.version.Version;
 
 import org.chromattic.api.ChromatticSession;
@@ -408,4 +410,100 @@ public abstract class PageImpl implements Page {
   @Destroy
   public abstract void remove();
   
+  /**
+   * add a related page
+   * @param page
+   * @return uuid of node of related page if add successfully. <br>
+   *         null if add failed.
+   * @throws NullPointerException if the param is null
+   * @throws Exception when any error occurs.
+   */
+  public String addRelatedPage(PageImpl page) throws Exception {
+    if (page == null) throw new NullPointerException("related page is null");
+    ChromatticSession chSession = getChromatticSession();
+    Session jcrSession = chSession.getJCRSession();
+    Node myJcrNode = (Node) jcrSession.getItem(getPath());
+    
+    Map<String, Value> referedUUIDs = new HashMap<String, Value>();
+    if (myJcrNode.hasProperty(WikiNodeType.Definition.RELATION)) {
+       Value[] values = myJcrNode.getProperty(WikiNodeType.Definition.RELATION).getValues();
+       if (values != null && values.length > 0) {
+         for (Value value : values) {
+           referedUUIDs.put(value.getString(), value);
+         }
+       }
+    }
+    Node referredJcrNode = (Node) jcrSession.getItem(page.getPath());
+    String referedUUID = referredJcrNode.getUUID();
+    
+    if (referedUUIDs.containsKey(referedUUID)) {
+      return null;
+    }
+    
+    Value value2Add = jcrSession.getValueFactory().createValue(referredJcrNode);
+    referedUUIDs.put(referedUUID, value2Add);
+    
+    myJcrNode.setProperty(WikiNodeType.Definition.RELATION, referedUUIDs.values().toArray(new Value[referedUUIDs.size()]));
+    myJcrNode.save();
+    return referedUUID;
+  }
+  
+  public List<PageImpl> getRelatedPages() throws Exception {
+    List<PageImpl> pages = new ArrayList<PageImpl>();
+    ChromatticSession chSession = getChromatticSession();
+    Session jcrSession = chSession.getJCRSession();
+    Node myJcrNode = (Node) jcrSession.getItem(getPath());
+    if (myJcrNode.hasProperty(WikiNodeType.Definition.RELATION)) {
+      Value[] values = myJcrNode.getProperty(WikiNodeType.Definition.RELATION).getValues();
+      if (values != null && values.length > 0) {
+        for (Value value : values) {
+          PageImpl page = chSession.findById(PageImpl.class, value.getString());
+          pages.add(page);
+        }
+      }
+    }
+    return pages;
+  }
+  
+  /**
+   * remove a specified related page.
+   * @param page
+   * @return uuid of node if related page is removed successfully <br>
+   *         null if removing failed.
+   * @throws NullPointerException if param is null
+   * @throws Exception when an error is thrown.
+   */
+  public String removeRelatedPage(PageImpl page) throws Exception {
+    if (page == null) throw new NullPointerException("related page is null");
+    ChromatticSession chSession = getChromatticSession();
+    Session jcrSession = chSession.getJCRSession();
+    Node myJcrNode = (Node) jcrSession.getItem(getPath());
+    Map<String, Value> referedUUIDs = new HashMap<String, Value>();
+    if (myJcrNode.hasProperty(WikiNodeType.Definition.RELATION)) {
+       Value[] values = myJcrNode.getProperty(WikiNodeType.Definition.RELATION).getValues();
+       if (values != null && values.length > 0) {
+         for (Value value : values) {
+           referedUUIDs.put(value.getString(), value);
+         }
+       }
+    }
+    Node referredJcrNode = (Node) jcrSession.getItem(page.getPath());
+    String referedUUID = referredJcrNode.getUUID();
+    
+    if (!referedUUIDs.containsKey(referedUUID)) {
+      return null;
+    }
+    referedUUIDs.remove(referedUUID);
+    myJcrNode.setProperty(WikiNodeType.Definition.RELATION, referedUUIDs.values().toArray(new Value[referedUUIDs.size()]));
+    myJcrNode.save();
+    return referedUUID;
+  }
+  
+  public void removeAllRelatedPages() throws Exception {
+    ChromatticSession chSession = getChromatticSession();
+    Session jcrSession = chSession.getJCRSession();
+    Node myJcrNode = (Node) jcrSession.getItem(getPath());
+    myJcrNode.setProperty(WikiNodeType.Definition.RELATION, (Value[]) null);
+    myJcrNode.save();
+  }
 }
