@@ -1,0 +1,48 @@
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(revision 65312)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(working copy)
+@@ -1018,18 +1018,21 @@
+ 	public JCRPageList getPageListComment(String questionId) throws Exception{
+ 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+ 		try {
+-			Node commentHome = getFAQServiceHome(sProvider).getNode(questionId + "/" + Utils.COMMENT_HOME) ;
+-			QueryManager qm = commentHome.getSession().getWorkspace().getQueryManager();
+-			StringBuffer queryString = new StringBuffer("/jcr:root").append(commentHome.getPath()). 
+-			append("//element(*,exo:comment)").append("order by @exo:dateComment ascending");
+-			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+-			QueryResult result = query.execute();
+-			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+-			return pageList;
++			Node commentHome = getFAQServiceHome(sProvider).getNode(questionId) ;
++			if(commentHome.hasNode(Utils.COMMENT_HOME)) {
++				commentHome = commentHome.getNode(Utils.COMMENT_HOME);
++				QueryManager qm = commentHome.getSession().getWorkspace().getQueryManager();
++				StringBuffer queryString = new StringBuffer("/jcr:root").append(commentHome.getPath()). 
++				append("//element(*,exo:comment)").append("order by @exo:dateComment ascending");
++				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
++				QueryResult result = query.execute();
++				QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
++				return pageList;
++			}
+ 		} catch (Exception e) {
+ 			log.error("Failed to get page list comment",e);
+-			return null;
+ 		} finally { sProvider.close() ; }
++		return null;
+ 	}
+ 	
+ 	private Comment getCommentByNode(Node commentNode) throws Exception {
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java	(revision 65243)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java	(working copy)
+@@ -986,7 +986,7 @@
+ 			UIPrintAllQuestions uiPrintAll = popupContainer.addChild(UIPrintAllQuestions.class, null, null) ;
+ 			uiPrintAll.setCategoryId(questions.categoryId_, faqService_, questions.faqSetting_, questions.canEditQuestion);
+ 			popupContainer.setId("FAQPrintAllQuestion") ;
+-			popupAction.activate(popupContainer, 800, 500) ;
++			popupAction.activate(popupContainer, 800, 500, false) ;
+ 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+ 		}
+ 	}

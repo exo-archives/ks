@@ -1018,18 +1018,21 @@ public class JCRDataStorage {
 	public JCRPageList getPageListComment(String questionId) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
-			Node commentHome = getFAQServiceHome(sProvider).getNode(questionId + "/" + Utils.COMMENT_HOME) ;
-			QueryManager qm = commentHome.getSession().getWorkspace().getQueryManager();
-			StringBuffer queryString = new StringBuffer("/jcr:root").append(commentHome.getPath()). 
-			append("//element(*,exo:comment)").append("order by @exo:dateComment ascending");
-			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
-			return pageList;
+			Node commentHome = getFAQServiceHome(sProvider).getNode(questionId) ;
+			if(commentHome.hasNode(Utils.COMMENT_HOME)) {
+				commentHome = commentHome.getNode(Utils.COMMENT_HOME);
+				QueryManager qm = commentHome.getSession().getWorkspace().getQueryManager();
+				StringBuffer queryString = new StringBuffer("/jcr:root").append(commentHome.getPath()). 
+				append("//element(*,exo:comment)").append("order by @exo:dateComment ascending");
+				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+				QueryResult result = query.execute();
+				QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+				return pageList;
+			}
 		} catch (Exception e) {
 			log.error("Failed to get page list comment",e);
-			return null;
 		} finally { sProvider.close() ; }
+		return null;
 	}
 	
 	private Comment getCommentByNode(Node commentNode) throws Exception {
