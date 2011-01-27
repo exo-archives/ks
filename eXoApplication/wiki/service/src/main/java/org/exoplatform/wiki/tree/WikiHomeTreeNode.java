@@ -21,9 +21,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
+import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.utils.Utils;
 
 /**
@@ -38,7 +41,7 @@ public class WikiHomeTreeNode extends TreeNode {
   public WikiHomeTreeNode(WikiHome wikiHome) throws Exception {
     super(WikiNodeType.Definition.WIKI_HOME_TITLE, TreeNodeType.WIKIHOME);
     this.wikiHome = wikiHome;
-    this.path = this.getPath();
+    this.path = this.buildPath();
     this.hasChild = wikiHome.getChildPages().size() > 0;
   }
 
@@ -83,9 +86,11 @@ public class WikiHomeTreeNode extends TreeNode {
     }
     return null;
   }
-
-  public String getPath() {
-    return Utils.getWikiType(this.wikiHome.getWiki()) + "/" + this.wikiHome.getOwner() + "/"
-        + WikiNodeType.Definition.WIKI_HOME_NAME;
+  
+  @Override
+  public String buildPath() {
+    Wiki wiki = this.wikiHome.getWiki();
+    WikiPageParams params = new WikiPageParams(Utils.getWikiType(wiki), wiki.getOwner(),WikiNodeType.Definition.WIKI_HOME_NAME );
+    return TreeUtils.getPathFromPageParams(params);
   }
 }

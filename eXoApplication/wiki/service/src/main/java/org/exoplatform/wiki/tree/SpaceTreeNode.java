@@ -22,6 +22,8 @@ import java.util.Iterator;
 
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiType;
+import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.utils.Utils;
 
 /**
@@ -34,7 +36,7 @@ public class SpaceTreeNode extends TreeNode {
   
   public SpaceTreeNode(String name) throws Exception {
     super(name, TreeNodeType.SPACE);
-    this.path = name;
+    this.path = buildPath();
     this.hasChild = Utils.getWikisByType(WikiType.valueOf(name.toUpperCase())).size() > 0;
   }  
   
@@ -59,5 +61,10 @@ public class SpaceTreeNode extends TreeNode {
         return (WikiTreeNode)child;
     }
     return null;
+  }
+  
+  @Override
+  public String buildPath() {
+    return TreeUtils.getPathFromPageParams(new WikiPageParams(this.name, null, null));
   }
 }

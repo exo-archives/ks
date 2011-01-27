@@ -246,4 +246,8 @@ public class TreeNode {
   private void pushChild(HashMap<String, Object> context) throws Exception {
     pushChild(null, context);
   }
+
+  public String buildPath() {
+    return null;
+  }
 }

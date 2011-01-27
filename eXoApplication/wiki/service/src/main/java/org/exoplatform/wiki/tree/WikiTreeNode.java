@@ -20,6 +20,8 @@ import java.util.HashMap;
 
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
+import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.utils.Utils;
 
 /**
@@ -34,8 +36,7 @@ public class WikiTreeNode extends TreeNode {
   public WikiTreeNode(Wiki wiki) throws Exception {
     super(wiki.getOwner(), TreeNodeType.WIKI);
     this.wiki = wiki;
-    String type = Utils.getWikiType(wiki);
-    this.path = type + "/" + Utils.validateWikiOwner(type, wiki.getOwner());
+    this.path = buildPath();
     this.hasChild = true;
   }
 
@@ -56,5 +57,11 @@ public class WikiTreeNode extends TreeNode {
 
   public void setWiki(Wiki wiki) {
     this.wiki = wiki;
+  }
+  
+  @Override
+  public String buildPath() { 
+    WikiPageParams params = new WikiPageParams(Utils.getWikiType(wiki), wiki.getOwner(), null);
+    return TreeUtils.getPathFromPageParams(params);
   }
 }

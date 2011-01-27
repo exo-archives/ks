@@ -63,6 +63,7 @@ import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.impl.SessionManager;
+import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
@@ -230,22 +231,7 @@ public class Utils {
   }
 
   public static String getCurrentWikiPagePath() throws Exception {
-    String result = null;
-    Wiki currentWiki = getCurrentWiki();
-    String currentWikiName = currentWiki.getOwner();
-    String currentWikiPath = ((WikiImpl) currentWiki).getPath();
-    String currentPagePath = null;
-    PageImpl currentPage = ((PageImpl) getCurrentWikiPage());
-    if (currentPage != null) {
-      currentPagePath = currentPage.getPath();
-      String prefixPath = getCurrentWikiPageParams().getType() + "/" + currentWikiName;
-      result = currentPagePath.replace(currentWikiPath, prefixPath);
-      if (result.equals(prefixPath)
-          || result.equals(prefixPath + "/" + WikiNodeType.Definition.WIKI_HOME_NAME)) {
-        return prefixPath + "/" + WikiNodeType.Definition.WIKI_HOME_NAME;
-      }
-    }
-    return result;
+    return TreeUtils.getPathFromPageParams(getCurrentWikiPageParams());
   }
 
   public static Preferences getCurrentPreferences() throws Exception {

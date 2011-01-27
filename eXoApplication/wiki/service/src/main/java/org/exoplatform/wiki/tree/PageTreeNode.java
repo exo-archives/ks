@@ -22,6 +22,8 @@ import java.util.Iterator;
 
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.utils.Utils;
 
 /**
@@ -36,7 +38,7 @@ public class PageTreeNode extends TreeNode {
   public PageTreeNode(PageImpl page) throws Exception {
     super(page.getContent().getTitle(), TreeNodeType.PAGE);
     this.page = page;
-    this.path = getPath();
+    this.path = buildPath();
     this.hasChild = this.page.getChildPages().size() > 0;
   }
 
@@ -70,15 +72,12 @@ public class PageTreeNode extends TreeNode {
     }
     return null;
   }
-
-  public String getPath() {
+  
+  @Override
+  public String buildPath() {
     Wiki wiki = (Wiki) this.page.getWiki();
-    if (wiki != null) {
-      String wikiType = Utils.getWikiType(wiki);
-      String relPath = wikiType + "/" + wiki.getOwner() + "/" + this.page.getName();
-      return relPath;
-    }
-    return null;
+    WikiPageParams params = new WikiPageParams(Utils.getWikiType(wiki), wiki.getOwner(),this.page.getName() );
+    return TreeUtils.getPathFromPageParams(params);    
   }
 
 }

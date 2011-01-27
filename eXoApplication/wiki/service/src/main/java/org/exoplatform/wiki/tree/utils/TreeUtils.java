@@ -144,7 +144,7 @@ public class TreeUtils {
             result.setOwner(groupId);
           } else {
             result.setPageId(path.substring(path.lastIndexOf("/") + 1));
-            String owner = path.substring(path.indexOf("/") + 1, path.lastIndexOf("/"));
+            String owner = path.substring(path.indexOf("/"), path.lastIndexOf("/"));
             while (oService.getGroupHandler().findGroupById(owner) == null) {
               owner = owner.substring(0,owner.lastIndexOf("/"));
             }
@@ -160,10 +160,17 @@ public class TreeUtils {
     return result;
   }
  
-  
   public static String getPathFromPageParams(WikiPageParams param) {
-    if (param.getType() != null && param.getOwner() != null && param.getPageId() != null)
-      return param.getType() + "/" + param.getOwner() + "/" + param.getPageId();
-    return null;
+    StringBuilder sb = new StringBuilder();
+    if (param.getType() != null) {
+      sb.append(param.getType());
+    }
+    if (param.getOwner() != null) {
+      sb.append("/").append(Utils.validateWikiOwner(param.getType(), param.getOwner()));
+    }
+    if (param.getPageId() != null) {
+      sb.append("/").append(param.getPageId());
+    }
+    return sb.toString();
   }
 }
