@@ -47,8 +47,18 @@
 	<td>gtn</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Login by Admin</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
 	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Answer</td>
 	<td></td>
 </tr>
 <tr>
@@ -104,7 +114,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>The detail of SNF_KS_08</td>
+	<td>Tinh yeu nhu nang. nang dua em ve ben dong suoi mo</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -117,6 +127,11 @@
 	<td>root@localhost.vn</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
@@ -124,6 +139,11 @@
 <tr>
 	<td>mouseDown</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-OK</td>
 	<td></td>
 </tr>
 <tr>
@@ -262,13 +282,8 @@
 	<td>gtn</td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div/a</td>
-	<td></td>
-</tr>
-<tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -392,13 +407,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
+	<td>waitForElementPresent</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 </tbody></table>

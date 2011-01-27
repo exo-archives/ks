@@ -112,6 +112,11 @@
 	<td>Question for Discuss in French</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
@@ -119,6 +124,11 @@
 <tr>
 	<td>mouseDown</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-OK</td>
 	<td></td>
 </tr>
 <tr>
@@ -152,12 +162,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>mouseOver</td>
+	<td>waitForElementPresent</td>
 	<td>//div[@id='UIPage']//a[@title=&quot;Edit Portlet&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
+	<td>mouseOver</td>
 	<td>//div[@id='UIPage']//a[@title=&quot;Edit Portlet&quot;]</td>
 	<td></td>
 </tr>
@@ -197,8 +207,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Live demo</td>
+	<td>echo</td>
+	<td>-Live demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Live demo</td>
 	<td></td>
 </tr>
 <tr>
@@ -207,6 +222,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
@@ -214,6 +234,11 @@
 <tr>
 	<td>click</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-OK</td>
 	<td></td>
 </tr>
 <tr>
@@ -227,6 +252,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Close</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Close</td>
 	<td></td>
@@ -234,6 +264,11 @@
 <tr>
 	<td>click</td>
 	<td>link=Close</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Finish</td>
 	<td></td>
 </tr>
 <tr>
@@ -282,23 +317,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td></td>
-	<td></td>
-</tr>
-<tr>
-	<td>selectWindow</td>
-	<td>name=undefined</td>
-	<td></td>
-</tr>
-<tr>
 	<td>echo</td>
 	<td>-Goto Forum To Check-</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyLocation</td>
-	<td>http://localhost:8080/ksdemo/private/classic/forum/topic/topicb7a27dab7f00010101af135a3a93c374</td>
+	<td>verifyTitle</td>
+	<td>Forum</td>
 	<td></td>
 </tr>
 <tr>
@@ -448,27 +473,27 @@
 </tr>
 <tr>
 	<td>mouseOver</td>
-	<td>//div[@id='UIPage']/div/div/div/div/div/div/div</td>
+	<td>//div[@id='UIPage']//a[@title=&quot;Edit Portlet&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div/div/div[2]/div/div/div/div/div/div/a[1]</td>
+	<td>//div[@id='UIPage']//a[@title=&quot;Edit Portlet&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div/div/div[2]/div/div/div/div/div/div/a[1]</td>
+	<td>//div[@id='UIPage']//a[@title=&quot;Edit Portlet&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[2]/div[1]/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div[3]/div/div/div/div</td>
+	<td>//div[text()=&quot;Discussion&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//div[2]/div[1]/div/div/div/div/div[2]/div/div/div/div/div/div/div/div/div[3]/div/div/div/div</td>
+	<td>mouseDown</td>
+	<td>//div[text()=&quot;Discussion&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -477,7 +502,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>uncheck</td>
 	<td>EnableDiscuss</td>
 	<td></td>
 </tr>

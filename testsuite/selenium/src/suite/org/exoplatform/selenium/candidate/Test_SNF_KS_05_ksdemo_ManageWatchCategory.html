@@ -22,6 +22,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Login by Admin</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
@@ -49,6 +54,11 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Answers Pages</td>
 	<td></td>
 </tr>
 <tr>
@@ -82,7 +92,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDown</td>
 	<td>link=Add category</td>
 	<td></td>
 </tr>
@@ -104,7 +114,7 @@
 <tr>
 	<td>type</td>
 	<td>description</td>
-	<td>SNF_KS_05 des</td>
+	<td>Buong tay ngam ngui xot xa.</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -143,12 +153,12 @@
 </tr>
 <tr>
 	<td>waitForText</td>
-	<td>//div[2]/div[3]/div/div/div/div/div[2]</td>
+	<td>//div[@class=&quot;PopupMessage&quot;]</td>
 	<td>You are watching this category, you will be notified about all changes.</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//div[2]/div[3]/div/div/div/div/div[2]</td>
+	<td>//div[@class=&quot;PopupMessage&quot;]</td>
 	<td>You are watching this category, you will be notified about all changes.</td>
 </tr>
 <tr>
@@ -178,27 +188,27 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='UICategories']//a[2]</td>
+	<td>//div[@class='UICategories']//a[@title=&quot;Manage watches&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='UICategories']//a[2]</td>
+	<td>//div[@class='UICategories']//a[@title=&quot;Manage watches&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Edit Watch</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UIWatchManager</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//form[@id='UIWatchManager']/div[2]//td[3]/div[2]/div</td>
+	<td>//form[@id='UIWatchManager']//div[@title=&quot;Edit&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIWatchManager']/div[2]//td[3]/div[2]/div</td>
+	<td>//form[@id='UIWatchManager']//div[@title=&quot;Edit&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -227,8 +237,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIWatchManager']//div[@title=&quot;Edit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//form[@id='UIWatchManager']/div[2]//td[3]/div[2]/div</td>
+	<td>//form[@id='UIWatchManager']//div[@title=&quot;Edit&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -302,6 +317,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-- Remove Watch</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>//form[@id='UIWatchManager']//div[@class=&quot;DeleteWatchIcon&quot;]</td>
 	<td></td>
@@ -324,6 +344,11 @@
 <tr>
 	<td>verifyTextNotPresent</td>
 	<td>root@localhost.vn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Close</td>
 	<td></td>
 </tr>
 <tr>
@@ -377,6 +402,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Sign out</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign out</td>
 	<td></td>
@@ -384,11 +414,6 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
 	<td></td>
 </tr>
 </tbody></table>

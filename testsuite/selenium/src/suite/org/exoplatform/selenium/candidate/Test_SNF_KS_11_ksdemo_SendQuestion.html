@@ -47,8 +47,13 @@
 	<td>gtn</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Login Root</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -104,7 +109,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>English for Send Description</td>
+	<td>English for Send Description: Anh sẵn sàng làm chiếc que&nbsp;&nbsp;diêm Dám đốt cháy cả trái tim diêm sinh bé xíu&nbsp;&nbsp;&nbsp;Cháy đến tận cùng của thân tăm trắng trẻo&nbsp;&nbsp;&nbsp;Dù kiếp tàn nhưng hiểu: đã được yêu!</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -137,8 +142,28 @@
 	<td></td>
 </tr>
 <tr>
+	<td>open</td>
+	<td>/ksdemo/private/classic/answers</td>
+	<td></td>
+</tr>
+<tr>
 	<td>echo</td>
-	<td>-Send Question-</td>
+	<td>--&nbsp;&nbsp;Add Question-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit question</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Submit question</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-- Send Question-</td>
 	<td></td>
 </tr>
 <tr>
@@ -153,12 +178,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//table//td/table[@class='DisablePrint']//div[@class=&quot;SendToFriend&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Send&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//table//td/table[@class='DisablePrint']//div[@class=&quot;SendToFriend&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Send&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -174,41 +199,66 @@
 <tr>
 	<td>type</td>
 	<td>To</td>
-	<td>flowerhaui@gmail.com</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//form[@id='UISendMailForm']//table[@class='ActionContainer']//td//div[@class='ButtonMiddle']</td>
-	<td></td>
+	<td>catbien@gmail.com</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIAnswersPortlet']//table[@class='ActionContainer']//td//div[@class='ButtonMiddle']</td>
+	<td>//form[@id='UISendMailForm']//a[text()=&quot;Send&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIAnswersPortlet']/div[3]/div/div[2]//div[3]/div/table/tbody/tr/td//div[@class='ButtonMiddle']</td>
+	<td>//form[@id='UISendMailForm']//a[text()=&quot;Send&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Delete Test Data-</td>
+	<td>--&nbsp;&nbsp;Check Successful?</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//div[@id='AnswersViewContent']/div/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[4]/a/div[@class='Delete']</td>
+	<td>waitForTextPresent</td>
+	<td>Your message has been sent successfully.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Your message has been sent successfully.</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div/div/div/div[@class='ButtonMiddle']</td>
+	<td>//div[@id='UIAnswersPortlet']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div/div/div/div[@class='ButtonMiddle']</td>
+	<td>//div[@id='UIAnswersPortlet']//a[text()=&quot;OK&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Delete Test Data-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -222,13 +272,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 </tbody></table>

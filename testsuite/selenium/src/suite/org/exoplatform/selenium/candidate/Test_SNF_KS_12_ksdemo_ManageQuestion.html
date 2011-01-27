@@ -47,8 +47,18 @@
 	<td>gtn</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Login Root</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Go to Answers</td>
 	<td></td>
 </tr>
 <tr>
@@ -58,7 +68,7 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Manage question-</td>
+	<td>--&nbsp;&nbsp;Manage question-</td>
 	<td></td>
 </tr>
 <tr>
@@ -72,24 +82,34 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Not Approved &quot;What does eXo Knowledge Suite contain ?&quot;</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='UIFormInput']//div[@class='TrueIcon']/div</td>
+	<td>//div[@id=&quot;UITabContent&quot;]//div[@title=&quot;Disapprove&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//td[3]/div/div</td>
+	<td>//div[@id=&quot;UITabContent&quot;]//div[@title=&quot;Disapprove&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>No</td>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Check status: No</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
+	<td>waitForText</td>
+	<td>//div[@id=&quot;UITabContent&quot;]//div[@title=&quot;Approve&quot;]</td>
 	<td>No</td>
-	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id=&quot;UITabContent&quot;]//div[@title=&quot;Approve&quot;]</td>
+	<td>No</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -291,7 +311,6 @@
 	<td>Sign in</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>

@@ -22,6 +22,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Login by root</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
@@ -57,13 +62,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Go to Answer pages</td>
+	<td></td>
+</tr>
+<tr>
 	<td>open</td>
 	<td>/ksdemo/private/classic/answers</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Category</td>
+	<td>-Category Iteams</td>
 	<td></td>
 </tr>
 <tr>
@@ -87,7 +97,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDown</td>
 	<td>link=Add category</td>
 	<td></td>
 </tr>
@@ -109,7 +119,12 @@
 <tr>
 	<td>type</td>
 	<td>description</td>
-	<td>SNF_KS_04 des</td>
+	<td>Tim` moi nhau cho nhau vo nat tim dau.</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -147,14 +162,24 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Check Popup Message Content</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForText</td>
-	<td>//div[2]/div[3]/div/div/div/div/div[2]</td>
+	<td>//div[@class=&quot;PopupMessage&quot;]</td>
 	<td>You are watching this category, you will be notified about all changes.</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//div[2]/div[3]/div/div/div/div/div[2]</td>
+	<td>//div[@class=&quot;PopupMessage&quot;]</td>
 	<td>You are watching this category, you will be notified about all changes.</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-OK</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -232,6 +257,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Sign out</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign out</td>
 	<td></td>
@@ -239,11 +269,6 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
 	<td></td>
 </tr>
 </tbody></table>

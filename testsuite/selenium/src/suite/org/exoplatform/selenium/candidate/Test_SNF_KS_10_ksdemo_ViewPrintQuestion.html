@@ -47,8 +47,18 @@
 	<td>gtn</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Login Root</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Go to Answers</td>
 	<td></td>
 </tr>
 <tr>
@@ -58,12 +68,12 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Add Question-</td>
+	<td>--&nbsp;&nbsp;Add Question-</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Submit question</td>
+	<td>waitForElementPresent</td>
+	<td>link=Submit question</td>
 	<td></td>
 </tr>
 <tr>
@@ -99,7 +109,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>English Description</td>
+	<td>English Description. Troi` con may ti'm de la' mo nhieu. La' khoc tren mi cho moi u sau</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -112,6 +122,11 @@
 	<td>root@localhost.vn</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
@@ -119,6 +134,11 @@
 <tr>
 	<td>mouseDown</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;OK</td>
 	<td></td>
 </tr>
 <tr>
@@ -133,7 +153,7 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Print Question-</td>
+	<td>--&nbsp;&nbsp;Print Question-</td>
 	<td></td>
 </tr>
 <tr>
@@ -148,12 +168,17 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[2]/a</td>
+	<td>//div[@class='DecoratorMC']//a[@title=&quot;Print&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[2]/a</td>
+	<td>//div[@class='DecoratorMC']//a[@title=&quot;Print&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Verify data</td>
 	<td></td>
 </tr>
 <tr>
@@ -168,42 +193,47 @@
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>English Description</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@class='UIAction']//div[@class='PrintAction']/div[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@class='UIAction']//div[@class='PrintAction']/div[2]</td>
+	<td>English Description. Troi` con may ti'm de la' mo nhieu. La' khoc tren mi cho moi u sau</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Delete Test Data-</td>
+	<td>--&nbsp;&nbsp;Close</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']/div/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[4]/a/div[@class='Delete']</td>
+	<td>//div[@class='UIAction']//a[text()=&quot;Close&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']/div/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[4]/a/div[@class='Delete']</td>
+	<td>//div[@class='UIAction']//a[text()=&quot;Close&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Delete Test Data-</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div/div/div/div[@class='ButtonMiddle']</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div/div/div/div[@class='ButtonMiddle']</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -217,6 +247,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Sign out</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign out</td>
 	<td></td>
@@ -224,11 +259,6 @@
 <tr>
 	<td>click</td>
 	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
 	<td></td>
 </tr>
 </tbody></table>

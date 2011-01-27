@@ -48,7 +48,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -88,12 +88,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>click</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -109,6 +109,11 @@
 <tr>
 	<td>echo</td>
 	<td>-Answer Question-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Question for Answer</td>
 	<td></td>
 </tr>
 <tr>
@@ -292,7 +297,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
@@ -333,7 +338,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -387,7 +392,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
@@ -423,7 +428,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -437,18 +442,28 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Question for Answer</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Question for Answer</td>
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-SortAnswer</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']/div/div[1]/div[2]/div/div/div[3]/div/div[1]/div/table/tbody/tr/td[2]/a/div</td>
+	<td>//div[@id='AnswersViewContent']//div[@class=&quot;SortAnswer DisablePrint&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']/div/div[1]/div[2]/div/div/div[3]/div/div[1]/div/table/tbody/tr/td[2]/a/div</td>
+	<td>//div[@id='AnswersViewContent']//div[@class=&quot;SortAnswer DisablePrint&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -472,13 +487,13 @@
 	<td>Answer 1</td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//div[@class='TitleResponseContent']//a</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class=&quot;SortAnswer DisablePrint&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>AnswersViewContent</td>
+	<td>click</td>
+	<td>//div[@id='AnswersViewContent']//div[@class=&quot;SortAnswer DisablePrint&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -502,18 +517,23 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='Delete']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']/div/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[4]/a/div[@class='Delete']</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='Delete']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div/div/div/div[@class='ButtonMiddle']</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div/div/div/div[@class='ButtonMiddle']</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>

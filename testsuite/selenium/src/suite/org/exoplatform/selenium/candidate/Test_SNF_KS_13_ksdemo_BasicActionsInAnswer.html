@@ -47,8 +47,18 @@
 	<td>gtn</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Login by Root</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Answers</td>
 	<td></td>
 </tr>
 <tr>
@@ -62,8 +72,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Submit question</td>
+	<td>waitForElementPresent</td>
+	<td>link=Submit question</td>
 	<td></td>
 </tr>
 <tr>
@@ -107,6 +117,11 @@
 	<td>Question for Answer in French</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
@@ -114,6 +129,11 @@
 <tr>
 	<td>mouseDown</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-OK</td>
 	<td></td>
 </tr>
 <tr>
@@ -139,6 +159,11 @@
 <tr>
 	<td>click</td>
 	<td>link=Question for Answer</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Answer</td>
 	<td></td>
 </tr>
 <tr>
@@ -242,13 +267,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>- Click Edit icon</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@id='SetWidthContent']//table//td[2]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Edit Answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@id='SetWidthContent']//table//td[2]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Edit Answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -318,12 +348,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@id='SetWidthContent']//table//td[2]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Edit Answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@id='SetWidthContent']//table//td[2]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Edit Answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -403,12 +433,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@id='SetWidthContent']//table//td[5]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@id='SetWidthContent']//table//td[5]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -443,12 +473,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@id='SetWidthContent']//table//td[5]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@id='SetWidthContent']//table//td[5]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -473,22 +503,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']/div/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[4]/a/div[@class='Delete']</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='Delete']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']/div/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[4]/a/div[@class='Delete']</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='Delete']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div/div/div/div[@class='ButtonMiddle']</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div/div/div/div[@class='ButtonMiddle']</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -502,6 +532,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Sign out</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign out</td>
 	<td></td>
@@ -509,11 +544,6 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
 	<td></td>
 </tr>
 </tbody></table>
