@@ -88,7 +88,7 @@ UIWikiAjaxRequest.prototype.checkAnchor = function() {
         queryParams += '&';
         queryParams += splits[index];
       }
-      var ajaxGetLink = action.getAttribute('onclick').replace('&ajaxRequest=true', queryParams + '&ajaxRequest=true');
+      var ajaxGetLink = action.getAttributeNode('onclick').value.replace('&ajaxRequest=true', queryParams + '&ajaxRequest=true');
       action.onclick = function() {
         eval(ajaxGetLink);
       };
