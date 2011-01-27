@@ -1,0 +1,38 @@
+
+<% uiform.begin(); %>
+<div class="SideBarContent">
+  <div class="SideContent">
+    <%
+      uiform.renderChild(uiform.UI_TREE_ID);
+    %>    
+  </div>
+</div>
+<div class="UIAction"> 
+  <table class="ActionContainer">
+    <tr>
+      <td>
+        <div onclick="<%= uicomponent.event("Cancel") %>" class="ActionButton LightBlueStyle" onmouseover="this.style.color = '#058ee6'" onmouseout="this.style.color='black'">
+          <div class="ButtonLeft">
+              <div class="ButtonRight">
+                <div class="ButtonMiddle">
+                  <a href="javascript:void(0);"><%= _ctx.appRes("UIWikiSelectPageForm.action.Cancel")%></a>
+                </div>
+              </div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div onclick="<%= uicomponent.event("SelectPage") %>" class="ActionButton LightBlueStyle" onmouseover="this.style.color = '#058ee6'" onmouseout="this.style.color='black'">
+          <div class="ButtonLeft">
+              <div class="ButtonRight">
+                <div class="ButtonMiddle">
+                  <a href="javascript:void(0);"><%= _ctx.appRes("UIWikiSelectPageForm.action.Select")%></a>
+                </div>
+              </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+<% uiform.end(); %>

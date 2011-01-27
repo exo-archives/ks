@@ -38,11 +38,15 @@
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .tableview tr {
-	background: none;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .EvenClass {
 	background-color: #F7F7F7;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody a {
+    color:#165FB3;
+    height: 20px;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .tableview th {
