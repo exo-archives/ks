@@ -44,21 +44,33 @@
 								</th>
 								<th style="width:130px;">
 									<div onclick="<%=uicomponent.event("SetOrderBy","lastPostDate");%>">
-										<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
+										<div class="DownArrow1Icon">
+											<div class="THFixHidden" style="width: 114px;">
+												<%=_ctx.appRes("UITopicContainer.label.LastPosts");%>
+											</div>
+										</div>
 									</div>
 								</th>
 								<th style="width:60px;">
 									<div onclick="<%=uicomponent.event("SetOrderBy","postCount");%>">
-										<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a>
+										<div class="DownArrow1Icon">
+											<div class="THFixHidden" style="width: 44px;">
+												<%=_ctx.appRes("UITopicContainer.label.Replies");%>
+											</div>
+										</div>
 									</div>
 								</th>
 								<th style="width:60px;">
 									<div onclick="<%=uicomponent.event("SetOrderBy","viewCount");%>">
-										<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></a>
+										<div class="DownArrow1Icon">
+											<div class="THFixHidden" style="width: 44px;">
+												<%=_ctx.appRes("UITopicContainer.label.Views");%>
+											</div>
+										</div>
 									</div>
 								</th>
 								<%if(isAdmin){ %>
-									<th style="width:40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
+									<th style="width:50px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
 								<%}%>
 							</tr>
 						</thead>

@@ -673,3 +673,8 @@
 .UIForumPortlet .FORUMImportCategoryForm .FieldLabel {
 	width: 75px;
 }
+
+.UIForumPortlet .DownArrow1Icon .THFixHidden{
+	overflow: hidden;
+	word-wrap: break-word;
+}
