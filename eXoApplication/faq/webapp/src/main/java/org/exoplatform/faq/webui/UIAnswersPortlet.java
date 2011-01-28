@@ -20,6 +20,7 @@ import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.popup.UISettingForm;
@@ -78,7 +79,8 @@ public class UIAnswersPortlet extends UIPortletApplication {
 				SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
 				Space space = sService.getSpaceByUrl(url);
 				String categoryId = Utils.CATE_SPACE_ID_PREFIX + space.getId();
-				return categoryId;
+				FAQService fService = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+				if(fService.getCategoryById(categoryId)!= null) return categoryId;
 			}
 			return null;
 		} catch (Exception e) {
