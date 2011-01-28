@@ -1,0 +1,76 @@
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModeratorManagementForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModeratorManagementForm.java	(revision 65243)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModeratorManagementForm.java	(working copy)
+@@ -53,6 +53,7 @@
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+ import org.exoplatform.webui.core.UIPopupWindow;
++import org.exoplatform.webui.core.UIApplication;
+ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+ import org.exoplatform.webui.core.model.SelectItemOption;
+ import org.exoplatform.webui.event.Event;
+@@ -605,7 +606,22 @@
+ 	static	public class SaveActionListener extends EventListener<UIModeratorManagementForm> {
+ 		public void execute(Event<UIModeratorManagementForm> event) throws Exception {
+ 			UIModeratorManagementForm uiForm = event.getSource() ;
+-			UserProfile userProfile = uiForm.userProfile ;
++			//UserProfile userProfile = uiForm.userProfile ;
++			String userId = uiForm.userProfile.getUserId();
++			UserProfile userProfile = uiForm.forumService.getUserProfileManagement(userId);
++			if (userProfile.getLastLoginDate() == null)
++			{
++			  UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
++			  uiApp.addMessage(new ApplicationMessage("UIModeratorManagementForm.msg.user-was-deleted", null, ApplicationMessage.ERROR));
++			  uiForm.isEdit = false ;
++			  UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
++			  // popupWindow.setWindowSize(760, 350) ;
++			  UIPopupAction popupAction = popupWindow.getParent();
++			  popupAction.deActivate();
++			  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
++			  event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
++			  return;
++			}
+ 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+ 			UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
+ 			String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
+Index: eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_en.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_en.properties	(revision 65243)
++++ eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_en.properties	(working copy)
+@@ -381,7 +381,8 @@
+ UISelectItemForum.action.Cancel=Cancel
+ UISelectItemForum.label.ChooseDestinationForum=Choose a Destination Forum
+ UIModeratorManagementForm.label.ResultSearchUserIsNull=No Result
+-UIModeratorManagementForm.msg.setDefaultAvartar=Are your sure you want set default avatar?
++UIModeratorManagementForm.msg.setDefaultAvartar=Are you sure you want to set the default avatar?
++UIModeratorManagementForm.msg.user-was-deleted=This user account was deleted.
+ #############################################################################
+ #							UIViewUserProfile																							#
+ #############################################################################
+Index: eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_fr.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_fr.properties	(revision 65243)
++++ eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_fr.properties	(working copy)
+@@ -378,6 +378,7 @@
+ UISelectItemForum.label.ChooseDestinationForum=Choisir un forum destinataire
+ UIModeratorManagementForm.label.ResultSearchUserIsNull=Pas de résultat
+ UIModeratorManagementForm.msg.setDefaultAvartar=Votre avatar sera réinitialisé. Confirmez-vous ?
++UIModeratorManagementForm.msg.user-was-deleted=Ce compte utilisateur a été supprimé.
+ #############################################################################
+ #							UIViewUserProfile																							#
+ #############################################################################
+Index: eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet.properties	(revision 65243)
++++ eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet.properties	(working copy)
+@@ -381,7 +381,8 @@
+ UISelectItemForum.action.Cancel=Cancel
+ UISelectItemForum.label.ChooseDestinationForum=Choose a Destination Forum
+ UIModeratorManagementForm.label.ResultSearchUserIsNull=No Result
+-UIModeratorManagementForm.msg.setDefaultAvartar=Are your sure you want set default avatar?
++UIModeratorManagementForm.msg.setDefaultAvartar=Are you sure you want to set the default avatar?
++UIModeratorManagementForm.msg.user-was-deleted=This user account was deleted.
+ #############################################################################
+ #							UIViewUserProfile																							#
+ #############################################################################

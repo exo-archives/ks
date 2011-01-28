@@ -53,6 +53,7 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupWindow;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -605,7 +606,22 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	static	public class SaveActionListener extends EventListener<UIModeratorManagementForm> {
 		public void execute(Event<UIModeratorManagementForm> event) throws Exception {
 			UIModeratorManagementForm uiForm = event.getSource() ;
-			UserProfile userProfile = uiForm.userProfile ;
+			//UserProfile userProfile = uiForm.userProfile ;
+			String userId = uiForm.userProfile.getUserId();
+			UserProfile userProfile = uiForm.forumService.getUserProfileManagement(userId);
+			if (userProfile.getLastLoginDate() == null)
+			{
+			  UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
+			  uiApp.addMessage(new ApplicationMessage("UIModeratorManagementForm.msg.user-was-deleted", null, ApplicationMessage.ERROR));
+			  uiForm.isEdit = false ;
+			  UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
+			  // popupWindow.setWindowSize(760, 350) ;
+			  UIPopupAction popupAction = popupWindow.getParent();
+			  popupAction.deActivate();
+			  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			  event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+			  return;
+			}
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
 			String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
