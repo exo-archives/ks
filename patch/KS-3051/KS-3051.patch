@@ -1,0 +1,30 @@
+Index: web/ksportal/src/main/webapp/WEB-INF/conf/portal/portal-configuration.xml
+===================================================================
+--- web/ksportal/src/main/webapp/WEB-INF/conf/portal/portal-configuration.xml	(revision 65575)
++++ web/ksportal/src/main/webapp/WEB-INF/conf/portal/portal-configuration.xml	(working copy)
+@@ -56,7 +56,24 @@
+       </value-param>             
+ 	  </init-params>   
+   </component>
+-  
++
++   <component>
++    <key>org.exoplatform.portal.config.GlobalPortalConfigService</key>
++    <type>org.exoplatform.portal.config.GlobalPortalConfigService</type>
++    <init-params>    
++      <value-param>
++        <name>time.24h.format</name>
++        <description>Default is 12h format. If value is true, 24h format will be apply for time of portal </description>
++        <value>false</value>
++      </value-param>
++      <value-param>
++        <name>node.notfound</name>
++        <description>if value is true, always indicate using node not found when node is not existing</description>
++        <value>false</value>
++      </value-param>
++    </init-params>
++  </component>
++
+   <component>
+     <key>org.exoplatform.portal.config.UserPortalConfigService</key>
+     <type>org.exoplatform.portal.config.UserPortalConfigService</type>
