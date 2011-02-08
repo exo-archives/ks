@@ -1,0 +1,128 @@
+Index: eXoApplication/forum/service/pom.xml
+===================================================================
+--- eXoApplication/forum/service/pom.xml	(revision 65648)
++++ eXoApplication/forum/service/pom.xml	(working copy)
+@@ -134,6 +134,11 @@
+       <artifactId>commons-lang</artifactId>
+       <version>${commons-lang.version}</version>
+     </dependency>
+-
++    <dependency>
++      <groupId>xml-apis</groupId>
++      <artifactId>xml-apis</artifactId>
++      <version>${xml-apis.version}</version>
++      <scope>provided</scope>
++    </dependency>
+   </dependencies>
+ </project>
+Index: packaging/pkg/pom.xml
+===================================================================
+--- packaging/pkg/pom.xml	(revision 65648)
++++ packaging/pkg/pom.xml	(working copy)
+@@ -87,7 +87,41 @@
+       <version>${project.version}</version>
+       <type>js</type>
+     </dependency>
+-  </dependencies>
++    <!-- dependencies to fix exobuild tool 's error -->
++   <dependency>
++      <groupId>javagroups</groupId>
++      <artifactId>jgroups-all</artifactId>
++      <version>${javagroups.version}</version>
++   </dependency>	
++   <dependency>
++      <groupId>com.thoughtworks.xstream</groupId>
++      <artifactId>xstream</artifactId>
++      <version>${com.thoughtworks.xstream.version}</version>
++   </dependency>
++   <dependency>
++      <groupId>org.apache.shindig</groupId>
++      <artifactId>shindig-social-api</artifactId>
++      <version>${org.apache.shindig.version}</version>
++   </dependency>	
++    <dependency><groupId>org.codehaus.woodstox</groupId><artifactId>wstx-asl</artifactId><version>${org.codehaus.woodstox.version}</version><type>jar</type></dependency>
++    <dependency><groupId>rome</groupId><artifactId>rome</artifactId><version>${rome.version}</version><type>jar</type></dependency>   
++    <dependency><groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>${org.slf4j.version}</version><type>jar</type></dependency>
++    <dependency><groupId>org.slf4j</groupId><artifactId>slf4j-jdk14</artifactId><version>${org.slf4j.version}</version><type>jar</type></dependency>
++    <dependency><groupId>stax</groupId><artifactId>stax-api</artifactId><version>${stax.version}</version><type>jar</type></dependency>
++    <dependency><groupId>commons-fileupload</groupId><artifactId>commons-fileupload</artifactId><version>${commons-fileupload.version}</version><type>jar</type></dependency>
++    <dependency><groupId>jaxen</groupId><artifactId>jaxen</artifactId><version>${jaxen.version}</version><type>jar</type></dependency>
++    <dependency><groupId>commons-codec</groupId><artifactId>commons-codec</artifactId><version>${commons-codec.version}</version><type>jar</type></dependency>
++    <dependency><groupId>org.jvnet.jaxb2.maven2</groupId><artifactId>maven-jaxb2-plugin</artifactId><version>${org.jvnet.jaxb2.maven2.version}</version><type>jar</type></dependency>
++    <dependency><groupId>xml-apis</groupId><artifactId>xml-apis</artifactId><version>${xml-apis.version}</version><type>jar</type></dependency>
++    <dependency><groupId>jcr</groupId><artifactId>jcr</artifactId><version>${jcr.version}</version><type>jar</type></dependency>
++    <dependency><groupId>commons-beanutils</groupId><artifactId>commons-beanutils</artifactId><version>${commons-beanutils.version}</version><type>jar</type></dependency>
++    <dependency><groupId>com.ibm.icu</groupId><artifactId>icu4j</artifactId><version>${com.ibm.icu.version}</version><type>jar</type></dependency>
++    <dependency><groupId>commons-collections</groupId><artifactId>commons-collections</artifactId><version>${commons-collections.version}</version><type>jar</type></dependency>
++    <dependency><groupId>com.sun.xml.bind</groupId><artifactId>jaxb-impl</artifactId><version>${com.sun.xml.bind.version}</version><type>jar</type></dependency>
++    <dependency><groupId>org.apache.lucene</groupId><artifactId>lucene-memory</artifactId><version>${org.apache.lucene.version}</version><type>jar</type></dependency>
++    <dependency><groupId>xerces</groupId><artifactId>xercesImpl</artifactId><version>${xerces.version}</version><type>jar</type></dependency>
++    <dependency><groupId>xpp3</groupId><artifactId>xpp3</artifactId><version>${xpp3.version}</version><type>jar</type></dependency>
++</dependencies>
+   <profiles>
+     <profile>
+       <id>pkg</id>
+Index: packaging/module/src/main/javascript/ks.packaging.module.js
+===================================================================
+--- packaging/module/src/main/javascript/ks.packaging.module.js	(revision 65648)
++++ packaging/module/src/main/javascript/ks.packaging.module.js	(working copy)
+@@ -22,8 +22,8 @@
+   
+   module.eXoApplication.faq = 
+     new Project("org.exoplatform.ks", "exo.ks.eXoApplication.faq.webapp", "war", module.version).
+-      addDependency(new Project("rome", "rome", "jar", "0.8")).
+-	  addDependency(new Project("jdom", "jdom", "jar", "1.0")).
++      addDependency(new Project("rome", "rome", "jar", "${rome.version}")).
++	  addDependency(new Project("jdom", "jdom", "jar", "${jdom.version}")).
+ 	  addDependency(new Project("org.exoplatform.ks", "exo.ks.eXoApplication.faq.service", "jar",  module.version));
+ 	  
+   module.eXoApplication.faq.deployName = "faq";
+Index: pom.xml
+===================================================================
+--- pom.xml	(revision 65648)
++++ pom.xml	(working copy)
+@@ -53,16 +53,28 @@
+     <exo.product.name>exo-ks</exo.product.name>
+     <exo.product.specification>1.2</exo.product.specification>
+     <!-- Dependencies -->
+-    <rome.version>0.8</rome.version>
++    <com.thoughtworks.xstream.version>1.2</com.thoughtworks.xstream.version>
++    <org.apache.shindig.version>0.8.1-1-r719456</org.apache.shindig.version>
++    <javagroups.version>2.5.2</javagroups.version>
++    <rome.version>0.9</rome.version>
++    <jdom.version>1.0</jdom.version>
++    <jcr.version>1.0</jcr.version>
+     <quartz.version>1.5.0-RC2</quartz.version>
+     <xpp3.version>1.1.3.4.O</xpp3.version>
+-    <xml-apis.version>1.0.b2</xml-apis.version>
++    <xml-apis.version>1.3.04</xml-apis.version>
+     <javax.jcr.version>1.0</javax.jcr.version>
+     <javax.mail.version>1.4</javax.mail.version>
+     <javax.servlet.version>2.3</javax.servlet.version>
+     <javax.portlet.version>2.0</javax.portlet.version>
+     <javax.xml.bind.version>2.1</javax.xml.bind.version>
++    <org.codehaus.woodstox.version>3.2.1</org.codehaus.woodstox.version>
++    <org.slf4j.version>1.5.6</org.slf4j.version>
++    <stax.version>1.0</stax.version>   
+     <commons-logging.version>1.0.4</commons-logging.version>
++    <commons-fileupload.version>1.0</commons-fileupload.version>
++    <jaxen.version>1.1.1</jaxen.version>
++    <commons-codec.version>1.3</commons-codec.version>
++    <org.jvnet.jaxb2.maven2.version>0.1</org.jvnet.jaxb2.maven2.version>
+     <org.jcrom.version>1.2</org.jcrom.version>
+     <picocontainer.version>1.1</picocontainer.version>
+     <commons-io.version>1.3</commons-io.version>
+@@ -78,6 +90,13 @@
+     <org.exoplatform.portal.version>2.5.12-SNAPSHOT</org.exoplatform.portal.version>
+     <org.exoplatform.exopackage.version>1.2.3</org.exoplatform.exopackage.version>
+     <version.exobuild.plugin>1.2.2</version.exobuild.plugin>
++    <commons-beanutils.version>1.6</commons-beanutils.version>
++    <com.ibm.icu.version>3.8</com.ibm.icu.version>
++    <commons-collections.version>3.1</commons-collections.version>
++    <com.sun.xml.bind.version>2.1.7</com.sun.xml.bind.version>
++    <org.apache.lucene.version>2.2.0</org.apache.lucene.version>
++    <xerces.version>2.9.1</xerces.version>
++    <xpp3.version>1.1.3.4.O</xpp3.version>
+   </properties>
+   <build>
+     <resources>

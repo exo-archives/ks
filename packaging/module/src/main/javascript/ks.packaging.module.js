@@ -22,8 +22,8 @@ function getModule(params) {
   
   module.eXoApplication.faq = 
     new Project("org.exoplatform.ks", "exo.ks.eXoApplication.faq.webapp", "war", module.version).
-      addDependency(new Project("rome", "rome", "jar", "0.8")).
-	  addDependency(new Project("jdom", "jdom", "jar", "1.0")).
+      addDependency(new Project("rome", "rome", "jar", "${rome.version}")).
+	  addDependency(new Project("jdom", "jdom", "jar", "${jdom.version}")).
 	  addDependency(new Project("org.exoplatform.ks", "exo.ks.eXoApplication.faq.service", "jar",  module.version));
 	  
   module.eXoApplication.faq.deployName = "faq";
