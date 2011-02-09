@@ -1,0 +1,24 @@
+.UITemplateSettingForm {
+  
+}
+
+.UITemplateSettingForm .TemplateControl {
+  width: 90%;
+  margin: auto;
+}
+
+.UITemplateSettingForm .TemplateControl .TemplateSearchBox {
+  float: left;
+}
+
+.UITemplateSettingForm .TemplateControl .TemplateSearchBox input {
+  width: 200px;
+}
+
+.UITemplateSettingForm  .UITemplateGrid {
+  width: 90%;
+}
+
+.UITemplateSettingForm .TemplateActions {
+  float: right;
+}

@@ -29,7 +29,7 @@ import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.control.listener.UIWikiToolBarActionListener;
-import org.exoplatform.wiki.webui.popup.UIWikiEditPreferencesForm;
+import org.exoplatform.wiki.webui.popup.UIWikiSettingContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -53,7 +53,7 @@ public class PreferencesActionComponent extends UIComponent {
     protected void processEvent(Event<PreferencesActionComponent> event) throws Exception {
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       UIPopupContainer uiPopupContainer = uiWikiPortlet.getPopupContainer(PopupLevel.L1);
-      uiPopupContainer.activate(UIWikiEditPreferencesForm.class, 500);
+      uiPopupContainer.activate(UIWikiSettingContainer.class, 800);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);
       super.processEvent(event);
     }

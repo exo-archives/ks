@@ -30,9 +30,9 @@ import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
-import org.exoplatform.wiki.service.SearchData;
-import org.exoplatform.wiki.service.SearchResult;
 import org.exoplatform.wiki.service.WikiContext;
+import org.exoplatform.wiki.service.search.ContentSearchData;
+import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.Requirement;
@@ -117,7 +117,7 @@ public class DefaultWikiService implements WikiService {
    
     try {
       WikiContext wikiContext = getWikiContext();
-      SearchData data = new SearchData(null, "", null,wikiContext.getType(),wikiContext.getOwner());
+      ContentSearchData data = new ContentSearchData(null, "", null,wikiContext.getType(),wikiContext.getOwner());
       PageList<SearchResult> results = wservice.search(data);
       List<DocumentReference> documentReferences = prepareDocumentReferenceList(results);
       List<WikiPage> wikiPages = getWikiPages(documentReferences);
@@ -158,7 +158,7 @@ public class DefaultWikiService implements WikiService {
    
     try {
       WikiContext wikiContext = getWikiContext();
-      SearchData data = new SearchData(null, escapedKeyword, null, wikiContext.getType(),wikiContext.getOwner());      
+      ContentSearchData data = new ContentSearchData(null, escapedKeyword, null, wikiContext.getType(),wikiContext.getOwner());      
       PageList<SearchResult> results = wservice.search(data);
       List<DocumentReference> documentReferences = prepareDocumentReferenceList(results);
       return getWikiPages(documentReferences);

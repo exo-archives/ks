@@ -20,8 +20,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -43,11 +45,11 @@ import org.exoplatform.services.jcr.access.SystemIdentity;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
-import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
@@ -272,18 +274,44 @@ public class Utils {
     String pageNodeSelected = uiPortal.getSelectedNode().getUri();
     sb.append(pageNodeSelected);   
     return sb.toString();
-  }  
-  
-  public static void redirect(WikiPageParams params, WikiMode mode) throws Exception {
+  }
+
+  public static void redirect(WikiPageParams pageParams, WikiMode mode) throws Exception {
+    redirect(pageParams, mode, null);
+  }
+
+  public static void redirect(WikiPageParams pageParams, WikiMode mode, Map<String, String[]> params) throws Exception {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
+    portalRequestContext.setResponseComplete(true);
+    portalRequestContext.sendRedirect(createURL(pageParams, mode, params));
+  }
+  
+  public static void ajaxRedirect(Event<? extends UIComponent> event,
+                                  WikiPageParams pageParams,
+                                  WikiMode mode,
+                                  Map<String, String[]> params) throws Exception {
+    String redirectLink = Utils.createURL(pageParams, mode, params);
+    event.getRequestContext().getJavascriptManager().addCustomizedOnLoadScript("ajaxRedirect('"
+        + redirectLink + "');");
+  }
+  
+  public static String createURL(WikiPageParams pageParams,
+                                 WikiMode mode,
+                                 Map<String, String[]> params) throws Exception {
     StringBuffer sb = new StringBuffer();
-    sb.append(getURLFromParams(params));
+    sb.append(getURLFromParams(pageParams));
     if (!mode.equals(WikiMode.VIEW)) {
-      sb.append("#");
-      sb.append(Utils.getActionFromWikiMode(mode));
-      portalRequestContext.setResponseComplete(true);
+      sb.append("#").append(Utils.getActionFromWikiMode(mode));
     }
-    portalRequestContext.sendRedirect(sb.toString());
+    if (params != null) {
+      Iterator<Entry<String, String[]>> iter = params.entrySet().iterator();
+      while (iter.hasNext()) {
+        Entry<String, String[]> entry = iter.next();
+        sb.append("&");
+        sb.append(entry.getKey()).append("=").append(entry.getValue()[0]);
+      }
+    }
+    return sb.toString();
   }
   
   public static String createFullRequestAction(String formId,
@@ -310,6 +338,10 @@ public class Utils {
       return "AddPage";
     case DELETECONFIRM:
       return "DeleteConfirm";
+    case ADDTEMPLATE:
+      return "AddTemplate";
+    case EDITTEMPLATE:
+      return "EditTemplate";
     default:
       return "";
     }

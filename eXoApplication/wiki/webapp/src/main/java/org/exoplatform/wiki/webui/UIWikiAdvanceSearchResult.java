@@ -28,7 +28,7 @@ import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
-import org.exoplatform.wiki.service.SearchResult;
+import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 
 /**

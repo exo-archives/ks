@@ -27,7 +27,7 @@ package org.exoplatform.wiki.webui;
 public enum WikiMode {
   
   PORTLETPREFERENCES,
-  
+
   VIEW,
 
   EDITPAGE,
@@ -43,9 +43,14 @@ public enum WikiMode {
   DELETECONFIRM,
 
   HELP,
-  
+
   VIEWREVISION,
+
+  PAGEINFO,
+
+  EDITTEMPLATE,
+
+  ADDTEMPLATE
   
-  PAGEINFO
 
 }

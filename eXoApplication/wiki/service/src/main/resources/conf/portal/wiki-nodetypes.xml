@@ -149,8 +149,7 @@
     </childNodeDefinitions>
   </nodeType>
   
-  <!-- Node type generated for the class org.exoplatform.wiki.mow.core.api.wiki.UserWiki -->
-  <nodeType name="wiki:userwiki" isMixin="false" hasOrderableChildNodes="false">
+  <nodeType name="wiki:wiki" isMixin="false" hasOrderableChildNodes="false">
     <supertypes>
       <supertype>nt:base</supertype>
       <supertype>mix:referenceable</supertype>      
@@ -193,101 +192,39 @@
           <requiredPrimaryType>wiki:preferences</requiredPrimaryType>
         </requiredPrimaryTypes>
       </childNodeDefinition>
+       <childNodeDefinition name="TemplateContainer" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>wiki:templatecontainer</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
     </childNodeDefinitions>
+  </nodeType>
+  
+  <!-- Node type generated for the class org.exoplatform.wiki.mow.core.api.wiki.UserWiki -->
+  <nodeType name="wiki:userwiki" isMixin="false" hasOrderableChildNodes="false">
+    <supertypes>
+      <supertype>wiki:wiki</supertype>      
+    </supertypes>
+    <propertyDefinitions/>    
+    <childNodeDefinitions/>    
   </nodeType>
   
   <!-- Node type generated for the class org.exoplatform.wiki.mow.core.api.wiki.GroupWiki -->
   <nodeType name="wiki:groupwiki" isMixin="false" hasOrderableChildNodes="false">
     <supertypes>
-      <supertype>nt:base</supertype>
-      <supertype>mix:referenceable</supertype>
+      <supertype>wiki:wiki</supertype>      
     </supertypes>
-    <propertyDefinitions>
-      <propertyDefinition name="ref" requiredType="Reference" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-        <valueConstraints/>
-      </propertyDefinition>
-      <propertyDefinition name="owner" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-        <valueConstraints/>
-      </propertyDefinition>
-      <propertyDefinition name="wikiPermissions" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
-        <valueConstraints/>
-      </propertyDefinition>
-      <propertyDefinition name="isDefaultPermissionsInited" requiredType="Boolean" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
-        <valueConstraints/>
-        <defaultValues>
-          <defaultValue>false</defaultValue>
-        </defaultValues>
-      </propertyDefinition>
-    </propertyDefinitions>
-    <childNodeDefinitions>
-      <childNodeDefinition name="WikiHome" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
-        <requiredPrimaryTypes>
-          <requiredPrimaryType>exo:wikihome</requiredPrimaryType>
-        </requiredPrimaryTypes>
-      </childNodeDefinition>
-      <childNodeDefinition name="LinkRegistry" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
-        <requiredPrimaryTypes>
-          <requiredPrimaryType>wiki:linkregistry</requiredPrimaryType>
-        </requiredPrimaryTypes>
-      </childNodeDefinition>
-      <childNodeDefinition name="Trash" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
-        <requiredPrimaryTypes>
-          <requiredPrimaryType>wiki:trash</requiredPrimaryType>
-        </requiredPrimaryTypes>
-      </childNodeDefinition>
-      <childNodeDefinition name="Preferences" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
-        <requiredPrimaryTypes>
-          <requiredPrimaryType>wiki:preferences</requiredPrimaryType>
-        </requiredPrimaryTypes>
-      </childNodeDefinition>
-    </childNodeDefinitions>
+    <propertyDefinitions/>    
+    <childNodeDefinitions/>    
   </nodeType>
 	
 	<!-- Node type generated for the class org.exoplatform.wiki.mow.core.api.wiki.PortalWiki -->
   <nodeType name="wiki:portalwiki" isMixin="false" hasOrderableChildNodes="false">
-    <supertypes>
-      <supertype>nt:base</supertype>
-      <supertype>mix:referenceable</supertype>
+   <supertypes>
+      <supertype>wiki:wiki</supertype>      
     </supertypes>
-    <propertyDefinitions>
-      <propertyDefinition name="ref" requiredType="Reference" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-        <valueConstraints/>
-      </propertyDefinition>
-      <propertyDefinition name="owner" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-        <valueConstraints/>
-      </propertyDefinition>
-      <propertyDefinition name="wikiPermissions" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
-        <valueConstraints/>
-      </propertyDefinition>
-      <propertyDefinition name="isDefaultPermissionsInited" requiredType="Boolean" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
-        <valueConstraints/>
-        <defaultValues>
-          <defaultValue>false</defaultValue>
-        </defaultValues>
-      </propertyDefinition>
-    </propertyDefinitions>
-    <childNodeDefinitions>
-      <childNodeDefinition name="WikiHome" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
-        <requiredPrimaryTypes>
-          <requiredPrimaryType>exo:wikihome</requiredPrimaryType>
-        </requiredPrimaryTypes>
-      </childNodeDefinition>
-      <childNodeDefinition name="LinkRegistry" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
-        <requiredPrimaryTypes>
-          <requiredPrimaryType>wiki:linkregistry</requiredPrimaryType>
-        </requiredPrimaryTypes>
-      </childNodeDefinition>
-      <childNodeDefinition name="Trash" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
-        <requiredPrimaryTypes>
-          <requiredPrimaryType>wiki:trash</requiredPrimaryType>
-        </requiredPrimaryTypes>
-      </childNodeDefinition>
-        <childNodeDefinition name="Preferences" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
-        <requiredPrimaryTypes>
-          <requiredPrimaryType>wiki:preferences</requiredPrimaryType>
-        </requiredPrimaryTypes>
-      </childNodeDefinition>
-    </childNodeDefinitions>
+    <propertyDefinitions/>    
+    <childNodeDefinitions/>    
   </nodeType>
   
   <!-- Node type generated for the class org.exoplatform.wiki.mow.core.api.WikiStoreImpl -->
@@ -486,6 +423,11 @@
           <requiredPrimaryType>wiki:preferencessyntax</requiredPrimaryType>
         </requiredPrimaryTypes>
        </childNodeDefinition>
+       <childNodeDefinition name="TemplateContainer" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>wiki:templatecontainer</requiredPrimaryType>
+        </requiredPrimaryTypes>
+       </childNodeDefinition>       
      </childNodeDefinitions>
   </nodeType>
    
@@ -498,6 +440,32 @@
         <valueConstraints/>
       </propertyDefinition>   
       <propertyDefinition name="allowMutipleSyntaxes" requiredType="Boolean" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>     
+    </propertyDefinitions>
+    <childNodeDefinitions/>
+  </nodeType>
+  
+  <nodeType name="wiki:templatecontainer" isMixin="false" hasOrderableChildNodes="false">
+    <supertypes>
+      <supertype>nt:base</supertype>      
+    </supertypes>
+    <propertyDefinitions/>
+    <childNodeDefinitions>    
+      <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>wiki:template</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+    </childNodeDefinitions>
+  </nodeType>
+  
+   <nodeType name="wiki:template" isMixin="false" hasOrderableChildNodes="false">
+    <supertypes>
+      <supertype>wiki:page</supertype>      
+    </supertypes>
+    <propertyDefinitions>
+      <propertyDefinition name="description" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
         <valueConstraints/>
       </propertyDefinition>     
     </propertyDefinitions>

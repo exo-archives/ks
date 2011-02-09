@@ -23,10 +23,13 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.Template;
 import org.exoplatform.wiki.service.DataStorage;
-import org.exoplatform.wiki.service.SearchData;
-import org.exoplatform.wiki.service.SearchResult;
-import org.exoplatform.wiki.service.TitleSearchResult;
+import org.exoplatform.wiki.service.search.ContentSearchData;
+import org.exoplatform.wiki.service.search.SearchResult;
+import org.exoplatform.wiki.service.search.TemplateSearchData;
+import org.exoplatform.wiki.service.search.TemplateSearchResult;
+import org.exoplatform.wiki.service.search.TitleSearchResult;
 import org.exoplatform.wiki.utils.Utils;
 
 public class JCRDataStorage implements DataStorage{
@@ -34,7 +37,7 @@ public class JCRDataStorage implements DataStorage{
   
   private static final int searchSize = 10;
   
-  public PageList<SearchResult> search(ChromatticSession session, SearchData data) throws Exception {
+  public PageList<SearchResult> search(ChromatticSession session, ContentSearchData data) throws Exception {
     List<SearchResult> resultList = new ArrayList<SearchResult>();
     String statement = data.getStatement();
     QueryManager qm = session.getJCRSession().getWorkspace().getQueryManager();
@@ -87,7 +90,7 @@ public class JCRDataStorage implements DataStorage{
       updateDate = searchAtt.getUpdatedDate();
       PageImpl page = searchAtt.getParentPage();
       createdDate.setTime(page.getCreatedDate());
-    }
+    } 
     SearchResult result = new SearchResult(excerpt, title, path, type, updateDate, createdDate);
     return result;
   }
@@ -105,7 +108,7 @@ public class JCRDataStorage implements DataStorage{
     return result;
   }
   
-  public List<SearchResult> searchRenamedPage(ChromatticSession session, SearchData data) throws Exception {
+  public List<SearchResult> searchRenamedPage(ChromatticSession session, ContentSearchData data) throws Exception {
     List<SearchResult> resultList = new ArrayList<SearchResult>() ;
     String statement = data.getStatementForRenamedPage() ;
     QueryManager qm = session.getJCRSession().getWorkspace().getQueryManager();
@@ -134,7 +137,7 @@ public class JCRDataStorage implements DataStorage{
     return attContent.getProperty("jcr:data").getStream() ;    
   }
   
-  public List<TitleSearchResult> searchDataByTitle(ChromatticSession session, SearchData data) throws Exception {
+  public List<TitleSearchResult> searchDataByTitle(ChromatticSession session, ContentSearchData data) throws Exception {
     List<TitleSearchResult> resultList = new ArrayList<TitleSearchResult>();
     String statement = data.getStatementForTitle();
 
@@ -254,5 +257,44 @@ public class JCRDataStorage implements DataStorage{
       }
     }
     return false;
+  }
+
+  @Override
+  public List<TemplateSearchResult> searchTemplate(ChromatticSession session,
+                                                       TemplateSearchData data) throws Exception {
+    // TODO Auto-generated method stub
+    List<TemplateSearchResult> resultList = new ArrayList<TemplateSearchResult>();
+    String statement = data.getStatement();
+    QueryManager qm = session.getJCRSession().getWorkspace().getQueryManager();
+    Query q = qm.createQuery(statement, Query.SQL);
+    QueryResult result = q.execute();
+    RowIterator iter = result.getRows();
+    while (iter.hasNext()) {
+      TemplateSearchResult tempResult = getTemplateResult(iter.nextRow());
+      resultList.add(tempResult);
+    }
+   return resultList;
+  }
+
+  private TemplateSearchResult getTemplateResult(Row row) throws Exception {
+    String type = row.getValue("jcr:primaryType").getString();
+
+    String path = row.getValue("jcr:path").getString();
+    String title = (row.getValue("title") == null ? null : row.getValue("title").getString());
+    
+
+    String templatePath = path.substring(0, path.lastIndexOf("/"));
+    
+    Template template = (Template) org.exoplatform.wiki.utils.Utils.getObject(templatePath,
+                                                                              WikiNodeType.WIKI_PAGE);
+    String description = template.getDescription();
+    TemplateSearchResult result = new TemplateSearchResult(template.getName(),
+                                                           title,
+                                                           path,
+                                                           type,
+                                                           null,
+                                                           null,
+                                                           description);
+    return result;
   }
 }

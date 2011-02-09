@@ -92,6 +92,9 @@ for(entry in uicomponent.getActions()) {
 		<%} else if(action.equals("SavePage")){
 		%>
 		<a href="$link" class="Save Icon" title="<%=_ctx.appRes("UIPageToolBar.label.SavePage");%>">save</a>
+		<%} else if(action.equals("SaveTemplate")){
+		%>
+		<a href="$link" class="Save Icon" title="<%=_ctx.appRes("UIPageToolBar.label.SaveTemplate");%>">save template</a>
 		<%} else if(action.equals("MinorEdit")){
 		%>
 		<a href="$link" class="MinorEdit Icon" title="<%=_ctx.appRes("UIPageToolBar.label.MinorEdit");%>">minor edit</a>

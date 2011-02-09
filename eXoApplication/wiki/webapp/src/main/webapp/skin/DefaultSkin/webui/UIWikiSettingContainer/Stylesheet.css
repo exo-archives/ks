@@ -1,0 +1,26 @@
+@import url('extension/Stylesheet.css') ;
+
+.UIWikiSettingContainer {
+  margin: 20px 10px 20px 10px;
+  display: block;  
+}
+
+.UIWikiSettingContainer .SettingItems {
+  float: left;
+  width: 20%;
+  border: solid #CCC 1px;
+  padding: 5px;
+}
+
+.UIWikiSettingContainer .Item {
+  height: 20px;
+}
+
+.UIWikiSettingContainer .Selected {
+  font-weight: bold;
+}
+
+.UIWikiSettingContainer .Content {
+  margin-left: 22%;
+  border: solid #CCC 1px;
+}

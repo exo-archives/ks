@@ -4,6 +4,8 @@
    uiform.renderChild(uiform.TITLE_CONTROL);
    uiform.renderChild(uiform.PAGE_TOOLBAR);
 %>
+ <div class="ClearBoth"></div>
+<% uiform.renderChild(uiform.FIELD_TEMPLATEDESCTIPTION);  %>
    <div class="ClearBoth"></div>
 <% uiform.renderChild(uiform.HELP_PANEL);%>
 

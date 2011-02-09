@@ -5,13 +5,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import org.chromattic.api.ChromatticSession;
@@ -47,6 +47,8 @@ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PortalWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.RemovedMixin;
 import org.exoplatform.wiki.mow.core.api.wiki.RenamedMixin;
+import org.exoplatform.wiki.mow.core.api.wiki.Template;
+import org.exoplatform.wiki.mow.core.api.wiki.TemplateContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.Trash;
 import org.exoplatform.wiki.mow.core.api.wiki.UserWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
@@ -58,12 +60,14 @@ import org.exoplatform.wiki.service.IDType;
 import org.exoplatform.wiki.service.Permission;
 import org.exoplatform.wiki.service.PermissionEntry;
 import org.exoplatform.wiki.service.PermissionType;
-import org.exoplatform.wiki.service.SearchData;
-import org.exoplatform.wiki.service.SearchResult;
-import org.exoplatform.wiki.service.TitleSearchResult;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.listener.PageWikiListener;
+import org.exoplatform.wiki.service.search.ContentSearchData;
+import org.exoplatform.wiki.service.search.SearchResult;
+import org.exoplatform.wiki.service.search.TemplateSearchData;
+import org.exoplatform.wiki.service.search.TemplateSearchResult;
+import org.exoplatform.wiki.service.search.TitleSearchResult;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.rendering.syntax.Syntax;
 
@@ -218,6 +222,13 @@ public class WikiServiceImpl implements WikiService {
     }
     return true;    
   }
+
+  @Override
+  public void deleteTemplatePage(String wikiType, String wikiOwner, String templateId) throws Exception {
+    // TODO Auto-generated method stub
+   WikiPageParams params = new WikiPageParams(wikiType, wikiOwner, templateId);
+   getTemplatePage(params, templateId).remove();
+  }  
   
   public void deleteDraftNewPage(String newDraftPageId) throws Exception {
     Model model = getModel();
@@ -493,8 +504,41 @@ public class WikiServiceImpl implements WikiService {
     // TODO Auto-generated method stub
     return null;
   }
+  
+  @Override
+  public Template getTemplatePage(WikiPageParams params, String templateId) throws Exception {
+    return getTemplatesContainer(params).getTemplate(templateId);
+  }
 
-  public PageList<ContentImpl> searchContent(SearchData data) throws Exception {
+  @Override
+  public Map<String,Template> getTemplates(WikiPageParams params) throws Exception {
+    return getTemplatesContainer(params).getTemplates();
+  }
+  
+  @Override
+  public TemplateContainer getTemplatesContainer(WikiPageParams params) throws Exception {
+    Model model = getModel();
+    WikiImpl wiki = (WikiImpl) getWiki(params.getType(), params.getOwner(), model);
+    return wiki.getPreferences().getTemplateContainer();
+  }
+  
+  @Override
+  public void modifyTemplate(WikiPageParams params,
+                             Template template,
+                             String newTitle,
+                             String newDescription,
+                             String newContent,
+                             String newSyntaxId) throws Exception {
+    if (newTitle != null) {
+      template = getTemplatesContainer(params).addPage(TitleResolver.getId(newTitle,false), template);
+      template.setDescription(newDescription);
+      template.getContent().setTitle(newTitle);
+      template.getContent().setText(newContent);
+      template.getContent().setSyntax(newSyntaxId);
+    }
+  }
+
+  public PageList<ContentImpl> searchContent(ContentSearchData data) throws Exception {
     Model model = getModel();
     try {
       WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
@@ -517,7 +561,7 @@ public class WikiServiceImpl implements WikiService {
     return null;
   }
   
-  public PageList<SearchResult> search(SearchData data) throws Exception {
+  public PageList<SearchResult> search(ContentSearchData data) throws Exception {
 
     Model model = getModel();
     try {
@@ -529,11 +573,26 @@ public class WikiServiceImpl implements WikiService {
     }
     return null;
   }
+  
+  @Override
+  public List<TemplateSearchResult> searchTemplate(TemplateSearchData data) throws Exception {
+
+    Model model = getModel();
+    try {
+      WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+      List<TemplateSearchResult> result = jcrDataStorage.searchTemplate(wStore.getSession(),
+                                                                            data);
+      return result;
+    } catch (Exception e) {
+      log.error("Can't search", e);
+    }
+    return null;
+  }
 
   public List<SearchResult> searchRenamedPage(String wikiType, String wikiOwner, String pageId) throws Exception {
     Model model = getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
-    SearchData data = new SearchData(wikiType, wikiOwner, pageId);
+    ContentSearchData data = new ContentSearchData(wikiType, wikiOwner, pageId);
     return jcrDataStorage.searchRenamedPage(wStore.getSession(), data);
   }
 
@@ -550,6 +609,8 @@ public class WikiServiceImpl implements WikiService {
         return wStore.getSession().findByPath(ContentImpl.class, relPath);
       } else if (WikiNodeType.WIKI_ATTACHMENT.equals(objectNodeType)) {   
         return wStore.getSession().findByPath(AttachmentImpl.class, relPath);
+      } else if (WikiNodeType.WIKI_TEMPLATE.equals(objectNodeType)) {   
+        return wStore.getSession().findByPath(Template.class, relPath);
       }
     } catch (Exception e) {
       // TODO: handle exception
@@ -619,7 +680,7 @@ public class WikiServiceImpl implements WikiService {
     return null;
   }
   
-  public List<TitleSearchResult> searchDataByTitle(SearchData data) throws Exception {
+  public List<TitleSearchResult> searchDataByTitle(ContentSearchData data) throws Exception {
     try {
       Model model = getModel();
       WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
@@ -772,6 +833,31 @@ public class WikiServiceImpl implements WikiService {
       }
     }
   }
+  
+  @Override
+  public Template createTemplatePage(String title, WikiPageParams params) throws Exception {
+    Model model = getModel();
+    TemplateContainer templContainer = getTemplatesContainer(params);
+    ConversationState conversationState = ConversationState.getCurrent();
+    try {
+      Template template = templContainer.createTemplatePage();
+      String pageId = TitleResolver.getId(title, false);
+      template.setName(pageId);
+      templContainer.addPage(template.getName(), template);
+      String creator = null;
+      if (conversationState != null && conversationState.getIdentity() != null) {
+        creator = conversationState.getIdentity().getUserId();
+      }
+      template.setOwner(creator);
+      template.getContent().setTitle(title);
+      model.save();
+      return template;
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      log.error("Can not create Template page", e);
+    }
+    return null;
+  }
 
   private PageImpl addSyntaxPage(WikiStoreImpl wStore,
                                  PageImpl parentPage,
@@ -894,7 +980,5 @@ public class WikiServiceImpl implements WikiService {
     PageImpl related = (PageImpl) getPageById(relatedPageParams.getType(), relatedPageParams.getOwner(), relatedPageParams.getPageId());
     return orginary.removeRelatedPage(related) != null;
   }
-  
-  
   
 }

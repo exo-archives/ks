@@ -1,0 +1,123 @@
+<%
+   import org.exoplatform.webui.core.UIComponent;
+   import org.exoplatform.webui.form.UIForm;
+   import org.exoplatform.wiki.webui.UIWikiPortlet;
+
+   String[] beanFields = uicomponent.getBeanFields();
+   String[] beanActions = uicomponent.getBeanActions();
+   int colnum = 0;
+   if(beanFields != null && beanFields.length > 0 && beanActions != null && beanActions.length > 0)
+      colnum = beanFields.length + 1;
+   else if(beanFields != null && beanFields.length > 0)
+      colnum = beanFields.length;
+      
+   UIComponent uiParent = uicomponent.getParent();
+   String name = uicomponent.getLabel();
+   UIForm uiForm = uicomponent.getAncestorOfType(UIForm.class);
+%>
+<div id="$uicomponent.id">
+   <table class="UIGrid UITemplateGrid" cellspacing="0">
+      <thead>
+      <tr>
+         <% if (name != null)
+         		{ for (field in beanFields)
+         			{ %>
+         				<th><%=_ctx.appRes(name + ".header." + field)%></th>
+         		<% }
+         			if (beanActions != null)
+         			{ %>
+         				<th><%=_ctx.appRes(name + ".header.action")%></th>
+         		<% }
+         		}
+         		if (name == null)
+         		{
+         			for (field in beanFields)
+         			{ %>
+         				<th><%=_ctx.appRes(uiParent.getName() + ".header." + field)%></th>
+         	 <% }
+         			if (beanActions != null && beanActions.length > 0)
+         			{ %>
+         				<th><%=_ctx.appRes(uiParent.getName() + ".header.action")%></th>
+         	 <% }
+         		} %>
+      </tr>
+      </thead>
+      <tbody>
+      <% if (uicomponent.getUIPageIterator().getAvailable() < 1)
+      { %>
+      <tr>
+      	 <td style="font-style:italic; color: #FF5604; text-align: center;" colspan="<%=colnum%>">
+            <%=_ctx.appRes("UIGrid.msg.empty")%>
+         </td>
+      </tr>
+      <% }
+      else
+      {
+         def rowClass = null;
+         boolean even = true;
+         for (bean in uicomponent.getBeans())
+         {
+            if (even) rowClass = "EvenRow";
+            else rowClass = "OddRow";
+            even = !even;
+      %>
+      <tr class="$rowClass">
+         <%
+               for (field in beanFields)
+               {
+                  def fieldValue = uicomponent.getFieldValue(bean, field);
+                  def renderer = uicomponent.getRendererFor(fieldValue);
+                  println "<td><div class=\"" + renderer.getCSSClassFor(fieldValue) + "\" title='$fieldValue'>" + renderer.render(fieldValue, _ctx) + "</div></td>";
+               }
+               if (beanActions != null && beanActions.length > 0)
+               {
+         %>
+         <td>
+            <div class="ActionContainer">
+               <%
+                     def beanIdField = uicomponent.getBeanIdField();
+                     def beanId = uicomponent.getBeanIdFor(bean);
+                     for (action in beanActions)
+                     {
+                        if (action == null) continue;
+                        String title = _ctx.appRes(uiParent.getName() + ".action.title." + action);
+                        String actionLink = "";
+                        if (uiForm != null)
+                        {
+                           actionLink = uiForm.event(action, uiParent.getId(), beanId);
+                        }
+                        else
+                        {
+                           actionLink = uiParent.event(action, beanId);
+                        }
+                        String actionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + action;
+                        String anchor = "#" + action;
+               %>
+               <% 
+                if (uicomponent.isChangeModeAction(action)){
+                 %>
+               <a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="${action}Icon">$title</a>               
+               <a onclick="$actionLink" id="$actionId" style="display:none;">&nbsp;</a>
+               <% } else { %>
+               <a onclick="$actionLink" alt="$action">$title</a>
+               <% } 
+                } %>
+            </div>
+         </td>
+         <%
+               }
+         %>
+      </tr>
+      <%
+            }
+         }
+      %>
+      </tbody>
+   </table> <!--End UIGrid-->
+<%
+   if (uicomponent.getUIPageIterator().getAvailablePage() > 1)
+   {
+      _ctx.renderUIComponent(uicomponent.getUIPageIterator());
+   }
+%>
+</div>

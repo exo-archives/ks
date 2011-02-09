@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -62,15 +63,21 @@ public class UIWikiPageEditForm extends UIWikiForm {
   public static final String PAGE_TOOLBAR  = "UIWikiPageEditForm_PageToolBar";
   public static final String HELP_PANEL    = "UIWikiSidePanelArea";
   public static final String RICHTEXT_AREA = "UIWikiRichTextArea";
+  public static final String FIELD_TEMPLATEDESCTIPTION = "UIWikiTemplateDescriptionContainer";
   
-  private String  title ;
+  private boolean            isTemplate        = false;
+
+  private String             templateId        = StringUtils.EMPTY;
+
+  private String             title;
   
   public static final String CLOSE = "Close";
   
   public UIWikiPageEditForm() throws Exception{
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.EDITPAGE, WikiMode.ADDPAGE });
-    
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.EDITPAGE, WikiMode.ADDPAGE,
+        WikiMode.EDITTEMPLATE, WikiMode.ADDTEMPLATE });
     addChild(UIWikiPageTitleControlArea.class, null, TITLE_CONTROL).toInputMode();
+    addChild(UIWikiTemplateDescriptionContainer.class, null, FIELD_TEMPLATEDESCTIPTION);
     addChild(UIPageToolBar.class, null, PAGE_TOOLBAR);
     addChild(UIWikiSidePanelArea.class, null, HELP_PANEL);
     addChild(UIWikiRichTextArea.class, null, RICHTEXT_AREA).setRendered(false);
@@ -94,6 +101,22 @@ public class UIWikiPageEditForm extends UIWikiForm {
   public void setTitle(String title){ this.title = title ;}
   public String getTitle(){ return title ;}
   
+  public boolean isTemplate() {
+    return isTemplate;
+  }
+
+  public void setTemplate(boolean isTemplate) {
+    this.isTemplate = isTemplate;
+  }
+
+  public String getTemplateId() {
+    return templateId;
+  }
+
+  public void setTemplateId(String templateId) {
+    this.templateId = templateId;
+  }
+
   public boolean isSidePanelRendered(){
     return getChild(UIWikiSidePanelArea.class).isRendered();
   }

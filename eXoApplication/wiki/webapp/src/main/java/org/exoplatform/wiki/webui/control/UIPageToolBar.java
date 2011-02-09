@@ -38,6 +38,7 @@ import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.control.action.MinorEditActionComponent;
 import org.exoplatform.wiki.webui.control.action.SavePageActionComponent;
+import org.exoplatform.wiki.webui.control.action.SaveTemplateActionComponent;
 
 /**
  * Created by The eXo Platform SAS
@@ -87,7 +88,7 @@ public class UIPageToolBar extends UIContainer {
   
   public boolean isSaveAction(String action) {
     List<String> saveActions = Arrays.asList(new String[] { SavePageActionComponent.ACTION,
-        MinorEditActionComponent.ACTION });
+        MinorEditActionComponent.ACTION, SaveTemplateActionComponent.ACTION });
     return saveActions.contains(action);
   }
 

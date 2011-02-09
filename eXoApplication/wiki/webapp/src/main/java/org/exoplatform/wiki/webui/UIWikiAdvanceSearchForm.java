@@ -36,9 +36,9 @@ import org.exoplatform.webui.form.UIFormSelectBoxWithGroups;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiType;
-import org.exoplatform.wiki.service.SearchData;
-import org.exoplatform.wiki.service.SearchResult;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.service.search.ContentSearchData;
+import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.utils.Utils;
 
 /**
@@ -145,7 +145,7 @@ public class UIWikiAdvanceSearchForm extends UIForm {
           wikiOwner = arrayParams[1];
       }
     }
-    SearchData data = new SearchData(text, null, null, wikiType, wikiOwner);
+    ContentSearchData data = new ContentSearchData(text, null, null, wikiType, wikiOwner);
     PageList<SearchResult> results = wservice.search(data);
     UIWikiAdvanceSearchResult uiSearchResults = getParent().findFirstComponentOfType(UIWikiAdvanceSearchResult.class);
     uiSearchResults.setKeyword(text);

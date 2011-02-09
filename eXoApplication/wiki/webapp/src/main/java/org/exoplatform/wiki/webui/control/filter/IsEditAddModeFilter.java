@@ -42,7 +42,9 @@ public class IsEditAddModeFilter extends UIExtensionAbstractFilter {
   @Override
   public boolean accept(Map<String, Object> context) throws Exception {
     UIWikiPortlet wikiPortlet = (UIWikiPortlet) context.get(UIWikiPortlet.class.getName());
-    return(wikiPortlet.getWikiMode() == WikiMode.EDITPAGE || wikiPortlet.getWikiMode() == WikiMode.ADDPAGE);
+    return (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE
+        || wikiPortlet.getWikiMode() == WikiMode.ADDPAGE
+        || wikiPortlet.getWikiMode() == WikiMode.EDITTEMPLATE || wikiPortlet.getWikiMode() == WikiMode.ADDTEMPLATE);
   }
 
   @Override

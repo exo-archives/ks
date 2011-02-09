@@ -72,6 +72,10 @@ public class UIWikiApplicationControlArea extends UIContainer {
       return "UIWikiPortlet.label.View-Revision";
     case DELETECONFIRM:
       return "UIWikiPortlet.label.Delete-Confirm";
+    case EDITTEMPLATE:
+      return "UIWikiPortlet.label.Edit-Template";
+    case ADDTEMPLATE:
+      return "UIWikiPortlet.label.Add-Template";
     default:
       return "";
     }

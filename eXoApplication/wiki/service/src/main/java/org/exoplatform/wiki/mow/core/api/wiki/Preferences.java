@@ -52,4 +52,23 @@ public abstract class Preferences {
     return preferencesSyntax;
   }
   
+  @OneToOne
+  @Owner
+  @MappedBy(WikiNodeType.Definition.TEMPLATE_CONTAINER)
+  protected abstract TemplateContainer getTemplateContainerByChromattic();
+
+  protected abstract void setTemplateContainerByChromattic(TemplateContainer templContainer);
+
+  @Create
+  protected abstract TemplateContainer createTemplateContainer();
+
+  public TemplateContainer getTemplateContainer() {
+    TemplateContainer templatecontainer = getTemplateContainerByChromattic();
+    if (templatecontainer == null) {
+      templatecontainer = createTemplateContainer();
+      setTemplateContainerByChromattic(templatecontainer);
+    }
+    return templatecontainer;
+  }
+  
 }

@@ -56,6 +56,10 @@ public class PageListenersInAction implements Action {
       return false;
     }
     
+    if (ancestor.isNodeType(WikiNodeType.WIKI_TEMPLATE)) {
+      return false;
+    }
+    
     if (log.isDebugEnabled()) {
       log.debug(String.format("Executing listener [%s] at item [%s] due to event code [%s]", toString(), textProperty.getPath(), eventObj));
     }
@@ -75,6 +79,7 @@ public class PageListenersInAction implements Action {
     String pageId = ancestor.getName();
     boolean moreVersionsThan1 = false;
     try {
+      
       moreVersionsThan1 = ancestor.getVersionHistory().getAllVersions().getSize() > 1;
     } catch (NullPointerException e) {
       if (log.isDebugEnabled()) {

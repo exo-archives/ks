@@ -162,6 +162,14 @@
       <js-path>/javascript/eXo/wiki/spliter/Spliter.js</js-path>
     </param>
   </javascript>
+	
+	 <!-- js for Spliter -->
+   <javascript>
+    <param>
+      <js-module>eXo.wiki.UITemplateSettingForm</js-module>
+      <js-path>/javascript/eXo/wiki/extension/UITemplateSettingForm.js</js-path>
+    </param>
+  </javascript>
    
 </gatein-resources>
 

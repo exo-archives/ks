@@ -36,6 +36,11 @@ import org.exoplatform.wiki.mow.core.api.wiki.PortalWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.UserWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
+import org.exoplatform.wiki.service.search.ContentSearchData;
+import org.exoplatform.wiki.service.search.SearchResult;
+import org.exoplatform.wiki.service.search.TemplateSearchData;
+import org.exoplatform.wiki.service.search.TemplateSearchResult;
+import org.exoplatform.wiki.service.search.TitleSearchResult;
 import org.xwiki.rendering.syntax.Syntax;
 
 
@@ -116,6 +121,12 @@ public class TestWikiService extends AbstractMOWTestcase {
     assertNotNull(wService.getPageById(PortalConfig.PORTAL_TYPE, "classic", "parentPage")) ;
     wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "childPage", "parentPage") ;
     assertNotNull(wService.getPageById(PortalConfig.PORTAL_TYPE, "classic", "childPage")) ;
+  }
+
+  public void testCreateTemplatePage() throws Exception {
+    WikiPageParams params = new WikiPageParams(PortalConfig.PORTAL_TYPE, "classic", null);
+    wService.createTemplatePage("SampleChart", params);
+    assertNotNull(wService.getTemplatePage(params, "SampleChart"));
   }
   
   public void testGetBreadcumb() throws Exception {
@@ -214,6 +225,17 @@ public class TestWikiService extends AbstractMOWTestcase {
     assertFalse(wService.deletePage(PortalConfig.PORTAL_TYPE, "classic", "WikiHome")) ;
   }
   
+  public void testDeleteTemplatePage() throws Exception{
+    Model model = mowService.getModel();
+    WikiPageParams params = new WikiPageParams(PortalConfig.PORTAL_TYPE, "classic", null);
+    wService.createTemplatePage("SampleExcel", params);
+    model.save();
+    assertNotNull(wService.getTemplatePage(params, "SampleExcel"));
+    wService.deleteTemplatePage(PortalConfig.PORTAL_TYPE, "classic", "SampleExcel");
+    model.save();
+    assertNull(wService.getTemplatePage(params, "SampleExcel"));
+  }
+  
   public void testRenamePage() throws Exception{    
     wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "currentPage", "WikiHome") ;
     assertTrue(wService.renamePage(PortalConfig.PORTAL_TYPE, "classic", "currentPage", "renamedPage", "renamedPage")) ;
@@ -265,63 +287,63 @@ public class TestWikiService extends AbstractMOWTestcase {
 
     cspage.getChromatticSession().save();
     // fulltext search
-    SearchData data = new SearchData("suite", null, null, "portal", "classic");
+    ContentSearchData data = new ContentSearchData("suite", null, null, "portal", "classic");
     PageList<ContentImpl> result = wService.searchContent(data);
     assertEquals(2, result.getAll().size());
 
-    data = new SearchData("suite", null, null, "portal", null);
+    data = new ContentSearchData("suite", null, null, "portal", null);
 
     result = wService.searchContent(data);
     assertEquals(3, result.getAll().size());
 
-    data = new SearchData("suite", null, null, null, null);
+    data = new ContentSearchData("suite", null, null, null, null);
     result = wService.searchContent(data);
     assertEquals(4, result.getAll().size());
 
     // title search
-    data = new SearchData(null, "knowledge", null, "portal", "classic");
+    data = new ContentSearchData(null, "knowledge", null, "portal", "classic");
     result = wService.searchContent(data);
     assertEquals(1, result.getAll().size());
 
-    data = new SearchData(null, "collaboration", null, "portal", "classic");
+    data = new ContentSearchData(null, "collaboration", null, "portal", "classic");
     result = wService.searchContent(data);
     assertEquals(1, result.getAll().size());
 
-    data = new SearchData(null, "knowledge", null, "portal", null);
+    data = new ContentSearchData(null, "knowledge", null, "portal", null);
     result = wService.searchContent(data);
     assertEquals(2, result.getAll().size());
 
-    data = new SearchData(null, "knowledge", null, null, null);
+    data = new ContentSearchData(null, "knowledge", null, null, null);
     result = wService.searchContent(data);
     assertEquals(3, result.getAll().size());
 
     // content search
-    data = new SearchData(null, null, "forum", "portal", "classic");
+    data = new ContentSearchData(null, null, "forum", "portal", "classic");
     result = wService.searchContent(data);
     assertEquals(1, result.getAll().size());
 
-    data = new SearchData(null, null, "calendar", "portal", "classic");
+    data = new ContentSearchData(null, null, "calendar", "portal", "classic");
     result = wService.searchContent(data);
     assertEquals(1, result.getAll().size());
 
-    data = new SearchData(null, null, "forum", "portal", null);
+    data = new ContentSearchData(null, null, "forum", "portal", null);
     result = wService.searchContent(data);
     assertEquals(2, result.getAll().size());
 
-    data = new SearchData(null, null, "forum", null, null);
+    data = new ContentSearchData(null, null, "forum", null, null);
     result = wService.searchContent(data);
     assertEquals(3, result.getAll().size());
 
     // content & title search
-    data = new SearchData(null, "suite", "forum", "portal", "classic");
+    data = new ContentSearchData(null, "suite", "forum", "portal", "classic");
     result = wService.searchContent(data);
     assertEquals(1, result.getAll().size());
 
-    data = new SearchData(null, "suite", "forum", "portal", null);
+    data = new ContentSearchData(null, "suite", "forum", "portal", null);
     result = wService.searchContent(data);
     assertEquals(2, result.getAll().size());
 
-    data = new SearchData(null, "suite", "forum", null, null);
+    data = new ContentSearchData(null, "suite", "forum", null, null);
     result = wService.searchContent(data);
     assertEquals(3, result.getAll().size());
 
@@ -345,12 +367,12 @@ public class TestWikiService extends AbstractMOWTestcase {
     assertNotNull(attachment1.getContentResource()) ;
     attachment1.setContentResource(Resource.createPlainText("exoplatform content mamagement")) ;    
     kspage.getChromatticSession().save();
-    SearchData data = new SearchData("exoplatform", null, null,"portal","classic") ;
+    ContentSearchData data = new ContentSearchData("exoplatform", null, null,"portal","classic") ;
    
     PageList<SearchResult> result = wService.search(data) ;
     assertEquals(2, result.getAll().size()) ;    
     
-    data = new SearchData("exoplatform", null, null,"portal",null) ;
+    data = new ContentSearchData("exoplatform", null, null,"portal",null) ;
     result = wService.search(data) ;
     assertEquals(3, result.getAll().size()) ;    
       
@@ -371,9 +393,18 @@ public class TestWikiService extends AbstractMOWTestcase {
     assertNotNull(attachment1.getContentResource());
     kspage.getChromatticSession().save();
 
-    SearchData data = new SearchData(null, "dump", null, "portal", "classic");
+    ContentSearchData data = new ContentSearchData(null, "dump", null, "portal", "classic");
     List<TitleSearchResult> result = wService.searchDataByTitle(data);
     assertEquals(2, result.size());
+  }
+  
+  public void testSearchTemplate() throws Exception {    
+    WikiPageParams params= new WikiPageParams(PortalConfig.PORTAL_TYPE,  "classic", null);
+    wService.createTemplatePage("Sample Search Template", params);
+    assertNotNull(wService.getTemplatePage(params, "Sample_Search_Template"));
+    TemplateSearchData data = new TemplateSearchData("Template",PortalConfig.PORTAL_TYPE,  "classic");
+    List<TemplateSearchResult> result = wService.searchTemplate(data);
+    assertEquals(1, result.size());
   }
   
   public void testGetPageTitleOfAttachment() throws Exception {

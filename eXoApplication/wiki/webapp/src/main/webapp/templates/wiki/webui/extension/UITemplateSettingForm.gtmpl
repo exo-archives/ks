@@ -1,0 +1,34 @@
+<%
+  import org.exoplatform.wiki.webui.UIWikiPortlet; 
+%>
+<%
+ def rcontext = _ctx.getRequestContext(); 
+ String addLink = uiform.event(uiform.ACTION_ADD);
+ String anchor = "#" + uiform.ACTION_ADD;
+ String actionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + uiform.ACTION_ADD;
+ String inputId = uiform.TEMPLATE_SEARCHBOX;
+ rcontext.getJavascriptManager().importJavascript('eXo.wiki.UITemplateSettingForm', '/wiki/javascript/') ;
+ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UITemplateSettingForm.init('"+ uicomponent.id+"', '" + inputId + "');");
+ %>
+
+<div class="UIForm UITemplateSettingForm">
+	<%uiform.begin();%>
+	  Templates
+	  <br/>
+	  <br/>
+	  <div class="TemplateControl">
+	    <div class="TemplateSearchBox" >	
+  	    <% uiform.renderChild(uiform.TEMPLATE_SEARCHBOX);	%>
+  	    <a class="AdvancedSearch" style="display:none"  onclick="<%=uiform.event(uiform.ACTION_SEARCH);%>"></a>
+  		</div>
+  		<div class="TemplateActions" >
+  		  <a class="AddTemplate" onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');">Add more...</a>
+  		  <a onclick="$addLink" id="$actionId" style="display:none;">&nbsp;</a>
+  		</div>
+  	</div>
+  	<div class="ClearBoth"></div>
+  	<div class="TemplateGrid">
+  	  <% uiform.renderChild(uiform.	TEMPLATE_GRID);	%>
+  	</div>				
+  <%uiform.end();%>
+</div>

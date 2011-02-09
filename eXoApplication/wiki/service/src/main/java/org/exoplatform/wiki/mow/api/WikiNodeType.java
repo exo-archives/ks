@@ -33,8 +33,10 @@ public interface WikiNodeType {
   public final static String USER_WIKI_CONTAINER     = "wiki:userwikis";
 
   public final static String PORTAL_WIKI             = "wiki:portalwiki";
-
+  
   public final static String GROUP_WIKI              = "wiki:groupwiki";
+
+  public final static String WIKI                    = "wiki:wiki";
 
   public final static String USER_WIKI               = "wiki:userwiki";
 
@@ -69,6 +71,10 @@ public interface WikiNodeType {
   public final static String WIKI_PREFERENCES        = "wiki:preferences";
   
   public final static String WIKI_PREFERENCES_SYNTAX = "wiki:preferencessyntax";
+  
+  public final static String WIKI_TEMPLATE_CONTAINER = "wiki:templatecontainer";
+
+  public final static String WIKI_TEMPLATE           = "wiki:template";
 
   public final static String WIKI_WATCHED            = "wiki:watched";
 
@@ -152,10 +158,14 @@ public interface WikiNodeType {
 
     public final static String PREFERENCES_SYNTAX         = "PreferencesSyntax";
     
+    public final static String TEMPLATE_CONTAINER         = "TemplateContainer";
+    
     public final static String FILE_TYPE                  = "fileType";
     
     public final static String WATCHER                    = "watcher";
     
     public final static String RELATION                    = "exo:relation";
+    
+    public final static String DESCRIPTION                = "description";
   }
 }

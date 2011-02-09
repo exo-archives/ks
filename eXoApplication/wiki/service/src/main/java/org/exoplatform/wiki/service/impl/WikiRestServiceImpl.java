@@ -64,8 +64,6 @@ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
 import org.exoplatform.wiki.service.Relations;
-import org.exoplatform.wiki.service.SearchData;
-import org.exoplatform.wiki.service.TitleSearchResult;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiResource;
@@ -79,6 +77,8 @@ import org.exoplatform.wiki.service.rest.model.PageSummary;
 import org.exoplatform.wiki.service.rest.model.Pages;
 import org.exoplatform.wiki.service.rest.model.Space;
 import org.exoplatform.wiki.service.rest.model.Spaces;
+import org.exoplatform.wiki.service.search.ContentSearchData;
+import org.exoplatform.wiki.service.search.TitleSearchResult;
 import org.exoplatform.wiki.tree.JsonNodeData;
 import org.exoplatform.wiki.tree.RootTreeNode;
 import org.exoplatform.wiki.tree.TreeNode;
@@ -388,7 +388,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
   @Produces(MediaType.APPLICATION_JSON)
   public Response searchData(@PathParam("keyword") String keyword) throws Exception {
     try {
-      SearchData data = new SearchData(null, keyword.toLowerCase(), null, null, null);
+      ContentSearchData data = new ContentSearchData(null, keyword.toLowerCase(), null, null, null);
       List<TitleSearchResult> result = wikiService.searchDataByTitle(data);
       return Response.ok(new BeanToJsons(result), MediaType.APPLICATION_JSON)
                      .cacheControl(cc)
