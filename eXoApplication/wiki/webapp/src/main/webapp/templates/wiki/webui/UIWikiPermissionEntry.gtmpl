@@ -6,7 +6,7 @@
   String id = permissionEntry.getId();
   Permission[] permissions = permissionEntry.getPermissions();
   def uiPermissionForm = uicomponent.getParent().getParent();
-  def deleteLink = uiPermissionForm.event(uiPermissionForm.DELETE_ACTION, id);
+  def deleteLink = uiPermissionForm.event(uiPermissionForm.DELETE_ENTRY, id);
 %>
 <td><div title="managers in Administrators" class="Text"><%= id %></div><div title="manager:/platform/administrators" class="Text"><%= id %></div></td>
 <%

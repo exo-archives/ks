@@ -1,3 +1,9 @@
+<%
+  import org.exoplatform.webui.core.UIPopupWindow;
+  
+  def uiUserPopupWindow = uicomponent.getChildById(uicomponent.USER_PERMISSION_POPUP_SELECTOR);
+  uicomponent.renderChild(uiUserPopupWindow) ;
+%>
 <div class="UIForm $uicomponent.id">
   <%uiform.begin()%>
     <div class="HorizontalLayout">
@@ -5,8 +11,8 @@
         <%
           List children = uicomponent.getChildren() ;
           for(component in children) {
-            if(component.isRendered()){
-              uicomponent.renderChild(component.getClass()) ;
+            if(component.isRendered() && component.getId()!= uicomponent.USER_PERMISSION_POPUP_SELECTOR){
+              uicomponent.renderChild(component) ;
             }
           }
         %>

@@ -260,6 +260,27 @@
   font-size: 11px;
 }
 
+.UIWikiPortlet .UserIcon {
+  background:url("/eXoResources/skin/DefaultSkin/webui/component/UIToolbar/background/LargeToolbar.gif") no-repeat left -128px;
+  height:32px;
+  margin:auto;
+  width:32px;
+}
+
+.UIWikiPortlet .GroupIcon {
+  background:url("/eXoResources/skin/DefaultSkin/webui/component/UIToolbar/background/LargeToolbar.gif") no-repeat -32px -128px;
+  height:32px;
+  margin:auto;
+  width:32px;
+}
+
+.UIWikiPortlet .MembershipIcon {
+  background:url("/eXoResources/skin/DefaultSkin/webui/component/UIToolbar/background/LargeToolbar.gif") no-repeat -64px -128px;
+  height:32px;
+  margin:auto;
+  width:32px;
+}
+
 .UIWikiPortlet .Add {
 	background:url("background/UIPageToolBarIcon.png") no-repeat left -47px;
 	padding:10px 0 16px 25px;
