@@ -53,7 +53,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -63,17 +63,22 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Add Category-</td>
+	<td>-Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Select Add Category on Menu</td>
 	<td></td>
 </tr>
 <tr>
@@ -82,7 +87,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDown</td>
 	<td>link=Add category</td>
 	<td></td>
 </tr>
@@ -118,12 +123,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIUserSelector']/div[2]/div[2]/table/tbody/tr/td/a[1]/div/div/div</td>
+	<td>//form[@id='UIUserSelector']//div[contains(text(),&quot;Add&quot;)]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIUserSelector']/div[2]/div[2]/table/tbody/tr/td/a[1]/div/div/div</td>
+	<td>//form[@id='UIUserSelector']//div[contains(text(),&quot;Add&quot;)]</td>
 	<td></td>
 </tr>
 <tr>
@@ -152,33 +157,28 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=SNF_KS_01</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementPresent</td>
-	<td>link=SNF_KS_01</td>
-	<td></td>
-</tr>
-<tr>
 	<td>echo</td>
 	<td>-Edit Category-</td>
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=SNF_KS_01</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=SNF_KS_01</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
@@ -187,7 +187,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>mouseDown</td>
 	<td>//div[@id='FAQCategroManager']//div[@class='MenuItem']</td>
 	<td></td>
 </tr>
@@ -213,12 +213,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategoryForm']/div[2]/div/div/table//div[1]/div/div/div</td>
+	<td>//form[@id='UICategoryForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategoryForm']/div[2]/div/div/table//div[1]/div/div/div</td>
+	<td>//form[@id='UICategoryForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -228,12 +228,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIBreadcumbs']/div/table/tbody/tr/td/div/a</td>
+	<td>//div[@id='UIBreadcumbs']//img[@alt=&quot;categories&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIBreadcumbs']/div/table/tbody/tr/td/div/a</td>
+	<td>//div[@id='UIBreadcumbs']//img[@alt=&quot;categories&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -253,17 +253,17 @@
 </tr>
 <tr>
 	<td>contextMenu</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_01 Update&quot;]</td>
 	<td>contextmenu</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIFAQPopupCategories2']/div/div/div/div/div[7]/a[@class='IconItem MoveCategory']</td>
+	<td>//div[@id='UIFAQPopupCategories2']//a[@class='IconItem MoveCategory']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@id='UIFAQPopupCategories2']/div/div/div/div/div[7]/a[@class='IconItem MoveCategory']</td>
+	<td>mouseDown</td>
+	<td>//div[@id='UIFAQPopupCategories2']//a[@class='IconItem MoveCategory']</td>
 	<td></td>
 </tr>
 <tr>
@@ -288,12 +288,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//a/span</td>
+	<td>//a[@title=&quot;Technical FAQ&quot;]/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//a/span</td>
+	<td>//a[@title=&quot;Technical FAQ&quot;]/span</td>
 	<td></td>
 </tr>
 <tr>
@@ -313,22 +313,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_01 Update&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseOver</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_01 Update&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>contextMenu</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_01 Update&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseDownRight</td>
-	<td>//div[@id='UIFAQPopupCategories2']/div/div/div/div/div[6]/a</td>
+	<td>//div[@id='UIFAQPopupCategories2']//a[@class=&quot;IconItem DeleteCategory&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -361,7 +361,6 @@
 	<td>Sign in</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>
