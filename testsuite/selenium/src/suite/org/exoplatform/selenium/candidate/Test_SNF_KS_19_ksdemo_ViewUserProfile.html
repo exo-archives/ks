@@ -47,8 +47,13 @@
 	<td>gtn</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Login by Root</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -62,23 +67,38 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Category</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>FAQCategroManager</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Edit</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='FAQCategroManager']//div[@class='MenuItem']</td>
+	<td>//div[@id='FAQCategroManager']//a[text()=&quot;Edit&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@id='FAQCategroManager']//div[@class='MenuItem']</td>
+	<td>mouseDown</td>
+	<td>//div[@id='FAQCategroManager']//a[text()=&quot;Edit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-View Author Infor</td>
 	<td></td>
 </tr>
 <tr>
@@ -87,18 +107,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>check</td>
 	<td>ViewAuthorInfor</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategoryForm']//table[@class='ActionContainer']//div[@class='ActionButton LightBlueStyle']</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategoryForm']//table[@class='ActionContainer']//div[@class='ActionButton LightBlueStyle']</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
@@ -107,8 +127,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Submit question</td>
+	<td>waitForElementPresent</td>
+	<td>link=Submit question</td>
 	<td></td>
 </tr>
 <tr>
@@ -144,7 +164,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>English Description</td>
+	<td>Tear in my eyes when you leave</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -157,6 +177,11 @@
 	<td>root@localhost.vn</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
@@ -164,6 +189,21 @@
 <tr>
 	<td>mouseDown</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>The question has been posted.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>The question has been posted.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-OK</td>
 	<td></td>
 </tr>
 <tr>
@@ -192,38 +232,93 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@class='FAQContent']//div[@class='ProfileContainer']//a</td>
+	<td>echo</td>
+	<td>-View Profile</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>//div[@class='FAQContent']//div[@class='ProfileContainer']//a</td>
+	<td>waitForElementPresent</td>
+	<td>//a[@title=&quot;View profile&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='FAQContent']//div[@class='ProfileContainer']//a</td>
+	<td>//a[@title=&quot;View profile&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- User Name</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>User Profile</td>
+	<td>User Name: root</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>User Profile</td>
+	<td>User Name: root</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- First Name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>First Name: Root</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>First Name: Root</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Last Name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Last Name: Root</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Last Name: Root</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Email</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Email: root@localhost</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Email: root@localhost</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Close</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UIViewUserProfile</td>
+	<td>//form[@id='UIViewUserProfile']//a[text()=&quot;Close&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIViewUserProfile']/div[3]/table/tbody/tr/td/div/div/div/div/a</td>
+	<td>//form[@id='UIViewUserProfile']//a[text()=&quot;Close&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -233,22 +328,42 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
+	<td>//a[@title=&quot;Delete&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
+	<td>//a[@title=&quot;Delete&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Display message to comfirm</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Do you really want to delete this question and its answers ?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Do you really want to delete this question and its answers ?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-OK</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -263,27 +378,37 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>--Uncheck View Question Author</td>
+	<td>-Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>FAQCategroManager</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Edit</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='FAQCategroManager']//div[@class='MenuItem']</td>
+	<td>//div[@id='FAQCategroManager']//a[text()=&quot;Edit&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@id='FAQCategroManager']//div[@class='MenuItem']</td>
+	<td>mouseDown</td>
+	<td>//div[@id='FAQCategroManager']//a[text()=&quot;Edit&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Uncheck View Author Infor</td>
 	<td></td>
 </tr>
 <tr>
@@ -292,28 +417,38 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>uncheck</td>
 	<td>ViewAuthorInfor</td>
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategoryForm']//table[@class='ActionContainer']//div[@class='ActionButton LightBlueStyle']</td>
+	<td>//form[@id='UICategoryForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategoryForm']//table[@class='ActionContainer']//div[@class='ActionButton LightBlueStyle']</td>
+	<td>//form[@id='UICategoryForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>echo</td>
+	<td>-sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 </tbody></table>

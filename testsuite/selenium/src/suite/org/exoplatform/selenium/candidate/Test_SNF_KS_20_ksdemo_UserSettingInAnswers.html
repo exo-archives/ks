@@ -47,13 +47,18 @@
 	<td>gtn</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Login by Root</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Add question for user testing test-</td>
+	<td>-Go to Answers&nbsp;&nbsp;and submit question</td>
 	<td></td>
 </tr>
 <tr>
@@ -72,8 +77,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Question</td>
+	<td>echo</td>
+	<td>-Add question for user testing test-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>QuestionTitle</td>
 	<td></td>
 </tr>
 <tr>
@@ -104,7 +114,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>English Description</td>
+	<td>Toi thao thuc, toi heo mon vi noi nho.</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -154,7 +164,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>French Description</td>
+	<td>Chi can den ben toi vao nhung thang nam cuoi doi</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -162,13 +172,33 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>echo</td>
+	<td>-Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//a[text()=&quot;Save&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//a[text()=&quot;Save&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>The question has been posted.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>The question has been posted.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-OK</td>
 	<td></td>
 </tr>
 <tr>
@@ -197,6 +227,21 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForTextPresent</td>
+	<td>Toi thao thuc, toi heo mon vi noi nho.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Toi thao thuc, toi heo mon vi noi nho.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Change language into French</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=French</td>
 	<td></td>
@@ -208,22 +253,32 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>Question in French</td>
+	<td>Chi can den ben toi vao nhung thang nam cuoi doi</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>Question in French</td>
+	<td>Chi can den ben toi vao nhung thang nam cuoi doi</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>French Description</td>
+	<td>Question in French</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>French Description</td>
+	<td>Question in French</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Change language into English</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=English</td>
 	<td></td>
 </tr>
 <tr>
@@ -243,12 +298,12 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>English Description</td>
+	<td>Toi thao thuc, toi heo mon vi noi nho.</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>English Description</td>
+	<td>Toi thao thuc, toi heo mon vi noi nho.</td>
 	<td></td>
 </tr>
 <tr>
@@ -297,6 +352,11 @@
 	<td>SNF_KS_20 des</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
@@ -323,22 +383,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_20&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseOver</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_20&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>contextMenu</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_20&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseDownRight</td>
-	<td>//div[@id='UIFAQPopupCategories2']//div[@class='UIRightClickPopupMenu UIContextMenuContainer']//div[8][@class='MenuItem']/a</td>
+	<td>//div[@id='UIFAQPopupCategories2']//a[@class='IconItem Watch']</td>
 	<td></td>
 </tr>
 <tr>
@@ -377,6 +437,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;order-by: alphabet/index</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>order-by</td>
 	<td></td>
@@ -385,6 +450,11 @@
 	<td>select</td>
 	<td>order-by</td>
 	<td>label=alphabet/Index</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;order-type: Descending</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -397,18 +467,33 @@
 	<td>label=Descending</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;vote</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>vote</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>check</td>
 	<td>vote</td>
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>--&nbsp;&nbsp;Sort question by popularity</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UISettingForm']//div[@title=&quot;Watches&quot;]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//tr[4]/td[2]/div</td>
+	<td>//form[@id='UISettingForm']//div[@title=&quot;Watches&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -424,6 +509,11 @@
 <tr>
 	<td>assertConfirmation</td>
 	<td>Are you sure you want unwatch this category?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Cancel</td>
 	<td></td>
 </tr>
 <tr>
@@ -494,7 +584,7 @@
 <tr>
 	<td>type</td>
 	<td>//html/body</td>
-	<td>English Description</td>
+	<td>Ta thuong toi bua quen an. vi cong ty ma 2 mat do ngau.</td>
 </tr>
 <tr>
 	<td>selectFrame</td>
@@ -507,13 +597,33 @@
 	<td>root@localhost.vn</td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>echo</td>
+	<td>-Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//a[text()=&quot;Save&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//a[text()=&quot;Save&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>The question has been posted.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>The question has been posted.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-OK</td>
 	<td></td>
 </tr>
 <tr>
@@ -552,23 +662,53 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
+	<td>echo</td>
+	<td>-Delete question</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//div[@id='UIQuestions']//a[@title=&quot;Delete&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//div[@id='UIQuestions']//a[@title=&quot;Delete&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Do you really want to delete this question and its answers ?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Do you really want to delete this question and its answers ?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Ok</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-open Question in English</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Question in English</td>
 	<td></td>
 </tr>
 <tr>
@@ -577,23 +717,43 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
+	<td>echo</td>
+	<td>-Delete</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//div[@id='UIQuestions']//a[@title=&quot;Delete&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//div[@id='UIQuestions']//a[@title=&quot;Delete&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Do you really want to delete this question and its answers ?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Do you really want to delete this question and its answers ?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-OK</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -603,22 +763,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_20&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseOver</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_20&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>contextMenu</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_20&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseDownRight</td>
-	<td>//div[@id='UIFAQPopupCategories2']/div/div/div/div/div[6]/a</td>
+	<td>//div[@id='UIFAQPopupCategories2']//a[@class=&quot;IconItem DeleteCategory&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -672,6 +832,11 @@
 	<td>label=Ascending</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
@@ -682,18 +847,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Sign out</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
 	<td></td>
 </tr>
 </tbody></table>

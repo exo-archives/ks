@@ -47,13 +47,18 @@
 	<td>gtn</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Login bt root</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Add Category-</td>
+	<td>-Access Forum</td>
 	<td></td>
 </tr>
 <tr>
@@ -62,13 +67,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-F1: Add Category</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//a/span</td>
+	<td>//span[text()=&quot;Add category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//a/span</td>
+	<td>//span[text()=&quot;Add category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -84,7 +94,12 @@
 <tr>
 	<td>type</td>
 	<td>Description</td>
-	<td>add new category</td>
+	<td>Add new category</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Save: add category successful</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -97,33 +112,43 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Cate1_SNF_KS_24</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>Cate1_SNF_KS_24</td>
+	<td>echo</td>
+	<td>- Go Home</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AddCategory']/div/div/div/div/a/span</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AddCategory']/div/div/div/div/a/span</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Cate1_SNF_KS_24</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>link=Cate1_SNF_KS_24</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-- Create more Category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AddCategory']//span[text()=&quot;Add category&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='AddCategory']//span[text()=&quot;Add category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -139,7 +164,12 @@
 <tr>
 	<td>type</td>
 	<td>Description</td>
-	<td>add new category</td>
+	<td>ven tu - bachata</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Save: add category successful</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -152,23 +182,28 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>- Go Home</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Cate2_SNF_KS_24</td>
+	<td>waitForElementPresent</td>
+	<td>link=Cate2_SNF_KS_24</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>Cate2_SNF_KS_24</td>
+	<td>verifyElementPresent</td>
+	<td>link=Cate2_SNF_KS_24</td>
 	<td></td>
 </tr>
 <tr>
@@ -187,23 +222,33 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td>echo</td>
+	<td>-Manage Category menu</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategory']//div[@class='ItemIcon AddForumIcon']/a</td>
+	<td>//div[text()=&quot;Manage Category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategory']//div[@class='ItemIcon AddForumIcon']/a</td>
+	<td>//div[text()=&quot;Manage Category&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//a[text()=&quot;Add forum&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[text()=&quot;Add forum&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -222,13 +267,18 @@
 	<td>Test Forum In Category</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Save to create Forum</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td>//form[@id='UIForumForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td>//form[@id='UIForumForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -242,48 +292,63 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>For1_SNF_KS_24</td>
+	<td>waitForElementPresent</td>
+	<td>link=For1_SNF_KS_24</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>For1_SNF_KS_24</td>
+	<td>verifyElementPresent</td>
+	<td>link=For1_SNF_KS_24</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Edit Forum inside Category-</td>
+	<td>-F2: Edit Forum inside Category-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Check forum that need to edit : For1_SNF_KS_24</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategory']//input[@id='UIFORUMCheckAllForum']</td>
+	<td>document.forms[1].elements[3]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategory']//input[@id='UIFORUMCheckAllForum']</td>
+	<td>document.forms[1].elements[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Manage Category menu</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td>//div[text()=&quot;Manage Category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td>//div[text()=&quot;Manage Category&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Edit</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategory']//div[@class='UIContextMenuContainer']//div[@class='ItemIcon EditForumIcon']/a</td>
+	<td>//a[contains(@href,&quot;EditForum&quot;)]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategory']//div[@class='UIContextMenuContainer']//div[@class='ItemIcon EditForumIcon']/a</td>
+	<td>//a[contains(@href,&quot;EditForum&quot;)]</td>
 	<td></td>
 </tr>
 <tr>
@@ -302,6 +367,11 @@
 	<td>Test Forum In Category Edit</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
@@ -312,38 +382,38 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>For1_SNF_KS_24_Edit</td>
+	<td>waitForElementPresent</td>
+	<td>link=For1_SNF_KS_24_Edit</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>For1_SNF_KS_24_Edit</td>
+	<td>verifyElementPresent</td>
+	<td>link=For1_SNF_KS_24_Edit</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Lock Forum inside Category-</td>
+	<td>-F3: Lock Forum inside Category-</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategory']//input[@id='UIFORUMCheckAllForum']</td>
+	<td>document.forms[1].elements[3]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategory']//input[@id='UIFORUMCheckAllForum']</td>
+	<td>document.forms[1].elements[3]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td>//div[text()=&quot;Manage Category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td>//div[text()=&quot;Manage Category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -512,23 +582,103 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Login by john to check Category was locked</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>link=For1_SNF_KS_24_Edit</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=For1_SNF_KS_24_Edit</td>
+	<td>link=Sign in</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UITopicContainer']//div[@class='LockActionForum UIActionForum']</td>
+	<td>username</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>//form[@id='UITopicContainer']//div[@class='LockActionForum UIActionForum']</td>
+	<td>type</td>
+	<td>username</td>
+	<td>john</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>gtn</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>link=For1_SNF_KS_24_Edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementNotPresent</td>
+	<td>link=For1_SNF_KS_24_Edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-- Login admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>username</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>gtn</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Forum</td>
 	<td></td>
 </tr>
 <tr>
@@ -574,6 +724,106 @@
 <tr>
 	<td>click</td>
 	<td>link=Open</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Login by john to check Category was opened</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>username</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>john</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>gtn</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=For1_SNF_KS_24_Edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>link=For1_SNF_KS_24_Edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-- Login admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>username</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>gtn</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Forum</td>
 	<td></td>
 </tr>
 <tr>
@@ -662,38 +912,53 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>For1_SNF_KS_24_Edit</td>
+	<td>waitForElementNotPresent</td>
+	<td>link=For1_SNF_KS_24_Edit</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>For1_SNF_KS_24_Edit</td>
+	<td>verifyElementNotPresent</td>
+	<td>link=For1_SNF_KS_24_Edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-- Home</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIBreadcumbs']//div[1]/a</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Cate2_SNF_KS_24</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Cate2_SNF_KS_24</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=For1_SNF_KS_24_Edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>link=For1_SNF_KS_24_Edit</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
 	<td>-Remove Forum Inside Category-</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Cate2_SNF_KS_24</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Cate2_SNF_KS_24</td>
 	<td></td>
 </tr>
 <tr>
@@ -732,13 +997,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextNotPresent</td>
-	<td>For1_SNF_KS_24_Edit</td>
+	<td>waitForElementNotPresent</td>
+	<td>link=For1_SNF_KS_24_Edit</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextNotPresent</td>
-	<td>For1_SNF_KS_24_Edit</td>
+	<td>verifyElementNotPresent</td>
+	<td>link=For1_SNF_KS_24_Edit</td>
 	<td></td>
 </tr>
 <tr>
@@ -747,8 +1012,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -763,7 +1033,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UICategory</td>
+	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
 	<td></td>
 </tr>
 <tr>
@@ -783,12 +1053,12 @@
 </tr>
 <tr>
 	<td>waitForElementNotPresent</td>
-	<td>Cate1_SNF_KS_24</td>
+	<td>link=Cate1_SNF_KS_24</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextNotPresent</td>
-	<td>Cate1_SNF_KS_24</td>
+	<td>verifyElementNotPresent</td>
+	<td>link=Cate1_SNF_KS_24</td>
 	<td></td>
 </tr>
 <tr>
@@ -803,7 +1073,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UICategory</td>
+	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
 	<td></td>
 </tr>
 <tr>
@@ -829,16 +1099,21 @@
 <tr>
 	<td>verifyTextNotPresent</td>
 	<td>link=Cate2_SNF_KS_24</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
 	<td></td>
 </tr>
 </tbody></table>

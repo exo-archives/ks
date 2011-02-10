@@ -48,7 +48,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -58,17 +58,22 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Add Category-</td>
+	<td>-Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add category</td>
 	<td></td>
 </tr>
 <tr>
@@ -193,17 +198,17 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td>//div[@id=&quot;UIAnswersPortlet&quot;]//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td>//div[@id=&quot;UIAnswersPortlet&quot;]//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Comment Question-</td>
+	<td>-Comment Question</td>
 	<td></td>
 </tr>
 <tr>
@@ -308,12 +313,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICommentForm']/div[2]/div[2]/table//div[1]/div/div/div</td>
+	<td>//form[@id='UICommentForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICommentForm']/div[2]/div[2]/table//div[1]/div/div/div</td>
+	<td>//form[@id='UICommentForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -342,13 +347,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Edit comment</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[3]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Edit comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[3]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Edit comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -374,6 +384,11 @@
 <tr>
 	<td>selectFrame</td>
 	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
@@ -403,12 +418,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[3]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Edit comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[3]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Edit comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -483,12 +498,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -518,12 +533,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -647,8 +662,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UICommentForm']//a[text()=&quot;Save&quot;]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//form[@id='UICommentForm']/div[2]/div[2]/table//div[1]/div/div/div</td>
+	<td>//form[@id='UICommentForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -677,13 +697,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Promote as answer</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[2]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Promote as answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[2]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Promote as answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -713,12 +738,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[2]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Promote as answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//table//td[2]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Promote as answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -733,27 +758,27 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>- Delete data-</td>
+	<td>- Delete Question</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
+	<td>//div[@class='DecoratorMC']//a[@title=&quot;Delete&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
+	<td>//div[@class='DecoratorMC']//a[@title=&quot;Delete&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()=&quot;OK&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -783,22 +808,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_16&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseOver</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_16&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>contextMenu</td>
-	<td>//div[6]/div/a/span</td>
+	<td>//a[@title=&quot;SNF_KS_16&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseDownRight</td>
-	<td>//div[@id='UIFAQPopupCategories2']/div/div/div/div/div[6]/a</td>
+	<td>//div[@id='UIFAQPopupCategories2']//a[@class=&quot;IconItem DeleteCategory&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -817,6 +842,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Sign Out</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign out</td>
 	<td></td>
@@ -826,12 +856,6 @@
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
-	<td></td>
-</tr>
-
 </tbody></table>
 </body>
 </html>

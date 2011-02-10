@@ -48,12 +48,12 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Add Category for Test-</td>
+	<td>-Go to Forum</td>
 	<td></td>
 </tr>
 <tr>
@@ -62,13 +62,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Add Category for Test-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//a/span</td>
+	<td>//span[text()=&quot;Add category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//a/span</td>
+	<td>//span[text()=&quot;Add category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -87,6 +92,11 @@
 	<td>Category 1</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
@@ -97,13 +107,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>- Go Home</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -118,12 +133,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//a/span</td>
+	<td>//span[text()=&quot;Add category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//a/span</td>
+	<td>//span[text()=&quot;Add category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -153,12 +168,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -183,12 +198,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[3]/div/div/div/div/a/span</td>
+	<td>//span[text()=&quot;Add forum&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[3]/div/div/div/div/a/span</td>
+	<td>//span[text()=&quot;Add forum&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -208,12 +223,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td>//form[@id='UIForumForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td>//form[@id='UIForumForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -233,22 +248,27 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UITopicContainer']/div[4]//div[1]//div[6]/div[1]/div/div</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseOver</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UITopicContainer']/div[4]//div[1]//div[6]/div[1]/div/div</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UITopicContainer']//div[@class='ItemIcon EditForumIcon']/a</td>
+	<td>//a[contains(@href,&quot;EditForum&quot;)]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UITopicContainer']//div[@class='ItemIcon EditForumIcon']/a</td>
+	<td>//a[contains(@href,&quot;EditForum&quot;)]</td>
 	<td></td>
 </tr>
 <tr>
@@ -277,6 +297,11 @@
 	<td>Forum actions Update</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
@@ -287,8 +312,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>UITopicContainer</td>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='UIForumDescription']//span[@class='NameForum']</td>
 	<td></td>
 </tr>
 <tr>
@@ -313,17 +338,27 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon MoveForumIcon']/a</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon MoveForumIcon']/a</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Cate2_SNF_KS_25</td>
+	<td>waitForElementPresent</td>
+	<td>//a[contains(@href,&quot;MoveForum&quot;)]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(@href,&quot;MoveForum&quot;)]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Cate2_SNF_KS_25</td>
 	<td></td>
 </tr>
 <tr>
@@ -332,8 +367,28 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Cate2_SNF_KS_25</td>
+	<td>waitForElementNotPresent</td>
+	<td>link=For_SNF_KS_25_Update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementNotPresent</td>
+	<td>link=For_SNF_KS_25_Update</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Cate2_SNF_KS_25</td>
 	<td></td>
 </tr>
 <tr>
@@ -368,12 +423,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon RemoveForumIcon']/a</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon RemoveForumIcon']/a</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//a[contains(@href,&quot;RemoveForum&quot;)]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(@href,&quot;RemoveForum&quot;)]</td>
 	<td></td>
 </tr>
 <tr>
@@ -393,12 +458,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -412,13 +477,23 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Manage Category menu</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>UICategory</td>
+	<td>//div[text()=&quot;Manage Category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td>//div[text()=&quot;Manage Category&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Delete: Cate1_SNF_KS_25</td>
 	<td></td>
 </tr>
 <tr>
@@ -458,12 +533,17 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UICategory</td>
+	<td>//div[text()=&quot;Manage Category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td>//div[text()=&quot;Manage Category&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Delete: Cate2_SNF_KS_25</td>
 	<td></td>
 </tr>
 <tr>
@@ -489,6 +569,11 @@
 <tr>
 	<td>verifyTextNotPresent</td>
 	<td>link=Cate2_SNF_KS_25</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-- Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -499,11 +584,6 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
 	<td></td>
 </tr>
 </tbody></table>

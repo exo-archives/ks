@@ -48,7 +48,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -62,13 +62,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Add Category for Test-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//a/span</td>
+	<td>//span[text()=&quot;Add category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//a/span</td>
+	<td>//span[text()=&quot;Add category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -85,6 +90,11 @@
 	<td>type</td>
 	<td>Description</td>
 	<td>Category 1</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -113,12 +123,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[3]/div/div/div/div/a/span</td>
+	<td>//span[text()=&quot;Add forum&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[3]/div/div/div/div/a/span</td>
+	<td>//span[text()=&quot;Add forum&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -138,12 +148,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td>//form[@id='UIForumForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td>//form[@id='UIForumForm']//a[text()=&quot;Save&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -163,17 +173,27 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon SetLockedIcon']/a</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon SetLockedIcon']/a</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UITopicContainer</td>
+	<td>//a[contains(@href, &quot;SetLockedForum&quot;)]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(@href, &quot;SetLockedForum&quot;)]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicContainer']//div[@class='LockActionForum UIActionForum']</td>
 	<td></td>
 </tr>
 <tr>
@@ -188,12 +208,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon SetUnLockIcon']/a</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon SetUnLockIcon']/a</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//a[contains(@href, &quot;SetUnLockForum&quot;)]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(@href, &quot;SetUnLockForum&quot;)]</td>
 	<td></td>
 </tr>
 <tr>
@@ -218,12 +248,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon SetCloseIcon']/a</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='ForumToolbar']//div[@class='CenterBar']/div[6]//div[@class='ItemIcon SetCloseIcon']/a</td>
+	<td>//form[@id='UITopicContainer']//div[text()=&quot;More actions&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//a[contains(@href, &quot;CloseForum&quot;)]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(@href, &quot;CloseForum&quot;)]</td>
 	<td></td>
 </tr>
 <tr>

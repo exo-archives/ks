@@ -48,12 +48,12 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//div[@id='UIPortalLoginFormAction']//a[text()=&quot;Sign in&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Add Category-</td>
+	<td>-Access Forum</td>
 	<td></td>
 </tr>
 <tr>
@@ -62,13 +62,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Add Category-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//a/span</td>
+	<td>//span[text()=&quot;Add category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//a/span</td>
+	<td>//span[text()=&quot;Add category&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -84,7 +89,12 @@
 <tr>
 	<td>type</td>
 	<td>Description</td>
-	<td>SNF_KS_22 Desc</td>
+	<td>Gap anh la duyen phan cua em</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Save</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -102,18 +112,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>- Go Home</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>SNF_KS_22</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>SNF_KS_22</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -122,8 +132,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>pause</td>
-	<td>1000</td>
+	<td>waitForElementPresent</td>
+	<td>link=SNF_KS_22</td>
 	<td></td>
 </tr>
 <tr>
@@ -164,7 +174,7 @@
 <tr>
 	<td>verifyValue</td>
 	<td>Description</td>
-	<td>SNF_KS_22 Desc</td>
+	<td>Gap anh la duyen phan cua em</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -174,7 +184,7 @@
 <tr>
 	<td>type</td>
 	<td>Description</td>
-	<td>SNF_KS_22 Desc Update</td>
+	<td>Gat bo het qua khu. nhung loi lam da qua. Hay de anh yeu em voi tam long chan thanh</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -182,13 +192,18 @@
 	<td>root</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Move Permission tab</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategoryForm']/div[2]//div[1]//div[2]/div/div/div/div/div</td>
+	<td>//form[@id='UICategoryForm']//div[text()=&quot;Permissions&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategoryForm']/div[2]//div[1]//div[2]/div/div/div/div/div</td>
+	<td>//form[@id='UICategoryForm']//div[text()=&quot;Permissions&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -217,23 +232,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>pause</td>
-	<td>1000</td>
+	<td>echo</td>
+	<td>- Go Home</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[2]/div/div/div/div[1]/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>SNF_KS_22 Update </td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>SNF_KS_22 Update</td>
+	<td>//a[@title=&quot;Home&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -247,6 +257,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Manage Cateogory</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
 	<td></td>
@@ -254,6 +269,11 @@
 <tr>
 	<td>click</td>
 	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Delete</td>
 	<td></td>
 </tr>
 <tr>
@@ -282,16 +302,15 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Sign Out</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
-	<td></td>
-</tr>
-
 </tbody></table>
 </body>
 </html>
