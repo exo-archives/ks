@@ -68,7 +68,8 @@ public class PagePermissionActionComponent extends UIComponent {
     protected void processEvent(Event<PagePermissionActionComponent> event) throws Exception {
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       UIPopupContainer uiPopupContainer = uiWikiPortlet.getPopupContainer(PopupLevel.L1);
-      UIWikiPermissionForm uiWikiPermissionForm = uiPopupContainer.activate(UIWikiPermissionForm.class, 800);
+      UIWikiPermissionForm uiWikiPermissionForm = uiPopupContainer.createUIComponent(UIWikiPermissionForm.class, null, "UIWikiPagePermissionForm");
+      uiPopupContainer.activate(uiWikiPermissionForm, 800, 0);
       uiWikiPermissionForm.setScope(Scope.PAGE);
       PageImpl page = (PageImpl) Utils.getCurrentWikiPage();
       HashMap<String, String[]> permissionMap = page.getPagePermission();

@@ -88,6 +88,10 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
   
   public static String DELETE_ENTRY = "DeleteEntry";
   
+  public static String WIKI_PERMISSION_OWNER = "UIWikiPermissionOwner";
+  
+  public static String PERMISSION_OWNER = "PermissionOwner";
+  
   public static String PERMISSION_POPUP_SELECTOR = "UIWikiPermissionPopupSelector";
   
   public static String USER_PERMISSION_POPUP_SELECTOR = "UIWikiUserPermissionPopupSelector";
@@ -119,8 +123,8 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     UIPermissionGrid permissionGrid = addChild(UIPermissionGrid.class, null, null);
     permissionGrid.setPermissionEntries(this.permissionEntries);
 
-    UIFormInputWithActions owner = new UIFormInputWithActions("UIWikiPermissionOwner");
-    owner.addUIFormInput(new UIFormStringInput("owner", "owner", null));
+    UIFormInputWithActions owner = new UIFormInputWithActions(WIKI_PERMISSION_OWNER);
+    owner.addUIFormInput(new UIFormStringInput(PERMISSION_OWNER, PERMISSION_OWNER, null));
     List<ActionData> actions = new ArrayList<ActionData>();
     ActionData selectUser = new ActionData();
     selectUser.setActionListener(OPEN_SELECT_USER_FORM);
@@ -146,7 +150,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     addOwner.setActionName(ADD_ENTRY);
     addOwner.setCssIconClass(ADD_ICON);
     actions.add(addOwner);
-    owner.setActionField("owner", actions);
+    owner.setActionField(PERMISSION_OWNER, actions);
 
     addChild(owner);
 
@@ -230,33 +234,45 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     @Override
     public void execute(Event<UIWikiPermissionForm> event) throws Exception {
       UIWikiPermissionForm uiWikiPermissionForm = event.getSource();
+      uiWikiPermissionForm.processPostAction();
       Scope scope = uiWikiPermissionForm.getScope();
-      PermissionEntry permissionEntry = new PermissionEntry();
-      Permission[] permissions = null;
-      if (Scope.WIKI.equals(scope)) {
-        permissions = new Permission[4];
-        permissions[0] = new Permission();
-        permissions[0].setPermissionType(PermissionType.VIEWPAGE);
-        permissions[1] = new Permission();
-        permissions[1].setPermissionType(PermissionType.EDITPAGE);
-        permissions[2] = new Permission();
-        permissions[2].setPermissionType(PermissionType.ADMINPAGE);
-        permissions[3] = new Permission();
-        permissions[3].setPermissionType(PermissionType.ADMINSPACE);
-      } else if (Scope.PAGE.equals(scope)) {
-        permissions = new Permission[2];
-        permissions[0] = new Permission();
-        permissions[0].setPermissionType(PermissionType.VIEWPAGE);
-        permissions[1] = new Permission();
-        permissions[1].setPermissionType(PermissionType.EDITPAGE);
-      }
-      permissionEntry.setPermissions(permissions);
       UIFormInputWithActions inputWithActions = uiWikiPermissionForm.getChild(UIFormInputWithActions.class);
       UIFormStringInput uiFormStringInput = inputWithActions.getChild(UIFormStringInput.class);
-      permissionEntry.setId(uiFormStringInput.getValue());
-      permissionEntry.setIdType(IDType.USER);
-      uiWikiPermissionForm.processPostAction();
-      uiWikiPermissionForm.permissionEntries.add(permissionEntry);
+      String permissionOwner = uiFormStringInput.getValue();
+      if (permissionOwner != null && permissionOwner.length() > 0) {
+        String[] entries = permissionOwner.split(",");
+        for (String entry : entries) {
+          PermissionEntry permissionEntry = new PermissionEntry();
+          Permission[] permissions = null;
+          if (Scope.WIKI.equals(scope)) {
+            permissions = new Permission[4];
+            permissions[0] = new Permission();
+            permissions[0].setPermissionType(PermissionType.VIEWPAGE);
+            permissions[1] = new Permission();
+            permissions[1].setPermissionType(PermissionType.EDITPAGE);
+            permissions[2] = new Permission();
+            permissions[2].setPermissionType(PermissionType.ADMINPAGE);
+            permissions[3] = new Permission();
+            permissions[3].setPermissionType(PermissionType.ADMINSPACE);
+          } else if (Scope.PAGE.equals(scope)) {
+            permissions = new Permission[2];
+            permissions[0] = new Permission();
+            permissions[0].setPermissionType(PermissionType.VIEWPAGE);
+            permissions[1] = new Permission();
+            permissions[1].setPermissionType(PermissionType.EDITPAGE);
+          }
+          permissionEntry.setPermissions(permissions);
+          permissionEntry.setId(entry);
+          if (entry.startsWith("/")) {
+            permissionEntry.setIdType(IDType.GROUP);
+          } else if (entry.contains(":")) {
+            permissionEntry.setIdType(IDType.MEMBERSHIP);
+          } else {
+            permissionEntry.setIdType(IDType.USER);
+          }
+          uiWikiPermissionForm.permissionEntries.add(permissionEntry);
+        }
+      }
       uiWikiPermissionForm.setPermission(uiWikiPermissionForm.permissionEntries);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
     }
@@ -354,11 +370,13 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
   static public class SelectMembershipActionListener extends EventListener<UIGroupMembershipSelector> {
     @Override
     public void execute(Event<UIGroupMembershipSelector> event) throws Exception {
-      UIWikiPermissionForm uiWikiPermissionForm = event.getSource().getParent().getParent();
+      UIGroupMembershipSelector uiGroupMembershipSelector = event.getSource();
+      UIWikiPermissionForm uiWikiPermissionForm = uiGroupMembershipSelector.getParent().getParent();
+      String currentGroup = uiGroupMembershipSelector.getCurrentGroup().getId();
       String membershipId = event.getRequestContext().getRequestParameter(OBJECTID);
       UIFormInputWithActions inputWithActions = uiWikiPermissionForm.getChild(UIFormInputWithActions.class);
       UIFormStringInput uiFormStringInput = inputWithActions.getChild(UIFormStringInput.class);
-      uiFormStringInput.setValue(membershipId);
+      uiFormStringInput.setValue(membershipId + ":" + currentGroup);
       UIPopupWindow uiPopup = uiWikiPermissionForm.getChildById(PERMISSION_POPUP_SELECTOR);
       uiPopup.setUIComponent(null);
       uiPopup.setShow(false);

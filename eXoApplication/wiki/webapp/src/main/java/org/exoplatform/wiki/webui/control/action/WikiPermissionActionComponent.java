@@ -61,7 +61,8 @@ public class WikiPermissionActionComponent extends UIComponent {
     protected void processEvent(Event<WikiPermissionActionComponent> event) throws Exception {
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       UIPopupContainer uiPopupContainer = uiWikiPortlet.getPopupContainer(PopupLevel.L1);
-      UIWikiPermissionForm uiWikiPermissionForm = uiPopupContainer.activate(UIWikiPermissionForm.class, 800);
+      UIWikiPermissionForm uiWikiPermissionForm = uiPopupContainer.createUIComponent(UIWikiPermissionForm.class, null, "UIWikiSpacePermissionForm");
+      uiPopupContainer.activate(uiWikiPermissionForm, 800, 0);
       uiWikiPermissionForm.setScope(Scope.WIKI);
       WikiService wikiService = uiWikiPermissionForm.getApplicationComponent(WikiService.class);
       WikiPageParams pageParams = Utils.getCurrentWikiPageParams();

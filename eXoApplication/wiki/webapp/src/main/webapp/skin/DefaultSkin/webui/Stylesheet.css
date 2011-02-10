@@ -143,6 +143,12 @@
 	table-layout: fixed;
 }
 
+.UIWikiPortlet table.UIGrid {
+  width: 100%;
+  table-layout: auto;
+  margin-bottom: 0px;
+}
+
 .UIWikiPortlet th {
 	background:none repeat scroll 0 0 #F0F0F0;
 	border:1px solid #DDDDDD;
@@ -152,9 +158,22 @@
 	text-align:left;
 }
 
+.UIWikiPortlet .UIGrid th {
+  background:url("/eXoResources/skin/DefaultSkin/webui/component/UIGrid/background/ThGridRepeatBg1x19.jpg") repeat-x scroll 0 0 #D2DDF1;
+  border:1px solid #B7B7B7;
+}
+
 .UIWikiPortlet td {
 	text-align: left;
 	padding: 5px 10px;
+}
+
+.UIWikiPortlet .UIGrid td {
+  padding: 4px 4px 4px 12px;
+}
+
+.UIWikiPortlet .UIGrid .ActionContainer {
+  text-align: left;
 }
 
 .UIWikiPortlet .UIWikiPageArea td , .UIWikiPortletWysiwygCss td , .UIWikiPagePreview .UIWikiPortlet td  {
@@ -282,14 +301,31 @@
 }
 
 .UIWikiPortlet .Add {
-	background:url("background/UIPageToolBarIcon.png") no-repeat left -47px;
-	padding:10px 0 16px 25px;
+  background:url("/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueCirclePlus.gif") no-repeat;
+  with: 16px;
+  height: 16px;
 }
 
 .Border {
   border: solid 1px #B5B6B6;
   margin: 2px 2px 2px 2px;
   padding: 2px 2px 2px 2px;
+}
+
+.UIForm .HorizontalLayout .FormContainer .UIFormInputSet {
+  padding:10px 0 10px 0;
+}
+
+.UIWikiPermissionOwner table.UIFormGrid {
+  margin-bottom: 0px;
+}
+
+.UIWikiPermissionOwner .UIFormGrid {
+  margin: 0px;
+}
+
+.UIWikiPermissionOwner .UIFormGrid td, .UIWikiPermissionOwner .UIFormGrid td.FieldLabel {
+  padding: 0px;
 }
 
 .UIWikiPageEditForm .UIWikiPageContentMarginRight {
