@@ -16,15 +16,9 @@
  */
 package org.exoplatform.wiki.webui.control.listener;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.ext.UIExtensionEventListener;
-import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.control.UIWikiToolBar;
-import org.exoplatform.wiki.webui.control.action.BrowseActionComponent;
 
 /**
  * Created by The eXo Platform SAS
@@ -32,16 +26,7 @@ import org.exoplatform.wiki.webui.control.action.BrowseActionComponent;
  *          hieu.lai@exoplatform.com
  * Aug 25, 2010  
  */
-public class UIWikiToolBarActionListener<T extends UIComponent> extends UIExtensionEventListener<T> {
-
-  @Override
-  protected Map<String, Object> createContext(Event<T> event) throws Exception {
-    // TODO Auto-generated method stub
-    Map<String, Object> context = new HashMap<String, Object>();
-    UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-    context.put(UIWikiPortlet.class.getName(), wikiPortlet);
-    return context;
-  }
+public class UIWikiToolBarActionListener<T extends UIComponent> extends UIPageToolBarActionListener<T> {
 
   @Override
   protected String getExtensionType() {

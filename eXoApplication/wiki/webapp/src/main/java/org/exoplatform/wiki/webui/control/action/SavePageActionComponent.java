@@ -109,7 +109,8 @@ public class SavePageActionComponent extends UIComponent {
     }
   }
   
-  public static class SavePageActionListener extends UIPageToolBarActionListener<SavePageActionComponent> {
+  public static class SavePageActionListener extends
+                                            UIPageToolBarActionListener<SavePageActionComponent> {
     @Override
     protected void processEvent(Event<SavePageActionComponent> event) throws Exception {
       WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
@@ -120,13 +121,11 @@ public class SavePageActionComponent extends UIComponent {
       UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
       UIWikiRichTextArea wikiRichTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);
       UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class)
-                                                 .getUIStringInput();
-      UIFormStringInput descriptionInput = pageEditForm.findComponentById(UIWikiTemplateDescriptionContainer.FIELD_DESCRIPTION);
+                                                 .getUIStringInput();      
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
       UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
       UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
-      boolean isTemplate = pageEditForm.isTemplate();
       Page page = Utils.getCurrentWikiPage();
       try {
         event.getSource().validate(titleInput);
@@ -151,62 +150,48 @@ public class SavePageActionComponent extends UIComponent {
       }
       String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
       markup = markup.trim();
-      String description = descriptionInput.getValue();
       String syntaxId = syntaxTypeSelectBox.getValue();
-      try {       
+      try {
         String newPageId = TitleResolver.getId(title, false);
         if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
-          if (isTemplate) {
-            Template template = wikiService.getTemplatePage(pageParams,  pageEditForm.getTemplateId());
-            wikiService.modifyTemplate(pageParams,
-                                       template,
-                                       newPageId,
-                                       description,
-                                       markup,
-                                       syntaxId);
-          } else {
-           
-            if (wikiPortlet.getEditMode() == EditMode.SECTION) {
-              newPageId = page.getName();
-              title = page.getContent().getTitle();
-              markup = renderingService.updateContentOfSection(page.getContent().getText(),
-                                                               page.getContent().getSyntax(),
-                                                               wikiPortlet.getSectionIndex(),
-                                                               markup);
-            }
-            if (!page.getName().equals(newPageId)) {
-              wikiService.renamePage(pageParams.getType(),
-                                     pageParams.getOwner(),
-                                     page.getName(),
-                                     newPageId,
-                                     title);
-            }
-            Object minorAtt = event.getRequestContext()
-                                   .getAttribute(MinorEditActionComponent.ACTION);
-            if (minorAtt != null) {
-              ((PageImpl) page).setMinorEdit(Boolean.parseBoolean(minorAtt.toString()));
-            }
-            page.getContent().setText(markup);
-            page.getContent().setComment(commentInput.getValue());
-            page.getContent().setSyntax(syntaxId);
-            pageTitleControlForm.getUIFormInputInfo().setValue(title);
+          if (wikiPortlet.getEditMode() == EditMode.SECTION) {
+            newPageId = page.getName();
+            title = page.getContent().getTitle();
+            markup = renderingService.updateContentOfSection(page.getContent().getText(),
+                                                             page.getContent().getSyntax(),
+                                                             wikiPortlet.getSectionIndex(),
+                                                             markup);
+          }
+          if (!page.getName().equals(newPageId)) {
+            wikiService.renamePage(pageParams.getType(),
+                                   pageParams.getOwner(),
+                                   page.getName(),
+                                   newPageId,
+                                   title);
+          }
+          Object minorAtt = event.getRequestContext().getAttribute(MinorEditActionComponent.ACTION);
+          if (minorAtt != null) {
+            ((PageImpl) page).setMinorEdit(Boolean.parseBoolean(minorAtt.toString()));
+          }
+          page.getContent().setText(markup);
+          page.getContent().setComment(commentInput.getValue());
+          page.getContent().setSyntax(syntaxId);
+          pageTitleControlForm.getUIFormInputInfo().setValue(title);
 
-            if (!pageEditForm.getTitle().equals(title)) {
-              page.getContent().setTitle(title);
-              ((PageImpl) page).checkin();
-              ((PageImpl) page).checkout();
-              pageParams.setPageId(newPageId);
-            } else {
-              ((PageImpl) page).checkin();
-              ((PageImpl) page).checkout();
-            }
+          if (!pageEditForm.getTitle().equals(title)) {
+            page.getContent().setTitle(title);
+            ((PageImpl) page).checkin();
+            ((PageImpl) page).checkout();
+            pageParams.setPageId(newPageId);
+          } else {
+            ((PageImpl) page).checkin();
+            ((PageImpl) page).checkout();
           }
         } else if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
-          String pageId = TitleResolver.getId(title, false);          
-          boolean isExist = (wikiService.isExisting(pageParams.getType(),
-                                                    pageParams.getOwner(),
-                                                    pageId))
-              || (wikiService.getTemplatePage(pageParams, pageId) != null);
+          String pageId = TitleResolver.getId(title, false);
+          boolean isExist = wikiService.isExisting(pageParams.getType(),
+                                                   pageParams.getOwner(),
+                                                   pageId);
           if (isExist) {
             log.error("The title '" + title + "' is already existing!");
             uiApp.addMessage(new ApplicationMessage("SavePageAction.msg.warning-page-title-already-exist",
@@ -219,23 +204,17 @@ public class SavePageActionComponent extends UIComponent {
           String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
           Page draftPage = wikiService.getExsitedOrNewDraftPageById(null, null, sessionId);
           Collection<AttachmentImpl> attachs = ((PageImpl) draftPage).getAttachments();
-          if (isTemplate) {
-            Template template = wikiService.createTemplatePage(title, pageParams);
-            template.setDescription(description);
-            template.getContent().setText(markup);
-            template.getContent().setSyntax(syntaxId);
-          } else {
-            Page subPage = wikiService.createPage(pageParams.getType(),
-                                                  pageParams.getOwner(),
-                                                  title,
-                                                  page.getName());
-            subPage.getContent().setText(markup);
-            subPage.getContent().setSyntax(syntaxId);
-            ((PageImpl) subPage).getAttachments().addAll(attachs);
-            ((PageImpl) subPage).checkin();
-            ((PageImpl) subPage).checkout();
-            pageParams.setPageId(pageId);
-          }
+
+          Page subPage = wikiService.createPage(pageParams.getType(),
+                                                pageParams.getOwner(),
+                                                title,
+                                                page.getName());
+          subPage.getContent().setText(markup);
+          subPage.getContent().setSyntax(syntaxId);
+          ((PageImpl) subPage).getAttachments().addAll(attachs);
+          ((PageImpl) subPage).checkin();
+          ((PageImpl) subPage).checkout();
+          pageParams.setPageId(pageId);
           ((PageImpl) draftPage).remove();
           return;
         }

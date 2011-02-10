@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.webui;
+package org.exoplatform.wiki.webui.commons;
 
 import org.exoplatform.commons.serialization.api.annotations.Serialized;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -26,7 +26,7 @@ import org.exoplatform.webui.core.UIGrid;
  *          hieu.lai@exoplatform.com
  * 9 Feb 2011  
  */
-@ComponentConfig(template = "app:/templates/wiki/webui/UITemplateGrid.gtmpl")
+@ComponentConfig(template = "app:/templates/wiki/webui/UIWikiTemplateGrid.gtmpl")
 @Serialized
 public class UIWikiTemplateGrid extends UIGrid {
 
@@ -34,16 +34,5 @@ public class UIWikiTemplateGrid extends UIGrid {
     super();
     // TODO Auto-generated constructor stub
   }
-  
-  private boolean isChangeModeAction(String actionName) {
-    if (actionName != null) {
-      try {
-        if (WikiMode.valueOf(actionName.toUpperCase()) != null)
-          return true;
-      } catch (IllegalArgumentException e) {
-        return false;
-      }
-    }
-    return false;
-  }
+ 
 }

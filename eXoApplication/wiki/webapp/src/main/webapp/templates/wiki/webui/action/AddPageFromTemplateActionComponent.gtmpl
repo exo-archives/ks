@@ -1,0 +1,6 @@
+<% 
+	String link = uicomponent.event(uicomponent.ADDPAGE_FROMTEMPLATE);
+ %>
+<div class="AddPageFromTemplateActionComponent">
+		<a href="$link" class="FromTemplate MoreItems Icon" title="<%=_ctx.appRes("UIPageToolBar.label.FromTemplate");%>"><%= _ctx.appRes("UIPageToolBar.label.FromTemplate"); %></a>
+</div>

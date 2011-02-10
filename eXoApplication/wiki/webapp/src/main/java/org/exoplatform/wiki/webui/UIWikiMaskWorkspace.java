@@ -40,7 +40,7 @@ public class UIWikiMaskWorkspace extends UIMaskWorkspace {
   
  
   public UIWikiMaskWorkspace() {
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.EDITPAGE, WikiMode.ADDPAGE,
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE, WikiMode.ADDPAGE,
         WikiMode.ADDTEMPLATE, WikiMode.EDITTEMPLATE });
   }
 

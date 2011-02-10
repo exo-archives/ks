@@ -96,10 +96,18 @@
   </javascript>
   
    <!-- js for hover menu  -->
+	 <!-- Remove in the future  -->
    <javascript>
     <param>
       <js-module>eXo.wiki.UIWikiDropdownMenu</js-module>
       <js-path>/javascript/eXo/wiki/UIWikiDropdownMenu.js</js-path>
+    </param>
+  </javascript>
+	
+	 <javascript>
+    <param>
+      <js-module>eXo.wiki.UIDropdownMenu</js-module>
+      <js-path>/javascript/eXo/wiki/UIDropdownMenu.js</js-path>
     </param>
   </javascript>
  
@@ -166,8 +174,8 @@
 	 <!-- js for Spliter -->
    <javascript>
     <param>
-      <js-module>eXo.wiki.UITemplateSettingForm</js-module>
-      <js-path>/javascript/eXo/wiki/extension/UITemplateSettingForm.js</js-path>
+      <js-module>eXo.wiki.UIWikiTemplateForm</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiTemplateForm.js</js-path>
     </param>
   </javascript>
    

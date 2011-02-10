@@ -26,3 +26,7 @@
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .UnWatchPage:hover {
 	background: #D0DFF0 url("background/watch_on.png") no-repeat 5px center;	
 }
+
+.UIWikiPageControlArea .UIPageToolBar .AddPageActionComponent {
+  position:relative;
+}

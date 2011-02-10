@@ -1,0 +1,12 @@
+<% 
+  def rcontext = _ctx.getRequestContext() ;
+  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIDropdownMenu', '/wiki/javascript/') ;
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIDropdownMenu.init(\""+uicomponent.id+"\");");
+ %>
+
+<div class="AddPageActionComponent HoverLink MoreLink Icon" id ="$uicomponent.id" >
+	<%= _ctx.appRes("UIPageToolBar.label.AddPage"); %>	
+	<div class="HoverMenu MoreMenu">
+				<% uicomponent.renderChildren(); %>
+	</div>
+</div>

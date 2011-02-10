@@ -2,6 +2,7 @@
    import org.exoplatform.webui.core.UIComponent;
    import org.exoplatform.webui.form.UIForm;
    import org.exoplatform.wiki.webui.UIWikiPortlet;
+   import org.exoplatform.wiki.commons.Utils;
 
    String[] beanFields = uicomponent.getBeanFields();
    String[] beanActions = uicomponent.getBeanActions();
@@ -16,7 +17,7 @@
    UIForm uiForm = uicomponent.getAncestorOfType(UIForm.class);
 %>
 <div id="$uicomponent.id">
-   <table class="UIGrid UITemplateGrid" cellspacing="0">
+   <table class="UIGrid UIWikiTemplateGrid" cellspacing="0">
       <thead>
       <tr>
          <% if (name != null)
@@ -94,7 +95,8 @@
                         String anchor = "#" + action;
                %>
                <% 
-                if (uicomponent.isChangeModeAction(action)){
+              
+                if (Utils.getModeFromAction(action)){
                  %>
                <a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="${action}Icon">$title</a>               
                <a onclick="$actionLink" id="$actionId" style="display:none;">&nbsp;</a>

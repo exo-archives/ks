@@ -395,12 +395,10 @@
 
 .UIWikiPageControlArea .UIPageToolBar .MoreLink {
 	background:url("background/UIPageToolBarIcon.png") no-repeat left -282px;
-	color:#535353;
 	height: 14px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MoreLink:hover {
-	color:#535353;
 	height: 14px;
 }
 

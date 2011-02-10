@@ -68,8 +68,8 @@ for(entry in uicomponent.getActions()) {
 	   }
 %>
 		<% if(action.equals("AddPage")){
+		     uicomponent.renderChild(actionComponent.getId());
 		%>
-		<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Add Icon" title="<%=_ctx.appRes("UIPageToolBar.label.AddPage");%>">add</a>
 		<%} else if(action.equals("EditPage")){
 		%>
 		<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="Edit Icon" title="<%=_ctx.appRes("UIPageToolBar.label.EditPage");%>">edit</a>

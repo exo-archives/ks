@@ -1,0 +1,13 @@
+<%
+  import org.exoplatform.wiki.webui.UIWikiPortlet;  
+%>
+<% 
+	String link = uicomponent.event(uicomponent.ADDPAGE_FROMBLANK);
+	String action = uicomponent.ACTIONNAME;
+	String anchor = "#" + action;
+  String actionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + action;
+ %>
+<div class="AddPageFromBlankActionComponent">
+	<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="BlankPage MoreItems Icon" title="<%=_ctx.appRes("UIPageToolBar.label.BlankPage");%>"><%= _ctx.appRes("UIPageToolBar.label.BlankPage"); %></a>
+	<a onclick="$link" id="$actionId" style="display:none"></a>
+</div>

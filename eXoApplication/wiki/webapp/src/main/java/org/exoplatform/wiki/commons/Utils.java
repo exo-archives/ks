@@ -82,6 +82,8 @@ import org.xwiki.rendering.syntax.Syntax;
  */
 public class Utils {
   
+  public static final String WITH = "With";
+  
   public static String getCurrentRequestURL() throws Exception {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     HttpServletRequest request = portalRequestContext.getRequest();
@@ -347,10 +349,6 @@ public class Utils {
     }
   }
 
-  public static WikiMode getWikiModeFromAction(String action) {
-    return WikiMode.valueOf(action.toUpperCase());
-  }
- 
   public static String getCurrentRestURL() {
     StringBuilder sb = new StringBuilder();
     sb.append("/").append(PortalContainer.getCurrentPortalContainerName()).append("/");
@@ -396,4 +394,18 @@ public class Utils {
     return org.exoplatform.wiki.utils.Utils.hasPermission(acl, permissions, user);
   }
   
+  public static WikiMode getModeFromAction(String actionParam) {
+    String[] params = actionParam.split(WITH);
+    String name = params[0];
+    if (name != null) {
+      try {
+        WikiMode mode = WikiMode.valueOf(name.toUpperCase());
+        if (mode != null)
+          return mode;
+      } catch (IllegalArgumentException e) {
+        return null;
+      }
+    }
+    return null;
+  }
 }

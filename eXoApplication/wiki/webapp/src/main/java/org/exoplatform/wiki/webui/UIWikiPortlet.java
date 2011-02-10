@@ -48,7 +48,7 @@ import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.webui.control.UIPageToolBar;
-import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
+import org.exoplatform.wiki.webui.control.action.AddPageFromBlankActionComponent;
 
 /**
  * Created by The eXo Platform SAS Author : eXoPlatform exo@exoplatform.com Nov
@@ -151,7 +151,7 @@ public class UIWikiPortlet extends UIPortletApplication {
         uiExtensionContext.put(WikiContext.PAGETITLE,
                                pageParams.getParameter(WikiContext.PAGETITLE));
         if (manager.accept(UIPageToolBar.EXTENSION_TYPE, WikiContext.ADDPAGE, uiExtensionContext)) {
-          AddPageActionComponent.processAddPageAction(uiExtensionContext);
+          AddPageFromBlankActionComponent.processAddPageAction(uiExtensionContext);
         }
       }
       try {
@@ -266,14 +266,18 @@ public class UIWikiPortlet extends UIPortletApplication {
   
   public static class ChangeModeActionListener extends EventListener<UIWikiPortlet> {
     @Override
-    public void execute(Event<UIWikiPortlet> event) throws Exception {      
-      UIWikiPortlet wikiPortlet= event.getSource();
+    public void execute(Event<UIWikiPortlet> event) throws Exception {
+      UIWikiPortlet wikiPortlet = event.getSource();
       String mode = event.getRequestContext().getRequestParameter("mode");
-      String currentMode = (mode.equals("")) ? WikiMode.VIEW.toString() : mode;   
-      if (!currentMode.equalsIgnoreCase(wikiPortlet.mode.toString())){
-      event.getSource().changeMode(WikiMode.valueOf(currentMode.toUpperCase()));
+      String currentModeName = (mode.equals("")) ? WikiMode.VIEW.toString() : mode;
+      if (!currentModeName.equalsIgnoreCase(wikiPortlet.mode.toString())) {
+        WikiMode currentMode = Utils.getModeFromAction(currentModeName);
+        if (currentMode == null)
+          currentMode = WikiMode.VIEW;
+        event.getSource().changeMode(currentMode);
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(wikiPortlet.findFirstComponentOfType(UIWikiEmptyAjaxBlock.class));      
+      event.getRequestContext()
+           .addUIComponentToUpdateByAjax(wikiPortlet.findFirstComponentOfType(UIWikiEmptyAjaxBlock.class));
     }
   }
   
