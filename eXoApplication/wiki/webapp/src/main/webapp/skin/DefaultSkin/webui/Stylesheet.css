@@ -582,7 +582,7 @@
 }
 
 .UIWikiPageContentArea span.EditSection a {
-  background:url("/wiki/skin/DefaultSkin/webui/background/black-edit.png") no-repeat scroll left top transparent;
+  background:url("/wiki/skin/DefaultSkin/webui/background/EditContentIcon.png") no-repeat scroll left top transparent;
   border:0 solid blue;
   line-height:24px;
   margin:0 -52px 0 0;
