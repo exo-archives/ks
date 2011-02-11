@@ -42,7 +42,6 @@ import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
-import org.exoplatform.wiki.mow.core.api.wiki.Template;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -53,7 +52,6 @@ import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
-import org.exoplatform.wiki.webui.UIWikiTemplateDescriptionContainer;
 import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddPageModeFilter;
@@ -86,7 +84,7 @@ public class SavePageActionComponent extends UIComponent {
   }
   
   public void validate(UIFormInput uiInput) throws Exception {
-    String invalidCharacters = ": @ / \\ | ^ # ; [ ] { } < > * ' \" +"; // and .
+    String invalidCharacters = ": @ / \\ | ^ # ; [ ] { } < > * ' \" + ?"; // and .
     Object[] args = { invalidCharacters };
     
     if (uiInput.getValue() == null || ((String) uiInput.getValue()).trim().length() == 0) {
@@ -101,7 +99,7 @@ public class SavePageActionComponent extends UIComponent {
           || Character.isDigit(c)
           || (c != ':' && c != '@' && c != '/' && c != '\\' && c != '|' && c != '^' && c != '#'
               && c != ';' && c != '[' && c != ']' && c != '{' && c != '}' && c != '<' && c != '>'
-              && c != '.' && c != '*' && c != '\'' && c != '\"' && c != '+')
+              && c != '.' && c != '*' && c != '\'' && c != '\"' && c != '+' && c != '?' )
           ) {
         continue;
       }
