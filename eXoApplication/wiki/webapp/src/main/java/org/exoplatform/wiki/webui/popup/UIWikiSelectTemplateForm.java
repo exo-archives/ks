@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.webui.popup;
 
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -80,7 +81,10 @@ public class UIWikiSelectTemplateForm extends UIWikiTemplateForm implements UIPo
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
       UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
-      String templateId = event.getRequestContext().getRequestParameter(OBJECTID);      
+      String templateId = event.getRequestContext().getRequestParameter(OBJECTID);
+
+      String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
+      form.wService.createDraftNewPage(sessionId);
       titleInput.setEditable(true);
       commentInput.setRendered(false);
       Template template = form.wService.getTemplatePage(Utils.getCurrentWikiPageParams(),
