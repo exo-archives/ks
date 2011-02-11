@@ -80,8 +80,8 @@ import org.exoplatform.wiki.service.rest.model.Spaces;
 import org.exoplatform.wiki.service.search.ContentSearchData;
 import org.exoplatform.wiki.service.search.TitleSearchResult;
 import org.exoplatform.wiki.tree.JsonNodeData;
-import org.exoplatform.wiki.tree.RootTreeNode;
 import org.exoplatform.wiki.tree.TreeNode;
+import org.exoplatform.wiki.tree.WikiTreeNode;
 import org.exoplatform.wiki.tree.TreeNode.TREETYPE;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.utils.Utils;
@@ -240,22 +240,22 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
         context.put(TreeNode.CURRENT_PATH, currentPath);
       }   
       context.put(TreeNode.SHOW_EXCERPT, showExcerpt);
+      WikiPageParams pageParam = TreeUtils.getPageParamsFromPath(path);
       if (type.equalsIgnoreCase(TREETYPE.ALL.toString())) {
-        WikiPageParams pageParam = new WikiPageParams();
-        pageParam = TreeUtils.getPageParamsFromPath(path);
+      
         PageImpl page = (PageImpl) wikiService.getPageById(pageParam.getType(),
                                                            pageParam.getOwner(),
                                                            pageParam.getPageId());
+        
         Stack<WikiPageParams> stk = Utils.getStackParams(page);
         context.put(TreeNode.STACK_PARAMS, stk);
-        responseData = getJsonTree(context);
+        responseData = getJsonTree(pageParam, context);
       } else if (type.equalsIgnoreCase(TREETYPE.CHILDREN.toString())) {
         // Get children only
         if (depth == null)
           depth = "1";
-        context.put(TreeNode.DEPTH, depth);        
-        WikiPageParams pageParams = TreeUtils.getPageParamsFromPath(path);
-        responseData = getJsonDescendants(pageParams, context);
+        context.put(TreeNode.DEPTH, depth);
+        responseData = getJsonDescendants(pageParam, context);
       }
       return Response.ok(new BeanToJsons(responseData), MediaType.APPLICATION_JSON)
                      .cacheControl(cc)
@@ -519,20 +519,15 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     attachment.getLink().add(attachmentLink);
 
     return attachment;
-  }
-
-  private List<JsonNodeData> getJsonTree(HashMap<String, Object> context) throws Exception {
+  }  
+ 
+  private List<JsonNodeData> getJsonTree(WikiPageParams params,HashMap<String, Object> context) throws Exception {
     List<JsonNodeData> responseData = new ArrayList<JsonNodeData>();
     String currentPath = (String) context.get(TreeNode.CURRENT_PATH);
-    RootTreeNode rootNode = new RootTreeNode();
-    rootNode.pushDescendants(context);
-    List<TreeNode> children = rootNode.getChildren();
-    for (int i = 0; i < children.size(); i++) {
-      boolean isLastNode = false;
-      if (i == children.size() - 1)
-        isLastNode = true;
-      responseData.add(new JsonNodeData(children.get(i), isLastNode, false, currentPath, null, context));
-    }
+    Wiki wiki = Utils.getWiki(params);
+    WikiTreeNode wikiNode = new WikiTreeNode(wiki);
+    wikiNode.pushDescendants(context);
+    responseData = TreeUtils.tranformToJson(wikiNode, context);
     return responseData;
   }
 

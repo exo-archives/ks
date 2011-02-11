@@ -28,7 +28,6 @@ import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.Message;
-import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
@@ -216,11 +215,20 @@ public class Utils {
     return "system" ;
   }
   
-  public static  Collection<Wiki> getWikisByType(WikiType wikiType)
-  {
+  public static Collection<Wiki> getWikisByType(WikiType wikiType) {
     MOWService mowService = (MOWService) PortalContainer.getComponent(MOWService.class);
-    WikiStoreImpl store = (WikiStoreImpl) mowService.getModel().getWikiStore();   
-    return store.getWikiContainer(wikiType).getAllWikis();     
+    WikiStoreImpl store = (WikiStoreImpl) mowService.getModel().getWikiStore();
+    return store.getWikiContainer(wikiType).getAllWikis();
+  }
+  
+  public static Wiki getWiki(WikiPageParams params) {
+    Collection<Wiki> wikis = getWikisByType(WikiType.valueOf(params.getType().toUpperCase()));
+    for (Wiki wiki : wikis) {
+      if (wiki.getOwner().equals(params.getOwner())) {
+        return wiki;
+      }
+    }
+    return null;
   }
 
   public static String getWikiType(Wiki wiki) {
@@ -300,8 +308,6 @@ public class Utils {
       stack.push(new WikiPageParams(Utils.getWikiType(wiki), wiki.getOwner(), page.getName()));
       page = page.getParentPage();
     }
-    stack.push(new WikiPageParams(Utils.getWikiType(wiki), wiki.getOwner(), null));
-    stack.push(new WikiPageParams(Utils.getWikiType(wiki), null, null));
     return stack;
   }
   
