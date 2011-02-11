@@ -45,6 +45,11 @@ public class ForumWebservice implements ResourceContainer {
 	  try{		  
 		  ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
 		  List<Post> list = forumService.getNewPosts(maxcount);
+		  if(list != null) {
+			  for (Post post : list) {
+			  	post.setLink(post.getLink() + "/" + post.getId());
+			  }
+		  }
 		  MessageBean data = new MessageBean();
 		  data.setData(list);
 		  return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();

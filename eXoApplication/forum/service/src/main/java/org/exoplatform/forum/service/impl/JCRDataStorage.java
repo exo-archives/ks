@@ -7817,9 +7817,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 		while (iter.hasNext() && count++ < number) {
 			if (list == null)
 				list = new ArrayList<Post>();
-			Post p = getPost(iter.nextNode());
-			p.setLink(p.getLink()+"/"+p.getId());
-			list.add(p);
+			list.add(getPost(iter.nextNode()));
 		}
 		return list;
 	}
