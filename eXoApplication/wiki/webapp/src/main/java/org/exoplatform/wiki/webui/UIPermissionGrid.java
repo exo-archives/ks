@@ -21,7 +21,6 @@ import java.util.List;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.wiki.service.PermissionEntry;
 
 /**

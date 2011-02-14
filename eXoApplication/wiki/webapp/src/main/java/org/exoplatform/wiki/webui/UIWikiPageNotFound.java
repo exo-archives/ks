@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
@@ -35,7 +35,7 @@ import org.exoplatform.wiki.webui.core.UIWikiComponent;
  * Apr 26, 2010  
  */
 @ComponentConfig(
-  lifecycle = UIApplicationLifecycle.class,
+  lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPageNotFound.gtmpl"
 )
 

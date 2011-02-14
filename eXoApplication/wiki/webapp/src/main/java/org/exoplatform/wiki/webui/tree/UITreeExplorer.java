@@ -22,7 +22,7 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.UIPortletApplication;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
@@ -33,7 +33,7 @@ import org.exoplatform.webui.event.EventListener;
  * Aug 6, 2010  
  */
 @ComponentConfig(
-                 lifecycle = UIApplicationLifecycle.class, 
+                 lifecycle = Lifecycle.class, 
                  template = "app:/templates/wiki/webui/tree/UITreeExplorer.gtmpl",
                  events = {
                      @EventConfig(listeners = UITreeExplorer.SelectNodeActionListener.class)
