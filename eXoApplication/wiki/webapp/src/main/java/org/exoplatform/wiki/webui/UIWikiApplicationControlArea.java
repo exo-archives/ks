@@ -20,6 +20,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -33,7 +34,7 @@ import org.exoplatform.wiki.webui.control.UIWikiToolBar;
  * Apr 26, 2010  
  */
 @ComponentConfig(
-  lifecycle = UIApplicationLifecycle.class,
+  lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiApplicationControlArea.gtmpl"
 )
 public class UIWikiApplicationControlArea extends UIContainer {

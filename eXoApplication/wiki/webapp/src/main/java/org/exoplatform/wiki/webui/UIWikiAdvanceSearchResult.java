@@ -23,7 +23,7 @@ import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
@@ -38,7 +38,7 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
  * May 14, 2010  
  */
 @ComponentConfig(
-  lifecycle = UIApplicationLifecycle.class,
+  lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiAdvanceSearchResult.gtmpl"  
 )
 public class UIWikiAdvanceSearchResult extends UIContainer {

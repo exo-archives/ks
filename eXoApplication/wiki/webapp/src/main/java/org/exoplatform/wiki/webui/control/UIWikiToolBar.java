@@ -24,7 +24,7 @@ import java.util.Map;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.ext.UIExtension;
 import org.exoplatform.webui.ext.UIExtensionManager;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
@@ -36,7 +36,7 @@ import org.exoplatform.wiki.webui.UIWikiPortlet;
  * Apr 26, 2010  
  */
 @ComponentConfig(
-  lifecycle = UIApplicationLifecycle.class,
+  lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiToolbar.gtmpl"
 )
 public class UIWikiToolBar extends UIContainer {

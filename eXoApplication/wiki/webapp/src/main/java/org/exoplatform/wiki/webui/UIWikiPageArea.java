@@ -19,7 +19,7 @@ package org.exoplatform.wiki.webui;
 import java.util.Arrays;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
@@ -29,8 +29,7 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
  * Apr 26, 2010  
  */
 @ComponentConfig(
-  lifecycle = UIApplicationLifecycle.class,
-  template = "app:/templates/wiki/webui/UIWikiPageArea.gtmpl"
+  lifecycle = UIContainerLifecycle.class
 )
 public class UIWikiPageArea extends UIWikiContainer {
   public UIWikiPageArea() throws Exception{

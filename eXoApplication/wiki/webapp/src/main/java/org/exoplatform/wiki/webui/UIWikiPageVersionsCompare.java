@@ -22,7 +22,7 @@ import java.util.List;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
@@ -34,7 +34,7 @@ import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
  * Jul 13, 2010  
  */
 @ComponentConfig(
-  lifecycle = UIApplicationLifecycle.class,
+  lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPageVersionsCompare.gtmpl",
   events = {
     @EventConfig(listeners = UIWikiPageVersionsCompare.ReturnVersionsListActionListener.class),

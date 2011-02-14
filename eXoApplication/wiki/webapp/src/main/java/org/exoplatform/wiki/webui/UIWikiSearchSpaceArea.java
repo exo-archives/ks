@@ -21,6 +21,7 @@ import java.util.Arrays;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
@@ -32,8 +33,7 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
  * May 14, 2010  
  */
 @ComponentConfig(
-  lifecycle = UIApplicationLifecycle.class,
-  template = "app:/templates/wiki/webui/UIWikiSearchSpaceArea.gtmpl",
+  lifecycle = UIContainerLifecycle.class,
   events = {
       @EventConfig(listeners = UIWikiSearchSpaceArea.CloseActionListener.class)
     }

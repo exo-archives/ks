@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
@@ -32,7 +32,7 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
  * 7 Dec 2010  
  */
 @ComponentConfig(
-                 lifecycle = UIApplicationLifecycle.class,
+                 lifecycle = Lifecycle.class,
                  template = "app:/templates/wiki/webui/UIWikiMiddleArea.gtmpl",
                  events = {
                      @EventConfig(listeners = UIWikiMiddleArea.ShowHideActionListener.class)                     

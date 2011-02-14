@@ -19,7 +19,7 @@ package org.exoplatform.wiki.webui;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.wiki.service.Permission;
 import org.exoplatform.wiki.service.PermissionEntry;
@@ -31,7 +31,7 @@ import org.exoplatform.wiki.service.PermissionEntry;
  * Jan 4, 2011  
  */
 @ComponentConfig(
-  lifecycle = UIApplicationLifecycle.class,
+  lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPermissionEntry.gtmpl"
 )
 public class UIWikiPermissionEntry extends UIContainer {

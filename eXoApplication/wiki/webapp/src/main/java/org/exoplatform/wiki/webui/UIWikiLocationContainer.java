@@ -20,6 +20,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -36,7 +37,7 @@ import org.exoplatform.wiki.utils.Utils;
  * 15 Nov 2010  
  */
 @ComponentConfig(
-                 lifecycle = UIApplicationLifecycle.class,
+                 lifecycle = Lifecycle.class,
                  template = "app:/templates/wiki/webui/UIWikiLocationContainer.gtmpl",
                  events = {
                      @EventConfig(listeners = UIWikiLocationContainer.ChangeNewLocationActionListener.class)                  

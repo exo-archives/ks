@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.wiki.service.PermissionEntry;
 
@@ -30,7 +31,7 @@ import org.exoplatform.wiki.service.PermissionEntry;
  * Jan 4, 2011  
  */
 @ComponentConfig(
-  lifecycle = UIApplicationLifecycle.class,
+  lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/UIPermissionGrid.gtmpl"
 )
 public class UIPermissionGrid extends UIContainer {
