@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.social.core.activity.model.ExoSocialActivityImpl;
 import org.exoplatform.social.webui.activity.BaseUIActivity;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -26,12 +27,11 @@ public class ForumUIActivity extends BaseUIActivity {
   static private final Log LOG = ExoLogger.getLogger(ForumUIActivity.class);
   
   public String getUriOfAuthor() {
-    String userId = getActivity().getUserId();
     try {
-      return "<a href='" + getUserProfileUri(userId) + "'>" + getUserFullName(userId)  + "</a>";
+      return "<a href='" + getOwnerIdentity().getProfile().getUrl() + "'>" + getOwnerIdentity().getProfile().getFullName() + "</a>";
     } catch (Exception e) {
       if (LOG.isDebugEnabled()) {
-        LOG.debug("can not get Url of user " + userId, e);
+        LOG.debug("can not get Url of user " + getOwnerIdentity().getProfile().getId(), e);
       }
       return "";
     }
@@ -58,7 +58,7 @@ public class ForumUIActivity extends BaseUIActivity {
   
   public String getActivityParamValue(String key) {
     String value = null;
-    Map<String, String> params = getActivity().getTemplateParams();
+    Map<String, String> params = ((ExoSocialActivityImpl)getActivity()).getTemplateParams();
     if (params != null) {
       value = params.get(key);
     }

@@ -32,7 +32,8 @@ import org.exoplatform.forum.service.impl.ForumEventListener;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.social.core.activity.model.Activity;
+import org.exoplatform.social.core.activity.model.ExoSocialActivity;
+import org.exoplatform.social.core.activity.model.ExoSocialActivityImpl;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.identity.provider.SpaceIdentityProvider;
@@ -96,7 +97,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         Space space = spaceS.getSpaceById(spaceId) ;
         Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
         Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, post.getOwner());
-        Activity activity = new Activity();
+        ExoSocialActivity activity = new ExoSocialActivityImpl();
         activity.setUserId(userIdentity.getId());
         activity.setTitle(msg);
         activity.setBody(body);
@@ -140,7 +141,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         Space space = spaceS.getSpaceById(spaceId) ;
         Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
         
-        Activity activity = new Activity();
+        ExoSocialActivity activity = new ExoSocialActivityImpl();
         activity.setUserId(userIdentity.getId());
         activity.setTitle(msg);
         activity.setBody(body);
@@ -184,7 +185,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         Space space = spaceS.getSpaceById(spaceId) ;
         Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
         
-        Activity activity = new Activity();
+        ExoSocialActivity activity = new ExoSocialActivityImpl();
         activity.setUserId(userIdentity.getId());
         activity.setTitle(msg);
         activity.setBody(body);
@@ -227,7 +228,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         Space space = spaceS.getSpaceById(spaceId) ;
         Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
         
-        Activity activity = new Activity();
+        ExoSocialActivity activity = new ExoSocialActivityImpl();
         activity.setUserId(userIdentity.getId());
         activity.setTitle(msg);
         activity.setBody(body);

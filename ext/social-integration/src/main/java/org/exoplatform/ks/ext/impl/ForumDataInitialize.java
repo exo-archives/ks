@@ -25,6 +25,7 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.social.core.space.SpaceListenerPlugin;
+import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.impl.SpaceServiceImpl;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceLifeCycleEvent;
@@ -70,7 +71,7 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
     Space space = event.getSpace();
     Category category = new Category();
     category.setId(Utils.CATEGORY + space.getId());
-    category.setCategoryName(SpaceServiceImpl.SPACE_PARENT.split("/")[1]);
+    category.setCategoryName(SpaceUtils.SPACE_GROUP.split("/")[1]);
     category.setOwner(SpaceServiceImpl.MANAGER +":"+ space.getGroupId());
     category.setUserPrivate(new String[] {space.getGroupId()});
     category.setDescription("");
@@ -78,7 +79,7 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
     Forum forum = new Forum();
     forum.setOwner(SpaceServiceImpl.MANAGER +":"+ space.getGroupId());
     forum.setId(Utils.FORUM_SPACE_ID_PREFIX + space.getId());
-    forum.setForumName(space.getName());
+    forum.setForumName(space.getPrettyName());
     forum.setDescription(space.getDescription());
     //TODO hard text manager should check with portal team
     forum.setModerators(new String[]{SpaceServiceImpl.MANAGER +":"+ space.getGroupId()});

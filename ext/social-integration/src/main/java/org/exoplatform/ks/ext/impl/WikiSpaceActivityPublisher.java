@@ -8,7 +8,8 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.social.core.activity.model.Activity;
+import org.exoplatform.social.core.activity.model.ExoSocialActivity;
+import org.exoplatform.social.core.activity.model.ExoSocialActivityImpl;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.identity.provider.SpaceIdentityProvider;
@@ -97,7 +98,7 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
                                                   page.getAuthor(),
                                                   false);
 
-    Activity activity = new Activity();
+    ExoSocialActivity activity = new ExoSocialActivityImpl();
     activity.setUserId(userIdentity.getId());
     activity.setTitle("title");
     activity.setBody("body");
@@ -167,7 +168,7 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
                                                   page.getAuthor(),
                                                   false);
 
-    Activity activity = new Activity();
+    ExoSocialActivity activity = new ExoSocialActivityImpl();
     activity.setUserId(userIdentity.getId());
     activity.setTitle("title");
     activity.setBody("body");

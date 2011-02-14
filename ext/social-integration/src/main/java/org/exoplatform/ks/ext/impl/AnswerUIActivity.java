@@ -20,7 +20,8 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
-import org.exoplatform.social.core.activity.model.Activity;
+import org.exoplatform.social.core.activity.model.ExoSocialActivity;
+import org.exoplatform.social.core.activity.model.ExoSocialActivityImpl;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
@@ -50,25 +51,24 @@ public class AnswerUIActivity extends BaseUIActivity {
   
   protected Log               log            = ExoLogger.getLogger(this.getClass());
 
-  private List<Activity> questionComments_;
+  private List<ExoSocialActivity> questionComments_;
 
   public String getUriOfAuthor() {
-    String userId = getActivity().getUserId();
     try {
-      return "<a href='" + getUserProfileUri(userId) + "'>" + getUserFullName(userId)  + "</a>";
+      return "<a href='" + getOwnerIdentity().getProfile().getUrl() + "'>" + getOwnerIdentity().getProfile().getFullName()  + "</a>";
     } catch (Exception e) {
       if (log.isDebugEnabled()) {
-        log.debug("can not get Url of user " + userId, e);
+        log.debug("can not get Url of user " + getOwnerIdentity().getProfile().getId(), e);
       }
       return "";
     }
   }
   
   
-  private Activity toActivity(Comment comment) {
-    Activity activity = null;
+  private ExoSocialActivity toActivity(Comment comment) {
+    ExoSocialActivity activity = null;
     if (comment != null) {
-     activity = new Activity();
+     activity = new ExoSocialActivityImpl();
      IdentityManager identityM = (IdentityManager) PortalContainer.getInstance()
      .getComponentInstanceOfType(IdentityManager.class);
      Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, comment.getCommentBy());
@@ -86,9 +86,9 @@ public class AnswerUIActivity extends BaseUIActivity {
    * @see org.exoplatform.social.webui.activity.BaseUIActivity#getComments()
    */
   @Override
-  public List<Activity> getComments() {
+  public List<ExoSocialActivity> getComments() {
     if (isQuestionActivity()) {
-      if (questionComments_ == null) questionComments_ = new ArrayList<Activity>();
+      if (questionComments_ == null) questionComments_ = new ArrayList<ExoSocialActivity>();
       if (questionComments_.isEmpty()) {
         
         FAQService faqService = (FAQService) ExoContainerContext.getCurrentContainer()
@@ -96,7 +96,7 @@ public class AnswerUIActivity extends BaseUIActivity {
         try {
           Comment[] comments = faqService.getComments(getActivityParamValue(AnswersSpaceActivityPublisher.QUESTION_ID_KEY));
           for (Comment comment : comments) {
-            Activity act = toActivity(comment);
+            ExoSocialActivity act = toActivity(comment);
             if (act != null)
               questionComments_.add(act);
           }
@@ -262,7 +262,7 @@ public class AnswerUIActivity extends BaseUIActivity {
                              comment,
                              uiActivity.getActivityParamValue(AnswersSpaceActivityPublisher.LANGUAGE_KEY));
       // cache question's comment
-      Activity act = uiActivity.toActivity(comment);
+      ExoSocialActivity act = uiActivity.toActivity(comment);
       if (act != null)
         uiActivity.questionComments_.add(act);
       uiFormComment.reset();

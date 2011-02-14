@@ -34,7 +34,7 @@ public class SocialContactProvider implements ContactProvider {
       if (profile.contains(Profile.LAST_NAME)) {
         contact.setLastName(profile.getProperty(Profile.LAST_NAME).toString());
       }
-      contact.setAvatarUrl(profile.getAvatarImageSource());
+      contact.setAvatarUrl(profile.getAvatarUrl());
       if (profile.contains(Profile.GENDER)) {
         contact.setGender(profile.getProperty(Profile.GENDER).toString());
       }

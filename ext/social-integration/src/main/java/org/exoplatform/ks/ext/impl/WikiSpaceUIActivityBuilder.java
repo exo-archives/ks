@@ -1,13 +1,13 @@
 package org.exoplatform.ks.ext.impl;
 
-import org.exoplatform.social.core.activity.model.Activity;
+import org.exoplatform.social.core.activity.model.ExoSocialActivity;
 import org.exoplatform.social.webui.activity.BaseUIActivity;
 import org.exoplatform.social.webui.activity.BaseUIActivityBuilder;
 
 public class WikiSpaceUIActivityBuilder extends BaseUIActivityBuilder {
 
   @Override
-  protected void extendUIActivity(BaseUIActivity uiActivity, Activity activity) {
+  protected void extendUIActivity(BaseUIActivity uiActivity, ExoSocialActivity activity) {
     // TODO Auto-generated method stub
     
   }

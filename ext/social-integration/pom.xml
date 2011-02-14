@@ -110,6 +110,13 @@
       <scope>provided</scope>
     </dependency>		
     
+    <dependency>
+      <groupId>org.gatein.shindig</groupId>
+      <artifactId>shindig-social-api</artifactId>
+      <version>${org.gatein.shindig.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    
 	
   </dependencies>
 </project>

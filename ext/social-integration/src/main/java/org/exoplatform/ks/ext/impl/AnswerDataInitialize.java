@@ -78,7 +78,7 @@ public class AnswerDataInitialize extends SpaceListenerPlugin {
      Category cat = new Category();
      cat.setId(Utils.CATE_SPACE_ID_PREFIX + space.getId());
      cat.setCreatedDate(new Date()) ;
-     cat.setName(space.getName()) ;
+     cat.setName(space.getPrettyName()) ;
      cat.setUserPrivate(new String[]{space.getGroupId()});
      cat.setDescription(space.getDescription()) ;    
      //cat.setModerateQuestions(moderatequestion) ;

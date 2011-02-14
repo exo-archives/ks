@@ -28,7 +28,8 @@ import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.impl.AnswerEventListener;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.social.core.activity.model.Activity;
+import org.exoplatform.social.core.activity.model.ExoSocialActivity;
+import org.exoplatform.social.core.activity.model.ExoSocialActivityImpl;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.identity.provider.SpaceIdentityProvider;
@@ -91,7 +92,7 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
                                                               spaceId,
                                                               false);
       Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, answer.getResponseBy());
-      Activity activity = new Activity();
+      ExoSocialActivity activity = new ExoSocialActivityImpl();
       activity.setUserId(userIdentity.getId());
       activity.setTitle(msg);
       activity.setBody(body);
@@ -191,7 +192,7 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
                                                               spaceId,
                                                               false);
       Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, question.getAuthor());
-      Activity activity = new Activity();
+      ExoSocialActivity activity = new ExoSocialActivityImpl();
       activity.setUserId(userIdentity.getId());
       activity.setTitle(msg);
       activity.setBody(body);
