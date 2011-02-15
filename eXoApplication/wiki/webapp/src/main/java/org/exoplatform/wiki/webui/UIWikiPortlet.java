@@ -84,6 +84,8 @@ public class UIWikiPortlet extends UIPortletApplication {
 
   public static String          WIKI_PORTLET_ACTION_PREFIX = "UIWikiPortlet_";
   
+  private String                redirectURL                = "";
+  
   public static enum PopupLevel {
     L1,
     L2
@@ -118,6 +120,7 @@ public class UIWikiPortlet extends UIPortletApplication {
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
     PortletRequestContext portletReqContext = (PortletRequestContext) context;
+    redirectURL = this.url(this.REDIRECT_ACTION);
     if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
       if (mode.equals(WikiMode.PORTLETPREFERENCES)) {
         loadPreferences();
@@ -204,6 +207,14 @@ public class UIWikiPortlet extends UIPortletApplication {
 
   public void setSectionIndex(String sectionIndex) {
     this.sectionIndex = sectionIndex;
+  }
+
+  public String getRedirectURL() {
+    return redirectURL;
+  }
+
+  public void setRedirectURL(String redirectURL) {
+    this.redirectURL = redirectURL;
   }
 
   public void changeMode(WikiMode newMode) {

@@ -254,7 +254,7 @@ public class Utils {
     WikiContext wikiContext = new WikiContext();
     wikiContext.setPortalURI(portalURI);
     wikiContext.setTreeRestURI(treeRestURL);
-    wikiContext.setRedirectURI(wikiPortlet.url(UIWikiPortlet.REDIRECT_ACTION));
+    wikiContext.setRedirectURI(wikiPortlet.getRedirectURL());
     wikiContext.setPortletURI(pageNodeSelected);
     WikiPageParams params = Utils.getCurrentWikiPageParams();
     wikiContext.setType(params.getType());

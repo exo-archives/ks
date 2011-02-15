@@ -55,7 +55,7 @@ import org.xwiki.rendering.syntax.Syntax;
 )
 public class UIWikiPageContentArea extends UIWikiContainer {
 
-  private String htmlOutput; 
+  private String htmlOutput;
   
   public UIWikiPageContentArea() throws Exception{
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.HELP, WikiMode.VIEWREVISION });
@@ -102,7 +102,7 @@ public class UIWikiPageContentArea extends UIWikiContainer {
                                       .concat("/wiki/tree/")
                                       .concat(TREETYPE.CHILDREN.toString()));
       wikiContext.setPageTreeId(IdGenerator.generate());
-      wikiContext.setRedirectURI(getAncestorOfType(UIWikiPortlet.class).url(UIWikiPortlet.REDIRECT_ACTION));
+      wikiContext.setRedirectURI(getAncestorOfType(UIWikiPortlet.class).getRedirectURL());
       WikiPageParams params = Utils.getCurrentWikiPageParams();
       wikiContext.setType(params.getType());
       wikiContext.setOwner(params.getOwner());
