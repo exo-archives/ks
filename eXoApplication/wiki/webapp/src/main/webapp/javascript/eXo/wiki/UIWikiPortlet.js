@@ -125,51 +125,58 @@ UIWikiPortlet.prototype.cancel = function(evt) {
 /*
  * Render the breadcrumb again to fit with a half of screen width
  */
-UIWikiPortlet.prototype.renderBreadcrumbs = function(uicomponentid, isLink) {
-  var breadcrumb = document.getElementById(uicomponentid);
-  var breadcrumbsInfoBar = eXo.core.DOMUtil.findDescendantsByClass(breadcrumb, 'div', 'BreadcumbsInfoBar')[0];
-  var breadcrumbPopup = eXo.core.DOMUtil.findNextElementByTagName(breadcrumb, 'div');
-  var itemsBlock = eXo.core.DOMUtil.findDescendantsByClass(breadcrumbPopup, 'div', 'SubBlock');
-  var breadcrumbItems = eXo.core.DOMUtil.findDescendantsByTagName(breadcrumb, "a");
-  var lessThanContainer = function() {
-    return breadcrumbsInfoBar.offsetWidth < breadcrumb.parentNode.offsetWidth / 2;
-  };
-  if (breadcrumbItems.length > 3) {
-    var popupItems = new Array();
-    // Move breadcrumb items to an array to prepair to insert to popup menu
-    for ( var index = breadcrumbItems.length - 2; index > 1; index--) {
-      if (!lessThanContainer()) {
-        var link = document.createElement('a');
-        link.className = 'ItemIcon MenuIcon';
-        link.innerHTML = breadcrumbItems[index].innerHTML;
-        if(isLink)
-          link.href = breadcrumbItems[index].href;
-        popupItems.push(link);
-        if (index == breadcrumbItems.length - 2) {
-          breadcrumbItems[index].innerHTML = ' ... ';
-          if(isLink){
-            breadcrumbItems[index].href = '#';
-            eXo.core.Browser.eventListener(breadcrumbItems[index], 'mouseover', this.showBreadcrumbPopup);
-          }
-        } else {
-          var arrowBlock = eXo.core.DOMUtil.findNextElementByTagName(breadcrumbItems[index], 'div');
-          breadcrumbsInfoBar.removeChild(breadcrumbItems[index]);
-          if (eXo.core.DOMUtil.hasClass(arrowBlock, 'LeftBlock')) {
-            breadcrumbsInfoBar.removeChild(arrowBlock);
-          }
+UIWikiPortlet.prototype.renderBreadcrumbs = function(uicomponentid, isLink){
+  var me = eXo.wiki.UIWikiPortlet;
+  var component = document.getElementById(uicomponentid);
+  var breadcrumb = eXo.core.DOMUtil.findFirstDescendantByClass(component, 'div', 'BreadcumbsInfoBar');
+  var breadcrumbPopup = eXo.core.DOMUtil.findNextElementByTagName(component, 'div');
+  breadcrumbPopup = eXo.core.DOMUtil.findFirstDescendantByClass(breadcrumbPopup, 'div', 'SubBlock');
+  var itemArray = eXo.core.DOMUtil.findDescendantsByTagName(breadcrumb, "a");
+   var shortenFractor = 3/4;
+    itemArray.shift();
+    itemArray.shift();
+    var lastItem = itemArray.pop();
+    var popupItems = new Array();     
+    var firstTime=true;
+    while (breadcrumb.offsetWidth > shortenFractor*breadcrumb.parentNode.offsetWidth) {
+    if (itemArray.length > 0) {
+      var arrayLength = itemArray.length;
+      var item = itemArray.pop();
+      popupItems.push(item);
+      if (firstTime) {
+        firstTime = false;
+        var newItem = item.cloneNode(true);
+        newItem.innerHTML = ' ... ';
+        if (isLink) {
+          newItem.href = '#';
+          eXo.core.Browser.eventListener(newItem, 'mouseover', this.showBreadcrumbPopup);
         }
-      } else {
-        break;
+        breadcrumb.replaceChild(newItem, item);
       }
+      else {
+        var leftBlock = eXo.core.DOMUtil.findPreviousElementByTagName(item, 'div');
+        breadcrumb.removeChild(leftBlock);
+        breadcrumb.removeChild(item);
+      }
+      
     }
-    // Insert breadcrumb items to popup menu
+    else {
+      lastItem.innerHTML = lastItem.innerHTML.substring(0, lastItem.innerHTML.length - 5) + "...";
+    }
+  }
+  me.createPopup(popupItems, isLink, breadcrumbPopup);
+};
+
+UIWikiPortlet.prototype.createPopup = function(popupItems, isLink, breadcrumbPopup){
+  if (isLink) {
     var popupItemDepth = -1;
-    for ( var index = popupItems.length - 1; index >= 0; index--) {
+    for (var index = popupItems.length - 1; index >= 0; index--) {
+      popupItems[index].className = 'ItemIcon MenuIcon';
       popupItemDepth++;
       var menuItem = document.createElement('div');
       menuItem.className = 'MenuItem';
       var previousDiv = menuItem;
-      for ( var i = 0; i < popupItemDepth; i++) {
+      for (var i = 0; i < popupItemDepth; i++) {
         var marginLeftDiv = document.createElement('div');
         marginLeftDiv.className = 'MarginLeftDiv';
         previousDiv.appendChild(marginLeftDiv);
@@ -181,8 +188,9 @@ UIWikiPortlet.prototype.renderBreadcrumbs = function(uicomponentid, isLink) {
       if (popupItemDepth == 0) {
         menuItem.appendChild(popupItems[index]);
       }
-      itemsBlock[0].appendChild(menuItem);
+      breadcrumbPopup.appendChild(menuItem);
     }
+    
   }
 };
 
