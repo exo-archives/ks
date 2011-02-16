@@ -166,8 +166,8 @@
    <!-- js for Spliter -->
    <javascript>
     <param>
-      <js-module>eXo.wiki.Spliter</js-module>
-      <js-path>/javascript/eXo/wiki/spliter/Spliter.js</js-path>
+      <js-module>eXo.wiki.TableSpliter</js-module>
+      <js-path>/javascript/eXo/wiki/spliter/TableSpliter.js</js-path>
     </param>
   </javascript>
 	

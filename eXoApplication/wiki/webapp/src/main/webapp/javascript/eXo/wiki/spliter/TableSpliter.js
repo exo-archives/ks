@@ -20,17 +20,17 @@
 if (!eXo.wiki)
   eXo.wiki = {};
 
-function Spliter() {
+function TableSpliter() {
 };
 
-Spliter.prototype.exeRowSplit = function(e, markerobj) {  
+TableSpliter.prototype.exeRowSplit = function(e, markerobj) {  
   _e = (window.event) ? window.event : e;
   this.posX = _e.clientX;
   this.posY = _e.clientY;
   var marker = (typeof (markerobj) == "string") ? document
       .getElementById(markerobj) : markerobj;
-  this.beforeArea = eXo.core.DOMUtil.findPreviousElementByTagName(marker, "div");
-  this.afterArea = eXo.core.DOMUtil.findNextElementByTagName(marker, "div"); 
+  this.beforeArea = eXo.core.DOMUtil.findPreviousElementByTagName(marker, "td");
+  this.afterArea = eXo.core.DOMUtil.findNextElementByTagName(marker, "td"); 
   if (this.beforeArea && this.afterArea && this.beforeArea.style.display !="none" && this.afterArea.style.display !="none") {
     if (marker.offsetWidth >= marker.offsetHeight) {
       this.adjustVertical();
@@ -40,48 +40,48 @@ Spliter.prototype.exeRowSplit = function(e, markerobj) {
   }
 };
 
-Spliter.prototype.adjustHorizon = function() {
+TableSpliter.prototype.adjustHorizon = function() {
   this.beforeArea.style.width = this.beforeArea.offsetWidth + "px";
   this.afterArea.style.width = this.afterArea.offsetWidth + "px";
   this.beforeX = this.beforeArea.offsetWidth;
   this.afterX = this.afterArea.offsetWidth;
-  document.onmousemove = eXo.wiki.Spliter.adjustWidth;
-  document.onmouseup = eXo.wiki.Spliter.clear;
+  document.onmousemove = eXo.wiki.TableSpliter.adjustWidth;
+  document.onmouseup = eXo.wiki.TableSpliter.clear;
 } ;
 
-Spliter.prototype.adjustVertical = function() {
+TableSpliter.prototype.adjustVertical = function() {
   this.beforeArea.style.height = this.beforeArea.offsetHeight + "px";
   this.afterArea.style.height = this.afterArea.offsetHeight + "px";
   this.beforeX = this.beforeArea.offsetHeight;
   this.afterX = this.afterArea.offsetHeight;
-  document.onmousemove = eXo.wiki.Spliter.adjustHeight;
-  document.onmouseup = eXo.wiki.Spliter.clear;
+  document.onmousemove = eXo.wiki.TableSpliter.adjustHeight;
+  document.onmouseup = eXo.wiki.TableSpliter.clear;
 } ;
 
-Spliter.prototype.adjustWidth = function(evt) {
+TableSpliter.prototype.adjustWidth = function(evt) {
   evt = (window.event) ? window.event : evt ;
-  var Spliter = eXo.wiki.Spliter ;
-  var delta = evt.clientX - Spliter.posX ;
-  var afterWidth = (Spliter.afterX - delta) ;
-  var beforeWidth = (Spliter.beforeX + delta) ;
+  var TableSpliter = eXo.wiki.TableSpliter ;
+  var delta = evt.clientX - TableSpliter.posX ;
+  var afterWidth = (TableSpliter.afterX - delta) ;
+  var beforeWidth = (TableSpliter.beforeX + delta) ;
   if (beforeWidth <= 0  || afterWidth <= 0) return ;
-  Spliter.beforeArea.style.width =  beforeWidth + "px" ;
-  Spliter.afterArea.style.width =  afterWidth + "px" ;  
+  TableSpliter.beforeArea.style.width =  beforeWidth + "px" ;
+  TableSpliter.afterArea.style.width =  afterWidth + "px" ;  
 } ;
 
-Spliter.prototype.adjustHeight = function(evt) {
+TableSpliter.prototype.adjustHeight = function(evt) {
   evt = (window.event) ? window.event : evt ;
-  var Spliter = eXo.wiki.Spliter ;
-  var delta = evt.clientY - Spliter.posY ;
-  var afterHeight = (Spliter.afterY - delta) ;
-  var beforeHeight = (Spliter.beforeY + delta) ;
+  var TableSpliter = eXo.wiki.TableSpliter ;
+  var delta = evt.clientY - TableSpliter.posY ;
+  var afterHeight = (TableSpliter.afterY - delta) ;
+  var beforeHeight = (TableSpliter.beforeY + delta) ;
   if (beforeHeight <= 0  || afterHeight <= 0) return ;
-  Spliter.beforeArea.style.height =  beforeHeight + "px" ;
-  Spliter.afterArea.style.height =  afterHeight + "px" ;  
+  TableSpliter.beforeArea.style.height =  beforeHeight + "px" ;
+  TableSpliter.afterArea.style.height =  afterHeight + "px" ;  
 } ;
 
-Spliter.prototype.clear = function() {  
+TableSpliter.prototype.clear = function() {  
   document.onmousemove = null ;  
 } ;
 
-eXo.wiki.Spliter = new Spliter() ;
+eXo.wiki.TableSpliter = new TableSpliter() ;

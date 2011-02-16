@@ -5,13 +5,24 @@ import org.exoplatform.wiki.webui.UIWikiPageContainer;
 
 <% 
 	String showHideAction = uicomponent.event(uicomponent.SHOW_HIDE_ACTION);
+	def navigationTree =  uicomponent.getChild(UIWikiNavigationContainer.class);
  %>
 <div class="UIWikiMiddleArea" id="$uicomponent.id">
- 	<% uicomponent.renderChild(UIWikiNavigationContainer.class); %>
- 	<div class="Spliter" onmousedown="eXo.wiki.Spliter.exeRowSplit(event,this);">
- 		<div class="Resizer" ondblclick="$showHideAction">
- 	</div>
- 	</div>
- 	<% uicomponent.renderChild(UIWikiPageContainer.class); %>
+  <table class="WikiLayout" >
+    <tr>
+      <% if(navigationTree.isRendered()) { %>
+	    <td class="Navigation" >
+		 		<% uicomponent.renderChild(navigationTree); %>
+		 	</td>
+		 	<% 
+		 	}
+		 	%>
+		 	<td class="Spliter" onmousedown="eXo.wiki.TableSpliter.exeRowSplit(event,this);" ondblclick="$showHideAction" >	
+	 	  </td>
+	 	  <td>
+	 			<% uicomponent.renderChild(UIWikiPageContainer.class); %>
+	 		</td>
+	 	</tr>
+ 	</table>
 </div>
 
