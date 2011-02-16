@@ -955,8 +955,8 @@
 																continue;
 															}
 															date = FAQUtils.getLongDateFormat(answer.getDateResponse());
-															responseBy = answer.getFullName();
 															owner = answer.getResponseBy();
+															responseBy = FAQUtils.getScreenName(owner, answer.getFullName());
 															String userProfile = uicomponent.event("ViewUserProfile", owner);
 														%>
 														<div class="ResponseItemContainer">
@@ -970,14 +970,14 @@
 																					<div class="ProfileContainer">
 																						<%
 																						if(uicomponent.faqSetting_.isEnableViewAvatar()) {
-																							String avatarUrlAnswer = uicomponent.getAvatarUrl(answer.getResponseBy());
+																							String avatarUrlAnswer = uicomponent.getAvatarUrl(owner);
 																						%>				
 																						<div class="AvatarContainer" style="margin-top:0px;">
 																							<div class="ImageAvatar"><img class="FAQAvatar" src="$avatarUrlAnswer" width="63px" alt="Avatar"/></div>
 																						</div>
 																						<%}%>
 																						<div class="AuthorInfor" style="text-align:center">
-																							<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", answer.getResponseBy())%>" style="color:gray; cursor:pointer;">
+																							<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" style="color:gray; cursor:pointer;">
 																								<span class="UserName">$responseBy</span>
 																							</a>
 																						</div>
@@ -1129,6 +1129,7 @@
 													<%
 														int commentCount = 0;
 														for(Comment comment in comments){
+															String owner = comment.getCommentBy();
 															if(uicomponent.currentUser_.equals(comment.getCommentBy())) canEditComment = true;
 															else canEditComment = false;
 													%>
@@ -1144,15 +1145,15 @@
 																						<div class="ProfileContainer">
 																							<%
 																							if(uicomponent.faqSetting_.isEnableViewAvatar()) {
-																								String avatarUrlComment = uicomponent.getAvatarUrl(comment.getCommentBy());
+																								String avatarUrlComment = uicomponent.getAvatarUrl(owner);
 																							%>				
 																							<div class="AvatarContainer" style="margin-top:0px;">
 																								<div class="ImageAvatar"><img class="FAQAvatar" src="$avatarUrlComment" width="63" alt="Avatar"/></div>
 																							</div>
 																							<%}%>
 																							<div class="AuthorInfor" style="text-align:center">
-																								<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", comment.getCommentBy())%>" style="color:gray; cursor:pointer;">
-																									<span class="UserName"><%=comment.getFullName()%></span>
+																								<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", owner)%>" style="color:gray; cursor:pointer;">
+																									<span class="UserName"><%=FAQUtils.getScreenName(owner, comment.getFullName())%></span>
 																								</a>
 																							</div>
 																						</div>

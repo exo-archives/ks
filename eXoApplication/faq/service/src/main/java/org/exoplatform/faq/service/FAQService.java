@@ -1055,6 +1055,8 @@ public interface FAQService extends FAQServiceLegacy{
    */
   public Comment[] getComments(String questionId) throws Exception;
   
+  public void calculateDeletedUser(String userName) throws Exception;
+  
 }
 
 

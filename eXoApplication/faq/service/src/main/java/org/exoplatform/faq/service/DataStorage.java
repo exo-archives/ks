@@ -220,4 +220,6 @@ public interface DataStorage {
   CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception;
 
   void updateQuestionRelatives(String questionPath, String[] relatives) throws Exception;
+  
+  public void calculateDeletedUser(String userName) throws Exception;
 }

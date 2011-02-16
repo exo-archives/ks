@@ -48,23 +48,19 @@
 
   <external-component-plugins>
     <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
+  <!--Answer user listener-->
     <component-plugin>
-      <name>forum.new.user.event.listener</name>
+      <name>answer.user.event.listener</name>
       <set-method>addListenerPlugin</set-method>
-      <type>org.exoplatform.forum.service.conf.NewUserListener</type>
-      <description>creates a profile in forum for each new user
-      </description>
+      <type>org.exoplatform.faq.service.conf.UserListener</type>
+      <description>calculate info when deleted users</description>
     </component-plugin>
-  </external-component-plugins>
-
-	<external-component-plugins>
-    <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
+  <!--Forum user listener-->
     <component-plugin>
       <name>forum.new.user.event.listener</name>
       <set-method>addListenerPlugin</set-method>
       <type>org.exoplatform.forum.service.conf.NewUserListener</type>
-      <description>creates a profile in forum for each new user</description>
-
+      <description>creates a profile in forum for each new user and calculate info when deleted user.</description>
       <init-params>
         <properties-param>
           <name>user.profile.setting</name>
@@ -76,11 +72,8 @@
           <property name="maxTopic" value="10"/>
           <property name="maxPost" value="10"/>
           <property name="isShowForumJump" value="true"/>
-
         </properties-param>
       </init-params>
-
-
     </component-plugin>
   </external-component-plugins>
 

@@ -267,10 +267,16 @@ public class FAQUtils {
 				fullName = userName;
 			return fullName;
 		} catch (Exception e) {
-			return userName;
+			return getScreenName(userName, "");
 		}
 	}
 
+	public static String getScreenName(String userName, String fullName) {
+		return (userName.contains(org.exoplatform.faq.service.Utils.DELETED)) ? 
+				("<s>" + ((isFieldEmpty(fullName)) ? 
+						(userName.substring(0, userName.indexOf(org.exoplatform.faq.service.Utils.DELETED))):fullName) + "</s>") : userName;
+	}
+	
 	public static boolean isFieldEmpty(String s) {
 		return (s == null || s.trim().length() <= 0) ? true : false;
 	}

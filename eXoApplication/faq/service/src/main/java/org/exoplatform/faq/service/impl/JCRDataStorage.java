@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.zip.ZipEntry;
@@ -109,7 +110,7 @@ import com.sun.syndication.io.SyndFeedOutput;
 /**
  * Created by The eXo Platform SARL Author : Hung Nguyen Quang hung.nguyen@exoplatform.com Jul 10, 2007
  */
-public class JCRDataStorage implements DataStorage {
+public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
 	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
 
@@ -292,9 +293,11 @@ public class JCRDataStorage implements DataStorage {
 				attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
 				return attachment;
 			}
-		} catch (PathNotFoundException e) {
+		} catch (PathNotFoundException e ) {
 			return null;
-		} catch (Exception e) {
+		} catch (RepositoryException e) {
+			return null;
+		}catch (Exception e) {
 			log.error("Failed to get user avatar", e);
 		} finally {
 			sProvider.close();
@@ -736,6 +739,8 @@ public class JCRDataStorage implements DataStorage {
 			answer.setResponses((answerNode.getProperty("exo:responses").getValue().getString()));
 		if (answerNode.hasProperty("exo:responseBy"))
 			answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString()));
+		
+		System.out.println("\n\n answer.getResponseBy(): " + answer.getResponseBy() + " answer.getResponses: " + answer.getResponses());
 		if (answerNode.hasProperty("exo:fullName"))
 			answer.setFullName((answerNode.getProperty("exo:fullName").getValue().getString()));
 		if (answerNode.hasProperty("exo:dateResponse"))
@@ -3648,6 +3653,7 @@ public class JCRDataStorage implements DataStorage {
 	 * @see org.exoplatform.faq.service.impl.DataStorage#isCategoryExist(java.lang.String, java.lang.String)
 	 */
 	public boolean isCategoryExist(String name, String path) {
+		if(path == null || path.trim().length() <= 0) return false;
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		try {
 			Node category = getFAQServiceHome(sProvider).getNode(path);
@@ -4068,6 +4074,66 @@ public class JCRDataStorage implements DataStorage {
 			sProvider.close();
 		}
 	}
+	
+	
+	public void calculateDeletedUser(String userName) throws Exception {
+		// remove setting by user
+		SessionProvider sProvider = SessionProvider.createSystemProvider();
+		try {
+			Node node = getUserSettingHome(sProvider);
+			if(node.hasNode(userName)) node.getNode(userName).remove();
+			StringBuilder queryString = new StringBuilder(JCR_ROOT).append("/").append(dataLocator.getFaqCategoriesLocation()).append("//*[");
+			String[] strs = new String []{EXO_RESPONSE_BY, EXO_COMMENT_BY, EXO_AUTHOR, EXO_USER_WATCHING};
+			for (int i = 0; i < strs.length; i++) {
+				queryString.append("@").append(strs[i]).append("='").append(userName).append((i == strs.length-1)?"']":"' or ");
+			}
+			Session session = node.getSession();
+			QueryManager qm = session.getWorkspace().getQueryManager();
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			Node item;
+			String newUserName = userName + Utils.DELETED+ (new Random(100));
+			while (iter.hasNext()) {
+				item = iter.nextNode();
+				for (int i = 0; i < strs.length; i++) {
+					if(i < 3 && item.hasProperty(strs[i]) && item.getProperty(strs[i]).getString().equals(userName)) {
+						item.setProperty(strs[i], newUserName);
+					} else if(item.hasProperty(strs[i])){
+						List<String> list = new PropertyReader(item).list(strs[i], new ArrayList<String>());
+						int t = list.indexOf(userName);
+						if(t > 0 && strs[i].equals(EXO_USER_WATCHING)) {
+							List<String>list2 = new PropertyReader(item).list(EXO_EMAIL_WATCHING, new ArrayList<String>());
+							list2.remove(t);
+							item.setProperty(EXO_EMAIL_WATCHING, list2.toArray(new String[list2.size()]));
+						}
+					}
+				}
+			}
+			session.save();
+			// LastActivity 
+			queryString = new StringBuilder(JCR_ROOT).append("/").append(dataLocator.getFaqCategoriesLocation())
+						.append("//element(*,exo:faqQuestion)[(jcr:contains(@").append(EXO_LAST_ACTIVITY).append(", '").append(userName).append("'))]");
+			query = qm.createQuery(queryString.toString(), Query.XPATH);
+			iter = query.execute().getNodes();
+			Question question = new Question();
+			while (iter.hasNext()) {
+				item = iter.nextNode();
+				if (item.hasProperty(EXO_LAST_ACTIVITY)) {
+					question.setLastActivity(item.getProperty(EXO_LAST_ACTIVITY).getString());
+					if(userName.equals(question.getAuthorOfLastActivity())) {
+						item.setProperty(EXO_LAST_ACTIVITY, newUserName + "-" + question.getTimeOfLastActivity());
+					}
+				}
+			}
+			session.save();
+		} catch (Exception e) {
+			log.error("Failed to create answer RSS ", e);
+		} finally {
+			sProvider.close();
+		}
+	}
+
 
 	public InputStream createAnswerRSS(String cateId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();

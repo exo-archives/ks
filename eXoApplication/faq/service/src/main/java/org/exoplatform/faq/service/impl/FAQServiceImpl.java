@@ -1351,6 +1351,10 @@ public class FAQServiceImpl implements FAQService, Startable {
   public void addListenerPlugin(AnswerEventListener listener) throws Exception{
     listeners_.add(listener);
   }
+
+	public void calculateDeletedUser(String userName) throws Exception {
+		jcrData_.calculateDeletedUser(userName);
+	}
 }
 
 

@@ -45,6 +45,7 @@ public class Utils {
 	final public static String ALL = "All".intern() ;
   public static final String CATE_SPACE_ID_PREFIX = "CategorySpace".intern();
 	final public static String UI_FAQ_VIEWER = "UIFAQViewer".intern(); 
+	final public static String DELETED = ":deleted".intern(); 
 	
 	/**
 	 *  This method convert string to string[] split with comma
