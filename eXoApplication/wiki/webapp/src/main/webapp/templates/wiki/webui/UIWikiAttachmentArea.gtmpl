@@ -22,7 +22,7 @@
       attachments = uicomponent.getAttachmentsList();
       int index = 0;
       String rowClass;
-      DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, currentLocale);
+      DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, currentLocale);
       String creator;
       String downloadLink;
       String deleteLink;
@@ -34,7 +34,7 @@
           rowClass = "OddRow";
         }
         if(attachment.getCreator() == null){
-          creator = "anonymous";
+          creator = _ctx.appRes("UIWikiPortlet.label.Anonymous");
         }else{
           creator = attachment.getCreator();
           creator = uicomponent.getFullName(creator);

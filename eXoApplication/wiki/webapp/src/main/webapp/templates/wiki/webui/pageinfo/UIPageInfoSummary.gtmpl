@@ -7,7 +7,9 @@
   DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, currentLocale);
   def title = currentWikiPage.getContent().getTitle();
   def author = currentWikiPage.getOwner();
+  author = (author != null) ? author : _ctx.appRes("UIWikiPortlet.label.Anonymous");
   def editor = currentWikiPage.getAuthor();
+  editor = (editor != null) ? editor : _ctx.appRes("UIWikiPortlet.label.Anonymous");
   def updateDate = df.format(currentWikiPage.getUpdatedDate());
   def createdDate = df.format(currentWikiPage.getCreatedDate());
   def wordlink = "";

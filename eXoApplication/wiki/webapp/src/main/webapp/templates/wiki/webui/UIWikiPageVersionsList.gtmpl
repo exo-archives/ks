@@ -59,7 +59,7 @@
           int index = 0;
           String rowClass;
           boolean isCurrentVersion = true;
-          DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, currentLocale);
+          DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, currentLocale);
           for(version in versionsList){
             index++;
             if(index%2 == 1){
@@ -81,7 +81,7 @@
             }
             String updatedDate = df.format(frozenNode.getUpdatedDate());
             String author = frozenNode.getAuthor();
-            author = (author != null) ? author : "anonymous";
+            author = (author != null) ? author : _ctx.appRes("UIWikiPortlet.label.Anonymous");
             String comment = frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT).getComment();
             comment = (comment != null) ? comment : "";
             String restore = (isCurrentVersion) ? "" : _ctx.appRes("UIWikiPageVersionsList.label.Restore");

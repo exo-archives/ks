@@ -36,6 +36,7 @@
         def viewLink = uicomponent.event("ViewRevision", version.getName());
         def updatedDate = df.format(frozenNode.getUpdatedDate());
         def author = frozenNode.getAuthor();
+        author = (author != null) ? author : _ctx.appRes("UIWikiPortlet.label.Anonymous");
         if (isOddRow) {
           rowClass = "OddClass";
         } else {

@@ -9,9 +9,9 @@
   
   currentWikiPage = uicomponent.getCurrentWikiPage();
   String creator = currentWikiPage.getOwner();
-  creator = (creator != null) ? creator : "anonymous";
+  creator = (creator != null) ? creator : _ctx.appRes("UIWikiPortlet.label.Anonymous");
   String author = currentWikiPage.getAuthor();
-  author = (author != null) ? author : "anonymous";
+  author = (author != null) ? author : _ctx.appRes("UIWikiPortlet.label.Anonymous");
   def createdDate = df.format(currentWikiPage.getCreatedDate());
   def updatedDate = df.format(currentWikiPage.getUpdatedDate());
   int attachmentsTotal =  currentWikiPage.getAttachments().size();
