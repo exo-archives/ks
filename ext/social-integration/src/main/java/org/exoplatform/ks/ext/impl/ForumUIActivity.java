@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.social.core.activity.model.ExoSocialActivityImpl;
 import org.exoplatform.social.webui.activity.BaseUIActivity;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -58,7 +57,7 @@ public class ForumUIActivity extends BaseUIActivity {
   
   public String getActivityParamValue(String key) {
     String value = null;
-    Map<String, String> params = ((ExoSocialActivityImpl)getActivity()).getTemplateParams();
+    Map<String, String> params = getActivity().getTemplateParams();
     if (params != null) {
       value = params.get(key);
     }

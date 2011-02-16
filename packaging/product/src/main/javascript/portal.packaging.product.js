@@ -18,6 +18,7 @@ function getProduct(version) {
   
   product.addDependencies(portal.portlet.exoadmin) ;
   product.addDependencies(portal.portlet.web) ;
+  product.addDependencies(portal.portlet.dashboard) ;
   product.addDependencies(portal.eXoGadgetServer) ;
   product.addDependencies(portal.eXoGadgets) ;
   product.addDependencies(portal.webui.portal);
