@@ -1,12 +1,12 @@
 <%
 def rcontext = _ctx.getRequestContext() ;
 rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiDropdownMenu', '/wiki/javascript/') ;
-rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(\""+uicomponent.id+"\");");
 %>
 <div id="$uicomponent.id" class="UIWikiToolBar">
 <%
 	def browseActionComponent= uicomponent.getBrowseAction();
 	  if (browseActionComponent!=null){ 
+	  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(\""+uicomponent.id+"\");");
 	%>
 		<a class="HoverLink BrowseLink Icon"><%= _ctx.appRes(uicomponent.getName() + ".action." + browseActionComponent.getActionName()) %></a>	
 		<div style="position:relative;margin-top:-1px">
@@ -26,20 +26,14 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(
 					 			String actionLabel=_ctx.appRes(uicomponent.getName() + ".action." + actionName);
 				 				String link = actionComponent.event(actionName);
 							%>
-								<% if(!actionName.equals(browseActionComponent)){%>
+								<% if(!actionName.equals(browseActionComponent.getActionName())){%>
 									<a href="$link" class="$actionName Icon">$actionLabel</a>
-						<%			}
-									}
-							}
-					%>
+						    <% }
+							} %>
 						</div>
-					</div>
-				</div>
-				<div class="BrowseMenuBL">
-					<div class="BrowseMenuBR">
-						<div class="BrowseMenuBC"><span></span></div>
 					</div>
 				</div>
 		</div>
 	</div>
+<% } %>
 </div>

@@ -133,7 +133,7 @@ UIUpload.prototype.getStyleSheetContent = function(){
   styleText += ".FileHidden {position: relative; width: 250px; text-align: right; -moz-opacity:0 ; filter:alpha(opacity: 0); opacity: 0; z-index: 2; } ";
   styleText += ".StylingFileUpload {position: absolute; width: 250px; top: 0px; left: 0px; z-index: 1; } ";
   styleText += ".FileName {width: 180px; padding: 1px 0 0; } ";
-  styleText += ".BrowseButton {float: right; width: 65px; text-align: center; color: #ffffff; font-family: Arial; font-size: 12px; padding: 3px 0; margin-top:2px; background: url('/wiki/skin/DefaultSkin/webui/background/BtnSearch.gif') no-repeat left; }";
+  styleText += ".BrowseButton {float: right; width: 66px; text-align: center; color: #ffffff; font-family: Arial; font-size: 12px; padding: 3px 0; margin-top:2px; background: url('/wiki/skin/DefaultSkin/webui/background/BtnSearch.gif') no-repeat left; }";
   styleText += ".ClearRight {clear: right; }";
   return styleText;
 }

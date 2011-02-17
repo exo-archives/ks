@@ -28,6 +28,7 @@ import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
+import org.exoplatform.wiki.webui.control.filter.AdminSpacePermissionFilter;
 import org.exoplatform.wiki.webui.control.listener.UIWikiToolBarActionListener;
 import org.exoplatform.wiki.webui.popup.UIWikiSettingContainer;
 
@@ -41,7 +42,7 @@ import org.exoplatform.wiki.webui.popup.UIWikiSettingContainer;
 public class PreferencesActionComponent extends UIComponent {
   
   
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList();
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new AdminSpacePermissionFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {

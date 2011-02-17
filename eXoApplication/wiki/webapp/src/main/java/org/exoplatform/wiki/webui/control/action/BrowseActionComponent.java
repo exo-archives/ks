@@ -23,6 +23,7 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
+import org.exoplatform.wiki.webui.control.filter.AdminSpacePermissionFilter;
 
 /**
  * Created by The eXo Platform SAS
@@ -34,7 +35,7 @@ import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 @ComponentConfig()
 public class BrowseActionComponent extends UIComponent {
   
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList();
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new AdminSpacePermissionFilter() });;
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
