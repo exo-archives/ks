@@ -4,34 +4,42 @@
   
 %>
 <div id="$uicomponent.id" class="UIPageToolBar ClearFix" >
-	<div style="position:relative">
-		<div class="HoverMenu MoreMenu"> 
-		<%for(entry in uicomponent.getActions()) {
-			String action = entry.getActionName();    
-			def actionComponent = entry.getActionComponent();
-			String link = actionComponent.event(action);
-		%>
-			<% if(action.equals("MovePage")){
+	<div class="MoreComponent HoverLink MoreLink Icon" id="HoverLink"><%= _ctx.appRes("UIPageToolBar.label.More"); %>
+			<div class="HoverMenu MoreMenu">
+			  <ul>
+			<%for(entry in uicomponent.getActions()) {
+				String action = entry.getActionName();    
+				def actionComponent = entry.getActionComponent();
+				String link = actionComponent.event(action);
 			%>
-			<a href="$link" class="MovePage MoreItems Icon" title="<%=_ctx.appRes("UIPageToolBar.label.MovePage");%>"><%= _ctx.appRes("UIPageToolBar.label.MovePage"); %></a>
+				<% if(action.equals("MovePage")){
+				%>
+				<li onclick="$link" >
+				<a class="MovePage" title="<%=_ctx.appRes("UIPageToolBar.label.MovePage");%>"><%= _ctx.appRes("UIPageToolBar.label.MovePage"); %></a>
+				</li>
+				<%}%>
+				<% if(action.equals("WatchPage") || action.equals("PageInfo")) {
+				%>
+					<li>
+					<% uicomponent.renderChild(actionComponent.getId()); %>
+					</li>
+				<%
+				   }
+				%>		
+				<% if(action.equals("PagePermission")){ %>
+					<li>
+				  <a href="$link" class="PagePermission" title="<%=_ctx.appRes("UIPageToolBar.label.PagePermission");%>"><%= _ctx.appRes("UIPageToolBar.label.PagePermission"); %></a>
+				  </li>
+				<%}%>
 			<%}%>
-			<% if(action.equals("WatchPage") || action.equals("PageInfo")) {
-			    uicomponent.renderChild(actionComponent.getId());
-			   }
-			%>		
-			<% if(action.equals("PagePermission")){ %>
-			  <a href="$link" class="PagePermission MoreItems Icon" title="<%=_ctx.appRes("UIPageToolBar.label.PagePermission");%>"><%= _ctx.appRes("UIPageToolBar.label.PagePermission"); %></a>
-			<%}%>
-		<%}%>
+			  </ul>			
 		</div>
 	</div>
-
-<a class="HoverLink MoreLink Icon" title="<%=_ctx.appRes("UIPageToolBar.label.More");%>"><%= _ctx.appRes("UIPageToolBar.label.More"); %></a>
 <%
 def rcontext = _ctx.getRequestContext() ;
 rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiDropdownMenu', '/wiki/javascript/') ;
 rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIConfirmBox', '/wiki/javascript/') ;
-rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(\""+uicomponent.id+"\");");
+rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIDropdownMenu.init(\"HoverLink\");");
 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIConfirmBox.init();");
 rcontext.getJavascriptManager().addOnResizeJavascript("eXo.wiki.UIConfirmBox.resetPosition");
 rcontext.getJavascriptManager().addOnScrollJavascript("eXo.wiki.UIConfirmBox.resetPosition");

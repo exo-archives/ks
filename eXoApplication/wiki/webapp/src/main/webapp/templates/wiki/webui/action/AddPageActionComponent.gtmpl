@@ -7,6 +7,21 @@
 <div class="AddPageActionComponent HoverLink MoreLink Icon" id ="$uicomponent.id" >
 	<%= _ctx.appRes("UIPageToolBar.label.AddPage"); %>	
 	<div class="HoverMenu MoreMenu">
-				<% uicomponent.renderChildren(); %>
+	  <ul>
+			<%
+       List children = uicomponent.getChildren() ;
+       for(component in children) {
+         if(component.isRendered()){
+         %>
+         <li>
+         <%
+           uicomponent.renderChild(component.getClass()) ;
+           %>
+         </li>
+           <%
+         }
+       }
+      %>
+		</ul>
 	</div>
 </div>

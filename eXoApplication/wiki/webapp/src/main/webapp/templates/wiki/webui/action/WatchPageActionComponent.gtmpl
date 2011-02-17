@@ -5,8 +5,8 @@
 	  boolean isWatched = uicomponent.detectWatched(false);
 	%>
 	<% if (!isWatched){ %>
-		<a href="$link" class="WatchPage MoreItems Icon" title="<%=_ctx.appRes("UIPageToolBar.label.WatchPage");%>"><%= _ctx.appRes("UIPageToolBar.label.WatchPage"); %></a>
+		<a href="$link" class="WatchPage" title="<%=_ctx.appRes("UIPageToolBar.label.WatchPage");%>"><%= _ctx.appRes("UIPageToolBar.label.WatchPage"); %></a>
 	<% } else { %>
-		<a href="$link" class="UnWatchPage MoreItems Icon" title="<%=_ctx.appRes("UIPageToolBar.label.UnWatchPage");%>"><%= _ctx.appRes("UIPageToolBar.label.UnWatchPage"); %></a>
+		<a href="$link" class="UnWatchPage" title="<%=_ctx.appRes("UIPageToolBar.label.UnWatchPage");%>"><%= _ctx.appRes("UIPageToolBar.label.UnWatchPage"); %></a>
 	<% } %>
 </div>

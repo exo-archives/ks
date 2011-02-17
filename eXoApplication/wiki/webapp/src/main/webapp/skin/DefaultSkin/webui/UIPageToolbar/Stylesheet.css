@@ -1,0 +1,78 @@
+.UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar{
+	float: right;
+	margin-bottom: 0px;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .Delete {
+	background:url("../background/UIPageToolBarIcon.png") no-repeat left -304px;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .Edit {
+	background:url("../background/UIPageToolBarIcon.png") no-repeat left -261px;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .Add {
+	background:url("../background/UIPageToolBarIcon.png") no-repeat left -47px;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .MoreLink {
+  background: url("../background/UIPageToolBarIcon.png") no-repeat left
+    -282px;
+  height: 14px;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .MoreLink:hover {
+  height: 14px;
+}
+
+/**************For edit form***********************/
+
+.UIWikiPageEditForm .UIPageToolBar{
+	margin: 10px 0 0;
+	float: right;
+}
+
+.UIWikiPageEditForm .UIPageToolBar .Icon {
+  float: right;
+  height: 14px;
+  margin: 0;
+  padding: 6px 8px 6px 25px;
+  text-transform: capitalize;
+  color: black;
+}
+
+.UIWikiPageEditForm .UIPageToolBar .Icon:hover {
+  background-color: #d0dff0;
+  -moz-border-radius: 3px 3px 3px 3px;
+  -webkit-border-radius: 3px 3px 3px 3px;
+  text-decoration: none;
+}
+
+.UIWikiPageEditForm .UIPageToolBar .Delete {
+  background: url("../background/UIPageToolBarIcon.png") no-repeat left -72px
+    ;
+}
+
+.UIWikiPageEditForm .UIPageToolBar .Edit {
+  background: url("../background/UIPageToolBarIcon.png") no-repeat left
+    -235px;
+}
+
+.UIWikiPageEditForm .UIPageToolBar .FAQ {
+  background: url("../background/UIPageToolBarIcon.png") no-repeat left
+    -212px;
+}
+
+.UIWikiPageEditForm .UIPageToolBar .View {
+  background: url("../background/UIPageToolBarIcon.png") no-repeat left
+    -188px;
+}
+
+.UIWikiPageEditForm .UIPageToolBar .Save {
+  background: url("../background/UIPageToolBarIcon.png") no-repeat left
+    -144px;
+}
+
+.UIWikiPageEditForm .UIPageToolBar .MinorEdit {
+  background: url("../background/quote_icon.gif") no-repeat 3px center;
+}

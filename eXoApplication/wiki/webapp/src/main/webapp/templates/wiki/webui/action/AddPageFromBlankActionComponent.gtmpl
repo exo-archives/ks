@@ -8,6 +8,6 @@
   String actionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + action;
  %>
 <div class="AddPageFromBlankActionComponent">
-	<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="BlankPage MoreItems Icon" title="<%=_ctx.appRes("UIPageToolBar.label.BlankPage");%>"><%= _ctx.appRes("UIPageToolBar.label.BlankPage"); %></a>
+	<a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="BlankPage" title="<%=_ctx.appRes("UIPageToolBar.label.BlankPage");%>"><%= _ctx.appRes("UIPageToolBar.label.BlankPage"); %></a>
 	<a onclick="$link" id="$actionId" style="display:none"></a>
 </div>

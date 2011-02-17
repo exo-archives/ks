@@ -10,6 +10,7 @@
 @import url('action/Stylesheet.css') ;
 @import url('UIWikiPageInfo/Stylesheet.css') ;
 @import url('UIWikiSettingContainer/Stylesheet.css') ;
+@import url('UIPageToolbar/Stylesheet.css') ;
 
 .ClearFix:after {
 	content: ".";
@@ -140,7 +141,6 @@
 .UIWikiPortlet table {
   width: auto;
 	border-collapse: collapse;
-	table-layout: fixed;
 }
 
 .UIWikiPortlet table.UIGrid {
@@ -354,11 +354,6 @@
 	border-bottom:1px solid #C7C7C7;
 }
 
-.UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar{
-	float: right;
-	margin-bottom: 0px;
-}
-
 .UIWikiPortlet .UIWikiPageControlArea .Icon {
 	float:right;
 	height: 12px;
@@ -368,27 +363,11 @@
 	color: black;
 }
 
-.UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .MoreItems:hover {
-	-moz-border-radius:0px;
-}
-
 .UIWikiPortlet .UIWikiPageControlArea .Icon:hover {
 	background-color: #d0dff0;
 	-moz-border-radius:3px 3px 3px 3px;
 	-webkit-border-radius: 3px;
 	text-decoration: none;
-}
-
-.UIWikiPortlet .UIWikiPageControlArea .Delete {
-	background:url("background/UIPageToolBarIcon.png") no-repeat left -304px;
-}
-
-.UIWikiPortlet .UIWikiPageControlArea .Edit {
-	background:url("background/UIPageToolBarIcon.png") no-repeat left -261px;
-}
-
-.UIWikiPortlet .UIWikiPageControlArea .Add {
-	background:url("background/UIPageToolBarIcon.png") no-repeat left -47px;
 }
 
 .UIWikiPortlet .UIWikiMiddleArea {
@@ -424,37 +403,9 @@
 	overflow: auto;	
 }
 
-.UIWikiPageControlArea .UIPageToolBar .MoreLink {
-	background:url("background/UIPageToolBarIcon.png") no-repeat left -282px;
-	height: 14px;
-}
-
-.UIWikiPageControlArea .UIPageToolBar .MoreLink:hover {
-	height: 14px;
-}
-
-.UIWikiPageControlArea .UIPageToolBar .MoreMenu {
-	width:100px;
-	top:26px;
-	right:0px;	
-	padding-left: 26px;
-	*padding-left: 6px;
-}
-
-.UIWikiPageControlArea .UIPageToolBar .MoreItems {
-	width: 92px;
-	color:#535353;		
-	padding-left: 26px;
-}
-
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm{
 	float:left;
 	margin-top: 8px;
-}
-
-.UIWikiPageEditForm .UIPageToolBar{
-	margin: 10px 0 0;
-	float: right;
 }
 
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm {
@@ -518,77 +469,6 @@
 	padding: 6px 8px;
 	width: 99%;
 	*width: 98.2%;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .Icon {
-	float: right;
-	height: 14px;
-	margin: 0;
-	padding: 6px 8px 6px 25px;
-	text-transform:capitalize;
-	color: black;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .Icon:hover {
-	background-color: #d0dff0;
-	-moz-border-radius:3px 3px 3px 3px;
-	-webkit-border-radius:3px 3px 3px 3px;
-	text-decoration: none;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .Delete {
-	background:url("background/UIPageToolBarIcon.png") no-repeat left -72px;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .Edit {
-	background:url("background/UIPageToolBarIcon.png") no-repeat left -235px;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .FAQ {
-	background:url("background/UIPageToolBarIcon.png") no-repeat left -212px;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .View {
-	background:url("background/UIPageToolBarIcon.png") no-repeat left -188px;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .Save{
-	background:url("background/UIPageToolBarIcon.png") no-repeat left -144px;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .MinorEdit{
-	background:url("background/quote_icon.gif") no-repeat 3px center;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .MoreLink {
-	display:none;
-}
-
-.UIWikiPageControlArea .UIPageToolBar .MoreMenu {
-	width:100px;
-	top:26px;
-	right:0px;	
-}
-
-.UIWikiPageEditForm .UIPageToolBar .MoreMenu {
-	width:100px;
-	top:26px;
-	right:0px;	
-}
-
-.UIWikiPageEditForm .UIPageToolBar .MoreItems {
-	width: 88px;
-	color:#535353;		
-}
-
-.UIPageToolBar .PopupDiv{
-	display: none;
-	position:absolute;
-	width: 100%;
-	height:1100px;
-	left:0px;
-	top: 0px;	
-	z-index: 25;		
 }
 
 /* wiki homepage */
@@ -1575,4 +1455,36 @@
 
 .UIWikiPortlet .UIWikiMovePageForm .UIAction .ActionButton {
 	float: right;
+}
+
+/**************For Hover Menu***********************/
+
+.UIWikiPortlet .MoreMenu {
+  white-space: nowrap;
+  top: 26px;
+  right: 0px;
+}
+
+.UIWikiPortlet .HoverMenu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  float: left;
+  line-height: 24px;
+  width: 150px;
+}
+
+.UIWikiPortlet .HoverMenu li {
+  margin: 0;
+  display: block;
+}
+
+.UIWikiPortlet .HoverMenu li:hover {
+  background: #D0DFF0;
+}
+
+.UIWikiPortlet .HoverMenu a {
+  color: #535353;
+  text-decoration: none;
+  padding: 6px 8px 6px 25px;
 }
