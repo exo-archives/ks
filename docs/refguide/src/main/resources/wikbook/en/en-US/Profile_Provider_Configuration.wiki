@@ -1,11 +1,11 @@
-h1. Overview
+h1. Overview {anchor:id=KSref.ProfileProviderConfiguration.Overview}
 
 Forum and FAQ applications are to show some information about posters. 
 The way we retrieve that information is pluggable through the _ContactProvider_ component.
 
 For public internet websites, users can provide personal information, such as personal email address and location. To enable, simply override the _ContactProvider_ component in your configuration.
 
-h1. Configuration
+h1. Configuration {anchor:id=KSref.ProfileProviderConfiguration.Configuration}
 Configure the _profile-configuration.xml_ file as shown below:
 
 {code:xml}
@@ -15,7 +15,7 @@ Configure the _profile-configuration.xml_ file as shown below:
 </component>
 {code}
 
-h1. Using ContactProvider
+h1. Using ContactProvider {anchor:id=KSref.ProfileProviderConfiguration.UseContactProvider}
 When you start the Tomcat, the _DefaultContactProvider_ class will be initialized and the _OrganizationService_ component is set within the _DefaultContactProvider_ component.
 
 The _DefaultContactProvider_ class enables you to get user information via the _OrganizationService_ component.

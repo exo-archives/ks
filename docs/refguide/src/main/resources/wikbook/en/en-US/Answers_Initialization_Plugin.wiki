@@ -1,10 +1,10 @@
-h1. Overview
+h1. Overview {anchor:id=KSref.AnwerEmailTemplates.Configuration}
 
 The Initialization plug-in component is to define the default answers data in the _.xml_ or _.zip_ file. It includes categories of question that should be exported from the Answers application.
 
 When the Answers Service starts, it will get values returned from the Initialization plug-in component to initialize the default Answers data.
 
-h1. Configuration
+h1. Configuration {anchor:id=KSref.AnwerInitializer.Configuration}
 
 * Default Answers data
 

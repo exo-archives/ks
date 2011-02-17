@@ -1,5 +1,5 @@
 
-h1. Configuration plug-in
+h1. Configuration plug-in {anchor:id=KSref.FAQTemplateConfiguration.ConfigurationPlugin}
 Configuration plug-in is used to automatically set up a default template for the FAQ portlet. When the FAQ service starts, it will get values which are returned from the _TemplatePlugin_ component to initialize the template for the FAQ portlet.
 
 The template configuration plug-in is configured in the _templates-configuration.xml_ file.
@@ -40,19 +40,19 @@ The properties of template configuration plug-in are defined in _init-params_ ta
 |*viewerTemplate* | Path of file template | war:/ks-extension/ks/faq/templates/ FAQViewerPortlet.gtmpl
 
 
-h1. How to change look and feel
+h1. How to change look and feel {anchor:id=KSref.FAQTemplateConfiguration.HowToChangeLookAndFeel}
 You can use two ways to change the template FAQ viewer: 
 * By using Plug-in
 * By using *edit mode* to edit template
 
-h2. Using Plug-in
+h2. Using Plug-in {anchor:id=KSref.FAQTemplateConfiguration.UsingPlugin}
 * *Step 1*: Create a file named *_FAQViewerPortlet.gtmpl_*. The content of the file is the template of the FAQ viewer.
 
 * *Step 2*: Copy this file and paste into _ks-extension/WEB-INF/ks-extension/ks/faq/templates/_ that is in the *webapps* folder of the server (tomcat, jboss).
 
 * *Step 3*: When the server runs, _FAQViewerPortlet.gtmpl_ will initialize the template of the FAQ viewer.
 
-h2. By using Edit Mode
+h2. By using Edit Mode {anchor:id=KSref.FAQTemplateConfiguration.UsingEditMode}
 
 * *Step 1*: Run the server and open the FAQ Portlet.
 
@@ -61,7 +61,7 @@ h2. By using Edit Mode
 * *Step 3*: Edit the content of *text-area-input* and click *Save*.    
 
 
-h1. API provided by the UIComponent (UIViewer.java)
+h1. API provided by the UIComponent (UIViewer.java) {anchor:id=KSref.FAQTemplateConfiguration.APIsProvidedByUIComponent}
 * UIViewer is the child of the component _UIFAQPortlet_. It shows the main content of FAQ portlet.
 
 * List of APIs:

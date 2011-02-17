@@ -1,6 +1,6 @@
 Applications of eXo Knowledge, such as Forum, Answers and Polls, use REST services to communicate with the server. This section describes REST Services of internal APIs. 
 
-h1. Forum application
+h1. Forum application {anchor:id=KSref.InternalAPIs.ForumApplication}
 
 The Forum application of eXo Knowledge uses the ForumWebservice to provide all APIs to work with Forum, such as filtering IPs, viewing RSS, and more.
 
@@ -19,7 +19,7 @@ Use the following APIs to build all the functions of the Forum application:
 | *viewrss* | To process the request by the user when he/she wants to view RSS. | $portalName/ $restcontextname/ ks/forum/rss/ | String resourceid |category id  {example}{example} forum id  {example}{example} topic id |
 | *userrss* | To process the request by users when they wants to view their own collected RSS. | $portalName /$restcontextname/ ks/forum/rss/user/ | String resourceid | username id |
 
-h1. Answers application
+h1. Answers application {anchor:id=KSref.InternalAPIs.AnswersApplication}
 
 The Answers application of eXo Knowledge uses the FAQWebservice to view RSS.
 
@@ -34,7 +34,7 @@ Use the following APIs to build all the functions of Answers application:
 | *viewrss* | To view RSS | $portalName/ $restcontextname/ ks/faq/rss/| String resourceid | category id, question id |
 
 
-h1. Polls application
+h1. Polls application {anchor:id=KSref.InternalAPIs.PollsApplication}
 
 The Polls application of eXo Knowledge uses the PollWebservice to create and interact with the Polls gadget.
 || Service name || Service URL || Description || Location ||

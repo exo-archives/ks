@@ -1,12 +1,12 @@
-h1. Overview
+h1. Overview {anchor:id=KSref.ForumInitializer.Overview}
 
 The Initialization plug-in component defines the default Forum data in the *.xml* file, including categories, forums, topics and posts.
 
 When the Forum Service runs, it will get values which are returned from the Initialization plug-in component to initialize default data of the Forum.
 
-h1. Configuration
+h1. Configuration {anchor:id=KSref.ForumInitializer.Configuration}
 
-h2. Default forum data
+h2. Default forum data {anchor:id=KSref.ForumInitializer.DefaultForumData}
 
 The default forum data is configured in the {{war:webapp/WEB-INF/conf/ksdemo/ks/services-configuration.xml}} file.
 
@@ -155,7 +155,7 @@ In the sample code above, the *org.exoplatform.forum.service.conf.CategoryData* 
       </value>
 {code}
 
-h2. Forum array
+h2. Forum array {anchor:id=KSref.ForumInitializer.ForumArray}
 
 Category may contain one or more Forums. The value of the Forum is defined in the *forums* field. It returns a forum array. The value of forum array is defined by the *org.exoplatform.forum.service.conf.ForumData* object as below:
 
@@ -199,7 +199,7 @@ In the sample code above, the *org.exoplatform.forum.service.conf.ForumData* obj
     </value>
 {code}
 
-h2. Forum topics
+h2. Forum topics {anchor:id=KSref.ForumInitializer.ForumTopics}
 
 # Forum may contain one or more topics. The value of topic is defined in the *topics* field. It returns a topic array. The value of topic array is defined by the *org.exoplatform.forum.service.conf.TopicData* object as below:
 
@@ -289,7 +289,7 @@ By default, the default Forum data can only be changed by modifying the *service
 
 At runtime, the new changes in the *services-configuration.xml* file will be executed and updated, the default Forum data will be created correspondingly.
 
-h1. Initial Data Plugin
+h1. Initial Data Plugin {anchor:id=KSref.ForumInitializer.InitialDataPlugin}
 
 The Initial Data plugin is configured in the services-configuration.xml file.
 In details, at runtime of Forum Service, the Initialization plug-in component is called, the services-configuration.xml file will be executed. The component-plugin named addInitialDataPlugin will refer to *org.exoplatform.forum.service.conf.ForumInitialDataPlugin* to import some objects to create data for Forum service.
