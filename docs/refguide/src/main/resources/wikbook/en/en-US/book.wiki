@@ -67,6 +67,9 @@ h4. Answers Initializer {anchor:id=KSref.Configuration.AnswersInitializer}
 h4. Answers Email Templates Configuration {anchor:id=KSref.Configuration.AnswersEmailTemplatesConfiguration}
 {include:document="Answers_Email_Templates_Configuration.wiki"}
 
+h3. Poll Configuration {anchor:id=KSref.Configuration.PollConfiguration} 
+{include:document="Initialization_Poll_Plugin_Configuration.wiki"}
+
 h1. Developer reference {anchor:id=KSref.DeveloperReference}
 
 h2. Extension points {anchor:id=KSref.DeveloperReference.ExtensionPoints}

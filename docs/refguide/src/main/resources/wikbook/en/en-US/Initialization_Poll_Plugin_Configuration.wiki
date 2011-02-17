@@ -1,0 +1,152 @@
+h1. Overview {anchor:id=KSref.PollConfiguration.Overview}
+
+The Initialization plug-in component defines the default Poll data in the *.xml* file, including polls.
+When the Poll Service runs, it will get values returned from the Initialization plug-in component to initialize default Poll data.
+
+h1. Configuration {anchor:id=KSref.PollConfiguration.Configuration}
+
+h2. Default Poll data {anchor:id=KSref.PollConfiguration.DefaultPollData}
+
+The default Poll data are configured in the {{war:webapp/WEB-INF/conf/ksdemo/ks/services-configuration.xml}} file.
+
+In particular, when the Poll service starts, the Initialization plug-in component is called. Next, the *services-configuration.xml* file is executed.
+The component-plugin named *addInitialDefaultDataPlugin* will refer to *org.exoplatform.poll.service.InitialDeafaultDataPlugin* to execute some objects to create default data for the Poll application.
+
+
+{code:xml}
+<component-plugin>
+  <name>default.data</name>
+  <set-method>addInitialDefaultDataPlugin</set-method>
+  <type>org.exoplatform.poll.service.InitialDefaultDataPlugin</type>
+  <description>Initialize</description>
+  <init-params>
+    <object-param>
+      <name>livedemo.default.configuration</name>
+      <description>initial data for live demo</description>
+      <object type="org.exoplatform.poll.service.PollInitialData">
+        <field name="pollDatas">
+          <collection type="java.util.ArrayList">
+            <value>
+              <object type="org.exoplatform.poll.service.PollData">
+                <field name="parentPath">
+                  <string>ksdemo/Polls</string>
+                </field>
+                <field name="owner">
+                  <string>root</string>
+                </field>
+                <field name="question">
+                  <string>What color do you like ?</string>
+                </field>
+                <field name="timeOut">
+                  <string>0</string>
+                </field>
+                <field name="isMultiCheck">
+                  <string>false</string>
+                </field>
+                <field name="isAgainVote">
+                  <string>false</string>
+                </field>
+                <field name="isClosed">
+                  <string>false</string>
+                </field>
+                 <field name="options">
+                 <collection type="java.util.ArrayList">
+                  <value><string>Green</string></value>
+                  <value><string>Blue</string></value>
+                  <value><string>Red</string></value>
+                  <value><string>Yellow</string></value>
+                  <value><string>Orange</string></value>
+                  <value><string>Purple</string></value>
+                 </collection>
+                </field>
+               </object>
+             </value>
+           </collection>
+         </field>
+       </object>
+     </object-param>
+  </init-params>
+</component-plugin>
+{code}
+
+* In which,
+|| Name || Set-method || Type || Description ||
+| *default.data* | {{addInitialDefaultDataPlugin}} | {{org.exoplatform.poll.service.InitialDefaultDataPlugin}} | The initial default data of Poll. |
+
+* Init-param
+|| Name || Possible value || Default value || Description |
+| *livedemo.default.configuration* | {{object}} | {{org.exoplatform.poll.service.PollInitialData}} | The initial data for live demo. |
+
+* Poll array
+
+After the *org.exoplatform.poll.service.InitialDefaultDataPlugin* object has been executed, the *org.exoplatform.poll.service.PollInitialData* object will be called. It returns a polls array. The value of poll array is defined by the *org.exoplatform.poll.service.PollData* object as below:
+
+{code:xml}
+	  <name>livedemo.default.configuration</name>
+      <description>initial data for live demo</description>
+      <object type="org.exoplatform.poll.service.PollInitialData">
+        <field name="pollDatas">
+          <collection type="java.util.ArrayList">
+            <value>
+              <object type="org.exoplatform.poll.service.PollData">
+                ....
+               </object>
+             </value>
+           </collection>
+         </field>
+       </object>
+{code}
+
+* Poll includes some basic data which are defined in the *field* tag with a specific name as below:
+
+{code:xml}
+	..........
+		<field name="parentPath">
+		  <string>ksdemo/Polls</string>
+		</field>
+		<field name="owner">
+		  <string>root</string>
+		</field>
+		<field name="question">
+		  <string>What color do you like ?</string>
+		</field>
+		<field name="timeOut">
+		  <string>0</string>
+		</field>
+		<field name="isMultiCheck">
+		  <string>false</string>
+		</field>
+		<field name="isAgainVote">
+		  <string>false</string>
+		</field>
+		<field name="isClosed">
+		  <string>false</string>
+		</field>
+		 <field name="options">
+		 <collection type="java.util.ArrayList">
+		  <value><string>Green</string></value>
+		  <value><string>Blue</string></value>
+		  <value><string>Red</string></value>
+		  <value><string>Yellow</string></value>
+		  <value><string>Orange</string></value>
+		  <value><string>Purple</string></value>
+		 </collection>
+		</field>
+	....
+{code}
+
+In which:
+
+||* Field* || *Possible value* || *Default value* || *Description* ||
+| *parentPath*| {{string}} | {{ ksdemo/Polls}} | Parent path of poll data. |
+| *owner* | {{user id}} | {{root}} | The creator of Poll. |
+| *question* | {{string}} | {{What color do you like?}} | The question for Poll. |
+| *timeout* | {{number}} | {{0}} | The time before poll is closed. If value = {{0}}, the poll will never be closed. |
+| *isMultiCheck*| {{boolean}} |  {{false}} | If the value is {{true}}, user can vote for multi-options. If the value is {{false}}, only one option can be voted. |
+| *isAgainVote*| {{boolean}} | {{false}} | If the value is {{true}}, user can vote again. |
+| *isClose* | {{boolean}} | {{false}} | If the value is {{true}}, poll will be closed. |
+| *options*| {{java.util.ArrayList}} | List of string | list of options for Poll. |
+
+* Modify values of Poll
+
+Values of the default Poll can be changed by editing text values in the tag of each {{field}} by the other one.
