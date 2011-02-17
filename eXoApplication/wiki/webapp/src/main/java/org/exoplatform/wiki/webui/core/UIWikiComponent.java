@@ -44,4 +44,12 @@ public class UIWikiComponent extends UIComponent {
   public WikiMode getCurrentMode() {
     return getAncestorOfType(UIWikiPortlet.class).getWikiMode();
   }
+
+  public List<WikiMode> getAccept_Modes() {
+    return accept_Modes;
+  }
+
+  public void setAccept_Modes(List<WikiMode> acceptModes) {
+    accept_Modes = acceptModes;
+  }
 }

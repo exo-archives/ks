@@ -45,4 +45,12 @@ public class UIWikiContainer extends UIContainer {
     return getAncestorOfType(UIWikiPortlet.class).getWikiMode();
   }
 
+  public List<WikiMode> getAccept_Modes() {
+    return accept_Modes;
+  }
+
+  public void setAccept_Modes(List<WikiMode> acceptModes) {
+    accept_Modes = acceptModes;
+  }
+
 }

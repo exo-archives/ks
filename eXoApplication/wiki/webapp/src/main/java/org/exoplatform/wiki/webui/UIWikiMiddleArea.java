@@ -52,6 +52,11 @@ public class UIWikiMiddleArea extends UIWikiContainer {
     addChild(UIWikiNavigationContainer.class, null, null);
     addChild(UIWikiPageContainer.class, null, null);
   }
+  
+  private boolean isNavigationRender() {
+    UIWikiNavigationContainer navigation = getChild(UIWikiNavigationContainer.class);
+    return (navigation.getAccept_Modes().contains(navigation.getCurrentMode()) && navigation.isRendered());
+  }
 
   public static class ShowHideActionListener extends EventListener<UIWikiMiddleArea> {
     @Override

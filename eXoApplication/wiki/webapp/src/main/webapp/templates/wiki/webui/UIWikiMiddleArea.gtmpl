@@ -5,14 +5,13 @@ import org.exoplatform.wiki.webui.UIWikiPageContainer;
 
 <% 
 	String showHideAction = uicomponent.event(uicomponent.SHOW_HIDE_ACTION);
-	def navigationTree =  uicomponent.getChild(UIWikiNavigationContainer.class);
  %>
 <div class="UIWikiMiddleArea" id="$uicomponent.id">
   <table class="WikiLayout" >
     <tr>
-      <% if(navigationTree.isRendered()) { %>
+      <% if(uicomponent.isNavigationRender()) { %>
 	    <td class="Navigation" >
-		 		<% uicomponent.renderChild(navigationTree); %>
+		 		<% uicomponent.renderChild(UIWikiNavigationContainer.class); %>
 		 	</td>
 		 	<% 
 		 	}
