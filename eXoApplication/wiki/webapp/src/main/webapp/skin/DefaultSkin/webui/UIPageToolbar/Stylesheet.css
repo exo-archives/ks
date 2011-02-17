@@ -76,3 +76,7 @@
 .UIWikiPageEditForm .UIPageToolBar .MinorEdit {
   background: url("../background/quote_icon.gif") no-repeat 3px center;
 }
+
+.UIWikiPageEditForm .UIPageToolBar .MoreLink {
+  display:none;
+}
