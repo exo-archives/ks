@@ -4,19 +4,19 @@
 }
 
 .UIWikiPageControlArea .UIPageToolBar .Delete {
-	background:url("../background/UIPageToolBarIcon.png") no-repeat left -304px;
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -304px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .Edit {
-	background:url("../background/UIPageToolBarIcon.png") no-repeat left -261px;
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -261px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .Add {
-	background:url("../background/UIPageToolBarIcon.png") no-repeat left -47px;
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -47px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MoreLink {
-  background: url("../background/UIPageToolBarIcon.png") no-repeat left
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
     -282px;
   height: 14px;
 }
@@ -49,32 +49,32 @@
 }
 
 .UIWikiPageEditForm .UIPageToolBar .Delete {
-  background: url("../background/UIPageToolBarIcon.png") no-repeat left -72px
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -72px
     ;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .Edit {
-  background: url("../background/UIPageToolBarIcon.png") no-repeat left
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
     -235px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .FAQ {
-  background: url("../background/UIPageToolBarIcon.png") no-repeat left
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
     -212px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .View {
-  background: url("../background/UIPageToolBarIcon.png") no-repeat left
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
     -188px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .Save {
-  background: url("../background/UIPageToolBarIcon.png") no-repeat left
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
     -144px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .MinorEdit {
-  background: url("../background/quote_icon.gif") no-repeat 3px center;
+  background: url("/wiki/skin/DefaultSkin/webui/background/quote_icon.gif") no-repeat 3px center;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .MoreLink {
