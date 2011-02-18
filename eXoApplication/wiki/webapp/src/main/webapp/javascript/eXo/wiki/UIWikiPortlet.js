@@ -161,7 +161,11 @@ UIWikiPortlet.prototype.renderBreadcrumbs = function(uicomponentid, isLink){
       
     }
     else {
+      if (lastItem.innerHTML.length >5){
       lastItem.innerHTML = lastItem.innerHTML.substring(0, lastItem.innerHTML.length - 5) + "...";
+     }
+     else 
+      break;
     }
   }
   me.createPopup(popupItems, isLink, breadcrumbPopup);
