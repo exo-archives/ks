@@ -409,4 +409,24 @@ public class Utils {
     }
     return null;
   }
+  
+  /**
+   * render macro to XHtml string.
+   * @param uiComponent - component that contain the macro.
+   * @param macroName - name of macro
+   * @param wikiSyntax - wiki syntax referred from {@link Syntax}
+   * @return String in format {@link Syntax#XHTML_1_0}
+   */
+  public static String renderMacroToXHtml(UIComponent uiComponent, String macroName, String wikiSyntax) {
+    try {
+      RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
+      Utils.setUpWikiContext(uiComponent.getAncestorOfType(UIWikiPortlet.class), renderingService);
+      return renderingService.render(macroName,
+                                     wikiSyntax,
+                                     Syntax.XHTML_1_0.toIdString(),
+                                     false);
+    } catch (Exception e) {
+      return "";
+    }
+  }
 }
