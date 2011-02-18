@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
 
+import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.service.WikiContext;
@@ -47,6 +48,7 @@ public class RelatedMacro extends AbstractMacro<RelatedPagesMacroParameters>{
                              MacroTransformationContext context) throws MacroExecutionException {
     WikiContext params = getWikiContext();
     Block block = null;
+    
     try {
       block = new RawBlock(createRelationList(params), XHTML_SYNTAX);
     } catch (Exception e) {
@@ -69,7 +71,7 @@ public class RelatedMacro extends AbstractMacro<RelatedPagesMacroParameters>{
       .append("=")
       .append(pathParam);
     
-    String treeID = "RelatedPages"+ context.getPageTreeId();
+    String treeID = "RelatedPages"+ IdGenerator.generate();
     treeBuilder.append("<div class=\"UITreeExplorer\" id =\"").append(treeID).append("\">")
       .append("   <input class='info' type='hidden' restUrl='").append(restUri.toString()).append("' redirectUrl='").append(redirectURI).append("' />")   
       .append("   <script> eXo.wiki.UIRelated.init(\"" + treeID  +"\"); </script>")
