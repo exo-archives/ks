@@ -1,3 +1,6 @@
+<% 
+	import org.exoplatform.services.jcr.util.IdGenerator; 
+ %>
 
 
 <div class="UIPageInfoItem UIPageInfoRelatedPage">
@@ -25,7 +28,7 @@
 	       def breadcrumbDatas = uicomponent.getBreadcrumbDatas(rp);
 	       
 	       breadcrumbComponent.setBreadCumbs(breadcrumbDatas);
-	       
+	       breadcrumbComponent.setId(breadcrumbComponent.getId()+ IdGenerator.generate());
 	       
 	       def rmAction = uicomponent.getRemovePageActionLink(wikiParams);
 	       if (isOddRow) {
