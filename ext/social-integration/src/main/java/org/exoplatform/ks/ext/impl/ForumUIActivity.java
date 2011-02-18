@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.social.core.space.model.Space;
+import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.social.webui.activity.BaseUIActivity;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -36,6 +38,32 @@ public class ForumUIActivity extends BaseUIActivity {
     }
   }
 
+  public String getUserFullName(String userId) {
+    return getOwnerIdentity().getProfile().getFullName();
+  }
+
+  public String getUserProfileUri(String userId) {
+    return getOwnerIdentity().getProfile().getUrl();
+  }
+
+  public String getUserAvatarImageSource(String userId) {
+    return getOwnerIdentity().getProfile().getAvatarUrl();
+  }
+  
+  public String getSpaceAvatarImageSource(String spaceIdentityId) {
+    try {
+      String spaceId = getOwnerIdentity().getRemoteId();
+      SpaceService spaceService = getApplicationComponent(SpaceService.class);
+      Space space = spaceService.getSpaceById(spaceId);
+      if (space != null) {
+        return space.getAvatarUrl();
+      }
+    } catch (Exception e) {
+      LOG.warn("Failed to getSpaceById: " + spaceIdentityId, e);
+    }
+    return null;
+  }
+  
   private String getViewLink() {
     String link = "";
     if (getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).toLowerCase().indexOf("topic") >=0) {

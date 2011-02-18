@@ -6,8 +6,11 @@ import java.util.Map;
 
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.config.model.PortalConfig;
-import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.social.core.space.model.Space;
+import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.social.webui.activity.BaseUIActivity;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -28,6 +31,9 @@ import org.exoplatform.webui.core.lifecycle.WebuiBindingContext;
     }
 )
 public class WikiUIActivity extends BaseUIActivity {
+  
+  private static final Log log = ExoLogger.getLogger(WikiUIActivity.class);
+  
   String getActivityParamValue(String key) {
     String value = null;
     Map<String, String> params = getActivity().getTemplateParams();
@@ -36,6 +42,32 @@ public class WikiUIActivity extends BaseUIActivity {
     }
 
     return value != null ? value : "";
+  }
+  
+  public String getUserFullName(String userId) {
+    return getOwnerIdentity().getProfile().getFullName();
+  }
+
+  public String getUserProfileUri(String userId) {
+    return getOwnerIdentity().getProfile().getUrl();
+  }
+
+  public String getUserAvatarImageSource(String userId) {
+    return getOwnerIdentity().getProfile().getAvatarUrl();
+  }
+  
+  public String getSpaceAvatarImageSource(String spaceIdentityId) {
+    try {
+      String spaceId = getOwnerIdentity().getRemoteId();
+      SpaceService spaceService = getApplicationComponent(SpaceService.class);
+      Space space = spaceService.getSpaceById(spaceId);
+      if (space != null) {
+        return space.getAvatarUrl();
+      }
+    } catch (Exception e) {
+      log.warn("Failed to getSpaceById: " + spaceIdentityId, e);
+    }
+    return null;
   }
   
   String getActivityMessage(WebuiBindingContext _ctx) throws Exception {
