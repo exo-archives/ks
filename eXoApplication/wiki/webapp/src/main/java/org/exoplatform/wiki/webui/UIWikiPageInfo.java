@@ -129,9 +129,14 @@ public class UIWikiPageInfo extends UIWikiContainer {
     public void execute(Event<UIWikiPageInfo> event) throws Exception {
       UIWikiPageInfo uicomponent = event.getSource();
       UIWikiPortlet wikiPortlet = uicomponent.getAncestorOfType(UIWikiPortlet.class);
+      UIWikiRelatedPages relatedCtn = null;
+      if (wikiPortlet.getChild(UIWikiMiddleArea.class) != null) {
+        relatedCtn = wikiPortlet.getChild(UIWikiMiddleArea.class).getChild(UIWikiRelatedPages.class);
+      }
       UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);
       UIWikiSelectPageForm selectPageForm = popupContainer.activate(UIWikiSelectPageForm.class, 600);
       selectPageForm.addUpdatedComponent(uicomponent);
+      if (relatedCtn != null) selectPageForm.addUpdatedComponent(relatedCtn);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
     }
   }
@@ -148,6 +153,11 @@ public class UIWikiPageInfo extends UIWikiContainer {
     public void execute(Event<UIWikiPageInfo> event) throws Exception {
       WebuiRequestContext requestContext = event.getRequestContext();
       UIWikiPageInfo uicomponent = event.getSource();
+      UIWikiPortlet wikiPortlet = uicomponent.getAncestorOfType(UIWikiPortlet.class);
+      UIWikiRelatedPages relatedCtn = null;
+      if (wikiPortlet.getChild(UIWikiMiddleArea.class) != null) {
+        relatedCtn = wikiPortlet.getChild(UIWikiMiddleArea.class).getChild(UIWikiRelatedPages.class);
+      }
       String wikiType = requestContext.getRequestParameter(WIKI_TYPE);
       String owner = requestContext.getRequestParameter(PAGE_OWNER);
       String pageId = requestContext.getRequestParameter(PAGE_ID);
@@ -155,6 +165,7 @@ public class UIWikiPageInfo extends UIWikiContainer {
         WikiPageParams relatedPageParams = new WikiPageParams(wikiType, owner, pageId);
         WikiService service = uicomponent.getApplicationComponent(WikiService.class);
         service.removeRelatedPage(Utils.getCurrentWikiPageParams(), relatedPageParams);
+        if (relatedCtn != null) requestContext.addUIComponentToUpdateByAjax(relatedCtn);
       } catch (Exception e) {
         if (log.isWarnEnabled()) log.warn(String.format("can not remove related page [%s]", pageId), e);
         UIApplication application = uicomponent.getAncestorOfType(UIApplication.class);

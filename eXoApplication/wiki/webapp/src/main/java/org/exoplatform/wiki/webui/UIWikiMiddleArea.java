@@ -50,6 +50,7 @@ public class UIWikiMiddleArea extends UIWikiContainer {
         WikiMode.ADDTEMPLATE, WikiMode.EDITTEMPLATE });
     // TODO Auto-generated constructor stub
     addChild(UIWikiNavigationContainer.class, null, null);
+    addChild(UIWikiRelatedPages.class, null, null);
     addChild(UIWikiPageContainer.class, null, null);
   }
   

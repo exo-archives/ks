@@ -22,12 +22,15 @@
         </tr>
       </thead>
       <tbody>
-      <% currentVersions.each {version ->
-        def isCurrentVersion = true;
+      <%
+       def isCurrentVersion = true;
+       currentVersions.each {version ->
+        
         def frozenNode = version.getNTFrozenNode();
         def versionLabel = version.getName();
         def versionNumber= versionLabel;
         if(isCurrentVersion){
+        	isCurrentVersion = false;
           versionLabel = _ctx.appRes("UIWikiPageVersionsList.label.Current") + " (v. " + versionLabel + ")";
         } else {
           versionLabel = "v. " + versionLabel;
