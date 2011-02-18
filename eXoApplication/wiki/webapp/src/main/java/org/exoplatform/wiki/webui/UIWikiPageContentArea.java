@@ -101,6 +101,7 @@ public class UIWikiPageContentArea extends UIWikiContainer {
       wikiContext.setTreeRestURI(Utils.getCurrentRestURL()
                                       .concat("/wiki/tree/")
                                       .concat(TREETYPE.CHILDREN.toString()));
+      wikiContext.setRestURI(Utils.getCurrentRestURL());
       wikiContext.setPageTreeId(IdGenerator.generate());
       wikiContext.setRedirectURI(getAncestorOfType(UIWikiPortlet.class).getRedirectURL());
       WikiPageParams params = Utils.getCurrentWikiPageParams();

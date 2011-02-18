@@ -47,6 +47,8 @@ public class WikiContext extends WikiPageParams {
   private String             redirectURI;
   
   private String             pageTreeId;
+  
+  private String             restURI;
 
   public String getPageTitle() {
     return pageTitle;
@@ -94,6 +96,20 @@ public class WikiContext extends WikiPageParams {
 
   public void setPageTreeId(String pageTreeId) {
     this.pageTreeId = pageTreeId;
+  }
+
+  /**
+   * @return the restURI
+   */
+  public String getRestURI() {
+    return restURI;
+  }
+
+  /**
+   * @param restURI the restURI to set
+   */
+  public void setRestURI(String restURI) {
+    this.restURI = restURI;
   }
   
 }

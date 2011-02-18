@@ -179,5 +179,13 @@
     </param>
   </javascript>
    
+   <!-- js for Spliter -->
+   <javascript>
+    <param>
+      <js-module>eXo.wiki.UIRelated</js-module>
+      <js-path>/javascript/eXo/wiki/related/UIRelated.js</js-path>
+    </param>
+  </javascript>
+   
 </gatein-resources>
 

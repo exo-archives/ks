@@ -39,6 +39,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -69,6 +70,8 @@ import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiResource;
 import org.exoplatform.wiki.service.WikiRestService;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.service.related.JsonRelatedData;
+import org.exoplatform.wiki.service.related.RelatedUtil;
 import org.exoplatform.wiki.service.rest.model.Attachment;
 import org.exoplatform.wiki.service.rest.model.Attachments;
 import org.exoplatform.wiki.service.rest.model.Link;
@@ -265,6 +268,27 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       log.error(e.getMessage(), e);
       return Response.serverError().entity(e.getMessage()).cacheControl(cc).build();
     }
+  }
+  
+  @GET
+  @Path("/related/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getRelated(@QueryParam(TreeNode.PATH) String path) {
+    if (path == null) {
+      return Response.status(Status.NOT_FOUND).build();
+    }
+    try {
+      WikiPageParams params = TreeUtils.getPageParamsFromPath(path);
+      PageImpl page = (PageImpl) wikiService.getPageById(params.getType(), params.getOwner(), params.getPageId());
+      
+      List<PageImpl> relatedPages = page.getRelatedPages();
+      List<JsonRelatedData> relatedData = RelatedUtil.pageImplToJson(relatedPages);
+      return Response.ok(new BeanToJsons<JsonRelatedData>(relatedData)).cacheControl(cc).build();
+    } catch (Exception e) {
+      if (log.isErrorEnabled()) log.error(String.format("can not get related pages of [%s]", path), e);
+      return Response.serverError().cacheControl(cc).build();
+    }
+    
   }
   
   @GET

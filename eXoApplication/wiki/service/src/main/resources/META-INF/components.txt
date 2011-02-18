@@ -24,3 +24,4 @@ org.exoplatform.wiki.rendering.macro.children.ChildrenMacro
 org.exoplatform.wiki.rendering.macro.pagetree.PageTreeMacro
 org.exoplatform.wiki.rendering.macro.include.IncludePageMacro
 org.exoplatform.wiki.rendering.macro.excerpt.ExcerptMacro
+org.exoplatform.wiki.rendering.macro.related.RelatedMacro
