@@ -33,6 +33,11 @@ rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiDropdownMenu', 
 						</div>
 					</div>
 				</div>
+				<div class="BrowseMenuBL">
+				  <div class="BrowseMenuBR">
+				    <div class="BrowseMenuBC"><span></span></div>
+				  </div>
+				</div>
 		</div>
 	</div>
 <% } %>

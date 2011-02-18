@@ -25,6 +25,7 @@
 .UIWikiPortlet .UIWikiToolBar .HoverMenu {
 	border:none;
 	background: none;
+	width: auto;
 }
 
 .UIWikiPortlet .UIWikiToolBar a { 
@@ -68,6 +69,7 @@
 
 .UIWikiPortlet .UIWikiToolBar .BrowseMenuMC {
 	background: white;
+	white-space: nowrap;
 }
 
 .UIWikiPortlet .UIWikiToolBar .BrowseMenuBL {

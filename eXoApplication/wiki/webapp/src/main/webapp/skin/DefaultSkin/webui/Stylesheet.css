@@ -279,31 +279,27 @@
   font-size: 11px;
 }
 
+.UIWikiPortlet .ActionIcon {
+  margin-left: 4px;
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+}
+
 .UIWikiPortlet .UserIcon {
-  background:url("/eXoResources/skin/DefaultSkin/webui/component/UIToolbar/background/LargeToolbar.gif") no-repeat left -128px;
-  height:32px;
-  margin:auto;
-  width:32px;
+  background:url("/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/UserIcons/Worker.png") no-repeat;
 }
 
 .UIWikiPortlet .GroupIcon {
-  background:url("/eXoResources/skin/DefaultSkin/webui/component/UIToolbar/background/LargeToolbar.gif") no-repeat -32px -128px;
-  height:32px;
-  margin:auto;
-  width:32px;
+  background:url("/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/SmallGroup.gif") no-repeat;
 }
 
 .UIWikiPortlet .MembershipIcon {
-  background:url("/eXoResources/skin/DefaultSkin/webui/component/UIToolbar/background/LargeToolbar.gif") no-repeat -64px -128px;
-  height:32px;
-  margin:auto;
-  width:32px;
+  background:url("/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/MembershipSelector.gif") no-repeat;
 }
 
 .UIWikiPortlet .Add {
   background:url("/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueCirclePlus.gif") no-repeat;
-  with: 16px;
-  height: 16px;
 }
 
 .Border {

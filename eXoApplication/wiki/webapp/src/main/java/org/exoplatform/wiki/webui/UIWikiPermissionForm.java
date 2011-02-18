@@ -21,9 +21,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.exoplatform.services.organization.Group;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.UIPopupContainer;
@@ -84,6 +88,8 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
 
   private Scope scope;
 
+  public static String ANY = "any";
+  
   public static String ADD_ENTRY = "AddEntry";
   
   public static String DELETE_ENTRY = "DeleteEntry";
@@ -102,13 +108,13 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
   
   public static String OPEN_SELECT_MEMBERSHIP_FORM= "OpenSelectMembershipForm";
   
-  public static String GROUP_ICON = "GroupIcon";
+  public static String GROUP_ICON = "ActionIcon GroupIcon";
   
-  public static String USER_ICON = "UserIcon";
+  public static String USER_ICON = "ActionIcon UserIcon";
   
-  public static String MEMBERSHIP_ICON = "MembershipIcon";
+  public static String MEMBERSHIP_ICON = "ActionIcon MembershipIcon";
   
-  public static String ADD_ICON = "Add";
+  public static String ADD_ICON = "ActionIcon Add";
   
   public static String SAVE = "Save";
   
@@ -234,47 +240,99 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     @Override
     public void execute(Event<UIWikiPermissionForm> event) throws Exception {
       UIWikiPermissionForm uiWikiPermissionForm = event.getSource();
+      UIApplication uiApp = uiWikiPermissionForm.getAncestorOfType(UIApplication.class);
       uiWikiPermissionForm.processPostAction();
       Scope scope = uiWikiPermissionForm.getScope();
       UIFormInputWithActions inputWithActions = uiWikiPermissionForm.getChild(UIFormInputWithActions.class);
       UIFormStringInput uiFormStringInput = inputWithActions.getChild(UIFormStringInput.class);
       String permissionOwner = uiFormStringInput.getValue();
       if (permissionOwner != null && permissionOwner.length() > 0) {
+        OrganizationService service = uiWikiPermissionForm.getApplicationComponent(OrganizationService.class);
+        StringBuilder sb = new StringBuilder();
+        IDType idType;
         String[] entries = permissionOwner.split(",");
         for (String entry : entries) {
-          PermissionEntry permissionEntry = new PermissionEntry();
-          Permission[] permissions = null;
-          if (Scope.WIKI.equals(scope)) {
-            permissions = new Permission[4];
-            permissions[0] = new Permission();
-            permissions[0].setPermissionType(PermissionType.VIEWPAGE);
-            permissions[1] = new Permission();
-            permissions[1].setPermissionType(PermissionType.EDITPAGE);
-            permissions[2] = new Permission();
-            permissions[2].setPermissionType(PermissionType.ADMINPAGE);
-            permissions[3] = new Permission();
-            permissions[3].setPermissionType(PermissionType.ADMINSPACE);
-          } else if (Scope.PAGE.equals(scope)) {
-            permissions = new Permission[2];
-            permissions[0] = new Permission();
-            permissions[0].setPermissionType(PermissionType.VIEWPAGE);
-            permissions[1] = new Permission();
-            permissions[1].setPermissionType(PermissionType.EDITPAGE);
-          }
-          permissionEntry.setPermissions(permissions);
-          permissionEntry.setId(entry);
           if (entry.startsWith("/")) {
-            permissionEntry.setIdType(IDType.GROUP);
+            idType = IDType.GROUP;
           } else if (entry.contains(":")) {
-            permissionEntry.setIdType(IDType.MEMBERSHIP);
+            idType = IDType.MEMBERSHIP;
           } else {
-            permissionEntry.setIdType(IDType.USER);
+            idType = IDType.USER;
           }
-          uiWikiPermissionForm.permissionEntries.add(permissionEntry);
+          if (isExistId(entry, idType, service)) {
+            if (isNotExistEntry(entry, uiWikiPermissionForm.permissionEntries)) {
+              PermissionEntry permissionEntry = new PermissionEntry();
+              Permission[] permissions = null;
+              if (Scope.WIKI.equals(scope)) {
+                permissions = new Permission[4];
+                permissions[0] = new Permission();
+                permissions[0].setPermissionType(PermissionType.VIEWPAGE);
+                permissions[1] = new Permission();
+                permissions[1].setPermissionType(PermissionType.EDITPAGE);
+                permissions[2] = new Permission();
+                permissions[2].setPermissionType(PermissionType.ADMINPAGE);
+                permissions[3] = new Permission();
+                permissions[3].setPermissionType(PermissionType.ADMINSPACE);
+              } else if (Scope.PAGE.equals(scope)) {
+                permissions = new Permission[2];
+                permissions[0] = new Permission();
+                permissions[0].setPermissionType(PermissionType.VIEWPAGE);
+                permissions[1] = new Permission();
+                permissions[1].setPermissionType(PermissionType.EDITPAGE);
+              }
+              permissionEntry.setPermissions(permissions);
+              permissionEntry.setId(entry);
+              permissionEntry.setIdType(idType);
+              uiWikiPermissionForm.permissionEntries.add(permissionEntry);
+            }
+          } else {
+            if (sb.length() == 0) {
+              sb.append(entry);
+            } else {
+              sb.append(", ").append(entry);
+            }
+          }
+        }
+        uiFormStringInput.setValue("");
+        if (sb.length() > 0) {
+          String[] msgArg = { sb.toString() };
+          uiApp.addMessage(new ApplicationMessage("UIWikiPermissionForm.msg.NonExistID", msgArg, ApplicationMessage.WARNING));
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
         }
       }
       uiWikiPermissionForm.setPermission(uiWikiPermissionForm.permissionEntries);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
+    }
+
+    private boolean isExistId(String identityId, IDType idType, OrganizationService service) throws Exception {
+      if (idType == IDType.USER) {
+        if (ANY.equalsIgnoreCase(identityId)) {
+          return true;
+        } else {
+          return service.getUserHandler().findUserByName(identityId) != null;
+        }
+      } else if (idType == IDType.GROUP) {
+        return service.getGroupHandler().findGroupById(identityId) != null;
+      } else {
+        String[] membership = identityId.split(":");
+        Group group = service.getGroupHandler().findGroupById(membership[1]);
+        if (group == null) {
+          return false;
+        }
+        if ("*".equals(membership[0])) {
+          return true;
+        }
+        return service.getMembershipTypeHandler().findMembershipType(membership[0]) != null;
+      }
+    }
+
+    private boolean isNotExistEntry(String entry, List<PermissionEntry> entries) {
+      for (PermissionEntry permEntry : entries) {
+        if (entry.equals(permEntry.getId())) {
+          return false;
+        }
+      }
+      return true;
     }
   }
 
