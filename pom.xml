@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.exoplatform</groupId>
     <artifactId>exo.parent</artifactId>
-    <version>7</version>
+    <version>7.1</version>
   </parent>
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>ks</artifactId>
@@ -16,15 +16,15 @@
   <scm>
    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/2.1.x</connection>
    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/2.1.x</developerConnection>
-   <url>http://fisheye.exoplatform.org/browse/ks</url>
+   <url>https://fisheye.exoplatform.org/browse/ks</url>
   </scm>
   <issueManagement>
     <system>jira</system>
-    <url>http://jira.exoplatform.org/browse/KS</url>
+    <url>https://jira.exoplatform.org/browse/KS</url>
   </issueManagement>
   <ciManagement>
     <system>hudson</system>
-    <url>http://builder.exoplatform.org/hudson/job/ks-2.1.x-ci/</url>
+    <url>https://ci.exoplatform.org/job/ks-2.1.x-ci/</url>
   </ciManagement>
   <properties>
     <org.exoplatform.kernel.version>2.2.8-GA-SNAPSHOT</org.exoplatform.kernel.version>
