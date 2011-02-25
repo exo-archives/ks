@@ -26,24 +26,6 @@
       <type>js</type>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.core</groupId>
-      <artifactId>core.packaging.module</artifactId>
-      <version>${org.exoplatform.core.version}</version>
-      <type>js</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.ws</groupId>
-      <artifactId>ws.packaging.module</artifactId>
-      <version>${org.exoplatform.ws.version}</version>
-      <type>js</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.jcr</groupId>
-      <artifactId>jcr.packaging.module</artifactId>
-      <version>${org.exoplatform.jcr.version}</version>
-      <type>js</type>
-    </dependency>
-    <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>portal.packaging.module</artifactId>
       <version>${org.exoplatform.portal.version}</version>
@@ -62,18 +44,6 @@
       <type>js</type>
     </dependency>
 
-    <dependency>
-      <groupId>org.exoplatform.tool</groupId>
-      <artifactId>exopackage</artifactId>
-      <version>${org.exoplatform.exopackage.version}</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.kernel</groupId>
-      <artifactId>kernel.packaging.module</artifactId>
-      <version>${org.exoplatform.kernel.version}</version>
-      <type>js</type>
-    </dependency>
     <dependency>
       <groupId>org.exoplatform.core</groupId>
       <artifactId>core.packaging.module</artifactId>
@@ -97,13 +67,6 @@
       <artifactId>exo.jcr.component.ftp</artifactId>
       <version>${org.exoplatform.jcr.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>portal.packaging.module</artifactId>
-      <version>${org.exoplatform.portal.version}</version>
-      <type>js</type>
-    </dependency>
-
     <dependency>
       <groupId>c3p0</groupId>
       <artifactId>c3p0</artifactId>
@@ -527,11 +490,6 @@
       <version>${cglib.version}</version>
     </dependency>
     <dependency>
-      <groupId>quartz</groupId>
-      <artifactId>quartz</artifactId>
-      <version>${quartz.version}</version>
-    </dependency>
-    <dependency>
       <groupId>antlr</groupId>
       <artifactId>antlr</artifactId>
       <version>${antlr.version}</version>
@@ -545,11 +503,6 @@
       <groupId>stax</groupId>
       <artifactId>stax-api</artifactId>
       <version>${stax.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>xml-apis</groupId>
-      <artifactId>xml-apis</artifactId>
-      <version>${xml-apis.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-collections</groupId>
@@ -581,11 +534,6 @@
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>${commons-logging.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>${commons-lang.version}</version>
     </dependency>
     <dependency>
       <groupId>org.gatein.wsrp</groupId>
@@ -904,15 +852,6 @@
   </dependencies>
   <build>
     <plugins>
-      <!-- needed for exobuild to call maven dependency:get -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.1</version>
-        <configuration>
-          <repositoryUrl>http://repository.exoplatform.org/all</repositoryUrl>
-        </configuration>
-      </plugin>
       <!-- check-out exobuild -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -1022,7 +961,7 @@
                     <!--argument>-Dexo.src.dir=NONE</argument-->
                     <argument>-Dexo.dep.dir=${exo.projects.directory.dependencies}</argument>
                     <!-- to get the server ref install -->
-                    <argument>-Dexo.m2.repos=file:${settings.localRepository},http://repository.exoplatform.org/all</argument>
+                    <argument>-Dexo.m2.repos=file:${settings.localRepository}</argument>
                     <argument>-Dclean.server=${exo.projects.app.tomcat.version}</argument>
                     <argument>-Dexo.m2.home=${maven.home}</argument>
                     <argument>-Xshare:auto</argument>
@@ -1102,7 +1041,7 @@
                     <argument>-Dexo.conf.dir=${basedir}/target/exopackage-conf</argument>
                     <argument>-Dexo.working.dir=${gatein.working.dir}</argument>
                     <argument>-Dexo.dep.dir=${exo.projects.directory.dependencies}</argument>
-                    <argument>-Dexo.m2.repos=file:${settings.localRepository},http://repository.exoplatform.org/all</argument>
+                    <argument>-Dexo.m2.repos=file:${settings.localRepository}</argument>
                     <argument>-Dclean.server=${exo.projects.app.jboss.version}</argument>
                     <argument>-Dexo.m2.home=${maven.home}</argument>
                     <argument>-Xshare:auto</argument>

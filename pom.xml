@@ -20,11 +20,11 @@
   </scm>
   <issueManagement>
     <system>jira</system>
-    <url>http://jira.exoplatform.org/browse/KS</url>
+    <url>https://jira.exoplatform.org/browse/KS</url>
   </issueManagement>
   <ciManagement>
     <system>hudson</system>
-    <url>http://builder.exoplatform.org/hudson/job/ks-trunk-ci/</url>
+    <url>https://ci.exoplatform.org/job/ks-trunk-ci/</url>
   </ciManagement>
    <properties>
     <org.exoplatform.kernel.version>2.2.7-GA</org.exoplatform.kernel.version>
