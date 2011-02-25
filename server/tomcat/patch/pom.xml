@@ -21,8 +21,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
-    <artifactId>ks-parent</artifactId>
+    <artifactId>exo.ks.server.parent</artifactId>
     <version>1.2.8-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>exo.ks.server.tomcat.patch</artifactId>
   <name>eXo KS Tomcat Server</name>

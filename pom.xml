@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.exoplatform</groupId>
     <artifactId>exo.parent</artifactId>
-    <version>8</version>
+    <version>8.1</version>
   </parent>
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>ks-parent</artifactId>
@@ -38,15 +38,15 @@
   <scm>
     <connection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</connection>
     <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</developerConnection>
-    <url>http://fisheye.exoplatform.org/browse/ks/branches/1.2.x</url>
+    <url>https://fisheye.exoplatform.org/ks/branches/1.2.x</url>
   </scm>
   <issueManagement>
     <system>jira</system>
-    <url>http://jira.exoplatform.org/browse/KS</url>
+    <url>https://jira.exoplatform.org/browse/KS</url>
   </issueManagement>
   <ciManagement>
     <system>hudson</system>
-    <url>http://builder.exoplatform.org/hudson/job/ks-1.2.x-ci/</url>
+    <url>https://ci.exoplatform.org/job/ks-1.2.x-ci/</url>
   </ciManagement>
   <properties>
     <!-- Informations for the Manifests -->
