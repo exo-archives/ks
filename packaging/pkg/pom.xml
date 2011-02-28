@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
-    <artifactId>ks</artifactId>
+    <artifactId>exo.ks.packaging</artifactId>
     <version>2.2.0-Beta2-SNAPSHOT</version>
   </parent>
   <artifactId>exo.ks.packaging.assembly</artifactId>
