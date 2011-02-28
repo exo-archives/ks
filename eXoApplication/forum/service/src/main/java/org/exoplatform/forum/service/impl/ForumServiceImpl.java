@@ -928,7 +928,9 @@ public class ForumServiceImpl implements ForumService, Startable {
     }
     if (maxOnline > mostOnline) {
       stats.setMostUsersOnline(maxOnline + ", at " + timestamp.getTimeInMillis());
-    } else {
+    } else if (mostOnline == 0) {
+      // this case is expected to appear when the first user logins to system and the statistic is not activated before.
+      // the maximum number of online users will jump from N/A to 1 
       stats.setMostUsersOnline("1, at " + timestamp.getTimeInMillis());
     }
     storage.saveForumStatistic(stats);  
