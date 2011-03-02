@@ -7849,7 +7849,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 						if(categoryView == null || categoryView.contains(string)) categoryCanView.add(string);
 					}
 				}
-				forumCanView.addAll(getForumUserCanView(categoryHome, new ArrayList<String>(), new ArrayList<String>()));
+				forumCanView.addAll(getForumUserCanView(categoryHome, listOfUser, new ArrayList<String>()));
 			}
 			Node node;
 			String []path;
@@ -7868,33 +7868,37 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 		} finally {
 			sProvider.close();
 		}
-		
 		return list;
 	}
 	
 	public List<Post> getNewPosts(int number) throws Exception {
 		List<Post> list = null;
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
-		Node categoryHome = getCategoryHome(sProvider);
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append(JCR_ROOT).append(categoryHome.getPath())
-			.append("//element(*,").append(EXO_POST).append(") [((@").append(EXO_IS_APPROVED).append("='true') and (@").append(EXO_IS_HIDDEN)
-			.append("='false') and (@").append(EXO_IS_ACTIVE_BY_TOPIC).append("='true') and (@").append(EXO_USER_PRIVATE).append("='exoUserPri'))] order by @").append(EXO_CREATED_DATE).append(" descending");
-		Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		NodeIterator iter = result.getNodes();
-		int count = 0;
-		
-		Node node;
-		while (iter.hasNext() && count < number) {
-			if (list == null)
-				list = new ArrayList<Post>();
-			node = iter.nextNode();
-			if(postIsPublicByParent(node)){
-				list.add(getPost(node));
-				count ++;
+		try {
+			Node categoryHome = getCategoryHome(sProvider);
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append(JCR_ROOT).append(categoryHome.getPath())
+				.append("//element(*,").append(EXO_POST).append(") [((@").append(EXO_IS_APPROVED).append("='true') and (@").append(EXO_IS_HIDDEN)
+				.append("='false') and (@").append(EXO_IS_ACTIVE_BY_TOPIC).append("='true') and (@").append(EXO_USER_PRIVATE).append("='exoUserPri'))] order by @").append(EXO_CREATED_DATE).append(" descending");
+			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			int count = 0;
+			Node node;
+			while (iter.hasNext() && count < number) {
+				if (list == null)
+					list = new ArrayList<Post>();
+				node = iter.nextNode();
+				if(postIsPublicByParent(node)){
+					list.add(getPost(node));
+					count ++;
+				}
 			}
+		} catch (Exception e) {
+			log.debug("Failed to get new post.", e);
+		} finally {
+			sProvider.close();
 		}
 		return list;
 	}
