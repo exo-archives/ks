@@ -482,10 +482,16 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 		return isMod;
 	}
 	
-	private String getScreenName(String userName, String screenName) throws Exception {
-		return (userName.contains(Utils.DELETED)) ? "<s>"
-				+ ((screenName.contains(Utils.DELETED)) ? 
-						screenName.substring(0, screenName.indexOf(Utils.DELETED)) : screenName) + "</s>" : screenName;
+	private String getScreenName(String screenName) throws Exception {
+		if(screenName != null && screenName.length() > 17 && !screenName.trim().contains(" ")){
+			boolean isDelted = false;
+			if(screenName.indexOf("<s>") >= 0) {
+				screenName = screenName.replaceAll("<s>", "").replaceAll("</s>", "");
+				isDelted = true;
+			}
+			screenName = "<span title=\""+screenName+"\">"+((isDelted)?"<s>":"")+ForumUtils.getSubString(screenName, 15)+((isDelted)?"</s></span>":"</span>"); 
+		}
+		return screenName ;
 	}
 	 
 	private Topic getTopic() throws Exception {

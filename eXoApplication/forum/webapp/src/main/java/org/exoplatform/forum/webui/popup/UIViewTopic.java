@@ -27,6 +27,7 @@ import javax.jcr.PathNotFoundException;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -203,6 +204,19 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		}
 	}
 	
+	@SuppressWarnings("unused")
+	private String getScreenName(String screenName) throws Exception {
+		if(screenName != null && screenName.length() > 17 && !screenName.trim().contains(" ")){
+			boolean isDelted = false;
+			if(screenName.indexOf("<s>") >= 0) {
+				screenName = screenName.replaceAll("<s>", "").replaceAll("</s>", "");
+				isDelted = true;
+			}
+			screenName = "<span title=\""+screenName+"\">"+((isDelted)?"<s>":"")+ForumUtils.getSubString(screenName, 15)+((isDelted)?"</s></span>":"</span>"); 
+		}
+		return screenName ;
+	}
+	 
 	@SuppressWarnings("unused")
 	private String getAvatarUrl(String userId) throws Exception {
 		return ForumSessionUtils.getUserAvatarURL(userId, forumService);

@@ -686,7 +686,8 @@
 					}
 				}
 				UserProfile userInfo = uicomponent.getUserInfo(owner) ;
-				screenName = uicomponent.getScreenName(owner, userInfo.getScreenName());
+				screenName = userInfo.getScreenName() ;
+				String viewScreenName = uicomponent.getScreenName(screenName);
 				String classIconPost = post.getIcon() ;
 				if(ForumUtils.isEmpty(classIconPost)) 
 					classIconPost = "NormalTopicIcon" ;
@@ -747,7 +748,7 @@
 								<div class="MemberName">
 									<div class="State $userSmile" title="${screenName}'s $titleSmile"><span></span></div>
 									<div class="ContentAction" style="float:left;" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-										<div class="Name" style="float:none; cursor:pointer;">$screenName</div>
+										<div class="Name" style="float:none; cursor:pointer;">$viewScreenName</div>
 										<div style="position:relative;">
 											<div class="UIPopupCategory" style="display:none; left:2px; top:-2px; ">
 												<div class="UIRightClickPopupMenu" style="display:block;">
@@ -766,7 +767,7 @@
 																		  if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
 																			String linkView = uicomponent.event(viewAction, owner) ;
 																			String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-																			if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + screenName ;
+																			if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
 																	%>
 																			<div class="MenuItem" onclick="$linkView">
 																				<div class="ItemIcon IconsView $viewAction" style="padding-left:30px;">
@@ -819,7 +820,7 @@
 																			  if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
 																				String linkView = uicomponent.event(viewAction, owner) ;
 																				String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
-																				if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + screenName ;
+																				if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
 																		%>
 																				<div class="MenuItem" onclick="$linkView">
 																					<div class="ItemIcon IconsView $viewAction" style="padding-left:30px;">
@@ -855,7 +856,7 @@
 									<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>:$totalPost</div>
 									<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
 									<% } else {%>
-									<div><strong>$screenName</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
+									<div><strong>$viewScreenName</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
 									<% } 
 									 if(!ForumUtils.isEmpty(location)) {
 									%>

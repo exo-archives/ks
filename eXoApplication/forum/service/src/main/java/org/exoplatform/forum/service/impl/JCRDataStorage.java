@@ -4512,18 +4512,24 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 	}
 
 	private String getScreenName(SessionProvider sProvider, String userName) throws Exception {
-		String userTemp = userName;
 		try {
 			Node userProfile = getUserProfileNode(getUserProfileHome(sProvider), userName);
+			return getScreenName(userName, userProfile);
+		} catch (Exception e) {
+			return getScreenName(userName, null);
+		}
+	}
+
+	private String getScreenName(String userName, Node userProfile) throws Exception {
+		String userTemp = userName;
+		if(userProfile != null) {
 			PropertyReader reader = new PropertyReader(userProfile);
 			userName = reader.string(EXO_SCREEN_NAME, reader.string(EXO_FULL_NAME, userName));
-		} catch (Exception e) {
-			log.debug("Failed to get scrennName for user " + userName, e);
-		}
+		} 
 		return (userTemp.contains(Utils.DELETED)) ? "<s>"
 				+ ((userName.contains(Utils.DELETED)) ? userName.substring(0, userName.indexOf(Utils.DELETED)) : userName) + "</s>" : userName;
 	}
-
+	
 	private boolean isBanIp(String ip) throws Exception {
 		return (getBanList().contains(ip)) ? true : false;
 	}
@@ -4537,12 +4543,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 			Node profileNode = getUserProfileHome(sProvider).getNode(userName);
 			userProfile.setUserId(userName);
 			userProfile.setUserTitle(profileNode.getProperty(EXO_USER_TITLE).getString());
-			try {
-				userProfile.setScreenName(profileNode.getProperty(EXO_SCREEN_NAME).getString());
-			} catch (Exception e) {
-				userProfile.setScreenName(userName);
-			}
-
+			userProfile.setScreenName(getScreenName(userName, profileNode));
 			userProfile.setSignature(profileNode.getProperty(EXO_SIGNATURE).getString());
 			userProfile.setIsDisplaySignature(profileNode.getProperty(EXO_IS_DISPLAY_SIGNATURE).getBoolean());
 			userProfile.setIsDisplayAvatar(profileNode.getProperty(EXO_IS_DISPLAY_AVATAR).getBoolean());
@@ -4708,8 +4709,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 			newProfileNode = getUserProfileNode(userProfileNode, userName);
 			PropertyReader reader = new PropertyReader(newProfileNode);
 			userProfile.setUserId(userName);
-
-			userProfile.setScreenName(reader.string(EXO_SCREEN_NAME, userName));
+			userProfile.setScreenName(getScreenName(userName, newProfileNode));
 			userProfile.setFullName(reader.string(EXO_FULL_NAME));
 			userProfile.setFirstName(reader.string(EXO_FIRST_NAME));
 			userProfile.setLastName(reader.string(EXO_LAST_NAME));
@@ -4753,16 +4753,17 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 		List<UserProfile> profiles = new ArrayList<UserProfile>();
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		PropertyReader reader;
+		Node userProfileNode;
 		try {
 			Node userProfileHome = getUserProfileHome(sProvider);
 			for (String userName : userList) {
 				userProfile = new UserProfile();
-				reader = new PropertyReader(getUserProfileNode(userProfileHome, userName));
+				userProfileNode = getUserProfileNode(userProfileHome, userName) ;
+				reader = new PropertyReader(userProfileNode);
 				userProfile.setUserId(userName);
 				userProfile.setUserRole((userName.contains(Utils.DELETED)) ? 4 : reader.l(EXO_USER_ROLE, 2));
 				userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
-				userProfile.setScreenName(reader.string(EXO_SCREEN_NAME, userName));
-
+				userProfile.setScreenName(getScreenName(userName, userProfileNode));
 				userProfile.setJoinedDate(reader.date(EXO_JOINED_DATE, new Date()));
 				userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR, false));
 				userProfile.setTotalPost(reader.l(EXO_TOTAL_POST));
@@ -4789,12 +4790,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 		try {
 			Node userProfileHome = getUserProfileHome(sProvider);
 			userProfile = new UserProfile();
-			PropertyReader reader = new PropertyReader(getUserProfileNode(userProfileHome, userName));
+			Node userProfileNode = getUserProfileNode(userProfileHome, userName);
+			PropertyReader reader = new PropertyReader(userProfileNode);
 			userProfile.setUserId(userName);
 			userProfile.setUserRole((userName.contains(Utils.DELETED)) ? 4 : reader.l(EXO_USER_ROLE, 2));
 			userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
-			userProfile.setScreenName(reader.string(EXO_SCREEN_NAME, userName));
-
+			userProfile.setScreenName(getScreenName(userName, userProfileNode));
 			userProfile.setJoinedDate(reader.date(EXO_JOINED_DATE, new Date()));
 			userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR, false));
 			userProfile.setTotalPost(reader.l(EXO_TOTAL_POST));
@@ -4921,11 +4922,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 		UserProfile userProfile = new UserProfile();
 		userProfile.setUserId(userProfileNode.getName());
 		userProfile.setUserTitle(userProfileNode.getProperty(EXO_USER_TITLE).getString());
-		try {
-			userProfile.setScreenName(userProfileNode.getProperty(EXO_SCREEN_NAME).getString());
-		} catch (Exception e) {
-			userProfile.setScreenName(userProfileNode.getName());
-		}
+		userProfile.setScreenName(getScreenName(userProfileNode.getName(), userProfileNode));
 		userProfile.setFullName(userProfileNode.getProperty(EXO_FULL_NAME).getString());
 		userProfile.setFirstName(userProfileNode.getProperty(EXO_FIRST_NAME).getString());
 		userProfile.setLastName(userProfileNode.getProperty(EXO_LAST_NAME).getString());

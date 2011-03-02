@@ -56,6 +56,7 @@
 			}
 			UserProfile userInfo = uicomponent.getUserInfo(owner) ;
 			screenName = userInfo.getScreenName();
+			String viewScreenName = uicomponent.getScreenName(screenName);
 			String classIconPost = post.getIcon() ;
 			if(ForumUtils.isEmpty(classIconPost)) 
 				classIconPost = "NormalTopicIcon" ;
@@ -114,7 +115,7 @@
 								%>
 								<div class="MemberName">
 									<div class="State $userSmile" title="${screenName}'s $titleSmile"><span></span></div>
-									<div class="Name">$screenName</div>
+									<div class="Name">$viewScreenName</div>
 									<div style="clear:left;"><span></span></div>
 								</div>
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
