@@ -216,12 +216,11 @@ public class FAQUtils {
 			contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
 		if (profile.getAttribute("user.home-info.online.uri") != null)
 			contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
-		FileAttachment fileAttachment = faqService.getUserAvatar(userId);
-		if (fileAttachment == null || fileAttachment.getSize() == 0) {
-			if (profile.getAttribute("user.other-info.avatar.url") != null)
+			String urlAvt = getUserAvatar(userId);
+		if (urlAvt.indexOf(org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL) >= 0 && profile.getAttribute("user.other-info.avatar.url") != null) {
 				contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
 		} else {
-			contact.setAvatarUrl(getFileSource(fileAttachment, dservice));
+			contact.setAvatarUrl(urlAvt);
 		}
 	}
 
@@ -514,15 +513,19 @@ public class FAQUtils {
 		return calendar;
 	}
 
-  public static String getUserAvatar(String userName) throws Exception {
-    String url = "";
-    FAQService service = getFAQService();
-    FileAttachment avatar = service.getUserAvatar(userName);
-    if (avatar != null) {
-      url = Utils.getImageUrl(avatar.getPath());
-    }
-    return url;
-  }
+	public static String getUserAvatar(String userName) throws Exception {
+		String url = "";
+		try {
+			FAQService service = getFAQService();
+			FileAttachment avatar = service.getUserAvatar(userName);
+			if (avatar != null) {
+				url = Utils.getImageUrl(avatar.getPath()) + "?size=" + avatar.getSize();
+			}
+		} catch (Exception e) {
+			log.debug("Failed to get user avatar of user: " + userName, e);
+		}
+		return (isFieldEmpty(url)) ? org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL : url;
+	}
 	
 	
 	private static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
@@ -534,21 +537,6 @@ public class FAQUtils {
 			InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
 			dresource.setDownloadName(fileName);
 			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-		}
-		return null;
-	}
-
-	public static String getFileSource(FileAttachment attachment, DownloadService dservice) {
-		if (dservice == null)
-			dservice = (DownloadService) PortalContainer.getComponent(DownloadService.class);
-		try {
-			InputStream input = attachment.getInputStream();
-			String fileName = attachment.getName();
-			if (fileName == null || fileName.trim().length() < 1)
-				fileName = "avatar." + attachment.getMimeType();
-			// String fileName = attachment.getNodeName() ;
-			return getFileSource(input, fileName, dservice);
-		} catch (Exception e) {
 		}
 		return null;
 	}

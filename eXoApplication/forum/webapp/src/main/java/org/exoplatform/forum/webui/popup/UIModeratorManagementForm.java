@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
@@ -539,7 +538,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 	}
 	
 	public void setUserAvatarURL(String userId){
-		userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, getForumService(), getApplicationComponent(DownloadService.class));
+		userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, getForumService());
 	}
 	
 	private void searchUserProfileByKey(String keyword) throws Exception {
@@ -844,13 +843,13 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 	
 	static	public class SetDeaultAvatarActionListener extends BaseEventListener<UIModeratorManagementForm> {
 		public void onEvent(Event<UIModeratorManagementForm> event, UIModeratorManagementForm uiForm, String objectId) throws Exception {
-			if(uiForm.userAvartarUrl.equals("/forum/skin/DefaultSkin/webui/background/Avatar1.gif")) return;
+			if(uiForm.userAvartarUrl.equals(ForumSessionUtils.DEFAULT_AVATAR)) return;
 			String userId = ((UIFormStringInput)uiForm.findComponentById(FIELD_USERID_INPUT)).getValue();
 			try {
 				uiForm.getForumService().setDefaultAvatar(userId);
 			} catch (Exception e) {
 			}
-			uiForm.userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, uiForm.getForumService(), uiForm.getApplicationComponent(DownloadService.class));
+			uiForm.userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, uiForm.getForumService());
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}

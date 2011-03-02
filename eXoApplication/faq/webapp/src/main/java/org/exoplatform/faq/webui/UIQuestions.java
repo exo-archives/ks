@@ -397,15 +397,8 @@ public class UIQuestions extends UIContainer {
 		return languageMap.keySet().toArray(new String[] {});
 	}
 
-	private String getAvatarUrl(String userId) {
-		try {
-			String url = FAQUtils.getFileSource(faqService_.getUserAvatar(userId), null);
-			if (FAQUtils.isFieldEmpty(url))
-				url = Utils.DEFAULT_AVATAR_URL;
-			return url;
-		} catch (Exception e) {
-		}
-		return Utils.DEFAULT_AVATAR_URL;
+	private String getAvatarUrl(String userId) throws Exception {
+		return FAQUtils.getUserAvatar(userId);
 	}
 
 	public String getCategoryId() {

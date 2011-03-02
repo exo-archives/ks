@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
@@ -122,7 +121,6 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	private JCRPageList pageList ;
 	UIForumPageIterator pageIterator ;
-	private final String defaultAvatar = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 	
 	public UIForumUserSettingForm() throws Exception {
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
@@ -375,16 +373,8 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 	}
 	
 	@SuppressWarnings("unused")
-	private String getAvatarUrl(){
-		String url = defaultAvatar;
-		try {
-			DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-			url = ForumSessionUtils.getUserAvatarURL(UserHelper.getCurrentUser(), this.getForumService(), dservice);
-		} catch (Exception e) {
-			url = defaultAvatar;
-		}
-		if(url == null || url.trim().length() < 1) url = defaultAvatar;
-		return url;
+	private String getAvatarUrl() throws Exception{
+		return ForumSessionUtils.getUserAvatarURL(UserHelper.getCurrentUser(), this.getForumService());
 	}
 	
 	public UIFormSelectBoxForum getUIFormSelectBoxForum(String name) {

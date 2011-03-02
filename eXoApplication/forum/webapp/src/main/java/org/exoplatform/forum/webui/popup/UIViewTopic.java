@@ -205,9 +205,9 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
 	private String getAvatarUrl(String userId) throws Exception {
-		String url = ForumSessionUtils.getUserAvatarURL(userId, forumService, getApplicationComponent(DownloadService.class));
-		return url;
+		return ForumSessionUtils.getUserAvatarURL(userId, forumService);
 	}
+	
 	@SuppressWarnings("unused")
 	private boolean isOnline(String userId) throws Exception {
 		return this.forumService.isOnline(userId) ;

@@ -540,6 +540,10 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 			return null;
 		}
 	}
+	
+	public String getAvatarUrl(String userId) throws Exception {
+		return ForumSessionUtils.getUserAvatarURL(userId, getForumService());
+	}
 
 	public CommonContact getPersonalContact(String userId) throws Exception {
 		CommonContact contact ;
@@ -553,12 +557,6 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 		return contact ;
 	}
 	
-	public String getAvatarUrl(CommonContact contact, String userId) throws Exception {
-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		return ForumSessionUtils.getUserAvatarURL(userId, getForumService(), dservice);
-	}
-
-
 	public void initPage() throws Exception {
 		objectId = topicId;
 		isDoubleClickQuickReply = false;

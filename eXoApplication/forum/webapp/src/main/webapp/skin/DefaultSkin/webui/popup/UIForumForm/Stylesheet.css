@@ -72,5 +72,5 @@
 /********KS-2315*********/
 
 .UIFormForum  .UIFormInput .UIFormUploadInput .UploadIframe iframe{
-	width: auto;
+	width: 360px;
 }

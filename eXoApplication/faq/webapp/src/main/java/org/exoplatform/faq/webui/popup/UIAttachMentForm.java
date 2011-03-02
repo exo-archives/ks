@@ -22,6 +22,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.ks.common.webui.BaseUIForm;
@@ -129,14 +130,11 @@ public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
 					attachMentForm.warning("UIAttachMentForm.msg.avatar-upload-long");
 					return;
 				}
-				FAQService service = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
-				service.saveUserAvatar(FAQUtils.getCurrentUser(), listFileAttachment.get(0));
 				String currentUser = FAQUtils.getCurrentUser();
-				String avatarUrl = FAQUtils.getUserAvatar(currentUser);
-				if (avatarUrl == null || avatarUrl.trim().length() < 1)
-					avatarUrl = attachMentForm.getLabel("AvatarURL");
+				FAQService service = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+				service.saveUserAvatar(currentUser, listFileAttachment.get(0));
 				UISettingForm settingForm = portlet.findFirstComponentOfType(UISettingForm.class);
-				settingForm.setAvatarUrl(avatarUrl);
+				settingForm.setAvatarUrl(FAQUtils.getUserAvatar(currentUser));
 				event.getRequestContext().addUIComponentToUpdateByAjax(settingForm);
 			} else {
 				UIQuestionForm questionForm = portlet.findFirstComponentOfType(UIQuestionForm.class);

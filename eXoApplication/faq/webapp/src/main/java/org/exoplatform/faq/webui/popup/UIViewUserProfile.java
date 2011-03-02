@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.user.ContactProvider;
@@ -79,14 +78,7 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 
 	@SuppressWarnings("unused")
 	private String getAvatarUrl(String userId) throws Exception {
-		try {
-			String url = FAQUtils.getFileSource(faqService_.getUserAvatar(userId), null);
-			if (FAQUtils.isFieldEmpty(url))
-				url = Utils.DEFAULT_AVATAR_URL;
-			return url;
-		} catch (Exception e) {
-		}
-		return Utils.DEFAULT_AVATAR_URL;
+		return FAQUtils.getUserAvatar(userId);
 	}
 
 	public void setUser(User userName, FAQService faqService) {

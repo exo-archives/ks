@@ -41,6 +41,7 @@ import org.exoplatform.services.log.Log;
 public class ForumSessionUtils {
 	
   static private final Log LOG = ExoLogger.getLogger(ForumSessionUtils.class);
+  public final static String DEFAULT_AVATAR = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif"; 
   
   /**
    * create an avatar link for user. 
@@ -49,24 +50,22 @@ public class ForumSessionUtils {
    * else, return default url: <a>/forum/skin/DefaultSkin/webui/background/Avatar1.gif</a>.
    * @param userName
    * @param forumService
-   * @param dservice
    * @return
    */
-	public static String getUserAvatarURL(String userName, ForumService forumService, DownloadService dservice){
+	public static String getUserAvatarURL(String userName, ForumService forumService){
 		String url = null;
 		try{
 			ForumAttachment attachment = forumService.getUserAvatar(userName);
-			url = ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
-			return url;
+			url = org.exoplatform.ks.common.Utils.getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
 		}catch (Exception e){
 		  if (LOG.isDebugEnabled()) LOG.debug(String.format("can not load avatar of [%s] as file resource", userName), e);
 		}
-    CommonContact contact = getPersonalContact(userName);
-    if (contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0) {
-      url = contact.getAvatarUrl();
-    }
-		if(url == null || url.trim().length() < 1){
-		  url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+    if(url == null || url.trim().length() < 1){
+    	CommonContact contact = getPersonalContact(userName);
+	    if (contact != null && contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0) {
+	      url = contact.getAvatarUrl();
+	    }
+		  url = (url == null || url.trim().length() < 1)?DEFAULT_AVATAR:url;
 		}
 		return url;
 	}

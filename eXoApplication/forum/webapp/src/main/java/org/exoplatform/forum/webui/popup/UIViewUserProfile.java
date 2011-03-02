@@ -108,10 +108,8 @@ public class UIViewUserProfile extends BaseUIForm implements UIPopupComponent {
 		return contact ;
 	}
 	
-	private String getAvatarUrl(CommonContact contact) throws Exception {
-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		String url = ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService, dservice);
-		return url;
+	private String getAvatarUrl() throws Exception {
+		return ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService);
 	}
 	
 	private String[] getLabelProfile() {

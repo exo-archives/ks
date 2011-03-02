@@ -257,9 +257,6 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
 			addUIFormInput((new UIFormCheckBoxInput<Boolean>(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
 
 			setAvatarUrl(FAQUtils.getUserAvatar(FAQUtils.getCurrentUser()));
-
-			if (avatarUrl == null || avatarUrl.trim().length() < 1)
-				avatarUrl = Utils.DEFAULT_AVATAR_URL;
 		}
 	}
 
@@ -268,18 +265,12 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
     return avatarUrl != null && avatarUrl.indexOf(Utils.DEFAULT_AVATAR_URL) >= 0;
   }
 
-  private Random random = new Random();
 
   /**
    * @return the avatarUrl
    */
   public String getAvatarUrl() {
-    String tempUrl = avatarUrl;
-    if (!isDefaultAvatar()) {
-      // add random id to avoid caching image on Firefox.
-      tempUrl = tempUrl + "?avatarRandomId=" + random.nextLong();
-    }
-    return tempUrl;
+    return avatarUrl;
   }
 
   public void setAvatarUrl(String url) {

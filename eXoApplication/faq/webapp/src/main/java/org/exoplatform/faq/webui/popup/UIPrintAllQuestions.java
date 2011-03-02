@@ -30,7 +30,6 @@ import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
-import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.ks.common.webui.BaseUIForm;
@@ -56,6 +55,7 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIPrintAllQuestions.CloseActionListener.class) 
 		}
 )
+@SuppressWarnings("unused")
 public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent {
 	private String[] sizes_ = new String[] { "bytes", "KB", "MB" };
 	private String categoryId = null;
@@ -92,26 +92,6 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
 		return "";
 	}
 
-	@SuppressWarnings("unused")
-	private String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
-		byte[] imageBytes = null;
-		if (input != null) {
-			imageBytes = new byte[input.available()];
-			input.read(imageBytes);
-			ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-			InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
-			dresource.setDownloadName(fileName);
-			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-		}
-		return null;
-	}
-
-	/*
-	 * private String getFileSource(FileAttachment attachment) throws Exception { DownloadService dservice = getApplicationComponent(DownloadService.class) ; try { InputStream input =
-	 * attachment.getInputStream() ; String fileName = attachment.getName() ; //String fileName = attachment.getNodeName() ; return getFileSource(input, fileName, dservice); } catch (Exception e) { }
-	 * return null; }
-	 */
-
 	public String getImageUrl(String imagePath) throws Exception {
 		String url = "";
 		try {
@@ -122,15 +102,8 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
 		return url;
 	}
 
-	private String getAvatarUrl(String userId) {
-		try {
-			String url = FAQUtils.getFileSource(faqService_.getUserAvatar(userId), null);
-			if (FAQUtils.isFieldEmpty(url))
-				url = Utils.DEFAULT_AVATAR_URL;
-			return url;
-		} catch (Exception e) {
-		}
-		return Utils.DEFAULT_AVATAR_URL;
+	private String getAvatarUrl(String userId) throws Exception {
+		return FAQUtils.getUserAvatar(userId);
 	}
 
 	private String convertSize(long size) {
