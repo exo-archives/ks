@@ -23,6 +23,7 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
+import org.exoplatform.services.security.ConversationState;
 @Path("ks/forum")
 public class ForumWebservice implements ResourceContainer {
 
@@ -44,7 +45,8 @@ public class ForumWebservice implements ResourceContainer {
 	  cacheControl.setNoStore(true);
 	  try{		  
 		  ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-		  List<Post> list = forumService.getNewPosts(maxcount);
+		  String userName = getUserId();// if userName == null, for get new public posts.
+		  List<Post> list = forumService.getNewPostsByUser(userName, maxcount);
 		  if(list != null) {
 			  for (Post post : list) {
 			  	post.setLink(post.getLink() + "/" + post.getId());
@@ -58,7 +60,28 @@ public class ForumWebservice implements ResourceContainer {
 	  }
   }
 
-
+  @GET
+  @Path("getpublicmessage/{maxcount}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getPulicMessage(@PathParam("maxcount") int maxcount) throws Exception {
+  	CacheControl cacheControl = new CacheControl();
+  	cacheControl.setNoCache(true);
+  	cacheControl.setNoStore(true);
+  	try{		  
+  		ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+  		List<Post> list = forumService.getNewPostsByUser(null, maxcount);
+  		if(list != null) {
+  			for (Post post : list) {
+  				post.setLink(post.getLink() + "/" + post.getId());
+  			}
+  		}
+  		MessageBean data = new MessageBean();
+  		data.setData(list);
+  		return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+  	}catch(Exception e){
+  		return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cacheControl).build();
+  	}
+  }
 
   @GET
   @Path("filter/{strIP}")
@@ -169,5 +192,13 @@ public class ForumWebservice implements ResourceContainer {
       log.trace("\nGet UserRSS fail: ", e);
       return Response.status(Status.INTERNAL_SERVER_ERROR).build() ;
     }
+  }
+  
+  private String getUserId() {
+		String username = "";
+		try {
+			username = ConversationState.getCurrent().getIdentity().getUserId();
+		} catch (Exception e) {}
+		return username;
   }
 }

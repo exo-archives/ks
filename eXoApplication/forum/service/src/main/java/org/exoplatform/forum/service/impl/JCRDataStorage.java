@@ -67,7 +67,6 @@ import org.exoplatform.forum.service.CalculateModeratorEventListener;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.DeletedUserCalculateEventListener;
-import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -83,6 +82,7 @@ import org.exoplatform.forum.service.ForumSubscription;
 import org.exoplatform.forum.service.JCRForumAttachment;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.LazyPageList;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.SortSettings;
@@ -7802,24 +7802,113 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 		}
 	}
 
+	public List<Post> getNewPostsByUser(String userName, int number) throws Exception {
+		if(Utils.isEmpty(userName) || UserProfile.USER_GUEST.equals(userName)) {
+			return getNewPosts(number);
+		}
+		List<Post> list = null;
+		SessionProvider sProvider = SessionProvider.createSystemProvider();
+		try {
+			boolean isAdmin = isAdminRole(userName);
+			if(!isAdmin) {
+				try {
+					isAdmin = (new PropertyReader(getUserProfileNode(getUserProfileHome(sProvider), userName)).l(EXO_USER_ROLE) == 0) ? true:false;
+				} catch (Exception e) {}
+			}
+			Node categoryHome = getCategoryHome(sProvider);
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,").append(EXO_POST).append(")[("); 
+			if(!isAdmin) stringBuffer.append("(@").append(EXO_IS_APPROVED).append("='true') and (@").append(EXO_IS_HIDDEN)
+															 .append("='false') and (@").append(EXO_IS_ACTIVE_BY_TOPIC).append("='true') and ");
+			stringBuffer.append("(@").append(EXO_USER_PRIVATE).append("='exoUserPri' or @").append(EXO_USER_PRIVATE)
+									.append("='").append(userName).append("'))]").append(" order by @").append(EXO_CREATED_DATE).append(" descending");
+			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			int count = 0;
+			/*
+			 cateids = list query
+			 cateids = listinput -> public for property (null for view)
+			 cateids = {cateid} for private --> can not view
+			 cateids = new array for view --> can not view
+			*/
+			List<String> categoryCanView = new ArrayList<String>();
+			List<String> forumCanView = new ArrayList<String>();
+			if(!isAdmin) {
+				List<String> listOfUser = ForumServiceUtils.getAllGroupAndMembershipOfUser(userName);
+				Map<String, List<String>> mapPrivate = getCategoryViewer(categoryHome, listOfUser, new ArrayList<String>(), new ArrayList<String>(), "@"+EXO_USER_PRIVATE);
+				List<String> categoryIds = mapPrivate.get(Utils.CATEGORY);//all categoryid public for private user
+				
+				Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, null, new ArrayList<String>(), "@"+EXO_VIEWER);
+				List<String> categoryView = mapList.get(Utils.CATEGORY);
+				// private
+				if(categoryIds.contains("cateId") || (categoryView != null && categoryView.isEmpty())) return new ArrayList<Post>();
+				
+				if(categoryIds.isEmpty()) {
+					categoryCanView.addAll((categoryView == null?new ArrayList<String>():categoryView));
+				} else {
+					for (String string : categoryIds) {
+						if(categoryView == null || categoryView.contains(string)) categoryCanView.add(string);
+					}
+				}
+				forumCanView.addAll(getForumUserCanView(categoryHome, new ArrayList<String>(), new ArrayList<String>()));
+			}
+			Node node;
+			String []path;
+			while (iter.hasNext() && count < number) {
+				if (list == null)
+					list = new ArrayList<Post>();
+				node = iter.nextNode();
+				path = node.getPath().split("/");
+				if((categoryCanView.isEmpty() || categoryCanView.contains(path[path.length - 4])) && (forumCanView.isEmpty() || forumCanView.contains(path[path.length - 3]))){
+					list.add(getPost(node));
+					count ++;
+				}
+			}
+		} catch (Exception e) {
+			log.debug("Failed to get new post.", e);
+		} finally {
+			sProvider.close();
+		}
+		
+		return list;
+	}
+	
 	public List<Post> getNewPosts(int number) throws Exception {
 		List<Post> list = null;
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
-		Node forumHomeNode = getForumHomeNode(sProvider);
-		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
+		Node categoryHome = getCategoryHome(sProvider);
+		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append(JCR_ROOT).append(forumHomeNode.getPath())
-				.append("//element(*,exo:post) [((@exo:isApproved='true') and (@exo:isHidden='false') and (@exo:isActiveByTopic='true') and (@exo:userPrivate='exoUserPri'))] order by @exo:createdDate descending");
+		stringBuffer.append(JCR_ROOT).append(categoryHome.getPath())
+			.append("//element(*,").append(EXO_POST).append(") [((@").append(EXO_IS_APPROVED).append("='true') and (@").append(EXO_IS_HIDDEN)
+			.append("='false') and (@").append(EXO_IS_ACTIVE_BY_TOPIC).append("='true') and (@").append(EXO_USER_PRIVATE).append("='exoUserPri'))] order by @").append(EXO_CREATED_DATE).append(" descending");
 		Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
 		int count = 0;
-		while (iter.hasNext() && count++ < number) {
+		
+		Node node;
+		while (iter.hasNext() && count < number) {
 			if (list == null)
 				list = new ArrayList<Post>();
-			list.add(getPost(iter.nextNode()));
+			node = iter.nextNode();
+			if(postIsPublicByParent(node)){
+				list.add(getPost(node));
+				count ++;
+			}
 		}
 		return list;
+	}
+
+	private boolean postIsPublicByParent(Node postNode) throws Exception {
+		Node node = postNode.getParent();
+		if (!new PropertyReader(node).list(EXO_CAN_VIEW, new ArrayList<String>()).isEmpty()) return false;
+		if (!new PropertyReader(node = node.getParent()).list(EXO_VIEWER, new ArrayList<String>()).isEmpty()) return false;
+		if (!new PropertyReader(node = node.getParent()).list(EXO_VIEWER, new ArrayList<String>()).isEmpty()) return false;
+		if (!new PropertyReader(node).list(EXO_USER_PRIVATE, new ArrayList<String>()).isEmpty()) return false;
+		return true;
 	}
 
 	public boolean deleteUserProfile(String userId) throws Exception {

@@ -766,4 +766,10 @@ public class FakeForumService implements ForumService {
 		
 	}
 
+	@Override
+	public List<Post> getNewPostsByUser(String userName, int number) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

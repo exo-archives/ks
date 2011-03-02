@@ -980,6 +980,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   List<Post> getNewPosts(int number) throws Exception;
+  List<Post> getNewPostsByUser(String userName, int number) throws Exception;
 
   /**
    * Search  node
