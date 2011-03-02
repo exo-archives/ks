@@ -76,16 +76,16 @@ UIWikiPortlet.prototype.changeMode = function(event) {
   var me = eXo.wiki.UIWikiPortlet;
   var currentURL = document.location.href;
   var mode = "";
-  if (currentURL.indexOf("#") > 0) {
+   if(currentURL.indexOf("action=AddPage") > 0) {
+    mode = "AddPage";
+  } else if (currentURL.indexOf("#") > 0) {
     mode = currentURL.substring(currentURL.indexOf("#") + 1, currentURL.length);
     if (mode && mode.length > 0 && mode.charAt(0) == 'H') {
       mode = "";
     }
     if (mode.indexOf("/") > 0)
       mode = mode.substring(0, mode.indexOf("/"));
-  } else if(currentURL.indexOf("action=AddPage") > 0) {
-    mode = "AddPage";
-  }
+  } 
   var link = me.changeModeLink;
   var endParamIndex = link.href.lastIndexOf("')");
   var modeIndex = link.href.indexOf("&mode");
