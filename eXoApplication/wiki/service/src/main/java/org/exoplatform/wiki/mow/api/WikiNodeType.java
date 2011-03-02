@@ -167,5 +167,7 @@ public interface WikiNodeType {
     public final static String RELATION                    = "exo:relation";
     
     public final static String DESCRIPTION                = "description";
+    
+    public final static String URL                        = "url";
   }
 }

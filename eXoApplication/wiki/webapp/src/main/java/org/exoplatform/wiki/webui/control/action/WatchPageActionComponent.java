@@ -19,6 +19,16 @@ package org.exoplatform.wiki.webui.control.action;
 import java.util.Arrays;
 import java.util.List;
 
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.resource.SkinConfig;
+import org.exoplatform.portal.resource.SkinService;
+import org.exoplatform.portal.webui.application.UIPortlet;
+import org.exoplatform.portal.webui.page.UIPageBody;
+import org.exoplatform.portal.webui.portal.UIPortal;
+import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.portal.webui.workspace.UIPortalApplication;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -31,6 +41,7 @@ import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.WatchedMixin;
+import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.webui.control.filter.IsUserFilter;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
@@ -59,6 +70,8 @@ public class WatchPageActionComponent extends UIComponent {
   }
   
   public boolean detectWatched(boolean isChangeState) throws Exception {
+    RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer()
+                                                                              .getComponentInstanceOfType(RenderingService.class);
     ConversationState conversationState = ConversationState.getCurrent();
     String currentUserId = conversationState.getIdentity().getUserId();
     PageImpl currentPage = (PageImpl) Utils.getCurrentWikiPage();
@@ -80,12 +93,35 @@ public class WatchPageActionComponent extends UIComponent {
         watchers.remove(currentUserId);
       } else {
         // Begin watching
-        watchers.add(currentUserId);
+        watchers.add(currentUserId);        
+      }
+      if (renderingService.getCssURL() == null) {
+        renderingService.setCssURL(getPortletCssLink());
       }
       mixin.setWatchers(watchers);
       currentPage.setWatchedMixin(mixin);
     }
     return isWatched;
+  }
+
+  private String getPortletCssLink() {
+    SkinService skinService = (SkinService) PortalContainer.getComponent(SkinService.class);
+    PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
+    String requestURL = portalRequestContext.getRequest().getRequestURL().toString();
+    String portalURI = portalRequestContext.getPortalURI();
+    String domainURL = requestURL.substring(0, requestURL.indexOf(portalURI));
+    UIPortal uiPortal = Util.getUIPortal();
+    UIPortalApplication uiPortalApp = uiPortal.getAncestorOfType(UIPortalApplication.class);
+    String currentSkin = uiPortalApp.getSkin();
+    UIPageBody uiPageBody = uiPortal.findFirstComponentOfType(UIPageBody.class);
+    if (uiPageBody != null) {
+      UIPortlet currentPortlet = (UIPortlet) uiPageBody.findFirstComponentOfType(UIPortlet.class);
+      SkinConfig skinConfig = skinService.getSkin(currentPortlet.getSkinId(), currentSkin);
+      StringBuilder sb = new StringBuilder(domainURL);
+      sb.append(skinConfig.getCSSPath());
+      return sb.toString();
+    }
+    return null;
   }
 
   public static class WatchPageActionListener extends

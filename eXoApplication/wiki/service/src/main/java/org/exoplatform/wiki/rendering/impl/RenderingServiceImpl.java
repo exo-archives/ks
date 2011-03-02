@@ -59,11 +59,13 @@ import org.xwiki.xml.html.HTMLUtils;
  * 5, 2009
  */
 public class RenderingServiceImpl implements RenderingService, Startable {
+  
+  private String cssURL; 
 
   private Log LOG = ExoLogger.getExoLogger(RenderingServiceImpl.class);
   EmbeddableComponentManager componentManager = null;
 
-  public Execution getExecutionContext() throws ComponentLookupException, ComponentRepositoryException{
+  public Execution getExecution() throws ComponentLookupException, ComponentRepositoryException{
     return componentManager.lookup(Execution.class);
   }
   
@@ -303,6 +305,14 @@ public class RenderingServiceImpl implements RenderingService, Startable {
     }
 
     return syntax;
+  }
+
+  public String getCssURL() {
+    return cssURL;
+  }
+
+  public void setCssURL(String cssURL) {
+    this.cssURL = cssURL;
   }
 
 }

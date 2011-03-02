@@ -31,5 +31,9 @@ public interface RenderingService {
   public String updateContentOfSection(String markup, String sourceSyntax, String sectionIndex, String newSectionContent) throws Exception;
   
   public XDOM parse(String markup, String sourceSyntax) throws Exception;
+  
+  public String getCssURL();
+
+  public void setCssURL(String cssURL);
 
 }

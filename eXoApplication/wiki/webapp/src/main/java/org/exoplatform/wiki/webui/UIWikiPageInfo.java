@@ -117,11 +117,13 @@ public class UIWikiPageInfo extends UIWikiContainer {
 
   String renderHierarchy() throws Exception {
     RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
-    Utils.setUpWikiContext(getAncestorOfType(UIWikiPortlet.class), renderingService);
-    return renderingService.render("{{pagetree /}}",
-                                   Syntax.XWIKI_2_0.toIdString(),
-                                   Syntax.XHTML_1_0.toIdString(),
-                                   false);
+    Utils.setUpWikiContext(getAncestorOfType(UIWikiPortlet.class));
+    String content = renderingService.render("{{pagetree /}}",
+                                             Syntax.XWIKI_2_0.toIdString(),
+                                             Syntax.XHTML_1_0.toIdString(),
+                                             false);
+    Utils.removeWikiContext();
+    return content;
   }
 
   static public class AddRelatedPageActionListener extends EventListener<UIWikiPageInfo> {

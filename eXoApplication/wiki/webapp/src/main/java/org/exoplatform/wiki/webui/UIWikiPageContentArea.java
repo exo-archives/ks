@@ -19,10 +19,6 @@ package org.exoplatform.wiki.webui;
 import java.util.Arrays;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.portal.UIPortal;
-import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
@@ -33,14 +29,8 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
-import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
 import org.exoplatform.wiki.service.PermissionType;
-import org.exoplatform.wiki.service.WikiContext;
-import org.exoplatform.wiki.service.WikiPageParams;
-import org.exoplatform.wiki.tree.TreeNode.TREETYPE;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
-import org.xwiki.context.Execution;
-import org.xwiki.context.ExecutionContext;
 import org.xwiki.rendering.syntax.Syntax;
 
 /**
@@ -86,30 +76,7 @@ public class UIWikiPageContentArea extends UIWikiContainer {
     PageImpl wikipage = (PageImpl) Utils.getCurrentWikiPage();
     
     //Setup wiki context
-    Execution ec = ((RenderingServiceImpl) renderingService).getExecutionContext();
-    if (ec.getContext() == null) {
-      //
-      PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
-      UIPortal uiPortal = Util.getUIPortal();
-      String portalURI = portalRequestContext.getPortalURI();
-      String pageNodeSelected = uiPortal.getSelectedNode().getUri();
-      //
-      ec.setContext(new ExecutionContext());
-      WikiContext wikiContext = new WikiContext();
-      wikiContext.setPortalURI(portalURI);
-      wikiContext.setPortletURI(pageNodeSelected);
-      wikiContext.setTreeRestURI(Utils.getCurrentRestURL()
-                                      .concat("/wiki/tree/")
-                                      .concat(TREETYPE.CHILDREN.toString()));
-      wikiContext.setRestURI(Utils.getCurrentRestURL());
-      wikiContext.setPageTreeId(IdGenerator.generate());
-      wikiContext.setRedirectURI(getAncestorOfType(UIWikiPortlet.class).getRedirectURL());
-      WikiPageParams params = Utils.getCurrentWikiPageParams();
-      wikiContext.setType(params.getType());
-      wikiContext.setOwner(params.getOwner());
-      wikiContext.setPageId(params.getPageId());
-      ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
-    }
+    Utils.setUpWikiContext(this.getAncestorOfType(UIWikiPortlet.class));
     
     // Render current content
     if (currentMode.equals(WikiMode.VIEW)) {
@@ -127,8 +94,7 @@ public class UIWikiPageContentArea extends UIWikiContainer {
       String pageSyntax = content.getSyntax();
       this.htmlOutput = renderingService.render(pageContent, pageSyntax, Syntax.XHTML_1_0.toIdString(), false);
     }
-    //Remove wiki context
-    ec.removeContext();
+    Utils.removeWikiContext();
     
   }
   

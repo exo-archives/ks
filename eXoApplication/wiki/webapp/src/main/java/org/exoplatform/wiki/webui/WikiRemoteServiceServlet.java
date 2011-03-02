@@ -74,7 +74,7 @@ public class WikiRemoteServiceServlet extends RemoteServiceServlet {
       RPCRequest req = RPC.decodeRequest(payload, null, this);
       RenderingServiceImpl renderingService = (RenderingServiceImpl) portalContainer.getComponentInstanceOfType(RenderingService.class);
       WikiContext wikiContext = (WikiContext) sessionManager.getSessionContext(sessionId);
-      Execution ec = ((RenderingServiceImpl) renderingService).getExecutionContext();
+      Execution ec = ((RenderingServiceImpl) renderingService).getExecution();
       if (ec.getContext() == null) {
         ec.setContext(new ExecutionContext());
         ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);

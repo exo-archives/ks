@@ -182,7 +182,7 @@
 
 /*===========================*/
 
-.UIWikiPortlet .wikicreatelink a {
+.wikicreatelink a {
   color: red;
 }
 
@@ -196,32 +196,32 @@
   display: block;
 }
 
-.UIWikiPortlet .notemessage {
+.notemessage {
   background-image: url("background/exclamation.gif");
   color:#336699;
 }
 
-.UIWikiPortlet .tipmessage {
+.tipmessage {
   background-image: url("background/check.gif");
   color:#336699;
 }
 
-.UIWikiPortlet .infomessage {
+.infomessage {
   background-image: url("background/information.gif");
   color:#336699;
 }
 
-.UIWikiPortlet .warningmessage {
+.warningmessage {
   background-image: url("background/error.gif");
   color:#D5A13D;
 }
 
-.UIWikiPortlet .errormessage {
+.errormessage {
   background-image: url("background/error.gif");
   color:#E14726;
 }
 
-.UIWikiPortlet .panel {
+.panel {
   -moz-border-radius-bottomleft: 5px;
   -moz-border-radius-bottomright: 5px;
   -moz-border-radius-topleft: 5px;
@@ -234,7 +234,7 @@
   padding: 0;
 }
 
-.UIWikiPortlet .panel .panelHeader {
+.panel .panelHeader {
   -moz-border-radius-topleft: 5px;
   -moz-border-radius-topright: 5px;
   border-bottom-color: #F0F0F0;
@@ -246,14 +246,14 @@
   text-align: left;
 }
 
-.UIWikiPortlet .panel .panelContent {
+.panel .panelContent {
   color:#333333;
   margin:10px 0;
   padding:0 10px;
   text-align:left;
 }
 
-.UIWikiPortlet .code {
+.code {
   background-color:#F1F7FF;
   border:1px dotted #555555;
   margin:1em 0;
@@ -261,7 +261,7 @@
   padding:0 1px;
 }
 
-.UIWikiPortlet .code pre {
+.code pre {
   font-family:courier,courier new,monospace;
 }
 
@@ -1413,28 +1413,28 @@
 	font-size: 12px;
 }
 
-.UIWikiPageVersionsCompare .diff  {
+.diff  {
   margin-bottom: -5px;
   overflow: auto;
   padding: 3px 4px;
   white-space: normal;
 }
 
-.UIWikiPageVersionsCompare .diffaddword  {
+.diffaddword  {
   background: #b5ffbf;
 }
 
-.UIWikiPageVersionsCompare .diffremoveword  {
+.diffremoveword  {
   background: #ffd8da;
   text-decoration: line-through;
 }
 
-.UIWikiPageVersionsCompare .prediffaddword  {
+.prediffaddword  {
   background: #b5ffbf;
   margin:0;
 }
 
-.UIWikiPageVersionsCompare .prediffremoveword  {
+.prediffremoveword  {
   background: #ffd8da;
   margin:0;
 }

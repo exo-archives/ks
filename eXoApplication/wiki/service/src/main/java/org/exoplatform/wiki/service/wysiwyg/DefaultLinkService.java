@@ -122,7 +122,7 @@ public class DefaultLinkService implements LinkService {
     org.exoplatform.wiki.service.WikiService wservice = (org.exoplatform.wiki.service.WikiService) PortalContainer.getComponent(org.exoplatform.wiki.service.WikiService.class);
     WikiContext wikiContext = getWikiContext();
     WikiContext context = new WikiContext();
-    context.setPortalURI(wikiContext.getPortalURI());
+    context.setPortalURL(wikiContext.getPortalURL());
     context.setPortletURI(wikiContext.getPortletURI());
     PageImpl page;
     switch (entityReference.getType()) {

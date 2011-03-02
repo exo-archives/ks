@@ -22,7 +22,7 @@ package org.exoplatform.wiki.service;
  *          viet.nguyen@exoplatform.com
  * Apr 8, 2010  
  */
-public class WikiContext extends WikiPageParams {
+public class WikiContext extends WikiPageParams implements Cloneable {
   
   public static final String WIKICONTEXT = "wikicontext";
 
@@ -38,7 +38,7 @@ public class WikiContext extends WikiPageParams {
   
   private String             pageTitle;
   
-  private String             portalURI;
+  private String             portalURL;
 
   private String             portletURI;
   
@@ -58,12 +58,12 @@ public class WikiContext extends WikiPageParams {
     this.pageTitle = pageTitle;
   }
   
-  public String getPortalURI() {
-    return portalURI;
+  public String getPortalURL() {
+    return portalURL;
   }
 
-  public void setPortalURI(String portalURI) {
-    this.portalURI = portalURI;
+  public void setPortalURL(String portalURL) {
+    this.portalURL = portalURL;
   }
 
   public String getPortletURI() {
@@ -110,6 +110,25 @@ public class WikiContext extends WikiPageParams {
    */
   public void setRestURI(String restURI) {
     this.restURI = restURI;
+  }
+
+  @Override
+  public WikiContext clone() throws CloneNotSupportedException {
+    // TODO Auto-generated method stub
+    WikiContext obj = new WikiContext();
+    obj.setAttachmentName(this.getAttachmentName());
+    obj.setOwner(this.getOwner());
+    obj.setPageId(this.getPageId());
+    obj.setPageTitle(this.getPageTitle());
+    obj.setPageTreeId(this.getPageTreeId());
+    obj.setParameters(this.getParameters());
+    obj.setPortalURL(this.getPortalURL());
+    obj.setPortletURI(this.getPortletURI());
+    obj.setRedirectURI(this.getRedirectURI());
+    obj.setRestURI(this.getRestURI());
+    obj.setTreeRestURI(this.getTreeRestURI());
+    obj.setType(this.getType());
+    return obj;
   }
   
 }

@@ -47,11 +47,13 @@ import org.exoplatform.wiki.mow.core.api.wiki.PortalWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.UserWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
+import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.diff.DiffResult;
 import org.exoplatform.wiki.service.diff.DiffService;
+import org.xwiki.rendering.syntax.Syntax;
 
 public class Utils {
   
@@ -166,6 +168,7 @@ public class Utils {
     return wikiOwner;
   }
   
+
   public static String getDefaultRepositoryWebDavUri() {
     StringBuilder sb = new StringBuilder();
     sb.append("/");
@@ -194,7 +197,7 @@ public class Utils {
   
   public static String getDocumentURL(WikiContext wikiContext) {
     StringBuilder sb = new StringBuilder();
-    sb.append(wikiContext.getPortalURI());
+    sb.append(wikiContext.getPortalURL());
     sb.append(wikiContext.getPortletURI());
     sb.append("/");
     if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(wikiContext.getType())) {
@@ -322,6 +325,7 @@ public class Utils {
   public static void sendMailOnChangeContent(ContentImpl content) throws Exception {
     ExoContainer container = ExoContainerContext.getCurrentContainer();
     DiffService diffService = (DiffService) container.getComponentInstanceOfType(DiffService.class);
+    RenderingService renderingService = (RenderingService) container.getComponentInstanceOfType(RenderingService.class);
     Common common = new Common();
     Message message = new Message();
     ConversationState conversationState = ConversationState.getCurrent();
@@ -346,21 +350,36 @@ public class Utils {
     DiffResult diffResult = diffService.getDifferencesAsHTML(previousVersionContent,
                                                              currentVersionContent,
                                                              false);
+    String fullContent = renderingService.render(currentVersionContent,
+                                                 content.getSyntax(),
+                                                 Syntax.XHTML_1_0.toIdString(),
+                                                 false);
+    
     if (diffResult.getChanges() == 0) {
       diffResult.setDiffHTML("No changes, new revision is created.");
-    }    
-    StringBuilder sb = new StringBuilder();
-    sb.append("The page \"" + pageTitle + "\" has been modifed by <b>" + author + "</b>")
-      .append("<br/><br/>")
-      .append("Changes are:")
-      .append("<br/><br/>")
-      .append(insertStyle(diffResult.getDiffHTML()));
+    } 
     
+    StringBuilder sbt = new StringBuilder();
+    sbt.append("<html>")
+       .append("  <head>")
+       .append("     <link rel=\"stylesheet\" href=\""+renderingService.getCssURL() +"\" type=\"text/css\">")
+       .append("  </head>")
+       .append("  <body>")
+       .append("    Page <a href=\""+page.getURL()+"\">" + content.getTitle() +"</a> is modified by " +page.getAuthor())
+       .append("    <br/><br/>")
+       .append("    Changes("+ diffResult.getChanges()+")")
+       .append("    <br/><br/>")
+       .append(     insertStyle(diffResult.getDiffHTML()))
+       .append("    Full content: ")
+       .append("    <br/><br/>")
+       .append(     fullContent)
+       .append("  </body>")
+       .append("</html>");
     // Create message
     message.setFrom(makeNotificationSender(author));    
     message.setSubject("\"" + pageTitle + "\" page was modified");
     message.setMimeType(MIMETYPE_TEXTHTML);
-    message.setBody(sb.toString());
+    message.setBody(sbt.toString());
     try {
       JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
       if (schedulerService != null)
@@ -371,8 +390,6 @@ public class Utils {
 
     }
   }
-  
-
   
   public static boolean isWikiAvailable(String wikiType, String wikiOwner) {
     MOWService mowService = (MOWService) ExoContainerContext.getCurrentContainer()
@@ -458,16 +475,6 @@ public class Utils {
     }
     return false;
   }
-
-  private static String insertStyle(String rawHTML) {
-    String result = rawHTML;
-    result = result.replaceAll("class=\"diffaddword\"", "style=\"background: #b5ffbf;\"");
-    result = result.replaceAll("<span class=\"diffremoveword\">",
-                               "<span style=\" background: #ffd8da;text-decoration: line-through;\">");
-    result = result.replaceAll("<pre class=\"diffremoveword\">",
-                               "<pre style=\" background: #ffd8da;\">");
-    return result;
-  }
   
   private static String makeNotificationSender(String from) {
     InternetAddress addr = null;
@@ -494,4 +501,16 @@ public class Utils {
       return null;
     }
   }
+  
+
+  private static String insertStyle(String rawHTML) {
+    String result = rawHTML;
+    result = result.replaceAll("class=\"diffaddword\"", "style=\"background: #b5ffbf;\"");
+    result = result.replaceAll("<span class=\"diffremoveword\">",
+                               "<span style=\" background: #ffd8da;text-decoration: line-through;\">");
+    result = result.replaceAll("<pre class=\"diffremoveword\">",
+                               "<pre style=\" background: #ffd8da;\">");
+    return result;
+  }
+
 }

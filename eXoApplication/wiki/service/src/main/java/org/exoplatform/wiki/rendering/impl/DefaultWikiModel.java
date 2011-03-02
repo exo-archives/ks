@@ -17,6 +17,7 @@
 package org.exoplatform.wiki.rendering.impl;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.Page;
@@ -67,12 +68,16 @@ public class DefaultWikiModel implements WikiModel {
   
   public String getAttachmentURL(String documentName, String attachmentName) {
     WikiContext wikiMarkupContext = getWikiMarkupContext(documentName);
+    String portalContainerName = PortalContainer.getCurrentPortalContainerName();
+    String portalURL = wikiMarkupContext.getPortalURL();
+    String domainURL = portalURL.substring(0, portalURL.indexOf(portalContainerName)-1);
     if (DEFAULT_ATTACHMENT.equals(wikiMarkupContext.getAttachmentName())
         && (attachmentName != null)) {
       wikiMarkupContext.setAttachmentName(attachmentName);
     }
+    
     StringBuilder sb = new StringBuilder();
-    sb.append(Utils.getDefaultRepositoryWebDavUri());
+    sb.append(domainURL).append(Utils.getDefaultRepositoryWebDavUri());
     PageImpl page = null;
     try {
       WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);
@@ -204,7 +209,7 @@ public class DefaultWikiModel implements WikiModel {
 
       if (wikiContext != null) {
 
-        wikiMarkupContext.setPortalURI(wikiContext.getPortalURI());
+        wikiMarkupContext.setPortalURL(wikiContext.getPortalURL());
         wikiMarkupContext.setPortletURI(wikiContext.getPortletURI());
 
         if (DEFAULT_WIKI.equals(wikiMarkupContext.getType())) {

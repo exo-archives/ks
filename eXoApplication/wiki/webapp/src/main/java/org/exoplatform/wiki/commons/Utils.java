@@ -120,10 +120,13 @@ public class Utils {
   
   public static String getURLFromParams(WikiPageParams params) throws Exception {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
+    String requestURL = portalRequestContext.getRequest().getRequestURL().toString();
     String portalURI = portalRequestContext.getPortalURI();
+    String domainURL = requestURL.substring(0, requestURL.indexOf(portalURI));
+
     UIPortal uiPortal = Util.getUIPortal();
     String pageNodeSelected = uiPortal.getSelectedNode().getUri();
-    StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder(domainURL);
     sb.append(portalURI);
     sb.append(pageNodeSelected);
     sb.append("/");
@@ -181,41 +184,35 @@ public class Utils {
     String owner=  Utils.getCurrentWikiPageParams().getOwner();
     return store.getWiki(WikiType.valueOf(wikiType.toUpperCase()), owner);    
   }
-    
-  public static void setUpWikiContext(UIWikiPortlet wikiPortlet, RenderingService renderingService) throws Exception {
-    Execution ec = ((RenderingServiceImpl) renderingService).getExecutionContext();
+
+  public static void setUpWikiContext(UIWikiPortlet wikiPortlet) throws Exception {
+    RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer()
+                                                                              .getComponentInstanceOfType(RenderingService.class);
+    Execution ec = ((RenderingServiceImpl) renderingService).getExecution();
     if (ec.getContext() == null) {
       ec.setContext(new ExecutionContext());
-      WikiContext wikiContext = getCurrentWikiContext(wikiPortlet);
-      ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
     }
-  }
-  
-  public static void removeWikiContext(RenderingService renderingService) throws Exception {
-    Execution ec = ((RenderingServiceImpl) renderingService).getExecutionContext();
-    if (ec != null) {
-      ec.removeContext();
-    }
+    WikiContext wikiContext = createWikiContext(wikiPortlet);
+    ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
   }
   
   public static void feedDataForWYSIWYGEditor(UIWikiPageEditForm pageEditForm, String xhtmlContent) throws Exception {
     UIWikiPortlet wikiPortlet = pageEditForm.getAncestorOfType(UIWikiPortlet.class);
     HttpSession session = Util.getPortalRequestContext().getRequest().getSession(false);
+    Utils.setUpWikiContext(wikiPortlet);
     if (xhtmlContent == null) {
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
       UIFormTextAreaInput markupInput = pageEditForm.getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT);
       String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
       String markupSyntax = pageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
-      setUpWikiContext(wikiPortlet, renderingService);
       String htmlContent = renderingService.render(markup, markupSyntax, Syntax.ANNOTATED_XHTML_1_0.toIdString(), false);
-      removeWikiContext(renderingService);
       session.setAttribute(UIWikiRichTextArea.SESSION_KEY, htmlContent);
     } else {
       session.setAttribute(UIWikiRichTextArea.SESSION_KEY, xhtmlContent);
     }
     
     SessionManager sessionManager = (SessionManager) RootContainer.getComponent(SessionManager.class);
-    sessionManager.addSessionContext(session.getId(), getCurrentWikiContext(wikiPortlet));
+    sessionManager.addSessionContext(session.getId(), Utils.createWikiContext(wikiPortlet));
   }
 
   public static Page isRenderFullHelpPage() throws Exception {
@@ -243,16 +240,18 @@ public class Utils {
     return currentWiki.getPreferences();
   }
  
-  private static WikiContext getCurrentWikiContext(UIWikiPortlet wikiPortlet) throws Exception {
-    //
+  public static WikiContext createWikiContext(UIWikiPortlet wikiPortlet) throws Exception {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     UIPortal uiPortal = Util.getUIPortal();
+    String requestURL = portalRequestContext.getRequest().getRequestURL().toString();
     String portalURI = portalRequestContext.getPortalURI();
+    String domainURL = requestURL.substring(0, requestURL.indexOf(portalURI));
+    String portalURL = domainURL + portalURI;
     String pageNodeSelected = uiPortal.getSelectedNode().getUri();
     String treeRestURL = getCurrentRestURL().concat("/wiki/tree/children/");
-    //
+
     WikiContext wikiContext = new WikiContext();
-    wikiContext.setPortalURI(portalURI);
+    wikiContext.setPortalURL(portalURL);
     wikiContext.setTreeRestURI(treeRestURL);
     wikiContext.setRestURI(getCurrentRestURL());
     wikiContext.setRedirectURI(wikiPortlet.getRedirectURL());
@@ -286,21 +285,21 @@ public class Utils {
   public static void redirect(WikiPageParams pageParams, WikiMode mode, Map<String, String[]> params) throws Exception {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     portalRequestContext.setResponseComplete(true);
-    portalRequestContext.sendRedirect(createURL(pageParams, mode, params));
+    portalRequestContext.sendRedirect(createURLWithMode(pageParams, mode, params));
   }
   
   public static void ajaxRedirect(Event<? extends UIComponent> event,
                                   WikiPageParams pageParams,
                                   WikiMode mode,
                                   Map<String, String[]> params) throws Exception {
-    String redirectLink = Utils.createURL(pageParams, mode, params);
+    String redirectLink = Utils.createURLWithMode(pageParams, mode, params);
     event.getRequestContext().getJavascriptManager().addCustomizedOnLoadScript("ajaxRedirect('"
         + redirectLink + "');");
   }
   
-  public static String createURL(WikiPageParams pageParams,
-                                 WikiMode mode,
-                                 Map<String, String[]> params) throws Exception {
+  public static String createURLWithMode(WikiPageParams pageParams,
+                                         WikiMode mode,
+                                         Map<String, String[]> params) throws Exception {
     StringBuffer sb = new StringBuffer();
     sb.append(getURLFromParams(pageParams));
     if (!mode.equals(WikiMode.VIEW)) {
@@ -420,13 +419,23 @@ public class Utils {
   public static String renderMacroToXHtml(UIComponent uiComponent, String macroName, String wikiSyntax) {
     try {
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
-      Utils.setUpWikiContext(uiComponent.getAncestorOfType(UIWikiPortlet.class), renderingService);
-      return renderingService.render(macroName,
+      setUpWikiContext(uiComponent.getAncestorOfType(UIWikiPortlet.class));
+      String content= renderingService.render(macroName,
                                      wikiSyntax,
                                      Syntax.XHTML_1_0.toIdString(),
                                      false);
+      removeWikiContext();
+      return content;
     } catch (Exception e) {
       return "";
+    }
+  }
+
+  public static void removeWikiContext() throws Exception {
+    RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
+    Execution ec = ((RenderingServiceImpl) renderingService).getExecution();
+    if (ec != null) {
+      ec.removeContext();
     }
   }
 }

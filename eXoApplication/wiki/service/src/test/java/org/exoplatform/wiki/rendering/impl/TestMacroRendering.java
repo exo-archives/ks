@@ -137,7 +137,7 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
     wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "childPage1", "samplePage");
     wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "childPage2", "samplePage");
     wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "testPage", "childPage1");
-    Execution ec = renderingService.getExecutionContext();
+    Execution ec = renderingService.getExecution();
     WikiContext wikiContext = (WikiContext) ec.getContext().getProperty(WikiContext.WIKICONTEXT);
     wikiContext.setPageId("samplePage");
     ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
@@ -163,7 +163,7 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
     wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "testPageTree1", "rootPage");
     wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "testPageTree2", "rootPage");
     wikiService.createPage(PortalConfig.PORTAL_TYPE, "classic", "testPageTree11", "testPageTree1");
-    Execution ec = renderingService.getExecutionContext();
+    Execution ec = renderingService.getExecution();
     WikiContext wikiContext = (WikiContext) ec.getContext().getProperty(WikiContext.WIKICONTEXT);
     wikiContext.setPageId("rootPage");
     ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
@@ -183,10 +183,10 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
   }
   
   private void setupDefaultWikiContext() throws ComponentLookupException, ComponentRepositoryException {
-    Execution ec = renderingService.getExecutionContext();
+    Execution ec = renderingService.getExecution();
     ec.setContext(new ExecutionContext());
     WikiContext wikiContext = new WikiContext();
-    wikiContext.setPortalURI("http://localhost:8080/portal/classic/");
+    wikiContext.setPortalURL("http://localhost:8080/portal/classic/");
     wikiContext.setTreeRestURI("/wiki/tree/children/");
     wikiContext.setRedirectURI("http://localhost:8080/portal/classic/");
     wikiContext.setPortletURI("wiki");

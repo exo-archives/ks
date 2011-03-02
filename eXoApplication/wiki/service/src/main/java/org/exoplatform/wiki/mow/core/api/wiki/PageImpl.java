@@ -139,6 +139,11 @@ public abstract class PageImpl implements Page {
   @Property(name = WikiNodeType.Definition.UPDATED_DATE)
   public abstract Date getUpdatedDate();
   
+  @Property(name = WikiNodeType.Definition.URL)
+  public abstract String getURL();
+  public abstract void setURL(String url);
+  
+  
   @OneToOne(type = RelationshipType.EMBEDDED)
   @Owner
   public abstract MovedMixin getMovedMixin();

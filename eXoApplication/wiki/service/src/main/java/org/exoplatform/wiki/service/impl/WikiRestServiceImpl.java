@@ -152,10 +152,10 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
         syntaxId = (syntaxId != null) ? syntaxId : Syntax.XWIKI_2_0.toIdString();
       }
       if (!isMarkup) {
-        Execution ec = ((RenderingServiceImpl) renderingService).getExecutionContext();
+        Execution ec = ((RenderingServiceImpl) renderingService).getExecution();
         ec.setContext(new ExecutionContext());
         WikiContext wikiContext = new WikiContext();
-        wikiContext.setPortalURI(portalURI);
+        wikiContext.setPortalURL(portalURI);
         wikiContext.setPortletURI("wiki");
         wikiContext.setType(wikiType);
         wikiContext.setOwner(wikiOwner);

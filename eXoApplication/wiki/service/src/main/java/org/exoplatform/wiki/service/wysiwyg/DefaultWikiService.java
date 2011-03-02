@@ -210,7 +210,8 @@ public class DefaultWikiService implements WikiService {
    * @see WikiService#getAttachment(org.xwiki.gwt.wysiwyg.client.wiki.EntityReference)
    */
   public Attachment getAttachment(org.xwiki.gwt.wysiwyg.client.wiki.EntityReference attachmentReference) {
-    // Clean attachment filename to be synchronized with all attachment operations.
+    // Clean attachment filename to be synchronized with all attachment
+    // operations.
     String cleanedFileName = attachmentReference.getFileName();
     DocumentReference documentReference = new DocumentReference(attachmentReference.getWikiName(),
                                                                 attachmentReference.getSpaceName(),
@@ -225,24 +226,25 @@ public class DefaultWikiService implements WikiService {
       if (page == null) {
         return null;
       }
+
+      if (page.getAttachment(cleanedFileName) == null) {
+        log.warn(String.format("Failed to get attachment: %s not found.", cleanedFileName));
+        return null;
+      }
+
+      org.xwiki.gwt.wysiwyg.client.wiki.EntityReference foundAttachmentReference = entityReferenceConverter.convert(documentReference);
+      foundAttachmentReference.setType(attachmentReference.getType());
+      foundAttachmentReference.setFileName(cleanedFileName);
+
+      Attachment attach = new Attachment();
+      attach.setReference(foundAttachmentReference);
+      attach.setUrl(page.getAttachment(cleanedFileName).getDownloadURL());
+      return attach;
     } catch (Exception e) {
       log.error("Failed to get attachment: there was a problem with getting the document on the server.",
                 e);
       return null;
     }
-    if (page.getAttachment(cleanedFileName) == null) {
-      log.warn(String.format("Failed to get attachment: %s not found.", cleanedFileName));
-      return null;
-    }
-
-    org.xwiki.gwt.wysiwyg.client.wiki.EntityReference foundAttachmentReference = entityReferenceConverter.convert(documentReference);
-    foundAttachmentReference.setType(attachmentReference.getType());
-    foundAttachmentReference.setFileName(cleanedFileName);
-
-    Attachment attach = new Attachment();
-    attach.setReference(foundAttachmentReference);
-    attach.setUrl(page.getAttachment(cleanedFileName).getDownloadURL());
-    return attach;
   }
 
   /**

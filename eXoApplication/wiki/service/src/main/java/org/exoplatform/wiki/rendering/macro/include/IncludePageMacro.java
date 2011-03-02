@@ -89,24 +89,26 @@ public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> 
     WikiContext pageContext = null;
     StringBuilder includeContent = new StringBuilder();
     ExecutionContext ec = execution.getContext();
-    if (ec != null) {
-      currentContext = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
-      pageContext = currentContext;
-      pageContext.setOwner(params.getOwner());
-      pageContext.setType(params.getType());
-      pageContext.setPageId(params.getPageId());
-    }
     try {
-      // Set page context as current context
-      ec.setProperty(WikiContext.WIKICONTEXT, pageContext);
+      if (ec != null) {
+        currentContext = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
+        pageContext = currentContext.clone();
+        pageContext.setOwner(params.getOwner());
+        pageContext.setType(params.getType());
+        pageContext.setPageId(params.getPageId());
+        // Set page context as current context
+        ec.setProperty(WikiContext.WIKICONTEXT, pageContext);
+      }
       includeContent.append("<div class=\"IncludePage \" >");
       PageImpl page = (PageImpl) wservice.getPageById(params.getType(),
                                                       params.getOwner(),
                                                       params.getPageId());
-      includeContent.append(renderingservice.render(page.getContent().getText(),
-                                               page.getContent().getSyntax(),
-                                               Syntax.XHTML_1_0.toIdString(),
-                                               false));
+      if (page != null) {
+        includeContent.append(renderingservice.render(page.getContent().getText(),
+                                                      page.getContent().getSyntax(),
+                                                      Syntax.XHTML_1_0.toIdString(),
+                                                      false));
+      }
       includeContent.append("</div>");
       Block result = new RawBlock(includeContent.toString(), Syntax.XHTML_1_0);
       return Collections.singletonList(result);

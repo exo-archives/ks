@@ -129,6 +129,7 @@ public class SavePageActionComponent extends UIComponent {
       UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
       Page page = Utils.getCurrentWikiPage();
+      Utils.setUpWikiContext(wikiPortlet);
       try {
         event.getSource().validate(titleInput);
       } catch (MessageException ex) {
@@ -175,10 +176,13 @@ public class SavePageActionComponent extends UIComponent {
           if (minorAtt != null) {
             ((PageImpl) page).setMinorEdit(Boolean.parseBoolean(minorAtt.toString()));
           }
-          page.getContent().setText(markup);
+
           page.getContent().setComment(commentInput.getValue());
           page.getContent().setSyntax(syntaxId);
           pageTitleControlForm.getUIFormInputInfo().setValue(title);
+          pageParams.setPageId(page.getName());
+          ((PageImpl) page).setURL(Utils.getURLFromParams(pageParams));          
+          page.getContent().setText(markup);
 
           if (!pageEditForm.getTitle().equals(title)) {
             page.getContent().setTitle(title);
@@ -211,6 +215,8 @@ public class SavePageActionComponent extends UIComponent {
                                                 pageParams.getOwner(),
                                                 title,
                                                 page.getName());
+          pageParams.setPageId(page.getName());
+          ((PageImpl) page).setURL(Utils.getURLFromParams(pageParams));
           subPage.getContent().setText(markup);
           subPage.getContent().setSyntax(syntaxId);
           ((PageImpl) subPage).getAttachments().addAll(attachs);
