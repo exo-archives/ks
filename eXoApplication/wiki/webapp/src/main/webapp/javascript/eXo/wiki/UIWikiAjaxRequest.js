@@ -107,10 +107,10 @@ UIWikiAjaxRequest.prototype.createIEHistoryFrame = function() {
   if (!this.iframe) {
     var tmpIframe = document.createElement('iframe');
     tmpIframe.id = iframeID;
-    tmpIframe.src = '/wiki/resources/HistoryFrame.htm';
     tmpIframe.style.display = 'none';
     document.body.appendChild(tmpIframe);
-    this.iframe = document.getElementById(iframeID);
+    this.iframe = tmpIframe;
+    eXo.wiki.UIWikiAjaxRequest.makeNewHash(location.hash);
   }
 };
 
