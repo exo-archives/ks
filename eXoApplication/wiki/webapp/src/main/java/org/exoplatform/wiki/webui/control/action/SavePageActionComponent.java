@@ -19,6 +19,7 @@ package org.exoplatform.wiki.webui.control.action;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.webui.util.Util;
@@ -84,8 +85,9 @@ public class SavePageActionComponent extends UIComponent {
   }
   
   public void validate(UIFormInput uiInput) throws Exception {
-    String invalidCharacters = ": @ / \\ | ^ # ; [ ] { } < > * ' \" + ?"; // and .
+    String invalidCharacters = ": @ / \\ | ^ # ; [ ] { } < > * ' \" + ? &"; // and .
     Object[] args = { invalidCharacters };
+    StringTokenizer tokens;
     
     if (uiInput.getValue() == null || ((String) uiInput.getValue()).trim().length() == 0) {
       throw new MessageException(new ApplicationMessage("WikiPageNameValidator.msg.EmptyTitle", args, ApplicationMessage.WARNING));
@@ -93,14 +95,16 @@ public class SavePageActionComponent extends UIComponent {
     
     String s = (String) uiInput.getValue();
     for (int i = 0; i < s.length(); i++) {
+      tokens = new StringTokenizer(invalidCharacters);
       char c = s.charAt(i);
-      // Does not accept the following characters in the title of a page : @ / \ | ^ # ; [ ] { } < > . * ' " +
-      if (Character.isLetter(c)
-          || Character.isDigit(c)
-          || (c != ':' && c != '@' && c != '/' && c != '\\' && c != '|' && c != '^' && c != '#'
-              && c != ';' && c != '[' && c != ']' && c != '{' && c != '}' && c != '<' && c != '>'
-              && c != '.' && c != '*' && c != '\'' && c != '\"' && c != '+' && c != '?' )
-          ) {
+      boolean isInvalid = false;
+      while(tokens.hasMoreTokens()){
+        String test= tokens.nextToken();        
+        isInvalid= test.equals(String.valueOf(c));
+        if (isInvalid==true) 
+          break;
+      }      
+      if (Character.isLetter(c) || Character.isDigit(c) || (!isInvalid)) {
         continue;
       }
       throw new MessageException(new ApplicationMessage("WikiPageNameValidator.msg.Invalid-char", args, ApplicationMessage.WARNING));
