@@ -527,20 +527,6 @@ public class FAQUtils {
 		return (isFieldEmpty(url)) ? org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL : url;
 	}
 	
-	
-	private static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
-		byte[] imageBytes = null;
-		if (input != null) {
-			imageBytes = new byte[input.available()];
-			input.read(imageBytes);
-			ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-			InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
-			dresource.setDownloadName(fileName);
-			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-		}
-		return null;
-	}
-
 	public static String getLink(String link, String componentId, String componentIdhasAction, String action, String actionRep, String objectId) {
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
 		String url = portalContext.getRequest().getRequestURL().toString();
