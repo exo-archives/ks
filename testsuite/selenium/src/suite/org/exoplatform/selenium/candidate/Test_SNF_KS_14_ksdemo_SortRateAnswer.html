@@ -112,6 +112,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Question for Answer</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Question for Answer</td>
 	<td></td>
@@ -137,9 +142,19 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
 	<td>selectFrame</td>
 	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
 	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body</td>
+	<td>Answer 1</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -437,6 +452,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Question for Answer</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Question for Answer</td>
 	<td></td>
@@ -453,23 +473,38 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>AnswersViewContent</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyText</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[1]//div[@class='AnswerContent']</td>
 	<td>Answer 2</td>
 </tr>
 <tr>
-	<td>verifyText</td>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[1]//div[@class='AnswerContent']</td>
+	<td>Answer 2</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[2]//div[@class='AnswerContent']</td>
 	<td>Answer 3</td>
 </tr>
 <tr>
-	<td>verifyText</td>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[2]//div[@class='AnswerContent']</td>
+	<td>Answer 3</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[3]//div[@class='AnswerContent']</td>
 	<td>Answer 1</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[3]//div[@class='AnswerContent']</td>
+	<td>Answer 1</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@class='TitleResponseContent']//a</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -478,27 +513,42 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>AnswersViewContent</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyText</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[1]//div[@class='AnswerContent']</td>
 	<td>Answer 1</td>
 </tr>
 <tr>
-	<td>verifyText</td>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[1]//div[@class='AnswerContent']</td>
+	<td>Answer 1</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[2]//div[@class='AnswerContent']</td>
 	<td>Answer 3</td>
 </tr>
 <tr>
-	<td>verifyText</td>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[2]//div[@class='AnswerContent']</td>
+	<td>Answer 3</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[3]//div[@class='AnswerContent']</td>
+	<td>Answer 2</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[3]//div[@class='AnswerContent']</td>
 	<td>Answer 2</td>
 </tr>
 <tr>
 	<td>echo</td>
 	<td>-Delete test data-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']/div/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[4]/a/div[@class='Delete']</td>
 	<td></td>
 </tr>
 <tr>
