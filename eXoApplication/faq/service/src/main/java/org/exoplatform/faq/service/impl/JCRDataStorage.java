@@ -3564,11 +3564,9 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		try {
 			Node node = getFAQServiceHome(sProvider).getNode(id);
-			if (node.isNodeType("exo:faqQuestion"))
+			if (node.isNodeType(EXO_FAQ_QUESTION))
 				node = node.getParent().getParent();
-			return node.getProperty("exo:isModerateAnswers").getBoolean();
-		} catch (PathNotFoundException e) {
-			return false;
+			return new PropertyReader(node).bool(EXO_IS_MODERATE_ANSWERS, false);
 		} catch (Exception e) {
 			log.error("Failed to check moderate answer", e);
 		} finally {
