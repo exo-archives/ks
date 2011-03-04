@@ -83,8 +83,9 @@ UIAnswersPortlet.prototype.checkAction = function() {
 	}
 } ;
 
-UIAnswersPortlet.prototype.checkCustomView = function(hileTitle, showTitle){
+UIAnswersPortlet.prototype.checkCustomView = function(isNotSpace, hileTitle, showTitle){
 	var cookie = eXo.core.Browser.getCookie("FAQCustomView");
+	cookie = ((cookie == '' && isNotSpace == 'true') || cookie == 'block') ? '':'none';
 	document.getElementById('FAQViewCategoriesColumn').style.display = cookie;
 	var buttomView = document.getElementById('FAQCustomView');
 	var title = document.getElementById('FAQTitlePanels');
@@ -100,16 +101,19 @@ UIAnswersPortlet.prototype.changeCustomView = function(change, hileTitle, showTi
 	var columnCategories = document.getElementById('FAQViewCategoriesColumn');
 	var buttomView = document.getElementById('FAQCustomView');
 	var title = document.getElementById('FAQTitlePanels');
+	var cookie = "";
 	if(columnCategories.style.display != "none"){		
 		columnCategories.style.display = "none";
-		 eXo.core.DOMUtil.addClass(buttomView,"FAQCustomViewRight");
-		 title.title = showTitle;
+		eXo.core.DOMUtil.addClass(buttomView,"FAQCustomViewRight");
+		title.title = showTitle;
+		cookie = "node";
 	}else{
 		columnCategories.style.display = "";
-		 eXo.core.DOMUtil.replaceClass(buttomView,"FAQCustomViewRight","");
-		 title.title = hileTitle;
+		eXo.core.DOMUtil.replaceClass(buttomView,"FAQCustomViewRight","");
+		title.title = hileTitle;
+		cookie = "block";
 	}
-	eXo.core.Browser.setCookie("FAQCustomView",columnCategories.style.display,1);
+	eXo.core.Browser.setCookie("FAQCustomView", cookie, 1);
 	var uiNav = eXo.faq.UIAnswersPortlet ;
 	if(typeof(uiNav.initActionScroll) == "function") uiNav.initActionScroll();
 	if(typeof(uiNav.initBreadCumbScroll) == "function") uiNav.initBreadCumbScroll();

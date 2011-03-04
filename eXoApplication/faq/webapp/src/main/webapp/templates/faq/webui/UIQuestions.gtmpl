@@ -16,7 +16,7 @@
 	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.controlWorkSpace();");
 	//jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'");');
 	jsmanager.addJavascript('eXo.faq.UIAnswersPortlet.initContextMenu("'+compId+'") ;') ;
-	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
+	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.checkCustomView('" + uicomponent.isNotInSpace() + "', '" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
 	jsmanager.addCustomizedOnLoadScript('eXo.faq.UIAnswersPortlet.loadActionScroll();');
 	jsmanager.addJavascript('eXo.faq.UIAnswersPortlet.updateContainersHeight();') ;
 	String url = uicomponent.url("Setting", "OBJECTID");
@@ -54,7 +54,7 @@
 									if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
 									 	String linkRss = uicomponent.getRSSLink() ;
 									%>
-										<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
+										<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
 											<div class="SeparatorLine">
 												<div class="LeftOverButton">
 													<div class="RightOverButton">

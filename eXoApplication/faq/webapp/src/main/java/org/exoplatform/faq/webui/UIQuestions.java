@@ -25,6 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.portlet.PortletPreferences;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.rendering.RenderHelper;
 import org.exoplatform.faq.rendering.RenderingException;
@@ -51,9 +53,9 @@ import org.exoplatform.faq.webui.popup.UIResponseForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.faq.webui.popup.UIViewUserProfile;
-import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.common.UserHelper;
@@ -63,6 +65,8 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -162,6 +166,12 @@ public class UIQuestions extends UIContainer {
 			faqService_ = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
 		if (FAQUtils.isFieldEmpty(getId()))
 			setId("UIQuestions");
+	}
+	
+	private boolean isNotInSpace() {
+		PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+		return (portletPref.getValue("SPACE_URL", null) != null) ? false : true;
 	}
 
   private boolean isCategoryHome() {
