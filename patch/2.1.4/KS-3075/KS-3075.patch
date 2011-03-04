@@ -1,0 +1,15 @@
+Index: eXoApplication/faq/webapp/src/main/resources/locale/portlet/faq/AnswersPortlet_fr.properties
+===================================================================
+--- eXoApplication/faq/webapp/src/main/resources/locale/portlet/faq/AnswersPortlet_fr.properties	(revision 66825)
++++ eXoApplication/faq/webapp/src/main/resources/locale/portlet/faq/AnswersPortlet_fr.properties	(working copy)
+@@ -206,6 +206,10 @@
+ UIQuestions.action.PrintQuestion=Imprimer
+ UIQuestions.action.SendQuestion=Envoyer
+ UIQuestions.action.EditSubCategory=Modifier
++UIQuestions.label.score=Score
++UIQuestions.label.answers=Réponses
++UIQuestions.label.last-act-time-minute=Il y a {0} minute(s).
++UIQuestions.label.last-act-time-hour=Il y a {0} heure(s).
+ UIQuestions.label.edit-category=Modifier
+ UIQuestions.label.delete-category=Supprimer
+ UIQuestions.label.By=Par
