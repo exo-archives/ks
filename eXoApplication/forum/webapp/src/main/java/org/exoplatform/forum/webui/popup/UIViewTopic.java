@@ -27,6 +27,7 @@ import javax.jcr.PathNotFoundException;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
@@ -69,6 +70,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIViewTopic extends UIForm implements UIPopupComponent {
+	public static final String SIGNATURE = "SignatureTypeID" ;
 	private ForumService forumService ;
 	private Topic topic ;
 	private JCRPageList pageList ;
@@ -100,6 +102,9 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	}
 	
 	public String renderPost(Post post) throws RenderingException {
+		if(SIGNATURE.equals(post.getId())){
+			post.setMessage(ForumTransformHTML.enCodeViewSignature(post.getMessage()));
+		}
 		return renderHelper.renderPost(post);
 	}
 	
@@ -133,7 +138,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 					mapUserProfile.put(profile.getUserId(), profile) ;
 				}
 			}catch(Exception e) {
-				//logged
+				log.warn("Failed load user info: "+ e.getMessage(), e);
 			}
 		}
 	}

@@ -33,6 +33,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.rendering.RenderHelper;
@@ -172,6 +173,7 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public static final String FIELD_ADD_TAG = "AddTag" ;
+	public static final String SIGNATURE = "SignatureTypeID" ;
 	
 	RenderHelper renderHelper = new RenderHelper();
 	
@@ -1766,6 +1768,9 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 	}
 
 	public String renderPost(Post post) throws RenderingException {
+		if(SIGNATURE.equals(post.getId())){
+			post.setMessage(ForumTransformHTML.enCodeViewSignature(post.getMessage()));
+		}
 		return renderHelper.renderPost(post);
 	}
 

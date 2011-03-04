@@ -126,7 +126,24 @@ public class ForumTransformHTML {
 				}
 			}
 		}
-		return buffer.toString();
+		return buffer.toString().replaceFirst("(<br/>)*", "");
+	}
+	
+	public static String enCodeViewSignature(String s) {
+		if(s != null && s.trim().length() > 0) {
+		// replace enter key to <br/> tag html
+			StringBuffer buffer = new StringBuffer();
+			for (int j = 0; j < s.trim().length(); j++) {
+				char c = s.charAt(j); 
+				if((int)c == 10){
+					buffer.append("<br/>") ;
+				} else {
+					buffer.append(c) ;
+				}
+			}
+			s = buffer.toString();
+		} else s = "";
+		return s;
 	}
 	
 	public static String unCodeHTML(String s) {

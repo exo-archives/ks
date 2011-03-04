@@ -225,6 +225,7 @@
 							<% } %>
 							<%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
 									post.setMessage(userInfo.getSignature());
+									post.setId(uicomponent.SIGNATURE);
 									String signature = uicomponent.renderPost(post);
 							%>
 									<div class="Signature">__________________<br/><%=signature;%></div>
