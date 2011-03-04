@@ -12,10 +12,31 @@ Configure the _profile-configuration.xml_ file as shown below:
 <component>
 	<key>org.exoplatform.ks.common.user.ContactProvider</key>
 	<type>org.exoplatform.ks.common.user.DefaultContactProvider</type>
+	<!--<type>org.exoplatform.ks.ext.common.SocialContactProvider</type> -->
 </component>
 {code}
+When eXo Knowledge is integareted in eXo Platform and if you want to use ProfileProvider from eXo Social, you need to change "*type*" _org.exoplatform.ks.common.user.DefaultContactProvider_ into _org.exoplatform.ks.ext.common.SocialContactProvider_.
 
 h1. Using ContactProvider {anchor:id=KSref.ProfileProviderConfiguration.UseContactProvider}
+You can get the _ContactProvider_ as follows:
+
+{code:java}
+public CommonContact getPersonalContact(String userId) throws Exception {
+	try {
+		if(userId.indexOf(Utils.DELETED) > 0) return new CommonContact();
+		ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
+		return provider.getCommonContact(userId);
+	}catch (Exception e) {
+		return new CommonContact();
+	}
+}
+{code}
+In eXo Knowlege, when using ContactProvider, you can use one of two following classes:
+* _DefaultContactProvider_ 
+* _SocialContactProvider_
+
+h2. By DefaultContactProvider {anchor:id=KSref.ProfileProviderConfiguration.UseDefaultContactProvider}
+
 When you start the Tomcat, the _DefaultContactProvider_ class will be initialized and the _OrganizationService_ component is set within the _DefaultContactProvider_ component.
 
 The _DefaultContactProvider_ class enables you to get user information via the _OrganizationService_ component.
@@ -66,20 +87,42 @@ public CommonContact getCommonContact(String userId) {
 | *user.business-info.telecom. telephone.number* | {{String}} | The mobile number of user. |
 | *user.home-info.online.uri* | {{String}} | The individual websites of user. |
 
-- You can get the _ContactProvider_ as follows:
+
+
+h2. By SocialContactProvider {anchor:id=KSref.ProfileProviderConfiguration.UseSocialContactProvider}
+The _SocailContactProvider_ class gets users' profiles by userId via the _IdentityManager_ class.
 
 {code:java}
-public CommonContact getPersonalContact(String userId) throws Exception {
-	try {
-		if(userId.indexOf(Utils.DELETED) > 0) return new CommonContact();
-		ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
-		return provider.getCommonContact(userId);
-	}catch (Exception e) {
-		return new CommonContact();
-	}
-}
-{code}
+public CommonContact getCommonContact(String userId) {
+    CommonContact contact = new CommonContact();
+    try {
+      IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class);
+      Identity userIdentity = identityM.getIdentity(OrganizationIdentityProvider.NAME, userId, true);
+      Profile profile = userIdentity.getProfile();
+      if (profile.contains(Profile.EMAIL)) {
+        contact.setEmailAddress(profile.getProperty(Profile.EMAIL).toString());
+      }
+      if (profile.contains(Profile.FIRST_NAME)) {
+        contact.setFirstName(profile.getProperty(Profile.FIRST_NAME).toString());
+      }
+      if (profile.contains(Profile.LAST_NAME)) {
+        contact.setLastName(profile.getProperty(Profile.LAST_NAME).toString());
+      }
+      contact.setAvatarUrl(profile.getAvatarImageSource());
+      if (profile.contains(Profile.GENDER)) {
+        contact.setGender(profile.getProperty(Profile.GENDER).toString());
+      }
 
-
-
-
+      if (profile.contains(Profile.CONTACT_PHONES)) {
+        contact.setPhone(profile.getProperty(Profile.CONTACT_PHONES).toString());
+      }
+      if (profile.contains(Profile.URL)) {
+        contact.setWebSite(profile.getProperty(Profile.URL).toString());
+      }
+    } catch (Exception e) {
+      if (LOG.isErrorEnabled()) LOG.error(String.format("can not load contact from eXo Social Profile with user [%s]", userId), e);
+      
+    }
+    return contact;
+  }
+ {code}
