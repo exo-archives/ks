@@ -62,6 +62,7 @@ function getProduct(version) {
   /* cleanup duplicated lib */
   product.removeDependency(new Project("commons-httpclient", "commons-httpclient", "jar", "3.0"));
   product.removeDependency(new Project("commons-collections", "commons-collections", "jar", "3.1"));
+  product.removeDependency(new Project("commons-collections", "commons-collections", "jar", "3.2"));
   product.removeDependency(new Project("commons-lang", "commons-lang", "jar", "2.3")); // exclusion added by KS. lib dir un tomcat contains versions 2.3 and 2.4. Keeping the newest.
   product.module = ks ;
   product.dependencyModule = [ kernel, core, ws, eXoJcr];
