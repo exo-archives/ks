@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.service ;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -55,7 +56,11 @@ public class Post {
 	
 	public String getId() { 
 	  if (id == null) {
-	    id = Utils.POST + IdGenerator.generate() ;
+	  	try {
+	  		id = Utils.POST + IdGenerator.generate() ;
+			} catch (NullPointerException e) {
+				id = Utils.POST + Calendar.getInstance().getTimeInMillis();
+			}
 	  }
 	  return id; 
 	}

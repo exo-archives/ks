@@ -134,11 +134,10 @@ public class ForumTransformHTML {
 		// replace enter key to <br/> tag html
 			StringBuffer buffer = new StringBuffer();
 			for (int j = 0; j < s.trim().length(); j++) {
-				char c = s.charAt(j); 
-				if((int)c == 10){
+				if(s.codePointAt(j) == 10){
 					buffer.append("<br/>") ;
 				} else {
-					buffer.append(c) ;
+					buffer.append(s.charAt(j)) ;
 				}
 			}
 			s = buffer.toString();

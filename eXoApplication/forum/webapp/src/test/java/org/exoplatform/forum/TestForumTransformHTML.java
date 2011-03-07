@@ -84,6 +84,12 @@ public class TestForumTransformHTML extends TestCase{
 		assertEquals("<p> test <br/> test 'test' <div>text</div></p>", 
 								ForumTransformHTML.unCodeHTML("&lt;p&gt; test &lt;br/&gt; test &#39test&#39 &lt;div&gt;text&lt;/div&gt;&lt;/p&gt;"));
   }
+	
+	public void testEnCodeViewSignature() {
+		assertEquals("", ForumTransformHTML.enCodeViewSignature(null));
+		assertEquals("", ForumTransformHTML.enCodeViewSignature(""));
+		assertEquals("ABC hello<br/> test<div>hello</div><br/>Hello World.", ForumTransformHTML.enCodeViewSignature("ABC hello\n test<div>hello</div>\nHello World."));
+	}
 
 	public void testFixAddBBcodeAction() {
 		// value input not null.
