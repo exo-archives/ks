@@ -740,7 +740,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 		if (answerNode.hasProperty("exo:responseBy"))
 			answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString()));
 		
-		System.out.println("\n\n answer.getResponseBy(): " + answer.getResponseBy() + " answer.getResponses: " + answer.getResponses());
 		if (answerNode.hasProperty("exo:fullName"))
 			answer.setFullName((answerNode.getProperty("exo:fullName").getValue().getString()));
 		if (answerNode.hasProperty("exo:dateResponse"))
