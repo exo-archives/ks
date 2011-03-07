@@ -31,7 +31,7 @@
     <org.exoplatform.core.version>2.3.8-GA-SNAPSHOT</org.exoplatform.core.version>
     <org.exoplatform.ws.version>2.1.8-GA-SNAPSHOT</org.exoplatform.ws.version>
     <org.exoplatform.jcr.version>1.12.8-GA-SNAPSHOT</org.exoplatform.jcr.version>
-	<org.exoplatform.portal.version>3.1.8-PLF-SNAPSHOT</org.exoplatform.portal.version>
+	<org.exoplatform.portal.version>3.1.8-REBASED-SNAPSHOT</org.exoplatform.portal.version>
 	    
 	<!--commons dependencies-->
 	<org.exoplatform.commons.version>1.0.4-SNAPSHOT</org.exoplatform.commons.version>
@@ -92,7 +92,7 @@
 	<html-parser.version>1.6</html-parser.version>
 	<com.sun.xml.bind.version>2.1.7</com.sun.xml.bind.version>
 	<org.jvnet.jaxb2.maven2.version>0.1</org.jvnet.jaxb2.maven2.version>
-	<org.gatein.pc.version>2.1.1-GA</org.gatein.pc.version>
+	<org.gatein.pc.version>2.2.0-GA</org.gatein.pc.version>
 	<commons-pool.version>1.2</commons-pool.version>
 	<asm.version>1.5.3</asm.version>
 	<antlr.version>2.7.6rc1</antlr.version>
@@ -192,7 +192,7 @@
       </dependency>
       <dependency>
         <groupId>org.exoplatform.portal</groupId>
-        <artifactId>exo.portal.component.web</artifactId>
+        <artifactId>exo.portal.component.web.api</artifactId>
         <version>${org.exoplatform.portal.version}</version>
       </dependency>
       <dependency>
