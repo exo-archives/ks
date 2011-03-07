@@ -20,6 +20,7 @@ import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.popup.UISettingForm;
@@ -78,7 +79,8 @@ public class UIAnswersPortlet extends UIPortletApplication {
         SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
         Space space = sService.getSpaceByUrl(url) ;
         String categoryId = Utils.CATE_SPACE_ID_PREFIX + space.getId();
-        return categoryId ;
+        FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+        if(service.getCategoryById(categoryId) != null) return categoryId ;
       }
       return null;
     } catch (Exception e) {
@@ -128,17 +130,19 @@ public class UIAnswersPortlet extends UIPortletApplication {
 
   private void renderPortletById() throws Exception {
   	try {
+  	  String selectedCategory = Utils.CATEGORY_HOME ;
       String cateId = getSpaceCategoryId() ;
+      if(cateId != null) selectedCategory =  Utils.CATEGORY_HOME+"/"+cateId ;
       PortalRequestContext context = Util.getPortalRequestContext();
       if(!FAQUtils.isFieldEmpty(cateId) && context.getRequestParameter(OBJECTID) == null && 
       		!("true".equals(""+context.getRequestParameter("ajaxRequest")))){
         UIBreadcumbs uiBreadcums = findFirstComponentOfType(UIBreadcumbs.class);
         UIQuestions uiQuestions = findFirstComponentOfType(UIQuestions.class) ;
         UICategories categories = findFirstComponentOfType(UICategories.class);
-        uiBreadcums.setUpdataPath(Utils.CATEGORY_HOME+"/"+cateId) ;
+        uiBreadcums.setUpdataPath(selectedCategory) ;
         uiBreadcums.setRenderSearch(true);
-      	uiQuestions.setCategoryId(Utils.CATEGORY_HOME+"/"+cateId);
-      	categories.setPathCategory(Utils.CATEGORY_HOME+"/"+cateId) ;
+      	uiQuestions.setCategoryId(selectedCategory);
+      	categories.setPathCategory(selectedCategory) ;
       }
     } catch (Exception e) {
       System.out.println("can not render the selected category");

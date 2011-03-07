@@ -84,7 +84,7 @@
 						</div>
 		    	  <a title="Next Page" class="Icon NextPageIcon" href="#"></a>
 		    	  <a title="Next 10 pages" class="Icon DisableNextTopPageIcon"></a>
-		    		<div style="clear:left;"><span><span/></div>
+		    		<div style="clear:left;"><span></span></div>
 			  	</div>
 		  		<div class="LeftPageIteratorBlock">
 			  		<div class="TotalPages">Total pages:</div>
