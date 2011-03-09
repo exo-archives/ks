@@ -12,6 +12,8 @@
   <modules>
     <module>service</module>
     <module>webapp</module>
+    <module>assembly</module>
+    <module>ear</module>
   </modules>
  <dependencies>
      <dependency>

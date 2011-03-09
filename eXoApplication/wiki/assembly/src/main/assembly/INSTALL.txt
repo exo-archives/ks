@@ -1,0 +1,37 @@
+**********************************************************************************************
+                        Deploy eXo Wiki into Tomcat Server
+**********************************************************************************************
+To deploy eXo Wiki module into Tomcat server run eXo Platform 3.0, execute the following steps:
+    - stop the server.
+    - copy jar files in 'lib' folder to [Tomcat home]/lib. *NOTE: Be careful with version conflict between these files and exist ones in the server. The libraries which eXo Wiki depends on are listed as following pairs([groupId]:[artifactId]):
+              * org.exoplatform.ks:exo.ks.eXoApplication.wiki.service
+              * com.google.gwt:gwt-servlet
+              * com.google.gwt:gwt-user
+              * org.xwiki.platform:xwiki-web-gwt-wysiwyg-client
+              * org.apache.pdfbox:fontbox
+              * javax.validation:validation-api            
+              * org.hibernate:hibernate-validator
+              * org.python:jython-standalone
+              * pygments:pygments
+              * net.sourceforge.htmlcleaner:htmlcleaner
+              * org.xwiki.platform:xwiki-core-configuration-api
+              * org.xwiki.platform:xwiki-core-model
+              * org.xwiki.platform:xwiki-core-context
+              * org.xwiki.platform:xwiki-core-component-api
+              * org.xwiki.platform:xwiki-core-component-default
+              * org.xwiki.platform:xwiki-core-properties
+              * org.xwiki.platform:xwiki-core-xml
+              * org.xwiki.platform:xwiki-core-script
+              * org.xwiki.platform:xwiki-core-rendering-api
+              * org.xwiki.platform:xwiki-core-rendering-syntax-wikimodel
+              * org.xwiki.platform:xwiki-core-rendering-macro-toc
+              * org.xwiki.platform:xwiki-core-rendering-macro-box
+              * org.xwiki.platform:xwiki-core-rendering-macro-message
+              * org.xwiki.platform:xwiki-core-rendering-macro-code
+              * org.wikimodel:org.wikimodel.wem
+              * org.suigeneris:jrcs.diff
+              * org.suigeneris:jrcs.rcs
+              * ecs:ecs
+    - copy 'wiki.war' file to [Tomcat home]/webapps to deploy wiki web app.
+    - start the server. If the above steps are successful, eXo Wiki module is available in Application Registry of the portal.
+
