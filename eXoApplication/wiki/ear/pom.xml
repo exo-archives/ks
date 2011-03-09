@@ -211,11 +211,11 @@
                     <artifactId>jcr</artifactId>
                    <excluded>true</excluded>
                 </jarModule>
-                <jarModule>
+                <!-- jarModule>
                     <groupId>org.jdom</groupId>
                     <artifactId>jdom</artifactId>
                    <excluded>true</excluded>
-                </jarModule>
+                </jarModule -->
                 <jarModule>
                     <groupId>org.livetribe</groupId>
                     <artifactId>livetribe-jsr223</artifactId>
