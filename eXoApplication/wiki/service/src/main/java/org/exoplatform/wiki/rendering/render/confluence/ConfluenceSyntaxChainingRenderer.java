@@ -21,17 +21,16 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.xwiki.rendering.listener.Format;
 import org.xwiki.rendering.listener.HeaderLevel;
-import org.xwiki.rendering.listener.Image;
-import org.xwiki.rendering.listener.Link;
 import org.xwiki.rendering.listener.ListType;
 import org.xwiki.rendering.listener.chaining.BlockStateChainingListener;
 import org.xwiki.rendering.listener.chaining.ListenerChain;
 import org.xwiki.rendering.listener.chaining.StackableChainingListener;
+import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.renderer.AbstractChainingPrintRenderer;
-import org.xwiki.rendering.renderer.LinkReferenceSerializer;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
 import org.xwiki.rendering.renderer.printer.VoidWikiPrinter;
 import org.xwiki.rendering.renderer.printer.WikiPrinter;
+import org.xwiki.rendering.renderer.reference.ResourceReferenceSerializer;
 
 /**
  * Created by The eXo Platform SAS
@@ -51,7 +50,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
 
   private ConfluenceSyntaxMacroRenderer macroPrinter;
 
-  private LinkReferenceSerializer linkReferenceSerializer;
+  private ResourceReferenceSerializer linkReferenceSerializer;
 
   // Custom States
 
@@ -61,7 +60,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
 
   private Map<String, String> previousFormatParameters;
 
-  public ConfluenceSyntaxChainingRenderer(ListenerChain listenerChain, LinkReferenceSerializer linkReferenceSerializer) {
+  public ConfluenceSyntaxChainingRenderer(ListenerChain listenerChain, ResourceReferenceSerializer linkReferenceSerializer) {
 
     setListenerChain(listenerChain);
 
@@ -157,7 +156,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
    *      boolean, java.util.Map)
    */
   @Override
-  public void beginLink(Link link, boolean isFreeStandingURI, Map<String, String> parameters) {
+  public void beginLink(ResourceReference link, boolean isFreeStandingURI, Map<String, String> parameters) {
     // Flush test content before the link.
     // TODO: improve the block state renderer to be able to make the difference between what is bufferized
     // before the link and what in the label link
@@ -200,7 +199,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
    *      boolean, java.util.Map)
    */
   @Override
-  public void endLink(Link link, boolean isFreeStandingURI, Map<String, String> parameters) {
+  public void endLink(ResourceReference link, boolean isFreeStandingURI, Map<String, String> parameters) {
     // The links in a top level link label are not rendered as link (only the
     // label is printed)
     if (getBlockState().getLinkDepth() == 1) {
@@ -782,7 +781,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
    *      boolean, Map)
    */
   @Override
-  public void onImage(Image image, boolean isFreeStandingURI, Map<String, String> parameters) {
+  public void onImage(ResourceReference image, boolean isFreeStandingURI, Map<String, String> parameters) {
     getImageRenderer().beginRenderImage(getConfluencePrinter());
     getImageRenderer().renderImageContent(getConfluencePrinter(), getImageRenderer().renderImage(image));
     getImageRenderer().endRenderImage(getConfluencePrinter(), parameters);

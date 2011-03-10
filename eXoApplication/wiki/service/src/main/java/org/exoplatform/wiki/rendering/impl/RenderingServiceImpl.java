@@ -40,8 +40,8 @@ import org.xwiki.rendering.block.SectionBlock;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.converter.ConversionException;
 import org.xwiki.rendering.listener.Format;
-import org.xwiki.rendering.listener.Link;
-import org.xwiki.rendering.listener.LinkType;
+import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.renderer.BlockRenderer;
@@ -88,10 +88,8 @@ public class RenderingServiceImpl implements RenderingService, Startable {
       int sectionIndex = 1;
       for (HeaderBlock block : filteredHeaders) {
         SectionBlock section = block.getSection();
-        Link link = new Link();
-        link.setReference("section=" + sectionIndex);
+        ResourceReference link = new ResourceReference( "section=" + sectionIndex, ResourceType.URL);       
         sectionIndex++;
-        link.setType(LinkType.URI);
         List<Block> emtyList = Collections.emptyList();
         Map<String, String> linkParameters = new LinkedHashMap<String, String>();
         linkParameters.put("title", "Edit section: " + renderXDOM(new XDOM(block.getChildren()), sSyntax));

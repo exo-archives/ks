@@ -21,12 +21,11 @@ import java.util.Stack;
 
 import org.apache.commons.lang.StringUtils;
 import org.xwiki.rendering.internal.parser.PlainTextStreamParser;
-import org.xwiki.rendering.internal.renderer.DefaultLinkReferenceSerializer;
 import org.xwiki.rendering.internal.renderer.ParametersPrinter;
-import org.xwiki.rendering.listener.Link;
 import org.xwiki.rendering.listener.QueueListener.Event;
 import org.xwiki.rendering.listener.chaining.EventType;
-import org.xwiki.rendering.renderer.LinkReferenceSerializer;
+import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.rendering.renderer.reference.ResourceReferenceSerializer;
 
 /**
  * Created by The eXo Platform SAS
@@ -46,9 +45,9 @@ public class ConfluenceSyntaxLinkRenderer {
 
   private ConfluenceSyntaxListenerChain listenerChain;
 
-  private LinkReferenceSerializer linkReferenceSerializer;
+  private ResourceReferenceSerializer linkReferenceSerializer;
 
-  public ConfluenceSyntaxLinkRenderer(ConfluenceSyntaxListenerChain listenerChain, LinkReferenceSerializer linkReferenceSerializer) {
+  public ConfluenceSyntaxLinkRenderer(ConfluenceSyntaxListenerChain listenerChain, ResourceReferenceSerializer linkReferenceSerializer) {
     this.listenerChain = listenerChain;
     this.linkReferenceSerializer = linkReferenceSerializer;
     this.forceFullSyntax.push(false);
@@ -59,11 +58,11 @@ public class ConfluenceSyntaxLinkRenderer {
    * 
    * @see DefaultLinkReferenceSerializer#serialize(org.xwiki.rendering.listener.Link)
    */
-  public String serialize(Link link) {
-    return this.linkReferenceSerializer.serialize(link).replace("|", "~|");
+  public String serialize(ResourceReference link) {
+    return this.linkReferenceSerializer.serialize(link);
   }
 
-  public void beginRenderLink(ConfluenceSyntaxEscapeWikiPrinter printer, Link link, boolean isFreeStandingURI,
+  public void beginRenderLink(ConfluenceSyntaxEscapeWikiPrinter printer, ResourceReference link, boolean isFreeStandingURI,
                               Map<String, String> parameters) {
     // find if the last printed char is part of a syntax (i.e. consumed by the
     // parser before starting to parse the link)
@@ -121,7 +120,7 @@ public class ConfluenceSyntaxLinkRenderer {
     }
   }
 
-  public void endRenderLink(ConfluenceSyntaxEscapeWikiPrinter printer, Link link, boolean isFreeStandingURI,
+  public void endRenderLink(ConfluenceSyntaxEscapeWikiPrinter printer, ResourceReference link, boolean isFreeStandingURI,
                             Map<String, String> parameters) {
     printer.print(serialize(link));
 

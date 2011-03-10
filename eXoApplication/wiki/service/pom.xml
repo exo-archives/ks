@@ -219,6 +219,11 @@
       <artifactId>ecs</artifactId>
       <version>${ecs.version}</version>
     </dependency>
+    <dependency>
+      <groupId>net.sourceforge.cssparser</groupId>
+      <artifactId>cssparser</artifactId>
+      <version>${cssparser.version}</version>
+    </dependency>
     <!-- Code macro depends on -->
     <dependency>
       <groupId>org.python</groupId>

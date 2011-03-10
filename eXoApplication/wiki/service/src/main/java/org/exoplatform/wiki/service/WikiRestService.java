@@ -36,6 +36,6 @@ public interface WikiRestService {
    * @param isMarkup if <em>true</em> then <em>markup content</em> is returned else <em>html content</em> is returned
    * @return the instance of javax.ws.rs.core.Response
    */
-  Response getWikiPageContent(String wikiType, String wikiOwner, String pageId, String portalURI, String sessionKey, boolean isMarkup);
+  Response getWikiPageContent(String wikiType, String wikiOwner, String pageId, String portalURI, String sessionKey, boolean isMarkup, String data);
   
 }

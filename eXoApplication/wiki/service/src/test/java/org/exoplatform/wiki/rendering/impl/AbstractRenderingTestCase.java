@@ -27,11 +27,11 @@ import org.exoplatform.wiki.rendering.RenderingService;
  */
 public abstract class AbstractRenderingTestCase extends AbstractMOWTestcase {
 
-  protected RenderingServiceImpl renderingService;
+  protected RenderingService renderingService;
 
   protected void setUp() throws Exception {
     super.setUp();
-    renderingService = (RenderingServiceImpl) container.getComponentInstanceOfType(RenderingService.class);
+    renderingService = (RenderingService) container.getComponentInstanceOfType(RenderingService.class);
   }
 
   protected void tearDown() throws Exception {

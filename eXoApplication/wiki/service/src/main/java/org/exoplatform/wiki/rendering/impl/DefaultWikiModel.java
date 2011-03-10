@@ -16,6 +16,8 @@
  */
 package org.exoplatform.wiki.rendering.impl;
 
+import java.util.Map;
+
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
@@ -35,8 +37,11 @@ import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.context.Execution;
 import org.xwiki.context.ExecutionContext;
 import org.xwiki.model.EntityType;
+import org.xwiki.model.reference.AttachmentReferenceResolver;
 import org.xwiki.model.reference.DocumentReferenceResolver;
 import org.xwiki.model.reference.EntityReference;
+import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.wiki.WikiModel;
 
 /**
@@ -66,47 +71,14 @@ public class DefaultWikiModel implements WikiModel {
 
   private static final String spacePageSeparator = ".";
   
-  public String getAttachmentURL(String documentName, String attachmentName) {
-    WikiContext wikiMarkupContext = getWikiMarkupContext(documentName);
-    String portalContainerName = PortalContainer.getCurrentPortalContainerName();
-    String portalURL = wikiMarkupContext.getPortalURL();
-    String domainURL = portalURL.substring(0, portalURL.indexOf(portalContainerName)-1);
-    if (DEFAULT_ATTACHMENT.equals(wikiMarkupContext.getAttachmentName())
-        && (attachmentName != null)) {
-      wikiMarkupContext.setAttachmentName(attachmentName);
-    }
-    
-    StringBuilder sb = new StringBuilder();
-    sb.append(domainURL).append(Utils.getDefaultRepositoryWebDavUri());
-    PageImpl page = null;
-    try {
-      WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);
-      page = (PageImpl) wikiService.getExsitedOrNewDraftPageById(wikiMarkupContext.getType(),wikiMarkupContext.getOwner(),wikiMarkupContext.getPageId());
-      if (page != null) {
-        sb.append(page.getWorkspace());
-        sb.append(page.getPath());
-        sb.append("/");
-        AttachmentImpl att = page.getAttachment(wikiMarkupContext.getAttachmentName());
-        if (att != null) {
-          sb.append(att.getName());
-        }
-      }
-    } catch (Exception e) {
-      if (LOG.isWarnEnabled()) {
-        LOG.warn("Couldn't get attachment URL for attachment: " + attachmentName + " in document: "
-            + documentName, e);
-      }
-    }
-    return sb.toString();
-  }
-
-  public String getDocumentEditURL(String documentName, String anchor, String queryString) {
+  @Override
+  public String getDocumentEditURL(ResourceReference documentReference) {
     ExecutionContext ec = execution.getContext();
     WikiContext wikiContext = null;
     if (ec != null) {
       wikiContext = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
     }
-    WikiContext wikiMarkupContext = getWikiMarkupContext(documentName);
+    WikiContext wikiMarkupContext = getWikiMarkupContext(documentReference.getReference(),ResourceType.DOCUMENT);
     if (wikiContext != null) {
       String viewURL = getDocumentViewURL(wikiContext);
       StringBuilder sb = new StringBuilder(viewURL);
@@ -135,31 +107,76 @@ public class DefaultWikiModel implements WikiModel {
     return "";
   }
 
-  public String getDocumentViewURL(String documentName, String anchor, String queryString) {
-    WikiContext wikiMarkupContext = getWikiMarkupContext(documentName);
+  @Override
+  public String getDocumentViewURL(ResourceReference documentReference) {
+    WikiContext wikiMarkupContext = getWikiMarkupContext(documentReference.getReference(),ResourceType.DOCUMENT);
     return getDocumentViewURL(wikiMarkupContext);
   }
 
-  public boolean isDocumentAvailable(String documentName) {
-    // TODO : should look for pages in the model with the given title
-    // (Page.findPageByTitle())
-    Page page = null;
+  @Override
+  public String getImageURL(ResourceReference imageReference, Map<String, String> parameters) {
+    String imageName = imageReference.getReference();
+    WikiContext wikiMarkupContext = getWikiMarkupContext(imageName,ResourceType.ATTACHMENT);
+    String portalContainerName = PortalContainer.getCurrentPortalContainerName();
+    String portalURL = wikiMarkupContext.getPortalURL();
+    String domainURL = portalURL.substring(0, portalURL.indexOf(portalContainerName)-1);  
+    StringBuilder sb = new StringBuilder();
+    sb.append(domainURL).append(Utils.getDefaultRepositoryWebDavUri());
+    PageImpl page = null;
     try {
-      WikiContext wikiMarkupContext = getWikiMarkupContext(documentName);
       WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);
-      if (!Utils.isWikiAvailable(wikiMarkupContext.getType(), wikiMarkupContext.getOwner())) {
-        return false;
-      }
-      page = wikiService.getPageById(wikiMarkupContext.getType(),wikiMarkupContext.getOwner(),wikiMarkupContext.getPageId());
-      if (page == null) {
-        page = wikiService.getRelatedPage(wikiMarkupContext.getType(), wikiMarkupContext.getOwner(), wikiMarkupContext.getPageId());
+      page = (PageImpl) wikiService.getExsitedOrNewDraftPageById(wikiMarkupContext.getType(),wikiMarkupContext.getOwner(),wikiMarkupContext.getPageId());
+      if (page != null) {
+        sb.append(page.getWorkspace());
+        sb.append(page.getPath());
+        sb.append("/");
+        AttachmentImpl att = page.getAttachment(wikiMarkupContext.getAttachmentName());
+        if (att != null) {
+          sb.append(att.getName());
+        }
       }
     } catch (Exception e) {
-        if(LOG.isWarnEnabled()){
-          LOG.warn("An exception happened when checking available status of document: "+ documentName, e);
-        }
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("Couldn't get attachment URL for attachment: " + imageName, e);
+      }
     }
-    return (page != null);
+    return sb.toString();
+  }
+
+  @Override
+  public String getLinkURL(ResourceReference linkReference) {
+    return getImageURL(linkReference, null);
+  }
+
+  @Override
+  public boolean isDocumentAvailable(ResourceReference documentReference) {
+    // Should look for pages in the model with the given title
+    // (Page.findPageByTitle())
+    Page page = null;
+    String documentName = documentReference.getReference();
+    ResourceType type = documentReference.getType();
+    WikiContext wikiMarkupContext = getWikiMarkupContext(documentName, type);
+    try {
+      WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
+                                                                 .getComponentInstanceOfType(WikiService.class);
+      if (!Utils.isWikiAvailable(wikiMarkupContext.getType(), wikiMarkupContext.getOwner())) {
+        return false;
+      } else {
+        page = wikiService.getPageById(wikiMarkupContext.getType(),
+                                       wikiMarkupContext.getOwner(),
+                                       wikiMarkupContext.getPageId());
+        if (page == null) {
+          return false;
+        } 
+      }
+
+    } catch (Exception e) {
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("An exception happened when checking available status of document: "
+            + documentName, e);
+      }
+    }
+    return true;
   }
 
   private String getDocumentViewURL(WikiContext context) {
@@ -183,49 +200,54 @@ public class DefaultWikiModel implements WikiModel {
     return Utils.getDocumentURL(context);
   }
   
-  public WikiContext getWikiMarkupContext(String documentName) {
+  public WikiContext getWikiMarkupContext(String objectName, ResourceType type) {
     WikiContext wikiMarkupContext = new WikiContext();
     try {
       DocumentReferenceResolver<String> stringDocumentReferenceResolver = componentManager.lookup(DocumentReferenceResolver.class);
-      EntityReference entityReference = stringDocumentReferenceResolver.resolve(documentName);
-
+      AttachmentReferenceResolver<String> stringAttachmentReferenceResolver = componentManager.lookup(AttachmentReferenceResolver.class);
+      EntityReference entityReference = null;
+      if (ResourceType.DOCUMENT.equals(type)) {
+        entityReference = stringDocumentReferenceResolver.resolve(objectName);
+      } else if (ResourceType.ATTACHMENT.equals(type)) {
+        entityReference = stringAttachmentReferenceResolver.resolve(objectName);
+      }
       ExecutionContext ec = execution.getContext();
       WikiContext wikiContext = null;
       if (ec != null) {
         wikiContext = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
       }
-
-      wikiMarkupContext.setType(entityReference.extractReference(EntityType.WIKI).getName());
-      wikiMarkupContext.setOwner(entityReference.extractReference(EntityType.SPACE).getName());
-      wikiMarkupContext.setPageTitle(entityReference.extractReference(EntityType.DOCUMENT).getName());
-      wikiMarkupContext.setPageId(wikiMarkupContext.getPageTitle());
-      wikiMarkupContext.setPageId(TitleResolver.getId(wikiMarkupContext.getPageId(), false));
-      if(entityReference.extractReference(EntityType.ATTACHMENT) != null){
-        wikiMarkupContext.setAttachmentName(entityReference.extractReference(EntityType.ATTACHMENT).getName());
-      }
-      else {
-        wikiMarkupContext.setAttachmentName(DEFAULT_ATTACHMENT);
-      }
-
-      if (wikiContext != null) {
-
-        wikiMarkupContext.setPortalURL(wikiContext.getPortalURL());
-        wikiMarkupContext.setPortletURI(wikiContext.getPortletURI());
-
-        if (DEFAULT_WIKI.equals(wikiMarkupContext.getType())) {
-          wikiMarkupContext.setType(wikiContext.getType());
-        }
-        if (DEFAULT_SPACE.equals(wikiMarkupContext.getOwner())) {
-          wikiMarkupContext.setOwner(wikiContext.getOwner());
-        }
-        if (DEFAULT_PAGE.equals(wikiMarkupContext.getPageId())) {
-          wikiMarkupContext.setPageId(wikiContext.getPageId());
+      if (entityReference != null) {
+        wikiMarkupContext.setType(entityReference.extractReference(EntityType.WIKI).getName());
+        wikiMarkupContext.setOwner(entityReference.extractReference(EntityType.SPACE).getName());
+        wikiMarkupContext.setPageTitle(entityReference.extractReference(EntityType.DOCUMENT)
+                                                      .getName());
+        wikiMarkupContext.setPageId(wikiMarkupContext.getPageTitle());
+        wikiMarkupContext.setPageId(TitleResolver.getId(wikiMarkupContext.getPageId(), false));
+        EntityReference attachmentReference = entityReference.extractReference(EntityType.ATTACHMENT);
+        if (attachmentReference != null) {
+          wikiMarkupContext.setAttachmentName(attachmentReference.getName());
         }
 
+        if (wikiContext != null) {
+
+          wikiMarkupContext.setPortalURL(wikiContext.getPortalURL());
+          wikiMarkupContext.setPortletURI(wikiContext.getPortletURI());
+
+          if (DEFAULT_WIKI.equals(wikiMarkupContext.getType())) {
+            wikiMarkupContext.setType(wikiContext.getType());
+          }
+          if (DEFAULT_SPACE.equals(wikiMarkupContext.getOwner())) {
+            wikiMarkupContext.setOwner(wikiContext.getOwner());
+          }
+          if (DEFAULT_PAGE.equals(wikiMarkupContext.getPageId())) {
+            wikiMarkupContext.setPageId(wikiContext.getPageId());
+          }
+
+        }
       }
     } catch (Exception e) {
-      if(LOG.isWarnEnabled()){
-        LOG.warn("Couldn't get wiki context for markup: "+ documentName, e);
+      if (LOG.isWarnEnabled()) {
+        LOG.warn("Couldn't get wiki context for markup: " + objectName, e);
       }
     }
     return wikiMarkupContext;

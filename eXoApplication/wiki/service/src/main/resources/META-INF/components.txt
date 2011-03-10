@@ -5,6 +5,7 @@ org.exoplatform.wiki.service.wysiwyg.DefaultLinkService
 org.exoplatform.wiki.service.wysiwyg.DefaultWikiService
 org.exoplatform.wiki.service.wysiwyg.WikiMacroDescriptorTranslator
 org.exoplatform.wiki.service.wysiwyg.WikiMacroService
+org.exoplatform.wiki.rendering.render.confluence.ConfluenceResourceReferenceSerializer
 org.exoplatform.wiki.rendering.render.confluence.ConfluenceSyntaxRenderer
 org.exoplatform.wiki.rendering.render.confluence.ConfluenceSyntaxBlockRenderer
 org.exoplatform.wiki.rendering.render.confluence.ConfluenceSyntaxRendererFactory
@@ -25,3 +26,4 @@ org.exoplatform.wiki.rendering.macro.pagetree.PageTreeMacro
 org.exoplatform.wiki.rendering.macro.include.IncludePageMacro
 org.exoplatform.wiki.rendering.macro.excerpt.ExcerptMacro
 org.exoplatform.wiki.rendering.macro.related.RelatedMacro
+org.exoplatform.wiki.rendering.macro.code.CodeMacro

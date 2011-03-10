@@ -108,9 +108,9 @@
 	<xerces.version>2.9.1</xerces.version>
   
   <!-- Begin wiki properties -->
-  <org.xwiki.platform.version>2.4</org.xwiki.platform.version>
-  <org.wikimodel.version>2.0.7-20100805</org.wikimodel.version>
-  <gwt.version>2.0.3</gwt.version>
+  <org.xwiki.platform.version>2.7.1</org.xwiki.platform.version>
+  <org.wikimodel.version>2.0.7-20101027</org.wikimodel.version>
+  <gwt.version>2.0.4</gwt.version>
   <smartgwt.version>2.0</smartgwt.version>
   <net.sourceforge.htmlcleaner.version>2.1</net.sourceforge.htmlcleaner.version>
     <!--dependencies which Code Macro depends on-->
@@ -120,6 +120,7 @@
     
   <org.suigeneris.version>0.4.2</org.suigeneris.version>
   <ecs.version>1.4.2</ecs.version>
+  <cssparser.version>0.9.5</cssparser.version>
     <!--dependencies which org.xwiki.platform:xwiki-core-properties depends on-->
   <javax.validation.version>1.0.0.GA</javax.validation.version>
   <hibernate-validator.version>4.0.0.GA</hibernate-validator.version>

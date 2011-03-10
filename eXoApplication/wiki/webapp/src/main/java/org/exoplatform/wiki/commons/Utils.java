@@ -203,9 +203,11 @@ public class Utils {
     if (xhtmlContent == null) {
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
       UIFormTextAreaInput markupInput = pageEditForm.getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT);
+      UIWikiRichTextArea richTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);    
       String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
       String markupSyntax = pageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
       String htmlContent = renderingService.render(markup, markupSyntax, Syntax.ANNOTATED_XHTML_1_0.toIdString(), false);
+      richTextArea.getUIFormTextAreaInput().setValue(htmlContent);
       session.setAttribute(UIWikiRichTextArea.SESSION_KEY, htmlContent);
     } else {
       session.setAttribute(UIWikiRichTextArea.SESSION_KEY, xhtmlContent);

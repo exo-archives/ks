@@ -16,6 +16,9 @@
  */
 package org.exoplatform.wiki.rendering;
 
+import org.xwiki.component.manager.ComponentLookupException;
+import org.xwiki.component.manager.ComponentRepositoryException;
+import org.xwiki.context.Execution;
 import org.xwiki.rendering.block.XDOM;
 
 /**
@@ -23,6 +26,8 @@ import org.xwiki.rendering.block.XDOM;
  * 5, 2009
  */
 public interface RenderingService {
+  
+  public Execution getExecution() throws ComponentLookupException, ComponentRepositoryException;
 
   public String render(String markup, String sourceSyntax, String targetSyntax, boolean supportSectionEdit) throws Exception;
 

@@ -253,11 +253,6 @@
                 </jarModule>
                 <jarModule>
                     <groupId>org.xwiki.platform</groupId>
-                    <artifactId>xwiki-core-observation-local</artifactId>
-                   <excluded>true</excluded>
-                </jarModule>
-                <jarModule>
-                    <groupId>org.xwiki.platform</groupId>
                     <artifactId>xwiki-web-gwt-dom</artifactId>
                    <excluded>true</excluded>
                 </jarModule>

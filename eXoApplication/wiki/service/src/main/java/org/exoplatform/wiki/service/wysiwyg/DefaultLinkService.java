@@ -17,6 +17,8 @@
 package org.exoplatform.wiki.service.wysiwyg;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiContext;
@@ -25,13 +27,15 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.Requirement;
 import org.xwiki.context.Execution;
 import org.xwiki.gwt.wysiwyg.client.wiki.EntityConfig;
+import org.xwiki.gwt.wysiwyg.client.wiki.URIReference;
+import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.model.reference.EntityReferenceSerializer;
-import org.xwiki.rendering.listener.Link;
-import org.xwiki.rendering.listener.LinkType;
-import org.xwiki.rendering.parser.LinkParser;
-import org.xwiki.rendering.renderer.LinkReferenceSerializer;
+import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.rendering.listener.reference.ResourceType;
+import org.xwiki.rendering.parser.ResourceReferenceParser;
+import org.xwiki.rendering.renderer.reference.ResourceReferenceSerializer;
 
 /**
  * Created by The eXo Platform SAS
@@ -41,84 +45,99 @@ import org.xwiki.rendering.renderer.LinkReferenceSerializer;
  */
 @Component
 public class DefaultLinkService implements LinkService {
-  /**
-   * The attachment URI protocol.
-   */
-  private static final String ATTACHMENT_URI_PROTOCOL = "attach:";
-
-  /**
-   * The image URI protocol.
-   */
-  private static final String IMAGE_URI_PROTOCOL = "image:";
-
+  
   /** Execution context handler, needed for accessing the WikiContext. */
   @Requirement
   private Execution execution;
   
   /**
-   * The component used to serialize Wiki document references.
+   * The component used to serialize XWiki document references.
    */
   @Requirement("compact")
-  private EntityReferenceSerializer<String> entityReferenceSerializer;
+  private EntityReferenceSerializer<String>        entityReferenceSerializer;
 
   /**
-   * The component used to resolve an entity reference relative to another entity reference.
+   * The component used to resolve an entity reference relative to another
+   * entity reference.
    */
   @Requirement("explicit/reference")
   private EntityReferenceResolver<EntityReference> explicitReferenceEntityReferenceResolver;
 
   /**
-   * The component used to resolve a string entity reference relative to another entity reference.
+   * The component used to resolve a string entity reference relative to another
+   * entity reference.
    */
   @Requirement("explicit")
-  private EntityReferenceResolver<String> explicitStringEntityReferenceResolver;
+  private EntityReferenceResolver<String>          explicitStringEntityReferenceResolver;
 
   /**
    * The component used to serialize link references.
+   * <p>
+   * Note: The link reference syntax is independent of the syntax of the edited
+   * document. The current hint should be replaced with a generic one to avoid
+   * confusion.
    */
-  @Requirement
-  private LinkReferenceSerializer linkReferenceSerializer;
+  @Requirement("xhtmlmarker")
+  private ResourceReferenceSerializer              linkReferenceSerializer;
 
   /**
    * The component used to parser link references.
+   * <p>
+   * Note: The link reference syntax is independent of the syntax of the edited
+   * document. The current hint should be replaced with a generic one to avoid
+   * confusion.
    */
-  @Requirement("xwiki/2.0")
-  private LinkParser linkReferenceParser;
+  @Requirement("xhtmlmarker")
+  private ResourceReferenceParser                  linkReferenceParser;
 
   /**
-   * The object used to convert between client-side entity references and server-side entity references.
+   * The object used to convert between client and server entity reference.
    */
-  private final EntityReferenceConverter entityReferenceConverter = new EntityReferenceConverter();
+  private final EntityReferenceConverter           entityReferenceConverter = new EntityReferenceConverter();
+  
+  /**
+   * Log exception.
+   */  
+  private static final Log      log               = ExoLogger.getLogger(EntityReferenceConverter.class);
 
   /**
    * {@inheritDoc}
    * 
    * @see LinkService#getEntityConfig(org.xwiki.gwt.wysiwyg.client.wiki.EntityReference,
-   *      org.xwiki.gwt.wysiwyg.client.wiki.EntityReference)
+   *      org.xwiki.gwt.wysiwyg.client.wiki.ResourceReference)
    */
   public EntityConfig getEntityConfig(org.xwiki.gwt.wysiwyg.client.wiki.EntityReference origin,
-      org.xwiki.gwt.wysiwyg.client.wiki.EntityReference destination)
-  {
-      EntityReference originReference = entityReferenceConverter.convert(origin);
-      EntityReference destinationReference = entityReferenceConverter.convert(destination);
-      destinationReference =
-          explicitReferenceEntityReferenceResolver.resolve(destinationReference, destinationReference.getType(),
-              originReference);
-      String destRelativeStrRef = this.entityReferenceSerializer.serialize(destinationReference, originReference);
+                                      org.xwiki.gwt.wysiwyg.client.wiki.ResourceReference destination) {
+    String url;
+    String destRelativeStrRef;
+    
+    if (org.xwiki.gwt.wysiwyg.client.wiki.EntityReference.EntityType.EXTERNAL == destination.getEntityReference()
+                                                                                            .getType()) {
+      url = new URIReference(destination.getEntityReference()).getURI();
+      destRelativeStrRef = url;
+    } else {
+      EntityReference originRef = entityReferenceConverter.convert(origin);
+      EntityReference destRef = entityReferenceConverter.convert(destination.getEntityReference());
+      destRef = explicitReferenceEntityReferenceResolver.resolve(destRef,
+                                                                 destRef.getType(),
+                                                                 originRef);
+      destRelativeStrRef = entityReferenceSerializer.serialize(destRef, originRef);
+      url = getEntityURL(destRef);
+    }
 
-      EntityConfig entityConfig = new EntityConfig();
-      entityConfig.setUrl(getEntityURL(destinationReference));
-      entityConfig.setReference(getLinkReference(destination.getType(), destRelativeStrRef));
-      return entityConfig;
+    EntityConfig entityConfig = new EntityConfig();
+    entityConfig.setUrl(url);
+    entityConfig.setReference(getLinkReference(destination.getType(),
+                                               destination.isTyped(),
+                                               destRelativeStrRef));
+    return entityConfig;
   }
 
   /**
    * @param entityReference an entity reference
    * @return the URL to access the specified entity
-   * @throws Exception 
    */
-  private String getEntityURL(EntityReference entityReference)
-  {
+  private String getEntityURL(EntityReference entityReference) {
     org.exoplatform.wiki.service.WikiService wservice = (org.exoplatform.wiki.service.WikiService) PortalContainer.getComponent(org.exoplatform.wiki.service.WikiService.class);
     WikiContext wikiContext = getWikiContext();
     WikiContext context = new WikiContext();
@@ -126,89 +145,122 @@ public class DefaultLinkService implements LinkService {
     context.setPortletURI(wikiContext.getPortletURI());
     PageImpl page;
     switch (entityReference.getType()) {
-      case DOCUMENT:
-        String pageId = entityReference.getName();
-        String wikiOwner = entityReference.getParent().getName();
-        String wikiType = entityReference.getParent().getParent().getName();
-        context.setType(wikiType);
-        context.setOwner(wikiOwner);
-        context.setPageId(pageId);
-        try {
-          boolean isPageExisted = wservice.isExisting(wikiType, wikiOwner, pageId);
-          if (isPageExisted) {
-            return Utils.getDocumentURL(context);
-          }
-        } catch (Exception e) {}
-        return null;
-      case ATTACHMENT:
-        String attachmentId = entityReference.getName();
-        pageId = entityReference.getParent().getName();
-        wikiOwner = entityReference.getParent().getParent().getName();
-        wikiType = entityReference.getParent().getParent().getParent().getName();
-        try {
-          page = (PageImpl) wservice.getExsitedOrNewDraftPageById(wikiType, wikiOwner, pageId);
-          AttachmentImpl att = page.getAttachment(attachmentId);
-          if (att != null) {
-            return att.getDownloadURL();
-          }
-        } catch (Exception e) {}
-        return null;
-      default:
-        return null;
+    case DOCUMENT:
+      String pageId = entityReference.getName();
+      String wikiOwner = entityReference.getParent().getName();
+      String wikiType = entityReference.getParent().getParent().getName();
+      context.setType(wikiType);
+      context.setOwner(wikiOwner);
+      context.setPageId(pageId);
+      try {
+        boolean isPageExisted = wservice.isExisting(wikiType, wikiOwner, pageId);
+        if (isPageExisted) {
+          return Utils.getDocumentURL(context);
+        }
+      } catch (Exception e) {
+        log.error("Exception happen when finding page " + pageId, e);
+      }
+      return null;
+    case ATTACHMENT:
+      String attachmentId = entityReference.getName();
+      pageId = entityReference.getParent().getName();
+      wikiOwner = entityReference.getParent().getParent().getName();
+      wikiType = entityReference.getParent().getParent().getParent().getName();
+      try {
+        page = (PageImpl) wservice.getExsitedOrNewDraftPageById(wikiType, wikiOwner, pageId);
+        AttachmentImpl att = page.getAttachment(attachmentId);
+        if (att != null) {
+          return att.getDownloadURL();
+        }
+      } catch (Exception e) {
+        log.error("Exception happen when finding attachment " + attachmentId, e);
+      }
+      return null;
+    default:
+      return null;
     }
   }
 
   /**
-   * @param entityType the type of linked entity
+   * @param clientResourceType the type of linked resource
+   * @param typed {@code true} to include the resource scheme in the link
+   *          reference serialization, {@code false} otherwise
    * @param relativeStringEntityReference a relative string entity reference
-   * @return a link reference that can be used to insert a link to the specified entity
+   * @return a link reference that can be used to insert a link to the specified
+   *         entity
    */
-  private String getLinkReference(org.xwiki.gwt.wysiwyg.client.wiki.EntityReference.EntityType entityType,
-      String relativeStringEntityReference)
-  {
-      Link link = new Link();
-      link.setType(entityType == org.xwiki.gwt.wysiwyg.client.wiki.EntityReference.EntityType.DOCUMENT
-          ? LinkType.DOCUMENT : LinkType.URI);
-      link.setReference(relativeStringEntityReference);
-      String linkReference = linkReferenceSerializer.serialize(link);
-      if (entityType == org.xwiki.gwt.wysiwyg.client.wiki.EntityReference.EntityType.ATTACHMENT) {
-          linkReference = ATTACHMENT_URI_PROTOCOL + linkReference;
-      }
-      return linkReference;
+  private String getLinkReference(org.xwiki.gwt.wysiwyg.client.wiki.ResourceReference.ResourceType clientResourceType,
+                                  boolean typed,
+                                  String relativeStringEntityReference) {
+    
+    
+    ResourceType resourceType = new ResourceType(clientResourceType.getScheme());
+    ResourceReference linkReference = new ResourceReference(relativeStringEntityReference,
+                                                            resourceType);
+    
+    linkReference.setTyped(typed);
+    return linkReferenceSerializer.serialize(linkReference);
   }
+  
+  
 
   /**
    * {@inheritDoc}
    * 
-   * @see LinkService#parseLinkReference(String, org.xwiki.gwt.wysiwyg.client.wiki.EntityReference.EntityType,
+   * @see LinkService#parseLinkReference(String,
    *      org.xwiki.gwt.wysiwyg.client.wiki.EntityReference)
    */
-  public org.xwiki.gwt.wysiwyg.client.wiki.EntityReference parseLinkReference(String linkReference,
-      org.xwiki.gwt.wysiwyg.client.wiki.EntityReference.EntityType entityType,
-      org.xwiki.gwt.wysiwyg.client.wiki.EntityReference baseReference)
-  {
-      String fullLinkReference = linkReference;
-      // Add the image protocol because the client doesn't provided it.
-      if (entityType == org.xwiki.gwt.wysiwyg.client.wiki.EntityReference.EntityType.IMAGE) {
-          fullLinkReference = IMAGE_URI_PROTOCOL + linkReference;
-      }
-      Link link = linkReferenceParser.parse(fullLinkReference);
-      String stringEntityReference = link.getReference();
-      // Remove the URI protocol because the link reference parser doesn't do it.
-      int uriSchemeDelimiter = stringEntityReference.indexOf(':');
-      if (link.getType() == LinkType.URI && uriSchemeDelimiter > -1) {
-          stringEntityReference = stringEntityReference.substring(uriSchemeDelimiter + 1);
-      }
-      org.xwiki.gwt.wysiwyg.client.wiki.EntityReference entityReference =
-          entityReferenceConverter.convert(explicitStringEntityReferenceResolver.resolve(stringEntityReference,
-              entityReferenceConverter.convert(entityType), entityReferenceConverter.convert(baseReference)));
-      entityReference.setType(entityType);
-      return entityReference;
+  public org.xwiki.gwt.wysiwyg.client.wiki.ResourceReference parseLinkReference(String linkReferenceAsString,
+                                                                                org.xwiki.gwt.wysiwyg.client.wiki.EntityReference baseReference) {
+    ResourceReference linkReference = linkReferenceParser.parse(linkReferenceAsString);
+    org.xwiki.gwt.wysiwyg.client.wiki.ResourceReference clientLinkReference = new org.xwiki.gwt.wysiwyg.client.wiki.ResourceReference();
+    clientLinkReference.setType(org.xwiki.gwt.wysiwyg.client.wiki.ResourceReference.ResourceType.forScheme(linkReference.getType()
+                                                                                                                        .getScheme()));
+    clientLinkReference.setTyped(linkReference.isTyped());
+    clientLinkReference.getParameters().putAll(linkReference.getParameters());
+    clientLinkReference.setEntityReference(parseEntityReferenceFromResourceReference(linkReference.getReference(),
+                                                                                     clientLinkReference.getType(),
+                                                                                     baseReference));
+    return clientLinkReference;
   }
 
-  private WikiContext getWikiContext()
-  {
-      return (WikiContext) execution.getContext().getProperty(WikiContext.WIKICONTEXT);
+  /**
+   * Parses a client entity reference from a link/resource reference.
+   * 
+   * @param stringEntityReference a string entity reference extracted from a
+   *          link/resource reference
+   * @param resourceType the type of resource the string entity reference was
+   *          extracted from
+   * @param baseReference the client entity reference that is used to resolve
+   *          the parsed entity reference relative to
+   * @return an untyped client entity reference
+   */
+  private org.xwiki.gwt.wysiwyg.client.wiki.EntityReference parseEntityReferenceFromResourceReference(String stringEntityReference,
+                                                                                                      org.xwiki.gwt.wysiwyg.client.wiki.ResourceReference.ResourceType resourceType,
+                                                                                                      org.xwiki.gwt.wysiwyg.client.wiki.EntityReference baseReference) {
+    org.xwiki.gwt.wysiwyg.client.wiki.EntityReference.EntityType entityType;
+    switch (resourceType) {
+    case DOCUMENT:
+      entityType = org.xwiki.gwt.wysiwyg.client.wiki.EntityReference.EntityType.DOCUMENT;
+      break;
+    case ATTACHMENT:
+      entityType = org.xwiki.gwt.wysiwyg.client.wiki.EntityReference.EntityType.ATTACHMENT;
+      break;
+    default:
+      entityType = org.xwiki.gwt.wysiwyg.client.wiki.EntityReference.EntityType.EXTERNAL;
+      break;
+    }
+    if (entityType == org.xwiki.gwt.wysiwyg.client.wiki.EntityReference.EntityType.EXTERNAL) {
+      return new URIReference(stringEntityReference).getEntityReference();
+    } else {
+      return entityReferenceConverter.convert(explicitStringEntityReferenceResolver.resolve(stringEntityReference,
+                                                                                            EntityType.valueOf(entityType.toString()),
+                                                                                            entityReferenceConverter.convert(baseReference)));
+    }
   }
   
+  private WikiContext getWikiContext() {
+    return (WikiContext) execution.getContext().getProperty(WikiContext.WIKICONTEXT);
+  }
+
 }

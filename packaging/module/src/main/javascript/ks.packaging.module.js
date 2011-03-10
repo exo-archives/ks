@@ -62,6 +62,7 @@ function getModule(params) {
     addDependency(new Project("org.exoplatform.ks", "exo.ks.eXoApplication.wiki.service", "jar",  module.version)).
     addDependency(new Project("com.google.gwt", "gwt-servlet", "jar",  "${gwt.version}")).
     addDependency(new Project("com.google.gwt", "gwt-user", "jar",  "${gwt.version}")).
+    addDependency(new Project("net.sourceforge.cssparser", "cssparser", "jar",  "${cssparser.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-web-gwt-wysiwyg-client", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.apache.pdfbox", "fontbox", "jar",  "${org.apache.pdfbox.fontbox.version}")).
     addDependency(new Project("javax.validation", "validation-api", "jar",  "${javax.validation.version}")).
@@ -79,6 +80,7 @@ function getModule(params) {
     addDependency(new Project("org.xwiki.platform", "xwiki-core-script", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-core-rendering-api", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-core-rendering-syntax-wikimodel", "jar",  "${org.xwiki.platform.version}")).
+    addDependency(new Project("org.xwiki.platform", "xwiki-core-rendering-transformation-macro", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-core-rendering-macro-toc", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-core-rendering-macro-box", "jar",  "${org.xwiki.platform.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-core-rendering-macro-message", "jar",  "${org.xwiki.platform.version}")).

@@ -20,10 +20,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.xwiki.rendering.internal.renderer.ParametersPrinter;
-import org.xwiki.rendering.listener.DocumentImage;
-import org.xwiki.rendering.listener.Image;
-import org.xwiki.rendering.listener.ImageType;
-import org.xwiki.rendering.listener.URLImage;
+import org.xwiki.rendering.listener.reference.ResourceReference;
 
 /**
  * Created by The eXo Platform SAS
@@ -33,28 +30,15 @@ import org.xwiki.rendering.listener.URLImage;
  */
 
 /**
- * Generate a Confluence syntax string representation of an {@link Image}, using the format:
+ * Generate a Confluence syntax string representation of an {@image ResourceReference}, using the format:
  * <code>(optional document name)^(attachment name)</code>.
  */
 public class ConfluenceSyntaxImageRenderer {
   
   private ParametersPrinter parametersPrinter = new ParametersPrinter();
   
-  public String renderImage(Image image) {
-    String result;
-    if (image.getType() == ImageType.DOCUMENT) {
-      DocumentImage documentImage = DocumentImage.class.cast(image);
-      if (documentImage.getDocumentName() != null) {
-        result = documentImage.getDocumentName() + "^" + documentImage.getAttachmentName();
-      } else {
-        result = documentImage.getAttachmentName();
-      }
-    } else {
-      URLImage urlImage = URLImage.class.cast(image);
-      result = urlImage.getURL();
-    }
-
-    return result;
+  public String renderImage(ResourceReference image) {
+    return image.getReference().replace("@", "^");
   }
   
   public void beginRenderImage(ConfluenceSyntaxEscapeWikiPrinter printer) {

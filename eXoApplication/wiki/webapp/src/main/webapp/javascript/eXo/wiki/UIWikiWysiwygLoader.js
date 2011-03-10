@@ -14,6 +14,11 @@ if (!eXo.wiki.Wysiwyg) {
      * The queue of functions to execute after the WYSIWYG module is loaded.
      */
     onModuleLoadQueue : [],
+    
+    /**
+     * All the WYSIWYG editor instances, mapped to their hookId.
+     */
+    instances: {},
 
     /**
      * Loads the WYSIWYG code on demand.
@@ -202,6 +207,12 @@ hookGwtOnLoad : function() {
   // Prevent further calls to this method.
     this.hookGwtOnLoad = function() {
     };
+  },
+  /**
+   * @return the WYSIWYG editor instance associated with the given hookId
+   */
+  getInstance: function(hookId) {
+      return this.instances[hookId];
   }
   };
 
@@ -225,6 +236,7 @@ hookGwtOnLoad : function() {
         document.fire('xwiki:wysiwyg:created', {
           'instance' : this
         });
+        eXo.wiki.Wysiwyg.instances[this.getParameter('hookId')] = this;
       }
     }
     WysiwygEditorAspect.prototype = new WysiwygEditor;

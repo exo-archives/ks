@@ -34,6 +34,7 @@ import org.xwiki.context.Execution;
 import org.xwiki.context.ExecutionContext;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.RawBlock;
+import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.syntax.Syntax;
@@ -84,7 +85,7 @@ public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> 
     model = (DefaultWikiModel) getWikiModel(context);
     renderingservice = getRenderingService();
     wservice = getWikiService();
-    WikiPageParams params = model.getWikiMarkupContext(documentName);
+    WikiPageParams params = model.getWikiMarkupContext(documentName,ResourceType.DOCUMENT);
     WikiContext currentContext = null;
     WikiContext pageContext = null;
     StringBuilder includeContent = new StringBuilder();

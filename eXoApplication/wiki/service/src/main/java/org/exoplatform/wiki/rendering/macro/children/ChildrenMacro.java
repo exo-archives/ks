@@ -44,8 +44,8 @@ import org.xwiki.rendering.block.LinkBlock;
 import org.xwiki.rendering.block.ListItemBlock;
 import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.block.WordBlock;
-import org.xwiki.rendering.listener.Link;
-import org.xwiki.rendering.listener.LinkType;
+import org.xwiki.rendering.listener.reference.DocumentResourceReference;
+import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.syntax.Syntax;
@@ -95,7 +95,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     String childrenNum = parameters.getChildrenNum();
     String depth = parameters.getDepth();
     model = (DefaultWikiModel) getWikiModel(context);
-    WikiPageParams params = model.getWikiMarkupContext(documentName);
+    WikiPageParams params = model.getWikiMarkupContext(documentName,ResourceType.DOCUMENT);
     if (StringUtils.EMPTY.equals(documentName)) {
       ExecutionContext ec = execution.getContext();
       if (ec != null) {
@@ -132,14 +132,12 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
                                                                .getComponentInstanceOfType(WikiService.class);
     List<Block> blocks = new ArrayList<Block>();
-    Link link = new Link();
+    
     WikiPageParams params = TreeUtils.getPageParamsFromPath(node.getPath());
     PageImpl page = (PageImpl) wikiService.getPageById(params.getType(),
                                                        params.getOwner(),
                                                        params.getPageId());
-
-    link.setReference(model.getDocumentName(params));
-    link.setType(LinkType.DOCUMENT);
+    DocumentResourceReference link = new DocumentResourceReference(model.getDocumentName(params));
     List<Block> content = new ArrayList<Block>();
     content.add(new WordBlock(page.getContent().getTitle()));
 

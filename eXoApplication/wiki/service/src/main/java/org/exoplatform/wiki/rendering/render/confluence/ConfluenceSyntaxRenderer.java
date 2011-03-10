@@ -28,7 +28,7 @@ import org.xwiki.rendering.listener.chaining.GroupStateChainingListener;
 import org.xwiki.rendering.listener.chaining.ListenerChain;
 import org.xwiki.rendering.listener.chaining.LookaheadChainingListener;
 import org.xwiki.rendering.renderer.AbstractChainingPrintRenderer;
-import org.xwiki.rendering.renderer.LinkReferenceSerializer;
+import org.xwiki.rendering.renderer.reference.ResourceReferenceSerializer;
 
 /**
  * Created by The eXo Platform SAS
@@ -44,10 +44,10 @@ import org.xwiki.rendering.renderer.LinkReferenceSerializer;
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class ConfluenceSyntaxRenderer extends AbstractChainingPrintRenderer implements Initializable {
   /**
-   * Needed by ConfluenceSyntaxChainingRenderer to serialize wiki link references.
+   * Needed by XWikiSyntaxChainingRenderer to serialize wiki link references.
    */
-  @Requirement
-  private LinkReferenceSerializer linkReferenceSerializer;
+  @Requirement("confluence/1.0/link")
+  private ResourceReferenceSerializer linkReferenceSerializer;
 
   /**
    * {@inheritDoc}

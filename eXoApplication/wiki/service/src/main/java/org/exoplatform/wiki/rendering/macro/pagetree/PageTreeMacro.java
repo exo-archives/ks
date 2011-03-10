@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -35,6 +34,7 @@ import org.xwiki.context.Execution;
 import org.xwiki.context.ExecutionContext;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.RawBlock;
+import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.syntax.Syntax;
@@ -85,7 +85,7 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
     String startDepth = parameters.getStartDepth();
     excerpt = parameters.isExcerpt();
     model = (DefaultWikiModel) getWikiModel(context);
-    WikiPageParams params = model.getWikiMarkupContext(documentName);
+    WikiPageParams params = model.getWikiMarkupContext(documentName,ResourceType.DOCUMENT);
     if (StringUtils.EMPTY.equals(documentName)) {
       WikiContext wikiContext = getWikiContext();
       if (wikiContext != null)
