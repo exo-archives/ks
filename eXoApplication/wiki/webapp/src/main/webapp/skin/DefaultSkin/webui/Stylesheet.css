@@ -324,17 +324,6 @@
   padding: 0px;
 }
 
-.UIWikiPageEditForm .UIWikiPageContentMarginRight {
-  margin-right: 290px;
-}
-
-.UIWikiPageArea .UIWikiPageEditForm .HorizontalLayout {
-  margin-bottom: 20px;
-  margin-top: 4px;
-	padding: 0px;
-	border: none;
-	background: none;
-}
 
 .UIWikiPortlet .UIWikiPageTitleControlForm_PageControlArea {
 	float:left;
@@ -396,7 +385,6 @@
 
 .UIWikiPortlet .UIWikiMiddleArea .UIWikiPageContainer{
   margin:0;
-	overflow: auto;	
 }
 
 .UIWikiPortlet .UIWikiMiddleArea .Related {
@@ -419,30 +407,27 @@
 	margin-right: auto;
 }
 
-.UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm{
-	float:left;
-	margin-top: 8px;
-}
-
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm {
-	float: left;
-	width: 50%;
+	margin-top: 8px;
+	width: 40%;
+	*width: 40%;
 	font-weight: bold;
 	font-size: 18px;
 	color: #636363;
+	float: left;
 }
 
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm #TitleInput {
-	width: 100%;
+	width: 98%;
 	border: 1px solid #dddddd;
 	background-color: #ffffff;
 	font-size: 24px;
 	color: #636363;
-	padding-left: 8px;
+	padding-left: 6px;
 }
 
 .UIWikiPageEditForm .UIWikiTemplateDescriptionContainer input{
-  width: 50%;
+	width: 50%;
 	border: 1px solid #dddddd;
 	background-color: #ffffff;
 	font-size: 14px;
@@ -455,6 +440,7 @@
 	height: auto;
 	border: 1px solid #dddddd;
 	padding: 0 0 0 8px;
+	
 }
 
 .UIWikiPageEditForm .SyntaxType, .UIWikiPageEditForm .CommentInput {
@@ -482,9 +468,12 @@
 .UIWikiPageEditForm .UIForm .UIWikiPageContentMarginRight textarea {
 	border: 1px solid #dddddd;
 	height: auto;
-	padding: 6px 8px;
-	width: 99%;
-	*width: 97.2%;
+	padding: 6px 6px;
+	*padding: 6px 0px 6px 6px;
+	width: 96%;
+	*width: 95%;
+	overflow: auto;
+	margin-bottom: 10px;
 }
 
 /* wiki homepage */
@@ -727,13 +716,14 @@
 /* Wiki help */
 
 .UIWikiSidePanelArea {
-	margin: 4px 0 10px;
+	margin: 0px 0 10px;
 	padding: 0;
 	line-height: 16px;
 	width: 270px;
 	float: right;
 	border: 1px solid #dddddd;
 	border-top: none;
+	*margin-top: 4px;
 }
 
 .UIWikiSidePanelArea .Tit {
@@ -1504,3 +1494,15 @@
   text-decoration: none;
   padding: 6px 8px 6px 25px;
 }
+
+
+/**** 11-03-2011 *****/
+
+.UIWikiPageArea .UIWikiPageEditForm .UIColsLeftsEditForm{
+	margin-right: 280px;
+	*margin-right: 270px;
+	padding: 0px;
+	margin-top: 4px;
+	margin-bottom: 20px;
+}
+

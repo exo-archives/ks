@@ -1,12 +1,14 @@
 <div class="UIWikiPageEditForm">
-<% uiform.begin();
-   
+<% uiform.begin();%>
+<div class="ClearFix">
+<%
    uiform.renderChild(uiform.TITLE_CONTROL);
    uiform.renderChild(uiform.PAGE_TOOLBAR);
 %>
- <div class="ClearBoth"></div>
+</div>
+<div class="UIWikiPageContainer ClearFix">
 <% uiform.renderChild(uiform.FIELD_TEMPLATEDESCTIPTION);  %>
-   <div class="ClearBoth"></div>
+
 <% uiform.renderChild(uiform.HELP_PANEL);%>
 
 <% textAreaInput = uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT)
@@ -15,7 +17,8 @@
 <% if(uicomponent.isSidePanelRendered() && uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT).isRendered()){
      textAreaInput.setColumns(92);
 %>
-   <div class="UIWikiPageContentInputContainer UIWikiPageContentMarginRight HorizontalLayout">
+  <div class="UIColsLeftsEditForm">
+   <div class="UIWikiPageContentInputContainer UIWikiPageContentMarginRight">
      <% uiform.renderField(uiform.FIELD_CONTENT); %>
    </div>
 <% } else if(uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT).isRendered()) {
@@ -38,8 +41,9 @@
        %>
      <% } %>
    </div>
+ </div>
 <% if(uiform.getChildById(uiform.HELP_PANEL).isRendered()) { %>
-   <div class="ClearRight"></div>
 <% } %>
+</div>
 <% uiform.end();%>
 </div>

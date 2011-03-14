@@ -3,13 +3,12 @@
 %>
 
 <div class="UIWikiSidePanelArea" id="$uicomponent.id">
-  <div class="BarTit">
+  <div class="BarTit ClearFix">
   <% 
   	 String closeLink= uicomponent.getParent().event(UIWikiPageEditForm.CLOSE);
    %>
     <a href="$closeLink" class="CloseButton"><span></span></a>
      <%=uicomponent.getSyntaxName()%>
-    <div class="ClearRight"></div>
   </div>
   <div class="Content">
   <% if (uicomponent.getHtmlOutput()!=null) {%>
