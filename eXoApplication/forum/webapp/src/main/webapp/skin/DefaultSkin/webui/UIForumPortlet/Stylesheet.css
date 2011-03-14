@@ -270,8 +270,10 @@
 }
 
 .UIForumPortlet .ContentContainer .UIGrid th {
-	background: url(background/ForumTitleBar1x19.gif) repeat-x;
+  background: #f0f0f0 url(background/ForumTitleBar1x19.gif) repeat-x;
 	border: 1px solid #d2d4dc;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 .UIForumPortlet .ContentContainer .UIGrid td {
