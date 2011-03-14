@@ -16,16 +16,13 @@
  */
 package org.exoplatform.wiki.webui;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
-import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormSelectBox;
@@ -36,8 +33,8 @@ import org.exoplatform.wiki.mow.core.api.wiki.Preferences;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.control.UIPageToolBar;
+import org.exoplatform.wiki.webui.core.UISyntaxSelectBoxFactory;
 import org.exoplatform.wiki.webui.core.UIWikiForm;
-import org.xwiki.rendering.syntax.Syntax;
 
 /**
  * Created by The eXo Platform SAS
@@ -73,7 +70,7 @@ public class UIWikiPageEditForm extends UIWikiForm {
   
   public static final String CLOSE = "Close";
   
-  public UIWikiPageEditForm() throws Exception{
+  public UIWikiPageEditForm() throws Exception {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.EDITPAGE, WikiMode.ADDPAGE,
         WikiMode.EDITTEMPLATE, WikiMode.ADDTEMPLATE });
     addChild(UIWikiPageTitleControlArea.class, null, TITLE_CONTROL).toInputMode();
@@ -85,18 +82,10 @@ public class UIWikiPageEditForm extends UIWikiForm {
     addUIFormInput(markupInput).setRendered(true);
     UIFormStringInput commentInput = new UIFormStringInput(FIELD_COMMENT, FIELD_COMMENT, "");
     addUIFormInput(commentInput);
-    List<SelectItemOption<String>> syntaxTypes = new ArrayList<SelectItemOption<String>>();
-    syntaxTypes.add(new SelectItemOption<String>(Syntax.XWIKI_1_0.toString(),Syntax.XWIKI_1_0.toIdString()));
-    syntaxTypes.add(new SelectItemOption<String>(Syntax.XWIKI_2_0.toString(),Syntax.XWIKI_2_0.toIdString()));
-    syntaxTypes.add(new SelectItemOption<String>(Syntax.CREOLE_1_0.toString(),Syntax.CREOLE_1_0.toIdString()));
-    syntaxTypes.add(new SelectItemOption<String>(Syntax.CONFLUENCE_1_0.toString(),Syntax.CONFLUENCE_1_0.toIdString()));
-    syntaxTypes.add(new SelectItemOption<String>(Syntax.MEDIAWIKI_1_0.toString(),Syntax.MEDIAWIKI_1_0.toIdString()));
-    syntaxTypes.add(new SelectItemOption<String>(Syntax.JSPWIKI_1_0.toString(),Syntax.JSPWIKI_1_0.toIdString()));
-    syntaxTypes.add(new SelectItemOption<String>(Syntax.TWIKI_1_0.toString(),Syntax.TWIKI_1_0.toIdString()));
-    UIFormSelectBox syntaxTypeSelectBox = new UIFormSelectBox(FIELD_SYNTAX,FIELD_SYNTAX,syntaxTypes);
-    syntaxTypeSelectBox.setOnChange("SelectSyntax");
-    addUIFormInput(syntaxTypeSelectBox);
-  }   
+    UIFormSelectBox selectSyntax = UISyntaxSelectBoxFactory.newInstance(FIELD_SYNTAX, FIELD_SYNTAX);
+    selectSyntax.setOnChange("SelectSyntax");
+    this.addChild(selectSyntax);   
+  }
   
   public void setTitle(String title){ this.title = title ;}
   public String getTitle(){ return title ;}

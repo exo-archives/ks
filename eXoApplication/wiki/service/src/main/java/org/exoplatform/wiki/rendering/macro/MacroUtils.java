@@ -17,7 +17,6 @@
 package org.exoplatform.wiki.rendering.macro;
 
 import java.io.StringReader;
-import java.net.URLDecoder;
 import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -26,8 +25,6 @@ import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.macro.excerpt.ExcerptMacro;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
-import org.exoplatform.wiki.tree.TreeNode;
-import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
@@ -113,6 +110,16 @@ public class MacroUtils {
     return sb.toString();
   }
 
+
+
+  /**
+   * Get the parser for the current syntax.
+   * 
+   * @param componentManager manager of all services
+   * @param context the context of the macro transformation (from which to get the current syntax)
+   * @return the parser for the current syntax
+   * @throws MacroExecutionException Failed to find source parser.
+   */
   private static Parser getSyntaxParser(ComponentManager componentManager, MacroTransformationContext context) throws MacroExecutionException {
     try {
       return componentManager.lookup(Parser.class, context.getSyntax().toIdString());

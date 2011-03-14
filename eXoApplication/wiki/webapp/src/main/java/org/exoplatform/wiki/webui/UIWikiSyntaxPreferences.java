@@ -16,18 +16,14 @@
  */
 package org.exoplatform.wiki.webui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputSet;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.Preferences;
 import org.exoplatform.wiki.service.WikiService;
-import org.xwiki.rendering.syntax.Syntax;
+import org.exoplatform.wiki.webui.core.UISyntaxSelectBoxFactory;
 
 /**
  * Created by The eXo Platform SAS
@@ -42,25 +38,15 @@ public class UIWikiSyntaxPreferences extends UIFormInputSet {
 
   public UIWikiSyntaxPreferences(String id) throws Exception {
    setId(id);  
-   WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
-   
-   List<SelectItemOption<String>> syntaxTypes = new ArrayList<SelectItemOption<String>>();
-   syntaxTypes.add(new SelectItemOption<String>(Syntax.XWIKI_1_0.toString(),Syntax.XWIKI_1_0.toIdString()));
-   syntaxTypes.add(new SelectItemOption<String>(Syntax.XWIKI_2_0.toString(),Syntax.XWIKI_2_0.toIdString()));
-   syntaxTypes.add(new SelectItemOption<String>(Syntax.CREOLE_1_0.toString(),Syntax.CREOLE_1_0.toIdString()));
-   syntaxTypes.add(new SelectItemOption<String>(Syntax.CONFLUENCE_1_0.toString(),Syntax.CONFLUENCE_1_0.toIdString()));
-   syntaxTypes.add(new SelectItemOption<String>(Syntax.MEDIAWIKI_1_0.toString(),Syntax.MEDIAWIKI_1_0.toIdString()));
-   syntaxTypes.add(new SelectItemOption<String>(Syntax.JSPWIKI_1_0.toString(),Syntax.JSPWIKI_1_0.toIdString()));
-   syntaxTypes.add(new SelectItemOption<String>(Syntax.TWIKI_1_0.toString(),Syntax.TWIKI_1_0.toIdString()));
-   UIFormSelectBox syntaxTypeSelectBox = new UIFormSelectBox(FIELD_SYNTAX,FIELD_SYNTAX,syntaxTypes);   
-   
+   WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;   
     Preferences currentPreferences = Utils.getCurrentPreferences();
     String currentDefaultSyntaxt = currentPreferences.getPreferencesSyntax().getDefaultSyntax();
     if (currentDefaultSyntaxt == null) {
       currentDefaultSyntaxt = wservice.getDefaultWikiSyntaxId();
     }
-    syntaxTypeSelectBox.setValue(currentDefaultSyntaxt);
-    addUIFormInput(syntaxTypeSelectBox).setRendered(true);
+    UIFormSelectBox selectSyntax = UISyntaxSelectBoxFactory.newInstance(FIELD_SYNTAX, FIELD_SYNTAX);    
+    selectSyntax.setValue(currentDefaultSyntaxt);
+    this.addChild(selectSyntax);
     UIFormCheckBoxInput<Boolean> allowSelect = new UIFormCheckBoxInput<Boolean>(FIELD_ALLOW,
                                                                                 FIELD_ALLOW,
                                                                                 null);

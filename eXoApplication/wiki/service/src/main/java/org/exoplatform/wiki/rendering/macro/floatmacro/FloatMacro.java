@@ -16,27 +16,22 @@
  */
 package org.exoplatform.wiki.rendering.macro.floatmacro;
 
-import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.wiki.rendering.macro.MacroUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.Requirement;
-import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.GroupBlock;
-import org.xwiki.rendering.block.ParagraphBlock;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
-import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
-import org.xwiki.rendering.util.ParserUtils;
-import org.xwiki.rendering.parser.ParseException;
 
 /**
  * Created by The eXo Platform SAS
@@ -92,7 +87,9 @@ public class FloatMacro extends AbstractMacro<FloatMacroParameters> {
       Map<String, String> params = new HashMap<String, String>();
       if (!StringUtils.isEmpty(cssClass)) params.put("class", cssClass);
       params.put("style", styles);
-      List<Block> contentBlocks = parseSourceSyntax(content, context);
+      List<Block> contentBlocks = MacroUtils.parseSourceSyntax(getComponentManager(),
+                                                               content,
+                                                               context);
       Block floatBlock = new GroupBlock(contentBlocks, params);
       return Collections.singletonList(floatBlock); 
     } else {
@@ -111,54 +108,5 @@ public class FloatMacro extends AbstractMacro<FloatMacroParameters> {
    */
   public ComponentManager getComponentManager() {
     return this.componentManager;
-  }
-  
-  /**
-   * Parse provided content with the parser of the current wiki syntax.
-   * 
-   * @param content the content to parse.
-   * @param context the context of the macro transformation.
-   * @return an XDOM containing the parser content.
-   * @throws MacroExecutionException failed to parse content
-   */
-  protected List<Block> parseSourceSyntax(String content, MacroTransformationContext context) throws MacroExecutionException {
-    Parser parser = getSyntaxParser(context);
-
-    try {
-      List<Block> blocks = parser.parse(new StringReader(content)).getChildren();
-      
-      if (context.isInline()) {
-        ParserUtils parseUtils = new ParserUtils();
-        parseUtils.removeTopLevelParagraph(blocks);
-      }
-      
-      if (blocks.size() == 1 && blocks.get(0) instanceof ParagraphBlock) {
-        List<Block> children = blocks.get(0).getChildren();
-        if (children.size() > 0) {
-          blocks = children;
-        }
-      }
-
-      return blocks;
-    } catch (ParseException e) {
-      throw new MacroExecutionException("Failed to parse content [" + content
-          + "] with Syntax parser [" + parser.getSyntax() + "]", e);
-    }
-  }
-  
-  /**
-   * Get the parser for the current syntax.
-   * 
-   * @param context the context of the macro transformation (from which to get the current syntax)
-   * @return the parser for the current syntax
-   * @throws MacroExecutionException Failed to find source parser.
-   */
-  protected Parser getSyntaxParser(MacroTransformationContext context) throws MacroExecutionException {
-    try {
-      return getComponentManager().lookup(Parser.class, context.getSyntax().toIdString());
-    } catch (ComponentLookupException e) {
-      throw new MacroExecutionException("Failed to find source parser for syntax ["
-          + context.getSyntax() + "]", e);
-    }
   }
 }

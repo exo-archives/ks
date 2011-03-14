@@ -3,7 +3,7 @@ import org.exoplatform.wiki.mow.api.Page ;
 import org.exoplatform.wiki.mow.api.WikiNodeType ;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl ;
 import org.exoplatform.commons.utils.PageList ;
-import org.exoplatform.wiki.service.SearchResult;
+import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.commons.Utils ;
 import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 

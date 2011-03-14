@@ -55,32 +55,7 @@ public class ContentSearchData extends SearchData {
   }
 
   public String getChromatticStatement() {
-    StringBuilder statement = new StringBuilder();
-    try {
-      boolean isAnd = false;
-      statement.append(this.jcrQueryPath);
-      isAnd = true;
-      if (text != null && text.length() > 0) {
-        if (isAnd)
-          statement.append(" AND ");
-        statement.append(" CONTAINS(*, '").append(text).append("')");
-        isAnd = true;
-      } else {
-        if (title != null && title.length() > 0) {
-          if (isAnd)
-            statement.append(" AND ");
-          statement.append(" CONTAINS(title, '").append(title).append("') ");
-          isAnd = true;
-        }
-        if (content != null && content.length() > 0) {
-          if (isAnd)
-            statement.append(" AND ");
-          statement.append(" CONTAINS(text, '").append(content).append("') ");
-        }
-      }
-    } catch (Exception e) {
-    }
-    return statement.toString();
+    return getContentCdt();
   }
 
   public String getStatementForTitle() {
@@ -99,36 +74,10 @@ public class ContentSearchData extends SearchData {
 
   public String getStatement() {
     StringBuilder statement = new StringBuilder();
-    try {
-      statement.append("SELECT title, jcr:primaryType, path, excerpt(.) ")
-               .append("FROM nt:base ")
-               .append("WHERE ");
-      boolean isAnd = false;
-
-      statement.append(this.jcrQueryPath);
-      isAnd = true;
-
-      if (text != null && text.length() > 0) {
-        if (isAnd)
-          statement.append(" AND ");
-        statement.append(" CONTAINS(*, '").append(text).append("')");
-        isAnd = true;
-      } else {
-        if (title != null && title.length() > 0) {
-          if (isAnd)
-            statement.append(" AND ");
-          statement.append(" CONTAINS(title, '").append(title).append("') ");
-          isAnd = true;
-        }
-        if (content != null && content.length() > 0) {
-          if (isAnd)
-            statement.append(" AND ");
-          statement.append(" CONTAINS(text, '").append(content).append("') ");
-        }
-      }
-      statement.append(" ORDER BY jcr:primaryType DESC, jcr:score DESC");
-    } catch (Exception e) {
-    }
+    statement.append("SELECT title, jcr:primaryType, path, excerpt(.) ")
+             .append("FROM nt:base ")
+             .append("WHERE ");
+    statement.append(getContentCdt());
     return statement.toString();
   }
 
@@ -144,6 +93,32 @@ public class ContentSearchData extends SearchData {
     } catch (Exception e) {
     }
     return statement.toString();
+  }
+  
+  private String getContentCdt() {
+    StringBuilder clause = new StringBuilder();
+    boolean isAnd = false;
+    clause.append(this.jcrQueryPath);
+    isAnd = true;
+    if (text != null && text.length() > 0) {
+      if (isAnd)
+        clause.append(" AND ");
+      clause.append(" CONTAINS(*, '").append(text).append("')");
+      isAnd = true;
+    } else {
+      if (title != null && title.length() > 0) {
+        if (isAnd)
+          clause.append(" AND ");
+        clause.append(" CONTAINS(title, '").append(title).append("') ");
+        isAnd = true;
+      }
+      if (content != null && content.length() > 0) {
+        if (isAnd)
+          clause.append(" AND ");
+        clause.append(" CONTAINS(text, '").append(content).append("') ");
+      }
+    }
+    return clause.toString();
   }
 
 }
