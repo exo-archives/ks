@@ -67,9 +67,9 @@
 										<td class="Tdbox">
 										<%
 											if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())){%>
-												<%=_ctx.appRes("UIPageListPostByIP.label.Topic");%>
+												<%=_ctx.appRes("UIForumPortlet.label.topic");%>
 										<%} else {%>
-												<%=_ctx.appRes("UIPageListPostByIP.label.Post");%>
+												<%=_ctx.appRes("UIForumPortlet.label.post");%>
 										<%}
 										%>
 										</td>

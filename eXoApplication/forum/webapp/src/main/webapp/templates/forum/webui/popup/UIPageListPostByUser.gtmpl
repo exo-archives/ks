@@ -32,7 +32,7 @@
 									</div>
 									</div>
 								</th>
-								<th style="width:120px">
+								<th style="width:130px">
 									<div onclick="<%=uicomponent.event("SetOrderBy","createdDate");%>">
 										<div class="DownArrow1Icon" style="cursor:pointer">
 											<%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%>
@@ -42,7 +42,7 @@
 								<%if(isAdmin){ 
 								    if(isShowIP) {
 								%>
-									<th style="width:120px; margin:0px auto;"><%=_ctx.appRes("UIPageListPostByUser.label.IPLogging");%></th>
+									<th style="width:130px; margin:0px auto;"><%=_ctx.appRes("UIPageListPostByUser.label.IPLogging");%></th>
 								<%  }%>
 								<%} %>
 									<th style="width:60px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>

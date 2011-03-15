@@ -565,7 +565,7 @@
 																			<div class="ButtonLeft">
 																				<div class="ButtonRight">
 																					<div class="ButtonMiddle">
-																					 <div onclick="<%=uicomponent.event("AddTagTopic")%>">Add Tag</div>
+																					 <div onclick="<%=uicomponent.event("AddTagTopic")%>"><%=_ctx.appRes("UITopicDetail.label.AddTag");%></div>
 																					</div>
 																				</div>
 																			</div>
