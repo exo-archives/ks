@@ -1,0 +1,460 @@
+h1. Overview  
+eXo Knowledge is a JCR-based product, it uses JCR to store data.
+The root node of eXo Knowledge is exo:application which includes these child nodes: exo:forumHome, exo:faqHome. 
+
+h1. Forum JCR structure
+Forum is a JCR-based application. The Forum data are saved in eXo-JCR under the Forum Service data directory. The whole JCR structure of Forum can be visualized in the diagram below:
+
+!Forum_JCR_Structure.png!
+
+h2. Forum System
+The Forum System node is created from the note type exo:forumSystem. That is defined as a child node of Forum Service and can store nodes with these following note types: exo:banIP, exo:forumUserProfile, exo:statistic, exo:administration under the Forum System.
+The Forum System node is stored in {{/exo:applications/ForumService/ForumSystem}}.
+
+h3. User Profile and User Profile Home
+The User Profile and User Profile Home node are used to store information of each user. User Profile is automatically created by a listener when a user registers to the organization service. Private message and forum subscription can be added to User Profile as a child node. 
+These node types exo:forumUserProfile, exo:userProfileHome, exo:privateMessage and exo:forumSubcription are defined as child nodes of exo:forumUserProfile.
+The User Profile node is stored under ForumSystem node: {{/exo:applications/ForumService/ForumSystem/exo:userProfileHome/exo:forumUserProfile}}.
+
+- The node type exo:forumUserProfile has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:userId | String | false| The user id. |
+| exo:fullName | String | false| The user's full name. |
+| exo:firstName | String | false| The user's first name. |
+| exo:lastName | String | false| The user's last name. |
+| exo:email | String | false| The user's email address. |
+| exo:userTitle | String | false| The user's title: Administrator, Moderator or User. |
+| exo:screenName | String | false| The displayed name of user in Forum. |
+| exo:userRole | Long | false| The user's role. The value can be: "O": Administrator, "1": Moderator, "2": User, "3": guest. |
+| exo:signature | String | false| The signature displayed at the end of each user's post. |
+| exo:totalPost | Long | false| The total posts submitted by the user. |
+| exo:totalTopic | Long | false| The total topics started by the user. |
+| exo:jobWattingForModerator | Long | false| The number of jobs that are waiting to be moderated. |
+| exo:moderateForums | String | true| The list of forum ids that user is the moderator. |
+| exo:moderateCategory | String | true| The list of category ids that user is the moderator. |
+| exo:readTopic | String | true| The list of topics that user has read. |
+| exo:readForum | String | true| The read of forums that user has read. |
+| exo:lastReadPostOfTopic | String | true| The list of last read posts id in a topic that user has read. |
+| exo:lastReadPostOfForum | String | true| The list of last read posts id in a forum that user has read. |
+| exo:isAutoWatchMyTopics | Boolean | false| Enable/disable the auto-watch the topics created by user. Topics created by a user will be watched automatically if the value is set to "true". |
+| exo:isAutoWatchTopicIPost | Boolean | false| Enable/disable the auto-watch posts submitted by user. Topics posted by an user will be watched automatically if the value is set to "true". |
+| exo:bookmark | String | true| The list of topics/posts bookmarked by user. |
+| exo:lastLoginDate | Date | false| The date of the last login. |
+| exo:joinedDate | Date | false| The date when user joined forum. |
+| exo:lastPostDate | Date | false| The date of the last post. |
+| exo:isDisplaySignature | Boolean | false | Users' signature will be displayed at the end of their post if the value is set to "true". |
+| exo:isDisplayAvatar | Boolean | false | User's avatar is displayed if the value is set to "true". |
+| exo:newMessage | Long | false | The number of new messages. |
+| exo:timeZone | Double | false | The time zone configured by user. |
+| exo:timeFormat | String | false | The time format configured by user 12h/24h. |
+| exo:shortDateformat | String | false | The format of short date configured by user. Example: 'dd/MM/yyyy'. |
+| exo:longDateformat | String | false | The format of long date configured by user. Example: 'dd mmm, yyyy'. |
+| exo:maxPost | Long | false | The number of the maximum posts displayed per page. |
+| exo:maxTopic | Long | false | The number of the maximum topics displayed per page |
+| exo:isShowForumJump | Boolean | false | Display/hide the forum jump drop-down list. This jump list will be shown if the value is set to "true". |
+| exo:collapCategories | String | true | The list of categories collapsed by user. |
+| exo:isBanned | Boolean | false| The user's condition. User is currently banned if the value is set to "true". |
+| exo:banUntil | Long | false | The time when the ban period will expire. |
+| exo:banReason | String | false | The description for the reason that user was banned. |
+| exo:banCounter | String | false | The number of bans that user has committed. |
+| exo:banReasonSummary | String | true| The list of ban reason summaries when a user is banned for more than one time. |
+| exo:createdDateBan | Date | false | The date when the ban period is started. |
+
+- The child node type exo:privateMessage has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:from | String | false | The user id of the sender. |
+| exo:sendTo | String | false | The user id of the receiver. |
+| exo:name | String | false | The private message subject. |
+| exo:message | String | false | The message contents. |
+| exo:type | String | false | The private message type: sent messages or received messages. |
+| exo:receivedDate | Date | false | The date when the private message was received. |
+| exo:isUnread | Boolean | false | The private message read status: read/unread. |
+
+- The child node type exo:forumSubscription has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:categoryIds | String | true | The ids of the subscribed categories. |
+| exo:forumIds | String | true | The ids of the subscribed forums. |
+| exo:topicIds | String | true | The ids of the subscribed topics. |
+
+h3. Statistic and Statistic Home
+Statistic and Statistic Home are used to store statistic information of forum, such as number of posts, topics, users, active users. The node type is exo:forumStatistic, exo:statisticHome.
+- The Statistic node is stored under the Forum System node: {{/exo:applications/ForumService/ForumSystem/exo:statisticHome/exo:forumStatistic}} and its node type has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:postCount | Long | false | The total number of submitted posts in Forum. |
+| exo:topicCount | Long | false | The number of total created topics in Forum.|
+| exo:membersCount | Long | false | The number of the registered users. |
+| exo:newMembers | String | false | The id of the latest registered user. |
+| exo:mostUsersOnline | String | false | The highest number of the online users. |
+| exo:activeUsers | Long | false | The number of active users. |
+
+h3. Ban IP and Ban IP Home
+The Ban IP and Ban IP Home node are used to store data about banned IP addresses. The node type exo:banIPHome contains the child node exo:IPHome.
+- The Ban IP node is stored under the Forum System node: {{/exo:applications/ForumService/ForumSystem/exo:banIPHome/exo:banIP}} and its node type has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:ips | String | true | The list of ip addresses of the banned users. |
+
+h3. Administration and Administration Home
+
+Administration and Administration Home are used to store data for setting the layout, notification email format and censor jobs. The node type of the Administration Home node is exo:administrationHome and the its child node type is exo:administration.
+The Administration node is stored under the ForumSystem node {{/exo:applications/ForumService/ForumSystem/exo:administrationHome/exo:administration}} and its node type has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:forumSortBy | String | false | Sort forum by criteria: post count, topic count, lock status. |
+| exo:forumSortByType | String | false | Sort forum by ascending/descending type. |
+| exo:topicSortBy | String | false | Sort topic by criteria. |
+| exo:topicSortByType | String | false | Sort topic by ascending type or descending type. |
+| exo:censoredKeyword | String | false | The list of censored words. |
+| exo:headerSubject | String | false | The subject header. |
+| exo:enableHeaderSubject | Boolean | false | Enable/disable the subject header. The subject header is displayed if the value is set to "true".|
+| exo:notifyEmailContent | String | false | Define if the notification email will be sent when there is a new added topic/post. |
+| exo:notifyEmailMoved | String | false | Define if the notification email will be sent when there are any moved topic/post. |
+
+h2. Forum Data
+The Forum Data node is created from the node type exo:forumData. The data nodes like category, forum, topic, post, tag, BBcode and topic type will be stored under the Forum Data node:{{/exo:applications/ForumService/ForumData}}.
+
+h3. Category and Category home
+The Category node is used to store all categories of forum, this node is a child node of the Forum Data node and only Category note type can be added to the Category Home. The node type of the Category Home node is exo:categoryHome
+is stored in {{/exo:applications/ForumService/ForumData/CategoryHome}}.
+The Category node has the node type exo:forumCategory which is a child node of the CategoryHome node. This note type is defined to allow adding child nodes as exo:forum and exo:forumRSS.
+
+- The node type exo:forumCategory has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:id | String | false | The category id. |
+| exo:owner | String | false | The category creator. |
+| exo:path | String | false | The node path of the category. |
+| exo:createdDate | Date | false | The date when the category was created. |
+| exo:modifiedBy | String | false | The id of the user who made the last modification on the category. |
+| exo:name | String | false | The category name. |
+| exo:modifiedDate | Date | false | The date when the modifications on category were made. |
+| exo:description | String | false | The category description. |
+| exo:moderators | String | true | The list of moderators of the category. |
+| exo:tempModerators | String | true | The temporary moderator of the category. |
+| exo:createTopicRole | String | true | The topic role. |
+| exo:poster | String | true | The list of ids of the users and groups who can post in the category. |
+| exo:viewer | String | true | The list of ids of the users and groups who can only view posts in the category. |
+| exo:categoryOrder | Long | false | The order number of category in the category list. |
+| exo:userPrivate | String | true | The list of user ids whose access are restricted from the category. |
+| exo:forumCount | Long | false | The total number of forums in the category. |
+
+h3. Forum
+The Forum node is defined as a child node of category and allowed adding child nodes as Topic and RSS type. The node type of Forum is exo:forum.
+The Forum node is stored in {{/exo:applications/ForumService/ForumData/CategoryHome/%Category-id%/%Forum-id%}} and its node type has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:id | String | false | The forum id. |
+| exo:owner | String | false | The forum creator. |
+| exo:path | String | false | The node path of the forum. |
+| exo:name | String | false | The forum title. |
+| exo:forumOrder | Integer | false | The order number in the list of forums. Forum with smaller number will get higher order. |
+| exo:createdDate | Date | false | The date and time when the forum was created. |
+| exo:modifiedBy | String | false | The id of user who modified the category. |
+| exo:modifiedDate | Date | false | The time of modification, including date, time and time zone. |
+| exo:lastTopicPath | String | false | The id of the last topic in the forum. |
+| exo:description | String | false | The description of forum. |
+| exo:postCount | Long | false | The total number of submitted posts in the forum. |
+| exo:topicCount | Long | false | The total number of created topics in the forum. |
+| exo:isAutoAddEmailNotify | Boolean | false | Enable/disable the notification email to moderators. |
+| exo:notifyWhenAddTopic | String | true | Email addresses to notify when there is a new topic in the forum. |
+| exo:notifyWhenAddPost | String | true | Email addresses to notify when there is a new post in the forum. |
+| exo:isModerateTopic | Boolean | false | All new topic will be moderated if the value is set to "true". |
+| exo:isModeratePost | Boolean | false | All new posts will be moderated if the value is set to "true". |
+| exo:isClosed | Boolean | false | The forum status: closed/open. Forum is closed if the value is set to "true". |
+| exo:isLock | Boolean | false | The forum status: locked/unlocked. Forum is locked if the value is set to "true". |
+| exo:createTopicRole | String | true | The list of ids of the users or groups who can create topic in the forum. |
+| exo:poster | String | true | The list of ids of the users or groups who can submit post in the forum. |
+| exo:viewer | String | true | The list ids of the users or groups who can view posts in the forum. |
+| exo:moderators | String | true | The list of user ids who are the moderators of forum. |
+| exo:tempModerators | String | true | The list of user ids who are the temporary moderators. |
+| exo:banIPs | String | true | The list of banned IP addresses. |
+
+
+
+h3. Topic
+The Topic node is defined as a child node of the Forum node and allowed adding child nodes as Topic, Poll and RSS type. The node type of the Topic and Poll node is exo:topic, exo:poll.
+- The Topic node is stored in {{/exo:applications/ForumService/ForumData/CategoryHome/%Category-id%/%Forum-id%/%Topic-id%}} and its node type has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:id | String | false | The topic id. |
+| exo:owner | String | false | The user id of the topic creator. |
+| exo:path | String | false | The node path of the topic. |
+| exo:name | String | false | The subject of the topic |
+| exo:createdDate | Date | false | The time when the topic was created. |
+| exo:modifiedBy | String | false | The id of the user who made the latest modification in the topic. |
+| exo:modifiedDate | Date | false | The date when the modifications were made. |
+| exo:lastPostBy | String | false | The user id of the last poster in topic. |
+| exo:lastPostDate | Date | false | The date when the last post was submitted. |
+| exo:description | String | false | The topic description. |
+| exo:topicType | String | false | The id of the topic type. |
+| exo:postCount | Long | false | The number of posts in the topic. |
+| exo:viewCount | Long | false | The number of topic views. |
+| exo:numberAttachments | Long | false | The number of attachments in the topic. |
+| exo:icon | String | false | The name of the topic icon. |
+| exo:link | String | false | The link to the topic. Example: {noformat}http://localhost:8080/ksdemo/public/classic/forum/topic/%Topic-id%.{noformat} |
+| exo:isModeratePost | Boolean | false | All posts in the topic will have to wait for moderation if the value is set to "true". |
+| exo:isNotifyWhenAddPost | Boolean | false | When there is a new post in a topic, a notification message will be sent to the topic owner if this value is set to "true". |
+| exo:isClosed | Boolean | false | The state of the topic: closed/open. If the value is set to "true", the topic is closed. |
+| exo:isLock | Boolean | false | The lock status of the topic: lock/unlocked. If the value is set to "true", the topic is locked. |
+| exo:isApproved | Boolean | false | The topic is approved to be published if the value is set to "true". |
+| exo:isSticky | Boolean | false | If the value is set to "true", the topic is currently sticky. |
+| exo:isWaiting | boolean | false | The topic status. The topic is waiting for moderation if the value is set to "true". |
+| exo:isActive | boolean | false | The topic activity status: active/inactive. The topic is active (topic gets new posts in a period of time) if the status is set to "true". |
+| exo:isActiveByForum | Boolean | false | The topic status based on the forum state. Example: When the topic is active and the forum that contains it is closed, this topic will be considered as inactive. |
+| exo:canView | String | true | List of user ids who can view the topic contents. |
+| exo:canPost | String | true | List of user ids who can post in the topic. |
+| exo:isPoll | Boolean | false | The topic contains poll if the value is set to "true". |
+| exo:userVoteRating | String | true | The list of user id who voted. |
+| exo:tagId | String | true | The list of the topic tag id. |
+| exo:voteRating | Double | false | The average vote score of the topic. |
+
+- The child node type exo:poll has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:id | String | false | The poll id. |
+| exo:owner | String | false | The user id of poll creator. |
+| exo:createdDate | Date | false | The date and time when the poll was created. |
+| exo:modifiedBy | String | false | The user id who modified the poll. |
+| exo:modifiedDate | Date | false | The time when the poll is modified. |
+| exo:lastVote | Date | false | The date of the last vote. |
+| exo:question | String | false | The contents of the question for poll. |
+| exo:timeOut | Long | false | The time when the polled is closed. |
+| exo:option | String | true | The list of options for poll. |
+| exo:vote | String | true | The list of votes by users. |
+| exo:userVote | String | true | The list of user ids who voted. |
+| exo:isMultiCheck | Boolean | false | User can choose more than one option if the value is set to "true". |
+| exo:isAgainVote | Boolean | false | Users can change their vote if the value is set to "true". |
+| exo:isClosed | Boolean | false | The poll status. Poll is closed if the value is set to "true". |
+
+
+
+h3. Post
+The Post node is defined as child node of Topic and allowed adding only the Attachment child node type. The Post node type is exo:post, and the child node type is exo:forumAttachment.
+- The Post node is stored in {{/exo:applications/ForumService/ForumData/CategoryHome/%Category-id%/%Forum-id%/%Topic-id%/%Post-id%}} and its node type has the following properties:
+
+|| Properties name || Required type || Multiple|| Description ||
+| exo:id | String | false | The post id. |
+| exo:owner | String | false | The user id of the poster. |
+| exo:path | String | false | The node path of the post. |
+| exo:createdDate | Date | false | The date time when post is submitted, including date, time, time zone. |
+| exo:modifiedBy | String | false | The id of the user who modified the post. |
+| exo:editReason | String | false | The reason for editing the post. |
+| exo:modifiedDate | Date | false | The date when the post was modified. |
+| exo:name | String | false | The post title. |
+| exo:message | String | false | The message of the post. |
+| exo:remoteAddr | String | false | The remote IP address of the post. |
+| exo:icon | String | false | The name of the icon for the post. |
+| exo:userPrivate | String | true | The list of user ids that are restricted from the post. |
+| exo:link | String | false | The link to open the topic. |
+| exo:isApproved | Boolean | false | The state of the post: approved/unapproved. The post is approved if the value is set to "true". |
+| exo:numberAttach | Long | false | The number of attachments in the post. |
+| exo:isActiveByTopic | Boolean | false | The post is activity status based on the topic state. If the topic is close, all post in it will be considered as inactive.  |
+| exo:isHidden | Boolean | false | The post status: shown/hidden. The post is hidden if the value is set to "true". |
+| exo:isFirstPost | Boolean | false | The post is the first one in a topic if the value is set to "true". |
+
+
+
+h3. Tag and Tag home
+The Tag node is used to store data about tag name, topics with tag added, number of users using this tag, number of tags in use. The node type of the Tag node is exo:forumTag and its child node type is "exo:tagHome".
+The Tag node is stored in {{/exo:applications/ForumService/ForumData/TagHome/%tag-id%}} and its node type has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:id | String | false | The id of tag. |
+| exo:name | String | false | The tag name. |
+| exo:useCount | Long | false | The number of times that the tag was used. |
+| exo:userTag | String | true | The number of users using the tag. |
+
+
+
+h3. BBCode and BBCode home
+The BBCode note is used to define what BBCode will be used in the forum. The node type of the BBCode node is exo:forumBBCode.
+The BBCode node is stored in {{/exo:applications/ForumService/ForumData/forumBBCode/%BBCode_tag%}} and its node type has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:description | String | false | The description about the tag purpose. Example: {noformat} 'The [url] tag allows creating links to other websites and files'.{noformat} |
+| exo:example |  String |  false | The example about using the tag. Example: {noformat}[URL]http://www.exoplatform.com[/URL]'.{noformat} |
+| exo:isActive | Boolean  | false | The BBCode tag is active/deactive. The BBCode tag is active if the value is set to "true". |
+| exo:isOption | Boolean | false | If the value is set to "true", user can create a tag with atributes and values. |
+| exo:replacement |  String | false | The HTML code that will be replaced by the tag. {noformat}Example: [url] tag replaces '<a target='_blank' href="{param}">{param}</a>'{noformat}. |
+| exo:tagName | String | false | The BBCode tag name. |
+
+
+h3. Topic type and Topic type home
+The Topic type home contains a child node with the node type exo:topicType.
+The Topic node is stored in {{/exo:applications/ForumService/ForumData/TopicTypeHome/%Topic-id%}} and its node type has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:id | String | false | The id of the topic type. |
+| exo:name | String | false | The name of the topic type. |
+| exo:icon | String | false | The icon of the topic type. |
+
+
+h1. FAQ JCR structure
+FAQ is a JCR-based application. The FAQ data are stored in the eXo-JCR under the faqApp data directory. 
+The whole FAQ JCR structure can be visualized in the following diagram:
+
+!FAQ_JCR_Structure.png!
+
+h2. Category
+The Category node is created from the exo:faqCategory node type and defined to add data inside as:
+- Sub-category
+- Question Home
+- RSS
+
+h3. Sub-category
+The system will automatically create the Category Home node under the FAQ application node at the first time the user launches application. All users-created categories are the sub-categories of Category Home.
+The home of the Category node is automatically created in: {{/exo:applications/faqApp/categories}}.
+
+In fact, Sub-category is also a category. FAQ has defined a mixin note type called mix:faqSubCategory to allow adding a node having the same type with category to an existing category. 
+When a category is created, this mixin note type will be mixed to that category. 
+
+The node type exo:faqCategory has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:id | String | false | The sub-category id. |
+| exo:name | String | false | The name of the sub-category. |
+| exo:userPrivate | String | true | The list of user ids that are restricted from the category. |
+| exo:description | String | false | The description of the sub-category. |
+| exo:isModerateQuestions | Boolean | false | The question post moderation status. All questions posted in the sub-category will have wait for moderation if the vcalue is "true". |
+| exo:isModerateAnswers | Boolean | false | The answer post moderation status. All answers posted in the sub-category will have to wait for moderation if the value is set to "true". |
+| exo:isView | Boolean | false | The category is shown/hidden. The category will be shown if the value is set to "true". |
+| exo:viewAuthorInfor | Boolean | false | The category enables user to view the information of questions poster if the value is set to "true'. |
+| exo:moderators | String | true | The list of user ids who are the category moderator. |
+| exo:createdDate | Date | false | The time when the sub-category is created. |
+| exo:index | Long | false | The index number of the category. |
+
+h3. RSS
+Each category has a RSS child node that stores a RSS feed representing all questions in this category as the binary data type. 
+The RSS node is stored in {{/exo:applications/faqApp/categories/ks.rss}} and its node type is exo:faqRSS.
+
+h3. Question and Question Home
+The Question Home node is created from the exo:faqQuestionHome node type that is defined as a child node of category. This node cantains all question nodes that created in side a category. Only the Question node type exo:faqQuestion can be added to the question Home. 
+The Question Home node is created as a child node of Categories {{/exo:applications/faqApp/categories/questions}}.
+
+Question node is created from exo:faqQuestion note type under the Question Home node. The Answers, Comments and Attachments node are defined as child nodes of the Question node.
+The Question node is created under the Question Home: {{/exo:applications/faqApp/categories/questions/%Question-id%}}.
+
+- The exo:faqQuestion node type has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:id | String | false | The question id. |
+| exo:language | String | false | The language of the question. |
+| exo:name | String | false | The question details. |
+| exo:title | String | false | The question title. |
+| exo:author | String | false | The the user id of the question poster. |
+| exo:email | String | false | The email of the question author |
+| exo:isActivated | Boolean | false | The question status: activated/inactivated. The question is activated if the value is set to "true". |
+| exo:isApproved | Boolean | false | The state of the question: approved/unapproved. The question is approved to be published if the value is set to "true". |
+| exo:categoryId | String | false | The id of the category containing the question. |
+| exo:createdDate | Date | false | The date and time when the question was submitted. |
+| exo:relatives | String | true | The list of the related questions ids. |
+| exo:usersVote | String | true | The list of user ids who voted. |
+| exo:markVote | Double | false | The average vote scores of the question. |
+| exo:topicIdDiscuss | String | false | The topic id in the forum where the question is discussed. |
+| exo:nameAttachs | String | true | The file name of attachments in the question. |
+| exo:lastActivity | String | false | The user id and time when the last activity of the question was made. |
+| exo:numberOfPublicAnswers | Long | false | The number of all posted answers that has been published. |
+| exo:link | String | false | The link to open the question. |
+| exo:responses | String | true | The responses of the question. |
+| exo:dateResponse | Date | true | The date when the question received the answer. |
+| exo:responseBy | String | true | The user id of the answer poster. |
+
+
+h3. Multilanguages
+A question can support multilanguages, all other languages are stored as a child node of the question and can be add to the question via a mixin node type called mix:faqi18n.
+After the mixin node type mix:faqi18n is added to the question, the node type exo:questionLanguageHome can be added to the question node and this note type will contain all languages node with the note type exo:faqLanguage.
+All display properties of the question are defined in the node type exo:faqLanguage .
+
+- The node type exo:faqLanguage has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:language | String | false | The language of the question. |
+| exo:name | String | false | The name of the language. |
+| exo:title | String | false | The title of the question in the selected language. |
+| exo:questionId | String | false | The id of the question. |
+| exo:categoryId | String | false | The id of the category. |
+
+h3. Answer, Comment and Attachment
+The Answer, Comment and Attachment node is defined as the child nodes of the Question node. Attachment node is defined as a nt:file note type and stored right under the Question node. 
+Answers and comments node are stored under the Answer home and the Comment home node.
+
+- The Answer node is stored in {{/exo:applications/faqApp/categories/questions/%Question-id%/faqAnswerHome/%Answer-id%}} and its node type has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:id | String | false | The id of the answer. |
+| exo:questionId | String | false | The id of the question. |
+| exo:categoryId | String | false | The id of the category containing the question. |
+| exo:responses | String | false | The content of the anwser. |
+| exo:dateResponse | Date | false | The date when the response was posted. |
+| exo:responseBy | String | false | The id of the user who responsed the answer. |
+| exo:responseLanguage | String | false | The language of the answer response. |
+| exo:approveResponses | Boolean | false | The response is pending for approval if the value is set to "false". |
+| exo:activateResponses | Boolean | false | The state of the anwser: activated/deactivated . |
+| exo:usersVoteAnswer | String | true | The list of user ids who voted for the answer. |
+| exo:MarkVotes | Long | false | The average vote scores of the answer. |
+| exo:postId | String | false | The post id. |
+| exo:fullName | String | false | The answer author's full name. |
+
+- The Comment node is stored in {{/exo:applications/faqApp/categories/questions/%Question-id%/faqCommentHome/%Comment-id%}} and its node type has the following propeties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:id | String | false | The comment id. |
+| exo:comments | String | false | The comment contents. |
+| exo:dateComment | Date | false | The date when the comment is posted. |
+| exo:commentBy | String | false | The user id of the comment poster. |
+| exo:postId | String | false | The id of the post. |
+| exo:fullName | String | false | The full name of the comment poster. |
+| exo:categoryId | String | false | The id of the category in which the comment is posted. |
+| exo:questionId | String | false | The id of the question in which the comment is posted. |
+| exo:commentLanguage | String | false | The language of the comment. |
+
+- The Attachment node is stored in {{/exo:applications/faqApp/categories/questions/%Question-id%/faqAttachment}} and its node type has the following properties:
+
+|| Properties name || Required type || Multiple || Possible values || Description ||
+| exo:fileName | String | false | The name of the attachment file. |
+
+h3. FAQ setting
+This FAQ Setting node stores the user settings data, such as how answer is ordered (in alphabetical order or by created date), the order type (descending or ascending) or the user's selection to sort questions by popularity. Each user has a dedicated settings data to select the display preferences in FAQ . The default setting will be used if the users has never changed and saved their setting. 
+
+- The User Setting node of an individual user is stored in {{/exo:applications/faqApp/settingHome/userSettingHome/%user-id%}} and has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:ordeBy | string | false | Define how questions are ordered, by "alphabet/index" or "created date". |
+| exo:ordeType | string | false | The value "asc" = ascending and "des" = descending. |
+| exo:sortQuestionByVote | Boolean | false | All questions will be sorted by the popularity (based on the number of votes) if the value is set to "true". |
+
+h3. Template for FAQ
+This node stores the template for FAQ portlet. User can edit this template online in FAQ to change the layout, skins, etc.
+
+- The template is stored in an nt:file note type under the Template Home node.
+{{/exo:applications/faqApp/templateHome/nt:file}}.
+
+h1. Poll JCR structure
+
+The Poll data are saved in eXo-JCR under the eXoPolls data directory. The whole JCR structure of Poll can be visualized in the diagram below:
+
+!Polls_JCR_Structure.png!
+
+The Poll node is used to store the default data in a poll. The node type of the Poll node is exo:poll.
+The Poll node is stored under eXoPolls node {{/exo:applications/eXoPolls/%PortalName%/Polls/Poll-id%}} and its node type (exo:poll) has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:id | String | false | The poll id. |
+| exo:owner | String | false | The user id of the poll creator. |
+| exo:createdDate | Date | false | The date and time when the poll is created. |
+| exo:modifiedBy | String | false | The id of the user who made the last modification on the poll. |
+| exo:modifiedDate | Date | false | The date and time when the latest modification on poll was made. |
+| exo:lastVote | Date | false | The date and time when the last vote was made. |
+| exo:question | String | false | The question content of poll. |
+| exo:timeOut | Long | false | The time when the poll will be closed. |
+| exo:option | String | true | The list of options for poll. Each option is seperated by a comma. |
+| exo:vote | String | true | The list of votes by users. |
+| exo:userVote | String | true | The list of user ids who voted. |
+| exo:isMultiCheck | Boolean | false | Enable/disable the multi check. User can vote for more than one option if the value is set to "true". |
+| exo:isAgainVote | Boolean | false | Enable/disable the option to vote again. User can change their vote if the value is set to "true". |
+| exo:isClosed | Boolean | false | The poll status: open/closed. The poll is closed if the value is set to "true". |
+
