@@ -28,8 +28,12 @@ import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
+import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -116,6 +120,23 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 	
 	static	public class OpenTopicActionListener extends EventListener<UIPageListTopicUnApprove> {
 		public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
+		  UIPageListTopicUnApprove uiForm = event.getSource() ;
+		  String topicId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      Topic topic = uiForm.getTopic(topicId) ;
+      topic = uiForm.getForumService().getTopicUpdate(topic, false);
+      UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+      if(topic == null){
+        uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+        return ;
+      }
+      UIPopupContainer popupContainer = uiForm.getChild(UIPopupContainer.class);
+      if(popupContainer == null)
+        popupContainer = uiForm.addChild(UIPopupContainer.class, null,"PoupContainerTopic") ;
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+      UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
+      viewTopic.setTopic(topic) ;
+      viewTopic.setActionForm(new String[] {"Close"});
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	

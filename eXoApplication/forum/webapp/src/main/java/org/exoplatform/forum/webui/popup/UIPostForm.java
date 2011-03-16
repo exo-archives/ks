@@ -26,9 +26,9 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumServiceUtils;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -299,22 +299,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 		return true;
 	}
 	
-	private String[] getCensoredKeyword() throws Exception {
-		ForumAdministration forumAdministration = getForumService().getForumAdministration() ;
-		String stringKey = forumAdministration.getCensoredKeyword();
-		if(stringKey != null && stringKey.length() > 0) {
-			stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",") ;
-			return ForumUtils.splitForForum(stringKey);
-//			if(stringKey.contains(",")){ 
-//				stringKey.replaceAll(";", ",") ;
-//				return stringKey.trim().split(",") ;
-//			} else { 
-//				return stringKey.trim().split(";") ;
-//			}
-		}
-		return new String[]{};
-	}
-	
 	static	public class SubmitPostActionListener extends BaseEventListener<UIPostForm> {
 		public void onEvent(Event<UIPostForm> event, UIPostForm uiForm, String id) throws Exception {
 			if(uiForm.isDoubleClickSubmit) return;
@@ -357,7 +341,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 						boolean isOffend = false ; 
 						boolean hasTopicMod = false ;
 						if(!uiForm.isMod()) {
-							String []censoredKeyword = uiForm.getCensoredKeyword() ;
+							String []censoredKeyword = ForumUtils.getCensoredKeyword(uiForm.getForumService()) ;
 							checksms = checksms.toLowerCase().trim();
 							for (String string : censoredKeyword) {
 								if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
@@ -412,8 +396,10 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 									post.setModifiedBy(userName) ;
 									post.setModifiedDate(new Date()) ;
 									post.setEditReason(editReason) ;
+                  MessageBuilder messageBuilder = ForumUtils.getDefaultMail();
+                  messageBuilder.setLink(link+"/"+post.getId());
 									try {
-										uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, ForumUtils.getDefaultMail()) ;
+										uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, messageBuilder) ;
 									} catch (PathNotFoundException e) {
 										isParentDelete = true;
 									}

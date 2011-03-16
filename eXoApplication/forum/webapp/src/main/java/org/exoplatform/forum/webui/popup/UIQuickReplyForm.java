@@ -28,7 +28,6 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.info.UIForumQuickReplyPortlet;
-import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
@@ -100,7 +99,6 @@ public class UIQuickReplyForm extends UIForm {
 			Log log = ExoLogger.getLogger(QuickReplyActionListener.class); 
 			UIQuickReplyForm quickReply = event.getSource() ;
 			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-			ForumAdministration forumAdministration = forumService.getForumAdministration() ;
 			UIFormTextAreaInput textAreaInput = quickReply.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
 			String message = textAreaInput.getValue() ;
 			String checksms = message ;
@@ -108,14 +106,10 @@ public class UIQuickReplyForm extends UIForm {
 				boolean isOffend = false ;
 				boolean hasTopicMod = false ;
 				if(!quickReply.isModerator) {
-					String stringKey = forumAdministration.getCensoredKeyword();
-					if(stringKey != null && stringKey.length() > 0) {
-						stringKey = stringKey.toLowerCase() ;
-						String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
-						checksms = checksms.toLowerCase().trim();
-						for (String string : censoredKeyword) {
-							if(checksms.indexOf(string.trim().toLowerCase()) >= 0) {isOffend = true ;break;}
-						}
+					String []censoredKeyword = ForumUtils.getCensoredKeyword(forumService) ;
+					checksms = checksms.toLowerCase().trim();
+					for (String string : censoredKeyword) {
+						if(checksms.indexOf(string) >= 0) {isOffend = true ;break;}
 					}
 					if(quickReply.topic != null) hasTopicMod = quickReply.topic.getIsModeratePost() ;
 				}

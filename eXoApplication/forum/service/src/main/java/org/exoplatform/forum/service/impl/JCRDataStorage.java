@@ -751,7 +751,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 								post.setMessage(ct);
 								post.setOwner(postData.getOwner());
 								post.setIcon(postData.getIcon());
-								this.savePost(category.getId(), forum.getId(), topic.getId(), post, true, new MessageBuilder());
+								MessageBuilder messageBuilder = new MessageBuilder();
+								messageBuilder.setLink("link");
+								this.savePost(category.getId(), forum.getId(), topic.getId(), post, true, messageBuilder);
 								set.add(post.getOwner());
 							}
 						}
@@ -3202,7 +3204,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 					continue;
 				postAttachmentNode.remove();
 			}
-			boolean sendAlertJob = true;
+			boolean sendAlertJob = false;
 			boolean isFistPost = false;
 			if (isNew) {
 				long topicPostCount = topicNode.getProperty(EXO_POST_COUNT).getLong() + 1;
@@ -3215,15 +3217,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
 				boolean isSetLastPost = true;
 				if (topicNode.getProperty(EXO_IS_CLOSED).getBoolean()) {
-					sendAlertJob = false;
 					postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, false);
 				} else {
 					if (isSetLastPost && topicNode.getProperty(EXO_IS_WAITING).getBoolean()) {
 						isSetLastPost = false;
-						sendAlertJob = false;
 					}
 					if (isSetLastPost) {
-						sendAlertJob = false;
 						isSetLastPost = topicNode.getProperty(EXO_IS_ACTIVE).getBoolean();
 					}
 					boolean canView = true;
@@ -3231,7 +3230,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 					if ((hasProperty(categoryNode, EXO_VIEWER)) || (hasProperty(forumNode, EXO_VIEWER)) || (hasProperty(topicNode, EXO_CAN_VIEW)))
 						canView = false;
 					if (isSetLastPost) {
-						if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
+						if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {// first post
 							isFistPost = true;
 							// set InfoPost for Forum
 							if (!forumNode.getProperty(EXO_IS_MODERATE_TOPIC).getBoolean()) {
@@ -3239,10 +3238,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 								if (canView) {
 									forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
 								}
-								sendAlertJob = false;
 							} else if (canView && topicNode.getProperty(EXO_IS_APPROVED).getBoolean()) {
 								forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
-								sendAlertJob = false;
 							}
 							// set InfoPost for Topic
 							if (!post.getIsHidden()) {
@@ -3256,16 +3253,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 								if (topicNode.getProperty(EXO_IS_APPROVED).getBoolean()) {
 									if (!topicNode.getProperty(EXO_IS_MODERATE_POST).getBoolean()) {
 										forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
-										sendAlertJob = false;
 									}
 								}
 							} else {
 								if (!topicNode.getProperty(EXO_IS_MODERATE_POST).getBoolean()) {
 									forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
-									sendAlertJob = false;
 								} else if (post.getIsApproved()) {
 									forumNode.setProperty(EXO_LAST_TOPIC_PATH, topicNode.getName());
-									sendAlertJob = false;
 								}
 							}
 
@@ -3278,25 +3272,24 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 									topicNode.setProperty(EXO_LAST_POST_DATE, calendar);
 									topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
 								}
-								if (post.getIsHidden())
-									sendAlertJob = true;
-							} else
-								sendAlertJob = true;
+							} 
 						} else {
 							// update post count
 							forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
 							topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
 						}
+						if ((!post.getIsApproved() || post.getIsHidden()) && post.getUserPrivate().length != 2)
+						  sendAlertJob = true;
 					} else {
 						postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, false);
 						sendAlertJob = true;
 					}
 				}
-				if (isNew && messageBuilder.getLink().length() == 0)
+				if (isNew && messageBuilder.getLink().equals("link")) ;
 					sendAlertJob = false; // initDefaulDate
 			} else {
-				if (post.getIsApproved() && !post.getIsHidden())
-					sendAlertJob = false;
+			  if ((!post.getIsApproved() || post.getIsHidden()) && post.getUserPrivate().length != 2)
+          sendAlertJob = true;
 				long temp = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong() - postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
 				topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, (temp + numberAttach));
 			}

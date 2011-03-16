@@ -39,11 +39,11 @@ import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
@@ -1477,18 +1477,6 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 		return true;
 	}
 	
-
-
-	private String[] getCensoredKeyword() throws Exception {
-		ForumAdministration forumAdministration = getForumService().getForumAdministration() ;
-		String stringKey = forumAdministration.getCensoredKeyword();
-		if(stringKey != null && stringKey.length() > 0) {
-			stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",") ;
-			return ForumUtils.splitForForum(stringKey);
-		}
-		return new String[0];
-	}
-	
 	static public class QuickReplyActionListener extends BaseEventListener<UITopicDetail> {
 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
@@ -1508,10 +1496,10 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 						boolean isOffend = false ;
 						boolean hasTopicMod = false ;
 						if(!topicDetail.isMod) {
-							String []censoredKeyword = topicDetail.getCensoredKeyword() ;
+							String []censoredKeyword = ForumUtils.getCensoredKeyword(topicDetail.getForumService()) ;
 							checksms = checksms.toLowerCase().trim();
 							for (String string : censoredKeyword) {
-								if(checksms.indexOf(string.trim().toLowerCase()) >= 0) {isOffend = true ;break;}
+								if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
 							}
 							if(topicDetail.topic != null) hasTopicMod = topicDetail.topic.getIsModeratePost() ;
 						}
@@ -1550,8 +1538,10 @@ public class UITopicDetail extends	UIForumKeepStickPageIterator {
 						post.setIsHidden(isOffend) ;
 						post.setIsApproved(!hasTopicMod) ;
 						post.setLink(link);
+						MessageBuilder messageBuilder = ForumUtils.getDefaultMail();
+						messageBuilder.setLink(link+"/"+post.getId());
 						try {
-							topicDetail.getForumService().savePost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true, ForumUtils.getDefaultMail()) ;
+							topicDetail.getForumService().savePost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true, messageBuilder) ;
 							long postCount = topicDetail.getUserInfo(userName).getTotalPost() + 1 ;
 							topicDetail.getUserInfo(userName).setTotalPost(postCount);
 							topicDetail.getUserInfo(userName).setLastPostDate(ForumUtils.getInstanceTempCalendar().getTime()) ;

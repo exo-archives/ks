@@ -39,6 +39,8 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.forum.service.ForumAdministration;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.TopicType;
@@ -196,6 +198,16 @@ public class ForumUtils {
 		}
 		return className ;
 	}
+	
+	public static String[] getCensoredKeyword(ForumService forumService) throws Exception {
+    ForumAdministration forumAdministration = forumService.getForumAdministration() ;
+    String stringKey = forumAdministration.getCensoredKeyword();
+    if(!ForumUtils.isEmpty(stringKey)) {
+      stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",").replaceAll(";", ",") ;
+      return stringKey.trim().split(",") ;
+    }
+    return new String[]{};
+  }
 	
 	public static String[] splitForForum (String str) throws Exception {
 		if(!isEmpty(str)) {

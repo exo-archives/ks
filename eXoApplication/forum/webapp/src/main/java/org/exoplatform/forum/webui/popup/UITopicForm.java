@@ -466,16 +466,6 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 		return true;
 	}
 
-	private String[] getCensoredKeyword() throws Exception {
-		ForumAdministration forumAdministration = getForumService().getForumAdministration() ;
-		String stringKey = forumAdministration.getCensoredKeyword();
-		if(stringKey != null && stringKey.length() > 0) {
-			stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",") ;
-			return ForumUtils.splitForForum(stringKey);
-		}
-		return new String[]{};
-	}
-	
 	static	public class SubmitThreadActionListener extends BaseEventListener<UITopicForm> {
 		public void onEvent(Event<UITopicForm> event, UITopicForm uiForm, final String objectId) throws Exception {
 			if(uiForm.isDoubleClickSubmit) return;
@@ -516,7 +506,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 						boolean isOffend = false ; 
 						boolean hasForumMod = false ;
 						if(!uiForm.isMod()) {
-							String []censoredKeyword = uiForm.getCensoredKeyword() ;
+							String []censoredKeyword = ForumUtils.getCensoredKeyword(uiForm.getForumService()) ;
 							checksms = checksms.toLowerCase();
 							for (String string : censoredKeyword) {
 								if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
