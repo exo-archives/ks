@@ -3285,8 +3285,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 						sendAlertJob = true;
 					}
 				}
-				if (isNew && messageBuilder.getLink().equals("link")) ;
+				if (isNew && messageBuilder.getLink().equals("link")) {
 					sendAlertJob = false; // initDefaulDate
+				}
 			} else {
 			  if ((!post.getIsApproved() || post.getIsHidden()) && post.getUserPrivate().length != 2)
           sendAlertJob = true;

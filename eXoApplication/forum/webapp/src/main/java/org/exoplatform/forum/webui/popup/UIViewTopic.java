@@ -251,8 +251,10 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 				popupAction.deActivate() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
-				if(moderationForum != null)
-					event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum) ;
+				if(moderationForum != null) {
+				  moderationForum.setReloadPortlet(true);
+				  event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum) ;
+				}
 			} else {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;
@@ -275,9 +277,12 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 			if(popupContainer != null) {
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
 				popupAction.deActivate() ;
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
+        if(moderationForum != null) {
+          event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum) ;
+          moderationForum.setReloadPortlet(true);
+        }
 			} else {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;

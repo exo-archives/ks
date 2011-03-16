@@ -59,14 +59,15 @@ import org.exoplatform.webui.event.Event.Phase;
 		}
 )
 
+@SuppressWarnings("unchecked")
 public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 	private UserProfile userProfile ;
 	private ForumService forumService;
 	private String[] path = new String[]{};
 	List<ForumSearch> list_;
 	private boolean isShowIter = true;
+	private boolean isReloadPortlet = false;
 	public final String SEARCH_ITERATOR = "moderationIterator";
-	@SuppressWarnings("unchecked")
 	private JCRPageList pageList ;
 	private UIForumPageIterator pageIterator ;
 	public UIModerationForum() throws Exception {
@@ -78,7 +79,11 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	@SuppressWarnings("unused")
+	public void setReloadPortlet(boolean isReloadPortlet) {
+    this.isReloadPortlet = isReloadPortlet;
+  }
+
+  @SuppressWarnings("unused")
 	private String getTitleInHTMLCode(String s) {
 		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
 	}
@@ -107,7 +112,7 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 		return isShowIter ;
 	}
 	
-	@SuppressWarnings({ "unused", "unchecked" })
+  @SuppressWarnings( { "unused" })
 	private List<ForumSearch> getListObject() throws Exception {
 		try {
 			list_ = forumService.getJobWattingForModerator(getPath()) ;
@@ -168,8 +173,13 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 
 	static	public class CloseActionListener extends EventListener<UIModerationForum> {
 		public void execute(Event<UIModerationForum> event) throws Exception {
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+		  UIModerationForum uiform = event.getSource();
+			UIForumPortlet forumPortlet = uiform.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
+			if(uiform.isReloadPortlet) {
+			  uiform.isReloadPortlet = false;
+			  event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+			}
 		}
 	}
 }
