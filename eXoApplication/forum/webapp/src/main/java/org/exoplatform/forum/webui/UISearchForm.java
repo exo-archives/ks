@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -34,9 +35,12 @@ import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.UISelector;
 import org.exoplatform.ks.common.webui.UIUserSelect;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -45,8 +49,8 @@ import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
@@ -119,6 +123,7 @@ public class UISearchForm extends UIForm implements UISelector {
 	private final static String USER_SEARCH_POPUP_WINDOW_ID = "UIUserSearchPopupWindow";
 	private ForumService forumService;
 	private List<TopicType> listTT = new ArrayList<TopicType>();
+	private Locale locale ;
 	public UISearchForm() throws Exception {
 		if(this.getId() == null)setId("UISearchForm");
 		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
@@ -132,29 +137,17 @@ public class UISearchForm extends UIForm implements UISelector {
 		UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX, FIELD_SEARCHTYPE_SELECTBOX, list) ;
 		searchType.setOnChange("Onchange") ;
 		
-		list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>(getLabel("All"), "all")) ;
-		for (TopicType topicType : listTT) {
-			list.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
-		}
-		UIFormSelectBox topicType = new UIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX, FIELD_TOPICTYPE_SELECTBOX, list) ;
-		topicType.setValue(TopicType.DEFAULT_ID);
-		
-		list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>(getLabel("Full"), "entire")) ;
-		list.add(new SelectItemOption<String>(getLabel("Titles"), "title")) ;
-		UIFormRadioBoxInput boxInput = new UIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX, FIELD_SCOPE_RADIOBOX, list);
-		boxInput.setValue("entire");
+		UIFormSelectBox topicType = new UIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX, FIELD_TOPICTYPE_SELECTBOX, null) ;
+		UIFormRadioBoxInput boxInput = new UIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX, FIELD_SCOPE_RADIOBOX, null);
 		
 		UIFormCheckBoxInput<Boolean> isLock = new UIFormCheckBoxInput<Boolean>(FIELD_ISLOCK_CHECKBOX, FIELD_ISLOCK_CHECKBOX, false);
 		UIFormCheckBoxInput<Boolean> isUnLock = new UIFormCheckBoxInput<Boolean>(FIELD_ISUNLOCK_CHECKBOX, FIELD_ISUNLOCK_CHECKBOX, false);
 		UIFormCheckBoxInput<Boolean> isClosed = new UIFormCheckBoxInput<Boolean>(FIELD_ISCLOSED_CHECKBOX, FIELD_ISCLOSED_CHECKBOX, false);
 		UIFormCheckBoxInput<Boolean> isOpent = new UIFormCheckBoxInput<Boolean>(FIELD_ISOPEN_CHECKBOX, FIELD_ISOPEN_CHECKBOX, false);
-		String showCalendar = getLabel("ShowCalendar");
-		UIFormDateTimePicker FromDateCreated = new UIFormDateTimePicker(FROMDATECREATED, FROMDATECREATED, null, false, showCalendar) ;
-		UIFormDateTimePicker ToDateCreated = new UIFormDateTimePicker(TODATECREATED, TODATECREATED, null, false, showCalendar) ;
-		UIFormDateTimePicker FromDateCreatedLastPost = new UIFormDateTimePicker(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false, showCalendar) ;
-		UIFormDateTimePicker ToDateCreatedLastPost = new UIFormDateTimePicker(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false, showCalendar) ;
+		UIFormDateTimePicker FromDateCreated = new UIFormDateTimePicker(FROMDATECREATED, FROMDATECREATED, null, false) ;
+		UIFormDateTimePicker ToDateCreated = new UIFormDateTimePicker(TODATECREATED, TODATECREATED, null, false) ;
+		UIFormDateTimePicker FromDateCreatedLastPost = new UIFormDateTimePicker(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false) ;
+		UIFormDateTimePicker ToDateCreatedLastPost = new UIFormDateTimePicker(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false) ;
 
 		UISliderControl topicCountMin = new UISliderControl(FIELD_TOPICCOUNTMIN_SLIDER, FIELD_TOPICCOUNTMIN_SLIDER, "0") ;//Sliders 
 
@@ -185,6 +178,46 @@ public class UISearchForm extends UIForm implements UISelector {
 		setActions(new String[]{"Search","ResetField", "Cancel"});
 	}
 	
+	@SuppressWarnings("unused")
+	private void setLocale() throws Exception {
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		Locale locale = portalContext.getLocale();
+		if(this.locale == null || !locale.getLanguage().equals(this.locale.getLanguage())) {
+			initDefaultContent();
+			this.locale = locale;
+		}
+	}
+	
+	public void initDefaultContent() throws Exception {
+		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
+		list.add(new SelectItemOption<String>(getLabel("Category"), Utils.CATEGORY)) ;
+		list.add(new SelectItemOption<String>(getLabel("Forum"), Utils.FORUM)) ;
+		list.add(new SelectItemOption<String>(getLabel("Topic"), Utils.TOPIC)) ;
+		list.add(new SelectItemOption<String>(getLabel("Post"), Utils.POST)) ;
+		this.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(list);
+		
+		list = new ArrayList<SelectItemOption<String>>() ;
+		list.add(new SelectItemOption<String>(getLabel("Full"), "entire")) ;
+		list.add(new SelectItemOption<String>(getLabel("Titles"), "title")) ;
+		UIFormRadioBoxInput boxInput = this.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setOptions(list);
+		boxInput.setValue("entire");
+		
+		list = new ArrayList<SelectItemOption<String>>() ;
+		list.add(new SelectItemOption<String>(getLabel("All"), "all")) ;
+		for (TopicType topicType : listTT) {
+			list.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
+    }
+		UIFormSelectBox topicType = this.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setOptions(list);
+		topicType.setValue(TopicType.DEFAULT_ID);
+		
+		if(userProfile == null) setUserProfile(null);
+		String showCalendar = getLabel("ShowCalendar");
+		getUIFormDateTimePicker(FROMDATECREATED).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
+		getUIFormDateTimePicker(TODATECREATED).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
+		getUIFormDateTimePicker(FROMDATECREATEDLASTPOST).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
+		getUIFormDateTimePicker(TODATECREATEDLASTPOST).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
+	}
+	
 	public boolean getIsSearchCate() {return isSearchCate;}
 	public boolean getIsSearchForum() { return isSearchForum;}
 	public void setIsSearchForum(boolean isSearchForum){this.isSearchForum = isSearchForum;}
@@ -198,12 +231,9 @@ public class UISearchForm extends UIForm implements UISelector {
 	}
 	
 	public void setUserProfile(UserProfile userProfile) throws Exception {
-		try {
-			this.userProfile = userProfile ;
-		} catch (Exception e) {
-			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-		}
+			this.userProfile = (userProfile != null)?userProfile : this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
+	
 	private boolean getIsMod() {
 		if(this.userProfile != null) {
 			if(this.userProfile.getUserRole() < 2) return true ;
@@ -253,6 +283,12 @@ public class UISearchForm extends UIForm implements UISelector {
 		} catch (Exception e) {
 			return id ;
 		}
+	}
+
+	public String getLabel(String id) throws Exception {
+		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+		ResourceBundle res = context.getApplicationResourceBundle() ;
+		return getLabel(res, id);
 	}
 	
 	private String checkValue(String input) throws Exception {
