@@ -40,10 +40,10 @@
 					<td style="width:60px;text-align:center">
 						<div class="ActionContainer" style="margin:0px auto; width:42px;">
 							<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("EditBBCode", bbcodeId)%>">
-								 <div title="Edit BBCode" class="Icon16x16 EditIcon"><span></span></div>							
+								 <div title="<%=_ctx.appRes("UIBBCodeManagerForm.label.EditBBCode");%>" class="Icon16x16 EditIcon"><span></span></div>							
 							</div>
 							<div style="cursor:pointer; float:left; margin:2px;" onclick="if(confirm('<%=_ctx.appRes("UIBBCodeManagerForm.msg.confirm-delete-BBCode")%>')){<%=uiform.event("DeleteBBCode", bbcodeId)%>;}">
-								 <div title="Delete BBCode" class="Icon16x16 DeleteIcon"><span></span></div>							
+								 <div title="<%=_ctx.appRes("UIBBCodeManagerForm.label.DeleteBBCode");%>" class="Icon16x16 DeleteIcon"><span></span></div>							
 							</div>
 							<div style="clear:left;"><span></span></div>
 						</div>
