@@ -2647,12 +2647,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 			Node topicNode = forumNode.getNode(topicId);
 
 			Map<String, Long> userPostMap = getDeletePostByUser(topicNode);
-
-			// update TopicCount for Forum
-			forumNode.setProperty(EXO_TOPIC_COUNT, forumNode.getProperty(EXO_TOPIC_COUNT).getLong() - 1);
-			// update PostCount for Forum
-			long newPostCount = forumNode.getProperty(EXO_POST_COUNT).getLong() - (topic.getPostCount() + 1);
-			forumNode.setProperty(EXO_POST_COUNT, newPostCount);
+			if (topic.getIsApproved() && !topic.getIsWaiting()) {
+			  // update TopicCount for Forum
+			  forumNode.setProperty(EXO_TOPIC_COUNT, forumNode.getProperty(EXO_TOPIC_COUNT).getLong() - 1);
+			  // update PostCount for Forum
+			  long newPostCount = forumNode.getProperty(EXO_POST_COUNT).getLong() - (topic.getPostCount() + 1);
+			  forumNode.setProperty(EXO_POST_COUNT, newPostCount);
+			}
 			topicNode.remove();
 			forumNode.save();
 			if (!topic.getIsActive() || !topic.getIsApproved() || topic.getIsWaiting()) {
