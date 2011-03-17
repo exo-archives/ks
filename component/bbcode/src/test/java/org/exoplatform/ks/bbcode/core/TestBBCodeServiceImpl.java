@@ -43,7 +43,7 @@ import org.testng.annotations.Test;
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-@ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml"), 
+@ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.jcr-configuration.xml"), 
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/bbcodes-configuration.xml")})
 public class TestBBCodeServiceImpl extends AbstractJCRTestCase {
 
