@@ -88,12 +88,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//a[text()=&quot;Save&quot;]</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//a[text()=&quot;Save&quot;]</td>
+	<td>mouseDown</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-OK</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
 	<td></td>
 </tr>
 <tr>
@@ -107,23 +117,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//form[@id='UIQuestionForm']/div[3]/table/tbody/tr/td/div[1]/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//form[@id='UIQuestionForm']/div[3]/table/tbody/tr/td/div[1]/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[4]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[4]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td>pause</td>
+	<td>3000</td>
 	<td></td>
 </tr>
 <tr>
@@ -159,6 +154,11 @@
 <tr>
 	<td>selectFrame</td>
 	<td>//iframe[@id='QuestionRespone___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
 	<td></td>
 </tr>
 <tr>
@@ -207,6 +207,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
 	<td>selectFrame</td>
 	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
 	<td></td>
@@ -249,6 +254,11 @@
 <tr>
 	<td>selectFrame</td>
 	<td>//iframe[@id='QuestionRespone___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
 	<td></td>
 </tr>
 <tr>
@@ -492,17 +502,32 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[1]//div[@class='AnswerContent']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[1]//div[@class='AnswerContent']</td>
 	<td>Answer 2</td>
 </tr>
 <tr>
-	<td>verifyText</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[2]//div[@class='AnswerContent']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[2]//div[@class='AnswerContent']</td>
 	<td>Answer 3</td>
 </tr>
 <tr>
-	<td>verifyText</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[3]//div[@class='AnswerContent']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[3]//div[@class='AnswerContent']</td>
 	<td>Answer 1</td>
 </tr>
@@ -517,17 +542,32 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[1]//div[@class='AnswerContent']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[1]//div[@class='AnswerContent']</td>
 	<td>Answer 1</td>
 </tr>
 <tr>
-	<td>verifyText</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[2]//div[@class='AnswerContent']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[2]//div[@class='AnswerContent']</td>
 	<td>Answer 3</td>
 </tr>
 <tr>
-	<td>verifyText</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[3]//div[@class='AnswerContent']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
 	<td>//div[@id='AnswersViewContent']//div[@class='ResponseContainer']/div[2]/div/div[3]//div[@class='AnswerContent']</td>
 	<td>Answer 2</td>
 </tr>
