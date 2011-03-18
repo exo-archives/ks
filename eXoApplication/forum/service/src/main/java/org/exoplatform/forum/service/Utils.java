@@ -341,6 +341,20 @@ public class Utils {
   }
 	
 	/**
+	 * check string array is whether empty or not
+	 * @param array
+	 * @return false if at least one element of array is not empty, true in the opposite case.
+	 */
+	public static boolean isEmpty(String[] array) {
+	  if (array != null && array.length > 0) {
+	    for (String s : array) {
+	      if (s != null && s.trim().length() > 0) return false;
+	    }
+	  }
+    return true;
+  }
+	
+	/**
 	 * get Xpath query when get list post. 
 	 * @param String isApproved
 	 * @param String isHidden
