@@ -53,8 +53,6 @@ public interface DataStorage {
 
   void setDefaultAvatar(String userName) throws Exception;
 
-  NodeIterator getQuestionsIterator() throws Exception;
-
   boolean initRootCategory() throws Exception;
 
   byte[] getTemplate() throws Exception;

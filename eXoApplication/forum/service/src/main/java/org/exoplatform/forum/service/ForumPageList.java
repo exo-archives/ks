@@ -78,10 +78,9 @@ public class ForumPageList extends JCRPageList {
 	
 	@SuppressWarnings("unchecked")
 	protected void populateCurrentPage(int page) throws Exception	{
+	  sessionManager.openSession();
 		if(iter_ == null) {
-		  sessionManager.openSession();
 			iter_ = setQuery(isQuery_, value_) ;
-			sessionManager.closeSession();
 			setAvailablePage((int) iter_.getSize()) ;
 			
 			if(page == 0) currentPage_ = 0;  // nasty trick for getAll()
@@ -120,6 +119,7 @@ public class ForumPageList extends JCRPageList {
 			}
 		}
 		iter_ = null;
+		sessionManager.closeSession();
 		//currentListPage_ = objects_.subList(getFrom(), getTo()) ;
 	}
 	

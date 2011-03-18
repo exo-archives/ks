@@ -77,7 +77,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
   
   // Path: /exo:applications/eXoPolls/   using for: $PORTAL/Polls
   private Node getPublicPollHomeNode(SessionProvider sProvider) throws Exception {
-    Node publicApp = getNodeByPath(nodeHierarchyCreator_.getPublicApplicationNode(sProvider).getPath(), sProvider);
+    Node publicApp = getNodeByPath(nodeHierarchyCreator_.getJcrPath("eXoApplications"), sProvider);
     try {
       return publicApp.getNode(EXO_POLLS);
     } catch (Exception e) {
@@ -111,6 +111,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
   
   public void initDefaultData() throws Exception {
   	SessionProvider sProvider = SessionProvider.createSystemProvider();
+  	List<Poll> polls = new ArrayList<Poll>();
 		try {
 			for (InitialDefaultDataPlugin pln : defaultDataPlugins) {
 				PollInitialData initialData =  pln.getPollInitialData();
@@ -144,7 +145,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 							poll.setIsAgainVote(Boolean.parseBoolean(pollData.getIsAgainVote()));
 							poll.setIsMultiCheck(Boolean.parseBoolean(pollData.getIsMultiCheck()));
 							poll.setIsClosed(Boolean.parseBoolean(pollData.getIsClosed()));
-							savePoll(poll, true, false);
+							polls.add(poll);
 						}
 					}					
 				}
@@ -152,6 +153,9 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 		} finally {
 			sProvider.close();
 		}
+		for (Poll poll : polls) {
+		  savePoll(poll, true, false);
+    }
   }
   
 	public Poll getPoll(String pollId) throws Exception {

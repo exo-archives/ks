@@ -156,13 +156,14 @@ public class FileAttachment {
   	if(input != null)return input ;
   	else {
   		Node attachment ;
+  		Session session = getSesison();
       try{
-      	Session session = getSesison();
       	attachment = (Node)session.getItem(getId()) ;
-      	session.logout();
         return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
       }catch (Exception e) {  
         return null ;
+      } finally {
+        session.logout();
       }
   	}
   }

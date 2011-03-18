@@ -362,22 +362,14 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsIterator()
-	 */
-	public NodeIterator getQuestionsIterator() throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider();
+	public NodeIterator getQuestionsIterator(SessionProvider sProvider) throws Exception {
 		try {
 			Node faqHome = getFAQServiceHome(sProvider);
 			return getQuestionsIterator(faqHome, "", true);
 		} catch (Exception e) {
 			log.error("Failed to get question iterator: ", e);
-		} finally {
-			sProvider.close();
+			return null;
 		}
-		return null;
 	}
 
 	private NodeIterator getQuestionsIterator(Node parentNode, String strQuery, boolean isAll) throws Exception {
@@ -389,13 +381,20 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 	}
 
 	public void reInitQuestionNodeListeners() throws Exception {
-		NodeIterator iter = getQuestionsIterator();
-		if (iter == null)
-			return;
-		while (iter.hasNext()) {
-			Node quesNode = iter.nextNode();
-			registerQuestionNodeListener(quesNode);
-		}
+	  SessionProvider sProvider = SessionProvider.createSystemProvider();
+    try {
+      NodeIterator iter = getQuestionsIterator(sProvider);
+      if (iter == null)
+        return;
+      while (iter.hasNext()) {
+        Node quesNode = iter.nextNode();
+        registerQuestionNodeListener(quesNode);
+      }
+    } catch (Exception e) {
+      log.error("Failed to get question iterator: ", e);
+    } finally {
+      sProvider.close();
+    }
 	}
 
 	/*

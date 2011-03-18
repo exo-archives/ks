@@ -710,13 +710,6 @@ public interface FAQService extends FAQServiceLegacy{
   public void setDefaultAvatar(String userName)throws Exception;
 
   /**
-   * Get collection of questions
-   * @return list of all questions 
-   * @throws Exception
-   */
-  public NodeIterator getQuestionsIterator() throws Exception ; 
-
-  /**
    * Get list pending questions in a category
    * @param categoryId id of category
    * @param faqSetting settings

@@ -1105,16 +1105,6 @@ public class FAQServiceImpl implements FAQService, Startable {
 		return jcrData_.getPendingQuestionsByCategory(categoryId, faqSetting);
 	}
 	
-	// For migrate data
-	public NodeIterator getQuestionsIterator(SessionProvider sProvider) throws Exception {
-		sProvider.close() ;
-		return getQuestionsIterator() ;
-	}
-	
-	public NodeIterator getQuestionsIterator() throws Exception {
-		return jcrData_.getQuestionsIterator() ;
-	}	
-	
 	public boolean isExisting(String path) throws Exception {
 		return jcrData_.isExisting(path) ;
 	}
