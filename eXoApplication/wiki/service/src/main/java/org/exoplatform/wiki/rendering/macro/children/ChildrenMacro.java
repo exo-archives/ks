@@ -139,7 +139,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
                                                        params.getPageId());
     DocumentResourceReference link = new DocumentResourceReference(model.getDocumentName(params));
     List<Block> content = new ArrayList<Block>();
-    content.add(new WordBlock(page.getContent().getTitle()));
+    content.add(new WordBlock(page.getTitle()));
 
     LinkBlock linkBlock = new LinkBlock(content, link, true);
     blocks.add(linkBlock);

@@ -27,7 +27,7 @@ import org.exoplatform.wiki.commons.DateTimeFomatter;
 			<p>The page you were trying to reach could not be found: it may have been renamed or moved to another space, or the name you requested may be incomplete.</p>
 			<div class="ResultInfo"><b>Note :</b> The page you were looking for may have been renamed or moved to the following location</div>			
 			<div class="BlockResultFeed">
-			  <a href="$url" class="Page TxtTitFeed"><%=relatedPage.getContent().getTitle()%></a>
+			  <a href="$url" class="Page TxtTitFeed"><%=relatedPage.getTitle()%></a>
 				<div class="TxtDetail"><%=summaryContent%></div>
 				<div><a href="$homeUrl" class="TxtMark"><%=relatedLocation %></a> Last Modified: <%= updateDate %> </div>
 			</div>						

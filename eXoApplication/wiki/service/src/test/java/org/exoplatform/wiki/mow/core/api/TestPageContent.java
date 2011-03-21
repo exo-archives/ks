@@ -17,35 +17,35 @@
 package org.exoplatform.wiki.mow.core.api;
 
 import org.exoplatform.wiki.mow.api.WikiType;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 
 
 public class TestPageContent extends AbstractMOWTestcase {
 
-  public void testGetPageContent() {
+  public void testGetPageContent() throws Exception {
     PageImpl wikipage = createWikiPage(WikiType.PORTAL, "classic", "AddPageContent-001");
-    ContentImpl content = wikipage.getContent();
+    AttachmentImpl content = wikipage.getContent();
     assertNotNull(content);
-    content.setSyntax("xwiki_2.0");
+    wikipage.setSyntax("xwiki_2.0");
     content.setText("This is a content of page");
-    assertEquals(content.getSyntax(), "xwiki_2.0");
+    assertEquals(wikipage.getSyntax(), "xwiki_2.0");
     assertEquals(content.getText(), "This is a content of page");
   }
 
-  public void testUpdatePageContent() {
+  public void testUpdatePageContent() throws Exception {
     PageImpl wikipage = createWikiPage(WikiType.PORTAL, "classic", "UpdatePageContent-001");
-    ContentImpl content = wikipage.getContent();
+    AttachmentImpl content = wikipage.getContent();
     assertNotNull(content);
-    content.setSyntax("xwiki_2.0");
+    wikipage.setSyntax("xwiki_2.0");
     content.setText("This is a content of page");
-    assertEquals(content.getSyntax(), "xwiki_2.0");
+    assertEquals(wikipage.getSyntax(), "xwiki_2.0");
     assertEquals(content.getText(), "This is a content of page");
     content.setText("This is a content of page - edited");
-    content.setSyntax("xwiki_2.1");
+    wikipage.setSyntax("xwiki_2.1");
 
-    ContentImpl updatedContent = wikipage.getContent();
-    assertEquals(updatedContent.getSyntax(), "xwiki_2.1");
+    AttachmentImpl updatedContent = wikipage.getContent();
+    assertEquals(wikipage.getSyntax(), "xwiki_2.1");
     assertEquals(updatedContent.getText(), "This is a content of page - edited");
   }
 

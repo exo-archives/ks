@@ -90,7 +90,7 @@ public class MovePageActionComponent extends UIComponent {
       currentLocation.setBreadCumbs(wikiService.getBreadcumb(params.getType(), params.getOwner(), params.getPageId()));
       UIFormInputInfo pageNameInfo = movePageForm.getUIFormInputInfo(UIWikiMovePageForm.PAGENAME_INFO);
       pageNameInfo.setValue(res.getString("UIWikiMovePageForm.msg.you-are-about-move-page")
-          +" "+ Utils.getCurrentWikiPage().getContent().getTitle());
+          +" "+ Utils.getCurrentWikiPage().getTitle());
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);
       super.processEvent(event);
     }

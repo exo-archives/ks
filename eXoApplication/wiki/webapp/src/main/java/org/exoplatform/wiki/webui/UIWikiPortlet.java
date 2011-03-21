@@ -161,8 +161,7 @@ public class UIWikiPortlet extends UIPortletApplication {
         // TODO: ignore request URL of resources
         context.setAttribute("wikiPage", page);
         ((UIWikiPageTitleControlArea) findComponentById(UIWikiPageControlArea.TITLE_CONTROL)).getUIFormInputInfo()
-                                                                                             .setValue(page.getContent()
-                                                                                                           .getTitle());      
+                                                                                             .setValue(page.getTitle());      
       } catch (Exception e) {
         e.printStackTrace();
         context.setAttribute("wikiPage", null);

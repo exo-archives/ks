@@ -94,25 +94,6 @@
     <childNodeDefinitions/>
   </nodeType>
   
-  <!-- Node type generated for the class org.exoplatform.wiki.mow.core.api.content.ContentImpl -->
-  <nodeType name="wiki:content" isMixin="false" hasOrderableChildNodes="false">
-    <supertypes>
-      <supertype>wiki:contentItem</supertype>      
-    </supertypes>
-    <propertyDefinitions>
-      <propertyDefinition name="syntax" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-        <valueConstraints/>
-      </propertyDefinition>
-      <propertyDefinition name="title" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-        <valueConstraints/>
-      </propertyDefinition>
-      <propertyDefinition name="comment" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-        <valueConstraints/>
-      </propertyDefinition>
-    </propertyDefinitions>
-    <childNodeDefinitions/>
-  </nodeType>
-  
   <!-- Node type generated for the class org.exoplatform.wiki.mow.core.api.content.AbstractContentItem -->
   <nodeType name="wiki:contentItem" isMixin="false" hasOrderableChildNodes="false">
     <supertypes>
@@ -265,7 +246,9 @@
 	
 	<nodeType name="wiki:attachment" isMixin="false" hasOrderableChildNodes="false">
     <supertypes>
-      <supertype>nt:file</supertype>      
+      <supertype>nt:base</supertype>
+      <supertype>nt:file</supertype>
+      <supertype>mix:referenceable</supertype>
     </supertypes>
     <propertyDefinitions>
       <propertyDefinition name="title" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
@@ -302,6 +285,7 @@
   <nodeType name="wiki:page" isMixin="false" hasOrderableChildNodes="false">
     <supertypes>
       <supertype>nt:base</supertype>
+      <supertype>nt:folder</supertype>
       <supertype>mix:referenceable</supertype>
     </supertypes>
     <propertyDefinitions>
@@ -315,6 +299,15 @@
         <valueConstraints/>
       </propertyDefinition>
       <propertyDefinition name="updatedDate" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+      <propertyDefinition name="syntax" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+      <propertyDefinition name="title" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>
+      <propertyDefinition name="comment" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
         <valueConstraints/>
       </propertyDefinition>
       <propertyDefinition name="url" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
@@ -333,7 +326,7 @@
     <childNodeDefinitions>
       <childNodeDefinition name="content" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
         <requiredPrimaryTypes>
-          <requiredPrimaryType>wiki:content</requiredPrimaryType>
+          <requiredPrimaryType>wiki:attachment</requiredPrimaryType>
         </requiredPrimaryTypes>
       </childNodeDefinition>
       <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">

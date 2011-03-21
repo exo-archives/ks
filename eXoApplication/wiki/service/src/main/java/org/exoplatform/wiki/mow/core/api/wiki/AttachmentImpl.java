@@ -21,12 +21,15 @@ import java.util.GregorianCalendar;
 
 import org.chromattic.api.annotations.Destroy;
 import org.chromattic.api.annotations.ManyToOne;
+import org.chromattic.api.annotations.MappedBy;
 import org.chromattic.api.annotations.Name;
+import org.chromattic.api.annotations.OneToOne;
 import org.chromattic.api.annotations.Path;
 import org.chromattic.api.annotations.PrimaryType;
 import org.chromattic.api.annotations.Property;
 import org.chromattic.api.annotations.WorkspaceName;
 import org.chromattic.ext.ntdef.NTFile;
+import org.chromattic.ext.ntdef.Resource;
 import org.exoplatform.wiki.mow.api.Attachment;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.utils.Utils;
@@ -101,7 +104,8 @@ public abstract class AttachmentImpl extends NTFile implements Attachment {
   }
   
   public String getFullTitle() {
-    return (getFileType() == null) ? getTitle() : getTitle().concat(getFileType());
+    String fullTitle = (getFileType() == null) ? getTitle() : getTitle().concat(getFileType());
+    return (fullTitle != null) ? fullTitle : getName();
   }
 
   @ManyToOne
@@ -109,4 +113,23 @@ public abstract class AttachmentImpl extends NTFile implements Attachment {
   
   @Destroy
   public abstract void remove();
+  
+  public String getText() throws Exception {
+    Resource textContent = getContentResource();
+    if (textContent == null) {
+      setText("");
+      textContent = getContentResource();
+    }
+    return new String(textContent.getData(), "UTF-8");
+  }
+
+  public void setText(String text) {
+    text = text != null ? text : "";
+    Resource textContent = Resource.createPlainText(text);
+    setContentResource(textContent);
+  }
+
+  @OneToOne
+  @MappedBy(WikiNodeType.Definition.CONTENT)
+  public abstract PageImpl getParent();
 }

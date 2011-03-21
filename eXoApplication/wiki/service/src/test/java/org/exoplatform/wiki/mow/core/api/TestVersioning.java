@@ -22,7 +22,7 @@ import org.exoplatform.wiki.chromattic.ext.ntdef.NTFrozenNode;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiType;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 
 /**
@@ -42,7 +42,7 @@ public class TestVersioning extends AbstractMOWTestcase {
 
   public void testCreateVersionHistoryTree() throws Exception {
     PageImpl wikipage = createWikiPage(WikiType.PORTAL, "versioning", "testCreateVersionHistoryTree-001");
-    wikipage.getContent().setTitle("testCreateVersionHistoryTree");
+    wikipage.setTitle("testCreateVersionHistoryTree");
     wikipage.getContent().setText("testCreateVersionHistoryTree-ver1.0");
     NTVersion ver1 = wikipage.checkin();
     assertNotNull(ver1);
@@ -64,19 +64,19 @@ public class TestVersioning extends AbstractMOWTestcase {
     version = iter.next();
     NTFrozenNode frozenNode = version.getNTFrozenNode();
     assertEquals("testCreateVersionHistoryTree-ver1.0",
-                 ((ContentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT))).getText());
+                 ((AttachmentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT))).getText());
     assertNotNull(frozenNode.getUpdatedDate());
     assertNotNull(frozenNode.getAuthor());
     version = iter.next();
     frozenNode = version.getNTFrozenNode();
     assertEquals("testCreateVersionHistoryTree-ver2.0",
-                 ((ContentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT))).getText());
+                 ((AttachmentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT))).getText());
     assertNotNull(frozenNode.getUpdatedDate());
     assertNotNull(frozenNode.getAuthor());
     version = iter.next();
     frozenNode = version.getNTFrozenNode();
     assertEquals("testCreateVersionHistoryTree-ver3.0",
-                 ((ContentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT))).getText());
+                 ((AttachmentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT))).getText());
     assertNotNull(frozenNode.getUpdatedDate());
     assertNotNull(frozenNode.getAuthor());
   }

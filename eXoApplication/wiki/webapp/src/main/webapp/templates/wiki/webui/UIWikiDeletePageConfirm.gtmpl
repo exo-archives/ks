@@ -14,12 +14,12 @@ import org.exoplatform.wiki.commons.Utils ;
 		}else {
 		%>
 			<div>
-				<h2><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfoHeader").replace("{0}", "<span>" + page.getContent().getTitle() + "</span>"); %></h2>
+				<h2><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfoHeader").replace("{0}", "<span>" + page.getTitle() + "</span>"); %></h2>
 				<p><b><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfo1"); %></b> <br/><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfo2"); %> </p>				
 				<ul>
 					<li><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfo3"); %></li>
 					<li><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfo4"); %></li>
-					<li><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfo5").replace("{0}", "<b>" + uicomponent.getWiki() + ": " + page.getParentPage().getContent().getTitle() + "</b>."); %></li>
+					<li><%= _ctx.appRes("UIWikiDeletePageConfirm.label.DeleteInfo5").replace("{0}", "<b>" + uicomponent.getWiki() + ": " + page.getParentPage().getTitle() + "</b>."); %></li>
 				</ul>
 			</div>		
 		<%

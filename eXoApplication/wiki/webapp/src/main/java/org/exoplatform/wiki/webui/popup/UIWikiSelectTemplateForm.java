@@ -28,15 +28,15 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.Template;
 import org.exoplatform.wiki.webui.UIWikiMaskWorkspace;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.UIWikiTemplateDescriptionContainer;
 import org.exoplatform.wiki.webui.WikiMode;
-import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.commons.UIWikiTemplateForm;
 import org.exoplatform.wiki.webui.control.action.AddPageFromBlankActionComponent;
 
@@ -89,11 +89,11 @@ public class UIWikiSelectTemplateForm extends UIWikiTemplateForm implements UIPo
       commentInput.setRendered(false);
       Template template = form.wService.getTemplatePage(Utils.getCurrentWikiPageParams(),
                                                         templateId);     
-      titleInput.setValue(template.getContent().getTitle());
+      titleInput.setValue(template.getTitle());
       descriptionInput.setValue(template.getDescription());
-      pageEditForm.setTitle(template.getContent().getTitle());
+      pageEditForm.setTitle(template.getTitle());
       markupInput.setValue(template.getContent().getText());
-      syntaxTypeSelectBox.setValue(template.getContent().getSyntax());     
+      syntaxTypeSelectBox.setValue(template.getSyntax());     
       UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);
       popupContainer.deActivate();
       wikiPortlet.changeMode(WikiMode.ADDPAGE);
@@ -112,8 +112,8 @@ public class UIWikiSelectTemplateForm extends UIWikiTemplateForm implements UIPo
       String templateId = event.getRequestContext().getRequestParameter(OBJECTID);
       Template template = form.wService.getTemplatePage(Utils.getCurrentWikiPageParams(),
                                                         templateId);
-      ContentImpl content = template.getContent();
-      wikiPagePreview.renderWikiMarkup(content.getText(), content.getSyntax());
+      AttachmentImpl content = template.getContent();
+      wikiPagePreview.renderWikiMarkup(content.getText(), template.getSyntax());
       mask.setUIComponent(wikiPagePreview);
       mask.setShow(true);
       event.getRequestContext().addUIComponentToUpdateByAjax(mask);

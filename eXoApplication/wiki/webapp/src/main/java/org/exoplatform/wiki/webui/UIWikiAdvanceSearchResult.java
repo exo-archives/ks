@@ -26,8 +26,8 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 
@@ -67,14 +67,13 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
   private Wiki getWiki(SearchResult result) throws Exception {
     Wiki searchWiki = null;
     try {
-      if (WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())) {
-        ContentImpl searchContent = (ContentImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(),
-                                                                                             result.getType());
+      if (WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType()) || WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())) {
+        AttachmentImpl searchContent = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(),
+                                                                                                   WikiNodeType.WIKI_ATTACHMENT);
         searchWiki = searchContent.getParent().getWiki();
-      } else if (WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())) {
-        AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(),
-                                                                                               WikiNodeType.WIKI_ATTACHMENT);
-        searchWiki = searchAtt.getParentPage().getWiki();
+      } else if(WikiNodeType.WIKI_PAGE.equals(result.getType()) || WikiNodeType.WIKI_HOME.equals(result.getType())){
+        PageImpl page = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(), WikiNodeType.WIKI_PAGE);
+        searchWiki = page.getWiki();
       }
     } catch (Exception e) {
     }

@@ -39,7 +39,6 @@ import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.ModelImpl;
 import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.GroupWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
@@ -322,7 +321,7 @@ public class Utils {
     return params;
   }
   
-  public static void sendMailOnChangeContent(ContentImpl content) throws Exception {
+  public static void sendMailOnChangeContent(AttachmentImpl content) throws Exception {
     ExoContainer container = ExoContainerContext.getCurrentContainer();
     DiffService diffService = (DiffService) container.getComponentInstanceOfType(DiffService.class);
     RenderingService renderingService = (RenderingService) container.getComponentInstanceOfType(RenderingService.class);
@@ -341,17 +340,17 @@ public class Utils {
     }   
     
     // Get differences
-    String pageTitle = content.getTitle();
+    String pageTitle = page.getTitle();
     String currentVersionContent = content.getText();
     NTVersion previousVersion = page.getVersionableMixin().getBaseVersion();
-    String previousVersionContent = ((ContentImpl) previousVersion.getNTFrozenNode()
+    String previousVersionContent = ((AttachmentImpl) previousVersion.getNTFrozenNode()
                                                                   .getChildren()
                                                                   .get(WikiNodeType.Definition.CONTENT)).getText();
     DiffResult diffResult = diffService.getDifferencesAsHTML(previousVersionContent,
                                                              currentVersionContent,
                                                              false);
     String fullContent = renderingService.render(currentVersionContent,
-                                                 content.getSyntax(),
+                                                 page.getSyntax(),
                                                  Syntax.XHTML_1_0.toIdString(),
                                                  false);
     
@@ -365,7 +364,7 @@ public class Utils {
        .append("     <link rel=\"stylesheet\" href=\""+renderingService.getCssURL() +"\" type=\"text/css\">")
        .append("  </head>")
        .append("  <body>")
-       .append("    Page <a href=\""+page.getURL()+"\">" + content.getTitle() +"</a> is modified by " +page.getAuthor())
+       .append("    Page <a href=\""+page.getURL()+"\">" + page.getTitle() +"</a> is modified by " +page.getAuthor())
        .append("    <br/><br/>")
        .append("    Changes("+ diffResult.getChanges()+")")
        .append("    <br/><br/>")
@@ -460,9 +459,9 @@ public class Utils {
     for (int i = 0, length = existedPermission.size(); i < length; i++) {
       AccessControlEntry ace = existedPermission.get(i);
       // match action
-      if (ace.getPermission().equals(testPermission)) {
+      if (testPermission.equals(ace.getPermission())) {
         // match any
-        if (ace.getIdentity().equals(SystemIdentity.ANY))
+        if (SystemIdentity.ANY.equals(ace.getIdentity()))
           return true;
         else if (ace.getIdentity().indexOf(":") == -1) {
           // just user

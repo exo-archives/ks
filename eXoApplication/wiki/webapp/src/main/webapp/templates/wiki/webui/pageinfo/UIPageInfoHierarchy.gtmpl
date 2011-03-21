@@ -3,7 +3,7 @@
   def pageImpl = (PageImpl) currentWikiPage;
   def parentPage = pageImpl.getParentPage();
   def parentLink = parentPage != null ? uicomponent.getPageLink(parentPage) : "";
-  def parentTitle = parentPage != null ? parentPage.getContent().getTitle() : "";
+  def parentTitle = parentPage != null ? parentPage.getTitle() : "";
 %>
 
 <div class="UIPageInfoItem UIPageInfoHierarchy">

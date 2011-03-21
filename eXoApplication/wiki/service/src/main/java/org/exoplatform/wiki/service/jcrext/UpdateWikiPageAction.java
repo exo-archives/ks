@@ -21,7 +21,6 @@ import java.util.GregorianCalendar;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
-import javax.jcr.UnsupportedRepositoryOperationException;
 
 import org.apache.commons.chain.Context;
 import org.exoplatform.services.command.action.Action;

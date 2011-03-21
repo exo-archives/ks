@@ -15,8 +15,7 @@ public final class RelatedUtil {
     List<JsonRelatedData> jsonObjs = new ArrayList<JsonRelatedData>();
     for (PageImpl page : pages) {
       String name = page.getName();
-      String title = page.getContent().getTitle();
-      
+      String title = page.getTitle();
       String path = TreeUtils.getPathFromPageParams(Utils.getWikiPageParams(page));
       JsonRelatedData dataObj = new JsonRelatedData(name, title, path);
       jsonObjs.add(dataObj);

@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.exoplatform.wiki.mow.api.content.Content;
 import org.exoplatform.wiki.service.PermissionType;
 
 /**
@@ -59,7 +58,24 @@ public interface Page {
    * 
    * @return
    */
-  Content getContent();
+  Attachment getContent();
+  
+  /**
+   * Get the syntax used in that page
+   * 
+   * @return
+   */
+  String getSyntax();
+
+  void setSyntax(String syntax);
+
+  String getTitle();
+
+  void setTitle(String title);
+  
+  String getComment();
+  
+  void setComment(String comment);
 
   /**
    * Get the attachments of this page

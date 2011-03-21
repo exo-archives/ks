@@ -26,7 +26,6 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
@@ -45,11 +44,8 @@ import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiTemplateDescriptionContainer;
 import org.exoplatform.wiki.webui.WikiMode;
-import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddTemplateModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
-import org.exoplatform.wiki.webui.extension.UITemplateSettingForm;
-import org.exoplatform.wiki.webui.popup.UIWikiSettingContainer;
 
 
 /**
@@ -127,7 +123,7 @@ public class SaveTemplateActionComponent extends SavePageActionComponent {
           Template template = wikiService.createTemplatePage(title, pageParams);
           template.setDescription(description);
           template.getContent().setText(markup);
-          template.getContent().setSyntax(syntaxId);
+          template.setSyntax(syntaxId);
           uiApp.addMessage(new ApplicationMessage("SaveTemplateAction.msg.Create-template-successfully",
                                                   msgArg,
                                                   ApplicationMessage.INFO));

@@ -35,7 +35,7 @@ import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.commons.VersionNameComparatorDesc;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.diff.DiffResult;
 import org.exoplatform.wiki.service.diff.DiffService;
@@ -85,9 +85,9 @@ public class UIWikiPageVersionsList extends UIForm {
   public void renderVersionsDifference(List<NTVersion> versions) throws Exception {
     Collections.sort(versions, new VersionNameComparatorDesc());
     NTVersion toVersion = versions.get(0);
-    String toVersionContent = ((ContentImpl) toVersion.getNTFrozenNode().getChildren().get(WikiNodeType.Definition.CONTENT)).getText();
+    String toVersionContent = ((AttachmentImpl) toVersion.getNTFrozenNode().getChildren().get(WikiNodeType.Definition.CONTENT)).getText();
     NTVersion fromVersion = versions.get(1);
-    String fromVersionContent = ((ContentImpl) fromVersion.getNTFrozenNode().getChildren().get(WikiNodeType.Definition.CONTENT)).getText();
+    String fromVersionContent = ((AttachmentImpl) fromVersion.getNTFrozenNode().getChildren().get(WikiNodeType.Definition.CONTENT)).getText();
     DiffService diffService = this.getApplicationComponent(DiffService.class);
     UIWikiPageVersionsCompare uiPageVersionsCompare = ((UIWikiHistorySpaceArea) this.getParent()).getChild(UIWikiPageVersionsCompare.class);
     uiPageVersionsCompare.setRendered(true);

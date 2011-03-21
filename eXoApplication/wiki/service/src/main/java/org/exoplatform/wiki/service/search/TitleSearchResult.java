@@ -19,7 +19,6 @@ package org.exoplatform.wiki.service.search;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.utils.Utils;
 
@@ -76,7 +75,7 @@ public class TitleSearchResult {
     Wiki searchWiki = null;
     try {
       if (WikiNodeType.WIKI_PAGE_CONTENT.equals(getType())) {
-        ContentImpl searchContent = (ContentImpl) org.exoplatform.wiki.utils.Utils.getObject(getPath(),
+        AttachmentImpl searchContent = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(getPath(),
                                                                                              getType());
         searchWiki = searchContent.getParent().getWiki();
       } else if (WikiNodeType.WIKI_ATTACHMENT.equals(getType())) {

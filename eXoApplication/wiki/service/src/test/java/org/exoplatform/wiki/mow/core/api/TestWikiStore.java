@@ -18,19 +18,15 @@ package org.exoplatform.wiki.mow.core.api;
 
 import org.exoplatform.wiki.mow.api.Model;
 import org.exoplatform.wiki.mow.api.Page;
-import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiStore;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.wiki.GroupWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.GroupWikiContainer;
-import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PortalWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.PortalWikiContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.UserWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.UserWikiContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
-import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 
 /**
  * Created by The eXo Platform SAS
@@ -103,7 +99,7 @@ public class TestWikiStore extends AbstractMOWTestcase {
     PortalWiki wiki = portalWikiContainer.addWiki("classic");
     assertNotNull(wiki) ;
     /*WikiHome wikiHomePage = wiki.getWikiHome();
-    ContentImpl content = wiki.createContent() ;
+    AttachmentImpl content = wiki.createContent() ;
     assertNotNull(content) ;
     
     wikiHomePage.setContent(content) ;    
@@ -111,7 +107,7 @@ public class TestWikiStore extends AbstractMOWTestcase {
     content.setSyntax("xwiki_2.0");
     content.setText("This is exo wiki") ;
     
-    ContentImpl addedContent = wikiHomePage.getContent() ;
+    AttachmentImpl addedContent = wikiHomePage.getContent() ;
     
     assertNotNull(addedContent) ;
     assertEquals(addedContent.getSyntax(), "xwiki_2.0") ;
@@ -127,11 +123,11 @@ public class TestWikiStore extends AbstractMOWTestcase {
     wikiChildPage.setParentPage(wikipage);
     assertSame(wikiChildPage, wikipage.getChildPages().iterator().next());
     
-    ContentImpl pageContent = wiki.createContent() ;
+    AttachmentImpl pageContent = wiki.createContent() ;
     wikipage.setContent(pageContent) ;
     pageContent.setSyntax("exowiki_2.0") ;
     pageContent.setText("This is the first page's content") ;
-    ContentImpl addedPageContent = wikipage.getContent() ;
+    AttachmentImpl addedPageContent = wikipage.getContent() ;
     assertEquals(addedPageContent.getSyntax(), "exowiki_2.0") ;
     assertEquals(addedPageContent.getText(), "This is the first page's content") ;
     */

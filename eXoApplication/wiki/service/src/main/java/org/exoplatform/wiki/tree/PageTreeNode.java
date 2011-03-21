@@ -36,7 +36,7 @@ public class PageTreeNode extends TreeNode {
   private PageImpl page;
 
   public PageTreeNode(PageImpl page) throws Exception {
-    super(page.getContent().getTitle(), TreeNodeType.PAGE);
+    super(page.getTitle(), TreeNodeType.PAGE);
     this.page = page;
     this.path = buildPath();
     this.hasChild = this.page.getChildPages().size() > 0;

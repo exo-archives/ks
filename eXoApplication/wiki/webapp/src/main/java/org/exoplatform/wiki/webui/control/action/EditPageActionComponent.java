@@ -83,14 +83,14 @@ public class EditPageActionComponent extends UIComponent {
       UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       
       Page page = Utils.getCurrentWikiPage();
-      String title = page.getContent().getTitle();
+      String title = page.getTitle();
       String content = page.getContent().getText();
       titleInput.setEditable(true);
-      syntaxTypeSelectBox.setValue(page.getContent().getSyntax());
+      syntaxTypeSelectBox.setValue(page.getSyntax());
       syntaxTypeSelectBox.setEnable(Utils.getCurrentPreferences().getPreferencesSyntax().getAllowMutipleSyntaxes());
       if (wikiPortlet.getEditMode() == EditMode.SECTION) {
         RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
-        content = renderingService.getContentOfSection(content, page.getContent().getSyntax(), sectionIndex);
+        content = renderingService.getContentOfSection(content, page.getSyntax(), sectionIndex);
         titleInput.setEditable(false);
         syntaxTypeSelectBox.setEnable(false);
       }

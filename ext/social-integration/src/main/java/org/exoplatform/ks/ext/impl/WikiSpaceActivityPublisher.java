@@ -108,7 +108,7 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
     templateParams.put(ACTIVITY_TYPE_KEY, ADD_PAGE_TYPE);
     templateParams.put(PAGE_OWNER_KEY, wikiOwner);
     templateParams.put(PAGE_TYPE_KEY, wikiType);
-    templateParams.put(PAGE_TITLE_KEY, page.getContent().getTitle());
+    templateParams.put(PAGE_TITLE_KEY, page.getTitle());
     templateParams.put(PORTLET_NAME_KEY, params.getValueParam("wikiPortletName").getValue());
     templateParams.put(SPACE_URL_KEY, space.getUrl());
     activity.setTemplateParams(templateParams);
@@ -178,7 +178,7 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
     templateParams.put(ACTIVITY_TYPE_KEY, UPDATE_PAGE_TYPE);
     templateParams.put(PAGE_OWNER_KEY, wikiOwner);
     templateParams.put(PAGE_TYPE_KEY, wikiType);
-    templateParams.put(PAGE_TITLE_KEY, page.getContent().getTitle());
+    templateParams.put(PAGE_TITLE_KEY, page.getTitle());
     templateParams.put(PORTLET_NAME_KEY, params.getValueParam("wikiPortletName").getValue());
     templateParams.put(SPACE_URL_KEY, space.getUrl());
     activity.setTemplateParams(templateParams);

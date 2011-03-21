@@ -96,7 +96,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
     Collection<AttachmentImpl> attachments = null;
     try {
       Page page = getCurrentWikiPage();
-      attachments = ((PageImpl) page).getAttachments();
+      attachments = ((PageImpl) page).getAttachmentsExcludeContent();
     } catch (Exception e) {
       attachments = new ArrayList<AttachmentImpl>();
       log.warn("An error happened when get attachments list", e);

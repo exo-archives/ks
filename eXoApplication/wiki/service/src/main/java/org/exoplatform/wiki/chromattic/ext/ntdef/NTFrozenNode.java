@@ -70,6 +70,15 @@ public abstract class NTFrozenNode {
       return null;
     }
   }
+  
+  public String getComment() throws Exception {
+    Value value = getPropertyValue(WikiNodeType.Definition.COMMENT);
+    if (value != null) {
+      return value.getString();
+    } else {
+      return null;
+    }
+  }
 
   public void setMOWService(MOWService mowService) {
     this.mowService = mowService;

@@ -14,7 +14,7 @@
   author = (author != null) ? author : _ctx.appRes("UIWikiPortlet.label.Anonymous");
   def createdDate = df.format(currentWikiPage.getCreatedDate());
   def updatedDate = df.format(currentWikiPage.getUpdatedDate());
-  int attachmentsTotal =  currentWikiPage.getAttachments().size();
+  int attachmentsTotal =  currentWikiPage.getAttachmentsExcludeContent().size();
   int versionsTotal = currentWikiPage.getVersionableMixin().getVersionHistory().getChildren().size() -1 ;
   
   String historyAnchor = "#" + uicomponent.SHOW_HISTORY;

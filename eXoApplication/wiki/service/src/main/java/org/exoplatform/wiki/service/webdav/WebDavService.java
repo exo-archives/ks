@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2009 eXo Platform SAS.
+ * Copyright (C) 2003-2011 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -14,32 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.mow.api.content;
+package org.exoplatform.wiki.service.webdav;
 
 /**
- * Represents the content of a page.
- * 
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
- *         Lamarque</a>
- * @version $Revision$
+ * Created by The eXo Platform SAS
+ * Author : viet.nguyen
+ *          viet.nguyen@exoplatform.com
+ * Mar 4, 2011  
  */
-public interface Content extends ContentItem {
-
-  /**
-   * Get the syntax used in that page
-   * 
-   * @return
-   */
-  String getSyntax();
-
-  void setSyntax(String syntax);
-
-  String getTitle();
-
-  void setTitle(String title);
-  
-  String getComment();
-  
-  void setComment(String comment);
+public interface WebDavService {
 
 }

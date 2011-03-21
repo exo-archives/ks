@@ -68,7 +68,7 @@ public class TemplateSearchData extends SearchData {
       String title = getTitle();
       statement.append("SELECT title, jcr:primaryType, path,"+WikiNodeType.Definition.DESCRIPTION)
                .append(" FROM ")
-               .append(WikiNodeType.WIKI_PAGE_CONTENT)
+               .append(WikiNodeType.WIKI_PAGE)
                .append(" WHERE ");
       statement.append(this.jcrQueryPath);
       if (title != null && title.length() > 0) {

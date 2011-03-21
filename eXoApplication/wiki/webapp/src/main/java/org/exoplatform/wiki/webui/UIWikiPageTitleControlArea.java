@@ -112,7 +112,7 @@ public class UIWikiPageTitleControlArea extends UIContainer {
     boolean isRenameHome = WikiNodeType.Definition.WIKI_HOME_NAME.equals(page.getName())
         && !newName.equals(pageParams.getPageId());
     if (isRenameHome) {
-      page.getContent().setTitle(newTitle);
+      page.setTitle(newTitle);
     } else {
       wikiService.renamePage(pageParams.getType(),
                              pageParams.getOwner(),

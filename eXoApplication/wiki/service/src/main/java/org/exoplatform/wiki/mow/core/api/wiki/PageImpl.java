@@ -46,6 +46,7 @@ import org.chromattic.api.annotations.Path;
 import org.chromattic.api.annotations.PrimaryType;
 import org.chromattic.api.annotations.Property;
 import org.chromattic.api.annotations.WorkspaceName;
+import org.chromattic.ext.ntdef.NTFolder;
 import org.chromattic.ext.ntdef.Resource;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.AccessControlList;
@@ -59,7 +60,6 @@ import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.WikiService;
@@ -72,14 +72,14 @@ import org.exoplatform.wiki.utils.Utils;
  * Mar 26, 2010  
  */
 @PrimaryType(name = WikiNodeType.WIKI_PAGE)
-public abstract class PageImpl implements Page {
+public abstract class PageImpl extends NTFolder implements Page {
   
   private MOWService mowService;
   
   private WikiService wService;
   
   private boolean isMinorEdit = false;
-
+  
   public void setMOWService(MOWService mowService) {
     this.mowService = mowService;
   }
@@ -117,18 +117,42 @@ public abstract class PageImpl implements Page {
   @OneToOne
   @Owner
   @MappedBy(WikiNodeType.Definition.CONTENT)
-  protected abstract ContentImpl getContentByChromattic();  
-  protected abstract void setContentByChromattic(ContentImpl content);
+  protected abstract AttachmentImpl getContentByChromattic();
+
+  protected abstract void setContentByChromattic(AttachmentImpl content);
+
   @Create
-  protected abstract ContentImpl createContent();
-  public ContentImpl getContent() {
-    ContentImpl content = getContentByChromattic();
+  protected abstract AttachmentImpl createContent();
+
+  public AttachmentImpl getContent() {
+    AttachmentImpl content = getContentByChromattic();
     if (content == null) {
       content = createContent();
       setContentByChromattic(content);
     }
     return content;
   }
+  
+  @Property(name = WikiNodeType.Definition.TITLE)
+  public abstract String getTitleByChromattic();
+  public abstract void setTitleByChromattic(String title);
+  
+  public String getTitle() {
+    String title = getTitleByChromattic();
+    return (title != null) ? title : getName();
+  }
+  
+  public void setTitle(String title) {
+    setTitleByChromattic(title);
+  }
+  
+  @Property(name = WikiNodeType.Definition.SYNTAX)
+  public abstract String getSyntax();
+  public abstract void setSyntax(String syntax);
+  
+  @Property(name = WikiNodeType.Definition.COMMENT)
+  public abstract String getComment();
+  public abstract void setComment(String comment);
   
   @Property(name = WikiNodeType.Definition.OWNER)
   public abstract String getOwner();
@@ -183,17 +207,22 @@ public abstract class PageImpl implements Page {
   
   @OneToOne(type = RelationshipType.EMBEDDED)
   @Owner
-  public abstract VersionableMixin getVersionableMixin();
-  protected abstract void setVersionableMixin(VersionableMixin mix);
+  public abstract VersionableMixin getVersionableMixinByChromattic();
+  protected abstract void setVersionableMixinByChromattic(VersionableMixin mix);
   @Create
   protected abstract VersionableMixin createVersionableMixin();
   
-  public void makeVersionable() {
-    VersionableMixin versionableMixin = getVersionableMixin();
+  public VersionableMixin getVersionableMixin() {
+    VersionableMixin versionableMixin = getVersionableMixinByChromattic();
     if (versionableMixin == null) {
       versionableMixin = createVersionableMixin();
-      setVersionableMixin(versionableMixin);
+      setVersionableMixinByChromattic(versionableMixin);
     }
+    return versionableMixin;
+  }
+
+  public void makeVersionable() {
+    getVersionableMixin();
   }
   
   //TODO: replace by @Checkin when Chromattic support
@@ -248,7 +277,22 @@ public abstract class PageImpl implements Page {
   
   
   @OneToMany
-  public abstract Collection<AttachmentImpl> getAttachments() ;
+  public abstract Collection<AttachmentImpl> getAttachmentsByChromattic();
+
+  public Collection<AttachmentImpl> getAttachments() {
+    return getAttachmentsByChromattic();
+  }
+  
+  public Collection<AttachmentImpl> getAttachmentsExcludeContent() {
+    Collection<AttachmentImpl> attachments = getAttachmentsByChromattic();
+    List<AttachmentImpl> atts = new ArrayList<AttachmentImpl>(attachments.size());
+    for (AttachmentImpl attachment : attachments) {
+      if (!"content".equals(attachment.getName())) {
+        atts.add(attachment);
+      }
+    }
+    return atts;
+  }
   
   public AttachmentImpl getAttachment(String attachmentId) {
     for (AttachmentImpl att : getAttachments()) {
@@ -320,7 +364,6 @@ public abstract class PageImpl implements Page {
       List<String> actions = null;
       if (nodeActions != null) {
         actions = new ArrayList<String>(Arrays.asList(nodeActions));
-        Arrays.asList(nodeActions);
       } else {
         actions = new ArrayList<String>();
       }

@@ -36,9 +36,9 @@ import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.UIWikiTemplateDescriptionContainer;
 import org.exoplatform.wiki.webui.WikiMode;
-import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.commons.UIWikiTemplateForm;
 
 
@@ -102,11 +102,11 @@ public class UITemplateSettingForm extends UIWikiTemplateForm {
       commentInput.setRendered(false);
       Template template = wservice.getTemplatePage(pageParams, templateId);
      
-      titleInput.setValue(template.getContent().getTitle());
+      titleInput.setValue(template.getTitle());
       descriptionInput.setValue(template.getDescription());
-      pageEditForm.setTitle(template.getContent().getTitle());
+      pageEditForm.setTitle(template.getTitle());
       markupInput.setValue(template.getContent().getText());
-      syntaxTypeSelectBox.setValue(template.getContent().getSyntax());     
+      syntaxTypeSelectBox.setValue(template.getSyntax());     
       UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);
       popupContainer.deActivate();
       wikiPortlet.changeMode(WikiMode.EDITTEMPLATE);

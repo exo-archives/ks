@@ -60,4 +60,17 @@ public interface Attachment {
    */
   String getDownloadURL();
 
+  String getTitle();
+
+  void setTitle(String title);
+  
+  /**
+   * Get the text representation of the content item
+   * 
+   * @return
+   */
+  String getText() throws Exception;
+
+  void setText(String text);
+
 }

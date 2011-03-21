@@ -106,7 +106,7 @@ public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> 
                                                       params.getPageId());
       if (page != null) {
         includeContent.append(renderingservice.render(page.getContent().getText(),
-                                                      page.getContent().getSyntax(),
+                                                      page.getSyntax(),
                                                       Syntax.XHTML_1_0.toIdString(),
                                                       false));
       }

@@ -38,9 +38,9 @@ import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -85,8 +85,8 @@ import org.exoplatform.wiki.service.search.ContentSearchData;
 import org.exoplatform.wiki.service.search.TitleSearchResult;
 import org.exoplatform.wiki.tree.JsonNodeData;
 import org.exoplatform.wiki.tree.TreeNode;
-import org.exoplatform.wiki.tree.WikiTreeNode;
 import org.exoplatform.wiki.tree.TreeNode.TREETYPE;
+import org.exoplatform.wiki.tree.WikiTreeNode;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.context.Execution;
@@ -151,7 +151,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
         Page page = wikiService.getPageById(wikiType, wikiOwner, pageId);
         if (page != null) {
           pageContent = page.getContent().getText();
-          syntaxId = page.getContent().getSyntax();
+          syntaxId = page.getSyntax();
           syntaxId = (syntaxId != null) ? syntaxId : Syntax.XWIKI_2_0.toIdString();
         }
         if (!isMarkup) {
@@ -489,7 +489,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     page.setVersion("current");
     page.setMajorVersion(1);
     page.setMinorVersion(0);
-    page.setLanguage(doc.getContent().getSyntax());
+    page.setLanguage(doc.getSyntax());
     page.setCreator(doc.getOwner());
 
     GregorianCalendar calendar = new GregorianCalendar();
@@ -575,15 +575,15 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
                                       URI baseUri,
                                       PageImpl doc) {
     pageSummary.setWiki(Utils.getWikiType(doc.getWiki()));
-    pageSummary.setFullName(doc.getContent().getTitle());
+    pageSummary.setFullName(doc.getTitle());
     pageSummary.setId(Utils.getWikiType(doc.getWiki())+ ":" + doc.getWiki().getOwner() + "." + doc.getName());
     pageSummary.setSpace(doc.getWiki().getOwner());
     pageSummary.setName(doc.getName());
-    pageSummary.setTitle(doc.getContent().getTitle());
+    pageSummary.setTitle(doc.getTitle());
     pageSummary.setXwikiRelativeUrl("http://localhost:8080/ksdemo/rest-ksdemo/wiki/portal/spaces/classic/pages/WikiHome");
     pageSummary.setXwikiAbsoluteUrl("http://localhost:8080/ksdemo/rest-ksdemo/wiki/portal/spaces/classic/pages/WikiHome");
     pageSummary.setTranslations(objectFactory.createTranslations());
-    pageSummary.setSyntax(doc.getContent().getSyntax());
+    pageSummary.setSyntax(doc.getSyntax());
 
     PageImpl parent = doc.getParentPage();
     // parentId must not be set if the parent document does not exist.

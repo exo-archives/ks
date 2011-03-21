@@ -28,7 +28,6 @@ import org.chromattic.api.annotations.Path;
 import org.chromattic.api.annotations.Property;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
@@ -47,9 +46,9 @@ public abstract class WikiImpl implements Wiki {
       setHome(home);
       home.makeVersionable();
       home.setOwner(getOwner());
-      ContentImpl content = home.getContent();
-      content.setTitle(WikiNodeType.Definition.WIKI_HOME_TITLE);
-      content.setSyntax(home.getWikiService().getDefaultWikiSyntaxId());
+      AttachmentImpl content = home.getContent();
+      home.setTitle(WikiNodeType.Definition.WIKI_HOME_TITLE);
+      home.setSyntax(home.getWikiService().getDefaultWikiSyntaxId());
       content.setText("This is a Wiki Home page of " + getOwner());
       try {
         home.setPagePermission(null);

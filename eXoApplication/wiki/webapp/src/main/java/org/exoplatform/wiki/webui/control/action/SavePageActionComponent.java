@@ -159,9 +159,9 @@ public class SavePageActionComponent extends UIComponent {
         if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
           if (wikiPortlet.getEditMode() == EditMode.SECTION) {
             newPageId = page.getName();
-            title = page.getContent().getTitle();
+            title = page.getTitle();
             markup = renderingService.updateContentOfSection(page.getContent().getText(),
-                                                             page.getContent().getSyntax(),
+                                                             page.getSyntax(),
                                                              wikiPortlet.getSectionIndex(),
                                                              markup);
           }
@@ -177,15 +177,15 @@ public class SavePageActionComponent extends UIComponent {
             ((PageImpl) page).setMinorEdit(Boolean.parseBoolean(minorAtt.toString()));
           }
 
-          page.getContent().setComment(commentInput.getValue());
-          page.getContent().setSyntax(syntaxId);
+          page.setComment(commentInput.getValue());
+          page.setSyntax(syntaxId);
           pageTitleControlForm.getUIFormInputInfo().setValue(title);
           pageParams.setPageId(page.getName());
           ((PageImpl) page).setURL(Utils.getURLFromParams(pageParams));          
           page.getContent().setText(markup);
 
           if (!pageEditForm.getTitle().equals(title)) {
-            page.getContent().setTitle(title);
+            page.setTitle(title);
             ((PageImpl) page).checkin();
             ((PageImpl) page).checkout();
             pageParams.setPageId(newPageId);
@@ -218,7 +218,7 @@ public class SavePageActionComponent extends UIComponent {
           pageParams.setPageId(page.getName());
           ((PageImpl) page).setURL(Utils.getURLFromParams(pageParams));
           subPage.getContent().setText(markup);
-          subPage.getContent().setSyntax(syntaxId);
+          subPage.setSyntax(syntaxId);
           ((PageImpl) subPage).getAttachments().addAll(attachs);
           ((PageImpl) subPage).checkin();
           ((PageImpl) subPage).checkout();

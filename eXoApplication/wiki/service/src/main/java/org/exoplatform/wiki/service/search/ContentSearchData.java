@@ -54,16 +54,16 @@ public class ContentSearchData extends SearchData {
     }
   }
 
-  public String getChromatticStatement() {
-    return getContentCdt();
-  }
-
-  public String getStatementForTitle() {
+  public String getStatementForTitle(boolean onlyHomePages) {
     StringBuilder statement = new StringBuilder();
+    String queryPath = jcrQueryPath;
+    if (onlyHomePages) {
+      queryPath = queryPath.substring(0, queryPath.length() - 3) + "'";
+    }
     statement.append("SELECT jcr:primaryType, jcr:path, title, fileType ")
              .append("FROM nt:base ")
              .append("WHERE ")
-             .append(jcrQueryPath)
+             .append(queryPath)
              .append(" AND ")
              .append("LOWER(title) LIKE '%")
              .append(title)
@@ -72,12 +72,12 @@ public class ContentSearchData extends SearchData {
     return statement.toString();
   }
 
-  public String getStatement() {
+  public String getStatement(boolean onlyHomePages) {
     StringBuilder statement = new StringBuilder();
     statement.append("SELECT title, jcr:primaryType, path, excerpt(.) ")
              .append("FROM nt:base ")
              .append("WHERE ");
-    statement.append(getContentCdt());
+    statement.append(getContentCdt(onlyHomePages));
     return statement.toString();
   }
 
@@ -95,10 +95,14 @@ public class ContentSearchData extends SearchData {
     return statement.toString();
   }
   
-  private String getContentCdt() {
+  private String getContentCdt(boolean onlyHomePages) {
     StringBuilder clause = new StringBuilder();
     boolean isAnd = false;
-    clause.append(this.jcrQueryPath);
+    String queryPath = this.jcrQueryPath;
+    if (onlyHomePages) {
+      queryPath = queryPath.substring(0, queryPath.length() - 3) + "'";
+    }
+    clause.append(queryPath);
     isAnd = true;
     if (text != null && text.length() > 0) {
       if (isAnd)
@@ -115,7 +119,7 @@ public class ContentSearchData extends SearchData {
       if (content != null && content.length() > 0) {
         if (isAnd)
           clause.append(" AND ");
-        clause.append(" CONTAINS(text, '").append(content).append("') ");
+        clause.append(" CONTAINS(*, '").append(content).append("') ");
       }
     }
     return clause.toString();

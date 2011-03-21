@@ -26,7 +26,7 @@ import org.exoplatform.wiki.chromattic.ext.ntdef.NTFrozenNode;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.service.PermissionType;
@@ -80,18 +80,18 @@ public class UIWikiPageContentArea extends UIWikiContainer {
     
     // Render current content
     if (currentMode.equals(WikiMode.VIEW)) {
-      this.htmlOutput = renderingService.render(wikipage.getContent().getText(), wikipage.getContent().getSyntax(), Syntax.XHTML_1_0.toIdString(), wikipage.hasPermission(PermissionType.EDITPAGE));
+      this.htmlOutput = renderingService.render(wikipage.getContent().getText(), wikipage.getSyntax(), Syntax.XHTML_1_0.toIdString(), wikipage.hasPermission(PermissionType.EDITPAGE));
     }
     if (currentMode.equals(WikiMode.HELP)) {
-      this.htmlOutput = renderingService.render(wikipage.getContent().getText(), wikipage.getContent().getSyntax(), Syntax.XHTML_1_0.toIdString(), false);
+      this.htmlOutput = renderingService.render(wikipage.getContent().getText(), wikipage.getSyntax(), Syntax.XHTML_1_0.toIdString(), false);
     }
     // Render select version content
     if (currentMode.equals(WikiMode.VIEWREVISION) && currentVersionName != null) {
       NTVersion version = wikipage.getVersionableMixin().getVersionHistory().getVersion(currentVersionName);
       NTFrozenNode frozenNode = version.getNTFrozenNode();
-      ContentImpl content = (ContentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT));
+      AttachmentImpl content = (AttachmentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT));
       String pageContent = content.getText();
-      String pageSyntax = content.getSyntax();
+      String pageSyntax = wikipage.getSyntax();
       this.htmlOutput = renderingService.render(pageContent, pageSyntax, Syntax.XHTML_1_0.toIdString(), false);
     }
     Utils.removeWikiContext();

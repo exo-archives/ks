@@ -67,7 +67,7 @@ public class CancelActionComponent extends UIComponent {
       UIWikiPageTitleControlArea pageTitleControlForm = wikiPortlet.findComponentById(UIWikiPageControlArea.TITLE_CONTROL);
       try {
         Page page = Utils.getCurrentWikiPage();
-        pageTitleControlForm.getUIFormInputInfo().setValue(page.getContent().getTitle());
+        pageTitleControlForm.getUIFormInputInfo().setValue(page.getTitle());
       } catch (Exception e) {
         log.warn("An exception happens when cancel edit page", e);
       }

@@ -37,7 +37,6 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.GroupWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.LinkEntry;
@@ -132,7 +131,8 @@ public class WikiServiceImpl implements WikiService {
       creator = conversationState.getIdentity().getUserId();
     }
     page.setOwner(creator);
-    page.getContent().setTitle(title);
+    page.setTitle(title);
+    page.getContent().setText("");
     page.makeVersionable();
     
     //update LinkRegistry
@@ -176,7 +176,7 @@ public class WikiServiceImpl implements WikiService {
       boolean isExisted = result.hasNext();
       if (!isExisted) {
         Page page = getWikiHome(wikiType, wikiOwner);
-        String wikiHomeId = TitleResolver.getId(page.getContent().getTitle(), true);
+        String wikiHomeId = TitleResolver.getId(page.getTitle(), true);
         if (wikiHomeId.equals(pageId)) {
           isExisted = true;
         }
@@ -245,7 +245,7 @@ public class WikiServiceImpl implements WikiService {
     if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageName) || pageName == null)
       return false;
     PageImpl currentPage = (PageImpl) getPageById(wikiType, wikiOwner, pageName);
-    currentPage.getContent().setTitle(newTitle) ;
+    currentPage.setTitle(newTitle) ;
     PageImpl parentPage = currentPage.getParentPage();
     parentPage.addPage(newName, currentPage) ;
     if(currentPage.getRenamedMixin() != null) {
@@ -455,7 +455,7 @@ public class WikiServiceImpl implements WikiService {
       }
       if (page == null) {
         page = getWikiHome(wikiType, wikiOwner);
-        String wikiHomeId = TitleResolver.getId(page.getContent().getTitle(), true);
+        String wikiHomeId = TitleResolver.getId(page.getTitle(), true);
         if (!wikiHomeId.equals(pageId)) {
           page = null;
         }
@@ -532,33 +532,20 @@ public class WikiServiceImpl implements WikiService {
     if (newTitle != null) {
       template = getTemplatesContainer(params).addPage(TitleResolver.getId(newTitle,false), template);
       template.setDescription(newDescription);
-      template.getContent().setTitle(newTitle);
+      template.setTitle(newTitle);
       template.getContent().setText(newContent);
-      template.getContent().setSyntax(newSyntaxId);
+      template.setSyntax(newSyntaxId);
     }
   }
 
-  public PageList<ContentImpl> searchContent(ContentSearchData data) throws Exception {
-    Model model = getModel();
-    try {
-      WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
-      String statement = data.getChromatticStatement();
-      List<ContentImpl> list = new ArrayList<ContentImpl>();
-      if (statement != null) {
-        Iterator<ContentImpl> result = wStore.getSession()
-                                             .createQueryBuilder(ContentImpl.class)
-                                             .where(statement)
-                                             .get()
-                                             .objects();
-        while (result.hasNext()) {
-          list.add(result.next());
-        }
+  public PageList<SearchResult> searchContent(ContentSearchData data) throws Exception {
+    List<SearchResult> results = search(data).getAll();
+    for (SearchResult result : results) {
+      if (WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())) {
+        results.remove(result);
       }
-      return new ObjectPageList<ContentImpl>(list, 5);
-    } catch (Exception e) {
-      log.error("Can't search content", e);
     }
-    return null;
+    return new ObjectPageList<SearchResult>(results, 10);
   }
   
   public PageList<SearchResult> search(ContentSearchData data) throws Exception {
@@ -605,9 +592,7 @@ public class WikiServiceImpl implements WikiService {
       WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
       if (WikiNodeType.WIKI_PAGE.equals(objectNodeType)) {
         return wStore.getSession().findByPath(PageImpl.class, relPath);
-      } else if (WikiNodeType.WIKI_PAGE_CONTENT.equals(objectNodeType)) {
-        return wStore.getSession().findByPath(ContentImpl.class, relPath);
-      } else if (WikiNodeType.WIKI_ATTACHMENT.equals(objectNodeType)) {   
+      } else if (WikiNodeType.WIKI_ATTACHMENT.equals(objectNodeType)) {
         return wStore.getSession().findByPath(AttachmentImpl.class, relPath);
       } else if (WikiNodeType.WIKI_TEMPLATE.equals(objectNodeType)) {   
         return wStore.getSession().findByPath(Template.class, relPath);
@@ -625,12 +610,11 @@ public class WikiServiceImpl implements WikiService {
       if (relPath.startsWith("/"))
         relPath = relPath.substring(1);
       String temp = relPath.substring(0, relPath.lastIndexOf("/"));
-      temp = temp.substring(0, temp.lastIndexOf("/"));
-      relPath = temp + "/" + WikiNodeType.Definition.CONTENT;
+      relPath = temp.substring(0, temp.lastIndexOf("/"));
       Model model = getModel();
       WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
-      ContentImpl content = wStore.getSession().findByPath(ContentImpl.class, relPath);
-      return content.getTitle();
+      PageImpl page = wStore.getSession().findByPath(PageImpl.class, relPath);
+      return page.getTitle();
     } catch (Exception e) {
     }
     return null;
@@ -659,7 +643,7 @@ public class WikiServiceImpl implements WikiService {
     Iterator<PageImpl> syntaxPageIterator = wStore.getHelpPagesContainer().getChildPages().values().iterator();
     while (syntaxPageIterator.hasNext()) {
       PageImpl syntaxPage = syntaxPageIterator.next();
-      if (syntaxPage.getContent().getSyntax().equals(syntaxId)) {
+      if (syntaxPage.getSyntax().equals(syntaxId)) {
         return syntaxPage;
       }
     }
@@ -807,7 +791,7 @@ public class WikiServiceImpl implements WikiService {
     if (page == null) {
       return list;
     }
-    list.add(0, new BreadcrumbData(page.getName(), page.getPath(), page.getContent().getTitle(), wikiType, wikiOwner));
+    list.add(0, new BreadcrumbData(page.getName(), page.getPath(), page.getTitle(), wikiType, wikiOwner));
     PageImpl parentPage = page.getParentPage();
     if (parentPage != null) {
       getBreadcumb(list, wikiType, wikiOwner, parentPage.getName());
@@ -849,7 +833,8 @@ public class WikiServiceImpl implements WikiService {
         creator = conversationState.getIdentity().getUserId();
       }
       template.setOwner(creator);
-      template.getContent().setTitle(title);
+      template.setTitle(title);
+      template.getContent().setText("");
       model.save();
       return template;
     } catch (Exception e) {
@@ -878,10 +863,10 @@ public class WikiServiceImpl implements WikiService {
     String realName = name.replace("/", "");
     syntaxPage.setName(realName + type);
     syntaxPage.setParentPage(parentPage);
-    ContentImpl content = syntaxPage.getContent();
-    content.setTitle(realName + type);
+    AttachmentImpl content = syntaxPage.getContent();
+    syntaxPage.setTitle(realName + type);
     content.setText(stringContent.toString());
-    content.setSyntax(name);
+    syntaxPage.setSyntax(name);
     inputContent.close();
     bufferReader.close();
     return syntaxPage;

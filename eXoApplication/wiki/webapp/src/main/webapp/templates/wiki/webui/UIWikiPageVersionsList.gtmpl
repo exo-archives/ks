@@ -82,7 +82,7 @@
             String updatedDate = df.format(frozenNode.getUpdatedDate());
             String author = frozenNode.getAuthor();
             author = (author != null) ? author : _ctx.appRes("UIWikiPortlet.label.Anonymous");
-            String comment = frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT).getComment();
+            String comment = frozenNode.getComment();
             comment = (comment != null) ? comment : "";
             String restore = (isCurrentVersion) ? "" : _ctx.appRes("UIWikiPageVersionsList.label.Restore");
             String viewLink = uicomponent.event(uicomponent.VIEW_REVISION, version.getName());

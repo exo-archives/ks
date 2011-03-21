@@ -87,7 +87,7 @@ public class MacroUtils {
                                                        params.getOwner(),
                                                        params.getPageId());
 
-    return getExcerpts(page.getContent().getText(), page.getContent().getSyntax());
+    return getExcerpts(page.getContent().getText(), page.getSyntax());
   }
 
   private static String getExcerpts(String markup, String sourceSyntax) throws Exception {

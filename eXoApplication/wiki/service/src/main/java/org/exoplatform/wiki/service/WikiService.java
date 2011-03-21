@@ -23,7 +23,6 @@ import java.util.Map;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.wiki.mow.api.Page;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.Template;
 import org.exoplatform.wiki.mow.core.api.wiki.TemplateContainer;
@@ -61,7 +60,7 @@ public interface WikiService {
 	public Page getExsitedOrNewDraftPageById(String wikiType, String wikiOwner, String pageId) throws Exception ;
 	public Page getPageByUUID(String uuid) throws Exception ;
 	public Template getTemplatePage(WikiPageParams params, String templateId) throws Exception;	
-	public PageList<ContentImpl> searchContent(ContentSearchData data) throws Exception ;
+	public PageList<SearchResult> searchContent(ContentSearchData data) throws Exception ;
 	public List<BreadcrumbData> getBreadcumb(String wikiType, String wikiOwner, String pageId) throws Exception ;
 	public WikiPageParams getWikiPageParams(BreadcrumbData data) throws Exception;
 	public PageList<SearchResult> search(ContentSearchData data) throws Exception ;

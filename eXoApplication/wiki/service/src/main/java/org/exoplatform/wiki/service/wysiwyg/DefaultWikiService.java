@@ -207,7 +207,7 @@ public class DefaultWikiService implements WikiService {
       String wikiOwner = documentReference.getParent().getName();
       String wikiType = documentReference.getParent().getParent().getName();
       PageImpl page = (PageImpl) wservice.getPageById(wikiType, wikiOwner, pageId);
-      wikiPage.setTitle(page.getContent().getTitle());
+      wikiPage.setTitle(page.getTitle());
       wikiPage.setUrl(pageId);
       wikiPages.add(wikiPage);
     }
@@ -298,7 +298,7 @@ public class DefaultWikiService implements WikiService {
       Page page = wservice.getExsitedOrNewDraftPageById(wikiName,
                                                         spaceName,
                                                         TitleResolver.getId(pageName, false));
-      Collection<AttachmentImpl> attachs = ((PageImpl) page).getAttachments();
+      Collection<AttachmentImpl> attachs = ((PageImpl) page).getAttachmentsExcludeContent();
       for (AttachmentImpl attach : attachs) {
         AttachmentReference attachmentReference = new AttachmentReference(attach.getName(),
                                                                           documentReference);

@@ -16,14 +16,18 @@
  */
 package org.exoplatform.wiki.service.impl;
 
+import org.chromattic.api.ChromatticSession;
 import org.chromattic.api.event.LifeCycleListener;
 import org.chromattic.api.event.StateChangeListener;
+import org.chromattic.ext.ntdef.NTResource;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTFrozenNode;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersionHistory;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
-import org.exoplatform.wiki.mow.core.api.content.ContentImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.WatchedMixin;
 import org.exoplatform.wiki.service.WikiService;
@@ -40,6 +44,8 @@ public class Injector implements LifeCycleListener, StateChangeListener {
   private final MOWService mowService;
 
   private final WikiService wService;
+  
+  private static final Log log = ExoLogger.getLogger("org.exoplatform.wiki.service.impl.Injector");
 
   public Injector(MOWService mowService,WikiService wService ) {
     this.mowService = mowService;
@@ -93,25 +99,33 @@ public class Injector implements LifeCycleListener, StateChangeListener {
   @Override
   public void propertyChanged(String id, Object o, String propertyName, Object propertyValue) {
     // TODO Auto-generated method stub
-    if (o instanceof ContentImpl) {
-      if (propertyName.equals(WikiNodeType.Definition.TEXT.toString())) {
-        ContentImpl content = (ContentImpl) o;
-        try {
-          PageImpl page = content.getParent();
-          WatchedMixin mixin = page.getWatchedMixin();
-          if (mixin != null) {
-            boolean isWatched = !mixin.getWatchers().isEmpty();
-            Wiki wiki = page.getWiki();
-            boolean isMinorEdit = page.isMinorEdit();
-            if (wiki != null && isWatched && !isMinorEdit) {
-              NTVersionHistory history = page.getVersionableMixin().getVersionHistory();
-              if (history != null && history.getChildren().size() > 1) {
-                Utils.sendMailOnChangeContent(content);
+    if (o instanceof NTResource) {
+      if ("jcr:data".equals(propertyName)) {
+        ChromatticSession session = mowService.getSession();
+        String path = session.getPath(o);
+        if (path.endsWith(WikiNodeType.Definition.CONTENT)) {
+          path = path.substring(0, path.lastIndexOf("/"));
+          if (path.startsWith("/")) {
+            path = path.substring(1);
+          }
+          AttachmentImpl content = session.findByPath(AttachmentImpl.class, path);
+          try {
+            PageImpl page = content.getParent();
+            WatchedMixin mixin = page.getWatchedMixin();
+            if (mixin != null) {
+              boolean isWatched = !mixin.getWatchers().isEmpty();
+              Wiki wiki = page.getWiki();
+              boolean isMinorEdit = page.isMinorEdit();
+              if (wiki != null && isWatched && !isMinorEdit) {
+                NTVersionHistory history = page.getVersionableMixin().getVersionHistory();
+                if (history != null && history.getChildren().size() > 1) {
+                  Utils.sendMailOnChangeContent(content);
+                }
               }
             }
+          } catch (Exception e) {
+            log.warn("Can not notify wiki page changes by email !", e);
           }
-        } catch (Exception e) {
-          e.printStackTrace();
         }
       }
     }

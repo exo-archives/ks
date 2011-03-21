@@ -69,7 +69,7 @@ public class TestPageAttachment extends AbstractMOWTestcase {
   public void testGetPageAttachment() throws Exception{
     WikiService wService = (WikiService)container.getComponentInstanceOfType(WikiService.class) ;
     PageImpl wikipage = (PageImpl)wService.getPageById("portal", "classic", "WikiHome") ;
-    Collection<AttachmentImpl> attachments = wikipage.getAttachments() ;
+    Collection<AttachmentImpl> attachments = wikipage.getAttachmentsExcludeContent() ;
     assertEquals(attachments.size(), 1) ;
     Iterator<AttachmentImpl> iter = attachments.iterator() ;
     AttachmentImpl att0 = iter.next() ;
@@ -79,7 +79,7 @@ public class TestPageAttachment extends AbstractMOWTestcase {
     assertEquals(att0.getCreator(), "root") ;
     
     wikipage = (PageImpl)wService.getPageById("portal", "classic", "AddPageAttachment-001") ;
-    attachments = wikipage.getAttachments() ;
+    attachments = wikipage.getAttachmentsExcludeContent() ;
     assertEquals(attachments.size(), 2) ;
     iter = attachments.iterator() ;
     AttachmentImpl att1 = iter.next() ;
@@ -106,7 +106,7 @@ public class TestPageAttachment extends AbstractMOWTestcase {
   public void testGetNewPageAttachment() throws Exception{
     WikiService wService = (WikiService)container.getComponentInstanceOfType(WikiService.class) ;
     PageImpl wikipage = (PageImpl)wService.getPageById("portal", "classic", "AddPageAttachment-002") ;
-    Collection<AttachmentImpl> attachments = wikipage.getAttachments() ;
+    Collection<AttachmentImpl> attachments = wikipage.getAttachmentsExcludeContent() ;
     assertEquals(attachments.size(), 1) ;
     Iterator<AttachmentImpl> iter = attachments.iterator() ;
     AttachmentImpl att = iter.next();

@@ -89,7 +89,7 @@ public class UIWikiVersionSelect extends UIWikiContainer {
     public void execute(Event<UIWikiVersionSelect> event) throws Exception {
       UIWikiVersionSelect versionSelect = event.getSource();
       UIWikiPortlet wikiPortlet = versionSelect.getAncestorOfType(UIWikiPortlet.class);
-      UIWikiHistorySpaceArea uiHistorySpace = wikiPortlet.getChild(UIWikiHistorySpaceArea.class);
+      UIWikiHistorySpaceArea uiHistorySpace = wikiPortlet.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
       UIWikiPageVersionsList uiVersionsList = uiHistorySpace.getChild(UIWikiPageVersionsList.class);
       List<NTVersion> comparedVersions = new ArrayList<NTVersion>();
       List<NTVersion> versionsList = uiVersionsList.getVersionsList();
