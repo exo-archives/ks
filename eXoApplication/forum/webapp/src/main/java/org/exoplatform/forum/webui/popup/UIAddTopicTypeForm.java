@@ -53,85 +53,91 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 			@EventConfig(listeners = UIAddTopicTypeForm.CancelActionListener.class, phase=Phase.DECODE)
 		}
 )
-
 public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponent {
-	public static final String FIELD_TOPICTYPENAME_INPUT = "topicTypeName" ;
-	public static final String FIELD_TOPICTYPEICON_TAB = "topicTypeIcon" ;
-	private TopicType topicType;
-	private boolean isEdit = false;
-	public UIAddTopicTypeForm() throws Exception {
-		UIFormStringInput topicTypeName = new UIFormStringInput(FIELD_TOPICTYPENAME_INPUT, FIELD_TOPICTYPENAME_INPUT, null);
-		topicTypeName.addValidator(MandatoryValidator.class);
-		UIFormInputIconSelector uiIconSelector = new UIFormInputIconSelector(FIELD_TOPICTYPEICON_TAB, FIELD_TOPICTYPEICON_TAB) ;
-		uiIconSelector.setSelectedIcon("IconsView");
-		addUIFormInput(topicTypeName);
-		addUIFormInput(uiIconSelector) ;
-	}
-	
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
+  public static final String FIELD_TOPICTYPENAME_INPUT = "topicTypeName";
 
-	public void setTopicType(TopicType topicType) {
-		this.topicType = topicType;
-		this.isEdit = true;
-		getUIStringInput(FIELD_TOPICTYPENAME_INPUT).setValue(topicType.getName());
-		((UIFormInputIconSelector)getChild(UIFormInputIconSelector.class)).setSelectedIcon(topicType.getIcon());
-	}
+  public static final String FIELD_TOPICTYPEICON_TAB   = "topicTypeIcon";
 
-	private boolean checkIsSameName(ForumService forumService, String name) throws Exception {
-		List<TopicType> topicTs = forumService.getTopicTypes();
-		for (TopicType topicT : topicTs) {
-			if(topicT.getName().equalsIgnoreCase(name)) return true;
-		}
-		return false;
-	}
+  private TopicType          topicType;
 
+  private boolean            isEdit                    = false;
 
-	static	public class CancelActionListener extends EventListener<UIAddTopicTypeForm> {
-		public void execute(Event<UIAddTopicTypeForm> event) throws Exception {
-			event.getSource().cancelChildPopupAction();
-		}
-	}
+  public UIAddTopicTypeForm() throws Exception {
+    UIFormStringInput topicTypeName = new UIFormStringInput(FIELD_TOPICTYPENAME_INPUT, FIELD_TOPICTYPENAME_INPUT, null);
+    topicTypeName.addValidator(MandatoryValidator.class);
+    UIFormInputIconSelector uiIconSelector = new UIFormInputIconSelector(FIELD_TOPICTYPEICON_TAB, FIELD_TOPICTYPEICON_TAB);
+    uiIconSelector.setSelectedIcon("IconsView");
+    addUIFormInput(topicTypeName);
+    addUIFormInput(uiIconSelector);
+  }
 
-	static	public class SaveActionListener extends EventListener<UIAddTopicTypeForm> {
-		public void execute(Event<UIAddTopicTypeForm> event) throws Exception {
-			UIAddTopicTypeForm topicTypeForm = event.getSource();
-			String typeName = topicTypeForm.getUIStringInput(FIELD_TOPICTYPENAME_INPUT).getValue();
-			UIFormInputIconSelector uiIconSelector = topicTypeForm.getChild(UIFormInputIconSelector.class);
-			String typeIcon = uiIconSelector.getSelectedIcon();
-			TopicType topicType = new TopicType();
-			if(topicTypeForm.isEdit) {
-				topicType = topicTypeForm.topicType;
-			}
-			while (typeName.indexOf("	") >= 0) {
-				typeName = StringUtils.replace(typeName, "	", " ");
-			}
-			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-			if(!typeName.equalsIgnoreCase(topicType.getName()) && topicTypeForm.checkIsSameName(forumService, typeName)) {
-				topicTypeForm.warning("UIAddTopicTypeForm.smg.SameNameType") ;
-				return ;
-			}
-			topicType.setName(typeName.trim());
-			topicType.setIcon(typeIcon);
-			forumService.saveTopicType(topicType);
-			UIForumPortlet forumPortlet = topicTypeForm.getAncestorOfType(UIForumPortlet.class);
-			if(topicTypeForm.isEdit) {
-				if(forumPortlet.getChild(UIForumContainer.class).isRendered() && !forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class).isRendered()){
-					UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
-					topicContainer.setTopicType(topicType.getId());
-					event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
-				}
-			}
-			topicTypeForm.isEdit = false;
-			try {
-				UITopicForm topicForm = forumPortlet.findFirstComponentOfType(UITopicForm.class);
-				topicForm.addNewTopicType();
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicForm) ;
-			} catch (Exception e) {
-				UITopicTypeManagerForm typeManagerForm = topicTypeForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UITopicTypeManagerForm.class);
-				event.getRequestContext().addUIComponentToUpdateByAjax(typeManagerForm) ;
-			}
-			topicTypeForm.cancelChildPopupAction();
-		}
-	}
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  public void setTopicType(TopicType topicType) {
+    this.topicType = topicType;
+    this.isEdit = true;
+    getUIStringInput(FIELD_TOPICTYPENAME_INPUT).setValue(topicType.getName());
+    ((UIFormInputIconSelector) getChild(UIFormInputIconSelector.class)).setSelectedIcon(topicType.getIcon());
+  }
+
+  private boolean checkIsSameName(ForumService forumService, String name) throws Exception {
+    List<TopicType> topicTs = forumService.getTopicTypes();
+    for (TopicType topicT : topicTs) {
+      if (topicT.getName().equalsIgnoreCase(name))
+        return true;
+    }
+    return false;
+  }
+
+  static public class CancelActionListener extends EventListener<UIAddTopicTypeForm> {
+    public void execute(Event<UIAddTopicTypeForm> event) throws Exception {
+      event.getSource().cancelChildPopupAction();
+    }
+  }
+
+  static public class SaveActionListener extends EventListener<UIAddTopicTypeForm> {
+    public void execute(Event<UIAddTopicTypeForm> event) throws Exception {
+      UIAddTopicTypeForm topicTypeForm = event.getSource();
+      String typeName = topicTypeForm.getUIStringInput(FIELD_TOPICTYPENAME_INPUT).getValue();
+      UIFormInputIconSelector uiIconSelector = topicTypeForm.getChild(UIFormInputIconSelector.class);
+      String typeIcon = uiIconSelector.getSelectedIcon();
+      TopicType topicType = new TopicType();
+      if (topicTypeForm.isEdit) {
+        topicType = topicTypeForm.topicType;
+      }
+      while (typeName.indexOf("	") >= 0) {
+        typeName = StringUtils.replace(typeName, "	", " ");
+      }
+      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+      if (!typeName.equalsIgnoreCase(topicType.getName()) && topicTypeForm.checkIsSameName(forumService, typeName)) {
+        topicTypeForm.warning("UIAddTopicTypeForm.smg.SameNameType");
+        return;
+      }
+      topicType.setName(typeName.trim());
+      topicType.setIcon(typeIcon);
+      forumService.saveTopicType(topicType);
+      UIForumPortlet forumPortlet = topicTypeForm.getAncestorOfType(UIForumPortlet.class);
+      if (topicTypeForm.isEdit) {
+        if (forumPortlet.getChild(UIForumContainer.class).isRendered() && !forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class).isRendered()) {
+          UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
+          topicContainer.setTopicType(topicType.getId());
+          event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer);
+        }
+      }
+      topicTypeForm.isEdit = false;
+      try {
+        UITopicForm topicForm = forumPortlet.findFirstComponentOfType(UITopicForm.class);
+        topicForm.addNewTopicType();
+        event.getRequestContext().addUIComponentToUpdateByAjax(topicForm);
+      } catch (Exception e) {
+        UITopicTypeManagerForm typeManagerForm = topicTypeForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UITopicTypeManagerForm.class);
+        event.getRequestContext().addUIComponentToUpdateByAjax(typeManagerForm);
+      }
+      topicTypeForm.cancelChildPopupAction();
+    }
+  }
 }

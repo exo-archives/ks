@@ -46,82 +46,89 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 @SuppressWarnings("unused")
-public class UICategoryInfo extends UIContainer	{
-	private	ForumService forumService ;
-	private UserProfile userProfile;
-	private String linkUserInfo = "";
-	//private long mostUserOnline_ = 0;
-	
-	public UICategoryInfo() throws Exception {
-		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-	} 
+public class UICategoryInfo extends UIContainer {
+  private ForumService forumService;
 
-	private List<String> getUserOnline() throws Exception {
-		return forumService.getOnlineUsers();
-	}
+  private UserProfile  userProfile;
 
-	private String getScreenName(String userName) throws Exception {
-		return forumService.getScreenName(userName);
-	}
-	
-	private UserProfile getUserProfile() throws Exception {
-		try {
-		 	UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
-		 	userProfile = forumPortlet.getUserProfile();
-		 	linkUserInfo = forumPortlet.getPortletLink();
-		 } catch (Exception e) {
-			 String userId = UserHelper.getCurrentUser();
-		 	userProfile = forumService.getDefaultUserProfile(userId, "");
-		 }
-		return userProfile;
-	}
+  private String       linkUserInfo = "";
 
-	private String getActionViewInfoUser(String linkType, String userName) {
-		String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
-		return link;
-	}
-	
-	private String getMostUsersOnline(String s, String at) throws Exception {
-		if(ForumUtils.isEmpty(s)) return "";
-		try {
-			String []strs = s.split(",");
-			long l = Long.parseLong(strs[1].replace("at", "").trim());
-			Calendar calendar = GregorianCalendar.getInstance();
-			double timeZone = userProfile.getTimeZone();
-			if(userProfile.getUserId().equals(UserProfile.USER_GUEST))timeZone = 0;
-			long zone = (long)(timeZone*3600000) ;
-			calendar.setTimeInMillis(l - zone);
-			StringBuilder builder = new StringBuilder();
-			
-			if(ForumUtils.isEmpty(at)) at = "at";
-			builder.append(strs[0]).append(", ").append(at).append(" ");
-			builder.append(ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()), calendar.getTime()));
-			if(userProfile.getUserId().equals(UserProfile.USER_GUEST)) {
-				if(timeZone >= 0)
-					builder.append(" GMT+").append(String.valueOf(timeZone).replace(".0", ""));
-				else builder.append(" GMT").append(String.valueOf(timeZone).replace(".0", ""));
-			}
-			s = builder.toString();
-		} catch (Exception e) {
-			s = s.replace("at", at);
-		}
-		return s;
-	}
-	
-	public Calendar getInstanceTempCalendar() { 
-		Calendar	calendar = GregorianCalendar.getInstance() ;
-		calendar.setLenient(false) ;
-		int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-		calendar.setTimeInMillis(System.currentTimeMillis() + gmtoffset) ; 
-		return	calendar;
-	}
-	
-	public ForumStatistic getForumStatistic() throws Exception {
-		return	forumService.getForumStatistic() ;				
-	}
-	
-	static public class CreatedLinkActionListener extends EventListener<UICategoryInfo> {
-		public void execute(Event<UICategoryInfo> event) throws Exception {
-		}
-	}
+  // private long mostUserOnline_ = 0;
+
+  public UICategoryInfo() throws Exception {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+  }
+
+  private List<String> getUserOnline() throws Exception {
+    return forumService.getOnlineUsers();
+  }
+
+  private String getScreenName(String userName) throws Exception {
+    return forumService.getScreenName(userName);
+  }
+
+  private UserProfile getUserProfile() throws Exception {
+    try {
+      UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+      userProfile = forumPortlet.getUserProfile();
+      linkUserInfo = forumPortlet.getPortletLink();
+    } catch (Exception e) {
+      String userId = UserHelper.getCurrentUser();
+      userProfile = forumService.getDefaultUserProfile(userId, "");
+    }
+    return userProfile;
+  }
+
+  private String getActionViewInfoUser(String linkType, String userName) {
+    String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
+    return link;
+  }
+
+  private String getMostUsersOnline(String s, String at) throws Exception {
+    if (ForumUtils.isEmpty(s))
+      return "";
+    try {
+      String[] strs = s.split(",");
+      long l = Long.parseLong(strs[1].replace("at", "").trim());
+      Calendar calendar = GregorianCalendar.getInstance();
+      double timeZone = userProfile.getTimeZone();
+      if (userProfile.getUserId().equals(UserProfile.USER_GUEST))
+        timeZone = 0;
+      long zone = (long) (timeZone * 3600000);
+      calendar.setTimeInMillis(l - zone);
+      StringBuilder builder = new StringBuilder();
+
+      if (ForumUtils.isEmpty(at))
+        at = "at";
+      builder.append(strs[0]).append(", ").append(at).append(" ");
+      builder.append(ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()), calendar.getTime()));
+      if (userProfile.getUserId().equals(UserProfile.USER_GUEST)) {
+        if (timeZone >= 0)
+          builder.append(" GMT+").append(String.valueOf(timeZone).replace(".0", ""));
+        else
+          builder.append(" GMT").append(String.valueOf(timeZone).replace(".0", ""));
+      }
+      s = builder.toString();
+    } catch (Exception e) {
+      s = s.replace("at", at);
+    }
+    return s;
+  }
+
+  public Calendar getInstanceTempCalendar() {
+    Calendar calendar = GregorianCalendar.getInstance();
+    calendar.setLenient(false);
+    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+    calendar.setTimeInMillis(System.currentTimeMillis() + gmtoffset);
+    return calendar;
+  }
+
+  public ForumStatistic getForumStatistic() throws Exception {
+    return forumService.getForumStatistic();
+  }
+
+  static public class CreatedLinkActionListener extends EventListener<UICategoryInfo> {
+    public void execute(Event<UICategoryInfo> event) throws Exception {
+    }
+  }
 }

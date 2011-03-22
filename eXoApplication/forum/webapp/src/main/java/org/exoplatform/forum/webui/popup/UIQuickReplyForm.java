@@ -63,171 +63,184 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 		}
 )
 public class UIQuickReplyForm extends UIForm {
-	private String categoryId ;
-	private String forumId ; 
-	private String topicId = "";
-	private String userName;
-	private String links = "";
-	private Topic topic;
-	private boolean isModerator = false;
-	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
-	public UIQuickReplyForm() {
-		addUIFormInput( new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA,null)) ;
-	}
-	
-	private String getLink() {
-		return links;
-	}
-	
-	public void setInitForm(String categoryId, String forumId, String topicId, boolean isModerator) throws Exception {
-		this.categoryId = categoryId;
-		this.forumId = forumId;
-		this.topicId = topicId;
-		this.isModerator = isModerator;
-		this.userName = UserHelper.getCurrentUser() ;
-		try {
-			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-			this.topic = forumService.getTopic(categoryId, forumId, topicId, userName) ;
-		} catch (Exception e) {
-			topic = new Topic();
-		}
-	}
-	
-	static public class QuickReplyActionListener extends EventListener<UIQuickReplyForm> {
-		
-		public void execute(Event<UIQuickReplyForm> event) throws Exception {
-			Log log = ExoLogger.getLogger(QuickReplyActionListener.class); 
-			UIQuickReplyForm quickReply = event.getSource() ;
-			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-			UIFormTextAreaInput textAreaInput = quickReply.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
-			String message = textAreaInput.getValue() ;
-			String checksms = message ;
-			if(checksms != null && checksms.trim().length() > 0) {
-				boolean isOffend = false ;
-				boolean hasTopicMod = false ;
-				if(!quickReply.isModerator) {
-					String []censoredKeyword = ForumUtils.getCensoredKeyword(forumService) ;
-					checksms = checksms.toLowerCase().trim();
-					for (String string : censoredKeyword) {
-						if(checksms.indexOf(string) >= 0) {isOffend = true ;break;}
-					}
-					if(quickReply.topic != null) hasTopicMod = quickReply.topic.getIsModeratePost() ;
-				}
-				StringBuffer buffer = new StringBuffer();
-				for (int j = 0; j < message.length(); j++) {
-					char c = message.charAt(j); 
-					if((int)c == 9){
-						buffer.append("&nbsp; &nbsp; ") ;
-					} else if((int)c == 10){
-						buffer.append("<br/>") ;
-					}	else if((int)c == 60){
-						buffer.append("&lt;") ;
-					} else if((int)c == 62){
-						buffer.append("&gt;") ;
-					} else if(c == '\''){
-						buffer.append("&apos;") ;
-					} else{
-						buffer.append(c) ;
-					}
-				} 
-				String remoteAddr = Utils.getRemoteIP();
-				UserProfile userProfile = forumService.getDefaultUserProfile(quickReply.userName, remoteAddr);
-				// set link
-//				String link = ForumSessionUtils.getBreadcumbUrl(quickReply.getLink(), quickReply.getId(), "QuickReply", quickReply.topicId).replaceFirst("private", "public");				
-				String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, quickReply.topicId).replaceFirst("private", "public");				
-				//
-				Topic topic = quickReply.topic ;
-				Post post = new Post() ;
-				post.setName("Re: " + topic.getTopicName()) ;
-				post.setMessage(buffer.toString()) ;
-				post.setOwner(quickReply.userName) ;
-				post.setRemoteAddr(remoteAddr) ;
-				post.setIcon(topic.getIcon());
-				post.setIsHidden(isOffend) ;
-				post.setIsApproved(!hasTopicMod) ;
-				post.setLink(link);
-				try {
-					forumService.savePost(quickReply.categoryId, quickReply.forumId, quickReply.topicId, post, true, ForumUtils.getDefaultMail()) ;
-					forumService.updateTopicAccess(quickReply.userName,	topic.getId()) ;
-					if(userProfile.getIsAutoWatchTopicIPost()) {
-						List<String> values = new ArrayList<String>();
-						values.add(userProfile.getEmail());
-						String path = quickReply.categoryId + "/" + quickReply.forumId + "/" + quickReply.topicId;
-						forumService.addWatch(1, path, values, quickReply.userName) ;
-					}
-				} catch (PathNotFoundException e) {
-					String[] args = new String[] { } ;
-					throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
-				}
-				textAreaInput.setValue("") ;
-				if(isOffend || hasTopicMod) {
-					Object[] args = { "" };
-					UIApplication uiApp = quickReply.getAncestorOfType(UIApplication.class) ;
-					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
-					else {
-						args = new Object[]{ };
-						uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isModerate", args, ApplicationMessage.WARNING)) ;
-					}
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				} else {
-					try {
-						ActionResponse actionRes = event.getRequestContext().getResponse() ;
-						ForumParameter param = new ForumParameter() ;
-						param.setTopicId(topic.getId());
-						actionRes.setEvent(new QName("ReLoadPortletEvent"), param) ;
-					} catch (Exception e) {
-						log.debug("\nSetting Topic fail: " + e.getMessage() + "\n" + e.getCause());
-					}
-				}
-				event.getRequestContext().addUIComponentToUpdateByAjax(quickReply) ;
-			}else {
-				String[] args = new String[] { quickReply.getLabel(FIELD_MESSAGE_TEXTAREA) } ;
-				throw new MessageException(new ApplicationMessage("MessagePost.msg.message-empty", args)) ;
-			}
-		}
-	}
-	
-	static public class PreviewReplyActionListener extends EventListener<UIQuickReplyForm> {
-		public void execute(Event<UIQuickReplyForm> event) throws Exception {
-			UIQuickReplyForm quickReply = event.getSource() ;	
-			String message = quickReply.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
-			String checksms = (message) ;
-			if(checksms != null && checksms.trim().length() > 3) {
-				StringBuffer buffer = new StringBuffer();
-				for (int j = 0; j < message.length(); j++) {
-					char c = message.charAt(j); 
-					if((int)c == 9){
-						buffer.append("&nbsp; &nbsp; ") ;
-					} else if((int)c == 10){
-						buffer.append("<br/>") ;
-					}	else if((int)c == 60){
-						buffer.append("&lt;") ;
-					} else if((int)c == 62){
-						buffer.append("&gt;") ;
-					} else {
-						buffer.append(c) ;
-					}
-				} 
-				Topic topic = quickReply.topic ;
-				Post post = new Post() ;
-				post.setName("Re: " + topic.getTopicName()) ;
-				post.setMessage(buffer.toString()) ;
-				post.setOwner(quickReply.userName) ;
-				post.setRemoteAddr("") ;
-				post.setIcon(topic.getIcon());
-				post.setIsApproved(false) ;
-				post.setCreatedDate(new Date()) ;
-				UIForumQuickReplyPortlet quickReplyPortlet = quickReply.getAncestorOfType(UIForumQuickReplyPortlet.class) ;
-				UIPopupAction popupAction = quickReplyPortlet.getChild(UIPopupAction.class).setRendered(true)	;
-				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
-				viewPost.setPostView(post) ;
-				viewPost.setViewUserInfo(false) ;
-				viewPost.setActionForm(new String[] {"Close"});
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-			}else {
-				String[] args = new String[] { quickReply.getLabel(FIELD_MESSAGE_TEXTAREA) } ;
-				throw new MessageException(new ApplicationMessage("MessagePost.msg.message-empty", args)) ;
-			}
-		}
-	}
+  private String             categoryId;
+
+  private String             forumId;
+
+  private String             topicId                = "";
+
+  private String             userName;
+
+  private String             links                  = "";
+
+  private Topic              topic;
+
+  private boolean            isModerator            = false;
+
+  public static final String FIELD_MESSAGE_TEXTAREA = "Message";
+
+  public UIQuickReplyForm() {
+    addUIFormInput(new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null));
+  }
+
+  private String getLink() {
+    return links;
+  }
+
+  public void setInitForm(String categoryId, String forumId, String topicId, boolean isModerator) throws Exception {
+    this.categoryId = categoryId;
+    this.forumId = forumId;
+    this.topicId = topicId;
+    this.isModerator = isModerator;
+    this.userName = UserHelper.getCurrentUser();
+    try {
+      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+      this.topic = forumService.getTopic(categoryId, forumId, topicId, userName);
+    } catch (Exception e) {
+      topic = new Topic();
+    }
+  }
+
+  static public class QuickReplyActionListener extends EventListener<UIQuickReplyForm> {
+
+    public void execute(Event<UIQuickReplyForm> event) throws Exception {
+      Log log = ExoLogger.getLogger(QuickReplyActionListener.class);
+      UIQuickReplyForm quickReply = event.getSource();
+      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+      UIFormTextAreaInput textAreaInput = quickReply.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA);
+      String message = textAreaInput.getValue();
+      String checksms = message;
+      if (checksms != null && checksms.trim().length() > 0) {
+        boolean isOffend = false;
+        boolean hasTopicMod = false;
+        if (!quickReply.isModerator) {
+          String[] censoredKeyword = ForumUtils.getCensoredKeyword(forumService);
+          checksms = checksms.toLowerCase().trim();
+          for (String string : censoredKeyword) {
+            if (checksms.indexOf(string) >= 0) {
+              isOffend = true;
+              break;
+            }
+          }
+          if (quickReply.topic != null)
+            hasTopicMod = quickReply.topic.getIsModeratePost();
+        }
+        StringBuffer buffer = new StringBuffer();
+        for (int j = 0; j < message.length(); j++) {
+          char c = message.charAt(j);
+          if ((int) c == 9) {
+            buffer.append("&nbsp; &nbsp; ");
+          } else if ((int) c == 10) {
+            buffer.append("<br/>");
+          } else if ((int) c == 60) {
+            buffer.append("&lt;");
+          } else if ((int) c == 62) {
+            buffer.append("&gt;");
+          } else if (c == '\'') {
+            buffer.append("&apos;");
+          } else {
+            buffer.append(c);
+          }
+        }
+        String remoteAddr = Utils.getRemoteIP();
+        UserProfile userProfile = forumService.getDefaultUserProfile(quickReply.userName, remoteAddr);
+        // set link
+        // String link = ForumSessionUtils.getBreadcumbUrl(quickReply.getLink(), quickReply.getId(), "QuickReply", quickReply.topicId).replaceFirst("private", "public");
+        String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, quickReply.topicId).replaceFirst("private", "public");
+        //
+        Topic topic = quickReply.topic;
+        Post post = new Post();
+        post.setName("Re: " + topic.getTopicName());
+        post.setMessage(buffer.toString());
+        post.setOwner(quickReply.userName);
+        post.setRemoteAddr(remoteAddr);
+        post.setIcon(topic.getIcon());
+        post.setIsHidden(isOffend);
+        post.setIsApproved(!hasTopicMod);
+        post.setLink(link);
+        try {
+          forumService.savePost(quickReply.categoryId, quickReply.forumId, quickReply.topicId, post, true, ForumUtils.getDefaultMail());
+          forumService.updateTopicAccess(quickReply.userName, topic.getId());
+          if (userProfile.getIsAutoWatchTopicIPost()) {
+            List<String> values = new ArrayList<String>();
+            values.add(userProfile.getEmail());
+            String path = quickReply.categoryId + "/" + quickReply.forumId + "/" + quickReply.topicId;
+            forumService.addWatch(1, path, values, quickReply.userName);
+          }
+        } catch (PathNotFoundException e) {
+          String[] args = new String[] {};
+          throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING));
+        }
+        textAreaInput.setValue("");
+        if (isOffend || hasTopicMod) {
+          Object[] args = { "" };
+          UIApplication uiApp = quickReply.getAncestorOfType(UIApplication.class);
+          if (isOffend)
+            uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING));
+          else {
+            args = new Object[] {};
+            uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isModerate", args, ApplicationMessage.WARNING));
+          }
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        } else {
+          try {
+            ActionResponse actionRes = event.getRequestContext().getResponse();
+            ForumParameter param = new ForumParameter();
+            param.setTopicId(topic.getId());
+            actionRes.setEvent(new QName("ReLoadPortletEvent"), param);
+          } catch (Exception e) {
+            log.debug("\nSetting Topic fail: " + e.getMessage() + "\n" + e.getCause());
+          }
+        }
+        event.getRequestContext().addUIComponentToUpdateByAjax(quickReply);
+      } else {
+        String[] args = new String[] { quickReply.getLabel(FIELD_MESSAGE_TEXTAREA) };
+        throw new MessageException(new ApplicationMessage("MessagePost.msg.message-empty", args));
+      }
+    }
+  }
+
+  static public class PreviewReplyActionListener extends EventListener<UIQuickReplyForm> {
+    public void execute(Event<UIQuickReplyForm> event) throws Exception {
+      UIQuickReplyForm quickReply = event.getSource();
+      String message = quickReply.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue();
+      String checksms = (message);
+      if (checksms != null && checksms.trim().length() > 3) {
+        StringBuffer buffer = new StringBuffer();
+        for (int j = 0; j < message.length(); j++) {
+          char c = message.charAt(j);
+          if ((int) c == 9) {
+            buffer.append("&nbsp; &nbsp; ");
+          } else if ((int) c == 10) {
+            buffer.append("<br/>");
+          } else if ((int) c == 60) {
+            buffer.append("&lt;");
+          } else if ((int) c == 62) {
+            buffer.append("&gt;");
+          } else {
+            buffer.append(c);
+          }
+        }
+        Topic topic = quickReply.topic;
+        Post post = new Post();
+        post.setName("Re: " + topic.getTopicName());
+        post.setMessage(buffer.toString());
+        post.setOwner(quickReply.userName);
+        post.setRemoteAddr("");
+        post.setIcon(topic.getIcon());
+        post.setIsApproved(false);
+        post.setCreatedDate(new Date());
+        UIForumQuickReplyPortlet quickReplyPortlet = quickReply.getAncestorOfType(UIForumQuickReplyPortlet.class);
+        UIPopupAction popupAction = quickReplyPortlet.getChild(UIPopupAction.class).setRendered(true);
+        UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670);
+        viewPost.setPostView(post);
+        viewPost.setViewUserInfo(false);
+        viewPost.setActionForm(new String[] { "Close" });
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        String[] args = new String[] { quickReply.getLabel(FIELD_MESSAGE_TEXTAREA) };
+        throw new MessageException(new ApplicationMessage("MessagePost.msg.message-empty", args));
+      }
+    }
+  }
 }

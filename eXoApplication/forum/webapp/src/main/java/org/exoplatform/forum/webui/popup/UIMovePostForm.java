@@ -65,150 +65,172 @@ import org.exoplatform.webui.event.Event.Phase;
 		}
 )
 public class UIMovePostForm extends BaseUIForm implements UIPopupComponent {
-	private ForumService forumService ;
-	private String topicId ;
-	private List<Post> posts ;
-	private UserProfile userProfile ;
-	private List<Category> categories;
-	private String link;
-	private String pathPost = "";
-	
-	public UIMovePostForm() throws Exception {
-		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-	}
-	
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	public String getLink() {return link;}
-	public void setLink(String link) {this.link = link;}
-	
-	@SuppressWarnings("unused")
-	private String getTitleInHTMLCode(String s) {
-		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-	}
-	
-	public void updatePost(String topicId, List<Post> posts) throws Exception {
-		this.topicId = topicId ;
-		this.posts = posts ;
-		try {
-			this.pathPost = posts.get(0).getPath();
-		} catch (Exception e) {}
-		setCategories() ;
-	}
-	
-	public UserProfile getUserProfile() throws Exception {
-		return this.userProfile ;
-	}
-	public void setUserProfile(UserProfile userProfile) throws Exception {
-		this.userProfile = userProfile ;
-		if(this.userProfile == null) {
-			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-		}
-	}
-	
-	private void setCategories() throws Exception {
-		this.categories = new ArrayList<Category>();
-		for (Category category : this.forumService.getCategories()) {
-			if(this.userProfile.getUserRole() == 1) {
-				String []list = category.getUserPrivate();
-				if(list != null && list.length > 0 && !list[0].equals(" ")){
-					if(!ForumUtils.isStringInStrings(list, this.userProfile.getUserId())) {
-						continue ;
-					}
-				}
-			}
-			categories.add(category) ;
-		}
-	}
-	@SuppressWarnings("unused")
-	private List<Category> getCategories() throws Exception {
-		return	this.categories;
-	}
-	
-	@SuppressWarnings("unused")
-	private boolean getSelectForum(String forumId) throws Exception {
-		if(this.posts.get(0).getPath().contains(forumId)) return true ;
-		else return false ;
-	}
-	
-	@SuppressWarnings("unused")
-	private List<Forum> getForums(String categoryId) throws Exception {
-		List<Forum> forums = new ArrayList<Forum>() ;
-		for(Forum forum : this.forumService.getForums(categoryId, "")) {
-			if(this.userProfile.getUserRole() == 1){
-				String []moderators = forum.getModerators();
-				if(!ForumServiceUtils.hasPermission(moderators, this.userProfile.getUserId())){
-					continue;
-				}
-			}
-			forums.add(forum) ;
-		}
-		return forums ;
-	}
+  private ForumService   forumService;
 
-	@SuppressWarnings("unused")
-	private List<Topic> getTopics(String categoryId, String forumId, boolean isMode) throws Exception {
-		List<Topic> topics = new ArrayList<Topic>() ;
-		List<Topic> topics_ = this.forumService.getTopics(categoryId, forumId);
-		for(Topic topic : topics_) {
-			if(topic.getId().equalsIgnoreCase(this.topicId)){
-				if(pathPost.indexOf(categoryId) >= 0 && pathPost.indexOf(forumId) > 0)
-					continue ;
-			}
-			if(this.userProfile.getUserRole() == 1){
-				if(!isMode) {
-					if(!topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || topic.getIsClosed() || topic.getIsLock() || topic.getIsWaiting()) continue ;
-					if(topic.getCanPost().length > 0 && !ForumUtils.isStringInStrings(topic.getCanPost(), this.userProfile.getUserId())) continue ;
-				}
-			}
-			topics.add(topic) ;
-		}
-		return topics ;
-	}
-	
-	static	public class SaveActionListener extends BaseEventListener<UIMovePostForm> {
-		public void onEvent(Event<UIMovePostForm> event, UIMovePostForm uiForm, final String topicPath) throws Exception {
-			if(!ForumUtils.isEmpty(topicPath)) {
-				try {
-					String[] temp = topicPath.split("/") ;
-				// set link
-					String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");
-					//
-					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-					ResourceBundle res = context.getApplicationResourceBundle() ;
-					Collections.sort(uiForm.posts, new ForumUtils.DatetimeComparatorDESC()) ;
-					String []postPath = new String[uiForm.posts.size()];
-					int i = 0;
-					for (Post post : uiForm.posts) {
-						postPath[i] = post.getPath(); ++i;
-					}
-					uiForm.forumService.movePost(postPath, topicPath, false, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link) ;
-					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-					forumPortlet.cancelAction() ;
-					UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class) ;
-					UITopicDetailContainer topicDetailContainer = forumContainer.getChild(UITopicDetailContainer.class) ;
-					topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]) ;
-					topicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]) ;
-					UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
-					forumDescription.setForumIds(temp[temp.length - 3], temp[temp.length - 2]);
-					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-				} catch (ItemExistsException e) {
-					warning("UIImportForm.msg.ObjectIsExist") ;
-					return;
-				} catch (Exception e) {
-					warning("UIMovePostForm.msg.parent-deleted") ;
-					return ;
-				}
-			}
-		}
-	}
-	
-	static	public class CancelActionListener extends EventListener<UIMovePostForm> {
-		public void execute(Event<UIMovePostForm> event) throws Exception {
-			UIMovePostForm uiForm = event.getSource() ;
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-		}
-	}
+  private String         topicId;
+
+  private List<Post>     posts;
+
+  private UserProfile    userProfile;
+
+  private List<Category> categories;
+
+  private String         link;
+
+  private String         pathPost = "";
+
+  public UIMovePostForm() throws Exception {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  public String getLink() {
+    return link;
+  }
+
+  public void setLink(String link) {
+    this.link = link;
+  }
+
+  @SuppressWarnings("unused")
+  private String getTitleInHTMLCode(String s) {
+    return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+  }
+
+  public void updatePost(String topicId, List<Post> posts) throws Exception {
+    this.topicId = topicId;
+    this.posts = posts;
+    try {
+      this.pathPost = posts.get(0).getPath();
+    } catch (Exception e) {
+    }
+    setCategories();
+  }
+
+  public UserProfile getUserProfile() throws Exception {
+    return this.userProfile;
+  }
+
+  public void setUserProfile(UserProfile userProfile) throws Exception {
+    this.userProfile = userProfile;
+    if (this.userProfile == null) {
+      this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+    }
+  }
+
+  private void setCategories() throws Exception {
+    this.categories = new ArrayList<Category>();
+    for (Category category : this.forumService.getCategories()) {
+      if (this.userProfile.getUserRole() == 1) {
+        String[] list = category.getUserPrivate();
+        if (list != null && list.length > 0 && !list[0].equals(" ")) {
+          if (!ForumUtils.isStringInStrings(list, this.userProfile.getUserId())) {
+            continue;
+          }
+        }
+      }
+      categories.add(category);
+    }
+  }
+
+  @SuppressWarnings("unused")
+  private List<Category> getCategories() throws Exception {
+    return this.categories;
+  }
+
+  @SuppressWarnings("unused")
+  private boolean getSelectForum(String forumId) throws Exception {
+    if (this.posts.get(0).getPath().contains(forumId))
+      return true;
+    else
+      return false;
+  }
+
+  @SuppressWarnings("unused")
+  private List<Forum> getForums(String categoryId) throws Exception {
+    List<Forum> forums = new ArrayList<Forum>();
+    for (Forum forum : this.forumService.getForums(categoryId, "")) {
+      if (this.userProfile.getUserRole() == 1) {
+        String[] moderators = forum.getModerators();
+        if (!ForumServiceUtils.hasPermission(moderators, this.userProfile.getUserId())) {
+          continue;
+        }
+      }
+      forums.add(forum);
+    }
+    return forums;
+  }
+
+  @SuppressWarnings("unused")
+  private List<Topic> getTopics(String categoryId, String forumId, boolean isMode) throws Exception {
+    List<Topic> topics = new ArrayList<Topic>();
+    List<Topic> topics_ = this.forumService.getTopics(categoryId, forumId);
+    for (Topic topic : topics_) {
+      if (topic.getId().equalsIgnoreCase(this.topicId)) {
+        if (pathPost.indexOf(categoryId) >= 0 && pathPost.indexOf(forumId) > 0)
+          continue;
+      }
+      if (this.userProfile.getUserRole() == 1) {
+        if (!isMode) {
+          if (!topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || topic.getIsClosed() || topic.getIsLock() || topic.getIsWaiting())
+            continue;
+          if (topic.getCanPost().length > 0 && !ForumUtils.isStringInStrings(topic.getCanPost(), this.userProfile.getUserId()))
+            continue;
+        }
+      }
+      topics.add(topic);
+    }
+    return topics;
+  }
+
+  static public class SaveActionListener extends BaseEventListener<UIMovePostForm> {
+    public void onEvent(Event<UIMovePostForm> event, UIMovePostForm uiForm, final String topicPath) throws Exception {
+      if (!ForumUtils.isEmpty(topicPath)) {
+        try {
+          String[] temp = topicPath.split("/");
+          // set link
+          String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");
+          //
+          WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+          ResourceBundle res = context.getApplicationResourceBundle();
+          Collections.sort(uiForm.posts, new ForumUtils.DatetimeComparatorDESC());
+          String[] postPath = new String[uiForm.posts.size()];
+          int i = 0;
+          for (Post post : uiForm.posts) {
+            postPath[i] = post.getPath();
+            ++i;
+          }
+          uiForm.forumService.movePost(postPath, topicPath, false, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
+          UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+          forumPortlet.cancelAction();
+          UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
+          UITopicDetailContainer topicDetailContainer = forumContainer.getChild(UITopicDetailContainer.class);
+          topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]);
+          topicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]);
+          UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
+          forumDescription.setForumIds(temp[temp.length - 3], temp[temp.length - 2]);
+          event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+        } catch (ItemExistsException e) {
+          warning("UIImportForm.msg.ObjectIsExist");
+          return;
+        } catch (Exception e) {
+          warning("UIMovePostForm.msg.parent-deleted");
+          return;
+        }
+      }
+    }
+  }
+
+  static public class CancelActionListener extends EventListener<UIMovePostForm> {
+    public void execute(Event<UIMovePostForm> event) throws Exception {
+      UIMovePostForm uiForm = event.getSource();
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+    }
+  }
 }

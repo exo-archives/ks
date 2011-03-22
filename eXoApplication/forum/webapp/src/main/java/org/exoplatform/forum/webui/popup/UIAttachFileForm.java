@@ -52,121 +52,128 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 			@EventConfig(listeners = UIAttachFileForm.CancelActionListener.class, phase = Phase.DECODE)
 		}
 )
-
 public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent {
 
-	final static public String FIELD_UPLOAD	 = "upload";
-	private boolean						 isTopicForm	 = true;
-	private boolean 					 isChangeAvatar_ = false;
-	private int								 maxField			 = 5;
+  final static public String FIELD_UPLOAD    = "upload";
 
-	public UIAttachFileForm() throws Exception {
-		setMultiPart(true) ;
-	}
-	
-	public void setMaxField(int maxField){
-		this.maxField = maxField;
-		int sizeLimit = ForumUtils.getLimitUploadSize() ;
-		UIFormUploadInput uiInput ;
-		int i = 0 ;
-		while(i++ < maxField) {
-			if(sizeLimit >= 0) uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i), sizeLimit) ;
-			else uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i)) ;
-			addUIFormInput(uiInput) ;
-		}
-	}
+  private boolean            isTopicForm     = true;
 
-	public void updateIsTopicForm(boolean isTopicForm) throws Exception {
-		this.isTopicForm = isTopicForm ;
-	}
-	
-	public void setIsChangeAvatar(boolean isChangeAvatar){
-		this.isChangeAvatar_ = isChangeAvatar;
-	}
-	
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
+  private boolean            isChangeAvatar_ = false;
 
-	static	public class SaveActionListener extends EventListener<UIAttachFileForm> {
-		public void execute(Event<UIAttachFileForm> event) throws Exception {
-			UIAttachFileForm uiForm = event.getSource();
-			List<BufferAttachment> files = new ArrayList<BufferAttachment>() ;
-			int i = 0 ;
-			BufferAttachment attachfile ;
-			UploadService uploadService = uiForm.getApplicationComponent(UploadService.class) ;
-			while(i++ < uiForm.maxField) {
-				UIFormUploadInput input = (UIFormUploadInput)uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
-				UploadResource uploadResource = input.getUploadResource() ;
-				if(uploadResource == null) {
-					continue ;
-				}
-				String fileName = uploadResource.getFileName() ;
-				if(fileName == null || fileName.equals("")) {
-					continue ;
-				}
-				try {
-					attachfile = new BufferAttachment() ;
-					attachfile.setId("ForumAttachment" + IdGenerator.generate());
-					attachfile.setName(uploadResource.getFileName()) ;
-					attachfile.setInputStream(input.getUploadDataAsStream()) ;
-					attachfile.setMimeType(uploadResource.getMimeType()) ;
-					attachfile.setSize((long)uploadResource.getUploadedSize());
-					files.add(attachfile) ;
-				} catch (Exception e) {
-					uiForm.log.error("Can not attach file, exception: ", e) ;
-					uiForm.warning("UIAttachFileForm.msg.upload-error") ;
-					return ;
-				}
-				uploadService.removeUpload(input.getUploadId()) ;
-			}
-			if(files.isEmpty()){
-				uiForm.warning("UIAttachFileForm.msg.upload-not-save") ;
-				return ;
-			}
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			if(uiForm.isTopicForm) {
-				UITopicForm topicForm = forumPortlet.findFirstComponentOfType(UITopicForm.class);
-				for (BufferAttachment file : files) {
-					topicForm.addToUploadFileList(file) ;
-				}
-				topicForm.refreshUploadFileList() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicForm) ;
-			} else if(uiForm.isChangeAvatar_){
-				if(files.get(0).getMimeType().indexOf("image") < 0){
-					uiForm.warning("UIAttachFileForm.msg.fileIsNotImage") ;
-					return ;
-				}
-				if(files.get(0).getSize() >= (2 * 1048576)){
-					uiForm.warning("UIAttachFileForm.msg.avatar-upload-long") ;
-					return ;
-				}
-				ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-				forumService.saveUserAvatar(UserHelper.getCurrentUser(), files.get(0));
-				UIForumUserSettingForm settingForm = forumPortlet.findFirstComponentOfType(UIForumUserSettingForm.class);
-				event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;
-			} else {
-				UIPostForm postForm = forumPortlet.findFirstComponentOfType(UIPostForm.class);
-				for (BufferAttachment file : files) {
-					postForm.addToUploadFileList(file) ;
-				}
-				postForm.refreshUploadFileList() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(postForm) ;
-			}
-			uiForm.cancelChildPopupAction();
-		}
-	}
+  private int                maxField        = 5;
 
-	static	public class CancelActionListener extends EventListener<UIAttachFileForm> {
-		public void execute(Event<UIAttachFileForm> event) throws Exception {
-			UIAttachFileForm uiForm = event.getSource() ;
-			UploadService uploadService = uiForm.getApplicationComponent(UploadService.class) ;
-			int i = 0 ;
-			UIFormUploadInput input ;
-			while(i++ < uiForm.maxField) {
-				input = (UIFormUploadInput)uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
-				uploadService.removeUpload(input.getUploadId()) ;
-			}
-			uiForm.cancelChildPopupAction();
-		}
-	}
+  public UIAttachFileForm() throws Exception {
+    setMultiPart(true);
+  }
+
+  public void setMaxField(int maxField) {
+    this.maxField = maxField;
+    int sizeLimit = ForumUtils.getLimitUploadSize();
+    UIFormUploadInput uiInput;
+    int i = 0;
+    while (i++ < maxField) {
+      if (sizeLimit >= 0)
+        uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i), sizeLimit);
+      else
+        uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i));
+      addUIFormInput(uiInput);
+    }
+  }
+
+  public void updateIsTopicForm(boolean isTopicForm) throws Exception {
+    this.isTopicForm = isTopicForm;
+  }
+
+  public void setIsChangeAvatar(boolean isChangeAvatar) {
+    this.isChangeAvatar_ = isChangeAvatar;
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  static public class SaveActionListener extends EventListener<UIAttachFileForm> {
+    public void execute(Event<UIAttachFileForm> event) throws Exception {
+      UIAttachFileForm uiForm = event.getSource();
+      List<BufferAttachment> files = new ArrayList<BufferAttachment>();
+      int i = 0;
+      BufferAttachment attachfile;
+      UploadService uploadService = uiForm.getApplicationComponent(UploadService.class);
+      while (i++ < uiForm.maxField) {
+        UIFormUploadInput input = (UIFormUploadInput) uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
+        UploadResource uploadResource = input.getUploadResource();
+        if (uploadResource == null) {
+          continue;
+        }
+        String fileName = uploadResource.getFileName();
+        if (fileName == null || fileName.equals("")) {
+          continue;
+        }
+        try {
+          attachfile = new BufferAttachment();
+          attachfile.setId("ForumAttachment" + IdGenerator.generate());
+          attachfile.setName(uploadResource.getFileName());
+          attachfile.setInputStream(input.getUploadDataAsStream());
+          attachfile.setMimeType(uploadResource.getMimeType());
+          attachfile.setSize((long) uploadResource.getUploadedSize());
+          files.add(attachfile);
+        } catch (Exception e) {
+          uiForm.log.error("Can not attach file, exception: ", e);
+          uiForm.warning("UIAttachFileForm.msg.upload-error");
+          return;
+        }
+        uploadService.removeUpload(input.getUploadId());
+      }
+      if (files.isEmpty()) {
+        uiForm.warning("UIAttachFileForm.msg.upload-not-save");
+        return;
+      }
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      if (uiForm.isTopicForm) {
+        UITopicForm topicForm = forumPortlet.findFirstComponentOfType(UITopicForm.class);
+        for (BufferAttachment file : files) {
+          topicForm.addToUploadFileList(file);
+        }
+        topicForm.refreshUploadFileList();
+        event.getRequestContext().addUIComponentToUpdateByAjax(topicForm);
+      } else if (uiForm.isChangeAvatar_) {
+        if (files.get(0).getMimeType().indexOf("image") < 0) {
+          uiForm.warning("UIAttachFileForm.msg.fileIsNotImage");
+          return;
+        }
+        if (files.get(0).getSize() >= (2 * 1048576)) {
+          uiForm.warning("UIAttachFileForm.msg.avatar-upload-long");
+          return;
+        }
+        ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+        forumService.saveUserAvatar(UserHelper.getCurrentUser(), files.get(0));
+        UIForumUserSettingForm settingForm = forumPortlet.findFirstComponentOfType(UIForumUserSettingForm.class);
+        event.getRequestContext().addUIComponentToUpdateByAjax(settingForm);
+      } else {
+        UIPostForm postForm = forumPortlet.findFirstComponentOfType(UIPostForm.class);
+        for (BufferAttachment file : files) {
+          postForm.addToUploadFileList(file);
+        }
+        postForm.refreshUploadFileList();
+        event.getRequestContext().addUIComponentToUpdateByAjax(postForm);
+      }
+      uiForm.cancelChildPopupAction();
+    }
+  }
+
+  static public class CancelActionListener extends EventListener<UIAttachFileForm> {
+    public void execute(Event<UIAttachFileForm> event) throws Exception {
+      UIAttachFileForm uiForm = event.getSource();
+      UploadService uploadService = uiForm.getApplicationComponent(UploadService.class);
+      int i = 0;
+      UIFormUploadInput input;
+      while (i++ < uiForm.maxField) {
+        input = (UIFormUploadInput) uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
+        uploadService.removeUpload(input.getUploadId());
+      }
+      uiForm.cancelChildPopupAction();
+    }
+  }
 }

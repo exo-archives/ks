@@ -49,70 +49,76 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 			@EventConfig(listeners = UISelectCategoryForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 	)
-	public class UISelectCategoryForm extends BaseForumForm implements UIPopupComponent {
-		private List<String> listIdIsSelected = new ArrayList<String>();
-		List<ForumLinkData> forumLinks = new ArrayList<ForumLinkData>();
-		public UISelectCategoryForm() {
-		}
-		
-		public void activate() throws Exception {}
-		public void deActivate() throws Exception {}
-		
-		public void setSelectCateId(List<String> listIdIsSelected) throws Exception {
-			this.listIdIsSelected = listIdIsSelected;
-			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-			this.forumLinks = forumService.getAllLink("", "");
-		}
+public class UISelectCategoryForm extends BaseForumForm implements UIPopupComponent {
+  private List<String> listIdIsSelected = new ArrayList<String>();
 
-		@SuppressWarnings({ "unchecked", "unused" })
-		private List<ForumLinkData> getForumLinks() throws Exception {
-			String categoryId = "" , forumId = "";
-			boolean isPut = true ;
-			String cateId = "" ;
-			for (ForumLinkData forumLink : this.forumLinks) {
-				if(forumLink.getType().equals(Utils.CATEGORY)){
-					cateId = forumLink.getId() ;
-					if(getUIFormCheckBoxInput(forumLink.getPath()) == null) {
-						if(listIdIsSelected.contains(cateId))
-							addUIFormInput((new UIFormCheckBoxInput(cateId, cateId, false)).setChecked(true));
-						else 
-							addUIFormInput((new UIFormCheckBoxInput(cateId, cateId, false)).setChecked(false));
-					}
-				}
-			}
-			return this.forumLinks ;
-		}
-		
-		private String getNameForumLinkData(String id) throws Exception {
-			for (ForumLinkData linkData : this.forumLinks ) {
-				if(linkData.getId().equals(id)) return linkData.getName() ;
-			}
-			return null ;
-		}
+  List<ForumLinkData>  forumLinks       = new ArrayList<ForumLinkData>();
 
-		static	public class AddActionListener extends EventListener<UISelectCategoryForm> {
-			@SuppressWarnings("unchecked")
-			public void execute(Event<UISelectCategoryForm> event) throws Exception {
-				UISelectCategoryForm uiForm = event.getSource() ;
-				List<String> listIdSelected = new ArrayList<String>() ;
-				List<UIComponent> children = uiForm.getChildren() ;
-				for(UIComponent child : children) {
-					if(child instanceof UIFormCheckBoxInput) {
-						if(((UIFormCheckBoxInput)child).isChecked()) {
-							listIdSelected.add(uiForm.getNameForumLinkData(child.getName()) +"("+ child.getName());
-						}
-					}
-				}
-				UIModeratorManagementForm managementForm = uiForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIModeratorManagementForm.class) ;
-				managementForm.setModCateValues(listIdSelected) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(managementForm);
-				uiForm.cancelChildPopupAction();
-			}
-		}
-		
-		static	public class CancelActionListener extends EventListener<UISelectCategoryForm> {
-			public void execute(Event<UISelectCategoryForm> event) throws Exception {
-				event.getSource().cancelChildPopupAction();
-			}
-		}
-	}
+  public UISelectCategoryForm() {
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  public void setSelectCateId(List<String> listIdIsSelected) throws Exception {
+    this.listIdIsSelected = listIdIsSelected;
+    ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    this.forumLinks = forumService.getAllLink("", "");
+  }
+
+  @SuppressWarnings( { "unchecked", "unused" })
+  private List<ForumLinkData> getForumLinks() throws Exception {
+    String categoryId = "", forumId = "";
+    boolean isPut = true;
+    String cateId = "";
+    for (ForumLinkData forumLink : this.forumLinks) {
+      if (forumLink.getType().equals(Utils.CATEGORY)) {
+        cateId = forumLink.getId();
+        if (getUIFormCheckBoxInput(forumLink.getPath()) == null) {
+          if (listIdIsSelected.contains(cateId))
+            addUIFormInput((new UIFormCheckBoxInput(cateId, cateId, false)).setChecked(true));
+          else
+            addUIFormInput((new UIFormCheckBoxInput(cateId, cateId, false)).setChecked(false));
+        }
+      }
+    }
+    return this.forumLinks;
+  }
+
+  private String getNameForumLinkData(String id) throws Exception {
+    for (ForumLinkData linkData : this.forumLinks) {
+      if (linkData.getId().equals(id))
+        return linkData.getName();
+    }
+    return null;
+  }
+
+  static public class AddActionListener extends EventListener<UISelectCategoryForm> {
+    @SuppressWarnings("unchecked")
+    public void execute(Event<UISelectCategoryForm> event) throws Exception {
+      UISelectCategoryForm uiForm = event.getSource();
+      List<String> listIdSelected = new ArrayList<String>();
+      List<UIComponent> children = uiForm.getChildren();
+      for (UIComponent child : children) {
+        if (child instanceof UIFormCheckBoxInput) {
+          if (((UIFormCheckBoxInput) child).isChecked()) {
+            listIdSelected.add(uiForm.getNameForumLinkData(child.getName()) + "(" + child.getName());
+          }
+        }
+      }
+      UIModeratorManagementForm managementForm = uiForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIModeratorManagementForm.class);
+      managementForm.setModCateValues(listIdSelected);
+      event.getRequestContext().addUIComponentToUpdateByAjax(managementForm);
+      uiForm.cancelChildPopupAction();
+    }
+  }
+
+  static public class CancelActionListener extends EventListener<UISelectCategoryForm> {
+    public void execute(Event<UISelectCategoryForm> event) throws Exception {
+      event.getSource().cancelChildPopupAction();
+    }
+  }
+}

@@ -27,160 +27,191 @@ import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
+
 /**
  * Represents a select element
  * 
  */
 public class UIFormSelectBoxForum extends UIFormStringInput {
-	
-	/**
-	 * It make SelectBox's ability to select multiple values
-	 */
-	private boolean isMultiple_ = false ;
-	
-	/**
-	 * The size of the list (number of select options)
-	 */
-	private int size_ = 1 ;
 
-	/**
-	 * The list of options
-	 */
-	private List<SelectItemOption<String>> options_ ;
-	
-	/**
-	 * The javascript expression executed when an onChange event fires
-	 */
-	private String onchange_;
-	
-	public UIFormSelectBoxForum(String name, String bindingExpression, List<SelectItemOption<String>> options) {
-		super(name, bindingExpression, null);
-		setOptions(options);
-	}
-	
-	final public UIFormSelectBoxForum setMultiple(boolean bl) {
-		isMultiple_ = bl ; return this ;
-	}
-	
-	final public UIFormSelectBoxForum setSize(int i) { 
-		size_ = i ; return this ;
-	}
-	
-	@Override
-	public UIFormSelectBoxForum setValue(String value) {
-		value_ = value ;
-		for(SelectItemOption<String> option : options_) {
-			if(option.getValue().equals(value_)) option.setSelected(true) ;
-			else option.setSelected(false) ;
-		}
-		
-		return this ;
-	}
+  /**
+   * It make SelectBox's ability to select multiple values
+   */
+  private boolean                        isMultiple_ = false;
 
-	public String[] getSelectedValues() {
-		if(isMultiple_) {
-			List<String> selectedValues = new ArrayList<String>() ;
-			for(int i = 0; i < options_.size(); i ++) {
-				SelectItemOption<String> item = options_.get(i) ; 
-				if(item.isSelected()) selectedValues.add(item.getValue()); 
-			}
-			return selectedValues.toArray(new String[0]) ;
-		}
-		return new String[]{value_} ;
-	}
-	
-	public UIFormSelectBoxForum setSelectedValues(String[] values) {
-		for(SelectItemOption<String> option : options_) {
-			option.setSelected(false) ;
-			for(String value : values) {
-				if(value.equals(option.getValue())) {
-					option.setSelected(true) ;
-					break ;
-				}
-			}
-		}
-		
-		return this ;
-	}
-		
-	final public List<SelectItemOption<String>> getOptions() { return options_ ; }
-	
-	final public UIFormSelectBoxForum setOptions(List<SelectItemOption<String>> options) { 
-		options_ = options ; 
-		if(options_ == null || options_.size() < 1) return this;
-		value_ = options_.get(0).getValue();
-		return this ;
-	} 
-	
-	public void setOnChange(String onchange){ onchange_ = onchange; }		
-	
-	public UIFormSelectBoxForum setDisabled(boolean disabled) {
-		setEnable(!disabled);
-		return this;
-	}
-	
-	@Override
-	public void decode(Object input, WebuiRequestContext context) throws Exception {
-		String[] values = context.getRequestParameterValues(getId()) ;
-		if(values == null) {
-			value_ = null ;
-			for(SelectItemOption<String> item : options_) {
-				item.setSelected(false) ;
-			}
-			return ;
-		}
-		
-		int i = 0 ;
-		value_ = values[0] ;
-		for(SelectItemOption<String> item: options_) {
-			if (i > -1 && item.getValue().equals(values[i])) {
-				item.setSelected(true) ;
-				if(values.length == ++i) i = -1 ;
-			} else item.setSelected(false) ;
-		}
-	}
-		
-	protected String renderOnChangeEvent(UIForm uiForm) throws Exception {
-		return uiForm.event(onchange_, (String)null);
-	}
-	
-	@Override
-	public void processRender(WebuiRequestContext context) throws Exception {
-		ResourceBundle res = context.getApplicationResourceBundle() ;
-		UIForm uiForm = getAncestorOfType(UIForm.class) ;
-		String formId = null ;
-		if(uiForm.getId().equals("UISearchForm")) formId = uiForm.<UIComponent>getParent().getId() ;
-		else formId = uiForm.getId() ;
-	 
-		Writer w = context.getWriter() ;
-		w.write("<select class=\"selectbox\" name=\""); w.write(name); w.write("\"") ;
-		if(onchange_ != null) {
-			w.append(" onchange=\"").append(renderOnChangeEvent(uiForm)).append("\"");
-		}
-		
-		if(isMultiple_)	w.write(" multiple=\"true\""); 
-		if(size_ > 1)	w.write(" size=\"" + size_ + "\"");
-		
-		if (!enable_)	w.write(" disabled ");
-		
-		w.write(">\n") ;
-		
-		for(SelectItemOption<String> item : options_) {
-			String labelAndCss = item.getLabel() ;
-			String temp[] = labelAndCss.split("/") ;
-			try {
-				temp[0] = res.getString(formId + ".label.option." + item.getValue()) ;
-			} catch(MissingResourceException ex) {}
-			String classCss = "optionNormal" ;
-			if(temp.length > 1) classCss = temp[1] ; 
-			if(item.isSelected()) {
-				w.write("<option selected=\"selected\" class=\""); w.write(classCss + " optionSelected"); w.write("\" value=\""); w.write(item.getValue()); w.write("\">"); 
-			} else {
-				w.write("<option class=\""); w.write(classCss); w.write("\" value=\""); w.write(item.getValue()); w.write("\">"); 
-			}
-			w.write(temp[0]); w.write("</option>\n");
-		}
-		w.write("</select>\n") ;
-	}
+  /**
+   * The size of the list (number of select options)
+   */
+  private int                            size_       = 1;
+
+  /**
+   * The list of options
+   */
+  private List<SelectItemOption<String>> options_;
+
+  /**
+   * The javascript expression executed when an onChange event fires
+   */
+  private String                         onchange_;
+
+  public UIFormSelectBoxForum(String name, String bindingExpression, List<SelectItemOption<String>> options) {
+    super(name, bindingExpression, null);
+    setOptions(options);
+  }
+
+  final public UIFormSelectBoxForum setMultiple(boolean bl) {
+    isMultiple_ = bl;
+    return this;
+  }
+
+  final public UIFormSelectBoxForum setSize(int i) {
+    size_ = i;
+    return this;
+  }
+
+  @Override
+  public UIFormSelectBoxForum setValue(String value) {
+    value_ = value;
+    for (SelectItemOption<String> option : options_) {
+      if (option.getValue().equals(value_))
+        option.setSelected(true);
+      else
+        option.setSelected(false);
+    }
+
+    return this;
+  }
+
+  public String[] getSelectedValues() {
+    if (isMultiple_) {
+      List<String> selectedValues = new ArrayList<String>();
+      for (int i = 0; i < options_.size(); i++) {
+        SelectItemOption<String> item = options_.get(i);
+        if (item.isSelected())
+          selectedValues.add(item.getValue());
+      }
+      return selectedValues.toArray(new String[0]);
+    }
+    return new String[] { value_ };
+  }
+
+  public UIFormSelectBoxForum setSelectedValues(String[] values) {
+    for (SelectItemOption<String> option : options_) {
+      option.setSelected(false);
+      for (String value : values) {
+        if (value.equals(option.getValue())) {
+          option.setSelected(true);
+          break;
+        }
+      }
+    }
+
+    return this;
+  }
+
+  final public List<SelectItemOption<String>> getOptions() {
+    return options_;
+  }
+
+  final public UIFormSelectBoxForum setOptions(List<SelectItemOption<String>> options) {
+    options_ = options;
+    if (options_ == null || options_.size() < 1)
+      return this;
+    value_ = options_.get(0).getValue();
+    return this;
+  }
+
+  public void setOnChange(String onchange) {
+    onchange_ = onchange;
+  }
+
+  public UIFormSelectBoxForum setDisabled(boolean disabled) {
+    setEnable(!disabled);
+    return this;
+  }
+
+  @Override
+  public void decode(Object input, WebuiRequestContext context) throws Exception {
+    String[] values = context.getRequestParameterValues(getId());
+    if (values == null) {
+      value_ = null;
+      for (SelectItemOption<String> item : options_) {
+        item.setSelected(false);
+      }
+      return;
+    }
+
+    int i = 0;
+    value_ = values[0];
+    for (SelectItemOption<String> item : options_) {
+      if (i > -1 && item.getValue().equals(values[i])) {
+        item.setSelected(true);
+        if (values.length == ++i)
+          i = -1;
+      } else
+        item.setSelected(false);
+    }
+  }
+
+  protected String renderOnChangeEvent(UIForm uiForm) throws Exception {
+    return uiForm.event(onchange_, (String) null);
+  }
+
+  @Override
+  public void processRender(WebuiRequestContext context) throws Exception {
+    ResourceBundle res = context.getApplicationResourceBundle();
+    UIForm uiForm = getAncestorOfType(UIForm.class);
+    String formId = null;
+    if (uiForm.getId().equals("UISearchForm"))
+      formId = uiForm.<UIComponent> getParent().getId();
+    else
+      formId = uiForm.getId();
+
+    Writer w = context.getWriter();
+    w.write("<select class=\"selectbox\" name=\"");
+    w.write(name);
+    w.write("\"");
+    if (onchange_ != null) {
+      w.append(" onchange=\"").append(renderOnChangeEvent(uiForm)).append("\"");
+    }
+
+    if (isMultiple_)
+      w.write(" multiple=\"true\"");
+    if (size_ > 1)
+      w.write(" size=\"" + size_ + "\"");
+
+    if (!enable_)
+      w.write(" disabled ");
+
+    w.write(">\n");
+
+    for (SelectItemOption<String> item : options_) {
+      String labelAndCss = item.getLabel();
+      String temp[] = labelAndCss.split("/");
+      try {
+        temp[0] = res.getString(formId + ".label.option." + item.getValue());
+      } catch (MissingResourceException ex) {
+      }
+      String classCss = "optionNormal";
+      if (temp.length > 1)
+        classCss = temp[1];
+      if (item.isSelected()) {
+        w.write("<option selected=\"selected\" class=\"");
+        w.write(classCss + " optionSelected");
+        w.write("\" value=\"");
+        w.write(item.getValue());
+        w.write("\">");
+      } else {
+        w.write("<option class=\"");
+        w.write(classCss);
+        w.write("\" value=\"");
+        w.write(item.getValue());
+        w.write("\">");
+      }
+      w.write(temp[0]);
+      w.write("</option>\n");
+    }
+    w.write("</select>\n");
+  }
 
 }

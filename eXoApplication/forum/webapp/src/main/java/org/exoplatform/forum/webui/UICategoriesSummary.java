@@ -29,21 +29,21 @@ import org.exoplatform.webui.core.UIContainer;
 @ComponentConfig(
 		template = "app:/templates/forum/webui/UICategoriesSummary.gtmpl"
 )
-public class UICategoriesSummary extends UIContainer	{
-	public UICategoriesSummary() throws Exception {
-		addChild(UICategoryInfo.class, null, null);
-		addChild(UIForumIconState.class, null, null).updateInfor(true);
-	}
-	
-	@SuppressWarnings("unused")
-	private void setRenderChild() throws Exception {
-		try {
-			UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
-			UICategoryInfo categoryInfo = getChild(UICategoryInfo.class);
-			if(categoryInfo.isRendered())
-				categoryInfo.setRendered(forumPortlet.isShowStatistics());
-			getChild(UIForumIconState.class).setRendered(forumPortlet.isShowIconsLegend());
-		} catch (Exception e) {
-		}
-	}
+public class UICategoriesSummary extends UIContainer {
+  public UICategoriesSummary() throws Exception {
+    addChild(UICategoryInfo.class, null, null);
+    addChild(UIForumIconState.class, null, null).updateInfor(true);
+  }
+
+  @SuppressWarnings("unused")
+  private void setRenderChild() throws Exception {
+    try {
+      UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+      UICategoryInfo categoryInfo = getChild(UICategoryInfo.class);
+      if (categoryInfo.isRendered())
+        categoryInfo.setRendered(forumPortlet.isShowStatistics());
+      getChild(UIForumIconState.class).setRendered(forumPortlet.isShowIconsLegend());
+    } catch (Exception e) {
+    }
+  }
 }

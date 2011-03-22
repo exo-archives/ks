@@ -40,23 +40,25 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = UIViewTopicCreatedByUser.CloseActionListener.class, phase=Phase.DECODE)
 		}
 )
-public class UIViewTopicCreatedByUser extends UIForm implements UIPopupComponent	{
-	public UIViewTopicCreatedByUser() throws Exception{
-		addChild(UIPageListTopicByUser.class, null, "UIPageListTopicByUser") ;
-	}
+public class UIViewTopicCreatedByUser extends UIForm implements UIPopupComponent {
+  public UIViewTopicCreatedByUser() throws Exception {
+    addChild(UIPageListTopicByUser.class, null, "UIPageListTopicByUser");
+  }
 
-	public void activate() throws Exception { }
-	public void deActivate() throws Exception { }
-	
-	public void setUserId(String userId){
-		this.getChild(UIPageListTopicByUser.class).setUserName(userId);
-	}
-	
-	
-	static public class CloseActionListener extends EventListener<UIViewTopicCreatedByUser> {
-		public void execute(Event<UIViewTopicCreatedByUser> event) throws Exception {
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-		}
-	}
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  public void setUserId(String userId) {
+    this.getChild(UIPageListTopicByUser.class).setUserName(userId);
+  }
+
+  static public class CloseActionListener extends EventListener<UIViewTopicCreatedByUser> {
+    public void execute(Event<UIViewTopicCreatedByUser> event) throws Exception {
+      UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+    }
+  }
 }

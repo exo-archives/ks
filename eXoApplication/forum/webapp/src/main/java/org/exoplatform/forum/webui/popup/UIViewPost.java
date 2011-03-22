@@ -69,204 +69,216 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIViewPost extends UIForm implements UIPopupComponent {
-	private Post post;
-	private boolean isViewUserInfo = true ;
-	private ForumService forumService;
-	private UserProfile userProfile;
-	RenderHelper renderHelper = new RenderHelper();
-	
-	private static Log log = ExoLogger.getLogger(UIViewPost.class); 
-	
-	public UIViewPost() {
-		forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-	}
-	
-	public void setActionForm(String[] actions) {
-		this.setActions(actions);
-	}
-	
-	@SuppressWarnings("unused")
-	private UserProfile getUserProfile() throws Exception {
-		try {
-			userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-		} catch (Exception e) {
-			String userName = UserHelper.getCurrentUser();
-			if (userName != null) {
-				try {
-					userProfile = forumService.getQuickProfile(userName);
-				} catch (Exception ex) {
-				}
-			}
-		}
-		return userProfile;
-	}
-	
-	public String renderPost(Post post) throws RenderingException {
-		return renderHelper.renderPost(post);
-	}
-	
-	public String getImageUrl(String imagePath) throws Exception {
-		String url = "";
-		try {
-			url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
-		} catch (Exception e) {
-			log.warn(imagePath + " is not exist: " + e.getMessage());
-		}
-		return url ;
-	}
-	
-	@SuppressWarnings("unused")
-	private String getFileSource(ForumAttachment attachment) throws Exception {
-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		try {
-			InputStream input = attachment.getInputStream() ;
-			String fileName = attachment.getName() ;
-			return ForumSessionUtils.getFileSource(input, fileName, dservice);
-		} catch (PathNotFoundException e) {
-			return null;
-		}
-	}
+  private Post         post;
 
-	public void setPostView(Post post) throws Exception {
-		this.post = post ;
-	}
-	
-	@SuppressWarnings("unused")
-	private Post getPostView() throws Exception {
-		return post ;
-	}
+  private boolean      isViewUserInfo = true;
 
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	public void setViewUserInfo(boolean isView){ this.isViewUserInfo = isView ;}
-	public boolean getIsViewUserInfo(){ return this.isViewUserInfo ;}
-	
-	static public class DownloadAttachActionListener extends EventListener<UIViewPost> {
-		public void execute(Event<UIViewPost> event) throws Exception {
-			UIViewPost viewPost = event.getSource() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(viewPost) ;
-		}
-	}
-	
-	static	public class ApproveActionListener extends EventListener<UIViewPost> {
-		public void execute(Event<UIViewPost> event) throws Exception {
-			UIViewPost uiForm = event.getSource() ;
-			Post post = uiForm.post;
-			post.setIsApproved(true);
-			post.setIsHidden(false);
-			List<Post> posts = new ArrayList<Post>();
-			posts.add(post);
-			try{
-				uiForm.forumService.modifyPost(posts, Utils.APPROVE);
-				uiForm.forumService.modifyPost(posts, Utils.HIDDEN);
-			}catch(Exception e) {
-				UIViewPost.log.debug("\nModify post fail: " + e.getMessage() + "\n" + e.getCause());
-			}
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			if(popupContainer != null) {
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-				popupAction.deActivate();
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-				UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
-        if(moderationForum != null) {
-          event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum) ;
+  private ForumService forumService;
+
+  private UserProfile  userProfile;
+
+  RenderHelper         renderHelper   = new RenderHelper();
+
+  private static Log   log            = ExoLogger.getLogger(UIViewPost.class);
+
+  public UIViewPost() {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+  }
+
+  public void setActionForm(String[] actions) {
+    this.setActions(actions);
+  }
+
+  @SuppressWarnings("unused")
+  private UserProfile getUserProfile() throws Exception {
+    try {
+      userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+    } catch (Exception e) {
+      String userName = UserHelper.getCurrentUser();
+      if (userName != null) {
+        try {
+          userProfile = forumService.getQuickProfile(userName);
+        } catch (Exception ex) {
+        }
+      }
+    }
+    return userProfile;
+  }
+
+  public String renderPost(Post post) throws RenderingException {
+    return renderHelper.renderPost(post);
+  }
+
+  public String getImageUrl(String imagePath) throws Exception {
+    String url = "";
+    try {
+      url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
+    } catch (Exception e) {
+      log.warn(imagePath + " is not exist: " + e.getMessage());
+    }
+    return url;
+  }
+
+  @SuppressWarnings("unused")
+  private String getFileSource(ForumAttachment attachment) throws Exception {
+    DownloadService dservice = getApplicationComponent(DownloadService.class);
+    try {
+      InputStream input = attachment.getInputStream();
+      String fileName = attachment.getName();
+      return ForumSessionUtils.getFileSource(input, fileName, dservice);
+    } catch (PathNotFoundException e) {
+      return null;
+    }
+  }
+
+  public void setPostView(Post post) throws Exception {
+    this.post = post;
+  }
+
+  @SuppressWarnings("unused")
+  private Post getPostView() throws Exception {
+    return post;
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  public void setViewUserInfo(boolean isView) {
+    this.isViewUserInfo = isView;
+  }
+
+  public boolean getIsViewUserInfo() {
+    return this.isViewUserInfo;
+  }
+
+  static public class DownloadAttachActionListener extends EventListener<UIViewPost> {
+    public void execute(Event<UIViewPost> event) throws Exception {
+      UIViewPost viewPost = event.getSource();
+      event.getRequestContext().addUIComponentToUpdateByAjax(viewPost);
+    }
+  }
+
+  static public class ApproveActionListener extends EventListener<UIViewPost> {
+    public void execute(Event<UIViewPost> event) throws Exception {
+      UIViewPost uiForm = event.getSource();
+      Post post = uiForm.post;
+      post.setIsApproved(true);
+      post.setIsHidden(false);
+      List<Post> posts = new ArrayList<Post>();
+      posts.add(post);
+      try {
+        uiForm.forumService.modifyPost(posts, Utils.APPROVE);
+        uiForm.forumService.modifyPost(posts, Utils.HIDDEN);
+      } catch (Exception e) {
+        UIViewPost.log.debug("\nModify post fail: " + e.getMessage() + "\n" + e.getCause());
+      }
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+      if (popupContainer != null) {
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+        UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
+        if (moderationForum != null) {
+          event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum);
           moderationForum.setReloadPortlet(true);
         }
-			} else {
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.cancelAction() ;
-			}
-		}
-	}
-	
-	static	public class DeletePostActionListener extends EventListener<UIViewPost> {
-		public void execute(Event<UIViewPost> event) throws Exception {
-			UIViewPost uiForm = event.getSource() ;
-			Post post = uiForm.post;
-			try{
-				String []path = post.getPath().split("/");
-				int l = path.length ;
-				uiForm.forumService.removePost(path[l-4], path[l-3], path[l-2], post.getId());
-			}catch(Exception e) {
-				UIViewPost.log.debug("Removing " + post.getId() + " post fail: " +e.getCause());
-			}
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			if(popupContainer != null) {
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-				popupAction.deActivate();
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-				UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
-        if(moderationForum != null) {
-          event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum) ;
+      } else {
+        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+        forumPortlet.cancelAction();
+      }
+    }
+  }
+
+  static public class DeletePostActionListener extends EventListener<UIViewPost> {
+    public void execute(Event<UIViewPost> event) throws Exception {
+      UIViewPost uiForm = event.getSource();
+      Post post = uiForm.post;
+      try {
+        String[] path = post.getPath().split("/");
+        int l = path.length;
+        uiForm.forumService.removePost(path[l - 4], path[l - 3], path[l - 2], post.getId());
+      } catch (Exception e) {
+        UIViewPost.log.debug("Removing " + post.getId() + " post fail: " + e.getCause());
+      }
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+      if (popupContainer != null) {
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+        UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
+        if (moderationForum != null) {
+          event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum);
           moderationForum.setReloadPortlet(true);
         }
-			} else {
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.cancelAction() ;
-			}
-		}
-	}
+      } else {
+        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+        forumPortlet.cancelAction();
+      }
+    }
+  }
 
-	static	public class OpenTopicLinkActionListener extends EventListener<UIViewPost> {
-		public void execute(Event<UIViewPost> event) throws Exception {
-			UIViewPost uiForm = event.getSource() ;
-			Post post = uiForm.post;
-			if(post == null){
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
-				return ;
-			}
-			String path = post.getPath();
-			path = path.substring(path.lastIndexOf(Utils.TOPIC));
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-			forumPortlet.calculateRenderComponent(path, event.getRequestContext());
-			// close popup
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			if(popupContainer != null) {
-				UIPopupAction popupAction;
-				if(((UIComponent)uiForm.getParent()).getId().equals(popupContainer.getId())){
-					popupAction = popupContainer.getAncestorOfType(UIPopupAction.class) ;
-				} else {
-					popupAction = popupContainer.getChild(UIPopupAction.class) ;
-				}
-				popupAction.deActivate();
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-			} else {
-				try {
-					forumPortlet.cancelAction() ;
-				} catch (Exception e) {
-					UIForumQuickReplyPortlet forumQuickReplyPortlet = uiForm.getAncestorOfType(UIForumQuickReplyPortlet.class) ;
-					forumQuickReplyPortlet.cancelAction() ;
-				}
-			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-		}
-	}
-	
-	static	public class CloseActionListener extends EventListener<UIViewPost> {
-		public void execute(Event<UIViewPost> event) throws Exception {
-			UIViewPost uiForm = event.getSource() ;
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			if(popupContainer != null) {
-				UIPopupAction popupAction;
-				if(((UIComponent)uiForm.getParent()).getId().equals(popupContainer.getId())){
-					popupAction = popupContainer.getAncestorOfType(UIPopupAction.class) ;
-				} else {
-					popupAction = popupContainer.getChild(UIPopupAction.class) ;
-				}
-				popupAction.deActivate();
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-			} else {
-				try {
-					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-					forumPortlet.cancelAction() ;
-				} catch (Exception e) {
-					UIForumQuickReplyPortlet forumPortlet = uiForm.getAncestorOfType(UIForumQuickReplyPortlet.class) ;
-					forumPortlet.cancelAction() ;
-				}
-			}
-		}
-	}
+  static public class OpenTopicLinkActionListener extends EventListener<UIViewPost> {
+    public void execute(Event<UIViewPost> event) throws Exception {
+      UIViewPost uiForm = event.getSource();
+      Post post = uiForm.post;
+      if (post == null) {
+        UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
+        uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING));
+        return;
+      }
+      String path = post.getPath();
+      path = path.substring(path.lastIndexOf(Utils.TOPIC));
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.calculateRenderComponent(path, event.getRequestContext());
+      // close popup
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+      if (popupContainer != null) {
+        UIPopupAction popupAction;
+        if (((UIComponent) uiForm.getParent()).getId().equals(popupContainer.getId())) {
+          popupAction = popupContainer.getAncestorOfType(UIPopupAction.class);
+        } else {
+          popupAction = popupContainer.getChild(UIPopupAction.class);
+        }
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        try {
+          forumPortlet.cancelAction();
+        } catch (Exception e) {
+          UIForumQuickReplyPortlet forumQuickReplyPortlet = uiForm.getAncestorOfType(UIForumQuickReplyPortlet.class);
+          forumQuickReplyPortlet.cancelAction();
+        }
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+    }
+  }
+
+  static public class CloseActionListener extends EventListener<UIViewPost> {
+    public void execute(Event<UIViewPost> event) throws Exception {
+      UIViewPost uiForm = event.getSource();
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+      if (popupContainer != null) {
+        UIPopupAction popupAction;
+        if (((UIComponent) uiForm.getParent()).getId().equals(popupContainer.getId())) {
+          popupAction = popupContainer.getAncestorOfType(UIPopupAction.class);
+        } else {
+          popupAction = popupContainer.getChild(UIPopupAction.class);
+        }
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        try {
+          UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+          forumPortlet.cancelAction();
+        } catch (Exception e) {
+          UIForumQuickReplyPortlet forumPortlet = uiForm.getAncestorOfType(UIForumQuickReplyPortlet.class);
+          forumPortlet.cancelAction();
+        }
+      }
+    }
+  }
 
 }

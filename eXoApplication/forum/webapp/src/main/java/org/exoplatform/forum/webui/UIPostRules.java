@@ -33,49 +33,51 @@ import org.exoplatform.webui.core.UIContainer;
 @ComponentConfig(
 		template = "app:/templates/forum/webui/UIPostRules.gtmpl"
 )
-public class UIPostRules extends UIContainer	{
-	private UserProfile userProfile ;
-	private boolean canCreateNewThread = false;
-	private boolean canAddPost = false;
-	
-	public boolean isCanCreateNewThread() {
-		return canCreateNewThread;
-	}
+public class UIPostRules extends UIContainer {
+  private UserProfile userProfile;
 
-	public boolean isCanAddPost() {
-		return canAddPost;
-	}
+  private boolean     canCreateNewThread = false;
 
-	public UIPostRules() throws Exception {		
-	}	
-	
-	@SuppressWarnings("unused")
-	private UserProfile getUserProfile() throws Exception {
-		if(this.userProfile == null) {
-			try {
-				this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-			} catch (Exception e) {
-				ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-				userProfile = forumService.getDefaultUserProfile(UserHelper.getCurrentUser(), "") ;
-			}
-		}
-		return this.userProfile ;
-	}
-	
-	public void setUserProfile(UserProfile userProfile ) {
-		this.userProfile = userProfile ;
-	}
-	
-	public void setLock(boolean isLock) {
-		canCreateNewThread = !isLock;
-		canAddPost = !isLock;
-	}
-	
-	public void setCanAddPost(boolean canAddPost){
-		this.canAddPost = canAddPost;
-	}
-	
-	public void setCanCreateNewThread(boolean canCreatThread){
-		this.canCreateNewThread = canCreatThread;
-	}
+  private boolean     canAddPost         = false;
+
+  public boolean isCanCreateNewThread() {
+    return canCreateNewThread;
+  }
+
+  public boolean isCanAddPost() {
+    return canAddPost;
+  }
+
+  public UIPostRules() throws Exception {
+  }
+
+  @SuppressWarnings("unused")
+  private UserProfile getUserProfile() throws Exception {
+    if (this.userProfile == null) {
+      try {
+        this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+      } catch (Exception e) {
+        ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+        userProfile = forumService.getDefaultUserProfile(UserHelper.getCurrentUser(), "");
+      }
+    }
+    return this.userProfile;
+  }
+
+  public void setUserProfile(UserProfile userProfile) {
+    this.userProfile = userProfile;
+  }
+
+  public void setLock(boolean isLock) {
+    canCreateNewThread = !isLock;
+    canAddPost = !isLock;
+  }
+
+  public void setCanAddPost(boolean canAddPost) {
+    this.canAddPost = canAddPost;
+  }
+
+  public void setCanCreateNewThread(boolean canCreatThread) {
+    this.canCreateNewThread = canCreatThread;
+  }
 }

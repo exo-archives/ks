@@ -35,29 +35,29 @@ import org.exoplatform.webui.core.UIContainer;
 @ComponentConfig(
 		template = "app:/templates/forum/webui/UIForumContainer.gtmpl"
 )
-public class UIForumContainer extends UIContainer	{
-	public UIForumContainer() throws Exception {
-		addChild(UIForumDescription.class, null, null) ;
-		addChild(UITopicContainer.class, null, null) ;
-		addChild(UITopicDetailContainer.class, null, null).setRendered(false) ;
-		addChild(UIForumSummary.class, null, null) ;
-	}
-	
-	public void setIsRenderChild(boolean isRender) {
-		getChild(UITopicContainer.class).setRendered(isRender) ;
-		getChild(UITopicDetailContainer.class).setRendered(!isRender) ;
-		getChild(UIForumSummary.class).setRendered(isRender) ;
-		if(isRender){
-			try {
-				PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
-				ActionResponse actionRes = (ActionResponse)pcontext.getResponse();
-				ForumParameter param = new ForumParameter() ;
-				param.setRenderQuickReply(false);
-				param.setRenderPoll(false);
-				actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
-				actionRes.setEvent(new QName("ForumPollEvent"), param) ;
-			} catch (Exception e) {
-			}
-		}
-	}
+public class UIForumContainer extends UIContainer {
+  public UIForumContainer() throws Exception {
+    addChild(UIForumDescription.class, null, null);
+    addChild(UITopicContainer.class, null, null);
+    addChild(UITopicDetailContainer.class, null, null).setRendered(false);
+    addChild(UIForumSummary.class, null, null);
+  }
+
+  public void setIsRenderChild(boolean isRender) {
+    getChild(UITopicContainer.class).setRendered(isRender);
+    getChild(UITopicDetailContainer.class).setRendered(!isRender);
+    getChild(UIForumSummary.class).setRendered(isRender);
+    if (isRender) {
+      try {
+        PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+        ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
+        ForumParameter param = new ForumParameter();
+        param.setRenderQuickReply(false);
+        param.setRenderPoll(false);
+        actionRes.setEvent(new QName("QuickReplyEvent"), param);
+        actionRes.setEvent(new QName("ForumPollEvent"), param);
+      } catch (Exception e) {
+      }
+    }
+  }
 }

@@ -47,42 +47,55 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIViewPrivateMessageForm extends UIForm implements UIPopupComponent {
-	private ForumPrivateMessage privateMessage ;
-	private UserProfile userProfile;
-	RenderHelper renderHelper = new RenderHelper();
-	public UIViewPrivateMessageForm() {}
-	
-	public ForumPrivateMessage getPrivateMessage() { return privateMessage;}
-	public void setPrivateMessage(ForumPrivateMessage privateMessage) { 
-		this.privateMessage = privateMessage;
-	}
-	
-	public String renderMessage(String str) throws RenderingException {
-		Post post = new Post();
-		post.setMessage(str);
-		return renderHelper.renderPost(post);
-	}
-	
-	public UserProfile getUserProfile() { return userProfile;}
-	public void setUserProfile(UserProfile userProfile) {
-		this.userProfile = userProfile;
-	}
-	
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	static	public class CloseActionListener extends EventListener<UIViewPrivateMessageForm> {
-		public void execute(Event<UIViewPrivateMessageForm> event) throws Exception {
-			UIViewPrivateMessageForm uiForm = event.getSource() ;
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			if(popupContainer == null) {
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.cancelAction() ;
-			} else {
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-				popupAction.deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-			}
-		}
-	}
+  private ForumPrivateMessage privateMessage;
+
+  private UserProfile         userProfile;
+
+  RenderHelper                renderHelper = new RenderHelper();
+
+  public UIViewPrivateMessageForm() {
+  }
+
+  public ForumPrivateMessage getPrivateMessage() {
+    return privateMessage;
+  }
+
+  public void setPrivateMessage(ForumPrivateMessage privateMessage) {
+    this.privateMessage = privateMessage;
+  }
+
+  public String renderMessage(String str) throws RenderingException {
+    Post post = new Post();
+    post.setMessage(str);
+    return renderHelper.renderPost(post);
+  }
+
+  public UserProfile getUserProfile() {
+    return userProfile;
+  }
+
+  public void setUserProfile(UserProfile userProfile) {
+    this.userProfile = userProfile;
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  static public class CloseActionListener extends EventListener<UIViewPrivateMessageForm> {
+    public void execute(Event<UIViewPrivateMessageForm> event) throws Exception {
+      UIViewPrivateMessageForm uiForm = event.getSource();
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+      if (popupContainer == null) {
+        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+        forumPortlet.cancelAction();
+      } else {
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      }
+    }
+  }
 }

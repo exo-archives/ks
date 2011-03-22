@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui.popup;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
@@ -49,95 +48,101 @@ import org.exoplatform.webui.event.Event.Phase;
 )
 @SuppressWarnings("unused")
 public class UIViewUserProfile extends BaseUIForm implements UIPopupComponent {
-	
-	private UserProfile userProfile ;
-	private UserProfile userProfileLogin ;
-	private CommonContact contact = null;
-	private ForumService forumService ;
-	private boolean isGetContact = true;
-	public CommonContact getContact(String userId) throws Exception {
-		if(contact == null || isGetContact) {
-			contact = getPersonalContact(userId) ;
-		}
-		return contact;
-	}
 
-	public void setContact(CommonContact contact) {
-		isGetContact = false;
-		this.contact = contact;
-	}
+  private UserProfile   userProfile;
 
-	public UIViewUserProfile() {
-		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-	}
+  private UserProfile   userProfileLogin;
 
-	private boolean isAdmin(String userId) throws Exception {
-		return forumService.isAdminRole(userId);
-	}
-	
-	
-	private boolean isOnline(String userId) throws Exception {
-		return forumService.isOnline(userId) ;
-	}
-	
-	private String getScreenName(String userName) throws Exception {
-		return forumService.getScreenName(userName); 
-	}
-	
-	public void setUserProfile(UserProfile userProfile) {
-		this.userProfile = userProfile ;
-	}
-	
-	public UserProfile getUserProfile() {
-		return this.userProfile ;
-	}
+  private CommonContact contact      = null;
 
-	public void setUserProfileLogin(UserProfile userProfile) {
-		this.userProfileLogin = userProfile ;
-	}
-	
-	public UserProfile getUserProfileLogin() {
-		return this.userProfileLogin ;
-	}
-	
-	private CommonContact getPersonalContact(String userId) throws Exception {
-		CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
-		if(contact == null) {
-			contact = new CommonContact() ;
-		}
-		return contact ;
-	}
-	
-	private String getAvatarUrl() throws Exception {
-		return ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService);
-	}
-	
-	private String[] getLabelProfile() {
-		return new String[]{"userName", "firstName", "lastName", "birthDay", "gender", 
-				"email", "jobTitle", "location", "workPhone", "mobilePhone" , "website"};
-	}
-	
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	static	public class CloseActionListener extends EventListener<UIViewUserProfile> {
-		public void execute(Event<UIViewUserProfile> event) throws Exception {
-			UIViewUserProfile uiForm = event.getSource() ;
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			if(popupContainer == null) {
-				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.cancelAction() ;
-			} else {
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-				if(popupAction.findFirstComponentOfType(UIViewUserProfile.class) != null){
-					popupAction.deActivate();
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
-				} else {
-					UIPopupAction popup = popupContainer.getAncestorOfType(UIPopupAction.class);
-					popup.deActivate();
-					event.getRequestContext().addUIComponentToUpdateByAjax(popup) ;
-				}
-			}
-		}
-	}
+  private ForumService  forumService;
+
+  private boolean       isGetContact = true;
+
+  public CommonContact getContact(String userId) throws Exception {
+    if (contact == null || isGetContact) {
+      contact = getPersonalContact(userId);
+    }
+    return contact;
+  }
+
+  public void setContact(CommonContact contact) {
+    isGetContact = false;
+    this.contact = contact;
+  }
+
+  public UIViewUserProfile() {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+  }
+
+  private boolean isAdmin(String userId) throws Exception {
+    return forumService.isAdminRole(userId);
+  }
+
+  private boolean isOnline(String userId) throws Exception {
+    return forumService.isOnline(userId);
+  }
+
+  private String getScreenName(String userName) throws Exception {
+    return forumService.getScreenName(userName);
+  }
+
+  public void setUserProfile(UserProfile userProfile) {
+    this.userProfile = userProfile;
+  }
+
+  public UserProfile getUserProfile() {
+    return this.userProfile;
+  }
+
+  public void setUserProfileLogin(UserProfile userProfile) {
+    this.userProfileLogin = userProfile;
+  }
+
+  public UserProfile getUserProfileLogin() {
+    return this.userProfileLogin;
+  }
+
+  private CommonContact getPersonalContact(String userId) throws Exception {
+    CommonContact contact = ForumSessionUtils.getPersonalContact(userId);
+    if (contact == null) {
+      contact = new CommonContact();
+    }
+    return contact;
+  }
+
+  private String getAvatarUrl() throws Exception {
+    return ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService);
+  }
+
+  private String[] getLabelProfile() {
+    return new String[] { "userName", "firstName", "lastName", "birthDay", "gender", "email", "jobTitle", "location", "workPhone", "mobilePhone", "website" };
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  static public class CloseActionListener extends EventListener<UIViewUserProfile> {
+    public void execute(Event<UIViewUserProfile> event) throws Exception {
+      UIViewUserProfile uiForm = event.getSource();
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+      if (popupContainer == null) {
+        UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+        forumPortlet.cancelAction();
+      } else {
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+        if (popupAction.findFirstComponentOfType(UIViewUserProfile.class) != null) {
+          popupAction.deActivate();
+          event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+        } else {
+          UIPopupAction popup = popupContainer.getAncestorOfType(UIPopupAction.class);
+          popup.deActivate();
+          event.getRequestContext().addUIComponentToUpdateByAjax(popup);
+        }
+      }
+    }
+  }
 }

@@ -48,78 +48,78 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		}
 )
 public class UIQuickSearchForm extends BaseUIForm {
-	final static	private String FIELD_SEARCHVALUE = "inputValue" ;
-	
-	public UIQuickSearchForm() throws Exception {
-		addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null)) ;
-	}
+  final static private String FIELD_SEARCHVALUE = "inputValue";
 
-	
-	static	public class SearchActionListener extends EventListener<UIQuickSearchForm> {
-		public void execute(Event<UIQuickSearchForm> event) throws Exception {
-			UIQuickSearchForm uiForm = event.getSource() ;
-			UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE) ;
-			String text = formStringInput.getValue() ;
-			if(!ForumUtils.isEmpty(text)) {
-				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=|:\"'";
-				for (int i = 0; i < special.length(); i++) {
-					char c = special.charAt(i);
-					if(text.indexOf(c) >= 0) {
-						uiForm.warning("UIQuickSearchForm.msg.failure") ;
-						return ;
-					}
-				}
-				ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				UserProfile userProfile = forumPortlet.getUserProfile() ;
-				String type = "";
-				if(userProfile.getUserRole() == 0) type = "true,all";
-				else type = "false,all" ;
-				List<String> forumIdsOfModerator = new ArrayList<String>();
-				if(userProfile.getUserRole() == 1) {
-					String []strings = userProfile.getModerateForums();
-					for (int i = 0; i < strings.length; i++) {
-						String str = strings[i].substring(strings[i].lastIndexOf("/")+1);
-						if(str.length() > 0)
-							forumIdsOfModerator.add(str);
-					}
-				}
-				List<ForumSearch> list = null;
-				try {
-					list = forumService.getQuickSearch(text, type, "", userProfile.getUserId(),
-															forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()), forumIdsOfModerator);
-				}catch (Exception e) {
-					uiForm.log.warn("\nGetting quick search failure:\n " + e.getCause());
-					uiForm.warning("UIQuickSearchForm.msg.failure") ;
-					return ;
-				}
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				UICategories categories = categoryContainer.getChild(UICategories.class);
-				categories.setIsRenderChild(true) ;				
-				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
-				listSearchEvent.setListSearchEvent(list) ;
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-			} else {
-				formStringInput.setValue("") ;
-				uiForm.warning("UIQuickSearchForm.msg.checkEmpty") ;
-			}
-		}
-	}
+  public UIQuickSearchForm() throws Exception {
+    addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null));
+  }
 
-	static	public class AdvancedSearchActionListener extends EventListener<UIQuickSearchForm> {
-		public void execute(Event<UIQuickSearchForm> event) throws Exception {
-			UIQuickSearchForm uiForm = event.getSource() ;
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL) ;
-			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
-			UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class) ;
-			searchForm.setUserProfile(forumPortlet.getUserProfile()) ;
-			searchForm.setSelectType(Utils.CATEGORY) ;
-			searchForm.setPath("");
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-		}
-	}
+  static public class SearchActionListener extends EventListener<UIQuickSearchForm> {
+    public void execute(Event<UIQuickSearchForm> event) throws Exception {
+      UIQuickSearchForm uiForm = event.getSource();
+      UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE);
+      String text = formStringInput.getValue();
+      if (!ForumUtils.isEmpty(text)) {
+        String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=|:\"'";
+        for (int i = 0; i < special.length(); i++) {
+          char c = special.charAt(i);
+          if (text.indexOf(c) >= 0) {
+            uiForm.warning("UIQuickSearchForm.msg.failure");
+            return;
+          }
+        }
+        ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+        UserProfile userProfile = forumPortlet.getUserProfile();
+        String type = "";
+        if (userProfile.getUserRole() == 0)
+          type = "true,all";
+        else
+          type = "false,all";
+        List<String> forumIdsOfModerator = new ArrayList<String>();
+        if (userProfile.getUserRole() == 1) {
+          String[] strings = userProfile.getModerateForums();
+          for (int i = 0; i < strings.length; i++) {
+            String str = strings[i].substring(strings[i].lastIndexOf("/") + 1);
+            if (str.length() > 0)
+              forumIdsOfModerator.add(str);
+          }
+        }
+        List<ForumSearch> list = null;
+        try {
+          list = forumService.getQuickSearch(text, type, "", userProfile.getUserId(), forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()), forumIdsOfModerator);
+        } catch (Exception e) {
+          uiForm.log.warn("\nGetting quick search failure:\n " + e.getCause());
+          uiForm.warning("UIQuickSearchForm.msg.failure");
+          return;
+        }
+        UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
+        categoryContainer.updateIsRender(true);
+        forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+        UICategories categories = categoryContainer.getChild(UICategories.class);
+        categories.setIsRenderChild(true);
+        UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
+        listSearchEvent.setListSearchEvent(list);
+        forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+      } else {
+        formStringInput.setValue("");
+        uiForm.warning("UIQuickSearchForm.msg.checkEmpty");
+      }
+    }
+  }
+
+  static public class AdvancedSearchActionListener extends EventListener<UIQuickSearchForm> {
+    public void execute(Event<UIQuickSearchForm> event) throws Exception {
+      UIQuickSearchForm uiForm = event.getSource();
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL);
+      forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
+      UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class);
+      searchForm.setUserProfile(forumPortlet.getUserProfile());
+      searchForm.setSelectType(Utils.CATEGORY);
+      searchForm.setPath("");
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+    }
+  }
 }

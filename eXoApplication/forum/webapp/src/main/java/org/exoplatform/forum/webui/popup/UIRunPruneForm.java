@@ -43,42 +43,46 @@ import org.exoplatform.webui.event.Event.Phase;
 			@EventConfig(listeners = UIRunPruneForm.CloseActionListener.class, phase=Phase.DECODE)
 		}
 )
+public class UIRunPruneForm extends BaseForumForm implements UIPopupComponent {
+  private PruneSetting pruneSetting;
 
-public class UIRunPruneForm	extends BaseForumForm implements UIPopupComponent {
-	private PruneSetting pruneSetting;
-	private long topicOld = 0;
-	public UIRunPruneForm() {
-		
-	}
-	
-	public void setPruneSetting(PruneSetting pruneSetting) throws Exception{
-		this.pruneSetting = pruneSetting ;
-		this.topicOld = getForumService().checkPrune(pruneSetting);
-	}
-	
-	public long getTopicOld() {
-		return topicOld;
-	}
+  private long         topicOld = 0;
 
-	public void setTopicOld(long topicOld) {
-		this.topicOld = topicOld;
-	}
-	
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	static	public class CloseActionListener extends EventListener<UIRunPruneForm> {
-		public void execute(Event<UIRunPruneForm> event) throws Exception {
-			event.getSource().cancelChildPopupAction();
-		}
-	}
+  public UIRunPruneForm() {
 
-	static	public class RunActionListener extends EventListener<UIRunPruneForm> {
-		public void execute(Event<UIRunPruneForm> event) throws Exception {
-			UIRunPruneForm uiform = event.getSource();
-			uiform.getForumService().runPrune(uiform.pruneSetting) ;
-			uiform.cancelChildPopupAction();
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiform.getAncestorOfType(UIForumPortlet.class));
-		}
-	}
+  }
+
+  public void setPruneSetting(PruneSetting pruneSetting) throws Exception {
+    this.pruneSetting = pruneSetting;
+    this.topicOld = getForumService().checkPrune(pruneSetting);
+  }
+
+  public long getTopicOld() {
+    return topicOld;
+  }
+
+  public void setTopicOld(long topicOld) {
+    this.topicOld = topicOld;
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  static public class CloseActionListener extends EventListener<UIRunPruneForm> {
+    public void execute(Event<UIRunPruneForm> event) throws Exception {
+      event.getSource().cancelChildPopupAction();
+    }
+  }
+
+  static public class RunActionListener extends EventListener<UIRunPruneForm> {
+    public void execute(Event<UIRunPruneForm> event) throws Exception {
+      UIRunPruneForm uiform = event.getSource();
+      uiform.getForumService().runPrune(uiform.pruneSetting);
+      uiform.cancelChildPopupAction();
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiform.getAncestorOfType(UIForumPortlet.class));
+    }
+  }
 }

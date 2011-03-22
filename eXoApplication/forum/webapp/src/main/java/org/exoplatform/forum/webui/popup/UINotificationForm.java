@@ -54,152 +54,165 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 			@EventConfig(listeners = UINotificationForm.CloseActionListener.class, phase = Phase.DECODE)
 		}
 )
-public class UINotificationForm extends BaseForumForm implements UIPopupComponent{
+public class UINotificationForm extends BaseForumForm implements UIPopupComponent {
 
-	public static final String FIELD_ENABLEHEADERSUBJECT_CHECKBOX = "enableHeaderSubject" ;
-	public static final String FIELD_NOTIFYEMAIL_MOVE_TAB = "notifyEmailMoveTab" ;
-	public static final String FIELD_NOTIFYEMAIL_ADDNEW_TAB = "notifyEmailAddNewTab" ;
-	
-	public static final String FIELD_HEADERSUBJECT_INPUT = "headerSubject" ;
-	public static final String FIELD_NOTIFYEMAIL_TEXTAREA = "notifyEmail" ;
-	public static final String FIELD_NOTIFYEMAILMOVED_TEXTAREA = "notifyEmailMoved" ;
-	private ForumAdministration administration ;
-	private int tabId = 0 ;
-	public UINotificationForm() {
-		setActions(new String[]{"Save", "Close"});
-	}
-	
-	public void setInitForm() throws Exception {
-		administration = getForumService().getForumAdministration();
-		UIFormInputWithActions notifyEmailAddNewTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_ADDNEW_TAB);
-		UIFormInputWithActions notifyEmailMoveTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_MOVE_TAB);
-		UIFormCheckBoxInput<Boolean> enableHeaderSubject = initEnableHeaderField();
-		UIFormStringInput headerSubject = initEnableHeaderSubjectField();
-		UIFormWYSIWYGInput notifyEmail = initNotifyEmailField();
-		UIFormWYSIWYGInput notifyEmailMoved = initNotifyMoveField();
-		
-		notifyEmailAddNewTab.addUIFormInput(enableHeaderSubject);
-		notifyEmailAddNewTab.addUIFormInput(headerSubject);
-		notifyEmailAddNewTab.addUIFormInput(notifyEmail) ;
-		notifyEmailMoveTab.addUIFormInput(notifyEmailMoved) ;
-		
-		initEmailField(notifyEmailAddNewTab, FIELD_NOTIFYEMAIL_TEXTAREA);		
-		initEmailField(notifyEmailMoveTab, FIELD_NOTIFYEMAILMOVED_TEXTAREA);
-		
-		addUIFormInput(notifyEmailAddNewTab);
-		addUIFormInput(notifyEmailMoveTab);
-	}
-	
-	private void initEmailField(UIFormInputWithActions notifyEmailTab, String param) throws Exception {
-		List<ActionData> actions = new ArrayList<ActionData>() ;
-		ActionData ad = new ActionData() ;
-		ad.setActionListener("GetDefaultMail") ;
-		ad.setActionParameter(param) ;
-		ad.setCssIconClass("Refresh") ;
-		ad.setActionName("TitleResetMail");
-		actions.add(ad) ;
-		notifyEmailTab.setActionField(param, actions);
-	}
-	
-	private UIFormWYSIWYGInput initNotifyMoveField() {
-		String value = administration.getNotifyEmailMoved();
-		if(ForumUtils.isEmpty(value)) value = this.getLabel("EmailToAuthorMoved");
-		UIFormWYSIWYGInput notifyEmailMoved = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, "");
-		notifyEmailMoved.setToolBarName("Basic");
-		notifyEmailMoved.setFCKConfig(Utils.getFCKConfig());
-		notifyEmailMoved.setValue(value); 
-		return notifyEmailMoved;
-	}
+  public static final String  FIELD_ENABLEHEADERSUBJECT_CHECKBOX = "enableHeaderSubject";
 
-	private UIFormWYSIWYGInput initNotifyEmailField() {
-		String value = administration.getNotifyEmailContent();
-		if(ForumUtils.isEmpty(value)) value = this.getLabel("notifyEmailContentDefault");
-		UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, "");
-		notifyEmail.setToolBarName("Basic");
-		notifyEmail.setFCKConfig(Utils.getFCKConfig());
-		notifyEmail.setValue(value); 
-		return notifyEmail;
-	}
-	
-	private UIFormStringInput initEnableHeaderSubjectField() {
-		UIFormStringInput headerSubject = new UIFormStringInput(FIELD_HEADERSUBJECT_INPUT, FIELD_HEADERSUBJECT_INPUT, null);
-		String headerSubject_ = administration.getHeaderSubject(); 
-		if(ForumUtils.isEmpty(headerSubject_)) headerSubject_ = this.getLabel("notifyEmailHeaderSubjectDefault");
-		headerSubject.setValue(headerSubject_);
-		return headerSubject;
-	}
+  public static final String  FIELD_NOTIFYEMAIL_MOVE_TAB         = "notifyEmailMoveTab";
 
-	private UIFormCheckBoxInput<Boolean> initEnableHeaderField() {
-		UIFormCheckBoxInput<Boolean> enableHeaderSubject = new UIFormCheckBoxInput<Boolean>(FIELD_ENABLEHEADERSUBJECT_CHECKBOX, FIELD_ENABLEHEADERSUBJECT_CHECKBOX, false);
-		enableHeaderSubject.setChecked(administration.getEnableHeaderSubject());
-		return enableHeaderSubject;
-	}
+  public static final String  FIELD_NOTIFYEMAIL_ADDNEW_TAB       = "notifyEmailAddNewTab";
 
-	@SuppressWarnings("unused")
-	private boolean tabIsSelected(int tabId) {
-		if(this.tabId == tabId) return true ;
-		else return false ;
-	}
-	
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	static	public class SaveActionListener extends BaseEventListener<UINotificationForm> {
-		public void onEvent(Event<UINotificationForm> event, UINotificationForm uiForm, String objId) throws Exception {
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			UIFormInputWithActions notifyEmailAddNewTab = getChildById(FIELD_NOTIFYEMAIL_ADDNEW_TAB) ;
-			UIFormInputWithActions notifyEmailMoveTab = getChildById(FIELD_NOTIFYEMAIL_MOVE_TAB) ;
-			boolean enableHeaderSubject = (Boolean)notifyEmailAddNewTab.getUIFormCheckBoxInput(FIELD_ENABLEHEADERSUBJECT_CHECKBOX).getValue();
-			String headerSubject = notifyEmailAddNewTab.getUIStringInput(FIELD_HEADERSUBJECT_INPUT).getValue();
-			String notifyEmail = notifyEmailAddNewTab.getChild(UIFormWYSIWYGInput.class).getValue() ;
-			
-			String notifyEmailMoved = notifyEmailMoveTab.getChild(UIFormWYSIWYGInput.class).getValue() ;
-			if(notifyEmail == null || notifyEmail.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
-				warning("UINotificationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAIL_TEXTAREA));
-				return;
-			}
-			if(notifyEmailMoved == null || notifyEmailMoved.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
-				warning("UINotificationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA));
-				return;
-			}
-			uiForm.administration.setEnableHeaderSubject(enableHeaderSubject) ;
-			uiForm.administration.setHeaderSubject(headerSubject);
-			uiForm.administration.setNotifyEmailContent(notifyEmail) ;
-			uiForm.administration.setNotifyEmailMoved(notifyEmailMoved);
-			try {
-				uiForm.getForumService().saveForumAdministration(uiForm.administration) ;
-			} catch (Exception e) {
-				uiForm.log.error("failed to save forum administration", e);
-			}
-			forumPortlet.cancelAction() ;
-		}
+  public static final String  FIELD_HEADERSUBJECT_INPUT          = "headerSubject";
 
-	}
-	
-	static public class SelectTabActionListener extends BaseEventListener<UINotificationForm> {
-		public void onEvent(Event<UINotificationForm> event, UINotificationForm uiForm, String id) throws Exception {
-			uiForm.tabId = Integer.parseInt(id);
-			refresh();
-		}
-	}
-	
-	static public class GetDefaultMailActionListener extends BaseEventListener<UINotificationForm> {
-		public void onEvent(Event<UINotificationForm> event, UINotificationForm uiForm, String objectId) throws Exception {
-			if(objectId.equals(FIELD_NOTIFYEMAIL_TEXTAREA)) {
-				((UIFormInputWithActions)getChildById(FIELD_NOTIFYEMAIL_ADDNEW_TAB)).
-				getChild(UIFormWYSIWYGInput.class).setValue(getLabel("notifyEmailContentDefault"));
-			} else {
-				((UIFormInputWithActions)getChildById(FIELD_NOTIFYEMAIL_MOVE_TAB)).
-				getChild(UIFormWYSIWYGInput.class).setValue(getLabel("EmailToAuthorMoved"));
-			}
-			refresh();
-		}
-	}
-	
-	static	public class CloseActionListener extends BaseEventListener<UINotificationForm> {
-		public void onEvent(Event<UINotificationForm> event, UINotificationForm uiForm, String objId) throws Exception {
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-		}
-	}
+  public static final String  FIELD_NOTIFYEMAIL_TEXTAREA         = "notifyEmail";
+
+  public static final String  FIELD_NOTIFYEMAILMOVED_TEXTAREA    = "notifyEmailMoved";
+
+  private ForumAdministration administration;
+
+  private int                 tabId                              = 0;
+
+  public UINotificationForm() {
+    setActions(new String[] { "Save", "Close" });
+  }
+
+  public void setInitForm() throws Exception {
+    administration = getForumService().getForumAdministration();
+    UIFormInputWithActions notifyEmailAddNewTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_ADDNEW_TAB);
+    UIFormInputWithActions notifyEmailMoveTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_MOVE_TAB);
+    UIFormCheckBoxInput<Boolean> enableHeaderSubject = initEnableHeaderField();
+    UIFormStringInput headerSubject = initEnableHeaderSubjectField();
+    UIFormWYSIWYGInput notifyEmail = initNotifyEmailField();
+    UIFormWYSIWYGInput notifyEmailMoved = initNotifyMoveField();
+
+    notifyEmailAddNewTab.addUIFormInput(enableHeaderSubject);
+    notifyEmailAddNewTab.addUIFormInput(headerSubject);
+    notifyEmailAddNewTab.addUIFormInput(notifyEmail);
+    notifyEmailMoveTab.addUIFormInput(notifyEmailMoved);
+
+    initEmailField(notifyEmailAddNewTab, FIELD_NOTIFYEMAIL_TEXTAREA);
+    initEmailField(notifyEmailMoveTab, FIELD_NOTIFYEMAILMOVED_TEXTAREA);
+
+    addUIFormInput(notifyEmailAddNewTab);
+    addUIFormInput(notifyEmailMoveTab);
+  }
+
+  private void initEmailField(UIFormInputWithActions notifyEmailTab, String param) throws Exception {
+    List<ActionData> actions = new ArrayList<ActionData>();
+    ActionData ad = new ActionData();
+    ad.setActionListener("GetDefaultMail");
+    ad.setActionParameter(param);
+    ad.setCssIconClass("Refresh");
+    ad.setActionName("TitleResetMail");
+    actions.add(ad);
+    notifyEmailTab.setActionField(param, actions);
+  }
+
+  private UIFormWYSIWYGInput initNotifyMoveField() {
+    String value = administration.getNotifyEmailMoved();
+    if (ForumUtils.isEmpty(value))
+      value = this.getLabel("EmailToAuthorMoved");
+    UIFormWYSIWYGInput notifyEmailMoved = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, "");
+    notifyEmailMoved.setToolBarName("Basic");
+    notifyEmailMoved.setFCKConfig(Utils.getFCKConfig());
+    notifyEmailMoved.setValue(value);
+    return notifyEmailMoved;
+  }
+
+  private UIFormWYSIWYGInput initNotifyEmailField() {
+    String value = administration.getNotifyEmailContent();
+    if (ForumUtils.isEmpty(value))
+      value = this.getLabel("notifyEmailContentDefault");
+    UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, "");
+    notifyEmail.setToolBarName("Basic");
+    notifyEmail.setFCKConfig(Utils.getFCKConfig());
+    notifyEmail.setValue(value);
+    return notifyEmail;
+  }
+
+  private UIFormStringInput initEnableHeaderSubjectField() {
+    UIFormStringInput headerSubject = new UIFormStringInput(FIELD_HEADERSUBJECT_INPUT, FIELD_HEADERSUBJECT_INPUT, null);
+    String headerSubject_ = administration.getHeaderSubject();
+    if (ForumUtils.isEmpty(headerSubject_))
+      headerSubject_ = this.getLabel("notifyEmailHeaderSubjectDefault");
+    headerSubject.setValue(headerSubject_);
+    return headerSubject;
+  }
+
+  private UIFormCheckBoxInput<Boolean> initEnableHeaderField() {
+    UIFormCheckBoxInput<Boolean> enableHeaderSubject = new UIFormCheckBoxInput<Boolean>(FIELD_ENABLEHEADERSUBJECT_CHECKBOX, FIELD_ENABLEHEADERSUBJECT_CHECKBOX, false);
+    enableHeaderSubject.setChecked(administration.getEnableHeaderSubject());
+    return enableHeaderSubject;
+  }
+
+  @SuppressWarnings("unused")
+  private boolean tabIsSelected(int tabId) {
+    if (this.tabId == tabId)
+      return true;
+    else
+      return false;
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  static public class SaveActionListener extends BaseEventListener<UINotificationForm> {
+    public void onEvent(Event<UINotificationForm> event, UINotificationForm uiForm, String objId) throws Exception {
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      UIFormInputWithActions notifyEmailAddNewTab = getChildById(FIELD_NOTIFYEMAIL_ADDNEW_TAB);
+      UIFormInputWithActions notifyEmailMoveTab = getChildById(FIELD_NOTIFYEMAIL_MOVE_TAB);
+      boolean enableHeaderSubject = (Boolean) notifyEmailAddNewTab.getUIFormCheckBoxInput(FIELD_ENABLEHEADERSUBJECT_CHECKBOX).getValue();
+      String headerSubject = notifyEmailAddNewTab.getUIStringInput(FIELD_HEADERSUBJECT_INPUT).getValue();
+      String notifyEmail = notifyEmailAddNewTab.getChild(UIFormWYSIWYGInput.class).getValue();
+
+      String notifyEmailMoved = notifyEmailMoveTab.getChild(UIFormWYSIWYGInput.class).getValue();
+      if (notifyEmail == null || notifyEmail.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1) {
+        warning("UINotificationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAIL_TEXTAREA));
+        return;
+      }
+      if (notifyEmailMoved == null || notifyEmailMoved.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1) {
+        warning("UINotificationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA));
+        return;
+      }
+      uiForm.administration.setEnableHeaderSubject(enableHeaderSubject);
+      uiForm.administration.setHeaderSubject(headerSubject);
+      uiForm.administration.setNotifyEmailContent(notifyEmail);
+      uiForm.administration.setNotifyEmailMoved(notifyEmailMoved);
+      try {
+        uiForm.getForumService().saveForumAdministration(uiForm.administration);
+      } catch (Exception e) {
+        uiForm.log.error("failed to save forum administration", e);
+      }
+      forumPortlet.cancelAction();
+    }
+
+  }
+
+  static public class SelectTabActionListener extends BaseEventListener<UINotificationForm> {
+    public void onEvent(Event<UINotificationForm> event, UINotificationForm uiForm, String id) throws Exception {
+      uiForm.tabId = Integer.parseInt(id);
+      refresh();
+    }
+  }
+
+  static public class GetDefaultMailActionListener extends BaseEventListener<UINotificationForm> {
+    public void onEvent(Event<UINotificationForm> event, UINotificationForm uiForm, String objectId) throws Exception {
+      if (objectId.equals(FIELD_NOTIFYEMAIL_TEXTAREA)) {
+        ((UIFormInputWithActions) getChildById(FIELD_NOTIFYEMAIL_ADDNEW_TAB)).getChild(UIFormWYSIWYGInput.class).setValue(getLabel("notifyEmailContentDefault"));
+      } else {
+        ((UIFormInputWithActions) getChildById(FIELD_NOTIFYEMAIL_MOVE_TAB)).getChild(UIFormWYSIWYGInput.class).setValue(getLabel("EmailToAuthorMoved"));
+      }
+      refresh();
+    }
+  }
+
+  static public class CloseActionListener extends BaseEventListener<UINotificationForm> {
+    public void onEvent(Event<UINotificationForm> event, UINotificationForm uiForm, String objId) throws Exception {
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+    }
+  }
 }

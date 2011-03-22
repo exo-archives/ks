@@ -54,109 +54,126 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		}
 )
 public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
-	private static final String TITLE = "title"; 
-	private static final String DESTINATION = "destination"; 
-	private List<Topic> listTopic ;
-	private String link;
-	public UIMergeTopicForm() throws Exception {
-	}
-	
-	private void intAddChild() throws Exception {
-		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
-		if(this.listTopic != null && this.listTopic.size() > 0) {
-			for (Topic topic : this.listTopic) {
-				list.add(new SelectItemOption<String>(topic.getTopicName(), topic.getId()));
-			}
-		}
-		UIFormSelectBox destination = new UIFormSelectBox(DESTINATION, DESTINATION, list) ;
-		UIFormStringInput titleThread = new UIFormStringInput(TITLE,TITLE, null) ;
-		if(this.listTopic != null && this.listTopic.size() > 0) {
-			destination.setValue(this.listTopic.get(0).getId()) ;
-			titleThread.setValue(this.listTopic.get(0).getTopicName());
-		}
-		addUIFormInput(destination) ;
-		addUIFormInput(titleThread) ;
-	}
+  private static final String TITLE       = "title";
 
-	public String getLink() {return link;}
-	public void setLink(String link) {this.link = link;}
-	
-	public void updateTopics(List<Topic> topics) {
-		this.listTopic = topics ;
-	}
-	
-	public void activate() throws Exception {
-		intAddChild() ;
-	}
-	public void deActivate() throws Exception {}
-	
-	static	public class SaveActionListener extends EventListener<UIMergeTopicForm> {
-		public void execute(Event<UIMergeTopicForm> event) throws Exception {
-			UIMergeTopicForm uiForm = event.getSource() ;
-			String topicMergeId = uiForm.getUIFormSelectBox(DESTINATION).getValue() ;
-			String topicMergeTitle = uiForm.getUIStringInput(TITLE).getValue() ;
-			topicMergeTitle = ForumTransformHTML.enCodeHTML(topicMergeTitle).trim() ;
-			if(!ForumUtils.isEmpty(topicMergeTitle)) {
-				Topic topicMerge = new Topic() ;
-				for(Topic topic : uiForm.listTopic) {
-					if(topicMergeId.equals(topic.getId())) {topicMerge = topic; break ;}
-				}
-				String destTopicPath = topicMerge.getPath() ;
-				boolean isMerge = true;
-				if(!ForumUtils.isEmpty(destTopicPath)) {
-					String temp[] = destTopicPath.split("/") ;
-					String categoryId = temp[temp.length - 3] ;
-					String forumId = temp[temp.length - 2] ;
-					ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-					String link = uiForm.getLink();
-					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-					ResourceBundle res = context.getApplicationResourceBundle() ;
-					String emailContent = res.getString("UINotificationForm.label.EmailToAuthorMoved");
-					try {
-						for(Topic topic : uiForm.listTopic) {
-							if(topicMergeId.equals(topic.getId())) {continue ;}
-							try {
-								// set link
-								link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");	
-								forumService.mergeTopic(categoryId+"/"+forumId+"/"+topic.getId(), destTopicPath, emailContent, link) ;
-							} catch (Exception e) {
-								isMerge = false;
-								break;
-							}
-						}
-						if(isMerge){
-							topicMerge.setTopicName(topicMergeTitle) ;
-							try {
-								List<Topic>list = new ArrayList<Topic>();
-								list.add(topicMerge) ;
-								forumService.modifyTopic(list, Utils.CHANGE_NAME) ;
-							} catch (Exception e) {
-								uiForm.log.error("Merge topic is fall ", e);
-								isMerge = false;
-							}
-						}
-					}catch (Exception e) {}
-				} else {
-					isMerge = false;
-				}
-				if(!isMerge) {
-					uiForm.warning("UIMergeTopicForm.msg.forum-deleted") ;
-				}
-			} else {
-				uiForm.warning("UIMergeTopicForm.msg.checkEmptyTitle") ;
-				return;
-			}
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
-			forumPortlet.cancelAction() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-		}
-	}
-	
-	static	public class CancelActionListener extends EventListener<UIMergeTopicForm> {
-		public void execute(Event<UIMergeTopicForm> event) throws Exception {
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
-			forumPortlet.cancelAction() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-		}
-	}
+  private static final String DESTINATION = "destination";
+
+  private List<Topic>         listTopic;
+
+  private String              link;
+
+  public UIMergeTopicForm() throws Exception {
+  }
+
+  private void intAddChild() throws Exception {
+    List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
+    if (this.listTopic != null && this.listTopic.size() > 0) {
+      for (Topic topic : this.listTopic) {
+        list.add(new SelectItemOption<String>(topic.getTopicName(), topic.getId()));
+      }
+    }
+    UIFormSelectBox destination = new UIFormSelectBox(DESTINATION, DESTINATION, list);
+    UIFormStringInput titleThread = new UIFormStringInput(TITLE, TITLE, null);
+    if (this.listTopic != null && this.listTopic.size() > 0) {
+      destination.setValue(this.listTopic.get(0).getId());
+      titleThread.setValue(this.listTopic.get(0).getTopicName());
+    }
+    addUIFormInput(destination);
+    addUIFormInput(titleThread);
+  }
+
+  public String getLink() {
+    return link;
+  }
+
+  public void setLink(String link) {
+    this.link = link;
+  }
+
+  public void updateTopics(List<Topic> topics) {
+    this.listTopic = topics;
+  }
+
+  public void activate() throws Exception {
+    intAddChild();
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  static public class SaveActionListener extends EventListener<UIMergeTopicForm> {
+    public void execute(Event<UIMergeTopicForm> event) throws Exception {
+      UIMergeTopicForm uiForm = event.getSource();
+      String topicMergeId = uiForm.getUIFormSelectBox(DESTINATION).getValue();
+      String topicMergeTitle = uiForm.getUIStringInput(TITLE).getValue();
+      topicMergeTitle = ForumTransformHTML.enCodeHTML(topicMergeTitle).trim();
+      if (!ForumUtils.isEmpty(topicMergeTitle)) {
+        Topic topicMerge = new Topic();
+        for (Topic topic : uiForm.listTopic) {
+          if (topicMergeId.equals(topic.getId())) {
+            topicMerge = topic;
+            break;
+          }
+        }
+        String destTopicPath = topicMerge.getPath();
+        boolean isMerge = true;
+        if (!ForumUtils.isEmpty(destTopicPath)) {
+          String temp[] = destTopicPath.split("/");
+          String categoryId = temp[temp.length - 3];
+          String forumId = temp[temp.length - 2];
+          ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+          String link = uiForm.getLink();
+          WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+          ResourceBundle res = context.getApplicationResourceBundle();
+          String emailContent = res.getString("UINotificationForm.label.EmailToAuthorMoved");
+          try {
+            for (Topic topic : uiForm.listTopic) {
+              if (topicMergeId.equals(topic.getId())) {
+                continue;
+              }
+              try {
+                // set link
+                link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");
+                forumService.mergeTopic(categoryId + "/" + forumId + "/" + topic.getId(), destTopicPath, emailContent, link);
+              } catch (Exception e) {
+                isMerge = false;
+                break;
+              }
+            }
+            if (isMerge) {
+              topicMerge.setTopicName(topicMergeTitle);
+              try {
+                List<Topic> list = new ArrayList<Topic>();
+                list.add(topicMerge);
+                forumService.modifyTopic(list, Utils.CHANGE_NAME);
+              } catch (Exception e) {
+                uiForm.log.error("Merge topic is fall ", e);
+                isMerge = false;
+              }
+            }
+          } catch (Exception e) {
+          }
+        } else {
+          isMerge = false;
+        }
+        if (!isMerge) {
+          uiForm.warning("UIMergeTopicForm.msg.forum-deleted");
+        }
+      } else {
+        uiForm.warning("UIMergeTopicForm.msg.checkEmptyTitle");
+        return;
+      }
+      UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+    }
+  }
+
+  static public class CancelActionListener extends EventListener<UIMergeTopicForm> {
+    public void execute(Event<UIMergeTopicForm> event) throws Exception {
+      UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+    }
+  }
 }

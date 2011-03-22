@@ -42,31 +42,31 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIForumRulePortlet.ForumRuleEventActionListener.class)
 		}
 )
-
 public class UIForumRulePortlet extends UIPortletApplication {
-	private boolean isRenderChild = false;
-	public UIForumRulePortlet() throws Exception {
-		addChild(UIPostRules.class, null, null).setRendered(isRenderChild);
-	}
-	
-	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {		
-		super.processRender(app, context) ;
-	}	
-	
-	static public class ForumRuleEventActionListener extends EventListener<UIForumRulePortlet> {
-		public void execute(Event<UIForumRulePortlet> event) throws Exception {
-			UIForumRulePortlet forumRulePortlet = event.getSource();
-			ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-			forumRulePortlet.isRenderChild = params.isRenderRule();
-			UIPostRules postRules = forumRulePortlet.getChild(UIPostRules.class);
-			List<String> infoRules = params.getInfoRules();
-			postRules.setCanCreateNewThread(Boolean.parseBoolean(infoRules.get(1)));
-			postRules.setCanAddPost(Boolean.parseBoolean(infoRules.get(2)));
-			if(!ForumUtils.isEmpty(infoRules.get(0))) {
-				postRules.setLock(Boolean.parseBoolean(infoRules.get(0)));
-			}
-			postRules.setRendered(forumRulePortlet.isRenderChild);
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumRulePortlet);
-		}
-	}
-} 
+  private boolean isRenderChild = false;
+
+  public UIForumRulePortlet() throws Exception {
+    addChild(UIPostRules.class, null, null).setRendered(isRenderChild);
+  }
+
+  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
+    super.processRender(app, context);
+  }
+
+  static public class ForumRuleEventActionListener extends EventListener<UIForumRulePortlet> {
+    public void execute(Event<UIForumRulePortlet> event) throws Exception {
+      UIForumRulePortlet forumRulePortlet = event.getSource();
+      ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
+      forumRulePortlet.isRenderChild = params.isRenderRule();
+      UIPostRules postRules = forumRulePortlet.getChild(UIPostRules.class);
+      List<String> infoRules = params.getInfoRules();
+      postRules.setCanCreateNewThread(Boolean.parseBoolean(infoRules.get(1)));
+      postRules.setCanAddPost(Boolean.parseBoolean(infoRules.get(2)));
+      if (!ForumUtils.isEmpty(infoRules.get(0))) {
+        postRules.setLock(Boolean.parseBoolean(infoRules.get(0)));
+      }
+      postRules.setRendered(forumRulePortlet.isRenderChild);
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumRulePortlet);
+    }
+  }
+}

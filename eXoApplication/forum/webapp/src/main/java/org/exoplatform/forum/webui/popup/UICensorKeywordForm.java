@@ -44,45 +44,50 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UICensorKeywordForm.CloseActionListener.class, phase = Phase.DECODE)
 		}
 )
-public class UICensorKeywordForm extends BaseForumForm implements UIPopupComponent{
-	public static final String FIELD_CENSOREDKEYWORD_TEXTAREA = "censorKeyword" ;
-	private ForumAdministration administration ;
-	public UICensorKeywordForm() {
-	}
-	
-	public void setInitForm() throws Exception {
-		administration = getForumService().getForumAdministration();
-		UIFormTextAreaInput censorKeyword = new UIFormTextAreaInput(FIELD_CENSOREDKEYWORD_TEXTAREA, FIELD_CENSOREDKEYWORD_TEXTAREA, null);
-		censorKeyword.setValue(administration.getCensoredKeyword()) ;
-		addUIFormInput(censorKeyword);
-	}
+public class UICensorKeywordForm extends BaseForumForm implements UIPopupComponent {
+  public static final String  FIELD_CENSOREDKEYWORD_TEXTAREA = "censorKeyword";
 
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	static	public class SaveActionListener extends BaseEventListener<UICensorKeywordForm> {
-		public void onEvent(Event<UICensorKeywordForm> event, UICensorKeywordForm uiForm, String objId) throws Exception {
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			String censoredKeyword = uiForm.getUIFormTextAreaInput(FIELD_CENSOREDKEYWORD_TEXTAREA).getValue() ;
-			censoredKeyword = ForumUtils.removeSpaceInString(censoredKeyword);
-			if(!ForumUtils.isEmpty(censoredKeyword)) {
-				censoredKeyword = censoredKeyword.toLowerCase();
-			}
-			uiForm.administration.setCensoredKeyword(censoredKeyword) ;
-			try {
-				uiForm.getForumService().saveForumAdministration(uiForm.administration) ;
-			} catch (Exception e) {
-				uiForm.log.error("failed to save forum administration", e);
-			}
-			forumPortlet.cancelAction() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-		}
-	}
+  private ForumAdministration administration;
 
-	static	public class CloseActionListener extends BaseEventListener<UICensorKeywordForm> {
-		public void onEvent(Event<UICensorKeywordForm> event, UICensorKeywordForm uiForm, String objId) throws Exception {
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-		}
-	}
+  public UICensorKeywordForm() {
+  }
+
+  public void setInitForm() throws Exception {
+    administration = getForumService().getForumAdministration();
+    UIFormTextAreaInput censorKeyword = new UIFormTextAreaInput(FIELD_CENSOREDKEYWORD_TEXTAREA, FIELD_CENSOREDKEYWORD_TEXTAREA, null);
+    censorKeyword.setValue(administration.getCensoredKeyword());
+    addUIFormInput(censorKeyword);
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  static public class SaveActionListener extends BaseEventListener<UICensorKeywordForm> {
+    public void onEvent(Event<UICensorKeywordForm> event, UICensorKeywordForm uiForm, String objId) throws Exception {
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      String censoredKeyword = uiForm.getUIFormTextAreaInput(FIELD_CENSOREDKEYWORD_TEXTAREA).getValue();
+      censoredKeyword = ForumUtils.removeSpaceInString(censoredKeyword);
+      if (!ForumUtils.isEmpty(censoredKeyword)) {
+        censoredKeyword = censoredKeyword.toLowerCase();
+      }
+      uiForm.administration.setCensoredKeyword(censoredKeyword);
+      try {
+        uiForm.getForumService().saveForumAdministration(uiForm.administration);
+      } catch (Exception e) {
+        uiForm.log.error("failed to save forum administration", e);
+      }
+      forumPortlet.cancelAction();
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+    }
+  }
+
+  static public class CloseActionListener extends BaseEventListener<UICensorKeywordForm> {
+    public void onEvent(Event<UICensorKeywordForm> event, UICensorKeywordForm uiForm, String objId) throws Exception {
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+    }
+  }
 }

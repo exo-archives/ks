@@ -55,175 +55,200 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UIForumLinks extends BaseUIForm {
-	private ForumService forumService ;
-	public static final String FIELD_FORUMLINK_SELECTBOX = "forumLink" ;
-	public static final String FIELD_FORUMHOMEPAGE_LABEL = "forumHomePage" ;
-	private String path = Utils.FORUM_SERVICE;
-	private List<ForumLinkData> forumLinks = null;
-	private UserProfile userProfile = new UserProfile();
-	public UIForumLinks() throws Exception {
-		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-	}
-	
-	private String getStrQuery(List<String> list, String property){
-		StringBuffer strQuery = new StringBuffer();
-		int t = 0;
-		for (String string : list) {
-			if(t == 0) strQuery.append("(").append(property).append("='").append(string).append("'");
-			else strQuery.append(" or ").append(property).append("='").append(string).append("'");
-			++t;
-		}
-		if(t > 0) strQuery.append(")");
-		return strQuery.toString();
-	}
-	
-	public void setUpdateForumLinks() throws Exception {
-		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
-		try {
-			this.userProfile = forumPortlet.getUserProfile() ;
-		} catch (Exception e) {
-			String userName = UserHelper.getCurrentUser();
-			if (userName != null) {
-				try {
-					userProfile = forumService.getQuickProfile(userName);
-				} catch (Exception ex) {
-					userProfile = new UserProfile();
-				}
-			}
-		}
-		String strQueryCate = "";
-		String strQueryForum = "";
-		List<String>listUser = UserHelper.getAllGroupAndMembershipOfUser(this.userProfile.getUserId());
-		if(this.userProfile.getUserRole() > 0) {
-			// set Query for Forum 
-			strQueryForum = getStrQuery(listUser, "@exo:moderators") ;
-			if(!ForumUtils.isEmpty(strQueryForum)) strQueryForum = "(@exo:isClosed='false' or "+strQueryForum + ")";
-			else strQueryForum = "@exo:isClosed='false'";
-			
-			// set Query for Category 
-			listUser.add(" ");
-			strQueryCate = getStrQuery(listUser, "@exo:userPrivate");
-		}
-		List<String> listCateIdScope = forumPortlet.getInvisibleCategories();
-		List<String> listForumIdScope = forumPortlet.getInvisibleForums();
-		if(!listForumIdScope.isEmpty() && !listForumIdScope.get(0).equals(" ")) {
-			String s = getStrQuery(listForumIdScope, "fn:name()");
-			if(!ForumUtils.isEmpty(strQueryForum)) strQueryForum = strQueryForum + " and " + s;
-			else strQueryForum = s;
-		}
-		
-		if(!listCateIdScope.isEmpty() && !listCateIdScope.get(0).equals(" ")) {
-			String s = getStrQuery(listCateIdScope, "fn:name()");
-			if(!ForumUtils.isEmpty(strQueryCate)) strQueryCate = strQueryCate + " and " + s;
-			else strQueryCate = s;
-		}
-		
-		if(!ForumUtils.isEmpty(strQueryForum)) strQueryForum = "["+strQueryForum+"]";
-		if(!ForumUtils.isEmpty(strQueryCate)) strQueryCate = "["+strQueryCate+"]";
-		
-		this.forumLinks = forumService.getAllLink(strQueryCate, strQueryForum);
-		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>(this.getLabel(FIELD_FORUMHOMEPAGE_LABEL)+"/" + FIELD_FORUMHOMEPAGE_LABEL, Utils.FORUM_SERVICE)) ;
-		String space = "&nbsp; &nbsp; ",	type = "/categoryLink"; 
-		for(ForumLinkData linkData : forumLinks) {
-			if(linkData.getType().equals(Utils.FORUM)) {
-				type = "/" + FIELD_FORUMLINK_SELECTBOX; 
-				space = "&nbsp; &nbsp; &nbsp; &nbsp; " ;
-			}
-			if(linkData.getType().equals(Utils.CATEGORY)) {
-				type = "/categoryLink"; 
-				space = "&nbsp; &nbsp; " ;
-			}
-			if(linkData.getType().equals(Utils.TOPIC)) continue ;
-			list.add(new SelectItemOption<String>(space + linkData.getName() + type, linkData.getPath())) ;
-		}
-		UIFormSelectBoxForum forumLink ;
-		if(getChild(UIFormSelectBoxForum.class) != null) {
-			forumLink = this.getChild(UIFormSelectBoxForum.class).setOptions(list) ;
-			if(ForumUtils.isEmpty(path)) forumLink.setValue(Utils.FORUM_SERVICE) ;
-			else forumLink.setValue(path.trim()) ;
-		} else {
-			forumLink = new UIFormSelectBoxForum(FIELD_FORUMLINK_SELECTBOX, FIELD_FORUMLINK_SELECTBOX, list) ;
-			if(ForumUtils.isEmpty(path)) forumLink.setValue(Utils.FORUM_SERVICE) ;
-			else forumLink.setValue(path.trim()) ;
-			addUIFormInput(forumLink) ;
-		}
-	}
-	
-	public UIFormSelectBoxForum getUIFormSelectBoxForum(String name) {
-		return	findComponentById(name) ;
-	}
+  private ForumService        forumService;
 
-	public List<ForumLinkData> getForumLinks() throws Exception {
-		return this.forumLinks ;
-	}
-	
-	public void setValueOption(String path) throws Exception {
-		this.path = path ;
-	}
-	
-	static	public class SelectActionListener extends EventListener<UIForumLinks> {
-		public void execute(Event<UIForumLinks> event) throws Exception {
-			UIForumLinks uiForm = event.getSource() ;
-			UIFormSelectBoxForum selectBoxForum = uiForm.getUIFormSelectBoxForum(FIELD_FORUMLINK_SELECTBOX) ;
-			String path = selectBoxForum.getValue();
-			try {
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				boolean isErro = false ;
-				if(!path.equals(uiForm.path)) {
-					if(path.lastIndexOf(Utils.FORUM) > 0) {
-						String id[] = path.trim().split("/");
-						Forum forum = uiForm.forumService.getForum(id[0], id[1]);;
-						if(forum != null){
-							UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
-							forumContainer.getChild(UIForumDescription.class).setForum(forum);
-							forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true, 0) ;
-							forumContainer.setIsRenderChild(true) ;
-							forumPortlet.updateIsRendered(ForumUtils.FORUM);
-						} else isErro = true ;
-					} else if(path.indexOf(Utils.CATEGORY) >= 0) {
-						Category category = uiForm.forumService.getCategory(path.trim()) ;
-						if(category != null){
-							UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-							categoryContainer.getChild(UICategory.class).update(category, null) ;
-							categoryContainer.updateIsRender(false) ;
-							forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-						} else isErro = true ;
-					}
-					if(isErro) {
-						uiForm.warning("UIShowBookMarkForm.msg.link-not-found") ;
-						path = Utils.FORUM_SERVICE ;
-					}
-					if(path.indexOf(Utils.FORUM_SERVICE) >= 0) {
-						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-						categoryContainer.updateIsRender(true) ;
-						categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-					}
-					uiForm.path = path ;
-					forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(path.trim());
-					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-				}
-			} catch (Exception e) {
-				try {
-					if(!path.equals(uiForm.path)) {
-						uiForm.path = path ;
-						UIForumLinkPortlet linkPortlet = uiForm.getParent();
-						if(path.equals(Utils.FORUM_SERVICE)){
-							linkPortlet.setRenderChild(false);
-						} else {
-							linkPortlet.setRenderChild(true);
-						}
-						ActionResponse actionRes = event.getRequestContext().getResponse() ;
-						ForumParameter param = new ForumParameter() ;
-						param.setPath(path);
-						actionRes.setEvent(new QName("OpenLink"), param) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(linkPortlet);
-					}
-				} catch (Exception ex) {
-					uiForm.log.error("Rendering " + uiForm.getParent() + " uicomponent fail: " +ex.getMessage() + "\n" + ex.getCause());
-				}
-			}
-		}
-	}
+  public static final String  FIELD_FORUMLINK_SELECTBOX = "forumLink";
+
+  public static final String  FIELD_FORUMHOMEPAGE_LABEL = "forumHomePage";
+
+  private String              path                      = Utils.FORUM_SERVICE;
+
+  private List<ForumLinkData> forumLinks                = null;
+
+  private UserProfile         userProfile               = new UserProfile();
+
+  public UIForumLinks() throws Exception {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+  }
+
+  private String getStrQuery(List<String> list, String property) {
+    StringBuffer strQuery = new StringBuffer();
+    int t = 0;
+    for (String string : list) {
+      if (t == 0)
+        strQuery.append("(").append(property).append("='").append(string).append("'");
+      else
+        strQuery.append(" or ").append(property).append("='").append(string).append("'");
+      ++t;
+    }
+    if (t > 0)
+      strQuery.append(")");
+    return strQuery.toString();
+  }
+
+  public void setUpdateForumLinks() throws Exception {
+    UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+    try {
+      this.userProfile = forumPortlet.getUserProfile();
+    } catch (Exception e) {
+      String userName = UserHelper.getCurrentUser();
+      if (userName != null) {
+        try {
+          userProfile = forumService.getQuickProfile(userName);
+        } catch (Exception ex) {
+          userProfile = new UserProfile();
+        }
+      }
+    }
+    String strQueryCate = "";
+    String strQueryForum = "";
+    List<String> listUser = UserHelper.getAllGroupAndMembershipOfUser(this.userProfile.getUserId());
+    if (this.userProfile.getUserRole() > 0) {
+      // set Query for Forum
+      strQueryForum = getStrQuery(listUser, "@exo:moderators");
+      if (!ForumUtils.isEmpty(strQueryForum))
+        strQueryForum = "(@exo:isClosed='false' or " + strQueryForum + ")";
+      else
+        strQueryForum = "@exo:isClosed='false'";
+
+      // set Query for Category
+      listUser.add(" ");
+      strQueryCate = getStrQuery(listUser, "@exo:userPrivate");
+    }
+    List<String> listCateIdScope = forumPortlet.getInvisibleCategories();
+    List<String> listForumIdScope = forumPortlet.getInvisibleForums();
+    if (!listForumIdScope.isEmpty() && !listForumIdScope.get(0).equals(" ")) {
+      String s = getStrQuery(listForumIdScope, "fn:name()");
+      if (!ForumUtils.isEmpty(strQueryForum))
+        strQueryForum = strQueryForum + " and " + s;
+      else
+        strQueryForum = s;
+    }
+
+    if (!listCateIdScope.isEmpty() && !listCateIdScope.get(0).equals(" ")) {
+      String s = getStrQuery(listCateIdScope, "fn:name()");
+      if (!ForumUtils.isEmpty(strQueryCate))
+        strQueryCate = strQueryCate + " and " + s;
+      else
+        strQueryCate = s;
+    }
+
+    if (!ForumUtils.isEmpty(strQueryForum))
+      strQueryForum = "[" + strQueryForum + "]";
+    if (!ForumUtils.isEmpty(strQueryCate))
+      strQueryCate = "[" + strQueryCate + "]";
+
+    this.forumLinks = forumService.getAllLink(strQueryCate, strQueryForum);
+    List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
+    list.add(new SelectItemOption<String>(this.getLabel(FIELD_FORUMHOMEPAGE_LABEL) + "/" + FIELD_FORUMHOMEPAGE_LABEL, Utils.FORUM_SERVICE));
+    String space = "&nbsp; &nbsp; ", type = "/categoryLink";
+    for (ForumLinkData linkData : forumLinks) {
+      if (linkData.getType().equals(Utils.FORUM)) {
+        type = "/" + FIELD_FORUMLINK_SELECTBOX;
+        space = "&nbsp; &nbsp; &nbsp; &nbsp; ";
+      }
+      if (linkData.getType().equals(Utils.CATEGORY)) {
+        type = "/categoryLink";
+        space = "&nbsp; &nbsp; ";
+      }
+      if (linkData.getType().equals(Utils.TOPIC))
+        continue;
+      list.add(new SelectItemOption<String>(space + linkData.getName() + type, linkData.getPath()));
+    }
+    UIFormSelectBoxForum forumLink;
+    if (getChild(UIFormSelectBoxForum.class) != null) {
+      forumLink = this.getChild(UIFormSelectBoxForum.class).setOptions(list);
+      if (ForumUtils.isEmpty(path))
+        forumLink.setValue(Utils.FORUM_SERVICE);
+      else
+        forumLink.setValue(path.trim());
+    } else {
+      forumLink = new UIFormSelectBoxForum(FIELD_FORUMLINK_SELECTBOX, FIELD_FORUMLINK_SELECTBOX, list);
+      if (ForumUtils.isEmpty(path))
+        forumLink.setValue(Utils.FORUM_SERVICE);
+      else
+        forumLink.setValue(path.trim());
+      addUIFormInput(forumLink);
+    }
+  }
+
+  public UIFormSelectBoxForum getUIFormSelectBoxForum(String name) {
+    return findComponentById(name);
+  }
+
+  public List<ForumLinkData> getForumLinks() throws Exception {
+    return this.forumLinks;
+  }
+
+  public void setValueOption(String path) throws Exception {
+    this.path = path;
+  }
+
+  static public class SelectActionListener extends EventListener<UIForumLinks> {
+    public void execute(Event<UIForumLinks> event) throws Exception {
+      UIForumLinks uiForm = event.getSource();
+      UIFormSelectBoxForum selectBoxForum = uiForm.getUIFormSelectBoxForum(FIELD_FORUMLINK_SELECTBOX);
+      String path = selectBoxForum.getValue();
+      try {
+        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+        boolean isErro = false;
+        if (!path.equals(uiForm.path)) {
+          if (path.lastIndexOf(Utils.FORUM) > 0) {
+            String id[] = path.trim().split("/");
+            Forum forum = uiForm.forumService.getForum(id[0], id[1]);
+            ;
+            if (forum != null) {
+              UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
+              forumContainer.getChild(UIForumDescription.class).setForum(forum);
+              forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true, 0);
+              forumContainer.setIsRenderChild(true);
+              forumPortlet.updateIsRendered(ForumUtils.FORUM);
+            } else
+              isErro = true;
+          } else if (path.indexOf(Utils.CATEGORY) >= 0) {
+            Category category = uiForm.forumService.getCategory(path.trim());
+            if (category != null) {
+              UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
+              categoryContainer.getChild(UICategory.class).update(category, null);
+              categoryContainer.updateIsRender(false);
+              forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+            } else
+              isErro = true;
+          }
+          if (isErro) {
+            uiForm.warning("UIShowBookMarkForm.msg.link-not-found");
+            path = Utils.FORUM_SERVICE;
+          }
+          if (path.indexOf(Utils.FORUM_SERVICE) >= 0) {
+            UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
+            categoryContainer.updateIsRender(true);
+            categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
+            forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+          }
+          uiForm.path = path;
+          forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(path.trim());
+          event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+        }
+      } catch (Exception e) {
+        try {
+          if (!path.equals(uiForm.path)) {
+            uiForm.path = path;
+            UIForumLinkPortlet linkPortlet = uiForm.getParent();
+            if (path.equals(Utils.FORUM_SERVICE)) {
+              linkPortlet.setRenderChild(false);
+            } else {
+              linkPortlet.setRenderChild(true);
+            }
+            ActionResponse actionRes = event.getRequestContext().getResponse();
+            ForumParameter param = new ForumParameter();
+            param.setPath(path);
+            actionRes.setEvent(new QName("OpenLink"), param);
+            event.getRequestContext().addUIComponentToUpdateByAjax(linkPortlet);
+          }
+        } catch (Exception ex) {
+          uiForm.log.error("Rendering " + uiForm.getParent() + " uicomponent fail: " + ex.getMessage() + "\n" + ex.getCause());
+        }
+      }
+    }
+  }
 }

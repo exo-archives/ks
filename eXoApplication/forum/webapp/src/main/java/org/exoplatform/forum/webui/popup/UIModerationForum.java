@@ -58,128 +58,142 @@ import org.exoplatform.webui.event.Event.Phase;
 			@EventConfig(listeners = UIModerationForum.CloseActionListener.class, phase=Phase.DECODE)
 		}
 )
-
 @SuppressWarnings("unchecked")
 public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
-	private UserProfile userProfile ;
-	private ForumService forumService;
-	private String[] path = new String[]{};
-	List<ForumSearch> list_;
-	private boolean isShowIter = true;
-	private boolean isReloadPortlet = false;
-	public final String SEARCH_ITERATOR = "moderationIterator";
-	private JCRPageList pageList ;
-	private UIForumPageIterator pageIterator ;
-	public UIModerationForum() throws Exception {
-		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-		pageIterator = addChild(UIForumPageIterator.class, null, SEARCH_ITERATOR);
-		setActions(new String[]{"Close"});
-	}
-	
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	public void setReloadPortlet(boolean isReloadPortlet) {
+  private UserProfile         userProfile;
+
+  private ForumService        forumService;
+
+  private String[]            path            = new String[] {};
+
+  List<ForumSearch>           list_;
+
+  private boolean             isShowIter      = true;
+
+  private boolean             isReloadPortlet = false;
+
+  public final String         SEARCH_ITERATOR = "moderationIterator";
+
+  private JCRPageList         pageList;
+
+  private UIForumPageIterator pageIterator;
+
+  public UIModerationForum() throws Exception {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    pageIterator = addChild(UIForumPageIterator.class, null, SEARCH_ITERATOR);
+    setActions(new String[] { "Close" });
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  public void setReloadPortlet(boolean isReloadPortlet) {
     this.isReloadPortlet = isReloadPortlet;
   }
 
   @SuppressWarnings("unused")
-	private String getTitleInHTMLCode(String s) {
-		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-	}
-	
-	public void setUserProfile(UserProfile userProfile) throws Exception {
-		this.userProfile = userProfile;
-		if(this.userProfile == null) {
-			this.userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
-		}
-	}
-	
-	public String[] getPath() {
-		if(userProfile.getUserRole() <= 1) {
-			if(userProfile.getUserRole() == 1){
-				path = this.userProfile.getModerateForums() ;
-			} else path = new String[]{};
-		}
-		return path;
-	}
-	
-	public void setPath(String[] path) {
-		this.path = path;
-	}
+  private String getTitleInHTMLCode(String s) {
+    return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+  }
 
-	public boolean getIsShowIter() {
-		return isShowIter ;
-	}
-	
+  public void setUserProfile(UserProfile userProfile) throws Exception {
+    this.userProfile = userProfile;
+    if (this.userProfile == null) {
+      this.userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
+    }
+  }
+
+  public String[] getPath() {
+    if (userProfile.getUserRole() <= 1) {
+      if (userProfile.getUserRole() == 1) {
+        path = this.userProfile.getModerateForums();
+      } else
+        path = new String[] {};
+    }
+    return path;
+  }
+
+  public void setPath(String[] path) {
+    this.path = path;
+  }
+
+  public boolean getIsShowIter() {
+    return isShowIter;
+  }
+
   @SuppressWarnings( { "unused" })
-	private List<ForumSearch> getListObject() throws Exception {
-		try {
-			list_ = forumService.getJobWattingForModerator(getPath()) ;
-		} catch (Exception e) {
-			list_ = new ArrayList<ForumSearch>();
-			log.error("list of forum search must not null: ",e);
-		}
-		pageList = new ForumPageList(10, list_.size());
-		pageList.setPageSize(10);
-		pageIterator.updatePageList(pageList);
-		isShowIter = true;
-		if(pageList.getAvailablePage() <= 1) isShowIter = false;
-		int pageSelect = pageIterator.getPageSelected();
-		List<ForumSearch>list = new ArrayList<ForumSearch>();
-		try {
-			list.addAll(pageList.getPageSearch(pageSelect, list_)) ;
-		} catch (Exception e) {
-		}
-		return list ;
-	}
-	
-	private ForumSearch getObject(String id) throws Exception {
-		for (ForumSearch obj : list_) {
-			if(obj.getId().equals(id)) return obj;
-		}
-		return null;
-	}
+  private List<ForumSearch> getListObject() throws Exception {
+    try {
+      list_ = forumService.getJobWattingForModerator(getPath());
+    } catch (Exception e) {
+      list_ = new ArrayList<ForumSearch>();
+      log.error("list of forum search must not null: ", e);
+    }
+    pageList = new ForumPageList(10, list_.size());
+    pageList.setPageSize(10);
+    pageIterator.updatePageList(pageList);
+    isShowIter = true;
+    if (pageList.getAvailablePage() <= 1)
+      isShowIter = false;
+    int pageSelect = pageIterator.getPageSelected();
+    List<ForumSearch> list = new ArrayList<ForumSearch>();
+    try {
+      list.addAll(pageList.getPageSearch(pageSelect, list_));
+    } catch (Exception e) {
+    }
+    return list;
+  }
 
-	static	public class OpenActionListener extends BaseEventListener<UIModerationForum> {
-		public void onEvent(Event<UIModerationForum> event, UIModerationForum moderationForum, final String objectId ) throws Exception {
-			ForumSearch forumSearch = moderationForum.getObject(objectId); 
-			UIPopupContainer popupContainer = moderationForum.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-			if(forumSearch.getType().equals(Utils.TOPIC)) {
-				try {
-					Topic topic = moderationForum.forumService.getTopicByPath(forumSearch.getPath(), false);
-					UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
-					viewTopic.setTopic(topic) ;
-					viewTopic.setActionForm(new String[] {"Approve", "DeleteTopic", "Close"});
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-				} catch (Exception e) {
-					moderationForum.log.warn("Failed to view topic: ", e);
-				}
-			} else {
-				try {
-					Post post = moderationForum.forumService.getPost("", "", "", forumSearch.getPath());
-					UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700) ;
-					viewPost.setPostView(post) ;
-					viewPost.setViewUserInfo(false) ;
-					viewPost.setActionForm(new String[] {"Approve", "DeletePost", "Close", "OpenTopicLink"});
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-				} catch (Exception e) {
-					moderationForum.log.warn("Failed to view post: ", e);
-				}
-			}
-		}
-	}
+  private ForumSearch getObject(String id) throws Exception {
+    for (ForumSearch obj : list_) {
+      if (obj.getId().equals(id))
+        return obj;
+    }
+    return null;
+  }
 
-	static	public class CloseActionListener extends EventListener<UIModerationForum> {
-		public void execute(Event<UIModerationForum> event) throws Exception {
-		  UIModerationForum uiform = event.getSource();
-			UIForumPortlet forumPortlet = uiform.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-			if(uiform.isReloadPortlet) {
-			  uiform.isReloadPortlet = false;
-			  event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-			}
-		}
-	}
+  static public class OpenActionListener extends BaseEventListener<UIModerationForum> {
+    public void onEvent(Event<UIModerationForum> event, UIModerationForum moderationForum, final String objectId) throws Exception {
+      ForumSearch forumSearch = moderationForum.getObject(objectId);
+      UIPopupContainer popupContainer = moderationForum.getAncestorOfType(UIPopupContainer.class);
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+      if (forumSearch.getType().equals(Utils.TOPIC)) {
+        try {
+          Topic topic = moderationForum.forumService.getTopicByPath(forumSearch.getPath(), false);
+          UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700);
+          viewTopic.setTopic(topic);
+          viewTopic.setActionForm(new String[] { "Approve", "DeleteTopic", "Close" });
+          event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+        } catch (Exception e) {
+          moderationForum.log.warn("Failed to view topic: ", e);
+        }
+      } else {
+        try {
+          Post post = moderationForum.forumService.getPost("", "", "", forumSearch.getPath());
+          UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700);
+          viewPost.setPostView(post);
+          viewPost.setViewUserInfo(false);
+          viewPost.setActionForm(new String[] { "Approve", "DeletePost", "Close", "OpenTopicLink" });
+          event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+        } catch (Exception e) {
+          moderationForum.log.warn("Failed to view post: ", e);
+        }
+      }
+    }
+  }
+
+  static public class CloseActionListener extends EventListener<UIModerationForum> {
+    public void execute(Event<UIModerationForum> event) throws Exception {
+      UIModerationForum uiform = event.getSource();
+      UIForumPortlet forumPortlet = uiform.getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+      if (uiform.isReloadPortlet) {
+        uiform.isReloadPortlet = false;
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+      }
+    }
+  }
 }

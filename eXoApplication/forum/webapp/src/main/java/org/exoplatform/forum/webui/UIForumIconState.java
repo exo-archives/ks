@@ -37,24 +37,25 @@ import org.exoplatform.webui.event.EventListener;
 			@EventConfig(listeners = UIForumIconState.IconStateParamActionListener.class)			
 		}	
 )
-public class UIForumIconState extends UIContainer	{
-	private boolean isForumIcon = true ;
-	public UIForumIconState() throws Exception {		
-	}
-	
-	public void updateInfor(boolean isIconForum) {
-		this.isForumIcon = isIconForum ;
-	}
-	
-	public boolean getIsIconForum() {
-		return this.isForumIcon ;
-	}
-	
-	static	public class IconStateParamActionListener extends EventListener<UIForumIconState> {
-		public void execute(Event<UIForumIconState> event) throws Exception {
-			UIForumIconState forumIconState = event.getSource();
-			ForumParameter params = (ForumParameter)event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-			forumIconState.isForumIcon = params.isForumIcon() ; 
-		}
-	}	
+public class UIForumIconState extends UIContainer {
+  private boolean isForumIcon = true;
+
+  public UIForumIconState() throws Exception {
+  }
+
+  public void updateInfor(boolean isIconForum) {
+    this.isForumIcon = isIconForum;
+  }
+
+  public boolean getIsIconForum() {
+    return this.isForumIcon;
+  }
+
+  static public class IconStateParamActionListener extends EventListener<UIForumIconState> {
+    public void execute(Event<UIForumIconState> event) throws Exception {
+      UIForumIconState forumIconState = event.getSource();
+      ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
+      forumIconState.isForumIcon = params.isForumIcon();
+    }
+  }
 }

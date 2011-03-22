@@ -33,15 +33,14 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 	 lifecycle = UIApplicationLifecycle.class,
 	 template = "app:/templates/forum/webui/info/UIForumIconStatePortlet.gtmpl"
 )
-
 public class UIForumIconStatePortlet extends UIPortletApplication {
-	public UIForumIconStatePortlet() throws Exception {
-		addChild(UIForumIconState.class, null, null) ;
-	}
-	
-	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {		
-	 
-		super.processRender(app, context) ;
-	}	
-	
-} 
+  public UIForumIconStatePortlet() throws Exception {
+    addChild(UIForumIconState.class, null, null);
+  }
+
+  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
+
+    super.processRender(app, context);
+  }
+
+}

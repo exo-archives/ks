@@ -41,34 +41,34 @@ import org.exoplatform.webui.event.EventListener;
 		 	@EventConfig(listeners = UIForumLinkPortlet.ForumLinkEventActionListener.class)
 	 }
 )
-	
 public class UIForumLinkPortlet extends UIPortletApplication {
-	private boolean isRenderChild = false;
-	public UIForumLinkPortlet() throws Exception {
-		addChild(UIForumLinks.class, null, null).setRendered(isRenderChild);
-	}
-	
-	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {		
-		super.processRender(app, context) ;
-	}	
-	
-	public boolean isRenderChild() {
-		return isRenderChild;
-	}
-	
-	public void setRenderChild(boolean isRenderChild) {
-		this.isRenderChild = isRenderChild;
-	}
-	
-	static public class ForumLinkEventActionListener extends EventListener<UIForumLinkPortlet> {
-		public void execute(Event<UIForumLinkPortlet> event) throws Exception {
-			UIForumLinkPortlet forumLinkPortlet = event.getSource();
-			ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-			forumLinkPortlet.isRenderChild = params.isRenderForumLink();
-			UIForumLinks forumLink = forumLinkPortlet.getChild(UIForumLinks.class);
-			forumLink.setValueOption(params.getPath());
-			forumLink.setRendered(forumLinkPortlet.isRenderChild);
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumLinkPortlet);
-		}
-	}
-} 
+  private boolean isRenderChild = false;
+
+  public UIForumLinkPortlet() throws Exception {
+    addChild(UIForumLinks.class, null, null).setRendered(isRenderChild);
+  }
+
+  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
+    super.processRender(app, context);
+  }
+
+  public boolean isRenderChild() {
+    return isRenderChild;
+  }
+
+  public void setRenderChild(boolean isRenderChild) {
+    this.isRenderChild = isRenderChild;
+  }
+
+  static public class ForumLinkEventActionListener extends EventListener<UIForumLinkPortlet> {
+    public void execute(Event<UIForumLinkPortlet> event) throws Exception {
+      UIForumLinkPortlet forumLinkPortlet = event.getSource();
+      ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
+      forumLinkPortlet.isRenderChild = params.isRenderForumLink();
+      UIForumLinks forumLink = forumLinkPortlet.getChild(UIForumLinks.class);
+      forumLink.setValueOption(params.getPath());
+      forumLink.setRendered(forumLinkPortlet.isRenderChild);
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumLinkPortlet);
+    }
+  }
+}

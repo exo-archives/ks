@@ -70,238 +70,258 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIViewTopic extends UIForm implements UIPopupComponent {
-	public static final String SIGNATURE = "SignatureTypeID" ;
-	private ForumService forumService ;
-	private Topic topic ;
-	private JCRPageList pageList ;
-	private UserProfile userProfile ;
-	private int pageSelect ;
-	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
-	RenderHelper renderHelper = new RenderHelper();
-	
-	private static Log log = ExoLogger.getLogger(UIViewTopic.class);
-	public UIViewTopic() throws Exception {
-		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-		addChild(UIForumPageIterator.class, null, "ViewTopicPageIterator") ;
-	}
-	public void activate() throws Exception {	}
-	public void deActivate() throws Exception {}
-	
-	public Topic getTopic() { return topic;}
-	public void setTopic(Topic topic) {
-		this.topic = topic;
-	}
+  public static final String       SIGNATURE      = "SignatureTypeID";
 
-	@SuppressWarnings("unused")
-	private UserProfile getUserProfile() throws Exception {
-		return this.userProfile ;
-	}
-	
-	public void setActionForm(String[] actions) {
-		this.setActions(actions);
-	}
-	
-	public String renderPost(Post post) throws RenderingException {
-		if(SIGNATURE.equals(post.getId())){
-			post.setMessage(ForumTransformHTML.enCodeViewSignature(post.getMessage()));
-		}
-		return renderHelper.renderPost(post);
-	}
-	
-	@SuppressWarnings("unused")
-	private void initPage() throws Exception {
-		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-		String userLogin = this.userProfile.getUserId();
-		Topic topic = this.topic ;
-		String id[] = topic.getPath().split("/");
-		int l = id.length ;
-		pageList = forumService.getPosts(id[l-3], id[l-2], topic.getId(), "", "", "", userLogin)	; 
-		long maxPost = this.userProfile.getMaxPostInPage() ;
-		if(maxPost <= 0) maxPost = 10 ;
-		pageList.setPageSize((int)maxPost) ;
-		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
-		forumPageIterator.updatePageList(pageList) ;
-		
-	}
-	
-	private void updateUserProfiles(List<Post> posts) throws Exception {
-		List<String> userNames = new ArrayList<String>() ;
-		for(Post post : posts) {
-			if(!userNames.contains(post.getOwner())) {
-				userNames.add(post.getOwner()) ;
-			}
-		}
-		if(userNames.size() > 0) {
-			try{
-				List<UserProfile> profiles = forumService.getQuickProfiles(userNames) ;
-				for(UserProfile profile : profiles) {
-					mapUserProfile.put(profile.getUserId(), profile) ;
-				}
-			}catch(Exception e) {
-				log.warn("Failed load user info: "+ e.getMessage(), e);
-			}
-		}
-	}
-	
-	@SuppressWarnings({ "unused", "unchecked" })
-	private List<Post> getPostPageList() throws Exception {
-		if(this.pageList == null) return null ;
-		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
-		this.pageSelect = forumPageIterator.getPageSelected() ;
-		int availablePage = this.pageList.getAvailablePage() ;
-		if(this.pageSelect > availablePage) {
-			this.pageSelect = availablePage ;
-			forumPageIterator.setSelectPage(availablePage);
-		}
-		List<Post> posts = pageList.getPage(pageSelect);
-		if(posts == null) posts = new ArrayList<Post>();
-		updateUserProfiles(posts) ;
-		return posts ;
-	}
-	
-	@SuppressWarnings("unused")
-	private boolean getIsRenderIter() {
-		long availablePage = this.pageList.getAvailablePage() ;
-		if(availablePage > 1) return true;
-		return false ;
-	}
-	
-	@SuppressWarnings("unused")
-	private UserProfile getUserInfo(String userName) throws Exception {
-		UserProfile profile = mapUserProfile.get(userName);
-		if(profile == null ){
-			profile = new UserProfile();
-			profile.setUserId(userName);
-			profile.setUserTitle("User");
-			profile.setUserRole((long)2);
-		}
-		return profile;
-	}
-	
-	@SuppressWarnings("unused")
-	private CommonContact getPersonalContact(String userId) throws Exception {
-		CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
-		if(contact == null) {
-			contact = new CommonContact() ;
-		}
-		return contact ;
-	}
-	
-	public String getImageUrl(String imagePath) throws Exception {
-		String url = "";
-		try {
-			url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
-		} catch (Exception e) {
-			log.warn(imagePath + " must exist: " +e.getCause());
-		}
-		return url ;
-	}
-	
-	@SuppressWarnings("unused")
-	private String getFileSource(ForumAttachment attachment) throws Exception {
-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		try {
-			InputStream input = attachment.getInputStream() ;
-			String fileName = attachment.getName() ;
-			return ForumSessionUtils.getFileSource(input, fileName, dservice);
-		} catch (PathNotFoundException e) {
-			return null;
-		}
-	}
-	
-	@SuppressWarnings("unused")
-	private String getScreenName(String screenName) throws Exception {
-		if(screenName != null && screenName.length() > 17 && !screenName.trim().contains(" ")){
-			boolean isDelted = false;
-			if(screenName.indexOf("<s>") >= 0) {
-				screenName = screenName.replaceAll("<s>", "").replaceAll("</s>", "");
-				isDelted = true;
-			}
-			screenName = "<span title=\""+screenName+"\">"+((isDelted)?"<s>":"")+ForumUtils.getSubString(screenName, 15)+((isDelted)?"</s></span>":"</span>"); 
-		}
-		return screenName ;
-	}
-	 
-	@SuppressWarnings("unused")
-	private String getAvatarUrl(String userId) throws Exception {
-		return ForumSessionUtils.getUserAvatarURL(userId, forumService);
-	}
-	
-	@SuppressWarnings("unused")
-	private boolean isOnline(String userId) throws Exception {
-		return this.forumService.isOnline(userId) ;
-	}
-	static	public class ApproveActionListener extends EventListener<UIViewTopic> {
-		public void execute(Event<UIViewTopic> event) throws Exception {
-			UIViewTopic uiForm = event.getSource() ;
-			Topic topic = uiForm.topic;
-			topic.setIsApproved(true);
-			topic.setIsWaiting(false);
-			List<Topic> topics = new ArrayList<Topic>();
-			topics.add(topic);
-			try{
-				uiForm.forumService.modifyTopic(topics, Utils.APPROVE);
-				uiForm.forumService.modifyTopic(topics, Utils.WAITING);
-			}catch(Exception e) {
-				uiForm.log.debug("\nModify topic fail: " + e.getMessage() + "\n" + e.getCause());
-			}
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			if(popupContainer != null) {
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-				popupAction.deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-				UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
-				if(moderationForum != null) {
-				  moderationForum.setReloadPortlet(true);
-				  event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum) ;
-				}
-			} else {
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.cancelAction() ;
-			}
-		}
-	}
-	
-	static	public class DeleteTopicActionListener extends EventListener<UIViewTopic> {
-		public void execute(Event<UIViewTopic> event) throws Exception {
-			UIViewTopic uiForm = event.getSource() ;
-			Topic topic = uiForm.topic;
-			try {
-				String []path = topic.getPath().split("/");
-				int l = path.length ;
-				uiForm.forumService.removeTopic(path[l-3], path[l-2], topic.getId());
-			} catch (Exception e) {
-				uiForm.log.debug("Removing " + topic.getId() + " topic fail: " + e.getCause());
-			}
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			if(popupContainer != null) {
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-				popupAction.deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-				UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
-        if(moderationForum != null) {
-          event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum) ;
+  private ForumService             forumService;
+
+  private Topic                    topic;
+
+  private JCRPageList              pageList;
+
+  private UserProfile              userProfile;
+
+  private int                      pageSelect;
+
+  private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
+
+  RenderHelper                     renderHelper   = new RenderHelper();
+
+  private static Log               log            = ExoLogger.getLogger(UIViewTopic.class);
+
+  public UIViewTopic() throws Exception {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    addChild(UIForumPageIterator.class, null, "ViewTopicPageIterator");
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  public Topic getTopic() {
+    return topic;
+  }
+
+  public void setTopic(Topic topic) {
+    this.topic = topic;
+  }
+
+  @SuppressWarnings("unused")
+  private UserProfile getUserProfile() throws Exception {
+    return this.userProfile;
+  }
+
+  public void setActionForm(String[] actions) {
+    this.setActions(actions);
+  }
+
+  public String renderPost(Post post) throws RenderingException {
+    if (SIGNATURE.equals(post.getId())) {
+      post.setMessage(ForumTransformHTML.enCodeViewSignature(post.getMessage()));
+    }
+    return renderHelper.renderPost(post);
+  }
+
+  @SuppressWarnings("unused")
+  private void initPage() throws Exception {
+    this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+    String userLogin = this.userProfile.getUserId();
+    Topic topic = this.topic;
+    String id[] = topic.getPath().split("/");
+    int l = id.length;
+    pageList = forumService.getPosts(id[l - 3], id[l - 2], topic.getId(), "", "", "", userLogin);
+    long maxPost = this.userProfile.getMaxPostInPage();
+    if (maxPost <= 0)
+      maxPost = 10;
+    pageList.setPageSize((int) maxPost);
+    UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
+    forumPageIterator.updatePageList(pageList);
+
+  }
+
+  private void updateUserProfiles(List<Post> posts) throws Exception {
+    List<String> userNames = new ArrayList<String>();
+    for (Post post : posts) {
+      if (!userNames.contains(post.getOwner())) {
+        userNames.add(post.getOwner());
+      }
+    }
+    if (userNames.size() > 0) {
+      try {
+        List<UserProfile> profiles = forumService.getQuickProfiles(userNames);
+        for (UserProfile profile : profiles) {
+          mapUserProfile.put(profile.getUserId(), profile);
+        }
+      } catch (Exception e) {
+        log.warn("Failed load user info: " + e.getMessage(), e);
+      }
+    }
+  }
+
+  @SuppressWarnings( { "unused", "unchecked" })
+  private List<Post> getPostPageList() throws Exception {
+    if (this.pageList == null)
+      return null;
+    UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
+    this.pageSelect = forumPageIterator.getPageSelected();
+    int availablePage = this.pageList.getAvailablePage();
+    if (this.pageSelect > availablePage) {
+      this.pageSelect = availablePage;
+      forumPageIterator.setSelectPage(availablePage);
+    }
+    List<Post> posts = pageList.getPage(pageSelect);
+    if (posts == null)
+      posts = new ArrayList<Post>();
+    updateUserProfiles(posts);
+    return posts;
+  }
+
+  @SuppressWarnings("unused")
+  private boolean getIsRenderIter() {
+    long availablePage = this.pageList.getAvailablePage();
+    if (availablePage > 1)
+      return true;
+    return false;
+  }
+
+  @SuppressWarnings("unused")
+  private UserProfile getUserInfo(String userName) throws Exception {
+    UserProfile profile = mapUserProfile.get(userName);
+    if (profile == null) {
+      profile = new UserProfile();
+      profile.setUserId(userName);
+      profile.setUserTitle("User");
+      profile.setUserRole((long) 2);
+    }
+    return profile;
+  }
+
+  @SuppressWarnings("unused")
+  private CommonContact getPersonalContact(String userId) throws Exception {
+    CommonContact contact = ForumSessionUtils.getPersonalContact(userId);
+    if (contact == null) {
+      contact = new CommonContact();
+    }
+    return contact;
+  }
+
+  public String getImageUrl(String imagePath) throws Exception {
+    String url = "";
+    try {
+      url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
+    } catch (Exception e) {
+      log.warn(imagePath + " must exist: " + e.getCause());
+    }
+    return url;
+  }
+
+  @SuppressWarnings("unused")
+  private String getFileSource(ForumAttachment attachment) throws Exception {
+    DownloadService dservice = getApplicationComponent(DownloadService.class);
+    try {
+      InputStream input = attachment.getInputStream();
+      String fileName = attachment.getName();
+      return ForumSessionUtils.getFileSource(input, fileName, dservice);
+    } catch (PathNotFoundException e) {
+      return null;
+    }
+  }
+
+  @SuppressWarnings("unused")
+  private String getScreenName(String screenName) throws Exception {
+    if (screenName != null && screenName.length() > 17 && !screenName.trim().contains(" ")) {
+      boolean isDelted = false;
+      if (screenName.indexOf("<s>") >= 0) {
+        screenName = screenName.replaceAll("<s>", "").replaceAll("</s>", "");
+        isDelted = true;
+      }
+      screenName = "<span title=\"" + screenName + "\">" + ((isDelted) ? "<s>" : "") + ForumUtils.getSubString(screenName, 15) + ((isDelted) ? "</s></span>" : "</span>");
+    }
+    return screenName;
+  }
+
+  @SuppressWarnings("unused")
+  private String getAvatarUrl(String userId) throws Exception {
+    return ForumSessionUtils.getUserAvatarURL(userId, forumService);
+  }
+
+  @SuppressWarnings("unused")
+  private boolean isOnline(String userId) throws Exception {
+    return this.forumService.isOnline(userId);
+  }
+
+  static public class ApproveActionListener extends EventListener<UIViewTopic> {
+    public void execute(Event<UIViewTopic> event) throws Exception {
+      UIViewTopic uiForm = event.getSource();
+      Topic topic = uiForm.topic;
+      topic.setIsApproved(true);
+      topic.setIsWaiting(false);
+      List<Topic> topics = new ArrayList<Topic>();
+      topics.add(topic);
+      try {
+        uiForm.forumService.modifyTopic(topics, Utils.APPROVE);
+        uiForm.forumService.modifyTopic(topics, Utils.WAITING);
+      } catch (Exception e) {
+        uiForm.log.debug("\nModify topic fail: " + e.getMessage() + "\n" + e.getCause());
+      }
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+      if (popupContainer != null) {
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+        UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
+        if (moderationForum != null) {
+          moderationForum.setReloadPortlet(true);
+          event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum);
+        }
+      } else {
+        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+        forumPortlet.cancelAction();
+      }
+    }
+  }
+
+  static public class DeleteTopicActionListener extends EventListener<UIViewTopic> {
+    public void execute(Event<UIViewTopic> event) throws Exception {
+      UIViewTopic uiForm = event.getSource();
+      Topic topic = uiForm.topic;
+      try {
+        String[] path = topic.getPath().split("/");
+        int l = path.length;
+        uiForm.forumService.removeTopic(path[l - 3], path[l - 2], topic.getId());
+      } catch (Exception e) {
+        uiForm.log.debug("Removing " + topic.getId() + " topic fail: " + e.getCause());
+      }
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+      if (popupContainer != null) {
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+        UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
+        if (moderationForum != null) {
+          event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum);
           moderationForum.setReloadPortlet(true);
         }
-			} else {
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.cancelAction() ;
-			}
-		}
-	}
-	
-	static	public class CloseActionListener extends EventListener<UIViewTopic> {
-		public void execute(Event<UIViewTopic> event) throws Exception {
-			UIViewTopic uiForm = event.getSource() ;
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			if(popupContainer != null) {
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-				popupAction.deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-			} else {
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.cancelAction() ;
-			}
-		}
-	}
+      } else {
+        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+        forumPortlet.cancelAction();
+      }
+    }
+  }
+
+  static public class CloseActionListener extends EventListener<UIViewTopic> {
+    public void execute(Event<UIViewTopic> event) throws Exception {
+      UIViewTopic uiForm = event.getSource();
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+      if (popupContainer != null) {
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+        forumPortlet.cancelAction();
+      }
+    }
+  }
 }

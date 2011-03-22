@@ -57,109 +57,119 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		}
 )
 public class UIPageListPostHidden extends UIForumKeepStickPageIterator implements UIPopupComponent {
-	private ForumService forumService ;
-	private String categoryId, forumId, topicId ;
-	private List<Post> listPost = new ArrayList<Post>() ;
-	
-	public UIPageListPostHidden() throws Exception {
-		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-		this.setActions(new String[]{"UnHidden","Cancel"});
-	}
+  private ForumService forumService;
 
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	@SuppressWarnings("unused")
-	private UserProfile getUserProfile() throws Exception {
-		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-	}
-	
-	@SuppressWarnings("unused")
-	private String getTitleInHTMLCode(String s) {
-		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-	}
-	
-	public void setUpdateContainer(String categoryId, String forumId, String topicId) {
-		this.categoryId = categoryId ; this.forumId = forumId ; this.topicId = topicId ;
-	}
-	
-	@SuppressWarnings({ "unchecked", "unused" })
-	private List<Post> getPosts() throws Exception {
-		pageList = forumService.getPosts(this.categoryId, this.forumId, this.topicId, "", "true", "", "");
-		pageList.setPageSize(6) ;
-		maxPage = pageList.getAvailablePage();
-		listPost = pageList.getPage(pageSelect);
-		pageSelect = pageList.getCurrentPage();
-		if(listPost == null) listPost = new ArrayList<Post>();
-		if(!listPost.isEmpty()) {
-			for (Post post : listPost) {
-				if(getUIFormCheckBoxInput(post.getId()) != null) {
-					getUIFormCheckBoxInput(post.getId()).setChecked(false) ;
-				}else {
-					addUIFormInput(new UIFormCheckBoxInput(post.getId(), post.getId(), false) );
-				}
-			}
-		}
-		return listPost ;
-	}
-	
-	private Post getPost(String postId) throws Exception {
-		for (Post post : this.listPost) {
-			if(post.getId().equals(postId)) return post ;
-		}
-		return forumService.getPost(this.categoryId, this.forumId, this.topicId, postId) ;
-	}
-	
-	static	public class OpenPostLinkActionListener extends BaseEventListener<UIPageListPostHidden> {
-		public void onEvent(Event<UIPageListPostHidden> event, UIPageListPostHidden uiForm, final String postId) throws Exception {
-			Post post = uiForm.getPost(postId) ;
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-			UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700) ;
-			viewPost.setPostView(post) ;
-			viewPost.setViewUserInfo(false) ;
-			viewPost.setActionForm(new String[] {"Close", "OpenTopicLink"});
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-		}
-	}
+  private String       categoryId, forumId, topicId;
 
-	static public class UnHiddenActionListener extends BaseEventListener<UIPageListPostHidden> {
-		public void onEvent(Event<UIPageListPostHidden> event, UIPageListPostHidden postHidden, final String objectId) throws Exception {
-			Post post;
-			List<Post> posts = new ArrayList<Post>();
-			boolean haveCheck = false;
-			for (String postId : postHidden.getIdSelected()) {
-				haveCheck = true;
-				post = postHidden.getPost(postId);
-				if (post != null) {
-					post.setIsHidden(false);
-					posts.add(post);
-				}
-			}
-			if (!haveCheck) {
-				warning("UIPageListPostUnApprove.sms.notCheck");
-			} else {
-				try {
-					postHidden.forumService.modifyPost(posts, Utils.HIDDEN);
-				}catch (Exception e) {}
-			}
-			if(posts.size() == postHidden.listPost.size()) {
-				UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class);
-				forumPortlet.cancelAction();
-				UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
-			}else{
-				event.getRequestContext().addUIComponentToUpdateByAjax(postHidden.getParent());
-			}
-		}
-	}
-	
-	static	public class CancelActionListener extends EventListener<UIPageListPostHidden> {
-		public void execute(Event<UIPageListPostHidden> event) throws Exception {
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
-		}
-	}
+  private List<Post>   listPost = new ArrayList<Post>();
+
+  public UIPageListPostHidden() throws Exception {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    this.setActions(new String[] { "UnHidden", "Cancel" });
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  @SuppressWarnings("unused")
+  private UserProfile getUserProfile() throws Exception {
+    return this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+  }
+
+  @SuppressWarnings("unused")
+  private String getTitleInHTMLCode(String s) {
+    return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+  }
+
+  public void setUpdateContainer(String categoryId, String forumId, String topicId) {
+    this.categoryId = categoryId;
+    this.forumId = forumId;
+    this.topicId = topicId;
+  }
+
+  @SuppressWarnings( { "unchecked", "unused" })
+  private List<Post> getPosts() throws Exception {
+    pageList = forumService.getPosts(this.categoryId, this.forumId, this.topicId, "", "true", "", "");
+    pageList.setPageSize(6);
+    maxPage = pageList.getAvailablePage();
+    listPost = pageList.getPage(pageSelect);
+    pageSelect = pageList.getCurrentPage();
+    if (listPost == null)
+      listPost = new ArrayList<Post>();
+    if (!listPost.isEmpty()) {
+      for (Post post : listPost) {
+        if (getUIFormCheckBoxInput(post.getId()) != null) {
+          getUIFormCheckBoxInput(post.getId()).setChecked(false);
+        } else {
+          addUIFormInput(new UIFormCheckBoxInput(post.getId(), post.getId(), false));
+        }
+      }
+    }
+    return listPost;
+  }
+
+  private Post getPost(String postId) throws Exception {
+    for (Post post : this.listPost) {
+      if (post.getId().equals(postId))
+        return post;
+    }
+    return forumService.getPost(this.categoryId, this.forumId, this.topicId, postId);
+  }
+
+  static public class OpenPostLinkActionListener extends BaseEventListener<UIPageListPostHidden> {
+    public void onEvent(Event<UIPageListPostHidden> event, UIPageListPostHidden uiForm, final String postId) throws Exception {
+      Post post = uiForm.getPost(postId);
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true);
+      UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700);
+      viewPost.setPostView(post);
+      viewPost.setViewUserInfo(false);
+      viewPost.setActionForm(new String[] { "Close", "OpenTopicLink" });
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+    }
+  }
+
+  static public class UnHiddenActionListener extends BaseEventListener<UIPageListPostHidden> {
+    public void onEvent(Event<UIPageListPostHidden> event, UIPageListPostHidden postHidden, final String objectId) throws Exception {
+      Post post;
+      List<Post> posts = new ArrayList<Post>();
+      boolean haveCheck = false;
+      for (String postId : postHidden.getIdSelected()) {
+        haveCheck = true;
+        post = postHidden.getPost(postId);
+        if (post != null) {
+          post.setIsHidden(false);
+          posts.add(post);
+        }
+      }
+      if (!haveCheck) {
+        warning("UIPageListPostUnApprove.sms.notCheck");
+      } else {
+        try {
+          postHidden.forumService.modifyPost(posts, Utils.HIDDEN);
+        } catch (Exception e) {
+        }
+      }
+      if (posts.size() == postHidden.listPost.size()) {
+        UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class);
+        forumPortlet.cancelAction();
+        UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
+        event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
+      } else {
+        event.getRequestContext().addUIComponentToUpdateByAjax(postHidden.getParent());
+      }
+    }
+  }
+
+  static public class CancelActionListener extends EventListener<UIPageListPostHidden> {
+    public void execute(Event<UIPageListPostHidden> event) throws Exception {
+      UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+      UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
+      event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
+    }
+  }
 }

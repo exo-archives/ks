@@ -52,80 +52,87 @@ import org.exoplatform.webui.event.Event.Phase;
 			@EventConfig(listeners = UIShowBookMarkForm.CancelActionListener.class, phase=Phase.DECODE)
 		}
 )
-public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent{
-	ForumService forumService ;
-	public final String BOOKMARK_ITERATOR = "BookmarkPageIterator";
-	private JCRPageList pageList ;
-	UIForumPageIterator pageIterator ;
-	private List<String> bookMarks = new ArrayList<String>();
-	public UIShowBookMarkForm() throws Exception {
-		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-		pageIterator = addChild(UIForumPageIterator.class, null, BOOKMARK_ITERATOR);
-	}
-	
-	public void activate() throws Exception {	}
-	public void deActivate() throws Exception {	}
-	
-	@SuppressWarnings({ "unused", "unchecked" })
-	private List<String> getBookMark() throws Exception {
-		try{
-			bookMarks = forumService.getBookmarks( this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId());
-		}catch(Exception e) {
-			log.error("Getting book mark fail: ", e);
-		}
-		pageList = new ForumPageList(6, bookMarks.size());
-		pageList.setPageSize(6);
-		pageIterator = this.getChild(UIForumPageIterator.class);
-		pageIterator.updatePageList(pageList);
-		List<String>list = new ArrayList<String>();
-		list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), this.bookMarks)) ;
-		pageIterator.setSelectPage(pageList.getCurrentPage());
-		try {
-			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
-		} catch (Exception e) {
-			log.error("\nCould not render a UIComponent: " + e.getMessage() + "\n" + e.getCause());
-		}
-		return list ;
-	} 
-	
-	private String getBookMarkId(String id) throws Exception {
-		for (String str : this.bookMarks) {
-			if(str.indexOf(id) >= 0) return str ;
-		}
-		return "";
-	}
-	
-	@SuppressWarnings("unused")
-	private String getType(String id) {
-		return (id.indexOf(Utils.FORUM_SERVICE) >= 0)? Utils.FORUM_SERVICE:(
-					 (id.indexOf(Utils.CATEGORY) >= 0)? ForumUtils.CATEGORY :( 
-					 (id.indexOf(Utils.FORUM) >= 0)? ForumUtils.FORUM :(
-					 (id.indexOf(Utils.TOPIC) >= 0)? ForumUtils.TOPIC :(""))));
-	}
-	
-	static	public class OpenLinkActionListener extends BaseEventListener<UIShowBookMarkForm> {
-		public void onEvent(Event<UIShowBookMarkForm> event, UIShowBookMarkForm bookmarkForm, String id) throws Exception {
-			UIForumPortlet forumPortlet = bookmarkForm.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.calculateRenderComponent(id, event.getRequestContext());
-			forumPortlet.cancelAction() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-		}
-	}
-	
-	static	public class DeleteLinkActionListener extends BaseEventListener<UIShowBookMarkForm> {
-		public void onEvent(Event<UIShowBookMarkForm> event, UIShowBookMarkForm bookmarkForm, String path) throws Exception {
-			UIShowBookMarkForm bookMark = event.getSource() ;
-			UIForumPortlet forumPortlet = bookMark.getAncestorOfType(UIForumPortlet.class) ;
-			bookMark.forumService.saveUserBookmark(forumPortlet.getUserProfile().getUserId(), path, false) ;
-			forumPortlet.updateUserProfileInfo() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(bookMark.getParent()) ;
-		}
-	}
+public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent {
+  ForumService         forumService;
 
-	static	public class CancelActionListener extends EventListener<UIShowBookMarkForm> {
-		public void execute(Event<UIShowBookMarkForm> event) throws Exception {
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-		}
-	}
+  public final String  BOOKMARK_ITERATOR = "BookmarkPageIterator";
+
+  private JCRPageList  pageList;
+
+  UIForumPageIterator  pageIterator;
+
+  private List<String> bookMarks         = new ArrayList<String>();
+
+  public UIShowBookMarkForm() throws Exception {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    pageIterator = addChild(UIForumPageIterator.class, null, BOOKMARK_ITERATOR);
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  @SuppressWarnings( { "unused", "unchecked" })
+  private List<String> getBookMark() throws Exception {
+    try {
+      bookMarks = forumService.getBookmarks(this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId());
+    } catch (Exception e) {
+      log.error("Getting book mark fail: ", e);
+    }
+    pageList = new ForumPageList(6, bookMarks.size());
+    pageList.setPageSize(6);
+    pageIterator = this.getChild(UIForumPageIterator.class);
+    pageIterator.updatePageList(pageList);
+    List<String> list = new ArrayList<String>();
+    list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), this.bookMarks));
+    pageIterator.setSelectPage(pageList.getCurrentPage());
+    try {
+      if (pageList.getAvailablePage() <= 1)
+        pageIterator.setRendered(false);
+    } catch (Exception e) {
+      log.error("\nCould not render a UIComponent: " + e.getMessage() + "\n" + e.getCause());
+    }
+    return list;
+  }
+
+  private String getBookMarkId(String id) throws Exception {
+    for (String str : this.bookMarks) {
+      if (str.indexOf(id) >= 0)
+        return str;
+    }
+    return "";
+  }
+
+  @SuppressWarnings("unused")
+  private String getType(String id) {
+    return (id.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : ((id.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : ((id.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : ((id.indexOf(Utils.TOPIC) >= 0) ? ForumUtils.TOPIC : (""))));
+  }
+
+  static public class OpenLinkActionListener extends BaseEventListener<UIShowBookMarkForm> {
+    public void onEvent(Event<UIShowBookMarkForm> event, UIShowBookMarkForm bookmarkForm, String id) throws Exception {
+      UIForumPortlet forumPortlet = bookmarkForm.getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.calculateRenderComponent(id, event.getRequestContext());
+      forumPortlet.cancelAction();
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+    }
+  }
+
+  static public class DeleteLinkActionListener extends BaseEventListener<UIShowBookMarkForm> {
+    public void onEvent(Event<UIShowBookMarkForm> event, UIShowBookMarkForm bookmarkForm, String path) throws Exception {
+      UIShowBookMarkForm bookMark = event.getSource();
+      UIForumPortlet forumPortlet = bookMark.getAncestorOfType(UIForumPortlet.class);
+      bookMark.forumService.saveUserBookmark(forumPortlet.getUserProfile().getUserId(), path, false);
+      forumPortlet.updateUserProfileInfo();
+      event.getRequestContext().addUIComponentToUpdateByAjax(bookMark.getParent());
+    }
+  }
+
+  static public class CancelActionListener extends EventListener<UIShowBookMarkForm> {
+    public void execute(Event<UIShowBookMarkForm> event) throws Exception {
+      UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+    }
+  }
 }

@@ -61,206 +61,231 @@ import org.exoplatform.webui.event.EventListener;
 			@EventConfig(listeners = UIPageListPostByIP.DeletePostLinkActionListener.class)
 		}
 )
-public class UIPageListPostByIP	extends BaseUIForm implements UIPopupComponent	{
-	private ForumService forumService ;
-	private UserProfile userProfile = null ;
-	private String userName = "";
-	private String ip_ = null;
-	private String strOrderBy = "createdDate descending";
-	private boolean hasEnableIPLogging = true;
-	private List<Post> posts = new ArrayList<Post>() ;
-	public UIPageListPostByIP() throws Exception {
-		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-		this.userName = null ;
-		addChild(UIForumPageIterator.class, null, "PageListPostByUser") ;
-		this.setActions(new String[]{"Cancel"});
-	}
+public class UIPageListPostByIP extends BaseUIForm implements UIPopupComponent {
+  private ForumService forumService;
 
-	public boolean getHasEnableIPLogging() {
-		return hasEnableIPLogging;
-	}
-	@SuppressWarnings("unused")
-	private UserProfile getUserProfile() throws Exception {
-		if(this.userProfile == null) {
-			UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
-			this.userProfile = forumPortlet.getUserProfile() ;
-			hasEnableIPLogging = forumPortlet.isEnableIPLogging();
-		}
-		return this.userProfile ;
-	}
+  private UserProfile  userProfile        = null;
 
-	public String getUserName() { return userName;}
-	public void setUserName(String userId) { this.userName = userId ;}
+  private String       userName           = "";
 
-	@SuppressWarnings("unused")
-	private String getTitleInHTMLCode(String s) {
-		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-	}
-	
-	public void setIp(String ip){
-		this.ip_ = ip;
-		strOrderBy = "createdDate descending";
-	}
+  private String       ip_                = null;
 
-	@SuppressWarnings({ "unchecked", "unused" })
-	private List<Post> getPostsByUser() throws Exception {
-		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
-		List<Post> posts = null;
-		try {
-			boolean isMod = false;
-			if(this.userProfile.getUserRole() < 2) isMod = true;
-			JCRPageList pageList = forumService.getListPostsByIP(ip_, strOrderBy);
-			forumPageIterator.updatePageList(pageList) ;
-			if(pageList != null) pageList.setPageSize(6) ;
-			posts = pageList.getPage(forumPageIterator.getPageSelected());
-			forumPageIterator.setSelectPage(pageList.getCurrentPage());
-		}catch (Exception e) {}
-		if(posts == null) posts = new ArrayList<Post>();
-		this.posts = posts ;
-		return posts ;
-	}
+  private String       strOrderBy         = "createdDate descending";
 
-	private Post getPostById(String postId) {
-		for(Post post : this.posts) {
-			if(post.getId().equals(postId)) return post ;
-		}
-		return null ;
-	}
+  private boolean      hasEnableIPLogging = true;
 
-	static	public class OpenPostLinkActionListener extends BaseEventListener<UIPageListPostByIP> {
-		public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiForm, final String postId) throws Exception {
-			Post post = uiForm.getPostById(postId) ;
-			if(post == null){
-				warning("UIShowBookMarkForm.msg.link-not-found") ;
-				return ;
-			}
-			boolean isRead = true;
-			if(uiForm.userProfile.getUserRole() > 0) {
-				String ids[] = post.getPath().split("/");
-				int leng = ids.length;
-				String categoryId = ids[leng - 4];
-				String forumId = ids[leng - 3];
-				String topicId = ids[leng - 2];
-				try {
-					Category category = uiForm.forumService.getCategory(categoryId);
-					if(category == null) {
-						warning("UIShowBookMarkForm.msg.link-not-found") ;
-						return ;
-					}
-					String[] privateUser = category.getUserPrivate();
-					if(privateUser != null && privateUser.length > 0) {
-						if(privateUser.length ==1 && privateUser[0].equals(" ")){
-							isRead = true;
-						} else {
-							isRead = ForumServiceUtils.hasPermission(privateUser, uiForm.userProfile.getUserId());
-						}
-					}
-					if(isRead) {
-						String path_ = "" ;
-						Forum forum = uiForm.forumService.getForum(categoryId , forumId ) ;
-						if(forum != null ) path_ = forum.getPath()+"/"+topicId ;
-						Topic topic = uiForm.forumService.getTopicByPath(path_, false) ;
-						if(forum == null || topic == null) {
-							warning("UIForumPortlet.msg.do-not-permission") ;
-							return;
-						}
-						if(uiForm.userProfile.getUserRole() == 1 && (forum.getModerators() != null && forum.getModerators().length > 0 && 
-								ForumServiceUtils.hasPermission(forum.getModerators(), uiForm.userProfile.getUserId()))) isRead = true;
-						else isRead = false;
+  private List<Post>   posts              = new ArrayList<Post>();
 
-						if(!isRead && !forum.getIsClosed()){
-							List<String> listUserPermission = new ArrayList<String>();
-							if (forum.getCreateTopicRole() != null && forum.getCreateTopicRole().length > 0) 
-								listUserPermission.addAll(Arrays.asList(forum.getCreateTopicRole()));
+  public UIPageListPostByIP() throws Exception {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    this.userName = null;
+    addChild(UIForumPageIterator.class, null, "PageListPostByUser");
+    this.setActions(new String[] { "Cancel" });
+  }
 
-							if(forum.getViewer() != null && forum.getViewer().length > 0 )
-								listUserPermission.addAll(Arrays.asList(forum.getViewer()));
+  public boolean getHasEnableIPLogging() {
+    return hasEnableIPLogging;
+  }
 
-							if(ForumServiceUtils.hasPermission(listUserPermission.toArray(new String[]{}), uiForm.userProfile.getUserId())) isRead = true;
+  @SuppressWarnings("unused")
+  private UserProfile getUserProfile() throws Exception {
+    if (this.userProfile == null) {
+      UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+      this.userProfile = forumPortlet.getUserProfile();
+      hasEnableIPLogging = forumPortlet.isEnableIPLogging();
+    }
+    return this.userProfile;
+  }
 
-							// check for topic:
-							if(!isRead && post.getIsActiveByTopic() && post.getIsApproved() && !post.getIsHidden() && topic.getIsActive() &&
-									topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsWaiting()){
-								if((topic.getCanPost().length == 1 && topic.getCanPost()[0].equals(" ")) || 
-										ForumServiceUtils.hasPermission(topic.getCanPost(),uiForm.userProfile.getUserId()) ||
-										(topic.getCanView().length == 1 && topic.getCanView()[0].equals(" ")) ||
-										ForumServiceUtils.hasPermission(topic.getCanView(),uiForm.userProfile.getUserId())) isRead = true;
-								else isRead = false;
-							} else {
-								isRead = false;
-							}
-						}
-					}
-				} catch (Exception e) {
-					warning("UIShowBookMarkForm.msg.link-not-found") ;
-				}
-			}
-			if(isRead){
-				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700) ;
-				viewPost.setPostView(post) ;
-				viewPost.setViewUserInfo(false) ;
-				viewPost.setActionForm(new String[] {"Close", "OpenTopicLink"});
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-			} else {
-				warning("UIForumPortlet.msg.do-not-permission") ;
-				return;
-			}
-		}
-	}
+  public String getUserName() {
+    return userName;
+  }
 
-	static	public class DeletePostLinkActionListener extends BaseEventListener<UIPageListPostByIP> {
-		public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiForm, final String postId) throws Exception {
-			Post post = uiForm.getPostById(postId);
-			String[] path = post.getPath().split("/");
-			int length = path.length;
-			String topicId = path[length - 2];
-			String forumId = path[length - 3];
-			String categoryId = path[length - 4];
-			if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(postId)){
-				try {
-					uiForm.forumService.removeTopic(categoryId, forumId, topicId);
-				}catch (Exception e) {}
-			} else {
-				try {
-					uiForm.forumService.removePost(categoryId, forumId, topicId, postId);
-				}catch (Exception e) {}
-			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
-		}
-	}
-	static public class SetOrderByActionListener extends BaseEventListener<UIPageListPostByIP> {
-		public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiContainer, final String path) throws Exception {
-			if(!ForumUtils.isEmpty(uiContainer.strOrderBy)) {
-				if(uiContainer.strOrderBy.indexOf(path) >= 0) {
-					if(uiContainer.strOrderBy.indexOf("descending") > 0) {
-						uiContainer.strOrderBy = path + " ascending";
-					} else {
-						uiContainer.strOrderBy = path + " descending";
-					}
-				} else {
-					uiContainer.strOrderBy = path + " ascending";
-				}
-			} else {
-				uiContainer.strOrderBy = path + " ascending";
-			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer) ;
-		}
-	}
+  public void setUserName(String userId) {
+    this.userName = userId;
+  }
 
-	static	public class CancelActionListener extends EventListener<UIPageListPostByIP> {
-		public void execute(Event<UIPageListPostByIP> event) throws Exception {
-			UIPageListPostByIP listPostByIP = event.getSource();
-			listPostByIP.cancelChildPopupAction();
-			UIBanIPForumManagerForm form =listPostByIP.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIBanIPForumManagerForm.class);
-			if(form != null) {
-				event.getRequestContext().addUIComponentToUpdateByAjax(form);
-			}
-		}
-	}
+  @SuppressWarnings("unused")
+  private String getTitleInHTMLCode(String s) {
+    return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+  }
 
-	public void activate() throws Exception {	}
-	public void deActivate() throws Exception {	}
+  public void setIp(String ip) {
+    this.ip_ = ip;
+    strOrderBy = "createdDate descending";
+  }
+
+  @SuppressWarnings( { "unchecked", "unused" })
+  private List<Post> getPostsByUser() throws Exception {
+    UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
+    List<Post> posts = null;
+    try {
+      boolean isMod = false;
+      if (this.userProfile.getUserRole() < 2)
+        isMod = true;
+      JCRPageList pageList = forumService.getListPostsByIP(ip_, strOrderBy);
+      forumPageIterator.updatePageList(pageList);
+      if (pageList != null)
+        pageList.setPageSize(6);
+      posts = pageList.getPage(forumPageIterator.getPageSelected());
+      forumPageIterator.setSelectPage(pageList.getCurrentPage());
+    } catch (Exception e) {
+    }
+    if (posts == null)
+      posts = new ArrayList<Post>();
+    this.posts = posts;
+    return posts;
+  }
+
+  private Post getPostById(String postId) {
+    for (Post post : this.posts) {
+      if (post.getId().equals(postId))
+        return post;
+    }
+    return null;
+  }
+
+  static public class OpenPostLinkActionListener extends BaseEventListener<UIPageListPostByIP> {
+    public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiForm, final String postId) throws Exception {
+      Post post = uiForm.getPostById(postId);
+      if (post == null) {
+        warning("UIShowBookMarkForm.msg.link-not-found");
+        return;
+      }
+      boolean isRead = true;
+      if (uiForm.userProfile.getUserRole() > 0) {
+        String ids[] = post.getPath().split("/");
+        int leng = ids.length;
+        String categoryId = ids[leng - 4];
+        String forumId = ids[leng - 3];
+        String topicId = ids[leng - 2];
+        try {
+          Category category = uiForm.forumService.getCategory(categoryId);
+          if (category == null) {
+            warning("UIShowBookMarkForm.msg.link-not-found");
+            return;
+          }
+          String[] privateUser = category.getUserPrivate();
+          if (privateUser != null && privateUser.length > 0) {
+            if (privateUser.length == 1 && privateUser[0].equals(" ")) {
+              isRead = true;
+            } else {
+              isRead = ForumServiceUtils.hasPermission(privateUser, uiForm.userProfile.getUserId());
+            }
+          }
+          if (isRead) {
+            String path_ = "";
+            Forum forum = uiForm.forumService.getForum(categoryId, forumId);
+            if (forum != null)
+              path_ = forum.getPath() + "/" + topicId;
+            Topic topic = uiForm.forumService.getTopicByPath(path_, false);
+            if (forum == null || topic == null) {
+              warning("UIForumPortlet.msg.do-not-permission");
+              return;
+            }
+            if (uiForm.userProfile.getUserRole() == 1 && (forum.getModerators() != null && forum.getModerators().length > 0 && ForumServiceUtils.hasPermission(forum.getModerators(), uiForm.userProfile.getUserId())))
+              isRead = true;
+            else
+              isRead = false;
+
+            if (!isRead && !forum.getIsClosed()) {
+              List<String> listUserPermission = new ArrayList<String>();
+              if (forum.getCreateTopicRole() != null && forum.getCreateTopicRole().length > 0)
+                listUserPermission.addAll(Arrays.asList(forum.getCreateTopicRole()));
+
+              if (forum.getViewer() != null && forum.getViewer().length > 0)
+                listUserPermission.addAll(Arrays.asList(forum.getViewer()));
+
+              if (ForumServiceUtils.hasPermission(listUserPermission.toArray(new String[] {}), uiForm.userProfile.getUserId()))
+                isRead = true;
+
+              // check for topic:
+              if (!isRead && post.getIsActiveByTopic() && post.getIsApproved() && !post.getIsHidden() && topic.getIsActive() && topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsWaiting()) {
+                if ((topic.getCanPost().length == 1 && topic.getCanPost()[0].equals(" ")) || ForumServiceUtils.hasPermission(topic.getCanPost(), uiForm.userProfile.getUserId()) || (topic.getCanView().length == 1 && topic.getCanView()[0].equals(" ")) || ForumServiceUtils.hasPermission(topic.getCanView(), uiForm.userProfile.getUserId()))
+                  isRead = true;
+                else
+                  isRead = false;
+              } else {
+                isRead = false;
+              }
+            }
+          }
+        } catch (Exception e) {
+          warning("UIShowBookMarkForm.msg.link-not-found");
+        }
+      }
+      if (isRead) {
+        UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true);
+        UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700);
+        viewPost.setPostView(post);
+        viewPost.setViewUserInfo(false);
+        viewPost.setActionForm(new String[] { "Close", "OpenTopicLink" });
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        warning("UIForumPortlet.msg.do-not-permission");
+        return;
+      }
+    }
+  }
+
+  static public class DeletePostLinkActionListener extends BaseEventListener<UIPageListPostByIP> {
+    public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiForm, final String postId) throws Exception {
+      Post post = uiForm.getPostById(postId);
+      String[] path = post.getPath().split("/");
+      int length = path.length;
+      String topicId = path[length - 2];
+      String forumId = path[length - 3];
+      String categoryId = path[length - 4];
+      if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(postId)) {
+        try {
+          uiForm.forumService.removeTopic(categoryId, forumId, topicId);
+        } catch (Exception e) {
+        }
+      } else {
+        try {
+          uiForm.forumService.removePost(categoryId, forumId, topicId, postId);
+        } catch (Exception e) {
+        }
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
+    }
+  }
+
+  static public class SetOrderByActionListener extends BaseEventListener<UIPageListPostByIP> {
+    public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiContainer, final String path) throws Exception {
+      if (!ForumUtils.isEmpty(uiContainer.strOrderBy)) {
+        if (uiContainer.strOrderBy.indexOf(path) >= 0) {
+          if (uiContainer.strOrderBy.indexOf("descending") > 0) {
+            uiContainer.strOrderBy = path + " ascending";
+          } else {
+            uiContainer.strOrderBy = path + " descending";
+          }
+        } else {
+          uiContainer.strOrderBy = path + " ascending";
+        }
+      } else {
+        uiContainer.strOrderBy = path + " ascending";
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer);
+    }
+  }
+
+  static public class CancelActionListener extends EventListener<UIPageListPostByIP> {
+    public void execute(Event<UIPageListPostByIP> event) throws Exception {
+      UIPageListPostByIP listPostByIP = event.getSource();
+      listPostByIP.cancelChildPopupAction();
+      UIBanIPForumManagerForm form = listPostByIP.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIBanIPForumManagerForm.class);
+      if (form != null) {
+        event.getRequestContext().addUIComponentToUpdateByAjax(form);
+      }
+    }
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
 
 }

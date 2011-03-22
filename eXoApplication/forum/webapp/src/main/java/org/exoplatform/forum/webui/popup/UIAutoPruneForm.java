@@ -51,89 +51,95 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		}
 )
 @SuppressWarnings("unused")
-public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent{
-	private List<PruneSetting> listPruneSetting = new ArrayList<PruneSetting>();
-	public UIAutoPruneForm() {
-	}
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	@SuppressWarnings("unchecked")
-	private List<PruneSetting> getPruneSettings() throws Exception {
-		listPruneSetting = new ArrayList<PruneSetting>();
-		try {
-			UIFormCheckBoxInput<Boolean>isActiveBBcode;
-			for (PruneSetting pruneSetting : getForumService().getAllPruneSetting()) {
-				listPruneSetting.add(pruneSetting);
-				isActiveBBcode = getUIFormCheckBoxInput(getForumIdOfPrune(pruneSetting));
-				if(isActiveBBcode == null){
-					isActiveBBcode = new UIFormCheckBoxInput<Boolean>(getForumIdOfPrune(pruneSetting), getForumIdOfPrune(pruneSetting), false); 
-					addUIFormInput(isActiveBBcode);
-				}
-				isActiveBBcode.setChecked(pruneSetting.isActive());
-			}
-		} catch (Exception e) {
-			log.error("failed to get prune settings", e);
-		}
-		return listPruneSetting;
-	}
-	
-	private String getForumIdOfPrune(PruneSetting pruneSetting) {
-		String id = pruneSetting.getForumPath();
-		return (ForumUtils.isEmpty(id))?"" : id.substring(id.lastIndexOf("/"));
-	}
-	
-	private PruneSetting getPruneSetting(String forumId) throws Exception {
-		for (PruneSetting prune : listPruneSetting) {
-			if(prune.getForumPath().indexOf(forumId) > 0) return prune;
-		}
-		return new PruneSetting();
-	}
-	
-	static public class RunPruneActionListener extends BaseEventListener<UIAutoPruneForm> {
-		public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
-			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
-			if (pruneSetting.getInActiveDay() == 0) {
-				warning("UIAutoPruneForm.sms.not-set-activeDay");
-				return;
-			} else {
-				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-				UIRunPruneForm pruneForm = uiForm.openPopup(popupContainer, UIRunPruneForm.class, 200, 0);
-				pruneForm.setPruneSetting(pruneSetting);
-			}
-		}
-	}
+public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent {
+  private List<PruneSetting> listPruneSetting = new ArrayList<PruneSetting>();
 
-	static	public class ActivatePruneActionListener extends BaseEventListener<UIAutoPruneForm> {
-		public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
-			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
-			boolean isActive = uiForm.getUIFormCheckBoxInput(pruneId).isChecked();
-			if(pruneSetting.getInActiveDay() == 0) {
-				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-				UIAutoPruneSettingForm pruneSettingForm = uiForm.openPopup(popupContainer, UIAutoPruneSettingForm.class, 525, 0) ;
-				pruneSettingForm.setPruneSetting(pruneSetting);
-				pruneSettingForm.setActivate(isActive);
-			} else {
-				pruneSetting.setActive(isActive);
-				uiForm.getForumService().savePruneSetting(pruneSetting);
-			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getAncestorOfType(UIForumPortlet.class));
-		}
-	}
-	
-	static	public class PruneSettingActionListener extends BaseEventListener<UIAutoPruneForm> {
-		public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIAutoPruneSettingForm pruneSettingForm = uiForm.openPopup(popupContainer, UIAutoPruneSettingForm.class, 525, 0) ;
-			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
-			pruneSettingForm.setPruneSetting(pruneSetting);
-		}
-	}
-	
-	static	public class CloseActionListener extends BaseEventListener<UIAutoPruneForm> {
-		public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, String objId) throws Exception {
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-		}
-	}
+  public UIAutoPruneForm() {
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  @SuppressWarnings("unchecked")
+  private List<PruneSetting> getPruneSettings() throws Exception {
+    listPruneSetting = new ArrayList<PruneSetting>();
+    try {
+      UIFormCheckBoxInput<Boolean> isActiveBBcode;
+      for (PruneSetting pruneSetting : getForumService().getAllPruneSetting()) {
+        listPruneSetting.add(pruneSetting);
+        isActiveBBcode = getUIFormCheckBoxInput(getForumIdOfPrune(pruneSetting));
+        if (isActiveBBcode == null) {
+          isActiveBBcode = new UIFormCheckBoxInput<Boolean>(getForumIdOfPrune(pruneSetting), getForumIdOfPrune(pruneSetting), false);
+          addUIFormInput(isActiveBBcode);
+        }
+        isActiveBBcode.setChecked(pruneSetting.isActive());
+      }
+    } catch (Exception e) {
+      log.error("failed to get prune settings", e);
+    }
+    return listPruneSetting;
+  }
+
+  private String getForumIdOfPrune(PruneSetting pruneSetting) {
+    String id = pruneSetting.getForumPath();
+    return (ForumUtils.isEmpty(id)) ? "" : id.substring(id.lastIndexOf("/"));
+  }
+
+  private PruneSetting getPruneSetting(String forumId) throws Exception {
+    for (PruneSetting prune : listPruneSetting) {
+      if (prune.getForumPath().indexOf(forumId) > 0)
+        return prune;
+    }
+    return new PruneSetting();
+  }
+
+  static public class RunPruneActionListener extends BaseEventListener<UIAutoPruneForm> {
+    public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
+      PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
+      if (pruneSetting.getInActiveDay() == 0) {
+        warning("UIAutoPruneForm.sms.not-set-activeDay");
+        return;
+      } else {
+        UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+        UIRunPruneForm pruneForm = uiForm.openPopup(popupContainer, UIRunPruneForm.class, 200, 0);
+        pruneForm.setPruneSetting(pruneSetting);
+      }
+    }
+  }
+
+  static public class ActivatePruneActionListener extends BaseEventListener<UIAutoPruneForm> {
+    public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
+      PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
+      boolean isActive = uiForm.getUIFormCheckBoxInput(pruneId).isChecked();
+      if (pruneSetting.getInActiveDay() == 0) {
+        UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+        UIAutoPruneSettingForm pruneSettingForm = uiForm.openPopup(popupContainer, UIAutoPruneSettingForm.class, 525, 0);
+        pruneSettingForm.setPruneSetting(pruneSetting);
+        pruneSettingForm.setActivate(isActive);
+      } else {
+        pruneSetting.setActive(isActive);
+        uiForm.getForumService().savePruneSetting(pruneSetting);
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getAncestorOfType(UIForumPortlet.class));
+    }
+  }
+
+  static public class PruneSettingActionListener extends BaseEventListener<UIAutoPruneForm> {
+    public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+      UIAutoPruneSettingForm pruneSettingForm = uiForm.openPopup(popupContainer, UIAutoPruneSettingForm.class, 525, 0);
+      PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
+      pruneSettingForm.setPruneSetting(pruneSetting);
+    }
+  }
+
+  static public class CloseActionListener extends BaseEventListener<UIAutoPruneForm> {
+    public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, String objId) throws Exception {
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+    }
+  }
 }

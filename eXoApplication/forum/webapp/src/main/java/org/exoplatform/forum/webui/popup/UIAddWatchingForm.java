@@ -53,120 +53,137 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UIAddWatchingForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
-public class UIAddWatchingForm	extends BaseUIForm	implements UIPopupComponent {
-	final static public String EMAIL_ADDRESS = "emails" ;
-	public static final String USER_NAME = "userName" ; 
-	private String path = "";
-	private String type = "";
-	private boolean isCategory = false;
-	private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(EMAIL_ADDRESS,EMAIL_ADDRESS) ;
-	public UIAddWatchingForm() throws Exception {
-		UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
-		addUIFormInput(userName);
-	}
-	
-	public void initForm() throws Exception	{
-		List<String> list = new ArrayList<String>() ;
-		String userId = UserHelper.getCurrentUser() ;
-		if(!ForumUtils.isEmpty(userId)) {
-			UIFormStringInput userName = getUIStringInput(USER_NAME) ;
-			userName.setEditable(false) ;
-			userName.setValue(userId) ;
-			CommonContact contact = this.getPersonalContact(userId) ;
-			String email = contact.getEmailAddress() ;
-			if(!ForumUtils.isEmpty(email))
-				list.add(email);
-		}
-		list.add("");
-		this.initMultiValuesField(list);
-	}
+public class UIAddWatchingForm extends BaseUIForm implements UIPopupComponent {
+  final static public String       EMAIL_ADDRESS    = "emails";
 
-	public void activate() throws Exception {}
-	public boolean isCategory() {
-		return isCategory;
-	}
+  public static final String       USER_NAME        = "userName";
 
-	public void setIsCategory(boolean isCategory) {
-		this.isCategory = isCategory;
-	}
+  private String                   path             = "";
 
-	public void deActivate() throws Exception {}
-	
-	public void setPathNode(String path) {
-		this.path = path ;
-	}
+  private String                   type             = "";
 
-	public void setType(String type) {this.type = type ;}
-	public String getType() { return type;}
-	
-	private void initMultiValuesField(List<String> list) throws Exception {
-		if( uiFormMultiValue != null ) removeChildById(EMAIL_ADDRESS);
-		uiFormMultiValue = createUIComponent(UIFormMultiValueInputSet.class, null, null) ;
-		uiFormMultiValue.setId(EMAIL_ADDRESS) ;
-		uiFormMultiValue.setName(EMAIL_ADDRESS) ;
-		uiFormMultiValue.setType(UIFormStringInput.class) ;
-		uiFormMultiValue.setValue(list) ;
-		addUIFormInput(uiFormMultiValue) ;
-	}
-	
-	private CommonContact getPersonalContact(String userId) throws Exception {
-		CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
-		if(contact == null) {
-			contact = new CommonContact() ;
-		}
-		return contact ;
-	}
+  private boolean                  isCategory       = false;
 
-	static	public class SaveActionListener extends BaseEventListener<UIAddWatchingForm> {
-		public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			String path = uiForm.path;
-			List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
-			boolean isEmail = true;
-			List<String> values_ = new ArrayList<String>();
-			if(values.size() > 0) {
-				StringBuilder builder = new StringBuilder();
-				builder.append(values.get(0));
-				values_.add(builder.toString()) ;
-				for (String string : values) {
-					if(values_.contains(string)) continue ;
-					values_.add(string) ;
-					builder.append(",").append(string);
-				}
-				isEmail = ForumUtils.isValidEmailAddresses(builder.toString()) ;
-				if(isEmail) {
-				} else {
-					warning("UIAddMultiValueForm.msg.invalid-field") ;
-				}
-			} 
-			if(values_.size() > 0 && !ForumUtils.isEmpty(path)) {
-				ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-				try {
-					forumService.addWatch(1, path, values_, UserHelper.getCurrentUser()) ;
-				}catch (Exception e) {}
-			}
-			uiForm.path = "";
-			uiForm.initForm() ;
-			forumPortlet.cancelAction() ;
-			info("UIAddWatchingForm.msg.successfully") ;
-			if(uiForm.isCategory()) {
-				UICategory category = forumPortlet.findFirstComponentOfType(UICategory.class);
-				category.setIsEditCategory(true);
-			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-		}
-	}
-	
-	static	public class RefreshActionListener extends BaseEventListener<UIAddWatchingForm> {
-		public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
-			uiForm.initForm() ;
-		}
-	}
-	
-	static	public class CancelActionListener extends BaseEventListener<UIAddWatchingForm> {
-		public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-		}
-	}
+  private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(EMAIL_ADDRESS, EMAIL_ADDRESS);
+
+  public UIAddWatchingForm() throws Exception {
+    UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
+    addUIFormInput(userName);
+  }
+
+  public void initForm() throws Exception {
+    List<String> list = new ArrayList<String>();
+    String userId = UserHelper.getCurrentUser();
+    if (!ForumUtils.isEmpty(userId)) {
+      UIFormStringInput userName = getUIStringInput(USER_NAME);
+      userName.setEditable(false);
+      userName.setValue(userId);
+      CommonContact contact = this.getPersonalContact(userId);
+      String email = contact.getEmailAddress();
+      if (!ForumUtils.isEmpty(email))
+        list.add(email);
+    }
+    list.add("");
+    this.initMultiValuesField(list);
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public boolean isCategory() {
+    return isCategory;
+  }
+
+  public void setIsCategory(boolean isCategory) {
+    this.isCategory = isCategory;
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  public void setPathNode(String path) {
+    this.path = path;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  private void initMultiValuesField(List<String> list) throws Exception {
+    if (uiFormMultiValue != null)
+      removeChildById(EMAIL_ADDRESS);
+    uiFormMultiValue = createUIComponent(UIFormMultiValueInputSet.class, null, null);
+    uiFormMultiValue.setId(EMAIL_ADDRESS);
+    uiFormMultiValue.setName(EMAIL_ADDRESS);
+    uiFormMultiValue.setType(UIFormStringInput.class);
+    uiFormMultiValue.setValue(list);
+    addUIFormInput(uiFormMultiValue);
+  }
+
+  private CommonContact getPersonalContact(String userId) throws Exception {
+    CommonContact contact = ForumSessionUtils.getPersonalContact(userId);
+    if (contact == null) {
+      contact = new CommonContact();
+    }
+    return contact;
+  }
+
+  static public class SaveActionListener extends BaseEventListener<UIAddWatchingForm> {
+    public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      String path = uiForm.path;
+      List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
+      boolean isEmail = true;
+      List<String> values_ = new ArrayList<String>();
+      if (values.size() > 0) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(values.get(0));
+        values_.add(builder.toString());
+        for (String string : values) {
+          if (values_.contains(string))
+            continue;
+          values_.add(string);
+          builder.append(",").append(string);
+        }
+        isEmail = ForumUtils.isValidEmailAddresses(builder.toString());
+        if (isEmail) {
+        } else {
+          warning("UIAddMultiValueForm.msg.invalid-field");
+        }
+      }
+      if (values_.size() > 0 && !ForumUtils.isEmpty(path)) {
+        ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+        try {
+          forumService.addWatch(1, path, values_, UserHelper.getCurrentUser());
+        } catch (Exception e) {
+        }
+      }
+      uiForm.path = "";
+      uiForm.initForm();
+      forumPortlet.cancelAction();
+      info("UIAddWatchingForm.msg.successfully");
+      if (uiForm.isCategory()) {
+        UICategory category = forumPortlet.findFirstComponentOfType(UICategory.class);
+        category.setIsEditCategory(true);
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+    }
+  }
+
+  static public class RefreshActionListener extends BaseEventListener<UIAddWatchingForm> {
+    public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
+      uiForm.initForm();
+    }
+  }
+
+  static public class CancelActionListener extends BaseEventListener<UIAddWatchingForm> {
+    public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+    }
+  }
 }

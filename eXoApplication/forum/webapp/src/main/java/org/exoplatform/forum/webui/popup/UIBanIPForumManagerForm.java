@@ -54,172 +54,187 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UIBanIPForumManagerForm.CancelActionListener.class, phase=Phase.DECODE)
 		}
 )
+public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupComponent {
+  public static final String  SEARCH_IP_BAN        = "searchIpBan";
 
-public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupComponent{
-	public static final String SEARCH_IP_BAN = "searchIpBan";
-	public static final String NEW_IP_BAN_INPUT1 = "newIpBan1";
-	public static final String NEW_IP_BAN_INPUT2 = "newIpBan2";
-	public static final String NEW_IP_BAN_INPUT3 = "newIpBan3";
-	public static final String NEW_IP_BAN_INPUT4 = "newIpBan4";
-	public static final String BAN_IP_PAGE_ITERATOR = "IpBanPageIterator";
-	private String forumId = "null" ;
-	private boolean isForum = false;
+  public static final String  NEW_IP_BAN_INPUT1    = "newIpBan1";
 
-	private JCRPageList pageList ;
-	private UIForumPageIterator pageIterator ;
-	public UIBanIPForumManagerForm() throws Exception {
-		
-		addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, null));
-		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT1, null)).setMaxLength(3));
-		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT2, null)).setMaxLength(3));
-		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT3, null)).setMaxLength(3));
-		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT4, null)).setMaxLength(3));
-		setActions(new String[]{"Cancel"});
-		pageIterator = addChild(UIForumPageIterator.class, null, BAN_IP_PAGE_ITERATOR);
-	}
-	
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
+  public static final String  NEW_IP_BAN_INPUT2    = "newIpBan2";
 
-	public void setForumId(String forumId) {
-		this.forumId = forumId;
-		isForum = true;
-	}
-	
-	@SuppressWarnings("unused")
-	private String getRestPath() throws Exception {
-		try {
-			ExoContainerContext exoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
-			return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
-		} catch (Exception e) {
-			log.error("Can not get portal name or rest context name, exception: ",e);
-		}
-		return "";
-	}
-	
-	@SuppressWarnings({ "unused", "unchecked" })
-	private List<String> getListIpBan() throws Exception {
-		List<String> listIpBan = new ArrayList<String>();
-		if(isForum) {
-			listIpBan = getForumService().getForumBanList(forumId);
-		} else {
-			listIpBan.addAll(getForumService().getBanList());
-		}
-		pageList = new ForumPageList(8, listIpBan.size());
-		pageList.setPageSize(8);
-		pageIterator = this.getChild(UIForumPageIterator.class);
-		pageIterator.updatePageList(pageList);
-		List<String>list = new ArrayList<String>();
-		list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), listIpBan)) ;
-		pageIterator.setSelectPage(pageList.getCurrentPage());
-		try {
-			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
-			else	pageIterator.setRendered(true);
-		} catch (Exception e) {
-			log.error("failed to init page iterator", e);
-		}
-		return list;
-	}
-	
-	/**
-	 * Validates an IP Address. IP elements must be 4 integers between 0 and 255.
-	 * 255.255.255.255 is not a valid IP address;
-	 * 0.0.0.0 is not a valid IP address;
-	 * @param ipAdd elements of the address
-	 * @return null if the address is not valid
-	 */
-	public String checkIpAddress(String[] ipAdd){
-		StringBuilder ip = new StringBuilder();
-		if(ipAdd.length < 4) return null;
-		try{
-			int[] ips = new int[4];
-			for(int t = 0; t < ipAdd.length; t ++){
-				if(t>0) ip.append(".");
-				ip.append(ipAdd[t]);
-				ips[t] = Integer.parseInt(ipAdd[t]);
-			}
-			for(int i = 0; i < 4; i ++){
-				if(ips[i] < 0 || ips[i] > 255) return null;
-			}
-			if(ips[0] == 255 && ips[1] == 255 && ips[2] == 255 && ips[3] == 255) return null;
-			if(ips[0] == 0 && ips[1] == 0 && ips[2] == 0 && ips[3] == 0) return null;
-			return ip.toString();
-		} catch (Exception e){
-			log.error("failed to check IP address, Ip is not format number.");
-			return null;
-		}
-	}
-	
-	private String getValueIp(String inputId) throws Exception {
-		UIFormStringInput stringInput = this.getUIStringInput(inputId) ;	
-		String vl = stringInput.getValue();
-		stringInput.setValue("");
-		return ForumUtils.isEmpty(vl)?"0":vl;
-	}
-	
-	static	public class AddIpActionListener extends BaseEventListener<UIBanIPForumManagerForm> {
-		public void onEvent(Event<UIBanIPForumManagerForm> event, UIBanIPForumManagerForm uiForm, final String objectId) throws Exception {
-			String[] ip = new String[] { uiForm.getValueIp(NEW_IP_BAN_INPUT1), uiForm.getValueIp(NEW_IP_BAN_INPUT2),
-																	 uiForm.getValueIp(NEW_IP_BAN_INPUT3), uiForm.getValueIp(NEW_IP_BAN_INPUT4) };
-			String ipAdd = uiForm.checkIpAddress(ip);
-			if (ipAdd == null) {
-				warning("UIBanIPForumManagerForm.sms.ipInvalid");
-				return;
-			}
-			
-			if(uiForm.isForum){
-				if(!uiForm.getForumService().addBanIPForum(ipAdd, uiForm.forumId)){
-					warning("UIBanIPForumManagerForm.sms.ipBanFalse", new String[]{ipAdd}) ;
-					return;
-				} else {
-					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-					UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
-					topicContainer.setIdUpdate(true);
-					event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
-				}
-			} else if(!uiForm.getForumService().addBanIP(ipAdd)){
-				warning("UIBanIPForumManagerForm.sms.ipBanFalse", ipAdd);
-				return;
-			}
-			refresh();
-		}
-	}
-	
-	static	public class OpenPostsActionListener extends BaseEventListener<UIBanIPForumManagerForm> {
-		public void onEvent(Event<UIBanIPForumManagerForm> event, UIBanIPForumManagerForm uiForm, final String ip) throws Exception {
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-			UIPageListPostByIP pageListPostByIP = openPopup(popupContainer, UIPageListPostByIP.class, 650, 0) ;
-			pageListPostByIP.setIp(ip) ;
-		}
-	}
-	
-	static	public class UnBanActionListener extends BaseEventListener<UIBanIPForumManagerForm> {
-		public void onEvent(Event<UIBanIPForumManagerForm> event, UIBanIPForumManagerForm uiForm, final String ip) throws Exception {
-			if(uiForm.isForum){
-				uiForm.getForumService().removeBanIPForum(ip, uiForm.forumId);
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-				UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
-				topicContainer.setIdUpdate(true);
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
-			} else {
-				uiForm.getForumService().removeBan(ip) ;
-			}
-			refresh();
-		}
-	}
-	
-	static	public class CancelActionListener extends BaseEventListener<UIBanIPForumManagerForm> {
-		public void onEvent(Event<UIBanIPForumManagerForm> event, UIBanIPForumManagerForm uiForm, final String ip) throws Exception {
-			if(uiForm.isForum){
-				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-				UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
-				topicContainer.setIdUpdate(true);
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
-			}
-			uiForm.cancelChildPopupAction();
-		}
-	}
-	
-	
-	
+  public static final String  NEW_IP_BAN_INPUT3    = "newIpBan3";
+
+  public static final String  NEW_IP_BAN_INPUT4    = "newIpBan4";
+
+  public static final String  BAN_IP_PAGE_ITERATOR = "IpBanPageIterator";
+
+  private String              forumId              = "null";
+
+  private boolean             isForum              = false;
+
+  private JCRPageList         pageList;
+
+  private UIForumPageIterator pageIterator;
+
+  public UIBanIPForumManagerForm() throws Exception {
+
+    addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, null));
+    addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT1, null)).setMaxLength(3));
+    addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT2, null)).setMaxLength(3));
+    addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT3, null)).setMaxLength(3));
+    addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT4, null)).setMaxLength(3));
+    setActions(new String[] { "Cancel" });
+    pageIterator = addChild(UIForumPageIterator.class, null, BAN_IP_PAGE_ITERATOR);
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  public void setForumId(String forumId) {
+    this.forumId = forumId;
+    isForum = true;
+  }
+
+  @SuppressWarnings("unused")
+  private String getRestPath() throws Exception {
+    try {
+      ExoContainerContext exoContext = (ExoContainerContext) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
+      return "/" + exoContext.getPortalContainerName() + "/" + exoContext.getRestContextName();
+    } catch (Exception e) {
+      log.error("Can not get portal name or rest context name, exception: ", e);
+    }
+    return "";
+  }
+
+  @SuppressWarnings( { "unused", "unchecked" })
+  private List<String> getListIpBan() throws Exception {
+    List<String> listIpBan = new ArrayList<String>();
+    if (isForum) {
+      listIpBan = getForumService().getForumBanList(forumId);
+    } else {
+      listIpBan.addAll(getForumService().getBanList());
+    }
+    pageList = new ForumPageList(8, listIpBan.size());
+    pageList.setPageSize(8);
+    pageIterator = this.getChild(UIForumPageIterator.class);
+    pageIterator.updatePageList(pageList);
+    List<String> list = new ArrayList<String>();
+    list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), listIpBan));
+    pageIterator.setSelectPage(pageList.getCurrentPage());
+    try {
+      if (pageList.getAvailablePage() <= 1)
+        pageIterator.setRendered(false);
+      else
+        pageIterator.setRendered(true);
+    } catch (Exception e) {
+      log.error("failed to init page iterator", e);
+    }
+    return list;
+  }
+
+  /**
+   * Validates an IP Address. IP elements must be 4 integers between 0 and 255.
+   * 255.255.255.255 is not a valid IP address;
+   * 0.0.0.0 is not a valid IP address;
+   * @param ipAdd elements of the address
+   * @return null if the address is not valid
+   */
+  public String checkIpAddress(String[] ipAdd) {
+    StringBuilder ip = new StringBuilder();
+    if (ipAdd.length < 4)
+      return null;
+    try {
+      int[] ips = new int[4];
+      for (int t = 0; t < ipAdd.length; t++) {
+        if (t > 0)
+          ip.append(".");
+        ip.append(ipAdd[t]);
+        ips[t] = Integer.parseInt(ipAdd[t]);
+      }
+      for (int i = 0; i < 4; i++) {
+        if (ips[i] < 0 || ips[i] > 255)
+          return null;
+      }
+      if (ips[0] == 255 && ips[1] == 255 && ips[2] == 255 && ips[3] == 255)
+        return null;
+      if (ips[0] == 0 && ips[1] == 0 && ips[2] == 0 && ips[3] == 0)
+        return null;
+      return ip.toString();
+    } catch (Exception e) {
+      log.error("failed to check IP address, Ip is not format number.");
+      return null;
+    }
+  }
+
+  private String getValueIp(String inputId) throws Exception {
+    UIFormStringInput stringInput = this.getUIStringInput(inputId);
+    String vl = stringInput.getValue();
+    stringInput.setValue("");
+    return ForumUtils.isEmpty(vl) ? "0" : vl;
+  }
+
+  static public class AddIpActionListener extends BaseEventListener<UIBanIPForumManagerForm> {
+    public void onEvent(Event<UIBanIPForumManagerForm> event, UIBanIPForumManagerForm uiForm, final String objectId) throws Exception {
+      String[] ip = new String[] { uiForm.getValueIp(NEW_IP_BAN_INPUT1), uiForm.getValueIp(NEW_IP_BAN_INPUT2), uiForm.getValueIp(NEW_IP_BAN_INPUT3), uiForm.getValueIp(NEW_IP_BAN_INPUT4) };
+      String ipAdd = uiForm.checkIpAddress(ip);
+      if (ipAdd == null) {
+        warning("UIBanIPForumManagerForm.sms.ipInvalid");
+        return;
+      }
+
+      if (uiForm.isForum) {
+        if (!uiForm.getForumService().addBanIPForum(ipAdd, uiForm.forumId)) {
+          warning("UIBanIPForumManagerForm.sms.ipBanFalse", new String[] { ipAdd });
+          return;
+        } else {
+          UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+          UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
+          topicContainer.setIdUpdate(true);
+          event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer);
+        }
+      } else if (!uiForm.getForumService().addBanIP(ipAdd)) {
+        warning("UIBanIPForumManagerForm.sms.ipBanFalse", ipAdd);
+        return;
+      }
+      refresh();
+    }
+  }
+
+  static public class OpenPostsActionListener extends BaseEventListener<UIBanIPForumManagerForm> {
+    public void onEvent(Event<UIBanIPForumManagerForm> event, UIBanIPForumManagerForm uiForm, final String ip) throws Exception {
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+      UIPageListPostByIP pageListPostByIP = openPopup(popupContainer, UIPageListPostByIP.class, 650, 0);
+      pageListPostByIP.setIp(ip);
+    }
+  }
+
+  static public class UnBanActionListener extends BaseEventListener<UIBanIPForumManagerForm> {
+    public void onEvent(Event<UIBanIPForumManagerForm> event, UIBanIPForumManagerForm uiForm, final String ip) throws Exception {
+      if (uiForm.isForum) {
+        uiForm.getForumService().removeBanIPForum(ip, uiForm.forumId);
+        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+        UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
+        topicContainer.setIdUpdate(true);
+        event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer);
+      } else {
+        uiForm.getForumService().removeBan(ip);
+      }
+      refresh();
+    }
+  }
+
+  static public class CancelActionListener extends BaseEventListener<UIBanIPForumManagerForm> {
+    public void onEvent(Event<UIBanIPForumManagerForm> event, UIBanIPForumManagerForm uiForm, final String ip) throws Exception {
+      if (uiForm.isForum) {
+        UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+        UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
+        topicContainer.setIdUpdate(true);
+        event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer);
+      }
+      uiForm.cancelChildPopupAction();
+    }
+  }
+
 }

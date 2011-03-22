@@ -30,38 +30,41 @@ import org.exoplatform.webui.core.UIContainer;
 @ComponentConfig(
 		template = "app:/templates/forum/webui/UICategoryContainer.gtmpl"
 )
-public class UICategoryContainer extends UIContainer	{
-	boolean isRenderJump = true;
-	boolean isRender_ = true;
-	public UICategoryContainer() throws Exception {
-		addChild(UICategories.class, null, null).setRendered(true) ;
-		addChild(UICategory.class, null, null).setRendered(false) ;
-		addChild(UICategoriesSummary.class, null, null);
-	} 
-	public void setIsRenderJump(boolean isRenderJump) {
-		this.isRenderJump = isRenderJump ;
-	}
-	
-	public void updateIsRender(boolean isRender) throws Exception {
-		isRender_ = isRender;
-		getChild(UICategories.class).setRendered(isRender) ;
-		getChild(UICategory.class).setRendered(!isRender) ;
-		UIForumPortlet forumPortlet = getParent();
-		if(isRender || forumPortlet.isShowForumActionBar()) {
-			forumPortlet.getChild(UIForumActionBar.class).setRendered(!UserHelper.isAnonim()) ;
-		} else {
-			forumPortlet.getChild(UIForumActionBar.class).setRendered(false) ;
-		}
-		this.findFirstComponentOfType(UICategoryInfo.class).setRendered(isRender) ;
-		renderJump();
-	}
-	
-	public void renderJump() {
-		UIForumLinks forumLinks = ((UIForumPortlet) this.getParent()).getChild(UIForumLinks.class) ;
-		if(isRenderJump) {
-			forumLinks.setRendered(!isRender_);
-		} else {
-			forumLinks.setRendered(false);
-		}
-	}
+public class UICategoryContainer extends UIContainer {
+  boolean isRenderJump = true;
+
+  boolean isRender_    = true;
+
+  public UICategoryContainer() throws Exception {
+    addChild(UICategories.class, null, null).setRendered(true);
+    addChild(UICategory.class, null, null).setRendered(false);
+    addChild(UICategoriesSummary.class, null, null);
+  }
+
+  public void setIsRenderJump(boolean isRenderJump) {
+    this.isRenderJump = isRenderJump;
+  }
+
+  public void updateIsRender(boolean isRender) throws Exception {
+    isRender_ = isRender;
+    getChild(UICategories.class).setRendered(isRender);
+    getChild(UICategory.class).setRendered(!isRender);
+    UIForumPortlet forumPortlet = getParent();
+    if (isRender || forumPortlet.isShowForumActionBar()) {
+      forumPortlet.getChild(UIForumActionBar.class).setRendered(!UserHelper.isAnonim());
+    } else {
+      forumPortlet.getChild(UIForumActionBar.class).setRendered(false);
+    }
+    this.findFirstComponentOfType(UICategoryInfo.class).setRendered(isRender);
+    renderJump();
+  }
+
+  public void renderJump() {
+    UIForumLinks forumLinks = ((UIForumPortlet) this.getParent()).getChild(UIForumLinks.class);
+    if (isRenderJump) {
+      forumLinks.setRendered(!isRender_);
+    } else {
+      forumLinks.setRendered(false);
+    }
+  }
 }

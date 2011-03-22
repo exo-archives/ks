@@ -28,55 +28,50 @@ import org.exoplatform.ks.rendering.spi.MarkupRenderDelegate;
  */
 public class RenderHelper {
 
-	private MarkupRenderingService markupRenderingService;
-	
-	
-	public RenderHelper() {
-	}
+  private MarkupRenderingService markupRenderingService;
 
-	/**
-	 * Render markup for a forum Post
-	 * 
-	 * @param post
-	 * @return
-	 */
-	public String renderPost(Post post) {
-		try {
-			return getMarkupRenderingService().delegateRendering(new PostDelegate(), post);
-		} catch (Exception e) {
-			throw new RenderingException(e);
-		}
-	}
+  public RenderHelper() {
+  }
 
-	
-	
-	static class PostDelegate implements MarkupRenderDelegate<Post> {
-		
-		public String getMarkup(Post post) {
-			return post.getMessage();
-		}
+  /**
+   * Render markup for a forum Post
+   * 
+   * @param post
+   * @return
+   */
+  public String renderPost(Post post) {
+    try {
+      return getMarkupRenderingService().delegateRendering(new PostDelegate(), post);
+    } catch (Exception e) {
+      throw new RenderingException(e);
+    }
+  }
 
-		/**
-		 * TODO when Forum will support more syntaxes, we should have the
-		 * resolving logic here
-		 */
-		public String getSyntax(Post target) {
-			return SupportedSyntaxes.bbcode.name();
-		}
+  static class PostDelegate implements MarkupRenderDelegate<Post> {
 
-	}
-	
-	
-	public MarkupRenderingService getMarkupRenderingService() {
-		if (this.markupRenderingService == null) {
-			this.markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer()
-																																									 .getComponentInstanceOfType(MarkupRenderingService.class);
-		}
-		return this.markupRenderingService;
-	}
-	
-	public void setMarkupRenderingService(MarkupRenderingService markupRenderingService) {
-		this.markupRenderingService = markupRenderingService;
-	}
-	
+    public String getMarkup(Post post) {
+      return post.getMessage();
+    }
+
+    /**
+     * TODO when Forum will support more syntaxes, we should have the
+     * resolving logic here
+     */
+    public String getSyntax(Post target) {
+      return SupportedSyntaxes.bbcode.name();
+    }
+
+  }
+
+  public MarkupRenderingService getMarkupRenderingService() {
+    if (this.markupRenderingService == null) {
+      this.markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(MarkupRenderingService.class);
+    }
+    return this.markupRenderingService;
+  }
+
+  public void setMarkupRenderingService(MarkupRenderingService markupRenderingService) {
+    this.markupRenderingService = markupRenderingService;
+  }
+
 }

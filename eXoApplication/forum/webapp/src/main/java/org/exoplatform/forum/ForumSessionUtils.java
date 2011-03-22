@@ -39,10 +39,11 @@ import org.exoplatform.services.log.Log;
  */
 
 public class ForumSessionUtils {
-	
-  static private final Log LOG = ExoLogger.getLogger(ForumSessionUtils.class);
-  public final static String DEFAULT_AVATAR = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif"; 
-  
+
+  static private final Log   LOG            = ExoLogger.getLogger(ForumSessionUtils.class);
+
+  public final static String DEFAULT_AVATAR = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+
   /**
    * create an avatar link for user. 
    * Firstly, the function tries to load avatar resource from user profile of forum.
@@ -52,54 +53,54 @@ public class ForumSessionUtils {
    * @param forumService
    * @return
    */
-	public static String getUserAvatarURL(String userName, ForumService forumService){
-		String url = null;
-		try{
-			ForumAttachment attachment = forumService.getUserAvatar(userName);
-			url = org.exoplatform.ks.common.Utils.getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
-		}catch (Exception e){
-		  if (LOG.isDebugEnabled()) LOG.debug(String.format("can not load avatar of [%s] as file resource", userName), e);
-		}
-    if(url == null || url.trim().length() < 1){
-    	CommonContact contact = getPersonalContact(userName);
-	    if (contact != null && contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0) {
-	      url = contact.getAvatarUrl();
-	    }
-		  url = (url == null || url.trim().length() < 1)?DEFAULT_AVATAR:url;
-		}
-		return url;
-	}
-	
-	public static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
-		byte[] imageBytes = null;
-		if (input != null) {
-			imageBytes = new byte[input.available()];
-			input.read(imageBytes);
-			ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-			InputStreamDownloadResource dresource = new InputStreamDownloadResource(
-					byteImage, "image");
-			dresource.setDownloadName(fileName);
-			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-		}
-		return null;
-	}
-	
-	public static CommonContact getPersonalContact(String userId) {
-		try {
-			if(userId.indexOf(Utils.DELETED) > 0) return new CommonContact();
-			ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
-			return provider.getCommonContact(userId);
-		}catch (Exception e) {
-			return new CommonContact();
-		}
-	}
-	
-	public static String getBreadcumbUrl(String link, String componentName, String actionName, String objectId) throws Exception {
-		PortalRequestContext portalContext = Util.getPortalRequestContext();
-		String url = portalContext.getRequest().getRequestURL().toString();
-		url = url.substring(0, url.indexOf("/", 8)) ;
-		link = link.replaceFirst(componentName,"UIBreadcumbs").replaceFirst(actionName,"ChangePath")
-			.replace("pathId", objectId).replaceAll("&amp;", "&");
-		return (url+link);
-	}
+  public static String getUserAvatarURL(String userName, ForumService forumService) {
+    String url = null;
+    try {
+      ForumAttachment attachment = forumService.getUserAvatar(userName);
+      url = org.exoplatform.ks.common.Utils.getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
+    } catch (Exception e) {
+      if (LOG.isDebugEnabled())
+        LOG.debug(String.format("can not load avatar of [%s] as file resource", userName), e);
+    }
+    if (url == null || url.trim().length() < 1) {
+      CommonContact contact = getPersonalContact(userName);
+      if (contact != null && contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0) {
+        url = contact.getAvatarUrl();
+      }
+      url = (url == null || url.trim().length() < 1) ? DEFAULT_AVATAR : url;
+    }
+    return url;
+  }
+
+  public static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
+    byte[] imageBytes = null;
+    if (input != null) {
+      imageBytes = new byte[input.available()];
+      input.read(imageBytes);
+      ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+      InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
+      dresource.setDownloadName(fileName);
+      return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+    }
+    return null;
+  }
+
+  public static CommonContact getPersonalContact(String userId) {
+    try {
+      if (userId.indexOf(Utils.DELETED) > 0)
+        return new CommonContact();
+      ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class);
+      return provider.getCommonContact(userId);
+    } catch (Exception e) {
+      return new CommonContact();
+    }
+  }
+
+  public static String getBreadcumbUrl(String link, String componentName, String actionName, String objectId) throws Exception {
+    PortalRequestContext portalContext = Util.getPortalRequestContext();
+    String url = portalContext.getRequest().getRequestURL().toString();
+    url = url.substring(0, url.indexOf("/", 8));
+    link = link.replaceFirst(componentName, "UIBreadcumbs").replaceFirst(actionName, "ChangePath").replace("pathId", objectId).replaceAll("&amp;", "&");
+    return (url + link);
+  }
 }

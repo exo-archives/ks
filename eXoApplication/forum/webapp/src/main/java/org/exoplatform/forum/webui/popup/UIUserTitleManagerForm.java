@@ -39,20 +39,20 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIUserTitleManagerForm extends UIForm {
-	
-	
-	public UIUserTitleManagerForm() {
-		
-	}
-	
-	static	public class SaveActionListener extends EventListener<UIUserTitleManagerForm> {
-		public void execute(Event<UIUserTitleManagerForm> event) throws Exception {
-//			UIUserTitleManagerForm uiForm = event.getSource() ;
-		}
-	}
-	static	public class CancelActionListener extends EventListener<UIUserTitleManagerForm> {
-		public void execute(Event<UIUserTitleManagerForm> event) throws Exception {
-//			UIUserTitleManagerForm uiForm = event.getSource() ;
-		}
-	}
+
+  public UIUserTitleManagerForm() {
+
+  }
+
+  static public class SaveActionListener extends EventListener<UIUserTitleManagerForm> {
+    public void execute(Event<UIUserTitleManagerForm> event) throws Exception {
+      // UIUserTitleManagerForm uiForm = event.getSource() ;
+    }
+  }
+
+  static public class CancelActionListener extends EventListener<UIUserTitleManagerForm> {
+    public void execute(Event<UIUserTitleManagerForm> event) throws Exception {
+      // UIUserTitleManagerForm uiForm = event.getSource() ;
+    }
+  }
 }

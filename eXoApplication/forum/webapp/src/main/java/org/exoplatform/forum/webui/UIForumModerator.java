@@ -39,43 +39,51 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIForumModerator.CreatedLinkActionListener.class )
 		}
 )
+public class UIForumModerator extends UIContainer {
+  private List<String> moderators   = new ArrayList<String>();
 
-public class UIForumModerator extends UIContainer	{
-	private List<String> moderators = new ArrayList<String>();
-	ForumService forumService;
-	private long role = 3; 
-	private String linkUserInfo = "";
-	public UIForumModerator() throws Exception { 
-		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-	}
-	
-	@SuppressWarnings("unused")
-	private long getUserRole(){return role;}
-	public void setUserRole(long role) {this.role = role;}
-	
-	@SuppressWarnings("unused")
-	private List<String> getModeratorsForum() throws Exception {
-		return moderators ;
-	}
-	
-	public void setModeratorsForum(List<String> moderators)throws Exception {
-		this.moderators = moderators ;
-		this.linkUserInfo = this.getAncestorOfType(UIForumPortlet.class).getPortletLink();
-	}
+  ForumService         forumService;
 
-	@SuppressWarnings("unused")
-	private String getActionViewInfoUser(String linkType, String userName) {
-		String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
-		return link;
-	}
-  
-	@SuppressWarnings("unused")
-	private String getScreenName(String userId) throws Exception {
-		return forumService.getScreenName(userId);
-	}
-	
-	static public class CreatedLinkActionListener extends EventListener<UIForumModerator> {
-		public void execute(Event<UIForumModerator> event) throws Exception {
-		}
-	}
+  private long         role         = 3;
+
+  private String       linkUserInfo = "";
+
+  public UIForumModerator() throws Exception {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+  }
+
+  @SuppressWarnings("unused")
+  private long getUserRole() {
+    return role;
+  }
+
+  public void setUserRole(long role) {
+    this.role = role;
+  }
+
+  @SuppressWarnings("unused")
+  private List<String> getModeratorsForum() throws Exception {
+    return moderators;
+  }
+
+  public void setModeratorsForum(List<String> moderators) throws Exception {
+    this.moderators = moderators;
+    this.linkUserInfo = this.getAncestorOfType(UIForumPortlet.class).getPortletLink();
+  }
+
+  @SuppressWarnings("unused")
+  private String getActionViewInfoUser(String linkType, String userName) {
+    String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
+    return link;
+  }
+
+  @SuppressWarnings("unused")
+  private String getScreenName(String userId) throws Exception {
+    return forumService.getScreenName(userId);
+  }
+
+  static public class CreatedLinkActionListener extends EventListener<UIForumModerator> {
+    public void execute(Event<UIForumModerator> event) throws Exception {
+    }
+  }
 }

@@ -49,95 +49,103 @@ import org.exoplatform.webui.event.EventListener;
 			@EventConfig(listeners = UIListInBoxPrivateMessage.ReplyMessageActionListener.class)
 		}
 )
-public class UIListInBoxPrivateMessage extends UIContainer{
-	private ForumService forumService ;
-	private UserProfile userProfile = null	;
-	private List<ForumPrivateMessage> listInbox = null; 
-	private String userName = "";
-	private boolean isRenderIterator = false ;
-	public UIListInBoxPrivateMessage() throws Exception {
-		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-		addChild(UIForumPageIterator.class, null, "PageListInBoxMessage") ;
-	}
-	@SuppressWarnings("unused")
-	private UserProfile getUserProfile() throws Exception{
-		if(userProfile == null) {
-			userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-		}
-		this.userName = userProfile.getUserId() ;
-		return userProfile ;
-	}
-	
-	@SuppressWarnings("unused")
-	private boolean isRenderIterator(){
-		return isRenderIterator ;
-	}
-	
-	@SuppressWarnings({ "unused", "unchecked" })
-	private List<ForumPrivateMessage> getListInBoxPrivateMessage() throws Exception {
-		JCRPageList pageList = this.forumService.getPrivateMessage(userName, Utils.RECEIVE_MESSAGE) ;
-		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
-		forumPageIterator.updatePageList(pageList) ;
-		pageList.setPageSize(10) ;
-		int page = forumPageIterator.getPageSelected() ;
-		this.listInbox = pageList.getPage(page) ;
-		if(pageList.getAvailable() > 10){
-			isRenderIterator = true;
-		}
-		return this.listInbox ;
-	}
-	
-	@SuppressWarnings("unused")
-	private ForumPrivateMessage getPrivateMessage(String id)throws Exception {
-		List<ForumPrivateMessage> list = this.listInbox ;
-		for (ForumPrivateMessage forumPrivateMessage : list) {
-			if(forumPrivateMessage.getId().equals(id)) return forumPrivateMessage ;
-		}
-		return null;
-	}
-	
-	static	public class ViewMessageActionListener extends EventListener<UIListInBoxPrivateMessage> {
-		public void execute(Event<UIListInBoxPrivateMessage> event) throws Exception {
-			UIListInBoxPrivateMessage uicontainer = event.getSource() ;
-			String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
-			if(!ForumUtils.isEmpty(objctId)) {
-				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-				try {
-					uicontainer.forumService.saveReadMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
-					ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
-					UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class) ;
-					UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-					UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 650) ;
-					privateMessageForm.setPrivateMessage(privateMessage);
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
-					forumPortlet.getUserProfile() ;
-				} catch (Exception e) {}
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-			}
-		}
-	}
-	
-	static	public class DeleteMessageActionListener extends EventListener<UIListInBoxPrivateMessage> {
-		public void execute(Event<UIListInBoxPrivateMessage> event) throws Exception {
-			UIListInBoxPrivateMessage uicontainer = event.getSource() ;
-			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			if(!ForumUtils.isEmpty(objctId)) {
-				uicontainer.forumService.removePrivateMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
-				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.getUserProfile() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-			}
-		}
-	}
-	
-	static	public class ReplyMessageActionListener extends EventListener<UIListInBoxPrivateMessage> {
-		public void execute(Event<UIListInBoxPrivateMessage> event) throws Exception {
-			UIListInBoxPrivateMessage uicontainer = event.getSource() ;
-			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
-			UIPrivateMessageForm privateMessageForm = uicontainer.getParent() ;
-			privateMessageForm.setUpdate(privateMessage, true) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(privateMessageForm) ;
-		}
-	}
+public class UIListInBoxPrivateMessage extends UIContainer {
+  private ForumService              forumService;
+
+  private UserProfile               userProfile      = null;
+
+  private List<ForumPrivateMessage> listInbox        = null;
+
+  private String                    userName         = "";
+
+  private boolean                   isRenderIterator = false;
+
+  public UIListInBoxPrivateMessage() throws Exception {
+    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    addChild(UIForumPageIterator.class, null, "PageListInBoxMessage");
+  }
+
+  @SuppressWarnings("unused")
+  private UserProfile getUserProfile() throws Exception {
+    if (userProfile == null) {
+      userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+    }
+    this.userName = userProfile.getUserId();
+    return userProfile;
+  }
+
+  @SuppressWarnings("unused")
+  private boolean isRenderIterator() {
+    return isRenderIterator;
+  }
+
+  @SuppressWarnings( { "unused", "unchecked" })
+  private List<ForumPrivateMessage> getListInBoxPrivateMessage() throws Exception {
+    JCRPageList pageList = this.forumService.getPrivateMessage(userName, Utils.RECEIVE_MESSAGE);
+    UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
+    forumPageIterator.updatePageList(pageList);
+    pageList.setPageSize(10);
+    int page = forumPageIterator.getPageSelected();
+    this.listInbox = pageList.getPage(page);
+    if (pageList.getAvailable() > 10) {
+      isRenderIterator = true;
+    }
+    return this.listInbox;
+  }
+
+  @SuppressWarnings("unused")
+  private ForumPrivateMessage getPrivateMessage(String id) throws Exception {
+    List<ForumPrivateMessage> list = this.listInbox;
+    for (ForumPrivateMessage forumPrivateMessage : list) {
+      if (forumPrivateMessage.getId().equals(id))
+        return forumPrivateMessage;
+    }
+    return null;
+  }
+
+  static public class ViewMessageActionListener extends EventListener<UIListInBoxPrivateMessage> {
+    public void execute(Event<UIListInBoxPrivateMessage> event) throws Exception {
+      UIListInBoxPrivateMessage uicontainer = event.getSource();
+      String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
+      if (!ForumUtils.isEmpty(objctId)) {
+        UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+        try {
+          uicontainer.forumService.saveReadMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
+          ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId);
+          UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class);
+          UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+          UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 650);
+          privateMessageForm.setPrivateMessage(privateMessage);
+          event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+          forumPortlet.getUserProfile();
+        } catch (Exception e) {
+        }
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+      }
+    }
+  }
+
+  static public class DeleteMessageActionListener extends EventListener<UIListInBoxPrivateMessage> {
+    public void execute(Event<UIListInBoxPrivateMessage> event) throws Exception {
+      UIListInBoxPrivateMessage uicontainer = event.getSource();
+      String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
+      if (!ForumUtils.isEmpty(objctId)) {
+        uicontainer.forumService.removePrivateMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
+        UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+        forumPortlet.getUserProfile();
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+      }
+    }
+  }
+
+  static public class ReplyMessageActionListener extends EventListener<UIListInBoxPrivateMessage> {
+    public void execute(Event<UIListInBoxPrivateMessage> event) throws Exception {
+      UIListInBoxPrivateMessage uicontainer = event.getSource();
+      String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
+      ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId);
+      UIPrivateMessageForm privateMessageForm = uicontainer.getParent();
+      privateMessageForm.setUpdate(privateMessage, true);
+      event.getRequestContext().addUIComponentToUpdateByAjax(privateMessageForm);
+    }
+  }
 }

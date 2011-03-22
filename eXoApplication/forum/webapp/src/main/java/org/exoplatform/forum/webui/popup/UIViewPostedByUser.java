@@ -38,21 +38,24 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIViewPostedByUser extends UIForm implements UIPopupComponent {
-	public UIViewPostedByUser() throws Exception {
-		addChild(UIPageListPostByUser.class, null, "UIPageListPostByUser") ;
-	}
+  public UIViewPostedByUser() throws Exception {
+    addChild(UIPageListPostByUser.class, null, "UIPageListPostByUser");
+  }
 
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	public void setUserProfile(String userId) {
-		this.getChild(UIPageListPostByUser.class).setUserName(userId) ;
-	}
-	
-	static public class CloseActionListener extends EventListener<UIViewPostedByUser> {
-		public void execute(Event<UIViewPostedByUser> event) throws Exception {
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-		}
-	}
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  public void setUserProfile(String userId) {
+    this.getChild(UIPageListPostByUser.class).setUserName(userId);
+  }
+
+  static public class CloseActionListener extends EventListener<UIViewPostedByUser> {
+    public void execute(Event<UIViewPostedByUser> event) throws Exception {
+      UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+    }
+  }
 }

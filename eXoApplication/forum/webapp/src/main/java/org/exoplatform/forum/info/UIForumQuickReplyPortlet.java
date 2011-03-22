@@ -44,42 +44,45 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UIForumQuickReplyPortlet extends UIPortletApplication {
-	private boolean isRenderChild = false;
-	public UIForumQuickReplyPortlet() throws Exception {
-		addChild(UIQuickReplyForm.class, null, null).setRendered(false) ;
-		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
-	}
-	
-	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {		
-		super.processRender(app, context) ;
-	}	
-	
-	public void renderPopupMessages() throws Exception {
-		UIPopupMessages popupMess = getUIPopupMessages();
-		if(popupMess == null)	return ;
-		WebuiRequestContext	context = RequestContext.getCurrentInstance() ;
-		popupMess.processRender(context);
-	}
+  private boolean isRenderChild = false;
 
-	public void cancelAction() throws Exception {
-		WebuiRequestContext context = RequestContext.getCurrentInstance() ;
-		UIPopupAction popupAction = getChild(UIPopupAction.class) ;
-		popupAction.deActivate() ;
-		context.addUIComponentToUpdateByAjax(popupAction) ;
-	}
-	
-	static public class QuickReplyEventActionListener extends EventListener<UIForumQuickReplyPortlet> {
-		public void execute(Event<UIForumQuickReplyPortlet> event) throws Exception {
-			UIForumQuickReplyPortlet quickReplyPortlet = event.getSource();
-			ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-			quickReplyPortlet.isRenderChild = params.isRenderQuickReply();
-			if(quickReplyPortlet.isRenderChild && params.getCategoryId() == null) quickReplyPortlet.isRenderChild = false;
-			UIQuickReplyForm quickReplyForm = quickReplyPortlet.getChild(UIQuickReplyForm.class);
-			if(quickReplyPortlet.isRenderChild) {
-				quickReplyForm.setInitForm(params.getCategoryId(), params.getForumId(), params.getTopicId(), params.isModerator());
-			}
-			quickReplyForm.setRendered(quickReplyPortlet.isRenderChild);
-			event.getRequestContext().addUIComponentToUpdateByAjax(quickReplyPortlet);
-		}
-	}
-} 
+  public UIForumQuickReplyPortlet() throws Exception {
+    addChild(UIQuickReplyForm.class, null, null).setRendered(false);
+    addChild(UIPopupAction.class, null, "UIForumPopupAction");
+  }
+
+  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
+    super.processRender(app, context);
+  }
+
+  public void renderPopupMessages() throws Exception {
+    UIPopupMessages popupMess = getUIPopupMessages();
+    if (popupMess == null)
+      return;
+    WebuiRequestContext context = RequestContext.getCurrentInstance();
+    popupMess.processRender(context);
+  }
+
+  public void cancelAction() throws Exception {
+    WebuiRequestContext context = RequestContext.getCurrentInstance();
+    UIPopupAction popupAction = getChild(UIPopupAction.class);
+    popupAction.deActivate();
+    context.addUIComponentToUpdateByAjax(popupAction);
+  }
+
+  static public class QuickReplyEventActionListener extends EventListener<UIForumQuickReplyPortlet> {
+    public void execute(Event<UIForumQuickReplyPortlet> event) throws Exception {
+      UIForumQuickReplyPortlet quickReplyPortlet = event.getSource();
+      ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
+      quickReplyPortlet.isRenderChild = params.isRenderQuickReply();
+      if (quickReplyPortlet.isRenderChild && params.getCategoryId() == null)
+        quickReplyPortlet.isRenderChild = false;
+      UIQuickReplyForm quickReplyForm = quickReplyPortlet.getChild(UIQuickReplyForm.class);
+      if (quickReplyPortlet.isRenderChild) {
+        quickReplyForm.setInitForm(params.getCategoryId(), params.getForumId(), params.getTopicId(), params.isModerator());
+      }
+      quickReplyForm.setRendered(quickReplyPortlet.isRenderChild);
+      event.getRequestContext().addUIComponentToUpdateByAjax(quickReplyPortlet);
+    }
+  }
+}

@@ -33,14 +33,13 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 	 lifecycle = UIApplicationLifecycle.class,
 	 template = "app:/templates/forum/webui/info/UIForumStatisticPortlet.gtmpl"
 )
-
 public class UIForumStatisticPortlet extends UIPortletApplication {
-	public UIForumStatisticPortlet() throws Exception {
-		addChild(UICategoryInfo.class, null, null);
-	}
-	
-	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {		
-		super.processRender(app, context) ;
-	}	
-	
-} 
+  public UIForumStatisticPortlet() throws Exception {
+    addChild(UICategoryInfo.class, null, null);
+  }
+
+  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
+    super.processRender(app, context);
+  }
+
+}

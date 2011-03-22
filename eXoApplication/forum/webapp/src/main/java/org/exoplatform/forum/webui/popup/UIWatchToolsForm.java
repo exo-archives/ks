@@ -59,131 +59,156 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
-	public final String WATCHTOOLS_ITERATOR = "WatchToolsPageIterator";
-	private String path = "";
-	private String[] emails = new String[]{};
-	private boolean isTopic = false;
-	@SuppressWarnings("unchecked")
-	private JCRPageList pageList ;
-	UIForumPageIterator pageIterator ;
-	private List<String> listEmail = new ArrayList<String>();
-	
-	private Log log = ExoLogger.getLogger(UIWatchToolsForm.class);
-	
-	public UIWatchToolsForm() throws Exception {
-		pageIterator = addChild(UIForumPageIterator.class, null, WATCHTOOLS_ITERATOR);
-	}
-	public String getPath() {return path;}
-	public void setPath(String path) {this.path = path;}
+  public final String  WATCHTOOLS_ITERATOR = "WatchToolsPageIterator";
 
-	public boolean getIsTopic() {return isTopic;}
-	public void setIsTopic(boolean isTopic) {this.isTopic = isTopic;}
-	
-	public String[] getEmails() throws Exception {
-		emails = getListEmail().toArray(new String[]{});
-		return emails;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public void setEmails(String[] emails) {
-		listEmail.clear();
-		listEmail.addAll(Arrays.asList(emails));
-		pageList = new ForumPageList(6, listEmail.size());
-		pageList.setPageSize(6);
-		pageIterator = this.getChild(UIForumPageIterator.class);
-		pageIterator.updatePageList(pageList);
-		try {
-			if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
-		} catch (Exception e) {
-			log.error("\nA UIComponent could not rendered: ", e);
-		}	
-	}
+  private String       path                = "";
 
-	@SuppressWarnings("unchecked")
-	public List<String> getListEmail() throws Exception {
-		int pageSelect = pageIterator.getPageSelected() ;
-		List<String>list = new ArrayList<String>();
-		try {
-			list.addAll(this.pageList.getPageList(pageSelect, this.listEmail)) ;
-			if(list.isEmpty()){
-				while(list.isEmpty() && pageSelect > 1) {
-					list.addAll(this.pageList.getPageList(--pageSelect, this.listEmail)) ;
-					pageIterator.setSelectPage(pageSelect) ;
-				}
-			}
-		} catch (Exception e) {
-		}
-		return list ;
-	}
+  private String[]     emails              = new String[] {};
 
-	public void setUnWatchEmail(String[] emails, String unwatchEmail){
-		if(emails.length == 1) setEmails(emails);
-		else if(emails.length>1){
-			List<String> temp = new ArrayList<String>();
-			int i = 0;
-			for(String em : emails){
-				if(!em.equals(unwatchEmail)){
-					temp.add(em);
-				} 
-			}
-		 String[] tempEmails = (String[]) temp.toArray(new String[0]);
-			setEmails(tempEmails);
-		}
-	}
+  private boolean      isTopic             = false;
 
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
-	static	public class DeleteEmailActionListener extends EventListener<UIWatchToolsForm> {
-		public void execute(Event<UIWatchToolsForm> event) throws Exception {
-			String email = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIWatchToolsForm uiForm = event.getSource();
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-			try {
-				String path = uiForm.path;
-				forumService.removeWatch(1, path, "/" + email) ;
-				String []strings = new String[(uiForm.listEmail.size()-1)];
-				int j = 0;
-				for (String string : uiForm.listEmail) {
-					if(string.equals(email)) continue ;
-					strings[j] = string; ++j;
-				}
-				uiForm.setEmails(strings) ;
-				forumPortlet.updateWatching();
-				List<Watch> listWatches = forumPortlet.getWatchingByCurrentUser();
-				if(uiForm.getIsTopic()){
-					UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
-					topicDetail.setListWatches(listWatches);
-					topicDetail.setIsEditTopic(true) ;
-					uiForm.isTopic = false;
-					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
-				} else if(path.indexOf(Utils.CATEGORY) < path.lastIndexOf(Utils.FORUM)){
-					UITopicContainer topicContainer= forumPortlet.findFirstComponentOfType(UITopicContainer.class);
-					topicContainer.setIdUpdate(true);
-					topicContainer.setListWatches(listWatches);
-					event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
-				} else {
-					UICategory uicategory = forumPortlet.findFirstComponentOfType(UICategory.class);
-					uicategory.setIsEditCategory(true);
-					event.getRequestContext().addUIComponentToUpdateByAjax(uicategory) ;
-				}
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
-			}catch (Exception e) {}
-		}
-	}
-	
-	static	public class EditEmailActionListener extends EventListener<UIWatchToolsForm> {
-		public void execute(Event<UIWatchToolsForm> event) throws Exception {
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-		}
-	}
-	
-	static	public class CloseActionListener extends EventListener<UIWatchToolsForm> {
-		public void execute(Event<UIWatchToolsForm> event) throws Exception {
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-		}
-	}
+  @SuppressWarnings("unchecked")
+  private JCRPageList  pageList;
+
+  UIForumPageIterator  pageIterator;
+
+  private List<String> listEmail           = new ArrayList<String>();
+
+  private Log          log                 = ExoLogger.getLogger(UIWatchToolsForm.class);
+
+  public UIWatchToolsForm() throws Exception {
+    pageIterator = addChild(UIForumPageIterator.class, null, WATCHTOOLS_ITERATOR);
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  public boolean getIsTopic() {
+    return isTopic;
+  }
+
+  public void setIsTopic(boolean isTopic) {
+    this.isTopic = isTopic;
+  }
+
+  public String[] getEmails() throws Exception {
+    emails = getListEmail().toArray(new String[] {});
+    return emails;
+  }
+
+  @SuppressWarnings("deprecation")
+  public void setEmails(String[] emails) {
+    listEmail.clear();
+    listEmail.addAll(Arrays.asList(emails));
+    pageList = new ForumPageList(6, listEmail.size());
+    pageList.setPageSize(6);
+    pageIterator = this.getChild(UIForumPageIterator.class);
+    pageIterator.updatePageList(pageList);
+    try {
+      if (pageIterator.getInfoPage().get(3) <= 1)
+        pageIterator.setRendered(false);
+    } catch (Exception e) {
+      log.error("\nA UIComponent could not rendered: ", e);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<String> getListEmail() throws Exception {
+    int pageSelect = pageIterator.getPageSelected();
+    List<String> list = new ArrayList<String>();
+    try {
+      list.addAll(this.pageList.getPageList(pageSelect, this.listEmail));
+      if (list.isEmpty()) {
+        while (list.isEmpty() && pageSelect > 1) {
+          list.addAll(this.pageList.getPageList(--pageSelect, this.listEmail));
+          pageIterator.setSelectPage(pageSelect);
+        }
+      }
+    } catch (Exception e) {
+    }
+    return list;
+  }
+
+  public void setUnWatchEmail(String[] emails, String unwatchEmail) {
+    if (emails.length == 1)
+      setEmails(emails);
+    else if (emails.length > 1) {
+      List<String> temp = new ArrayList<String>();
+      int i = 0;
+      for (String em : emails) {
+        if (!em.equals(unwatchEmail)) {
+          temp.add(em);
+        }
+      }
+      String[] tempEmails = (String[]) temp.toArray(new String[0]);
+      setEmails(tempEmails);
+    }
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  static public class DeleteEmailActionListener extends EventListener<UIWatchToolsForm> {
+    public void execute(Event<UIWatchToolsForm> event) throws Exception {
+      String email = event.getRequestContext().getRequestParameter(OBJECTID);
+      UIWatchToolsForm uiForm = event.getSource();
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+      try {
+        String path = uiForm.path;
+        forumService.removeWatch(1, path, "/" + email);
+        String[] strings = new String[(uiForm.listEmail.size() - 1)];
+        int j = 0;
+        for (String string : uiForm.listEmail) {
+          if (string.equals(email))
+            continue;
+          strings[j] = string;
+          ++j;
+        }
+        uiForm.setEmails(strings);
+        forumPortlet.updateWatching();
+        List<Watch> listWatches = forumPortlet.getWatchingByCurrentUser();
+        if (uiForm.getIsTopic()) {
+          UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
+          topicDetail.setListWatches(listWatches);
+          topicDetail.setIsEditTopic(true);
+          uiForm.isTopic = false;
+          event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
+        } else if (path.indexOf(Utils.CATEGORY) < path.lastIndexOf(Utils.FORUM)) {
+          UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
+          topicContainer.setIdUpdate(true);
+          topicContainer.setListWatches(listWatches);
+          event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer);
+        } else {
+          UICategory uicategory = forumPortlet.findFirstComponentOfType(UICategory.class);
+          uicategory.setIsEditCategory(true);
+          event.getRequestContext().addUIComponentToUpdateByAjax(uicategory);
+        }
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
+      } catch (Exception e) {
+      }
+    }
+  }
+
+  static public class EditEmailActionListener extends EventListener<UIWatchToolsForm> {
+    public void execute(Event<UIWatchToolsForm> event) throws Exception {
+      UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+    }
+  }
+
+  static public class CloseActionListener extends EventListener<UIWatchToolsForm> {
+    public void execute(Event<UIWatchToolsForm> event) throws Exception {
+      UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
+    }
+  }
 }
