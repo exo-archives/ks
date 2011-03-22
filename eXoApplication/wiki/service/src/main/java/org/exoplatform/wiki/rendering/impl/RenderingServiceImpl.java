@@ -19,6 +19,7 @@ package org.exoplatform.wiki.rendering.impl;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import org.xwiki.component.manager.ComponentRepositoryException;
 import org.xwiki.context.Execution;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.FormatBlock;
+import org.xwiki.rendering.block.GroupBlock;
 import org.xwiki.rendering.block.HeaderBlock;
 import org.xwiki.rendering.block.LinkBlock;
 import org.xwiki.rendering.block.SectionBlock;
@@ -88,6 +90,7 @@ public class RenderingServiceImpl implements RenderingService, Startable {
       int sectionIndex = 1;
       for (HeaderBlock block : filteredHeaders) {
         SectionBlock section = block.getSection();
+        Block parentBlock = section.getParent();
         ResourceReference link = new ResourceReference( "section=" + sectionIndex, ResourceType.URL);       
         sectionIndex++;
         List<Block> emtyList = Collections.emptyList();
@@ -97,7 +100,14 @@ public class RenderingServiceImpl implements RenderingService, Startable {
         Map<String, String> spanParameters = new LinkedHashMap<String, String>();
         spanParameters.put("class", "EditSection");
         FormatBlock spanBlock = new FormatBlock(Collections.singletonList((Block) linkBlock), Format.NONE, spanParameters);
-        section.insertChildAfter(spanBlock, block);
+        block.addChild(spanBlock);
+        
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("class", "section-container");
+        Block sectionContainer = new GroupBlock(params);
+        sectionContainer.addChild(section);
+        
+        parentBlock.replaceChild(sectionContainer, section);
       }
     }
 

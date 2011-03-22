@@ -233,6 +233,26 @@ UIWikiPortlet.prototype.showBreadcrumbPopup = function(evt) {
   breadcrumbPopup.style.top = offsetTop + 'px';
 };
 
+
+UIWikiPortlet.prototype.highlightEditSection = function (header, highlight) {
+  var sectionContainer = eXo.core.DOMUtil.findAncestorByClass(header, 'section-container');
+  var section = eXo.core.DOMUtil.findFirstDescendantByClass(header, 'span', 'EditSection');
+  if (highlight == true) {
+    section.style.display = 'block';
+    sectionContainer.style.backgroundColor = '#F7F7F7';
+  }
+  else {
+    section.style.display = 'none';
+    sectionContainer.style.backgroundColor = '';
+  }
+};
+
+UIWikiPortlet.prototype.editSection = function(editLink) {
+  var linkLabel = eXo.core.DOMUtil.findDescendantsByTagName(editLink, 'span')[0];
+  eXo.wiki.UIWikiAjaxRequest.makeNewHash('#EditPage&' + linkLabel.innerHTML);
+};
+
+
 eXo.wiki.UIWikiPortlet = new UIWikiPortlet();
 
 /** ******************* Other functions ***************** */

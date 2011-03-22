@@ -27,10 +27,14 @@ UIWikiEditParagraph.prototype.init = function(pageContentAreaId, editActionId) {
   for ( var index = 0; index < sections.length; index++) {
     var editLink = eXo.core.DOMUtil.findDescendantsByTagName(sections[index], 'a')[0];
     var linkLabel = eXo.core.DOMUtil.findDescendantsByTagName(editLink, 'span')[0];
-    var actionLink = 'eXo.wiki.UIWikiAjaxRequest.makeNewHash(' + '\'#EditPage&' + linkLabel.innerHTML + '\');'
-    editLink.setAttribute('onclick', actionLink);
+    //var actionLink = 'eXo.wiki.UIWikiAjaxRequest.makeNewHash(' + '\'#EditPage&' + linkLabel.innerHTML + '\');'
+    //editLink.setAttribute('onclick', actionLink);
+    editLink.onclick = function() { eXo.wiki.UIWikiPortlet.editSection(this); }
     editLink.href = 'javascript:void(0);';
-    linkLabel.innerHTML = 'edit';
+    
+    var header = sections[index].parentNode.parentNode;
+    header.onmouseover = function() { eXo.wiki.UIWikiPortlet.highlightEditSection(this, true); }
+    header.onmouseout = function() { eXo.wiki.UIWikiPortlet.highlightEditSection(this, false); }
   }
 };
 
