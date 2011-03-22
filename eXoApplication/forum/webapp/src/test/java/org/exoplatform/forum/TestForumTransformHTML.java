@@ -68,15 +68,15 @@ public class TestForumTransformHTML extends TestCase{
   }
 	
 	public void testEnCodeHTML() {
-		assertEquals("", ForumTransformHTML.enCodeHTML(null));
+		assertEquals("", ForumTransformHTML.enCodeHTMLTitle(null));
 		// clear space superfluous fix for FCKEditer
-		assertEquals("", ForumTransformHTML.enCodeHTML("<p>&nbsp;&nbsp;&nbsp;</p>"));
-		assertEquals("", ForumTransformHTML.enCodeHTML("<p>&nbsp;&nbsp;&nbsp;     </p>"));
-		assertEquals("abc", ForumTransformHTML.enCodeHTML("<br/><br/><br/><br/>abc"));
-		assertEquals("abc", ForumTransformHTML.enCodeHTML("abc<br/><br/><br/><br/>"));
+		assertEquals("", ForumTransformHTML.enCodeHTMLTitle("<p>&nbsp;&nbsp;&nbsp;</p>"));
+		assertEquals("", ForumTransformHTML.enCodeHTMLTitle("<p>&nbsp;&nbsp;&nbsp;     </p>"));
+		assertEquals("abc", ForumTransformHTML.enCodeHTMLTitle("<br/><br/><br/><br/>abc"));
+		assertEquals("abc", ForumTransformHTML.enCodeHTMLTitle("abc<br/><br/><br/><br/>"));
 		// encode: '<' --> '&lt;' ; '>' --> '&gt;' ; ''' --> &#39
 		assertEquals("&lt;p&gt; test &lt;br/&gt; test &#39test&#39 &lt;div&gt;text&lt;/div&gt;&lt;/p&gt;", 
-								ForumTransformHTML.enCodeHTML("<p> test <br/> test 'test' <div>text</div></p>"));
+								ForumTransformHTML.enCodeHTMLTitle("<p> test <br/> test 'test' <div>text</div></p>"));
   }
 	
 	public void testUnCodeHTML() {
@@ -89,6 +89,14 @@ public class TestForumTransformHTML extends TestCase{
 		assertEquals("", ForumTransformHTML.enCodeViewSignature(null));
 		assertEquals("", ForumTransformHTML.enCodeViewSignature(""));
 		assertEquals("ABC hello<br/> test<div>hello</div><br/>Hello World.", ForumTransformHTML.enCodeViewSignature("ABC hello\n test<div>hello</div>\nHello World."));
+	}
+
+	public void testEnCodeHTMLContent() {
+	  assertEquals("", ForumTransformHTML.enCodeViewSignature(null));
+	  assertEquals("", ForumTransformHTML.enCodeViewSignature(""));
+	  String s =   "Abc\txyz \nHelo everybody <div>xxx</div> BBB.\nStar is 'Ngoi Sao'";
+	  assertEquals("Abc&nbsp; &nbsp; xyz <br/>Helo everybody &lt;div&gt;xxx&lt;/div&gt; BBB.<br/>Star is &apos;Ngoi Sao&apos;", 
+	               ForumTransformHTML.enCodeHTMLContent(s));
 	}
 
 	public void testFixAddBBcodeAction() {

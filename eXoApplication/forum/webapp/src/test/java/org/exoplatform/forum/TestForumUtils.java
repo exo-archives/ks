@@ -152,6 +152,14 @@ public class TestForumUtils extends TestCase {
   	assertEquals("+5.50", ForumUtils.getTimeZoneNumberInString(timeZone));
   }
 
+  public void testArraysMerge() {
+    String[] str1 = null;
+    String[] str2 = new String[]{"abc5", "abc4", "abc3", "abc7"};
+    assertEquals("[abc5, abc4, abc3, abc7]", Arrays.asList(ForumUtils.arraysMerge(str1, str2)).toString());
+    str1 = new String[]{"abc1", "abc2", "abc3", "abc1"};
+    assertEquals("[abc1, abc4, abc5, abc2, abc3, abc7]", Arrays.asList(ForumUtils.arraysMerge(str1, str2)).toString());
+  }
+  
   public void testGetStarNumber() throws Exception {
 //  	class return arrays class css of VoteRatingForm.
   	// vote max is 5, vote is value mean of users voting.

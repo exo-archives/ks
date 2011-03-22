@@ -1517,27 +1517,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     }
   }
 
-  private boolean checkForumHasAddTopic(UserProfile userProfile) throws Exception {
-    this.topic = (Topic) getForumService().getObjectNameById(this.topicId, Utils.TOPIC);
-    if (topic.getIsClosed() || topic.getIsLock())
-      return false;
-    Forum forum = (Forum) getForumService().getObjectNameById(this.forumId, Utils.FORUM);
-    if (forum.getIsClosed() || forum.getIsLock())
-      return false;
-    if (userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
-      if (!topic.getIsActive() || !topic.getIsActiveByForum())
-        return false;
-      String[] canCreadPost = topic.getCanPost();
-      if (!ForumUtils.isArrayEmpty(canCreadPost)) {
-        return ForumServiceUtils.hasPermission(canCreadPost, userProfile.getUserId());
-      }
-    }
-    return true;
-  }
-
   static public class QuickReplyActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-
       if (topicDetail.isDoubleClickQuickReply)
         return;
       topicDetail.isDoubleClickQuickReply = true;
@@ -1550,8 +1531,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           topicDetail.log.warn("Failed read quick reply: " + e.getMessage(), e);
         }
         String checksms = message;
+        UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
         if (message != null && message.trim().length() > 0) {
-          if (topicDetail.checkForumHasAddTopic(topicDetail.userProfile)) {
+          if (forumPortlet.checkForumHasAddPost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId)) {
             boolean isOffend = false;
             boolean hasTopicMod = false;
             if (!topicDetail.isMod) {
@@ -1566,35 +1548,16 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
               if (topicDetail.topic != null)
                 hasTopicMod = topicDetail.topic.getIsModeratePost();
             }
-            StringBuffer buffer = new StringBuffer();
-            for (int j = 0; j < message.length(); j++) {
-              char c = message.charAt(j);
-              if ((int) c == 9) {
-                buffer.append("&nbsp; &nbsp; ");
-              } else if ((int) c == 10) {
-                buffer.append("<br/>");
-              } else if ((int) c == 60) {
-                buffer.append("&lt;");
-              } else if ((int) c == 62) {
-                buffer.append("&gt;");
-              } else if (c == '\'') {
-                buffer.append("&apos;");
-              } else if (c == '&') {
-                buffer.append("&#x26;");
-              } else {
-                buffer.append(c);
-              }
-            }
+            message = ForumTransformHTML.enCodeHTMLContent(message);
 
             // set link
             String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicDetail.topicId).replaceFirst("private", "public");
             //
-            UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
             String userName = topicDetail.userProfile.getUserId();
             Topic topic = topicDetail.topic;
             Post post = new Post();
             post.setName("Re: " + topic.getTopicName());
-            post.setMessage(buffer.toString());
+            post.setMessage(message);
             post.setOwner(userName);
             post.setRemoteAddr(topicDetail.getRemoteIP());
             post.setIcon(topic.getIcon());
@@ -1649,32 +1612,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   static public class PreviewReplyActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-
       String message = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue();
       String checksms = (message);
       if (checksms != null && message.trim().length() > 0) {
-        StringBuffer buffer = new StringBuffer();
-        for (int j = 0; j < message.length(); j++) {
-          char c = message.charAt(j);
-          if ((int) c == 9) {
-            buffer.append("&nbsp; &nbsp; ");
-          } else if ((int) c == 10) {
-            buffer.append("<br/>");
-          } else if ((int) c == 60) {
-            buffer.append("&lt;");
-          } else if ((int) c == 62) {
-            buffer.append("&gt;");
-          } else if (c == '&') {
-            buffer.append("&#x26;");
-          } else {
-            buffer.append(c);
-          }
-        }
+        message = ForumTransformHTML.enCodeHTMLContent(message);
         String userName = topicDetail.userProfile.getUserId();
         Topic topic = topicDetail.topic;
         Post post = new Post();
         post.setName("Re: " + topic.getTopicName());
-        post.setMessage(buffer.toString());
+        post.setMessage(message);
         post.setOwner(userName);
         post.setRemoteAddr("");
         post.setIcon(topic.getIcon());
@@ -1686,7 +1632,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         viewPost.setPostView(post);
         viewPost.setViewUserInfo(false);
         viewPost.setActionForm(new String[] { "Close" });
-
       } else {
         warning("MessagePost.msg.message-empty", getLabel(FIELD_MESSAGE_TEXTAREA));
       }

@@ -512,30 +512,70 @@ public class UIForumPortlet extends UIPortletApplication {
     return "";
   }
 
-  static public class ReLoadPortletEventActionListener extends EventListener<UIForumPortlet> {
-    public void execute(Event<UIForumPortlet> event) throws Exception {
-      UIForumPortlet forumPortlet = event.getSource();
-      ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-      if (params.getTopicId() != null) {
-        forumPortlet.userProfile.setLastTimeAccessTopic(params.getTopicId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis());
-        UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
-        topicDetail.setIdPostView("lastpost");
-      }
-      if (params.isRenderPoll()) {
-        UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class);
-        topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true);
-        ;
-        topicDetailContainer.getChild(UITopicPoll.class).setEditPoll(true);
-      }
-      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-    }
-  }
-
   private boolean isArrayNotNull(String[] strs) {
     if (strs != null && strs.length > 0 && !strs[0].equals(" "))
       return true;// private
     else
       return false;
+  }
+  
+  public boolean checkForumHasAddTopic(String categoryId, String forumId) throws Exception {
+    if (userProfile == null)
+      updateUserProfileInfo();
+    if (userProfile.getUserRole() == 0) return true;
+    try {
+      Forum forum = (Forum) forumService.getObjectNameById(forumId, Utils.FORUM);
+      if (forum.getIsClosed() || forum.getIsLock())
+        return false;
+      Category cate = (Category) forumService.getObjectNameById(categoryId, Utils.CATEGORY);
+      boolean isAdd = true;
+      if(!Utils.isEmpty(cate.getUserPrivate())) {
+        isAdd = ForumServiceUtils.hasPermission(cate.getUserPrivate(), userProfile.getUserId());
+      }
+      if(isAdd) {
+        if (userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
+          String[] canCreadTopic = ForumUtils.arraysMerge(forum.getCreateTopicRole(), cate.getCreateTopicRole());
+          if (!Utils.isEmpty(canCreadTopic) && !canCreadTopic[0].equals(" ")) {
+            return ForumServiceUtils.hasPermission(canCreadTopic, userProfile.getUserId());
+          }
+        }
+      } else return false;
+    } catch (Exception e) {
+      throw e;
+    }
+    return true;
+  }
+  
+  public boolean checkForumHasAddPost(String categoryId, String forumId, String topicId) throws Exception {
+    if (userProfile == null)
+      updateUserProfileInfo();
+    if (userProfile.getUserRole() == 0) return true;
+    try {
+      Topic topic = (Topic) forumService.getObjectNameById(topicId, Utils.TOPIC);
+      if (topic.getIsClosed() || topic.getIsLock())
+        return false;
+      Forum forum = (Forum) forumService.getObjectNameById(forumId, Utils.FORUM);
+      if (forum.getIsClosed() || forum.getIsLock())
+        return false;
+      Category cate = (Category) forumService.getObjectNameById(categoryId, Utils.CATEGORY);
+      boolean isAdd = true;
+      if(!Utils.isEmpty(cate.getUserPrivate())) {
+        isAdd = ForumServiceUtils.hasPermission(cate.getUserPrivate(), userProfile.getUserId());
+      }
+      if(isAdd) {
+        if (userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
+          if (!topic.getIsActive() || !topic.getIsActiveByForum())
+            return false;
+          String[] canCreadPost = ForumUtils.arraysMerge(cate.getCreateTopicRole(), ForumUtils.arraysMerge(topic.getCanPost(), forum.getCreateTopicRole()));
+          if (!ForumUtils.isArrayEmpty(canCreadPost)) {
+            return ForumServiceUtils.hasPermission(canCreadPost, userProfile.getUserId());
+          }
+        }
+      } else return false;
+    } catch (Exception e) {
+      throw e;
+    }
+    return true;
   }
 
   public boolean checkCanView(Category cate, Forum forum, Topic topic) throws Exception {
@@ -774,6 +814,25 @@ public class UIForumPortlet extends UIPortletApplication {
     getChild(UIForumLinks.class).setValueOption(path);
   }
 
+  static public class ReLoadPortletEventActionListener extends EventListener<UIForumPortlet> {
+    public void execute(Event<UIForumPortlet> event) throws Exception {
+      UIForumPortlet forumPortlet = event.getSource();
+      ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
+      if (params.getTopicId() != null) {
+        forumPortlet.userProfile.setLastTimeAccessTopic(params.getTopicId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis());
+        UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
+        topicDetail.setIdPostView("lastpost");
+      }
+      if (params.isRenderPoll()) {
+        UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class);
+        topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true);
+        ;
+        topicDetailContainer.getChild(UITopicPoll.class).setEditPoll(true);
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+    }
+  }
+  
   static public class OpenLinkActionListener extends EventListener<UIForumPortlet> {
     public void execute(Event<UIForumPortlet> event) throws Exception {
       UIForumPortlet forumPortlet = event.getSource();

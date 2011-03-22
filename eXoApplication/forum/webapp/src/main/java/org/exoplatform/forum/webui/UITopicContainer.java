@@ -1213,26 +1213,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   static public class SetOrderByActionListener extends BaseEventListener<UITopicContainer> {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String path) throws Exception {
       String orderOption = null;
-      // In case : user have sort before
-      if (!ForumUtils.isEmpty(uiTopicContainer.strOrderBy)) {
-        // If user want to reverse sort of a property
-        if (uiTopicContainer.strOrderBy.indexOf(path) >= 0) {
-          if (uiTopicContainer.strOrderBy.indexOf("descending") > 0) {
-            uiTopicContainer.strOrderBy = path + " ascending";
-            orderOption = "ascending";
-          } else {
-            uiTopicContainer.strOrderBy = path + " descending";
-            orderOption = "descending";
-          }
-          // User sort in another property
-        } else {
-          uiTopicContainer.strOrderBy = path + " ascending";
-          orderOption = "ascending";
-        }
-        // In case : The first time user sorting
-      } else {
-        uiTopicContainer.strOrderBy = path + " ascending";
+      uiTopicContainer.strOrderBy = ForumUtils.getOrderBy(uiTopicContainer.strOrderBy, path);
+      if(uiTopicContainer.strOrderBy.indexOf("ascending") > 0) {
         orderOption = "ascending";
+      } else {
+        orderOption = "descending";
       }
       uiTopicContainer.setCssClassForSorting(path, orderOption);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);

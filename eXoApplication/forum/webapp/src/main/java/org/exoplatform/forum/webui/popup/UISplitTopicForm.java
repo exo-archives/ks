@@ -152,7 +152,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
       UISplitTopicForm uiForm = event.getSource();
       String newTopicTitle = uiForm.getUIStringInput(FIELD_SPLITTHREAD_INPUT).getValue();
       if (!ForumUtils.isEmpty(newTopicTitle)) {
-        newTopicTitle = ForumTransformHTML.enCodeHTML(newTopicTitle);
+        newTopicTitle = ForumTransformHTML.enCodeHTMLTitle(newTopicTitle);
         // postIds number/id
         List<String> postIds = uiForm.getIdSelected();
         if (postIds.size() > 0) {

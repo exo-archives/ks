@@ -433,7 +433,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
         return;
       }
 
-      signature = ForumTransformHTML.enCodeHTML(signature);
+      signature = ForumTransformHTML.enCodeHTMLTitle(signature);
       boolean isDisplaySignature = (Boolean) inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue();
       Boolean isDisplayAvatar = (Boolean) inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue();
       boolean isAutoWatchMyTopics = (Boolean) inputSetProfile.getUIFormCheckBoxInput(FIELD_AUTOWATCHMYTOPICS_CHECKBOX).getValue();

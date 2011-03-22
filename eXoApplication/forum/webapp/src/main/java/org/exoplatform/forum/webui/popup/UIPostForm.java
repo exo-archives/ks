@@ -287,7 +287,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       if (postTitle != null && postTitle.length() <= 3) {
         k = 0;
       }
-      postTitle = ForumTransformHTML.enCodeHTML(postTitle).trim();
+      postTitle = ForumTransformHTML.enCodeHTMLTitle(postTitle).trim();
       if (t > 0 && k != 0 && !checksms.equals("null")) {
         Post post = uiForm.post_;
         post.setName(postTitle);
@@ -323,28 +323,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     }
   }
 
-  private boolean checkForumHasAddTopic(UserProfile userProfile) throws Exception {
-    try {
-      this.topic = (Topic) getForumService().getObjectNameById(this.topicId, Utils.TOPIC);
-      if (topic.getIsClosed() || topic.getIsLock())
-        return false;
-      Forum forum = (Forum) getForumService().getObjectNameById(this.forumId, Utils.FORUM);
-      if (forum.getIsClosed() || forum.getIsLock())
-        return false;
-      if (userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
-        if (!topic.getIsActive() || !topic.getIsActiveByForum())
-          return false;
-        String[] canCreadPost = topic.getCanPost();
-        if (!ForumUtils.isArrayEmpty(canCreadPost)) {
-          return ForumServiceUtils.hasPermission(canCreadPost, userProfile.getUserId());
-        }
-      }
-    } catch (Exception e) {
-      throw e;
-    }
-    return true;
-  }
-
   static public class SubmitPostActionListener extends BaseEventListener<UIPostForm> {
     public void onEvent(Event<UIPostForm> event, UIPostForm uiForm, String id) throws Exception {
       if (uiForm.isDoubleClickSubmit)
@@ -353,7 +331,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       UserProfile userProfile = forumPortlet.getUserProfile();
       try {
-        if (uiForm.checkForumHasAddTopic(userProfile)) {
+        if (forumPortlet.checkForumHasAddPost(uiForm.categoryId, uiForm.forumId, uiForm.topicId)) {
           UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
           int t = 0, k = 1;
           String postTitle = " " + threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
@@ -370,7 +348,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             return;
           }
 
-          editReason = ForumTransformHTML.enCodeHTML(editReason).trim();
+          editReason = ForumTransformHTML.enCodeHTMLTitle(editReason).trim();
           String userName = userProfile.getUserId();
           String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
           String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
@@ -383,7 +361,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           if (postTitle.trim().length() <= 0) {
             k = 0;
           }
-          postTitle = ForumTransformHTML.enCodeHTML(postTitle);
+          postTitle = ForumTransformHTML.enCodeHTMLTitle(postTitle);
           Post post = uiForm.post_;
           boolean isPP = false;
           if (t > 0 && k != 0 && !checksms.equals("null")) {

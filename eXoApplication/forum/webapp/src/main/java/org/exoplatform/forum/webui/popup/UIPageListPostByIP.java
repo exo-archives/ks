@@ -254,19 +254,7 @@ public class UIPageListPostByIP extends BaseUIForm implements UIPopupComponent {
 
   static public class SetOrderByActionListener extends BaseEventListener<UIPageListPostByIP> {
     public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiContainer, final String path) throws Exception {
-      if (!ForumUtils.isEmpty(uiContainer.strOrderBy)) {
-        if (uiContainer.strOrderBy.indexOf(path) >= 0) {
-          if (uiContainer.strOrderBy.indexOf("descending") > 0) {
-            uiContainer.strOrderBy = path + " ascending";
-          } else {
-            uiContainer.strOrderBy = path + " descending";
-          }
-        } else {
-          uiContainer.strOrderBy = path + " ascending";
-        }
-      } else {
-        uiContainer.strOrderBy = path + " ascending";
-      }
+      uiContainer.strOrderBy = ForumUtils.getOrderBy(uiContainer.strOrderBy, path);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer);
     }
   }

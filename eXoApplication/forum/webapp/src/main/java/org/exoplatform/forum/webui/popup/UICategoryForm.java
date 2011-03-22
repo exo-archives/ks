@@ -251,13 +251,13 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
         warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_CATEGORYTITLE_INPUT), String.valueOf(maxText) });
         return;
       }
-      categoryTitle = ForumTransformHTML.enCodeHTML(categoryTitle);
+      categoryTitle = ForumTransformHTML.enCodeHTMLTitle(categoryTitle);
       String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue();
       if (!ForumUtils.isEmpty(description) && description.length() > maxText) {
         warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_DESCRIPTION_INPUT), String.valueOf(maxText) });
         return;
       }
-      description = ForumTransformHTML.enCodeHTML(description);
+      description = ForumTransformHTML.enCodeHTMLTitle(description);
       String categoryOrder = uiForm.getUIStringInput(FIELD_CATEGORYORDER_INPUT).getValue();
       if (ForumUtils.isEmpty(categoryOrder))
         categoryOrder = "0";

@@ -396,7 +396,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
         uiForm.isDoubleClickSubmit = false;
         return;
       }
-      forumTitle = ForumTransformHTML.enCodeHTML(forumTitle);
+      forumTitle = ForumTransformHTML.enCodeHTMLTitle(forumTitle);
       String forumOrder = newForumForm.getUIStringInput(FIELD_FORUMORDER_INPUT).getValue();
       if (ForumUtils.isEmpty(forumOrder))
         forumOrder = "0";
@@ -411,7 +411,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       String description = newForumForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).getValue();
       if (ForumUtils.isEmpty(description))
         description = " ";
-      description = ForumTransformHTML.enCodeHTML(description);
+      description = ForumTransformHTML.enCodeHTMLTitle(description);
       UIFormInputWithActions moderationOptions = uiForm.getChildById(FIELD_MODERATOROPTION_FORM);
       boolean isAutoAddEmail = moderationOptions.getUIFormCheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
       String moderators = moderationOptions.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).getValue();

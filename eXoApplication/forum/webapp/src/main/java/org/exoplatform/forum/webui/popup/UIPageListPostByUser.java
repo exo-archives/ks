@@ -356,19 +356,7 @@ public class UIPageListPostByUser extends UIContainer {
     public void execute(Event<UIPageListPostByUser> event) throws Exception {
       UIPageListPostByUser uiContainer = event.getSource();
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
-      if (!ForumUtils.isEmpty(uiContainer.strOrderBy)) {
-        if (uiContainer.strOrderBy.indexOf(path) >= 0) {
-          if (uiContainer.strOrderBy.indexOf("descending") > 0) {
-            uiContainer.strOrderBy = path + " ascending";
-          } else {
-            uiContainer.strOrderBy = path + " descending";
-          }
-        } else {
-          uiContainer.strOrderBy = path + " ascending";
-        }
-      } else {
-        uiContainer.strOrderBy = path + " ascending";
-      }
+      uiContainer.strOrderBy = ForumUtils.getOrderBy(uiContainer.strOrderBy, path);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer);
     }
   }

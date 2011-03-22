@@ -181,7 +181,7 @@ public class UICategory extends BaseForumForm {
       try {
         this.category = getForumService().getCategory(this.categoryId);
       } catch (Exception e) {
-        e.printStackTrace();
+        log.debug("Failed to get category", e);
       }
       this.isEditCategory = false;
     }
@@ -192,7 +192,7 @@ public class UICategory extends BaseForumForm {
     try {
       this.category = getForumService().getCategory(this.categoryId);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.debug("Failed to get category", e);
     }
     return category;
   }
@@ -213,7 +213,7 @@ public class UICategory extends BaseForumForm {
       try {
         this.forums = getForumService().getForumSummaries(this.categoryId, strQuery);
       } catch (Exception e) {
-        e.printStackTrace();
+        log.debug("Failed to get forum summaries", e);
       }
       this.isEditForum = false;
       this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true);
@@ -721,7 +721,6 @@ public class UICategory extends BaseForumForm {
         info("UIAddWatchingForm.msg.successfully");
         event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory);
       } catch (Exception e) {
-        e.printStackTrace();
         warning("UIAddWatchingForm.msg.fall");
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory);
@@ -738,7 +737,6 @@ public class UICategory extends BaseForumForm {
         isUnWatch = true;
         info("UIAddWatchingForm.msg.UnWatchSuccessfully");
       } catch (Exception e) {
-        e.printStackTrace();
         warning("UIAddWatchingForm.msg.UnWatchfall");
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory);

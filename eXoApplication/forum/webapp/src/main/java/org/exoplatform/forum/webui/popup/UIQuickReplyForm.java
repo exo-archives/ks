@@ -25,6 +25,7 @@ import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.info.UIForumQuickReplyPortlet;
@@ -125,23 +126,7 @@ public class UIQuickReplyForm extends UIForm {
           if (quickReply.topic != null)
             hasTopicMod = quickReply.topic.getIsModeratePost();
         }
-        StringBuffer buffer = new StringBuffer();
-        for (int j = 0; j < message.length(); j++) {
-          char c = message.charAt(j);
-          if ((int) c == 9) {
-            buffer.append("&nbsp; &nbsp; ");
-          } else if ((int) c == 10) {
-            buffer.append("<br/>");
-          } else if ((int) c == 60) {
-            buffer.append("&lt;");
-          } else if ((int) c == 62) {
-            buffer.append("&gt;");
-          } else if (c == '\'') {
-            buffer.append("&apos;");
-          } else {
-            buffer.append(c);
-          }
-        }
+        message = ForumTransformHTML.enCodeHTMLContent(message);
         String remoteAddr = Utils.getRemoteIP();
         UserProfile userProfile = forumService.getDefaultUserProfile(quickReply.userName, remoteAddr);
         // set link
@@ -151,7 +136,7 @@ public class UIQuickReplyForm extends UIForm {
         Topic topic = quickReply.topic;
         Post post = new Post();
         post.setName("Re: " + topic.getTopicName());
-        post.setMessage(buffer.toString());
+        post.setMessage(message);
         post.setOwner(quickReply.userName);
         post.setRemoteAddr(remoteAddr);
         post.setIcon(topic.getIcon());
@@ -206,25 +191,11 @@ public class UIQuickReplyForm extends UIForm {
       String message = quickReply.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue();
       String checksms = (message);
       if (checksms != null && checksms.trim().length() > 3) {
-        StringBuffer buffer = new StringBuffer();
-        for (int j = 0; j < message.length(); j++) {
-          char c = message.charAt(j);
-          if ((int) c == 9) {
-            buffer.append("&nbsp; &nbsp; ");
-          } else if ((int) c == 10) {
-            buffer.append("<br/>");
-          } else if ((int) c == 60) {
-            buffer.append("&lt;");
-          } else if ((int) c == 62) {
-            buffer.append("&gt;");
-          } else {
-            buffer.append(c);
-          }
-        }
+        message = ForumTransformHTML.enCodeHTMLContent(message);
         Topic topic = quickReply.topic;
         Post post = new Post();
         post.setName("Re: " + topic.getTopicName());
-        post.setMessage(buffer.toString());
+        post.setMessage(message);
         post.setOwner(quickReply.userName);
         post.setRemoteAddr("");
         post.setIcon(topic.getIcon());

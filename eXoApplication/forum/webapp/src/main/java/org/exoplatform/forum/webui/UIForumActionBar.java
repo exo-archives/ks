@@ -116,24 +116,12 @@ public class UIForumActionBar extends UIContainer {
     }
   }
 
-  protected String getCometdContextName() {
-    String cometdContextName = "cometd";
-    try {
-      EXoContinuationBayeux bayeux = (EXoContinuationBayeux) PortalContainer.getInstance().getComponentInstanceOfType(AbstractBayeux.class);
-      return (bayeux == null ? "cometd" : bayeux.getCometdContextName());
-    } catch (Exception e) {
-    }
-    return cometdContextName;
+  public String getCometdContextName() {
+    return ((UIForumPortlet) this.getParent()).getCometdContextName();
   }
 
   public String getUserToken() throws Exception {
-    try {
-      ContinuationService continuation = (ContinuationService) PortalContainer.getInstance().getComponentInstanceOfType(ContinuationService.class);
-      return continuation.getUserToken(userProfile.getUserId());
-    } catch (Exception e) {
-      log.error("Could not retrieve continuation token for user " + userProfile.getUserId(), e);
-    }
-    return "";
+    return ((UIForumPortlet) this.getParent()).getUserToken();
   }
 
   static public class PrivateMessageActionListener extends EventListener<UIForumActionBar> {

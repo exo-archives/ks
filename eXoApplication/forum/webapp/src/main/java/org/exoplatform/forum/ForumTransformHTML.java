@@ -107,7 +107,7 @@ public class ForumTransformHTML {
     return builder.toString();
   }
 
-  public static String enCodeHTML(String s) {
+  public static String enCodeHTMLTitle(String s) {
     StringBuffer buffer = new StringBuffer();
     if (s != null) {
       s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
@@ -127,6 +127,29 @@ public class ForumTransformHTML {
       }
     }
     return buffer.toString().replaceFirst("(<br/>)*", "");
+  }
+
+  public static String enCodeHTMLContent(String message) {
+    StringBuffer buffer = new StringBuffer();
+    for (int j = 0; j < message.length(); j++) {
+      char c = message.charAt(j);
+      if ((int) c == 9) {
+        buffer.append("&nbsp; &nbsp; ");
+      } else if ((int) c == 10) {
+        buffer.append("<br/>");
+      } else if ((int) c == 60) {
+        buffer.append("&lt;");
+      } else if ((int) c == 62) {
+        buffer.append("&gt;");
+      } else if (c == '\'') {
+        buffer.append("&apos;");
+      } else if (c == '&') {
+        buffer.append("&#x26;");
+      } else {
+        buffer.append(c);
+      }
+    }
+   return buffer.toString(); 
   }
 
   public static String enCodeViewSignature(String s) {

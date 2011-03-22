@@ -810,7 +810,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       }
 
       String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue();
-      signature = ForumTransformHTML.enCodeHTML(signature);
+      signature = ForumTransformHTML.enCodeHTMLTitle(signature);
       boolean isDisplaySignature = (Boolean) inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue();
       Boolean isDisplayAvatar = (Boolean) inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue();
 

@@ -30,9 +30,11 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -229,6 +231,27 @@ public class ForumUtils {
     return className;
   }
 
+  public static String getOrderBy(String strOrderBy, String param) {
+    // In case : user have sort before
+    if (!ForumUtils.isEmpty(strOrderBy)) {
+      // If user want to reverse sort of a property
+      if (strOrderBy.indexOf(param) >= 0) {
+        if (strOrderBy.indexOf("descending") > 0) {
+          strOrderBy = param + " ascending";
+        } else {
+          strOrderBy = param + " descending";
+        }
+        // User sort in another property
+      } else {
+        strOrderBy = param + " ascending";
+      }
+      // In case : The first time user sorting
+    } else {
+      strOrderBy = param + " ascending";
+    }
+    return strOrderBy;
+  }
+  
   public static String[] getCensoredKeyword(ForumService forumService) throws Exception {
     ForumAdministration forumAdministration = forumService.getForumAdministration();
     String stringKey = forumAdministration.getCensoredKeyword();
@@ -354,6 +377,19 @@ public class ForumUtils {
     return list.toArray(new String[list.size()]);
   }
 
+  public static String[] arraysMerge(String[] strs1, String[] strs2) {
+    if(isArrayEmpty(strs1)) return strs2;
+    if(isArrayEmpty(strs2)) return strs1;
+    Set<String> set = new HashSet<String>();
+    for (int i = 0; i < strs1.length; i++) {
+      set.add(strs1[i]);
+    }
+    for (int i = 0; i < strs2.length; i++) {
+      set.add(strs2[i]);
+    }
+    return set.toArray(new String[set.size()]);
+  }
+  
   public static boolean isStringInStrings(String[] strings, String string) {
     string = string.trim();
     for (String string1 : strings) {

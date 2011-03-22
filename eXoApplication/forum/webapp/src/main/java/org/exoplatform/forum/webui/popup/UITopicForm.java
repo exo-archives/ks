@@ -463,7 +463,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
       if (topicTitle.length() < 1 && topicTitle.equals("null")) {
         k = 0;
       }
-      topicTitle = ForumTransformHTML.enCodeHTML(topicTitle);
+      topicTitle = ForumTransformHTML.enCodeHTMLTitle(topicTitle);
       if (t > 0 && k != 0 && !checksms.equals("null")) {
         String userName = UserHelper.getCurrentUser();
         Post postNew = new Post();
@@ -501,23 +501,6 @@ public class UITopicForm extends BaseForumForm implements UISelector {
     }
   }
 
-  private boolean checkForumHasAddTopic(UserProfile userProfile) throws Exception {
-    try {
-      this.forum = (Forum) getForumService().getObjectNameById(forum.getId(), Utils.FORUM);
-      if (this.forum.getIsClosed() || this.forum.getIsLock())
-        return false;
-      if (userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
-        String[] canCreadTopic = forum.getCreateTopicRole();
-        if (canCreadTopic != null && canCreadTopic.length > 0 && !canCreadTopic[0].equals(" ")) {
-          return ForumServiceUtils.hasPermission(canCreadTopic, userProfile.getUserId());
-        }
-      }
-    } catch (Exception e) {
-      throw e;
-    }
-    return true;
-  }
-
   static public class SubmitThreadActionListener extends BaseEventListener<UITopicForm> {
     public void onEvent(Event<UITopicForm> event, UITopicForm uiForm, final String objectId) throws Exception {
       if (uiForm.isDoubleClickSubmit)
@@ -526,7 +509,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       UserProfile userProfile = forumPortlet.getUserProfile();
       try {
-        if (uiForm.checkForumHasAddTopic(userProfile)) {
+        if (forumPortlet.checkForumHasAddTopic(uiForm.categoryId, uiForm.forumId)) {
           int t = 0, k = 1;
           UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
           UIFormStringInput stringInputTitle = threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT);
@@ -555,8 +538,8 @@ public class UITopicForm extends BaseForumForm implements UISelector {
           if (topicTitle.length() <= 0 && topicTitle.equals("null")) {
             k = 0;
           }
-          topicTitle = ForumTransformHTML.enCodeHTML(topicTitle);
-          editReason = ForumTransformHTML.enCodeHTML(editReason);
+          topicTitle = ForumTransformHTML.enCodeHTMLTitle(topicTitle);
+          editReason = ForumTransformHTML.enCodeHTMLTitle(editReason);
           if (t > 0 && k != 0 && !checksms.equals("null")) {
             boolean isOffend = false;
             boolean hasForumMod = false;
