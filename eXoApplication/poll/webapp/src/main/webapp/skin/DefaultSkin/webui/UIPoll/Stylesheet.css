@@ -6,8 +6,35 @@
 	height: auto;
 }
 
+.UIPollPortlet .UITopicPoll .MenuItem {
+	background-position: 6px 50%;
+	cursor: pointer;
+}
+
+.UIPollPortlet .UITopicPoll .MenuItem:hover {
+	background-color:#DEE4F2 ;
+	color: orange; 
+}
+
+.UIPollPortlet .UITopicPoll .MenuItem .ItemIcon {
+	line-height: 16px;
+	margin: 0px;
+	min-width: 60px;
+	padding: 5px 10px 5px 28px;
+	text-align: left;
+	white-space: nowrap;
+}
+
 .UIPollPortlet .UITopicPoll .UITabContentContainer {
-	border-top: solid 1px #b7b7b7;
+	border: none;
+	background: none;
+}
+
+
+.UIPollPortlet .UITopicPoll .UITabPane .UITabContentContainer .UITabContent {
+	border: none;
+	padding: 0px;
+	background: none;
 }
 
 .UIPollPortlet .UITopicPoll .ForumToolbar .Lable {
@@ -39,6 +66,7 @@
 
 .UIPollPortlet .UITopicPoll .TopicPollContainer {
 	border: 1px solid #b7b7b7;
+	background: #F7F7F7;
 }
 
 .UIPollPortlet .UITopicPoll .TopicPollContainer .PollTime {
@@ -85,8 +113,8 @@
 }
 
 /******************************** ViewPollForm *******************************/
-.UIPollPortlet .ViewPollForm {
-	padding: 0px 15px;
+.UIPollPortlet .UITopicPoll .ViewPollForm {
+	padding: 0px;
 }
 
 .UIPollPortlet .ViewPollForm .UIGrid .Number {

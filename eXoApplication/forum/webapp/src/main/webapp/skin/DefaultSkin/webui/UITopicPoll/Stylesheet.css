@@ -7,8 +7,15 @@
 }
 
 .UIForumPortlet .UITopicPoll .UITabContentContainer {
-	border-top: solid 1px #b7b7b7;
+	border: none;
 }
+
+.UIForumPortlet .UITopicPoll .UITabPane .UITabContentContainer .UITabContent {
+	border: none;
+	padding: 0px;
+	background: none;
+}
+
 
 .UIForumPortlet .UITopicPoll .ForumToolbar .Lable {
 	float: left;
@@ -39,6 +46,7 @@
 
 .UIForumPortlet .UITopicPoll .TopicPollContainer {
 	border: 1px solid #b7b7b7;
+	background: #F7F7F7;
 }
 
 .UIForumPortlet .UITopicPoll .TopicPollContainer .PollTime {
@@ -86,7 +94,7 @@
 
 /******************************** ViewPollForm *******************************/
 .UIForumPortlet .ViewPollForm {
-	padding: 0px 15px;
+	padding: 0px;
 }
 
 .UIForumPortlet .ViewPollForm .UIGrid .Number {
