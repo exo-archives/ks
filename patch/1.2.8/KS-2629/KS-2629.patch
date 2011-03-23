@@ -1,0 +1,49 @@
+Index: eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_fr.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_fr.properties	(revision 67465)
++++ eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_fr.properties	(working copy)
+@@ -40,7 +40,7 @@
+ UIForumPortlet.msg.save-successfully=Les paramètres de portlet on été enregistrés.
+ UIForumPortlet.msg.save-fail=Les paramètres de portlet n'ont pas été correctement enregistrés.
+ UIForumPopupWindow.title.ForumRSSForm=Le flux URL
+-UIForumPopupWindow.action.Cancel=Fermer
++UIForumPopupWindow.action.Cancel=Annuler
+ 
+ NameValidator.msg.ShortText=Le champ "{0}" est trop court.
+ NameValidator.msg.ShortMessage=Le champ "{0}" est trop court. Entrez 3 caractères au minimum.
+@@ -402,7 +402,7 @@
+ #							UIForumAdministrationForm 																		#
+ #############################################################################
+ UIForumPopupWindow.title.UIForumAdministration=Administration
+-UIForumAdministrationForm.action.Cancel=Fermer
++UIForumAdministrationForm.action.Cancel=Annuler
+ UIForumAdministrationForm.action.Save=Enregistrer
+ UIForumAdministrationForm.action.Run=Executer
+ UIForumAdministrationForm.label.searchIpBan=
+@@ -1155,7 +1155,7 @@
+ UIBanIPForumManagerForm.sms.ipBanRemoveFalse=L'adresse IP {0} ne peut être supprimée.
+ UIBanIPForumManagerForm.sms.ipBanFalse=L'adresse IP {0} existe déjà et ne peut être ajoutée.
+ UIBanIPForumManagerForm.confirm.UnBanIP=Etes-vous certain de supprimer cette adresse IP ?
+-UIBanIPForumManagerForm.action.Cancel=Fermer
++UIBanIPForumManagerForm.action.Cancel=Annuler
+ #############################################################################
+ #												UIModerationForum      														  #
+ #############################################################################
+@@ -1181,7 +1181,7 @@
+ UIForumPopupWindow.title.EditBBCodeForm=Modifier BBCode
+ UIAddBBCodeForm.action.Save=Enregistrer
+ UIAddBBCodeForm.action.Preview=Aperçu
+-UIAddBBCodeForm.action.Cancel=Fermer
++UIAddBBCodeForm.action.Cancel=Annuler
+ UIAddBBCodeForm.action.Apply=Appliquer
+ UIAddBBCodeForm.action.Back=Retour
+ 
+@@ -1264,7 +1264,7 @@
+ EditTopicTypeForm.label.default=Défaut
+ 
+ UIAddTopicTypeForm.action.Save=Enregistrer
+-UIAddTopicTypeForm.action.Cancel=Fermer
++UIAddTopicTypeForm.action.Cancel=Annuler
+ 
+ UIAddTopicTypeForm.smg.SameNameType=Ce type existe déjà.
+ #############################################################################
