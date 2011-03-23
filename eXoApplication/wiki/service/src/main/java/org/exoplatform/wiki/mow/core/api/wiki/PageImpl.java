@@ -287,7 +287,7 @@ public abstract class PageImpl extends NTFolder implements Page {
     Collection<AttachmentImpl> attachments = getAttachmentsByChromattic();
     List<AttachmentImpl> atts = new ArrayList<AttachmentImpl>(attachments.size());
     for (AttachmentImpl attachment : attachments) {
-      if (!"content".equals(attachment.getName())) {
+      if (!WikiNodeType.Definition.CONTENT.equals(attachment.getName())) {
         atts.add(attachment);
       }
     }
