@@ -61,7 +61,7 @@ public class ForumPageList extends JCRPageList {
         setAvailablePage((int) iter.getSize());
       }
     } finally {
-      sessionManager.closeSession();
+      //sessionManager.closeSession();
     }
   }
 	
@@ -78,14 +78,11 @@ public class ForumPageList extends JCRPageList {
 	
 	@SuppressWarnings("unchecked")
 	protected void populateCurrentPage(int page) throws Exception	{
-	  sessionManager.openSession();
 		if(iter_ == null) {
 			iter_ = setQuery(isQuery_, value_) ;
 			setAvailablePage((int) iter_.getSize()) ;
-			
 			if(page == 0) currentPage_ = 0;  // nasty trick for getAll()
 			else checkAndSetPage(page) ;
-			
 			page = currentPage_;
 		}
 		Node currentNode ;
@@ -119,8 +116,9 @@ public class ForumPageList extends JCRPageList {
 			}
 		}
 		iter_ = null;
-		sessionManager.closeSession();
-		//currentListPage_ = objects_.subList(getFrom(), getTo()) ;
+		if(sessionManager.getCurrentSession() != null && sessionManager.getCurrentSession().isLive()){
+      sessionManager.closeSession();
+    }
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -161,6 +159,9 @@ public class ForumPageList extends JCRPageList {
 			}
 		}
 		iter_ = null;
+		if(sessionManager.getCurrentSession() != null && sessionManager.getCurrentSession().isLive()){
+		  sessionManager.closeSession();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -189,6 +190,10 @@ public class ForumPageList extends JCRPageList {
 	private NodeIterator setQuery(boolean isQuery, String value) throws Exception {
 		NodeIterator iter ;
 		Session session = sessionManager.getCurrentSession();
+		if(session == null || !session.isLive()) {
+		  sessionManager.openSession();
+		  session = sessionManager.getCurrentSession();
+		}
 		if(isQuery) {
 			QueryManager qm = session.getWorkspace().getQueryManager() ;
 			Query query = qm.createQuery(value, Query.XPATH);

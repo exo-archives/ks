@@ -40,13 +40,12 @@ public class JCRForumAttachment extends ForumAttachment {
 		Session session = getSesison();
 		try{
 			attachment = (Node)session.getItem(getPathNode()) ;			
+			return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
 		}catch (Exception e) {
-			session.logout();
 			return null ;
 		}finally {
 			session.logout();
 		}
-		return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
 	}
 	
 	private Session getSesison()throws Exception {
