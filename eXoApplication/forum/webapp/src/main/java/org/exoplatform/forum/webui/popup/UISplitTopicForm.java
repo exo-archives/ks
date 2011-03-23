@@ -21,14 +21,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -39,8 +36,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 /**
@@ -64,18 +61,13 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 
   private String             link;
 
-  private UserProfile        userProfile             = null;
-
   private boolean            isRender                = true;
 
   private boolean            isSetPage               = true;
 
-  private ForumService       forumService            = null;
-
   public static final String FIELD_SPLITTHREAD_INPUT = "SplitThread";
 
   public UISplitTopicForm() throws Exception {
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     addUIFormInput(new UIFormStringInput(FIELD_SPLITTHREAD_INPUT, FIELD_SPLITTHREAD_INPUT, null));
     this.setActions(new String[] { "Save", "Cancel" });
   }
@@ -103,7 +95,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
     String path = this.topic.getPath();
     path = path.substring(path.indexOf(Utils.CATEGORY));
     if (isSetPage) {
-      pageList = forumService.getPostForSplitTopic(path);
+      pageList = getForumService().getPostForSplitTopic(path);
     }
     pageList.setPageSize(6);
     maxPage = pageList.getAvailablePage();
@@ -138,14 +130,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
     this.topic = topic;
   }
 
-  @SuppressWarnings("unused")
-  private UserProfile getUserProfile() {
-    return userProfile;
-  }
-
-  public void setUserProfile(UserProfile userProfile) {
-    this.userProfile = userProfile;
-  }
 
   static public class SaveActionListener extends EventListener<UISplitTopicForm> {
     public void execute(Event<UISplitTopicForm> event) throws Exception {
@@ -163,7 +147,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
             postPaths.add(path + str.substring(str.indexOf("/")));
           }
           Topic topic = new Topic();
-          Post post = uiForm.forumService.getPost("", "", "", postPaths.get(0));
+          Post post = uiForm.getForumService().getPost("", "", "", postPaths.get(0));
           String owner = uiForm.userProfile.getUserId();
           String topicId = post.getId().replaceFirst(Utils.POST, Utils.TOPIC);
           topic.setId(topicId);
@@ -173,7 +157,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
           topic.setDescription(post.getMessage());
           topic.setIcon(post.getIcon());
           topic.setAttachments(post.getAttachments());
-          Post lastPost = uiForm.forumService.getPost("", "", "", postPaths.get(postPaths.size() - 1));
+          Post lastPost = uiForm.getForumService().getPost("", "", "", postPaths.get(postPaths.size() - 1));
           topic.setLastPostBy(lastPost.getOwner());
           if (postPaths.size() > 1) {
             topic.setLastPostDate(lastPost.getCreatedDate());
@@ -188,14 +172,11 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
             WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
             ResourceBundle res = context.getApplicationResourceBundle();
 
-            uiForm.forumService.saveTopic(categoryId, forumId, topic, true, true, ForumUtils.getDefaultMail());
+            uiForm.getForumService().saveTopic(categoryId, forumId, topic, true, true, ForumUtils.getDefaultMail());
             String destTopicPath = path.substring(0, path.lastIndexOf("/")) + "/" + topicId;
-            uiForm.forumService.movePost(postPaths.toArray(new String[] {}), destTopicPath, true, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
+            uiForm.getForumService().movePost(postPaths.toArray(new String[] {}), destTopicPath, true, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
           } catch (Exception e) {
             uiForm.log.error("Saving topic " + topic + " fail: " + e.getMessage(), e);
-            // UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-            // UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-            // event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
             uiForm.warning("UISplitTopicForm.msg.forum-deleted");
           }
           UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);

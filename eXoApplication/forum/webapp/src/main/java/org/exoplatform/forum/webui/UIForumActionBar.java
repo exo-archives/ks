@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
@@ -48,9 +47,6 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.ws.frameworks.cometd.ContinuationService;
-import org.mortbay.cometd.AbstractBayeux;
-import org.mortbay.cometd.continuation.EXoContinuationBayeux;
 
 /**
  * Created by The eXo Platform SARL

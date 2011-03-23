@@ -16,13 +16,11 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumSessionUtils;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.user.CommonContact;
-import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -30,8 +28,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SARL
@@ -47,15 +45,10 @@ import org.exoplatform.webui.event.Event.Phase;
 		}
 )
 @SuppressWarnings("unused")
-public class UIViewUserProfile extends BaseUIForm implements UIPopupComponent {
-
-  private UserProfile   userProfile;
-
-  private UserProfile   userProfileLogin;
+public class UIViewUserProfile extends BaseForumForm implements UIPopupComponent {
+  private UserProfile   userProfileViewer;
 
   private CommonContact contact      = null;
-
-  private ForumService  forumService;
 
   private boolean       isGetContact = true;
 
@@ -72,35 +65,22 @@ public class UIViewUserProfile extends BaseUIForm implements UIPopupComponent {
   }
 
   public UIViewUserProfile() {
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }
 
   private boolean isAdmin(String userId) throws Exception {
-    return forumService.isAdminRole(userId);
+    return getForumService().isAdminRole(userId);
   }
 
   private boolean isOnline(String userId) throws Exception {
-    return forumService.isOnline(userId);
+    return getForumService().isOnline(userId);
   }
 
-  private String getScreenName(String userName) throws Exception {
-    return forumService.getScreenName(userName);
+  public void setUserProfileViewer(UserProfile userProfileViewer) {
+    this.userProfileViewer = userProfileViewer;
   }
 
-  public void setUserProfile(UserProfile userProfile) {
-    this.userProfile = userProfile;
-  }
-
-  public UserProfile getUserProfile() {
-    return this.userProfile;
-  }
-
-  public void setUserProfileLogin(UserProfile userProfile) {
-    this.userProfileLogin = userProfile;
-  }
-
-  public UserProfile getUserProfileLogin() {
-    return this.userProfileLogin;
+  public UserProfile getUserProfileViewer() {
+    return this.userProfileViewer;
   }
 
   private CommonContact getPersonalContact(String userId) throws Exception {
@@ -112,7 +92,7 @@ public class UIViewUserProfile extends BaseUIForm implements UIPopupComponent {
   }
 
   private String getAvatarUrl() throws Exception {
-    return ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService);
+    return ForumSessionUtils.getUserAvatarURL(userProfileViewer.getUserId(), getForumService());
   }
 
   private String[] getLabelProfile() {

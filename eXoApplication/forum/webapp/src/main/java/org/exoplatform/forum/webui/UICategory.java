@@ -29,7 +29,6 @@ import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.webui.popup.UICategoryForm;
 import org.exoplatform.forum.webui.popup.UIExportForm;
 import org.exoplatform.forum.webui.popup.UIForumForm;
@@ -85,8 +84,6 @@ import org.exoplatform.webui.form.UIFormStringInput;
 )
 @SuppressWarnings({ "unused", "unchecked"})
 public class UICategory extends BaseForumForm {
-  private UserProfile        userProfile     = null;
-
   private String             categoryId;
 
   private Category           category;
@@ -101,22 +98,18 @@ public class UICategory extends BaseForumForm {
 
   private List<Forum>        forums          = new ArrayList<Forum>();
 
-  private List<Watch>        listWatches     = new ArrayList<Watch>();
-
   private Map<String, Topic> MaptopicLast    = new HashMap<String, Topic>();
 
   private String             linkUserInfo    = "";
 
   static public boolean      isUnWatch       = false;
 
-  public static String       unwatchEmail    = "";
-
   public UICategory() throws Exception {
     addUIFormInput(new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null));
     setActions(new String[] { "EditCategory", "ExportCategory", "ImportForum", "DeleteCategory", "WatchOption", "AddForum", "EditForum", "SetLocked", "SetUnLock", "SetOpen", "SetClose", "MoveForum", "RemoveForum" });
   }
 
-  private UserProfile getUserProfile() throws Exception {
+  public UserProfile getUserProfile() throws Exception {
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
     useAjax = forumPortlet.isUseAjax();
     dayForumNewPost = forumPortlet.getDayForumNewPost();
@@ -142,10 +135,6 @@ public class UICategory extends BaseForumForm {
 
   private String getLastReadPostOfForum(String forumId) throws Exception {
     return userProfile.getLastPostIdReadOfForum(forumId);
-  }
-
-  private String getScreenName(String userName) throws Exception {
-    return getForumService().getScreenName(userName);
   }
 
   public void update(Category category, List<Forum> forums) throws Exception {
@@ -283,25 +272,18 @@ public class UICategory extends BaseForumForm {
     return null;
   }
 
-  private boolean isWatching(String path) throws Exception {
-    for (Watch watch : listWatches) {
-      // KS-2573
-      // check: is watching by email
-      if (path.equals(watch.getNodePath()) && watch.isAddWatchByEmail())
-        return true;
-    }
-    return false;
-  }
-
-  private String getEmailWatching(String path) throws Exception {
-    for (Watch watch : listWatches) {
-      try {
-        if (watch.getNodePath().endsWith(path))
-          return watch.getEmail();
-      } catch (Exception e) {
+  private List<Forum> getForumsChecked(boolean isBreak) throws Exception {
+    List<UIComponent> children = this.getChildren();
+    List<Forum> forums = new ArrayList<Forum>();
+    for (UIComponent child : children) {
+      if (child instanceof UIFormCheckBoxInput) {
+        if (((UIFormCheckBoxInput) child).isChecked()) {
+          forums.add(this.getForum(((UIFormCheckBoxInput) child).getName()));
+          if(isBreak) break;
+        }
       }
     }
-    return "";
+    return forums;
   }
 
   static public class EditCategoryActionListener extends BaseEventListener<UICategory> {
@@ -341,21 +323,13 @@ public class UICategory extends BaseForumForm {
   static public class EditForumActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
       List<UIComponent> children = uiCategory.getChildren();
-      Forum forum = null;
-      for (UIComponent child : children) {
-        if (child instanceof UIFormCheckBoxInput) {
-          if (((UIFormCheckBoxInput) child).isChecked()) {
-            forum = uiCategory.getForum(((UIFormCheckBoxInput) child).getName());
-            break;
-          }
-        }
-      }
-      if (forum != null) {
+      List<Forum> forums = uiCategory.getForumsChecked(true);
+      if (forums.size() > 0) {
         UIForumForm forumForm = uiCategory.openPopup(UIForumForm.class, "EditForumForm", 650, 480);
         forumForm.setMode(false);
         forumForm.initForm();
         forumForm.setCategoryValue(uiCategory.categoryId, false);
-        forumForm.setForumValue(forum, true);
+        forumForm.setForumValue(forums.get(0), true);
         forumForm.setForumUpdate(false);
         uiCategory.isEditForum = true;
       } else {
@@ -367,15 +341,7 @@ public class UICategory extends BaseForumForm {
 
   static public class SetLockedActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
-      List<UIComponent> children = uiCategory.getChildren();
-      List<Forum> forums = new ArrayList<Forum>();
-      for (UIComponent child : children) {
-        if (child instanceof UIFormCheckBoxInput) {
-          if (((UIFormCheckBoxInput) child).isChecked()) {
-            forums.add(uiCategory.getForum(((UIFormCheckBoxInput) child).getName()));
-          }
-        }
-      }
+      List<Forum> forums = uiCategory.getForumsChecked(false);
       if (forums.size() > 0) {
         try {
           for (Forum forum : forums) {
@@ -396,15 +362,7 @@ public class UICategory extends BaseForumForm {
 
   static public class SetUnLockActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
-      List<UIComponent> children = uiCategory.getChildren();
-      List<Forum> forums = new ArrayList<Forum>();
-      for (UIComponent child : children) {
-        if (child instanceof UIFormCheckBoxInput) {
-          if (((UIFormCheckBoxInput) child).isChecked()) {
-            forums.add(uiCategory.getForum(((UIFormCheckBoxInput) child).getName()));
-          }
-        }
-      }
+      List<Forum> forums = uiCategory.getForumsChecked(false);
       if (forums.size() > 0) {
         try {
           for (Forum forum : forums) {
@@ -425,15 +383,7 @@ public class UICategory extends BaseForumForm {
 
   static public class SetOpenActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
-      List<UIComponent> children = uiCategory.getChildren();
-      List<Forum> forums = new ArrayList<Forum>();
-      for (UIComponent child : children) {
-        if (child instanceof UIFormCheckBoxInput) {
-          if (((UIFormCheckBoxInput) child).isChecked()) {
-            forums.add(uiCategory.getForum(((UIFormCheckBoxInput) child).getName()));
-          }
-        }
-      }
+      List<Forum> forums = uiCategory.getForumsChecked(false);
       if (forums.size() > 0) {
         try {
           for (Forum forum : forums) {
@@ -452,15 +402,7 @@ public class UICategory extends BaseForumForm {
 
   static public class SetCloseActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
-      List<UIComponent> children = uiCategory.getChildren();
-      List<Forum> forums = new ArrayList<Forum>();
-      for (UIComponent child : children) {
-        if (child instanceof UIFormCheckBoxInput) {
-          if (((UIFormCheckBoxInput) child).isChecked()) {
-            forums.add(uiCategory.getForum(((UIFormCheckBoxInput) child).getName()));
-          }
-        }
-      }
+      List<Forum> forums = uiCategory.getForumsChecked(false);
       if (forums.size() > 0) {
         try {
           for (Forum forum : forums) {
@@ -479,15 +421,7 @@ public class UICategory extends BaseForumForm {
 
   static public class MoveForumActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
-      List<UIComponent> children = uiCategory.getChildren();
-      List<Forum> forums = new ArrayList<Forum>();
-      for (UIComponent child : children) {
-        if (child instanceof UIFormCheckBoxInput) {
-          if (((UIFormCheckBoxInput) child).isChecked()) {
-            forums.add(uiCategory.getForum(((UIFormCheckBoxInput) child).getName()));
-          }
-        }
-      }
+      List<Forum> forums = uiCategory.getForumsChecked(false);
       if ((forums.size() > 0)) {
         UIMoveForumForm moveForumForm = uiCategory.openPopup(UIMoveForumForm.class, 315, 365);
         moveForumForm.setListForum(forums, uiCategory.categoryId);
@@ -501,15 +435,7 @@ public class UICategory extends BaseForumForm {
 
   static public class RemoveForumActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
-      List<UIComponent> children = uiCategory.getChildren();
-      List<Forum> forums = new ArrayList<Forum>();
-      for (UIComponent child : children) {
-        if (child instanceof UIFormCheckBoxInput) {
-          if (((UIFormCheckBoxInput) child).isChecked()) {
-            forums.add(uiCategory.getForum(((UIFormCheckBoxInput) child).getName()));
-          }
-        }
-      }
+      List<Forum> forums = uiCategory.getForumsChecked(false);
       if ((forums.size() > 0)) {
         try {
           for (Forum forum : forums) {
@@ -709,35 +635,18 @@ public class UICategory extends BaseForumForm {
   }
 
   static public class AddWatchingActionListener extends BaseEventListener<UICategory> {
-    public void onEvent(Event<UICategory> event, UICategory uiCategory, final String path) throws Exception {
-      List<String> values = new ArrayList<String>();
-      try {
-        values.add(uiCategory.userProfile.getEmail());
-        uiCategory.getForumService().addWatch(1, path, values, uiCategory.userProfile.getUserId());
-        uiCategory.isEditCategory = true;
-        UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.updateWatching();
-        isUnWatch = false;
-        info("UIAddWatchingForm.msg.successfully");
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory);
-      } catch (Exception e) {
-        warning("UIAddWatchingForm.msg.fall");
-      }
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory);
+    public void onEvent(Event<UICategory> event, UICategory uiform, final String path) throws Exception {
+      isUnWatch = !uiform.addWatch(path, uiform.userProfile);
+      if(!isUnWatch) uiform.isEditCategory = true;
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiform);
     }
   }
 
   static public class UnWatchActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String path) throws Exception {
-      try {
-        unwatchEmail = uiCategory.getEmailWatching(path);
-        uiCategory.getForumService().removeWatch(1, path, uiCategory.userProfile.getUserId() + "/" + uiCategory.getEmailWatching(path));
-        UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.updateWatching();
+      if(uiCategory.unWatch(path, uiCategory.userProfile)) {
         isUnWatch = true;
-        info("UIAddWatchingForm.msg.UnWatchSuccessfully");
-      } catch (Exception e) {
-        warning("UIAddWatchingForm.msg.UnWatchfall");
+        uiCategory.isEditCategory = true;
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory);
     }

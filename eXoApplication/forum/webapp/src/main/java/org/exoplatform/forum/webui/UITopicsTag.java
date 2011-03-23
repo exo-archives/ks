@@ -33,7 +33,6 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.Watch;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -78,10 +77,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 
   private String            linkUserInfo      = "";
 
-  private UserProfile       userProfile       = null;
-
-  private List<Watch>       listWatches       = new ArrayList<Watch>();
-
   private List<Topic>       topics            = new ArrayList<Topic>();
 
   private Map<String, Long> mapNumberPagePost = new HashMap<String, Long>();
@@ -119,19 +114,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     this.userProfile = forumPortlet.getUserProfile();
     linkUserInfo = forumPortlet.getPortletLink();
     listWatches = forumPortlet.getWatchingByCurrentUser();
-  }
-
-  private UserProfile getUserProfile() {
-    return userProfile;
-  }
-
-  public void setUserProfile(UserProfile userProfile) throws Exception {
-    this.userProfile = userProfile;
-  }
-
-  @SuppressWarnings("unused")
-  private String getScreenName(String userName) throws Exception {
-    return getForumService().getScreenName(userName);
   }
 
   public String getRSSLink(String cateId) {
@@ -233,28 +215,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 
   private Forum getForum(String categoryId, String forumId) throws Exception {
     return this.getForumService().getForum(categoryId, forumId);
-  }
-
-  @SuppressWarnings("unused")
-  private boolean isWatching(String path) throws Exception {
-    for (Watch watch : listWatches) {
-      // KS-2573
-      // check: is watching by email watch
-      if (path.equals(watch.getNodePath()) && watch.isAddWatchByEmail())
-        return true;
-    }
-    return false;
-  }
-
-  private String getEmailWatching(String path) throws Exception {
-    for (Watch watch : listWatches) {
-      try {
-        if (watch.getNodePath().endsWith(path))
-          return watch.getEmail();
-      } catch (Exception e) {
-      }
-    }
-    return "";
   }
 
   static public class OpenTopicActionListener extends BaseEventListener<UITopicsTag> {
@@ -380,11 +340,10 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
           forumPortlet.updateWatching();
           topicTag.listWatches = forumPortlet.getWatchingByCurrentUser();
           info("UIAddWatchingForm.msg.successfully");
-          event.getRequestContext().addUIComponentToUpdateByAjax(topicTag);
         } catch (Exception e) {
-          event.getSource().log.warn("Adding watching topic fail. \nCaused by: " + e.getCause());
           warning("UIAddWatchingForm.msg.fall");
         }
+        event.getRequestContext().addUIComponentToUpdateByAjax(topicTag);
       }
     }
   }
@@ -397,11 +356,10 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
         forumPortlet.updateWatching();
         topicTag.listWatches = forumPortlet.getWatchingByCurrentUser();
         info("UIAddWatchingForm.msg.UnWatchSuccessfully");
-        event.getRequestContext().addUIComponentToUpdateByAjax(topicTag);
       } catch (Exception e) {
-        event.getSource().log.warn("Fail to unwatch tag topic. Caused by: " + e.getCause());
         warning("UIAddWatchingForm.msg.UnWatchfall");
       }
+      event.getRequestContext().addUIComponentToUpdateByAjax(topicTag);
     }
   }
 

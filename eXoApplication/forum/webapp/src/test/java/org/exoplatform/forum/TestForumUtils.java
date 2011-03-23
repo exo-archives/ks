@@ -182,6 +182,40 @@ public class TestForumUtils extends TestCase {
   	voteRating = 4.75;
   	assertEquals("[star, star, star, star, star, 4.7]", Arrays.asList(ForumUtils.getStarNumber(voteRating)).toString());
   }
+  
+  public void testGetOrderBy() throws Exception {
+    String param = "dateTime", strOrderBy = "";
+    assertEquals("dateTime ascending",ForumUtils.getOrderBy(strOrderBy, param));
+    param = "dateTime";
+    strOrderBy = "dateTime descending";
+    assertEquals("dateTime ascending",ForumUtils.getOrderBy(strOrderBy, param));
+    param = "dateTime";
+    strOrderBy = "dateTime ascending";
+    assertEquals("dateTime descending",ForumUtils.getOrderBy(strOrderBy, param));
+    param = "dateTime";
+    strOrderBy = "dateTime ascending";
+    assertEquals("dateTime descending",ForumUtils.getOrderBy(strOrderBy, param));
+    param = "dateTime";
+    strOrderBy = "name ascending";
+    assertEquals("dateTime ascending",ForumUtils.getOrderBy(strOrderBy, param));
+  }
+
+  public void testUpdateMultiValues() throws Exception {
+    String value = "root,demo", values = "";
+    assertEquals("root,demo", ForumUtils.updateMultiValues(value, values));
+    value = "root,demo";
+    values = "xxx,,aaa,eee,bbb  , , ddd";
+    assertEquals("xxx,aaa,eee,bbb,ddd,root,demo", ForumUtils.updateMultiValues(value, values));
+    value = "root,demo";
+    values = "xxx,,aaa,eee,bbb  ,demo, ddd,";
+    assertEquals("xxx,aaa,eee,bbb,demo,ddd,root,", ForumUtils.updateMultiValues(value, values));
+    value = "root,demo";
+    values = "xxx,,aaa,eee,bbb  ,root,demo, ddd,";
+    assertEquals("xxx,aaa,eee,bbb,root,demo,ddd,", ForumUtils.updateMultiValues(value, values));
+    value = "root,demo";
+    values = "xxx,,root,eee,root,bbb  ,demo, ddd,demo,";
+    assertEquals("xxx,root,eee,bbb,demo,ddd,", ForumUtils.updateMultiValues(value, values));
+  }
 
   public void testSplitForForum() throws Exception {
   	String str = "";

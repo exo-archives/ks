@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.impl.ForumNodeTypes;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
@@ -37,8 +36,8 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
@@ -81,11 +80,6 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 
   public void setTypeApprove(int typeApprove) {
     this.typeApprove = typeApprove;
-  }
-
-  @SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
-    return this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
   }
 
   public void setUpdateContainer(String categoryId, String forumId) {

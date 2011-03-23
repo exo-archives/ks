@@ -233,7 +233,7 @@ public class ForumUtils {
 
   public static String getOrderBy(String strOrderBy, String param) {
     // In case : user have sort before
-    if (!ForumUtils.isEmpty(strOrderBy)) {
+    if (!isEmpty(strOrderBy)) {
       // If user want to reverse sort of a property
       if (strOrderBy.indexOf(param) >= 0) {
         if (strOrderBy.indexOf("descending") > 0) {
@@ -250,6 +250,19 @@ public class ForumUtils {
       strOrderBy = param + " ascending";
     }
     return strOrderBy;
+  }
+  
+  public static String updateMultiValues(String value, String values) throws Exception {
+    if (!isEmpty(values)) {
+      values = removeSpaceInString(values);
+      if (!isStringInStrings(values.split(","), value)) {
+        if (values.lastIndexOf(",") != (values.length() - 1))
+          values = values + ",";
+        values = values + value;
+      }
+    } else
+      values = value;
+    return removeStringResemble(values);
   }
   
   public static String[] getCensoredKeyword(ForumService forumService) throws Exception {

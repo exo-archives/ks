@@ -856,11 +856,11 @@ public class UIForumPortlet extends UIPortletApplication {
       UIViewUserProfile viewUserProfile = popupAction.createUIComponent(UIViewUserProfile.class, null, null);
       try {
         UserProfile selectProfile = forumPortlet.forumService.getUserInformations(forumPortlet.forumService.getQuickProfile(userId.trim()));
-        viewUserProfile.setUserProfile(selectProfile);
+        viewUserProfile.setUserProfileViewer(selectProfile);
       } catch (Exception e) {
         log.error("Fail to set user profile: \n", e);
       }
-      viewUserProfile.setUserProfileLogin(forumPortlet.userProfile);
+      viewUserProfile.setUserProfile(forumPortlet.userProfile);
       CommonContact contact = forumPortlet.getPersonalContact(userId.trim());
       viewUserProfile.setContact(contact);
       popupAction.activate(viewUserProfile, 670, 400, true);

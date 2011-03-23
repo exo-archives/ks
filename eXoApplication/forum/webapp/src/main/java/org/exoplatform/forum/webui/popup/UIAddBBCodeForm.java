@@ -33,8 +33,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -125,6 +125,24 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     this.getUIFormCheckBoxInput(FIELD_USEOPTION_CHECKBOX).setChecked(bbcode.isOption());
   }
 
+  private void setBBcode() throws Exception {
+    String tagName = getUIStringInput(FIELD_TAGNAME_INPUT).getValue();
+    String replacement = getUIFormTextAreaInput(FIELD_REPLACEMENT_TEXTARE).getValue();
+    String description = getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).getValue();
+    String example = getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).getValue();
+    boolean isOption = (Boolean) getUIFormCheckBoxInput(FIELD_USEOPTION_CHECKBOX).getValue();
+    if (ForumUtils.isEmpty(description))
+      description = " ";
+    bbcode.setTagName(tagName.toUpperCase());
+    bbcode.setReplacement(replacement);
+    bbcode.setDescription(description);
+    bbcode.setExample(example);
+    bbcode.setOption(isOption);
+    if (bbcode.getId() == null)
+      bbcode.setId(bbcode.getTagName() + ((bbcode.isOption()) ? "=" : ""));
+    this.example = example;
+  }
+  
   @SuppressWarnings("unused")
   private String getReplaceByBBCode() throws Exception {
     return (new BBCodeRenderer()).renderExample(example, bbcode);
@@ -133,20 +151,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
   static public class SaveActionListener extends EventListener<UIAddBBCodeForm> {
     public void execute(Event<UIAddBBCodeForm> event) throws Exception {
       UIAddBBCodeForm uiForm = event.getSource();
-      String tagName = uiForm.getUIStringInput(FIELD_TAGNAME_INPUT).getValue();
-      String replacement = uiForm.getUIFormTextAreaInput(FIELD_REPLACEMENT_TEXTARE).getValue();
-      String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).getValue();
-      String example = uiForm.getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).getValue();
-      boolean isOption = (Boolean) uiForm.getUIFormCheckBoxInput(FIELD_USEOPTION_CHECKBOX).getValue();
-      if (ForumUtils.isEmpty(description))
-        description = " ";
-      uiForm.bbcode.setTagName(tagName.toUpperCase());
-      uiForm.bbcode.setReplacement(replacement);
-      uiForm.bbcode.setDescription(description);
-      uiForm.bbcode.setExample(example);
-      uiForm.bbcode.setOption(isOption);
-      if (uiForm.bbcode.getId() == null)
-        uiForm.bbcode.setId(uiForm.bbcode.getTagName() + ((uiForm.bbcode.isOption()) ? "=" : ""));
+      uiForm.setBBcode();
       uiForm.listBBCode = new ArrayList<BBCode>();
       try {
         uiForm.listBBCode.addAll(uiForm.bbCodeService.getAll());
@@ -163,7 +168,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
         bbcodes.add(uiForm.bbcode);
         uiForm.bbCodeService.save(bbcodes);
       } catch (Exception e) {
-        uiForm.log.error("Can not save BBCode has name: " + uiForm.bbcode.getTagName(), e);
+        log.error("Can not save BBCode has name: " + uiForm.bbcode.getTagName(), e);
       }
       uiForm.cancelChildPopupAction();
       try {
@@ -172,7 +177,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
         codeManagerForm.initCheckBoxActiveBBCode();
         event.getRequestContext().addUIComponentToUpdateByAjax(codeManagerForm);
       } catch (Exception e) {
-        uiForm.log.error("Can not update from: UIBBCodeManagerForm");
+        log.error("Can not update from: UIBBCodeManagerForm");
       }
     }
   }
@@ -183,21 +188,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
       String priview = event.getRequestContext().getRequestParameter(OBJECTID);
       if (priview.equals(PREVIEW)) {
         uiForm.isPriview = true;
-        String tagName = uiForm.getUIStringInput(FIELD_TAGNAME_INPUT).getValue();
-        String replacement = uiForm.getUIFormTextAreaInput(FIELD_REPLACEMENT_TEXTARE).getValue();
-        String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).getValue();
-        String example = uiForm.getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).getValue();
-        boolean isOption = (Boolean) uiForm.getUIFormCheckBoxInput(FIELD_USEOPTION_CHECKBOX).getValue();
-        if (ForumUtils.isEmpty(description))
-          description = " ";
-        uiForm.bbcode.setTagName(tagName.toUpperCase());
-        uiForm.bbcode.setReplacement(replacement);
-        uiForm.bbcode.setDescription(description);
-        uiForm.bbcode.setExample(example);
-        uiForm.bbcode.setOption(isOption);
-        if (uiForm.bbcode.getId() == null)
-          uiForm.bbcode.setId(uiForm.bbcode.getTagName() + ((uiForm.bbcode.isOption()) ? "=" : ""));
-        uiForm.example = example;
+        uiForm.setBBcode();
       } else {
         uiForm.isPriview = false;
         uiForm.listBBCode = new ArrayList<BBCode>();

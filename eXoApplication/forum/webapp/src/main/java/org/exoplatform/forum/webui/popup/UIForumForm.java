@@ -50,14 +50,14 @@ import org.exoplatform.webui.core.UITree;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 import org.exoplatform.webui.organization.account.UIUserSelector;
@@ -353,16 +353,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       fieldInput.setValue(value);
     } else {
       String values = fieldInput.getValue();
-      if (!ForumUtils.isEmpty(values)) {
-        values = ForumUtils.removeSpaceInString(values);
-        if (!ForumUtils.isStringInStrings(values.split(","), value)) {
-          if (values.lastIndexOf(",") != (values.length() - 1))
-            values = values + ",";
-          values = values + value;
-        }
-      } else
-        values = value;
-      fieldInput.setValue(values);
+      fieldInput.setValue(ForumUtils.updateMultiValues(value, values));
       if (selectField.equals(FIELD_MODERATOR_MULTIVALUE)) {
         UIFormInputWithActions moderationOptions = this.getChildById(FIELD_MODERATOROPTION_FORM);
         boolean isAutoAddEmail = moderationOptions.getUIFormCheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
@@ -575,10 +566,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
         UIUserSelect uiUserSelect = popupContainer.findFirstComponentOfType(UIUserSelect.class);
         if (uiUserSelect != null) {
           UIPopupWindow popupWindow = uiUserSelect.getParent();
-          popupWindow.setShow(false);
-          popupWindow.setUIComponent(null);
-          popupWindow.setRendered(false);
-          event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+          closePopupWindow(popupWindow);
         }
 
         UIGroupSelector uiGroupSelector = null;
@@ -702,20 +690,14 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
     public void execute(Event<UIUserSelector> event) throws Exception {
       UIUserSelector uiUserSelector = event.getSource();
       UIPopupWindow popupWindow = uiUserSelector.getParent();
-      popupWindow.setUIComponent(null);
-      popupWindow.setShow(false);
-      popupWindow.setRendered(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+      closePopupWindow(popupWindow);
     }
   }
 
   static public class ClosePopupActionListener extends EventListener<UIPopupWindow> {
     public void execute(Event<UIPopupWindow> event) throws Exception {
       UIPopupWindow popupWindow = event.getSource();
-      popupWindow.setUIComponent(null);
-      popupWindow.setShow(false);
-      popupWindow.setRendered(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+      closePopupWindow(popupWindow);
     }
   }
 
@@ -754,10 +736,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       String id = uiUserSelector.getPermisionType();
       UIFormInputWithActions inputWithActions = forumForm.getChildById((id.equals(FIELD_MODERATOR_MULTIVALUE)) ? FIELD_MODERATOROPTION_FORM : FIELD_FORUMPERMISSION_FORM);
       forumForm.setValueField(inputWithActions, id, values);
-      popupWindow.setUIComponent(null);
-      popupWindow.setShow(false);
-      popupWindow.setRendered(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+      closePopupWindow(popupWindow);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumForm);
     }
   }
@@ -767,27 +746,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       UIForumForm forumForm = event.getSource();
       String id = event.getRequestContext().getRequestParameter(OBJECTID).replace("/0", "");
       UIPopupContainer uiPopupContainer = forumForm.getAncestorOfType(UIPopupContainer.class);
-      UIGroupSelector uiGroupSelector = uiPopupContainer.findFirstComponentOfType(UIGroupSelector.class);
-      if (uiGroupSelector != null) {
-        UIPopupWindow popupWindow = uiGroupSelector.getAncestorOfType(UIPopupWindow.class);
-        popupWindow.setUIComponent(null);
-        popupWindow.setShow(false);
-        popupWindow.setRendered(false);
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
-      }
-      UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById(USER_SELECTOR_POPUPWINDOW);
-      if (uiPopupWindow == null)
-        uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, USER_SELECTOR_POPUPWINDOW, USER_SELECTOR_POPUPWINDOW);
-      UIUserSelect uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelect.class, null, "UIUserSelector");
-      uiUserSelector.setShowSearch(true);
-      uiUserSelector.setShowSearchUser(true);
-      uiUserSelector.setShowSearchGroup(false);
-      uiPopupWindow.setUIComponent(uiUserSelector);
-      uiPopupWindow.setShow(true);
-      uiPopupWindow.setWindowSize(740, 400);
-      uiPopupWindow.setRendered(true);
-      uiUserSelector.setPermisionType(id);
-      uiPopupContainer.setRendered(true);
+      forumForm.showUIUserSelect(uiPopupContainer, USER_SELECTOR_POPUPWINDOW, id);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);
     }
   }

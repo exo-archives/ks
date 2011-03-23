@@ -23,16 +23,14 @@ import java.util.ResourceBundle;
 
 import javax.jcr.ItemExistsException;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -41,15 +39,14 @@ import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
@@ -64,14 +61,10 @@ import org.exoplatform.webui.event.Event.Phase;
 			@EventConfig(listeners = UIMovePostForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
-public class UIMovePostForm extends BaseUIForm implements UIPopupComponent {
-  private ForumService   forumService;
-
+public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
   private String         topicId;
 
   private List<Post>     posts;
-
-  private UserProfile    userProfile;
 
   private List<Category> categories;
 
@@ -80,7 +73,6 @@ public class UIMovePostForm extends BaseUIForm implements UIPopupComponent {
   private String         pathPost = "";
 
   public UIMovePostForm() throws Exception {
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }
 
   public void activate() throws Exception {
@@ -112,20 +104,9 @@ public class UIMovePostForm extends BaseUIForm implements UIPopupComponent {
     setCategories();
   }
 
-  public UserProfile getUserProfile() throws Exception {
-    return this.userProfile;
-  }
-
-  public void setUserProfile(UserProfile userProfile) throws Exception {
-    this.userProfile = userProfile;
-    if (this.userProfile == null) {
-      this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-    }
-  }
-
   private void setCategories() throws Exception {
     this.categories = new ArrayList<Category>();
-    for (Category category : this.forumService.getCategories()) {
+    for (Category category : this.getForumService().getCategories()) {
       if (this.userProfile.getUserRole() == 1) {
         String[] list = category.getUserPrivate();
         if (list != null && list.length > 0 && !list[0].equals(" ")) {
@@ -154,7 +135,7 @@ public class UIMovePostForm extends BaseUIForm implements UIPopupComponent {
   @SuppressWarnings("unused")
   private List<Forum> getForums(String categoryId) throws Exception {
     List<Forum> forums = new ArrayList<Forum>();
-    for (Forum forum : this.forumService.getForums(categoryId, "")) {
+    for (Forum forum : this.getForumService().getForums(categoryId, "")) {
       if (this.userProfile.getUserRole() == 1) {
         String[] moderators = forum.getModerators();
         if (!ForumServiceUtils.hasPermission(moderators, this.userProfile.getUserId())) {
@@ -169,7 +150,7 @@ public class UIMovePostForm extends BaseUIForm implements UIPopupComponent {
   @SuppressWarnings("unused")
   private List<Topic> getTopics(String categoryId, String forumId, boolean isMode) throws Exception {
     List<Topic> topics = new ArrayList<Topic>();
-    List<Topic> topics_ = this.forumService.getTopics(categoryId, forumId);
+    List<Topic> topics_ = this.getForumService().getTopics(categoryId, forumId);
     for (Topic topic : topics_) {
       if (topic.getId().equalsIgnoreCase(this.topicId)) {
         if (pathPost.indexOf(categoryId) >= 0 && pathPost.indexOf(forumId) > 0)
@@ -205,7 +186,7 @@ public class UIMovePostForm extends BaseUIForm implements UIPopupComponent {
             postPath[i] = post.getPath();
             ++i;
           }
-          uiForm.forumService.movePost(postPath, topicPath, false, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
+          uiForm.getForumService().movePost(postPath, topicPath, false, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
           UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
           forumPortlet.cancelAction();
           UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);

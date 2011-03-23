@@ -55,9 +55,9 @@ public class ForumPageList extends JCRPageList {
       if (iter == null) {
         sessionManager.openSession();
         iter = setQuery(isQuery_, value_);
+        iter_ = iter;
       }
       if (iter != null) {
-        iter_ = iter;
         setAvailablePage((int) iter.getSize());
       }
     } finally {
@@ -98,6 +98,7 @@ public class ForumPageList extends JCRPageList {
 		} else {
 			pageSize = iter_.getSize() ;
 		}
+		
 		currentListPage_ = new ArrayList<Object>() ;
 		for(int i = 0; i < pageSize; i ++) {
 			if(iter_.hasNext()){

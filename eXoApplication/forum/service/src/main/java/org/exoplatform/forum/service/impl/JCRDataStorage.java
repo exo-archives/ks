@@ -7034,12 +7034,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
 	public List<String> getBookmarks(String userName) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
-		Node profile = getUserProfileHome(sProvider).getNode(userName);
-		sProvider.close();
-		if (profile.hasProperty(EXO_BOOKMARK)) {
-			return Utils.valuesToList(profile.getProperty(EXO_BOOKMARK).getValues());
-		}
-		return new ArrayList<String>();
+		try {
+		  Node profile = getUserProfileHome(sProvider).getNode(userName);
+		  if (profile.hasProperty(EXO_BOOKMARK)) {
+		    return Utils.valuesToList(profile.getProperty(EXO_BOOKMARK).getValues());
+		  }
+		  return new ArrayList<String>();
+    } finally {
+      sProvider.close();
+    }
 	}
 
 	public List<String> getBanList() throws Exception {

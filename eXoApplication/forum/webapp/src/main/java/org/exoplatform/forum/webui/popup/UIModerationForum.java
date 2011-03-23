@@ -19,21 +19,19 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumSearch;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -41,8 +39,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -59,11 +57,7 @@ import org.exoplatform.webui.event.Event.Phase;
 		}
 )
 @SuppressWarnings("unchecked")
-public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
-  private UserProfile         userProfile;
-
-  private ForumService        forumService;
-
+public class UIModerationForum extends BaseForumForm implements UIPopupComponent {
   private String[]            path            = new String[] {};
 
   List<ForumSearch>           list_;
@@ -79,7 +73,6 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
   private UIForumPageIterator pageIterator;
 
   public UIModerationForum() throws Exception {
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     pageIterator = addChild(UIForumPageIterator.class, null, SEARCH_ITERATOR);
     setActions(new String[] { "Close" });
   }
@@ -127,7 +120,7 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
   @SuppressWarnings( { "unused" })
   private List<ForumSearch> getListObject() throws Exception {
     try {
-      list_ = forumService.getJobWattingForModerator(getPath());
+      list_ = getForumService().getJobWattingForModerator(getPath());
     } catch (Exception e) {
       list_ = new ArrayList<ForumSearch>();
       log.error("list of forum search must not null: ", e);
@@ -162,7 +155,7 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
       if (forumSearch.getType().equals(Utils.TOPIC)) {
         try {
-          Topic topic = moderationForum.forumService.getTopicByPath(forumSearch.getPath(), false);
+          Topic topic = moderationForum.getForumService().getTopicByPath(forumSearch.getPath(), false);
           UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700);
           viewTopic.setTopic(topic);
           viewTopic.setActionForm(new String[] { "Approve", "DeleteTopic", "Close" });
@@ -172,7 +165,7 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
         }
       } else {
         try {
-          Post post = moderationForum.forumService.getPost("", "", "", forumSearch.getPath());
+          Post post = moderationForum.getForumService().getPost("", "", "", forumSearch.getPath());
           UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700);
           viewPost.setPostView(post);
           viewPost.setViewUserInfo(false);

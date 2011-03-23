@@ -49,7 +49,6 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.webui.popup.UIMovePostForm;
 import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
 import org.exoplatform.forum.webui.popup.UIPageListPostHidden;
@@ -189,7 +188,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   private List<String>               listContactsGotten      = new ArrayList<String>();
 
-  private List<Watch>                listWatches             = new ArrayList<Watch>();
+//  private List<Watch>                listWatches             = new ArrayList<Watch>();
 
   private Map<String, Integer>       pagePostRemember        = new HashMap<String, Integer>();
 
@@ -529,18 +528,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     return isMod;
   }
 
-  private String getScreenName(String screenName) throws Exception {
-    if (screenName != null && screenName.length() > 17 && !screenName.trim().contains(" ")) {
-      boolean isDelted = false;
-      if (screenName.indexOf("<s>") >= 0) {
-        screenName = screenName.replaceAll("<s>", "").replaceAll("</s>", "");
-        isDelted = true;
-      }
-      screenName = "<span title=\"" + screenName + "\">" + ((isDelted) ? "<s>" : "") + ForumUtils.getSubString(screenName, 15) + ((isDelted) ? "</s></span>" : "</span>");
-    }
-    return screenName;
-  }
-
   private Topic getTopic() throws Exception {
     try {
       if (this.isEditTopic || this.topic == null) {
@@ -767,29 +754,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       }
     }
     return mapUserProfile.get(userName);
-  }
-
-  public void setListWatches(List<Watch> listWatches) {
-    this.listWatches = listWatches;
-  }
-
-  private boolean isWatching(String path) throws Exception {
-    for (Watch watch : listWatches) {
-      if (path.equals(watch.getNodePath()) && watch.isAddWatchByEmail())
-        return true;
-    }
-    return false;
-  }
-
-  private String getEmailWatching(String path) throws Exception {
-    for (Watch watch : listWatches) {
-      try {
-        if (watch.getNodePath().endsWith(path))
-          return watch.getEmail();
-      } catch (Exception e) {
-      }
-    }
-    return "";
   }
 
   private void renderPoll() throws Exception {
@@ -1472,11 +1436,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       UIViewUserProfile viewUserProfile = topicDetail.openPopup(UIViewUserProfile.class, 670, 400);
       try {
         UserProfile selectProfile = topicDetail.getForumService().getUserInformations(topicDetail.mapUserProfile.get(userId));
-        viewUserProfile.setUserProfile(selectProfile);
+        viewUserProfile.setUserProfileViewer(selectProfile);
       } catch (Exception e) {
         topicDetail.log.warn("Failed to get User info: " + e.getMessage(), e);
       }
-      viewUserProfile.setUserProfileLogin(topicDetail.userProfile);
+      viewUserProfile.setUserProfile(topicDetail.userProfile);
       CommonContact contact = null;
       if (topicDetail.mapContact.containsKey(userId)) {
         contact = topicDetail.mapContact.get(userId);
@@ -1707,24 +1671,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   static public class AddWatchingActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-
       if (topicDetail.getTopic() != null) {
-        topicDetail.isEditTopic = true;
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(topicDetail.categoryId).append("/").append(topicDetail.forumId).append("/").append(topicDetail.topicId);
-        List<String> values = new ArrayList<String>();
-        try {
-          values.add(topicDetail.userProfile.getEmail());
-          topicDetail.getForumService().addWatch(1, buffer.toString(), values, topicDetail.userProfile.getUserId());
-          UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-          forumPortlet.updateWatching();
-          topicDetail.listWatches = forumPortlet.getWatchingByCurrentUser();
-          topicDetail.info("UIAddWatchingForm.msg.successfully");
-
+        StringBuffer buffer = new StringBuffer().append(topicDetail.categoryId).append("/")
+                              .append(topicDetail.forumId).append("/").append(topicDetail.topicId);
+        if(topicDetail.addWatch(buffer.toString(), topicDetail.userProfile)) {
+          topicDetail.isEditTopic = true;
           refresh();
-        } catch (Exception e) {
-          topicDetail.log.warn("Failed to add watch: " + e.getMessage(), e);
-          warning("UIAddWatchingForm.msg.fall");
         }
       } else {
         warning("UIForumPortlet.msg.topicEmpty");
@@ -1737,19 +1689,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       if (topicDetail.getTopic() != null) {
         topicDetail.isEditTopic = true;
-        String path = topicDetail.categoryId + "/" + topicDetail.forumId + "/" + topicDetail.topicId;
-        try {
-          topicDetail.getForumService().removeWatch(1, path, topicDetail.userProfile.getUserId() + "/" + topicDetail.getEmailWatching(path));
-          UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-          forumPortlet.updateWatching();
-          topicDetail.listWatches = forumPortlet.getWatchingByCurrentUser();
-          topicDetail.info("UIAddWatchingForm.msg.UnWatchSuccessfully");
-
-        } catch (Exception e) {
-          topicDetail.log.warn("Failed to unwatch: " + e.getMessage(), e);
-          warning("UIAddWatchingForm.msg.UnWatchfall");
+        StringBuffer buffer = new StringBuffer().append(topicDetail.categoryId).append("/")
+                              .append(topicDetail.forumId).append("/").append(topicDetail.topicId);
+        if(topicDetail.unWatch(buffer.toString(), topicDetail.userProfile)) {
+          topicDetail.isEditTopic = true;
+          refresh();
         }
-        refresh();
       } else {
         warning("UIForumPortlet.msg.topicEmpty");
         topicDetail.refreshPortlet();

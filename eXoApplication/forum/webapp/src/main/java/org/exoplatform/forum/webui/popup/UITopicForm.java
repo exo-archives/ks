@@ -27,7 +27,6 @@ import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAttachment;
-import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicType;
@@ -55,8 +54,8 @@ import org.exoplatform.webui.core.UITree;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormInputInfo;
@@ -803,16 +802,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
   public void updateSelect(String selectField, String value) throws Exception {
     UIFormTextAreaInput fieldInput = getUIFormTextAreaInput(selectField);
     String values = fieldInput.getValue();
-    if (!ForumUtils.isEmpty(values)) {
-      values = ForumUtils.removeSpaceInString(values);
-      if (!ForumUtils.isStringInStrings(values.split(","), value)) {
-        if (values.lastIndexOf(",") != (values.length() - 1))
-          values = values + ",";
-        values = values + value;
-      }
-    } else
-      values = value;
-    fieldInput.setValue(values);
+    fieldInput.setValue(ForumUtils.updateMultiValues(value, values));
   }
 
   static public class AddValuesUserActionListener extends BaseEventListener<UITopicForm> {
@@ -824,10 +814,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
         UIUserSelect uiUserSelect = popupContainer.findFirstComponentOfType(UIUserSelect.class);
         if (uiUserSelect != null) {
           UIPopupWindow popupWindow = uiUserSelect.getParent();
-          popupWindow.setShow(false);
-          popupWindow.setUIComponent(null);
-          popupWindow.setRendered(false);
-          event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+          closePopupWindow(popupWindow);
         }
 
         UIGroupSelector uiGroupSelector = null;
@@ -849,20 +836,14 @@ public class UITopicForm extends BaseForumForm implements UISelector {
     public void execute(Event<UIUserSelector> event) throws Exception {
       UIUserSelector uiUserSelector = event.getSource();
       UIPopupWindow popupWindow = uiUserSelector.getParent();
-      popupWindow.setUIComponent(null);
-      popupWindow.setShow(false);
-      popupWindow.setRendered(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+      closePopupWindow(popupWindow);
     }
   }
 
   static public class ClosePopupActionListener extends EventListener<UIPopupWindow> {
     public void execute(Event<UIPopupWindow> event) throws Exception {
       UIPopupWindow popupWindow = event.getSource();
-      popupWindow.setUIComponent(null);
-      popupWindow.setShow(false);
-      popupWindow.setRendered(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+      closePopupWindow(popupWindow);
     }
   }
 
@@ -896,10 +877,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
           topicForm.setValueField(topicPermission, FIELD_CANPOST_INPUT, values);
         }
       }
-      popupWindow.setUIComponent(null);
-      popupWindow.setShow(false);
-      popupWindow.setRendered(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
+      closePopupWindow(popupWindow);
       event.getRequestContext().addUIComponentToUpdateByAjax(topicForm);
     }
   }
@@ -909,27 +887,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
       UITopicForm topicForm = event.getSource();
       String id = event.getRequestContext().getRequestParameter(OBJECTID).replace("/0", "");
       UIPopupContainer uiPopupContainer = topicForm.getAncestorOfType(UIPopupContainer.class);
-      UIGroupSelector uiGroupSelector = uiPopupContainer.findFirstComponentOfType(UIGroupSelector.class);
-      if (uiGroupSelector != null) {
-        UIPopupWindow popupWindow = uiGroupSelector.getAncestorOfType(UIPopupWindow.class);
-        popupWindow.setUIComponent(null);
-        popupWindow.setShow(false);
-        popupWindow.setRendered(false);
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
-      }
-      UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById(USER_SELECTOR_POPUPWINDOW);
-      if (uiPopupWindow == null)
-        uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, USER_SELECTOR_POPUPWINDOW, USER_SELECTOR_POPUPWINDOW);
-      UIUserSelect uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelect.class, null, "UIUserSelector");
-      uiUserSelector.setShowSearch(true);
-      uiUserSelector.setShowSearchUser(true);
-      uiUserSelector.setShowSearchGroup(false);
-      uiPopupWindow.setUIComponent(uiUserSelector);
-      uiPopupWindow.setShow(true);
-      uiPopupWindow.setWindowSize(740, 400);
-      uiPopupWindow.setRendered(true);
-      uiUserSelector.setPermisionType(id);
-      uiPopupContainer.setRendered(true);
+      topicForm.showUIUserSelect(uiPopupContainer, USER_SELECTOR_POPUPWINDOW, id);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);
     }
   }

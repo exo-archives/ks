@@ -22,11 +22,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumSearch;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
@@ -40,7 +38,6 @@ import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -49,10 +46,9 @@ import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInput;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
@@ -90,7 +86,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 				)
 		}
 )
-public class UISearchForm extends UIForm implements UISelector {
+public class UISearchForm extends BaseForumForm implements UISelector {
 
   final static private String FIELD_SEARCHVALUE_INPUT     = "SearchValue";
 
@@ -126,8 +122,6 @@ public class UISearchForm extends UIForm implements UISelector {
 
   final static private String TODATECREATEDLASTPOST       = "ToDateCreatedLastPost";
 
-  private UserProfile         userProfile                 = null;
-
   private boolean             isSearchForum               = false;
 
   private boolean             isSearchCate                = false;
@@ -138,8 +132,6 @@ public class UISearchForm extends UIForm implements UISelector {
 
   private final static String USER_SEARCH_POPUP_WINDOW_ID = "UIUserSearchPopupWindow";
 
-  private ForumService        forumService;
-
   private List<TopicType>     listTT                      = new ArrayList<TopicType>();
 
   private Locale              locale;
@@ -147,7 +139,6 @@ public class UISearchForm extends UIForm implements UISelector {
   public UISearchForm() throws Exception {
     if (this.getId() == null)
       setId("UISearchForm");
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     UIFormStringInput searchValue = new UIFormStringInput(FIELD_SEARCHVALUE_INPUT, FIELD_SEARCHVALUE_INPUT, null);
     UIFormStringInput searchUser = new UIFormStringInput(FIELD_SEARCHUSER_INPUT, FIELD_SEARCHUSER_INPUT, null);
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
@@ -266,7 +257,7 @@ public class UISearchForm extends UIForm implements UISelector {
 
   private void setTopicType() throws Exception {
     listTT.clear();
-    listTT.addAll(forumService.getTopicTypes());
+    listTT.addAll(getForumService().getTopicTypes());
   }
 
   public void setUserProfile(UserProfile userProfile) throws Exception {
@@ -326,12 +317,6 @@ public class UISearchForm extends UIForm implements UISelector {
     }
   }
 
-  public String getLabel(String id) throws Exception {
-    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-    ResourceBundle res = context.getApplicationResourceBundle();
-    return getLabel(res, id);
-  }
-
   private String checkValue(String input) throws Exception {
     if (!ForumUtils.isEmpty(input)) {
       try {
@@ -347,15 +332,7 @@ public class UISearchForm extends UIForm implements UISelector {
   public void updateSelect(String selectField, String value) throws Exception {
     UIFormStringInput fieldInput = getUIStringInput(selectField);
     String values = fieldInput.getValue();
-    if (!ForumUtils.isEmpty(values)) {
-      if (!ForumUtils.isStringInStrings(values.split(","), value)) {
-        if (values.trim().lastIndexOf(",") != (values.length() - 1))
-          values = values.trim() + ",";
-        values = values + value;
-      }
-    } else
-      values = value;
-    fieldInput.setValue(values);
+    fieldInput.setValue(ForumUtils.updateMultiValues(value, values));
   }
 
   private Calendar getCalendar(UIFormDateTimePicker dateTimeInput, String faled) throws Exception {
@@ -482,7 +459,7 @@ public class UISearchForm extends UIForm implements UISelector {
       eventQuery.setRemain(remain);
       List<ForumSearch> list = null;
       try {
-        list = uiForm.forumService.getAdvancedSearch(eventQuery, forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()));
+        list = uiForm.getForumService().getAdvancedSearch(eventQuery, forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()));
       } catch (Exception e) {
         log.warn("\nGetting advance search fail:\n " + e.getCause());
         UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
@@ -605,17 +582,7 @@ public class UISearchForm extends UIForm implements UISelector {
       UIForumPortlet forumPortlet = searchForm.getAncestorOfType(UIForumPortlet.class);
       UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true);
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
-      UIPopupWindow uiPopupWindow = popupContainer.getChildById(USER_SEARCH_POPUP_WINDOW_ID);
-      if (uiPopupWindow == null)
-        uiPopupWindow = popupContainer.addChild(UIPopupWindow.class, USER_SEARCH_POPUP_WINDOW_ID, USER_SEARCH_POPUP_WINDOW_ID);
-      UIUserSelect uiUserSelector = popupContainer.createUIComponent(UIUserSelect.class, null, "UIUserSelector");
-      uiUserSelector.setShowSearch(true);
-      uiUserSelector.setShowSearchUser(true);
-      uiUserSelector.setShowSearchGroup(false);
-      uiUserSelector.setPermisionType(id);
-      uiPopupWindow.setUIComponent(uiUserSelector);
-      uiPopupWindow.setShow(true);
-      uiPopupWindow.setWindowSize(740, 400);
+      searchForm.showUIUserSelect(popupContainer, USER_SEARCH_POPUP_WINDOW_ID, id);
       popupAction.addChild(popupContainer);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }

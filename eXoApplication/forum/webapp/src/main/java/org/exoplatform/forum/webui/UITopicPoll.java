@@ -79,8 +79,6 @@ public class UITopicPoll extends BaseForumForm {
 
   private Forum       forum;
 
-  private UserProfile userProfile;
-
   private PollService pollService;
 
   private String      pollId;
@@ -89,8 +87,7 @@ public class UITopicPoll extends BaseForumForm {
     pollService = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
   }
 
-  @SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+  public UserProfile getUserProfile() throws Exception {
     userProfile = new UserProfile();
     try {
       userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();

@@ -687,7 +687,7 @@
 				}
 				UserProfile userInfo = uicomponent.getUserInfo(owner) ;
 				screenName = userInfo.getScreenName() ;
-				String viewScreenName = uicomponent.getScreenName(screenName);
+				String viewScreenName = uicomponent.getShortScreenName(screenName);
 				String classIconPost = post.getIcon() ;
 				if(ForumUtils.isEmpty(classIconPost)) 
 					classIconPost = "NormalTopicIcon" ;

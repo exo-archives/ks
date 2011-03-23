@@ -22,13 +22,11 @@ import java.util.ResourceBundle;
 
 import javax.jcr.ItemExistsException;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -36,15 +34,14 @@ import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
@@ -59,9 +56,7 @@ import org.exoplatform.webui.event.Event.Phase;
 			@EventConfig(listeners = UIMoveTopicForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
-public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
-  private ForumService   forumService;
-
+public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
   private String         forumId;
 
   private List<Topic>    topics;
@@ -71,8 +66,6 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
   private boolean        isFormTopic = false;
 
   private boolean        isAdmin     = false;
-
-  private UserProfile    userProfile;
 
   private String         link        = "";
 
@@ -94,19 +87,7 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
     this.isAdmin = isAdmin;
   }
 
-  public UserProfile getUserProfile() throws Exception {
-    return this.userProfile;
-  }
-
-  public void setUserProfile(UserProfile userProfile) throws Exception {
-    this.userProfile = userProfile;
-    if (this.userProfile == null) {
-      this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-    }
-  }
-
   public UIMoveTopicForm() throws Exception {
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }
 
   public void activate() throws Exception {
@@ -129,7 +110,7 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
 
   private void setCategories() throws Exception {
     this.categories = new ArrayList<Category>();
-    for (Category category : this.forumService.getCategories()) {
+    for (Category category : getForumService().getCategories()) {
       if (this.userProfile.getUserRole() == 1) {
         String[] list = category.getUserPrivate();
         if (list != null && list.length > 0 && !list[0].equals(" ")) {
@@ -158,7 +139,7 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
   @SuppressWarnings("unused")
   private List<Forum> getForums(String categoryId) throws Exception {
     List<Forum> forums = new ArrayList<Forum>();
-    for (Forum forum : this.forumService.getForumSummaries(categoryId, "")) {
+    for (Forum forum : this.getForumService().getForumSummaries(categoryId, "")) {
       if (forum.getId().equalsIgnoreCase(this.forumId)) {
         if (pathTopic.indexOf(categoryId) >= 0)
           continue;
@@ -190,7 +171,7 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
           // set link
           String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");
           //
-          uiForm.forumService.moveTopic(uiForm.topics, forumPath, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
+          uiForm.getForumService().moveTopic(uiForm.topics, forumPath, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
           UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
           forumPortlet.updateUserProfileInfo();
           forumPortlet.cancelAction();
@@ -202,7 +183,7 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
             UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
             forumDescription.setForumIds(temp[temp.length - 2], temp[temp.length - 1]);
             UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class);
-            topicDetail.setUpdateForum(uiForm.forumService.getForum(temp[temp.length - 2], temp[temp.length - 1]));
+            topicDetail.setUpdateForum(uiForm.getForumService().getForum(temp[temp.length - 2], temp[temp.length - 1]));
             topicDetail.setUpdateTopic(temp[temp.length - 2], temp[temp.length - 1], uiForm.topics.get(0).getId());
             event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
           } else {

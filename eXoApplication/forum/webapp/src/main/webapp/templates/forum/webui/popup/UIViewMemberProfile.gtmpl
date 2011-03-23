@@ -7,9 +7,9 @@
 <div class="UIViewMemberProfile">
 <% uiform.begin() %>
 <%	
+	UserProfile userProfileViewer = uiform.getUserProfileViewer() ;
 	UserProfile userProfile = uiform.getUserProfile() ;
-	UserProfile userProfileLogin = uiform.getUserProfileLogin() ;
-	String userName = userProfile.getUserId() ;
+	String userName = userProfileViewer.getUserId() ;
 	CommonContact contact = uiform.getContact(userName) ;
 	String avatarUrl = "";
 	String location = "" ;
@@ -24,7 +24,7 @@
 			location = location + contact.getCountry() ;
 		}
 	}
-	String shortDateFormat = userProfileLogin.getShortDateFormat() ;
+	String shortDateFormat = userProfile.getShortDateFormat() ;
 	
 	fullName = uiform.getScreenName(userName);
 	if(fullName == null || fullName.length() == 0 || fullName.equals(userName)) {
@@ -34,15 +34,15 @@
 		if(str != null && str.length() > 0) fullName = fullName + " " + str ;
 	}
 	Date dateView = new Date();
-	long setTime = (long)(userProfileLogin.getTimeZone()*3600000) ;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String createdDate = "";
-	if(userProfile.getJoinedDate() != null){
-		dateView.setTime(userProfile.getJoinedDate().getTime() - setTime);
+	if(userProfileViewer.getJoinedDate() != null){
+		dateView.setTime(userProfileViewer.getJoinedDate().getTime() - setTime);
 		createdDate = ForumUtils.getFormatDate(shortDateFormat, dateView) ;
 	}
 	
-	long totalPost = userProfile.getTotalPost();
-	shortDateFormat = shortDateFormat +	", " + userProfileLogin.getTimeFormat();
+	long totalPost = userProfileViewer.getTotalPost();
+	shortDateFormat = shortDateFormat +	", " + userProfile.getTimeFormat();
 	String userSmile = "OfflineIcon";
 	String titleSmile = "Offline" ;
 	if(uicomponent.isOnline(userName)) {
@@ -64,8 +64,8 @@
 						<td class="MemberContainer">
 							<div class="MemberContent">
 							<%	
-								boolean isDisplayAvatar = userProfile.getIsDisplayAvatar(); 
-								String userTitle = userProfile.getUserTitle();
+								boolean isDisplayAvatar = userProfileViewer.getIsDisplayAvatar(); 
+								String userTitle = userProfileViewer.getUserTitle();
 								if(isDisplayAvatar) {
 									avatarUrl = uiform.getAvatarUrl() ;
 								%>
@@ -76,8 +76,8 @@
 									<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $createdDate</div>
 									<%if(totalPost > 0) {
 											String lastPostDateOfUser = "" ;
-											if(userProfile.getLastPostDate() != null){
-												dateView.setTime(userProfile.getLastPostDate().getTime() - setTime);
+											if(userProfileViewer.getLastPostDate() != null){
+												dateView.setTime(userProfileViewer.getLastPostDate().getTime() - setTime);
 												lastPostDateOfUser = ForumUtils.getFormatDate(shortDateFormat, dateView) ;
 											}
 									%>
@@ -87,8 +87,8 @@
 									<div><strong>$userName</strong> <%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
 									<% } 
 											String lastLoginUser = "" ;
-											if(userProfile.getLastLoginDate() != null){
-												dateView.setTime(userProfile.getLastLoginDate().getTime() - setTime);
+											if(userProfileViewer.getLastLoginDate() != null){
+												dateView.setTime(userProfileViewer.getLastLoginDate().getTime() - setTime);
 												lastLoginUser = ForumUtils.getFormatDate(shortDateFormat, dateView) ;
 											}
 										if(!ForumUtils.isEmpty(lastLoginUser)) {

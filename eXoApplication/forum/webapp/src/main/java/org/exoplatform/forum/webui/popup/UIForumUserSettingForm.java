@@ -55,8 +55,8 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
@@ -137,8 +137,6 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 
   @SuppressWarnings("unused")
   private String             tabId                              = "ForumUserProfile";
-
-  private UserProfile        userProfile                        = null;
 
   private String[]           permissionUser                     = null;
 

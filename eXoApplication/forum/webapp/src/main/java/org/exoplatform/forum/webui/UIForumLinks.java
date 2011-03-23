@@ -22,18 +22,15 @@ import java.util.List;
 import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.info.UIForumLinkPortlet;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumLinkData;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -54,9 +51,7 @@ import org.exoplatform.webui.event.EventListener;
 			@EventConfig(listeners = UIForumLinks.SelectActionListener.class)			
 		}
 )
-public class UIForumLinks extends BaseUIForm {
-  private ForumService        forumService;
-
+public class UIForumLinks extends BaseForumForm {
   public static final String  FIELD_FORUMLINK_SELECTBOX = "forumLink";
 
   public static final String  FIELD_FORUMHOMEPAGE_LABEL = "forumHomePage";
@@ -65,10 +60,7 @@ public class UIForumLinks extends BaseUIForm {
 
   private List<ForumLinkData> forumLinks                = null;
 
-  private UserProfile         userProfile               = new UserProfile();
-
   public UIForumLinks() throws Exception {
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }
 
   private String getStrQuery(List<String> list, String property) {
@@ -94,7 +86,7 @@ public class UIForumLinks extends BaseUIForm {
       String userName = UserHelper.getCurrentUser();
       if (userName != null) {
         try {
-          userProfile = forumService.getQuickProfile(userName);
+          userProfile = getForumService().getQuickProfile(userName);
         } catch (Exception ex) {
           userProfile = new UserProfile();
         }
@@ -138,7 +130,7 @@ public class UIForumLinks extends BaseUIForm {
     if (!ForumUtils.isEmpty(strQueryCate))
       strQueryCate = "[" + strQueryCate + "]";
 
-    this.forumLinks = forumService.getAllLink(strQueryCate, strQueryForum);
+    this.forumLinks = getForumService().getAllLink(strQueryCate, strQueryForum);
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
     list.add(new SelectItemOption<String>(this.getLabel(FIELD_FORUMHOMEPAGE_LABEL) + "/" + FIELD_FORUMHOMEPAGE_LABEL, Utils.FORUM_SERVICE));
     String space = "&nbsp; &nbsp; ", type = "/categoryLink";
@@ -195,7 +187,7 @@ public class UIForumLinks extends BaseUIForm {
         if (!path.equals(uiForm.path)) {
           if (path.lastIndexOf(Utils.FORUM) > 0) {
             String id[] = path.trim().split("/");
-            Forum forum = uiForm.forumService.getForum(id[0], id[1]);
+            Forum forum = uiForm.getForumService().getForum(id[0], id[1]);
             ;
             if (forum != null) {
               UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
@@ -206,7 +198,7 @@ public class UIForumLinks extends BaseUIForm {
             } else
               isErro = true;
           } else if (path.indexOf(Utils.CATEGORY) >= 0) {
-            Category category = uiForm.forumService.getCategory(path.trim());
+            Category category = uiForm.getForumService().getCategory(path.trim());
             if (category != null) {
               UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
               categoryContainer.getChild(UICategory.class).update(category, null);

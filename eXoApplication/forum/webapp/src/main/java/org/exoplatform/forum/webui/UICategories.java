@@ -150,8 +150,6 @@ public class UICategories extends UIContainer {
   @SuppressWarnings("unused")
   private boolean isWatching(String path) throws Exception {
     for (Watch watch : listWatches) {
-      // KS-2573
-      // check: is watching by email
       if (path.equals(watch.getNodePath()) && watch.isAddWatchByEmail())
         return true;
     }
@@ -540,22 +538,19 @@ public class UICategories extends UIContainer {
     public void execute(Event<UICategories> event) throws Exception {
       UICategories uiContainer = event.getSource();
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
-      List<String> values = new ArrayList<String>();
       String userName = uiContainer.userProfile.getUserId();
       try {
+        List<String> values = new ArrayList<String>();
         values.add(uiContainer.forumService.getUserInformations(uiContainer.userProfile).getEmail());
         uiContainer.forumService.addWatch(1, path, values, userName);
         UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class);
         forumPortlet.updateWatching();
-        Object[] args = {};
         UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO));
+        uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", new String[]{}, ApplicationMessage.INFO));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
       } catch (Exception e) {
-        e.printStackTrace();
-        Object[] args = {};
         UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING));
+        uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", new String[]{}, ApplicationMessage.WARNING));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer);
@@ -575,7 +570,6 @@ public class UICategories extends UIContainer {
         uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
       } catch (Exception e) {
-        e.printStackTrace();
         Object[] args = {};
         UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class);
         uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING));

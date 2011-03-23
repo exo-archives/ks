@@ -16,10 +16,22 @@
  */
 package org.exoplatform.forum.webui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.webui.popup.UIGroupSelector;
 import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.ks.common.webui.UIUserSelect;
+import org.exoplatform.web.application.RequestContext;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.core.UIPopupWindow;
 
 /**
  * Base class for UIForm used in forum application.
@@ -30,6 +42,10 @@ import org.exoplatform.webui.core.UIComponent;
 public class BaseForumForm extends BaseUIForm {
 
   private ForumService forumService;
+
+  public UserProfile userProfile = new UserProfile();
+
+  public List<Watch>  listWatches = new ArrayList<Watch>();
 
   /**
    * Get a reference to the forum service
@@ -49,7 +65,57 @@ public class BaseForumForm extends BaseUIForm {
   protected void setForumService(ForumService forumService) {
     this.forumService = forumService;
   }
+  
+  public UserProfile getUserProfile() throws Exception {
+    return userProfile;
+  }
 
+  public void setUserProfile(UserProfile userProfile) throws Exception {
+    this.userProfile = userProfile;
+    if (this.userProfile == null) {
+      this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+    }
+  }
+  
+  public void setListWatches(List<Watch> listWatches) {
+    this.listWatches = listWatches;
+  }
+  
+  protected boolean isWatching(String path) throws Exception {
+    for (Watch watch : listWatches) {
+      if (path.equals(watch.getNodePath()) && watch.isAddWatchByEmail())
+        return true;
+    }
+    return false;
+  }
+
+  protected String getEmailWatching(String path) throws Exception {
+    for (Watch watch : listWatches) {
+      try {
+        if (watch.getNodePath().endsWith(path))
+          return watch.getEmail();
+      } catch (Exception e) {
+      }
+    }
+    return "";
+  }
+
+  protected String getScreenName(String userName) throws Exception {
+    return getForumService().getScreenName(userName);
+  }
+  
+  protected String getShortScreenName(String screenName) throws Exception {
+    if (screenName != null && screenName.length() > 17 && !screenName.trim().contains(" ")) {
+      boolean isDelted = false;
+      if (screenName.indexOf("<s>") >= 0) {
+        screenName = screenName.replaceAll("<s>", "").replaceAll("</s>", "");
+        isDelted = true;
+      }
+      screenName = "<span title=\"" + screenName + "\">" + ((isDelted) ? "<s>" : "") + ForumUtils.getSubString(screenName, 15) + ((isDelted) ? "</s></span>" : "</span>");
+    }
+    return screenName;
+  }
+  
   protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
     UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
     return openPopup(forumPortlet, componentType, popupId, width, height);
@@ -67,4 +133,64 @@ public class BaseForumForm extends BaseUIForm {
   protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
     return openPopup(componentType, popupId, width, 0);
   }
+
+  protected boolean addWatch(String path, UserProfile userProfile) {
+    List<String> values = new ArrayList<String>();
+    try {
+      values.add(userProfile.getEmail());
+      getForumService().addWatch(1, path, values, userProfile.getUserId());
+      UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.updateWatching();
+      this.listWatches = forumPortlet.getWatchingByCurrentUser();
+      info("UIAddWatchingForm.msg.successfully");
+      return true;
+    } catch (Exception e) {
+      warning("UIAddWatchingForm.msg.fall");
+      return false;
+    }
+  }
+
+  protected boolean unWatch(String path, UserProfile userProfile) {
+    try {
+      getForumService().removeWatch(1, path, userProfile.getUserId() + "/" + getEmailWatching(path));
+      UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.updateWatching();
+      this.listWatches = forumPortlet.getWatchingByCurrentUser();
+      info("UIAddWatchingForm.msg.UnWatchSuccessfully");
+      return true;
+    } catch (Exception e) {
+      warning("UIAddWatchingForm.msg.UnWatchfall");
+      return false;
+    }
+  }
+
+  protected static void closePopupWindow(UIPopupWindow popupWindow) {
+    popupWindow.setUIComponent(null);
+    popupWindow.setShow(false);
+    popupWindow.setRendered(false);
+    WebuiRequestContext context = RequestContext.getCurrentInstance();
+    context.addUIComponentToUpdateByAjax(popupWindow.getParent());
+  }
+  
+  protected void showUIUserSelect(UIPopupContainer uiPopupContainer, String popupWinDowId, String id) throws Exception {
+    UIGroupSelector uiGroupSelector = uiPopupContainer.findFirstComponentOfType(UIGroupSelector.class);
+    if (uiGroupSelector != null) {
+      UIPopupWindow popupWindow = uiGroupSelector.getAncestorOfType(UIPopupWindow.class);
+      closePopupWindow(popupWindow);
+    }
+    UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById(popupWinDowId);
+    if (uiPopupWindow == null)
+      uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, popupWinDowId, popupWinDowId);
+    UIUserSelect uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelect.class, null, "UIUserSelector");
+    uiUserSelector.setShowSearch(true);
+    uiUserSelector.setShowSearchUser(true);
+    uiUserSelector.setShowSearchGroup(false);
+    uiUserSelector.setPermisionType(id);
+    uiPopupWindow.setUIComponent(uiUserSelector);
+    uiPopupWindow.setShow(true);
+    uiPopupWindow.setWindowSize(740, 400);
+    uiPopupWindow.setRendered(true);
+    uiPopupContainer.setRendered(true);
+  }
+  
 }

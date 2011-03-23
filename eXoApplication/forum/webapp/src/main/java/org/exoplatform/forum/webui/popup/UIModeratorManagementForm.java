@@ -57,14 +57,14 @@ import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -98,8 +98,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   private JCRPageList         userPageList;
 
   private boolean             isEdit                             = false;
-
-  private UserProfile         userProfile                        = new UserProfile();
 
   private List<ForumLinkData> forumLinks                         = null;
 
@@ -668,8 +666,8 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     public void onEvent(Event<UIModeratorManagementForm> event, UIModeratorManagementForm uiForm, String userId) throws Exception {
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
       UIViewUserProfile viewUserProfile = openPopup(popupContainer, UIViewUserProfile.class, 670, 0);
-      viewUserProfile.setUserProfile(uiForm.getUserProfile(userId));
-      viewUserProfile.setUserProfileLogin(uiForm.getAncestorOfType(UIForumPortlet.class).getUserProfile());
+      viewUserProfile.setUserProfileViewer(uiForm.getUserProfile(userId));
+      viewUserProfile.setUserProfile(uiForm.getAncestorOfType(UIForumPortlet.class).getUserProfile());
       viewUserProfile.setContact(null);
     }
   }
