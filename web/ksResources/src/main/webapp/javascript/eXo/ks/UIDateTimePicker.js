@@ -9,10 +9,13 @@ UIDateTimePicker = function(calendarId) {
 	this.tooltip = ['Previous Year', 'Previous Month', 'Next Month', 'Next Year'];
 	this.pathResource = "/ksResources/javascript/eXo/ks/lang/";
 	this.lang = "";
+	this.fistWeekDay = 0; // sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 
 }
 
 UIDateTimePicker.prototype.getLang = function() {
 	try {
+	  var day = this.dateField.getAttribute('fistweekday');
+	  if (day) this.fistWeekDay = day * 1 - 1; // attribute 'fistweekday' includes: sunday: 1, monday: 2,..., saturday: 7 
 		var lang = this.dateField.getAttribute('lang'); 
 		if (this.lang == lang) 
 			return;
@@ -119,6 +122,7 @@ UIDateTimePicker.prototype.renderCalendar = function() {
 	var startDayOfWeek = this.getDayOfWeek(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, dayOfMonth) ;
 	var daysInMonth = this.getDaysInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth()) ;
 	var clazz = null;
+	var dayIdx = this.fistWeekDay;
 	var table = '<div id="BlockCaledar" class="BlockCalendar">' ;
 	table += 		'<div class="UICalendar" onmousedown="event.cancelBubble = true">' ;
 	table += 		'	<table class="MonthYearBox">' ;
@@ -133,7 +137,14 @@ UIDateTimePicker.prototype.renderCalendar = function() {
 	table += 		'	<div style="margin-top: 6px;padding: 0px 5px;">' ;
 	table += 		'		<table>' ;
 	table += 		'			<tr>' ;
-	table += 		'				<td><font color="red">' + this.weekdays[0] + '</font></td><td>' + this.weekdays[1] + '</td><td>' + this.weekdays[2] + '</td><td>' + this.weekdays[3] + '</td><td>' + this.weekdays[4] + '</td><td>' + this.weekdays[5] + '</td><td>' + this.weekdays[6] + '</td>' ;
+	for (var i = 0; i < 7; i++) {
+	 if (dayIdx == 0) {
+	   table += '       <td><font color="red">' + this.weekdays[dayIdx] + '</font></td>';
+	 } else {
+	   table += '       <td><font>' + this.weekdays[dayIdx] + '</font></td>';
+	 }
+	 dayIdx = ++dayIdx % 7;
+	}
 	table += 		'			</tr>' ;
 	table += 		'		</table>' ;
 	table += 		'	</div>' ;
@@ -142,7 +153,8 @@ UIDateTimePicker.prototype.renderCalendar = function() {
 	for (var week=0; week < 6; week++) {
 		table += "<tr>";
 		for (var dayOfWeek=0; dayOfWeek < 7; dayOfWeek++) {
-			if (week == 0 && startDayOfWeek == dayOfWeek) {
+		  var currentWeekDay = (dayOfWeek + this.fistWeekDay) % 7;
+			if (week == 0 && startDayOfWeek == currentWeekDay) {
 				validDay = 1;
 			} else if (validDay == 1 && dayOfMonth > daysInMonth) {
 				validDay = 0;
