@@ -205,5 +205,26 @@ public class MessageBuilder {
 		message.setBody(org.exoplatform.ks.common.Utils.convertCodeHTML(content_));
 		return message;
 	}
+
+	public Message getContentEmailMoved() {
+	  Message message = new Message();
+	  message.setMimeType(ForumNodeTypes.TEXT_HTML);
+	  message.setFrom(owner);
+	  message.setSubject(headerSubject);
+	  
+	  String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);
+	  content_ = StringUtils.replace(content_, "$OBJECT_PARENT_NAME", addType);
+	  content_ = StringUtils.replace(content_, "$POSTER", owner);
+	  content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", link);
+	  content_ = StringUtils.replace(content_, "$VIEWPOST_PRIVATE_LINK", link.replace("public", "private"));
+	  content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", link.replace("public", "private") + "/true");
+	  
+	  content_ = StringUtils.replace(content_, "$OBJECT_PARENT_TYPE", types.get(Utils.CATEGORY));
+	  content_ = StringUtils.replace(content_, "$OBJECT_TYPE", types.get(Utils.FORUM));
+	  message.setBody(org.exoplatform.ks.common.Utils.convertCodeHTML(content_));
+	  return message;
+	}
+	
+	
 }
 	 
