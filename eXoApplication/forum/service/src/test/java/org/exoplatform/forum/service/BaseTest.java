@@ -18,7 +18,10 @@
 package org.exoplatform.forum.service;
 
 import org.exoplatform.commons.chromattic.ChromatticManager;
-import org.exoplatform.component.test.*;
+import org.exoplatform.component.test.AbstractKernelTest;
+import org.exoplatform.component.test.ConfigurationUnit;
+import org.exoplatform.component.test.ConfiguredBy;
+import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentRequestLifecycle;
 import org.exoplatform.services.organization.OrganizationService;
@@ -31,68 +34,63 @@ import org.exoplatform.services.rest.impl.ResourceBinder;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@ConfiguredBy({
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.organization-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.ks.webservice.test-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.portal-configuration1.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.portal-configuration2.xml")
-  })
+@ConfiguredBy( { @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.jcr-configuration.xml"), @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.test.organization-configuration.xml"), @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.ks.webservice.test-configuration.xml"),
+    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.portal-configuration1.xml"), @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/exo.portal.component.portal-configuration2.xml") })
 public abstract class BaseTest extends AbstractKernelTest {
 
-  protected PortalContainer container;
-  
-  protected ProviderBinder providers;
+  protected PortalContainer     container;
 
-  protected ResourceBinder     binder;
+  protected ProviderBinder      providers;
 
-  protected RequestHandlerImpl requestHandler;
-  
-  protected OrganizationService  orgService;
- 
-  protected ChromatticManager chromatticManager;
+  protected ResourceBinder      binder;
+
+  protected RequestHandlerImpl  requestHandler;
+
+  protected OrganizationService orgService;
+
+  protected ChromatticManager   chromatticManager;
 
   public void setUp() throws Exception {
     container = PortalContainer.getInstance();
-    chromatticManager = (ChromatticManager)container.getComponentInstanceOfType(ChromatticManager.class);
+    chromatticManager = (ChromatticManager) container.getComponentInstanceOfType(ChromatticManager.class);
     orgService = (OrganizationService) container.getComponentInstanceOfType(OrganizationService.class);
     binder = (ResourceBinder) container.getComponentInstanceOfType(ResourceBinder.class);
     requestHandler = (RequestHandlerImpl) container.getComponentInstanceOfType(RequestHandlerImpl.class);
     ProviderBinder.setInstance(new ProviderBinder());
     providers = ProviderBinder.getInstance();
-//    System.out.println("##########################"+providers);
+    // System.out.println("##########################"+providers);
     ApplicationContextImpl.setCurrent(new ApplicationContextImpl(null, null, providers));
     binder.clear();
   }
-  
+
   protected void start() {
-    ((ComponentRequestLifecycle)orgService).startRequest(container);
+    ((ComponentRequestLifecycle) orgService).startRequest(container);
   }
-  
+
   protected void stop() {
-    ((ComponentRequestLifecycle)orgService).endRequest(container);
-  }  
-  
+    ((ComponentRequestLifecycle) orgService).endRequest(container);
+  }
+
   public void tearDown() throws Exception {
   }
 
   public boolean registry(Object resource) throws Exception {
-//    container.registerComponentInstance(resource);
+    // container.registerComponentInstance(resource);
     return binder.bind(resource);
   }
 
   public boolean registry(Class<?> resourceClass) throws Exception {
-//    container.registerComponentImplementation(resourceClass.getName(), resourceClass);
+    // container.registerComponentImplementation(resourceClass.getName(), resourceClass);
     return binder.bind(resourceClass);
   }
 
   public boolean unregistry(Object resource) {
-//    container.unregisterComponentByInstance(resource);
+    // container.unregisterComponentByInstance(resource);
     return binder.unbind(resource.getClass());
   }
 
   public boolean unregistry(Class<?> resourceClass) {
-//    container.unregisterComponent(resourceClass.getName());
+    // container.unregisterComponent(resourceClass.getName());
     return binder.unbind(resourceClass);
   }
 

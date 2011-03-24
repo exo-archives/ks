@@ -44,7 +44,8 @@ import org.exoplatform.services.organization.User;
 public interface DataStorage {
 
   public static final int CLOSE_FORUM = 1;
-  public static final int LOCK_FORUM = 2;
+
+  public static final int LOCK_FORUM  = 2;
 
   @Managed
   @ManagedDescription("repository for forum storage")
@@ -63,12 +64,13 @@ public interface DataStorage {
   void addRolePlugin(ComponentPlugin plugin) throws Exception;
 
   void addInitialDataPlugin(ComponentPlugin plugin) throws Exception;
+
   void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception;
 
   void addCalculateModeratorEventListener() throws Exception;
 
   void addDeletedUserCalculateListener() throws Exception;
-  
+
   void initCategoryListener();
 
   boolean isAdminRole(String userName) throws Exception;
@@ -123,11 +125,7 @@ public interface DataStorage {
 
   JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception;
 
-  LazyPageList<Topic> getTopicList(String categoryId,
-                                   String forumId,
-                                   String xpathConditions,
-                                   String strOrderBy,
-                                   int pageSize) throws Exception;
+  LazyPageList<Topic> getTopicList(String categoryId, String forumId, String xpathConditions, String strOrderBy, int pageSize) throws Exception;
 
   List<Topic> getTopics(String categoryId, String forumId) throws Exception;
 
@@ -136,7 +134,7 @@ public interface DataStorage {
   Topic getTopicSummary(String topicPath, boolean isLastPost) throws Exception;
 
   Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception;
-  
+
   Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception;
 
   JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception;
@@ -149,12 +147,7 @@ public interface DataStorage {
 
   void modifyTopic(List<Topic> topics, int type) throws Exception;
 
-  void saveTopic(String categoryId,
-                 String forumId,
-                 Topic topic,
-                 boolean isNew,
-                 boolean isMove,
-                 MessageBuilder messageBuilder) throws Exception;
+  void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception;
 
   Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception;
 
@@ -162,20 +155,9 @@ public interface DataStorage {
 
   long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) throws Exception;
 
-  JCRPageList getPosts(String categoryId,
-                       String forumId,
-                       String topicId,
-                       String isApproved,
-                       String isHidden,
-                       String strQuery,
-                       String userLogin) throws Exception;
+  JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
 
-  long getAvailablePost(String categoryId,
-                        String forumId,
-                        String topicId,
-                        String isApproved,
-                        String isHidden,
-                        String userLogin) throws Exception;
+  long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
 
   JCRPageList getPagePostByUser(String userName, String userId, boolean isMod, String strOrderBy) throws Exception;
 
@@ -183,12 +165,7 @@ public interface DataStorage {
 
   JCRPageList getListPostsByIP(String ip, String strOrderBy) throws Exception;
 
-  void savePost(String categoryId,
-                String forumId,
-                String topicId,
-                Post post,
-                boolean isNew,
-                MessageBuilder messageBuilder) throws Exception;
+  void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception;
 
   void modifyPost(List<Post> posts, int type) throws Exception;
 
@@ -276,17 +253,9 @@ public interface DataStorage {
 
   List<ForumLinkData> getAllLink(String strQueryCate, String strQueryForum) throws Exception;
 
-  List<ForumSearch> getQuickSearch(String textQuery,
-                                   String type_,
-                                   String pathQuery,
-                                   String userId,
-                                   List<String> listCateIds,
-                                   List<String> listForumIds,
-                                   List<String> forumIdsOfModerator) throws Exception;
+  List<ForumSearch> getQuickSearch(String textQuery, String type_, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
 
-  List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery,
-                                      List<String> listCateIds,
-                                      List<String> listForumIds) throws Exception;
+  List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) throws Exception;
 
   void addWatch(int watchType, String path, List<String> values, String currentUser) throws Exception;
 
@@ -299,28 +268,22 @@ public interface DataStorage {
   void updateForum(String path) throws Exception;
 
   SendMessageInfo getMessageInfo(String name) throws Exception;
-  
+
   Iterator<SendMessageInfo> getPendingMessages() throws Exception;
 
   List<ForumSearch> getJobWattingForModerator(String[] paths) throws Exception;
 
   int getJobWattingForModeratorByUser(String userId) throws Exception;
 
-
   NodeIterator search(String queryString) throws Exception;
 
   void evaluateActiveUsers(String query) throws Exception;
 
-  Object exportXML(String categoryId,
-                   String forumId,
-                   List<String> objectIds,
-                   String nodePath,
-                   ByteArrayOutputStream bos,
-                   boolean isExportAll) throws Exception;
+  Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll) throws Exception;
 
   void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) throws Exception;
 
-//  void updateDataImported() throws Exception;
+  // void updateDataImported() throws Exception;
 
   void updateTopicAccess(String userId, String topicId) throws Exception;
 
@@ -363,7 +326,7 @@ public interface DataStorage {
   void removeTopicType(String topicTypeId) throws Exception;
 
   JCRPageList getPageTopicByType(String type) throws Exception;
-  
+
   /**
    * Create or update a forum user profile
    * @param user user whose profile must be created
@@ -371,11 +334,13 @@ public interface DataStorage {
    * @return true if the user profile was added
    */
   public boolean populateUserProfile(User user, UserProfile profileTemplate, boolean isNew) throws Exception;;
-  public boolean deleteUserProfile(String userId) throws Exception ;
 
-  public void calculateDeletedUser(String userName) throws Exception ;
+  public boolean deleteUserProfile(String userId) throws Exception;
+
+  public void calculateDeletedUser(String userName) throws Exception;
 
   void initDataPlugin() throws Exception;
+
   void initDefaultData() throws Exception;
 
   List<RoleRulesPlugin> getRulesPlugins();
@@ -387,8 +352,9 @@ public interface DataStorage {
   void updateLastLoginDate(String userId) throws Exception;
 
   String getLatestUser() throws Exception;
-  
+
   List<Post> getNewPosts(int number) throws Exception;
+
   List<Post> getNewPostsByUser(String userName, int number) throws Exception;
 
   Map<String, String> getServerConfig();
@@ -399,15 +365,13 @@ public interface DataStorage {
 
   JCRPageList getPostForSplitTopic(String topicPath) throws Exception;
 
-  void movePost(String[] postPaths,
-                String destTopicPath,
-                boolean isCreatNewTopic,
-                String mailContent,
-                String link) throws Exception;
+  void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception;
 
   void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception;
 
   void updateUserProfileInfo(String name) throws Exception;
+
   public InputStream createForumRss(String objectId, String link) throws Exception;
+
   public InputStream createUserRss(String userId, String link) throws Exception;
 }

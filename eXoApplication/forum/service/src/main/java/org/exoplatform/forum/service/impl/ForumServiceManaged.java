@@ -21,11 +21,11 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 @Managed
-@NameTemplate(@Property(key="service", value="forum"))
+@NameTemplate(@Property(key = "service", value = "forum"))
 @ManagedDescription("Forum management")
 public class ForumServiceManaged implements ManagementAware {
-  
-  private static final Log log = ExoLogger.getLogger(ForumServiceManaged.class);
+
+  private static final Log  log = ExoLogger.getLogger(ForumServiceManaged.class);
 
   private ForumServiceImpl  forumService;
 
@@ -45,19 +45,19 @@ public class ForumServiceManaged implements ManagementAware {
   public List<String> getOnlineUsers() throws Exception {
     return forumService.onlineUserList_;
   }
-  
+
   @Managed
   @ManagedDescription("number of currently connected users")
   public int countOnlineUsers() throws Exception {
     return forumService.onlineUserList_.size();
   }
-  
+
   @Managed
   @ManagedDescription("rules that define administrators")
   public List<String> getAdminRules() {
     List<String> adminRules = new ArrayList<String>();
-    List<RoleRulesPlugin>  plugins = forumService.getStorage().getRulesPlugins();
-    
+    List<RoleRulesPlugin> plugins = forumService.getStorage().getRulesPlugins();
+
     for (RoleRulesPlugin plugin : plugins) {
       Collection<List<String>> allrules = plugin.getAllRules().values();
       for (List<String> rules : allrules) {
@@ -68,7 +68,7 @@ public class ForumServiceManaged implements ManagementAware {
     }
     return adminRules;
   }
-  
+
   @Managed
   @ManagedDescription("evaluate is a user has administrator role")
   public boolean hasForumAdminRole(String username) throws Exception {
@@ -77,37 +77,35 @@ public class ForumServiceManaged implements ManagementAware {
 
   @Managed
   @ManagedDescription("get the configuration of the mail service used for notifications in KS")
-  public Map<String,String> getMailServiceConfig() {
+  public Map<String, String> getMailServiceConfig() {
     return forumService.getStorage().getServerConfig();
   }
-  
+
   @Managed
   @ManagedDescription("Get the ContactProvider implementation")
   public String getContactProvider() {
     return ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ContactProvider.class).toString();
   }
-  
+
   @Managed
   @ManagedDescription("Set the ContactProvider implementation")
   public void setContactProvider(String fqn) {
     Object instance = null;
     try {
-    instance = Class.forName(fqn);
-    }
-    catch(Exception e) {
-      log.error("Failed to register contact provider for " + fqn  + ": " + e.getMessage());
+      instance = Class.forName(fqn);
+    } catch (Exception e) {
+      log.error("Failed to register contact provider for " + fqn + ": " + e.getMessage());
       return;
     }
     String name = PortalContainer.getCurrentPortalContainerName();
     ExoContainerContext.getContainerByName(name).registerComponentInstance(ContactProvider.class, instance);
   }
-  
-  
+
   public void registerPlugin(ManagedPlugin plugin) {
     if (context != null) {
       context.register(plugin);
     }
- 
+
   }
 
   public void registerStorageManager(DataStorage storage) {

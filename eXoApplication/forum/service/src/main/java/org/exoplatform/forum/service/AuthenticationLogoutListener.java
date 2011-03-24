@@ -23,26 +23,25 @@ import org.exoplatform.services.listener.Listener;
 import org.exoplatform.services.security.ConversationRegistry;
 import org.exoplatform.services.security.ConversationState;
 
-
 /**
  * Created by The eXo Platform SARL Author : Hung Nguyen Quang
  * hung.nguyen@exoplatform.com Nov 23, 2007 3:09:21 PM
  */
 public class AuthenticationLogoutListener extends Listener<ConversationRegistry, ConversationState> {
-  
+
   private ExoContainerContext context;
-	
-  public AuthenticationLogoutListener(ExoContainerContext context) throws Exception {	
-	  this.context = context;	  
-	}
 
-	@Override
-	public void onEvent(Event<ConversationRegistry, ConversationState> event) throws Exception {
-	  String name = context.getPortalContainerName();
-		ExoContainer container = ExoContainerContext.getContainerByName(name);
+  public AuthenticationLogoutListener(ExoContainerContext context) throws Exception {
+    this.context = context;
+  }
 
-  	ForumService fservice = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
-  	fservice.userLogout(event.getData().getIdentity().getUserId()) ;
-  	
-	}	
+  @Override
+  public void onEvent(Event<ConversationRegistry, ConversationState> event) throws Exception {
+    String name = context.getPortalContainerName();
+    ExoContainer container = ExoContainerContext.getContainerByName(name);
+
+    ForumService fservice = (ForumService) container.getComponentInstanceOfType(ForumService.class);
+    fservice.userLogout(event.getData().getIdentity().getUserId());
+
+  }
 }

@@ -14,35 +14,69 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
-package org.exoplatform.forum.service ;
-
+package org.exoplatform.forum.service;
 
 /**
  * March 2, 2007	
  */
 public class ForumLinkData {
-	private String id;
-	private String name;
-	private String path;
-	private String type;
-	private boolean isClosed = false ;
-	private boolean isLock = false ;
-	
-	public String getId(){return id;}
-	public void setId(String id){ this.id = id;}
-	
-	public String getName(){return name;}
-	public void setName(String Name){this.name = Name;}
-	
-	public String getPath(){return path;}
-	public void setPath(String path){this.path = path ; }
-	
-	public String getType(){return type;}
-	public void setType(String type){this.type = type ; }
+  private String  id;
 
-	public boolean getIsClosed() { return isClosed;}
-	public void setIsClosed(boolean isClosed) { this.isClosed = isClosed;}
-	
-	public boolean getIsLock() { return isLock;}
-	public void setIsLock(boolean isLock) { this.isLock = isLock;}
+  private String  name;
+
+  private String  path;
+
+  private String  type;
+
+  private boolean isClosed = false;
+
+  private boolean isLock   = false;
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String Name) {
+    this.name = Name;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public boolean getIsClosed() {
+    return isClosed;
+  }
+
+  public void setIsClosed(boolean isClosed) {
+    this.isClosed = isClosed;
+  }
+
+  public boolean getIsLock() {
+    return isLock;
+  }
+
+  public void setIsLock(boolean isLock) {
+    this.isLock = isLock;
+  }
 }

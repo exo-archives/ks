@@ -20,8 +20,6 @@ import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumEventLifeCycle;
-import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.Topic;
 
 /**
  * Created by The eXo Platform SAS Author : eXoPlatform exo@exoplatform.com Jul

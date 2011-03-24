@@ -10,19 +10,21 @@ package org.exoplatform.forum.service.ws;
  * @version $Revision$
  */
 public class BanIP {
-  private String ip ;
+  private String ip;
 
-  public BanIP() {}
+  public BanIP() {
+  }
 
   public BanIP(String str) {
-    ip = str ;
+    ip = str;
   }
-  
+
   public void setIp(String str) {
     this.ip = str;
   }
+
   public String getIp() {
     return ip;
   }
-   
+
 }

@@ -33,50 +33,50 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class RecountActiveUserJob implements Job{
-	private static Log log_ = ExoLogger.getLogger("job.forum.RecountActiveUserJob");
-	
-	public RecountActiveUserJob() throws Exception {}
-	
+public class RecountActiveUserJob implements Job {
+  private static Log log_ = ExoLogger.getLogger("job.forum.RecountActiveUserJob");
+
+  public RecountActiveUserJob() throws Exception {
+  }
+
   public void execute(JobExecutionContext context) throws JobExecutionException {
-  	ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
-		try{
-			ExoContainer exoContainer = org.exoplatform.ks.common.Utils.getExoContainer(context);
-			ForumService forumService = (ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
-	    ExoContainerContext.setCurrentContainer(exoContainer);
-			if(forumService != null) {
-	    	JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
-		    String lastPost = jdatamap.getString("lastPost") ;
-		    if(lastPost != null && lastPost.length() > 0) {
-	    		int days = Integer.parseInt(lastPost) ;
-	    		if(days > 0) {
-	    			long oneDay = 86400000 ; //milliseconds of one day
-	    			Calendar calendar = GregorianCalendar.getInstance() ;
-	    			long currentDay = calendar.getTimeInMillis() ;
-	    			currentDay = currentDay - (days * oneDay) ;
-	    			calendar.setTimeInMillis(currentDay) ;
-	    			StringBuilder stringBuilder = new StringBuilder();
-	    			stringBuilder.append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")[")
-	    				.append("@exo:lastPostDate >= xs:dateTime('").append(ISO8601.format(calendar)).append("')]") ;
-	    			forumService.evaluateActiveUsers(stringBuilder.toString()) ;
-	    			if (log_.isDebugEnabled()) {
-    		  		log_.debug("\n\n The RecoundActiveUserJob have been done");
-    		  	}
-	    		}
-		    }
-	    }	    
-		}catch(NumberFormatException nfe) {
-  		nfe.printStackTrace() ;
-  	}catch(RepositoryException e) {
-  	  if (log_.isDebugEnabled()) {
+    ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
+    try {
+      ExoContainer exoContainer = org.exoplatform.ks.common.Utils.getExoContainer(context);
+      ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
+      ExoContainerContext.setCurrentContainer(exoContainer);
+      if (forumService != null) {
+        JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
+        String lastPost = jdatamap.getString("lastPost");
+        if (lastPost != null && lastPost.length() > 0) {
+          int days = Integer.parseInt(lastPost);
+          if (days > 0) {
+            long oneDay = 86400000; // milliseconds of one day
+            Calendar calendar = GregorianCalendar.getInstance();
+            long currentDay = calendar.getTimeInMillis();
+            currentDay = currentDay - (days * oneDay);
+            calendar.setTimeInMillis(currentDay);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")[").append("@exo:lastPostDate >= xs:dateTime('").append(ISO8601.format(calendar)).append("')]");
+            forumService.evaluateActiveUsers(stringBuilder.toString());
+            if (log_.isDebugEnabled()) {
+              log_.debug("\n\n The RecoundActiveUserJob have been done");
+            }
+          }
+        }
+      }
+    } catch (NumberFormatException nfe) {
+      nfe.printStackTrace();
+    } catch (RepositoryException e) {
+      if (log_.isDebugEnabled()) {
         log_.debug("\n\n Job run so quick " + e.getMessage());
       }
-		} catch (Exception e) {
-		  if (log_.isDebugEnabled()) {
+    } catch (Exception e) {
+      if (log_.isDebugEnabled()) {
         log_.debug("\n\n The have exception " + e.getMessage());
       }
-    }finally {
-    	ExoContainerContext.setCurrentContainer(oldContainer);
+    } finally {
+      ExoContainerContext.setCurrentContainer(oldContainer);
     }
   }
 }

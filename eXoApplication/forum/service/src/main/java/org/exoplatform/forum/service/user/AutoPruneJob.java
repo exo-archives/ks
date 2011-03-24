@@ -26,26 +26,27 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class AutoPruneJob implements Job{
+public class AutoPruneJob implements Job {
   private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
-  
-  public AutoPruneJob() throws Exception {}
+
+  public AutoPruneJob() throws Exception {
+  }
 
   public void execute(JobExecutionContext context) throws JobExecutionException {
-  	ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
-	  try {
-	  	ExoContainer container = Utils.getExoContainer(context);
-	  	String desc = context.getJobDetail().getDescription();
-	  	ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
-	  	ExoContainerContext.setCurrentContainer(container);
-	  	forumService.runPrune(desc) ;
-	  	if (log_.isDebugEnabled()) {
-	  		log_.debug("\n\nAuto prune has worked on " + desc + " forum");
-	  	}
-	  } catch (Exception e) {
-	    log_.debug("\n\n >>>>>> AutoPrune Job error" + e.getMessage());
-	  }finally {
-    	ExoContainerContext.setCurrentContainer(oldContainer);
+    ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
+    try {
+      ExoContainer container = Utils.getExoContainer(context);
+      String desc = context.getJobDetail().getDescription();
+      ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
+      ExoContainerContext.setCurrentContainer(container);
+      forumService.runPrune(desc);
+      if (log_.isDebugEnabled()) {
+        log_.debug("\n\nAuto prune has worked on " + desc + " forum");
+      }
+    } catch (Exception e) {
+      log_.debug("\n\n >>>>>> AutoPrune Job error" + e.getMessage());
+    } finally {
+      ExoContainerContext.setCurrentContainer(oldContainer);
     }
   }
 }

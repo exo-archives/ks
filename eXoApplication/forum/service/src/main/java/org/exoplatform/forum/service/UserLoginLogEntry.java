@@ -14,20 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
-package org.exoplatform.forum.service ;
+package org.exoplatform.forum.service;
 
 import java.util.Calendar;
 
 public class UserLoginLogEntry {
-	public String userName;
-	public int totalOnline ;
+  public String   userName;
+
+  public int      totalOnline;
+
   public Calendar loginTime;
-   
 
   public UserLoginLogEntry(String username, int totalonline, Calendar time) {
     this.userName = username;
-    this.totalOnline = totalonline ;
-    this.loginTime = time;    
+    this.totalOnline = totalonline;
+    this.loginTime = time;
   }
 
 }

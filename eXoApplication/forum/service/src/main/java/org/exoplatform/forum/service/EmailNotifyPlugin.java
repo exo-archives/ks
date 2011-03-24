@@ -31,16 +31,16 @@ import org.exoplatform.container.xml.PropertiesParam;
  */
 public class EmailNotifyPlugin extends BaseComponentPlugin {
 
-	private Map<String,String> serverConfiguration_ = new HashMap<String, String>();
+  private Map<String, String> serverConfiguration_ = new HashMap<String, String>();
 
-	public EmailNotifyPlugin(InitParams params) {
-		PropertiesParam param = params.getPropertiesParam("email.configuration.info");
-		if (param != null) {
-			serverConfiguration_ = param.getProperties();
-		}
-	}
+  public EmailNotifyPlugin(InitParams params) {
+    PropertiesParam param = params.getPropertiesParam("email.configuration.info");
+    if (param != null) {
+      serverConfiguration_ = param.getProperties();
+    }
+  }
 
-	public Map<String, String> getServerConfiguration() {
-		return serverConfiguration_;
-	}
+  public Map<String, String> getServerConfiguration() {
+    return serverConfiguration_;
+  }
 }

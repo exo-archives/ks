@@ -30,13 +30,13 @@ import org.exoplatform.management.jmx.annotations.Property;
  * 23-10-2008 - 07:57:47  
  */
 @Managed
-@NameTemplate({@Property(key="service", value="forum"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
+@NameTemplate( { @Property(key = "service", value = "forum"), @Property(key = "view", value = "plugins"), @Property(key = "name", value = "{Name}") })
 @ManagedDescription("Plugin that allows to initialize default data for the forum")
 public class InitializeForumPlugin extends ManagedPlugin {
-	private ForumInitialData initialData = new ForumInitialData();
+  private ForumInitialData initialData = new ForumInitialData();
 
   public InitializeForumPlugin(InitParams params) throws Exception {
-  	setInitialData((ForumInitialData)params.getObjectParam("livedemo.default.configuration").getObject());
+    setInitialData((ForumInitialData) params.getObjectParam("livedemo.default.configuration").getObject());
   }
 
   private void setInitialData(ForumInitialData object) {
@@ -46,7 +46,5 @@ public class InitializeForumPlugin extends ManagedPlugin {
   public ForumInitialData getForumInitialData() {
     return initialData;
   }
-  
-
 
 }

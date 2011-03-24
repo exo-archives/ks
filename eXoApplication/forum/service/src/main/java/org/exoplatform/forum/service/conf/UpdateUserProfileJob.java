@@ -29,28 +29,29 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 public class UpdateUserProfileJob implements Job {
-	private static Log log_ = ExoLogger.getLogger(UpdateUserProfileJob.class);
-  public UpdateUserProfileJob() throws Exception {}
-		
-	
+  private static Log log_ = ExoLogger.getLogger(UpdateUserProfileJob.class);
+
+  public UpdateUserProfileJob() throws Exception {
+  }
+
   public void execute(JobExecutionContext context) throws JobExecutionException {
-  	ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
-	  try {
-	  	ExoContainer exoContainer = Utils.getExoContainer(context);
-			ForumService forumService = (ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
-			ExoContainerContext.setCurrentContainer(exoContainer);
-			String name = context.getJobDetail().getName();
-		  JobSchedulerService schedulerService = (JobSchedulerService)exoContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
-		  JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
-		  forumService.updateUserProfileInfo(name) ;
-		  if (log_.isDebugEnabled()) {
-	  		log_.debug("\n\nNumber of deleted posts, topics updated to Forum statistics and user's profile");
-	  	}		  
-		  schedulerService.removeJob(info) ;
-	  } catch (Exception e) {
-	    log_.trace("User profile could not updated: " + "\n" + e.getCause());
-	  }finally {
-    	ExoContainerContext.setCurrentContainer(oldContainer);
+    ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
+    try {
+      ExoContainer exoContainer = Utils.getExoContainer(context);
+      ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
+      ExoContainerContext.setCurrentContainer(exoContainer);
+      String name = context.getJobDetail().getName();
+      JobSchedulerService schedulerService = (JobSchedulerService) exoContainer.getComponentInstanceOfType(JobSchedulerService.class);
+      JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
+      forumService.updateUserProfileInfo(name);
+      if (log_.isDebugEnabled()) {
+        log_.debug("\n\nNumber of deleted posts, topics updated to Forum statistics and user's profile");
+      }
+      schedulerService.removeJob(info);
+    } catch (Exception e) {
+      log_.trace("User profile could not updated: " + "\n" + e.getCause());
+    } finally {
+      ExoContainerContext.setCurrentContainer(oldContainer);
     }
   }
 }

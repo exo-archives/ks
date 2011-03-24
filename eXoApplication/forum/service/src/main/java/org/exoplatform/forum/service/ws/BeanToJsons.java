@@ -14,15 +14,15 @@ import java.util.List;
  */
 public class BeanToJsons<T> {
   private List<T> jsonList;
-  
+
   public BeanToJsons(List<T> list) {
     this.jsonList = list;
   }
-  
+
   public List<T> getJsonList() {
     return jsonList;
   }
-  
+
   public void setJsonList(List<T> objectList) {
     this.jsonList = objectList;
   }

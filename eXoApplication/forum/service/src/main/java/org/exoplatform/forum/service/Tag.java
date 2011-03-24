@@ -27,32 +27,47 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  */
 
 public class Tag {
-	private String id ;
-	private String name ;
-	private String[] userTag ;
-	private long useCount = 0;
-	public Tag() {
-		id = Utils.TAG + IdGenerator.generate() ;
-	}
-	
-	public String getId()	{ return id ; }
-	public void setId(String s) { id = s ; }
-	
-	public void setName(String name) { this.name = name ; }
-	public String getName() { return name ; }
+  private String   id;
+
+  private String   name;
+
+  private String[] userTag;
+
+  private long     useCount = 0;
+
+  public Tag() {
+    id = Utils.TAG + IdGenerator.generate();
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String s) {
+    id = s;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
 
   public String[] getUserTag() {
-  	return userTag;
+    return userTag;
   }
+
   public void setUserTag(String[] userTag) {
-  	this.userTag = userTag;
+    this.userTag = userTag;
   }
 
-	public long getUseCount() {
-  	return useCount;
+  public long getUseCount() {
+    return useCount;
   }
 
-	public void setUseCount(long useCount) {
-  	this.useCount = useCount;
+  public void setUseCount(long useCount) {
+    this.useCount = useCount;
   }
 }

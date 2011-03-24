@@ -15,7 +15,9 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
 package org.exoplatform.forum.service;
+
 import java.util.Date;
+
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -23,64 +25,87 @@ import java.util.Date;
  * May 9, 2008 - 3:19:31 AM  
  */
 public class ForumPrivateMessage {
-	private String id;
-	private String from;
-	private String sendTo;
-	private String name;
-	private String message;
-	private String type ;
-	private Date receivedDate;
-	private boolean isUnread;
-	
-	public ForumPrivateMessage() {
-		isUnread = false; 
-	}
-	public String getFrom() {
-		return from;
-	}
-	public void setFrom(String from) {
-		this.from = from;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public Date getReceivedDate() {
-		return receivedDate;
-	}
-	public void setReceivedDate(Date receivedDate) {
-		this.receivedDate = receivedDate;
-	}
-	public boolean getIsUnread() {
-		return isUnread;
-	}
-	public void setIsUnread(boolean isUnread) {
-		this.isUnread = isUnread;
-	}
-	public String getSendTo() {
-		return sendTo;
-	}
-	public void setSendTo(String sendTo) {
-		this.sendTo = sendTo;
-	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
+  private String  id;
+
+  private String  from;
+
+  private String  sendTo;
+
+  private String  name;
+
+  private String  message;
+
+  private String  type;
+
+  private Date    receivedDate;
+
+  private boolean isUnread;
+
+  public ForumPrivateMessage() {
+    isUnread = false;
+  }
+
+  public String getFrom() {
+    return from;
+  }
+
+  public void setFrom(String from) {
+    this.from = from;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+  public Date getReceivedDate() {
+    return receivedDate;
+  }
+
+  public void setReceivedDate(Date receivedDate) {
+    this.receivedDate = receivedDate;
+  }
+
+  public boolean getIsUnread() {
+    return isUnread;
+  }
+
+  public void setIsUnread(boolean isUnread) {
+    this.isUnread = isUnread;
+  }
+
+  public String getSendTo() {
+    return sendTo;
+  }
+
+  public void setSendTo(String sendTo) {
+    this.sendTo = sendTo;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
 }

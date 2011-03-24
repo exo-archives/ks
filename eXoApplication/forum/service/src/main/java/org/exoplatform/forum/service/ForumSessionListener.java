@@ -30,12 +30,12 @@ import org.exoplatform.services.security.ConversationState;
 */
 @Deprecated
 public class ForumSessionListener extends AbstractHttpSessionListener {
-	
+
   protected static Log log = ExoLogger.getLogger("portal:PortalSessionListener");
-  
+
   public ForumSessionListener() {
   }
-  
+
   public void onSessionCreated(ExoContainer container, HttpSessionEvent event) {
   }
 
@@ -56,23 +56,23 @@ public class ForumSessionListener extends AbstractHttpSessionListener {
    * 
    */
   public void onSessionDestroyed(ExoContainer container, HttpSessionEvent event) {
-  	try {
-      //String portalContainerName = event.getSession().getServletContext().getServletContextName() ;
-      if(ConversationState.getCurrent() != null ){
-      	//ExoContainer container = ExoContainerContext.getCurrentContainer();
-  	    //PortalContainer portalContainer = container.getPortalContainer(portalContainerName) ;
-  	    ForumService fservice = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
-  	    fservice.userLogout(ConversationState.getCurrent().getIdentity().getUserId()) ;
-  	  }
-    } catch(Exception ex) {
-      log.error("Error while destroying a portal session",ex);
+    try {
+      // String portalContainerName = event.getSession().getServletContext().getServletContextName() ;
+      if (ConversationState.getCurrent() != null) {
+        // ExoContainer container = ExoContainerContext.getCurrentContainer();
+        // PortalContainer portalContainer = container.getPortalContainer(portalContainerName) ;
+        ForumService fservice = (ForumService) container.getComponentInstanceOfType(ForumService.class);
+        fservice.userLogout(ConversationState.getCurrent().getIdentity().getUserId());
+      }
+    } catch (Exception ex) {
+      log.error("Error while destroying a portal session", ex);
     } finally {
-      PortalContainer.setInstance(null) ;
+      PortalContainer.setInstance(null);
     }
   }
 
   @Override
   protected boolean requirePortalEnvironment() {
     return true;
-  }  
+  }
 }

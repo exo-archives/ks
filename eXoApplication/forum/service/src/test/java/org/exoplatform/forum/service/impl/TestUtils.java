@@ -45,79 +45,78 @@ public class TestUtils extends TestCase {
 
   public void testRemoveCharterStrange() {
 
-    assertEquals("",  Utils.removeCharterStrange(null));
+    assertEquals("", Utils.removeCharterStrange(null));
     assertEquals("", Utils.removeCharterStrange(""));
-    
-    String s = "aaa"+ new String(Character.toChars(31)) + "bbb";
+
+    String s = "aaa" + new String(Character.toChars(31)) + "bbb";
     assertEquals("aaabbb", Utils.removeCharterStrange(s));
-    
-    
-    String s2 = "aaa"+ new String(Character.toChars(32)) + "bbb";
-    assertEquals("aaa" + s2.charAt(3) +"bbb", Utils.removeCharterStrange(s2));
-    
+
+    String s2 = "aaa" + new String(Character.toChars(32)) + "bbb";
+    assertEquals("aaa" + s2.charAt(3) + "bbb", Utils.removeCharterStrange(s2));
+
   }
 
   public void testArraysHaveDifferentContent() {
-    
-   // if 2 arrays are the same, then it's false
-   String [] a = new String [] {"foo","bar", "zed"};
-   String [] b = new String [] {"foo","bar", "zed"};
-   assertFalse (Utils.arraysHaveDifferentContent(a, b));
-   
-   // order is not important
-   a = new String [] {"foo","bar", "zed"};
-   b = new String [] {"zed", "foo", "bar"};
-   assertFalse(Utils.arraysHaveDifferentContent(a, b));
-   
-   // if there is a difference in size, it's true
-   a = new String [0];
-   b = new String [] {"foo","bar", "zed"};
-   assertTrue(Utils.arraysHaveDifferentContent(a, b));
-   
-   // if there is a difference in content, it's true
-   a = new String [] {"foo","bar", "zed*"};
-   b = new String [] {"foo","bar", "zed"};
-   assertTrue(Utils.arraysHaveDifferentContent(a, b));
-   
-   // if there is a difference in content, it's true
-   a = new String [] {"foo","bar", "zed"};
-   b = new String [] {"foo","bar", "zed*"};
-   assertTrue(Utils.arraysHaveDifferentContent(a, b));
-   
+
+    // if 2 arrays are the same, then it's false
+    String[] a = new String[] { "foo", "bar", "zed" };
+    String[] b = new String[] { "foo", "bar", "zed" };
+    assertFalse(Utils.arraysHaveDifferentContent(a, b));
+
+    // order is not important
+    a = new String[] { "foo", "bar", "zed" };
+    b = new String[] { "zed", "foo", "bar" };
+    assertFalse(Utils.arraysHaveDifferentContent(a, b));
+
+    // if there is a difference in size, it's true
+    a = new String[0];
+    b = new String[] { "foo", "bar", "zed" };
+    assertTrue(Utils.arraysHaveDifferentContent(a, b));
+
+    // if there is a difference in content, it's true
+    a = new String[] { "foo", "bar", "zed*" };
+    b = new String[] { "foo", "bar", "zed" };
+    assertTrue(Utils.arraysHaveDifferentContent(a, b));
+
+    // if there is a difference in content, it's true
+    a = new String[] { "foo", "bar", "zed" };
+    b = new String[] { "foo", "bar", "zed*" };
+    assertTrue(Utils.arraysHaveDifferentContent(a, b));
+
   }
 
   public void testListsHaveDifferentContent() {
     // if 2 arrays are the same, then it's false
-    List<String> a = Arrays.asList("foo","bar", "zed");
-    List<String> b = Arrays.asList("foo","bar", "zed");
-    assertFalse (Utils.listsHaveDifferentContent(a, b));
-    
+    List<String> a = Arrays.asList("foo", "bar", "zed");
+    List<String> b = Arrays.asList("foo", "bar", "zed");
+    assertFalse(Utils.listsHaveDifferentContent(a, b));
+
     // order is not important
-    a = Arrays.asList("foo","bar", "zed");
+    a = Arrays.asList("foo", "bar", "zed");
     b = Arrays.asList("zed", "foo", "bar");
     assertFalse(Utils.listsHaveDifferentContent(a, b));
-    
+
     // if there is a difference in size, it's true
     a = Arrays.asList(new String[0]);
-    b = Arrays.asList("foo","bar", "zed");
+    b = Arrays.asList("foo", "bar", "zed");
     assertTrue(Utils.listsHaveDifferentContent(a, b));
-    
+
     // if there is a difference in content, it's true
-    a = Arrays.asList("foo","bar", "zed*");
-    b = Arrays.asList("foo","bar", "zed");
+    a = Arrays.asList("foo", "bar", "zed*");
+    b = Arrays.asList("foo", "bar", "zed");
     assertTrue(Utils.listsHaveDifferentContent(a, b));
-    
+
     // if there is a difference in content, it's true
-    a = Arrays.asList("foo","bar", "zed");
-    b = Arrays.asList("foo","bar", "zed*");
+    a = Arrays.asList("foo", "bar", "zed");
+    b = Arrays.asList("foo", "bar", "zed*");
     assertTrue(Utils.listsHaveDifferentContent(a, b));
   }
 
   public void testMapToArray() {
-    Map<String,String> map = new HashMap<String,String>();
-    String [] actual = Utils.mapToArray(map);
+    Map<String, String> map = new HashMap<String, String>();
+    String[] actual = Utils.mapToArray(map);
     assertContains(actual, " ");
-    
+
     map.put("foo", "foo");
     map.put("bar", "bar");
     map.put("zed", "zed");
@@ -126,39 +125,38 @@ public class TestUtils extends TestCase {
   }
 
   public void testArrayToMap() {
-    String [] s = new String [] {"foo,foo", "bar,bar", "zed,zed"};
-    Map<String,String> actual = Utils.arrayToMap(s);
+    String[] s = new String[] { "foo,foo", "bar,bar", "zed,zed" };
+    Map<String, String> actual = Utils.arrayToMap(s);
     assertContains(actual.keySet(), "foo", "bar", "zed");
     assertEquals("foo", actual.get("foo"));
     assertEquals("bar", actual.get("bar"));
     assertEquals("zed", actual.get("zed"));
 
-    
-    s = new String [] {"foo", "bar,bar", "zed,zed,zed"};
+    s = new String[] { "foo", "bar,bar", "zed,zed,zed" };
     actual = Utils.arrayToMap(s);
     assertContains(actual.keySet(), "bar");
     assertEquals(null, actual.get("foo"));
     assertEquals("bar", actual.get("bar"));
-    assertEquals(null, actual.get("zed")); 
+    assertEquals(null, actual.get("zed"));
   }
 
   public void testGetQueryInList() {
-   List<String> list = new ArrayList<String>(); 
-   String actual = Utils.propertyMatchAny("prop", list);
-   assertEquals("", actual);
-   
-   list = Arrays.asList("foo");
-   actual = Utils.propertyMatchAny("prop", list);
-   assertEquals("(not(prop) or prop='' or prop='foo')", actual);
-   
-   list = Arrays.asList("foo", "bar");
-   actual = Utils.propertyMatchAny("prop", list);
-   assertEquals("(not(prop) or prop='' or prop='foo' or prop='bar')", actual);
-   
-   list = Arrays.asList("foo", "bar", "zed");
-   actual = Utils.propertyMatchAny("prop", list);
-   assertEquals("(not(prop) or prop='' or prop='foo' or prop='bar' or prop='zed')", actual);
-   
+    List<String> list = new ArrayList<String>();
+    String actual = Utils.propertyMatchAny("prop", list);
+    assertEquals("", actual);
+
+    list = Arrays.asList("foo");
+    actual = Utils.propertyMatchAny("prop", list);
+    assertEquals("(not(prop) or prop='' or prop='foo')", actual);
+
+    list = Arrays.asList("foo", "bar");
+    actual = Utils.propertyMatchAny("prop", list);
+    assertEquals("(not(prop) or prop='' or prop='foo' or prop='bar')", actual);
+
+    list = Arrays.asList("foo", "bar", "zed");
+    actual = Utils.propertyMatchAny("prop", list);
+    assertEquals("(not(prop) or prop='' or prop='foo' or prop='bar' or prop='zed')", actual);
+
   }
 
   public void testIsListContentItemList() {
@@ -166,11 +164,11 @@ public class TestUtils extends TestCase {
     List<String> list1 = null;
     boolean actual = Utils.isListContentItemList(list, list1);
     assertFalse(actual);
-    
+
     list1 = Arrays.asList(" ");
     actual = Utils.isListContentItemList(list, list1);
     assertFalse(actual);
-    
+
     list = Arrays.asList("bar", "zed");
     list1 = Arrays.asList("foo");
     actual = Utils.isListContentItemList(list, list1);
@@ -180,12 +178,12 @@ public class TestUtils extends TestCase {
     list1 = Arrays.asList("foo", "dog");
     actual = Utils.isListContentItemList(list, list1);
     assertFalse(!actual);
-    
+
   }
 
-  public void testGetStringsInList()  throws Exception {
+  public void testGetStringsInList() throws Exception {
     List<String> list = new ArrayList<String>();
-    String [] actual = Utils.getStringsInList(list);
+    String[] actual = Utils.getStringsInList(list);
     assertEquals(0, actual.length);
     list.add("foo");
     list.add(" ");
@@ -198,61 +196,60 @@ public class TestUtils extends TestCase {
   public void testExtractSameItems() throws Exception {
     List<String> pList = Arrays.asList("foo", "bar", "zed");
     List<String> cList = Arrays.asList("foo", " ", "bar");
-    List<String>  actual = Utils.extractSameItems(pList, cList);
+    List<String> actual = Utils.extractSameItems(pList, cList);
     assertContains(actual, "foo", "bar");
-    
+
     // verify behaviour if first list is empty
     pList = new ArrayList<String>();
     cList = Arrays.asList("foo", " ", "bar");
     actual = Utils.extractSameItems(pList, cList);
     assertEmpty(actual);
-    
-    
+
     // verify behaviour if no common elements
     pList = Arrays.asList("foo", "bar", "zed");
     cList = Arrays.asList("foo*", "bar*", "zed*");
     actual = Utils.extractSameItems(pList, cList);
     assertEmpty(actual);
-    
+
   }
 
   public void testValuesToArray() throws Exception {
-    Value[] values = new Value [0] ;
-    String [] actual = Utils.valuesToArray(values);
+    Value[] values = new Value[0];
+    String[] actual = Utils.valuesToArray(values);
     assertEquals(0, actual.length);
-    
-    values = new Value [] {stubValue("foo")};
+
+    values = new Value[] { stubValue("foo") };
     actual = Utils.valuesToArray(values);
     assertContains(actual, "foo");
     assertEquals(1, actual.length);
-    
-    values = new Value [] {stubValue("foo"),stubValue("bar"),stubValue("zed")};
+
+    values = new Value[] { stubValue("foo"), stubValue("bar"), stubValue("zed") };
     actual = Utils.valuesToArray(values);
     assertContains(actual, "foo", "bar", "zed");
     assertEquals(3, actual.length);
   }
 
-  public void testValuesToList()  throws Exception {
-    Value[] values = new Value [0] ;
+  public void testValuesToList() throws Exception {
+    Value[] values = new Value[0];
     List<String> actual = Utils.valuesToList(values);
     assertEmpty(actual);
-    
-    values = new Value [] {stubValue("foo")};
+
+    values = new Value[] { stubValue("foo") };
     actual = Utils.valuesToList(values);
     assertContains(actual, "foo");
     assertEquals(1, actual.size());
-    
-    values = new Value [] {stubValue("foo"),stubValue("bar"),stubValue("zed")};
+
+    values = new Value[] { stubValue("foo"), stubValue("bar"), stubValue("zed") };
     actual = Utils.valuesToList(values);
     assertContains(actual, "foo", "bar", "zed");
     assertEquals(3, actual.size());
   }
-  
+
   public void testArrayCopy() {
-    
+
     // null in, null out
-    String [] source = null;
-    String [] actual = Utils.arrayCopy(source);
+    String[] source = null;
+    String[] actual = Utils.arrayCopy(source);
     assertNull(actual);
 
     // empty array
@@ -260,90 +257,75 @@ public class TestUtils extends TestCase {
     actual = Utils.arrayCopy(source);
     assertNotNull(actual);
     assertEquals(0, actual.length);
-    
-    source = new String [] {"foo", "bar", "zed"};
+
+    source = new String[] { "foo", "bar", "zed" };
     actual = Utils.arrayCopy(source);
     assertEquals("copied arrays should have same size", source.length, actual.length);
     assertNotSame("a new array should have been created", source, actual);
     assertContains(actual, "foo", "bar", "zed"); // should contain all elements
   }
-  
+
   public void testGetPathQuery() throws Exception {
-  	// test for value is empty and true or false.
-  	String actual = Utils.getPathQuery("", "", "").toString();
-  	String expected = "";
-  	assertEquals(expected, actual.trim());
-  	actual = Utils.getPathQuery("true", "", "").toString();
-  	expected = "[(@exo:isApproved='true')]";
-  	assertEquals(expected, actual);
+    // test for value is empty and true or false.
+    String actual = Utils.getPathQuery("", "", "").toString();
+    String expected = "";
+    assertEquals(expected, actual.trim());
+    actual = Utils.getPathQuery("true", "", "").toString();
+    expected = "[(@exo:isApproved='true')]";
+    assertEquals(expected, actual);
 
-  	actual = Utils.getPathQuery("", "true", "").toString();
-  	expected = "[@exo:isHidden='true']";
-  	assertEquals(expected, actual);
-  	
-  	actual = Utils.getPathQuery("", "", "User").toString();
-  	expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri'))]";
-  	assertEquals(expected, actual);
+    actual = Utils.getPathQuery("", "true", "").toString();
+    expected = "[@exo:isHidden='true']";
+    assertEquals(expected, actual);
 
-  	actual = Utils.getPathQuery("", "true", "User").toString();
-  	expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isHidden='true')]";
-  	assertEquals(expected, actual);
+    actual = Utils.getPathQuery("", "", "User").toString();
+    expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri'))]";
+    assertEquals(expected, actual);
 
-  	actual = Utils.getPathQuery("true", "", "User").toString();
-  	expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isApproved='true')]";
-  	assertEquals(expected, actual);
+    actual = Utils.getPathQuery("", "true", "User").toString();
+    expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isHidden='true')]";
+    assertEquals(expected, actual);
 
-  	actual = Utils.getPathQuery("true", "true", "").toString();
-  	expected = "[(@exo:isApproved='true')]";
-  	assertEquals(expected, actual);
-  	
-  	actual = Utils.getPathQuery("true", "true", "User").toString();
-  	expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isApproved='true')]";
-  	assertEquals(expected, actual);
+    actual = Utils.getPathQuery("true", "", "User").toString();
+    expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isApproved='true')]";
+    assertEquals(expected, actual);
+
+    actual = Utils.getPathQuery("true", "true", "").toString();
+    expected = "[(@exo:isApproved='true')]";
+    assertEquals(expected, actual);
+
+    actual = Utils.getPathQuery("true", "true", "User").toString();
+    expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isApproved='true')]";
+    assertEquals(expected, actual);
   }
-  
-  public void testHasPermission(){
+
+  public void testHasPermission() {
     List<String> l1 = Arrays.asList(" ");
     List<String> l2 = null;
-    
+
     boolean condition = Utils.hasPermission(l1, l2);
     assertFalse(condition);
-    
+
     condition = Utils.hasPermission(l2, l1);
     assertFalse(condition);
-    
+
     condition = Utils.hasPermission(l2, l2);
     assertFalse(condition);
-    
+
     l1 = Arrays.asList("g1", "g2");
     l2 = Arrays.asList("g3");
-    condition = Utils.hasPermission(l1, l2); 
+    condition = Utils.hasPermission(l1, l2);
     assertFalse(condition);
-    
-    condition = Utils.hasPermission(l2, l1); 
+
+    condition = Utils.hasPermission(l2, l1);
     assertFalse(condition);
-    
+
     l1 = Arrays.asList("g1", "g2", "g3");
     l2 = Arrays.asList("g1", "g4");
-    condition = Utils.hasPermission(l1, l2); 
+    condition = Utils.hasPermission(l1, l2);
     assertTrue(condition);
-    
-    condition = Utils.hasPermission(l2, l1); 
+
+    condition = Utils.hasPermission(l2, l1);
     assertTrue(condition);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

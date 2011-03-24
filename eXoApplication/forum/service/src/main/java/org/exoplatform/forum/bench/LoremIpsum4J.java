@@ -36,13 +36,9 @@
 
    THE SOFTWARE. 
 
-*/
-
-
+ */
 
 package org.exoplatform.forum.bench;
-
-
 
 /**
 
@@ -68,17 +64,13 @@ public class LoremIpsum4J {
 
   public static final String LOREM_IPSUM = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
 
-  private String[] loremIpsumWords;
-
- 
+  private String[]           loremIpsumWords;
 
   public LoremIpsum4J() {
 
-    this.loremIpsumWords = LOREM_IPSUM.split( "\\s" );
+    this.loremIpsumWords = LOREM_IPSUM.split("\\s");
 
   }
-
-  
 
   /**
 
@@ -92,11 +84,9 @@ public class LoremIpsum4J {
 
   public String getWords() {
 
-    return getWords( 50 );
+    return getWords(50);
 
   }
-
-  
 
   /**
 
@@ -110,13 +100,11 @@ public class LoremIpsum4J {
 
    */
 
-  public String getWords( int amount ) {
+  public String getWords(int amount) {
 
-    return getWords( amount, 0 );
+    return getWords(amount, 0);
 
   }
-
-  
 
   /**
 
@@ -134,55 +122,41 @@ public class LoremIpsum4J {
 
    */
 
-  public String getWords( int amount, int startIndex ) {
+  public String getWords(int amount, int startIndex) {
 
-    if ( startIndex < 0 || startIndex > 49 ) {
+    if (startIndex < 0 || startIndex > 49) {
 
-      throw new IndexOutOfBoundsException( "startIndex must be >= 0 and < 50" );
+      throw new IndexOutOfBoundsException("startIndex must be >= 0 and < 50");
 
     }
-
-  
 
     int word = startIndex;
 
     StringBuilder lorem = new StringBuilder();
 
-  
+    for (int i = 0; i < amount; i++) {
 
-    for( int i = 0; i < amount; i++ ) {
-
-      if ( word == 50 ) {
+      if (word == 50) {
 
         word = 0;
 
       }
 
+      lorem.append(loremIpsumWords[word]);
 
+      if (i < amount - 1) {
 
-      lorem.append( loremIpsumWords[ word ] );
-
-      
-
-      if ( i < amount - 1 ) {
-
-        lorem.append( ' ' );
+        lorem.append(' ');
 
       }
-
-
 
       word++;
 
     }
 
-    
-
-    return lorem.toString();  
+    return lorem.toString();
 
   }
-
-  
 
   /**
 
@@ -196,11 +170,9 @@ public class LoremIpsum4J {
 
   public String getParagraphs() {
 
-    return getParagraphs( 2 );
+    return getParagraphs(2);
 
   }
-
-  
 
   /**
 
@@ -214,31 +186,24 @@ public class LoremIpsum4J {
 
    */
 
-  public String getParagraphs( int amount ) {
+  public String getParagraphs(int amount) {
 
     StringBuilder lorem = new StringBuilder();
 
-  
+    for (int i = 0; i < amount; i++) {
 
-    for( int i = 0; i < amount; i++ ) {
+      lorem.append(LOREM_IPSUM);
 
-      lorem.append( LOREM_IPSUM );
+      if (i < amount - 1) {
 
-      
-
-      if ( i < amount - 1 ) {
-
-        lorem.append( "\n\n" );
+        lorem.append("\n\n");
 
       }
 
     }
-
-    
 
     return lorem.toString();
 
   }
 
 }
-

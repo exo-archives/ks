@@ -16,7 +16,6 @@
  **/
 package org.exoplatform.forum.service.conf;
 
-
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
@@ -28,23 +27,25 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 public class LoginJob implements Job {
-	private static Log log_ = ExoLogger.getLogger(LoginJob.class);
-  public LoginJob() throws Exception {}
-	
+  private static Log log_ = ExoLogger.getLogger(LoginJob.class);
+
+  public LoginJob() throws Exception {
+  }
+
   public void execute(JobExecutionContext context) throws JobExecutionException {
-  	ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
-    try{
-    	ExoContainer exoContainer = Utils.getExoContainer(context);
-    	ExoContainerContext.setCurrentContainer(exoContainer);
-      ForumService forumService = (ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
-      forumService.updateLoggedinUsers() ;
-    }catch(Exception e) {
+    ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
+    try {
+      ExoContainer exoContainer = Utils.getExoContainer(context);
+      ExoContainerContext.setCurrentContainer(exoContainer);
+      ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
+      forumService.updateLoggedinUsers();
+    } catch (Exception e) {
       log_.warn("Period login job can not execute ...");
-    }finally {
-    	ExoContainerContext.setCurrentContainer(oldContainer);
-    }     
+    } finally {
+      ExoContainerContext.setCurrentContainer(oldContainer);
+    }
     if (log_.isDebugEnabled()) {
-  		log_.info("\n\nForum Statistic has been updated for logged in user by a period login job");
-  	}
+      log_.info("\n\nForum Statistic has been updated for logged in user by a period login job");
+    }
   }
 }

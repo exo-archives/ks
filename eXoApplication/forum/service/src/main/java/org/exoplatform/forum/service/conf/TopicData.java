@@ -26,53 +26,57 @@ import java.util.List;
  * 23-10-2008 - 08:34:54  
  */
 public class TopicData {
-	private List<PostData> posts = new ArrayList<PostData>();
-	private String name ;
-	private String owner ;
-	private String content;
-	private String icon;
-	
-	public List<PostData> getPosts() {
-  	return posts;
+  private List<PostData> posts = new ArrayList<PostData>();
+
+  private String         name;
+
+  private String         owner;
+
+  private String         content;
+
+  private String         icon;
+
+  public List<PostData> getPosts() {
+    return posts;
   }
 
-	public void setPosts(List<PostData> posts) {
-  	this.posts = posts;
+  public void setPosts(List<PostData> posts) {
+    this.posts = posts;
   }
 
-	public String getName() {
-  	return name;
+  public String getName() {
+    return name;
   }
 
-	public void setName(String name) {
-  	this.name = name;
+  public void setName(String name) {
+    this.name = name;
   }
 
-	public String getOwner() {
-  	return owner;
+  public String getOwner() {
+    return owner;
   }
 
-	public void setOwner(String owner) {
-  	this.owner = owner;
+  public void setOwner(String owner) {
+    this.owner = owner;
   }
 
-	public String getContent() {
-  	return content;
+  public String getContent() {
+    return content;
   }
 
-	public void setContent(String content) {
-  	this.content = content;
+  public void setContent(String content) {
+    this.content = content;
   }
 
-	public String getIcon() {
-  	return icon;
+  public String getIcon() {
+    return icon;
   }
 
-	public void setIcon(String icon) {
-  	this.icon = icon;
+  public void setIcon(String icon) {
+    this.icon = icon;
   }
 
-	public TopicData() {
+  public TopicData() {
   }
-	
+
 }

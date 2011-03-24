@@ -40,7 +40,7 @@ import org.exoplatform.services.jcr.impl.core.query.lucene.QueryResultImpl;
  */
 public class TopicListAccess extends JCRListAccess<Topic> {
   String topicQuery;
-  
+
   /**
    * 
    * @param topicQuery the JCR xpath query that will match topic nodes
@@ -52,40 +52,36 @@ public class TopicListAccess extends JCRListAccess<Topic> {
 
   @Override
   protected int getSize(Session session) throws Exception {
-    QueryManager qm = session.getWorkspace().getQueryManager();     
-    QueryImpl query = (QueryImpl)qm.createQuery(topicQuery, Query.XPATH);
+    QueryManager qm = session.getWorkspace().getQueryManager();
+    QueryImpl query = (QueryImpl) qm.createQuery(topicQuery, Query.XPATH);
     QueryResultImpl result = (QueryResultImpl) query.execute();
     return result.getTotalSize();
   }
 
   @Override
-  protected Topic[] load(Session session, int index, int length) throws Exception,
-                                                                        IllegalArgumentException {
-    QueryManager qm = session.getWorkspace().getQueryManager();     
-    QueryImpl query = (QueryImpl)qm.createQuery(topicQuery, Query.XPATH);
+  protected Topic[] load(Session session, int index, int length) throws Exception, IllegalArgumentException {
+    QueryManager qm = session.getWorkspace().getQueryManager();
+    QueryImpl query = (QueryImpl) qm.createQuery(topicQuery, Query.XPATH);
     query.setOffset(index);
-    query.setLimit(index + length);   
+    query.setLimit(index + length);
     QueryResult result = query.execute();
     List<Topic> topicList = new ArrayList<Topic>();
     NodeIterator iter = result.getNodes();
-    while(iter.hasNext()){
+    while (iter.hasNext()) {
       topicList.add(getTopic(iter.nextNode()));
     }
     Topic[] topics = topicList.toArray(new Topic[topicList.size()]);
     return topics;
   }
-  
-  
-  
-  
-  
+
   private Topic getTopic(Node topicNode) throws Exception {
-    if(topicNode == null ) return null ;
+    if (topicNode == null)
+      return null;
     PropertyReader reader = new PropertyReader(topicNode);
-    Topic topicNew = new Topic() ;    
-    topicNew.setId(topicNode.getName()) ;
-    topicNew.setPath(topicNode.getPath()) ;
-  
+    Topic topicNew = new Topic();
+    topicNew.setId(topicNode.getName());
+    topicNew.setPath(topicNode.getPath());
+
     topicNew.setLastPostDate(reader.date("exo:lastPostDate"));
     topicNew.setLastPostBy(reader.string("exo:lastPostBy"));
     topicNew.setOwner(reader.string("exo:owner"));
@@ -96,8 +92,10 @@ public class TopicListAccess extends JCRListAccess<Topic> {
     topicNew.setViewCount(reader.l("exo:viewCount"));
     topicNew.setIsPoll(reader.bool("exo:isPoll"));
     topicNew.setIsSticky(reader.bool("exo:isSticky"));
-    if(topicNode.getParent().getProperty("exo:isLock").getBoolean()) topicNew.setIsLock(true);
-    else topicNew.setIsLock(reader.bool("exo:isLock")) ;
+    if (topicNode.getParent().getProperty("exo:isLock").getBoolean())
+      topicNew.setIsLock(true);
+    else
+      topicNew.setIsLock(reader.bool("exo:isLock"));
     topicNew.setIsApproved(reader.bool("exo:isApproved"));
     topicNew.setNumberAttachment(reader.l("exo:numberAttachments"));
     topicNew.setIcon(reader.string("exo:icon"));
@@ -108,16 +106,10 @@ public class TopicListAccess extends JCRListAccess<Topic> {
     topicNew.setVoteRating(reader.d("exo:voteRating"));
     topicNew.setUserVoteRating(reader.strings("exo:userVoteRating"));
     // TODO
-   /* topicNew.setCreatedDate(reader.date("exo:createdDate"));
-    topicNew.setModifiedBy(reader.string("exo:modifiedBy"));
-    topicNew.setModifiedDate(reader.date("exo:modifiedDate"));
-    topicNew.setTagId(reader.strings("exo:tagId"));
-    topicNew.setCanView(reader.strings("exo:canView", new String[]{}));
-    topicNew.setCanPost(reader.strings("exo:canPost", new String[]{}));*/
+    /*
+     * topicNew.setCreatedDate(reader.date("exo:createdDate")); topicNew.setModifiedBy(reader.string("exo:modifiedBy")); topicNew.setModifiedDate(reader.date("exo:modifiedDate")); topicNew.setTagId(reader.strings("exo:tagId")); topicNew.setCanView(reader.strings("exo:canView", new String[]{})); topicNew.setCanPost(reader.strings("exo:canPost", new String[]{}));
+     */
     return topicNew;
   }
-  
-
-
 
 }

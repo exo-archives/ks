@@ -37,13 +37,7 @@ import org.exoplatform.services.rest.tools.DummyContainerResponseWriter;
  */
 public abstract class AbstractResourceTest extends BaseTest {
 
-
-  public ContainerResponse service(String method,
-                                   String requestURI,
-                                   String baseURI,
-                                   MultivaluedMap<String, String> headers,
-                                   byte[] data,
-                                   ContainerResponseWriter writer) throws Exception {
+  public ContainerResponse service(String method, String requestURI, String baseURI, MultivaluedMap<String, String> headers, byte[] data, ContainerResponseWriter writer) throws Exception {
 
     if (headers == null)
       headers = new MultivaluedMapImpl();
@@ -53,27 +47,16 @@ public abstract class AbstractResourceTest extends BaseTest {
       in = new ByteArrayInputStream(data);
 
     EnvironmentContext envctx = new EnvironmentContext();
-    HttpServletRequest httpRequest = new MockHttpServletRequest(in,
-                                                                in != null ? in.available() : 0,
-                                                                method,
-                                                                new InputHeadersMap(headers));
+    HttpServletRequest httpRequest = new MockHttpServletRequest(in, in != null ? in.available() : 0, method, new InputHeadersMap(headers));
     envctx.put(HttpServletRequest.class, httpRequest);
     EnvironmentContext.setCurrent(envctx);
-    ContainerRequest request = new ContainerRequest(method,
-                                                    new URI(requestURI),
-                                                    new URI(baseURI),
-                                                    in,
-                                                    new InputHeadersMap(headers));
+    ContainerRequest request = new ContainerRequest(method, new URI(requestURI), new URI(baseURI), in, new InputHeadersMap(headers));
     ContainerResponse response = new ContainerResponse(writer);
     requestHandler.handleRequest(request, response);
     return response;
   }
 
-  public ContainerResponse service(String method,
-                                   String requestURI,
-                                   String baseURI,
-                                   MultivaluedMap<String, String> headers,
-                                   byte[] data) throws Exception {
+  public ContainerResponse service(String method, String requestURI, String baseURI, MultivaluedMap<String, String> headers, byte[] data) throws Exception {
     return service(method, requestURI, baseURI, headers, data, new DummyContainerResponseWriter());
 
   }

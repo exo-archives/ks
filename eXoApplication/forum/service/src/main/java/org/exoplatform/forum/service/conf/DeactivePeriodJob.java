@@ -28,15 +28,19 @@ import org.quartz.JobDataMap;
  * nov 29, 2007
  */
 public class DeactivePeriodJob extends PeriodJob {
-  private JobDataMap jdatamap_ ;
+  private JobDataMap jdatamap_;
+
   public DeactivePeriodJob(InitParams params) throws Exception {
-    super(params) ;
-  	ExoProperties props =  params.getPropertiesParam("deactive.info").getProperties() ;
-    jdatamap_ = new JobDataMap() ;
-    String days = props.getProperty("inactiveDays") ;
-    String forumName = props.getProperty("forumName") ;    
-    jdatamap_.put("inactiveDays", days) ;
-    jdatamap_.put("forumName", forumName) ;    
- }
-  public JobDataMap  getJobDataMap() {  return jdatamap_ ;  }
+    super(params);
+    ExoProperties props = params.getPropertiesParam("deactive.info").getProperties();
+    jdatamap_ = new JobDataMap();
+    String days = props.getProperty("inactiveDays");
+    String forumName = props.getProperty("forumName");
+    jdatamap_.put("inactiveDays", days);
+    jdatamap_.put("forumName", forumName);
+  }
+
+  public JobDataMap getJobDataMap() {
+    return jdatamap_;
+  }
 }

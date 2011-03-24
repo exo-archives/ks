@@ -25,49 +25,63 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-public class CalculateModeratorEventListener implements EventListener{
-	private String path_ ;
-	private String workspace_ ;
-	private String repository_ ; 
-	private Log log = ExoLogger.getLogger(CalculateModeratorEventListener.class);
-	public CalculateModeratorEventListener() throws Exception {
-	}
-	
-  public String getSrcWorkspace(){  return workspace_ ; }
-  public String getRepository(){ return repository_ ; }
-  public String getPath(){ return path_ ; }
-  public void setPath(String path){path_ = path ; }
-  
-	public void onEvent(EventIterator evIter){
-		
-		try{
-			ExoContainer container = ExoContainerContext.getCurrentContainer();
-			ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class);
-			while(evIter.hasNext()) {
-				Event ev = evIter.nextEvent() ;
-				if(ev.getType() == Event.PROPERTY_ADDED){
-					String evPath = ev.getPath();
-					if(evPath.substring(evPath.lastIndexOf("/")+1).equals("exo:moderators")) {
-						forumService.calculateModerator(path_, true);
-					}
-					// exo:moderators
-				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
-					String evPath = ev.getPath();
-					if(evPath.substring(evPath.lastIndexOf("/")+1).equals("exo:moderators")) {
-						forumService.calculateModerator(path_, false);
-					}
-					// exo:moderators, tempModerators
-				}else if(ev.getType() == Event.PROPERTY_REMOVED) {
-					String evPath = ev.getPath();
-					if(evPath.substring(evPath.lastIndexOf("/")+1).equals("exo:moderators")) {
-						forumService.calculateModerator(path_, false);
-					}
-				// exo:moderators, tempModerators
-				}
-			}
-		}catch(Exception e) {
-		  
-		}		
-	}
-}
+public class CalculateModeratorEventListener implements EventListener {
+  private String path_;
 
+  private String workspace_;
+
+  private String repository_;
+
+  private Log    log = ExoLogger.getLogger(CalculateModeratorEventListener.class);
+
+  public CalculateModeratorEventListener() throws Exception {
+  }
+
+  public String getSrcWorkspace() {
+    return workspace_;
+  }
+
+  public String getRepository() {
+    return repository_;
+  }
+
+  public String getPath() {
+    return path_;
+  }
+
+  public void setPath(String path) {
+    path_ = path;
+  }
+
+  public void onEvent(EventIterator evIter) {
+
+    try {
+      ExoContainer container = ExoContainerContext.getCurrentContainer();
+      ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
+      while (evIter.hasNext()) {
+        Event ev = evIter.nextEvent();
+        if (ev.getType() == Event.PROPERTY_ADDED) {
+          String evPath = ev.getPath();
+          if (evPath.substring(evPath.lastIndexOf("/") + 1).equals("exo:moderators")) {
+            forumService.calculateModerator(path_, true);
+          }
+          // exo:moderators
+        } else if (ev.getType() == Event.PROPERTY_CHANGED) {
+          String evPath = ev.getPath();
+          if (evPath.substring(evPath.lastIndexOf("/") + 1).equals("exo:moderators")) {
+            forumService.calculateModerator(path_, false);
+          }
+          // exo:moderators, tempModerators
+        } else if (ev.getType() == Event.PROPERTY_REMOVED) {
+          String evPath = ev.getPath();
+          if (evPath.substring(evPath.lastIndexOf("/") + 1).equals("exo:moderators")) {
+            forumService.calculateModerator(path_, false);
+          }
+          // exo:moderators, tempModerators
+        }
+      }
+    } catch (Exception e) {
+
+    }
+  }
+}

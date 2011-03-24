@@ -31,20 +31,21 @@ import org.quartz.JobDetail;
  * Jul 18, 2009  
  */
 @Managed
-@NameTemplate({@Property(key="service", value="forum"), @Property(key="view", value="jobs"), @Property(key="name", value="{Name}")})
+@NameTemplate( { @Property(key = "service", value = "forum"), @Property(key = "view", value = "jobs"), @Property(key = "name", value = "{Name}") })
 @ManagedDescription("Plugin that defines rules for administrator role")
 public class JobManager {
   JobDetail jobDetail;
+
   public JobManager(JobDetail jobDetail) {
     this.jobDetail = jobDetail;
   }
-  
+
   @Managed
   @ManagedName("Name")
   public String getName() {
     return jobDetail.getName();
   }
-  
+
   @Managed
   @ManagedName("DataMap")
   public JobDataMap getDataMap() {

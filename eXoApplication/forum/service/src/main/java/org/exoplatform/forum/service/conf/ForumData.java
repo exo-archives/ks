@@ -26,44 +26,47 @@ import java.util.List;
  * 23-10-2008 - 08:34:42  
  */
 public class ForumData {
-	private List<TopicData> topics = new ArrayList<TopicData>();
-	private String name ;
-	private String owner ;
-	private String description;
-	
-	public ForumData() {
+  private List<TopicData> topics = new ArrayList<TopicData>();
+
+  private String          name;
+
+  private String          owner;
+
+  private String          description;
+
+  public ForumData() {
   }
 
-	public List<TopicData> getTopics() {
-  	return topics;
+  public List<TopicData> getTopics() {
+    return topics;
   }
 
-	public void setTopics(List<TopicData> topics) {
-  	this.topics = topics;
+  public void setTopics(List<TopicData> topics) {
+    this.topics = topics;
   }
 
-	public String getName() {
-  	return name;
+  public String getName() {
+    return name;
   }
 
-	public void setName(String name) {
-  	this.name = name;
+  public void setName(String name) {
+    this.name = name;
   }
 
-	public String getOwner() {
-  	return owner;
+  public String getOwner() {
+    return owner;
   }
 
-	public void setOwner(String owner) {
-  	this.owner = owner;
+  public void setOwner(String owner) {
+    this.owner = owner;
   }
 
-	public String getDescription() {
-  	return description;
+  public String getDescription() {
+    return description;
   }
 
-	public void setDescription(String description) {
-  	this.description = description;
+  public void setDescription(String description) {
+    this.description = description;
   }
 
 }

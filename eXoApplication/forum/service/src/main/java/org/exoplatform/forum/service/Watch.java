@@ -15,6 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.forum.service;
+
 /**
  * Created by The eXo Platform SARL
  * Author : Ha Mai
@@ -22,60 +23,83 @@ package org.exoplatform.forum.service;
  * Mar 2, 2009, 11:44:39 AM
  */
 public class Watch {
-	private String id;
-	private String userId;
-	private String email = "";
-	private String nodePath;
-	private String path;
-	private String typeNode;
-	private boolean isRSS;
-	private boolean isEmail;
-	public boolean isAddWatchByRS() {
-		return isRSS;
-	}
-	public void setIsAddWatchByRSS(boolean isRSS) {
-		this.isRSS = isRSS;
-	}
-	public boolean isAddWatchByEmail() {
-		return isEmail;
-	}
-	public void setIsAddWatchByEmail(boolean isEmail) {
-		this.isEmail = isEmail;
-	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getPath() {
-		return path;
-	}
-	public void setPath(String path) {
-		this.path = path;
-	}
-	public String getNodePath() {
-		return nodePath;
-	}
-	public void setNodePath(String nodePath) {
-		this.nodePath = nodePath;
-	}
-	public String getTypeNode() {
-		return typeNode;
-	}
-	public void setTypeNode(String typeNode) {
-		this.typeNode = typeNode;
-	}
+  private String  id;
+
+  private String  userId;
+
+  private String  email = "";
+
+  private String  nodePath;
+
+  private String  path;
+
+  private String  typeNode;
+
+  private boolean isRSS;
+
+  private boolean isEmail;
+
+  public boolean isAddWatchByRS() {
+    return isRSS;
+  }
+
+  public void setIsAddWatchByRSS(boolean isRSS) {
+    this.isRSS = isRSS;
+  }
+
+  public boolean isAddWatchByEmail() {
+    return isEmail;
+  }
+
+  public void setIsAddWatchByEmail(boolean isEmail) {
+    this.isEmail = isEmail;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getUserId() {
+    return userId;
+  }
+
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  public String getNodePath() {
+    return nodePath;
+  }
+
+  public void setNodePath(String nodePath) {
+    this.nodePath = nodePath;
+  }
+
+  public String getTypeNode() {
+    return typeNode;
+  }
+
+  public void setTypeNode(String typeNode) {
+    this.typeNode = typeNode;
+  }
 }

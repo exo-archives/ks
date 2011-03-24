@@ -16,7 +16,6 @@
  */
 package org.exoplatform.forum.service;
 
-
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -28,40 +27,41 @@ public interface ForumEventLifeCycle {
    * This will be call after save forum category
    * @param category
    */
-  
+
   public void saveCategory(Category category);
+
   /**
    * This will be call after save forum
    * @param forum
    */
   public void saveForum(Forum forum);
+
   /**
    * This will be call after add topic
    * @param topic
    * @param forumId
    */
   public void addTopic(Topic topic, String categoryId, String forumId);
-  
+
   /**
    * This will be call after update topic
    * @param topic
    * @param forumId
    */
   public void updateTopic(Topic topic, String categoryId, String forumId);
-  
+
   /**
    * This will be call after save post
    * @param post
    * @param forumId
    */
   public void addPost(Post post, String categoryId, String forumId, String topicId);
-  
+
   /**
    * This will be call after save post
    * @param post
    * @param forumId
    */
   public void updatePost(Post post, String categoryId, String forumId, String topicId);
-  
 
 }

@@ -33,23 +33,23 @@ import org.exoplatform.services.jcr.RepositoryService;
  * TODO: wrong location, rename to JCRMessageAttachment
  */
 public class JCRForumAttachment extends ForumAttachment {
-	
-	@Override
-	public InputStream getInputStream() throws Exception {
-		Node attachment ;
-		Session session = getSesison();
-		try{
-			attachment = (Node)session.getItem(getPathNode()) ;			
-			return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
-		}catch (Exception e) {
-			return null ;
-		}finally {
-			session.logout();
-		}
-	}
-	
-	private Session getSesison()throws Exception {
-		RepositoryService repoService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class) ;
-		return repoService.getDefaultRepository().getSystemSession(getWorkspace()) ;
-	}
+
+  @Override
+  public InputStream getInputStream() throws Exception {
+    Node attachment;
+    Session session = getSesison();
+    try {
+      attachment = (Node) session.getItem(getPathNode());
+      return attachment.getNode("jcr:content").getProperty("jcr:data").getStream();
+    } catch (Exception e) {
+      return null;
+    } finally {
+      session.logout();
+    }
+  }
+
+  private Session getSesison() throws Exception {
+    RepositoryService repoService = (RepositoryService) PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class);
+    return repoService.getDefaultRepository().getSystemSession(getWorkspace());
+  }
 }

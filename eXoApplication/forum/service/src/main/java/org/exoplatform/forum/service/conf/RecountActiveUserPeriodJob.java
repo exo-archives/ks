@@ -28,14 +28,18 @@ import org.quartz.JobDataMap;
  * nov 29, 2007
  */
 public class RecountActiveUserPeriodJob extends PeriodJob {
-  private JobDataMap jdatamap_ ;
+  private JobDataMap jdatamap_;
+
   public RecountActiveUserPeriodJob(InitParams params) throws Exception {
-    super(params) ;
-  	ExoProperties props =  params.getPropertiesParam("RecountActiveUser.info").getProperties() ;
-    jdatamap_ = new JobDataMap() ;
-    String days = props.getProperty("lastPost") ;
-    jdatamap_.put("lastPost", days) ;
-        
- }
-  public JobDataMap  getJobDataMap() {  return jdatamap_ ;  }
+    super(params);
+    ExoProperties props = params.getPropertiesParam("RecountActiveUser.info").getProperties();
+    jdatamap_ = new JobDataMap();
+    String days = props.getProperty("lastPost");
+    jdatamap_.put("lastPost", days);
+
+  }
+
+  public JobDataMap getJobDataMap() {
+    return jdatamap_;
+  }
 }

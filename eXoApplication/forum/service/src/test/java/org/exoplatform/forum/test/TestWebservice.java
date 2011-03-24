@@ -34,38 +34,39 @@ import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
  */
 
 public class TestWebservice extends AbstractResourceTest {
-	ForumWebservice forurumWebservice;
-	static final String             baseURI = "";
-	
-	public void setUp() throws Exception {
-		RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
-		super.setUp();
-		forurumWebservice = (ForumWebservice) container.getComponentInstanceOfType(ForumWebservice.class);
-		registry(forurumWebservice);
-	}
+  ForumWebservice     forurumWebservice;
 
-	public void tearDown() throws Exception {
-		super.tearDown();
-	}
-	
-	public void testCheckPublicRss() throws Exception {
-		MultivaluedMap<String, String> h = new MultivaluedMapImpl();
-		String username = "root";
-		h.putSingle("username", username);
-		ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-		ContainerResponse response = service("GET", "http", baseURI, h, null, writer);
-		response = service("GET", "http", baseURI, h, null, writer);
-		assertNotNull(response);
-	}
-	
-	public void testGetLastpost() throws Exception {
-		//MultivaluedMap<String, String> h = new MultivaluedMapImpl();		
-		
-		String eventURI = "/ks/forum/getlastpost/5";
-		ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-		ContainerResponse response = service("GET", "http", baseURI, null, null, writer);
-		
-		assertNotNull(response);
-		assertNotSame(Response.Status.NOT_FOUND, response.getStatus());
-	}
+  static final String baseURI = "";
+
+  public void setUp() throws Exception {
+    RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
+    super.setUp();
+    forurumWebservice = (ForumWebservice) container.getComponentInstanceOfType(ForumWebservice.class);
+    registry(forurumWebservice);
+  }
+
+  public void tearDown() throws Exception {
+    super.tearDown();
+  }
+
+  public void testCheckPublicRss() throws Exception {
+    MultivaluedMap<String, String> h = new MultivaluedMapImpl();
+    String username = "root";
+    h.putSingle("username", username);
+    ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+    ContainerResponse response = service("GET", "http", baseURI, h, null, writer);
+    response = service("GET", "http", baseURI, h, null, writer);
+    assertNotNull(response);
+  }
+
+  public void testGetLastpost() throws Exception {
+    // MultivaluedMap<String, String> h = new MultivaluedMapImpl();
+
+    String eventURI = "/ks/forum/getlastpost/5";
+    ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+    ContainerResponse response = service("GET", "http", baseURI, null, null, writer);
+
+    assertNotNull(response);
+    assertNotSame(Response.Status.NOT_FOUND, response.getStatus());
+  }
 }

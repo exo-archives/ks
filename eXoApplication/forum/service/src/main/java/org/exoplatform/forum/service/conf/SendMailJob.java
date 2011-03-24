@@ -32,44 +32,44 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 public class SendMailJob implements Job {
-	private static Log	log_	= ExoLogger.getLogger("job.forum.SendMailJob");
+  private static Log log_ = ExoLogger.getLogger("job.forum.SendMailJob");
 
-	public SendMailJob() throws Exception {
-	}
+  public SendMailJob() throws Exception {
+  }
 
-	public void execute(JobExecutionContext context) throws JobExecutionException {
-		try {
-			ExoContainer exoContainer = Utils.getExoContainer(context);
-			MailService mailService = (MailService) exoContainer.getComponentInstanceOfType(MailService.class);
-			ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
-			Iterator<SendMessageInfo> iter = forumService.getPendingMessages();
-			int countEmail = 0;
-			while (iter.hasNext()) {
-				try {
-					SendMessageInfo messageInfo = iter.next();
-					List<String> emailAddresses = messageInfo.getEmailAddresses();
-					Message message = messageInfo.getMessage();
-					if (message != null && emailAddresses != null && emailAddresses.size() > 0) {
-						message.setFrom(Utils.makeNotificationSender(message.getFrom()));
-						List<String> sentMessages = new ArrayList<String>();
-						for (String address : emailAddresses) {
-							if (!sentMessages.contains(address)) {
-								message.setTo(address);
-								mailService.sendMessage(message);
-								sentMessages.add(address);
-								countEmail++;
-							}
-						}
-					}
-				} catch (Exception e) {
-					log_.error("Could not send email notification", e);
-				}
-			}
-			if (log_.isInfoEnabled() && countEmail > 0) {
-				log_.info("\n\nEmail notifications has been sent to " + countEmail + " addresses");
-			}
-		} catch (Exception e) {
-			log_.warn("\n\n Unable send email notification ");
-		}
-	}
+  public void execute(JobExecutionContext context) throws JobExecutionException {
+    try {
+      ExoContainer exoContainer = Utils.getExoContainer(context);
+      MailService mailService = (MailService) exoContainer.getComponentInstanceOfType(MailService.class);
+      ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
+      Iterator<SendMessageInfo> iter = forumService.getPendingMessages();
+      int countEmail = 0;
+      while (iter.hasNext()) {
+        try {
+          SendMessageInfo messageInfo = iter.next();
+          List<String> emailAddresses = messageInfo.getEmailAddresses();
+          Message message = messageInfo.getMessage();
+          if (message != null && emailAddresses != null && emailAddresses.size() > 0) {
+            message.setFrom(Utils.makeNotificationSender(message.getFrom()));
+            List<String> sentMessages = new ArrayList<String>();
+            for (String address : emailAddresses) {
+              if (!sentMessages.contains(address)) {
+                message.setTo(address);
+                mailService.sendMessage(message);
+                sentMessages.add(address);
+                countEmail++;
+              }
+            }
+          }
+        } catch (Exception e) {
+          log_.error("Could not send email notification", e);
+        }
+      }
+      if (log_.isInfoEnabled() && countEmail > 0) {
+        log_.info("\n\nEmail notifications has been sent to " + countEmail + " addresses");
+      }
+    } catch (Exception e) {
+      log_.warn("\n\n Unable send email notification ");
+    }
+  }
 }

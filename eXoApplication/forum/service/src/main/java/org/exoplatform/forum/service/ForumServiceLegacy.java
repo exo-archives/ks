@@ -21,6 +21,4 @@ package org.exoplatform.forum.service;
  */
 public interface ForumServiceLegacy {
 
-
-	
 }

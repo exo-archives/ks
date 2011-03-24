@@ -32,33 +32,34 @@ import org.exoplatform.services.jcr.RepositoryService;
  * Jul 9, 2007
  */
 public class BufferAttachment extends ForumAttachment {
-	
-	private byte[] bytes ;
-	
-  public InputStream getInputStream() throws Exception { 
-  	if(bytes != null )return new ByteArrayInputStream(bytes) ; 
-  	Node attachment ;
+
+  private byte[] bytes;
+
+  public InputStream getInputStream() throws Exception {
+    if (bytes != null)
+      return new ByteArrayInputStream(bytes);
+    Node attachment;
     Session session = getSesison();
-    try{
-      attachment = (Node)session.getItem(getPathNode()) ;
-      return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
-    }catch (Exception e) {  
-      return null ;
+    try {
+      attachment = (Node) session.getItem(getPathNode());
+      return attachment.getNode("jcr:content").getProperty("jcr:data").getStream();
+    } catch (Exception e) {
+      return null;
     } finally {
       session.logout();
     }
   }
-  
-	private Session getSesison()throws Exception {
-		RepositoryService repoService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class) ;
-		return repoService.getDefaultRepository().getSystemSession(getWorkspace()) ;
-	}
 
-	public void setInputStream(InputStream input) throws Exception {
+  private Session getSesison() throws Exception {
+    RepositoryService repoService = (RepositoryService) PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class);
+    return repoService.getDefaultRepository().getSystemSession(getWorkspace());
+  }
+
+  public void setInputStream(InputStream input) throws Exception {
     if (input != null) {
-      bytes = new byte[input.available()] ; 
-      input.read(bytes) ;
-    }
-    else bytes = null ;
+      bytes = new byte[input.available()];
+      input.read(bytes);
+    } else
+      bytes = null;
   }
 }

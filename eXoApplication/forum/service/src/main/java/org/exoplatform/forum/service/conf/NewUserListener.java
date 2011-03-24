@@ -35,33 +35,32 @@ import org.exoplatform.services.organization.UserEventListener;
  */
 public class NewUserListener extends UserEventListener {
 
-  private static Log log = ExoLogger.getLogger(NewUserListener.class);
+  private static Log  log = ExoLogger.getLogger(NewUserListener.class);
 
   private UserProfile profileTemplate;
+
   public NewUserListener(InitParams params) throws Exception {
-    if (params == null) return;
+    if (params == null)
+      return;
     PropertiesParam propsParams = params.getPropertiesParam("user.profile.setting");
     ExoProperties props = propsParams.getProperties();
     profileTemplate = new UserProfile();
-    
-    String timeZoneNumber = props.getProperty("timeZone") != null ?  props.getProperty("timeZone") : "GMT";
+
+    String timeZoneNumber = props.getProperty("timeZone") != null ? props.getProperty("timeZone") : "GMT";
     double timeZone = 0.0;
     timeZone = -TimeZone.getTimeZone(timeZoneNumber).getRawOffset() * 1.0 / 3600000;
     profileTemplate.setTimeZone(timeZone);
-    
-    String shortDateFormat = props.getProperty("shortDateFormat") != null ?
-                                props.getProperty("shortDateFormat") : "MM/dd/yyyy";    
+
+    String shortDateFormat = props.getProperty("shortDateFormat") != null ? props.getProperty("shortDateFormat") : "MM/dd/yyyy";
     profileTemplate.setShortDateFormat(shortDateFormat);
-    
-    String longDateFormat = props.getProperty("longDateFormat") != null ?
-                                props.getProperty("longDateFormat") : "DDD,MMM dd,yyyy";
-    
+
+    String longDateFormat = props.getProperty("longDateFormat") != null ? props.getProperty("longDateFormat") : "DDD,MMM dd,yyyy";
+
     profileTemplate.setLongDateFormat(longDateFormat);
-    String timeFormat = (props.getProperty("timeFormat") != null)?
-                         props.getProperty("timeFormat") : "hh:mm a";
-    
+    String timeFormat = (props.getProperty("timeFormat") != null) ? props.getProperty("timeFormat") : "hh:mm a";
+
     profileTemplate.setTimeFormat(timeFormat);
-    
+
     String strMaxTopic = props.getProperty("maxTopic");
     int maxTopic = 10;
     try {
@@ -70,7 +69,7 @@ public class NewUserListener extends UserEventListener {
       log.warn("maxTopic is not in format", nfe);
     }
     profileTemplate.setMaxTopicInPage(maxTopic);
-    
+
     String strMaxPost = props.getProperty("maxPost");
     int maxPost = 10;
     try {
@@ -79,7 +78,7 @@ public class NewUserListener extends UserEventListener {
       log.warn("maxPost is not in format", nfe);
     }
     profileTemplate.setMaxPostInPage(maxPost);
-    
+
     String strShowForumJump = props.getProperty("isShowForumJump");
     boolean isShowForumJump = true;
     isShowForumJump = Boolean.parseBoolean(strShowForumJump);
@@ -114,8 +113,7 @@ public class NewUserListener extends UserEventListener {
   }
 
   private ForumService getForumService() {
-    return (ForumService) ExoContainerContext.getCurrentContainer()
-                                             .getComponentInstanceOfType(ForumService.class);
+    return (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }
 
   @Override

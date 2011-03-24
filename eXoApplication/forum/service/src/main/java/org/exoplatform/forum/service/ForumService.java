@@ -57,6 +57,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   void addInitialDataPlugin(ComponentPlugin plugin) throws Exception;
+
   void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception;
 
   /**
@@ -104,7 +105,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   void calculateModerator(String categoryPath, boolean isNew) throws Exception;
-  
+
   /**
    * Adds the plugin.
    * 
@@ -313,6 +314,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception;
+
   /**
    * Modify topic.
    * 
@@ -332,12 +334,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @param isMove is the move
    * @throws Exception the exception
    */
-  void saveTopic(String categoryId,
-                 String forumId,
-                 Topic topic,
-                 boolean isNew,
-                 boolean isMove,
-                 MessageBuilder messageBuilder) throws Exception;
+  void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception;
 
   /**
    * Removes the topic.
@@ -385,13 +382,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @return the posts
    * @throws Exception the exception
    */
-  JCRPageList getPosts(String categoryId,
-                       String forumId,
-                       String topicId,
-                       String isApproved,
-                       String isHidden,
-                       String strQuery,
-                       String userLogin) throws Exception;
+  JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
 
   /**
    * Gets posts of topic.
@@ -401,7 +392,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   JCRPageList getPostForSplitTopic(String topicPath) throws Exception;
-  
+
   /**
    * Gets number of the posts.
    * 
@@ -414,12 +405,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @return number of the posts
    * @throws Exception the exception
    */
-  long getAvailablePost(String categoryId,
-                        String forumId,
-                        String topicId,
-                        String isApproved,
-                        String isHidden,
-                        String userLogin) throws Exception;
+  long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
 
   /**
    * Gets index of last read post.
@@ -470,12 +456,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @param forumId the forum id
    * @throws Exception the exception
    */
-  void savePost(String categoryId,
-                String forumId,
-                String topicId,
-                Post post,
-                boolean isNew,
-                MessageBuilder messageBuilder) throws Exception;
+  void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception;
 
   /**
    * Modify posts.
@@ -505,11 +486,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @param destTopicPath the dest topic path
    * @throws Exception the exception
    */
-  void movePost(String[] postPaths,
-                String destTopicPath,
-                boolean isCreatNewTopic,
-                String mailContent,
-                String link) throws Exception;
+  void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception;
 
   /**
    * Gets the object name by path.
@@ -695,7 +672,6 @@ public interface ForumService extends ForumServiceLegacy {
    */
   void saveUserBookmark(String userName, String bookMark, boolean isNew) throws Exception;
 
-
   /**
    * Save to post if this post has an user read
    * 
@@ -734,13 +710,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @return the quick search
    * @throws Exception the exception
    */
-  List<ForumSearch> getQuickSearch(String textQuery,
-                                   String type,
-                                   String pathQuery,
-                                   String userId,
-                                   List<String> listCateIds,
-                                   List<String> listForumIds,
-                                   List<String> forumIdsOfModerator) throws Exception;
+  List<ForumSearch> getQuickSearch(String textQuery, String type, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
 
   /**
    * Gets screen name
@@ -758,9 +728,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @return the advanced search
    * @throws Exception the exception
    */
-  List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery,
-                                      List<String> listCateIds,
-                                      List<String> listForumIds) throws Exception;
+  List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) throws Exception;
 
   /**
    * Save forum statistic.
@@ -955,7 +923,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   SendMessageInfo getMessageInfo(String name) throws Exception;
-  
+
   /**
    * Get messages are pending
    * 
@@ -980,6 +948,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   List<Post> getNewPosts(int number) throws Exception;
+
   List<Post> getNewPostsByUser(String userName, int number) throws Exception;
 
   /**
@@ -1036,12 +1005,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @param isExportAll is export all or not
    * @throws Exception the exception
    */
-  Object exportXML(String categoryId,
-                   String forumId,
-                   List<String> objectIds,
-                   String nodePath,
-                   ByteArrayOutputStream bos,
-                   boolean isExportAll) throws Exception;
+  Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll) throws Exception;
 
   /**
    * import a stream 
@@ -1052,8 +1016,9 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) throws Exception;
-// TODO: used updateForum(String path) for update data after imported.
-//  void updateDataImported() throws Exception;
+
+  // TODO: used updateForum(String path) for update data after imported.
+  // void updateDataImported() throws Exception;
 
   /**
    * get profiles of users
@@ -1367,11 +1332,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @return topic page list
    * @throws Exception the exception
    */
-  LazyPageList<Topic> getTopicList(String categoryId,
-                                   String forumId,
-                                   String string,
-                                   String strOrderBy,
-                                   int pageSize) throws Exception;
+  LazyPageList<Topic> getTopicList(String categoryId, String forumId, String string, String strOrderBy, int pageSize) throws Exception;
 
   /**
    * get summaries
@@ -1414,7 +1375,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception
    */
   void removeMember(User user) throws Exception;
-  
+
   /**
    * <p>
    * Update information of logged in users that records in a queue to statistic and profile
@@ -1423,16 +1384,16 @@ public interface ForumService extends ForumServiceLegacy {
    * @param
    * @throws Exception
    */
-  public void updateLoggedinUsers() throws Exception ;
-  
+  public void updateLoggedinUsers() throws Exception;
+
   /**
    * update when delete an user
    * 
    * @param userName username
    * @throws Exception the exception
    */
-  public void calculateDeletedUser(String userName) throws Exception ;
-  
+  public void calculateDeletedUser(String userName) throws Exception;
+
   /**
    * create RSS
    * 
@@ -1440,8 +1401,8 @@ public interface ForumService extends ForumServiceLegacy {
    * @return input stream
    * @throws Exception the exception
    */
-  public InputStream createForumRss(String objectId, String link) throws Exception ;
-  
+  public InputStream createForumRss(String objectId, String link) throws Exception;
+
   /**
    * create RSS of user
    * 
@@ -1450,13 +1411,13 @@ public interface ForumService extends ForumServiceLegacy {
    * @return input stream
    * @throws Exception the exception
    */
-  public InputStream createUserRss(String userId, String link) throws Exception ;
-  
+  public InputStream createUserRss(String userId, String link) throws Exception;
+
   /**
    * add listener
    * 
    * @param listener add listener
    * @throws Exception the exception
    */
-  public void addListenerPlugin(ForumEventListener listener) throws Exception ;
+  public void addListenerPlugin(ForumEventListener listener) throws Exception;
 }

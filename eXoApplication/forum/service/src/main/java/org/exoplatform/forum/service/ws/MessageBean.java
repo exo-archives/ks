@@ -15,12 +15,14 @@ import org.exoplatform.forum.service.Post;
  * Oct 15, 2008  
  */
 public class MessageBean {
-  private List<Post> data ;
+  private List<Post> data;
+
   public void setData(List<Post> postlist) {
     this.data = postlist;
   }
+
   public List<Post> getData() {
     return data;
   }
- 
+
 }

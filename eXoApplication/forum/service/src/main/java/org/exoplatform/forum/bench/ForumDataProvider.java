@@ -8,15 +8,15 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 
 public interface ForumDataProvider {
-	
-	public boolean isInitialized();
 
-	public List<Category> findCategories();
+  public boolean isInitialized();
 
-	public List<Forum> findForumsByCategory(String categoryId);
+  public List<Category> findCategories();
 
-	public List<Topic> findTopicsByForum(Forum forum);
+  public List<Forum> findForumsByCategory(String categoryId);
 
-	public List<Post> fingPostsByTopic(Topic topic);
+  public List<Topic> findTopicsByForum(Forum forum);
+
+  public List<Post> fingPostsByTopic(Topic topic);
 
 }

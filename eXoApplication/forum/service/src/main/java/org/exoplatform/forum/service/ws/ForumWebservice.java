@@ -3,6 +3,7 @@
  * 
  */
 package org.exoplatform.forum.service.ws;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,63 +25,68 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
+
 @Path("ks/forum")
 public class ForumWebservice implements ResourceContainer {
 
   protected final static String JSON_CONTENT_TYPE = MediaType.APPLICATION_JSON;
-  final public static String APP_TYPE = "forum".intern();
-  private String strQuery ;
-  private List<BanIP> ipsToJson = new ArrayList<BanIP>();
-  
-  private static Log log = ExoLogger.getLogger(ForumWebservice.class);
-  
-  public ForumWebservice() {}
+
+  final public static String    APP_TYPE          = "forum".intern();
+
+  private String                strQuery;
+
+  private List<BanIP>           ipsToJson         = new ArrayList<BanIP>();
+
+  private static Log            log               = ExoLogger.getLogger(ForumWebservice.class);
+
+  public ForumWebservice() {
+  }
 
   @GET
   @Path("getmessage/{maxcount}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getMessage(@PathParam("maxcount") int maxcount) throws Exception {
-	  CacheControl cacheControl = new CacheControl();
-	  cacheControl.setNoCache(true);
-	  cacheControl.setNoStore(true);
-	  try{		  
-		  ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-		  String userName = getUserId();// if userName == null, for get new public posts.
-		  List<Post> list = forumService.getNewPostsByUser(userName, maxcount);
-		  if(list != null) {
-			  for (Post post : list) {
-			  	post.setLink(post.getLink() + "/" + post.getId());
-			  }
-		  }
-		  MessageBean data = new MessageBean();
-		  data.setData(list);
-		  return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-	  }catch(Exception e){
-		  return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cacheControl).build();
-	  }
+    CacheControl cacheControl = new CacheControl();
+    cacheControl.setNoCache(true);
+    cacheControl.setNoStore(true);
+    try {
+      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+      String userName = getUserId();// if userName == null, for get new public posts.
+      List<Post> list = forumService.getNewPostsByUser(userName, maxcount);
+      if (list != null) {
+        for (Post post : list) {
+          post.setLink(post.getLink() + "/" + post.getId());
+        }
+      }
+      MessageBean data = new MessageBean();
+      data.setData(list);
+      return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+    } catch (Exception e) {
+      return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cacheControl).build();
+    }
   }
 
   @GET
   @Path("getpublicmessage/{maxcount}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getPulicMessage(@PathParam("maxcount") int maxcount) throws Exception {
-  	CacheControl cacheControl = new CacheControl();
-  	cacheControl.setNoCache(true);
-  	cacheControl.setNoStore(true);
-  	try{		  
-  		ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-  		List<Post> list = forumService.getNewPostsByUser(null, maxcount);
-  		if(list != null) {
-  			for (Post post : list) {
-  				post.setLink(post.getLink() + "/" + post.getId());
-  			}
-  		}
-  		MessageBean data = new MessageBean();
-  		data.setData(list);
-  		return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-  	}catch(Exception e){
-  		return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cacheControl).build();
-  	}
+    CacheControl cacheControl = new CacheControl();
+    cacheControl.setNoCache(true);
+    cacheControl.setNoStore(true);
+    try {
+      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+      List<Post> list = forumService.getNewPostsByUser(null, maxcount);
+      if (list != null) {
+        for (Post post : list) {
+          post.setLink(post.getLink() + "/" + post.getId());
+        }
+      }
+      MessageBean data = new MessageBean();
+      data.setData(list);
+      return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+    } catch (Exception e) {
+      return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cacheControl).build();
+    }
   }
 
   @GET
@@ -91,20 +97,21 @@ public class ForumWebservice implements ResourceContainer {
     cacheControl.setNoCache(true);
     cacheControl.setNoStore(true);
     ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-    if(str.equals("all")){
-      ipsToJson.clear() ;
-      List<String> banIps = forumService.getBanList() ;
-      for(String ip : banIps) {
-        ipsToJson.add(new BanIP(ip)) ;
+    if (str.equals("all")) {
+      ipsToJson.clear();
+      List<String> banIps = forumService.getBanList();
+      for (String ip : banIps) {
+        ipsToJson.add(new BanIP(ip));
       }
-    } else if(!str.equals(strQuery)){
-      ipsToJson.clear() ;
-      List<String> banIps = forumService.getBanList() ;
-      for(String ip : banIps) {
-        if(ip.startsWith(str)) ipsToJson.add(new BanIP(ip)) ;
+    } else if (!str.equals(strQuery)) {
+      ipsToJson.clear();
+      List<String> banIps = forumService.getBanList();
+      for (String ip : banIps) {
+        if (ip.startsWith(str))
+          ipsToJson.add(new BanIP(ip));
       }
-      strQuery = str ;
-    }    
+      strQuery = str;
+    }
     return Response.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
   }
 
@@ -116,20 +123,21 @@ public class ForumWebservice implements ResourceContainer {
     cacheControl.setNoCache(true);
     cacheControl.setNoStore(true);
     ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-    if(str.equals("all")){
-      ipsToJson.clear() ;
-      List<String> banIps = forumService.getForumBanList(forumId) ;
-      for(String ip : banIps) {
-        ipsToJson.add(new BanIP(ip)) ;
+    if (str.equals("all")) {
+      ipsToJson.clear();
+      List<String> banIps = forumService.getForumBanList(forumId);
+      for (String ip : banIps) {
+        ipsToJson.add(new BanIP(ip));
       }
-    } else if(!str.equals(strQuery)){
-      ipsToJson.clear() ;
-      List<String> banIps = forumService.getForumBanList(forumId) ;
-      for(String ip : banIps) {
-        if(ip.startsWith(str)) ipsToJson.add(new BanIP(ip)) ;
+    } else if (!str.equals(strQuery)) {
+      ipsToJson.clear();
+      List<String> banIps = forumService.getForumBanList(forumId);
+      for (String ip : banIps) {
+        if (ip.startsWith(str))
+          ipsToJson.add(new BanIP(ip));
       }
-      strQuery = str ;
-    }    
+      strQuery = str;
+    }
     return Response.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
   }
 
@@ -141,24 +149,24 @@ public class ForumWebservice implements ResourceContainer {
     cacheControl.setNoCache(true);
     cacheControl.setNoStore(true);
     ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-    if(str.equals(" ")){
-      ipsToJson.clear() ;
-    } else if(str.equals("onclickForm")){
-      ipsToJson.clear() ;
+    if (str.equals(" ")) {
+      ipsToJson.clear();
+    } else if (str.equals("onclickForm")) {
+      ipsToJson.clear();
       List<String> banIps = forumService.getTagNameInTopic(userAndTopicId);
-      for(String ip : banIps) {
-        ipsToJson.add(new BanIP(ip)) ;
+      for (String ip : banIps) {
+        ipsToJson.add(new BanIP(ip));
       }
     } else {
-      ipsToJson.clear() ;
+      ipsToJson.clear();
       List<String> banIps = forumService.getAllTagName(str, userAndTopicId);
-      for(String ip : banIps) {
-        if(ip.startsWith(str)) ipsToJson.add(new BanIP(ip)) ;
+      for (String ip : banIps) {
+        if (ip.startsWith(str))
+          ipsToJson.add(new BanIP(ip));
       }
-    }    
+    }
     return Response.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
   }
-
 
   @GET
   @Path("rss/{resourceid}")
@@ -168,15 +176,15 @@ public class ForumWebservice implements ResourceContainer {
     cacheControl.setNoCache(true);
     cacheControl.setNoStore(true);
     try {
-    	ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       InputStream is = forumService.createForumRss(resourceid, "http://www.exoplatform.com");
       return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cacheControl).build();
     } catch (Exception e) {
-      log.trace("\nView RSS fail: " +  e.getMessage() + "\n" + e.getCause());
-      return Response.status(Status.INTERNAL_SERVER_ERROR).build() ;
+      log.trace("\nView RSS fail: " + e.getMessage() + "\n" + e.getCause());
+      return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     }
   }
-  
+
   @GET
   @Path("rss/user/{resourceid}")
   @Produces(MediaType.TEXT_XML)
@@ -190,15 +198,16 @@ public class ForumWebservice implements ResourceContainer {
       return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cacheControl).build();
     } catch (Exception e) {
       log.trace("\nGet UserRSS fail: ", e);
-      return Response.status(Status.INTERNAL_SERVER_ERROR).build() ;
+      return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     }
   }
-  
+
   private String getUserId() {
-		String username = "";
-		try {
-			username = ConversationState.getCurrent().getIdentity().getUserId();
-		} catch (Exception e) {}
-		return username;
+    String username = "";
+    try {
+      username = ConversationState.getCurrent().getIdentity().getUserId();
+    } catch (Exception e) {
+    }
+    return username;
   }
 }

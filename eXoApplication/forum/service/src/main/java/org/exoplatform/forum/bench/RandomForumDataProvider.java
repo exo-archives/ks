@@ -20,224 +20,224 @@ import org.exoplatform.services.organization.OrganizationService;
 
 public class RandomForumDataProvider implements ForumDataProvider {
 
-	private static Log log = ExoLogger.getLogger(RandomForumDataProvider.class);
-	private LoremIpsum4J textGen;
-	private Random rand;
-	private List<String> users;
-	private int maxCategories = 10;
-	private int maxForums = 5;
-	private int maxTopics = 20;
-	private int maxPosts = 20;
-	private String fistCategoryId = Utils.CATEGORY + "randomId412849127491";
-	private boolean randomize = false;
-	private ForumService forumService;
+  private static Log   log            = ExoLogger.getLogger(RandomForumDataProvider.class);
 
-	public RandomForumDataProvider(InitParams initParams,
-			ForumService forumService, IDGeneratorService uidGenerator,
-			OrganizationService organizationService) {
-		this.forumService = forumService;
-		initRandomizers();
-		initParams(initParams);
+  private LoremIpsum4J textGen;
 
-	}
+  private Random       rand;
 
-	private void initParams(InitParams initParams) {
-		try {
-			maxCategories = Integer.parseInt(initParams.getValueParam(
-					"maxCategories").getValue());
-			maxForums = Integer.parseInt(initParams.getValueParam("maxForums")
-					.getValue());
-			maxTopics = Integer.parseInt(initParams.getValueParam("maxTopics")
-					.getValue());
-			maxPosts = Integer.parseInt(initParams.getValueParam("maxPosts")
-					.getValue());
-			randomize = Boolean.parseBoolean(initParams.getValueParam("randomize")
-					.getValue());
-			log.debug("initializing : " + initParams);
-		} catch (Exception e) {
-			throw new RuntimeException(
-					"Could not initialize " , e);
-		}
-	}
+  private List<String> users;
 
-	private void initRandomizers() {
-		textGen = new LoremIpsum4J();
-		rand = new Random();
-	}
+  private int          maxCategories  = 10;
 
-	private String randomWords(int i) {
-		int wordCount = rand.nextInt(i + 1) + 1;
-		String words = textGen.getWords(wordCount);
-		return words;
+  private int          maxForums      = 5;
 
-	}
-	
-	private String randomUser() {
-		users = Arrays.asList(new String[]{"root", "demo", "mary", "john"});
-		return users.get(rand.nextInt(4));
-	}
+  private int          maxTopics      = 20;
 
-	private String randomParagraphs(int i) {
-		int paragraphCount = rand.nextInt(i + 1) + 1;
-		String  paragraphs = textGen.getParagraphs(paragraphCount);
-		return paragraphs.replaceAll("\\n\\n","<br/><br/>");
-	}	
-	
+  private int          maxPosts       = 20;
 
-	public List<Category> findCategories() {
+  private String       fistCategoryId = Utils.CATEGORY + "randomId412849127491";
 
-		List<Category> result = new ArrayList<Category>();
-		try {
-			// init marker
-			Category init = newCategory(null);
-			init.setId(fistCategoryId);
-			result.add(init);
-			Category previous = init;
+  private boolean      randomize      = false;
 
-			for (int i = 0; i < (getMaxCategory()); i++) {
-				Category category = newCategory(previous);
-				result.add(category);
-				previous = category;
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		return result;
-	}
+  private ForumService forumService;
 
-	private int getMaxCategory() {
-		return (randomize)?rand.nextInt(maxCategories):maxCategories;
-	}
+  public RandomForumDataProvider(InitParams initParams, ForumService forumService, IDGeneratorService uidGenerator, OrganizationService organizationService) {
+    this.forumService = forumService;
+    initRandomizers();
+    initParams(initParams);
 
-	private Forum newForum(Forum previous) {
-		if (previous == null) {
-			previous = new Forum();
-		}
-		Forum forum = new Forum();
-		forum.setCreatedDate(new Date());
-		forum.setDescription(randomWords(10));
-		forum.setForumName(randomWords(5));
-		forum.setForumOrder(previous.getForumOrder() + 1);
-		forum.setOwner(randomUser());
-		return forum;
-	}
+  }
 
-	private Category newCategory(Category previous) {
-		if (previous == null) {
-			previous = new Category();
-		}
-		Category category = new Category();
-		category.setCategoryName(randomWords(10));
-		category.setCategoryOrder(previous.getCategoryOrder() + 1);
-		category.setCreatedDate(new Date());
-		category.setDescription(randomWords(10));
-		category.setModifiedBy(randomUser());
-		category.setModifiedDate(new Date());
-		category.setOwner(randomUser());
-		return category;
-	}
+  private void initParams(InitParams initParams) {
+    try {
+      maxCategories = Integer.parseInt(initParams.getValueParam("maxCategories").getValue());
+      maxForums = Integer.parseInt(initParams.getValueParam("maxForums").getValue());
+      maxTopics = Integer.parseInt(initParams.getValueParam("maxTopics").getValue());
+      maxPosts = Integer.parseInt(initParams.getValueParam("maxPosts").getValue());
+      randomize = Boolean.parseBoolean(initParams.getValueParam("randomize").getValue());
+      log.debug("initializing : " + initParams);
+    } catch (Exception e) {
+      throw new RuntimeException("Could not initialize ", e);
+    }
+  }
 
-	public List<Forum> findForumsByCategory(String categoryId) {
+  private void initRandomizers() {
+    textGen = new LoremIpsum4J();
+    rand = new Random();
+  }
 
-		List<Forum> result = new ArrayList<Forum>();
-		try {
-			Forum previous = null;
-			int forumCount = maxForums();
+  private String randomWords(int i) {
+    int wordCount = rand.nextInt(i + 1) + 1;
+    String words = textGen.getWords(wordCount);
+    return words;
 
-			for (int i = 0; i < forumCount; i++) {
-				Forum forum = newForum(previous);
+  }
 
-				result.add(forum);
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		return result;
-	}
+  private String randomUser() {
+    users = Arrays.asList(new String[] { "root", "demo", "mary", "john" });
+    return users.get(rand.nextInt(4));
+  }
 
-	private int maxForums() {
-		return (randomize)?(rand.nextInt(maxForums) + 1):maxForums;
-	}
+  private String randomParagraphs(int i) {
+    int paragraphCount = rand.nextInt(i + 1) + 1;
+    String paragraphs = textGen.getParagraphs(paragraphCount);
+    return paragraphs.replaceAll("\\n\\n", "<br/><br/>");
+  }
 
-	public boolean isInitialized() {
-		try {
-			Category initialized = forumService.getCategory(fistCategoryId);
-			return (initialized != null);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+  public List<Category> findCategories() {
 
-	public List<Topic> findTopicsByForum(Forum forum) {
-		List<Topic> result = new ArrayList<Topic>();
-		try {
-			Topic previous = null;
-			int topicCount = maxTopics();
+    List<Category> result = new ArrayList<Category>();
+    try {
+      // init marker
+      Category init = newCategory(null);
+      init.setId(fistCategoryId);
+      result.add(init);
+      Category previous = init;
 
-			for (int i = 0; i < topicCount; i++) {
-				Topic topic = newTopic(previous);
+      for (int i = 0; i < (getMaxCategory()); i++) {
+        Category category = newCategory(previous);
+        result.add(category);
+        previous = category;
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return result;
+  }
 
-				result.add(topic);
-			}
-			return result;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+  private int getMaxCategory() {
+    return (randomize) ? rand.nextInt(maxCategories) : maxCategories;
+  }
 
-	}
+  private Forum newForum(Forum previous) {
+    if (previous == null) {
+      previous = new Forum();
+    }
+    Forum forum = new Forum();
+    forum.setCreatedDate(new Date());
+    forum.setDescription(randomWords(10));
+    forum.setForumName(randomWords(5));
+    forum.setForumOrder(previous.getForumOrder() + 1);
+    forum.setOwner(randomUser());
+    return forum;
+  }
 
-	private int maxTopics() {
-		return (randomize)?(rand.nextInt(maxTopics) + 1):maxTopics;
-	}
+  private Category newCategory(Category previous) {
+    if (previous == null) {
+      previous = new Category();
+    }
+    Category category = new Category();
+    category.setCategoryName(randomWords(10));
+    category.setCategoryOrder(previous.getCategoryOrder() + 1);
+    category.setCreatedDate(new Date());
+    category.setDescription(randomWords(10));
+    category.setModifiedBy(randomUser());
+    category.setModifiedDate(new Date());
+    category.setOwner(randomUser());
+    return category;
+  }
 
-	private Topic newTopic(Topic previous) {
-		if (previous == null) {
-			previous = new Topic();
-		}
-		Topic topic = new Topic();
-		topic.setCreatedDate(new Date());
-		topic.setDescription(randomWords(10));
-		topic.setOwner(randomUser()); // todo use random user
-		topic.setTopicName(randomWords(5));
-		topic.setIcon("Shield");
-		return topic;
-	}
-	public List<Post> fingPostsByTopic(Topic topic) {
-		List<Post> result = new ArrayList<Post>();
-		try {
-			Post previous = null;
-			int postCount = maxPosts();
+  public List<Forum> findForumsByCategory(String categoryId) {
 
-			for (int i = 0; i < postCount; i++) {
-				Post post = newPost(previous);
+    List<Forum> result = new ArrayList<Forum>();
+    try {
+      Forum previous = null;
+      int forumCount = maxForums();
 
-				result.add(post);
+      for (int i = 0; i < forumCount; i++) {
+        Forum forum = newForum(previous);
 
-			}
-			return result;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+        result.add(forum);
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return result;
+  }
 
-	private int maxPosts() {
-		return (randomize)?(rand.nextInt(maxPosts) + 1):maxPosts;
-	}
+  private int maxForums() {
+    return (randomize) ? (rand.nextInt(maxForums) + 1) : maxForums;
+  }
 
-	private Post newPost(Post previous) {
-		if (previous == null) {
-			previous = new Post();
-		}
-		Post post = new Post();
-		post.setName(randomWords(10));
-		String content = randomParagraphs(5);
-		
-		post.setMessage(content);
-		post.setOwner(randomUser());
-		post.setIcon("Shield");
-		return post;
-	}
+  public boolean isInitialized() {
+    try {
+      Category initialized = forumService.getCategory(fistCategoryId);
+      return (initialized != null);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
 
+  public List<Topic> findTopicsByForum(Forum forum) {
+    List<Topic> result = new ArrayList<Topic>();
+    try {
+      Topic previous = null;
+      int topicCount = maxTopics();
 
+      for (int i = 0; i < topicCount; i++) {
+        Topic topic = newTopic(previous);
+
+        result.add(topic);
+      }
+      return result;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
+  }
+
+  private int maxTopics() {
+    return (randomize) ? (rand.nextInt(maxTopics) + 1) : maxTopics;
+  }
+
+  private Topic newTopic(Topic previous) {
+    if (previous == null) {
+      previous = new Topic();
+    }
+    Topic topic = new Topic();
+    topic.setCreatedDate(new Date());
+    topic.setDescription(randomWords(10));
+    topic.setOwner(randomUser()); // todo use random user
+    topic.setTopicName(randomWords(5));
+    topic.setIcon("Shield");
+    return topic;
+  }
+
+  public List<Post> fingPostsByTopic(Topic topic) {
+    List<Post> result = new ArrayList<Post>();
+    try {
+      Post previous = null;
+      int postCount = maxPosts();
+
+      for (int i = 0; i < postCount; i++) {
+        Post post = newPost(previous);
+
+        result.add(post);
+
+      }
+      return result;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private int maxPosts() {
+    return (randomize) ? (rand.nextInt(maxPosts) + 1) : maxPosts;
+  }
+
+  private Post newPost(Post previous) {
+    if (previous == null) {
+      previous = new Post();
+    }
+    Post post = new Post();
+    post.setName(randomWords(10));
+    String content = randomParagraphs(5);
+
+    post.setMessage(content);
+    post.setOwner(randomUser());
+    post.setIcon("Shield");
+    return post;
+  }
 
 }

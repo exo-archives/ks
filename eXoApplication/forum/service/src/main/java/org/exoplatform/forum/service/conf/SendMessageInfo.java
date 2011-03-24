@@ -14,31 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
-package org.exoplatform.forum.service.conf ;
+package org.exoplatform.forum.service.conf;
 
 import java.util.List;
 
 import org.exoplatform.services.mail.Message;
+
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
  * 				hung.nguyen@exoplatform.com
  * Aug 26, 2008
  */
-public class SendMessageInfo{  
-	private List<String> emailAddresses ;
-  private Message message ;
-  
-	public SendMessageInfo(List<String> emails, Message mes) {
-		emailAddresses = emails ;
-		message = mes ;
-	}
-	
-	public void setEmailAddresses(List<String> emailAddresses_) { emailAddresses = emailAddresses_ ;}
-	public List<String> getEmailAddresses() { return emailAddresses ;}
+public class SendMessageInfo {
+  private List<String> emailAddresses;
 
-	public void setMessage(Message message) { this.message = message ;}
-	public Message getMessage() { return message ; }
-	
-	
+  private Message      message;
+
+  public SendMessageInfo(List<String> emails, Message mes) {
+    emailAddresses = emails;
+    message = mes;
+  }
+
+  public void setEmailAddresses(List<String> emailAddresses_) {
+    emailAddresses = emailAddresses_;
+  }
+
+  public List<String> getEmailAddresses() {
+    return emailAddresses;
+  }
+
+  public void setMessage(Message message) {
+    this.message = message;
+  }
+
+  public Message getMessage() {
+    return message;
+  }
+
 }

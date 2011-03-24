@@ -21,7 +21,6 @@ import java.util.List;
 import org.exoplatform.commons.utils.LazyList;
 import org.exoplatform.commons.utils.ListAccess;
 
-
 /**
  * A PageList implementation backed by a LazyList to load data lazily. 
  * Implementation was partially borrowed from kernel 2.1 class of same name. 
@@ -56,22 +55,19 @@ public class LazyPageList<E> extends JCRPageList<E> {
 
   @Override
   protected void populateCurrentPage(String valueString) throws Exception {
-    throw new RuntimeException("Not implemented: populateCurrentPage(String)" );
+    throw new RuntimeException("Not implemented: populateCurrentPage(String)");
   }
 
   @SuppressWarnings("unchecked")
   @Override
   protected void populateCurrentPageList(int page, List list) throws Exception {
-    throw new RuntimeException("Not implemented: populateCurrentPageList(String, List)" );
+    throw new RuntimeException("Not implemented: populateCurrentPageList(String, List)");
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  protected void populateCurrentPageSearch(int page,
-                                           List list,
-                                           boolean isWatch,
-                                           boolean isSearchUser) throws Exception {
-    throw new RuntimeException("Not implemented: populateCurrentPageSearch(List, boolean, boolean)" );
-    
+  protected void populateCurrentPageSearch(int page, List list, boolean isWatch, boolean isSearchUser) throws Exception {
+    throw new RuntimeException("Not implemented: populateCurrentPageSearch(List, boolean, boolean)");
+
   }
 }

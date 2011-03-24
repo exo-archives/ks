@@ -15,6 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
 package org.exoplatform.forum.service;
+
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -22,42 +23,49 @@ package org.exoplatform.forum.service;
  * Aug 6, 2009 - 3:38:26 AM  
  */
 public class ForumSubscription {
-	private String id="";
-	private String[] categoryIds;
-	private String[] forumIds;
-	private String[] topicIds;
-	
-	public ForumSubscription() {
-		categoryIds = new String[]{};
-		forumIds    =	new String[]{};
-		topicIds 		= new String[]{};
+  private String   id = "";
+
+  private String[] categoryIds;
+
+  private String[] forumIds;
+
+  private String[] topicIds;
+
+  public ForumSubscription() {
+    categoryIds = new String[] {};
+    forumIds = new String[] {};
+    topicIds = new String[] {};
   }
 
-	public String getId() {
-  	return id;
-  }
-	public void setId(String id) {
-  	this.id = id;
+  public String getId() {
+    return id;
   }
 
-	public String[] getCategoryIds() {
-  	return categoryIds;
-  }
-	public void setCategoryIds(String[] categoryIds) {
-  	this.categoryIds = categoryIds;
+  public void setId(String id) {
+    this.id = id;
   }
 
-	public String[] getForumIds() {
-  	return forumIds;
-  }
-	public void setForumIds(String[] forumIds) {
-  	this.forumIds = forumIds;
+  public String[] getCategoryIds() {
+    return categoryIds;
   }
 
-	public String[] getTopicIds() {
-  	return topicIds;
+  public void setCategoryIds(String[] categoryIds) {
+    this.categoryIds = categoryIds;
   }
-	public void setTopicIds(String[] topicIds) {
-  	this.topicIds = topicIds;
+
+  public String[] getForumIds() {
+    return forumIds;
+  }
+
+  public void setForumIds(String[] forumIds) {
+    this.forumIds = forumIds;
+  }
+
+  public String[] getTopicIds() {
+    return topicIds;
+  }
+
+  public void setTopicIds(String[] topicIds) {
+    this.topicIds = topicIds;
   }
 }

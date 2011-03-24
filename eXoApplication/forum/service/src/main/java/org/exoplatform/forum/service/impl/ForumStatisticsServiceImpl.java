@@ -28,30 +28,33 @@ import org.exoplatform.services.log.Log;
  */
 public class ForumStatisticsServiceImpl implements ForumStatisticsService {
 
-  private static Log log = ExoLogger.getLogger(ForumStatisticsServiceImpl.class);
+  private static Log  log = ExoLogger.getLogger(ForumStatisticsServiceImpl.class);
+
   private DataStorage dataStorage;
-  
+
   public ForumStatisticsServiceImpl(DataStorage dataStorage) {
     this.dataStorage = dataStorage;
   }
-  
+
   public void addMember(String userName) throws Exception {
     ForumStatistic stats = dataStorage.getForumStatistic();
     stats.setNewMembers(userName);
-    stats.setMembersCount(stats.getMembersCount()+1);
+    stats.setMembersCount(stats.getMembersCount() + 1);
     dataStorage.saveForumStatistic(stats);
-    if (log.isDebugEnabled()) log.debug(userName + " joined forums. We have" + stats.getMembersCount() + " members now.");
+    if (log.isDebugEnabled())
+      log.debug(userName + " joined forums. We have" + stats.getMembersCount() + " members now.");
   }
 
-  public void removeMember(String userName)  throws Exception {
+  public void removeMember(String userName) throws Exception {
     ForumStatistic stats = dataStorage.getForumStatistic();
     long membersCount = stats.getMembersCount();
-    stats.setMembersCount((membersCount<=0) ? 0 : membersCount -1);
-    if(userName.equals(stats.getNewMembers())) {
+    stats.setMembersCount((membersCount <= 0) ? 0 : membersCount - 1);
+    if (userName.equals(stats.getNewMembers())) {
       stats.setNewMembers(dataStorage.getLatestUser());
     }
     dataStorage.saveForumStatistic(stats);
-    if (log.isDebugEnabled()) log.debug(userName + " left forums. We have" + membersCount + " members now.");
+    if (log.isDebugEnabled())
+      log.debug(userName + " left forums. We have" + membersCount + " members now.");
   }
 
 }

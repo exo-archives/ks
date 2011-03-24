@@ -25,34 +25,48 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-public class DeletedUserCalculateEventListener implements EventListener{
-	private String path_ ;
-	private String workspace_ ;
-	private String repository_ ; 
-	private Log log = ExoLogger.getLogger(DeletedUserCalculateEventListener.class);
-	public DeletedUserCalculateEventListener() throws Exception {
-	}
-	
-	public String getSrcWorkspace(){	return workspace_ ; }
-	public String getRepository(){ return repository_ ; }
-	public String getPath(){ return path_ ; }
-	public void setPath(String path){path_ = path ; }
-	
-	public void onEvent(EventIterator evIter){
-		try{
-			ExoContainer container = ExoContainerContext.getCurrentContainer();
-			ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class);
-			while(evIter.hasNext()) {
-				Event ev = evIter.nextEvent() ;
-				if(ev.getType() == Event.NODE_ADDED || ev.getType() == Event.NODE_REMOVED){
-					String userName = ev.getPath().substring(ev.getPath().lastIndexOf("/")+1) ;
-					forumService.calculateDeletedUser(userName);
-					break;
-				}
-			}
-		}catch(Exception e) {
-			log.error("Add event for calculateDeletedUser is fall", e);
-		}
-	}
-}
+public class DeletedUserCalculateEventListener implements EventListener {
+  private String path_;
 
+  private String workspace_;
+
+  private String repository_;
+
+  private Log    log = ExoLogger.getLogger(DeletedUserCalculateEventListener.class);
+
+  public DeletedUserCalculateEventListener() throws Exception {
+  }
+
+  public String getSrcWorkspace() {
+    return workspace_;
+  }
+
+  public String getRepository() {
+    return repository_;
+  }
+
+  public String getPath() {
+    return path_;
+  }
+
+  public void setPath(String path) {
+    path_ = path;
+  }
+
+  public void onEvent(EventIterator evIter) {
+    try {
+      ExoContainer container = ExoContainerContext.getCurrentContainer();
+      ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
+      while (evIter.hasNext()) {
+        Event ev = evIter.nextEvent();
+        if (ev.getType() == Event.NODE_ADDED || ev.getType() == Event.NODE_REMOVED) {
+          String userName = ev.getPath().substring(ev.getPath().lastIndexOf("/") + 1);
+          forumService.calculateDeletedUser(userName);
+          break;
+        }
+      }
+    } catch (Exception e) {
+      log.error("Add event for calculateDeletedUser is fall", e);
+    }
+  }
+}

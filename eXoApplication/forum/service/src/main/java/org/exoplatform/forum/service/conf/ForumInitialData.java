@@ -26,15 +26,16 @@ import java.util.List;
  * 23-10-2008 - 08:25:33  
  */
 public class ForumInitialData {
-	private List<CategoryData> categories = new ArrayList<CategoryData>();
+  private List<CategoryData> categories = new ArrayList<CategoryData>();
 
-	public ForumInitialData() {}
-  
-	public List<CategoryData> getCategories() {
-  	return categories;
+  public ForumInitialData() {
   }
-	
-	public void setCategories(List<CategoryData> categories) {
-  	this.categories = categories;
+
+  public List<CategoryData> getCategories() {
+    return categories;
+  }
+
+  public void setCategories(List<CategoryData> categories) {
+    this.categories = categories;
   }
 }

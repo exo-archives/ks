@@ -33,198 +33,244 @@ import org.exoplatform.services.mail.Message;
  * Jan 24, 2011  
  */
 public class MessageBuilder {
-	public final static String CONTEN_EMAIL = Utils.DEFAULT_EMAIL_CONTENT;
-	
-	private String id;
-	private String owner;
-	private String headerSubject;
-	private String content;
-	private String objName;
-	private String watchType;
-	private String addType;
-	private String message;
-	private String catName;
-	private String forumName;
-	private String topicName;
-	private String link;
-	private String dateFormat;
-	private String timeFormat;
-	private String zoneTime;
-	private Date createdDate;
-	private Map<String, String> types;
-	public MessageBuilder() {
-		content = CONTEN_EMAIL;
-		dateFormat = "MM/dd/yyyy";
-		timeFormat = "HH:mm";
-		zoneTime = "GMT+0";
-		types = new HashMap<String, String>();
-		types.put(Utils.CATEGORY, "Category");
-		types.put(Utils.FORUM, Utils.FORUM);
-		types.put(Utils.TOPIC, Utils.TOPIC);
-		types.put(Utils.POST, Utils.POST);
-		link = "";
-	}
-	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getOwner() {
-		return owner;
-	}
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-	public String getHeaderSubject() {
-		return headerSubject;
-	}
-	public void setHeaderSubject(String headerSubject) {
-		this.headerSubject = headerSubject;
-	}
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
-	}
-	public String getObjName() {
-		return objName;
-	}
-	public void setObjName(String objName) {
-		this.objName = objName;
-	}
-	public String getWatchType() {
-		return watchType;
-	}
-	public void setWatchType(String watchType) {
-		this.watchType = watchType;
-	}
-	public String getAddType() {
-		return addType;
-	}
-	public void setAddType(String addType) {
-		this.addType = addType;
-	}
-	public String getMessage() {
-		return message;
-	}
+  public final static String  CONTEN_EMAIL = Utils.DEFAULT_EMAIL_CONTENT;
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  private String              id;
 
-	public String getCatName() {
-		return catName;
-	}
-	public void setCatName(String catName) {
-		this.catName = catName;
-	}
-	public String getForumName() {
-		return forumName;
-	}
-	public void setForumName(String forumName) {
-		this.forumName = forumName;
-	}
-	public String getTopicName() {
-		return topicName;
-	}
-	public void setTopicName(String topicName) {
-		this.topicName = topicName;
-	}
-	public String getLink() {
-		return link;
-	}
-	public void setLink(String link) {
-		this.link = link;
-	}
-	public String getDateFormat() {
-		return dateFormat;
-	}
-	public void setDateFormat(String dateFormat) {
-		this.dateFormat = dateFormat;
-	}
-	public String getTimeFormat() {
-		return timeFormat;
-	}
-	public void setTimeFormat(String timeFormat) {
-		this.timeFormat = timeFormat;
-	}
-	public String getZoneTime() {
-		return zoneTime;
-	}
-	public void setZoneTime(String zoneTime) {
-		this.zoneTime = zoneTime;
-	}
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	public Map<String, String> getTypes() {
-		return types;
-	}
-	public void setTypes(String cate, String forum, String topic, String post) {
-		types = new HashMap<String, String>();
-		types.put(Utils.CATEGORY, cate);
-		types.put(Utils.FORUM, forum);
-		types.put(Utils.TOPIC, topic);
-		types.put(Utils.POST, post);
-	}
-	
-	public Message getContentEmail() {
-		Message message = new Message();
-		message.setMimeType(ForumNodeTypes.TEXT_HTML);
-		message.setFrom(owner);
-		if (headerSubject != null && headerSubject.length() > 0) {
-			headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
-			headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
-			headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
-		} else {
-			headerSubject = "[" + catName + "][" + forumName + "]" + topicName;
-		}
-		message.setSubject(headerSubject);
-		String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);
-		content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", types.get(watchType));
-		content_ = StringUtils.replace(content_, "$ADD_TYPE", types.get(addType));
-		content_ = StringUtils.replace(content_, "$POST_CONTENT", this.message);
-		Format formatter = new SimpleDateFormat(timeFormat);
-		content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate) + " " + zoneTime);
-		formatter = new SimpleDateFormat(dateFormat);
-		content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-		content_ = StringUtils.replace(content_, "$POSTER", owner);
-		content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", link + "/" + id);
-		content_ = StringUtils.replace(content_, "$VIEWPOST_PRIVATE_LINK", link.replace("public", "private") + "/" + id);
-		content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", link.replace("public", "private") + "/" + id + "/true");
+  private String              owner;
 
-		content_ = StringUtils.replace(content_, "$CATEGORY", catName);
-		content_ = StringUtils.replace(content_, "$FORUM", forumName);
-		content_ = StringUtils.replace(content_, "$TOPIC", topicName);
-		message.setBody(org.exoplatform.ks.common.Utils.convertCodeHTML(content_));
-		return message;
-	}
+  private String              headerSubject;
 
-	public Message getContentEmailMoved() {
-	  Message message = new Message();
-	  message.setMimeType(ForumNodeTypes.TEXT_HTML);
-	  message.setFrom(owner);
-	  message.setSubject(headerSubject);
-	  
-	  String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);
-	  content_ = StringUtils.replace(content_, "$OBJECT_PARENT_NAME", addType);
-	  content_ = StringUtils.replace(content_, "$POSTER", owner);
-	  content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", link);
-	  content_ = StringUtils.replace(content_, "$VIEWPOST_PRIVATE_LINK", link.replace("public", "private"));
-	  content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", link.replace("public", "private") + "/true");
-	  
-	  content_ = StringUtils.replace(content_, "$OBJECT_PARENT_TYPE", types.get(Utils.CATEGORY));
-	  content_ = StringUtils.replace(content_, "$OBJECT_TYPE", types.get(Utils.FORUM));
-	  message.setBody(org.exoplatform.ks.common.Utils.convertCodeHTML(content_));
-	  return message;
-	}
-	
-	
+  private String              content;
+
+  private String              objName;
+
+  private String              watchType;
+
+  private String              addType;
+
+  private String              message;
+
+  private String              catName;
+
+  private String              forumName;
+
+  private String              topicName;
+
+  private String              link;
+
+  private String              dateFormat;
+
+  private String              timeFormat;
+
+  private String              zoneTime;
+
+  private Date                createdDate;
+
+  private Map<String, String> types;
+
+  public MessageBuilder() {
+    content = CONTEN_EMAIL;
+    dateFormat = "MM/dd/yyyy";
+    timeFormat = "HH:mm";
+    zoneTime = "GMT+0";
+    types = new HashMap<String, String>();
+    types.put(Utils.CATEGORY, "Category");
+    types.put(Utils.FORUM, Utils.FORUM);
+    types.put(Utils.TOPIC, Utils.TOPIC);
+    types.put(Utils.POST, Utils.POST);
+    link = "";
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getOwner() {
+    return owner;
+  }
+
+  public void setOwner(String owner) {
+    this.owner = owner;
+  }
+
+  public String getHeaderSubject() {
+    return headerSubject;
+  }
+
+  public void setHeaderSubject(String headerSubject) {
+    this.headerSubject = headerSubject;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
+
+  public String getObjName() {
+    return objName;
+  }
+
+  public void setObjName(String objName) {
+    this.objName = objName;
+  }
+
+  public String getWatchType() {
+    return watchType;
+  }
+
+  public void setWatchType(String watchType) {
+    this.watchType = watchType;
+  }
+
+  public String getAddType() {
+    return addType;
+  }
+
+  public void setAddType(String addType) {
+    this.addType = addType;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+  public String getCatName() {
+    return catName;
+  }
+
+  public void setCatName(String catName) {
+    this.catName = catName;
+  }
+
+  public String getForumName() {
+    return forumName;
+  }
+
+  public void setForumName(String forumName) {
+    this.forumName = forumName;
+  }
+
+  public String getTopicName() {
+    return topicName;
+  }
+
+  public void setTopicName(String topicName) {
+    this.topicName = topicName;
+  }
+
+  public String getLink() {
+    return link;
+  }
+
+  public void setLink(String link) {
+    this.link = link;
+  }
+
+  public String getDateFormat() {
+    return dateFormat;
+  }
+
+  public void setDateFormat(String dateFormat) {
+    this.dateFormat = dateFormat;
+  }
+
+  public String getTimeFormat() {
+    return timeFormat;
+  }
+
+  public void setTimeFormat(String timeFormat) {
+    this.timeFormat = timeFormat;
+  }
+
+  public String getZoneTime() {
+    return zoneTime;
+  }
+
+  public void setZoneTime(String zoneTime) {
+    this.zoneTime = zoneTime;
+  }
+
+  public Date getCreatedDate() {
+    return createdDate;
+  }
+
+  public void setCreatedDate(Date createdDate) {
+    this.createdDate = createdDate;
+  }
+
+  public Map<String, String> getTypes() {
+    return types;
+  }
+
+  public void setTypes(String cate, String forum, String topic, String post) {
+    types = new HashMap<String, String>();
+    types.put(Utils.CATEGORY, cate);
+    types.put(Utils.FORUM, forum);
+    types.put(Utils.TOPIC, topic);
+    types.put(Utils.POST, post);
+  }
+
+  public Message getContentEmail() {
+    Message message = new Message();
+    message.setMimeType(ForumNodeTypes.TEXT_HTML);
+    message.setFrom(owner);
+    if (headerSubject != null && headerSubject.length() > 0) {
+      headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
+      headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
+      headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
+    } else {
+      headerSubject = "[" + catName + "][" + forumName + "]" + topicName;
+    }
+    message.setSubject(headerSubject);
+    String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);
+    content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", types.get(watchType));
+    content_ = StringUtils.replace(content_, "$ADD_TYPE", types.get(addType));
+    content_ = StringUtils.replace(content_, "$POST_CONTENT", this.message);
+    Format formatter = new SimpleDateFormat(timeFormat);
+    content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate) + " " + zoneTime);
+    formatter = new SimpleDateFormat(dateFormat);
+    content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+    content_ = StringUtils.replace(content_, "$POSTER", owner);
+    content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", link + "/" + id);
+    content_ = StringUtils.replace(content_, "$VIEWPOST_PRIVATE_LINK", link.replace("public", "private") + "/" + id);
+    content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", link.replace("public", "private") + "/" + id + "/true");
+
+    content_ = StringUtils.replace(content_, "$CATEGORY", catName);
+    content_ = StringUtils.replace(content_, "$FORUM", forumName);
+    content_ = StringUtils.replace(content_, "$TOPIC", topicName);
+    message.setBody(org.exoplatform.ks.common.Utils.convertCodeHTML(content_));
+    return message;
+  }
+
+  public Message getContentEmailMoved() {
+    Message message = new Message();
+    message.setMimeType(ForumNodeTypes.TEXT_HTML);
+    message.setFrom(owner);
+    message.setSubject(headerSubject);
+
+    String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);
+    content_ = StringUtils.replace(content_, "$OBJECT_PARENT_NAME", addType);
+    content_ = StringUtils.replace(content_, "$POSTER", owner);
+    content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", link);
+    content_ = StringUtils.replace(content_, "$VIEWPOST_PRIVATE_LINK", link.replace("public", "private"));
+    content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", link.replace("public", "private") + "/true");
+
+    content_ = StringUtils.replace(content_, "$OBJECT_PARENT_TYPE", types.get(Utils.CATEGORY));
+    content_ = StringUtils.replace(content_, "$OBJECT_TYPE", types.get(Utils.FORUM));
+    message.setBody(org.exoplatform.ks.common.Utils.convertCodeHTML(content_));
+    return message;
+  }
+
 }
-	 

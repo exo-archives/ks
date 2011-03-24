@@ -25,81 +25,88 @@ import java.util.Date;
  * May 20, 2009 - 7:59:08 AM  
  */
 public class PruneSetting {
-	private String id;
-	private String categoryName;
-	private String forumPath;
-	private String forumName;
-	private long inActiveDay = 0;	
-	private long periodTime = 0;
-	private Date lastRunDate = null;
-	private boolean isActive = false ;
-	
-	public PruneSetting() {
-		//id =  Utils.PRUNESETTING + IdGenerator.generate();
+  private String  id;
+
+  private String  categoryName;
+
+  private String  forumPath;
+
+  private String  forumName;
+
+  private long    inActiveDay = 0;
+
+  private long    periodTime  = 0;
+
+  private Date    lastRunDate = null;
+
+  private boolean isActive    = false;
+
+  public PruneSetting() {
+    // id = Utils.PRUNESETTING + IdGenerator.generate();
   }
 
-	public String getId() {
-  	return id;
+  public String getId() {
+    return id;
   }
 
-	public void setId(String id) {
-  	this.id = id;
+  public void setId(String id) {
+    this.id = id;
   }
 
-	public String getForumPath() {
-  	return forumPath;
+  public String getForumPath() {
+    return forumPath;
   }
 
-	public void setForumPath(String forumPath) {
-  	this.forumPath = forumPath;
+  public void setForumPath(String forumPath) {
+    this.forumPath = forumPath;
   }
 
-	public String getCategoryName() {
-  	return categoryName;
+  public String getCategoryName() {
+    return categoryName;
   }
 
-	public void setCategoryName(String categoryName) {
-  	this.categoryName = categoryName;
+  public void setCategoryName(String categoryName) {
+    this.categoryName = categoryName;
   }
 
-	public String getForumName() {
-  	return forumName;
+  public String getForumName() {
+    return forumName;
   }
 
-	public void setForumName(String forumName) {
-  	this.forumName = forumName;
+  public void setForumName(String forumName) {
+    this.forumName = forumName;
   }
 
-	public long getInActiveDay() {
-  	return inActiveDay;
+  public long getInActiveDay() {
+    return inActiveDay;
   }
 
-	public void setInActiveDay(long inActiveDay) {
-  	this.inActiveDay = inActiveDay;
+  public void setInActiveDay(long inActiveDay) {
+    this.inActiveDay = inActiveDay;
   }
 
-	public long getPeriodTime() {
-  	return periodTime;
+  public long getPeriodTime() {
+    return periodTime;
   }
 
-	public void setPeriodTime(long time) {
-  	this.periodTime = time;
+  public void setPeriodTime(long time) {
+    this.periodTime = time;
   }
 
-	public Date getLastRunDate() {
-  	return lastRunDate;
+  public Date getLastRunDate() {
+    return lastRunDate;
   }
 
-	public void setLastRunDate(Date lastRunDate) {
-  	this.lastRunDate = lastRunDate;
+  public void setLastRunDate(Date lastRunDate) {
+    this.lastRunDate = lastRunDate;
   }
 
-	public boolean isActive() {
-  	return isActive;
+  public boolean isActive() {
+    return isActive;
   }
 
-	public void setActive(boolean isActive) {
-  	this.isActive = isActive;
+  public void setActive(boolean isActive) {
+    this.isActive = isActive;
   }
 
 }

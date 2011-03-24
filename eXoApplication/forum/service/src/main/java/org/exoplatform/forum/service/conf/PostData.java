@@ -15,6 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
 package org.exoplatform.forum.service.conf;
+
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -22,43 +23,46 @@ package org.exoplatform.forum.service.conf;
  * 23-10-2008 - 08:35:14  
  */
 public class PostData {
-	private String name ;
-	private String owner ;
-	private String content;
-	private String icon;
-	
-	public PostData() {
+  private String name;
+
+  private String owner;
+
+  private String content;
+
+  private String icon;
+
+  public PostData() {
   }
 
-	public String getName() {
-  	return name;
+  public String getName() {
+    return name;
   }
 
-	public void setName(String name) {
-  	this.name = name;
+  public void setName(String name) {
+    this.name = name;
   }
 
-	public String getOwner() {
-  	return owner;
+  public String getOwner() {
+    return owner;
   }
 
-	public void setOwner(String owner) {
-  	this.owner = owner;
+  public void setOwner(String owner) {
+    this.owner = owner;
   }
 
-	public String getContent() {
-  	return content;
+  public String getContent() {
+    return content;
   }
 
-	public void setContent(String content) {
-  	this.content = content;
+  public void setContent(String content) {
+    this.content = content;
   }
 
-	public String getIcon() {
-  	return icon;
+  public String getIcon() {
+    return icon;
   }
 
-	public void setIcon(String icon) {
-  	this.icon = icon;
+  public void setIcon(String icon) {
+    this.icon = icon;
   }
 }

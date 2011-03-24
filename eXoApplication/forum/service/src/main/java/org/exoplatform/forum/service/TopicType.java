@@ -25,40 +25,43 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * Jun 1, 2009 - 7:54:11 AM  
  */
 public class TopicType {
-	public static final String DEFAULT_TYPE = "Default";
-	public static final String DEFAULT_ID = Utils.TOPICTYPE + "_default";
-	
-	private String id;
-	private String name;
-	private String icon ;
-	
-	public TopicType() {
-		id = Utils.TOPICTYPE + IdGenerator.generate();
-		name = DEFAULT_TYPE;
-		icon = "";
+  public static final String DEFAULT_TYPE = "Default";
+
+  public static final String DEFAULT_ID   = Utils.TOPICTYPE + "_default";
+
+  private String             id;
+
+  private String             name;
+
+  private String             icon;
+
+  public TopicType() {
+    id = Utils.TOPICTYPE + IdGenerator.generate();
+    name = DEFAULT_TYPE;
+    icon = "";
   }
 
-	public String getId() {
-  	return id;
+  public String getId() {
+    return id;
   }
 
-	public void setId(String id) {
-  	this.id = id;
+  public void setId(String id) {
+    this.id = id;
   }
 
-	public String getName() {
-  	return name;
+  public String getName() {
+    return name;
   }
 
-	public void setName(String name) {
-  	this.name = name;
+  public void setName(String name) {
+    this.name = name;
   }
 
-	public String getIcon() {
-  	return icon;
+  public String getIcon() {
+    return icon;
   }
 
-	public void setIcon(String icon) {
-  	this.icon = icon;
+  public void setIcon(String icon) {
+    this.icon = icon;
   }
 }
