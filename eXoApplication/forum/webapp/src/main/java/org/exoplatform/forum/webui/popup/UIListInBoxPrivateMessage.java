@@ -56,7 +56,7 @@ public class UIListInBoxPrivateMessage extends UIContainer {
 
   private List<ForumPrivateMessage> listInbox        = null;
 
-  private String                    userName         = "";
+  private String                    userName         = ForumUtils.EMPTY_STR;
 
   private boolean                   isRenderIterator = false;
 

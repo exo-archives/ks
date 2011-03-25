@@ -131,7 +131,7 @@ public class UIForumPortlet extends UIPortletApplication {
 
   private int          dayForumNewPost      = 0;
 
-  private String       linkUserInfo         = "";
+  private String       linkUserInfo         = ForumUtils.EMPTY_STR;
 
   private List<String> invisibleForums      = new ArrayList<String>();
 
@@ -315,20 +315,20 @@ public class UIForumPortlet extends UIPortletApplication {
     invisibleCategories.clear();
     invisibleForums.clear();
     try {
-      isShowForumActionBar = Boolean.parseBoolean(portletPref.getValue("showForumActionBar", ""));
-      dayForumNewPost = Integer.parseInt(portletPref.getValue("forumNewPost", ""));
-      useAjax = Boolean.parseBoolean(portletPref.getValue("useAjax", ""));
-      enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ""));
-      enableBanIP = Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ""));
-      isShowForumJump = Boolean.parseBoolean(portletPref.getValue("isShowForumJump", ""));
-      isShowPoll = Boolean.parseBoolean(portletPref.getValue("isShowPoll", ""));
-      isShowModerators = Boolean.parseBoolean(portletPref.getValue("isShowModerators", ""));
-      isShowRules = Boolean.parseBoolean(portletPref.getValue("isShowRules", ""));
-      isShowQuickReply = Boolean.parseBoolean(portletPref.getValue("isShowQuickReply", ""));
-      isShowStatistics = Boolean.parseBoolean(portletPref.getValue("isShowStatistics", ""));
-      isShowIconsLegend = Boolean.parseBoolean(portletPref.getValue("isShowIconsLegend", ""));
-      invisibleCategories.addAll(getListInValus(portletPref.getValue("invisibleCategories", "")));
-      invisibleForums.addAll(getListInValus(portletPref.getValue("invisibleForums", "")));
+      isShowForumActionBar = Boolean.parseBoolean(portletPref.getValue("showForumActionBar", ForumUtils.EMPTY_STR));
+      dayForumNewPost = Integer.parseInt(portletPref.getValue("forumNewPost", ForumUtils.EMPTY_STR));
+      useAjax = Boolean.parseBoolean(portletPref.getValue("useAjax", ForumUtils.EMPTY_STR));
+      enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ForumUtils.EMPTY_STR));
+      enableBanIP = Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ForumUtils.EMPTY_STR));
+      isShowForumJump = Boolean.parseBoolean(portletPref.getValue("isShowForumJump", ForumUtils.EMPTY_STR));
+      isShowPoll = Boolean.parseBoolean(portletPref.getValue("isShowPoll", ForumUtils.EMPTY_STR));
+      isShowModerators = Boolean.parseBoolean(portletPref.getValue("isShowModerators", ForumUtils.EMPTY_STR));
+      isShowRules = Boolean.parseBoolean(portletPref.getValue("isShowRules", ForumUtils.EMPTY_STR));
+      isShowQuickReply = Boolean.parseBoolean(portletPref.getValue("isShowQuickReply", ForumUtils.EMPTY_STR));
+      isShowStatistics = Boolean.parseBoolean(portletPref.getValue("isShowStatistics", ForumUtils.EMPTY_STR));
+      isShowIconsLegend = Boolean.parseBoolean(portletPref.getValue("isShowIconsLegend", ForumUtils.EMPTY_STR));
+      invisibleCategories.addAll(getListInValus(portletPref.getValue("invisibleCategories", ForumUtils.EMPTY_STR)));
+      invisibleForums.addAll(getListInValus(portletPref.getValue("invisibleForums", ForumUtils.EMPTY_STR)));
     } catch (Exception e) {
       log.error("Fail to load preference: " + e.getCause());
     }
@@ -454,7 +454,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public void updateUserProfileInfo() throws Exception {
-    String userId = "";
+    String userId = ForumUtils.EMPTY_STR;
     try {
       userId = UserHelper.getCurrentUser();
     } catch (Exception e) {
@@ -509,7 +509,7 @@ public class UIForumPortlet extends UIPortletApplication {
     } catch (Exception e) {
       log.error("Could not retrieve continuation token for user " + userProfile.getUserId(), e);
     }
-    return "";
+    return ForumUtils.EMPTY_STR;
   }
 
   private boolean isArrayNotNull(String[] strs) {
@@ -626,17 +626,17 @@ public class UIForumPortlet extends UIPortletApplication {
       boolean isReply = false, isQuote = false;
       if (path.indexOf("/true") > 0) {
         isQuote = true;
-        path = path.replaceFirst("/true", "");
+        path = path.replaceFirst("/true", ForumUtils.EMPTY_STR);
       } else if (path.indexOf("/false") > 0) {
         isReply = true;
-        path = path.replaceFirst("/false", "");
+        path = path.replaceFirst("/false", ForumUtils.EMPTY_STR);
       }
-      String[] id = path.split("/");
+      String[] id = path.split(ForumUtils.SLASH);
       String postId = "top";
       int page = 0;
       if (path.indexOf(Utils.POST) > 0) {
         postId = id[id.length - 1];
-        path = path.substring(0, path.lastIndexOf("/"));
+        path = path.substring(0, path.lastIndexOf(ForumUtils.SLASH));
         id = new String[] { path };
       } else if (id.length > 1) {
         try {
@@ -644,7 +644,7 @@ public class UIForumPortlet extends UIPortletApplication {
         } catch (Exception e) {
         }
         if (page > 0) {
-          path = path.replace("/" + id[id.length - 1], "");
+          path = path.replace(ForumUtils.SLASH + id[id.length - 1], ForumUtils.EMPTY_STR);
           id = new String[] { path };
         } else
           page = 0;
@@ -657,7 +657,7 @@ public class UIForumPortlet extends UIPortletApplication {
           topic = (Topic) this.forumService.getObjectNameById(path, Utils.TOPIC);
           path = topic.getPath();
           path = path.substring(path.indexOf(Utils.CATEGORY));
-          id = path.split("/");
+          id = path.split(ForumUtils.SLASH);
         }
         if (topic != null) {
           Category category = this.forumService.getCategory(id[0]);
@@ -671,9 +671,9 @@ public class UIForumPortlet extends UIPortletApplication {
             UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class);
             uiTopicDetail.setIsEditTopic(true);
             uiTopicDetail.setUpdateForum(forum);
-            uiTopicDetail.setTopicFromCate(id[0], id[1], topic, page);
+            uiTopicDetail.initInfoTopic(id[0], id[1], topic, page);
             uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
-            this.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+            this.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
             uiTopicDetail.setIdPostView(postId);
             uiTopicDetail.setLastPostId(postId);
             if (isReply || isQuote) {
@@ -698,7 +698,7 @@ public class UIForumPortlet extends UIPortletApplication {
                       uiTopicDetail.setIdPostView("normal");
                     }
                   } else {
-                    postForm.updatePost("", false, false, null);
+                    postForm.updatePost(ForumUtils.EMPTY_STR, false, false, null);
                     popupContainer.setId("UIAddPostContainer");
                   }
                   popupAction.activate(popupContainer, 900, 500);
@@ -724,7 +724,6 @@ public class UIForumPortlet extends UIPortletApplication {
           }
         }
       } catch (Exception e) {
-        e.printStackTrace();
         uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING));
         this.updateIsRendered(ForumUtils.CATEGORIES);
         UICategoryContainer categoryContainer = this.getChild(UICategoryContainer.class);
@@ -738,8 +737,8 @@ public class UIForumPortlet extends UIPortletApplication {
         Forum forum;
         String cateId = null;
         int page = 0;
-        if (path.indexOf("/") > 0) {
-          String[] arr = path.split("/");
+        if (path.indexOf(ForumUtils.SLASH) > 0) {
+          String[] arr = path.split(ForumUtils.SLASH);
           try {
             page = Integer.parseInt(arr[arr.length - 1]);
           } catch (Exception e) {
@@ -779,7 +778,7 @@ public class UIForumPortlet extends UIPortletApplication {
         categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
         path = Utils.FORUM_SERVICE;
       }
-    } else if (path.indexOf(Utils.CATEGORY) >= 0 && path.indexOf("/") < 0) {
+    } else if (path.indexOf(Utils.CATEGORY) >= 0 && path.indexOf(ForumUtils.SLASH) < 0) {
       UICategoryContainer categoryContainer = this.getChild(UICategoryContainer.class);
       try {
         Category category = this.forumService.getCategory(path);
@@ -826,7 +825,6 @@ public class UIForumPortlet extends UIPortletApplication {
       if (params.isRenderPoll()) {
         UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class);
         topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true);
-        ;
         topicDetailContainer.getChild(UITopicPoll.class).setEditPoll(true);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

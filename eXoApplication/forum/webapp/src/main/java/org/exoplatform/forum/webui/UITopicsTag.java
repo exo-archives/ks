@@ -65,17 +65,17 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 )
 
 public class UITopicsTag extends UIForumKeepStickPageIterator {
-  private String            tagId             = "";
+  private String            tagId             = ForumUtils.EMPTY_STR;
 
   private Tag               tag;
 
   private boolean           isUpdateTag       = true;
 
-  private String            strOrderBy        = "";
+  private String            strOrderBy        = ForumUtils.EMPTY_STR;
 
   private String            userIdAndtagId;
 
-  private String            linkUserInfo      = "";
+  private String            linkUserInfo      = ForumUtils.EMPTY_STR;
 
   private List<Topic>       topics            = new ArrayList<Topic>();
 
@@ -130,14 +130,14 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
   private long getSizePost(String Id) throws Exception {
     if (mapNumberPagePost.containsKey(Id))
       return mapNumberPagePost.get(Id);
-    String Ids[] = Id.split("/");
+    String Ids[] = Id.split(ForumUtils.SLASH);
     Topic topic = getTopic(Ids[(Ids.length - 1)]);
     long maxPost = getUserProfile().getMaxPostInPage();
     if (maxPost <= 0)
       maxPost = 10;
     if (topic != null && topic.getPostCount() > maxPost) {
-      String isApprove = "";
-      String isHidden = "";
+      String isApprove = ForumUtils.EMPTY_STR;
+      String isHidden = ForumUtils.EMPTY_STR;
       String userLogin = this.userProfile.getUserId();
       long role = this.userProfile.getUserRole();
       if (role >= 2) {
@@ -219,10 +219,10 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 
   static public class OpenTopicActionListener extends BaseEventListener<UITopicsTag> {
     public void onEvent(Event<UITopicsTag> event, UITopicsTag uiTopicsTag, final String idAndNumber) throws Exception {
-      String[] id = idAndNumber.split(",");
+      String[] id = idAndNumber.split(ForumUtils.COMMA);
       Topic topic = uiTopicsTag.getTopic(id[0]);
-      String[] ids = topic.getPath().split("/");
-      String cateId = "", forumId = "";
+      String[] ids = topic.getPath().split(ForumUtils.SLASH);
+      String cateId = ForumUtils.EMPTY_STR, forumId = ForumUtils.EMPTY_STR;
       for (int i = 0; i < ids.length; i++) {
         if (ids[i].indexOf(Utils.CATEGORY) >= 0)
           cateId = ids[i];
@@ -245,14 +245,14 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
       uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
       UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class);
       uiTopicDetail.setUpdateForum(forum);
-      uiTopicDetail.setUpdateContainer(cateId, forumId, topic, Integer.parseInt(id[1]));
+      uiTopicDetail.initInfoTopic(cateId, forumId, topic, Integer.parseInt(id[1]));
       uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(cateId, forumId, topic.getId());
       if (id[2].equals("true")) {
         uiTopicDetail.setIdPostView("lastpost");
       } else {
         uiTopicDetail.setIdPostView("top");
       }
-      forumPortlet.getChild(UIForumLinks.class).setValueOption(cateId + "/" + forumId + " ");
+      forumPortlet.getChild(UIForumLinks.class).setValueOption(cateId + ForumUtils.SLASH + forumId + " ");
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
@@ -270,7 +270,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicsTag> event, UITopicsTag topicsTag, final String objectId) throws Exception {
       UIForumPortlet forumPortlet = topicsTag.getParent();
       boolean hasCheck = false;
-      String topicPath = "";
+      String topicPath = ForumUtils.EMPTY_STR;
       try {
         String userId = topicsTag.getUserProfile().getUserId();
         for (String topicId : (List<String>) topicsTag.getIdSelected()) {
@@ -351,7 +351,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
   static public class UnWatchActionListener extends BaseEventListener<UITopicsTag> {
     public void onEvent(Event<UITopicsTag> event, UITopicsTag topicTag, final String path) throws Exception {
       try {
-        topicTag.getForumService().removeWatch(1, path, topicTag.userProfile.getUserId() + "/" + topicTag.getEmailWatching(path));
+        topicTag.getForumService().removeWatch(1, path, topicTag.userProfile.getUserId() + ForumUtils.SLASH + topicTag.getEmailWatching(path));
         UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class);
         forumPortlet.updateWatching();
         topicTag.listWatches = forumPortlet.getWatchingByCurrentUser();

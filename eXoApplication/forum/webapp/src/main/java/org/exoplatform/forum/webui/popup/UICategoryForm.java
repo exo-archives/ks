@@ -48,12 +48,12 @@ import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UITree;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 import org.exoplatform.webui.organization.account.UIUserSelector;
@@ -113,7 +113,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
 
   public static final String USER_SELECTOR_POPUPWINDOW    = "UICategoryUserPopupWindow";
 
-  private String             categoryId                   = "";
+  private String             categoryId                   = ForumUtils.EMPTY_STR;
 
   private int                id                           = 0;
 
@@ -158,7 +158,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         ad.setActionListener("AddValuesUser");
       else
         ad.setActionListener("AddPrivate");
-      ad.setActionParameter(String.valueOf(i) + "," + FIELD_USERPRIVATE_MULTIVALUE);
+      ad.setActionParameter(String.valueOf(i) + ForumUtils.COMMA + FIELD_USERPRIVATE_MULTIVALUE);
       ad.setCssIconClass(string + "Icon");
       ad.setActionName(string);
       actions.add(ad);
@@ -176,7 +176,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         } else {
           ad.setActionListener("AddPrivate");
         }
-        ad.setActionParameter(String.valueOf(i) + "," + field);
+        ad.setActionParameter(String.valueOf(i) + ForumUtils.COMMA + field);
         ad.setCssIconClass(string + "Icon");
         ad.setActionName(string);
         actions.add(ad);
@@ -273,7 +273,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
 
       String userPrivate = uiForm.getUIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE).getValue();
       if (!ForumUtils.isEmpty(userPrivate) && !ForumUtils.isEmpty(moderator)) {
-        userPrivate = userPrivate + "," + moderator;
+        userPrivate = userPrivate + ForumUtils.COMMA + moderator;
       }
       userPrivate = ForumUtils.removeSpaceInString(userPrivate);
       userPrivate = ForumUtils.removeStringResemble(userPrivate);
@@ -346,8 +346,8 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
           if (!invisibleCategories.isEmpty()) {
             List<String> invisibleForums = forumPortlet.getInvisibleForums();
             invisibleCategories.add(cat.getId());
-            String listForumId = invisibleForums.toString().replace('[' + "", "").replace(']' + "", "").replaceAll(" ", "");
-            String listCategoryId = invisibleCategories.toString().replace('[' + "", "").replace(']' + "", "").replaceAll(" ", "");
+            String listForumId = invisibleForums.toString().replace('[' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replace(']' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replaceAll(" ", ForumUtils.EMPTY_STR);
+            String listCategoryId = invisibleCategories.toString().replace('[' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replace(']' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replaceAll(" ", ForumUtils.EMPTY_STR);
             ForumUtils.savePortletPreference(listCategoryId, listForumId);
             forumPortlet.loadPreferences();
           }
@@ -373,7 +373,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         forumLinks.setUpdateForumLinks();
         forumLinks.setValueOption(cat.getId());
       } catch (Exception e) {
-        Object[] args = { "" };
+        Object[] args = { ForumUtils.EMPTY_STR };
         UIApplication uiApp = (UIApplication) forumPortlet;
         uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted", args, ApplicationMessage.WARNING));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
@@ -398,7 +398,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
   static public class AddPrivateActionListener extends BaseEventListener<UICategoryForm> {
     public void onEvent(Event<UICategoryForm> event, UICategoryForm categoryForm, String objectId) throws Exception {
       ;
-      String[] objects = objectId.split(",");
+      String[] objects = objectId.split(ForumUtils.COMMA);
       String type = objects[0];
       String param = objects[1];
       UIPopupContainer popupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class);
@@ -448,8 +448,8 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
       UIFormTextAreaInput textArea = withActions.getUIFormTextAreaInput(field);
       String vls = textArea.getValue();
       if (!ForumUtils.isEmpty(vls)) {
-        values = values + "," + vls;
-        values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+        values = values + ForumUtils.COMMA + vls;
+        values = ForumUtils.removeStringResemble(values.replaceAll(",,", ForumUtils.COMMA));
       }
       textArea.setValue(values);
     } catch (Exception e) {
@@ -486,7 +486,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
   static public class AddValuesUserActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
       UICategoryForm categoryForm = event.getSource();
-      String id = event.getRequestContext().getRequestParameter(OBJECTID).replace("0,", "");
+      String id = event.getRequestContext().getRequestParameter(OBJECTID).replace("0,", ForumUtils.EMPTY_STR);
       UIPopupContainer uiPopupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class);
       categoryForm.showUIUserSelect(uiPopupContainer, USER_SELECTOR_POPUPWINDOW, id);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);

@@ -33,8 +33,8 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 /**
@@ -112,7 +112,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     String value = administration.getNotifyEmailMoved();
     if (ForumUtils.isEmpty(value))
       value = this.getLabel("EmailToAuthorMoved");
-    UIFormWYSIWYGInput notifyEmailMoved = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, "");
+    UIFormWYSIWYGInput notifyEmailMoved = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, ForumUtils.EMPTY_STR);
     notifyEmailMoved.setToolBarName("Basic");
     notifyEmailMoved.setFCKConfig(Utils.getFCKConfig());
     notifyEmailMoved.setValue(value);
@@ -123,7 +123,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     String value = administration.getNotifyEmailContent();
     if (ForumUtils.isEmpty(value))
       value = this.getLabel("notifyEmailContentDefault");
-    UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, "");
+    UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, ForumUtils.EMPTY_STR);
     notifyEmail.setToolBarName("Basic");
     notifyEmail.setFCKConfig(Utils.getFCKConfig());
     notifyEmail.setValue(value);
@@ -169,11 +169,11 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
       String notifyEmail = notifyEmailAddNewTab.getChild(UIFormWYSIWYGInput.class).getValue();
 
       String notifyEmailMoved = notifyEmailMoveTab.getChild(UIFormWYSIWYGInput.class).getValue();
-      if (notifyEmail == null || notifyEmail.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1) {
+      if (notifyEmail == null || notifyEmail.replaceAll("<p>", ForumUtils.EMPTY_STR).replaceAll("</p>", ForumUtils.EMPTY_STR).replaceAll("&nbsp;", ForumUtils.EMPTY_STR).trim().length() < 1) {
         warning("UINotificationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAIL_TEXTAREA));
         return;
       }
-      if (notifyEmailMoved == null || notifyEmailMoved.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1) {
+      if (notifyEmailMoved == null || notifyEmailMoved.replaceAll("<p>", ForumUtils.EMPTY_STR).replaceAll("</p>", ForumUtils.EMPTY_STR).replaceAll("&nbsp;", ForumUtils.EMPTY_STR).trim().length() < 1) {
         warning("UINotificationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA));
         return;
       }

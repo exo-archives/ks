@@ -100,7 +100,7 @@ public class UICategory extends BaseForumForm {
 
   private Map<String, Topic> MaptopicLast    = new HashMap<String, Topic>();
 
-  private String             linkUserInfo    = "";
+  private String             linkUserInfo    = ForumUtils.EMPTY_STR;
 
   static public boolean      isUnWatch       = false;
 
@@ -196,7 +196,7 @@ public class UICategory extends BaseForumForm {
 
   private List<Forum> getForumList() throws Exception {
     if (this.isEditForum) {
-      String strQuery = "";
+      String strQuery = ForumUtils.EMPTY_STR;
       if (this.userProfile.getUserRole() > 0)
         strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
       try {
@@ -462,7 +462,7 @@ public class UICategory extends BaseForumForm {
         uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
         UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class);
         uiTopicContainer.setUpdateForum(uiCategory.categoryId, forum, 0);
-        forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId + "/" + forumId));
+        forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId + ForumUtils.SLASH + forumId));
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       } else {
         uiCategory.isEditForum = true;
@@ -474,7 +474,7 @@ public class UICategory extends BaseForumForm {
 
   static public class OpenLastTopicLinkActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String Id) throws Exception {
-      String[] id = Id.trim().split("/");
+      String[] id = Id.trim().split(ForumUtils.SLASH);
       UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
       forumPortlet.updateIsRendered(ForumUtils.FORUM);
       UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
@@ -485,14 +485,14 @@ public class UICategory extends BaseForumForm {
       Topic topic = uiCategory.getTopic(id[1]);
       topic = uiCategory.getForumService().getTopicUpdate(topic, true);
       uiTopicDetail.setUpdateForum(uiCategory.getForum(id[0]));
-      uiTopicDetail.setTopicFromCate(uiCategory.categoryId, id[0], topic, 0);
-      String lastPostId = "";
+      uiTopicDetail.initInfoTopic(uiCategory.categoryId, id[0], topic, 0);
+      String lastPostId = ForumUtils.EMPTY_STR;
       uiTopicDetail.setLastPostId(lastPostId);
       if (lastPostId == null || lastPostId.length() < 0)
         lastPostId = "lastpost";
       uiTopicDetail.setIdPostView(lastPostId);
       uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(uiCategory.categoryId, id[0], topic.getId());
-      forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId + "/" + id[0] + " "));
+      forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId + ForumUtils.SLASH + id[0] + " "));
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
@@ -500,7 +500,7 @@ public class UICategory extends BaseForumForm {
   static public class OpenLastReadTopicActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, String path) throws Exception {
       WebuiRequestContext context = event.getRequestContext();
-      String[] id = path.trim().split("/");
+      String[] id = path.trim().split(ForumUtils.SLASH);
       Topic topic = uiCategory.getTopic(id[2]);
       if (topic == null) {
         topic = (Topic) uiCategory.getForumService().getObjectNameById(id[2], Utils.TOPIC);
@@ -516,11 +516,11 @@ public class UICategory extends BaseForumForm {
         Forum forum;
         if (path.indexOf(id[1]) < 0) {
           if (id[id.length - 1].indexOf(Utils.POST) == 0) {
-            path = path.substring(path.indexOf(Utils.CATEGORY)) + "/" + id[id.length - 1];
+            path = path.substring(path.indexOf(Utils.CATEGORY)) + ForumUtils.SLASH + id[id.length - 1];
           } else {
             path = path.substring(path.indexOf(Utils.CATEGORY));
           }
-          id = path.trim().split("/");
+          id = path.trim().split(ForumUtils.SLASH);
           forum = uiCategory.getForumService().getForum(id[0], id[1]);
           forumPortlet.updateUserProfileInfo();
         } else {
@@ -535,7 +535,7 @@ public class UICategory extends BaseForumForm {
           UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class);
           uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
           uiTopicDetail.setUpdateForum(forum);
-          uiTopicDetail.setTopicFromCate(id[0], id[1], topic, 0);
+          uiTopicDetail.initInfoTopic(id[0], id[1], topic, 0);
           if (id[id.length - 1].indexOf(Utils.POST) == 0) {
             uiTopicDetail.setIdPostView(id[id.length - 1]);
             uiTopicDetail.setLastPostId(id[id.length - 1]);
@@ -543,10 +543,10 @@ public class UICategory extends BaseForumForm {
             uiTopicDetail.setIdPostView("lastpost");
           }
           uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
-          forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+          forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
           event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         } else {
-          uiCategory.userProfile.addLastPostIdReadOfForum(forum.getId(), "");
+          uiCategory.userProfile.addLastPostIdReadOfForum(forum.getId(), ForumUtils.EMPTY_STR);
           uiCategory.getForumService().saveLastPostIdRead(uiCategory.userProfile.getUserId(), uiCategory.userProfile.getLastReadPostOfForum(), uiCategory.userProfile.getLastReadPostOfTopic());
           ((UIApplication) forumPortlet).addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", new String[] { "this", "topic" }, ApplicationMessage.WARNING));
           context.addUIComponentToUpdateByAjax(uiCategory);
@@ -573,13 +573,13 @@ public class UICategory extends BaseForumForm {
         StringBuffer type = new StringBuffer();
         List<String> forumIdsOfModerator = new ArrayList<String>();
         if (uiCategory.userProfile.getUserRole() == 0) {
-          type.append("true,").append(Utils.FORUM).append("/").append(Utils.TOPIC).append("/").append(Utils.POST);
+          type.append("true,").append(Utils.FORUM).append(ForumUtils.SLASH).append(Utils.TOPIC).append(ForumUtils.SLASH).append(Utils.POST);
         } else {
-          type.append("false,").append(Utils.FORUM).append("/").append(Utils.TOPIC).append("/").append(Utils.POST);
+          type.append("false,").append(Utils.FORUM).append(ForumUtils.SLASH).append(Utils.TOPIC).append(ForumUtils.SLASH).append(Utils.POST);
           if (uiCategory.userProfile.getUserRole() == 1) {
             String[] strings = uiCategory.userProfile.getModerateForums();
             for (int i = 0; i < strings.length; i++) {
-              String str = strings[i].substring(strings[i].lastIndexOf("/") + 1);
+              String str = strings[i].substring(strings[i].lastIndexOf(ForumUtils.SLASH) + 1);
               if (str.length() > 0)
                 forumIdsOfModerator.add(str);
             }
@@ -595,7 +595,7 @@ public class UICategory extends BaseForumForm {
         UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
         listSearchEvent.setListSearchEvent(list);
         forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
-        formStringInput.setValue("");
+        formStringInput.setValue(ForumUtils.EMPTY_STR);
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       } else {
         warning("UIQuickSearchForm.msg.checkEmpty");
@@ -610,7 +610,7 @@ public class UICategory extends BaseForumForm {
         String type = path.substring(0, t);
         if (type.equals("forum")) {
           path = path.substring(t + 2);
-          String forumId = path.substring(path.indexOf("/") + 1);
+          String forumId = path.substring(path.indexOf(ForumUtils.SLASH) + 1);
           Forum forum = uiCategory.getForum(forumId);
           path = "ForumNormalIcon//" + forum.getForumName() + "//" + forumId;
         } else if (type.equals("category")) {
@@ -619,7 +619,7 @@ public class UICategory extends BaseForumForm {
           path = "CategoryNormalIcon//" + category.getCategoryName() + "//" + path;
         } else {
           path = path.substring(t + 2);
-          String topicId = path.substring(path.lastIndexOf("/") + 1);
+          String topicId = path.substring(path.lastIndexOf(ForumUtils.SLASH) + 1);
           Topic topic = uiCategory.getTopic(topicId);
           path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topicId;
         }

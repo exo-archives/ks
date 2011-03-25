@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -46,7 +47,7 @@ public class UIForumModerator extends UIContainer {
 
   private long         role         = 3;
 
-  private String       linkUserInfo = "";
+  private String       linkUserInfo = ForumUtils.EMPTY_STR;
 
   public UIForumModerator() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);

@@ -95,9 +95,10 @@ public class BaseForumForm extends BaseUIForm {
         if (watch.getNodePath().endsWith(path))
           return watch.getEmail();
       } catch (Exception e) {
+        log.debug("Failed to check email watching.");
       }
     }
-    return "";
+    return ForumUtils.EMPTY_STR;
   }
 
   protected String getScreenName(String userName) throws Exception {
@@ -108,10 +109,11 @@ public class BaseForumForm extends BaseUIForm {
     if (screenName != null && screenName.length() > 17 && !screenName.trim().contains(" ")) {
       boolean isDelted = false;
       if (screenName.indexOf("<s>") >= 0) {
-        screenName = screenName.replaceAll("<s>", "").replaceAll("</s>", "");
+        screenName = screenName.replaceAll("<s>", ForumUtils.EMPTY_STR).replaceAll("</s>", ForumUtils.EMPTY_STR);
         isDelted = true;
       }
-      screenName = "<span title=\"" + screenName + "\">" + ((isDelted) ? "<s>" : "") + ForumUtils.getSubString(screenName, 15) + ((isDelted) ? "</s></span>" : "</span>");
+      screenName = (new StringBuilder().append("<span title=\"").append(screenName).append("\">").append(((isDelted) ? "<s>" : ForumUtils.EMPTY_STR)).
+      append(ForumUtils.getSubString(screenName, 15)).append(((isDelted) ? "</s></span>" : "</span>"))).toString();
     }
     return screenName;
   }
@@ -152,7 +154,7 @@ public class BaseForumForm extends BaseUIForm {
 
   protected boolean unWatch(String path, UserProfile userProfile) {
     try {
-      getForumService().removeWatch(1, path, userProfile.getUserId() + "/" + getEmailWatching(path));
+      getForumService().removeWatch(1, path, userProfile.getUserId() + ForumUtils.SLASH + getEmailWatching(path));
       UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
       forumPortlet.updateWatching();
       this.listWatches = forumPortlet.getWatchingByCurrentUser();
@@ -160,6 +162,7 @@ public class BaseForumForm extends BaseUIForm {
       return true;
     } catch (Exception e) {
       warning("UIAddWatchingForm.msg.UnWatchfall");
+      log.debug("Failed to add watch.");
       return false;
     }
   }

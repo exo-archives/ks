@@ -44,8 +44,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -102,7 +102,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 
   private String                topicId;
 
-  private String                postId                 = "";
+  private String                postId                 = ForumUtils.EMPTY_STR;
 
   private boolean               isMod                  = false;
 
@@ -114,7 +114,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 
   private boolean               isMP                   = false;
 
-  private String                link                   = "";
+  private String                link                   = ForumUtils.EMPTY_STR;
 
   private boolean               isDoubleClickSubmit    = false;
 
@@ -127,7 +127,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
     editReason.setRendered(false);
     UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB);
-    UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, "");
+    UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setToolBarName("Basic");
     formWYSIWYGInput.setFCKConfig(org.exoplatform.ks.common.Utils.getFCKConfig());
@@ -181,7 +181,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     List<ActionData> uploadedFiles = new ArrayList<ActionData>();
     for (ForumAttachment attachdata : attachments_) {
       ActionData fileUpload = new ActionData();
-      fileUpload.setActionListener("");
+      fileUpload.setActionListener(ForumUtils.EMPTY_STR);
       fileUpload.setActionType(ActionData.TYPE_ATT);
       fileUpload.setCssIconClass("AttachmentIcon");
       String size = ForumUtils.getSizeFile(attachdata.getSize());
@@ -233,7 +233,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     if (!ForumUtils.isEmpty(this.postId) && post != null) {
       String message = post.getMessage();
       if (isQuote) {// quote
-        String title = "";
+        String title = ForumUtils.EMPTY_STR;
         if (post.getName().indexOf(": ") > 0)
           title = post.getName();
         else
@@ -295,7 +295,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           post.setModifiedDate(ForumUtils.getInstanceTempCalendar().getTime());
         }
         post.setModifiedBy(userName);
-        post.setRemoteAddr("");
+        post.setRemoteAddr(ForumUtils.EMPTY_STR);
         UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
         post.setIcon(uiIconSelector.getSelectedIcon());
         post.setIsApproved(false);
@@ -306,7 +306,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
         viewPost.setPostView(post);
         viewPost.setActionForm(new String[] { "Close" });
       } else {
-        String[] args = { "" };
+        String[] args = { ForumUtils.EMPTY_STR };
         if (k == 0) {
           args = new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT) };
           if (t <= 0)
@@ -430,7 +430,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                   post.setModifiedDate(new Date());
                   post.setEditReason(editReason);
                   MessageBuilder messageBuilder = ForumUtils.getDefaultMail();
-                  messageBuilder.setLink(link + "/" + post.getId());
+                  messageBuilder.setLink(link + ForumUtils.SLASH + post.getId());
                   try {
                     uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, messageBuilder);
                   } catch (PathNotFoundException e) {
@@ -453,7 +453,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                 if (userProfile.getIsAutoWatchTopicIPost()) {
                   List<String> values = new ArrayList<String>();
                   values.add(userProfile.getEmail());
-                  String path = uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId;
+                  String path = uiForm.categoryId + ForumUtils.SLASH + uiForm.forumId + ForumUtils.SLASH + uiForm.topicId;
                   uiForm.getForumService().addWatch(1, path, values, userProfile.getUserId());
                 }
               }
@@ -478,7 +478,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             }
             event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer);
           } else {
-            String[] args = { "" };
+            String[] args = { ForumUtils.EMPTY_STR };
             if (k == 0) {
               args = new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT) };
               if (t == 0)
@@ -494,7 +494,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
         } else {
           forumPortlet.cancelAction();
           UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
-          topicDetail.setUpdateContainer(uiForm.categoryId, uiForm.forumId, uiForm.topic, 0);
+          topicDetail.initInfoTopic(uiForm.categoryId, uiForm.forumId, uiForm.topic, 0);
           uiForm.warning("UIPostForm.msg.no-permission");
           event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         }

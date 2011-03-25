@@ -90,6 +90,12 @@ public class ForumUtils {
 
   public static final String POLL                    = "Poll".intern();
 
+  public static final String COMMA                   = ",".intern();
+
+  public static final String SLASH                   = "/".intern();
+
+  public static final String EMPTY_STR               = "".intern();
+
   public static final int    MAXSIGNATURE            = 300;
 
   public static final int    MAXTITLE                = 100;
@@ -98,20 +104,20 @@ public class ForumUtils {
 
   static String buildForumLink(String url, String selectedNode, String portalName, String type, String id) throws Exception {
     if (url.indexOf(portalName) > 0) {
-      if (url.indexOf(portalName + "/" + selectedNode) < 0) {
-        url = url.replaceFirst(portalName, portalName + "/" + selectedNode);
+      if (url.indexOf(portalName + SLASH + selectedNode) < 0) {
+        url = url.replaceFirst(portalName, portalName + SLASH + selectedNode);
       }
     }
-    selectedNode = portalName + "/" + selectedNode;
+    selectedNode = portalName + SLASH + selectedNode;
     url = url.substring(0, url.lastIndexOf(selectedNode) + selectedNode.length());
     StringBuilder link = new StringBuilder().append(url);
     if (!isEmpty(type) && !isEmpty(id)) {
-      if (link.lastIndexOf("/") == (link.length() - 1))
+      if (link.lastIndexOf(SLASH) == (link.length() - 1))
         link.append(type);
       else
-        link.append("/").append(type);
+        link.append(SLASH).append(type);
       if (!id.equals(Utils.FORUM_SERVICE))
-        link.append("/").append(id);
+        link.append(SLASH).append(id);
     }
     return link.toString();
   }
@@ -129,7 +135,7 @@ public class ForumUtils {
      * h,hh,H, m, mm, d, dd, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
      */
     if (myDate == null)
-      return "";
+      return EMPTY_STR;
     if (!isEmpty(format)) {
       if (format.indexOf("DDDD") >= 0)
         format = format.replaceAll("DDDD", "EEEE");
@@ -154,7 +160,7 @@ public class ForumUtils {
     if (isEmpty(addressList))
       return true;
     addressList = StringUtils.remove(addressList, " ");
-    addressList = StringUtils.replace(addressList, ";", ",");
+    addressList = StringUtils.replace(addressList, ";", COMMA);
     try {
       InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
       String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}";
@@ -255,9 +261,9 @@ public class ForumUtils {
   public static String updateMultiValues(String value, String values) throws Exception {
     if (!isEmpty(values)) {
       values = removeSpaceInString(values);
-      if (!isStringInStrings(values.split(","), value)) {
-        if (values.lastIndexOf(",") != (values.length() - 1))
-          values = values + ",";
+      if (!isStringInStrings(values.split(COMMA), value)) {
+        if (values.lastIndexOf(COMMA) != (values.length() - 1))
+          values = values + COMMA;
         values = values + value;
       }
     } else
@@ -269,8 +275,8 @@ public class ForumUtils {
     ForumAdministration forumAdministration = forumService.getForumAdministration();
     String stringKey = forumAdministration.getCensoredKeyword();
     if (!ForumUtils.isEmpty(stringKey)) {
-      stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",").replaceAll(";", ",");
-      return stringKey.trim().split(",");
+      stringKey = stringKey.toLowerCase().replaceAll(COMMA+" ", COMMA).replaceAll(" "+COMMA, COMMA).replaceAll(";", COMMA);
+      return stringKey.trim().split(COMMA);
     }
     return new String[] {};
   }
@@ -278,25 +284,25 @@ public class ForumUtils {
   public static String[] splitForForum(String str) throws Exception {
     if (!isEmpty(str)) {
       str = StringUtils.remove(str, " ");
-      if (str.contains(",")) {
-        str = str.replaceAll(";", ",");
-        return str.trim().split(",");
+      if (str.contains(COMMA)) {
+        str = str.replaceAll(";", COMMA);
+        return str.trim().split(COMMA);
       } else {
-        str = str.replaceAll(",", ";");
+        str = str.replaceAll(COMMA, ";");
         return str.trim().split(";");
       }
     } else
-      return new String[] { "" };
+      return new String[] { EMPTY_STR };
   }
 
   public static String unSplitForForum(String[] str) throws Exception {
     if (str == null || str.length == 0)
-      return "";
+      return EMPTY_STR;
     StringBuilder rtn = new StringBuilder();
     if (!str[0].equals(" ")) {
       for (String temp : str) {
         if (rtn.length() > 1)
-          rtn.append(",").append(temp.trim());
+          rtn.append(COMMA).append(temp.trim());
         else
           rtn.append(temp.trim());
       }
@@ -306,21 +312,21 @@ public class ForumUtils {
 
   public static String removeSpaceInString(String str) throws Exception {
     if (!isEmpty(str)) {
-      String strs[] = new String[] { ";", ", ", " ,", ",," };
+      String strs[] = new String[] { ";", COMMA+" ", " "+COMMA, COMMA+COMMA};
       for (int i = 0; i < strs.length; i++) {
         while (str.indexOf(strs[i]) >= 0) {
-          str = str.replaceAll(strs[i], ",");
+          str = str.replaceAll(strs[i], COMMA);
         }
       }
-      if (str.lastIndexOf(",") == str.length() - 1) {
+      if (str.lastIndexOf(COMMA) == str.length() - 1) {
         str = str.substring(0, str.length() - 1);
       }
-      if (str.indexOf(",") == 0) {
+      if (str.indexOf(COMMA) == 0) {
         str = str.substring(1, str.length());
       }
       return str;
     } else
-      return "";
+      return EMPTY_STR;
   }
 
   public static String removeZeroFirstNumber(String str) {
@@ -332,7 +338,7 @@ public class ForumUtils {
         s.append(str.charAt(i));
         ++i;
       }
-      str = str.replaceFirst(s.toString(), "");
+      str = str.replaceFirst(s.toString(), EMPTY_STR);
     }
     return str;
   }
@@ -350,11 +356,11 @@ public class ForumUtils {
         if (i == (l - 1))
           builder.append(temp[i]);
         else
-          builder.append(temp[i]).append(",");
+          builder.append(temp[i]).append(COMMA);
       }
       return builder.toString();
     } else
-      return "";
+      return EMPTY_STR;
   }
 
   public static boolean isEmpty(String str) {
@@ -374,8 +380,8 @@ public class ForumUtils {
     List<String> list = new ArrayList<String>();
     if (!isEmpty(output)) {
       if (!isEmpty(input)) {
-        if (input.lastIndexOf(",") != (input.length() - 1))
-          input = input + ",";
+        if (input.lastIndexOf(COMMA) != (input.length() - 1))
+          input = input + COMMA;
         output = input + output;
         String temp[] = splitForForum(output);
         for (String string : temp) {
@@ -470,7 +476,7 @@ public class ForumUtils {
       ResourceBundle res = context.getApplicationResourceBundle();
       messageBuilder.setContent(res.getString("UINotificationForm.label.notifyEmailContentDefault"));
       String header = res.getString("UINotificationForm.label.notifyEmailHeaderSubjectDefault");
-      messageBuilder.setHeaderSubject((isEmpty(header)) ? "" : header);
+      messageBuilder.setHeaderSubject((isEmpty(header)) ? EMPTY_STR : header);
 
       messageBuilder.setTypes(res.getString("UIForumPortlet.label.category"), res.getString("UIForumPortlet.label.forum"), res.getString("UIForumPortlet.label.topic"), res.getString("UIForumPortlet.label.post"));
     } catch (Exception e) {
@@ -482,7 +488,7 @@ public class ForumUtils {
   public static boolean enableIPLogging() {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    return Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ""));
+    return Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", EMPTY_STR));
   }
 
   public static void savePortletPreference(String listCategoryId, String listForumId) throws Exception {
@@ -497,44 +503,44 @@ public class ForumUtils {
     SettingPortletPreference preference = new SettingPortletPreference();
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    preference.setShowForumActionBar(Boolean.parseBoolean(portletPref.getValue("showForumActionBar", "")));
-    preference.setForumNewPost(Integer.parseInt(portletPref.getValue("forumNewPost", "")));
-    preference.setUseAjax(Boolean.parseBoolean(portletPref.getValue("useAjax", "")));
-    preference.setEnableIPLogging(Boolean.parseBoolean(portletPref.getValue("enableIPLogging", "")));
-    preference.setEnableIPFiltering(Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", "")));
-    preference.setInvisibleCategories(getListInValus(portletPref.getValue("invisibleCategories", "")));
-    preference.setInvisibleForums((getListInValus(portletPref.getValue("invisibleForums", ""))));
+    preference.setShowForumActionBar(Boolean.parseBoolean(portletPref.getValue("showForumActionBar", EMPTY_STR)));
+    preference.setForumNewPost(Integer.parseInt(portletPref.getValue("forumNewPost", EMPTY_STR)));
+    preference.setUseAjax(Boolean.parseBoolean(portletPref.getValue("useAjax", EMPTY_STR)));
+    preference.setEnableIPLogging(Boolean.parseBoolean(portletPref.getValue("enableIPLogging", EMPTY_STR)));
+    preference.setEnableIPFiltering(Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", EMPTY_STR)));
+    preference.setInvisibleCategories(getListInValus(portletPref.getValue("invisibleCategories", EMPTY_STR)));
+    preference.setInvisibleForums((getListInValus(portletPref.getValue("invisibleForums", EMPTY_STR))));
     // Show porlet
-    preference.setShowForumJump(Boolean.parseBoolean(portletPref.getValue("isShowForumJump", "")));
-    preference.setShowIconsLegend(Boolean.parseBoolean(portletPref.getValue("isShowIconsLegend", "")));
-    preference.setShowModerators(Boolean.parseBoolean(portletPref.getValue("isShowModerators", "")));
-    preference.setShowPoll(Boolean.parseBoolean(portletPref.getValue("isShowPoll", "")));
-    preference.setShowQuickReply(Boolean.parseBoolean(portletPref.getValue("isShowQuickReply", "")));
-    preference.setShowRules(Boolean.parseBoolean(portletPref.getValue("isShowRules", "")));
-    preference.setShowStatistics(Boolean.parseBoolean(portletPref.getValue("isShowStatistics", "")));
+    preference.setShowForumJump(Boolean.parseBoolean(portletPref.getValue("isShowForumJump", EMPTY_STR)));
+    preference.setShowIconsLegend(Boolean.parseBoolean(portletPref.getValue("isShowIconsLegend", EMPTY_STR)));
+    preference.setShowModerators(Boolean.parseBoolean(portletPref.getValue("isShowModerators", EMPTY_STR)));
+    preference.setShowPoll(Boolean.parseBoolean(portletPref.getValue("isShowPoll", EMPTY_STR)));
+    preference.setShowQuickReply(Boolean.parseBoolean(portletPref.getValue("isShowQuickReply", EMPTY_STR)));
+    preference.setShowRules(Boolean.parseBoolean(portletPref.getValue("isShowRules", EMPTY_STR)));
+    preference.setShowStatistics(Boolean.parseBoolean(portletPref.getValue("isShowStatistics", EMPTY_STR)));
     return preference;
   }
 
   public static void savePortletPreference(SettingPortletPreference sPreference) throws Exception {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    String listForumId = "", listCategoryId = "";
+    String listForumId = EMPTY_STR, listCategoryId = EMPTY_STR;
     List<String> invisibleForums = sPreference.getInvisibleForums();
     List<String> invisibleCategories = sPreference.getInvisibleCategories();
 
     if (!invisibleCategories.isEmpty()) {
-      listForumId = invisibleForums.toString().replace('[' + "", "").replace(']' + "", "").replaceAll(" ", "");
-      listCategoryId = invisibleCategories.toString().replace('[' + "", "").replace(']' + "", "").replaceAll(" ", "");
+      listForumId = invisibleForums.toString().replace('[' + EMPTY_STR, EMPTY_STR).replace(']' + EMPTY_STR, EMPTY_STR).replaceAll(" ", EMPTY_STR);
+      listCategoryId = invisibleCategories.toString().replace('[' + EMPTY_STR, EMPTY_STR).replace(']' + EMPTY_STR, EMPTY_STR).replaceAll(" ", EMPTY_STR);
     }
 
-    portletPref.setValue("isShowForumJump", sPreference.isShowForumJump() + "");
-    portletPref.setValue("isShowIconsLegend", sPreference.isShowIconsLegend() + "");
-    portletPref.setValue("isShowModerators", sPreference.isShowModerators() + "");
-    portletPref.setValue("isShowPoll", sPreference.isShowPoll() + "");
-    portletPref.setValue("isShowQuickReply", sPreference.isShowQuickReply() + "");
-    portletPref.setValue("isShowRules", sPreference.isShowRules() + "");
-    portletPref.setValue("isShowStatistics", sPreference.isShowStatistics() + "");
-    portletPref.setValue("useAjax", sPreference.isUseAjax() + "");
+    portletPref.setValue("isShowForumJump", sPreference.isShowForumJump() + EMPTY_STR);
+    portletPref.setValue("isShowIconsLegend", sPreference.isShowIconsLegend() + EMPTY_STR);
+    portletPref.setValue("isShowModerators", sPreference.isShowModerators() + EMPTY_STR);
+    portletPref.setValue("isShowPoll", sPreference.isShowPoll() + EMPTY_STR);
+    portletPref.setValue("isShowQuickReply", sPreference.isShowQuickReply() + EMPTY_STR);
+    portletPref.setValue("isShowRules", sPreference.isShowRules() + EMPTY_STR);
+    portletPref.setValue("isShowStatistics", sPreference.isShowStatistics() + EMPTY_STR);
+    portletPref.setValue("useAjax", sPreference.isUseAjax() + EMPTY_STR);
     portletPref.setValue("invisibleCategories", listCategoryId);
     portletPref.setValue("invisibleForums", listForumId);
     portletPref.store();
@@ -553,7 +559,7 @@ public class ForumUtils {
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
     int limitMB;
     try {
-      limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, "").trim());
+      limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, EMPTY_STR).trim());
     } catch (Exception e) {
       limitMB = -1;
     }

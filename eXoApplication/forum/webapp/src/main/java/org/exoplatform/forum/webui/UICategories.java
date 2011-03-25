@@ -92,7 +92,7 @@ public class UICategories extends UIContainer {
 
   private List<Watch>              listWatches       = new ArrayList<Watch>();
 
-  private String                   linkUserInfo      = "";
+  private String                   linkUserInfo      = ForumUtils.EMPTY_STR;
 
   private Log                      log               = ExoLogger.getLogger(this.getClass());
 
@@ -164,7 +164,7 @@ public class UICategories extends UIContainer {
       } catch (Exception e) {
       }
     }
-    return "";
+    return ForumUtils.EMPTY_STR;
   }
 
   @SuppressWarnings("unused")
@@ -243,7 +243,7 @@ public class UICategories extends UIContainer {
   private List<Forum> getForumList(String categoryId) throws Exception {
     if (isCollapCategories(categoryId))
       return new ArrayList<Forum>();
-    String strQuery = "";
+    String strQuery = ForumUtils.EMPTY_STR;
     if (this.userProfile.getUserRole() > 0)
       strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
     List<Forum> forumList = forumService.getForumSummaries(categoryId, strQuery);
@@ -286,8 +286,8 @@ public class UICategories extends UIContainer {
     String topicPath = forum.getLastTopicPath();
     if (!ForumUtils.isEmpty(topicPath)) {
       String topicId = topicPath;
-      if (topicId.indexOf("/") >= 0)
-        topicId = topicId.substring(topicPath.lastIndexOf("/") + 1);
+      if (topicId.indexOf(ForumUtils.SLASH) >= 0)
+        topicId = topicId.substring(topicPath.lastIndexOf(ForumUtils.SLASH) + 1);
       topic = maptopicLast.get(topicId);
       if (topic == null) {
         try {
@@ -329,7 +329,7 @@ public class UICategories extends UIContainer {
     public void execute(Event<UICategories> event) throws Exception {
       UICategories uiContainer = event.getSource();
       String objects = event.getRequestContext().getRequestParameter(OBJECTID);
-      String[] id = objects.split(",");
+      String[] id = objects.split(ForumUtils.COMMA);
       String userName = uiContainer.userProfile.getUserId();
       if (!userName.equals(UserProfile.USER_GUEST)) {
         try {
@@ -366,7 +366,7 @@ public class UICategories extends UIContainer {
         forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId);
         uiContainer.maptopicLast.clear();
       } catch (Exception e) {
-        Object[] args = { "" };
+        Object[] args = { ForumUtils.EMPTY_STR };
         UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class);
         uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted", args, ApplicationMessage.WARNING));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
@@ -379,7 +379,7 @@ public class UICategories extends UIContainer {
     public void execute(Event<UICategories> event) throws Exception {
       UICategories categories = event.getSource();
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
-      String[] id = path.trim().split("/");
+      String[] id = path.trim().split(ForumUtils.SLASH);
       UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class);
       forumPortlet.updateIsRendered(ForumUtils.FORUM);
       UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
@@ -398,12 +398,12 @@ public class UICategories extends UIContainer {
       UICategories categories = event.getSource();
       WebuiRequestContext context = event.getRequestContext();
       String path = context.getRequestParameter(OBJECTID);
-      String[] id = path.trim().split("/");
+      String[] id = path.trim().split(ForumUtils.SLASH);
       Forum forum = categories.getForumById(id[0], id[1]);
       Topic topic = categories.maptopicLast.get(id[2]);
       UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class);
       if (topic == null) {
-        Object[] args = { "" };
+        Object[] args = { ForumUtils.EMPTY_STR };
         UIApplication uiApp = categories.getAncestorOfType(UIApplication.class);
         uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING));
         context.addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
@@ -416,10 +416,10 @@ public class UICategories extends UIContainer {
         UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class);
         uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
         uiTopicDetail.setUpdateForum(forum);
-        uiTopicDetail.setTopicFromCate(id[0], id[1], topic, 0);
+        uiTopicDetail.initInfoTopic(id[0], id[1], topic, 0);
         uiTopicDetail.setIdPostView("lastpost");
         uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
-        forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+        forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
         categories.maptopicLast.clear();
       }
       context.addUIComponentToUpdateByAjax(forumPortlet);
@@ -431,7 +431,7 @@ public class UICategories extends UIContainer {
       UICategories categories = event.getSource();
       WebuiRequestContext context = event.getRequestContext();
       String path = context.getRequestParameter(OBJECTID);// cateid/forumid/topicid/postid/
-      String[] id = path.trim().split("/");
+      String[] id = path.trim().split(ForumUtils.SLASH);
       Topic topic = categories.maptopicLast.get(id[2]);
       if (topic == null) {
         topic = (Topic) categories.forumService.getObjectNameById(id[2], Utils.TOPIC);
@@ -440,7 +440,7 @@ public class UICategories extends UIContainer {
       }
       UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class);
       if (topic == null) {
-        Object[] args = { "" };
+        Object[] args = { ForumUtils.EMPTY_STR };
         UIApplication uiApp = categories.getAncestorOfType(UIApplication.class);
         uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING));
         context.addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
@@ -450,11 +450,11 @@ public class UICategories extends UIContainer {
         Forum forum;
         if (path.indexOf(id[1]) < 0) {
           if (id[id.length - 1].indexOf(Utils.POST) == 0) {
-            path = path.substring(path.indexOf(Utils.CATEGORY)) + "/" + id[id.length - 1];
+            path = path.substring(path.indexOf(Utils.CATEGORY)) + ForumUtils.SLASH + id[id.length - 1];
           } else {
             path = path.substring(path.indexOf(Utils.CATEGORY));
           }
-          id = path.trim().split("/");
+          id = path.trim().split(ForumUtils.SLASH);
           forum = categories.forumService.getForum(id[0], id[1]);
           forumPortlet.updateUserProfileInfo();
         } else {
@@ -469,7 +469,7 @@ public class UICategories extends UIContainer {
           UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class);
           uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
           uiTopicDetail.setUpdateForum(forum);
-          uiTopicDetail.setTopicFromCate(id[0], id[1], topic, 0);
+          uiTopicDetail.initInfoTopic(id[0], id[1], topic, 0);
           if (id[id.length - 1].indexOf(Utils.POST) == 0) {
             uiTopicDetail.setIdPostView(id[id.length - 1]);
             uiTopicDetail.setLastPostId(id[id.length - 1]);
@@ -477,11 +477,11 @@ public class UICategories extends UIContainer {
             uiTopicDetail.setIdPostView("lastpost");
           }
           uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
-          forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+          forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
           categories.maptopicLast.clear();
           context.addUIComponentToUpdateByAjax(forumPortlet);
         } else {
-          categories.userProfile.addLastPostIdReadOfForum(forum.getId(), "");
+          categories.userProfile.addLastPostIdReadOfForum(forum.getId(), ForumUtils.EMPTY_STR);
           categories.forumService.saveLastPostIdRead(categories.userProfile.getUserId(), categories.userProfile.getLastReadPostOfForum(), categories.userProfile.getLastReadPostOfTopic());
           ((UIApplication) forumPortlet).addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", new String[] { "this", "topic" }, ApplicationMessage.WARNING));
           context.addUIComponentToUpdateByAjax(categories);
@@ -499,8 +499,8 @@ public class UICategories extends UIContainer {
         String type = path.substring(0, path.indexOf("//"));
         if (type.equals("forum")) {
           path = path.substring(path.indexOf("//") + 2);
-          String categoryId = path.substring(0, path.indexOf("/"));
-          String forumId = path.substring(path.indexOf("/") + 1);
+          String categoryId = path.substring(0, path.indexOf(ForumUtils.SLASH));
+          String forumId = path.substring(path.indexOf(ForumUtils.SLASH) + 1);
           Forum forum = uiContainer.getForumById(categoryId, forumId);
           path = "ForumNormalIcon//" + forum.getForumName() + "//" + forumId;
         } else if (type.equals("category")) {
@@ -562,7 +562,7 @@ public class UICategories extends UIContainer {
       UICategories uiContainer = event.getSource();
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
       try {
-        uiContainer.forumService.removeWatch(1, path, uiContainer.userProfile.getUserId() + "/" + uiContainer.getEmailWatching(path));
+        uiContainer.forumService.removeWatch(1, path, uiContainer.userProfile.getUserId() + ForumUtils.SLASH + uiContainer.getEmailWatching(path));
         UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class);
         forumPortlet.updateWatching();
         Object[] args = {};

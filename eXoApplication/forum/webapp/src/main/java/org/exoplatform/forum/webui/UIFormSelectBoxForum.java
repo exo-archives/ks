@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.model.SelectItemOption;
@@ -187,7 +188,7 @@ public class UIFormSelectBoxForum extends UIFormStringInput {
 
     for (SelectItemOption<String> item : options_) {
       String labelAndCss = item.getLabel();
-      String temp[] = labelAndCss.split("/");
+      String temp[] = labelAndCss.split(ForumUtils.SLASH);
       try {
         temp[0] = res.getString(formId + ".label.option." + item.getValue());
       } catch (MissingResourceException ex) {

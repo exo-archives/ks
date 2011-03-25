@@ -41,8 +41,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
@@ -153,8 +153,8 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
         list.add(ForumTransformHTML.unCodeHTML(string));
       }
     } else {
-      list.add("");
-      list.add("");
+      list.add(ForumUtils.EMPTY_STR);
+      list.add(ForumUtils.EMPTY_STR);
     }
     this.initMultiValuesField(list);
   }
@@ -183,7 +183,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
       }
       boolean isAgainVote = uiForm.getUIFormCheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).isChecked();
       boolean isMultiVote = uiForm.getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX).isChecked();
-      String sms = "";
+      String sms = ForumUtils.EMPTY_STR;
       List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
       List<String> values_ = new ArrayList<String>();
       int i = 1;
@@ -341,7 +341,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
         uiForm.poll.setVote(vote);
         uiForm.poll.setTimeOut(timeOut);
         uiForm.poll.setIsClosed(uiForm.poll.getIsClosed());
-        String[] id = uiForm.TopicPath.trim().split("/");
+        String[] id = uiForm.TopicPath.trim().split(ForumUtils.SLASH);
         try {
           PollService pollSv = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
           if (uiForm.isUpdate) {
@@ -384,10 +384,10 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
     public void execute(Event<UIPollForm> event) throws Exception {
       UIPollForm uiForm = event.getSource();
       List<String> list = new ArrayList<String>();
-      list.add("");
-      list.add("");
+      list.add(ForumUtils.EMPTY_STR);
+      list.add(ForumUtils.EMPTY_STR);
       uiForm.initMultiValuesField(list);
-      uiForm.getUIStringInput(FIELD_QUESTION_INPUT).setValue("");
+      uiForm.getUIStringInput(FIELD_QUESTION_INPUT).setValue(ForumUtils.EMPTY_STR);
       uiForm.getUIStringInput(FIELD_TIMEOUT_INPUT).setValue("0");
       uiForm.getUIFormCheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).setChecked(false);
       uiForm.getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX).setChecked(false);

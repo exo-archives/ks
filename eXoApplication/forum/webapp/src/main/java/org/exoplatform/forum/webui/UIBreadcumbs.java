@@ -103,7 +103,7 @@ public class UIBreadcumbs extends UIContainer {
     isLink = false;
     setRenderForumLink(path);
     if (!ForumUtils.isEmpty(path) && !path.equals(FORUM_SERVICE)) {
-      String temp[] = path.split("/");
+      String temp[] = path.split(ForumUtils.SLASH);
       path_.clear();
       breadcumbs_.clear();
       path_.add(FORUM_SERVICE);
@@ -111,15 +111,15 @@ public class UIBreadcumbs extends UIContainer {
       breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL);
       if (path.equals(ForumUtils.FIELD_EXOFORUM_LABEL)) {
         breadcumbs_.add(ForumUtils.FIELD_SEARCHFORUM_LABEL);
-        path_.add("/" + ForumUtils.FIELD_EXOFORUM_LABEL);
+        path_.add(ForumUtils.SLASH + ForumUtils.FIELD_EXOFORUM_LABEL);
       } else {
-        String tempPath = "";
+        String tempPath = ForumUtils.EMPTY_STR;
         int i = 0;
         try {
           for (String string : temp) {
 
             if (!ForumUtils.isEmpty(tempPath))
-              tempPath = tempPath + "/" + string;
+              tempPath = tempPath + ForumUtils.SLASH + string;
             else
               tempPath = string;
             Object obj = forumService.getObjectNameByPath(tempPath);
@@ -169,7 +169,7 @@ public class UIBreadcumbs extends UIContainer {
       ForumParameter param = new ForumParameter();
       if (userProfile.getIsShowForumJump() && !path.equals(FORUM_SERVICE)) {
         if (path.indexOf(Utils.TOPIC) > 0) {
-          path = path.substring(0, path.lastIndexOf("/"));
+          path = path.substring(0, path.lastIndexOf(ForumUtils.SLASH));
         }
         param.setRenderForumLink(true);
         param.setPath(path);
@@ -217,7 +217,7 @@ public class UIBreadcumbs extends UIContainer {
   }
 
   private String getType(String id) {
-    return (id.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : ((id.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : ((id.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : ((id.indexOf(Utils.TOPIC) >= 0) ? ForumUtils.TOPIC : (""))));
+    return (id.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : ((id.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : ((id.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : ((id.indexOf(Utils.TOPIC) >= 0) ? ForumUtils.TOPIC : (ForumUtils.EMPTY_STR))));
   }
 
   private boolean checkLinkPrivate(String id) throws Exception {

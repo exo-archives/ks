@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -31,8 +32,8 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 
@@ -105,13 +106,13 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
 
   private UIFormSelectBox getSelectBox(String field, boolean isJobDay) {
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
-    list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEDAY), FIELD_VALUEDAY + ((isJobDay) ? "_Id" : "")));
-    list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEWEEKS), FIELD_VALUEWEEKS + ((isJobDay) ? "_Id" : "")));
-    list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEMONTHS), FIELD_VALUEMONTHS + ((isJobDay) ? "_Id" : "")));
+    list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEDAY), FIELD_VALUEDAY + ((isJobDay) ? "_Id" : ForumUtils.EMPTY_STR)));
+    list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEWEEKS), FIELD_VALUEWEEKS + ((isJobDay) ? "_Id" : ForumUtils.EMPTY_STR)));
+    list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEMONTHS), FIELD_VALUEMONTHS + ((isJobDay) ? "_Id" : ForumUtils.EMPTY_STR)));
     UIFormSelectBox selectBox = getUIFormSelectBox(field);
     if (selectBox == null) {
       selectBox = new UIFormSelectBox(field, field, list);
-      selectBox.setDefaultValue(FIELD_VALUEDAY + ((isJobDay) ? "_Id" : ""));
+      selectBox.setDefaultValue(FIELD_VALUEDAY + ((isJobDay) ? "_Id" : ForumUtils.EMPTY_STR));
     } else {
       selectBox.setOptions(list);
     }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.forum.ForumTransformHTML;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.JCRPageList;
@@ -39,8 +40,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -165,7 +166,7 @@ public class UIModerationForum extends BaseForumForm implements UIPopupComponent
         }
       } else {
         try {
-          Post post = moderationForum.getForumService().getPost("", "", "", forumSearch.getPath());
+          Post post = moderationForum.getForumService().getPost(ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, forumSearch.getPath());
           UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700);
           viewPost.setPostView(post);
           viewPost.setViewUserInfo(false);

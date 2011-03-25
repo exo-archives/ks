@@ -51,7 +51,7 @@ public class UICategoryInfo extends UIContainer {
 
   private UserProfile  userProfile;
 
-  private String       linkUserInfo = "";
+  private String       linkUserInfo = ForumUtils.EMPTY_STR;
 
   // private long mostUserOnline_ = 0;
 
@@ -74,7 +74,7 @@ public class UICategoryInfo extends UIContainer {
       linkUserInfo = forumPortlet.getPortletLink();
     } catch (Exception e) {
       String userId = UserHelper.getCurrentUser();
-      userProfile = forumService.getDefaultUserProfile(userId, "");
+      userProfile = forumService.getDefaultUserProfile(userId, ForumUtils.EMPTY_STR);
     }
     return userProfile;
   }
@@ -86,10 +86,10 @@ public class UICategoryInfo extends UIContainer {
 
   private String getMostUsersOnline(String s, String at) throws Exception {
     if (ForumUtils.isEmpty(s))
-      return "";
+      return ForumUtils.EMPTY_STR;
     try {
-      String[] strs = s.split(",");
-      long l = Long.parseLong(strs[1].replace("at", "").trim());
+      String[] strs = s.split(ForumUtils.COMMA);
+      long l = Long.parseLong(strs[1].replace("at", ForumUtils.EMPTY_STR).trim());
       Calendar calendar = GregorianCalendar.getInstance();
       double timeZone = userProfile.getTimeZone();
       if (userProfile.getUserId().equals(UserProfile.USER_GUEST))
@@ -104,9 +104,9 @@ public class UICategoryInfo extends UIContainer {
       builder.append(ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()), calendar.getTime()));
       if (userProfile.getUserId().equals(UserProfile.USER_GUEST)) {
         if (timeZone >= 0)
-          builder.append(" GMT+").append(String.valueOf(timeZone).replace(".0", ""));
+          builder.append(" GMT+").append(String.valueOf(timeZone).replace(".0", ForumUtils.EMPTY_STR));
         else
-          builder.append(" GMT").append(String.valueOf(timeZone).replace(".0", ""));
+          builder.append(" GMT").append(String.valueOf(timeZone).replace(".0", ForumUtils.EMPTY_STR));
       }
       s = builder.toString();
     } catch (Exception e) {

@@ -99,7 +99,7 @@ public class ForumSessionUtils {
   public static String getBreadcumbUrl(String link, String componentName, String actionName, String objectId) throws Exception {
     PortalRequestContext portalContext = Util.getPortalRequestContext();
     String url = portalContext.getRequest().getRequestURL().toString();
-    url = url.substring(0, url.indexOf("/", 8));
+    url = url.substring(0, url.indexOf(ForumUtils.SLASH, 8));
     link = link.replaceFirst(componentName, "UIBreadcumbs").replaceFirst(actionName, "ChangePath").replace("pathId", objectId).replaceAll("&amp;", "&");
     return (url + link);
   }

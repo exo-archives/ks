@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
@@ -99,7 +100,7 @@ public class UIListTopicOld extends UIContainer {
   @SuppressWarnings( { "unused", "unchecked" })
   private List<Topic> getTopicsOld() throws Exception {
     if (topics == null || topics.size() == 0 || isUpdate) {
-      JCRPageList pageList = forumService.getPageTopicOld(date, "");
+      JCRPageList pageList = forumService.getPageTopicOld(date, ForumUtils.EMPTY_STR);
       if (pageList != null) {
         pageList.setPageSize(10);
         UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
@@ -145,7 +146,7 @@ public class UIListTopicOld extends UIContainer {
     public void execute(Event<UIListTopicOld> event) throws Exception {
       UIListTopicOld listTopicOld = event.getSource();
       String ids = event.getRequestContext().getRequestParameter(OBJECTID);
-      String[] id = ids.split("/");
+      String[] id = ids.split(ForumUtils.SLASH);
       int l = id.length;
       listTopicOld.forumService.removeTopic(id[l - 3], id[l - 2], id[l - 1]);
       listTopicOld.isUpdate = true;

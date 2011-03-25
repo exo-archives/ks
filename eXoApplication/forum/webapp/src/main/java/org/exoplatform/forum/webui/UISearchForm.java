@@ -46,8 +46,8 @@ import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInput;
@@ -128,7 +128,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
 
   private boolean             isSearchTopic               = false;
 
-  private String              path                        = "";
+  private String              path                        = ForumUtils.EMPTY_STR;
 
   private final static String USER_SEARCH_POPUP_WINDOW_ID = "UIUserSearchPopupWindow";
 
@@ -299,7 +299,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       this.isSearchTopic = false;
     }
     try {
-      this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setValueOption("");
+      this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setValueOption(ForumUtils.EMPTY_STR);
     } catch (Exception e) {
     }
   }
@@ -383,7 +383,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       if (!isL && isUL)
         isLock = "false";
       String isClosed = "all";
-      String remain = "";
+      String remain = ForumUtils.EMPTY_STR;
       boolean isCl = (Boolean) uiForm.getUIFormCheckBoxInput(FIELD_ISCLOSED_CHECKBOX).getValue();
       boolean isOp = (Boolean) uiForm.getUIFormCheckBoxInput(FIELD_ISOPEN_CHECKBOX).getValue();
       if (uiForm.getIsMod()) {
@@ -496,17 +496,17 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(Utils.CATEGORY);
       uiForm.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setValue("all");
       uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setValue("entire");
-      uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST).setValue("");
-      uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST).setValue("");
+      uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST).setValue(ForumUtils.EMPTY_STR);
+      uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST).setValue(ForumUtils.EMPTY_STR);
       uiForm.getUIFormCheckBoxInput(FIELD_ISLOCK_CHECKBOX).setValue(false);
       uiForm.getUIFormCheckBoxInput(FIELD_ISUNLOCK_CHECKBOX).setValue(false);
       uiForm.getUIFormCheckBoxInput(FIELD_ISCLOSED_CHECKBOX).setValue(false);
       uiForm.getUIFormCheckBoxInput(FIELD_ISOPEN_CHECKBOX).setValue(false);
-      uiForm.getUIStringInput(FIELD_MODERATOR_INPUT).setValue("");
-      uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).setValue("");
-      uiForm.getUIFormDateTimePicker(FROMDATECREATED).setValue("");
-      uiForm.getUIFormDateTimePicker(TODATECREATED).setValue("");
-      uiForm.getUIStringInput(FIELD_SEARCHUSER_INPUT).setValue("");
+      uiForm.getUIStringInput(FIELD_MODERATOR_INPUT).setValue(ForumUtils.EMPTY_STR);
+      uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).setValue(ForumUtils.EMPTY_STR);
+      uiForm.getUIFormDateTimePicker(FROMDATECREATED).setValue(ForumUtils.EMPTY_STR);
+      uiForm.getUIFormDateTimePicker(TODATECREATED).setValue(ForumUtils.EMPTY_STR);
+      uiForm.getUIStringInput(FIELD_SEARCHUSER_INPUT).setValue(ForumUtils.EMPTY_STR);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }
   }
@@ -556,16 +556,16 @@ public class UISearchForm extends BaseForumForm implements UISelector {
         UIFormStringInput searchUser = searchForm.getUIStringInput(FIELD_SEARCHUSER_INPUT);
         String vls = searchUser.getValue();
         if (!ForumUtils.isEmpty(vls)) {
-          values = values + "," + vls;
-          values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+          values = values + ForumUtils.COMMA + vls;
+          values = ForumUtils.removeStringResemble(values.replaceAll(",,", ForumUtils.COMMA));
         }
         searchUser.setValue(values);
       } else {
         UIFormStringInput moderators = searchForm.getUIStringInput(FIELD_MODERATOR_INPUT);
         String vls = moderators.getValue();
         if (!ForumUtils.isEmpty(vls)) {
-          values = values + "," + vls;
-          values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+          values = values + ForumUtils.COMMA + vls;
+          values = ForumUtils.removeStringResemble(values.replaceAll(",,", ForumUtils.COMMA));
         }
         moderators.setValue(values);
       }

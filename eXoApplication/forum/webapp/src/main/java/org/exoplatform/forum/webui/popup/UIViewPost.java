@@ -25,6 +25,7 @@ import javax.jcr.PathNotFoundException;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.UIForumQuickReplyPortlet;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
@@ -47,8 +48,8 @@ import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIForm;
 
 /**
@@ -110,7 +111,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
   }
 
   public String getImageUrl(String imagePath) throws Exception {
-    String url = "";
+    String url = ForumUtils.EMPTY_STR;
     try {
       url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
     } catch (Exception e) {
@@ -197,7 +198,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
       UIViewPost uiForm = event.getSource();
       Post post = uiForm.post;
       try {
-        String[] path = post.getPath().split("/");
+        String[] path = post.getPath().split(ForumUtils.SLASH);
         int l = path.length;
         uiForm.forumService.removePost(path[l - 4], path[l - 3], path[l - 2], post.getId());
       } catch (Exception e) {

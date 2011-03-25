@@ -45,8 +45,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
@@ -70,7 +70,7 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
 
   private String         link;
 
-  private String         pathPost = "";
+  private String         pathPost = ForumUtils.EMPTY_STR;
 
   public UIMovePostForm() throws Exception {
   }
@@ -135,7 +135,7 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
   @SuppressWarnings("unused")
   private List<Forum> getForums(String categoryId) throws Exception {
     List<Forum> forums = new ArrayList<Forum>();
-    for (Forum forum : this.getForumService().getForums(categoryId, "")) {
+    for (Forum forum : this.getForumService().getForums(categoryId, ForumUtils.EMPTY_STR)) {
       if (this.userProfile.getUserRole() == 1) {
         String[] moderators = forum.getModerators();
         if (!ForumServiceUtils.hasPermission(moderators, this.userProfile.getUserId())) {
@@ -173,7 +173,7 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
     public void onEvent(Event<UIMovePostForm> event, UIMovePostForm uiForm, final String topicPath) throws Exception {
       if (!ForumUtils.isEmpty(topicPath)) {
         try {
-          String[] temp = topicPath.split("/");
+          String[] temp = topicPath.split(ForumUtils.SLASH);
           // set link
           String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");
           //

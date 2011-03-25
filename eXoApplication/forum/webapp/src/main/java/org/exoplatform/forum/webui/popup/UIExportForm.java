@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.webui.BaseForumForm;
@@ -52,7 +53,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 	private final static String EXPORT_ALL = "ExportAll";
 	private final static String EXPORT_CATEGORIES = "ExportCategories";
 	List<Object> listObjects = new ArrayList<Object>();
-	private Object object_ = "";
+	private Object object_ = ForumUtils.EMPTY_STR;
 	
 	public UIExportForm(){}
 
@@ -144,13 +145,13 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 				}
 			}
 			
-			String nodePath = "";
+			String nodePath = ForumUtils.EMPTY_STR;
 			String categoryId = null;
 			String forumId = null;
 			if(exportForm.object_ instanceof Forum) {
 				Forum forum = (Forum)exportForm.object_;
 				nodePath = forum.getPath();
-				categoryId = forum.getPath().split("/")[3];
+				categoryId = forum.getPath().split(ForumUtils.SLASH)[3];
 				forumId = forum.getId();
 			} else if(exportForm.object_ instanceof Category) {
 				Category category = (Category)exportForm.object_;

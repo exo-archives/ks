@@ -50,14 +50,14 @@ import org.exoplatform.webui.core.UITree;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 import org.exoplatform.webui.organization.account.UIUserSelector;
@@ -108,11 +108,11 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 
   private boolean            isUpdate                            = false;
 
-  private String             forumId                             = "";
+  private String             forumId                             = ForumUtils.EMPTY_STR;
 
-  private String             categoryId                          = "";
+  private String             categoryId                          = ForumUtils.EMPTY_STR;
 
-  private String             listEmailAutoUpdate                 = "";
+  private String             listEmailAutoUpdate                 = ForumUtils.EMPTY_STR;
 
   private int                id                                  = 0;
 
@@ -245,7 +245,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
           ad.setActionListener("AddUser");
         else
           ad.setActionListener("AddValuesUser");
-        ad.setActionParameter(fieldPermission + "/" + String.valueOf(i));
+        ad.setActionParameter(fieldPermission + ForumUtils.SLASH + String.valueOf(i));
         ad.setCssIconClass(string + "Icon");
         ad.setActionName(string);
         actions.add(ad);
@@ -439,8 +439,8 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       newForum.setForumOrder(Integer.valueOf(forumOrder).intValue());
       newForum.setCreatedDate(new Date());
       newForum.setDescription(description);
-      newForum.setLastTopicPath("");
-      newForum.setPath("");
+      newForum.setLastTopicPath(ForumUtils.EMPTY_STR);
+      newForum.setPath(ForumUtils.EMPTY_STR);
       newForum.setModifiedBy(userName);
       newForum.setModifiedDate(new Date());
       newForum.setPostCount(0);
@@ -503,12 +503,12 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
           uiForm.getForumService().saveForum(categoryId, newForum, true);
           List<String> invisibleCategories = forumPortlet.getInvisibleCategories();
           List<String> invisibleForums = forumPortlet.getInvisibleForums();
-          String listForumId = "", listCategoryId = "";
+          String listForumId = ForumUtils.EMPTY_STR, listCategoryId = ForumUtils.EMPTY_STR;
           if (!invisibleCategories.isEmpty()) {
             if (invisibleCategories.contains(categoryId)) {
               invisibleForums.add(newForum.getId());
-              listForumId = invisibleForums.toString().replace('[' + "", "").replace(']' + "", "").replaceAll(" ", "");
-              listCategoryId = invisibleCategories.toString().replace('[' + "", "").replace(']' + "", "").replaceAll(" ", "");
+              listForumId = invisibleForums.toString().replace('[' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replace(']' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replaceAll(" ", ForumUtils.EMPTY_STR);
+              listCategoryId = invisibleCategories.toString().replace('[' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replace(']' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replaceAll(" ", ForumUtils.EMPTY_STR);
               ForumUtils.savePortletPreference(listCategoryId, listForumId);
             }
           }
@@ -545,12 +545,12 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
           UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
           uiForumContainer.setIsRenderChild(true);
           uiTopicContainer.updateByBreadcumbs(categoryId, newForum.getId(), true, 1);
-          forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId + "/" + newForum.getId());
+          forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId + ForumUtils.SLASH + newForum.getId());
         }
         UIForumDescription forumDescription = forumPortlet.findFirstComponentOfType(UIForumDescription.class);
         forumDescription.setForum(newForum);
         UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
-        breadcumbs.setUpdataPath(categoryId + "/" + newForum.getId());
+        breadcumbs.setUpdataPath(categoryId + ForumUtils.SLASH + newForum.getId());
         forumPortlet.findFirstComponentOfType(UITopicContainer.class).setForum(true);
         context.addUIComponentToUpdateByAjax(forumPortlet);
       }
@@ -559,7 +559,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 
   static public class AddValuesUserActionListener extends BaseEventListener<UIForumForm> {
     public void onEvent(Event<UIForumForm> event, UIForumForm forumForm, String objctId) throws Exception {
-      String[] array = objctId.split("/");
+      String[] array = objctId.split(ForumUtils.SLASH);
       String childId = array[0];
       if (!ForumUtils.isEmpty(childId)) {
         UIPopupContainer popupContainer = forumForm.getAncestorOfType(UIPopupContainer.class);
@@ -612,8 +612,8 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
     if (!ForumUtils.isEmpty(moderators)) {
       String[] moderators_ = ForumUtils.splitForForum(moderators);
       List<String> listModerator = new ArrayList<String>();
-      String email = "";
-      this.listEmailAutoUpdate = "";
+      String email = ForumUtils.EMPTY_STR;
+      this.listEmailAutoUpdate = ForumUtils.EMPTY_STR;
       User user = null;
       List<String> list = ForumServiceUtils.getUserPermission(moderators_);
       boolean isFist = true;
@@ -637,7 +637,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
         notifyWhenAddTopics.setValue(this.listEmailAutoUpdate);
       } else {
         String[] strs = ForumUtils.splitForForum(emailTopic);
-        String emailTopics = "";
+        String emailTopics = ForumUtils.EMPTY_STR;
         for (int i = 0; i < strs.length; i++) {
           if (!listModerator.contains(strs[i].trim())) {
             if (emailTopics.length() == 0)
@@ -656,7 +656,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
         notifyWhenAddPosts.setValue(this.listEmailAutoUpdate);
       } else {
         String[] strs = ForumUtils.splitForForum(emailPost);
-        String emailPosts = "";
+        String emailPosts = ForumUtils.EMPTY_STR;
         for (int i = 0; i < strs.length; i++) {
           if (!listModerator.contains(strs[i].trim())) {
             if (emailPosts.length() == 0)
@@ -707,8 +707,8 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       if (textArea != null) {
         String vls = textArea.getValue();
         if (!ForumUtils.isEmpty(vls)) {
-          values = values + "," + vls;
-          values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+          values = values + ForumUtils.COMMA + vls;
+          values = ForumUtils.removeStringResemble(values.replaceAll(",,", ForumUtils.COMMA));
         }
         textArea.setValue(values);
         if (field.equals(FIELD_MODERATOR_MULTIVALUE)) {
@@ -744,7 +744,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
   static public class AddUserActionListener extends EventListener<UIForumForm> {
     public void execute(Event<UIForumForm> event) throws Exception {
       UIForumForm forumForm = event.getSource();
-      String id = event.getRequestContext().getRequestParameter(OBJECTID).replace("/0", "");
+      String id = event.getRequestContext().getRequestParameter(OBJECTID).replace("/0", ForumUtils.EMPTY_STR);
       UIPopupContainer uiPopupContainer = forumForm.getAncestorOfType(UIPopupContainer.class);
       forumForm.showUIUserSelect(uiPopupContainer, USER_SELECTOR_POPUPWINDOW, id);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);

@@ -160,8 +160,8 @@ public class UIForumListSearch extends UIContainer {
       boolean isRead = true;
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
 
-      String[] id = path.split("/");
-      String cateId = "", forumId = "", topicId = "", postId = "";
+      String[] id = path.split(ForumUtils.SLASH);
+      String cateId = ForumUtils.EMPTY_STR, forumId = ForumUtils.EMPTY_STR, topicId = ForumUtils.EMPTY_STR, postId = ForumUtils.EMPTY_STR;
       for (int i = 0; i < id.length; i++) {
         if (id[i].indexOf(Utils.CATEGORY) >= 0)
           cateId = id[i];
@@ -207,7 +207,7 @@ public class UIForumListSearch extends UIContainer {
             uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
             UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class);
             uiTopicContainer.setUpdateForum(cateId, forum, 0);
-            forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId + "/" + forumId));
+            forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId + ForumUtils.SLASH + forumId));
             event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
           }
         } else
@@ -222,12 +222,12 @@ public class UIForumListSearch extends UIContainer {
             uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
             UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class);
             uiTopicDetail.setUpdateForum(forum);
-            uiTopicDetail.setTopicFromCate(cateId, forumId, topic, 0);
+            uiTopicDetail.initInfoTopic(cateId, forumId, topic, 0);
             uiTopicDetail.setIdPostView("top");
             uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(cateId, forumId, topic.getId());
             forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(), topic.getId());
             forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis());
-            forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId + "/" + forumId + " "));
+            forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId + ForumUtils.SLASH + forumId + " "));
             event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
           }
         } else

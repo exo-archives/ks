@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
@@ -38,8 +39,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIForm;
 
 /**
@@ -61,7 +62,7 @@ import org.exoplatform.webui.form.UIForm;
 public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
   public final String  WATCHTOOLS_ITERATOR = "WatchToolsPageIterator";
 
-  private String       path                = "";
+  private String       path                = ForumUtils.EMPTY_STR;
 
   private String[]     emails              = new String[] {};
 
@@ -164,7 +165,7 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       try {
         String path = uiForm.path;
-        forumService.removeWatch(1, path, "/" + email);
+        forumService.removeWatch(1, path, ForumUtils.SLASH + email);
         String[] strings = new String[(uiForm.listEmail.size() - 1)];
         int j = 0;
         for (String string : uiForm.listEmail) {

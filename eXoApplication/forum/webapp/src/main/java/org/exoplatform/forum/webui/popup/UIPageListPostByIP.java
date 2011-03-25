@@ -60,7 +60,7 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponent {
-  private String       userName           = "";
+  private String       userName           = ForumUtils.EMPTY_STR;
 
   private String       ip_                = null;
 
@@ -146,7 +146,7 @@ public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponen
       }
       boolean isRead = true;
       if (uiForm.userProfile.getUserRole() > 0) {
-        String ids[] = post.getPath().split("/");
+        String ids[] = post.getPath().split(ForumUtils.SLASH);
         int leng = ids.length;
         String categoryId = ids[leng - 4];
         String forumId = ids[leng - 3];
@@ -166,10 +166,10 @@ public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponen
             }
           }
           if (isRead) {
-            String path_ = "";
+            String path_ = ForumUtils.EMPTY_STR;
             Forum forum = uiForm.getForumService().getForum(categoryId, forumId);
             if (forum != null)
-              path_ = forum.getPath() + "/" + topicId;
+              path_ = forum.getPath() + ForumUtils.SLASH + topicId;
             Topic topic = uiForm.getForumService().getTopicByPath(path_, false);
             if (forum == null || topic == null) {
               warning("UIForumPortlet.msg.do-not-permission");
@@ -224,7 +224,7 @@ public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponen
   static public class DeletePostLinkActionListener extends BaseEventListener<UIPageListPostByIP> {
     public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiForm, final String postId) throws Exception {
       Post post = uiForm.getPostById(postId);
-      String[] path = post.getPath().split("/");
+      String[] path = post.getPath().split(ForumUtils.SLASH);
       int length = path.length;
       String topicId = path[length - 2];
       String forumId = path[length - 3];

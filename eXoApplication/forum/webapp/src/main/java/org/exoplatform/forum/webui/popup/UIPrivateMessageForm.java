@@ -40,12 +40,12 @@ import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UITree;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 import org.exoplatform.webui.organization.account.UIUserSelector;
@@ -107,7 +107,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     SendTo.addValidator(MandatoryValidator.class);
     UIFormStringInput MailTitle = new UIFormStringInput(FIELD_MAILTITLE_INPUT, FIELD_MAILTITLE_INPUT, null);
     MailTitle.addValidator(MandatoryValidator.class);
-    UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MAILMESSAGE_INPUT, FIELD_MAILMESSAGE_INPUT, "");
+    UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MAILMESSAGE_INPUT, FIELD_MAILMESSAGE_INPUT, ForumUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setToolBarName("Basic");
     formWYSIWYGInput.setFCKConfig(Utils.getFCKConfig());
@@ -161,11 +161,11 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
 
   private String removeCurrentUser(String s) throws Exception {
     if (s.equals(userName))
-      return "";
-    if (s.contains(userName + ","))
-      s = StringUtils.remove(s, userName + ",");
-    if (s.contains("," + userName))
-      s = StringUtils.remove(s, "," + userName);
+      return ForumUtils.EMPTY_STR;
+    if (s.contains(userName + ForumUtils.COMMA))
+      s = StringUtils.remove(s, userName + ForumUtils.COMMA);
+    if (s.contains(ForumUtils.COMMA + userName))
+      s = StringUtils.remove(s, ForumUtils.COMMA + userName);
     return s;
   }
 
@@ -222,9 +222,9 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
           messageForm.getForumService().savePrivateMessage(privateMessage);
         } catch (Exception e) {
         }
-        areaInput.setValue("");
-        stringInput.setValue("");
-        formWYSIWYGInput.setValue("");
+        areaInput.setValue(ForumUtils.EMPTY_STR);
+        stringInput.setValue(ForumUtils.EMPTY_STR);
+        formWYSIWYGInput.setValue(ForumUtils.EMPTY_STR);
         messageForm.info("UIPrivateMessageForm.msg.sent-successfully");
         if (messageForm.fullMessage) {
           messageForm.id = 1;
@@ -342,7 +342,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     public void execute(Event<UIPrivateMessageForm> event) throws Exception {
       UIPrivateMessageForm messageForm = event.getSource();
       UIPopupContainer uiPopupContainer = messageForm.getAncestorOfType(UIPopupContainer.class);
-      messageForm.showUIUserSelect(uiPopupContainer, USER_SELECTOR_POPUPWINDOW, "");
+      messageForm.showUIUserSelect(uiPopupContainer, USER_SELECTOR_POPUPWINDOW, ForumUtils.EMPTY_STR);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);
     }
   }

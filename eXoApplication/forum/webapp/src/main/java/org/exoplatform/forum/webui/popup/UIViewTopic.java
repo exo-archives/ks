@@ -50,8 +50,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIForm;
 
 /**
@@ -128,9 +128,9 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
     this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
     String userLogin = this.userProfile.getUserId();
     Topic topic = this.topic;
-    String id[] = topic.getPath().split("/");
+    String id[] = topic.getPath().split(ForumUtils.SLASH);
     int l = id.length;
-    pageList = forumService.getPosts(id[l - 3], id[l - 2], topic.getId(), "", "", "", userLogin);
+    pageList = forumService.getPosts(id[l - 3], id[l - 2], topic.getId(), ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, userLogin);
     long maxPost = this.userProfile.getMaxPostInPage();
     if (maxPost <= 0)
       maxPost = 10;
@@ -207,7 +207,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
   }
 
   public String getImageUrl(String imagePath) throws Exception {
-    String url = "";
+    String url = ForumUtils.EMPTY_STR;
     try {
       url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
     } catch (Exception e) {
@@ -233,10 +233,10 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
     if (screenName != null && screenName.length() > 17 && !screenName.trim().contains(" ")) {
       boolean isDelted = false;
       if (screenName.indexOf("<s>") >= 0) {
-        screenName = screenName.replaceAll("<s>", "").replaceAll("</s>", "");
+        screenName = screenName.replaceAll("<s>", ForumUtils.EMPTY_STR).replaceAll("</s>", ForumUtils.EMPTY_STR);
         isDelted = true;
       }
-      screenName = "<span title=\"" + screenName + "\">" + ((isDelted) ? "<s>" : "") + ForumUtils.getSubString(screenName, 15) + ((isDelted) ? "</s></span>" : "</span>");
+      screenName = "<span title=\"" + screenName + "\">" + ((isDelted) ? "<s>" : ForumUtils.EMPTY_STR) + ForumUtils.getSubString(screenName, 15) + ((isDelted) ? "</s></span>" : "</span>");
     }
     return screenName;
   }
@@ -263,22 +263,26 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
         uiForm.forumService.modifyTopic(topics, Utils.APPROVE);
         uiForm.forumService.modifyTopic(topics, Utils.WAITING);
       } catch (Exception e) {
-        uiForm.log.debug("\nModify topic fail: " + e.getMessage() + "\n" + e.getCause());
+        log.debug("\nModify topic fail: ", e);
       }
-      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-      if (popupContainer != null) {
-        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-        popupAction.deActivate();
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-        UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
-        if (moderationForum != null) {
-          moderationForum.setReloadPortlet(true);
-          event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum);
-        }
-      } else {
-        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.cancelAction();
+      uiForm.closePopup(event);
+    }
+  }
+
+  private void closePopup(Event<UIViewTopic> event) throws Exception {
+    UIPopupContainer popupContainer = getAncestorOfType(UIPopupContainer.class);
+    if (popupContainer != null) {
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+      popupAction.deActivate();
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
+      if (moderationForum != null) {
+        moderationForum.setReloadPortlet(true);
+        event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum);
       }
+    } else {
+      UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+      forumPortlet.cancelAction();
     }
   }
 
@@ -287,26 +291,13 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
       UIViewTopic uiForm = event.getSource();
       Topic topic = uiForm.topic;
       try {
-        String[] path = topic.getPath().split("/");
+        String[] path = topic.getPath().split(ForumUtils.SLASH);
         int l = path.length;
         uiForm.forumService.removeTopic(path[l - 3], path[l - 2], topic.getId());
       } catch (Exception e) {
-        uiForm.log.debug("Removing " + topic.getId() + " topic fail: " + e.getCause());
+        log.debug("Removing " + topic.getId() + " topic fail: " + e.getCause());
       }
-      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-      if (popupContainer != null) {
-        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-        popupAction.deActivate();
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-        UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
-        if (moderationForum != null) {
-          event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum);
-          moderationForum.setReloadPortlet(true);
-        }
-      } else {
-        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.cancelAction();
-      }
+      uiForm.closePopup(event);
     }
   }
 

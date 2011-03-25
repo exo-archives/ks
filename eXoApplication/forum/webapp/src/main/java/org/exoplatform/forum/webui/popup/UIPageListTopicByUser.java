@@ -72,9 +72,9 @@ public class UIPageListTopicByUser extends UIContainer {
 
   private JCRPageList  pageList;
 
-  private String       strOrderBy = "";
+  private String       strOrderBy = ForumUtils.EMPTY_STR;
 
-  private String       userName   = "";
+  private String       userName   = ForumUtils.EMPTY_STR;
 
   private boolean      isUseAjax  = true;
 
@@ -145,7 +145,7 @@ public class UIPageListTopicByUser extends UIContainer {
       UIPageListTopicByUser uiForm = event.getSource();
       String topicId = event.getRequestContext().getRequestParameter(OBJECTID);
       Topic topic = uiForm.getTopicById(topicId);
-      String[] path = topic.getPath().split("/");
+      String[] path = topic.getPath().split(ForumUtils.SLASH);
       int i = path.length;
       String categoryId = path[i - 3];
       String forumId = path[i - 2];
@@ -166,7 +166,7 @@ public class UIPageListTopicByUser extends UIContainer {
         return;
       }
       
-      String[] id = topic.getPath().split("/");
+      String[] id = topic.getPath().split(ForumUtils.SLASH);
       int i = id.length;
       String categoryId = id[i - 3];
       String forumId = id[i - 2];
@@ -203,9 +203,9 @@ public class UIPageListTopicByUser extends UIContainer {
         uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
         UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class);
         uiTopicDetail.setUpdateForum(forum);
-        uiTopicDetail.setUpdateContainer(categoryId, forumId, topic, 0);
+        uiTopicDetail.initInfoTopic(categoryId, forumId, topic, 0);
         uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(categoryId, forumId, topic.getId());
-        forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId + "/" + forumId + " "));
+        forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId + ForumUtils.SLASH + forumId + " "));
         uiTopicDetail.setIdPostView("top");
         forumPortlet.cancelAction();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

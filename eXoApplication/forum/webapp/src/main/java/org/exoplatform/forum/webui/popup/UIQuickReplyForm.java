@@ -68,11 +68,11 @@ public class UIQuickReplyForm extends UIForm {
 
   private String             forumId;
 
-  private String             topicId                = "";
+  private String             topicId                = ForumUtils.EMPTY_STR;
 
   private String             userName;
 
-  private String             links                  = "";
+  private String             links                  = ForumUtils.EMPTY_STR;
 
   private Topic              topic;
 
@@ -135,7 +135,7 @@ public class UIQuickReplyForm extends UIForm {
         //
         Topic topic = quickReply.topic;
         Post post = new Post();
-        post.setName("Re: " + topic.getTopicName());
+        post.setName(quickReply.getLabel("Re") + topic.getTopicName());
         post.setMessage(message);
         post.setOwner(quickReply.userName);
         post.setRemoteAddr(remoteAddr);
@@ -149,16 +149,16 @@ public class UIQuickReplyForm extends UIForm {
           if (userProfile.getIsAutoWatchTopicIPost()) {
             List<String> values = new ArrayList<String>();
             values.add(userProfile.getEmail());
-            String path = quickReply.categoryId + "/" + quickReply.forumId + "/" + quickReply.topicId;
+            String path = quickReply.categoryId + ForumUtils.SLASH + quickReply.forumId + ForumUtils.SLASH + quickReply.topicId;
             forumService.addWatch(1, path, values, quickReply.userName);
           }
         } catch (PathNotFoundException e) {
           String[] args = new String[] {};
           throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING));
         }
-        textAreaInput.setValue("");
+        textAreaInput.setValue(ForumUtils.EMPTY_STR);
         if (isOffend || hasTopicMod) {
-          Object[] args = { "" };
+          Object[] args = { ForumUtils.EMPTY_STR };
           UIApplication uiApp = quickReply.getAncestorOfType(UIApplication.class);
           if (isOffend)
             uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING));
@@ -194,10 +194,10 @@ public class UIQuickReplyForm extends UIForm {
         message = ForumTransformHTML.enCodeHTMLContent(message);
         Topic topic = quickReply.topic;
         Post post = new Post();
-        post.setName("Re: " + topic.getTopicName());
+        post.setName(quickReply.getLabel("Re") + topic.getTopicName());
         post.setMessage(message);
         post.setOwner(quickReply.userName);
-        post.setRemoteAddr("");
+        post.setRemoteAddr(ForumUtils.EMPTY_STR);
         post.setIcon(topic.getIcon());
         post.setIsApproved(false);
         post.setCreatedDate(new Date());

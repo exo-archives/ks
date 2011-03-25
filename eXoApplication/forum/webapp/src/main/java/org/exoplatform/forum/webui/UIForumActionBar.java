@@ -207,7 +207,7 @@ public class UIForumActionBar extends UIContainer {
         if (category != null && category.isRendered()) {
           forumForm.setCategoryValue(category.getCategoryId(), true);
         } else {
-          forumForm.setCategoryValue("", true);
+          forumForm.setCategoryValue(ForumUtils.EMPTY_STR, true);
         }
         forumForm.setForumUpdate(false);
         forumForm.setActionBar(true);

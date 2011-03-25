@@ -54,11 +54,11 @@ public class TestForumUtils extends TestCase {
     
     // cases when type or id are empty
     assertEquals("http://hostname/portal/private/classic/forum", ForumUtils.buildForumLink("http://hostname/portal/private/classic/forum?param=value&param2=value2", "forum", "classic", null, null));
-    assertEquals("http://hostname/portal/private/classic/forum", ForumUtils.buildForumLink("http://hostname/portal/private/classic/forum?param=value&param2=value2", "forum", "classic", "", null));
-    assertEquals("http://hostname/portal/private/classic/forum", ForumUtils.buildForumLink("http://hostname/portal/private/classic/forum?param=value&param2=value2", "forum", "classic", null, ""));
-    assertEquals("http://hostname/portal/private/classic/forum", ForumUtils.buildForumLink("http://hostname/portal/private/classic/forum?param=value&param2=value2", "forum", "classic", "", ""));
-    assertEquals("http://hostname/portal/private/classic/forum", ForumUtils.buildForumLink("http://hostname/portal/private/classic/forum?param=value&param2=value2", "forum", "classic", "", "1234"));
-    assertEquals("http://hostname/portal/private/classic/forum", ForumUtils.buildForumLink("http://hostname/portal/private/classic/forum?param=value&param2=value2", "forum", "classic", "topic", ""));
+    assertEquals("http://hostname/portal/private/classic/forum", ForumUtils.buildForumLink("http://hostname/portal/private/classic/forum?param=value&param2=value2", "forum", "classic", ForumUtils.EMPTY_STR, null));
+    assertEquals("http://hostname/portal/private/classic/forum", ForumUtils.buildForumLink("http://hostname/portal/private/classic/forum?param=value&param2=value2", "forum", "classic", null, ForumUtils.EMPTY_STR));
+    assertEquals("http://hostname/portal/private/classic/forum", ForumUtils.buildForumLink("http://hostname/portal/private/classic/forum?param=value&param2=value2", "forum", "classic", ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR));
+    assertEquals("http://hostname/portal/private/classic/forum", ForumUtils.buildForumLink("http://hostname/portal/private/classic/forum?param=value&param2=value2", "forum", "classic", ForumUtils.EMPTY_STR, "1234"));
+    assertEquals("http://hostname/portal/private/classic/forum", ForumUtils.buildForumLink("http://hostname/portal/private/classic/forum?param=value&param2=value2", "forum", "classic", "topic", ForumUtils.EMPTY_STR));
     
     // case for explicit no-id
     assertEquals("http://hostname/portal/private/classic/forum/category", ForumUtils.buildForumLink("http://hostname/portal/private/classic/forum?param=value&param2=value2", "forum", "classic", "category", Utils.FORUM_SERVICE));
@@ -77,7 +77,7 @@ public class TestForumUtils extends TestCase {
   //}
 
   public void testIsValidEmailAddresses() throws Exception {
-    String emails = "";
+    String emails = ForumUtils.EMPTY_STR;
     // email is empty
     assertEquals(true, ForumUtils.isValidEmailAddresses(emails));
     // email only text not @
@@ -132,7 +132,7 @@ public class TestForumUtils extends TestCase {
 
   public void testGetTimeZoneNumberInString() {
   	// timeZone is empty
-  	String timeZone = "";
+  	String timeZone = ForumUtils.EMPTY_STR;
   	assertEquals(null, ForumUtils.getTimeZoneNumberInString(timeZone));
   	
   	// timeZone at Eniwetok. ZoneTime is -12.
@@ -184,7 +184,7 @@ public class TestForumUtils extends TestCase {
   }
   
   public void testGetOrderBy() throws Exception {
-    String param = "dateTime", strOrderBy = "";
+    String param = "dateTime", strOrderBy = ForumUtils.EMPTY_STR;
     assertEquals("dateTime ascending",ForumUtils.getOrderBy(strOrderBy, param));
     param = "dateTime";
     strOrderBy = "dateTime descending";
@@ -201,7 +201,7 @@ public class TestForumUtils extends TestCase {
   }
 
   public void testUpdateMultiValues() throws Exception {
-    String value = "root,demo", values = "";
+    String value = "root,demo", values = ForumUtils.EMPTY_STR;
     assertEquals("root,demo", ForumUtils.updateMultiValues(value, values));
     value = "root,demo";
     values = "xxx,,aaa,eee,bbb  , , ddd";
@@ -218,22 +218,22 @@ public class TestForumUtils extends TestCase {
   }
 
   public void testSplitForForum() throws Exception {
-  	String str = "";
+  	String str = ForumUtils.EMPTY_STR;
   	assertEquals("[]", Arrays.asList(ForumUtils.splitForForum(str)).toString());
   	str = "test, test, test";
   	assertEquals("[test, test, test]", Arrays.asList(ForumUtils.splitForForum(str)).toString());
   }
 
   public void testUnSplitForForum() throws Exception {
-  	String []strs = new String[]{""};
-  	assertEquals("", ForumUtils.unSplitForForum(strs));
+  	String []strs = new String[]{ForumUtils.EMPTY_STR};
+  	assertEquals(ForumUtils.EMPTY_STR, ForumUtils.unSplitForForum(strs));
   	strs = new String[]{"test1", "test2", "test3"};
   	assertEquals("test1,test2,test3", ForumUtils.unSplitForForum(strs));
   }
 
   public void testRemoveSpaceInString() throws Exception {
-    String str = "";
-    assertEquals("", ForumUtils.removeSpaceInString(str));
+    String str = ForumUtils.EMPTY_STR;
+    assertEquals(ForumUtils.EMPTY_STR, ForumUtils.removeSpaceInString(str));
     str = "test ,,test1,test2,   test3";
     assertEquals("test,test1,test2,test3", ForumUtils.removeSpaceInString(str));
   }
@@ -254,15 +254,15 @@ public class TestForumUtils extends TestCase {
   }
 
   public void testRemoveStringResemble() throws Exception {
-    String str = "";
-    assertEquals("", ForumUtils.removeStringResemble(str));
+    String str = ForumUtils.EMPTY_STR;
+    assertEquals(ForumUtils.EMPTY_STR, ForumUtils.removeStringResemble(str));
     str = "test,text, test,foo,test,abc";
     assertEquals("test,text,foo,abc", ForumUtils.removeStringResemble(str));
   }
 
   public void testIsEmpty() {
   	assertEquals(true, ForumUtils.isEmpty(null));
-  	assertEquals(true, ForumUtils.isEmpty(""));
+  	assertEquals(true, ForumUtils.isEmpty(ForumUtils.EMPTY_STR));
   	assertEquals(true, ForumUtils.isEmpty(" "));
   	assertEquals(false, ForumUtils.isEmpty("abc"));
   }
@@ -291,9 +291,9 @@ public class TestForumUtils extends TestCase {
   }
 
   public void testAddStringToString() throws Exception {
-  	String input = "", output="";
+  	String input = ForumUtils.EMPTY_STR, output=ForumUtils.EMPTY_STR;
   	assertEquals("[ ]", Arrays.asList(ForumUtils.addStringToString(input, output)).toString());
-  	input = "abc"; output="";
+  	input = "abc"; output=ForumUtils.EMPTY_STR;
   	assertEquals("[ ]", Arrays.asList(ForumUtils.addStringToString(input, output)).toString());
   	input = "abc"; output="abc";
   	assertEquals("[abc]", Arrays.asList(ForumUtils.addStringToString(input, output)).toString());
@@ -322,16 +322,16 @@ public class TestForumUtils extends TestCase {
   }
 
   public void testGetSubString() {
-    String title = "";
-    assertEquals("", ForumUtils.getSubString(title, 14));
+    String title = ForumUtils.EMPTY_STR;
+    assertEquals(ForumUtils.EMPTY_STR, ForumUtils.getSubString(title, 14));
     title = "test title test abcnde aads";
     assertEquals("test title...", ForumUtils.getSubString(title, 14));
   	assertEquals("test title test...", ForumUtils.getSubString(title, 17));
   }
 
   public void testGetLabel() {
-  	String label = "", key="";
-  	assertEquals("", ForumUtils.getLabel(label, key));
+  	String label = ForumUtils.EMPTY_STR, key=ForumUtils.EMPTY_STR;
+  	assertEquals(ForumUtils.EMPTY_STR, ForumUtils.getLabel(label, key));
   	label = "label"; key="key";
   	assertEquals("label", ForumUtils.getLabel(label, key));
   	label = "label '<keyWord>'"; key="key";
@@ -367,7 +367,7 @@ public class TestForumUtils extends TestCase {
   }
 
   public void testGetListInValus() throws Exception {
-    String values = "";
+    String values = ForumUtils.EMPTY_STR;
     assertEquals("[]", ForumUtils.getListInValus(values).toString());
     values = "value,value, value,   value,   value  ,value";
     assertEquals("[value]", ForumUtils.getListInValus(values).toString());
@@ -380,8 +380,8 @@ public class TestForumUtils extends TestCase {
   }
 
   public void testGetCalculateListEmail() throws Exception {
-  	String s = "";
-  	assertEquals("", ForumUtils.getCalculateListEmail(s));
+  	String s = ForumUtils.EMPTY_STR;
+  	assertEquals(ForumUtils.EMPTY_STR, ForumUtils.getCalculateListEmail(s));
   	
   	s = "abc@abc.com";
   	assertEquals("<span title='abc@abc.com'>abc@abc.com</span>", ForumUtils.getCalculateListEmail(s));

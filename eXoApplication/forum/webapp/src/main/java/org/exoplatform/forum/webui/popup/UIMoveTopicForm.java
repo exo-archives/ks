@@ -40,8 +40,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
@@ -67,9 +67,9 @@ public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
 
   private boolean        isAdmin     = false;
 
-  private String         link        = "";
+  private String         link        = ForumUtils.EMPTY_STR;
 
-  private String         pathTopic   = "";
+  private String         pathTopic   = ForumUtils.EMPTY_STR;
 
   public String getLink() {
     return link;
@@ -139,7 +139,7 @@ public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
   @SuppressWarnings("unused")
   private List<Forum> getForums(String categoryId) throws Exception {
     List<Forum> forums = new ArrayList<Forum>();
-    for (Forum forum : this.getForumService().getForumSummaries(categoryId, "")) {
+    for (Forum forum : this.getForumService().getForumSummaries(categoryId, ForumUtils.EMPTY_STR)) {
       if (forum.getId().equalsIgnoreCase(this.forumId)) {
         if (pathTopic.indexOf(categoryId) >= 0)
           continue;
@@ -179,12 +179,13 @@ public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
             UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
             UITopicDetailContainer topicDetailContainer = forumContainer.getChild(UITopicDetailContainer.class);
             forumContainer.setIsRenderChild(false);
-            String[] temp = forumPath.split("/");
+            String[] strs = forumPath.split(ForumUtils.SLASH);
+            String catgoryId = strs[strs.length - 2], forumId=strs[strs.length - 1];
             UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
-            forumDescription.setForumIds(temp[temp.length - 2], temp[temp.length - 1]);
+            forumDescription.setForumIds(catgoryId, forumId);
             UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class);
-            topicDetail.setUpdateForum(uiForm.getForumService().getForum(temp[temp.length - 2], temp[temp.length - 1]));
-            topicDetail.setUpdateTopic(temp[temp.length - 2], temp[temp.length - 1], uiForm.topics.get(0).getId());
+            topicDetail.setUpdateForum(uiForm.getForumService().getForum(catgoryId, forumId));
+            topicDetail.setUpdateTopic(catgoryId, forumId, uiForm.topics.get(0).getId());
             event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
           } else {
             UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);

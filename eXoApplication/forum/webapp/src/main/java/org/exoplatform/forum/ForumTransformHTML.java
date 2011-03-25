@@ -35,7 +35,7 @@ public class ForumTransformHTML {
 
   public static String cleanHtmlCode(String sms, List<String> bbcs) {
     if (sms == null || sms.trim().length() <= 0)
-      return "";
+      return ForumUtils.EMPTY_STR;
     sms = StringUtils.replace(sms, "\n", " ");
     // clean bbcode
     List<String> bbcList = new ArrayList<String>();
@@ -63,19 +63,19 @@ public class ForumTransformHTML {
         }
       }
     }
-    sms = StringUtils.replace(sms, "[U]", "");
-    sms = StringUtils.replace(sms, "[/U]", "");
-    sms = StringUtils.replace(sms, "[u]", "");
-    sms = StringUtils.replace(sms, "[/u]", "");
+    sms = StringUtils.replace(sms, "[U]", ForumUtils.EMPTY_STR);
+    sms = StringUtils.replace(sms, "[/U]", ForumUtils.EMPTY_STR);
+    sms = StringUtils.replace(sms, "[u]", ForumUtils.EMPTY_STR);
+    sms = StringUtils.replace(sms, "[/u]", ForumUtils.EMPTY_STR);
     // Clean html code
     String scriptregex = "<(script|style)[^>]*>[^<]*</(script|style)>";
     Pattern p1 = Pattern.compile(scriptregex, Pattern.CASE_INSENSITIVE);
     Matcher m1 = p1.matcher(sms);
-    sms = m1.replaceAll("");
+    sms = m1.replaceAll(ForumUtils.EMPTY_STR);
     String tagregex = "<[^>]*>";
     Pattern p2 = Pattern.compile(tagregex);
     Matcher m2 = p2.matcher(sms);
-    sms = m2.replaceAll("");
+    sms = m2.replaceAll(ForumUtils.EMPTY_STR);
     String multiplenewlines = "(\\n{1,2})(\\s*\\n)+";
     sms = sms.replaceAll(multiplenewlines, "$1");
     return sms;
@@ -83,7 +83,7 @@ public class ForumTransformHTML {
 
   public static String getTitleInHTMLCode(String s, List<String> bbcs) {
     if (s == null || s.trim().length() == 0)
-      return "";
+      return ForumUtils.EMPTY_STR;
     if (s.length() > 500)
       s = s.substring(0, 500);
     s = s.replaceAll("&nbsp;&nbsp;", "&nbsp;").replaceAll("&nbsp; ", "&nbsp;").replaceAll(" &nbsp;", "&nbsp;").replaceAll("<br/>", " ");
@@ -95,7 +95,7 @@ public class ForumTransformHTML {
 
   public static String removeCharterStrange(String s) {
     if (s == null || s.length() <= 0)
-      return "";
+      return ForumUtils.EMPTY_STR;
     int i = 0;
     StringBuilder builder = new StringBuilder();
     while (i < s.length()) {
@@ -111,7 +111,7 @@ public class ForumTransformHTML {
     StringBuffer buffer = new StringBuffer();
     if (s != null) {
       s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
-      s = s.replaceFirst("(<br/>)*", "");
+      s = s.replaceFirst("(<br/>)*", ForumUtils.EMPTY_STR);
       s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
       for (int j = 0; j < s.trim().length(); j++) {
         char c = s.charAt(j);
@@ -126,7 +126,7 @@ public class ForumTransformHTML {
         }
       }
     }
-    return buffer.toString().replaceFirst("(<br/>)*", "");
+    return buffer.toString().replaceFirst("(<br/>)*", ForumUtils.EMPTY_STR);
   }
 
   public static String enCodeHTMLContent(String message) {
@@ -165,7 +165,7 @@ public class ForumTransformHTML {
       }
       s = buffer.toString();
     } else
-      s = "";
+      s = ForumUtils.EMPTY_STR;
     return s;
   }
 
@@ -173,7 +173,7 @@ public class ForumTransformHTML {
     if (s != null && s.trim().length() > 0) {
       s = s.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#39", "'");
     } else
-      s = "";
+      s = ForumUtils.EMPTY_STR;
     return s;
   }
 
@@ -182,7 +182,7 @@ public class ForumTransformHTML {
     int lastIndex = 0;
     String start;
     String end;
-    String text_ = "";
+    String text_ = ForumUtils.EMPTY_STR;
     StringBuilder builder;
     String[] tagBBcode = new String[] { "quote", "code", "QUOTE", "CODE" };
     for (int i = 0; i < tagBBcode.length; i++) {
@@ -198,7 +198,7 @@ public class ForumTransformHTML {
             continue;
           text_ = text;
           if (text.indexOf('<' + "p") > text.indexOf('<' + "/p")) {
-            text = StringUtils.replaceOnce(text, "</p>", "");
+            text = StringUtils.replaceOnce(text, "</p>", ForumUtils.EMPTY_STR);
             int t = text.lastIndexOf('<' + "p>");
             builder.append(text.substring(0, t));
             if (text.length() > (t + 3)) {
@@ -214,7 +214,7 @@ public class ForumTransformHTML {
 
           builder = new StringBuilder();
           if (text.indexOf('<' + "span") > text.indexOf('<' + "/span")) {
-            text = StringUtils.replaceOnce(text, "</span>", "");
+            text = StringUtils.replaceOnce(text, "</span>", ForumUtils.EMPTY_STR);
             int t = text.lastIndexOf('<' + "span");
             builder.append(text.substring(0, t));
             if (text.length() > (t + 6)) {

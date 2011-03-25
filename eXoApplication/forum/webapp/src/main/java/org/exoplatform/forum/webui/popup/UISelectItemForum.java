@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
@@ -34,8 +35,8 @@ import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
@@ -79,16 +80,16 @@ public class UISelectItemForum extends BaseForumForm implements UIPopupComponent
     }
     if (this.forumLinks == null || this.forumLinks.size() <= 0) {
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-      this.forumLinks = forumService.getAllLink("", "");
+      this.forumLinks = forumService.getAllLink(ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR);
     }
   }
 
   @SuppressWarnings( { "unchecked", "unused" })
   private List<ForumLinkData> getForumLinks() throws Exception {
-    String categoryId = "", forumId = "";
+    String categoryId = ForumUtils.EMPTY_STR, forumId = ForumUtils.EMPTY_STR;
     boolean isPut = true;
     List<ForumLinkData> linkForum = new ArrayList<ForumLinkData>();
-    String cateId = "";
+    String cateId = ForumUtils.EMPTY_STR;
     for (ForumLinkData forumLink : this.forumLinks) {
       if (forumLink.getType().equals(Utils.CATEGORY)) {
         cateId = forumLink.getId();

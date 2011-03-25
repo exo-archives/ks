@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.webui.popup.UIListTopicOld;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -93,7 +94,7 @@ public class UIForumPageIterator extends UIContainer {
     }
     List<String> temp = new ArrayList<String>();
     for (int i = beginTabPage; i <= endTabPage; i++) {
-      temp.add("" + i);
+      temp.add(ForumUtils.EMPTY_STR + i);
     }
     return temp;
   }

@@ -46,7 +46,7 @@ public class UIForumInputWithActions extends UIFormInputSet {
 
   private String                labelActionAddItem;
 
-  private String                actionIdAddItem = "";
+  private String                actionIdAddItem = ForumUtils.EMPTY_STR;
 
   private Map<String, String>   mapLabelInfo    = new HashMap<String, String>();
 
@@ -150,12 +150,12 @@ public class UIForumInputWithActions extends UIFormInputSet {
           } else if (action.getActionType() == ActionData.TYPE_LINK) {
             w.write(ForumUtils.getSubString(actionLabel, 30));
           } else if (action.getActionType() == ActionData.TYPE_ATT) {
-            String size = "";
+            String size = ForumUtils.EMPTY_STR;
             if (actionLabel.lastIndexOf("(") > 0) {
               size = actionLabel.substring(actionLabel.lastIndexOf("("));
               actionLabel = actionLabel.substring(0, actionLabel.lastIndexOf("("));
             }
-            String type = "";
+            String type = ForumUtils.EMPTY_STR;
             int dot = actionLabel.lastIndexOf(".");
             if (dot > 0) {
               type = actionLabel.substring(dot);

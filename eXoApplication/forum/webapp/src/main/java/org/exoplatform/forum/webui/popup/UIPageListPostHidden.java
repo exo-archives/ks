@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Utils;
@@ -36,8 +37,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SAS
@@ -86,7 +87,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 
   @SuppressWarnings( { "unchecked", "unused" })
   private List<Post> getPosts() throws Exception {
-    pageList = forumService.getPosts(this.categoryId, this.forumId, this.topicId, "", "true", "", "");
+    pageList = forumService.getPosts(this.categoryId, this.forumId, this.topicId, ForumUtils.EMPTY_STR, "true", ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR);
     pageList.setPageSize(6);
     maxPage = pageList.getAvailablePage();
     listPost = pageList.getPage(pageSelect);

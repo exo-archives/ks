@@ -93,7 +93,7 @@ public class UITopicPoll extends BaseForumForm {
       userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
     } catch (Exception e) {
       try {
-        userProfile = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), "");
+        userProfile = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), ForumUtils.EMPTY_STR);
       } catch (Exception ex) {
       }
     }
@@ -155,7 +155,7 @@ public class UITopicPoll extends BaseForumForm {
         this.canViewEditMenu = true;
       else
         this.canViewEditMenu = false;
-      pollId = forum.getPath() + "/" + topicId + "/" + topicId.replace(Utils.TOPIC, Utils.POLL);
+      pollId = forum.getPath() + ForumUtils.SLASH + topicId + ForumUtils.SLASH + topicId.replace(Utils.TOPIC, Utils.POLL);
       try {
         poll_ = pollService.getPoll(pollId);
       } catch (Exception e) {
@@ -230,10 +230,10 @@ public class UITopicPoll extends BaseForumForm {
       double tmp = Double.parseDouble(string);
       double k = (tmp * size) / 100;
       int t = (int) Math.round(k);
-      string = "" + (double) t * 100 / size;
+      string = ForumUtils.EMPTY_STR + (double) t * 100 / size;
       infoVote[j] = string + ":" + t;
     }
-    infoVote[l] = "" + temp;
+    infoVote[l] = ForumUtils.EMPTY_STR + temp;
     if (poll.getIsMultiCheck()) {
       infoVote[l] = String.valueOf(userVotes.length);
     }
@@ -320,9 +320,9 @@ public class UITopicPoll extends BaseForumForm {
             for (String vote : votes) {
               double a = Double.parseDouble(vote);
               if (i == j)
-                votes[i] = "" + ((a - a / size) + onePercent);
+                votes[i] = ForumUtils.EMPTY_STR + ((a - a / size) + onePercent);
               else
-                votes[i] = "" + (a - a / size);
+                votes[i] = ForumUtils.EMPTY_STR + (a - a / size);
               i = i + 1;
             }
           }
@@ -405,7 +405,7 @@ public class UITopicPoll extends BaseForumForm {
           i = 0;
           for (double dv : doubleVote) {
             if (totalVote > 0 && dv > 0)
-              votes[i] = ((dv / totalVote) * 100) + "";
+              votes[i] = ((dv / totalVote) * 100) + ForumUtils.EMPTY_STR;
             else
               votes[i] = "0.0";
             i++;
@@ -434,7 +434,7 @@ public class UITopicPoll extends BaseForumForm {
         popupAction = forumPollPortlet.getChild(UIPopupAction.class);
       }
       UIPollForm pollForm = popupAction.createUIComponent(UIPollForm.class, null, null);
-      String path = topicPoll.categoryId + "/" + topicPoll.forumId + "/" + topicPoll.topicId;
+      String path = topicPoll.categoryId + ForumUtils.SLASH + topicPoll.forumId + ForumUtils.SLASH + topicPoll.topicId;
       pollForm.setTopicPath(path);
       topicPoll.poll_ = topicPoll.getPoll();
       pollForm.setUpdatePoll(topicPoll.poll_, true);
@@ -446,7 +446,7 @@ public class UITopicPoll extends BaseForumForm {
   static public class RemovePollActionListener extends EventListener<UITopicPoll> {
     public void execute(Event<UITopicPoll> event) throws Exception {
       UITopicPoll topicPoll = event.getSource();
-      topicPoll.pollService.removePoll(topicPoll.poll_.getParentPath() + "/" + topicPoll.poll_.getId());
+      topicPoll.pollService.removePoll(topicPoll.poll_.getParentPath() + ForumUtils.SLASH + topicPoll.poll_.getId());
       if (topicPoll.poll_.getIsMultiCheck()) {
         List<UIComponent> children = topicPoll.getChildren();
         for (int i = 0; i < children.size(); i++) {

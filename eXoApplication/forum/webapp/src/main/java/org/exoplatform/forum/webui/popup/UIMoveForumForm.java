@@ -38,8 +38,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -107,7 +107,7 @@ public class UIMoveForumForm extends BaseUIForm implements UIPopupComponent {
     public void onEvent(Event<UIMoveForumForm> event, UIMoveForumForm uiForm, final String categoryPath) throws Exception {
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       List<Forum> forums = uiForm.forums_;
-      String categoryId = categoryPath.substring((categoryPath.lastIndexOf("/") + 1));
+      String categoryId = categoryPath.substring((categoryPath.lastIndexOf(ForumUtils.SLASH) + 1));
       try {
         forumService.moveForum(forums, categoryPath);
         UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);

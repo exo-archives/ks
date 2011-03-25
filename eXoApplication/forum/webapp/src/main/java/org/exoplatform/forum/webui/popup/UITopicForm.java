@@ -54,8 +54,8 @@ import org.exoplatform.webui.core.UITree;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormInputInfo;
@@ -153,7 +153,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 
   private String                topicId;
 
-  private String                link                             = "";
+  private String                link                             = ForumUtils.EMPTY_STR;
 
   private Forum                 forum;
 
@@ -205,7 +205,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
     UIFormCheckBoxInput sticky = new UIFormCheckBoxInput<Boolean>(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, false);
     UIFormTextAreaInput canView = new UIFormTextAreaInput(FIELD_CANVIEW_INPUT, FIELD_CANVIEW_INPUT, null);
     UIFormTextAreaInput canPost = new UIFormTextAreaInput(FIELD_CANPOST_INPUT, FIELD_CANPOST_INPUT, null);
-    UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, "");
+    UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setFCKConfig(org.exoplatform.ks.common.Utils.getFCKConfig());
     formWYSIWYGInput.setToolBarName("Basic");
@@ -248,7 +248,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
           ad.setActionListener("AddUser");
         else
           ad.setActionListener("AddValuesUser");
-        ad.setActionParameter(fieldPermission + "/" + String.valueOf(i));
+        ad.setActionParameter(fieldPermission + ForumUtils.SLASH + String.valueOf(i));
         ad.setCssIconClass(string + "Icon");
         ad.setActionName(string);
         actions.add(ad);
@@ -359,7 +359,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
     List<ActionData> uploadedFiles = new ArrayList<ActionData>();
     for (ForumAttachment attachdata : attachments_) {
       ActionData fileUpload = new ActionData();
-      fileUpload.setActionListener("");
+      fileUpload.setActionListener(ForumUtils.EMPTY_STR);
       fileUpload.setActionType(ActionData.TYPE_ATT);
       fileUpload.setCssIconClass("AttachmentIcon ZipFileIcon");
       String fileName = ForumUtils.getSizeFile(attachdata.getSize());
@@ -411,7 +411,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
   public void setUpdateTopic(Topic topic, boolean isUpdate) throws Exception {
     if (isUpdate) {
       this.topicId = topic.getId();
-      this.topic = getForumService().getTopic(categoryId, forumId, topicId, "");
+      this.topic = getForumService().getTopic(categoryId, forumId, topicId, ForumUtils.EMPTY_STR);
       UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
       threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true);
       threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(this.topic.getTopicName()));
@@ -486,7 +486,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
         viewPost.setPostView(postNew);
         viewPost.setActionForm(new String[] { "Close" });
       } else {
-        String[] args = { "" };
+        String[] args = { ForumUtils.EMPTY_STR };
         if (k == 0) {
           args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) };
           if (t == 0)
@@ -616,7 +616,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
               }
               topicNew.setIsNotifyWhenAddPost(email);
             } else {
-              topicNew.setIsNotifyWhenAddPost("");
+              topicNew.setIsNotifyWhenAddPost(ForumUtils.EMPTY_STR);
             }
             topicNew.setIsModeratePost(moderatePost);
             topicNew.setIsWaiting(isOffend);
@@ -647,7 +647,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
               try {
                 uiForm.getForumService().saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, false, false, ForumUtils.getDefaultMail());
                 if (uiForm.isDetail) {
-                  forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId));
+                  forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + ForumUtils.SLASH + uiForm.forumId + ForumUtils.SLASH + uiForm.topicId));
                   UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
                   topicDetail.setIsEditTopic(true);
                   uiForm.isDetail = false;
@@ -668,7 +668,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
               topicNew.setVoteRating(0.0);
               topicNew.setUserVoteRating(new String[] {});
               try {
-                String remoteAddr = "";
+                String remoteAddr = ForumUtils.EMPTY_STR;
                 if (forumPortlet.isEnableIPLogging()) {
                   remoteAddr = org.exoplatform.ks.common.Utils.getRemoteIP();
                 }
@@ -677,7 +677,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
                 if (userProfile.getIsAutoWatchMyTopics()) {
                   List<String> values = new ArrayList<String>();
                   values.add(userProfile.getEmail());
-                  String path = uiForm.categoryId + "/" + uiForm.forumId + "/" + topicNew.getId();
+                  String path = uiForm.categoryId + ForumUtils.SLASH + uiForm.forumId + ForumUtils.SLASH + topicNew.getId();
                   uiForm.getForumService().addWatch(1, path, values, userName);
                 }
               } catch (PathNotFoundException e) {
@@ -807,7 +807,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 
   static public class AddValuesUserActionListener extends BaseEventListener<UITopicForm> {
     public void onEvent(Event<UITopicForm> event, UITopicForm uiTopicForm, String objctId) throws Exception {
-      String[] array = objctId.split("/");
+      String[] array = objctId.split(ForumUtils.SLASH);
       String childId = array[0];
       if (!ForumUtils.isEmpty(childId)) {
         UIPopupContainer popupContainer = uiTopicForm.getAncestorOfType(UIPopupContainer.class);
@@ -852,8 +852,8 @@ public class UITopicForm extends BaseForumForm implements UISelector {
       UIFormTextAreaInput textArea = withActions.getUIFormTextAreaInput(field);
       String vls = textArea.getValue();
       if (!ForumUtils.isEmpty(vls)) {
-        values = values + "," + vls;
-        values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+        values = values + ForumUtils.COMMA + vls;
+        values = ForumUtils.removeStringResemble(values.replaceAll(",,", ForumUtils.COMMA));
       }
       textArea.setValue(values);
     } catch (Exception e) {
@@ -885,7 +885,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
   static public class AddUserActionListener extends EventListener<UITopicForm> {
     public void execute(Event<UITopicForm> event) throws Exception {
       UITopicForm topicForm = event.getSource();
-      String id = event.getRequestContext().getRequestParameter(OBJECTID).replace("/0", "");
+      String id = event.getRequestContext().getRequestParameter(OBJECTID).replace("/0", ForumUtils.EMPTY_STR);
       UIPopupContainer uiPopupContainer = topicForm.getAncestorOfType(UIPopupContainer.class);
       topicForm.showUIUserSelect(uiPopupContainer, USER_SELECTOR_POPUPWINDOW, id);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);

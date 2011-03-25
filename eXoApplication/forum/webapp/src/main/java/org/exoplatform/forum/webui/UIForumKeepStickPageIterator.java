@@ -56,7 +56,7 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
 
   public boolean                     isLink          = false;
 
-  public String                      objectId        = "";
+  public String                      objectId        = ForumUtils.EMPTY_STR;
 
   private Map<Integer, List<String>> pageCheckedList = new HashMap<Integer, List<String>>();
 
@@ -85,8 +85,8 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
   }
 
   public String getURLGopage(String number) throws Exception {
-    String type = (objectId.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : ((objectId.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : ((objectId.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : ((objectId.indexOf(Utils.TOPIC) >= 0) ? ForumUtils.TOPIC : (""))));
-    String link = ForumUtils.createdForumLink(type, objectId + "/" + number);
+    String type = (objectId.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : ((objectId.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : ((objectId.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : ((objectId.indexOf(Utils.TOPIC) >= 0) ? ForumUtils.TOPIC : (ForumUtils.EMPTY_STR))));
+    String link = ForumUtils.createdForumLink(type, objectId + ForumUtils.SLASH + number);
     return link;
   }
 
@@ -115,7 +115,7 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
     }
     List<String> temp = new ArrayList<String>();
     for (int i = beginTabPage; i <= endTabPage; i++) {
-      temp.add("" + i);
+      temp.add(ForumUtils.EMPTY_STR + i);
     }
     return temp;
   }

@@ -52,7 +52,7 @@ public class UIForumInfos extends UIContainer {
     if (enableIPLogging) {
       return Utils.getRemoteIP();
     }
-    return "";
+    return ForumUtils.EMPTY_STR;
   }
 
   public void setForum(Forum forum) throws Exception {

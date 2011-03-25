@@ -35,8 +35,8 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 /**
@@ -118,7 +118,7 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
         String destTopicPath = topicMerge.getPath();
         boolean isMerge = true;
         if (!ForumUtils.isEmpty(destTopicPath)) {
-          String temp[] = destTopicPath.split("/");
+          String temp[] = destTopicPath.split(ForumUtils.SLASH);
           String categoryId = temp[temp.length - 3];
           String forumId = temp[temp.length - 2];
           ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
@@ -134,7 +134,7 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
               try {
                 // set link
                 link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");
-                forumService.mergeTopic(categoryId + "/" + forumId + "/" + topic.getId(), destTopicPath, emailContent, link);
+                forumService.mergeTopic(categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topic.getId(), destTopicPath, emailContent, link);
               } catch (Exception e) {
                 isMerge = false;
                 break;

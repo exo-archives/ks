@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.forum.ForumTransformHTML;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.impl.ForumNodeTypes;
@@ -36,8 +37,8 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
@@ -95,7 +96,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
   @SuppressWarnings( { "unchecked", "unused" })
   private List<Topic> getTopicsUnApprove() throws Exception {
     String type = (typeApprove == Utils.WAITING) ? ForumNodeTypes.EXO_IS_WAITING : (typeApprove == Utils.APPROVE) ? ForumNodeTypes.EXO_IS_APPROVED : ForumNodeTypes.EXO_IS_ACTIVE;
-    pageList = getForumService().getPageTopic(this.categoryId, this.forumId, "@" + type + "='" + ((typeApprove == Utils.WAITING) ? "true" : "false") + "'", "");
+    pageList = getForumService().getPageTopic(this.categoryId, this.forumId, "@" + type + "='" + ((typeApprove == Utils.WAITING) ? "true" : "false") + "'", ForumUtils.EMPTY_STR);
     pageList.setPageSize(6);
     maxPage = pageList.getAvailablePage();
     topics = pageList.getPage(pageSelect);

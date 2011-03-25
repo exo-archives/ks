@@ -85,7 +85,7 @@ public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent {
 
   private String getForumIdOfPrune(PruneSetting pruneSetting) {
     String id = pruneSetting.getForumPath();
-    return (ForumUtils.isEmpty(id)) ? "" : id.substring(id.lastIndexOf("/"));
+    return (ForumUtils.isEmpty(id)) ? ForumUtils.EMPTY_STR : id.substring(id.lastIndexOf(ForumUtils.SLASH));
   }
 
   private PruneSetting getPruneSetting(String forumId) throws Exception {

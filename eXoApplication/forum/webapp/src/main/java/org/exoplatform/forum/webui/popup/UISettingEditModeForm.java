@@ -207,7 +207,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 
   private List<Forum> getForumList(String categoryId) throws Exception {
     List<Forum> forumList = null;
-    String strQuery = "";
+    String strQuery = ForumUtils.EMPTY_STR;
     if (this.userProfile.getUserRole() > 0)
       strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
     try {
@@ -238,8 +238,8 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UISettingEditModeForm> event) throws Exception {
       UISettingEditModeForm editModeForm = event.getSource();
       List<UIComponent> children = editModeForm.getChildren();
-      String listCategoryId = "";
-      String listForumId = "";
+      String listCategoryId = ForumUtils.EMPTY_STR;
+      String listForumId = ForumUtils.EMPTY_STR;
       // int i = 0;
       for (UIComponent child : children) {
         if (child instanceof UIFormCheckBoxInput) {
@@ -248,12 +248,12 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
               if (ForumUtils.isEmpty(listCategoryId))
                 listCategoryId = child.getId();
               else
-                listCategoryId = listCategoryId + "," + child.getId();
+                listCategoryId = listCategoryId + ForumUtils.COMMA + child.getId();
             } else {
               if (ForumUtils.isEmpty(listForumId))
                 listForumId = child.getId();
               else
-                listForumId = listForumId + "," + child.getId();
+                listForumId = listForumId + ForumUtils.COMMA + child.getId();
             }
             // ++i;
           }
@@ -281,11 +281,11 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
         editModeForm.portletPreference.setInvisibleForums(listforuminv);
         ForumUtils.savePortletPreference(editModeForm.portletPreference);
         ((UIForumPortlet) editModeForm.getParent()).loadPreferences();
-        Object[] args = { "" };
+        Object[] args = { ForumUtils.EMPTY_STR };
         uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-successfully", args, ApplicationMessage.INFO));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
       } catch (Exception e) {
-        Object[] args = { "" };
+        Object[] args = { ForumUtils.EMPTY_STR };
         uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-fail", args, ApplicationMessage.INFO));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
       }
@@ -297,8 +297,8 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
       String id = event.getRequestContext().getRequestParameter(OBJECTID);
       UISettingEditModeForm editModeForm = event.getSource();
       if (editModeForm.tabId == 0) {
-        String listCategoryId = "";
-        String listForumId = "";
+        String listCategoryId = ForumUtils.EMPTY_STR;
+        String listForumId = ForumUtils.EMPTY_STR;
         List<UIComponent> children = editModeForm.getChildren();
         for (UIComponent child : children) {
           if (child instanceof UIFormCheckBoxInput) {
@@ -307,12 +307,12 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
                 if (ForumUtils.isEmpty(listCategoryId))
                   listCategoryId = child.getId();
                 else
-                  listCategoryId = listCategoryId + "," + child.getId();
+                  listCategoryId = listCategoryId + ForumUtils.COMMA + child.getId();
               } else {
                 if (ForumUtils.isEmpty(listForumId))
                   listForumId = child.getId();
                 else
-                  listForumId = listForumId + "," + child.getId();
+                  listForumId = listForumId + ForumUtils.COMMA + child.getId();
               }
             }
           }

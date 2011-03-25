@@ -57,14 +57,14 @@ import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -165,7 +165,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
   private String              userAvartarUrl                     = null;
 
-  private String              keyWord                            = "";
+  private String              keyWord                            = ForumUtils.EMPTY_STR;
 
   private boolean             isViewSearchUser                   = false;
 
@@ -300,7 +300,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     if (!this.listModerate.isEmpty()) {
       for (String value : listModerate) {
         if (value != null && value.trim().length() > 0) {
-          listId.add(value.substring(value.lastIndexOf("/") + 1));
+          listId.add(value.substring(value.lastIndexOf(ForumUtils.SLASH) + 1));
         }
       }
     }
@@ -391,7 +391,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     UIFormCheckBoxInput isDisplayAvatar = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
     isDisplayAvatar.setChecked(this.userProfile.getIsDisplayAvatar());
     // Option
-    String[] timeZone1 = getLabel(FIELD_TIMEZONE).split("/");
+    String[] timeZone1 = getLabel(FIELD_TIMEZONE).split(ForumUtils.SLASH);
     list = new ArrayList<SelectItemOption<String>>();
     for (String string : timeZone1) {
       list.add(new SelectItemOption<String>(string, ForumUtils.getTimeZoneNumberInString(string)));
@@ -406,7 +406,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       mark = "+";
     } else {
       timeZoneOld = 0.0;
-      mark = "";
+      mark = ForumUtils.EMPTY_STR;
     }
     timeZone.setValue(mark + timeZoneOld + "0");
 
@@ -514,7 +514,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     }
     UIFormTextAreaInput banReason = new UIFormTextAreaInput(FIELD_BANREASON_TEXTAREA, FIELD_BANREASON_TEXTAREA, null);
     UIFormStringInput banCounter = new UIFormStringInput(FIELD_BANCOUNTER_INPUT, FIELD_BANCOUNTER_INPUT, null);
-    banCounter.setValue(userProfile.getBanCounter() + "");
+    banCounter.setValue(userProfile.getBanCounter() + ForumUtils.EMPTY_STR);
     UIFormTextAreaInput banReasonSummary = new UIFormTextAreaInput(FIELD_BANREASONSUMMARY_MULTIVALUE, FIELD_BANREASONSUMMARY_MULTIVALUE, null);
     banReasonSummary.setValue(ForumUtils.unSplitForForum(userProfile.getBanReasonSummary()));
     banReasonSummary.setEditable(false);
@@ -603,7 +603,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     if (this.forumLinks == null || forumLinks.size() <= 0)
       hasGetService = true;
     if (hasGetService) {
-      this.getForumService().getAllLink("", "");
+      this.getForumService().getAllLink(ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR);
     }
   }
 
@@ -946,7 +946,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     public void execute(Event<UIModeratorManagementForm> event) throws Exception {
       UIModeratorManagementForm uiForm = event.getSource();
       uiForm.isViewSearchUser = false;
-      uiForm.keyWord = "";
+      uiForm.keyWord = ForumUtils.EMPTY_STR;
       uiForm.setPageListUserProfile();
       event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }

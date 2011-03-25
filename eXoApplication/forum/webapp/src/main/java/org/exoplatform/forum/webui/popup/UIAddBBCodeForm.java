@@ -33,8 +33,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -73,7 +73,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
 
   private BBCodeService      bbCodeService;
 
-  private String             example                   = "";
+  private String             example                   = ForumUtils.EMPTY_STR;
 
   private List<BBCode>       listBBCode                = new ArrayList<BBCode>();
 
@@ -139,7 +139,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     bbcode.setExample(example);
     bbcode.setOption(isOption);
     if (bbcode.getId() == null)
-      bbcode.setId(bbcode.getTagName() + ((bbcode.isOption()) ? "=" : ""));
+      bbcode.setId(bbcode.getTagName() + ((bbcode.isOption()) ? "=" : ForumUtils.EMPTY_STR));
     this.example = example;
   }
   

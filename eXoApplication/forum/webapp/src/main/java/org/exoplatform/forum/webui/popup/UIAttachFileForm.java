@@ -34,8 +34,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormUploadInput;
 
 /**
@@ -108,7 +108,7 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
           continue;
         }
         String fileName = uploadResource.getFileName();
-        if (fileName == null || fileName.equals("")) {
+        if (fileName == null || fileName.equals(ForumUtils.EMPTY_STR)) {
           continue;
         }
         try {

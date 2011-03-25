@@ -92,8 +92,8 @@ public class UIForumLinks extends BaseForumForm {
         }
       }
     }
-    String strQueryCate = "";
-    String strQueryForum = "";
+    String strQueryCate = ForumUtils.EMPTY_STR;
+    String strQueryForum = ForumUtils.EMPTY_STR;
     List<String> listUser = UserHelper.getAllGroupAndMembershipOfUser(this.userProfile.getUserId());
     if (this.userProfile.getUserRole() > 0) {
       // set Query for Forum
@@ -132,11 +132,11 @@ public class UIForumLinks extends BaseForumForm {
 
     this.forumLinks = getForumService().getAllLink(strQueryCate, strQueryForum);
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
-    list.add(new SelectItemOption<String>(this.getLabel(FIELD_FORUMHOMEPAGE_LABEL) + "/" + FIELD_FORUMHOMEPAGE_LABEL, Utils.FORUM_SERVICE));
+    list.add(new SelectItemOption<String>(this.getLabel(FIELD_FORUMHOMEPAGE_LABEL) + ForumUtils.SLASH + FIELD_FORUMHOMEPAGE_LABEL, Utils.FORUM_SERVICE));
     String space = "&nbsp; &nbsp; ", type = "/categoryLink";
     for (ForumLinkData linkData : forumLinks) {
       if (linkData.getType().equals(Utils.FORUM)) {
-        type = "/" + FIELD_FORUMLINK_SELECTBOX;
+        type = ForumUtils.SLASH + FIELD_FORUMLINK_SELECTBOX;
         space = "&nbsp; &nbsp; &nbsp; &nbsp; ";
       }
       if (linkData.getType().equals(Utils.CATEGORY)) {
@@ -186,7 +186,7 @@ public class UIForumLinks extends BaseForumForm {
         boolean isErro = false;
         if (!path.equals(uiForm.path)) {
           if (path.lastIndexOf(Utils.FORUM) > 0) {
-            String id[] = path.trim().split("/");
+            String id[] = path.trim().split(ForumUtils.SLASH);
             Forum forum = uiForm.getForumService().getForum(id[0], id[1]);
             ;
             if (forum != null) {

@@ -34,8 +34,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 
 /**
  * Created by The eXo Platform SAS
@@ -102,12 +102,12 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent {
       if (str.indexOf(id) >= 0)
         return str;
     }
-    return "";
+    return ForumUtils.EMPTY_STR;
   }
 
   @SuppressWarnings("unused")
   private String getType(String id) {
-    return (id.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : ((id.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : ((id.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : ((id.indexOf(Utils.TOPIC) >= 0) ? ForumUtils.TOPIC : (""))));
+    return (id.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : ((id.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : ((id.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : ((id.indexOf(Utils.TOPIC) >= 0) ? ForumUtils.TOPIC : (ForumUtils.EMPTY_STR))));
   }
 
   static public class OpenLinkActionListener extends BaseEventListener<UIShowBookMarkForm> {

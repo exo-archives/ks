@@ -56,7 +56,7 @@ public class UIListSentPrivateMessage extends UIContainer {
 
   private List<ForumPrivateMessage> listSend         = null;
 
-  private String                    userName         = "";
+  private String                    userName         = ForumUtils.EMPTY_STR;
 
   private boolean                   isRenderIterator = false;
 

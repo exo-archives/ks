@@ -55,8 +55,8 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
@@ -167,7 +167,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     }
 
     List<SelectItemOption<String>> list;
-    String[] timeZone1 = getLabel(FIELD_TIMEZONE).split("/");
+    String[] timeZone1 = getLabel(FIELD_TIMEZONE).split(ForumUtils.SLASH);
     list = new ArrayList<SelectItemOption<String>>();
     for (String string : timeZone1) {
       list.add(new SelectItemOption<String>(string + "/timeZone", ForumUtils.getTimeZoneNumberInString(string)));
@@ -182,7 +182,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       mark = "+";
     } else {
       timeZoneOld = 0.0;
-      mark = "";
+      mark = ForumUtils.EMPTY_STR;
     }
     timeZone.setValue(mark + timeZoneOld + "0");
     list = new ArrayList<SelectItemOption<String>>();
@@ -241,7 +241,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
     String strSignature = this.userProfile.getSignature();
     if (ForumUtils.isEmpty(strSignature))
-      strSignature = "";
+      strSignature = ForumUtils.EMPTY_STR;
     signature.setValue(ForumTransformHTML.unCodeHTML(strSignature));
     UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
     isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature());
@@ -278,7 +278,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 
     UIFormCheckBoxInput formCheckBoxRSS = null;
     UIFormCheckBoxInput formCheckBoxEMAIL = null;
-    String listObjectId = "", watchId;
+    String listObjectId = ForumUtils.EMPTY_STR, watchId;
     List<String> listId = new ArrayList<String>();
     ForumSubscription forumSubscription = getForumService().getForumSubscription(userProfile.getUserId());
     listId.addAll(Arrays.asList(forumSubscription.getCategoryIds()));
@@ -287,7 +287,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     boolean isAddWatchRSS;
     for (Watch watch : listWatches) {
       if (listObjectId.trim().length() > 0)
-        listObjectId += "/";
+        listObjectId += ForumUtils.SLASH;
       watchId = watch.getId();
       listObjectId += watchId;
       formCheckBoxRSS = new UIFormCheckBoxInput<Boolean>(RSS + watch.getId(), RSS + watch.getId(), false);
@@ -310,10 +310,10 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     UIFormStringInput formStringInput = null;
     formStringInput = new UIFormStringInput(RSS_LINK, null);
 
-    String rssLink = "";
+    String rssLink = ForumUtils.EMPTY_STR;
     PortalRequestContext portalContext = Util.getPortalRequestContext();
     String url = portalContext.getRequest().getRequestURL().toString();
-    url = url.substring(0, url.indexOf("/", 8));
+    url = url.substring(0, url.indexOf(ForumUtils.SLASH, 8));
     rssLink = url + org.exoplatform.ks.common.Utils.getUserRSSLink(ForumWebservice.APP_TYPE, userProfile.getUserId());
     formStringInput.setValue(rssLink);
     formStringInput.setEditable(false);
@@ -425,7 +425,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       int maxText = ForumUtils.MAXSIGNATURE;
       String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue();
       if (ForumUtils.isEmpty(signature)) {
-        signature = "";
+        signature = ForumUtils.EMPTY_STR;
       } else if (signature.trim().length() > maxText) {
         warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_SIGNATURE_TEXTAREA), String.valueOf(maxText) });
         return;
@@ -517,11 +517,11 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 
   static public class DeleteEmailWatchActionListener extends BaseEventListener<UIForumUserSettingForm> {
     public void onEvent(Event<UIForumUserSettingForm> event, UIForumUserSettingForm uiForm, String input) throws Exception {
-      String userId = input.substring(0, input.indexOf("/"));
-      String email = input.substring(input.lastIndexOf("/"));
-      String path = (input.substring(0, input.lastIndexOf("/"))).replace(userId + "/", "");
+      String userId = input.substring(0, input.indexOf(ForumUtils.SLASH));
+      String email = input.substring(input.lastIndexOf(ForumUtils.SLASH));
+      String path = (input.substring(0, input.lastIndexOf(ForumUtils.SLASH))).replace(userId + ForumUtils.SLASH, ForumUtils.EMPTY_STR);
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-      String emails = userId + "/" + email;
+      String emails = userId + ForumUtils.SLASH + email;
       try {
         uiForm.getForumService().removeWatch(1, path, emails);
         for (int i = 0; i < uiForm.listWatches.size(); i++) {
@@ -548,16 +548,16 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
         formCheckBoxRSS = inputUserWatchManger.getChildById(RSS + uiForm.listWatches.get(i).getId());
         if (formCheckBoxRSS.isChecked()) {
           if (listObjectId.length() > 0)
-            listObjectId.append("/");
+            listObjectId.append(ForumUtils.SLASH);
           listObjectId.append(uiForm.listWatches.get(i).getId());
         }
       }
       if (listObjectId.length() > 0) {
-        String rssLink = "";
+        String rssLink = ForumUtils.EMPTY_STR;
         PortalRequestContext portalContext = Util.getPortalRequestContext();
         String url = portalContext.getRequest().getRequestURL().toString();
-        url = url.replaceFirst("http://", "");
-        url = url.substring(0, url.indexOf("/"));
+        url = url.replaceFirst("http://", ForumUtils.EMPTY_STR);
+        url = url.substring(0, url.indexOf(ForumUtils.SLASH));
         url = "http://" + url;
         rssLink = url + org.exoplatform.ks.common.Utils.getRSSLink("forum", uiForm.getPortalName(), listObjectId.toString());
         ((UIFormStringInput) inputUserWatchManger.getChildById(RSS_LINK)).setValue(rssLink);
@@ -596,15 +596,15 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       UIForumUserSettingForm uiForm = event.getSource();
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-      String[] id = path.split("/");
-      String paths = "";
+      String[] id = path.split(ForumUtils.SLASH);
+      String paths = ForumUtils.EMPTY_STR;
       for (int i = 0; i < id.length; i++) {
         if (id[i].indexOf(Utils.CATEGORY) >= 0)
           paths = id[i];
         else if (id[i].indexOf(Utils.FORUM) >= 0)
-          paths = paths + "/" + id[i];
+          paths = paths + ForumUtils.SLASH + id[i];
         else if (id[i].indexOf(Utils.TOPIC) >= 0)
-          paths = paths + "/" + id[i];
+          paths = paths + ForumUtils.SLASH + id[i];
       }
       try {
         forumPortlet.calculateRenderComponent(paths, event.getRequestContext());

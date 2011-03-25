@@ -71,7 +71,7 @@ public class UIQuickSearchForm extends BaseUIForm {
         ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
         UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
         UserProfile userProfile = forumPortlet.getUserProfile();
-        String type = "";
+        String type = ForumUtils.EMPTY_STR;
         if (userProfile.getUserRole() == 0)
           type = "true,all";
         else
@@ -80,14 +80,14 @@ public class UIQuickSearchForm extends BaseUIForm {
         if (userProfile.getUserRole() == 1) {
           String[] strings = userProfile.getModerateForums();
           for (int i = 0; i < strings.length; i++) {
-            String str = strings[i].substring(strings[i].lastIndexOf("/") + 1);
+            String str = strings[i].substring(strings[i].lastIndexOf(ForumUtils.SLASH) + 1);
             if (str.length() > 0)
               forumIdsOfModerator.add(str);
           }
         }
         List<ForumSearch> list = null;
         try {
-          list = forumService.getQuickSearch(text, type, "", userProfile.getUserId(), forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()), forumIdsOfModerator);
+          list = forumService.getQuickSearch(text, type, ForumUtils.EMPTY_STR, userProfile.getUserId(), forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()), forumIdsOfModerator);
         } catch (Exception e) {
           uiForm.log.warn("\nGetting quick search failure:\n " + e.getCause());
           uiForm.warning("UIQuickSearchForm.msg.failure");
@@ -103,7 +103,7 @@ public class UIQuickSearchForm extends BaseUIForm {
         forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       } else {
-        formStringInput.setValue("");
+        formStringInput.setValue(ForumUtils.EMPTY_STR);
         uiForm.warning("UIQuickSearchForm.msg.checkEmpty");
       }
     }
@@ -118,7 +118,7 @@ public class UIQuickSearchForm extends BaseUIForm {
       UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class);
       searchForm.setUserProfile(forumPortlet.getUserProfile());
       searchForm.setSelectType(Utils.CATEGORY);
-      searchForm.setPath("");
+      searchForm.setPath(ForumUtils.EMPTY_STR);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }

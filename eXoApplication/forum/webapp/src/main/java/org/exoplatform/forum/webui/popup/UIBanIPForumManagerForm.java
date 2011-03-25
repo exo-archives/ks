@@ -101,11 +101,11 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
   private String getRestPath() throws Exception {
     try {
       ExoContainerContext exoContext = (ExoContainerContext) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
-      return "/" + exoContext.getPortalContainerName() + "/" + exoContext.getRestContextName();
+      return ForumUtils.SLASH + exoContext.getPortalContainerName() + ForumUtils.SLASH + exoContext.getRestContextName();
     } catch (Exception e) {
       log.error("Can not get portal name or rest context name, exception: ", e);
     }
-    return "";
+    return ForumUtils.EMPTY_STR;
   }
 
   @SuppressWarnings( { "unused", "unchecked" })
@@ -171,7 +171,7 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
   private String getValueIp(String inputId) throws Exception {
     UIFormStringInput stringInput = this.getUIStringInput(inputId);
     String vl = stringInput.getValue();
-    stringInput.setValue("");
+    stringInput.setValue(ForumUtils.EMPTY_STR);
     return ForumUtils.isEmpty(vl) ? "0" : vl;
   }
 

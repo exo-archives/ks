@@ -36,8 +36,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 /**
@@ -105,7 +105,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
       isRender = false;
     String checkBoxId;
     for (Post post : posts) {
-      checkBoxId = post.getCreatedDate().getTime() + "/" + post.getId();
+      checkBoxId = post.getCreatedDate().getTime() + ForumUtils.SLASH + post.getId();
       if (getUIFormCheckBoxInput(checkBoxId) != null) {
         getUIFormCheckBoxInput(checkBoxId).setChecked(false);
       } else {
@@ -144,10 +144,10 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
           List<String> postPaths = new ArrayList<String>();
           String path = uiForm.topic.getPath();
           for (String str : postIds) {
-            postPaths.add(path + str.substring(str.indexOf("/")));
+            postPaths.add(path + str.substring(str.indexOf(ForumUtils.SLASH)));
           }
           Topic topic = new Topic();
-          Post post = uiForm.getForumService().getPost("", "", "", postPaths.get(0));
+          Post post = uiForm.getForumService().getPost(ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, postPaths.get(0));
           String owner = uiForm.userProfile.getUserId();
           String topicId = post.getId().replaceFirst(Utils.POST, Utils.TOPIC);
           topic.setId(topicId);
@@ -157,12 +157,12 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
           topic.setDescription(post.getMessage());
           topic.setIcon(post.getIcon());
           topic.setAttachments(post.getAttachments());
-          Post lastPost = uiForm.getForumService().getPost("", "", "", postPaths.get(postPaths.size() - 1));
+          Post lastPost = uiForm.getForumService().getPost(ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, postPaths.get(postPaths.size() - 1));
           topic.setLastPostBy(lastPost.getOwner());
           if (postPaths.size() > 1) {
             topic.setLastPostDate(lastPost.getCreatedDate());
           }
-          String[] string = path.split("/");
+          String[] string = path.split(ForumUtils.SLASH);
           String categoryId = string[string.length - 3];
           String forumId = string[string.length - 2];
           try {
@@ -173,7 +173,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
             ResourceBundle res = context.getApplicationResourceBundle();
 
             uiForm.getForumService().saveTopic(categoryId, forumId, topic, true, true, ForumUtils.getDefaultMail());
-            String destTopicPath = path.substring(0, path.lastIndexOf("/")) + "/" + topicId;
+            String destTopicPath = path.substring(0, path.lastIndexOf(ForumUtils.SLASH)) + ForumUtils.SLASH + topicId;
             uiForm.getForumService().movePost(postPaths.toArray(new String[] {}), destTopicPath, true, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
           } catch (Exception e) {
             uiForm.log.error("Saving topic " + topic + " fail: " + e.getMessage(), e);
