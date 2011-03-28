@@ -225,6 +225,7 @@ public class UIWikiPortlet extends UIPortletApplication {
     }
     if (newMode.equals(WikiMode.EDITPAGE)||newMode.equals(WikiMode.ADDPAGE)) {
       findFirstComponentOfType(UIWikiSidePanelArea.class).setRendered(true);
+      findFirstComponentOfType(UIWikiBottomArea.class).setRendered(true);
       findFirstComponentOfType(UIWikiAttachmentArea.class).setRendered(true);
       findFirstComponentOfType(UIWikiRichTextArea.class).setRendered(false);
       findFirstComponentOfType(UIWikiPageEditForm.class).getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT).setRendered(true);

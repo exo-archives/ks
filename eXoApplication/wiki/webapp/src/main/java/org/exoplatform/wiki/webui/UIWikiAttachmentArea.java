@@ -33,8 +33,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
@@ -223,7 +223,6 @@ public class UIWikiAttachmentArea extends UIWikiForm {
       Page page = uiForm.getCurrentWikiPage();
       ((PageImpl) page).removeAttachment(attFileId);
       contentArea.renderVersion();
-      event.getRequestContext().addUIComponentToUpdateByAjax(pageArea);
       event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea);
     }
   }
