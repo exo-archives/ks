@@ -40,18 +40,18 @@ import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * May 22, 2009 - 2:11:20 AM	
+ *          tu.duy@exoplatform.com
+ * May 22, 2009 - 2:11:20 AM  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIAutoPruneSettingForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIAutoPruneSettingForm.SaveActionListener.class),
-			@EventConfig(listeners = UIAutoPruneSettingForm.RunActionListener.class),
-			@EventConfig(listeners = UIAutoPruneSettingForm.CloseActionListener.class, phase=Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIAutoPruneSettingForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIAutoPruneSettingForm.SaveActionListener.class),
+      @EventConfig(listeners = UIAutoPruneSettingForm.RunActionListener.class),
+      @EventConfig(listeners = UIAutoPruneSettingForm.CloseActionListener.class, phase=Phase.DECODE)
+    }
 )
 public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComponent {
   public static final String FIELD_INACTIVEDAY_INPUT     = "inActiveDay";

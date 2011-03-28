@@ -41,16 +41,16 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * May 16, 2008 - 5:02:24 AM	
+ *          tu.duy@exoplatform.com
+ * May 16, 2008 - 5:02:24 AM  
  */
 @ComponentConfig(
-		template = "app:/templates/forum/webui/popup/UIListTopicOldForm.gtmpl" ,
-		events = {
-				@EventConfig(listeners = UIListTopicOld.ActiveTopicActionListener.class),
-				@EventConfig(listeners = UIListTopicOld.DeleteTopicActionListener.class),
-				@EventConfig(listeners = UIListTopicOld.OpenTopicActionListener.class)
-		}
+    template = "app:/templates/forum/webui/popup/UIListTopicOldForm.gtmpl" ,
+    events = {
+        @EventConfig(listeners = UIListTopicOld.ActiveTopicActionListener.class),
+        @EventConfig(listeners = UIListTopicOld.DeleteTopicActionListener.class),
+        @EventConfig(listeners = UIListTopicOld.OpenTopicActionListener.class)
+    }
 )
 public class UIListTopicOld extends UIContainer {
   private ForumService forumService;

@@ -44,19 +44,19 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * 05-03-2008	
+ *          tu.duy@exoplatform.com
+ * 05-03-2008  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIPageListTopicUnApprove.gtmpl",
-		events = {
-				@EventConfig(listeners = UIPageListTopicUnApprove.OpenTopicActionListener.class ),
-				@EventConfig(listeners = UIPageListTopicUnApprove.ApproveTopicActionListener.class ),
-				@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
-				@EventConfig(listeners = UIPageListTopicUnApprove.CancelActionListener.class,phase = Phase.DECODE )
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIPageListTopicUnApprove.gtmpl",
+    events = {
+        @EventConfig(listeners = UIPageListTopicUnApprove.OpenTopicActionListener.class ),
+        @EventConfig(listeners = UIPageListTopicUnApprove.ApproveTopicActionListener.class ),
+        @EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
+        @EventConfig(listeners = UIPageListTopicUnApprove.CancelActionListener.class,phase = Phase.DECODE )
+    }
 )
 public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator implements UIPopupComponent {
   private String      categoryId, forumId;

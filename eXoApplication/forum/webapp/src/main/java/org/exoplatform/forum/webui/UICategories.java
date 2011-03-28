@@ -47,23 +47,23 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 
 @ComponentConfig(
-		template = "app:/templates/forum/webui/UICategories.gtmpl",
-		events = {
-			@EventConfig(listeners = UICategories.CollapCategoryActionListener.class),
-			@EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
-			@EventConfig(listeners = UICategories.OpenForumLinkActionListener.class),
-			@EventConfig(listeners = UICategories.AddBookMarkActionListener.class),
-			@EventConfig(listeners = UICategories.AddWatchingActionListener.class),
-			@EventConfig(listeners = UICategories.UnWatchActionListener.class),
-			@EventConfig(listeners = UICategories.RSSActionListener.class),
-			@EventConfig(listeners = UICategories.OpenLastTopicLinkActionListener.class),
-			@EventConfig(listeners = UICategories.OpenLastReadTopicActionListener.class)
-		}
+    template = "app:/templates/forum/webui/UICategories.gtmpl",
+    events = {
+      @EventConfig(listeners = UICategories.CollapCategoryActionListener.class),
+      @EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
+      @EventConfig(listeners = UICategories.OpenForumLinkActionListener.class),
+      @EventConfig(listeners = UICategories.AddBookMarkActionListener.class),
+      @EventConfig(listeners = UICategories.AddWatchingActionListener.class),
+      @EventConfig(listeners = UICategories.UnWatchActionListener.class),
+      @EventConfig(listeners = UICategories.RSSActionListener.class),
+      @EventConfig(listeners = UICategories.OpenLastTopicLinkActionListener.class),
+      @EventConfig(listeners = UICategories.OpenLastReadTopicActionListener.class)
+    }
 )
 public class UICategories extends UIContainer {
   protected ForumService           forumService;

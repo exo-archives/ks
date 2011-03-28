@@ -33,12 +33,12 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormUploadInput;
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class ,
-		template = "app:/templates/forum/webui/popup/UIImportForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIImportForm.SaveActionListener.class),
-			@EventConfig(listeners = UIImportForm.CancelActionListener.class)
-		}
+    lifecycle = UIFormLifecycle.class ,
+    template = "app:/templates/forum/webui/popup/UIImportForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIImportForm.SaveActionListener.class),
+      @EventConfig(listeners = UIImportForm.CancelActionListener.class)
+    }
 )
 public class UIImportForm extends BaseUIForm implements UIPopupComponent {
   private final String FILE_UPLOAD  = "FileUpload";

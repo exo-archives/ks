@@ -77,20 +77,20 @@ import org.mortbay.cometd.continuation.EXoContinuationBayeux;
 
 /**
  * Author : Nguyen Quang Hung
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aug 01, 2007
  */
 @ComponentConfig(
-								 lifecycle = UIApplicationLifecycle.class,
-								 template = "app:/templates/forum/webui/UIForumPortlet.gtmpl",
-								 events = {
-									 @EventConfig(listeners = UIForumPortlet.ReLoadPortletEventActionListener.class),
-									 @EventConfig(listeners = UIForumPortlet.ViewPublicUserInfoActionListener.class ) ,
-									 @EventConfig(listeners = UIForumPortlet.ViewPostedByUserActionListener.class ),
-									 @EventConfig(listeners = UIForumPortlet.PrivateMessageActionListener.class ),
-									 @EventConfig(listeners = UIForumPortlet.ViewThreadByUserActionListener.class ),
-									 @EventConfig(listeners = UIForumPortlet.OpenLinkActionListener.class)
-								 }
+                 lifecycle = UIApplicationLifecycle.class,
+                 template = "app:/templates/forum/webui/UIForumPortlet.gtmpl",
+                 events = {
+                   @EventConfig(listeners = UIForumPortlet.ReLoadPortletEventActionListener.class),
+                   @EventConfig(listeners = UIForumPortlet.ViewPublicUserInfoActionListener.class ) ,
+                   @EventConfig(listeners = UIForumPortlet.ViewPostedByUserActionListener.class ),
+                   @EventConfig(listeners = UIForumPortlet.PrivateMessageActionListener.class ),
+                   @EventConfig(listeners = UIForumPortlet.ViewThreadByUserActionListener.class ),
+                   @EventConfig(listeners = UIForumPortlet.OpenLinkActionListener.class)
+                 }
 )
 public class UIForumPortlet extends UIPortletApplication {
   private ForumService forumService;

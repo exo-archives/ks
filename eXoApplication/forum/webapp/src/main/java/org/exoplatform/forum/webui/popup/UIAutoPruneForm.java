@@ -36,19 +36,19 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Jan 29, 2010 - 4:51:01 AM	
+ *          tu.duy@exoplatform.com
+ * Jan 29, 2010 - 4:51:01 AM  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIAutoPruneForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIAutoPruneForm.PruneSettingActionListener.class),
-			@EventConfig(listeners = UIAutoPruneForm.RunPruneActionListener.class),
-			@EventConfig(listeners = UIAutoPruneForm.ActivatePruneActionListener.class),
-			@EventConfig(listeners = UIAutoPruneForm.CloseActionListener.class, phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIAutoPruneForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIAutoPruneForm.PruneSettingActionListener.class),
+      @EventConfig(listeners = UIAutoPruneForm.RunPruneActionListener.class),
+      @EventConfig(listeners = UIAutoPruneForm.ActivatePruneActionListener.class),
+      @EventConfig(listeners = UIAutoPruneForm.CloseActionListener.class, phase = Phase.DECODE)
+    }
 )
 @SuppressWarnings("unused")
 public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent {

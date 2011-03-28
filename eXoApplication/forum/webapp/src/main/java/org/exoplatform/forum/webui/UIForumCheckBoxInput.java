@@ -25,7 +25,7 @@ import org.exoplatform.webui.form.UIFormInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
+ *          tu.duy@exoplatform.com
  * 24 Mar 2008, 08:00:59
  */
 public class UIForumCheckBoxInput<T> extends UIFormCheckBoxInput<T> {

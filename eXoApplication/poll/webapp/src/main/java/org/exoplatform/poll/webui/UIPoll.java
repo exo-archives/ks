@@ -300,9 +300,7 @@ public class UIPoll extends BasePollForm {
 						}
 					} else {
 						setUserVote = new String[(size + 1)];
-						for (int t = 0; t < size; t++) {
-							setUserVote[t] = temporary[t];
-						}
+						System.arraycopy(temporary, 0, setUserVote, 0, size);
 						setUserVote[size] = userVote + ":" + j;
 						size = size + 1;
 					}

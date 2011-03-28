@@ -40,19 +40,19 @@ import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * 23-12-2008 - 04:17:18	
+ *          tu.duy@exoplatform.com
+ * 23-12-2008 - 04:17:18  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIBanIPForumManagerForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIBanIPForumManagerForm.AddIpActionListener.class), 
-			@EventConfig(listeners = UIBanIPForumManagerForm.OpenPostsActionListener.class), 
-			@EventConfig(listeners = UIBanIPForumManagerForm.UnBanActionListener.class, confirm="UIBanIPForumManagerForm.confirm.UnBanIP"), 
-			@EventConfig(listeners = UIBanIPForumManagerForm.CancelActionListener.class, phase=Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIBanIPForumManagerForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIBanIPForumManagerForm.AddIpActionListener.class), 
+      @EventConfig(listeners = UIBanIPForumManagerForm.OpenPostsActionListener.class), 
+      @EventConfig(listeners = UIBanIPForumManagerForm.UnBanActionListener.class, confirm="UIBanIPForumManagerForm.confirm.UnBanIP"), 
+      @EventConfig(listeners = UIBanIPForumManagerForm.CancelActionListener.class, phase=Phase.DECODE)
+    }
 )
 public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupComponent {
   public static final String  SEARCH_IP_BAN        = "searchIpBan";

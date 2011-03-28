@@ -68,24 +68,24 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIModeratorManagementForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIModeratorManagementForm.SetDeaultAvatarActionListener.class), 
-			@EventConfig(listeners = UIModeratorManagementForm.SearchUserActionListener.class), 
-			@EventConfig(listeners = UIModeratorManagementForm.GetAllUserActionListener.class), 
-			@EventConfig(listeners = UIModeratorManagementForm.ViewProfileActionListener.class), 
-			@EventConfig(listeners = UIModeratorManagementForm.EditProfileActionListener.class), 
-			@EventConfig(listeners = UIModeratorManagementForm.SaveActionListener.class), 
-			@EventConfig(listeners = UIModeratorManagementForm.AddValuesAreaActionListener.class, phase=Phase.DECODE), 
-			@EventConfig(listeners = UIModeratorManagementForm.AddValuesModCategoryActionListener.class, phase=Phase.DECODE), 
-			@EventConfig(listeners = UIModeratorManagementForm.CloseActionListener.class, phase=Phase.DECODE),
-			@EventConfig(listeners = UIModeratorManagementForm.CancelActionListener.class, phase=Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIModeratorManagementForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIModeratorManagementForm.SetDeaultAvatarActionListener.class), 
+      @EventConfig(listeners = UIModeratorManagementForm.SearchUserActionListener.class), 
+      @EventConfig(listeners = UIModeratorManagementForm.GetAllUserActionListener.class), 
+      @EventConfig(listeners = UIModeratorManagementForm.ViewProfileActionListener.class), 
+      @EventConfig(listeners = UIModeratorManagementForm.EditProfileActionListener.class), 
+      @EventConfig(listeners = UIModeratorManagementForm.SaveActionListener.class), 
+      @EventConfig(listeners = UIModeratorManagementForm.AddValuesAreaActionListener.class, phase=Phase.DECODE), 
+      @EventConfig(listeners = UIModeratorManagementForm.AddValuesModCategoryActionListener.class, phase=Phase.DECODE), 
+      @EventConfig(listeners = UIModeratorManagementForm.CloseActionListener.class, phase=Phase.DECODE),
+      @EventConfig(listeners = UIModeratorManagementForm.CancelActionListener.class, phase=Phase.DECODE)
+    }
 )
 @SuppressWarnings( { "unused", "unchecked", "deprecation" })
 public class UIModeratorManagementForm extends BaseForumForm implements UIPopupComponent {

@@ -46,22 +46,22 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/UITopicsTag.gtmpl",
-		events = {
-				@EventConfig(listeners = UITopicsTag.OpenTopicActionListener.class),
-				@EventConfig(listeners = UITopicsTag.RemoveTopicActionListener.class),
-				@EventConfig(listeners = UITopicsTag.AddWatchingActionListener.class),
-				@EventConfig(listeners = UITopicsTag.UnWatchActionListener.class),
-				@EventConfig(listeners = UITopicsTag.AddBookMarkActionListener.class),
-				@EventConfig(listeners = UITopicsTag.RSSActionListener.class),
-				@EventConfig(listeners = UITopicsTag.SetOrderByActionListener.class),
-				@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/UITopicsTag.gtmpl",
+    events = {
+        @EventConfig(listeners = UITopicsTag.OpenTopicActionListener.class),
+        @EventConfig(listeners = UITopicsTag.RemoveTopicActionListener.class),
+        @EventConfig(listeners = UITopicsTag.AddWatchingActionListener.class),
+        @EventConfig(listeners = UITopicsTag.UnWatchActionListener.class),
+        @EventConfig(listeners = UITopicsTag.AddBookMarkActionListener.class),
+        @EventConfig(listeners = UITopicsTag.RSSActionListener.class),
+        @EventConfig(listeners = UITopicsTag.SetOrderByActionListener.class),
+        @EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
+    }
 )
 
 public class UITopicsTag extends UIForumKeepStickPageIterator {

@@ -27,15 +27,15 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 
 @ComponentConfig(
-		template = "app:/templates/forum/webui/UIForumIconState.gtmpl",
-		events = {
-			@EventConfig(listeners = UIForumIconState.IconStateParamActionListener.class)			
-		}	
+    template = "app:/templates/forum/webui/UIForumIconState.gtmpl",
+    events = {
+      @EventConfig(listeners = UIForumIconState.IconStateParamActionListener.class)      
+    }  
 )
 public class UIForumIconState extends UIContainer {
   private boolean isForumIcon = true;

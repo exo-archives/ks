@@ -39,17 +39,17 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Jun 5, 2009 - 10:12:41 AM	
+ *          tu.duy@exoplatform.com
+ * Jun 5, 2009 - 10:12:41 AM  
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UISelectCategoryForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UISelectCategoryForm.AddActionListener.class), 
-			@EventConfig(listeners = UISelectCategoryForm.CancelActionListener.class,phase = Phase.DECODE)
-		}
-	)
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UISelectCategoryForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UISelectCategoryForm.AddActionListener.class), 
+      @EventConfig(listeners = UISelectCategoryForm.CancelActionListener.class,phase = Phase.DECODE)
+    }
+  )
 public class UISelectCategoryForm extends BaseForumForm implements UIPopupComponent {
   private List<String> listIdIsSelected = new ArrayList<String>();
 

@@ -40,19 +40,19 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Jan 29, 2010 - 4:51:01 AM	
+ *          tu.duy@exoplatform.com
+ * Jan 29, 2010 - 4:51:01 AM  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UINotificationForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UINotificationForm.GetDefaultMailActionListener.class),
-			@EventConfig(listeners = UINotificationForm.SelectTabActionListener.class),
-			@EventConfig(listeners = UINotificationForm.SaveActionListener.class),
-			@EventConfig(listeners = UINotificationForm.CloseActionListener.class, phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UINotificationForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UINotificationForm.GetDefaultMailActionListener.class),
+      @EventConfig(listeners = UINotificationForm.SelectTabActionListener.class),
+      @EventConfig(listeners = UINotificationForm.SaveActionListener.class),
+      @EventConfig(listeners = UINotificationForm.CloseActionListener.class, phase = Phase.DECODE)
+    }
 )
 public class UINotificationForm extends BaseForumForm implements UIPopupComponent {
 

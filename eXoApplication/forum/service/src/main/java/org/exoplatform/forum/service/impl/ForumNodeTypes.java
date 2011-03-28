@@ -349,4 +349,8 @@ public interface ForumNodeTypes {
 
   public static final String NT_RESOURCE                    = "nt:resource";
 
+  public static final String ASCENDING                      = " ascending";
+
+  public static final String DESCENDING                     = " descending";
+
 }

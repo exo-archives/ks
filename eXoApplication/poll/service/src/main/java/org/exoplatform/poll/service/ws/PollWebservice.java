@@ -133,12 +133,9 @@ public class PollWebservice implements ResourceContainer {
 				int j = Integer.valueOf(optionVote);
 				
 				setUserVote = new String[(size+1)] ;
-				for (int t = 0; t < size; t++) {
-					setUserVote[t] = temporary[t];
-				}
+				System.arraycopy(temporary, 0, setUserVote, 0, size);
 				setUserVote[size] = userVote + ":" + j;
 				size = size + 1 ;
-					
 				votes = poll.getVote() ;
 				double onePercent = (double)100/size;
 				int i = 0;

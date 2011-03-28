@@ -30,16 +30,16 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Apr 23, 2009 - 7:42:07 AM	
+ *          tu.duy@exoplatform.com
+ * Apr 23, 2009 - 7:42:07 AM  
  */
 
 @ComponentConfig(
-	 lifecycle = UIApplicationLifecycle.class,
-	 template = "app:/templates/forum/webui/info/UIForumLinkPortlet.gtmpl",
-	 events = {
-		 	@EventConfig(listeners = UIForumLinkPortlet.ForumLinkEventActionListener.class)
-	 }
+   lifecycle = UIApplicationLifecycle.class,
+   template = "app:/templates/forum/webui/info/UIForumLinkPortlet.gtmpl",
+   events = {
+       @EventConfig(listeners = UIForumLinkPortlet.ForumLinkEventActionListener.class)
+   }
 )
 public class UIForumLinkPortlet extends UIPortletApplication {
   private boolean isRenderChild = false;

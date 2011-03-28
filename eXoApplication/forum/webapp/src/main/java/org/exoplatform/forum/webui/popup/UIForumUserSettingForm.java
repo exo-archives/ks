@@ -66,23 +66,23 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIForumUserSettingForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIForumUserSettingForm.AttachmentActionListener.class), 
-			@EventConfig(listeners = UIForumUserSettingForm.SetDefaultAvatarActionListener.class), 
-			@EventConfig(listeners = UIForumUserSettingForm.SaveActionListener.class), 
-			@EventConfig(listeners = UIForumUserSettingForm.OpenTabActionListener.class), 
-			@EventConfig(listeners = UIForumUserSettingForm.OpentContentActionListener.class), 
-			@EventConfig(listeners = UIForumUserSettingForm.DeleteEmailWatchActionListener.class), 
-			@EventConfig(listeners = UIForumUserSettingForm.ResetRSSActionListener.class), 
-			@EventConfig(listeners = UIForumUserSettingForm.UpdateEmailActionListener.class), 
-			@EventConfig(listeners = UIForumUserSettingForm.CancelActionListener.class, phase=Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIForumUserSettingForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIForumUserSettingForm.AttachmentActionListener.class), 
+      @EventConfig(listeners = UIForumUserSettingForm.SetDefaultAvatarActionListener.class), 
+      @EventConfig(listeners = UIForumUserSettingForm.SaveActionListener.class), 
+      @EventConfig(listeners = UIForumUserSettingForm.OpenTabActionListener.class), 
+      @EventConfig(listeners = UIForumUserSettingForm.OpentContentActionListener.class), 
+      @EventConfig(listeners = UIForumUserSettingForm.DeleteEmailWatchActionListener.class), 
+      @EventConfig(listeners = UIForumUserSettingForm.ResetRSSActionListener.class), 
+      @EventConfig(listeners = UIForumUserSettingForm.UpdateEmailActionListener.class), 
+      @EventConfig(listeners = UIForumUserSettingForm.CancelActionListener.class, phase=Phase.DECODE)
+    }
 )
 public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComponent {
   public static final String FIELD_USERPROFILE_FORM             = "ForumUserProfile";

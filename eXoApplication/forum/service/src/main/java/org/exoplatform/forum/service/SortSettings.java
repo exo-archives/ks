@@ -4,7 +4,7 @@ public class SortSettings {
 
   private SortField field     = SortField.ORDER; // Name , Order, createdDate, laspostDate, postCount, topicCount, isLock, lastPostDate, viewCount, numberAttachments
 
-  private Direction direction = Direction.ASC;   // ascending or descending
+  private Direction direction = Direction.ASC;  // ascending or descending
 
   public SortSettings(String field, String direction) {
     this.field = toField(field);

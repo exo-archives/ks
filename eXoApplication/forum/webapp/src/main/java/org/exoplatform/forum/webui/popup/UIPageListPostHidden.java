@@ -43,18 +43,18 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
+ *          tu.duy@exoplatform.com
  * 06-03-2008, 04:41:47
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIPageListPostUnApprove.gtmpl",
-		events = {
-			@EventConfig(listeners = UIPageListPostHidden.OpenPostLinkActionListener.class),
-			@EventConfig(listeners = UIPageListPostHidden.UnHiddenActionListener.class),
-			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
-			@EventConfig(listeners = UIPageListPostHidden.CancelActionListener.class,phase = Phase.DECODE )
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIPageListPostUnApprove.gtmpl",
+    events = {
+      @EventConfig(listeners = UIPageListPostHidden.OpenPostLinkActionListener.class),
+      @EventConfig(listeners = UIPageListPostHidden.UnHiddenActionListener.class),
+      @EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
+      @EventConfig(listeners = UIPageListPostHidden.CancelActionListener.class,phase = Phase.DECODE )
+    }
 )
 public class UIPageListPostHidden extends UIForumKeepStickPageIterator implements UIPopupComponent {
   private ForumService forumService;

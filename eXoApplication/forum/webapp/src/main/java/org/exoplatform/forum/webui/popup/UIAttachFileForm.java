@@ -41,16 +41,16 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Pham Tuan
- *					tuan.pham@exoplatform.com
- * Aug 24, 2007	
+ *          tuan.pham@exoplatform.com
+ * Aug 24, 2007  
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
-		events = {
-			@EventConfig(listeners = UIAttachFileForm.SaveActionListener.class), 
-			@EventConfig(listeners = UIAttachFileForm.CancelActionListener.class, phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
+    events = {
+      @EventConfig(listeners = UIAttachFileForm.SaveActionListener.class), 
+      @EventConfig(listeners = UIAttachFileForm.CancelActionListener.class, phase = Phase.DECODE)
+    }
 )
 public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent {
 

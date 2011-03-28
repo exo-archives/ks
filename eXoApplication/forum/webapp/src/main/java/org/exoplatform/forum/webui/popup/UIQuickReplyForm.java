@@ -52,16 +52,16 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Apr 15, 2009 - 4:34:11 AM	
+ *          tu.duy@exoplatform.com
+ * Apr 15, 2009 - 4:34:11 AM  
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIQuickReplyForm.gtmpl", 
-		events = {
-			@EventConfig(listeners = UIQuickReplyForm.PreviewReplyActionListener.class),
-			@EventConfig(listeners = UIQuickReplyForm.QuickReplyActionListener.class)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIQuickReplyForm.gtmpl", 
+    events = {
+      @EventConfig(listeners = UIQuickReplyForm.PreviewReplyActionListener.class),
+      @EventConfig(listeners = UIQuickReplyForm.QuickReplyActionListener.class)
+    }
 )
 public class UIQuickReplyForm extends UIForm {
   private String             categoryId;

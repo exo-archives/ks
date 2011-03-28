@@ -43,18 +43,18 @@ import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
+ *          tu.duy@exoplatform.com
  * 11-03-2008, 09:13:50
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UISplitTopicForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UISplitTopicForm.SaveActionListener.class), 
-			@EventConfig(listeners = UISplitTopicForm.CancelActionListener.class,phase = Phase.DECODE),
-			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UISplitTopicForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UISplitTopicForm.SaveActionListener.class), 
+      @EventConfig(listeners = UISplitTopicForm.CancelActionListener.class,phase = Phase.DECODE),
+      @EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
+    }
 )
 public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UIPopupComponent {
   private Topic              topic                   = new Topic();

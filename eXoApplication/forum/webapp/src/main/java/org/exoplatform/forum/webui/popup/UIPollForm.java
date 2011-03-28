@@ -50,17 +50,17 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIPollForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIPollForm.SaveActionListener.class), 
-			@EventConfig(listeners = UIPollForm.RefreshActionListener.class, phase = Phase.DECODE),
-			@EventConfig(listeners = UIPollForm.CancelActionListener.class,phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIPollForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIPollForm.SaveActionListener.class), 
+      @EventConfig(listeners = UIPollForm.RefreshActionListener.class, phase = Phase.DECODE),
+      @EventConfig(listeners = UIPollForm.CancelActionListener.class,phase = Phase.DECODE)
+    }
 )
 public class UIPollForm extends BaseForumForm implements UIPopupComponent {
   public static final String       FIELD_QUESTION_INPUT     = "Question";

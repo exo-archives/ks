@@ -33,8 +33,8 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * 30-10-2008 - 10:35:05	
+ *          tu.duy@exoplatform.com
+ * 30-10-2008 - 10:35:05  
  */
 @ComponentConfig()
 public class UIForumKeepStickPageIterator extends BaseForumForm {

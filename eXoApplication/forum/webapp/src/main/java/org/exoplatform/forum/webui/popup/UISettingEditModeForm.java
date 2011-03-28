@@ -44,17 +44,17 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SAS 
  * Author : Vu Duy Tu 
- * 					tu.duy@exoplatform.com 
+ *           tu.duy@exoplatform.com 
  * 12 Feb 2009 - 03:59:49
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class, 
-		template = "app:/templates/forum/webui/popup/UISettingEditModeForm.gtmpl", 
-		events = { 
-			@EventConfig(listeners = UISettingEditModeForm.SaveActionListener.class),
-			@EventConfig(listeners = UISettingEditModeForm.SelectTabActionListener.class) 
-		}
+    lifecycle = UIFormLifecycle.class, 
+    template = "app:/templates/forum/webui/popup/UISettingEditModeForm.gtmpl", 
+    events = { 
+      @EventConfig(listeners = UISettingEditModeForm.SaveActionListener.class),
+      @EventConfig(listeners = UISettingEditModeForm.SelectTabActionListener.class) 
+    }
 )
 @SuppressWarnings( { "unused", "unchecked" })
 public class UISettingEditModeForm extends UIForm implements UIPopupComponent {

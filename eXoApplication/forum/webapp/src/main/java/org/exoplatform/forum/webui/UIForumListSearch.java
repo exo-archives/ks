@@ -45,15 +45,15 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SARL
  * Author : Duy Tu
- *		tu.duy@exoplatform.com
- * 14 Apr 2008, 08:22:52	
+ *    tu.duy@exoplatform.com
+ * 14 Apr 2008, 08:22:52  
  */
 @ComponentConfig(
-		template = "app:/templates/forum/webui/UIForumListSearch.gtmpl",
-		events = {
-			@EventConfig(listeners = UIForumListSearch.OpentContentActionListener.class),
-			@EventConfig(listeners = UIForumListSearch.CloseActionListener.class)
-		}
+    template = "app:/templates/forum/webui/UIForumListSearch.gtmpl",
+    events = {
+      @EventConfig(listeners = UIForumListSearch.OpentContentActionListener.class),
+      @EventConfig(listeners = UIForumListSearch.CloseActionListener.class)
+    }
 )
 public class UIForumListSearch extends UIContainer {
   private List<ForumSearch>   listEvent       = null;

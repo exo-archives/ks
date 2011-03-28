@@ -65,35 +65,35 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 
 @ComponentConfigs ( {
-				@ComponentConfig(
-						lifecycle = UIFormLifecycle.class,
-						template = "app:/templates/forum/webui/popup/UIForumForm.gtmpl",
-						events = {
-							@EventConfig(listeners = UIForumForm.SaveActionListener.class), 
-							@EventConfig(listeners = UIForumForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
-							@EventConfig(listeners = UIForumForm.AddUserActionListener.class, phase=Phase.DECODE),
-							@EventConfig(listeners = UIForumForm.CancelActionListener.class, phase=Phase.DECODE),
-							@EventConfig(listeners = UIForumForm.SelectTabActionListener.class, phase=Phase.DECODE),
-							@EventConfig(listeners = UIForumForm.OnChangeAutoEmailActionListener.class, phase=Phase.DECODE)
-						}
-				)
-			,
-				@ComponentConfig(
-						 id = "UIForumUserPopupWindow",
-						 type = UIPopupWindow.class,
-						 template = "system:/groovy/webui/core/UIPopupWindow.gtmpl",
-						 events = {
-							 @EventConfig(listeners = UIForumForm.ClosePopupActionListener.class, name = "ClosePopup")	,
-							 @EventConfig(listeners = UIForumForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
-							 @EventConfig(listeners = UIForumForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
-						 }
-				)
-		}
+        @ComponentConfig(
+            lifecycle = UIFormLifecycle.class,
+            template = "app:/templates/forum/webui/popup/UIForumForm.gtmpl",
+            events = {
+              @EventConfig(listeners = UIForumForm.SaveActionListener.class), 
+              @EventConfig(listeners = UIForumForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
+              @EventConfig(listeners = UIForumForm.AddUserActionListener.class, phase=Phase.DECODE),
+              @EventConfig(listeners = UIForumForm.CancelActionListener.class, phase=Phase.DECODE),
+              @EventConfig(listeners = UIForumForm.SelectTabActionListener.class, phase=Phase.DECODE),
+              @EventConfig(listeners = UIForumForm.OnChangeAutoEmailActionListener.class, phase=Phase.DECODE)
+            }
+        )
+      ,
+        @ComponentConfig(
+             id = "UIForumUserPopupWindow",
+             type = UIPopupWindow.class,
+             template = "system:/groovy/webui/core/UIPopupWindow.gtmpl",
+             events = {
+               @EventConfig(listeners = UIForumForm.ClosePopupActionListener.class, name = "ClosePopup")  ,
+               @EventConfig(listeners = UIForumForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
+               @EventConfig(listeners = UIForumForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
+             }
+        )
+    }
 )
 public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISelector {
   private boolean            isCategoriesUpdate                  = true;

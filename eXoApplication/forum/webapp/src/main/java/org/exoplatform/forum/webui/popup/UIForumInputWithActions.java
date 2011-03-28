@@ -35,8 +35,8 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Jun 9, 2008 - 10:31:58 AM	
+ *          tu.duy@exoplatform.com
+ * Jun 9, 2008 - 10:31:58 AM  
  */
 public class UIForumInputWithActions extends UIFormInputSet {
 
@@ -116,9 +116,9 @@ public class UIForumInputWithActions extends UIFormInputSet {
       }
       if (!mapLabelInfo.isEmpty() && mapLabelInfo.containsKey(inputEntry.getId())) {
         w.write("<tr>");
-        w.write("	<td colspan=\"2\">");
-        w.write("		<div style=\"height:18px;\"><div class=\"InfoMessageIcon\" id=\"" + inputEntry.getId() + "Info\">" + mapLabelInfo.get(inputEntry.getId()) + "</div></div>");
-        w.write("	</td>");
+        w.write("  <td colspan=\"2\">");
+        w.write("    <div style=\"height:18px;\"><div class=\"InfoMessageIcon\" id=\"" + inputEntry.getId() + "Info\">" + mapLabelInfo.get(inputEntry.getId()) + "</div></div>");
+        w.write("  </td>");
         w.write("</tr>");
       }
       w.write("<tr>");

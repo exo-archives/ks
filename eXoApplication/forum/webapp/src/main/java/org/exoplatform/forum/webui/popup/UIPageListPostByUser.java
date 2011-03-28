@@ -54,17 +54,17 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
+ *          tu.duy@exoplatform.com
  * 06-03-2008, 04:41:47
  */
 @ComponentConfig(
-		template = "app:/templates/forum/webui/popup/UIPageListPostByUser.gtmpl",
-		events = {
-			@EventConfig(listeners = UIPageListPostByUser.OpenPostLinkActionListener.class),
-			@EventConfig(listeners = UIPageListPostByUser.OpenTopicLinkActionListener.class),
-			@EventConfig(listeners = UIPageListPostByUser.SetOrderByActionListener.class),
-			@EventConfig(listeners = UIPageListPostByUser.DeletePostLinkActionListener.class, confirm="UITopicDetail.confirm.DeleteThisPost")
-		}
+    template = "app:/templates/forum/webui/popup/UIPageListPostByUser.gtmpl",
+    events = {
+      @EventConfig(listeners = UIPageListPostByUser.OpenPostLinkActionListener.class),
+      @EventConfig(listeners = UIPageListPostByUser.OpenTopicLinkActionListener.class),
+      @EventConfig(listeners = UIPageListPostByUser.SetOrderByActionListener.class),
+      @EventConfig(listeners = UIPageListPostByUser.DeletePostLinkActionListener.class, confirm="UITopicDetail.confirm.DeleteThisPost")
+    }
 )
 public class UIPageListPostByUser extends UIContainer {
   private ForumService forumService;

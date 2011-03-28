@@ -57,7 +57,7 @@ import org.exoplatform.webui.application.portlet.PortletRequestContext;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
+ *          tu.duy@exoplatform.com
  * Dec 21, 2007 5:35:54 PM 
  */
 

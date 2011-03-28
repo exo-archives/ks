@@ -44,16 +44,16 @@ import org.exoplatform.webui.event.Event.Phase;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
+ *          tu.duy@exoplatform.com
  * November 01 
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIRatingForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIRatingForm.VoteTopicActionListener.class), 
-			@EventConfig(listeners = UIRatingForm.CancelActionListener.class,phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIRatingForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIRatingForm.VoteTopicActionListener.class), 
+      @EventConfig(listeners = UIRatingForm.CancelActionListener.class,phase = Phase.DECODE)
+    }
 )
 public class UIRatingForm extends BaseUIForm implements UIPopupComponent {
   private Topic  topic;
@@ -80,9 +80,7 @@ public class UIRatingForm extends BaseUIForm implements UIPopupComponent {
       Double voteRating = topic.getVoteRating();
       voteRating = (voteRating * k + Integer.parseInt(vote)) / (k + 1);
       String[] temp = new String[k + 1];
-      for (int i = 0; i < k; i++) {
-        temp[i] = Vote[i];
-      }
+      System.arraycopy(Vote, 0, temp, 0, k);
       temp[k] = userName;
       topic.setVoteRating(voteRating);
       topic.setUserVoteRating(temp);

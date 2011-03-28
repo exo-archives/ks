@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -32,12 +31,12 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.ForumAttachment;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.user.CommonContact;
@@ -45,6 +44,7 @@ import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -57,28 +57,24 @@ import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * May 25, 2008 - 2:55:24 AM	
+ *          tu.duy@exoplatform.com
+ * May 25, 2008 - 2:55:24 AM  
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIViewTopic.gtmpl",
-		events = {
-			@EventConfig(listeners = UIViewTopic.ApproveActionListener.class, phase = Phase.DECODE),
-			@EventConfig(listeners = UIViewTopic.DeleteTopicActionListener.class, phase = Phase.DECODE),
-			@EventConfig(listeners = UIViewTopic.CloseActionListener.class, phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIViewTopic.gtmpl",
+    events = {
+      @EventConfig(listeners = UIViewTopic.ApproveActionListener.class, phase = Phase.DECODE),
+      @EventConfig(listeners = UIViewTopic.DeleteTopicActionListener.class, phase = Phase.DECODE),
+      @EventConfig(listeners = UIViewTopic.CloseActionListener.class, phase = Phase.DECODE)
+    }
 )
-public class UIViewTopic extends UIForm implements UIPopupComponent {
+public class UIViewTopic extends BaseForumForm implements UIPopupComponent {
   public static final String       SIGNATURE      = "SignatureTypeID";
-
-  private ForumService             forumService;
 
   private Topic                    topic;
 
   private JCRPageList              pageList;
-
-  private UserProfile              userProfile;
 
   private int                      pageSelect;
 
@@ -89,7 +85,6 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
   private static Log               log            = ExoLogger.getLogger(UIViewTopic.class);
 
   public UIViewTopic() throws Exception {
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     addChild(UIForumPageIterator.class, null, "ViewTopicPageIterator");
   }
 
@@ -105,11 +100,6 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 
   public void setTopic(Topic topic) {
     this.topic = topic;
-  }
-
-  @SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
-    return this.userProfile;
   }
 
   public void setActionForm(String[] actions) {
@@ -130,7 +120,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
     Topic topic = this.topic;
     String id[] = topic.getPath().split(ForumUtils.SLASH);
     int l = id.length;
-    pageList = forumService.getPosts(id[l - 3], id[l - 2], topic.getId(), ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, userLogin);
+    pageList = getForumService().getPosts(id[l - 3], id[l - 2], topic.getId(), ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, userLogin);
     long maxPost = this.userProfile.getMaxPostInPage();
     if (maxPost <= 0)
       maxPost = 10;
@@ -149,7 +139,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
     }
     if (userNames.size() > 0) {
       try {
-        List<UserProfile> profiles = forumService.getQuickProfiles(userNames);
+        List<UserProfile> profiles = getForumService().getQuickProfiles(userNames);
         for (UserProfile profile : profiles) {
           mapUserProfile.put(profile.getUserId(), profile);
         }
@@ -228,27 +218,14 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
     }
   }
 
-  @SuppressWarnings("unused")
-  private String getScreenName(String screenName) throws Exception {
-    if (screenName != null && screenName.length() > 17 && !screenName.trim().contains(" ")) {
-      boolean isDelted = false;
-      if (screenName.indexOf("<s>") >= 0) {
-        screenName = screenName.replaceAll("<s>", ForumUtils.EMPTY_STR).replaceAll("</s>", ForumUtils.EMPTY_STR);
-        isDelted = true;
-      }
-      screenName = "<span title=\"" + screenName + "\">" + ((isDelted) ? "<s>" : ForumUtils.EMPTY_STR) + ForumUtils.getSubString(screenName, 15) + ((isDelted) ? "</s></span>" : "</span>");
-    }
-    return screenName;
-  }
-
-  @SuppressWarnings("unused")
+   @SuppressWarnings("unused")
   private String getAvatarUrl(String userId) throws Exception {
-    return ForumSessionUtils.getUserAvatarURL(userId, forumService);
+    return ForumSessionUtils.getUserAvatarURL(userId, getForumService());
   }
 
   @SuppressWarnings("unused")
   private boolean isOnline(String userId) throws Exception {
-    return this.forumService.isOnline(userId);
+    return this.getForumService().isOnline(userId);
   }
 
   static public class ApproveActionListener extends EventListener<UIViewTopic> {
@@ -260,28 +237,28 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
       List<Topic> topics = new ArrayList<Topic>();
       topics.add(topic);
       try {
-        uiForm.forumService.modifyTopic(topics, Utils.APPROVE);
-        uiForm.forumService.modifyTopic(topics, Utils.WAITING);
+        uiForm.getForumService().modifyTopic(topics, Utils.APPROVE);
+        uiForm.getForumService().modifyTopic(topics, Utils.WAITING);
       } catch (Exception e) {
         log.debug("\nModify topic fail: ", e);
       }
-      uiForm.closePopup(event);
+      closePopup(event.getRequestContext(), uiForm);
     }
   }
 
-  private void closePopup(Event<UIViewTopic> event) throws Exception {
-    UIPopupContainer popupContainer = getAncestorOfType(UIPopupContainer.class);
+  public static void closePopup(WebuiRequestContext context, UIForm uiForm) throws Exception {
+    UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
     if (popupContainer != null) {
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
       popupAction.deActivate();
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      context.addUIComponentToUpdateByAjax(popupAction);
       UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
       if (moderationForum != null) {
         moderationForum.setReloadPortlet(true);
-        event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum);
+        context.addUIComponentToUpdateByAjax(moderationForum);
       }
     } else {
-      UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       forumPortlet.cancelAction();
     }
   }
@@ -293,11 +270,11 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
       try {
         String[] path = topic.getPath().split(ForumUtils.SLASH);
         int l = path.length;
-        uiForm.forumService.removeTopic(path[l - 3], path[l - 2], topic.getId());
+        uiForm.getForumService().removeTopic(path[l - 3], path[l - 2], topic.getId());
       } catch (Exception e) {
         log.debug("Removing " + topic.getId() + " topic fail: " + e.getCause());
       }
-      uiForm.closePopup(event);
+      closePopup(event.getRequestContext(), uiForm);
     }
   }
 

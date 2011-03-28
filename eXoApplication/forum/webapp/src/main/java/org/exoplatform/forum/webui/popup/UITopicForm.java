@@ -69,39 +69,39 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
+ *          tu.duy@exoplatform.com
  * Aug 22, 2007
  */
 
 @ComponentConfigs ( {
-				@ComponentConfig(
-						lifecycle = UIFormLifecycle.class,
-						template = "app:/templates/forum/webui/popup/UITopicForm.gtmpl",
-						events = {
-							@EventConfig(listeners = UITopicForm.PreviewThreadActionListener.class), 
-							@EventConfig(listeners = UITopicForm.SubmitThreadActionListener.class), 
-							@EventConfig(listeners = UITopicForm.AttachmentActionListener.class,phase = Phase.DECODE), 
-							@EventConfig(listeners = UITopicForm.RemoveAttachmentActionListener.class,phase = Phase.DECODE), 
-							@EventConfig(listeners = UITopicForm.CancelActionListener.class,phase = Phase.DECODE),
-							@EventConfig(listeners = UITopicForm.SelectTabActionListener.class, phase=Phase.DECODE),
-							@EventConfig(listeners = UITopicForm.SelectIconActionListener.class, phase=Phase.DECODE),
-							@EventConfig(listeners = UITopicForm.AddTypeTopicActionListener.class, phase=Phase.DECODE),
-							@EventConfig(listeners = UITopicForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
-							@EventConfig(listeners = UITopicForm.AddUserActionListener.class, phase=Phase.DECODE)
-						}
-				)
-			,
-				@ComponentConfig(
-						 id = "UITopicUserPopupWindow",
-						 type = UIPopupWindow.class,
-						 template = "system:/groovy/webui/core/UIPopupWindow.gtmpl",
-						 events = {
-							 @EventConfig(listeners = UITopicForm.ClosePopupActionListener.class, name = "ClosePopup")	,
-							 @EventConfig(listeners = UITopicForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
-							 @EventConfig(listeners = UITopicForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
-						 }
-				)
-		}
+        @ComponentConfig(
+            lifecycle = UIFormLifecycle.class,
+            template = "app:/templates/forum/webui/popup/UITopicForm.gtmpl",
+            events = {
+              @EventConfig(listeners = UITopicForm.PreviewThreadActionListener.class), 
+              @EventConfig(listeners = UITopicForm.SubmitThreadActionListener.class), 
+              @EventConfig(listeners = UITopicForm.AttachmentActionListener.class,phase = Phase.DECODE), 
+              @EventConfig(listeners = UITopicForm.RemoveAttachmentActionListener.class,phase = Phase.DECODE), 
+              @EventConfig(listeners = UITopicForm.CancelActionListener.class,phase = Phase.DECODE),
+              @EventConfig(listeners = UITopicForm.SelectTabActionListener.class, phase=Phase.DECODE),
+              @EventConfig(listeners = UITopicForm.SelectIconActionListener.class, phase=Phase.DECODE),
+              @EventConfig(listeners = UITopicForm.AddTypeTopicActionListener.class, phase=Phase.DECODE),
+              @EventConfig(listeners = UITopicForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
+              @EventConfig(listeners = UITopicForm.AddUserActionListener.class, phase=Phase.DECODE)
+            }
+        )
+      ,
+        @ComponentConfig(
+             id = "UITopicUserPopupWindow",
+             type = UIPopupWindow.class,
+             template = "system:/groovy/webui/core/UIPopupWindow.gtmpl",
+             events = {
+               @EventConfig(listeners = UITopicForm.ClosePopupActionListener.class, name = "ClosePopup")  ,
+               @EventConfig(listeners = UITopicForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
+               @EventConfig(listeners = UITopicForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
+             }
+        )
+    }
 )
 public class UITopicForm extends BaseForumForm implements UISelector {
 
@@ -453,7 +453,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
       int t = 0, k = 1;
       UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
       UIFormStringInput stringInputTitle = threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT);
-      String topicTitle = "	" + stringInputTitle.getValue();
+      String topicTitle = "  " + stringInputTitle.getValue();
       topicTitle = topicTitle.trim();
       String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
       String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
@@ -512,7 +512,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
           int t = 0, k = 1;
           UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
           UIFormStringInput stringInputTitle = threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT);
-          String topicTitle = "	" + stringInputTitle.getValue();
+          String topicTitle = " " + stringInputTitle.getValue();
           topicTitle = topicTitle.trim();
           int maxText = ForumUtils.MAXTITLE;
           if (topicTitle.length() > maxText) {

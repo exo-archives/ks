@@ -41,15 +41,15 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/UIForumLinks.gtmpl",
-		events = {
-			@EventConfig(listeners = UIForumLinks.SelectActionListener.class)			
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/UIForumLinks.gtmpl",
+    events = {
+      @EventConfig(listeners = UIForumLinks.SelectActionListener.class)      
+    }
 )
 public class UIForumLinks extends BaseForumForm {
   public static final String  FIELD_FORUMLINK_SELECTBOX = "forumLink";

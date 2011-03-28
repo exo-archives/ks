@@ -25,13 +25,13 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 
 /**
  * Author : Hung Nguyen Quang
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Mar 04, 2008
  */
 
 @ComponentConfig(
-	 lifecycle = UIApplicationLifecycle.class,
-	 template = "app:/templates/forum/webui/info/UIForumStatisticPortlet.gtmpl"
+   lifecycle = UIApplicationLifecycle.class,
+   template = "app:/templates/forum/webui/info/UIForumStatisticPortlet.gtmpl"
 )
 public class UIForumStatisticPortlet extends UIPortletApplication {
   public UIForumStatisticPortlet() throws Exception {

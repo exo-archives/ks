@@ -38,16 +38,16 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Jun 3, 2008 - 9:49:22 AM	
+ *          tu.duy@exoplatform.com
+ * Jun 3, 2008 - 9:49:22 AM  
  */
 @ComponentConfig(
-		template = "app:/templates/forum/webui/popup/UIListSentPrivateMessage.gtmpl",
-		events = {
-			@EventConfig(listeners = UIListSentPrivateMessage.ViewMessageActionListener.class),
-			@EventConfig(listeners = UIListSentPrivateMessage.DeleteMessageActionListener.class,confirm="UIPrivateMessageForm.confirm.Delete-message"),
-			@EventConfig(listeners = UIListSentPrivateMessage.ForwardMessageActionListener.class)
-		}
+    template = "app:/templates/forum/webui/popup/UIListSentPrivateMessage.gtmpl",
+    events = {
+      @EventConfig(listeners = UIListSentPrivateMessage.ViewMessageActionListener.class),
+      @EventConfig(listeners = UIListSentPrivateMessage.DeleteMessageActionListener.class,confirm="UIPrivateMessageForm.confirm.Delete-message"),
+      @EventConfig(listeners = UIListSentPrivateMessage.ForwardMessageActionListener.class)
+    }
 )
 public class UIListSentPrivateMessage extends UIContainer {
   private ForumService              forumService;

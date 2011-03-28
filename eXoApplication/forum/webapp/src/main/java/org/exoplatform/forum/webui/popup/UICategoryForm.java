@@ -61,34 +61,34 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 
 @ComponentConfigs ( {
-				@ComponentConfig(
-						lifecycle = UIFormLifecycle.class,
-						template = "app:/templates/forum/webui/popup/UICategoryForm.gtmpl",
-						events = {
-							@EventConfig(listeners = UICategoryForm.SaveActionListener.class), 
-							@EventConfig(listeners = UICategoryForm.AddPrivateActionListener.class, phase=Phase.DECODE),
-							@EventConfig(listeners = UICategoryForm.CancelActionListener.class, phase=Phase.DECODE),
-							@EventConfig(listeners = UICategoryForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
-							@EventConfig(listeners = UICategoryForm.SelectTabActionListener.class, phase=Phase.DECODE)
-						}
-				)
-			,
-				@ComponentConfig(
-						 id = "UICategoryUserPopupWindow",
-						 type = UIPopupWindow.class,
-						 template = "system:/groovy/webui/core/UIPopupWindow.gtmpl",
-						 events = {
-							 @EventConfig(listeners = UICategoryForm.ClosePopupActionListener.class, name = "ClosePopup")	,
-							 @EventConfig(listeners = UICategoryForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
-							 @EventConfig(listeners = UICategoryForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
-						 }
-				)
-		}
+        @ComponentConfig(
+            lifecycle = UIFormLifecycle.class,
+            template = "app:/templates/forum/webui/popup/UICategoryForm.gtmpl",
+            events = {
+              @EventConfig(listeners = UICategoryForm.SaveActionListener.class), 
+              @EventConfig(listeners = UICategoryForm.AddPrivateActionListener.class, phase=Phase.DECODE),
+              @EventConfig(listeners = UICategoryForm.CancelActionListener.class, phase=Phase.DECODE),
+              @EventConfig(listeners = UICategoryForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
+              @EventConfig(listeners = UICategoryForm.SelectTabActionListener.class, phase=Phase.DECODE)
+            }
+        )
+      ,
+        @ComponentConfig(
+             id = "UICategoryUserPopupWindow",
+             type = UIPopupWindow.class,
+             template = "system:/groovy/webui/core/UIPopupWindow.gtmpl",
+             events = {
+               @EventConfig(listeners = UICategoryForm.ClosePopupActionListener.class, name = "ClosePopup")  ,
+               @EventConfig(listeners = UICategoryForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
+               @EventConfig(listeners = UICategoryForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
+             }
+        )
+    }
 )
 public class UICategoryForm extends BaseForumForm implements UIPopupComponent, UISelector {
   public static final String CATEGORY_DETAIL_TAB          = "DetailTab";

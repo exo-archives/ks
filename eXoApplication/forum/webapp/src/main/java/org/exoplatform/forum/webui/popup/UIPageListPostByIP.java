@@ -46,18 +46,18 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
+ *          tu.duy@exoplatform.com
  * 06-03-2008, 04:41:47
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class ,
-		template = "app:/templates/forum/webui/popup/UIPageListPostByIP.gtmpl",
-		events = {
-			@EventConfig(listeners = UIPageListPostByIP.OpenPostLinkActionListener.class),
-			@EventConfig(listeners = UIPageListPostByIP.SetOrderByActionListener.class),
-			@EventConfig(listeners = UIPageListPostByIP.CancelActionListener.class),
-			@EventConfig(listeners = UIPageListPostByIP.DeletePostLinkActionListener.class)
-		}
+    lifecycle = UIFormLifecycle.class ,
+    template = "app:/templates/forum/webui/popup/UIPageListPostByIP.gtmpl",
+    events = {
+      @EventConfig(listeners = UIPageListPostByIP.OpenPostLinkActionListener.class),
+      @EventConfig(listeners = UIPageListPostByIP.SetOrderByActionListener.class),
+      @EventConfig(listeners = UIPageListPostByIP.CancelActionListener.class),
+      @EventConfig(listeners = UIPageListPostByIP.DeletePostLinkActionListener.class)
+    }
 )
 public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponent {
   private String       userName           = ForumUtils.EMPTY_STR;

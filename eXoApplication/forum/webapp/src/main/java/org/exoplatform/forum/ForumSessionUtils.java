@@ -35,7 +35,7 @@ import org.exoplatform.services.log.Log;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
+ *          tu.duy@exoplatform.com
  */
 
 public class ForumSessionUtils {

@@ -42,19 +42,19 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Apr 28, 2009 - 9:55:17 AM	
+ *          tu.duy@exoplatform.com
+ * Apr 28, 2009 - 9:55:17 AM  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIAddBBCodeForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIAddBBCodeForm.SaveActionListener.class), 
-			@EventConfig(listeners = UIAddBBCodeForm.PreviewActionListener.class),
-			@EventConfig(listeners = UIAddBBCodeForm.ApplyActionListener.class),
-			@EventConfig(listeners = UIAddBBCodeForm.CancelActionListener.class, phase=Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIAddBBCodeForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIAddBBCodeForm.SaveActionListener.class), 
+      @EventConfig(listeners = UIAddBBCodeForm.PreviewActionListener.class),
+      @EventConfig(listeners = UIAddBBCodeForm.ApplyActionListener.class),
+      @EventConfig(listeners = UIAddBBCodeForm.CancelActionListener.class, phase=Phase.DECODE)
+    }
 )
 public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
   public static final String FIELD_TAGNAME_INPUT       = "TagName";

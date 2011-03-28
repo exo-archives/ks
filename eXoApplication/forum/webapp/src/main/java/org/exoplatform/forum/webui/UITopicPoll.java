@@ -49,20 +49,20 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
+ *          tu.duy@exoplatform.com
  * Octo 26, 2007 9:48:18 AM 
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class ,
-		template = "app:/templates/forum/webui/UITopicPoll.gtmpl", 
-		events = {
-			@EventConfig(listeners = UITopicPoll.VoteActionListener.class),	
-			@EventConfig(listeners = UITopicPoll.EditPollActionListener.class) ,
-			@EventConfig(listeners = UITopicPoll.RemovePollActionListener.class, confirm="UITopicPoll.msg.confirm-RemovePoll"),
-			@EventConfig(listeners = UITopicPoll.ClosedPollActionListener.class),
-			@EventConfig(listeners = UITopicPoll.VoteAgainPollActionListener.class)
-		}
+    lifecycle = UIFormLifecycle.class ,
+    template = "app:/templates/forum/webui/UITopicPoll.gtmpl", 
+    events = {
+      @EventConfig(listeners = UITopicPoll.VoteActionListener.class),  
+      @EventConfig(listeners = UITopicPoll.EditPollActionListener.class) ,
+      @EventConfig(listeners = UITopicPoll.RemovePollActionListener.class, confirm="UITopicPoll.msg.confirm-RemovePoll"),
+      @EventConfig(listeners = UITopicPoll.ClosedPollActionListener.class),
+      @EventConfig(listeners = UITopicPoll.VoteAgainPollActionListener.class)
+    }
 )
 public class UITopicPoll extends BaseForumForm {
   private Poll        poll_;
@@ -301,9 +301,7 @@ public class UITopicPoll extends BaseForumForm {
             }
           } else {
             setUserVote = new String[(size + 1)];
-            for (int t = 0; t < size; t++) {
-              setUserVote[t] = temporary[t];
-            }
+            System.arraycopy(temporary, 0, setUserVote, 0, size);
             setUserVote[size] = userVote + ":" + j;
             size = size + 1;
           }

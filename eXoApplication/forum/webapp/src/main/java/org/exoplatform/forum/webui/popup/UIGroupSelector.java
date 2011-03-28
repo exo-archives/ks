@@ -42,29 +42,29 @@ import org.exoplatform.webui.organization.UIGroupMembershipSelector;
 /**
  * Created by The eXo Platform SARL
  * Author : Pham Tuan
- *					phamtuanchip@yahoo.de
+ *          phamtuanchip@yahoo.de
  * Aug 29, 2007 11:57:56 AM 
  */
 
 @ComponentConfigs({ 
-	@ComponentConfig(
-			template = "app:/templates/forum/webui/popup/UIGroupSelector.gtmpl",
-			events = {
-					@EventConfig(listeners = UIGroupSelector.ChangeNodeActionListener.class),
-					@EventConfig(listeners = UIGroupSelector.SelectMembershipActionListener.class),
-					@EventConfig(listeners = UIGroupSelector.SelectPathActionListener.class)	
-			}	
-	),
-	@ComponentConfig(
-			type = UITree.class, id = "UITreeGroupSelector",
-			template = "system:/groovy/webui/core/UITree.gtmpl",
-			events = @EventConfig(listeners = UITree.ChangeNodeActionListener.class)
-	),
-	@ComponentConfig(
-			type = UIBreadcumbs.class, id = "BreadcumbGroupSelector",
-			template = "system:/groovy/webui/core/UIBreadcumbs.gtmpl",
-			events = @EventConfig(listeners = UIBreadcumbs.SelectPathActionListener.class)
-	)
+  @ComponentConfig(
+      template = "app:/templates/forum/webui/popup/UIGroupSelector.gtmpl",
+      events = {
+          @EventConfig(listeners = UIGroupSelector.ChangeNodeActionListener.class),
+          @EventConfig(listeners = UIGroupSelector.SelectMembershipActionListener.class),
+          @EventConfig(listeners = UIGroupSelector.SelectPathActionListener.class)  
+      }  
+  ),
+  @ComponentConfig(
+      type = UITree.class, id = "UITreeGroupSelector",
+      template = "system:/groovy/webui/core/UITree.gtmpl",
+      events = @EventConfig(listeners = UITree.ChangeNodeActionListener.class)
+  ),
+  @ComponentConfig(
+      type = UIBreadcumbs.class, id = "BreadcumbGroupSelector",
+      template = "system:/groovy/webui/core/UIBreadcumbs.gtmpl",
+      events = @EventConfig(listeners = UIBreadcumbs.SelectPathActionListener.class)
+  )
 })
 public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopupComponent, UISelectComponent {
 

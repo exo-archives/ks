@@ -53,33 +53,33 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * May 9, 2008 - 8:19:24 AM	
+ *          tu.duy@exoplatform.com
+ * May 9, 2008 - 8:19:24 AM  
  */
 @ComponentConfigs ( 
-	{
-		@ComponentConfig(
-			lifecycle = UIFormLifecycle.class,
-			template = "app:/templates/forum/webui/popup/UIPrivateMessegeForm.gtmpl",
-			events = {
-				@EventConfig(listeners = UIPrivateMessageForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
-				@EventConfig(listeners = UIPrivateMessageForm.AddUserActionListener.class, phase=Phase.DECODE),
-				@EventConfig(listeners = UIPrivateMessageForm.SelectTabActionListener.class, phase=Phase.DECODE),
-				@EventConfig(listeners = UIPrivateMessageForm.CancelActionListener.class, phase=Phase.DECODE),
-				@EventConfig(listeners = UIPrivateMessageForm.SendPrivateMessageActionListener.class)
-			}
-		),
-		@ComponentConfig(
-			 id = "UIPMUserPopupWindow",
-			 type = UIPopupWindow.class,
-			 template = "system:/groovy/webui/core/UIPopupWindow.gtmpl",
-			 events = {
-				 @EventConfig(listeners = UIPrivateMessageForm.ClosePopupActionListener.class, name = "ClosePopup")	,
-				 @EventConfig(listeners = UIPrivateMessageForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
-				 @EventConfig(listeners = UIPrivateMessageForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
-			}
-		)
-	}
+  {
+    @ComponentConfig(
+      lifecycle = UIFormLifecycle.class,
+      template = "app:/templates/forum/webui/popup/UIPrivateMessegeForm.gtmpl",
+      events = {
+        @EventConfig(listeners = UIPrivateMessageForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
+        @EventConfig(listeners = UIPrivateMessageForm.AddUserActionListener.class, phase=Phase.DECODE),
+        @EventConfig(listeners = UIPrivateMessageForm.SelectTabActionListener.class, phase=Phase.DECODE),
+        @EventConfig(listeners = UIPrivateMessageForm.CancelActionListener.class, phase=Phase.DECODE),
+        @EventConfig(listeners = UIPrivateMessageForm.SendPrivateMessageActionListener.class)
+      }
+    ),
+    @ComponentConfig(
+       id = "UIPMUserPopupWindow",
+       type = UIPopupWindow.class,
+       template = "system:/groovy/webui/core/UIPopupWindow.gtmpl",
+       events = {
+         @EventConfig(listeners = UIPrivateMessageForm.ClosePopupActionListener.class, name = "ClosePopup")  ,
+         @EventConfig(listeners = UIPrivateMessageForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
+         @EventConfig(listeners = UIPrivateMessageForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
+      }
+    )
+  }
 )
 public class UIPrivateMessageForm extends BaseForumForm implements UIPopupComponent, UISelector {
   private String             userName;

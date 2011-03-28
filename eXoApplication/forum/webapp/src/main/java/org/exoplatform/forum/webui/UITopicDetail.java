@@ -82,62 +82,62 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/UITopicDetail.gtmpl", 
-		events = {
-			@EventConfig(listeners = UITopicDetail.AddPostActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.RatingTopicActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.AddTagTopicActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.UnTagTopicActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.OpenTopicsTagActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.GoNumberPageActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.SearchFormActionListener.class ),
-			
-			@EventConfig(listeners = UITopicDetail.PrintActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.EditActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.DeleteActionListener.class,confirm="UITopicDetail.confirm.DeleteThisPost" ),	
-			@EventConfig(listeners = UITopicDetail.PrivatePostActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.QuoteActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.EditTopicActionListener.class ),	//Topic Menu
-			@EventConfig(listeners = UITopicDetail.PrintPageActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.AddPollActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetOpenTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetCloseTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetLockedTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetUnLockTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetMoveTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetStickTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetUnStickTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SplitTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetApproveTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetUnApproveTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetDeleteTopicActionListener.class,confirm="UITopicDetail.confirm.DeleteThisTopic" ),	
-			@EventConfig(listeners = UITopicDetail.MergePostActionListener.class ), //Post Menu 
-			@EventConfig(listeners = UITopicDetail.MovePostActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetApprovePostActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetHiddenPostActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetUnHiddenPostActionListener.class ),	
-//			@EventConfig(listeners = UITopicDetail.SetUnApproveAttachmentActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class),
-			
-			@EventConfig(listeners = UITopicDetail.QuickReplyActionListener.class),
-			@EventConfig(listeners = UITopicDetail.PreviewReplyActionListener.class),
-			
-			@EventConfig(listeners = UITopicDetail.ViewPostedByUserActionListener.class ), 
-			@EventConfig(listeners = UITopicDetail.ViewPublicUserInfoActionListener.class ) ,
-			@EventConfig(listeners = UITopicDetail.ViewThreadByUserActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.WatchOptionActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.PrivateMessageActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.DownloadAttachActionListener.class ),
-			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
-			@EventConfig(listeners = UITopicDetail.AdvancedSearchActionListener.class),
-			@EventConfig(listeners = UITopicDetail.BanIPAllForumActionListener.class),
-			@EventConfig(listeners = UITopicDetail.BanIPThisForumActionListener.class),
-			@EventConfig(listeners = UITopicDetail.AddBookMarkActionListener.class),
-			@EventConfig(listeners = UITopicDetail.RSSActionListener.class),
-			@EventConfig(listeners = UITopicDetail.UnWatchActionListener.class),
-			@EventConfig(listeners = UITopicDetail.AddWatchingActionListener.class)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/UITopicDetail.gtmpl", 
+    events = {
+      @EventConfig(listeners = UITopicDetail.AddPostActionListener.class ),
+      @EventConfig(listeners = UITopicDetail.RatingTopicActionListener.class ),
+      @EventConfig(listeners = UITopicDetail.AddTagTopicActionListener.class ),
+      @EventConfig(listeners = UITopicDetail.UnTagTopicActionListener.class ),
+      @EventConfig(listeners = UITopicDetail.OpenTopicsTagActionListener.class ),
+      @EventConfig(listeners = UITopicDetail.GoNumberPageActionListener.class ),
+      @EventConfig(listeners = UITopicDetail.SearchFormActionListener.class ),
+      
+      @EventConfig(listeners = UITopicDetail.PrintActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.EditActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.DeleteActionListener.class,confirm="UITopicDetail.confirm.DeleteThisPost" ),  
+      @EventConfig(listeners = UITopicDetail.PrivatePostActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.QuoteActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.EditTopicActionListener.class ),  //Topic Menu
+      @EventConfig(listeners = UITopicDetail.PrintPageActionListener.class ),
+      @EventConfig(listeners = UITopicDetail.AddPollActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetOpenTopicActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetCloseTopicActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetLockedTopicActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetUnLockTopicActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetMoveTopicActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetStickTopicActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetUnStickTopicActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SplitTopicActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetApproveTopicActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetUnApproveTopicActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetDeleteTopicActionListener.class,confirm="UITopicDetail.confirm.DeleteThisTopic" ),  
+      @EventConfig(listeners = UITopicDetail.MergePostActionListener.class ), //Post Menu 
+      @EventConfig(listeners = UITopicDetail.MovePostActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetApprovePostActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetHiddenPostActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetUnHiddenPostActionListener.class ),  
+//      @EventConfig(listeners = UITopicDetail.SetUnApproveAttachmentActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.DeletePostActionListener.class),
+      
+      @EventConfig(listeners = UITopicDetail.QuickReplyActionListener.class),
+      @EventConfig(listeners = UITopicDetail.PreviewReplyActionListener.class),
+      
+      @EventConfig(listeners = UITopicDetail.ViewPostedByUserActionListener.class ), 
+      @EventConfig(listeners = UITopicDetail.ViewPublicUserInfoActionListener.class ) ,
+      @EventConfig(listeners = UITopicDetail.ViewThreadByUserActionListener.class ),
+      @EventConfig(listeners = UITopicDetail.WatchOptionActionListener.class ),
+      @EventConfig(listeners = UITopicDetail.PrivateMessageActionListener.class ),
+      @EventConfig(listeners = UITopicDetail.DownloadAttachActionListener.class ),
+      @EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
+      @EventConfig(listeners = UITopicDetail.AdvancedSearchActionListener.class),
+      @EventConfig(listeners = UITopicDetail.BanIPAllForumActionListener.class),
+      @EventConfig(listeners = UITopicDetail.BanIPThisForumActionListener.class),
+      @EventConfig(listeners = UITopicDetail.AddBookMarkActionListener.class),
+      @EventConfig(listeners = UITopicDetail.RSSActionListener.class),
+      @EventConfig(listeners = UITopicDetail.UnWatchActionListener.class),
+      @EventConfig(listeners = UITopicDetail.AddWatchingActionListener.class)
+    }
 )
 @SuppressWarnings("unused")
 public class UITopicDetail extends UIForumKeepStickPageIterator {
@@ -342,7 +342,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   public void setRenderInfoPorlet() throws Exception {
     /**
-     * Set permission for current user login.		
+     * Set permission for current user login.    
     */
     isMod = (userProfile.getUserRole() == UserProfile.ADMIN) || (ForumServiceUtils.hasPermission(forum.getModerators(), userName));
     if (topic != null) {
@@ -793,8 +793,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
               return;
             }
           }
-          while (tagIds.indexOf("	") > 0) {
-            tagIds = StringUtils.replace(tagIds, "	", " ");
+          while (tagIds.indexOf("  ") > 0) {
+            tagIds = StringUtils.replace(tagIds, "  ", " ");
           }
           List<String> listTags = new ArrayList<String>();
           for (String string : Arrays.asList(tagIds.split(" "))) {
@@ -890,7 +890,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   static public class PrintActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-      //			
+      //      
     }
   }
 
@@ -1004,7 +1004,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   static public class PrintPageActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-      //			
+      //      
     }
   }
 

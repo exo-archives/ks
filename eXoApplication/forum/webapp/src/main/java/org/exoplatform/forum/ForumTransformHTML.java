@@ -27,7 +27,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Created by The eXo Platform SAS 
  * Author : Vu Duy Tu 
- * 					tu.duy@exoplatform.com 
+ *           tu.duy@exoplatform.com 
  * May 22, 2008 - 2:58:53 AM
  */
 

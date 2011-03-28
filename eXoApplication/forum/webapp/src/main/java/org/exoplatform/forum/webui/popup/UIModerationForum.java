@@ -45,17 +45,17 @@ import org.exoplatform.webui.event.Event.Phase;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * 29-12-2008 - 04:43:19	
+ *          tu.duy@exoplatform.com
+ * 29-12-2008 - 04:43:19  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIModerationForum.gtmpl",
-		events = {
-			@EventConfig(listeners = UIModerationForum.OpenActionListener.class),
-			@EventConfig(listeners = UIModerationForum.CloseActionListener.class, phase=Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIModerationForum.gtmpl",
+    events = {
+      @EventConfig(listeners = UIModerationForum.OpenActionListener.class),
+      @EventConfig(listeners = UIModerationForum.CloseActionListener.class, phase=Phase.DECODE)
+    }
 )
 @SuppressWarnings("unchecked")
 public class UIModerationForum extends BaseForumForm implements UIPopupComponent {

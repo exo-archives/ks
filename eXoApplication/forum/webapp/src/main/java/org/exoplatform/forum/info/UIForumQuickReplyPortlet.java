@@ -32,16 +32,16 @@ import org.exoplatform.webui.event.EventListener;
 
 /**
  * Author : Hung Nguyen Quang
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Mar 04, 2008
  */
 
 @ComponentConfig(
-		lifecycle = UIApplicationLifecycle.class,
-		template = "app:/templates/forum/webui/info/UIForumQuickReplyPortlet.gtmpl",
-		events = {
-			@EventConfig(listeners = UIForumQuickReplyPortlet.QuickReplyEventActionListener.class)
-		}
+    lifecycle = UIApplicationLifecycle.class,
+    template = "app:/templates/forum/webui/info/UIForumQuickReplyPortlet.gtmpl",
+    events = {
+      @EventConfig(listeners = UIForumQuickReplyPortlet.QuickReplyEventActionListener.class)
+    }
 )
 public class UIForumQuickReplyPortlet extends UIPortletApplication {
   private boolean isRenderChild = false;

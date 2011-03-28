@@ -15,7 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
 package org.exoplatform.forum.webui;
-	
+  
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,38 +49,38 @@ import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class ,
-		template = "app:/templates/forum/webui/UICategory.gtmpl",
-		events = {
-				@EventConfig(listeners = UICategory.SearchFormActionListener.class),
-				@EventConfig(listeners = UICategory.EditCategoryActionListener.class),
-				@EventConfig(listeners = UICategory.WatchOptionActionListener.class),
-				@EventConfig(listeners = UICategory.ExportCategoryActionListener.class),
-				@EventConfig(listeners = UICategory.ImportForumActionListener.class),
-				@EventConfig(listeners = UICategory.DeleteCategoryActionListener.class,confirm="UICategory.confirm.DeleteCategory"),
-				@EventConfig(listeners = UICategory.AddForumActionListener.class),
-				@EventConfig(listeners = UICategory.EditForumActionListener.class),
-				@EventConfig(listeners = UICategory.SetLockedActionListener.class),
-				@EventConfig(listeners = UICategory.SetUnLockActionListener.class),
-				@EventConfig(listeners = UICategory.SetOpenActionListener.class),
-				@EventConfig(listeners = UICategory.SetCloseActionListener.class),
-				@EventConfig(listeners = UICategory.MoveForumActionListener.class),
-				@EventConfig(listeners = UICategory.RemoveForumActionListener.class),
-				@EventConfig(listeners = UICategory.OpenForumLinkActionListener.class),
-				@EventConfig(listeners = UICategory.OpenLastTopicLinkActionListener.class),
-				@EventConfig(listeners = UICategory.OpenLastReadTopicActionListener.class),
-				@EventConfig(listeners = UICategory.AddBookMarkActionListener.class),
-				@EventConfig(listeners = UICategory.AddWatchingActionListener.class),
-				@EventConfig(listeners = UICategory.UnWatchActionListener.class),
-				@EventConfig(listeners = UICategory.RSSActionListener.class),
-				@EventConfig(listeners = UICategory.AdvancedSearchActionListener.class)
-		}
+    lifecycle = UIFormLifecycle.class ,
+    template = "app:/templates/forum/webui/UICategory.gtmpl",
+    events = {
+        @EventConfig(listeners = UICategory.SearchFormActionListener.class),
+        @EventConfig(listeners = UICategory.EditCategoryActionListener.class),
+        @EventConfig(listeners = UICategory.WatchOptionActionListener.class),
+        @EventConfig(listeners = UICategory.ExportCategoryActionListener.class),
+        @EventConfig(listeners = UICategory.ImportForumActionListener.class),
+        @EventConfig(listeners = UICategory.DeleteCategoryActionListener.class,confirm="UICategory.confirm.DeleteCategory"),
+        @EventConfig(listeners = UICategory.AddForumActionListener.class),
+        @EventConfig(listeners = UICategory.EditForumActionListener.class),
+        @EventConfig(listeners = UICategory.SetLockedActionListener.class),
+        @EventConfig(listeners = UICategory.SetUnLockActionListener.class),
+        @EventConfig(listeners = UICategory.SetOpenActionListener.class),
+        @EventConfig(listeners = UICategory.SetCloseActionListener.class),
+        @EventConfig(listeners = UICategory.MoveForumActionListener.class),
+        @EventConfig(listeners = UICategory.RemoveForumActionListener.class),
+        @EventConfig(listeners = UICategory.OpenForumLinkActionListener.class),
+        @EventConfig(listeners = UICategory.OpenLastTopicLinkActionListener.class),
+        @EventConfig(listeners = UICategory.OpenLastReadTopicActionListener.class),
+        @EventConfig(listeners = UICategory.AddBookMarkActionListener.class),
+        @EventConfig(listeners = UICategory.AddWatchingActionListener.class),
+        @EventConfig(listeners = UICategory.UnWatchActionListener.class),
+        @EventConfig(listeners = UICategory.RSSActionListener.class),
+        @EventConfig(listeners = UICategory.AdvancedSearchActionListener.class)
+    }
 )
 @SuppressWarnings({ "unused", "unchecked"})
 public class UICategory extends BaseForumForm {

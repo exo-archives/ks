@@ -36,15 +36,15 @@ import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * May 10, 2008 - 9:16:19 AM	
+ *          tu.duy@exoplatform.com
+ * May 10, 2008 - 9:16:19 AM  
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIViewPrivateMessageForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIViewPrivateMessageForm.CloseActionListener.class,phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIViewPrivateMessageForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIViewPrivateMessageForm.CloseActionListener.class,phase = Phase.DECODE)
+    }
 )
 public class UIViewPrivateMessageForm extends UIForm implements UIPopupComponent {
   private ForumPrivateMessage privateMessage;

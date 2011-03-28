@@ -323,16 +323,22 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
+  private NodeIterator getNodeIteratorAutoPruneSetting(SessionProvider sProvider, boolean isActive) throws Exception {
+    Node categoryHNode = getCategoryHome(sProvider);
+    QueryManager qm = categoryHNode.getSession().getWorkspace().getQueryManager();
+    StringBuilder pathQuery = new StringBuilder();
+    pathQuery.append(JCR_ROOT).append(categoryHNode.getPath()).append("//element(*,").append(EXO_PRUNE_SETTING).append(")");
+    String strQuery = new String((isActive) ? (pathQuery.append("[@").append(EXO_IS_ACTIVE).append(" = 'true']")) : (pathQuery.append(" order by @").append(EXO_ID).append(ASCENDING)));
+    Query query = qm.createQuery(strQuery, Query.XPATH);
+    QueryResult result = query.execute();
+    NodeIterator iter = result.getNodes();
+    return iter;
+  }
+
   public void initAutoPruneSchedules() throws Exception {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
-      Node categoryHNode = getCategoryHome(sProvider);
-      QueryManager qm = categoryHNode.getSession().getWorkspace().getQueryManager();
-      StringBuilder pathQuery = new StringBuilder();
-      pathQuery.append(JCR_ROOT).append(categoryHNode.getPath()).append("//element(*,exo:pruneSetting) [@exo:isActive = 'true']");
-      Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
-      QueryResult result = query.execute();
-      NodeIterator iter = result.getNodes();
+      NodeIterator iter = getNodeIteratorAutoPruneSetting(sProvider, true);
       while (iter.hasNext()) {
         addOrRemoveSchedule(getPruneSetting(iter.nextNode()));
       }
@@ -2193,17 +2199,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider);
-      Calendar newDate = getGreenwichMeanTime();
-      if (forumPatch == null || forumPatch.length() <= 0)
-        forumPatch = categoryHome.getPath();
-      newDate.setTimeInMillis(newDate.getTimeInMillis() - date * 86400000);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer stringBuffer = new StringBuffer();
-      stringBuffer.append(JCR_ROOT).append(forumPatch).append("//element(*,exo:topic)[@exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @exo:createdDate ascending");
-      Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+      String strQuery = getStringQueryResultTopicsOld(categoryHome, date, forumPatch);
+      Query query = qm.createQuery(strQuery, Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
-      JCRPageList pagelist = new ForumPageList(iter, 10, stringBuffer.toString(), true);
+      JCRPageList pagelist = new ForumPageList(iter, 10, strQuery, true);
       return pagelist;
     } catch (Exception e) {
       return null;
@@ -2212,21 +2213,29 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
+  private NodeIterator getNodeIteratorTopicsOld(SessionProvider sProvider, long date, String forumPatch) throws Exception {
+    Node categoryHome = getCategoryHome(sProvider);
+    QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+    Query query = qm.createQuery(getStringQueryResultTopicsOld(categoryHome, date, forumPatch), Query.XPATH);
+    QueryResult result = query.execute();
+    return result.getNodes();
+  }
+
+  private String getStringQueryResultTopicsOld(Node categoryHome, long date, String forumPatch) throws Exception {
+    Calendar newDate = getGreenwichMeanTime();
+    if (forumPatch == null || forumPatch.length() <= 0)
+      forumPatch = categoryHome.getPath();
+    newDate.setTimeInMillis(newDate.getTimeInMillis() - date * 86400000);
+    StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append(JCR_ROOT).append(forumPatch).append("//element(*,").append(EXO_TOPIC).append(")[@").append(EXO_LAST_POST_DATE).append(" <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @").append(EXO_CREATED_DATE).append(ASCENDING);
+    return stringBuffer.toString();
+  }
+
   public List<Topic> getAllTopicsOld(long date, String forumPatch) throws Exception {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     List<Topic> topics = new ArrayList<Topic>();
     try {
-      Node categoryHome = getCategoryHome(sProvider);
-      Calendar newDate = getGreenwichMeanTime();
-      if (forumPatch == null || forumPatch.length() <= 0)
-        forumPatch = categoryHome.getPath();
-      newDate.setTimeInMillis(newDate.getTimeInMillis() - date * 86400000);
-      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer stringBuffer = new StringBuffer();
-      stringBuffer.append(JCR_ROOT).append(forumPatch).append("//element(*,exo:topic)[@exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @exo:createdDate ascending");
-      Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
-      QueryResult result = query.execute();
-      NodeIterator iter = result.getNodes();
+      NodeIterator iter = getNodeIteratorTopicsOld(sProvider, date, forumPatch);
       Topic topic;
       while (iter.hasNext()) {
         Node node = iter.nextNode();
@@ -2248,15 +2257,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   public long getTotalTopicOld(long date, String forumPatch) {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
-      Node categoryHome = getCategoryHome(sProvider);
-      Calendar newDate = getGreenwichMeanTime();
-      newDate.setTimeInMillis(newDate.getTimeInMillis() - date * 86400000);
-      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer stringBuffer = new StringBuffer();
-      stringBuffer.append(JCR_ROOT).append(forumPatch).append("//element(*,exo:topic)[@exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("') and @exo:isActive='true'] order by @exo:createdDate ascending");
-      Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
-      QueryResult result = query.execute();
-      NodeIterator iter = result.getNodes();
+      NodeIterator iter = getNodeIteratorTopicsOld(sProvider, date, forumPatch);
       return iter.getSize();
     } catch (Exception e) {
       return 0;
@@ -7120,13 +7121,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     List<PruneSetting> prunList = new ArrayList<PruneSetting>();
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
-      Node categoryHNode = getCategoryHome(sProvider);
-      QueryManager qm = categoryHNode.getSession().getWorkspace().getQueryManager();
-      StringBuilder pathQuery = new StringBuilder();
-      pathQuery.append(JCR_ROOT).append(categoryHNode.getPath()).append("//element(*,exo:pruneSetting) order by @exo:id ascending");
-      Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
-      QueryResult result = query.execute();
-      NodeIterator iter = result.getNodes();
+      NodeIterator iter = getNodeIteratorAutoPruneSetting(sProvider, false);
       while (iter.hasNext()) {
         Node prunNode = iter.nextNode();
         prunList.add(getPruneSetting(prunNode));

@@ -23,11 +23,11 @@ package org.exoplatform.forum.service;
  * May 5, 2008 - 2:33:00 AM  
  */
 public class ForumAdministration {
-  private String  forumSortBy;             // name , forumOrder, createdDate, laspostDate, postCount, topicCount
+  private String  forumSortBy;            // name , forumOrder, createdDate, laspostDate, postCount, topicCount
 
-  private String  forumSortByType;         // ascending or descending
+  private String  forumSortByType;        // ascending or descending
 
-  private String  topicSortBy;             // name, isLock, lastPostDate, postCount, numberAttachments.
+  private String  topicSortBy;            // name, isLock, lastPostDate, postCount, numberAttachments.
 
   private String  topicSortByType;
 

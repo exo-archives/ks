@@ -53,17 +53,17 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * 05-03-2008	
+ *          tu.duy@exoplatform.com
+ * 05-03-2008  
  */
 
 @ComponentConfig(
-		template = "app:/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl",
-		events = {
-				@EventConfig(listeners = UIPageListTopicByUser.OpenTopicActionListener.class ),
-				@EventConfig(listeners = UIPageListTopicByUser.SetOrderByActionListener.class ),
-				@EventConfig(listeners = UIPageListTopicByUser.DeleteTopicActionListener.class,confirm="UITopicDetail.confirm.DeleteThisTopic" )
-		}
+    template = "app:/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl",
+    events = {
+        @EventConfig(listeners = UIPageListTopicByUser.OpenTopicActionListener.class ),
+        @EventConfig(listeners = UIPageListTopicByUser.SetOrderByActionListener.class ),
+        @EventConfig(listeners = UIPageListTopicByUser.DeleteTopicActionListener.class,confirm="UITopicDetail.confirm.DeleteThisTopic" )
+    }
 )
 public class UIPageListTopicByUser extends UIContainer {
   private ForumService forumService;

@@ -40,17 +40,17 @@ import org.exoplatform.webui.event.Event.Phase;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Apr 30, 2008 - 8:19:21 AM	
+ *          tu.duy@exoplatform.com
+ * Apr 30, 2008 - 8:19:21 AM  
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIShowBookMarkForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIShowBookMarkForm.OpenLinkActionListener.class, phase=Phase.DECODE), 
-			@EventConfig(listeners = UIShowBookMarkForm.DeleteLinkActionListener.class), 
-			@EventConfig(listeners = UIShowBookMarkForm.CancelActionListener.class, phase=Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIShowBookMarkForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIShowBookMarkForm.OpenLinkActionListener.class, phase=Phase.DECODE), 
+      @EventConfig(listeners = UIShowBookMarkForm.DeleteLinkActionListener.class), 
+      @EventConfig(listeners = UIShowBookMarkForm.CancelActionListener.class, phase=Phase.DECODE)
+    }
 )
 public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent {
   ForumService         forumService;

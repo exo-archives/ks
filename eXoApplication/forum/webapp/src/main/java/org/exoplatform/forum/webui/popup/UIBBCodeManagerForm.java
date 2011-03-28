@@ -36,20 +36,20 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Jan 29, 2010 - 4:51:01 AM	
+ *          tu.duy@exoplatform.com
+ * Jan 29, 2010 - 4:51:01 AM  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIBBCodeManagerForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIBBCodeManagerForm.AddNewBBCodeActionListener.class), 
-			@EventConfig(listeners = UIBBCodeManagerForm.EditBBCodeActionListener.class), 
-			@EventConfig(listeners = UIBBCodeManagerForm.DeleteBBCodeActionListener.class), 
-			@EventConfig(listeners = UIBBCodeManagerForm.SaveActionListener.class),
-			@EventConfig(listeners = UIBBCodeManagerForm.CloseActionListener.class, phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIBBCodeManagerForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIBBCodeManagerForm.AddNewBBCodeActionListener.class), 
+      @EventConfig(listeners = UIBBCodeManagerForm.EditBBCodeActionListener.class), 
+      @EventConfig(listeners = UIBBCodeManagerForm.DeleteBBCodeActionListener.class), 
+      @EventConfig(listeners = UIBBCodeManagerForm.SaveActionListener.class),
+      @EventConfig(listeners = UIBBCodeManagerForm.CloseActionListener.class, phase = Phase.DECODE)
+    }
 )
 @SuppressWarnings("unused")
 public class UIBBCodeManagerForm extends BaseForumForm implements UIPopupComponent {

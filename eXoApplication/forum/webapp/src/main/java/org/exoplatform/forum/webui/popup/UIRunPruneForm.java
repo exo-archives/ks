@@ -31,17 +31,17 @@ import org.exoplatform.webui.event.Event.Phase;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * May 24, 2009 - 11:16:35 PM	
+ *          tu.duy@exoplatform.com
+ * May 24, 2009 - 11:16:35 PM  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIRunPruneForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIRunPruneForm.RunActionListener.class),
-			@EventConfig(listeners = UIRunPruneForm.CloseActionListener.class, phase=Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIRunPruneForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIRunPruneForm.RunActionListener.class),
+      @EventConfig(listeners = UIRunPruneForm.CloseActionListener.class, phase=Phase.DECODE)
+    }
 )
 public class UIRunPruneForm extends BaseForumForm implements UIPopupComponent {
   private PruneSetting pruneSetting;

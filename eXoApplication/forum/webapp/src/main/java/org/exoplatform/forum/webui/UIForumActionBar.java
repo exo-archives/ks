@@ -51,30 +51,30 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 
 @ComponentConfig(
-		template = "app:/templates/forum/webui/UIForumActionBar.gtmpl", 
-		events = {
-				@EventConfig(listeners = UIForumActionBar.AddCategoryActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.AddForumActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.ManageModeratorActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.EditProfileActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.OpenBookMarkActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.PrivateMessageActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.ModerationActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.ImportCategoryActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.ExportCategoryActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.SortSettingActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.CensorKeywordActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.NotificationActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.BBCodeManagerActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.AutoPruneActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.TopicTypeManagerActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.OpenIPBanActionListener.class)
-		}
+    template = "app:/templates/forum/webui/UIForumActionBar.gtmpl", 
+    events = {
+        @EventConfig(listeners = UIForumActionBar.AddCategoryActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.AddForumActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.ManageModeratorActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.EditProfileActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.OpenBookMarkActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.PrivateMessageActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.ModerationActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.ImportCategoryActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.ExportCategoryActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.SortSettingActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.CensorKeywordActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.NotificationActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.BBCodeManagerActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.AutoPruneActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.TopicTypeManagerActionListener.class),
+        @EventConfig(listeners = UIForumActionBar.OpenIPBanActionListener.class)
+    }
 )
 @SuppressWarnings("unused")
 public class UIForumActionBar extends UIContainer {

@@ -22,16 +22,16 @@ import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SARL
  * Author : Ha Mai Van
- *					ha.mai@exoplatform.com
+ *          ha.mai@exoplatform.com
  * Sebt 09, 2008 11:29:18 AM 
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIViewResultSearchUser.gtmpl",
-		events = {
-			@EventConfig(listeners = UIViewResultSearchUser.ViewUserActionListener.class),
-			@EventConfig(listeners = UIViewResultSearchUser.CloseActionListener.class,phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIViewResultSearchUser.gtmpl",
+    events = {
+      @EventConfig(listeners = UIViewResultSearchUser.ViewUserActionListener.class),
+      @EventConfig(listeners = UIViewResultSearchUser.CloseActionListener.class,phase = Phase.DECODE)
+    }
 )
 
 public class UIViewResultSearchUser extends UIForm implements UIPopupComponent {

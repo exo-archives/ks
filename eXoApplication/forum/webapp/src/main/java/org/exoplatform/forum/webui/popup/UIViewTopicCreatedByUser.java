@@ -29,16 +29,16 @@ import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
- *					exo@exoplatform.com
- * Apr 4, 2008	
+ *          exo@exoplatform.com
+ * Apr 4, 2008  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIViewListPostOrThreadByUser.gtmpl",
-		events = {
-			@EventConfig(listeners = UIViewTopicCreatedByUser.CloseActionListener.class, phase=Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIViewListPostOrThreadByUser.gtmpl",
+    events = {
+      @EventConfig(listeners = UIViewTopicCreatedByUser.CloseActionListener.class, phase=Phase.DECODE)
+    }
 )
 public class UIViewTopicCreatedByUser extends UIForm implements UIPopupComponent {
   public UIViewTopicCreatedByUser() throws Exception {

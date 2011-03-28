@@ -32,17 +32,17 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Jan 29, 2010 - 4:51:01 AM	
+ *          tu.duy@exoplatform.com
+ * Jan 29, 2010 - 4:51:01 AM  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
-		events = {
-			@EventConfig(listeners = UICensorKeywordForm.SaveActionListener.class),
-			@EventConfig(listeners = UICensorKeywordForm.CloseActionListener.class, phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
+    events = {
+      @EventConfig(listeners = UICensorKeywordForm.SaveActionListener.class),
+      @EventConfig(listeners = UICensorKeywordForm.CloseActionListener.class, phase = Phase.DECODE)
+    }
 )
 public class UICensorKeywordForm extends BaseForumForm implements UIPopupComponent {
   public static final String  FIELD_CENSOREDKEYWORD_TEXTAREA = "censorKeyword";

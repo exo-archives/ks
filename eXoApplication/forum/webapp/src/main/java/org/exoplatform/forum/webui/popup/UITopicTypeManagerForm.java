@@ -37,19 +37,19 @@ import org.exoplatform.webui.event.Event.Phase;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Jan 29, 2010 - 4:51:01 AM	
+ *          tu.duy@exoplatform.com
+ * Jan 29, 2010 - 4:51:01 AM  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UITopicTypeManagerForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UITopicTypeManagerForm.AddTopicTypeActionListener.class),
-			@EventConfig(listeners = UITopicTypeManagerForm.EditTopicTypeActionListener.class),
-			@EventConfig(listeners = UITopicTypeManagerForm.DeleteTopicTypeActionListener.class),
-			@EventConfig(listeners = UITopicTypeManagerForm.CloseActionListener.class, phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UITopicTypeManagerForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UITopicTypeManagerForm.AddTopicTypeActionListener.class),
+      @EventConfig(listeners = UITopicTypeManagerForm.EditTopicTypeActionListener.class),
+      @EventConfig(listeners = UITopicTypeManagerForm.DeleteTopicTypeActionListener.class),
+      @EventConfig(listeners = UITopicTypeManagerForm.CloseActionListener.class, phase = Phase.DECODE)
+    }
 )
 @SuppressWarnings("unused")
 public class UITopicTypeManagerForm extends BaseForumForm implements UIPopupComponent {

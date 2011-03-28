@@ -10,10 +10,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.Node;
 
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.service.Category;
@@ -31,6 +33,7 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.impl.ForumNodeTypes;
 import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -301,6 +304,20 @@ public class TestForumService extends ForumServiceTestCase {
     // We have 11 topic: 10 by Owner and 1 by demo
     pagelist = forumService_.getPageTopicByUser("Owner", true, "");
     assertEquals(pagelist.getAvailable(), 10);
+
+    // auto prune
+    // set 5 topics for old
+    Calendar cal = Calendar.getInstance();
+    cal.setTimeInMillis(cal.getTimeInMillis() - 2 * 86400000);
+    Node topicNode;
+    for (Topic topic2 : listTopic) {
+      topicNode = root_.getNode(topic2.getPath().replaceFirst("/", ""));
+      topicNode.setProperty(ForumNodeTypes.EXO_LAST_POST_DATE, cal);
+      topicNode.save();
+    }
+
+    listTopic = forumService_.getAllTopicsOld(1, forum.getPath());
+    assertEquals("Failed to run auto prune. List topic has size not equals 5.", listTopic.size(), 5);
 
     // move Topic
     // move topic from forum to forum 1

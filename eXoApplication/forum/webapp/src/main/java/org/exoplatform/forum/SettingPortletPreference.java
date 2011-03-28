@@ -22,8 +22,8 @@ import java.util.List;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * May 18, 2009 - 7:49:34 AM	
+ *          tu.duy@exoplatform.com
+ * May 18, 2009 - 7:49:34 AM  
  */
 public class SettingPortletPreference {
   private int          forumNewPost         = 1;

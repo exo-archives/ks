@@ -58,33 +58,33 @@ import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 @ComponentConfigs ( {
-				@ComponentConfig(
-						lifecycle = UIFormLifecycle.class,
-						template = "app:/templates/forum/webui/popup/UISearchForm.gtmpl",
-						events = {
-							@EventConfig(listeners = UISearchForm.SearchActionListener.class),	
-							@EventConfig(listeners = UISearchForm.OnchangeActionListener.class, phase = Phase.DECODE),	
-							@EventConfig(listeners = UISearchForm.ResetFieldActionListener.class, phase = Phase.DECODE),	
-							@EventConfig(listeners = UISearchForm.AddValuesUserActionListener.class, phase = Phase.DECODE),	
-							@EventConfig(listeners = UISearchForm.CancelActionListener.class, phase = Phase.DECODE)			
-						}
-				)
-			,
-				@ComponentConfig(
-						 id = "UIUserSearchPopupWindow",
-						 type = UIPopupWindow.class,
-						 template = "system:/groovy/webui/core/UIPopupWindow.gtmpl",
-						 events = {
-							 @EventConfig(listeners = UISearchForm.ClosePopupActionListener.class, name = "ClosePopup")	,
-							 @EventConfig(listeners = UISearchForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
-							 @EventConfig(listeners = UISearchForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
-						 }
-				)
-		}
+        @ComponentConfig(
+            lifecycle = UIFormLifecycle.class,
+            template = "app:/templates/forum/webui/popup/UISearchForm.gtmpl",
+            events = {
+              @EventConfig(listeners = UISearchForm.SearchActionListener.class),  
+              @EventConfig(listeners = UISearchForm.OnchangeActionListener.class, phase = Phase.DECODE),  
+              @EventConfig(listeners = UISearchForm.ResetFieldActionListener.class, phase = Phase.DECODE),  
+              @EventConfig(listeners = UISearchForm.AddValuesUserActionListener.class, phase = Phase.DECODE),  
+              @EventConfig(listeners = UISearchForm.CancelActionListener.class, phase = Phase.DECODE)      
+            }
+        )
+      ,
+        @ComponentConfig(
+             id = "UIUserSearchPopupWindow",
+             type = UIPopupWindow.class,
+             template = "system:/groovy/webui/core/UIPopupWindow.gtmpl",
+             events = {
+               @EventConfig(listeners = UISearchForm.ClosePopupActionListener.class, name = "ClosePopup")  ,
+               @EventConfig(listeners = UISearchForm.AddActionListener.class, name = "Add", phase = Phase.DECODE),
+               @EventConfig(listeners = UISearchForm.CloseActionListener.class, name = "Close", phase = Phase.DECODE)
+             }
+        )
+    }
 )
 public class UISearchForm extends BaseForumForm implements UISelector {
 

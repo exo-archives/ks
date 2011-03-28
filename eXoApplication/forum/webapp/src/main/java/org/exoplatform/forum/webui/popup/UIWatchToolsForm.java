@@ -46,18 +46,18 @@ import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * 27-08-2008 - 04:36:33	
+ *          tu.duy@exoplatform.com
+ * 27-08-2008 - 04:36:33  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIWatchToolsForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIWatchToolsForm.DeleteEmailActionListener.class, phase=Phase.DECODE),
-			@EventConfig(listeners = UIWatchToolsForm.EditEmailActionListener.class, phase=Phase.DECODE),
-			@EventConfig(listeners = UIWatchToolsForm.CloseActionListener.class, phase=Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIWatchToolsForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIWatchToolsForm.DeleteEmailActionListener.class, phase=Phase.DECODE),
+      @EventConfig(listeners = UIWatchToolsForm.EditEmailActionListener.class, phase=Phase.DECODE),
+      @EventConfig(listeners = UIWatchToolsForm.CloseActionListener.class, phase=Phase.DECODE)
+    }
 )
 public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
   public final String  WATCHTOOLS_ITERATOR = "WatchToolsPageIterator";

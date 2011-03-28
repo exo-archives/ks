@@ -41,6 +41,7 @@ import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -55,19 +56,19 @@ import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * October 2, 2007	
+ *          tu.duy@exoplatform.com
+ * October 2, 2007  
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIViewPost.gtmpl",
-		events = {
-			@EventConfig(listeners = UIViewPost.CloseActionListener.class, phase = Phase.DECODE),
-			@EventConfig(listeners = UIViewPost.ApproveActionListener.class, phase = Phase.DECODE),
-			@EventConfig(listeners = UIViewPost.DeletePostActionListener.class, phase = Phase.DECODE),
-			@EventConfig(listeners = UIViewPost.OpenTopicLinkActionListener.class),
-			@EventConfig(listeners = UIViewPost.DownloadAttachActionListener.class, phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIViewPost.gtmpl",
+    events = {
+      @EventConfig(listeners = UIViewPost.CloseActionListener.class, phase = Phase.DECODE),
+      @EventConfig(listeners = UIViewPost.ApproveActionListener.class, phase = Phase.DECODE),
+      @EventConfig(listeners = UIViewPost.DeletePostActionListener.class, phase = Phase.DECODE),
+      @EventConfig(listeners = UIViewPost.OpenTopicLinkActionListener.class),
+      @EventConfig(listeners = UIViewPost.DownloadAttachActionListener.class, phase = Phase.DECODE)
+    }
 )
 public class UIViewPost extends UIForm implements UIPopupComponent {
   private Post         post;
@@ -174,22 +175,9 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
         uiForm.forumService.modifyPost(posts, Utils.APPROVE);
         uiForm.forumService.modifyPost(posts, Utils.HIDDEN);
       } catch (Exception e) {
-        UIViewPost.log.debug("\nModify post fail: " + e.getMessage() + "\n" + e.getCause());
+        log.debug("\nModify post fail: ", e);
       }
-      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-      if (popupContainer != null) {
-        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-        popupAction.deActivate();
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-        UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
-        if (moderationForum != null) {
-          event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum);
-          moderationForum.setReloadPortlet(true);
-        }
-      } else {
-        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.cancelAction();
-      }
+      UIViewTopic.closePopup(event.getRequestContext(), uiForm);
     }
   }
 
@@ -202,22 +190,9 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
         int l = path.length;
         uiForm.forumService.removePost(path[l - 4], path[l - 3], path[l - 2], post.getId());
       } catch (Exception e) {
-        UIViewPost.log.debug("Removing " + post.getId() + " post fail: " + e.getCause());
+        log.debug("Removing " + post.getId() + " post fail: ", e);
       }
-      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-      if (popupContainer != null) {
-        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-        popupAction.deActivate();
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-        UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
-        if (moderationForum != null) {
-          event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum);
-          moderationForum.setReloadPortlet(true);
-        }
-      } else {
-        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.cancelAction();
-      }
+      UIViewTopic.closePopup(event.getRequestContext(), uiForm);
     }
   }
 
@@ -235,50 +210,37 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       forumPortlet.calculateRenderComponent(path, event.getRequestContext());
       // close popup
-      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-      if (popupContainer != null) {
-        UIPopupAction popupAction;
-        if (((UIComponent) uiForm.getParent()).getId().equals(popupContainer.getId())) {
-          popupAction = popupContainer.getAncestorOfType(UIPopupAction.class);
-        } else {
-          popupAction = popupContainer.getChild(UIPopupAction.class);
-        }
-        popupAction.deActivate();
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-      } else {
-        try {
-          forumPortlet.cancelAction();
-        } catch (Exception e) {
-          UIForumQuickReplyPortlet forumQuickReplyPortlet = uiForm.getAncestorOfType(UIForumQuickReplyPortlet.class);
-          forumQuickReplyPortlet.cancelAction();
-        }
-      }
+      uiForm.closeAction(event.getRequestContext());
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+    }
+  }
+
+  private void closeAction(WebuiRequestContext context) throws Exception {
+    UIPopupContainer popupContainer = getAncestorOfType(UIPopupContainer.class);
+    if (popupContainer != null) {
+      UIPopupAction popupAction;
+      if (((UIComponent) getParent()).getId().equals(popupContainer.getId())) {
+        popupAction = popupContainer.getAncestorOfType(UIPopupAction.class);
+      } else {
+        popupAction = popupContainer.getChild(UIPopupAction.class);
+      }
+      popupAction.deActivate();
+      context.addUIComponentToUpdateByAjax(popupAction);
+    } else {
+      try {
+        UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+        forumPortlet.cancelAction();
+      } catch (Exception e) {
+        UIForumQuickReplyPortlet forumPortlet = getAncestorOfType(UIForumQuickReplyPortlet.class);
+        forumPortlet.cancelAction();
+      }
     }
   }
 
   static public class CloseActionListener extends EventListener<UIViewPost> {
     public void execute(Event<UIViewPost> event) throws Exception {
       UIViewPost uiForm = event.getSource();
-      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-      if (popupContainer != null) {
-        UIPopupAction popupAction;
-        if (((UIComponent) uiForm.getParent()).getId().equals(popupContainer.getId())) {
-          popupAction = popupContainer.getAncestorOfType(UIPopupAction.class);
-        } else {
-          popupAction = popupContainer.getChild(UIPopupAction.class);
-        }
-        popupAction.deActivate();
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-      } else {
-        try {
-          UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-          forumPortlet.cancelAction();
-        } catch (Exception e) {
-          UIForumQuickReplyPortlet forumPortlet = uiForm.getAncestorOfType(UIForumQuickReplyPortlet.class);
-          forumPortlet.cancelAction();
-        }
-      }
+      uiForm.closeAction(event.getRequestContext());
     }
   }
 

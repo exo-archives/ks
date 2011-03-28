@@ -36,16 +36,16 @@ import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Duy Tu
- *		tu.duy@exoplatform.com
- * 14 Apr 2008, 02:57:05	
+ *    tu.duy@exoplatform.com
+ * 14 Apr 2008, 02:57:05  
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/UIQuickSearchForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIQuickSearchForm.SearchActionListener.class),			
-			@EventConfig(listeners = UIQuickSearchForm.AdvancedSearchActionListener.class)			
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/UIQuickSearchForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIQuickSearchForm.SearchActionListener.class),      
+      @EventConfig(listeners = UIQuickSearchForm.AdvancedSearchActionListener.class)      
+    }
 )
 public class UIQuickSearchForm extends BaseUIForm {
   final static private String FIELD_SEARCHVALUE = "inputValue";

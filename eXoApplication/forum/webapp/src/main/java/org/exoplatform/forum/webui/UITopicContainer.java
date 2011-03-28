@@ -66,49 +66,49 @@ import org.exoplatform.webui.form.UIFormStringInput;
  */
 
 @ComponentConfig(
-	lifecycle = UIFormLifecycle.class,
-	template = "app:/templates/forum/webui/UITopicContainer.gtmpl", 
-	events = {
-		@EventConfig(listeners = UITopicContainer.SearchFormActionListener.class ),	
-		@EventConfig(listeners = UITopicContainer.GoNumberPageActionListener.class ),	
-		@EventConfig(listeners = UITopicContainer.AddTopicActionListener.class ),	
-		@EventConfig(listeners = UITopicContainer.OpenTopicActionListener.class ),
-		@EventConfig(listeners = UITopicContainer.OpenTopicsTagActionListener.class ),// Menu
-																																									// Forum
-		@EventConfig(listeners = UITopicContainer.EditForumActionListener.class ),	
-		@EventConfig(listeners = UITopicContainer.SetLockedForumActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetUnLockForumActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetOpenForumActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetCloseForumActionListener.class),
-		@EventConfig(listeners = UITopicContainer.MoveForumActionListener.class),
-		@EventConfig(listeners = UITopicContainer.RemoveForumActionListener.class,confirm="UITopicContainer.confirm.RemoveForum"),// Menu
-																																																															// Topic
-		@EventConfig(listeners = UITopicContainer.WatchOptionActionListener.class),
-		
-		@EventConfig(listeners = UITopicContainer.EditTopicActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetOpenTopicActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetCloseTopicActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetLockedTopicActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetUnLockTopicActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetStickTopicActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetUnStickTopicActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetMoveTopicActionListener.class),
-		@EventConfig(listeners = UITopicContainer.MergeTopicActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
-		@EventConfig(listeners = UITopicContainer.ApproveTopicsActionListener.class ),
-		@EventConfig(listeners = UITopicContainer.ActivateTopicsActionListener.class ),
-		
-		@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
-		@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
-		@EventConfig(listeners = UITopicContainer.UnWatchActionListener.class),
-		@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class),
-		@EventConfig(listeners = UITopicContainer.ExportForumActionListener.class),
-		@EventConfig(listeners = UITopicContainer.AdvancedSearchActionListener.class),
-		@EventConfig(listeners = UITopicContainer.BanIpForumToolsActionListener.class),
-		@EventConfig(listeners = UITopicContainer.RSSActionListener.class),
-		@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
-	}
+  lifecycle = UIFormLifecycle.class,
+  template = "app:/templates/forum/webui/UITopicContainer.gtmpl", 
+  events = {
+    @EventConfig(listeners = UITopicContainer.SearchFormActionListener.class ),  
+    @EventConfig(listeners = UITopicContainer.GoNumberPageActionListener.class ),  
+    @EventConfig(listeners = UITopicContainer.AddTopicActionListener.class ),  
+    @EventConfig(listeners = UITopicContainer.OpenTopicActionListener.class ),
+    @EventConfig(listeners = UITopicContainer.OpenTopicsTagActionListener.class ),// Menu
+                                                                                  // Forum
+    @EventConfig(listeners = UITopicContainer.EditForumActionListener.class ),  
+    @EventConfig(listeners = UITopicContainer.SetLockedForumActionListener.class),
+    @EventConfig(listeners = UITopicContainer.SetUnLockForumActionListener.class),
+    @EventConfig(listeners = UITopicContainer.SetOpenForumActionListener.class),
+    @EventConfig(listeners = UITopicContainer.SetCloseForumActionListener.class),
+    @EventConfig(listeners = UITopicContainer.MoveForumActionListener.class),
+    @EventConfig(listeners = UITopicContainer.RemoveForumActionListener.class,confirm="UITopicContainer.confirm.RemoveForum"),// Menu
+                                                                                                                              // Topic
+    @EventConfig(listeners = UITopicContainer.WatchOptionActionListener.class),
+    
+    @EventConfig(listeners = UITopicContainer.EditTopicActionListener.class),
+    @EventConfig(listeners = UITopicContainer.SetOpenTopicActionListener.class),
+    @EventConfig(listeners = UITopicContainer.SetCloseTopicActionListener.class),
+    @EventConfig(listeners = UITopicContainer.SetLockedTopicActionListener.class),
+    @EventConfig(listeners = UITopicContainer.SetUnLockTopicActionListener.class),
+    @EventConfig(listeners = UITopicContainer.SetStickTopicActionListener.class),
+    @EventConfig(listeners = UITopicContainer.SetUnStickTopicActionListener.class),
+    @EventConfig(listeners = UITopicContainer.SetMoveTopicActionListener.class),
+    @EventConfig(listeners = UITopicContainer.MergeTopicActionListener.class),
+    @EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
+    @EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
+    @EventConfig(listeners = UITopicContainer.ApproveTopicsActionListener.class ),
+    @EventConfig(listeners = UITopicContainer.ActivateTopicsActionListener.class ),
+    
+    @EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
+    @EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
+    @EventConfig(listeners = UITopicContainer.UnWatchActionListener.class),
+    @EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class),
+    @EventConfig(listeners = UITopicContainer.ExportForumActionListener.class),
+    @EventConfig(listeners = UITopicContainer.AdvancedSearchActionListener.class),
+    @EventConfig(listeners = UITopicContainer.BanIpForumToolsActionListener.class),
+    @EventConfig(listeners = UITopicContainer.RSSActionListener.class),
+    @EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
+  }
 )
 @SuppressWarnings( { "unused", "unchecked" })
 public class UITopicContainer extends UIForumKeepStickPageIterator {

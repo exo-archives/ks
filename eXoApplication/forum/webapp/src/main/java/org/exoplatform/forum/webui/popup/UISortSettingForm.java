@@ -36,17 +36,17 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Jan 29, 2010 - 4:51:01 AM	
+ *          tu.duy@exoplatform.com
+ * Jan 29, 2010 - 4:51:01 AM  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
-		events = {
-			@EventConfig(listeners = UISortSettingForm.SaveActionListener.class),
-			@EventConfig(listeners = UISortSettingForm.CloseActionListener.class, phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
+    events = {
+      @EventConfig(listeners = UISortSettingForm.SaveActionListener.class),
+      @EventConfig(listeners = UISortSettingForm.CloseActionListener.class, phase = Phase.DECODE)
+    }
 )
 public class UISortSettingForm extends BaseForumForm implements UIPopupComponent {
   public static final String  FIELD_FORUMSORTBY_INPUT     = "forumSortBy";

@@ -41,17 +41,17 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Jun 1, 2009 - 10:56:38 AM	
+ *          tu.duy@exoplatform.com
+ * Jun 1, 2009 - 10:56:38 AM  
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
-		events = {
-			@EventConfig(listeners = UIAddTopicTypeForm.SaveActionListener.class),
-			@EventConfig(listeners = UIAddTopicTypeForm.CancelActionListener.class, phase=Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
+    events = {
+      @EventConfig(listeners = UIAddTopicTypeForm.SaveActionListener.class),
+      @EventConfig(listeners = UIAddTopicTypeForm.CancelActionListener.class, phase=Phase.DECODE)
+    }
 )
 public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponent {
   public static final String FIELD_TOPICTYPENAME_INPUT = "topicTypeName";
@@ -109,8 +109,8 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
       if (topicTypeForm.isEdit) {
         topicType = topicTypeForm.topicType;
       }
-      while (typeName.indexOf("	") >= 0) {
-        typeName = StringUtils.replace(typeName, "	", " ");
+      while (typeName.indexOf("  ") >= 0) {
+        typeName = StringUtils.replace(typeName, "  ", " ");
       }
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       if (!typeName.equalsIgnoreCase(topicType.getName()) && topicTypeForm.checkIsSameName(forumService, typeName)) {

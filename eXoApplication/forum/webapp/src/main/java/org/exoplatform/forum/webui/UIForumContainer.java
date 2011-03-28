@@ -28,12 +28,12 @@ import org.exoplatform.webui.core.UIContainer;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 
 @ComponentConfig(
-		template = "app:/templates/forum/webui/UIForumContainer.gtmpl"
+    template = "app:/templates/forum/webui/UIForumContainer.gtmpl"
 )
 public class UIForumContainer extends UIContainer {
   public UIForumContainer() throws Exception {

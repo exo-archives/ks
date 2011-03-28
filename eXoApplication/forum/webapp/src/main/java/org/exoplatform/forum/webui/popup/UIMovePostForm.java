@@ -50,16 +50,16 @@ import org.exoplatform.webui.event.Event.Phase;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
+ *          tu.duy@exoplatform.com
  * Aus 15, 2007 2:48:18 PM 
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIMovePostForm.gtmpl",
-		events = {
-			@EventConfig(listeners = UIMovePostForm.SaveActionListener.class), 
-			@EventConfig(listeners = UIMovePostForm.CancelActionListener.class,phase = Phase.DECODE)
-		}
+    lifecycle = UIFormLifecycle.class,
+    template = "app:/templates/forum/webui/popup/UIMovePostForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIMovePostForm.SaveActionListener.class), 
+      @EventConfig(listeners = UIMovePostForm.CancelActionListener.class,phase = Phase.DECODE)
+    }
 )
 public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
   private String         topicId;
