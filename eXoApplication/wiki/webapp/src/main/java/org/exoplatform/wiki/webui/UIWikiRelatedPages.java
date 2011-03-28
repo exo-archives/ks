@@ -13,7 +13,7 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
 public class UIWikiRelatedPages extends UIWikiContainer {
   public UIWikiRelatedPages() {
     super();
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE, WikiMode.ADDPAGE,
-        WikiMode.DELETECONFIRM, WikiMode.VIEWREVISION, WikiMode.SHOWHISTORY, WikiMode.ADVANCEDSEARCH, WikiMode.PAGEINFO });
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE,
+        WikiMode.DELETECONFIRM, WikiMode.VIEWREVISION, WikiMode.SHOWHISTORY, WikiMode.PAGEINFO });
   }
 }
