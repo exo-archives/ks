@@ -176,74 +176,27 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 		return getUIStringInput(FIELD_TEXT).getValue();
 	}
 
-	public void setIsSearchCategory() {
-		UIFormStringInput categoryName = getUIStringInput(FIELD_CATEGORY_NAME).setRendered(true);
-		UIFormSelectBox modeQuestion = getUIFormSelectBox(FIELD_ISMODERATEQUESTION).setRendered(true);
-		UIFormStringInput moderator = getUIStringInput(FIELD_CATEGORY_MODERATOR).setRendered(true);
-		categoryName.setValue("");
-		modeQuestion.setValue("");
-		moderator.setValue("");
+	 public void setIsSearch(boolean isCategory, boolean isQuestion) {
+	    UIFormStringInput categoryName = getUIStringInput(FIELD_CATEGORY_NAME).setRendered(isCategory);
+	    UIFormSelectBox modeQuestion = getUIFormSelectBox(FIELD_ISMODERATEQUESTION).setRendered(isCategory);
+	    UIFormStringInput moderator = getUIStringInput(FIELD_CATEGORY_MODERATOR).setRendered(isCategory);
+	    categoryName.setValue("");
+	    modeQuestion.setValue("");
+	    moderator.setValue("");
 
-		UIFormStringInput author = getUIStringInput(FIELD_AUTHOR).setRendered(false);
-		UIFormStringInput emailAddress = getUIStringInput(FIELD_EMAIL_ADDRESS).setRendered(false);
-		UIFormSelectBox language = getUIFormSelectBox(FIELD_LANGUAGE).setRendered(false);
-		UIFormTextAreaInput question = getUIFormTextAreaInput(FIELD_QUESTION).setRendered(false);
-		UIFormTextAreaInput response = getUIFormTextAreaInput(FIELD_RESPONSE).setRendered(false);
-		UIFormTextAreaInput comment = getUIFormTextAreaInput(FIELD_COMMENT).setRendered(false);
-
-		author.setValue("");
-		emailAddress.setValue("");
-		language.setValue("");
-		question.setValue("");
-		response.setValue("");
-		comment.setValue("");
-	}
-
-	public void setIsSearchQuestion() {
-		UIFormStringInput categoryName = getUIStringInput(FIELD_CATEGORY_NAME).setRendered(false);
-		UIFormSelectBox modeQuestion = getUIFormSelectBox(FIELD_ISMODERATEQUESTION).setRendered(false);
-		UIFormStringInput moderator = getUIStringInput(FIELD_CATEGORY_MODERATOR).setRendered(false);
-		categoryName.setValue("");
-		modeQuestion.setValue("");
-		moderator.setValue("");
-
-		UIFormStringInput author = getUIStringInput(FIELD_AUTHOR).setRendered(true);
-		UIFormStringInput emailAddress = getUIStringInput(FIELD_EMAIL_ADDRESS).setRendered(true);
-		UIFormSelectBox language = getUIFormSelectBox(FIELD_LANGUAGE).setRendered(true);
-		UIFormTextAreaInput question = getUIFormTextAreaInput(FIELD_QUESTION).setRendered(true);
-		UIFormTextAreaInput response = getUIFormTextAreaInput(FIELD_RESPONSE).setRendered(true);
-		UIFormTextAreaInput comment = getUIFormTextAreaInput(FIELD_COMMENT).setRendered(true);
-
-		author.setValue("");
-		emailAddress.setValue("");
-		language.setValue("");
-		question.setValue("");
-		response.setValue("");
-		comment.setValue("");
-	}
-
-	public void setIsQuickSearch() {
-		UIFormStringInput categoryName = getUIStringInput(FIELD_CATEGORY_NAME).setRendered(false);
-		UIFormSelectBox modeQuestion = getUIFormSelectBox(FIELD_ISMODERATEQUESTION).setRendered(false);
-		UIFormStringInput moderator = getUIStringInput(FIELD_CATEGORY_MODERATOR).setRendered(false);
-		categoryName.setValue("");
-		modeQuestion.setValue("");
-		moderator.setValue("");
-
-		UIFormStringInput author = getUIStringInput(FIELD_AUTHOR).setRendered(false);
-		UIFormStringInput emailAddress = getUIStringInput(FIELD_EMAIL_ADDRESS).setRendered(false);
-		UIFormSelectBox language = getUIFormSelectBox(FIELD_LANGUAGE).setRendered(false);
-		UIFormTextAreaInput question = getUIFormTextAreaInput(FIELD_QUESTION).setRendered(false);
-		UIFormTextAreaInput response = getUIFormTextAreaInput(FIELD_RESPONSE).setRendered(false);
-		UIFormTextAreaInput comment = getUIFormTextAreaInput(FIELD_COMMENT).setRendered(false);
-
-		author.setValue("");
-		emailAddress.setValue("");
-		language.setValue("");
-		question.setValue("");
-		response.setValue("");
-		comment.setValue("");
-	}
+	    UIFormStringInput author = getUIStringInput(FIELD_AUTHOR).setRendered(isQuestion);
+	    UIFormStringInput emailAddress = getUIStringInput(FIELD_EMAIL_ADDRESS).setRendered(isQuestion);
+	    UIFormSelectBox language = getUIFormSelectBox(FIELD_LANGUAGE).setRendered(isQuestion);
+	    UIFormTextAreaInput question = getUIFormTextAreaInput(FIELD_QUESTION).setRendered(isQuestion);
+	    UIFormTextAreaInput response = getUIFormTextAreaInput(FIELD_RESPONSE).setRendered(isQuestion);
+	    UIFormTextAreaInput comment = getUIFormTextAreaInput(FIELD_COMMENT).setRendered(isQuestion);
+	    author.setValue("");
+	    emailAddress.setValue("");
+	    language.setValue("");
+	    question.setValue("");
+	    response.setValue("");
+	    comment.setValue("");
+	  }
 
 	public String getLabel(ResourceBundle res, String id) throws Exception {
 		String label = getId() + ".label." + id;
@@ -273,11 +226,11 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 			UIAdvancedSearchForm uiAdvancedSearchForm = event.getSource();
 			String type = uiAdvancedSearchForm.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).getValue();
 			if (type.equals("faqCategory")) {
-				uiAdvancedSearchForm.setIsSearchCategory();
+				uiAdvancedSearchForm.setIsSearch(true, false);
 			} else if (type.equals("faqQuestion")) {
-				uiAdvancedSearchForm.setIsSearchQuestion();
+				uiAdvancedSearchForm.setIsSearch(false, true);
 			} else {
-				uiAdvancedSearchForm.setIsQuickSearch();
+				uiAdvancedSearchForm.setIsSearch(false, false);
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiAdvancedSearchForm);
 		}

@@ -16,8 +16,6 @@
  */
 package org.exoplatform.faq.webui;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -40,7 +38,6 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
-import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
@@ -73,8 +70,6 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 public class FAQUtils {
 	public static String DISPLAYAPPROVED = "approved";
 	public static String DISPLAYBOTH = "both";
-	private static String AKONG = "@";
-	public static String[] specialString = { "!", "#", "$", "%", "^", "&", ":", ">", "<", "~", "`", "]", "'", "/" };
 	public static String UPLOAD_FILE_SIZE = "uploadFileSizeLimitMB";
 
 	static private Log log = ExoLogger.getLogger(FAQUtils.class);
@@ -146,40 +141,12 @@ public class FAQUtils {
 		}
 	}
 
-	public static String filterString(String text, boolean isEmail) {
-		for (String str : specialString) {
-			text = text.replaceAll(str, "");
-		}
-		if (!isEmail)
-			text = text.replaceAll(AKONG, "");
-		int i = 0;
-		while (i < text.length()) {
-			if (text.charAt(i) == '?' || text.charAt(i) == '[' || text.charAt(i) == '(' || text.charAt(i) == '|' || text.charAt(i) == ')' || text.charAt(i) == '*' || text.charAt(i) == '\\'
-					|| text.charAt(i) == '+' || text.charAt(i) == '}' || text.charAt(i) == '{' || text.charAt(i) == '^' || text.charAt(i) == '$' || text.charAt(i) == '"') {
-				text = text.replace((text.charAt(i)) + "", "");
-			} else {
-				i++;
-			}
-		}
-		return text;
-	}
-
 	public static boolean checkSpecial(String text) {
-		boolean check = false;
-		if (text != null && text.trim().length() > 0) {
-			int i = 0;
-			while (i < text.length()) {
-				if (text.charAt(i) == '?' || text.charAt(i) == '[' || text.charAt(i) == '(' || text.charAt(i) == '|' || text.charAt(i) == ')' || text.charAt(i) == '*' || text.charAt(i) == '\\'
-						|| text.charAt(i) == '+' || text.charAt(i) == '}' || text.charAt(i) == '{' || text.charAt(i) == '^' || text.charAt(i) == '$' || text.charAt(i) == '"' || text.charAt(i) == '!'
-						|| text.charAt(i) == '#' || text.charAt(i) == '%' || text.charAt(i) == ':' || text.charAt(i) == '&' || text.charAt(i) == '>' || text.charAt(i) == '<' || text.charAt(i) == '~'
-						|| text.charAt(i) == '`' || text.charAt(i) == ']' || text.charAt(i) == '/') {
-					text = text.replace((text.charAt(i)) + "", "");
-					check = true;
-				} else {
-					i++;
-				}
-			}
-			return check;
+		if (!isFieldEmpty(text)) {
+		  String[] specialString = { "?", "[", "(", "|", ")", "*", "\\", "+", "}", "{", "^", "$", "#", "%", ":", "&", ">", "<", "'", "\"", "`", "!", "~", "]", "/" };
+			for (int i = 0; i < specialString.length; i++) {
+        if(text.indexOf(specialString[i]) >= 0) return true;
+      }
 		}
 		return false;
 	}

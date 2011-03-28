@@ -94,7 +94,11 @@ public class QuestionPageList extends JCRPageList {
 	 */
 	public void setNotYetAnswered(boolean isNotYetAnswered) {
 		this.isNotYetAnswered = isNotYetAnswered;
-		setTotalQuestion();
+		try {
+      setTotalQuestion();
+    } catch (Exception e) {
+      log.error("Fail to set total questions: ", e);
+    }
 	}
 
 	public void setOpenQuestion(boolean isOpenQuestion) {
@@ -104,9 +108,22 @@ public class QuestionPageList extends JCRPageList {
 	/**
 	 * get total questions are not yet ansewered. The first, get all questions in faq system then each questions check if property <code>response</code> in default language is <code>null</code> then put
 	 * this question into the <code>List</code> else get all children nodes of this question (if it have) and check if one of them is not yet ansewred then put this question into the <code>List</code>
+	 * @throws Exception 
 	 */
-	private void setTotalQuestion() {
+	private void setTotalQuestion() throws Exception {
 		listQuestions_ = new ArrayList<Question>();
+		if (iter_ == null || !iter_.hasNext()) {
+      Session session = getJCRSession();
+      if (isQuery_) {
+        QueryManager qm = session.getWorkspace().getQueryManager();
+        Query query = qm.createQuery(value_, Query.XPATH);
+        QueryResult result = query.execute();
+        iter_ = result.getNodes();
+      } else {
+        Node node = (Node) session.getItem(value_);
+        iter_ = node.getNodes();
+      }
+    }
 		NodeIterator nodeIterator = iter_;
 		NodeIterator languageIter = null;
 		Node questionNode = null;
@@ -149,6 +166,8 @@ public class QuestionPageList extends JCRPageList {
 			}
 		}
 		setAvailablePage(listQuestions_.size());
+		iter_ = null;
+		closeSession();
 	}
 
 	private boolean hasAnswerInQuestion(Node questionNode) throws Exception {
@@ -173,7 +192,7 @@ public class QuestionPageList extends JCRPageList {
 	public QuestionPageList(NodeIterator iter, long pageSize, String value, boolean isQuery) throws Exception {
 		super(pageSize);
 		this.sessionManager = FAQServiceUtils.getSessionManager();
-		iter_ = iter;
+//		iter_ = iter;
 		value_ = value;
 		isQuery_ = isQuery;
 		setAvailablePage(iter.getSize());
@@ -283,7 +302,7 @@ public class QuestionPageList extends JCRPageList {
 			}
 			if (isNotYetAnswered)
 				setTotalQuestion();
-			closeSession();
+//			closeSession();
 		}
 		if (isNotYetAnswered) {
 			setAvailablePage(listQuestions_.size());
@@ -322,6 +341,7 @@ public class QuestionPageList extends JCRPageList {
 			}
 		}
 		iter_ = null;
+		closeSession();
 	}
 
 	// Created by Vu Duy Tu
@@ -338,7 +358,7 @@ public class QuestionPageList extends JCRPageList {
 				Node node = (Node) session.getItem(value_);
 				iter_ = node.getNodes();
 			}
-			closeSession();
+//			closeSession();
 			setAvailablePage(iter_.getSize());
 			checkAndSetPage(page);
 			page = currentPage_;
@@ -367,6 +387,7 @@ public class QuestionPageList extends JCRPageList {
 			}
 		}
 		iter_ = null;
+		closeSession();
 	}
 
 	/*
@@ -382,7 +403,7 @@ public class QuestionPageList extends JCRPageList {
 			Query query = qm.createQuery(value_, Query.XPATH);
 			QueryResult result = query.execute();
 			iter_ = result.getNodes();
-			closeSession();
+//			closeSession();
 		}
 		long pageSize = getPageSize();
 		long position = 0;
@@ -400,6 +421,7 @@ public class QuestionPageList extends JCRPageList {
 			currentListWatch_.addAll(getWatchs(watchNode, false, (int) position, (int) pageSize));
 		}
 		iter_ = null;
+		closeSession();
 	}
 
 	/*
@@ -451,7 +473,7 @@ public class QuestionPageList extends JCRPageList {
 				Query query = qm.createQuery(value_, Query.XPATH);
 				QueryResult result = query.execute();
 				iter_ = result.getNodes();
-				closeSession();
+//				closeSession();
 			}
 			setAvailablePage(iter_.getSize());
 			if (page == 1)
@@ -472,6 +494,7 @@ public class QuestionPageList extends JCRPageList {
 				}
 			}
 			iter_ = null;
+			closeSession();
 		}
 	}
 
@@ -526,7 +549,7 @@ public class QuestionPageList extends JCRPageList {
 				listObject_.add(question);
 			}
 
-			closeSession(); // was missing ?
+//			closeSession(); // was missing ?
 			// ================== get list catetgories ===================================================
 			iter_ = null;
 			iter_ = nodeCategory_.getNodes();
@@ -549,7 +572,9 @@ public class QuestionPageList extends JCRPageList {
 
 			if (getAvailablePage() < listObject_.size())
 				setAvailablePage(listObject_.size());
+			
 			iter_ = null;
+			closeSession();
 		}
 
 		long pageSize = getPageSize();
@@ -797,7 +822,7 @@ public class QuestionPageList extends JCRPageList {
 				Node node = (Node) session.getItem(value_);
 				iter_ = node.getNodes();
 			}
-			closeSession();
+//			closeSession();
 		}
 
 		List<Question> questions = new ArrayList<Question>();
@@ -806,6 +831,7 @@ public class QuestionPageList extends JCRPageList {
 			questions.add(getQuestion(questionNode));
 		}
 		iter_ = null;
+		closeSession();
 		return questions;
 	}
 
@@ -822,14 +848,16 @@ public class QuestionPageList extends JCRPageList {
 				Node node = (Node) session.getItem(value_);
 				iter_ = node.getNodes();
 			}
-			iter_ = null;
-			closeSession();
+//			iter_ = null;
+//			closeSession();
 		}
 		Node watchNode = null;
 		while (iter_.hasNext()) {
 			watchNode = iter_.nextNode();
 			listWatches.addAll(getWatchs(watchNode, true, 0, 0));
 		}
+		iter_ = null;
+		closeSession();
 		return listWatches;
 	}
 
@@ -857,7 +885,9 @@ public class QuestionPageList extends JCRPageList {
 	}
 
 	private void closeSession() throws Exception {
-		sessionManager.closeSession();
+	  if (sessionManager.getCurrentSession() != null && sessionManager.getCurrentSession().isLive()) {
+	    sessionManager.closeSession();
+    }
 	}
 
 }

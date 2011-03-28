@@ -111,7 +111,7 @@ public class UIQuickSearch extends BaseUIForm {
 			UIQuickSearch uiForm = event.getSource();
 			UIAnswersPortlet uiPortlet = uiForm.getAncestorOfType(UIAnswersPortlet.class);
 			UIAdvancedSearchForm uiAdvancedSearchForm = uiForm.openPopup(uiPortlet, UIAdvancedSearchForm.class, "AdvanceSearchForm", 650, 0);
-			uiAdvancedSearchForm.setIsQuickSearch();
+			uiAdvancedSearchForm.setIsSearch(false, false);
 		}
 	}
 }

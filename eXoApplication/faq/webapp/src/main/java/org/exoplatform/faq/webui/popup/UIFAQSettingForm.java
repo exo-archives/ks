@@ -137,6 +137,23 @@ public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent {
 	public void deActivate() throws Exception {
 	}
 
+	private List<String> getCheckedId() throws Exception {
+	  List<String> list = new ArrayList<String>();
+	  UIFormInputWithActions selectCateTab = getChildById(SELECT_CATEGORY_TAB);
+    List<UIComponent> children = selectCateTab.getChildren();
+    for (UIComponent child : children) {
+      if (child instanceof UIFormCheckBoxInput) {
+        if (((UIFormCheckBoxInput) child).isChecked()) {
+          list.add(child.getId());
+        }
+      }
+    }
+    UIFormInputWithActions withActions = getChildById(PREFERENCE_TAB);
+    UIFormCheckBoxInput useAjaxCheckBox = withActions.getUIFormCheckBoxInput(FIELD_USEAJAX_CHECKBOX);
+    useAjax = useAjaxCheckBox.isChecked();
+	  return list;
+	}
+	
 	static public class SaveActionListener extends EventListener<UIFAQSettingForm> {
 		public void execute(Event<UIFAQSettingForm> event) throws Exception {
 			UIFAQSettingForm uiform = event.getSource();
@@ -151,19 +168,7 @@ public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent {
 				}
 				uiform.setTemplateEdit();
 			} else {
-				uiform.categoriesId = new ArrayList<String>();
-				UIFormInputWithActions selectCateTab = uiform.getChildById(SELECT_CATEGORY_TAB);
-				List<UIComponent> children = selectCateTab.getChildren();
-				for (UIComponent child : children) {
-					if (child instanceof UIFormCheckBoxInput) {
-						if (((UIFormCheckBoxInput) child).isChecked()) {
-							uiform.categoriesId.add(child.getId());
-						}
-					}
-				}
-				UIFormInputWithActions withActions = uiform.getChildById(PREFERENCE_TAB);
-				UIFormCheckBoxInput useAjaxCheckBox = withActions.getUIFormCheckBoxInput(FIELD_USEAJAX_CHECKBOX);
-				uiform.useAjax = useAjaxCheckBox.isChecked();
+				uiform.categoriesId = uiform.getCheckedId();
 				FAQUtils.saveFAQPortletPreference(uiform.categoriesId, uiform.useAjax);
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiform);
@@ -176,19 +181,7 @@ public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent {
 			UIFAQSettingForm uiform = event.getSource();
 			uiform.id_ = Integer.parseInt(id);
 			if (uiform.id_ >= 1) {
-				uiform.categoriesId = new ArrayList<String>();
-				UIFormInputWithActions selectCateTab = uiform.getChildById(SELECT_CATEGORY_TAB);
-				List<UIComponent> children = selectCateTab.getChildren();
-				for (UIComponent child : children) {
-					if (child instanceof UIFormCheckBoxInput) {
-						if (((UIFormCheckBoxInput) child).isChecked()) {
-							uiform.categoriesId.add(child.getId());
-						}
-					}
-				}
-				UIFormInputWithActions withActions = uiform.getChildById(PREFERENCE_TAB);
-				UIFormCheckBoxInput useAjaxCheckBox = withActions.getUIFormCheckBoxInput(FIELD_USEAJAX_CHECKBOX);
-				uiform.useAjax = useAjaxCheckBox.isChecked();
+			  uiform.categoriesId = uiform.getCheckedId();
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiform);
 		}

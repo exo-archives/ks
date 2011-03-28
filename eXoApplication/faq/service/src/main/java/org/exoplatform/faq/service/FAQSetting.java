@@ -62,17 +62,23 @@ public class FAQSetting {
 
 	private boolean isDiscussForum = false;
 	
-	/** The DISPLA y_ typ e_ alphabet. */
+	/** The DISPLA type alphabet. */
 	public static String DISPLAY_TYPE_ALPHABET = "alphabet" ;
 	
-	/** The DISPLA y_ typ e_ postdate. */
+	/** The DISPLA type postdate. */
 	public static String DISPLAY_TYPE_POSTDATE = "created" ;
 	
-	/** The ORDERB y_ typ e_ asc. */
+	/** The ORDERB type asc. */
 	public static String ORDERBY_TYPE_ASC = "asc" ;
 	
-	/** The ORDERB y_ typ e_ desc. */
+	/** The ORDERB type desc. */
 	public static String ORDERBY_TYPE_DESC = "desc" ;
+
+	/** The ORDERB asc. */
+	public static String ORDERBY_ASC = " ascending" ;
+	
+	/** The ORDERB desc. */
+	public static String ORDERBY_DESC = " descending" ;
 	
 	private String emailMoveQuestion = null;
 	
