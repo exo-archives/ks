@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -68,470 +68,468 @@ import org.exoplatform.webui.form.UIFormUploadInput;
  * Apr 14, 2008, 2:56:30 PM
  */
 public class FAQUtils {
-	public static String DISPLAYAPPROVED = "approved";
-	public static String DISPLAYBOTH = "both";
-	public static String UPLOAD_FILE_SIZE = "uploadFileSizeLimitMB";
+  public static String DISPLAYAPPROVED  = "approved";
 
-	static private Log log = ExoLogger.getLogger(FAQUtils.class);
+  public static String DISPLAYBOTH      = "both";
 
-	public static FAQService getFAQService() throws Exception {
-		return (FAQService) PortalContainer.getComponent(FAQService.class);
-	}
+  public static String UPLOAD_FILE_SIZE = "uploadFileSizeLimitMB";
 
-	public static String getDefaultLanguage() {
-		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-		return context.getLocale().getDisplayLanguage();
-	}
+  static private Log   log              = ExoLogger.getLogger(FAQUtils.class);
 
-	public static List<String> getAllLanguages(UIComponent component) {
-		LocaleConfigService configService = component.getApplicationComponent(LocaleConfigService.class);
-		List<String> languages = new ArrayList<String>();
-		for (LocaleConfig localeConfig : configService.getLocalConfigs()) {
-			languages.add(localeConfig.getLocale().getDisplayLanguage());
-		}
-		return languages;
-	}
+  public static FAQService getFAQService() throws Exception {
+    return (FAQService) PortalContainer.getComponent(FAQService.class);
+  }
 
-	/**
-	 * Find category which is already exist.<br/>
-	 * for example: when you are standing in category D in path: Root\A\B\C\D, you do some action (add new category, add question, go out to category C or B) but another moderator delete category C (or
-	 * B, A). Then this function will be use to find the nearest category with category D (which is exist) and move you into this category.<br/>
-	 * <u>Detail:</u><br/>
-	 * the first, system get category C, if C is exist, you will be moved into C else jump to B and test again.<br/>
-	 * This processing is done until find a category already exist.
-	 * 
-	 * @param faqService_
-	 *          FAQ Service
-	 * @param fAQContainer
-	 *          UIAnswersContainer this component is used to updated data
-	 * @param sessionProvider
-	 *          SessionProvider
-	 * @throws Exception
-	 */
-	public static void findCateExist(FAQService faqService_, UIAnswersContainer fAQContainer) throws Exception {
-		UIBreadcumbs breadcumbs = fAQContainer.findFirstComponentOfType(UIBreadcumbs.class);
-		String pathCate = "";
-		for (String path : breadcumbs.pathList_.get(breadcumbs.pathList_.size() - 1).split("/")) {
-			if (path.equals("FAQService")) {
-				pathCate = path;
-				continue;
-			}
-			try {
-				faqService_.getCategoryById(path);
-				if (pathCate.trim().length() > 0)
-					pathCate += "/";
-				pathCate += path;
-			} catch (Exception pathExc) {
-				UIQuestions questions = fAQContainer.findFirstComponentOfType(UIQuestions.class);
-				try {
-					breadcumbs.setUpdataPath(pathCate);
-				} catch (Exception exc) {
-					log.debug("Setting update path fail: " + exc.getMessage(), exc);
-				}
-				if (pathCate.indexOf("/") > 0) {
-					questions.setCategoryId(pathCate.substring(pathCate.lastIndexOf("/") + 1));
-				} else {
-					questions.categoryId_ = null;
-					questions.setListObject();
-					// questions.setIsNotChangeLanguage() ;
-				}
-				fAQContainer.findFirstComponentOfType(UICategories.class).setPathCategory(pathCate);
-				break;
-			}
-		}
-	}
+  public static String getDefaultLanguage() {
+    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+    return context.getLocale().getDisplayLanguage();
+  }
 
-	public static boolean checkSpecial(String text) {
-		if (!isFieldEmpty(text)) {
-		  String[] specialString = { "?", "[", "(", "|", ")", "*", "\\", "+", "}", "{", "^", "$", "#", "%", ":", "&", ">", "<", "'", "\"", "`", "!", "~", "]", "/" };
-			for (int i = 0; i < specialString.length; i++) {
-        if(text.indexOf(specialString[i]) >= 0) return true;
+  public static List<String> getAllLanguages(UIComponent component) {
+    LocaleConfigService configService = component.getApplicationComponent(LocaleConfigService.class);
+    List<String> languages = new ArrayList<String>();
+    for (LocaleConfig localeConfig : configService.getLocalConfigs()) {
+      languages.add(localeConfig.getLocale().getDisplayLanguage());
+    }
+    return languages;
+  }
+
+  /**
+   * Find category which is already exist.<br/>
+   * for example: when you are standing in category D in path: Root\A\B\C\D, you do some action (add new category, add question, go out to category C or B) but another moderator delete category C (or
+   * B, A). Then this function will be use to find the nearest category with category D (which is exist) and move you into this category.<br/>
+   * <u>Detail:</u><br/>
+   * the first, system get category C, if C is exist, you will be moved into C else jump to B and test again.<br/>
+   * This processing is done until find a category already exist.
+   * 
+   * @param faqService_
+   *          FAQ Service
+   * @param fAQContainer
+   *          UIAnswersContainer this component is used to updated data
+   * @param sessionProvider
+   *          SessionProvider
+   * @throws Exception
+   */
+  public static void findCateExist(FAQService faqService_, UIAnswersContainer fAQContainer) throws Exception {
+    UIBreadcumbs breadcumbs = fAQContainer.findFirstComponentOfType(UIBreadcumbs.class);
+    String pathCate = "";
+    for (String path : breadcumbs.pathList_.get(breadcumbs.pathList_.size() - 1).split("/")) {
+      if (path.equals("FAQService")) {
+        pathCate = path;
+        continue;
       }
-		}
-		return false;
-	}
+      try {
+        faqService_.getCategoryById(path);
+        if (pathCate.trim().length() > 0)
+          pathCate += "/";
+        pathCate += path;
+      } catch (Exception pathExc) {
+        UIQuestions questions = fAQContainer.findFirstComponentOfType(UIQuestions.class);
+        try {
+          breadcumbs.setUpdataPath(pathCate);
+        } catch (Exception exc) {
+          log.debug("Setting update path fail: " + exc.getMessage(), exc);
+        }
+        if (pathCate.indexOf("/") > 0) {
+          questions.setCategoryId(pathCate.substring(pathCate.lastIndexOf("/") + 1));
+        } else {
+          questions.categoryId_ = null;
+          questions.setListObject();
+          // questions.setIsNotChangeLanguage() ;
+        }
+        fAQContainer.findFirstComponentOfType(UICategories.class).setPathCategory(pathCate);
+        break;
+      }
+    }
+  }
 
-	public static InternetAddress[] getInternetAddress(String addressList) throws Exception {
-		if (isFieldEmpty(addressList))
-			return new InternetAddress[1];
-		try {
-			return InternetAddress.parse(addressList);
-		} catch (Exception e) {
-			return new InternetAddress[1];
-		}
-	}
+  public static boolean checkSpecial(String text) {
+    if (!isFieldEmpty(text)) {
+      String[] specialString = { "?", "[", "(", "|", ")", "*", "\\", "+", "}", "{", "^", "$", "#", "%", ":", "&", ">", "<", "'", "\"", "`", "!", "~", "]", "/" };
+      for (int i = 0; i < specialString.length; i++) {
+        if (text.indexOf(specialString[i]) >= 0)
+          return true;
+      }
+    }
+    return false;
+  }
 
-	public static void setCommonContactInfor(String userId, CommonContact contact, FAQService faqService, DownloadService dservice) throws Exception {
-		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-		UserProfile profile = organizationService.getUserProfileHandler().findUserProfileByName(userId);
-		if (profile.getAttribute("user.bdate") != null)
-			contact.setBirthday(profile.getAttribute("user.bdate"));
-		if (profile.getAttribute("user.gender") != null)
-			contact.setGender(profile.getAttribute("user.gender"));
-		if (profile.getAttribute("user.jobtitle") != null)
-			contact.setJob(profile.getAttribute("user.jobtitle"));
+  public static InternetAddress[] getInternetAddress(String addressList) throws Exception {
+    if (isFieldEmpty(addressList))
+      return new InternetAddress[1];
+    try {
+      return InternetAddress.parse(addressList);
+    } catch (Exception e) {
+      return new InternetAddress[1];
+    }
+  }
 
-		if (profile.getAttribute("user.business-info.online.email") != null)
-			contact.setEmailAddress(profile.getAttribute("user.business-info.online.email"));
-		if (profile.getAttribute("user.business-info.postal.city") != null)
-			contact.setCity(profile.getAttribute("user.business-info.postal.city"));
-		if (profile.getAttribute("user.business-info.postal.country") != null)
-			contact.setCountry(profile.getAttribute("user.business-info.postal.country"));
-		if (profile.getAttribute("user.business-info.telecom.mobile.number") != null)
-			contact.setMobile(profile.getAttribute("user.business-info.telecom.mobile.number"));
-		if (profile.getAttribute("user.business-info.telecom.telephone.number") != null)
-			contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
-		if (profile.getAttribute("user.home-info.online.uri") != null)
-			contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
-			String urlAvt = getUserAvatar(userId);
-		if (urlAvt.indexOf(org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL) >= 0 && profile.getAttribute("user.other-info.avatar.url") != null) {
-				contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
-		} else {
-			contact.setAvatarUrl(urlAvt);
-		}
-	}
+  public static void setCommonContactInfor(String userId, CommonContact contact, FAQService faqService, DownloadService dservice) throws Exception {
+    OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+    UserProfile profile = organizationService.getUserProfileHandler().findUserProfileByName(userId);
+    if (profile.getAttribute("user.bdate") != null)
+      contact.setBirthday(profile.getAttribute("user.bdate"));
+    if (profile.getAttribute("user.gender") != null)
+      contact.setGender(profile.getAttribute("user.gender"));
+    if (profile.getAttribute("user.jobtitle") != null)
+      contact.setJob(profile.getAttribute("user.jobtitle"));
 
-	public static String[] splitForFAQ(String str) throws Exception {
-		if (str != null && str.length() > 0) {
-			String[] temp;
-			if (str.contains(","))
-				temp = str.trim().split(",");
-			else if (str.contains(";"))
-				temp = str.split(";");
-			else
-				return new String[] { str };
-			List<String> ids = new ArrayList<String>();
-			for (String id : temp) {
-				ids.add(id.trim());
-			}
-			return ids.toArray(new String[ids.size()]);
-		} else
-			return new String[] {};
-	}
+    if (profile.getAttribute("user.business-info.online.email") != null)
+      contact.setEmailAddress(profile.getAttribute("user.business-info.online.email"));
+    if (profile.getAttribute("user.business-info.postal.city") != null)
+      contact.setCity(profile.getAttribute("user.business-info.postal.city"));
+    if (profile.getAttribute("user.business-info.postal.country") != null)
+      contact.setCountry(profile.getAttribute("user.business-info.postal.country"));
+    if (profile.getAttribute("user.business-info.telecom.mobile.number") != null)
+      contact.setMobile(profile.getAttribute("user.business-info.telecom.mobile.number"));
+    if (profile.getAttribute("user.business-info.telecom.telephone.number") != null)
+      contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
+    if (profile.getAttribute("user.home-info.online.uri") != null)
+      contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
+    String urlAvt = getUserAvatar(userId);
+    if (urlAvt.indexOf(org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL) >= 0 && profile.getAttribute("user.other-info.avatar.url") != null) {
+      contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
+    } else {
+      contact.setAvatarUrl(urlAvt);
+    }
+  }
 
-	/*
-	 * public static SessionProvider getSystemProvider() { return SessionProviderFactory.createSystemProvider(); }
-	 */
+  public static String[] splitForFAQ(String str) throws Exception {
+    if (str != null && str.length() > 0) {
+      String[] temp;
+      if (str.contains(","))
+        temp = str.trim().split(",");
+      else if (str.contains(";"))
+        temp = str.split(";");
+      else
+        return new String[] { str };
+      List<String> ids = new ArrayList<String>();
+      for (String id : temp) {
+        ids.add(id.trim());
+      }
+      return ids.toArray(new String[ids.size()]);
+    } else
+      return new String[] {};
+  }
 
-	static public String getCurrentUser() throws Exception {
-		return Util.getPortalRequestContext().getRemoteUser();
-	}
+  /*
+   * public static SessionProvider getSystemProvider() { return SessionProviderFactory.createSystemProvider(); }
+   */
 
-	static public String getEmailUser(String userName) throws Exception {
-		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-		User user = organizationService.getUserHandler().findUserByName(userName);
-		String email = user.getEmail();
-		return email;
-	}
+  static public String getCurrentUser() throws Exception {
+    return Util.getPortalRequestContext().getRemoteUser();
+  }
 
-	static public String getFullName(String userName) throws Exception {
-		try {
-			OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-			User user = organizationService.getUserHandler().findUserByName(userName);
-			String fullName = user.getFullName();
-			if (isFieldEmpty(fullName))
-				fullName = userName;
-			return fullName;
-		} catch (Exception e) {
-			return getScreenName(userName, "");
-		}
-	}
+  static public String getEmailUser(String userName) throws Exception {
+    OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+    User user = organizationService.getUserHandler().findUserByName(userName);
+    String email = user.getEmail();
+    return email;
+  }
 
-	public static String getScreenName(String userName, String fullName) {
-		return (userName.contains(org.exoplatform.faq.service.Utils.DELETED)) ? 
-				("<s>" + ((isFieldEmpty(fullName)) ? 
-						(userName.substring(0, userName.indexOf(org.exoplatform.faq.service.Utils.DELETED))):fullName) + "</s>") : userName;
-	}
-	
-	public static boolean isFieldEmpty(String s) {
-		return (s == null || s.trim().length() <= 0) ? true : false;
-	}
+  static public String getFullName(String userName) throws Exception {
+    try {
+      OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+      User user = organizationService.getUserHandler().findUserByName(userName);
+      String fullName = user.getFullName();
+      if (isFieldEmpty(fullName))
+        fullName = userName;
+      return fullName;
+    } catch (Exception e) {
+      return getScreenName(userName, "");
+    }
+  }
 
-	public static boolean isValidEmailAddresses(String addressList) throws Exception {
-		if (isFieldEmpty(addressList))
-			return true;
-		boolean isInvalid = true;
-		try {
-			InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
-			String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}";
-			for (int i = 0; i < iAdds.length; i++) {
-				if (!iAdds[i].getAddress().matches(emailRegex))
-					isInvalid = false;
-			}
-		} catch (AddressException e) {
-			return false;
-		}
-		return isInvalid;
-	}
+  public static String getScreenName(String userName, String fullName) {
+    return (userName.contains(org.exoplatform.faq.service.Utils.DELETED)) ? ("<s>" + ((isFieldEmpty(fullName)) ? (userName.substring(0, userName.indexOf(org.exoplatform.faq.service.Utils.DELETED))) : fullName) + "</s>") : userName;
+  }
 
-	public static String getResourceBundle(String resourceBundl) {
-		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-		ResourceBundle res = context.getApplicationResourceBundle();
-		return res.getString(resourceBundl);
-	}
+  public static boolean isFieldEmpty(String s) {
+    return (s == null || s.trim().length() <= 0) ? true : false;
+  }
 
-	/*
-	 * public static String[] getQuestionLanguages() {
-	 * 
-	 * return null ; }
-	 */
+  public static boolean isValidEmailAddresses(String addressList) throws Exception {
+    if (isFieldEmpty(addressList))
+      return true;
+    boolean isInvalid = true;
+    try {
+      InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
+      String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}";
+      for (int i = 0; i < iAdds.length; i++) {
+        if (!iAdds[i].getAddress().matches(emailRegex))
+          isInvalid = false;
+      }
+    } catch (AddressException e) {
+      return false;
+    }
+    return isInvalid;
+  }
 
-	@SuppressWarnings("unchecked")
-	public static Map prepareMap(List inputs, Map properties) throws Exception {
-		Map<String, JcrInputProperty> rawinputs = new HashMap<String, JcrInputProperty>();
-		HashMap<String, JcrInputProperty> hasMap = new HashMap<String, JcrInputProperty>();
-		for (int i = 0; i < inputs.size(); i++) {
-			JcrInputProperty property = null;
-			if (inputs.get(i) instanceof UIFormMultiValueInputSet) {
-				String inputName = ((UIFormMultiValueInputSet) inputs.get(i)).getName();
-				if (!hasMap.containsKey(inputName)) {
-					List<String> values = (List<String>) ((UIFormMultiValueInputSet) inputs.get(i)).getValue();
-					property = (JcrInputProperty) properties.get(inputName);
-					if (property != null) {
-						property.setValue(values.toArray(new String[values.size()]));
-					}
-				}
-				hasMap.put(inputName, property);
-			} else {
-				UIFormInputBase input = (UIFormInputBase) inputs.get(i);
-				property = (JcrInputProperty) properties.get(input.getName());
-				if (property != null) {
-					if (input instanceof UIFormUploadInput) {
-						byte[] content = ((UIFormUploadInput) input).getUploadData();
-						property.setValue(content);
-					} else if (input instanceof UIFormDateTimeInput) {
-						property.setValue(((UIFormDateTimeInput) input).getCalendar());
-					} else {
-						property.setValue(input.getValue());
-					}
-				}
-			}
-		}
-		Iterator iter = properties.values().iterator();
-		JcrInputProperty property;
-		while (iter.hasNext()) {
-			property = (JcrInputProperty) iter.next();
-			rawinputs.put(property.getJcrPath(), property);
-		}
-		return rawinputs;
-	}
+  public static String getResourceBundle(String resourceBundl) {
+    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+    ResourceBundle res = context.getApplicationResourceBundle();
+    return res.getString(resourceBundl);
+  }
 
-	public static String getSubString(String str, int max) {
-		if (str.length() > max) {
-			String newStr = str.substring(0, (max - 3));
-			return newStr.trim() + "...";
-		}
-		return str;
-	}
+  /*
+   * public static String[] getQuestionLanguages() { return null ; }
+   */
 
-	public static String getTitle(String text) {
-		/*
-		 * int i = 0 ; while (i < text.length()) { if(text.codePointAt(i) < 10) continue; if (text.charAt(i) == '"' ) text = text.replace((text.charAt(i)) + "", "&quot;") ; else i ++ ; }
-		 */
-		return StringUtils.replace(text, "\"", "&quot;");
-	}
+  @SuppressWarnings("unchecked")
+  public static Map prepareMap(List inputs, Map properties) throws Exception {
+    Map<String, JcrInputProperty> rawinputs = new HashMap<String, JcrInputProperty>();
+    HashMap<String, JcrInputProperty> hasMap = new HashMap<String, JcrInputProperty>();
+    for (int i = 0; i < inputs.size(); i++) {
+      JcrInputProperty property = null;
+      if (inputs.get(i) instanceof UIFormMultiValueInputSet) {
+        String inputName = ((UIFormMultiValueInputSet) inputs.get(i)).getName();
+        if (!hasMap.containsKey(inputName)) {
+          List<String> values = (List<String>) ((UIFormMultiValueInputSet) inputs.get(i)).getValue();
+          property = (JcrInputProperty) properties.get(inputName);
+          if (property != null) {
+            property.setValue(values.toArray(new String[values.size()]));
+          }
+        }
+        hasMap.put(inputName, property);
+      } else {
+        UIFormInputBase input = (UIFormInputBase) inputs.get(i);
+        property = (JcrInputProperty) properties.get(input.getName());
+        if (property != null) {
+          if (input instanceof UIFormUploadInput) {
+            byte[] content = ((UIFormUploadInput) input).getUploadData();
+            property.setValue(content);
+          } else if (input instanceof UIFormDateTimeInput) {
+            property.setValue(((UIFormDateTimeInput) input).getCalendar());
+          } else {
+            property.setValue(input.getValue());
+          }
+        }
+      }
+    }
+    Iterator iter = properties.values().iterator();
+    JcrInputProperty property;
+    while (iter.hasNext()) {
+      property = (JcrInputProperty) iter.next();
+      rawinputs.put(property.getJcrPath(), property);
+    }
+    return rawinputs;
+  }
 
-	public static List<String> getCategoriesIdFAQPortlet() throws Exception {
-		PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-		String str = portletPref.getValue("displayCategories", "");
-		List<String> list = new ArrayList<String>();
-		if (!isFieldEmpty(str)) {
-			list.addAll(Arrays.asList(str.split(",")));
-		}
-		return list;
-	}
+  public static String getSubString(String str, int max) {
+    if (str.length() > max) {
+      String newStr = str.substring(0, (max - 3));
+      return newStr.trim() + "...";
+    }
+    return str;
+  }
 
-	public static boolean getUseAjaxFAQPortlet() {
-		PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-		return Boolean.parseBoolean(portletPref.getValue("useAjax", ""));
-	}
+  public static String getTitle(String text) {
+    /*
+     * int i = 0 ; while (i < text.length()) { if(text.codePointAt(i) < 10) continue; if (text.charAt(i) == '"' ) text = text.replace((text.charAt(i)) + "", "&quot;") ; else i ++ ; }
+     */
+    return StringUtils.replace(text, "\"", "&quot;");
+  }
 
-	public static void saveFAQPortletPreference(List<String> list, boolean useAjax) throws Exception {
-		PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-		String str = list.toString();
-		str = str.replace("[", "").replace("]", "").replaceAll(" ", "");
-		portletPref.setValue("displayCategories", str);
-		portletPref.setValue("useAjax", String.valueOf(useAjax));
-		portletPref.store();
-	}
+  public static List<String> getCategoriesIdFAQPortlet() throws Exception {
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+    String str = portletPref.getValue("displayCategories", "");
+    List<String> list = new ArrayList<String>();
+    if (!isFieldEmpty(str)) {
+      list.addAll(Arrays.asList(str.split(",")));
+    }
+    return list;
+  }
 
-	public static void getPorletPreference(FAQSetting faqSetting) {
-		PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-		faqSetting.setEnableViewAvatar(Boolean.parseBoolean(portletPref.getValue("enableViewAvatar", "")));
-		faqSetting.setEnableAutomaticRSS(Boolean.parseBoolean(portletPref.getValue("enableAutomaticRSS", "")));
-		faqSetting.setEnanbleVotesAndComments(Boolean.parseBoolean(portletPref.getValue("enanbleVotesAndComments", "")));
-		faqSetting.setEnableAnonymousSubmitQuestion(Boolean.parseBoolean(portletPref.getValue("enableAnonymousSubmitQuestion", "")));
-		faqSetting.setDisplayMode(portletPref.getValue("display", ""));
-		faqSetting.setOrderBy(portletPref.getValue("orderBy", ""));
-		faqSetting.setOrderType(portletPref.getValue("orderType", ""));
-		faqSetting.setIsDiscussForum(Boolean.parseBoolean(portletPref.getValue("isDiscussForum", "")));
-		faqSetting.setIdNameCategoryForum(portletPref.getValue("idNameCategoryForum", ""));
-		faqSetting.setEmailMoveQuestion(portletPref.getValue("emailMoveQuestion", ""));
-		faqSetting.setPostQuestionInRootCategory(Boolean.parseBoolean(portletPref.getValue("isPostQuestionInRootCategory", "true")));
-	}
+  public static boolean getUseAjaxFAQPortlet() {
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+    return Boolean.parseBoolean(portletPref.getValue("useAjax", ""));
+  }
 
-	public static void getEmailSetting(FAQSetting faqSetting, boolean isNew, boolean isSettingForm) {
-		PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-		String emailContent = "";
-		if (isNew) {
-			emailContent = portletPref.getValue("SendMailAddNewQuestion", "");
-		} else {
-			if(isSettingForm)
-				emailContent = portletPref.getValue("SendMailEditResponseQuestion", "");
-		}
-		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-		ResourceBundle res = context.getApplicationResourceBundle();
-		// if(!isSettingForm){
-		if (emailContent == null || emailContent.trim().length() < 1) {
-			if (isNew) {
-				emailContent = res.getString("SendEmail.AddNewQuestion.Default");
-			} else {
-				if(isSettingForm)
-					emailContent = res.getString("SendEmail.EditQuestion.Default");
-				else 
-					emailContent = res.getString("SendEmail.ResponseQuestion.Default");
-			}
-		}
-		// }
-		faqSetting.setEmailSettingSubject(res.getString("SendEmail.Default.Subject"));
-		faqSetting.setEmailSettingContent(emailContent);
-	}
+  public static void saveFAQPortletPreference(List<String> list, boolean useAjax) throws Exception {
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+    String str = list.toString();
+    str = str.replace("[", "").replace("]", "").replaceAll(" ", "");
+    portletPref.setValue("displayCategories", str);
+    portletPref.setValue("useAjax", String.valueOf(useAjax));
+    portletPref.store();
+  }
 
-	public static String getEmailMoveQuestion(FAQSetting faqSetting) {
-		PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-		String str = portletPref.getValue("emailMoveQuestion", "");
-		if (isFieldEmpty(str)) {
-			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-			ResourceBundle res = context.getApplicationResourceBundle();
-			str = res.getString("SendEmail.MoveQuetstion.Default");
-		}
-		faqSetting.setEmailMoveQuestion(str);
-		return str;
-	}
+  public static void getPorletPreference(FAQSetting faqSetting) {
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+    faqSetting.setEnableViewAvatar(Boolean.parseBoolean(portletPref.getValue("enableViewAvatar", "")));
+    faqSetting.setEnableAutomaticRSS(Boolean.parseBoolean(portletPref.getValue("enableAutomaticRSS", "")));
+    faqSetting.setEnanbleVotesAndComments(Boolean.parseBoolean(portletPref.getValue("enanbleVotesAndComments", "")));
+    faqSetting.setEnableAnonymousSubmitQuestion(Boolean.parseBoolean(portletPref.getValue("enableAnonymousSubmitQuestion", "")));
+    faqSetting.setDisplayMode(portletPref.getValue("display", ""));
+    faqSetting.setOrderBy(portletPref.getValue("orderBy", ""));
+    faqSetting.setOrderType(portletPref.getValue("orderType", ""));
+    faqSetting.setIsDiscussForum(Boolean.parseBoolean(portletPref.getValue("isDiscussForum", "")));
+    faqSetting.setIdNameCategoryForum(portletPref.getValue("idNameCategoryForum", ""));
+    faqSetting.setEmailMoveQuestion(portletPref.getValue("emailMoveQuestion", ""));
+    faqSetting.setPostQuestionInRootCategory(Boolean.parseBoolean(portletPref.getValue("isPostQuestionInRootCategory", "true")));
+  }
 
-	public static void savePortletPreference(FAQSetting setting, String emailAddNewQuestion, String emailEditResponseQuestion) {
-		try {
-			PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-			PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-			portletPref.setValue("display", setting.getDisplayMode());
-			portletPref.setValue("orderBy", setting.getOrderBy());
-			portletPref.setValue("orderType", setting.getOrderType());
-			portletPref.setValue("isDiscussForum", String.valueOf(setting.getIsDiscussForum()));
-			portletPref.setValue("idNameCategoryForum", setting.getIdNameCategoryForum());
-			portletPref.setValue("enableAutomaticRSS", setting.isEnableAutomaticRSS() + "");
-			portletPref.setValue("enableViewAvatar", setting.isEnableViewAvatar() + "");
-			portletPref.setValue("enanbleVotesAndComments", setting.isEnanbleVotesAndComments() + "");
-			portletPref.setValue("enableAnonymousSubmitQuestion", setting.isEnableAnonymousSubmitQuestion() + "");
-			portletPref.setValue("SendMailAddNewQuestion", emailAddNewQuestion);
-			portletPref.setValue("SendMailEditResponseQuestion", emailEditResponseQuestion);
-			portletPref.setValue("emailMoveQuestion", setting.getEmailMoveQuestion());
-			portletPref.setValue("isPostQuestionInRootCategory", setting.isPostQuestionInRootCategory() + "");
-			portletPref.store();
-		} catch (Exception e) {
-			log.error("Fail to save portlet preferences: ", e);
-		}
-	}
+  public static void getEmailSetting(FAQSetting faqSetting, boolean isNew, boolean isSettingForm) {
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+    String emailContent = "";
+    if (isNew) {
+      emailContent = portletPref.getValue("SendMailAddNewQuestion", "");
+    } else {
+      if (isSettingForm)
+        emailContent = portletPref.getValue("SendMailEditResponseQuestion", "");
+    }
+    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+    ResourceBundle res = context.getApplicationResourceBundle();
+    // if(!isSettingForm){
+    if (emailContent == null || emailContent.trim().length() < 1) {
+      if (isNew) {
+        emailContent = res.getString("SendEmail.AddNewQuestion.Default");
+      } else {
+        if (isSettingForm)
+          emailContent = res.getString("SendEmail.EditQuestion.Default");
+        else
+          emailContent = res.getString("SendEmail.ResponseQuestion.Default");
+      }
+    }
+    // }
+    faqSetting.setEmailSettingSubject(res.getString("SendEmail.Default.Subject"));
+    faqSetting.setEmailSettingContent(emailContent);
+  }
 
-	private static String getFormatDate(int dateFormat, Date myDate) {
-		if (myDate == null)
-			return "";
-		String format = (dateFormat == DateFormat.LONG) ? "DDD,MMM dd,yyyy" : "MM/dd/yyyy";
-		try {
-			String userName = getCurrentUser();
-			if (!isFieldEmpty(userName)) {
-				org.exoplatform.forum.service.ForumService forumService = (org.exoplatform.forum.service.ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(
-						org.exoplatform.forum.service.ForumService.class);
-				org.exoplatform.forum.service.UserProfile profile = forumService.getUserSettingProfile(userName);
-				format = (dateFormat == DateFormat.LONG) ? profile.getLongDateFormat() : profile.getShortDateFormat();
-			}
-		} catch (Exception e) {
-			log.debug("No forum settings found for date format. Will use format " + format);
-		}
-		if (!isFieldEmpty(format)) {
-			if (format.indexOf("DDDD") >= 0)
-				format = format.replaceAll("DDDD", "EEEE");
-			if (format.indexOf("DDD") >= 0)
-				format = format.replaceAll("DDD", "EEE");
-		}
-		PortalRequestContext portalContext = Util.getPortalRequestContext();
-		Format formatter = new SimpleDateFormat(format, portalContext.getLocale());
-		return formatter.format(myDate);
-	}
+  public static String getEmailMoveQuestion(FAQSetting faqSetting) {
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+    String str = portletPref.getValue("emailMoveQuestion", "");
+    if (isFieldEmpty(str)) {
+      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+      ResourceBundle res = context.getApplicationResourceBundle();
+      str = res.getString("SendEmail.MoveQuetstion.Default");
+    }
+    faqSetting.setEmailMoveQuestion(str);
+    return str;
+  }
 
-	public static String getLongDateFormat(Date myDate) {
-		return getFormatDate(DateFormat.LONG, myDate);
-	}
+  public static void savePortletPreference(FAQSetting setting, String emailAddNewQuestion, String emailEditResponseQuestion) {
+    try {
+      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+      PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+      portletPref.setValue("display", setting.getDisplayMode());
+      portletPref.setValue("orderBy", setting.getOrderBy());
+      portletPref.setValue("orderType", setting.getOrderType());
+      portletPref.setValue("isDiscussForum", String.valueOf(setting.getIsDiscussForum()));
+      portletPref.setValue("idNameCategoryForum", setting.getIdNameCategoryForum());
+      portletPref.setValue("enableAutomaticRSS", setting.isEnableAutomaticRSS() + "");
+      portletPref.setValue("enableViewAvatar", setting.isEnableViewAvatar() + "");
+      portletPref.setValue("enanbleVotesAndComments", setting.isEnanbleVotesAndComments() + "");
+      portletPref.setValue("enableAnonymousSubmitQuestion", setting.isEnableAnonymousSubmitQuestion() + "");
+      portletPref.setValue("SendMailAddNewQuestion", emailAddNewQuestion);
+      portletPref.setValue("SendMailEditResponseQuestion", emailEditResponseQuestion);
+      portletPref.setValue("emailMoveQuestion", setting.getEmailMoveQuestion());
+      portletPref.setValue("isPostQuestionInRootCategory", setting.isPostQuestionInRootCategory() + "");
+      portletPref.store();
+    } catch (Exception e) {
+      log.error("Fail to save portlet preferences: ", e);
+    }
+  }
 
-	public static String getShortDateFormat(Date myDate) {
-		return getFormatDate(DateFormat.SHORT, myDate);
-	}
+  private static String getFormatDate(int dateFormat, Date myDate) {
+    if (myDate == null)
+      return "";
+    String format = (dateFormat == DateFormat.LONG) ? "DDD,MMM dd,yyyy" : "MM/dd/yyyy";
+    try {
+      String userName = getCurrentUser();
+      if (!isFieldEmpty(userName)) {
+        org.exoplatform.forum.service.ForumService forumService = (org.exoplatform.forum.service.ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(org.exoplatform.forum.service.ForumService.class);
+        org.exoplatform.forum.service.UserProfile profile = forumService.getUserSettingProfile(userName);
+        format = (dateFormat == DateFormat.LONG) ? profile.getLongDateFormat() : profile.getShortDateFormat();
+      }
+    } catch (Exception e) {
+      log.debug("No forum settings found for date format. Will use format " + format);
+    }
+    if (!isFieldEmpty(format)) {
+      if (format.indexOf("DDDD") >= 0)
+        format = format.replaceAll("DDDD", "EEEE");
+      if (format.indexOf("DDD") >= 0)
+        format = format.replaceAll("DDD", "EEE");
+    }
+    PortalRequestContext portalContext = Util.getPortalRequestContext();
+    Format formatter = new SimpleDateFormat(format, portalContext.getLocale());
+    return formatter.format(myDate);
+  }
 
-	public static Calendar getInstanceTempCalendar() {
-		Calendar calendar = GregorianCalendar.getInstance();
-		calendar.setLenient(false);
-		int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-		calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
-		return calendar;
-	}
+  public static String getLongDateFormat(Date myDate) {
+    return getFormatDate(DateFormat.LONG, myDate);
+  }
 
-	public static String getUserAvatar(String userName) throws Exception {
-		String url = "";
-		try {
-			FAQService service = getFAQService();
-			FileAttachment avatar = service.getUserAvatar(userName);
-			if (avatar != null) {
-				url = Utils.getImageUrl(avatar.getPath()) + "?size=" + avatar.getSize();
-			}
-		} catch (Exception e) {
-			log.debug("Failed to get user avatar of user: " + userName, e);
-		}
-		return (isFieldEmpty(url)) ? org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL : url;
-	}
-	
-	public static String getLink(String link, String componentId, String componentIdhasAction, String action, String actionRep, String objectId) {
-		PortalRequestContext portalContext = Util.getPortalRequestContext();
-		String url = portalContext.getRequest().getRequestURL().toString();
-		url = url.substring(0, url.indexOf("/", 8));
-		link = link.replaceFirst(componentId, componentIdhasAction).replaceFirst(action, actionRep).replaceFirst("OBJECTID", objectId).replaceAll("amp;", "");
-		link = url + link;
-		return link;
-	}
+  public static String getShortDateFormat(Date myDate) {
+    return getFormatDate(DateFormat.SHORT, myDate);
+  }
 
-	public static String getLinkDiscuss(String topicId) throws Exception {
-		PortalRequestContext portalContext = Util.getPortalRequestContext();
-		String link = portalContext.getRequest().getRequestURL().toString();
-		try {
-			String selectedNode = Util.getUIPortal().getSelectedNode().getUri();
-			String portalName = "/" + Util.getUIPortal().getName();
-			if (link.indexOf(portalName) > 0) {
-				if (link.indexOf(portalName + "/" + selectedNode) < 0) {
-					link = link.replaceFirst(portalName, portalName + "/" + selectedNode);
-				}
-			}
-			link = link.substring(0, link.indexOf(selectedNode) + selectedNode.length());
-			link = link.replaceAll(selectedNode, "forum") + "/" + org.exoplatform.forum.service.Utils.TOPIC + "/" + topicId;
-		} catch (Exception e) {
-			log.error("Fail to get link discuss: ", e);
-		}
-		return link;
-	}
+  public static Calendar getInstanceTempCalendar() {
+    Calendar calendar = GregorianCalendar.getInstance();
+    calendar.setLenient(false);
+    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
+    return calendar;
+  }
 
-	public static int getLimitUploadSize() {
-		PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-		int limitMB;
-		try {
-			limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, "").trim());
-		} catch (Exception e) {
-			limitMB = -1;
-		}
-		return limitMB;
-	}
+  public static String getUserAvatar(String userName) throws Exception {
+    String url = "";
+    try {
+      FAQService service = getFAQService();
+      FileAttachment avatar = service.getUserAvatar(userName);
+      if (avatar != null) {
+        url = Utils.getImageUrl(avatar.getPath()) + "?size=" + avatar.getSize();
+      }
+    } catch (Exception e) {
+      log.debug("Failed to get user avatar of user: " + userName, e);
+    }
+    return (isFieldEmpty(url)) ? org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL : url;
+  }
+
+  public static String getLink(String link, String componentId, String componentIdhasAction, String action, String actionRep, String objectId) {
+    PortalRequestContext portalContext = Util.getPortalRequestContext();
+    String url = portalContext.getRequest().getRequestURL().toString();
+    url = url.substring(0, url.indexOf("/", 8));
+    link = link.replaceFirst(componentId, componentIdhasAction).replaceFirst(action, actionRep).replaceFirst("OBJECTID", objectId).replaceAll("amp;", "");
+    link = url + link;
+    return link;
+  }
+
+  public static String getLinkDiscuss(String topicId) throws Exception {
+    PortalRequestContext portalContext = Util.getPortalRequestContext();
+    String link = portalContext.getRequest().getRequestURL().toString();
+    try {
+      String selectedNode = Util.getUIPortal().getSelectedNode().getUri();
+      String portalName = "/" + Util.getUIPortal().getName();
+      if (link.indexOf(portalName) > 0) {
+        if (link.indexOf(portalName + "/" + selectedNode) < 0) {
+          link = link.replaceFirst(portalName, portalName + "/" + selectedNode);
+        }
+      }
+      link = link.substring(0, link.indexOf(selectedNode) + selectedNode.length());
+      link = link.replaceAll(selectedNode, "forum") + "/" + org.exoplatform.forum.service.Utils.TOPIC + "/" + topicId;
+    } catch (Exception e) {
+      log.error("Fail to get link discuss: ", e);
+    }
+    return link;
+  }
+
+  public static int getLimitUploadSize() {
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+    int limitMB;
+    try {
+      limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, "").trim());
+    } catch (Exception e) {
+      limitMB = -1;
+    }
+    return limitMB;
+  }
 
 }

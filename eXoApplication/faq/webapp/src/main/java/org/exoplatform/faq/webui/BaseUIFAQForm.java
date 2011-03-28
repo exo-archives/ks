@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -29,45 +29,45 @@ import org.exoplatform.webui.core.UIComponent;
  * Jan 18, 2010 - 4:59:43 AM
  */
 public class BaseUIFAQForm extends BaseUIForm {
-	private FAQService faqService;
+  private FAQService faqService;
 
-	/**
-	 * Get a reference to the faq service
-	 * 
-	 * @return
-	 */
-	protected FAQService getFAQService() {
-		if (faqService == null) {
-			faqService = (FAQService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FAQService.class);
-		}
-		return faqService;
-	}
+  /**
+   * Get a reference to the faq service
+   * 
+   * @return
+   */
+  protected FAQService getFAQService() {
+    if (faqService == null) {
+      faqService = (FAQService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FAQService.class);
+    }
+    return faqService;
+  }
 
-	/**
-	 * Set faq service (used by unit tests)
-	 * 
-	 * @param faqService
-	 */
-	protected void setFAQService(FAQService faqService) {
-		this.faqService = faqService;
-	}
+  /**
+   * Set faq service (used by unit tests)
+   * 
+   * @param faqService
+   */
+  protected void setFAQService(FAQService faqService) {
+    this.faqService = faqService;
+  }
 
-	protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
-		UIFAQPortlet faqPortlet = getAncestorOfType(UIFAQPortlet.class);
-		return openPopup(faqPortlet, componentType, popupId, width, height);
-	}
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
+    UIFAQPortlet faqPortlet = getAncestorOfType(UIFAQPortlet.class);
+    return openPopup(faqPortlet, componentType, popupId, width, height);
+  }
 
-	protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
-		UIFAQPortlet faqPortlet = getAncestorOfType(UIFAQPortlet.class);
-		return openPopup(faqPortlet, componentType, width, height);
-	}
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
+    UIFAQPortlet faqPortlet = getAncestorOfType(UIFAQPortlet.class);
+    return openPopup(faqPortlet, componentType, width, height);
+  }
 
-	protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
-		return openPopup(componentType, width, 0);
-	}
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
+    return openPopup(componentType, width, 0);
+  }
 
-	protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
-		return openPopup(componentType, popupId, width, 0);
-	}
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
+    return openPopup(componentType, popupId, width, 0);
+  }
 
 }

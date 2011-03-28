@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -27,135 +27,136 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * Jan 16, 2009, 10:19:51 AM
  */
 public class Comment {
-	
-	/** The id. */
-	private String id;
-	
-	/** The is new. */
-	private boolean isNew;
-  
+
+  /** The id. */
+  private String  id;
+
+  /** The is new. */
+  private boolean isNew;
+
   /** The comments. */
-  private String comments;
-  
+  private String  comments;
+
   /** The comment by. */
-  private String commentBy;
-  
-  private String fullName;
-  
+  private String  commentBy;
+
+  private String  fullName;
+
   /** The date comment. */
-  private Date dateComment;
-  
-  private String postId;
+  private Date    dateComment;
+
+  private String  postId;
+
   /**
    * Instantiates a new comment.
    */
-  public Comment(){
-  	id = "Comment" + IdGenerator.generate() ;
-  }
-  
-	/**
-	 * Gets the id.
-	 * 
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-	
-	/**
-	 * Sets the id.
-	 * 
-	 * @param id the new id
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-	
-	/**
-	 * Gets the comments.
-	 * 
-	 * @return the comments
-	 */
-	public String getComments() {
-		return comments;
-	}
-	
-	/**
-	 * Sets the comments.
-	 * 
-	 * @param comments the new comments
-	 */
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
-	
-	/**
-	 * Gets the comment by.
-	 * 
-	 * @return the comment by
-	 */
-	public String getCommentBy() {
-		return commentBy;
-	}
-	
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	/**
-	 * Sets the comment by.
-	 * 
-	 * @param commentBy the new comment by
-	 */
-	public void setCommentBy(String commentBy) {
-		this.commentBy = commentBy;
-	}
-	
-	/**
-	 * Gets the date comment.
-	 * 
-	 * @return the date comment
-	 */
-	public Date getDateComment() {
-		return dateComment;
-	}
-	
-	/**
-	 * Sets the date comment.
-	 * 
-	 * @param dateComment the new date comment
-	 */
-	public void setDateComment(Date dateComment) {
-		this.dateComment = dateComment;
-	}
-
-	/**
-	 * Checks if is new.
-	 * 
-	 * @return true, if is new
-	 */
-	public boolean isNew() {
-		return isNew;
-	}
-
-	/**
-	 * Sets the new.
-	 * 
-	 * @param isNew the new new
-	 */
-	public void setNew(boolean isNew) {
-		this.isNew = isNew;
-	}
-
-	public String getPostId() {
-  	return postId;
+  public Comment() {
+    id = "Comment" + IdGenerator.generate();
   }
 
-	public void setPostId(String postId) {
-  	this.postId = postId;
+  /**
+   * Gets the id.
+   * 
+   * @return the id
+   */
+  public String getId() {
+    return id;
+  }
+
+  /**
+   * Sets the id.
+   * 
+   * @param id the new id
+   */
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  /**
+   * Gets the comments.
+   * 
+   * @return the comments
+   */
+  public String getComments() {
+    return comments;
+  }
+
+  /**
+   * Sets the comments.
+   * 
+   * @param comments the new comments
+   */
+  public void setComments(String comments) {
+    this.comments = comments;
+  }
+
+  /**
+   * Gets the comment by.
+   * 
+   * @return the comment by
+   */
+  public String getCommentBy() {
+    return commentBy;
+  }
+
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
+
+  public String getFullName() {
+    return fullName;
+  }
+
+  /**
+   * Sets the comment by.
+   * 
+   * @param commentBy the new comment by
+   */
+  public void setCommentBy(String commentBy) {
+    this.commentBy = commentBy;
+  }
+
+  /**
+   * Gets the date comment.
+   * 
+   * @return the date comment
+   */
+  public Date getDateComment() {
+    return dateComment;
+  }
+
+  /**
+   * Sets the date comment.
+   * 
+   * @param dateComment the new date comment
+   */
+  public void setDateComment(Date dateComment) {
+    this.dateComment = dateComment;
+  }
+
+  /**
+   * Checks if is new.
+   * 
+   * @return true, if is new
+   */
+  public boolean isNew() {
+    return isNew;
+  }
+
+  /**
+   * Sets the new.
+   * 
+   * @param isNew the new new
+   */
+  public void setNew(boolean isNew) {
+    this.isNew = isNew;
+  }
+
+  public String getPostId() {
+    return postId;
+  }
+
+  public void setPostId(String postId) {
+    this.postId = postId;
   }
 }

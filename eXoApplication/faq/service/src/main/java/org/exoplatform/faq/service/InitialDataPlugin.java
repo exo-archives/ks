@@ -8,15 +8,13 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.faq.service;
-
-
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +37,6 @@ import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-
 /**
  * A plugin to initialize FAQ data from xml export. By default the data will be imported to root category only if it does not already exist
  * <value-params> are : 
@@ -49,39 +46,38 @@ import org.exoplatform.services.log.Log;
  * </ul>
  */
 @Managed
-@NameTemplate({@Property(key="service", value="faq"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
+@NameTemplate( { @Property(key = "service", value = "faq"), @Property(key = "view", value = "plugins"), @Property(key = "name", value = "{Name}") })
 @ManagedDescription("Plugin that allows to initialize default data for the FAQ")
 public class InitialDataPlugin extends ManagedPlugin {
-  
-  private static final String TEXT_XML = "text/xml";
+
+  private static final String TEXT_XML        = "text/xml";
 
   private static final String APPLICATION_ZIP = "application/zip";
 
-  private static Log log = ExoLogger.getLogger(InitialDataPlugin.class);
+  private static Log          log             = ExoLogger.getLogger(InitialDataPlugin.class);
 
-  private String location;
-  private boolean forceXML = false;
-  
+  private String              location;
+
+  private boolean             forceXML        = false;
+
   public InitialDataPlugin(InitParams params) {
-    
+
     ValueParam vp1 = params.getValueParam("location");
     if (vp1 == null) {
       log.warn("value-param 'location' is missing for " + getName() + ". The plugin will not be used");
     } else {
       this.location = vp1.getValue();
     }
-    
+
     ValueParam vp2 = params.getValueParam("forceXML");
     if (vp2 != null) {
       try {
         forceXML = Boolean.valueOf(vp2.getValue());
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         log.warn("value-param 'forceXML' is erroneous for " + getName() + ". Expected 'true' or 'false', received '" + vp2.getValue() + "'. Using " + forceXML);
       }
     }
 
-    
   }
 
   public void setLocation(String location) {
@@ -97,75 +93,70 @@ public class InitialDataPlugin extends ManagedPlugin {
   public String getLocation() {
     return location;
   }
-  
+
   @Managed
   @ManagedDescription("Indicate if the data loaded should override any data found in the existing database")
   public boolean isForceXML() {
     return forceXML;
   }
-  
 
-  
   public boolean importData(FAQService service, ConfigurationManager configurationService) throws RuntimeException {
 
-    try {    
+    try {
       if (location == null) {
         log.warn("No data location provided for " + this);
         return false;
       }
 
       boolean isZip = isZip(location);
-      
+
       if (!isZip) {
         throw new RuntimeException("the .zip FAQ export format is expected");
       }
-      
+
       String categoryId = readCategoryFromZipEntry(configurationService);
       if (categoryId == null) {
         throw new RuntimeException("Could not extract category id from .zip . Is it a real FAQ export?");
       }
-      
-      
-      Category oCat = service.getCategoryById(Utils.CATEGORY_HOME +"/"+ categoryId);
+
+      Category oCat = service.getCategoryById(Utils.CATEGORY_HOME + "/" + categoryId);
       if (oCat != null) {
-        log.info("FAQ data in "+ location + " was not imported. The category '" + oCat.getName() + "' already exists.");
+        log.info("FAQ data in " + location + " was not imported. The category '" + oCat.getName() + "' already exists.");
         return false;
-      }  else {
+      } else {
         InputStream inputStream = configurationService.getInputStream(location);
         boolean result = service.importData(Utils.CATEGORY_HOME, inputStream, isZip);
         return result;
       }
-      
-      
-      
+
     } catch (Exception e) {
-    log.error("The plugin " + getName() + " failed to initialize data " + e);
+      log.error("The plugin " + getName() + " failed to initialize data " + e);
       throw new RuntimeException(e.getCause());
     }
 
   }
-  
+
   private String readCategoryFromZipEntry(ConfigurationManager configurationService) throws Exception {
 
-      InputStream inputStream = null;
-      ZipInputStream zipStream = null;
-      try {
-        inputStream = configurationService.getInputStream(location);
-        zipStream = new ZipInputStream(inputStream) ;
-        ZipEntry entry ;
-         
-        while((entry = zipStream.getNextEntry()) != null) {
-          String name = entry.getName();
-          zipStream.closeEntry();
-          String result = name.substring(0, name.lastIndexOf(".xml"));
-          return result;
-        }
-        return null;
+    InputStream inputStream = null;
+    ZipInputStream zipStream = null;
+    try {
+      inputStream = configurationService.getInputStream(location);
+      zipStream = new ZipInputStream(inputStream);
+      ZipEntry entry;
 
-      } finally {
-        safeClose(inputStream);
-        safeClose(zipStream);
+      while ((entry = zipStream.getNextEntry()) != null) {
+        String name = entry.getName();
+        zipStream.closeEntry();
+        String result = name.substring(0, name.lastIndexOf(".xml"));
+        return result;
       }
+      return null;
+
+    } finally {
+      safeClose(inputStream);
+      safeClose(zipStream);
+    }
   }
 
   private void safeClose(InputStream inputStream) {
@@ -177,16 +168,13 @@ public class InitialDataPlugin extends ManagedPlugin {
       }
     }
   }
-  
 
   /**
    * Look for the name of the category in the input file
    * @param configurationService
    * @return
    */
-  private String readCategoryFromXml(ConfigurationManager configurationService) throws Exception,
-                                                                                UnsupportedEncodingException,
-                                                                                IOException {
+  private String readCategoryFromXml(ConfigurationManager configurationService) throws Exception, UnsupportedEncodingException, IOException {
     InputStream inputStream = null;
     try {
       String importedCategoryId = null;
@@ -202,8 +190,7 @@ public class InitialDataPlugin extends ManagedPlugin {
 
       while (((len = inputStream.read(buf)) > 0) && keepReading) {
         sbuf.append(new String(buf, "UTF-8"));
-        
-       
+
         String content = sbuf.substring(0);
         Matcher matcher = pattern.matcher(content);
         if (matcher.find()) {
@@ -218,8 +205,6 @@ public class InitialDataPlugin extends ManagedPlugin {
     }
   }
 
-
-
   private void createCategory(FAQService service, String categoryName) throws Exception {
     Category categ = new Category();
     categ.setCreatedDate(new Date());
@@ -227,7 +212,7 @@ public class InitialDataPlugin extends ManagedPlugin {
     categ.setModerators(new String[0]);
     categ.setIndex(11L);
     service.saveCategory(Utils.CATEGORY_HOME, categ, true);
-    
+
   }
 
   boolean isZip(String fileName) {
@@ -238,12 +223,11 @@ public class InitialDataPlugin extends ManagedPlugin {
     } else if (TEXT_XML.equals(mimeType)) {
       return false;
     }
-    throw new RuntimeException("The format " + mimeType + " is not supported. Expecting "
-        + APPLICATION_ZIP + " or " + TEXT_XML);
+    throw new RuntimeException("The format " + mimeType + " is not supported. Expecting " + APPLICATION_ZIP + " or " + TEXT_XML);
   }
-  
+
   public String toString() {
-    return getName() + " (forceXML=" + forceXML + ",location="+ location + ")";
+    return getName() + " (forceXML=" + forceXML + ",location=" + location + ")";
   }
 
 }

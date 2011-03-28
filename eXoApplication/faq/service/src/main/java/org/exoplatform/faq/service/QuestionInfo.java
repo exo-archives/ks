@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -26,32 +26,39 @@ import java.util.List;
  * Jun 24, 2009 - 3:35:02 AM  
  */
 public class QuestionInfo {
-	private String id;
-	private String question;
-	private String detail;
-	private List<String> answers = new ArrayList<String>();
-	
-	public QuestionInfo() {}
+  private String       id;
 
-	public String getId() {
-  	return id;
-  }
-	public void setId(String id) {
-  	this.id = id;
+  private String       question;
+
+  private String       detail;
+
+  private List<String> answers = new ArrayList<String>();
+
+  public QuestionInfo() {
   }
 
-	public String getQuestion() {
-  	return question;
-  }
-	public void setQuestion(String question) {
-  	this.question = question;
+  public String getId() {
+    return id;
   }
 
-	public List<String> getAnswers() {
-  	return answers;
+  public void setId(String id) {
+    this.id = id;
   }
-	public void setAnswers(List<String> answers) {
-  	this.answers = answers;
+
+  public String getQuestion() {
+    return question;
+  }
+
+  public void setQuestion(String question) {
+    this.question = question;
+  }
+
+  public List<String> getAnswers() {
+    return answers;
+  }
+
+  public void setAnswers(List<String> answers) {
+    this.answers = answers;
   }
 
   public String getDetail() {
@@ -61,5 +68,5 @@ public class QuestionInfo {
   public void setDetail(String detail) {
     this.detail = detail;
   }
-	
+
 }

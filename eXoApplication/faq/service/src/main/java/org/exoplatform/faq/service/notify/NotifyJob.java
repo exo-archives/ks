@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -33,43 +33,43 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 public class NotifyJob implements Job {
-	private static Log	log_	= ExoLogger.getLogger("job.RecordsJob");
+  private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
 
-	public NotifyJob() throws Exception {
-	}
+  public NotifyJob() throws Exception {
+  }
 
-	public void execute(JobExecutionContext context) throws JobExecutionException {
-		ExoContainer exoContainer = Utils.getExoContainer(context);
-		try {
-			MailService mailService = (MailService) exoContainer.getComponentInstanceOfType(MailService.class);
-			FAQService faqService = (FAQService) exoContainer.getComponentInstanceOfType(FAQService.class);
-			Iterator<NotifyInfo> iter = faqService.getPendingMessages();
-			int countEmail = 0;
-			while (iter.hasNext()) {
-				try {
-					NotifyInfo messageInfo = iter.next();
-					List<String> emailAddresses = messageInfo.getEmailAddresses();
-					Message message = messageInfo.getMessage();
-					message.setFrom(Utils.makeNotificationSender(message.getFrom()));
-					if (message != null && emailAddresses != null && emailAddresses.size() > 0) {
-						List<String> sentMessages = new ArrayList<String>();
-						for (String address : emailAddresses) {
-							if (!sentMessages.contains(address)) {
-								message.setTo(address);
-								mailService.sendMessage(message);
-								sentMessages.add(address);
-								countEmail++;
-							}
-						}
-					}
-				} catch (Exception e) {
-				}
-			}
-			if (log_.isInfoEnabled() && countEmail > 0) {
-				log_.info("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
-			}
-		} catch (Exception e) {
-			log_.warn("\n\n Unable send email notification ");
-		}
-	}
+  public void execute(JobExecutionContext context) throws JobExecutionException {
+    ExoContainer exoContainer = Utils.getExoContainer(context);
+    try {
+      MailService mailService = (MailService) exoContainer.getComponentInstanceOfType(MailService.class);
+      FAQService faqService = (FAQService) exoContainer.getComponentInstanceOfType(FAQService.class);
+      Iterator<NotifyInfo> iter = faqService.getPendingMessages();
+      int countEmail = 0;
+      while (iter.hasNext()) {
+        try {
+          NotifyInfo messageInfo = iter.next();
+          List<String> emailAddresses = messageInfo.getEmailAddresses();
+          Message message = messageInfo.getMessage();
+          message.setFrom(Utils.makeNotificationSender(message.getFrom()));
+          if (message != null && emailAddresses != null && emailAddresses.size() > 0) {
+            List<String> sentMessages = new ArrayList<String>();
+            for (String address : emailAddresses) {
+              if (!sentMessages.contains(address)) {
+                message.setTo(address);
+                mailService.sendMessage(message);
+                sentMessages.add(address);
+                countEmail++;
+              }
+            }
+          }
+        } catch (Exception e) {
+        }
+      }
+      if (log_.isInfoEnabled() && countEmail > 0) {
+        log_.info("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
+      }
+    } catch (Exception e) {
+      log_.warn("\n\n Unable send email notification ");
+    }
+  }
 }

@@ -43,80 +43,81 @@ import org.exoplatform.webui.form.UIForm;
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class, 
-		template = "app:/templates/faq/webui/popup/UIViewUserProfile.gtmpl", 
-		events = {
-				@EventConfig(listeners = UIViewUserProfile.CloseActionListener.class) 
-		}
+    lifecycle = UIFormLifecycle.class, 
+    template = "app:/templates/faq/webui/popup/UIViewUserProfile.gtmpl", 
+    events = {
+        @EventConfig(listeners = UIViewUserProfile.CloseActionListener.class) 
+    }
 )
 public class UIViewUserProfile extends UIForm implements UIPopupComponent {
-	private CommonContact contact = null;
-	private FAQService faqService_ = null;
-	String[] lableProfile = null;
-	public User user_;
+  private CommonContact contact      = null;
 
-	public UIViewUserProfile() throws Exception {
-		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-		ResourceBundle res = context.getApplicationResourceBundle();
-		lableProfile = new String[] { res.getString("UIViewUserProfile.label.userName"), res.getString("UIViewUserProfile.label.firstName"), res.getString("UIViewUserProfile.label.lastName"),
-				res.getString("UIViewUserProfile.label.birthDay"), res.getString("UIViewUserProfile.label.gender"), res.getString("UIViewUserProfile.label.email"),
-				res.getString("UIViewUserProfile.label.jobTitle"), res.getString("UIViewUserProfile.label.location"), res.getString("UIViewUserProfile.label.workPhone"),
-				res.getString("UIViewUserProfile.label.mobilePhone"), res.getString("UIViewUserProfile.label.website") };
-		this.setActions(new String[] { "Close" });
-	}
+  private FAQService    faqService_  = null;
 
-	public CommonContact getContact(String userId) {
-		if (contact == null) {
-			contact = new CommonContact();
-			try {
-				FAQUtils.setCommonContactInfor(userId, contact, faqService_, getApplicationComponent(DownloadService.class));
-			} catch (Exception e) {
-			}
-		}
-		return contact;
-	}
+  String[]              lableProfile = null;
 
-	@SuppressWarnings("unused")
-	private String getAvatarUrl(String userId) throws Exception {
-		return FAQUtils.getUserAvatar(userId);
-	}
+  public User           user_;
 
-	public void setUser(User userName, FAQService faqService) {
-		this.user_ = userName;
-		this.faqService_ = faqService;
-	}
+  public UIViewUserProfile() throws Exception {
+    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+    ResourceBundle res = context.getApplicationResourceBundle();
+    lableProfile = new String[] { res.getString("UIViewUserProfile.label.userName"), res.getString("UIViewUserProfile.label.firstName"), res.getString("UIViewUserProfile.label.lastName"), res.getString("UIViewUserProfile.label.birthDay"), res.getString("UIViewUserProfile.label.gender"), res.getString("UIViewUserProfile.label.email"), res.getString("UIViewUserProfile.label.jobTitle"),
+        res.getString("UIViewUserProfile.label.location"), res.getString("UIViewUserProfile.label.workPhone"), res.getString("UIViewUserProfile.label.mobilePhone"), res.getString("UIViewUserProfile.label.website") };
+    this.setActions(new String[] { "Close" });
+  }
 
-	public User getUser() throws Exception {
-		return user_;
-	}
+  public CommonContact getContact(String userId) {
+    if (contact == null) {
+      contact = new CommonContact();
+      try {
+        FAQUtils.setCommonContactInfor(userId, contact, faqService_, getApplicationComponent(DownloadService.class));
+      } catch (Exception e) {
+      }
+    }
+    return contact;
+  }
 
-	@SuppressWarnings("unused")
-	private String[] getLabelProfile() {
-		return this.lableProfile;
-	}
+  @SuppressWarnings("unused")
+  private String getAvatarUrl(String userId) throws Exception {
+    return FAQUtils.getUserAvatar(userId);
+  }
 
-	public CommonContact getPersonalContact1(String userId) {
-		try {
-			ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class);
-			return provider.getCommonContact(userId);
-		} catch (Exception e) {
-			return new CommonContact();
-		}
-	}
+  public void setUser(User userName, FAQService faqService) {
+    this.user_ = userName;
+    this.faqService_ = faqService;
+  }
 
-	public void activate() throws Exception {
-	}
+  public User getUser() throws Exception {
+    return user_;
+  }
 
-	public void deActivate() throws Exception {
-	}
+  @SuppressWarnings("unused")
+  private String[] getLabelProfile() {
+    return this.lableProfile;
+  }
 
-	static public class CloseActionListener extends EventListener<UIViewUserProfile> {
-		public void execute(Event<UIViewUserProfile> event) throws Exception {
-			UIViewUserProfile uiViewUserProfile = event.getSource();
-			UIPopupAction uiPopupAction = uiViewUserProfile.getAncestorOfType(UIPopupAction.class);
-			uiPopupAction.deActivate();
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction);
-		}
-	}
+  public CommonContact getPersonalContact1(String userId) {
+    try {
+      ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class);
+      return provider.getCommonContact(userId);
+    } catch (Exception e) {
+      return new CommonContact();
+    }
+  }
+
+  public void activate() throws Exception {
+  }
+
+  public void deActivate() throws Exception {
+  }
+
+  static public class CloseActionListener extends EventListener<UIViewUserProfile> {
+    public void execute(Event<UIViewUserProfile> event) throws Exception {
+      UIViewUserProfile uiViewUserProfile = event.getSource();
+      UIPopupAction uiPopupAction = uiViewUserProfile.getAncestorOfType(UIPopupAction.class);
+      uiPopupAction.deActivate();
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction);
+    }
+  }
 
 }

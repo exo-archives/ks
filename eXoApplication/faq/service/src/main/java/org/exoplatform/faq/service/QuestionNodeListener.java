@@ -1,6 +1,5 @@
 package org.exoplatform.faq.service;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 import javax.jcr.observation.Event;
@@ -14,10 +13,11 @@ import org.exoplatform.services.log.Log;
 
 public class QuestionNodeListener implements EventListener {
   private Log log = ExoLogger.getLogger(QuestionNodeListener.class);
+
   public QuestionNodeListener() {
-    
+
   }
-  
+
   @Override
   public void onEvent(EventIterator events) {
     ExoContainer container = ExoContainerContext.getCurrentContainer();
@@ -28,13 +28,13 @@ public class QuestionNodeListener implements EventListener {
       while (events.hasNext()) {
         Event event = events.nextEvent();
         String pathString = event.getPath();
-        
+
         if (pathString.substring(0, pathString.length() - 1).indexOf(Utils.COMMENT_HOME) > 0) {
           // if there is a change in comment home node...
           if ((event.getType() == Event.NODE_ADDED || event.getType() == Event.NODE_REMOVED))
             service.reCalculateLastActivityOfQuestion(pathString);
         }
-        
+
         if (pathString.substring(0, pathString.length() - 3).indexOf(Utils.ANSWER_HOME) > 0) {
           if (event.getType() == Event.NODE_REMOVED) {
             service.reCalculateLastActivityOfQuestion(pathString);
@@ -44,7 +44,7 @@ public class QuestionNodeListener implements EventListener {
           if (event.getType() == Event.PROPERTY_ADDED || event.getType() == Event.PROPERTY_CHANGED || event.getType() == Event.PROPERTY_REMOVED) {
             int lastSlash = pathString.lastIndexOf("/");
             String propName = pathString.substring(lastSlash + 1);
-            
+
             if (propName.equalsIgnoreCase("exo:activateResponses") || propName.equalsIgnoreCase("exo:approveResponses")) {
               // if activate or approve properties of an answer was changed.
               String answerNodePath = pathString.substring(0, lastSlash);
@@ -55,14 +55,12 @@ public class QuestionNodeListener implements EventListener {
             }
           }
         }
-        
-        
+
       }
     } catch (Exception re) {
-       log.error("can not update last activity of question", re);
+      log.error("can not update last activity of question", re);
     }
 
   }
 
-  
 }

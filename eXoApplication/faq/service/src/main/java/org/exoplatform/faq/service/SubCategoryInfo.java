@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -26,47 +26,57 @@ import java.util.List;
  * Jun 24, 2009 - 3:34:44 AM  
  */
 public class SubCategoryInfo {
-	private String id;
-	private String path;
-	private String name;
-	private List<QuestionInfo> questionInfos = new ArrayList<QuestionInfo>();
-	private List<SubCategoryInfo> subCateInfos = new ArrayList<SubCategoryInfo>();
-	
-	public SubCategoryInfo() {}
-	
-	public String getId() {
-  	return id;
-  }
-	public void setId(String id) {
-  	this.id = id;
-  }
-	
-	public String getPath() {
-  	return path;
-  }
-	public void setPath(String path) {
-  	this.path = path;
-  }
-	
-	public String getName() {
-  	return name;
-  }
-	public void setName(String name) {
-  	this.name = name;
-  }
-	
-	public List<QuestionInfo> getQuestionInfos() {
-  	return questionInfos;
-  }
-	public void setQuestionInfos(List<QuestionInfo> questionInfos) {
-  	this.questionInfos = questionInfos;
+  private String                id;
+
+  private String                path;
+
+  private String                name;
+
+  private List<QuestionInfo>    questionInfos = new ArrayList<QuestionInfo>();
+
+  private List<SubCategoryInfo> subCateInfos  = new ArrayList<SubCategoryInfo>();
+
+  public SubCategoryInfo() {
   }
 
-	public List<SubCategoryInfo> getSubCateInfos() {
-  	return subCateInfos;
+  public String getId() {
+    return id;
   }
-	public void setSubCateInfos(List<SubCategoryInfo> subCateInfos) {
-  	this.subCateInfos = subCateInfos;
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public List<QuestionInfo> getQuestionInfos() {
+    return questionInfos;
+  }
+
+  public void setQuestionInfos(List<QuestionInfo> questionInfos) {
+    this.questionInfos = questionInfos;
+  }
+
+  public List<SubCategoryInfo> getSubCateInfos() {
+    return subCateInfos;
+  }
+
+  public void setSubCateInfos(List<SubCategoryInfo> subCateInfos) {
+    this.subCateInfos = subCateInfos;
   }
 
 }

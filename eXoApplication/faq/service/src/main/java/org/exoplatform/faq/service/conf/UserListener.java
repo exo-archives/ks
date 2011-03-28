@@ -33,10 +33,13 @@ import org.exoplatform.services.organization.UserEventListener;
 public class UserListener extends UserEventListener {
 
   private static Log log = ExoLogger.getLogger(UserListener.class);
-  FAQService faqService;
+
+  FAQService         faqService;
+
   public UserListener() throws Exception {
-  	faqService = (FAQService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FAQService.class);
+    faqService = (FAQService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FAQService.class);
   }
+
   @Override
   public void postSave(User user, boolean isNew) throws Exception {
   }
@@ -44,8 +47,8 @@ public class UserListener extends UserEventListener {
   @Override
   public void postDelete(User user) throws Exception {
     try {
-    	System.out.println("\n\n Run listener user delted, user kill: " + user.getUserName());
-    	faqService.calculateDeletedUser(user.getUserName());
+      System.out.println("\n\n Run listener user delted, user kill: " + user.getUserName());
+      faqService.calculateDeletedUser(user.getUserName());
     } catch (Exception e) {
       log.warn("failed to remove member : ", e);
     }

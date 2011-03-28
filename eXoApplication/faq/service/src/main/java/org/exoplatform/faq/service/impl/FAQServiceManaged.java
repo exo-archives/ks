@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -25,15 +25,14 @@ import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-
 @Managed
-@NameTemplate(@Property(key="service", value="faq"))
+@NameTemplate(@Property(key = "service", value = "faq"))
 @ManagedDescription("FAQ management")
 public class FAQServiceManaged implements ManagementAware {
-  
-  private static final Log log = ExoLogger.getLogger(FAQServiceManaged.class);
 
-  private FAQServiceImpl  faqService;
+  private static final Log  log = ExoLogger.getLogger(FAQServiceManaged.class);
+
+  private FAQServiceImpl    faqService;
 
   private ManagementContext context;
 
@@ -45,6 +44,5 @@ public class FAQServiceManaged implements ManagementAware {
   public void setContext(ManagementContext context) {
     this.context = context;
   }
-
 
 }

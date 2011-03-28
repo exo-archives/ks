@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -45,96 +45,98 @@ import org.exoplatform.webui.event.EventListener;
  * May 5, 2008, 2:26:57 PM
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class, 
-		template = "app:/templates/faq/webui/popup/ResultSearchCategory.gtmpl", 
-		events = {
-				@EventConfig(listeners = ResultSearchCategory.LinkActionListener.class), 
-				@EventConfig(listeners = ResultSearchCategory.CloseActionListener.class) 
-		}
+    lifecycle = UIFormLifecycle.class, 
+    template = "app:/templates/faq/webui/popup/ResultSearchCategory.gtmpl", 
+    events = {
+        @EventConfig(listeners = ResultSearchCategory.LinkActionListener.class), 
+        @EventConfig(listeners = ResultSearchCategory.CloseActionListener.class) 
+    }
 )
-
 public class ResultSearchCategory extends BaseUIForm implements UIPopupComponent {
-	private List<Category> listCategory_ = null;
-	private String LIST_RESULT_SEARCH = "listResultCategoriesSearch";
-	private UIAnswersPageIterator pageIterator;
-	private JCRPageList pageList;
+  private List<Category>        listCategory_      = null;
 
-	public ResultSearchCategory() throws Exception {
-		addChild(UIAnswersPageIterator.class, null, LIST_RESULT_SEARCH);
-	}
+  private String                LIST_RESULT_SEARCH = "listResultCategoriesSearch";
 
-	@SuppressWarnings("unused")
-	private List<Category> getListCategory() {
-		long pageSelected = pageIterator.getPageSelected();
-		listCategory_ = new ArrayList<Category>();
-		try {
-			listCategory_.addAll(pageList.getPageResultCategoriesSearch(pageSelected, FAQUtils.getCurrentUser()));
-		} catch (Exception e) {
-			log.error("Fail to get list of category: ", e);
-		}
-		return listCategory_;
-	}
+  private UIAnswersPageIterator pageIterator;
 
-	public void setListCategory(List<Category> listCategory) {
-		this.listCategory_ = listCategory;
-		try {
-			pageList = new QuestionPageList(listCategory);
-			pageList.setPageSize(5);
-			pageIterator = this.getChildById(LIST_RESULT_SEARCH);
-			pageIterator.updatePageList(pageList);
-		} catch (Exception e) {
-			log.error("Fail to set a list of category: ", e);
-		}
-	}
+  private JCRPageList           pageList;
 
-	@SuppressWarnings("unused")
-	private long getTotalpages(String pageInteratorId) {
-		UIAnswersPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH);
-		try {
-			return pageIterator.getInfoPage().get(3);
-		} catch (Exception e) {
-			log.debug("getting total page fail: ", e);
-			return 1;
-		}
-	}
+  public ResultSearchCategory() throws Exception {
+    addChild(UIAnswersPageIterator.class, null, LIST_RESULT_SEARCH);
+  }
 
-	public void activate() throws Exception {
-	}
+  @SuppressWarnings("unused")
+  private List<Category> getListCategory() {
+    long pageSelected = pageIterator.getPageSelected();
+    listCategory_ = new ArrayList<Category>();
+    try {
+      listCategory_.addAll(pageList.getPageResultCategoriesSearch(pageSelected, FAQUtils.getCurrentUser()));
+    } catch (Exception e) {
+      log.error("Fail to get list of category: ", e);
+    }
+    return listCategory_;
+  }
 
-	public void deActivate() throws Exception {
-	}
+  public void setListCategory(List<Category> listCategory) {
+    this.listCategory_ = listCategory;
+    try {
+      pageList = new QuestionPageList(listCategory);
+      pageList.setPageSize(5);
+      pageIterator = this.getChildById(LIST_RESULT_SEARCH);
+      pageIterator.updatePageList(pageList);
+    } catch (Exception e) {
+      log.error("Fail to set a list of category: ", e);
+    }
+  }
 
-	static public class LinkActionListener extends EventListener<ResultSearchCategory> {
-		public void execute(Event<ResultSearchCategory> event) throws Exception {
-			ResultSearchCategory resultSearch = event.getSource();
-			UIAnswersPortlet answerPortlet = resultSearch.getAncestorOfType(UIAnswersPortlet.class);
-			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			FAQService faqService = FAQUtils.getFAQService();
-			UIQuestions uiQuestions = answerPortlet.findFirstComponentOfType(UIQuestions.class);
-			try {
-				faqService.isExisting(categoryId);
-			} catch (Exception e) {
-				resultSearch.warning("UIQuestions.msg.category-id-deleted");
-				return;
-			}
-			uiQuestions.setCategoryId(categoryId);
-			uiQuestions.setDefaultLanguage();
-			UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class);
-			breadcumbs.setUpdataPath(categoryId);
+  @SuppressWarnings("unused")
+  private long getTotalpages(String pageInteratorId) {
+    UIAnswersPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH);
+    try {
+      return pageIterator.getInfoPage().get(3);
+    } catch (Exception e) {
+      log.debug("getting total page fail: ", e);
+      return 1;
+    }
+  }
 
-			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs);
-			UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
-			categories.setPathCategory(breadcumbs.getPaths());
-			UIAnswersContainer fAQContainer = uiQuestions.getAncestorOfType(UIAnswersContainer.class);
-			event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer);
-			answerPortlet.cancelAction();
-		}
-	}
+  public void activate() throws Exception {
+  }
 
-	static public class CloseActionListener extends EventListener<ResultSearchCategory> {
-		public void execute(Event<ResultSearchCategory> event) throws Exception {
-			UIAnswersPortlet answerPortlet = event.getSource().getAncestorOfType(UIAnswersPortlet.class);
-			answerPortlet.cancelAction();
-		}
-	}
+  public void deActivate() throws Exception {
+  }
+
+  static public class LinkActionListener extends EventListener<ResultSearchCategory> {
+    public void execute(Event<ResultSearchCategory> event) throws Exception {
+      ResultSearchCategory resultSearch = event.getSource();
+      UIAnswersPortlet answerPortlet = resultSearch.getAncestorOfType(UIAnswersPortlet.class);
+      String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+      FAQService faqService = FAQUtils.getFAQService();
+      UIQuestions uiQuestions = answerPortlet.findFirstComponentOfType(UIQuestions.class);
+      try {
+        faqService.isExisting(categoryId);
+      } catch (Exception e) {
+        resultSearch.warning("UIQuestions.msg.category-id-deleted");
+        return;
+      }
+      uiQuestions.setCategoryId(categoryId);
+      uiQuestions.setDefaultLanguage();
+      UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class);
+      breadcumbs.setUpdataPath(categoryId);
+
+      event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs);
+      UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
+      categories.setPathCategory(breadcumbs.getPaths());
+      UIAnswersContainer fAQContainer = uiQuestions.getAncestorOfType(UIAnswersContainer.class);
+      event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer);
+      answerPortlet.cancelAction();
+    }
+  }
+
+  static public class CloseActionListener extends EventListener<ResultSearchCategory> {
+    public void execute(Event<ResultSearchCategory> event) throws Exception {
+      UIAnswersPortlet answerPortlet = event.getSource().getAncestorOfType(UIAnswersPortlet.class);
+      answerPortlet.cancelAction();
+    }
+  }
 }

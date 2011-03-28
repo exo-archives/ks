@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -44,125 +44,127 @@ import org.exoplatform.webui.form.UIFormUploadInput;
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class, 
-		template = "app:/templates/faq/webui/popup/UIAttachMentForm.gtmpl", 
-		events = {
-				@EventConfig(listeners = UIAttachMentForm.SaveActionListener.class), 
-				@EventConfig(listeners = UIAttachMentForm.CancelActionListener.class) 
-		}
+    lifecycle = UIFormLifecycle.class, 
+    template = "app:/templates/faq/webui/popup/UIAttachMentForm.gtmpl", 
+    events = {
+        @EventConfig(listeners = UIAttachMentForm.SaveActionListener.class), 
+        @EventConfig(listeners = UIAttachMentForm.CancelActionListener.class) 
+    }
 )
 public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
-	private int numberUpload = 5;
-	private static final String FILE_UPLOAD = "FileUpload";
-	private boolean isChangeAvatar = false;
+  private int                 numberUpload   = 5;
 
-	public void setIsChangeAvatar(boolean changeAvatar) {
-		this.isChangeAvatar = changeAvatar;
-	}
+  private static final String FILE_UPLOAD    = "FileUpload";
 
-	public void setNumberUpload(int number) {
-		numberUpload = number;
-		int sizeLimit = FAQUtils.getLimitUploadSize();
-		for (int i = 0; i < numberUpload; i++) {
-			if (sizeLimit >= 0)
-				addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i, sizeLimit));
-			else
-				addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i));
-		}
-	}
+  private boolean             isChangeAvatar = false;
 
-	public void activate() throws Exception {
-	}
+  public void setIsChangeAvatar(boolean changeAvatar) {
+    this.isChangeAvatar = changeAvatar;
+  }
 
-	public void deActivate() throws Exception {
-	}
+  public void setNumberUpload(int number) {
+    numberUpload = number;
+    int sizeLimit = FAQUtils.getLimitUploadSize();
+    for (int i = 0; i < numberUpload; i++) {
+      if (sizeLimit >= 0)
+        addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i, sizeLimit));
+      else
+        addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i));
+    }
+  }
 
-	public UIAttachMentForm() {
-		this.setRendered(false);
-	}
+  public void activate() throws Exception {
+  }
 
-	static public class SaveActionListener extends EventListener<UIAttachMentForm> {
-		public void execute(Event<UIAttachMentForm> event) throws Exception {
-			UIAttachMentForm attachMentForm = event.getSource();
-			UploadService uploadService = attachMentForm.getApplicationComponent(UploadService.class);
+  public void deActivate() throws Exception {
+  }
 
-			List<FileAttachment> listFileAttachment = new ArrayList<FileAttachment>();
-			long fileSize = 0;
-			for (int i = 0; i < attachMentForm.numberUpload; i++) {
-				UIFormUploadInput uploadInput = attachMentForm.getChildById(FILE_UPLOAD + i);
-				UploadResource uploadResource = uploadInput.getUploadResource();
+  public UIAttachMentForm() {
+    this.setRendered(false);
+  }
 
-				if (uploadResource == null) {
-					continue;
-				}
+  static public class SaveActionListener extends EventListener<UIAttachMentForm> {
+    public void execute(Event<UIAttachMentForm> event) throws Exception {
+      UIAttachMentForm attachMentForm = event.getSource();
+      UploadService uploadService = attachMentForm.getApplicationComponent(UploadService.class);
 
-				if (uploadResource != null && uploadResource.getUploadedSize() > 0) {
-					FileAttachment fileAttachment = new FileAttachment();
-					fileAttachment.setName(uploadResource.getFileName());
-					fileAttachment.setInputStream(uploadInput.getUploadDataAsStream());
-					fileAttachment.setMimeType(uploadResource.getMimeType());
-					fileSize = (long) uploadResource.getUploadedSize();
-					fileAttachment.setSize(fileSize);
-					fileAttachment.setId("file" + IdGenerator.generate());
-					fileAttachment.setNodeName(IdGenerator.generate() + uploadResource.getFileName().substring(uploadResource.getFileName().lastIndexOf(".")));
-					listFileAttachment.add(fileAttachment);
-				} else {
-					attachMentForm.warning("UIAttachMentForm.msg.size-of-file-is-0", new String[] { uploadResource.getFileName() });
-					return;
-				}
-				// remove temp file in upload service and server
-				uploadService.removeUpload(uploadInput.getUploadId());
-			}
+      List<FileAttachment> listFileAttachment = new ArrayList<FileAttachment>();
+      long fileSize = 0;
+      for (int i = 0; i < attachMentForm.numberUpload; i++) {
+        UIFormUploadInput uploadInput = attachMentForm.getChildById(FILE_UPLOAD + i);
+        UploadResource uploadResource = uploadInput.getUploadResource();
 
-			if (listFileAttachment.isEmpty()) {
-				attachMentForm.warning("UIAttachMentForm.msg.file-not-found");
-				return;
-			}
+        if (uploadResource == null) {
+          continue;
+        }
 
-			UIAnswersPortlet portlet = attachMentForm.getAncestorOfType(UIAnswersPortlet.class);
-			if (attachMentForm.isChangeAvatar) {
-				if (listFileAttachment.get(0).getMimeType().indexOf("image") < 0) {
-					attachMentForm.warning("UIAttachMentForm.msg.fileIsNotImage");
-					return;
-				}
-				if (listFileAttachment.get(0).getSize() >= (2 * 1048576)) {
-					attachMentForm.warning("UIAttachMentForm.msg.avatar-upload-long");
-					return;
-				}
-				String currentUser = FAQUtils.getCurrentUser();
-				FAQService service = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
-				service.saveUserAvatar(currentUser, listFileAttachment.get(0));
-				UISettingForm settingForm = portlet.findFirstComponentOfType(UISettingForm.class);
-				settingForm.setAvatarUrl(FAQUtils.getUserAvatar(currentUser));
-				event.getRequestContext().addUIComponentToUpdateByAjax(settingForm);
-			} else {
-				UIQuestionForm questionForm = portlet.findFirstComponentOfType(UIQuestionForm.class);
-				questionForm.setListFileAttach(listFileAttachment);
-				questionForm.refreshUploadFileList();
-				event.getRequestContext().addUIComponentToUpdateByAjax(questionForm);
-			}
-			attachMentForm.cancelChildPopupAction();
-		}
-	}
+        if (uploadResource != null && uploadResource.getUploadedSize() > 0) {
+          FileAttachment fileAttachment = new FileAttachment();
+          fileAttachment.setName(uploadResource.getFileName());
+          fileAttachment.setInputStream(uploadInput.getUploadDataAsStream());
+          fileAttachment.setMimeType(uploadResource.getMimeType());
+          fileSize = (long) uploadResource.getUploadedSize();
+          fileAttachment.setSize(fileSize);
+          fileAttachment.setId("file" + IdGenerator.generate());
+          fileAttachment.setNodeName(IdGenerator.generate() + uploadResource.getFileName().substring(uploadResource.getFileName().lastIndexOf(".")));
+          listFileAttachment.add(fileAttachment);
+        } else {
+          attachMentForm.warning("UIAttachMentForm.msg.size-of-file-is-0", new String[] { uploadResource.getFileName() });
+          return;
+        }
+        // remove temp file in upload service and server
+        uploadService.removeUpload(uploadInput.getUploadId());
+      }
 
-	static public class CancelActionListener extends EventListener<UIAttachMentForm> {
-		public void execute(Event<UIAttachMentForm> event) throws Exception {
-			UIAttachMentForm attachMentForm = event.getSource();
-			// remove temp file in upload service and server
-			UploadService uploadService = attachMentForm.getApplicationComponent(UploadService.class);
-			UIFormUploadInput uploadInput;
-			for (int i = 0; i < attachMentForm.numberUpload; i++) {
-				try {
-					uploadInput = attachMentForm.getChildById(FILE_UPLOAD + i);
-					uploadService.removeUpload(uploadInput.getUploadId());
-				} catch (Exception e) {
-				}
-			}
-			attachMentForm.cancelChildPopupAction();
-		}
-	}
+      if (listFileAttachment.isEmpty()) {
+        attachMentForm.warning("UIAttachMentForm.msg.file-not-found");
+        return;
+      }
 
-	public int getNumberUpload() {
-		return numberUpload;
-	}
+      UIAnswersPortlet portlet = attachMentForm.getAncestorOfType(UIAnswersPortlet.class);
+      if (attachMentForm.isChangeAvatar) {
+        if (listFileAttachment.get(0).getMimeType().indexOf("image") < 0) {
+          attachMentForm.warning("UIAttachMentForm.msg.fileIsNotImage");
+          return;
+        }
+        if (listFileAttachment.get(0).getSize() >= (2 * 1048576)) {
+          attachMentForm.warning("UIAttachMentForm.msg.avatar-upload-long");
+          return;
+        }
+        String currentUser = FAQUtils.getCurrentUser();
+        FAQService service = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+        service.saveUserAvatar(currentUser, listFileAttachment.get(0));
+        UISettingForm settingForm = portlet.findFirstComponentOfType(UISettingForm.class);
+        settingForm.setAvatarUrl(FAQUtils.getUserAvatar(currentUser));
+        event.getRequestContext().addUIComponentToUpdateByAjax(settingForm);
+      } else {
+        UIQuestionForm questionForm = portlet.findFirstComponentOfType(UIQuestionForm.class);
+        questionForm.setListFileAttach(listFileAttachment);
+        questionForm.refreshUploadFileList();
+        event.getRequestContext().addUIComponentToUpdateByAjax(questionForm);
+      }
+      attachMentForm.cancelChildPopupAction();
+    }
+  }
+
+  static public class CancelActionListener extends EventListener<UIAttachMentForm> {
+    public void execute(Event<UIAttachMentForm> event) throws Exception {
+      UIAttachMentForm attachMentForm = event.getSource();
+      // remove temp file in upload service and server
+      UploadService uploadService = attachMentForm.getApplicationComponent(UploadService.class);
+      UIFormUploadInput uploadInput;
+      for (int i = 0; i < attachMentForm.numberUpload; i++) {
+        try {
+          uploadInput = attachMentForm.getChildById(FILE_UPLOAD + i);
+          uploadService.removeUpload(uploadInput.getUploadId());
+        } catch (Exception e) {
+        }
+      }
+      attachMentForm.cancelChildPopupAction();
+    }
+  }
+
+  public int getNumberUpload() {
+    return numberUpload;
+  }
 }

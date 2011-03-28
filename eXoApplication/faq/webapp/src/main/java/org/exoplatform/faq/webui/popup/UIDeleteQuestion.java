@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -39,92 +39,93 @@ import org.exoplatform.webui.form.UIForm;
  * Apr 22, 2008 ,3:21:47 PM
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class, 
-		template = "app:/templates/faq/webui/popup/UIDeleteQuestionForm.gtmpl", 
-		events = {
-				@EventConfig(listeners = UIDeleteQuestion.OkActionListener.class), 
-				@EventConfig(listeners = UIDeleteQuestion.CancelActionListener.class) 
-		}
+    lifecycle = UIFormLifecycle.class, 
+    template = "app:/templates/faq/webui/popup/UIDeleteQuestionForm.gtmpl", 
+    events = {
+        @EventConfig(listeners = UIDeleteQuestion.OkActionListener.class), 
+        @EventConfig(listeners = UIDeleteQuestion.CancelActionListener.class) 
+    }
 )
 public class UIDeleteQuestion extends UIForm implements UIPopupComponent {
-	private boolean isManagement_ = false;
+  private boolean    isManagement_ = false;
 
-	private Question question_ = null;
-	private FAQService faqService = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+  private Question   question_     = null;
 
-	public UIDeleteQuestion() {
-		isManagement_ = false;
-	}
+  private FAQService faqService    = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
 
-	public void activate() throws Exception {
-	}
+  public UIDeleteQuestion() {
+    isManagement_ = false;
+  }
 
-	public void deActivate() throws Exception {
-	}
+  public void activate() throws Exception {
+  }
 
-	@SuppressWarnings("unused")
-	private String getAuthor() {
-		return this.question_.getAuthor();
-	}
+  public void deActivate() throws Exception {
+  }
 
-	@SuppressWarnings("unused")
-	private String getEmail() {
-		return this.question_.getEmail();
-	}
+  @SuppressWarnings("unused")
+  private String getAuthor() {
+    return this.question_.getAuthor();
+  }
 
-	@SuppressWarnings("unused")
-	private String getQuestion() {
-		return this.question_.getQuestion();
-	}
+  @SuppressWarnings("unused")
+  private String getEmail() {
+    return this.question_.getEmail();
+  }
 
-	public void setIsManagement(boolean isManagement) {
-		this.isManagement_ = isManagement;
-	}
+  @SuppressWarnings("unused")
+  private String getQuestion() {
+    return this.question_.getQuestion();
+  }
 
-	public void setQuestionId(Question question) {
-		question_ = question;
-	}
+  public void setIsManagement(boolean isManagement) {
+    this.isManagement_ = isManagement;
+  }
 
-	static public class OkActionListener extends EventListener<UIDeleteQuestion> {
-		public void execute(Event<UIDeleteQuestion> event) throws Exception {
-			UIDeleteQuestion deleteQuestion = event.getSource();
-			deleteQuestion.faqService.removeQuestion(deleteQuestion.question_.getPath());
-			UIAnswersPortlet portlet = deleteQuestion.getAncestorOfType(UIAnswersPortlet.class);
-			UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
-			questions.setDefaultLanguage();
-			questions.updateCurrentQuestionList();
-			if (deleteQuestion.question_.getPath().equals(questions.viewingQuestionId_)) {
-				questions.viewingQuestionId_ = "";
-			}
-			if (!deleteQuestion.isManagement_) {
-				UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
-				popupAction.deActivate();
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-			} else {
-				UIPopupContainer popupContainer = deleteQuestion.getAncestorOfType(UIPopupContainer.class);
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-				popupAction.deActivate();
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
-			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(portlet.findFirstComponentOfType(UIAnswersContainer.class));
-		}
-	}
+  public void setQuestionId(Question question) {
+    question_ = question;
+  }
 
-	static public class CancelActionListener extends EventListener<UIDeleteQuestion> {
-		public void execute(Event<UIDeleteQuestion> event) throws Exception {
-			UIDeleteQuestion deleteQuestion = event.getSource();
-			if (!deleteQuestion.isManagement_) {
-				UIAnswersPortlet portlet = deleteQuestion.getAncestorOfType(UIAnswersPortlet.class);
-				UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
-				popupAction.deActivate();
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-			} else {
-				UIPopupContainer popupContainer = deleteQuestion.getAncestorOfType(UIPopupContainer.class);
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-				popupAction.deActivate();
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-			}
-		}
-	}
+  static public class OkActionListener extends EventListener<UIDeleteQuestion> {
+    public void execute(Event<UIDeleteQuestion> event) throws Exception {
+      UIDeleteQuestion deleteQuestion = event.getSource();
+      deleteQuestion.faqService.removeQuestion(deleteQuestion.question_.getPath());
+      UIAnswersPortlet portlet = deleteQuestion.getAncestorOfType(UIAnswersPortlet.class);
+      UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
+      questions.setDefaultLanguage();
+      questions.updateCurrentQuestionList();
+      if (deleteQuestion.question_.getPath().equals(questions.viewingQuestionId_)) {
+        questions.viewingQuestionId_ = "";
+      }
+      if (!deleteQuestion.isManagement_) {
+        UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        UIPopupContainer popupContainer = deleteQuestion.getAncestorOfType(UIPopupContainer.class);
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(portlet.findFirstComponentOfType(UIAnswersContainer.class));
+    }
+  }
+
+  static public class CancelActionListener extends EventListener<UIDeleteQuestion> {
+    public void execute(Event<UIDeleteQuestion> event) throws Exception {
+      UIDeleteQuestion deleteQuestion = event.getSource();
+      if (!deleteQuestion.isManagement_) {
+        UIAnswersPortlet portlet = deleteQuestion.getAncestorOfType(UIAnswersPortlet.class);
+        UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      } else {
+        UIPopupContainer popupContainer = deleteQuestion.getAncestorOfType(UIPopupContainer.class);
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      }
+    }
+  }
 
 }

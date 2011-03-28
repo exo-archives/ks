@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -32,105 +32,136 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * Jul 11, 2007  
  */
 public class Category {
-  private String id ;
-  private long index;
-  private String name ;
-  private String[] userPrivate = null;
-  private String description ;
-  private boolean isModerateQuestions = false ;
-  private boolean isModerateAnswers = false ;
-  private boolean viewAuthorInfor = false;
-  private boolean isView = true;
-  private String[] moderators ;
-  private Date createdDate ;
-  private String path ;
-  
+  private String   id;
 
-	/**
+  private long     index;
+
+  private String   name;
+
+  private String[] userPrivate         = null;
+
+  private String   description;
+
+  private boolean  isModerateQuestions = false;
+
+  private boolean  isModerateAnswers   = false;
+
+  private boolean  viewAuthorInfor     = false;
+
+  private boolean  isView              = true;
+
+  private String[] moderators;
+
+  private Date     createdDate;
+
+  private String   path;
+
+  /**
    * Class constructor specifying id of object is created
    */
   public Category() {
-    id = "Category" + IdGenerator.generate() ;
-    //userPrivate = new String[] {" "};
+    id = "Category" + IdGenerator.generate();
+    // userPrivate = new String[] {" "};
   }
-  
+
   public boolean isView() {
-  	return isView;
+    return isView;
   }
-  
+
   public void setView(boolean isView) {
-  	this.isView = isView;
+    this.isView = isView;
   }
+
   /**
    * This method get id of category object
    * 
    * @return  category' id
    */
-  public String getId() { return id ; }
-  
+  public String getId() {
+    return id;
+  }
+
   /**
    * This method set an id for category object
    * 
    * @param id  id which you want set for category
    */
-  public void setId(String id) { this.id = id ; }
-  
+  public void setId(String id) {
+    this.id = id;
+  }
+
   /**
    * This method get name of category object.
    * 
    * @return  name
    */
-  public String getName() { return name ; }
-  
+  public String getName() {
+    return name;
+  }
+
   /**
    * This method register the name to display on screen
    * 
    * @param  name of category with user input
    */
-  public void setName(String name) { this.name = name ; }
+  public void setName(String name) {
+    this.name = name;
+  }
 
   /**
    * This method get description of category 
    * 
    * @return description
    */
-  public String getDescription() { return description ; }
-  
+  public String getDescription() {
+    return description;
+  }
+
   /**
    * description will add information of category with user input  
    *  
    * @param description
    */
-  public void setDescription(String description) { this.description = description ; }	
-  
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
   /**
    * view users or group or membership will right(Users of FAQ Administrator) 
    * 
    * @return moderators
    */
-  public String[] getModerators() { return moderators ; }
-  
+  public String[] getModerators() {
+    return moderators;
+  }
+
   /**
    * This method set users or group or membership will administrator
    * of that category
    *    
    * @param mods is select in selector
    */
-  public void setModerators(String[] mods) { this.moderators = mods ; }
-  
+  public void setModerators(String[] mods) {
+    this.moderators = mods;
+  }
+
   /**
    * This method will get date of created date category
    * 
    * @return createDate is date create category
    */
-  public Date getCreatedDate() { return createdDate ; }
-  
+  public Date getCreatedDate() {
+    return createdDate;
+  }
+
   /**
    * This method set time system will time create current category
    * 
    * @param date is time computer system
    */
-  public void setCreatedDate(Date date) { this.createdDate = date ; }
+  public void setCreatedDate(Date date) {
+    this.createdDate = date;
+  }
 
   /**
    * This method set one category is moderate question
@@ -138,15 +169,19 @@ public class Category {
    * @param isMod  is true when create question in this category will default is not approved
    * 							else is approved
    */
-  public void setModerateQuestions(boolean isMod) { isModerateQuestions = isMod ; }
-  
+  public void setModerateQuestions(boolean isMod) {
+    isModerateQuestions = isMod;
+  }
+
   /**
    * This method get moderate question
    * 
    * @return <code>true</code> if check ModerateQuestions else <code>false</code>
    */
-  public boolean isModerateQuestions() { return isModerateQuestions ; }
-  
+  public boolean isModerateQuestions() {
+    return isModerateQuestions;
+  }
+
   /**
    * This method get all user is administrator of category to field Moderator
    * 
@@ -155,47 +190,52 @@ public class Category {
    * @throws Exception
    */
   public List<String> getModeratorsCategory() throws Exception {
-  	return FAQServiceUtils.getUserPermission(moderators) ;
+    return FAQServiceUtils.getUserPermission(moderators);
   }
 
-	public boolean isViewAuthorInfor() {
-		return viewAuthorInfor;
-	}
+  public boolean isViewAuthorInfor() {
+    return viewAuthorInfor;
+  }
 
-	public void setViewAuthorInfor(boolean viewAuthorInfor) {
-		this.viewAuthorInfor = viewAuthorInfor;
-	}
-	
-	public long getIndex() {
-		return index;
-	}
+  public void setViewAuthorInfor(boolean viewAuthorInfor) {
+    this.viewAuthorInfor = viewAuthorInfor;
+  }
 
-	public void setIndex(long index) {
-		this.index = index;
-	}
+  public long getIndex() {
+    return index;
+  }
 
-	public boolean isModerateAnswers() {
-		return isModerateAnswers;
-	}
+  public void setIndex(long index) {
+    this.index = index;
+  }
 
-	public void setModerateAnswers(boolean isModerateAnswers) {
-		this.isModerateAnswers = isModerateAnswers;
-	}
-	
-	public void setPath(String path) { this.path = path ;}
-	public String getPath() { return path ;}
-	
-	/**
+  public boolean isModerateAnswers() {
+    return isModerateAnswers;
+  }
+
+  public void setModerateAnswers(boolean isModerateAnswers) {
+    this.isModerateAnswers = isModerateAnswers;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  /**
    * @return the userPrivate
    */
   public String[] getUserPrivate() {
-  	return userPrivate;
+    return userPrivate;
   }
 
-	/**
+  /**
    * @param userPrivate the userPrivate to set
    */
   public void setUserPrivate(String[] userPrivate) {
-  	this.userPrivate = userPrivate;
+    this.userPrivate = userPrivate;
   }
 }

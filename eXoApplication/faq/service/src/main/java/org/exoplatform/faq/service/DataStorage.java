@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
@@ -60,8 +59,8 @@ public interface DataStorage {
   void saveTemplate(String str) throws Exception;
 
   void sendMessage(Message message) throws Exception;
-  
-  Iterator<NotifyInfo> getPendingMessages() throws Exception ;
+
+  Iterator<NotifyInfo> getPendingMessages() throws Exception;
 
   List<QuestionLanguage> getQuestionLanguages(String questionId) throws Exception;
 
@@ -139,10 +138,7 @@ public interface DataStorage {
 
   Node getCategoryNodeById(String categoryId) throws Exception;
 
-  List<Category> getSubCategories(String categoryId,
-                                  FAQSetting faqSetting,
-                                  boolean isGetAll,
-                                  List<String> limitedUsers) throws Exception;
+  List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> limitedUsers) throws Exception;
 
   long[] getCategoryInfo(String categoryId, FAQSetting faqSetting) throws Exception;
 
@@ -150,7 +146,7 @@ public interface DataStorage {
 
   void addWatchCategory(String id, Watch watch) throws Exception;
 
-  //TODO Going to remove
+  // TODO Going to remove
   QuestionPageList getListMailInWatch(String categoryId) throws Exception;
 
   List<Watch> getWatchByCategory(String categoryId) throws Exception;
@@ -192,7 +188,7 @@ public interface DataStorage {
 
   boolean importData(String parentId, InputStream inputStream, boolean isZip) throws Exception;
 
-  boolean isExisting(String path) throws Exception ;
+  boolean isExisting(String path) throws Exception;
 
   String getCategoryPathOf(String id) throws Exception;
 
@@ -208,7 +204,7 @@ public interface DataStorage {
 
   List<String> getQuestionContents(List<String> paths) throws Exception;
 
-  //will be remove
+  // will be remove
   Node getQuestionNodeById(String path) throws Exception;
 
   String[] getModeratorsOf(String path) throws Exception;
@@ -218,6 +214,6 @@ public interface DataStorage {
   CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception;
 
   void updateQuestionRelatives(String questionPath, String[] relatives) throws Exception;
-  
+
   public void calculateDeletedUser(String userName) throws Exception;
 }

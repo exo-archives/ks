@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -35,91 +35,94 @@ import org.exoplatform.webui.event.EventListener;
  * Aus 01, 2007 2:48:18 PM
  */
 @ComponentConfig(
-		template = "app:/templates/faq/webui/UIBreadcumbs.gtmpl", 
-		events = { @EventConfig(listeners = UIBreadcumbs.ChangePathActionListener.class) }
+    template = "app:/templates/faq/webui/UIBreadcumbs.gtmpl", 
+    events = { @EventConfig(listeners = UIBreadcumbs.ChangePathActionListener.class) }
 )
-
 public class UIBreadcumbs extends UIContainer {
-	private List<String> breadcumbs_ = new ArrayList<String>();
-	public List<String> pathList_ = new ArrayList<String>();
-	private String currentPath_ = Utils.CATEGORY_HOME;
-	public static final String FIELD_FAQHOME_BREADCUMBS = "faqHome";
-	private static final String QUICK_SEARCH = "QuickSearch";
+  private List<String>        breadcumbs_              = new ArrayList<String>();
 
-	public UIBreadcumbs() throws Exception {
-		addChild(UIQuickSearch.class, null, QUICK_SEARCH);
-	}
+  public List<String>         pathList_                = new ArrayList<String>();
 
-	public void setRenderSearch(boolean isRenderSearch) {
-		getChild(UIQuickSearch.class).setRendered(isRenderSearch);
-	}
+  private String              currentPath_             = Utils.CATEGORY_HOME;
 
-	public void setUpdataPath(String path) throws Exception {
-		if (path != null && path.trim().length() > 0 && !path.equals(Utils.CATEGORY_HOME)) {
-			String temp[] = path.split("/");
-			pathList_.clear();
-			breadcumbs_.clear();
-			String subPath = "";
-			for (String string : temp) {
-				if (subPath.length() > 0)
-					subPath = subPath + "/" + string;
-				else
-					subPath = string;
-				breadcumbs_.add(FAQUtils.getFAQService().getCategoryNameOf(subPath));
-				pathList_.add(subPath);
-			}
-		} else {
-			pathList_.clear();
-			breadcumbs_.clear();
-			pathList_.add(Utils.CATEGORY_HOME);
-			breadcumbs_.add(Utils.CATEGORY_HOME);
-		}
-		currentPath_ = path;
-	}
+  public static final String  FIELD_FAQHOME_BREADCUMBS = "faqHome";
 
-	public String getPath(int index) {
-		return this.pathList_.get(index);
-	}
+  private static final String QUICK_SEARCH             = "QuickSearch";
 
-	public String getPaths() {
-		return this.currentPath_;
-	}
+  public UIBreadcumbs() throws Exception {
+    addChild(UIQuickSearch.class, null, QUICK_SEARCH);
+  }
 
-	@SuppressWarnings("unused")
-	private int getMaxPath() {
-		return breadcumbs_.size();
-	}
+  public void setRenderSearch(boolean isRenderSearch) {
+    getChild(UIQuickSearch.class).setRendered(isRenderSearch);
+  }
 
-	public List<String> getBreadcumbs() throws Exception {
-		return breadcumbs_;
-	}
+  public void setUpdataPath(String path) throws Exception {
+    if (path != null && path.trim().length() > 0 && !path.equals(Utils.CATEGORY_HOME)) {
+      String temp[] = path.split("/");
+      pathList_.clear();
+      breadcumbs_.clear();
+      String subPath = "";
+      for (String string : temp) {
+        if (subPath.length() > 0)
+          subPath = subPath + "/" + string;
+        else
+          subPath = string;
+        breadcumbs_.add(FAQUtils.getFAQService().getCategoryNameOf(subPath));
+        pathList_.add(subPath);
+      }
+    } else {
+      pathList_.clear();
+      breadcumbs_.clear();
+      pathList_.add(Utils.CATEGORY_HOME);
+      breadcumbs_.add(Utils.CATEGORY_HOME);
+    }
+    currentPath_ = path;
+  }
 
-	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
-		public void execute(Event<UIBreadcumbs> event) throws Exception {
-			UIBreadcumbs uiBreadcums = event.getSource();
-			String paths = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIAnswersPortlet answerPortlet = uiBreadcums.getAncestorOfType(UIAnswersPortlet.class);
-			UIQuestions uiQuestions = answerPortlet.findFirstComponentOfType(UIQuestions.class);
-			UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
-			try {
-				// System.out.println("paths ===>" + paths);
-				// uiQuestions.setPath(paths) ;
-				// categoryId = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
-				uiQuestions.backPath_ = "";
-				uiQuestions.setLanguage(FAQUtils.getDefaultLanguage());
-				// uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().isViewAuthorInfo(paths);
-				uiBreadcums.setUpdataPath(paths);
-				categories.setPathCategory(paths);
-				uiQuestions.setCategoryId(paths);
-				uiQuestions.updateCurrentQuestionList();
-			} catch (Exception e) {
-				FAQUtils.findCateExist(FAQUtils.getFAQService(), uiQuestions.getAncestorOfType(UIAnswersContainer.class));
-				UIApplication uiApplication = uiBreadcums.getAncestorOfType(UIApplication.class);
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet);
-		}
-	}
+  public String getPath(int index) {
+    return this.pathList_.get(index);
+  }
+
+  public String getPaths() {
+    return this.currentPath_;
+  }
+
+  @SuppressWarnings("unused")
+  private int getMaxPath() {
+    return breadcumbs_.size();
+  }
+
+  public List<String> getBreadcumbs() throws Exception {
+    return breadcumbs_;
+  }
+
+  static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
+    public void execute(Event<UIBreadcumbs> event) throws Exception {
+      UIBreadcumbs uiBreadcums = event.getSource();
+      String paths = event.getRequestContext().getRequestParameter(OBJECTID);
+      UIAnswersPortlet answerPortlet = uiBreadcums.getAncestorOfType(UIAnswersPortlet.class);
+      UIQuestions uiQuestions = answerPortlet.findFirstComponentOfType(UIQuestions.class);
+      UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
+      try {
+        // System.out.println("paths ===>" + paths);
+        // uiQuestions.setPath(paths) ;
+        // categoryId = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
+        uiQuestions.backPath_ = "";
+        uiQuestions.setLanguage(FAQUtils.getDefaultLanguage());
+        // uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().isViewAuthorInfo(paths);
+        uiBreadcums.setUpdataPath(paths);
+        categories.setPathCategory(paths);
+        uiQuestions.setCategoryId(paths);
+        uiQuestions.updateCurrentQuestionList();
+      } catch (Exception e) {
+        FAQUtils.findCateExist(FAQUtils.getFAQService(), uiQuestions.getAncestorOfType(UIAnswersContainer.class));
+        UIApplication uiApplication = uiBreadcums.getAncestorOfType(UIApplication.class);
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet);
+    }
+  }
 
 }

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -30,92 +30,91 @@ import org.exoplatform.ks.rendering.spi.MarkupRenderDelegate;
  */
 public class RenderHelper {
 
-	private MarkupRenderingService markupRenderingService;
+  private MarkupRenderingService markupRenderingService;
 
-	public RenderHelper() {
-	}
+  public RenderHelper() {
+  }
 
-	/**
-	 * Render markup for a faq answer
-	 * 
-	 * @param answer
-	 * @return
-	 */
-	public String renderAnswer(Answer answer) {
-		try {
-			return getMarkupRenderingService().delegateRendering(new AnswerDelegate(), answer);
-		} catch (Exception e) {
-			throw new RenderingException(e);
-		}
-	}
+  /**
+   * Render markup for a faq answer
+   * 
+   * @param answer
+   * @return
+   */
+  public String renderAnswer(Answer answer) {
+    try {
+      return getMarkupRenderingService().delegateRendering(new AnswerDelegate(), answer);
+    } catch (Exception e) {
+      throw new RenderingException(e);
+    }
+  }
 
-	public String renderComment(Comment comment) {
-		try {
-			return getMarkupRenderingService().delegateRendering(new CommentDelegate(), comment);
-		} catch (Exception e) {
-			throw new RenderingException(e);
-		}
-	}
+  public String renderComment(Comment comment) {
+    try {
+      return getMarkupRenderingService().delegateRendering(new CommentDelegate(), comment);
+    } catch (Exception e) {
+      throw new RenderingException(e);
+    }
+  }
 
-	public String renderQuestion(Question question) {
-		try {
-			return getMarkupRenderingService().delegateRendering(new QuestionDelegate(), question);
-		} catch (Exception e) {
-			throw new RenderingException(e);
-		}
-	}
+  public String renderQuestion(Question question) {
+    try {
+      return getMarkupRenderingService().delegateRendering(new QuestionDelegate(), question);
+    } catch (Exception e) {
+      throw new RenderingException(e);
+    }
+  }
 
-	static class AnswerDelegate implements MarkupRenderDelegate<Answer> {
+  static class AnswerDelegate implements MarkupRenderDelegate<Answer> {
 
-		public String getMarkup(Answer answer) {
-			return answer.getResponses();
-		}
+    public String getMarkup(Answer answer) {
+      return answer.getResponses();
+    }
 
-		public String getSyntax(Answer target) {
-			return BBCodeRenderer.BBCODE_SYNTAX_ID;
-		}
+    public String getSyntax(Answer target) {
+      return BBCodeRenderer.BBCODE_SYNTAX_ID;
+    }
 
-	}
+  }
 
-	static class CommentDelegate implements MarkupRenderDelegate<Comment> {
+  static class CommentDelegate implements MarkupRenderDelegate<Comment> {
 
-		public String getMarkup(Comment answer) {
-			return answer.getComments();
-		}
+    public String getMarkup(Comment answer) {
+      return answer.getComments();
+    }
 
-		public String getSyntax(Comment target) {
-			return BBCodeRenderer.BBCODE_SYNTAX_ID;
-		}
+    public String getSyntax(Comment target) {
+      return BBCodeRenderer.BBCODE_SYNTAX_ID;
+    }
 
-	}
+  }
 
-	static class QuestionDelegate implements MarkupRenderDelegate<Question> {
+  static class QuestionDelegate implements MarkupRenderDelegate<Question> {
 
-		public String getMarkup(Question question) {
-			return question.getDetail();
-		}
+    public String getMarkup(Question question) {
+      return question.getDetail();
+    }
 
-		public String getSyntax(Question target) {
-			return BBCodeRenderer.BBCODE_SYNTAX_ID;
-		}
+    public String getSyntax(Question target) {
+      return BBCodeRenderer.BBCODE_SYNTAX_ID;
+    }
 
-	}
+  }
 
-	public MarkupRenderingService getMarkupRenderingService() {
-		if (this.markupRenderingService == null) {
-			this.markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(MarkupRenderingService.class);
-			/*
-			 * 
-			 * BBCodeRenderer renderer = (BBCodeRenderer) markupRenderingService.getRenderer(BBCodeRenderer.BBCODE_SYNTAX_ID); renderer.setBbCodeProvider(new ExtendedBBCodeProvider());
-			 */
+  public MarkupRenderingService getMarkupRenderingService() {
+    if (this.markupRenderingService == null) {
+      this.markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(MarkupRenderingService.class);
+      /*
+       * BBCodeRenderer renderer = (BBCodeRenderer) markupRenderingService.getRenderer(BBCodeRenderer.BBCODE_SYNTAX_ID); renderer.setBbCodeProvider(new ExtendedBBCodeProvider());
+       */
 
-		}
+    }
 
-		return this.markupRenderingService;
-	}
+    return this.markupRenderingService;
+  }
 
-	public void setMarkupRenderingService(MarkupRenderingService markupRenderingService) {
-		this.markupRenderingService = markupRenderingService;
-	}
+  public void setMarkupRenderingService(MarkupRenderingService markupRenderingService) {
+    this.markupRenderingService = markupRenderingService;
+  }
 
 }

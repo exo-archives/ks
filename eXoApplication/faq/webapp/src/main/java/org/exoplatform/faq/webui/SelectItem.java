@@ -7,23 +7,23 @@ package org.exoplatform.faq.webui;
  * 
  */
 public abstract class SelectItem {
-	/**
-	 * The text that appears on the UI when the item is rendered
-	 */
-	private String label_;
+  /**
+   * The text that appears on the UI when the item is rendered
+   */
+  private String label_;
 
-	public SelectItem(String label) {
-		this.label_ = label;
-	}
+  public SelectItem(String label) {
+    this.label_ = label;
+  }
 
-	public String getLabel() {
-		return label_;
-	}
+  public String getLabel() {
+    return label_;
+  }
 
-	public void setLabel(String label) {
-		this.label_ = label;
-	}
+  public void setLabel(String label) {
+    this.label_ = label;
+  }
 
-	// public abstract void setSelectedValue(String value) ;
+  // public abstract void setSelectedValue(String value) ;
 
 }

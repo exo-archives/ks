@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -1496,9 +1496,22 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       if (categoryId == null || categoryId.trim().length() < 1)
         categoryId = "null";
       queryString = new StringBuffer(JCR_ROOT).append(categoryHome.getPath())
-                    .append("//element(*,").append(EXO_FAQ_QUESTION).append(")[((").append(AT).append(EXO_CATEGORY_ID).append("='").append(categoryId).append("')")
-                    .append((categoryId.indexOf("/") > 0) ? (" or ("+AT+EXO_CATEGORY_ID +"='" + categoryId.substring(categoryId.lastIndexOf("/") + 1) + "'))") : ")")
-                    .append(" and (").append(AT).append(EXO_IS_ACTIVATED).append("='true') and (").append(AT).append(EXO_IS_APPROVED).append("='false')]");
+                                              .append("//element(*,")
+                                              .append(EXO_FAQ_QUESTION)
+                                              .append(")[((")
+                                              .append(AT)
+                                              .append(EXO_CATEGORY_ID)
+                                              .append("='")
+                                              .append(categoryId)
+                                              .append("')")
+                                              .append((categoryId.indexOf("/") > 0) ? (" or (" + AT + EXO_CATEGORY_ID + "='" + categoryId.substring(categoryId.lastIndexOf("/") + 1) + "'))") : ")")
+                                              .append(" and (")
+                                              .append(AT)
+                                              .append(EXO_IS_ACTIVATED)
+                                              .append("='true') and (")
+                                              .append(AT)
+                                              .append(EXO_IS_APPROVED)
+                                              .append("='false')]");
       queryString.append("order by ").append(Utils.getOderBy(faqSetting));
       System.out.println("\n\n ----------> " + queryString.toString());
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
@@ -3551,6 +3564,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     }
     return null;
   }
+
   /*
    * (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#getModeratorsOf(java.lang.String)

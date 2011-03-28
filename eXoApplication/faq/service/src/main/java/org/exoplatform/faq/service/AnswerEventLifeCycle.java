@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -24,9 +24,12 @@ package org.exoplatform.faq.service;
  */
 public interface AnswerEventLifeCycle {
 
- public void saveQuestion(Question question, boolean isNew);
- public void saveAnswer(String questionId, Answer answer, boolean isNew);
- public void saveAnswer(String questionId, Answer[] answers, boolean isNew);
- public void saveComment(String questionId, Comment comment, boolean isNew);
- 
+  public void saveQuestion(Question question, boolean isNew);
+
+  public void saveAnswer(String questionId, Answer answer, boolean isNew);
+
+  public void saveAnswer(String questionId, Answer[] answers, boolean isNew);
+
+  public void saveComment(String questionId, Comment comment, boolean isNew);
+
 }

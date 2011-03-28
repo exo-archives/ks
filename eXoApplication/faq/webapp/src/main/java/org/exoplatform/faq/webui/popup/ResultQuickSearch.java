@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -47,120 +47,123 @@ import org.exoplatform.webui.event.EventListener;
  * Apr 29, 2008, 11:51:17 AM
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class, 
-		template = "app:/templates/faq/webui/popup/ResultQuickSearch.gtmpl", 
-		events = {
-				@EventConfig(listeners = ResultQuickSearch.OpenCategoryActionListener.class), 
-				@EventConfig(listeners = ResultQuickSearch.LinkQuestionActionListener.class), 
-				@EventConfig(listeners = ResultQuickSearch.CloseActionListener.class) 
-		}
+    lifecycle = UIFormLifecycle.class, 
+    template = "app:/templates/faq/webui/popup/ResultQuickSearch.gtmpl", 
+    events = {
+        @EventConfig(listeners = ResultQuickSearch.OpenCategoryActionListener.class), 
+        @EventConfig(listeners = ResultQuickSearch.LinkQuestionActionListener.class), 
+        @EventConfig(listeners = ResultQuickSearch.CloseActionListener.class) 
+    }
 )
 public class ResultQuickSearch extends BaseUIForm implements UIPopupComponent {
-	private List<ObjectSearchResult> searchResults_ = new ArrayList<ObjectSearchResult>();
-	private String LIST_RESULT_SEARCH = "listResultSearch";
-	private UIAnswersPageIterator pageIterator;
-	private JCRPageList pageList;
+  private List<ObjectSearchResult> searchResults_     = new ArrayList<ObjectSearchResult>();
 
-	public ResultQuickSearch() throws Exception {
-		addChild(UIAnswersPageIterator.class, null, LIST_RESULT_SEARCH);
-		this.setActions(new String[] { "Close" });
-	}
+  private String                   LIST_RESULT_SEARCH = "listResultSearch";
 
-	public void setSearchResults(List<ObjectSearchResult> searchResults) throws Exception {
-		if (searchResults != null)
-			this.searchResults_ = searchResults;
-		else
-			this.searchResults_ = new ArrayList<ObjectSearchResult>();
-		try {
-			pageList = new QuestionPageList(searchResults_, 10);
-			pageList.setPageSize(10);
-			pageIterator = this.getChildById(LIST_RESULT_SEARCH);
-			pageIterator.updatePageList(pageList);
-		} catch (Exception e) {
-		}
-	}
+  private UIAnswersPageIterator    pageIterator;
 
-	@SuppressWarnings("unused")
-	private long getTotalpages(String pageInteratorId) {
-		UIAnswersPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH);
-		try {
-			return pageIterator.getInfoPage().get(3);
-		} catch (Exception e) {
-			return 1;
-		}
-	}
+  private JCRPageList              pageList;
 
-	public List<ObjectSearchResult> getSearchResults() {
-		searchResults_ = new ArrayList<ObjectSearchResult>();
-		try {
-			long pageSelected = pageIterator.getPageSelected();
-			searchResults_.addAll(pageList.getPageResultSearch(pageSelected, FAQUtils.getCurrentUser()));
-		} catch (Exception e) {
-		}
-		return searchResults_;
-	}
+  public ResultQuickSearch() throws Exception {
+    addChild(UIAnswersPageIterator.class, null, LIST_RESULT_SEARCH);
+    this.setActions(new String[] { "Close" });
+  }
 
-	public void activate() throws Exception {
-	}
+  public void setSearchResults(List<ObjectSearchResult> searchResults) throws Exception {
+    if (searchResults != null)
+      this.searchResults_ = searchResults;
+    else
+      this.searchResults_ = new ArrayList<ObjectSearchResult>();
+    try {
+      pageList = new QuestionPageList(searchResults_, 10);
+      pageList.setPageSize(10);
+      pageIterator = this.getChildById(LIST_RESULT_SEARCH);
+      pageIterator.updatePageList(pageList);
+    } catch (Exception e) {
+    }
+  }
 
-	public void deActivate() throws Exception {
-	}
+  @SuppressWarnings("unused")
+  private long getTotalpages(String pageInteratorId) {
+    UIAnswersPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH);
+    try {
+      return pageIterator.getInfoPage().get(3);
+    } catch (Exception e) {
+      return 1;
+    }
+  }
 
-	static public class OpenCategoryActionListener extends BaseEventListener<ResultQuickSearch> {
-		public void onEvent(Event<ResultQuickSearch> event, ResultQuickSearch resultQuickSearch, final String id) throws Exception {
-			FAQService faqService = FAQUtils.getFAQService();
-			UIAnswersPortlet answerPortlet = resultQuickSearch.getAncestorOfType(UIAnswersPortlet.class);
-			UIQuestions uiQuestions = answerPortlet.findFirstComponentOfType(UIQuestions.class);
-			if (!faqService.isExisting(id)) {
-				warning("UIQuestions.msg.category-id-deleted");
-				return;
-			}
-			uiQuestions.setCategoryId(id);
-			uiQuestions.setDefaultLanguage();
-			uiQuestions.updateCurrentQuestionList();
-			UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class);
-			breadcumbs.setUpdataPath(id);
-			UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
-			categories.setPathCategory(id);
-			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs);
-			UIAnswersContainer fAQContainer = uiQuestions.getAncestorOfType(UIAnswersContainer.class);
-			event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer);
-			answerPortlet.cancelAction();
-		}
-	}
+  public List<ObjectSearchResult> getSearchResults() {
+    searchResults_ = new ArrayList<ObjectSearchResult>();
+    try {
+      long pageSelected = pageIterator.getPageSelected();
+      searchResults_.addAll(pageList.getPageResultSearch(pageSelected, FAQUtils.getCurrentUser()));
+    } catch (Exception e) {
+    }
+    return searchResults_;
+  }
 
-	static public class LinkQuestionActionListener extends BaseEventListener<ResultQuickSearch> {
-		public void onEvent(Event<ResultQuickSearch> event, ResultQuickSearch resultQuickSearch, final String id) throws Exception {
-			FAQService faqService = FAQUtils.getFAQService();
-			try {
-				UIAnswersPortlet answerPortlet = resultQuickSearch.getAncestorOfType(UIAnswersPortlet.class);
-				UIQuestions uiQuestions = answerPortlet.findFirstComponentOfType(UIQuestions.class);
-				String categoryId = faqService.getCategoryPathOf(id);
-				uiQuestions.setCategoryId(categoryId);
-				uiQuestions.setDefaultLanguage();
-				uiQuestions.viewingQuestionId_ = id;
-				uiQuestions.updateCurrentQuestionList();
-				uiQuestions.updateLanguageMap();
+  public void activate() throws Exception {
+  }
 
-				UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class);
-				breadcumbs.setUpdataPath(categoryId);
-				UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
-				categories.setPathCategory(categoryId);
-				UIPopupAction popupAction = answerPortlet.getChild(UIPopupAction.class);
-				popupAction.deActivate();
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-				event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet.getChild(UIAnswersContainer.class));
-			} catch (Exception e) {
-				event.getSource().log.error("Could listen a link question action: ", e);
-				warning("UIQuestions.msg.question-id-deleted");
-			}
-		}
-	}
+  public void deActivate() throws Exception {
+  }
 
-	static public class CloseActionListener extends EventListener<ResultQuickSearch> {
-		public void execute(Event<ResultQuickSearch> event) throws Exception {
-			event.getSource().cancelChildPopupAction();
-		}
-	}
+  static public class OpenCategoryActionListener extends BaseEventListener<ResultQuickSearch> {
+    public void onEvent(Event<ResultQuickSearch> event, ResultQuickSearch resultQuickSearch, final String id) throws Exception {
+      FAQService faqService = FAQUtils.getFAQService();
+      UIAnswersPortlet answerPortlet = resultQuickSearch.getAncestorOfType(UIAnswersPortlet.class);
+      UIQuestions uiQuestions = answerPortlet.findFirstComponentOfType(UIQuestions.class);
+      if (!faqService.isExisting(id)) {
+        warning("UIQuestions.msg.category-id-deleted");
+        return;
+      }
+      uiQuestions.setCategoryId(id);
+      uiQuestions.setDefaultLanguage();
+      uiQuestions.updateCurrentQuestionList();
+      UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class);
+      breadcumbs.setUpdataPath(id);
+      UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
+      categories.setPathCategory(id);
+      event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs);
+      UIAnswersContainer fAQContainer = uiQuestions.getAncestorOfType(UIAnswersContainer.class);
+      event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer);
+      answerPortlet.cancelAction();
+    }
+  }
+
+  static public class LinkQuestionActionListener extends BaseEventListener<ResultQuickSearch> {
+    public void onEvent(Event<ResultQuickSearch> event, ResultQuickSearch resultQuickSearch, final String id) throws Exception {
+      FAQService faqService = FAQUtils.getFAQService();
+      try {
+        UIAnswersPortlet answerPortlet = resultQuickSearch.getAncestorOfType(UIAnswersPortlet.class);
+        UIQuestions uiQuestions = answerPortlet.findFirstComponentOfType(UIQuestions.class);
+        String categoryId = faqService.getCategoryPathOf(id);
+        uiQuestions.setCategoryId(categoryId);
+        uiQuestions.setDefaultLanguage();
+        uiQuestions.viewingQuestionId_ = id;
+        uiQuestions.updateCurrentQuestionList();
+        uiQuestions.updateLanguageMap();
+
+        UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class);
+        breadcumbs.setUpdataPath(categoryId);
+        UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
+        categories.setPathCategory(categoryId);
+        UIPopupAction popupAction = answerPortlet.getChild(UIPopupAction.class);
+        popupAction.deActivate();
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+        event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet.getChild(UIAnswersContainer.class));
+      } catch (Exception e) {
+        event.getSource().log.error("Could listen a link question action: ", e);
+        warning("UIQuestions.msg.question-id-deleted");
+      }
+    }
+  }
+
+  static public class CloseActionListener extends EventListener<ResultQuickSearch> {
+    public void execute(Event<ResultQuickSearch> event) throws Exception {
+      event.getSource().cancelChildPopupAction();
+    }
+  }
 
 }

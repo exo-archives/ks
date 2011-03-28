@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -17,7 +17,6 @@
 package org.exoplatform.faq.service;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
-
 
 /**
  * A question may be have multiple languages, user can write his question in
@@ -31,106 +30,114 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * @since   Jul 11, 2007
  */
 public class QuestionLanguage {
-	final public static String VIEW = "0".intern() ;
-	final public static String EDIT = "1".intern() ;
-	final public static String ADD_NEW = "2".intern() ;
-	final public static String DELETE = "3".intern() ;
-	
-	private String id;
-	
+  final public static String VIEW    = "0".intern();
+
+  final public static String EDIT    = "1".intern();
+
+  final public static String ADD_NEW = "2".intern();
+
+  final public static String DELETE  = "3".intern();
+
+  private String             id;
+
   /** The language. */
-  private String language ;
-  
-  private Answer[] answers;
-  
-  private Comment[] comments;
-  
+  private String             language;
+
+  private Answer[]           answers;
+
+  private Comment[]          comments;
+
   /** The question. */
-  private String detail ;
-  
-  private String question ;
-  
-  private String state ;  
-  
+  private String             detail;
+
+  private String             question;
+
+  private String             state;
+
   /**
    * class constructor.
    */
   public QuestionLanguage() {
-  	id = "Language" + IdGenerator.generate() ;
-  	state = ADD_NEW ;
-  	question = " " ;
-  	language = " "  ;
-  	detail = " "  ;
+    id = "Language" + IdGenerator.generate();
+    state = ADD_NEW;
+    question = " ";
+    language = " ";
+    detail = " ";
   }
-  
-	/**
+
+  /**
    * Get name of language is used to write quetsion.
    * 
    * @return  language name of language
    */
-  public String getLanguage() { return language ; }
-  
+  public String getLanguage() {
+    return language;
+  }
+
   /**
    * registers name of language for Language node and the name is Language node's name too.
    * 
    * @param lang  the name of language node
    */
-  public void setLanguage(String lang) { this.language = lang ; }
-  
+  public void setLanguage(String lang) {
+    this.language = lang;
+  }
+
   /**
    * Get content of question is saved in this language node.
    * 
    * @return  content of question in this language
    */
-  public String getDetail() { return detail ; }
-  
+  public String getDetail() {
+    return detail;
+  }
+
   /**
    * Registers question content for this language node.
    * 
    * @param q the content of question
    */
-  public void setDetail(String q) { this.detail = q ; }
+  public void setDetail(String q) {
+    this.detail = q;
+  }
 
-	public String getQuestion() {
-		return question;
-	}
+  public String getQuestion() {
+    return question;
+  }
 
-	public void setQuestion(String question) {
-		this.question = question;
-	}
-	
-	public Answer[] getAnswers() {
-		return answers;
-	}
+  public void setQuestion(String question) {
+    this.question = question;
+  }
 
-	public void setAnswers(Answer[] answers) {
-		this.answers = answers;
-	}
+  public Answer[] getAnswers() {
+    return answers;
+  }
 
-	public Comment[] getComments() {
-		return comments;
-	}
+  public void setAnswers(Answer[] answers) {
+    this.answers = answers;
+  }
 
-	public void setComments(Comment[] comments) {
-		this.comments = comments;
-	}
+  public Comment[] getComments() {
+    return comments;
+  }
 
-	public String getId() {
-		return id;
-	}
+  public void setComments(Comment[] comments) {
+    this.comments = comments;
+  }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	public String getState() {
-		return state;
-	}
+  public void setState(String state) {
+    this.state = state;
+  }
+
+  public String getState() {
+    return state;
+  }
 }
-
-
-

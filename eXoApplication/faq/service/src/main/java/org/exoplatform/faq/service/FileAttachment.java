@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -34,154 +34,180 @@ import org.exoplatform.services.jcr.RepositoryService;
  * @since    Nov 10, 2007
  */
 public class FileAttachment {
-	
-	/** The id. */
-	private String id ;
-	
-	/** The path. */
-	private String path ;
-  
+
+  /** The id. */
+  private String      id;
+
+  /** The path. */
+  private String      path;
+
   /** The work space. */
-  private String workspace ;
-  
+  private String      workspace;
+
   /** The name. */
-  private String name ;
-  
+  private String      name;
+
   /** The mine type. */
-  private String mimeType ;
-  
+  private String      mimeType;
+
   /** The size. */
-  private long size ;
-  
+  private long        size;
+
   /** The input. */
-  private InputStream input ;
-  
+  private InputStream input;
+
   /** the name of node file */
-  private String nodeName;
-  
-  
+  private String      nodeName;
+
   /**
    * Gets the file's id, each file have an unique id.
    * this id is used to edit question when upload file
    * 
    * @return the id
    */
-  public String getId() { return id ; }
-  
+  public String getId() {
+    return id;
+  }
+
   /**
    * Sets the id for this file, setting the id for this file
    * is done auto by system.
    * 
    * @param s the new id
    */
-  public void setId(String s) { this.id = s ; }
-  
+  public void setId(String s) {
+    this.id = s;
+  }
+
   /**
    * Gets the path of file, this path is used to view or down load file.
    * 
    * @return the path of file
    */
-  public String getPath() { return path ; }
-  
+  public String getPath() {
+    return path;
+  }
+
   /**
    * Sets the path which is the path in server. System auto set this property for File object
    * 
    * @param p the new path
    */
-  public void setPath(String p) { this.path = p ; }
-  
+  public void setPath(String p) {
+    this.path = p;
+  }
+
   /**
    * Gets the workspace.
    * 
    * @return the workspace
    */
-  public String getWorkspace() { return workspace ; }
-  
+  public String getWorkspace() {
+    return workspace;
+  }
+
   /**
    * Sets the workspace.
    * 
    * @param ws the new workspace
    */
-  public void setWorkspace(String ws) { workspace = ws ; }
-  
+  public void setWorkspace(String ws) {
+    workspace = ws;
+  }
+
   /**
    * Gets the mime type.
    * 
    * @return the mime type
    */
-  public String getMimeType() { return mimeType ; }
-  
+  public String getMimeType() {
+    return mimeType;
+  }
+
   /**
    * Sets the mime type.
    * 
    * @param mimeType_ the new mime type
    */
-  public void setMimeType(String mimeType_) { this.mimeType = mimeType_ ; }
-  
+  public void setMimeType(String mimeType_) {
+    this.mimeType = mimeType_;
+  }
+
   /**
    * Gets the size of file.
    * 
    * @return the size
    */
-  public long getSize() { return size ; }
-  
+  public long getSize() {
+    return size;
+  }
+
   /**
    * Sets the size for file is uploaded, setting size for file is done auto by sytem.
    * 
    * @param size_ the new size
    */
-  public void setSize(long size_) { this.size = size_ ; }
-  
+  public void setSize(long size_) {
+    this.size = size_;
+  }
+
   /**
    * Gets the name of file attach.
    * 
    * @return the name
    */
-  public String getName() { return name ; }
-  
+  public String getName() {
+    return name;
+  }
+
   /**
    * Sets the name of file for fileAttachment object when upload or get data.
    * 
    * @param name_ the new name
    */
-  public void setName(String name_) { this.name = name_ ; }
-  
+  public void setName(String name_) {
+    this.name = name_;
+  }
+
   /**
    * Gets the input stream which is file's data.
    * 
    * @return data of file
    * @throws Exception if Repository or value format occur exception
    */
-  public InputStream getInputStream() throws Exception{ 
-  	if(input != null)return input ;
-  	else {
-  		Node attachment ;
-  		Session session = getSesison();
-      try{
-      	attachment = (Node)session.getItem(getId()) ;
-        return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
-      }catch (Exception e) {  
-        return null ;
+  public InputStream getInputStream() throws Exception {
+    if (input != null)
+      return input;
+    else {
+      Node attachment;
+      Session session = getSesison();
+      try {
+        attachment = (Node) session.getItem(getId());
+        return attachment.getNode("jcr:content").getProperty("jcr:data").getStream();
+      } catch (Exception e) {
+        return null;
       } finally {
         session.logout();
       }
-  	}
+    }
   }
-  
+
   /**
    * Sets the input stream which is file's data.
    * 
    * @param in the new input stream
    * @throws Exception the exception
    */
-  public void setInputStream(InputStream in) throws Exception {input = in ; }
-  
+  public void setInputStream(InputStream in) throws Exception {
+    input = in;
+  }
+
   /**
    * Get the name of Node file
    * @return	name of node
    */
   public String getNodeName() {
-	return nodeName;
+    return nodeName;
   }
 
   /**
@@ -189,7 +215,7 @@ public class FileAttachment {
    * @param nodeName
    */
   public void setNodeName(String nodeName) {
-	this.nodeName = nodeName;
+    this.nodeName = nodeName;
   }
 
   /**
@@ -199,8 +225,8 @@ public class FileAttachment {
    * @throws Exception if Repository or RepositoryConfiguration occur exception
    */
   private Session getSesison() throws Exception {
-  	ExoContainer container = ExoContainerContext.getCurrentContainer();
-    RepositoryService repoService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class) ;
-    return repoService.getDefaultRepository().getSystemSession(getWorkspace()) ;
+    ExoContainer container = ExoContainerContext.getCurrentContainer();
+    RepositoryService repoService = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
+    return repoService.getDefaultRepository().getSystemSession(getWorkspace());
   }
 }

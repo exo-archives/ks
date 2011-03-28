@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -24,12 +24,15 @@ import org.exoplatform.container.xml.InitParams;
  * Jul 2, 2009, 4:25:54 PM
  */
 public class TemplatePlugin extends BaseComponentPlugin {
-	private String path_ ; 
+  private String path_;
 
   @SuppressWarnings("unchecked")
   public TemplatePlugin(InitParams params) throws Exception {
-  	path_ = params.getValueParam("viewerTemplate").getValue() ;    
+    path_ = params.getValueParam("viewerTemplate").getValue();
   }
-  public String getPath() { return path_ ;}
-  
+
+  public String getPath() {
+    return path_;
+  }
+
 }

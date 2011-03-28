@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -35,42 +35,49 @@ public class ITInitialDataPlugin extends FAQServiceTestCase {
 
   public ITInitialDataPlugin() throws Exception {
     super();
-    faq =  (FAQService)KernelUtils.getService(FAQService.class);
-    conf = (ConfigurationManager)KernelUtils.getService(ConfigurationManager.class);
+    faq = (FAQService) KernelUtils.getService(FAQService.class);
+    conf = (ConfigurationManager) KernelUtils.getService(ConfigurationManager.class);
   }
- 
-  FAQService faq;
+
+  FAQService           faq;
+
   ConfigurationManager conf;
-  InitialDataPlugin plugin;
+
+  InitialDataPlugin    plugin;
 
   public void setUp() throws Exception {
     InitParams params = new InitParams();
-    KernelUtils.addValueParam(params,"location", DATAZIP_LOCATION);
-    KernelUtils.addValueParam(params,"forceXML", "true");
+    KernelUtils.addValueParam(params, "location", DATAZIP_LOCATION);
+    KernelUtils.addValueParam(params, "forceXML", "true");
     plugin = new InitialDataPlugin(params);
   }
-  
 
   public void testImportData() throws Exception {
     InitParams params = new InitParams();
     plugin = new InitialDataPlugin(params);
-    
+
     // .xml format is not allowed
     plugin.setLocation("somefile.xml");
-    AssertUtils.assertException(new Closure() { public void dothis() { plugin.importData(faq,conf); }});
-    
+    AssertUtils.assertException(new Closure() {
+      public void dothis() {
+        plugin.importData(faq, conf);
+      }
+    });
+
     plugin.setLocation("someplace that does not exist");
-    AssertUtils.assertException(new Closure() { public void dothis() { plugin.importData(faq,conf); }});    
-    
+    AssertUtils.assertException(new Closure() {
+      public void dothis() {
+        plugin.importData(faq, conf);
+      }
+    });
+
     // import for real
     plugin.setLocation(DATAZIP_LOCATION);
-    assertTrue(plugin.importData(faq,conf));
+    assertTrue(plugin.importData(faq, conf));
 
     plugin.setLocation(DATAZIP_LOCATION);
-    assertFalse(plugin.importData(faq,conf));    
- 
+    assertFalse(plugin.importData(faq, conf));
 
-  }    
-
+  }
 
 }

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -35,67 +35,72 @@ import org.exoplatform.webui.form.UIForm;
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class, 
-		template = "app:/templates/faq/webui/popup/UIQuestionManagerForm.gtmpl", 
-		events = {
-				@EventConfig(listeners = UIQuestionManagerForm.CancelActionListener.class) 
-		}
+    lifecycle = UIFormLifecycle.class, 
+    template = "app:/templates/faq/webui/popup/UIQuestionManagerForm.gtmpl", 
+    events = {
+        @EventConfig(listeners = UIQuestionManagerForm.CancelActionListener.class) 
+    }
 )
 @SuppressWarnings("unused")
 public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
-	public static final String UI_QUESTION_INFO = "QuestionInfo";
-	public static final String UI_QUESTION_FORM = "UIQuestionForm";
-	public static final String UI_RESPONSE_FORM = "UIResponseForm";
+  public static final String UI_QUESTION_INFO       = "QuestionInfo";
 
-	public boolean isEditQuestion = false;
-	public boolean isResponseQuestion = false;
-	public boolean isViewEditQuestion = true;
-	public boolean isViewResponseQuestion = false;
+  public static final String UI_QUESTION_FORM       = "UIQuestionForm";
 
-	public void activate() throws Exception {
-	}
+  public static final String UI_RESPONSE_FORM       = "UIResponseForm";
 
-	public void deActivate() throws Exception {
-	}
+  public boolean             isEditQuestion         = false;
 
-	public UIQuestionManagerForm() throws Exception {
-		isEditQuestion = false;
-		isResponseQuestion = false;
-		isViewEditQuestion = false;
-		isViewResponseQuestion = false;
-		addChild(UIQuestionsInfo.class, null, UI_QUESTION_INFO);
-		addChild(UIQuestionForm.class, null, UI_QUESTION_FORM);
-		addChild(UIResponseForm.class, null, UI_RESPONSE_FORM);
-	}
+  public boolean             isResponseQuestion     = false;
 
-	public void setFAQSetting(FAQSetting setting) throws Exception {
-		UIQuestionsInfo questionsInfo = this.getChildById(UI_QUESTION_INFO);
-		questionsInfo.setFAQSetting(setting);
-	}
+  public boolean             isViewEditQuestion     = true;
 
-	private boolean getIsEdit() {
-		return this.isEditQuestion;
-	}
+  public boolean             isViewResponseQuestion = false;
 
-	private boolean getIsViewEdit() {
-		return this.isViewEditQuestion;
-	}
+  public void activate() throws Exception {
+  }
 
-	private boolean getIsResponse() {
-		return this.isResponseQuestion;
-	}
+  public void deActivate() throws Exception {
+  }
 
-	private boolean getIsVewResponse() {
-		return this.isViewResponseQuestion;
-	}
+  public UIQuestionManagerForm() throws Exception {
+    isEditQuestion = false;
+    isResponseQuestion = false;
+    isViewEditQuestion = false;
+    isViewResponseQuestion = false;
+    addChild(UIQuestionsInfo.class, null, UI_QUESTION_INFO);
+    addChild(UIQuestionForm.class, null, UI_QUESTION_FORM);
+    addChild(UIResponseForm.class, null, UI_RESPONSE_FORM);
+  }
 
-	static public class CancelActionListener extends EventListener<UIQuestionManagerForm> {
-		public void execute(Event<UIQuestionManagerForm> event) throws Exception {
-			UIQuestionManagerForm questionManagerForm = event.getSource();
-			UIAnswersPortlet portlet = questionManagerForm.getAncestorOfType(UIAnswersPortlet.class);
-			UIAnswersContainer container = portlet.findFirstComponentOfType(UIAnswersContainer.class);
-			portlet.cancelAction();
-			event.getRequestContext().addUIComponentToUpdateByAjax(container);
-		}
-	}
+  public void setFAQSetting(FAQSetting setting) throws Exception {
+    UIQuestionsInfo questionsInfo = this.getChildById(UI_QUESTION_INFO);
+    questionsInfo.setFAQSetting(setting);
+  }
+
+  private boolean getIsEdit() {
+    return this.isEditQuestion;
+  }
+
+  private boolean getIsViewEdit() {
+    return this.isViewEditQuestion;
+  }
+
+  private boolean getIsResponse() {
+    return this.isResponseQuestion;
+  }
+
+  private boolean getIsVewResponse() {
+    return this.isViewResponseQuestion;
+  }
+
+  static public class CancelActionListener extends EventListener<UIQuestionManagerForm> {
+    public void execute(Event<UIQuestionManagerForm> event) throws Exception {
+      UIQuestionManagerForm questionManagerForm = event.getSource();
+      UIAnswersPortlet portlet = questionManagerForm.getAncestorOfType(UIAnswersPortlet.class);
+      UIAnswersContainer container = portlet.findFirstComponentOfType(UIAnswersContainer.class);
+      portlet.cancelAction();
+      event.getRequestContext().addUIComponentToUpdateByAjax(container);
+    }
+  }
 }

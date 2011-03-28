@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -16,12 +16,11 @@
  */
 package org.exoplatform.faq.service;
 
-
 /**
  * This interface contains all deprecated methods of the ContactService API.
  * Don't rely on them as they will be removed in future.
  */
 
 public interface FAQServiceLegacy {
-	
+
 }

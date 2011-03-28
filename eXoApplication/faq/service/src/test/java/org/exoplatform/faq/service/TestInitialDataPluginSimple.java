@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -26,47 +26,43 @@ import org.exoplatform.faq.test.FAQTestCase;
  * Unit Tests for {@link InitialDataPlugin}
  */
 public class TestInitialDataPluginSimple extends FAQTestCase {
-  
+
   private static final String DATAZIP_LOCATION = "jar:/conf/Category752b877dc0a8000d0011d6845cfe7ad9.xml";
-  
+
   public void testInitialDataPlugin() {
-    
+
     // check params parsing
     InitParams params = new InitParams();
-    KernelUtils.addValueParam(params,"location", DATAZIP_LOCATION);
-    KernelUtils.addValueParam(params,"forceXML", "true");
-    KernelUtils.addValueParam(params,"category", "Foo");
+    KernelUtils.addValueParam(params, "location", DATAZIP_LOCATION);
+    KernelUtils.addValueParam(params, "forceXML", "true");
+    KernelUtils.addValueParam(params, "category", "Foo");
     InitialDataPlugin plugin = new InitialDataPlugin(params);
     assertTrue(plugin.isForceXML());
     assertEquals(DATAZIP_LOCATION, plugin.getLocation());
 
-    
-    // check defaults 
+    // check defaults
     params = new InitParams();
-    KernelUtils.addValueParam(params,"location", DATAZIP_LOCATION);
-    KernelUtils.addValueParam(params,"forceXML", "tqsqdqsrue");
+    KernelUtils.addValueParam(params, "location", DATAZIP_LOCATION);
+    KernelUtils.addValueParam(params, "forceXML", "tqsqdqsrue");
     plugin = new InitialDataPlugin(params);
     assertEquals(false, plugin.isForceXML()); // check defaults to true
-    
+
   }
 
   public void testIsZip() {
     InitParams params = new InitParams();
-    KernelUtils.addValueParam(params,"location", DATAZIP_LOCATION);
-    KernelUtils.addValueParam(params,"forceXML", "true");
+    KernelUtils.addValueParam(params, "location", DATAZIP_LOCATION);
+    KernelUtils.addValueParam(params, "forceXML", "true");
     final InitialDataPlugin plugin = new InitialDataPlugin(params);
-    
+
     assertTrue(plugin.isZip("toto.zip"));
     assertFalse(plugin.isZip("toto.xml"));
-    
-    AssertUtils.assertException( new Closure() {
+
+    AssertUtils.assertException(new Closure() {
       public void dothis() {
         plugin.isZip("toto.unsupported");
-      }     
+      }
     });
   }
-
-  
-
 
 }

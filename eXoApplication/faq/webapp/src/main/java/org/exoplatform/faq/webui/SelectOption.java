@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -30,89 +30,93 @@ import org.exoplatform.webui.core.model.SelectItemCategory;
  */
 public class SelectOption extends SelectItem {
 
-	/**
-	 * THe value of the item
-	 */
-	protected String value_;
-	/**
-	 * The icon url of the item
-	 */
-	protected String icon_;
-	/**
-	 * Whether this item is selected
-	 */
-	protected boolean selected_ = false;
-	/**
-	 * A description of the item
-	 */
-	protected String description_;
-	/**
-	 * Whether this item is disabled
-	 */
-	protected boolean disabled_ = false;
+  /**
+   * THe value of the item
+   */
+  protected String  value_;
 
-	public SelectOption(String label, String value, String icon) {
-		this(label, value, "", icon);
-	}
+  /**
+   * The icon url of the item
+   */
+  protected String  icon_;
 
-	public SelectOption(String label, String value, String desc, String icon) {
-		super(label);
-		value_ = value;
-		description_ = desc;
-		icon_ = icon;
-	}
+  /**
+   * Whether this item is selected
+   */
+  protected boolean selected_ = false;
 
-	public SelectOption(String label, String value, String desc, String icon, boolean selected) {
-		this(label, value, desc, icon);
-		selected_ = selected;
-	}
+  /**
+   * A description of the item
+   */
+  protected String  description_;
 
-	public boolean isDisabled() {
-		return disabled_;
-	}
+  /**
+   * Whether this item is disabled
+   */
+  protected boolean disabled_ = false;
 
-	public void setDisabled(boolean disabled) {
-		this.disabled_ = disabled;
-	}
+  public SelectOption(String label, String value, String icon) {
+    this(label, value, "", icon);
+  }
 
-	public SelectOption(String label, String value) {
-		this(label, value, "", null);
-	}
+  public SelectOption(String label, String value, String desc, String icon) {
+    super(label);
+    value_ = value;
+    description_ = desc;
+    icon_ = icon;
+  }
 
-	public SelectOption(String value) {
-		this(value, value, "", null);
-	}
+  public SelectOption(String label, String value, String desc, String icon, boolean selected) {
+    this(label, value, desc, icon);
+    selected_ = selected;
+  }
 
-	public String getValue() {
-		return value_;
-	}
+  public boolean isDisabled() {
+    return disabled_;
+  }
 
-	public void setValue(String s) {
-		value_ = s;
-	}
+  public void setDisabled(boolean disabled) {
+    this.disabled_ = disabled;
+  }
 
-	public String getDescription() {
-		return description_;
-	}
+  public SelectOption(String label, String value) {
+    this(label, value, "", null);
+  }
 
-	public void setDescription(String s) {
-		description_ = s;
-	}
+  public SelectOption(String value) {
+    this(value, value, "", null);
+  }
 
-	public boolean isSelected() {
-		return selected_;
-	}
+  public String getValue() {
+    return value_;
+  }
 
-	public void setSelected(boolean b) {
-		selected_ = b;
-	}
+  public void setValue(String s) {
+    value_ = s;
+  }
 
-	public String getIcon() {
-		return icon_;
-	}
+  public String getDescription() {
+    return description_;
+  }
 
-	public void setIcon(String icon) {
-		this.icon_ = icon;
-	}
+  public void setDescription(String s) {
+    description_ = s;
+  }
+
+  public boolean isSelected() {
+    return selected_;
+  }
+
+  public void setSelected(boolean b) {
+    selected_ = b;
+  }
+
+  public String getIcon() {
+    return icon_;
+  }
+
+  public void setIcon(String icon) {
+    this.icon_ = icon;
+  }
 
 }

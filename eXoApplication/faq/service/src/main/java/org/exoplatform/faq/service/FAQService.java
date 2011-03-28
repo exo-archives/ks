@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.impl.AnswerEventListener;
@@ -41,7 +40,7 @@ import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
  * 					hung.nguyen@exoplatform.com
  * @since   Mar 04, 2008
  */
-public interface FAQService extends FAQServiceLegacy{
+public interface FAQService extends FAQServiceLegacy {
 
   /**
    * Adds the plugin.
@@ -50,14 +49,14 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception the exception
    */
-  public void addPlugin(ComponentPlugin plugin) throws Exception ;
+  public void addPlugin(ComponentPlugin plugin) throws Exception;
 
   /**
    * Plugin to initialize default FAQ data
    * @param plugin
    * @throws Exception
    */
-  public void addInitialDataPlugin(InitialDataPlugin plugin) throws Exception ;
+  public void addInitialDataPlugin(InitialDataPlugin plugin) throws Exception;
 
   /**
    * This method should check exists category or NOT to create new or update exists category
@@ -73,8 +72,8 @@ public interface FAQService extends FAQServiceLegacy{
    * @see     list category
    * @throws Exception the exception
    */
-  public void saveCategory(String parentId, Category cat, boolean isAddNew) throws Exception ;
-  
+  public void saveCategory(String parentId, Category cat, boolean isAddNew) throws Exception;
+
   /**
    * This method should change view of category
    * 
@@ -89,7 +88,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param  	categoryId is address id of the category need remove 
    * @throws Exception the exception
    */
-  public void removeCategory(String categoryId) throws Exception ;
+  public void removeCategory(String categoryId) throws Exception;
 
   /**
    * This method should lookup category via identify 
@@ -100,7 +99,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @see     current category
    * @throws Exception the exception
    */
-  public Category getCategoryById(String categoryId) throws Exception ;  
+  public Category getCategoryById(String categoryId) throws Exception;
 
   /**
    * This method should lookup all the category
@@ -110,7 +109,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception the exception
    */
-  public List<Category> getAllCategories() throws Exception ;  
+  public List<Category> getAllCategories() throws Exception;
 
   /**
    * Get all categories of user.
@@ -124,7 +123,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception if can't found user
    */
-  public List<String> getListCateIdByModerator(String user) throws Exception ;  
+  public List<String> getListCateIdByModerator(String user) throws Exception;
 
   /**
    * This method should lookup all sub-categories of a category
@@ -136,7 +135,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception the exception
    */
-  public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> userView) throws Exception ;
+  public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> userView) throws Exception;
 
   /**
    * This method should move a category.
@@ -144,7 +143,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param destCategoryId : category is moved
    * @throws Exception the exception
    */
-  public void moveCategory(String categoryId, String destCategoryId) throws Exception ;
+  public void moveCategory(String categoryId, String destCategoryId) throws Exception;
 
   /**
    * Save question after create new question or edit infor of quesiton which is existed.
@@ -160,7 +159,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception if path of question nod not found
    */
-  public Node saveQuestion(Question question, boolean isAddNew, FAQSetting faqSetting) throws Exception ;
+  public Node saveQuestion(Question question, boolean isAddNew, FAQSetting faqSetting) throws Exception;
 
   /**
    * Delete question by question's id. Check question if it's existed then remove it
@@ -169,7 +168,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception  if question not found
    */
-  public void removeQuestion(String questionId) throws Exception ;
+  public void removeQuestion(String questionId) throws Exception;
 
   /**
    * Lookup the question node via identify, convert to question object and return
@@ -180,7 +179,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception the exception
    */
-  public Question getQuestionById(String questionId) throws Exception ;
+  public Question getQuestionById(String questionId) throws Exception;
 
   /**
    * Get all questions
@@ -190,7 +189,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception  if attachment not foune
    */
-  public QuestionPageList getAllQuestions() throws Exception ;
+  public QuestionPageList getAllQuestions() throws Exception;
 
   /**
    * Get all questisons not yet answered, the first get all questions 
@@ -202,7 +201,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception  if lost attachment
    */
-  public QuestionPageList getQuestionsNotYetAnswer(String categoryId, boolean isApproved) throws Exception ;
+  public QuestionPageList getQuestionsNotYetAnswer(String categoryId, boolean isApproved) throws Exception;
 
   /**
    * Get questions are activagted and approved in the category.
@@ -216,7 +215,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception  if can't found category
    */
-  public QuestionPageList getQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception ;
+  public QuestionPageList getQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception;
 
   /**
    * Get all questions of the category.
@@ -229,7 +228,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception    when category not found
    */
-  public QuestionPageList getAllQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception ;
+  public QuestionPageList getAllQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception;
 
   /**
    * Get some informations of category: Lookup category node by category's id
@@ -246,7 +245,7 @@ public interface FAQService extends FAQServiceLegacy{
    * if not found question or lose file attach
    * @throws Exception the exception
    */
-  public long[] getCategoryInfo(String categoryId, FAQSetting setting) throws Exception ;
+  public long[] getCategoryInfo(String categoryId, FAQSetting setting) throws Exception;
 
   /**
    * Get questions in list categories.
@@ -263,7 +262,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception      the exception
    */
-  public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception ;
+  public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception;
 
   /**
    * Get path of question. For example question A is included in category C and C is child of
@@ -290,7 +289,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception  when question not found
    */
-  public List<QuestionLanguage>  getQuestionLanguages(String questionId) throws Exception ;
+  public List<QuestionLanguage> getQuestionLanguages(String questionId) throws Exception;
 
   /**
    * This method should lookup languageNode of question
@@ -303,7 +302,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return 	Question list
    * @throws Exception the exception
    */
-  //public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text) throws Exception ;
+  // public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text) throws Exception ;
 
   /**
    * Search question by language.
@@ -334,7 +333,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception      when question node not found
    */
-  //public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch) throws Exception ;
+  // public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch) throws Exception ;
 
   /**
    * Move all of questions to category which have id is  specified
@@ -345,7 +344,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param faqSetting TODO
    * @throws Exception the exception
    */
-  public void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception ;  
+  public void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception;
 
   /**
    * This method to update FAQ setting.
@@ -353,7 +352,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param newSetting the new setting
    * @throws Exception the exception
    */
-  public void saveFAQSetting(FAQSetting faqSetting,String userName) throws Exception;  
+  public void saveFAQSetting(FAQSetting faqSetting, String userName) throws Exception;
 
   /**
    * This function is used to allow user can watch a category. 
@@ -365,7 +364,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @throws Exception the exception
    *  
    */
-  public void addWatchCategory(String id, Watch watch)throws Exception ;
+  public void addWatchCategory(String id, Watch watch) throws Exception;
 
   /**
    * This method will get list mail of one category. User see list this mails and 
@@ -376,7 +375,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @see			list email where user manager	
    * @throws Exception the exception				
    */
-  //public QuestionPageList getListMailInWatch(String categoryId) throws Exception ;
+  // public QuestionPageList getListMailInWatch(String categoryId) throws Exception ;
 
   /**
    * This method will delete watch in one category 
@@ -385,7 +384,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param	 emails is location current of one watch with user want delete 
    * @throws Exception the exception
    */
-  public void deleteCategoryWatch(String categoryId, String user) throws Exception ;
+  public void deleteCategoryWatch(String categoryId, String user) throws Exception;
 
   /**
    * This method will un watch in one category 
@@ -394,7 +393,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param	 userCurrent is user current then you un watch
    * @throws Exception the exception
    */
-  public void unWatchCategory(String categoryId, String userCurrent) throws Exception ;
+  public void unWatchCategory(String categoryId, String userCurrent) throws Exception;
 
   /**
    * This method will un watch in one question 
@@ -415,7 +414,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param	 eventQuery is object save value in form advanced search 
    * @throws Exception the exception
    */
-  //public List<Category> getAdvancedSearchCategory(FAQEventQuery eventQuery) throws Exception ;
+  // public List<Category> getAdvancedSearchCategory(FAQEventQuery eventQuery) throws Exception ;
 
   /**
    * This method should lookup all the categories node 
@@ -427,10 +426,9 @@ public interface FAQService extends FAQServiceLegacy{
    * @throws Exception the exception
    */
 
-  //public List<Question> getAdvancedSearchQuestion(FAQEventQuery eventQuery) throws Exception ;
+  // public List<Question> getAdvancedSearchQuestion(FAQEventQuery eventQuery) throws Exception ;
 
-  public List<ObjectSearchResult> getSearchResults(FAQEventQuery eventQuery) throws Exception ;
-
+  public List<ObjectSearchResult> getSearchResults(FAQEventQuery eventQuery) throws Exception;
 
   /**
    * This method should lookup all the categories node 
@@ -441,7 +439,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return Category list
    * @throws Exception the exception
    */
-  //public List<Question> searchQuestionWithNameAttach(FAQEventQuery eventQuery) throws Exception ;
+  // public List<Question> searchQuestionWithNameAttach(FAQEventQuery eventQuery) throws Exception ;
 
   /**
    * This method return path of category identify
@@ -449,7 +447,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return list category name is sort(path of this category)
    * @throws Exception the exception
    */
-  public List<String> getCategoryPath(String categoryId) throws Exception ;
+  public List<String> getCategoryPath(String categoryId) throws Exception;
 
   /**
    * This method will send message to address but you want send
@@ -457,13 +455,13 @@ public interface FAQService extends FAQServiceLegacy{
    * @param	 message is object save content with user want send to one or many address email
    * @throws Exception the exception
    */
-  public void sendMessage(Message message) throws Exception ;
+  public void sendMessage(Message message) throws Exception;
 
   /**
    * This method will get messages to send notify
    * @throws Exception the exception
    */
-  public Iterator<NotifyInfo> getPendingMessages() throws Exception ;
+  public Iterator<NotifyInfo> getPendingMessages() throws Exception;
 
   /**
    * Add language for question node, this function only use for Question node, 
@@ -481,7 +479,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception the exception
    */
-  public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception ;
+  public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception;
 
   /**
    * Get setting of user to view data (categories and questions). At first time user come, 
@@ -492,7 +490,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param faqSetting	the setting of user
    * @throws Exception	when can't find user or faqSetting
    */
-  public void getUserSetting(String userName, FAQSetting faqSetting) throws Exception ;
+  public void getUserSetting(String userName, FAQSetting faqSetting) throws Exception;
 
   /**
    * Get informations about message
@@ -500,7 +498,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return informations contain message and email addresses. 
    * @throws Exception
    */
-  public NotifyInfo getMessageInfo(String name) throws Exception  ;
+  public NotifyInfo getMessageInfo(String name) throws Exception;
 
   /**
    * Check permission of user
@@ -508,7 +506,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return	return <code>true</code> if user is addmin and <code>false</code> if opposite
    * @throws Exception
    */
-  public boolean isAdminRole(String userName) throws Exception ;
+  public boolean isAdminRole(String userName) throws Exception;
 
   /**
    * Get all user is admin.
@@ -543,7 +541,7 @@ public interface FAQService extends FAQServiceLegacy{
    */
   public void saveTopicIdDiscussQuestion(String questionId, String pathDiscuss) throws Exception;
 
-  //public QuestionPageList getListMailInWatchQuestion(String questionId) throws Exception;
+  // public QuestionPageList getListMailInWatchQuestion(String questionId) throws Exception;
 
   /**
    * Get list of questions that user watches 
@@ -562,7 +560,7 @@ public interface FAQService extends FAQServiceLegacy{
    */
   public Node getCategoryNodeById(String categoryId) throws Exception;
 
-  //public List<String> getListPathQuestionByCategory(String categoryId) throws Exception;
+  // public List<String> getListPathQuestionByCategory(String categoryId) throws Exception;
 
   /**
    * Import data to category
@@ -572,7 +570,7 @@ public interface FAQService extends FAQServiceLegacy{
    */
   public boolean importData(String categoryId, InputStream inputStream, boolean isZip) throws Exception;
 
-  //public boolean categoryAlreadyExist(String categoryId) throws Exception ;
+  // public boolean categoryAlreadyExist(String categoryId) throws Exception ;
 
   /**
    * Swap two categories
@@ -582,7 +580,7 @@ public interface FAQService extends FAQServiceLegacy{
    */
   public void swapCategories(String cateId1, String cateId2) throws Exception;
 
-  //public Node getQuestionNodeById(String questionId) throws Exception;
+  // public Node getQuestionNodeById(String questionId) throws Exception;
 
   /**
    * Get max index of categories
@@ -675,7 +673,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return question page list 
    * @throws Exception
    */
-  public QuestionPageList getWatchedCategoryByUser(String userId) throws Exception ;
+  public QuestionPageList getWatchedCategoryByUser(String userId) throws Exception;
 
   /**
    * Get avatar of user
@@ -700,14 +698,14 @@ public interface FAQService extends FAQServiceLegacy{
    * @return true if user is watching and false if isn't 
    * @throws Exception
    */
-  public boolean isUserWatched(String userId, String cateId) ;
+  public boolean isUserWatched(String userId, String cateId);
 
   /**
    * set default avatar for an user
    * @param userName username 
    * @throws Exception
    */
-  public void setDefaultAvatar(String userName)throws Exception;
+  public void setDefaultAvatar(String userName) throws Exception;
 
   /**
    * Get list pending questions in a category
@@ -725,7 +723,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return input stream of category 
    * @throws Exception
    */
-  public InputStream exportData(String categoryId, boolean createZipFile)  throws Exception;
+  public InputStream exportData(String categoryId, boolean createZipFile) throws Exception;
 
   /**
    * Check a path exist or not
@@ -741,7 +739,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return path of category
    * @throws Exception
    */
-  public String getCategoryPathOf(String id) throws Exception ;
+  public String getCategoryPathOf(String id) throws Exception;
 
   /**
    * Get titles of questions
@@ -749,7 +747,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return list titles of questions 
    * @throws Exception
    */
-  public List<String> getQuestionContents(List<String> paths) throws Exception ;
+  public List<String> getQuestionContents(List<String> paths) throws Exception;
 
   /**
    * Check moderate answer or not
@@ -757,7 +755,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return answer or not 
    * @throws Exception
    */
-  public boolean isModerateAnswer(String id) throws Exception ;
+  public boolean isModerateAnswer(String id) throws Exception;
 
   /**
    * Get question node
@@ -765,7 +763,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return question node 
    * @throws Exception
    */
-  public Node getQuestionNodeById(String path) throws Exception ;
+  public Node getQuestionNodeById(String path) throws Exception;
 
   /**
    * Get name of parent category
@@ -773,7 +771,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return name of parent category 
    * @throws Exception
    */
-  public String getParentCategoriesName(String path) throws Exception ;
+  public String getParentCategoriesName(String path) throws Exception;
 
   /**
    * Get email addresses that watch in a category
@@ -781,7 +779,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return question page list 
    * @throws Exception
    */
-  public QuestionPageList getListMailInWatch(String categoryId) throws Exception ;
+  public QuestionPageList getListMailInWatch(String categoryId) throws Exception;
 
   /**
    * Check user is moderator or not
@@ -790,7 +788,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return user is moderator or not 
    * @throws Exception
    */
-  public boolean isCategoryModerator(String categoryId, String user) throws Exception  ;
+  public boolean isCategoryModerator(String categoryId, String user) throws Exception;
 
   /**
    * Add language to a question
@@ -798,7 +796,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param language question language 
    * @throws Exception
    */
-  public void addLanguage(String questionPath, QuestionLanguage language) throws Exception ;
+  public void addLanguage(String questionPath, QuestionLanguage language) throws Exception;
 
   /**
    * Delete language in a answer
@@ -807,7 +805,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param language deleted language 
    * @throws Exception
    */
-  public void deleteAnswerQuestionLang(String questionPath, String answerId, String language) throws Exception  ;
+  public void deleteAnswerQuestionLang(String questionPath, String answerId, String language) throws Exception;
 
   /**
    * Delete language in a comment
@@ -816,7 +814,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param language deleted language 
    * @throws Exception
    */
-  public void deleteCommentQuestionLang(String questionPath, String commentId, String language) throws Exception ;
+  public void deleteCommentQuestionLang(String questionPath, String commentId, String language) throws Exception;
 
   /**
    * Get language of question
@@ -825,7 +823,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return Language of question 
    * @throws Exception
    */
-  public QuestionLanguage getQuestionLanguageByLanguage(String questionPath, String language) throws Exception ;
+  public QuestionLanguage getQuestionLanguageByLanguage(String questionPath, String language) throws Exception;
 
   /**
    * Get Comment of question
@@ -835,7 +833,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return comment of question 
    * @throws Exception
    */
-  public Comment getCommentById(String questionPath, String commentId, String language) throws Exception ;
+  public Comment getCommentById(String questionPath, String commentId, String language) throws Exception;
 
   /**
    * Get answer object
@@ -845,7 +843,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return answer has inputed id  
    * @throws Exception
    */
-  public Answer getAnswerById(String questionPath, String answerid, String language) throws Exception ;
+  public Answer getAnswerById(String questionPath, String answerid, String language) throws Exception;
 
   /**
    * Save an answer of question
@@ -854,7 +852,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param languge language of answer 
    * @throws Exception
    */
-  public void saveAnswer(String questionPath, Answer answer, String languge) throws Exception ;
+  public void saveAnswer(String questionPath, Answer answer, String languge) throws Exception;
 
   /**
    * Save an answer of question
@@ -862,7 +860,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param questionLanguage language of answer 
    * @throws Exception
    */
-  public void saveAnswer(String questionPath, QuestionLanguage questionLanguage) throws Exception ;
+  public void saveAnswer(String questionPath, QuestionLanguage questionLanguage) throws Exception;
 
   /**
    * Save comment of a question
@@ -871,7 +869,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param languge language of comment 
    * @throws Exception
    */
-  public void saveComment(String questionPath, Comment comment, String languge) throws Exception;  
+  public void saveComment(String questionPath, Comment comment, String languge) throws Exception;
 
   /**
    * Remove languages from question
@@ -879,7 +877,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param listLanguage removed languages 
    * @throws Exception
    */
-  public void removeLanguage(String questionPath, List<String> listLanguage) ;
+  public void removeLanguage(String questionPath, List<String> listLanguage);
 
   /**
    * vote for an answer
@@ -888,7 +886,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param isUp up or not 
    * @throws Exception
    */
-  public void voteAnswer(String answerPath, String userName, boolean isUp) throws Exception ;
+  public void voteAnswer(String answerPath, String userName, boolean isUp) throws Exception;
 
   /**
    * vote for a question
@@ -897,7 +895,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param number value user vote 
    * @throws Exception
    */
-  public void voteQuestion(String questionPath, String userName, int number) throws Exception ;
+  public void voteQuestion(String questionPath, String userName, int number) throws Exception;
 
   /**
    * Get moderators of question or category
@@ -905,7 +903,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return array users are moderator 
    * @throws Exception
    */
-  public String[] getModeratorsOf(String path) throws Exception ;
+  public String[] getModeratorsOf(String path) throws Exception;
 
   /**
    * Remove vote for question
@@ -913,7 +911,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param userName username remove vote 
    * @throws Exception
    */
-  public void unVoteQuestion(String questionPath, String userName) throws Exception ;
+  public void unVoteQuestion(String questionPath, String userName) throws Exception;
 
   /**
    * Check view author information or not
@@ -921,14 +919,14 @@ public interface FAQService extends FAQServiceLegacy{
    * @return is view author information or not 
    * @throws Exception
    */
-  public boolean isViewAuthorInfo(String id) throws Exception ; 
+  public boolean isViewAuthorInfo(String id) throws Exception;
 
   /**
    * Get number of categories
    * @return number of categories 
    * @throws Exception
    */
-  public long existingCategories() throws Exception ;
+  public long existingCategories() throws Exception;
 
   /**
    * Get name of category
@@ -936,7 +934,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return name of category
    * @throws Exception
    */
-  public String getCategoryNameOf(String categoryPath) throws Exception ;
+  public String getCategoryNameOf(String categoryPath) throws Exception;
 
   /**
    * Get quick questions
@@ -945,14 +943,14 @@ public interface FAQService extends FAQServiceLegacy{
    * @return list of questions 
    * @throws Exception
    */
-  public List<Question> getQuickQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception ;
+  public List<Question> getQuickQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception;
 
   /**
    * Get list of categories
    * @return list of categories 
    * @throws Exception
    */
-  public List<Cate> listingCategoryTree() throws Exception ;
+  public List<Cate> listingCategoryTree() throws Exception;
 
   /**
    * Get list of watches
@@ -960,7 +958,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return list of watches in a category 
    * @throws Exception
    */
-  public List<Watch> getWatchByCategory(String categoryId) throws Exception  ;
+  public List<Watch> getWatchByCategory(String categoryId) throws Exception;
 
   /**
    * Get information has watch or not
@@ -968,7 +966,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return has watch or has not 
    * @throws Exception
    */
-  public boolean hasWatch(String categoryPath) ;
+  public boolean hasWatch(String categoryPath);
 
   /**
    * Get informations about category
@@ -977,14 +975,14 @@ public interface FAQService extends FAQServiceLegacy{
    * @return informations in CategoryInfo object 
    * @throws Exception
    */
-  public CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception ;
+  public CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception;
 
   /**
    * Get template of questions
    * @return template 
    * @throws Exception
    */
-  public byte[] getTemplate() throws Exception ;
+  public byte[] getTemplate() throws Exception;
 
   /**
    * Save a template
@@ -1000,7 +998,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return is exist or not 
    * @throws Exception
    */
-  public boolean isCategoryExist(String name, String path) ;
+  public boolean isCategoryExist(String name, String path);
 
   /**
    * Update relatives for a question
@@ -1008,7 +1006,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param relatives input relatives 
    * @throws Exception
    */
-  public void updateQuestionRelatives( String questionPath, String[] relatives) throws Exception ;
+  public void updateQuestionRelatives(String questionPath, String[] relatives) throws Exception;
 
   /**
    * Check question has moderator or not
@@ -1016,7 +1014,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return is moderate or not 
    * @throws Exception
    */
-  public boolean isModerateQuestion(String id) throws Exception  ;
+  public boolean isModerateQuestion(String id) throws Exception;
 
   /**
    * Create RSS for answer
@@ -1024,7 +1022,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return stream of answer rss 
    * @throws Exception
    */
-  public InputStream createAnswerRSS(String cateId) throws Exception ;
+  public InputStream createAnswerRSS(String cateId) throws Exception;
 
   /**
    * Save last active information of question 
@@ -1047,10 +1045,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @throws Exception
    */
   public Comment[] getComments(String questionId) throws Exception;
-  
+
   public void calculateDeletedUser(String userName) throws Exception;
-  
+
 }
-
-
-

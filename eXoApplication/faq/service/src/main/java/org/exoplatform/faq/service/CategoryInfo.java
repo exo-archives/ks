@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -26,61 +26,71 @@ import java.util.List;
  * Jun 24, 2009 - 3:34:08 AM  
  */
 public class CategoryInfo {
-	private String id;
-	private String path;
-	private String name;
-	private List<String> pathName;
-	private List<QuestionInfo> questionInfos = new ArrayList<QuestionInfo>();
-	private List<SubCategoryInfo> subCateInfos = new ArrayList<SubCategoryInfo>();
-	
-	public CategoryInfo() {
-		id = Utils.CATEGORY_HOME;
-		path = id ;
-		name = id ;
-		pathName = new ArrayList<String>();
-		pathName.add(id);
-	}
+  private String                id;
 
-	public String getId() {
-  	return id;
-  }
-	public void setId(String id) {
-  	this.id = id;
+  private String                path;
+
+  private String                name;
+
+  private List<String>          pathName;
+
+  private List<QuestionInfo>    questionInfos = new ArrayList<QuestionInfo>();
+
+  private List<SubCategoryInfo> subCateInfos  = new ArrayList<SubCategoryInfo>();
+
+  public CategoryInfo() {
+    id = Utils.CATEGORY_HOME;
+    path = id;
+    name = id;
+    pathName = new ArrayList<String>();
+    pathName.add(id);
   }
 
-	public String getPath() {
-  	return path;
-  }
-	public void setPath(String path) {
-  	this.path = path;
+  public String getId() {
+    return id;
   }
 
-	public String getName() {
-  	return name;
-  }
-	public void setName(String name) {
-  	this.name = name;
+  public void setId(String id) {
+    this.id = id;
   }
 
-	public List<String> getPathName() {
-  	return pathName;
+  public String getPath() {
+    return path;
   }
 
-	public void setPathName(List<String> pathName) {
-  	this.pathName = pathName;
+  public void setPath(String path) {
+    this.path = path;
   }
 
-	public List<QuestionInfo> getQuestionInfos() {
-  	return questionInfos;
-  }
-	public void setQuestionInfos(List<QuestionInfo> questionInfos) {
-  	this.questionInfos = questionInfos;
+  public String getName() {
+    return name;
   }
 
-	public List<SubCategoryInfo> getSubCateInfos() {
-  	return subCateInfos;
+  public void setName(String name) {
+    this.name = name;
   }
-	public void setSubCateInfos(List<SubCategoryInfo> subCateInfos) {
-  	this.subCateInfos = subCateInfos;
+
+  public List<String> getPathName() {
+    return pathName;
+  }
+
+  public void setPathName(List<String> pathName) {
+    this.pathName = pathName;
+  }
+
+  public List<QuestionInfo> getQuestionInfos() {
+    return questionInfos;
+  }
+
+  public void setQuestionInfos(List<QuestionInfo> questionInfos) {
+    this.questionInfos = questionInfos;
+  }
+
+  public List<SubCategoryInfo> getSubCateInfos() {
+    return subCateInfos;
+  }
+
+  public void setSubCateInfos(List<SubCategoryInfo> subCateInfos) {
+    this.subCateInfos = subCateInfos;
   }
 }

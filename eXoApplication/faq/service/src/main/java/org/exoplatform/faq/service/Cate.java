@@ -8,30 +8,36 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.faq.service;
+
 /**
  * Created by The eXo Platform SARL
  * May 4, 2009, 5:24:16 PM
  */
 public class Cate {
-	private Category category;
-	private int deft ;
-	public Category getCategory() {
-		return category;
-	}
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-	public int getDeft() {
-		return deft;
-	}
-	public void setDeft(int deft) {
-		this.deft = deft;
-	}
+  private Category category;
+
+  private int      deft;
+
+  public Category getCategory() {
+    return category;
+  }
+
+  public void setCategory(Category category) {
+    this.category = category;
+  }
+
+  public int getDeft() {
+    return deft;
+  }
+
+  public void setDeft(int deft) {
+    this.deft = deft;
+  }
 }
