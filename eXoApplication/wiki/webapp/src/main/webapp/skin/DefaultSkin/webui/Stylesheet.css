@@ -435,13 +435,14 @@
 	padding-left: 8px;
 }
 
-.UIWikiPageEditForm .UIForm .HorizontalLayout textarea {
+.UIWikiPageEditForm .UIForm textarea {
 	width: 99%;
 	height: auto;
 	border: 1px solid #dddddd;
 	padding: 6px 0 0 6px;
 	overflow: auto;
 	font-size: 12px;
+	margin-top: 4px;
 }
 
 .UIWikiPageEditForm .SyntaxType, .UIWikiPageEditForm .CommentInput {
@@ -1503,11 +1504,4 @@
 	padding: 0px;
 	margin-top: 4px;
 	margin-bottom: 20px;
-}
-
-.UIWikiPageArea .UIWikiPageEditForm .UIWikiPageContainer .HorizontalLayout{
-	background: #fff;
-    border: 0px;
-    padding: 0px;
-	margin: 5px 0px;
 }

@@ -24,7 +24,7 @@
 <% } else if(uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT).isRendered()) {
      textAreaInput.setColumns(128);
 %>
-   <div class="UIWikiPageContentInputContainer HorizontalLayout">
+   <div class="UIWikiPageContentInputContainer">
      <% uiform.renderField(uiform.FIELD_CONTENT); %>
    </div>
 <% } %>
