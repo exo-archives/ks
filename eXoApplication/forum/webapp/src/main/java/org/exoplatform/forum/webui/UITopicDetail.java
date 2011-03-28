@@ -537,7 +537,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     try {
       url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.debug("Failed to get image url.", e);
     }
     return url;
   }
@@ -1015,7 +1015,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         UIPollForm pollForm = topicDetail.openPopup(UIPollForm.class, 655, 455);
         pollForm.setTopicPath(topic.getPath());
       } catch (Exception e) {
-        e.printStackTrace();
+        topicDetail.log.debug("Failed to open UIPollForm for add new poll.", e);
         warning("UIForumPortlet.msg.topicEmpty");
         topicDetail.refreshPortlet();
       }

@@ -332,11 +332,7 @@ public class UICategories extends UIContainer {
       String[] id = objects.split(ForumUtils.COMMA);
       String userName = uiContainer.userProfile.getUserId();
       if (!userName.equals(UserProfile.USER_GUEST)) {
-        try {
-          uiContainer.forumService.saveCollapsedCategories(userName, id[0], Boolean.parseBoolean(id[1]));
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
+        uiContainer.forumService.saveCollapsedCategories(userName, id[0], Boolean.parseBoolean(id[1]));
         uiContainer.getAncestorOfType(UIForumPortlet.class).updateUserProfileInfo();
       }
       if (uiContainer.collapCategories.contains(id[0])) {
@@ -512,11 +508,7 @@ public class UICategories extends UIContainer {
           Topic topic = uiContainer.maptopicLast.get(path);
           path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topic.getId();
         }
-        try {
-          uiContainer.forumService.saveUserBookmark(userName, path, true);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
+        uiContainer.forumService.saveUserBookmark(userName, path, true);
         UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class);
         forumPortlet.updateUserProfileInfo();
       }

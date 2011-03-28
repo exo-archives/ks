@@ -311,7 +311,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       } else
         isMode = getFAQService().isCategoryModerator(categoryId_, FAQUtils.getCurrentUser());
     } catch (Exception e) {
-      e.printStackTrace();
+      log.debug("Failed to get isModerator.", e);
     }
     return isMode;
   }
@@ -631,7 +631,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
                   forumService.saveTopic(ids[t - 3], ids[t - 2], topic, false, false, new MessageBuilder());
                 }
               } catch (Exception e) {
-                e.printStackTrace();
+                questionForm.log.debug("Failed to get topic discussion.", e);
               }
             }
           }
@@ -675,7 +675,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
         }
         event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersContainer.class));
       } catch (Exception e) {
-        e.printStackTrace();
+        questionForm.log.debug("Failed to save action creating question.", e);
       }
     }
   }

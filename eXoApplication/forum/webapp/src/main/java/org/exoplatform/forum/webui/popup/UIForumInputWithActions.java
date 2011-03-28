@@ -24,6 +24,8 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.form.UIForm;
@@ -39,6 +41,7 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
  * Jun 9, 2008 - 10:31:58 AM  
  */
 public class UIForumInputWithActions extends UIFormInputSet {
+  public static Log             log             = ExoLogger.getLogger(UIForumInputWithActions.class);
 
   Map<String, List<ActionData>> actionField     = new HashMap<String, List<ActionData>>();
 
@@ -90,7 +93,7 @@ public class UIForumInputWithActions extends UIFormInputSet {
     actionField.put(fieldName, actions);
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   public void processRender(WebuiRequestContext context) throws Exception {
     if (getComponentConfig() != null) {
       super.processRender(context);
@@ -112,7 +115,7 @@ public class UIForumInputWithActions extends UIFormInputSet {
           ((UIFormInputBase) inputEntry).setLabel(label);
       } catch (MissingResourceException ex) {
         label = inputEntry.getId();
-        System.err.println("\n " + uiForm.getId() + ".label." + inputEntry.getId() + " not found value");
+        log.info("\n " + uiForm.getId() + ".label." + inputEntry.getId() + " not found value");
       }
       if (!mapLabelInfo.isEmpty() && mapLabelInfo.containsKey(inputEntry.getId())) {
         w.write("<tr>");

@@ -45,7 +45,6 @@ public class FAQWebservice implements ResourceContainer {
       InputStream is = faqService.createAnswerRSS(resourceid);
       return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cacheControl).build();
     } catch (Exception e) {
-      e.printStackTrace();
       return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     }
   }

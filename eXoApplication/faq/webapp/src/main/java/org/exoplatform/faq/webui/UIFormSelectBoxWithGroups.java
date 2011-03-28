@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.form.UIForm;
@@ -32,6 +34,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
  * 
  */
 public class UIFormSelectBoxWithGroups extends UIFormStringInput {
+  public static Log        log         = ExoLogger.getLogger(UIFormSelectBoxWithGroups.class);
 
   /**
    * It make SelectBox's ability to select multiple values
@@ -213,13 +216,6 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
     }
   }
 
-  // protected String renderOnChangeAction(UIForm uiform) throws Exception {
-  // StringBuilder builder = new StringBuilder();
-  // builder.append(" onchange=\"javascript:eXo.webui.UIForm.submitForm('").
-  // append("").append("','").append(onchange_).append("');\" ");
-  // return builder.toString();
-  // }
-
   protected String renderOnChangeEvent(UIForm uiForm) throws Exception {
     return uiForm.event(onchange_, (String) null);
   }
@@ -270,7 +266,7 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
         try {
           label = res.getString(getFrom().getId() + ".optionGroup.label." + label);
         } catch (MissingResourceException ex) {
-          System.out.println("Could not find: " + getFrom().getId() + ".optionGroup.label." + label);
+          log.info("Could not find: " + getFrom().getId() + ".optionGroup.label." + label);
         }
         w.write("<optgroup label=\"");
         w.write(label);

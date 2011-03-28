@@ -47,7 +47,7 @@ public class UserListener extends UserEventListener {
   @Override
   public void postDelete(User user) throws Exception {
     try {
-      System.out.println("\n\n Run listener user delted, user kill: " + user.getUserName());
+      log.info("\n\n Run listener delete user, user kill: " + user.getUserName());
       faqService.calculateDeletedUser(user.getUserName());
     } catch (Exception e) {
       log.warn("failed to remove member : ", e);

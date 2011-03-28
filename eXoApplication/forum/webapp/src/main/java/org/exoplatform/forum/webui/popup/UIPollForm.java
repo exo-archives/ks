@@ -356,7 +356,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
             pollSv.savePoll(uiForm.poll, true, false);
           }
         } catch (Exception e) {
-          e.printStackTrace();
+          uiForm.log.debug("Failed to save poll.", e);
         }
         uiForm.isUpdate = false;
         try {

@@ -231,7 +231,7 @@ public class UICategories extends UIContainer {
         setPathCategory(parentCateID_);
         checkAndSetListCategory(userName, categoryId_);
       } catch (Exception e) {
-        e.printStackTrace();
+        log.debug("Failed to get list sub-categories in category", e);
       }
       if (categoryId_.equals(Utils.CATEGORY_HOME)) {
         currentCategoryName = faqService_.getCategoryById(categoryId_).getName();
@@ -563,7 +563,7 @@ public class UICategories extends UIContainer {
         uiCategories.faqService_.swapCategories(objectIds[0], objectIds[1]);
         // uiCategories.resetListCate();
       } catch (Exception e) {
-        e.printStackTrace();
+        log.debug("Failed to swap categories.", e);
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
       }

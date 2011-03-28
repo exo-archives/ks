@@ -235,7 +235,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
             this.userProfiles.add((UserProfile) obj);
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        log.debug("Failed to get user info to list of userProfiles.", e);
         this.setListUserProfile();
       }
     }

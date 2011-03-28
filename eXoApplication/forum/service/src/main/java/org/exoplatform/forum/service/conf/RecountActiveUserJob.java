@@ -66,7 +66,7 @@ public class RecountActiveUserJob implements Job {
         }
       }
     } catch (NumberFormatException nfe) {
-      nfe.printStackTrace();
+      log_.debug("Value of days is not Integer number.",nfe);
     } catch (RepositoryException e) {
       if (log_.isDebugEnabled()) {
         log_.debug("\n\n Job run so quick " + e.getMessage());

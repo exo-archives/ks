@@ -902,7 +902,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           catNode.save();
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        log.debug("Failed to save category moderators ", e);
       }
     } catch (Exception e) {
       log.error("Failed to save category", e);
@@ -4899,57 +4899,59 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   public void saveUserBookmark(String userName, String bookMark, boolean isNew) throws Exception {
     Node newProfileNode;
     SessionProvider sProvider = SessionProvider.createSystemProvider();
-    Node userProfileNode = getUserProfileHome(sProvider);
     try {
-      newProfileNode = userProfileNode.getNode(userName);
-      if (newProfileNode.hasProperty(EXO_BOOKMARK)) {
-        List<String> listOld = Utils.valuesToList(newProfileNode.getProperty(EXO_BOOKMARK).getValues());
-        List<String> listNew = new ArrayList<String>();
-        String pathNew = bookMark.substring(bookMark.lastIndexOf("//") + 1);
-        String pathOld = "";
-        boolean isAdd = true;
-        for (String string : listOld) {
-          pathOld = string.substring(string.lastIndexOf("//") + 1);
-          if (pathNew.equals(pathOld)) {
-            if (isNew) {
-              listNew.add(bookMark);
+      Node userProfileNode = getUserProfileHome(sProvider);
+      try {
+        newProfileNode = userProfileNode.getNode(userName);
+        if (newProfileNode.hasProperty(EXO_BOOKMARK)) {
+          List<String> listOld = Utils.valuesToList(newProfileNode.getProperty(EXO_BOOKMARK).getValues());
+          List<String> listNew = new ArrayList<String>();
+          String pathNew = bookMark.substring(bookMark.lastIndexOf("//") + 1);
+          String pathOld = "";
+          boolean isAdd = true;
+          for (String string : listOld) {
+            pathOld = string.substring(string.lastIndexOf("//") + 1);
+            if (pathNew.equals(pathOld)) {
+              if (isNew) {
+                listNew.add(bookMark);
+              }
+              isAdd = false;
+              continue;
             }
-            isAdd = false;
-            continue;
+            listNew.add(string);
           }
-          listNew.add(string);
-        }
-        if (isAdd) {
-          listNew.add(bookMark);
-        }
-        String[] bookMarks = listNew.toArray(new String[listNew.size()]);
-        newProfileNode.setProperty(EXO_BOOKMARK, bookMarks);
-        if (newProfileNode.isNew()) {
-          newProfileNode.getSession().save();
+          if (isAdd) {
+            listNew.add(bookMark);
+          }
+          String[] bookMarks = listNew.toArray(new String[listNew.size()]);
+          newProfileNode.setProperty(EXO_BOOKMARK, bookMarks);
+          if (newProfileNode.isNew()) {
+            newProfileNode.getSession().save();
+          } else {
+            newProfileNode.save();
+          }
         } else {
-          newProfileNode.save();
+          newProfileNode.setProperty(EXO_BOOKMARK, new String[] { bookMark });
+          if (newProfileNode.isNew()) {
+            newProfileNode.getSession().save();
+          } else {
+            newProfileNode.save();
+          }
         }
-      } else {
+      } catch (PathNotFoundException e) {
+        newProfileNode = userProfileNode.addNode(userName, Utils.USER_PROFILES_TYPE);
+        newProfileNode.setProperty(EXO_USER_ID, userName);
+        newProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
+        if (isAdminRole(userName)) {
+          newProfileNode.setProperty(EXO_USER_TITLE, Utils.ADMIN);
+        }
+        newProfileNode.setProperty(EXO_USER_ROLE, 2);
         newProfileNode.setProperty(EXO_BOOKMARK, new String[] { bookMark });
         if (newProfileNode.isNew()) {
           newProfileNode.getSession().save();
         } else {
           newProfileNode.save();
         }
-      }
-    } catch (PathNotFoundException e) {
-      newProfileNode = userProfileNode.addNode(userName, Utils.USER_PROFILES_TYPE);
-      newProfileNode.setProperty(EXO_USER_ID, userName);
-      newProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
-      if (isAdminRole(userName)) {
-        newProfileNode.setProperty(EXO_USER_TITLE, Utils.ADMIN);
-      }
-      newProfileNode.setProperty(EXO_USER_ROLE, 2);
-      newProfileNode.setProperty(EXO_BOOKMARK, new String[] { bookMark });
-      if (newProfileNode.isNew()) {
-        newProfileNode.getSession().save();
-      } else {
-        newProfileNode.save();
       }
     } catch (Exception e) {
       log.error("Failed to save UserBookmark.", e);
@@ -4960,52 +4962,56 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   public void saveCollapsedCategories(String userName, String categoryId, boolean isAdd) throws Exception {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
-    Node userProfileHome = getUserProfileHome(sProvider);
     Node newProfileNode;
     try {
-      newProfileNode = userProfileHome.getNode(userName);
-      if (newProfileNode.hasProperty(EXO_COLLAP_CATEGORIES)) {
-        List<String> listCategoryId = Utils.valuesToList(newProfileNode.getProperty(EXO_COLLAP_CATEGORIES).getValues());
-        if (listCategoryId.contains(categoryId)) {
-          if (!isAdd) {
-            listCategoryId.remove(categoryId);
-            isAdd = true;
+      Node userProfileHome = getUserProfileHome(sProvider);
+      try {
+        newProfileNode = userProfileHome.getNode(userName);
+        if (newProfileNode.hasProperty(EXO_COLLAP_CATEGORIES)) {
+          List<String> listCategoryId = Utils.valuesToList(newProfileNode.getProperty(EXO_COLLAP_CATEGORIES).getValues());
+          if (listCategoryId.contains(categoryId)) {
+            if (!isAdd) {
+              listCategoryId.remove(categoryId);
+              isAdd = true;
+            }
+          } else {
+            if (isAdd) {
+              listCategoryId.add(categoryId);
+            }
+          }
+          if (isAdd) {
+            String[] categoryIds = listCategoryId.toArray(new String[listCategoryId.size()]);
+            newProfileNode.setProperty(EXO_COLLAP_CATEGORIES, categoryIds);
+            if (newProfileNode.isNew()) {
+              newProfileNode.getSession().save();
+            } else {
+              newProfileNode.save();
+            }
           }
         } else {
-          if (isAdd) {
-            listCategoryId.add(categoryId);
-          }
-        }
-        if (isAdd) {
-          String[] categoryIds = listCategoryId.toArray(new String[listCategoryId.size()]);
-          newProfileNode.setProperty(EXO_COLLAP_CATEGORIES, categoryIds);
+          newProfileNode.setProperty(EXO_COLLAP_CATEGORIES, new String[] { categoryId });
           if (newProfileNode.isNew()) {
             newProfileNode.getSession().save();
           } else {
             newProfileNode.save();
           }
         }
-      } else {
+      } catch (PathNotFoundException e) {
+        newProfileNode = userProfileHome.addNode(userName, Utils.USER_PROFILES_TYPE);
+        newProfileNode.setProperty(EXO_USER_ID, userName);
+        newProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
+        if (isAdminRole(userName)) {
+          newProfileNode.setProperty(EXO_USER_TITLE, Utils.ADMIN);
+        }
+        newProfileNode.setProperty(EXO_USER_ROLE, 2);
         newProfileNode.setProperty(EXO_COLLAP_CATEGORIES, new String[] { categoryId });
         if (newProfileNode.isNew()) {
           newProfileNode.getSession().save();
         } else {
           newProfileNode.save();
         }
-      }
-    } catch (PathNotFoundException e) {
-      newProfileNode = userProfileHome.addNode(userName, Utils.USER_PROFILES_TYPE);
-      newProfileNode.setProperty(EXO_USER_ID, userName);
-      newProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
-      if (isAdminRole(userName)) {
-        newProfileNode.setProperty(EXO_USER_TITLE, Utils.ADMIN);
-      }
-      newProfileNode.setProperty(EXO_USER_ROLE, 2);
-      newProfileNode.setProperty(EXO_COLLAP_CATEGORIES, new String[] { categoryId });
-      if (newProfileNode.isNew()) {
-        newProfileNode.getSession().save();
-      } else {
-        newProfileNode.save();
+      } catch (Exception e) {
+        log.debug("Failed to save collapsed categories.", e);
       }
     } finally {
       sProvider.close();
@@ -6753,7 +6759,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         if (typeNodeExport.equals(EXO_FORUM_CATEGORY)) {
           // Check if import forum but the data import have structure of a category --> Error
           if (nodePath.split("/").length == 6) {
-            System.out.println("\n\n langth can not == 6 \n");
             throw new ConstraintViolationException();
           }
 
@@ -7374,7 +7379,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       s = StringUtils.replace(s, "END]]", "]]>");
       return new ByteArrayInputStream(s.getBytes());
     } catch (Exception e) {
-      e.printStackTrace();
+      log.debug("Failed to create forum rss", e);
     } finally {
       sProvider.close();
     }
@@ -7405,7 +7410,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         entries.addAll(topicUpdated(iter.nextNode()));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      log.debug("Failed to update syndEntry by forum.", e);
     }
     return entries;
   }
@@ -7439,7 +7444,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
 
     } catch (Exception e) {
-      e.printStackTrace();
+      log.debug("Failed to update sundEntry by topic.", e);
     }
     return entries;
   }
@@ -7642,7 +7647,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      log.debug("Failed to get latest user login.", e);
     } finally {
       sProvider.close();
     }
@@ -7857,7 +7862,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
                     list2.remove(t);
                     node.setProperty(EXO_EMAIL_WATCHING, list2.toArray(new String[list2.size()]));
                   } catch (Exception e) {
-                    e.printStackTrace();
+                    log.debug("Failed to get email watching by user deleted.", e);
                   }
                 }
                 list.remove(userName);

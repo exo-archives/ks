@@ -250,7 +250,7 @@ public class UIQuestions extends UIContainer {
     try {
       url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.debug("Failed to get url of image.", e);
     }
     return url;
   }
@@ -275,7 +275,7 @@ public class UIQuestions extends UIContainer {
         pageList = null;
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      log.debug("Failed to get list question in category.", e);
     }
   }
 
@@ -708,7 +708,7 @@ public class UIQuestions extends UIContainer {
           event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet);
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        log.debug("Failed to edit category.", e);
         FAQUtils.findCateExist(questions.faqService_, questions.getAncestorOfType(UIAnswersContainer.class));
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());

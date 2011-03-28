@@ -144,7 +144,7 @@ public class UIAnswersPortlet extends UIPortletApplication {
         categories.setPathCategory(Utils.CATEGORY_HOME + "/" + cateId);
       }
     } catch (Exception e) {
-      System.out.println("can not render the selected category");
+      log.error("can not render the selected category", e);
     }
   }
 
