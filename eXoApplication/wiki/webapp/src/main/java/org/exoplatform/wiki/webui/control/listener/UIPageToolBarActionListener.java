@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2010 eXo Platform SAS.
+ * Copyright (C) 2003-2011 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -16,40 +16,20 @@
  */
 package org.exoplatform.wiki.webui.control.listener;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.exoplatform.webui.core.UIComponent;
-import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.ext.UIExtensionEventListener;
-import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.control.UIPageToolBar;
 
 /**
  * Created by The eXo Platform SAS
- * Author : viet nguyen
- *          viet.nguyen@exoplatform.com
- * Apr 26, 2010  
+ * Author : Lai Trung Hieu
+ *          hieu.lai@exoplatform.com
+ * 24 Mar 2011  
  */
-public class UIPageToolBarActionListener<T extends UIComponent> extends UIExtensionEventListener<T> {
-
-  @Override
-  protected Map<String, Object> createContext(Event<T> event) throws Exception {
-    Map<String, Object> context = new HashMap<String, Object>();
-    UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-    context.put(UIWikiPortlet.class.getName(), wikiPortlet);
-    return context;
-  }
+public abstract class UIPageToolBarActionListener<T extends UIComponent> extends UIWikiPortletActionListener<T> {
 
   @Override
   protected String getExtensionType() {
     return UIPageToolBar.EXTENSION_TYPE;
-  }
-
-  @Override
-  protected void processEvent(Event<T> event) throws Exception {
-    // TODO Auto-generated method stub
-    
   }
 
 }

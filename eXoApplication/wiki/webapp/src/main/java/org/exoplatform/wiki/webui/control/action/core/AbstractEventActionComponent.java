@@ -14,10 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.webui.control.listener;
+package org.exoplatform.wiki.webui.control.action.core;
 
-import org.exoplatform.webui.core.UIComponent;
-import org.exoplatform.wiki.webui.control.UIWikiToolBar;
 
 /**
  * Created by The eXo Platform SAS
@@ -25,11 +23,10 @@ import org.exoplatform.wiki.webui.control.UIWikiToolBar;
  *          hieu.lai@exoplatform.com
  * 24 Mar 2011  
  */
-public abstract class UIWikiToolBarActionListener<T extends UIComponent> extends UIWikiPortletActionListener<T> {
+public abstract class AbstractEventActionComponent extends AbstractActionComponent {
 
   @Override
-  protected String getExtensionType() {
-    return UIWikiToolBar.EXTENSION_TYPE;
+  public String getActionLink() throws Exception {
+    return this.event(this.getActionName());
   }
-
 }

@@ -39,34 +39,34 @@
         <object-param>
           <name>EditPage</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.UIPageToolBar</string></field>
             <field name="rank"><int>300</int></field>
             <field name="name"><string>EditPage</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.EditPageActionComponent</string></field>
           </object>
         </object-param>
         <object-param>
-          <name>AddPage</name>
+          <name>Add</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
-            <field name="name"><string>AddPage</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.UIPageToolBar</string></field>
+            <field name="name"><string>Add</string></field>
             <field name="rank"><int>200</int></field>
-            <field name="component"><string>org.exoplatform.wiki.webui.control.action.AddPageActionComponent</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.AddExtensionContainer</string></field>
           </object>
         </object-param>
 				 <object-param>
-          <name>AddPageFromBlank</name>
+          <name>AddPage</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.webui.control.action.AddPageActionComponent</string></field>
-            <field name="name"><string>AddPageFromBlank</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.AddExtensionContainer</string></field>
+            <field name="name"><string>AddPage</string></field>
             <field name="rank"><int>400</int></field>
-            <field name="component"><string>org.exoplatform.wiki.webui.control.action.AddPageFromBlankActionComponent</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.AddPageActionComponent</string></field>
           </object>
         </object-param>
 				 <object-param>
           <name>AddPageFromTemplate</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.webui.control.action.AddPageActionComponent</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.AddExtensionContainer</string></field>
             <field name="name"><string>AddPageFromTemplate</string></field>
             <field name="rank"><int>500</int></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.AddPageFromTemplateActionComponent</string></field>
@@ -75,25 +75,16 @@
         <object-param>
           <name>DeletePage</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.UIPageToolBar</string></field>
             <field name="rank"><int>100</int></field>
             <field name="name"><string>DeletePage</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.DeletePageActionComponent</string></field>
           </object>
-        </object-param>
-        <object-param>
-          <name>MovePage</name>
-          <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
-            <field name="rank"><int>50</int></field>
-            <field name="name"><string>MovePage</string></field>
-            <field name="component"><string>org.exoplatform.wiki.webui.control.action.MovePageActionComponent</string></field>
-          </object>
-        </object-param>
+        </object-param>        
         <object-param>
           <name>SavePage</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.UIPageToolBar</string></field>
             <field name="rank"><int>500</int></field>
             <field name="name"><string>SavePage</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.SavePageActionComponent</string></field>
@@ -102,7 +93,7 @@
 				 <object-param>
           <name>SaveTemplate</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.UIPageToolBar</string></field>
             <field name="rank"><int>480</int></field>
             <field name="name"><string>SaveTemplate</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.SaveTemplateActionComponent</string></field>
@@ -111,7 +102,7 @@
          <object-param>
           <name>MinorEdit</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.UIPageToolBar</string></field>
             <field name="rank"><int>450</int></field>
             <field name="name"><string>MinorEdit</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.MinorEditActionComponent</string></field>
@@ -120,7 +111,7 @@
         <object-param>
           <name>PreviewPage</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.UIPageToolBar</string></field>
             <field name="rank"><int>400</int></field>
             <field name="name"><string>PreviewPage</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.PreviewPageActionComponent</string></field>
@@ -129,7 +120,7 @@
         <object-param>
           <name>Help</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.UIPageToolBar</string></field>
             <field name="rank"><int>300</int></field>
             <field name="name"><string>Help</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.HelpActionComponent</string></field>
@@ -138,7 +129,7 @@
         <object-param>
           <name>RichText</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.UIPageToolBar</string></field>
             <field name="rank"><int>200</int></field>
             <field name="name"><string>RichText</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.RichTextActionComponent</string></field>
@@ -147,16 +138,34 @@
         <object-param>
           <name>Cancel</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.UIPageToolBar</string></field>
             <field name="rank"><int>100</int></field>
             <field name="name"><string>Cancel</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.CancelActionComponent</string></field>
           </object>
         </object-param>
         <object-param>
+          <name>More</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.webui.control.UIPageToolBar</string></field>
+            <field name="rank"><int>50</int></field>
+            <field name="name"><string>More</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.MoreExtensionContainer</string></field>
+          </object>
+        </object-param>
+        <object-param>
+          <name>MovePage</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.webui.control.MoreExtensionContainer</string></field>
+            <field name="rank"><int>50</int></field>
+            <field name="name"><string>MovePage</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.MovePageActionComponent</string></field>
+          </object>
+        </object-param>
+        <object-param>
           <name>WatchPage</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.MoreExtensionContainer</string></field>
             <field name="rank"><int>40</int></field>
             <field name="name"><string>WatchPage</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.WatchPageActionComponent</string></field>
@@ -165,25 +174,34 @@
         <object-param>
           <name>PagePermission</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.MoreExtensionContainer</string></field>
             <field name="rank"><int>30</int></field>
             <field name="name"><string>PagePermission</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.PagePermissionActionComponent</string></field>
           </object>
+        </object-param>                          
+        <object-param>
+	         <name>PageInfo</name>
+	         <object type="org.exoplatform.webui.ext.UIExtension">
+	           <field name="type"><string>org.exoplatform.wiki.webui.control.MoreExtensionContainer</string></field>
+	           <field name="rank"><int>1000</int></field>
+	           <field name="name"><string>PageInfo</string></field>
+	           <field name="component"><string>org.exoplatform.wiki.webui.control.action.PageInfoActionComponent</string></field>
+	         </object>
         </object-param>
          <object-param>
           <name>Browse</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIWikiToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.UIWikiToolBar</string></field>
             <field name="rank"><int>50</int></field>
             <field name="name"><string>Browse</string></field>
-            <field name="component"><string>org.exoplatform.wiki.webui.control.action.BrowseActionComponent</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.BrowseExtensionContainer</string></field>
           </object>
         </object-param>   
         <object-param>
           <name>Preferences</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIWikiToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.BrowseExtensionContainer</string></field>
             <field name="rank"><int>100</int></field>
             <field name="name"><string>Preferences</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.PreferencesActionComponent</string></field>
@@ -192,20 +210,11 @@
         <object-param>
           <name>WikiPermission</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.UIWikiToolBar</string></field>
-            <field name="rank"><int>150</int></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.BrowseExtensionContainer</string></field>
+            <field name="rank"><int>200</int></field>
             <field name="name"><string>WikiPermission</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.WikiPermissionActionComponent</string></field>
           </object>
-        </object-param>                  
-        <object-param>
-	         <name>PageInfo</name>
-	         <object type="org.exoplatform.webui.ext.UIExtension">
-	           <field name="type"><string>org.exoplatform.wiki.UIPageToolBar</string></field>
-	           <field name="rank"><int>1000</int></field>
-	           <field name="name"><string>PageInfo</string></field>
-	           <field name="component"><string>org.exoplatform.wiki.webui.control.action.PageInfoActionComponent</string></field>
-	         </object>
         </object-param>
         <object-param>
            <name>SyntaxSetting</name>

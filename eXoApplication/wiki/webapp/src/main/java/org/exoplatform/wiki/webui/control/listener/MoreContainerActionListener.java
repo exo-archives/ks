@@ -14,41 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.webui.control;
+package org.exoplatform.wiki.webui.control.listener;
 
 import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.wiki.webui.control.MoreExtensionContainer;
 
 /**
  * Created by The eXo Platform SAS
  * Author : viet nguyen
  *          viet.nguyen@exoplatform.com
- * May 31, 2010  
+ * Apr 26, 2010  
  */
-public class ActionComponent {
+public abstract class MoreContainerActionListener<T extends UIComponent> extends UIPageToolBarActionListener<T> {
 
-  private String actionName;
-  
-  private UIComponent actionComponent;
-
-  public ActionComponent(String actionName, UIComponent actionComponent){
-    this.actionName = actionName;
-    this.actionComponent = actionComponent;
+  @Override
+  protected String getExtensionType() {
+    return MoreExtensionContainer.EXTENSION_TYPE;
   }
-  
-  public String getActionName() {
-    return actionName;
-  }
-
-  public void setActionName(String actionName) {
-    this.actionName = actionName;
-  }
-
-  public UIComponent getActionComponent() {
-    return actionComponent;
-  }
-
-  public void setActionComponent(UIComponent actionComponent) {
-    this.actionComponent = actionComponent;
-  }
-  
 }

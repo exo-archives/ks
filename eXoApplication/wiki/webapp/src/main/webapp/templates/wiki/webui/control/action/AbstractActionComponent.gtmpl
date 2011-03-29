@@ -1,0 +1,18 @@
+<%
+  import org.exoplatform.wiki.webui.UIWikiPortlet;  
+%>
+<% 
+ String actionName = uicomponent.getActionName();
+ String actionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + actionName;
+ String anchor = "#" + actionName;
+ String actionLink = uicomponent.getActionLink();
+ boolean isAnchor = uicomponent.isAnchor();
+ String labelName = _ctx.appRes(uicomponent.getParent().getName() +".action." + actionName);
+  
+ %>
+<% if (isAnchor)  {%>
+  <a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="$actionName Icon" title="$labelName">$labelName</a>
+  <a onclick="$actionLink" id="$actionId" style="display:none;">&nbsp;</a>
+<%} else { %>
+  <a onclick="$actionLink" class="$actionName Icon" title="$labelName">$labelName</a>
+<%} %>

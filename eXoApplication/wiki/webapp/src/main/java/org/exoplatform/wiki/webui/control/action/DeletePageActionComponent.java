@@ -25,7 +25,6 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
@@ -35,6 +34,7 @@ import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.WikiMode;
+import org.exoplatform.wiki.webui.control.action.core.AbstractEventActionComponent;
 import org.exoplatform.wiki.webui.control.filter.DeniedOnWikiHomePageFilter;
 import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
@@ -47,22 +47,31 @@ import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
  * Apr 26, 2010  
  */
 @ComponentConfig(
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",
   events = {
     @EventConfig(listeners = DeletePageActionComponent.DeletePageActionListener.class)
   }
 )
-public class DeletePageActionComponent extends UIComponent {
+public class DeletePageActionComponent extends AbstractEventActionComponent {
   
+  public static final String                   ACTION    = "DeletePage";
   
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] {
       new IsViewModeFilter(), new DeniedOnWikiHomePageFilter(), new EditPagesPermissionFilter() });
-
-  public DeletePageActionComponent() {
-    
-  }
+  
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
+  }  
+
+  @Override
+  public String getActionName() {
+    return ACTION;
+  }
+
+  @Override
+  public boolean isAnchor() {
+    return true;
   }
   
   public static class DeletePageActionListener extends UIPageToolBarActionListener<DeletePageActionComponent> {
@@ -80,8 +89,8 @@ public class DeletePageActionComponent extends UIComponent {
         prContext.getResponse().sendRedirect(parentURL);
         return ;        
       }      
-      wikiPortlet.changeMode(WikiMode.DELETECONFIRM);    
-      Utils.redirect(params, wikiPortlet.getWikiMode());
+      wikiPortlet.changeMode(WikiMode.DELETEPAGE);
     }
   }
+
 }

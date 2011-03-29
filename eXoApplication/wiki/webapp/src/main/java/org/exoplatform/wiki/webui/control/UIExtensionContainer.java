@@ -16,13 +16,12 @@
  */
 package org.exoplatform.wiki.webui.control;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.portal.webui.container.UIContainer;
-import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.ext.UIExtension;
 import org.exoplatform.webui.ext.UIExtensionManager;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
@@ -33,24 +32,21 @@ import org.exoplatform.wiki.webui.UIWikiPortlet;
  *          hieu.lai@exoplatform.com
  * 14 Mar 2011  
  */
-public abstract class UIExtensionContainer extends UIContainer {
+public abstract class UIExtensionContainer extends UIContainer {  
 
-  public List<ActionComponent> getActions() throws Exception {
-    List<ActionComponent> activeActions = new ArrayList<ActionComponent>();
+  @Override
+  public void processRender(WebuiRequestContext context) throws Exception {
     UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
-    Map<String, Object> context = new HashMap<String, Object>();
+    Map<String, Object> extContext = new HashMap<String, Object>();
     UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
-    context.put(UIWikiPortlet.class.getName(), wikiPortlet);
+    extContext.put(UIWikiPortlet.class.getName(), wikiPortlet);
     List<UIExtension> extensions = manager.getUIExtensions(getExtensionType());
-    if (extensions != null) {
+    if (extensions != null && extensions.size()>0) {
       for (UIExtension extension : extensions) {
-        UIComponent component = manager.addUIExtension(extension, context, this);
-        if (component != null) {
-          activeActions.add(new ActionComponent(extension.getName(), component));
-        }
+        manager.addUIExtension(extension, extContext, this);
       }
-    }
-    return activeActions;
+      super.processRender(context);
+    }    
   }
 
   public abstract String getExtensionType();

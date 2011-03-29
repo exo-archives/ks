@@ -1,0 +1,3 @@
+<div id="$uicomponent.id" class="UIPageToolBar ClearFix" >
+	<% uicomponent.renderChildren(); %>
+</div>

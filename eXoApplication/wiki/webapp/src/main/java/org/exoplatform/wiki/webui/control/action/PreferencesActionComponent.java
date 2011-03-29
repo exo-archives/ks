@@ -21,15 +21,15 @@ import java.util.List;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
+import org.exoplatform.wiki.webui.control.action.core.AbstractEventActionComponent;
 import org.exoplatform.wiki.webui.control.filter.AdminSpacePermissionFilter;
-import org.exoplatform.wiki.webui.control.listener.UIWikiToolBarActionListener;
+import org.exoplatform.wiki.webui.control.listener.BrowseContainerActionListener;
 import org.exoplatform.wiki.webui.popup.UIWikiSettingContainer;
 
 /**
@@ -38,18 +38,34 @@ import org.exoplatform.wiki.webui.popup.UIWikiSettingContainer;
  *          hieu.lai@exoplatform.com
  * Aug 25, 2010  
  */
-@ComponentConfig(events = { @EventConfig(listeners = PreferencesActionComponent.PreferencesActionListener.class) })
-public class PreferencesActionComponent extends UIComponent {
+@ComponentConfig(
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",                
+  events = {
+    @EventConfig(listeners = PreferencesActionComponent.PreferencesActionListener.class) 
+  }
+)
+public class PreferencesActionComponent extends AbstractEventActionComponent {
   
+  public static final String                   ACTION  = "Preferences";
   
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new AdminSpacePermissionFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
+  } 
+
+  @Override
+  public String getActionName() {
+    return ACTION;
+  }
+
+  @Override
+  public boolean isAnchor() {
+    return false;
   }
   
-  public static class PreferencesActionListener extends UIWikiToolBarActionListener<PreferencesActionComponent> {
+  public static class PreferencesActionListener extends BrowseContainerActionListener<PreferencesActionComponent> {
     @Override
     protected void processEvent(Event<PreferencesActionComponent> event) throws Exception {
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
@@ -59,5 +75,6 @@ public class PreferencesActionComponent extends UIComponent {
       super.processEvent(event);
     }
   }
+
   
 }

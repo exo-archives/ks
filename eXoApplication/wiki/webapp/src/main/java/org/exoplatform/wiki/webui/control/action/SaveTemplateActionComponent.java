@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.jcr.datamodel.IllegalNameException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -28,12 +29,12 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.wiki.commons.NameValidator;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.Template;
 import org.exoplatform.wiki.resolver.TitleResolver;
@@ -44,6 +45,7 @@ import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiTemplateDescriptionContainer;
 import org.exoplatform.wiki.webui.WikiMode;
+import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddTemplateModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 
@@ -55,11 +57,12 @@ import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
  * 9 Feb 2011  
  */
 @ComponentConfig(
-                 events = {
-                   @EventConfig(listeners = SaveTemplateActionComponent.SaveTemplateActionListener.class, phase = Phase.DECODE)
-                 }
-               )
-public class SaveTemplateActionComponent extends SavePageActionComponent {
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",                   
+  events = {
+    @EventConfig(listeners = SaveTemplateActionComponent.SaveTemplateActionListener.class, phase = Phase.DECODE)
+  }
+)
+public class SaveTemplateActionComponent extends AbstractFormActionComponent {
 
   public static final String                   ACTION   = "SaveTemplate";
   
@@ -72,11 +75,26 @@ public class SaveTemplateActionComponent extends SavePageActionComponent {
     return FILTERS;
   }
 
+  @Override
+  public String getActionName() {
+    return ACTION;
+  }
+  
+  @Override
+  public boolean isAnchor() {
+    return false;
+  }
+
+  @Override
+  public boolean isSubmit() {
+    return true;
+  }
+
   public static class SaveTemplateActionListener
                                                 extends
-                                                UIPageToolBarActionListener<SavePageActionComponent> {
+                                                UIPageToolBarActionListener<SaveTemplateActionComponent> {
     @Override
-    protected void processEvent(Event<SavePageActionComponent> event) throws Exception {
+    protected void processEvent(Event<SaveTemplateActionComponent> event) throws Exception {
       WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
@@ -88,9 +106,19 @@ public class SaveTemplateActionComponent extends SavePageActionComponent {
       UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
       UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
       try {
-        event.getSource().validate(titleInput);
-      } catch (MessageException ex) {
-        uiApp.addMessage(ex.getDetailMessage());
+        NameValidator.validate(titleInput.getValue());
+      } catch (IllegalNameException ex) {
+        String msg = ex.getMessage();
+        ApplicationMessage appMsg = new ApplicationMessage("WikiPageNameValidator.msg.EmptyTitle",
+                                                           null,
+                                                           ApplicationMessage.WARNING);
+        if (msg != null) {
+          Object[] arg = { msg };
+          appMsg = new ApplicationMessage("WikiPageNameValidator.msg.Invalid-char",
+                                          arg,
+                                          ApplicationMessage.WARNING);
+        }
+        uiApp.addMessage(appMsg);
         event.getRequestContext().setProcessRender(true);
       }
       if (event.getRequestContext().getProcessRender()) {
@@ -141,4 +169,5 @@ public class SaveTemplateActionComponent extends SavePageActionComponent {
       }
     }
   }
+  
 }

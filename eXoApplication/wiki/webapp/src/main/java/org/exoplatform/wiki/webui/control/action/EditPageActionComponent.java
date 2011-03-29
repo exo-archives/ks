@@ -22,7 +22,6 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
@@ -38,6 +37,7 @@ import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.WikiMode;
+import org.exoplatform.wiki.webui.control.action.core.AbstractEventActionComponent;
 import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
@@ -49,13 +49,16 @@ import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
  * Apr 26, 2010  
  */
 @ComponentConfig(
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",
   events = {
     @EventConfig(listeners = EditPageActionComponent.EditPageActionListener.class)
   }
 )
-public class EditPageActionComponent extends UIComponent {
+public class EditPageActionComponent extends AbstractEventActionComponent {
+  
+  public static final String                   ACTION  = "EditPage";
 
-  public static final String SECTION = "section";
+  public static final String                   SECTION = "section";
 
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] {
       new IsViewModeFilter(), new EditPagesPermissionFilter() });
@@ -63,6 +66,16 @@ public class EditPageActionComponent extends UIComponent {
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
+  }  
+
+  @Override
+  public String getActionName() {
+    return ACTION;
+  }
+
+  @Override
+  public boolean isAnchor() {
+    return true;
   }
   
   public static class EditPageActionListener extends UIPageToolBarActionListener<EditPageActionComponent> {

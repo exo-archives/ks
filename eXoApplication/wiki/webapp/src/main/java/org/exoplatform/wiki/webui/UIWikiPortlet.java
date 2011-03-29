@@ -48,7 +48,7 @@ import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.webui.control.UIPageToolBar;
-import org.exoplatform.wiki.webui.control.action.AddPageFromBlankActionComponent;
+import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
 
 /**
  * Created by The eXo Platform SAS Author : eXoPlatform exo@exoplatform.com Nov
@@ -154,7 +154,7 @@ public class UIWikiPortlet extends UIPortletApplication {
         uiExtensionContext.put(WikiContext.PAGETITLE,
                                pageParams.getParameter(WikiContext.PAGETITLE));
         if (manager.accept(UIPageToolBar.EXTENSION_TYPE, WikiContext.ADDPAGE, uiExtensionContext)) {
-          AddPageFromBlankActionComponent.processAddPageAction(uiExtensionContext);
+          AddPageActionComponent.processAddPageAction(uiExtensionContext);
         }
       }
       try {
@@ -282,8 +282,8 @@ public class UIWikiPortlet extends UIPortletApplication {
       UIWikiPortlet wikiPortlet = event.getSource();
       String mode = event.getRequestContext().getRequestParameter("mode");
       String currentModeName = (mode.equals("")) ? WikiMode.VIEW.toString() : mode;
-      if (!currentModeName.equalsIgnoreCase(wikiPortlet.mode.toString())) {
-        WikiMode currentMode = Utils.getModeFromAction(currentModeName);
+      WikiMode currentMode = Utils.getModeFromAction(currentModeName);
+      if (!currentMode.equals(wikiPortlet.mode)) {
         if (currentMode == null)
           currentMode = WikiMode.VIEW;
         event.getSource().changeMode(currentMode);

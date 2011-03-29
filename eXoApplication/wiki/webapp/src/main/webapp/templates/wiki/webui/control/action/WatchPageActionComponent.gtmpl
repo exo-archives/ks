@@ -1,0 +1,12 @@
+<div class="WatchPageActionComponent">
+	<%  
+	  def rcontext = _ctx.getRequestContext() ;    
+	  String link = uicomponent.event(uicomponent.WATCH_PAGE);
+	  boolean isWatched = uicomponent.detectWatched(false);
+	%>
+	<% if (!isWatched){ %>
+		<a href="$link" class="WatchPage Icon" title="<%=_ctx.appRes("MoreExtensionContainer.action.WatchPage");%>"><%= _ctx.appRes("MoreExtensionContainer.action.WatchPage"); %></a>
+	<% } else { %>
+		<a href="$link" class="UnWatchPage Icon" title="<%=_ctx.appRes("MoreExtensionContainer.action.UnWatchPage");%>"><%= _ctx.appRes("MoreExtensionContainer.action.UnWatchPage"); %></a>
+	<% } %>
+</div>

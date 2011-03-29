@@ -24,7 +24,6 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
@@ -38,10 +37,11 @@ import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 import org.exoplatform.wiki.webui.UIWikiLocationContainer;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
+import org.exoplatform.wiki.webui.control.action.core.AbstractEventActionComponent;
 import org.exoplatform.wiki.webui.control.filter.DeniedOnWikiHomePageFilter;
 import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
-import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
+import org.exoplatform.wiki.webui.control.listener.MoreContainerActionListener;
 import org.exoplatform.wiki.webui.popup.UIWikiMovePageForm;
 
 /**
@@ -51,25 +51,34 @@ import org.exoplatform.wiki.webui.popup.UIWikiMovePageForm;
  * Apr 26, 2010  
  */
 @ComponentConfig(
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",
   events = {
     @EventConfig(listeners = MovePageActionComponent.MovePageActionListener.class)
   }
 )
-public class MovePageActionComponent extends UIComponent {  
+public class MovePageActionComponent extends AbstractEventActionComponent {
+  
+  public static final String                   ACTION  = "MovePage";
   
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] {
       new IsViewModeFilter(), new DeniedOnWikiHomePageFilter(), new EditPagesPermissionFilter() });
-
-  public MovePageActionComponent() {
-    
-  }
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
   }
+
+  @Override
+  public String getActionName() {
+    return ACTION;
+  }
+
+  @Override
+  public boolean isAnchor() {
+    return false;
+  }
   
-  public static class MovePageActionListener extends UIPageToolBarActionListener<MovePageActionComponent> {
+  public static class MovePageActionListener extends MoreContainerActionListener<MovePageActionComponent> {
     @Override
     protected void processEvent(Event<MovePageActionComponent> event) throws Exception {      
       ResourceBundle res = event.getRequestContext().getApplicationResourceBundle();

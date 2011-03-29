@@ -21,13 +21,13 @@ import java.util.List;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiSidePanelArea;
+import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.filter.IsMarkupModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
@@ -39,18 +39,36 @@ import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
  * Apr 26, 2010  
  */
 @ComponentConfig(
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",
   events = {
     @EventConfig(listeners = HelpActionComponent.HelpActionListener.class, phase = Phase.DECODE)
   }
 )
-public class HelpActionComponent extends UIComponent {
+public class HelpActionComponent extends AbstractFormActionComponent {
+  
+  public static final String                   ACTION  = "Help";
 
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditAddModeFilter(), new IsMarkupModeFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
+  }  
+
+  @Override
+  public String getActionName() {
+    return ACTION;
   }
+
+  @Override
+  public boolean isAnchor() {
+    return false;
+  }
+
+  @Override
+  public boolean isSubmit() {
+    return false;
+  }  
   
   public static class HelpActionListener extends UIPageToolBarActionListener<HelpActionComponent> {
     @Override
@@ -63,4 +81,5 @@ public class HelpActionComponent extends UIComponent {
       super.processEvent(event);
     }
   }
+
 }

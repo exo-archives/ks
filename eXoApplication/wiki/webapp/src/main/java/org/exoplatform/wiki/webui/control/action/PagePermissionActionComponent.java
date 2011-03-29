@@ -20,12 +20,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
@@ -37,11 +36,13 @@ import org.exoplatform.wiki.service.Permission;
 import org.exoplatform.wiki.service.PermissionEntry;
 import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.webui.UIWikiPermissionForm;
-import org.exoplatform.wiki.webui.UIWikiPermissionForm.Scope;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.UIWikiPermissionForm.Scope;
 import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
+import org.exoplatform.wiki.webui.control.action.core.AbstractEventActionComponent;
 import org.exoplatform.wiki.webui.control.filter.AdminPagesPermissionFilter;
-import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
+import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
+import org.exoplatform.wiki.webui.control.listener.MoreContainerActionListener;
 
 /**
  * Created by The eXo Platform SAS
@@ -50,20 +51,34 @@ import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
  * Dec 29, 2010  
  */
 @ComponentConfig(
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",
   events = {
     @EventConfig(listeners = PagePermissionActionComponent.PagePermissionActionListener.class)
   }
 )
-public class PagePermissionActionComponent extends UIComponent {
+public class PagePermissionActionComponent extends AbstractEventActionComponent {
+  
+  public static final String                   ACTION  = "PagePermission";
 
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new AdminPagesPermissionFilter() });
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] {
+      new IsViewModeFilter(), new AdminPagesPermissionFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
   }
 
-  public static class PagePermissionActionListener extends UIPageToolBarActionListener<PagePermissionActionComponent> {
+  @Override
+  public String getActionName() {
+    return ACTION;
+  }
+
+  @Override
+  public boolean isAnchor() {
+    return false;
+  }
+
+  public static class PagePermissionActionListener extends MoreContainerActionListener<PagePermissionActionComponent> {
     @Override
     protected void processEvent(Event<PagePermissionActionComponent> event) throws Exception {
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);

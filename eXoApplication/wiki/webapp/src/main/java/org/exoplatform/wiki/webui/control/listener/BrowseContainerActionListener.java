@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2011 eXo Platform SAS.
+ * Copyright (C) 2003-2010 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -17,19 +17,19 @@
 package org.exoplatform.wiki.webui.control.listener;
 
 import org.exoplatform.webui.core.UIComponent;
-import org.exoplatform.wiki.webui.control.UIWikiToolBar;
+import org.exoplatform.wiki.webui.control.BrowseExtensionContainer;
 
 /**
  * Created by The eXo Platform SAS
  * Author : Lai Trung Hieu
  *          hieu.lai@exoplatform.com
- * 24 Mar 2011  
+ * Aug 25, 2010  
  */
-public abstract class UIWikiToolBarActionListener<T extends UIComponent> extends UIWikiPortletActionListener<T> {
+public abstract class BrowseContainerActionListener<T extends UIComponent> extends UIWikiPortletActionListener<T> {
 
   @Override
   protected String getExtensionType() {
-    return UIWikiToolBar.EXTENSION_TYPE;
+    return BrowseExtensionContainer.EXTENSION_TYPE;
   }
 
 }

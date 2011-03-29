@@ -16,8 +16,12 @@
  */
 package org.exoplatform.wiki.webui.control;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.lifecycle.Lifecycle;
+import org.exoplatform.webui.ext.filter.UIExtensionFilter;
+import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 
 /**
  * Created by The eXo Platform SAS
@@ -26,13 +30,19 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
  * Apr 26, 2010  
  */
 @ComponentConfig(
-  lifecycle = Lifecycle.class,
-  template = "app:/templates/wiki/webui/control/UIPageToolBar.gtmpl"
+  template = "app:/templates/wiki/webui/control/AddExtensionContainer.gtmpl"
 )
-public class UIPageToolBar extends UIExtensionContainer {
-
-  public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.control.UIPageToolBar";
+public class AddExtensionContainer extends UIExtensionContainer {
   
+  public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.control.AddExtensionContainer";
+  
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] {});
+
+  @UIExtensionFilters
+  public List<UIExtensionFilter> getFilters() {
+    return FILTERS;
+  }
+
   @Override
   public String getExtensionType() {
     return EXTENSION_TYPE;

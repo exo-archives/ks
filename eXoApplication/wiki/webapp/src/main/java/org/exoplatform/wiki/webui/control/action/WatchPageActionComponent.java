@@ -44,7 +44,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.WatchedMixin;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.webui.control.filter.IsUserFilter;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
-import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
+import org.exoplatform.wiki.webui.control.listener.MoreContainerActionListener;
 
 /**
  * Created by The eXo Platform SAS
@@ -53,7 +53,7 @@ import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
  * Aug 25, 2010  
  */
 @ComponentConfig(     
-      template = "app:/templates/wiki/webui/action/WatchPageActionComponent.gtmpl",
+      template = "app:/templates/wiki/webui/control/action/WatchPageActionComponent.gtmpl",
       events = { 
         @EventConfig(listeners = WatchPageActionComponent.WatchPageActionListener.class)
       }
@@ -125,7 +125,7 @@ public class WatchPageActionComponent extends UIComponent {
   }
 
   public static class WatchPageActionListener extends
-                                             UIPageToolBarActionListener<WatchPageActionComponent> {
+                                             MoreContainerActionListener<WatchPageActionComponent> {
     @Override
     protected void processEvent(Event<WatchPageActionComponent> event) throws Exception {
       UIApplication uiApp = event.getSource().getAncestorOfType(UIApplication.class);

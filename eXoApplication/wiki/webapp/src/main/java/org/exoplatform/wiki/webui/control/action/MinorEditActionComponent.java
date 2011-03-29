@@ -28,7 +28,7 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
-import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
+import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
 import org.exoplatform.wiki.webui.control.filter.IsEditModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 
@@ -39,11 +39,12 @@ import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
  * Dec 12, 2010  
  */
 @ComponentConfig(
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",               
   events = {
     @EventConfig(listeners = MinorEditActionComponent.MinorEditActionListener.class, phase = Phase.DECODE)
   }
 )
-public class MinorEditActionComponent extends UIComponent {  
+public class MinorEditActionComponent extends AbstractFormActionComponent {  
 
   public static final String                   ACTION = "MinorEdit";
   
@@ -52,7 +53,23 @@ public class MinorEditActionComponent extends UIComponent {
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
+  }  
+
+  @Override
+  public String getActionName() {
+    return ACTION;
   }
+  
+  @Override
+  public boolean isAnchor() {
+    return false;
+  }
+
+  @Override
+  public boolean isSubmit() {
+    return true;
+  }
+  
   public static class MinorEditActionListener extends UIPageToolBarActionListener<MinorEditActionComponent> {
     @Override
     protected void processEvent(Event<MinorEditActionComponent> event) throws Exception {

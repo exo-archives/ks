@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2010 eXo Platform SAS.
+ * Copyright (C) 2003-2011 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -14,32 +14,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.webui.control.action;
-
-import java.util.Arrays;
-import java.util.List;
+package org.exoplatform.wiki.webui.control.action.core;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIComponent;
-import org.exoplatform.webui.ext.filter.UIExtensionFilter;
-import org.exoplatform.webui.ext.filter.UIExtensionFilters;
-import org.exoplatform.wiki.webui.control.filter.AdminSpacePermissionFilter;
+
 
 /**
  * Created by The eXo Platform SAS
  * Author : Lai Trung Hieu
  *          hieu.lai@exoplatform.com
- * Aug 25, 2010  
+ * 24 Mar 2011  
  */
-
-@ComponentConfig()
-public class BrowseActionComponent extends UIComponent {
+@ComponentConfig(
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl"               
+)
+public abstract class AbstractActionComponent extends UIComponent {
   
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new AdminSpacePermissionFilter() });;
+  /**
+   * Get name
+   * 
+   * @return name of this component
+   */
+  public abstract String getActionName();
+  /**
+   * Get action link
+   * 
+   * @return a real action link of this component
+   */
+  public abstract String getActionLink() throws Exception;
 
-  @UIExtensionFilters
-  public List<UIExtensionFilter> getFilters() {
-    return FILTERS;
-  }
-  
+  /**
+   * Get type of action
+   * 
+   * @return <code>true</code> if this action creates anchor,
+   *         <code>false</code> if vice versa
+   */
+  public abstract boolean isAnchor();
 }

@@ -21,14 +21,16 @@ import java.util.List;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
-import org.exoplatform.wiki.webui.control.listener.AddPageActionListener;
+import org.exoplatform.wiki.webui.control.action.core.AbstractEventActionComponent;
+import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
+import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
+import org.exoplatform.wiki.webui.control.listener.AddContainerActionListener;
 import org.exoplatform.wiki.webui.popup.UIWikiSelectTemplateForm;
 
 /**
@@ -38,23 +40,34 @@ import org.exoplatform.wiki.webui.popup.UIWikiSelectTemplateForm;
  * Feb 10, 2011 
  */
 @ComponentConfig(
-  template = "app:/templates/wiki/webui/action/AddPageFromTemplateActionComponent.gtmpl",
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",
   events = {
     @EventConfig(listeners = AddPageFromTemplateActionComponent.AddPageFromTemplateActionListener.class)
   }
 )
-public class AddPageFromTemplateActionComponent extends UIComponent {
+public class AddPageFromTemplateActionComponent extends AbstractEventActionComponent {
   
-  private static final String ADDPAGE_FROMTEMPLATE = "AddPageFromTemplate";
+  private static final String                  ACTION  = "AddPageFromTemplate";
   
-  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] {});
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] {
+      new IsViewModeFilter(), new EditPagesPermissionFilter() });
 
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
   }
   
-  public static class AddPageFromTemplateActionListener extends AddPageActionListener<AddPageFromTemplateActionComponent> {
+  @Override
+  public String getActionName() {
+    return ACTION;
+  }
+
+  @Override
+  public boolean isAnchor() {
+    return false;
+  }
+  
+  public static class AddPageFromTemplateActionListener extends AddContainerActionListener<AddPageFromTemplateActionComponent> {
     @Override
     protected void processEvent(Event<AddPageFromTemplateActionComponent> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);

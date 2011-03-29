@@ -1,0 +1,22 @@
+<%
+  def rcontext = _ctx.getRequestContext() ;
+  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIDropdownMenu', '/wiki/javascript/') ;
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIDropdownMenu.init(\""+uicomponent.id+"\");"); 
+%>
+<div class="MoreExtensionContainer HoverLink MoreLink Icon" id ="$uicomponent.id">
+    <%= _ctx.appRes("UIPageToolBar.label.More"); %>
+    <div class="HoverMenu MoreMenu">
+        <ul>
+            <%
+            List children = uicomponent.getChildren() ;
+            for(component in children) {
+            if(component.isRendered()){ %>
+            <li>
+                <% uicomponent.renderChild(component.getClass()) ; %>
+            </li>
+            <%
+            }
+            } %>
+        </ul>
+    </div>
+</div>

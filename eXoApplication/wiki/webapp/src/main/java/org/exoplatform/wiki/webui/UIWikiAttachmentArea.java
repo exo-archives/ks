@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.jcr.datamodel.IllegalNameException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.OrganizationService;
@@ -35,7 +36,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
+import org.exoplatform.wiki.commons.NameValidator;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
@@ -71,25 +72,6 @@ public class UIWikiAttachmentArea extends UIWikiForm {
     UIWikiFormUploadInput uiInput = new UIWikiFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
     uiInput.setAutoUpload(true);    
     addUIFormInput(uiInput);    
-  }
-
-  public void validate(String fileName) throws Exception {
-    String invalidCharacters = ": @ / \\ | ^ # ; [ ] { } < > * ' \" +";
-    Object[] args = { invalidCharacters };
-    
-    for (int i = 0; i < fileName.length(); i++) {
-      char c = fileName.charAt(i);
-      // Does not accept the following characters in the title of a page : @ / \ | ^ # ; [ ] { } < > * ' " +
-      if (Character.isLetter(c)
-          || Character.isDigit(c)
-          || (c != ':' && c != '@' && c != '/' && c != '\\' && c != '|' && c != '^' && c != '#'
-              && c != ';' && c != '[' && c != ']' && c != '{' && c != '}' && c != '<' && c != '>'
-              && c != '*' && c != '\'' && c != '\"' && c != '+')
-          ) {
-        continue;
-      }
-      throw new MessageException(new ApplicationMessage("AttachmentNameValidator.msg.Invalid-char", args , ApplicationMessage.WARNING));
-    }
   }
   
   private Collection<AttachmentImpl> getAttachmentsList() {
@@ -137,11 +119,19 @@ public class UIWikiAttachmentArea extends UIWikiForm {
         if (uploadResource != null) {
           String fileName = uploadResource.getFileName();
           if (fileName != null) {
-            event.getSource().validate(fileName);
+            NameValidator.validate(fileName);
           }
         }
-      } catch (MessageException ex) {
-        uiApp.addMessage(ex.getDetailMessage());
+      } catch (IllegalNameException ex) {
+        String msg = ex.getMessage();
+        ApplicationMessage appMsg = null;
+        if (msg != null) {
+          Object[] arg = { msg };
+          appMsg = new ApplicationMessage("AttachmentNameValidator.msg.Invalid-char",
+                                          arg,
+                                          ApplicationMessage.WARNING);
+        }
+        uiApp.addMessage(appMsg);
         event.getRequestContext().setProcessRender(true);
       }
       if (event.getRequestContext().getProcessRender()) {

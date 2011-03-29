@@ -19,25 +19,14 @@ package org.exoplatform.wiki.webui.control.action;
 import java.util.Arrays;
 import java.util.List;
 
-import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
-import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.commons.Utils;
-import org.exoplatform.wiki.mow.api.Page;
-import org.exoplatform.wiki.service.WikiService;
-import org.exoplatform.wiki.webui.UIWikiPageControlArea;
-import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
-import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 
 /**
  * Created by The eXo Platform SAS
@@ -46,13 +35,9 @@ import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
  * May 4, 2010  
  */
 @ComponentConfig(
-  events = {
-    @EventConfig(listeners = CancelActionComponent.CancelActionListener.class, phase = Phase.DECODE)
-  }
+  template = "app:/templates/wiki/webui/control/action/CancelActionComponent.gtmpl"
 )
 public class CancelActionComponent extends UIComponent {
-
-  private static final Log log = ExoLogger.getLogger("wiki:CancelActionComponent");
   
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsEditAddModeFilter() });
 
@@ -60,24 +45,12 @@ public class CancelActionComponent extends UIComponent {
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
   }
-  public static class CancelActionListener extends UIPageToolBarActionListener<CancelActionComponent> {
-    @Override
-    protected void processEvent(Event<CancelActionComponent> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);     
-      UIWikiPageTitleControlArea pageTitleControlForm = wikiPortlet.findComponentById(UIWikiPageControlArea.TITLE_CONTROL);
-      try {
-        Page page = Utils.getCurrentWikiPage();
-        pageTitleControlForm.getUIFormInputInfo().setValue(page.getTitle());
-      } catch (Exception e) {
-        log.warn("An exception happens when cancel edit page", e);
-      }
-      if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
-        WikiService wikiService = event.getSource().getApplicationComponent(WikiService.class);
-        String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
-        wikiService.deleteDraftNewPage(sessionId);
-      }
-      wikiPortlet.changeMode(WikiMode.VIEW);
-      super.processEvent(event);
-    }
+  
+  private boolean isNewMode() {
+    return (WikiMode.ADDPAGE.equals(getAncestorOfType(UIWikiPortlet.class).getWikiMode()));
+  }  
+
+  private String getCurrentPageURL() throws Exception {
+    return Utils.getURLFromParams(Utils.getCurrentWikiPageParams());
   }
 }

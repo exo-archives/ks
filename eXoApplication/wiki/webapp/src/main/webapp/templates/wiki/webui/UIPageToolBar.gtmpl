@@ -37,7 +37,7 @@
 	</div>
 <%
 def rcontext = _ctx.getRequestContext() ;
-rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiDropdownMenu', '/wiki/javascript/') ;
+rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIDropdownMenu', '/wiki/javascript/') ;
 rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIConfirmBox', '/wiki/javascript/') ;
 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIDropdownMenu.init(\"HoverLink\");");
 rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIConfirmBox.init();");

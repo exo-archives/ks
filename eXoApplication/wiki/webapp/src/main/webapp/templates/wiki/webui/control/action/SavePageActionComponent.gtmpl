@@ -1,0 +1,19 @@
+<%
+  def rcontext = _ctx.getRequestContext();
+  String link = uicomponent.getActionLink(); 
+  String titleMessage = _ctx.appRes("UIConfirmBox.label.Confirmation");
+  String addMessage = _ctx.appRes("UIConfirmBox.label.ConfirmAdd");
+  String untitledMessage = _ctx.appRes("UIWikiPageTitleControlArea.label.Untitled");
+  String exitMessage = _ctx.appRes("UIConfirmBox.label.ConfirmExit");
+  String confirmLabel = _ctx.appRes("UIConfirmBox.label.Confirm");
+  String okLabel = _ctx.appRes("UIConfirmBox.label.Ok");
+  String cancelLabel = _ctx.appRes("UIConfirmBox.label.Cancel");
+  boolean isNewMode = uicomponent.isNewMode();
+  String pageTitleInputId= uicomponent.getPageTitleInputId();
+%>
+<div id="$uicomponent.id">
+  <a href="$link" onclick="return eXo.wiki.UIWikiSavePage.confirm('$uicomponent.id', $isNewMode, '$pageTitleInputId', '$untitledMessage','$titleMessage',  '$addMessage',  'SavePage Icon',  '$confirmLabel','$cancelLabel');" class="SavePage Icon" title="<%=_ctx.appRes("UIPageToolBar.action.SavePage");%>">
+    <%=_ctx.appRes("UIPageToolBar.action.SavePage");%>
+    </a>
+  </a>
+</div>

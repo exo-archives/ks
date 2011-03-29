@@ -28,14 +28,11 @@ UIConfirmBox.prototype.init = function() {
 };
 
 UIConfirmBox.prototype.render = function(uicomponentId, titleMessage, message,
-    submitClass, submitLabel, discardClass, discardLabel, cancelLabel) {  
-  
+    submitClass, submitLabel, cancelLabel) {  
   var me = eXo.wiki.UIConfirmBox;
   var uicomponent = document.getElementById(uicomponentId);
   var submitAction = eXo.core.DOMUtil.findFirstDescendantByClass(uicomponent,
       "a", submitClass);
-  var discardAction = eXo.core.DOMUtil.findFirstDescendantByClass(uicomponent,
-      "a", discardClass);
   
   me.confirmBox = document.createElement('div');
   eXo.core.DOMUtil.addClass(me.confirmBox, 'ConfirmBox');
@@ -64,9 +61,6 @@ UIConfirmBox.prototype.render = function(uicomponentId, titleMessage, message,
   if (submitAction && submitLabel) {
     me.createInput(container, submitAction, submitLabel);
   }
-  if (discardAction && discardLabel) {
-    me.createInput(container, discardAction, discardLabel);
-  }
   if (cancelLabel) {
     me.createInput(container, null, cancelLabel);
   }
@@ -85,9 +79,9 @@ UIConfirmBox.prototype.createInput = function(container, action, message) {
   input.setAttribute('type', 'button');
 
   eXo.core.Browser.eventListener(input, 'click', function(event) {
-    if (action && action.href)
-      window.location = action.href;
-    else
+    if (action && action.href){
+        window.location = action.href;
+      }
       eXo.wiki.UIConfirmBox.closeConfirm();
   });
   container.appendChild(input);

@@ -1,12 +1,12 @@
 <%
 def rcontext = _ctx.getRequestContext() ;
-rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiDropdownMenu', '/wiki/javascript/') ;
+rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIDropdownMenu', '/wiki/javascript/') ;
 %>
 <div id="$uicomponent.id" class="UIWikiToolBar">
 <%
 	def browseActionComponent= uicomponent.getBrowseAction();
 	  if (browseActionComponent!=null){ 
-	  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiDropdownMenu.init(\""+uicomponent.id+"\");");
+	  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIDropdownMenu.init(\""+uicomponent.id+"\");");
 	%>
 		<a class="HoverLink BrowseLink Icon"><%= _ctx.appRes(uicomponent.getName() + ".action." + browseActionComponent.getActionName()) %></a>	
 		<div style="position:relative;margin-top:-1px">

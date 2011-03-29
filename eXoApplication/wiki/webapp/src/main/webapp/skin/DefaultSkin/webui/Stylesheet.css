@@ -339,22 +339,6 @@
 	border-bottom:1px solid #C7C7C7;
 }
 
-.UIWikiPortlet .UIWikiPageControlArea .Icon {
-	float:right;
-	height: 12px;
-	padding: 6px 8px 6px 25px;
-	margin: 0px;
-	text-transform:capitalize;
-	color: black;
-}
-
-.UIWikiPortlet .UIWikiPageControlArea .Icon:hover {
-	background-color: #d0dff0;
-	-moz-border-radius:3px 3px 3px 3px;
-	-webkit-border-radius: 3px;
-	text-decoration: none;
-}
-
 .UIWikiPortlet .UIWikiMiddleArea {
   display:block;
   overflow: auto;

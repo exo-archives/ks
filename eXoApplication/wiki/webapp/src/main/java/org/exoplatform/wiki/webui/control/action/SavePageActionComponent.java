@@ -19,10 +19,10 @@ package org.exoplatform.wiki.webui.control.action;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.jcr.datamodel.IllegalNameException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -32,13 +32,12 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
-import org.exoplatform.webui.form.UIFormInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.wiki.commons.NameValidator;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
@@ -66,6 +65,7 @@ import org.xwiki.rendering.syntax.Syntax;
  * Apr 26, 2010  
  */
 @ComponentConfig(
+  template = "app:/templates/wiki/webui/control/action/SavePageActionComponent.gtmpl",
   events = {
     @EventConfig(listeners = SavePageActionComponent.SavePageActionListener.class, phase = Phase.DECODE)
   }
@@ -82,34 +82,19 @@ public class SavePageActionComponent extends UIComponent {
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
+  }  
+
+  private boolean isNewMode() {
+    return (WikiMode.ADDPAGE.equals(getAncestorOfType(UIWikiPortlet.class).getWikiMode()));
   }
   
-  public void validate(UIFormInput uiInput) throws Exception {
-    String invalidCharacters = ": @ / \\ | ^ # ; [ ] { } < > * ' \" + ? &"; // and .
-    Object[] args = { invalidCharacters };
-    StringTokenizer tokens;
-    
-    if (uiInput.getValue() == null || ((String) uiInput.getValue()).trim().length() == 0) {
-      throw new MessageException(new ApplicationMessage("WikiPageNameValidator.msg.EmptyTitle", args, ApplicationMessage.WARNING));
-    }
-    
-    String s = (String) uiInput.getValue();
-    for (int i = 0; i < s.length(); i++) {
-      tokens = new StringTokenizer(invalidCharacters);
-      char c = s.charAt(i);
-      boolean isInvalid = false;
-      while(tokens.hasMoreTokens()){
-        String test= tokens.nextToken();        
-        isInvalid= test.equals(String.valueOf(c));
-        if (isInvalid==true) 
-          break;
-      }      
-      if (Character.isLetter(c) || Character.isDigit(c) || (!isInvalid)) {
-        continue;
-      }
-      throw new MessageException(new ApplicationMessage("WikiPageNameValidator.msg.Invalid-char", args, ApplicationMessage.WARNING));
-    }
+  private String getPageTitleInputId() {
+    return UIWikiPageTitleControlArea.FIELD_TITLEINPUT;
   }
+  
+  private String getActionLink() throws Exception {
+    return Utils.createFormActionLink(this, ACTION, ACTION);
+  }  
   
   public static class SavePageActionListener extends
                                             UIPageToolBarActionListener<SavePageActionComponent> {
@@ -131,9 +116,19 @@ public class SavePageActionComponent extends UIComponent {
       Page page = Utils.getCurrentWikiPage();
       Utils.setUpWikiContext(wikiPortlet);
       try {
-        event.getSource().validate(titleInput);
-      } catch (MessageException ex) {
-        uiApp.addMessage(ex.getDetailMessage());
+        NameValidator.validate(titleInput.getValue());
+      } catch (IllegalNameException ex) {
+        String msg = ex.getMessage();
+        ApplicationMessage appMsg = new ApplicationMessage("WikiPageNameValidator.msg.EmptyTitle",
+                                                           null,
+                                                           ApplicationMessage.WARNING);
+        if (msg != null) {
+          Object[] arg = { msg };
+          appMsg = new ApplicationMessage("WikiPageNameValidator.msg.Invalid-char",
+                                          arg,
+                                          ApplicationMessage.WARNING);
+        }
+        uiApp.addMessage(appMsg);
         event.getRequestContext().setProcessRender(true);
       }
       if (event.getRequestContext().getProcessRender()) {
@@ -238,4 +233,5 @@ public class SavePageActionComponent extends UIComponent {
       }
     }
   }
+
 }

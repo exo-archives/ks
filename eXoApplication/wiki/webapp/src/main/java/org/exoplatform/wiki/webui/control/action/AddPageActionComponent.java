@@ -20,30 +20,47 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.ext.UIExtension;
-import org.exoplatform.webui.ext.UIExtensionManager;
+import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
+import org.exoplatform.webui.form.UIFormSelectBox;
+import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.service.WikiContext;
+import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.webui.UIWikiPageEditForm;
+import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.UIWikiRichTextArea;
+import org.exoplatform.wiki.webui.WikiMode;
+import org.exoplatform.wiki.webui.control.action.core.AbstractEventActionComponent;
 import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
+import org.exoplatform.wiki.webui.control.listener.AddContainerActionListener;
 
 /**
  * Created by The eXo Platform SAS
- * Author : viet nguyen
- *          viet.nguyen@exoplatform.com
- * Apr 26, 2010  
+ * Author : Lai Trung Hieu
+ *          hieu.lai@exoplatform.com
+ * Feb 10, 2011  
  */
 @ComponentConfig(
-  template = "app:/templates/wiki/webui/action/AddPageActionComponent.gtmpl"
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",
+  events = {
+     @EventConfig(listeners = AddPageActionComponent.AddPageActionListener.class)
+  }
 )
-public class AddPageActionComponent extends UIContainer {
-  
-  public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.control.action.AddPageActionComponent";
+public class AddPageActionComponent extends AbstractEventActionComponent {  
+
+  public static final String                   ACTION = "AddPage";
   
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] {
       new IsViewModeFilter(), new EditPagesPermissionFilter() });
@@ -52,20 +69,69 @@ public class AddPageActionComponent extends UIContainer {
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
   }
+  
+  @Override
+  public String getActionName() {
+    return ACTION;
+  }
 
   @Override
-  public void processRender(WebuiRequestContext context) throws Exception {
-    UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
-    Map<String, Object> extensionContext = new HashMap<String, Object>();
-    UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
-    extensionContext.put(UIWikiPortlet.class.getName(), wikiPortlet);
-    List<UIExtension> extensions = manager.getUIExtensions(EXTENSION_TYPE);
-    if (extensions != null) {
-      for (UIExtension extension : extensions) {
-        manager.addUIExtension(extension, extensionContext, this);
-      }
-    }
-    super.processRender(context);
+  public boolean isAnchor() {
+    return true;
   }
+  
+  public static class AddPageActionListener extends AddContainerActionListener<AddPageActionComponent> {
+    @Override
+    protected void processEvent(Event<AddPageActionComponent> event) throws Exception {
+      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
+      Map<String, Object> uiExtensionContext = new HashMap<String, Object>();
+      uiExtensionContext.put(UIWikiPortlet.class.getName(), wikiPortlet);
+      processAddPageAction(uiExtensionContext);
+      super.processEvent(event);
+    }
+  }
+
+  public static void processAddPageAction(Map<String, Object> uiExtensionContext) throws Exception {
+    WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
+    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+    ResourceBundle res = context.getApplicationResourceBundle() ;  
+    
+    UIWikiPortlet wikiPortlet = (UIWikiPortlet) uiExtensionContext.get(UIWikiPortlet.class.getName());    
+    String pageTitle = (String) uiExtensionContext.get(WikiContext.PAGETITLE);
+    UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
+    UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class)
+                                               .getUIStringInput();
+    UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
+    UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
+    UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);    
+    titleInput.setValue(res.getString("UIWikiPageTitleControlArea.label.Untitled"));
+    
+    titleInput.setEditable(true);
+    markupInput.setValue("");
+    commentInput.setRendered(false);
+    WikiService wikiService = wikiPortlet.getApplicationComponent(WikiService.class);
+    String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
+    wikiService.createDraftNewPage(sessionId);
+    
+    String currentDefaultSyntaxt = Utils.getCurrentPreferences().getPreferencesSyntax().getDefaultSyntax();
+    if (currentDefaultSyntaxt == null) {
+      currentDefaultSyntaxt = wservice.getDefaultWikiSyntaxId();
+    }
+    
+    syntaxTypeSelectBox.setValue(currentDefaultSyntaxt);
+    syntaxTypeSelectBox.setEnable(Utils.getCurrentPreferences().getPreferencesSyntax().getAllowMutipleSyntaxes());
+    if (pageTitle != null && pageTitle.length() > 0) {
+      titleInput.setValue(pageTitle);
+      titleInput.setEditable(false);
+    }
+
+    UIWikiRichTextArea wikiRichTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);
+    if (wikiRichTextArea.isRendered()) {
+      Utils.feedDataForWYSIWYGEditor(pageEditForm, null);
+    }
+
+    wikiPortlet.changeMode(WikiMode.ADDPAGE);
+  }
+
   
 }

@@ -38,7 +38,7 @@ import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.UIWikiTemplateDescriptionContainer;
 import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.commons.UIWikiTemplateForm;
-import org.exoplatform.wiki.webui.control.action.AddPageFromBlankActionComponent;
+import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
 
 /**
  * Created by The eXo Platform SAS
@@ -58,7 +58,7 @@ public class UIWikiSelectTemplateForm extends UIWikiTemplateForm implements UIPo
   public static final String    ACTION_PREVIEW = "PreviewTemplate";
 
   //Note this action is change mode one
-  public static final String    ACTION_ADD     = AddPageFromBlankActionComponent.ACTIONNAME
+  public static final String    ACTION_ADD     = AddPageActionComponent.ACTION
                                                    + Utils.WITH + "Template";
 
   public static final String    ACTION_SEARCH  = "SearchTemplate";

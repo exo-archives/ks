@@ -44,6 +44,8 @@ import org.exoplatform.services.jcr.access.AccessControlList;
 import org.exoplatform.services.jcr.access.SystemIdentity;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.form.UIForm;
@@ -317,21 +319,31 @@ public class Utils {
     }
     return sb.toString();
   }
-  
-  public static String createFullRequestAction(String formId,
-                                           String action,
-                                           String componentId,
-                                           String beanId) throws Exception {
-    StringBuilder b = new StringBuilder();
 
-    b.append("javascript:eXo.wiki.UIForm.submitPageEvent('").append(formId).append("','");
-    b.append(action).append("','");
-    b.append("&amp;").append(UIForm.SUBCOMPONENT_ID).append("=").append(componentId);
-    if (beanId != null) {
-      b.append("&amp;").append(UIComponent.OBJECTID).append("=").append(beanId);
+  
+  public static String createFormActionLink(UIComponent uiComponent,
+                                          String action,
+                                          String beanId) throws Exception {
+    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+    UIForm form = uiComponent.getAncestorOfType(UIForm.class);
+    if (form != null) {
+      String formId = form.getId();
+      if (context instanceof PortletRequestContext) {
+        formId = ((PortletRequestContext) context).getWindowId() + "#" + formId;
+      }
+      StringBuilder b = new StringBuilder();
+
+      b.append("javascript:eXo.wiki.UIForm.submitPageEvent('").append(formId).append("','");
+      b.append(action).append("','");
+      b.append("&amp;").append(UIForm.SUBCOMPONENT_ID).append("=").append(uiComponent.getId());
+      if (beanId != null) {
+        b.append("&amp;").append(UIComponent.OBJECTID).append("=").append(beanId);
+      }
+      b.append("')");
+      return b.toString();
+    } else {
+      return form.event(action, uiComponent.getId(), action);
     }
-    b.append("')");
-    return b.toString();
   }
 
   public static String getActionFromWikiMode(WikiMode mode) {
@@ -340,8 +352,8 @@ public class Utils {
       return "EditPage";
     case ADDPAGE:
       return "AddPage";
-    case DELETECONFIRM:
-      return "DeleteConfirm";
+    case DELETEPAGE:
+      return "DeletePage";
     case ADDTEMPLATE:
       return "AddTemplate";
     case EDITTEMPLATE:

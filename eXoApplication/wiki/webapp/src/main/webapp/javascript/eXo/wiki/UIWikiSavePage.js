@@ -21,11 +21,11 @@ function UIWikiSavePage() {
 };
 
 UIWikiSavePage.prototype.confirm = function(uicomponentId, isNewMode, pageTitleInputId, untitled,
-    titleMessage, addMessage, submitClass, submitLabel, discardClass, discardLabel, cancelLabel) {
+    titleMessage, addMessage, submitClass, submitLabel,cancelLabel) {
   var pageTitleInput = document.getElementById(pageTitleInputId); 
     if (isNewMode ==true && (pageTitleInput.value == untitled)) {
       eXo.wiki.UIConfirmBox.render(uicomponentId, titleMessage, addMessage,
-          submitClass, submitLabel, discardClass, discardLabel, cancelLabel);
+          submitClass, submitLabel, cancelLabel);
       return false;
     } 
   return true;

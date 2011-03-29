@@ -4,8 +4,8 @@
   rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIDropdownMenu.init(\""+uicomponent.id+"\");");
  %>
 
-<div class="AddPageActionComponent HoverLink MoreLink Icon" id ="$uicomponent.id" >
-	<%= _ctx.appRes("UIPageToolBar.label.AddPage"); %>	
+<div class="AddExtensionContainer HoverLink MoreLink Icon" id ="$uicomponent.id" >
+	<%= _ctx.appRes("UIPageToolBar.action.Add"); %>	
 	<div class="HoverMenu MoreMenu">
 	  <ul>
 			<%

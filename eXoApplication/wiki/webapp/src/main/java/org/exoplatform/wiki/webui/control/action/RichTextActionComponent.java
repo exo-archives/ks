@@ -22,7 +22,6 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
@@ -34,6 +33,7 @@ import org.exoplatform.wiki.webui.UIWikiPageContainer;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.UIWikiSidePanelArea;
+import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddPageModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
@@ -46,11 +46,14 @@ import org.xwiki.rendering.syntax.Syntax;
  * May 31, 2010  
  */
 @ComponentConfig(
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",               
   events = {
     @EventConfig(listeners = RichTextActionComponent.RichTextActionListener.class, phase = Phase.DECODE)
   }
 )
-public class RichTextActionComponent extends UIComponent {
+public class RichTextActionComponent extends AbstractFormActionComponent {
+  
+  public static final String                   ACTION  = "RichText";
 
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] {
       new IsEditAddModeFilter(), new IsEditAddPageModeFilter() });
@@ -58,6 +61,21 @@ public class RichTextActionComponent extends UIComponent {
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
+  }  
+
+  @Override
+  public String getActionName() {
+    return ACTION;
+  }
+
+  @Override
+  public boolean isAnchor() {
+    return false;
+  }
+
+  @Override
+  public boolean isSubmit() {
+    return false;
   }
   
   public static class RichTextActionListener extends UIPageToolBarActionListener<RichTextActionComponent> {

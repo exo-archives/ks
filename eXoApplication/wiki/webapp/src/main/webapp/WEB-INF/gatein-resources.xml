@@ -94,16 +94,7 @@
       <js-path>/javascript/eXo/wiki/UIWikiAjaxRequest.js</js-path>
     </param>
   </javascript>
-  
-   <!-- js for hover menu  -->
-	 <!-- Remove in the future  -->
-   <javascript>
-    <param>
-      <js-module>eXo.wiki.UIWikiDropdownMenu</js-module>
-      <js-path>/javascript/eXo/wiki/UIWikiDropdownMenu.js</js-path>
-    </param>
-  </javascript>
-	
+  	
 	 <javascript>
     <param>
       <js-module>eXo.wiki.UIDropdownMenu</js-module>

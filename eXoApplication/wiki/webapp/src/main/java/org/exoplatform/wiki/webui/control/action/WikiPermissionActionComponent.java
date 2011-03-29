@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
@@ -30,11 +29,12 @@ import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.UIWikiPermissionForm;
-import org.exoplatform.wiki.webui.UIWikiPermissionForm.Scope;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.UIWikiPermissionForm.Scope;
 import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
+import org.exoplatform.wiki.webui.control.action.core.AbstractEventActionComponent;
 import org.exoplatform.wiki.webui.control.filter.AdminSpacePermissionFilter;
-import org.exoplatform.wiki.webui.control.listener.UIWikiToolBarActionListener;
+import org.exoplatform.wiki.webui.control.listener.BrowseContainerActionListener;
 
 /**
  * Created by The eXo Platform SAS
@@ -43,11 +43,14 @@ import org.exoplatform.wiki.webui.control.listener.UIWikiToolBarActionListener;
  * Dec 29, 2010  
  */
 @ComponentConfig(
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",
   events = {
     @EventConfig(listeners = WikiPermissionActionComponent.WikiPermissionActionListener.class)
   }
 )
-public class WikiPermissionActionComponent extends UIComponent {
+public class WikiPermissionActionComponent extends AbstractEventActionComponent {
+  
+  public static final String                   ACTION  = "WikiPermission";
   
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new AdminSpacePermissionFilter() });
 
@@ -56,7 +59,17 @@ public class WikiPermissionActionComponent extends UIComponent {
     return FILTERS;
   }
 
-  public static class WikiPermissionActionListener extends UIWikiToolBarActionListener<WikiPermissionActionComponent> {
+  @Override
+  public String getActionName() {
+    return ACTION;
+  }
+
+  @Override
+  public boolean isAnchor() {
+    return false;
+  }
+
+  public static class WikiPermissionActionListener extends BrowseContainerActionListener<WikiPermissionActionComponent> {
     @Override
     protected void processEvent(Event<WikiPermissionActionComponent> event) throws Exception {
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);

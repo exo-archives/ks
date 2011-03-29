@@ -16,10 +16,8 @@
  */
 package org.exoplatform.wiki.webui.control;
 
-import java.util.List;
-
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.lifecycle.Lifecycle;
+import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 
 /**
  * Created by The eXo Platform SAS
@@ -28,29 +26,11 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
  * Apr 26, 2010  
  */
 @ComponentConfig(
-  lifecycle = Lifecycle.class,
-  template = "app:/templates/wiki/webui/UIWikiToolbar.gtmpl"
+  lifecycle = UIContainerLifecycle.class  
 )
 public class UIWikiToolBar extends UIExtensionContainer {
   
-  public static final String EXTENSION_TYPE = "org.exoplatform.wiki.UIWikiToolBar";
-
-  public static final String BROWSE_ACTION  = "Browse";
-  
-  public UIWikiToolBar() throws Exception {    
-  }
-  
-  public ActionComponent getBrowseAction() throws Exception {
-    List<ActionComponent> activeActions = getActions();
-    if (activeActions.size() > 0) {
-      for (ActionComponent action : activeActions) {
-        if (action.getActionName().equals(BROWSE_ACTION)) {
-          return action;
-        }
-      }
-    }
-    return null;
-  }
+  public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.control.UIWikiToolBar";
 
   @Override
   public String getExtensionType() {

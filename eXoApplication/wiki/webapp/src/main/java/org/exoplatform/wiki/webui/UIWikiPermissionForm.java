@@ -174,7 +174,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     this.scope = scope;
     if (Scope.WIKI.equals(this.scope)) {
       this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE,
-          WikiMode.ADDPAGE, WikiMode.DELETECONFIRM, WikiMode.VIEWREVISION, WikiMode.SHOWHISTORY,
+          WikiMode.ADDPAGE, WikiMode.DELETEPAGE, WikiMode.VIEWREVISION, WikiMode.SHOWHISTORY,
           WikiMode.ADVANCEDSEARCH });
     } else if (Scope.PAGE.equals(this.scope)) {
       this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW });

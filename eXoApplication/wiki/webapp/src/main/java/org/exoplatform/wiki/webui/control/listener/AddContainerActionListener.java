@@ -17,8 +17,7 @@
 package org.exoplatform.wiki.webui.control.listener;
 
 import org.exoplatform.webui.core.UIComponent;
-import org.exoplatform.webui.event.Event;
-import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
+import org.exoplatform.wiki.webui.control.AddExtensionContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -26,17 +25,11 @@ import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
  *          hieu.lai@exoplatform.com
  * Feb 10, 2011  
  */
-public class AddPageActionListener<T extends UIComponent> extends UIPageToolBarActionListener<T> {
+public abstract class AddContainerActionListener<T extends UIComponent> extends UIPageToolBarActionListener<T> {
 
   @Override
   protected String getExtensionType() {
-    return AddPageActionComponent.EXTENSION_TYPE;
-  }
-
-  @Override
-  protected void processEvent(Event<T> event) throws Exception {
-    // TODO Auto-generated method stub
-    
+    return AddExtensionContainer.EXTENSION_TYPE;
   }
 
 }

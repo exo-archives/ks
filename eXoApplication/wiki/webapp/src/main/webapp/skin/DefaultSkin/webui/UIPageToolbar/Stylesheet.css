@@ -3,16 +3,62 @@
 	margin-bottom: 0px;
 }
 
-.UIWikiPageControlArea .UIPageToolBar .Delete {
+.UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .Icon {
+	float:right;
+	height: 12px;
+	padding: 6px 8px 6px 25px;
+	margin: 0px;
+	text-transform:capitalize;
+	color: black;
+}
+
+.UIWikiPortlet .UIWikiPageControlArea .Icon:hover {
+	background-color: #d0dff0;
+	-moz-border-radius:3px 3px 3px 3px;
+	-webkit-border-radius: 3px;
+	text-decoration: none;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .DeletePage {
 	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -304px;
 }
 
-.UIWikiPageControlArea .UIPageToolBar .Edit {
+.UIWikiPageControlArea .UIPageToolBar .EditPage {
 	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -261px;
 }
 
-.UIWikiPageControlArea .UIPageToolBar .Add {
-	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -47px;
+.UIWikiPageControlArea .UIPageToolBar .AddPage {
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -44px;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .MovePage {
+	background:url("background/MovePage.gif") no-repeat 5px center;	
+}
+
+.UIWikiPageControlArea .UIPageToolBar .WatchPage {
+	background:url("background/watch_off.png") no-repeat 5px center;	
+}
+
+.UIWikiPageControlArea .UIPageToolBar .UnWatchPage {
+	background: url("background/watch_on.png") no-repeat 5px center;	
+}
+
+.UIWikiPageControlArea .UIPageToolBar .PageInfo {
+  background: url("/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/MiscIcons/Info.png") no-repeat 5px center;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .AddExtensionContainer {
+  position:relative;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .MoreExtensionContainer {
+  position:relative;
+}
+
+.UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .HoverMenu .Icon {
+	float: none;
+	display:block;
+	padding: 6px 8px 12px 25px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MoreLink {
@@ -54,22 +100,27 @@
     ;
 }
 
-.UIWikiPageEditForm .UIPageToolBar .Edit {
+.UIWikiPageEditForm .UIPageToolBar .RichText {
   background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
     -235px;
 }
 
-.UIWikiPageEditForm .UIPageToolBar .FAQ {
+.UIWikiPageEditForm .UIPageToolBar .Help {
   background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
     -212px;
 }
 
-.UIWikiPageEditForm .UIPageToolBar .View {
+.UIWikiPageEditForm .UIPageToolBar .PreviewPage {
   background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
     -188px;
 }
 
-.UIWikiPageEditForm .UIPageToolBar .Save {
+.UIWikiPageEditForm .UIPageToolBar .SavePage {
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
+    -144px;
+}
+
+.UIWikiPageEditForm .UIPageToolBar .SaveTemplate {
   background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
     -144px;
 }
