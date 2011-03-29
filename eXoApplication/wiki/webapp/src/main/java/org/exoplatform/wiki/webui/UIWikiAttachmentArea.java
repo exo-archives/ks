@@ -214,16 +214,17 @@ public class UIWikiAttachmentArea extends UIWikiForm {
   static public class RemoveAttachmentActionListener extends EventListener<UIWikiAttachmentArea> {
     public void execute(Event<UIWikiAttachmentArea> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIWikiPageArea pageArea = wikiPortlet.findFirstComponentOfType(UIWikiPageArea.class);
       UIWikiPageContentArea contentArea = wikiPortlet.findFirstComponentOfType(UIWikiPageContentArea.class);
-      UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);      
-     
+      UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);
       UIWikiAttachmentArea uiForm = event.getSource();
-      String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
       Page page = uiForm.getCurrentWikiPage();
-      ((PageImpl) page).removeAttachment(attFileId);
-      contentArea.renderVersion();
+      String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
+      ((PageImpl) page).removeAttachment(attFileId);      
       event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea);
+      if (WikiMode.VIEW.equals(wikiPortlet.getWikiMode())) {
+        contentArea.renderVersion();
+        event.getRequestContext().addUIComponentToUpdateByAjax(contentArea);
+      }
     }
   }
   
