@@ -14,7 +14,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<div class="Title"><%=_ctx.appRes("UIPollForm.label.LimitOption"); %>:</div>
+				<div class="Title"></div>
 				<div class="Line"><span></span></div>
 					<div class="PollOptionConntent">
 						<table class="UIFormGrid">
