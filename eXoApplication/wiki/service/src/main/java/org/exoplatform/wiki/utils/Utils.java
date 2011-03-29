@@ -332,7 +332,7 @@ public class Utils {
     String author = conversationState.getIdentity().getUserId();
 
     // Get watchers' mails
-    PageImpl page = content.getParent();
+    PageImpl page = content.getParentPage();
     List<String> list = page.getWatchedMixin().getWatchers();
     List<String> emailList = new ArrayList<String>();
     for (int i = 0; i < list.size(); i++) {

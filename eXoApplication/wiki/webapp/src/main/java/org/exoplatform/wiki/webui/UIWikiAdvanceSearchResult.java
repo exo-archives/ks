@@ -70,7 +70,7 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
       if (WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType()) || WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())) {
         AttachmentImpl searchContent = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(),
                                                                                                    WikiNodeType.WIKI_ATTACHMENT);
-        searchWiki = searchContent.getParent().getWiki();
+        searchWiki = searchContent.getParentPage().getWiki();
       } else if(WikiNodeType.WIKI_PAGE.equals(result.getType()) || WikiNodeType.WIKI_HOME.equals(result.getType())){
         PageImpl page = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(), WikiNodeType.WIKI_PAGE);
         searchWiki = page.getWiki();

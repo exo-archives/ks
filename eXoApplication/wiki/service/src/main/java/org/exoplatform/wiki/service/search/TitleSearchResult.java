@@ -74,15 +74,10 @@ public class TitleSearchResult {
   private Wiki getWiki() throws Exception {
     Wiki searchWiki = null;
     try {
-      if (WikiNodeType.WIKI_PAGE_CONTENT.equals(getType())) {
+      if (WikiNodeType.WIKI_PAGE_CONTENT.equals(getType()) || WikiNodeType.WIKI_ATTACHMENT.equals(getType())) {
         AttachmentImpl searchContent = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(getPath(),
                                                                                              getType());
-        searchWiki = searchContent.getParent().getWiki();
-      } else if (WikiNodeType.WIKI_ATTACHMENT.equals(getType())) {
-        // Search Object is attachment
-        AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(getPath(),
-                                                                                               getType());
-        searchWiki = searchAtt.getParentPage().getWiki();
+        searchWiki = searchContent.getParentPage().getWiki();
       }
     } catch (Exception e) {
     }

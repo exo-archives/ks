@@ -168,13 +168,6 @@
     </dependency>
     
     <dependency>
-      <groupId>org.chromattic</groupId>
-      <artifactId>chromattic.core</artifactId>
-      <version>${org.chromattic.version}</version>
-      <scope>test</scope>
-    </dependency>
-    
-    <dependency>
       <groupId>jtidy</groupId>
       <artifactId>jtidy</artifactId>
       <version>${jtidy.version}</version>

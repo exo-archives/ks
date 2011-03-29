@@ -21,9 +21,7 @@ import java.util.GregorianCalendar;
 
 import org.chromattic.api.annotations.Destroy;
 import org.chromattic.api.annotations.ManyToOne;
-import org.chromattic.api.annotations.MappedBy;
 import org.chromattic.api.annotations.Name;
-import org.chromattic.api.annotations.OneToOne;
 import org.chromattic.api.annotations.Path;
 import org.chromattic.api.annotations.PrimaryType;
 import org.chromattic.api.annotations.Property;
@@ -129,7 +127,4 @@ public abstract class AttachmentImpl extends NTFile implements Attachment {
     setContentResource(textContent);
   }
 
-  @OneToOne
-  @MappedBy(WikiNodeType.Definition.CONTENT)
-  public abstract PageImpl getParent();
 }

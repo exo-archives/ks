@@ -110,7 +110,7 @@ public class Injector implements LifeCycleListener, StateChangeListener {
           }
           AttachmentImpl content = session.findByPath(AttachmentImpl.class, path);
           try {
-            PageImpl page = content.getParent();
+            PageImpl page = content.getParentPage();
             WatchedMixin mixin = page.getWatchedMixin();
             if (mixin != null) {
               boolean isWatched = !mixin.getWatchers().isEmpty();
