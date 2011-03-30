@@ -108,13 +108,8 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
   public List<SelectItem> getOptions() throws Exception {
     List<SelectItem> options = new ArrayList<SelectItem>();
     options.add(new SelectOption(FILED_ALL_GROUP, FILED_ALL_GROUP));
-    OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-    Object[] objGroupIds = organizationService.getGroupHandler().getAllGroups().toArray();
     try {
-      List<String> groupIds = new ArrayList<String>();
-      for (Object object : objGroupIds) {
-        groupIds.add(((ExtGroup) object).getId());
-      }
+      List<String> groupIds = UserHelper.getAllGroupId();
       if (!groupIds.isEmpty()) {
         for (String publicCg : groupIds) {
           options.add(new SelectOption(publicCg, publicCg));
@@ -179,13 +174,6 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
     }
     return users;
   }
-
-  /*
-   * public List<User> getListAllUsers() throws Exception { List<User> users = UserHelper.getAllUser() ; return users ; }
-   */
-  /*
-   * public void setUserList(List<User> userList) throws Exception { ObjectPageList objPageList = new ObjectPageList(userList, 10) ; uiPageList_.setPageList(objPageList) ; }
-   */
 
   public void setUserList(PageList<User> userList) throws Exception {
     uiPageList_.setPageList(userList);

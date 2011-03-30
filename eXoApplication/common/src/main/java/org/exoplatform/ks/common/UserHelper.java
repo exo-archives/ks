@@ -37,7 +37,7 @@ import org.exoplatform.services.organization.impl.GroupImpl;
  */
 public class UserHelper {
   
-  private static OrganizationService getOrganizationService() {
+  public static OrganizationService getOrganizationService() {
     OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
     return organizationService;
   }
@@ -51,8 +51,8 @@ public class UserHelper {
   }
 
   public static List<Group> getAllGroup() throws Exception {
-    PageList pageList = (PageList) getGroupHandler().getAllGroups() ;
-    List<Group> list = pageList.getAll() ;
+    Collection<Group> pageList = getGroupHandler().getAllGroups() ;
+    List<Group> list = new ArrayList<Group>(pageList) ;
     return list;
   }
 
@@ -157,8 +157,22 @@ public class UserHelper {
   	return groupIds;
   }
 
+  public static List<String> getAllGroupId() throws Exception {
+    List<String> grIds = new ArrayList<String>();
+    for (Group gr : getAllGroup()) {
+      grIds.add(gr.getId());
+    }
+    return grIds;
+  }
+
+  
+  public static List<Group> findGroups(Group group) throws Exception {
+  	return (List<Group>) getGroupHandler().findGroups(group);
+  }
+  
+  @SuppressWarnings("unchecked")
   public static PageList getPageListUser() throws Exception {
-  	return getUserHandler().getUserPageList(10);
+    return getUserHandler().getUserPageList(10);
   }
 
   public static boolean isAnonim() throws Exception {
@@ -166,6 +180,10 @@ public class UserHelper {
   	if (userId == null)
   		return true;
   	return false;
+  }
+  
+  public static Collection findMembershipsByUser(String userId) throws Exception {
+    return getOrganizationService().getMembershipHandler().findMembershipsByUser(userId);
   }
 
   @SuppressWarnings("unchecked")
@@ -177,7 +195,7 @@ public class UserHelper {
 
   	listOfUser.add(userId); //himself
   	String value = "";
-  	Collection<Membership> memberships = getOrganizationService().getMembershipHandler().findMembershipsByUser(userId);
+  	Collection<Membership> memberships = findMembershipsByUser(userId);
   	for (Membership membership : memberships) {
        value = membership.getGroupId();
         listOfUser.add(value); // its groups
