@@ -177,6 +177,14 @@
       <js-path>/javascript/eXo/wiki/related/UIRelated.js</js-path>
     </param>
   </javascript>
+  
+  <!-- js for Edit page -->
+  <javascript>
+    <param>
+      <js-module>eXo.wiki.UIWikiPageEditForm</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiPageEditForm.js</js-path>
+    </param>
+  </javascript>
    
 </gatein-resources>
 

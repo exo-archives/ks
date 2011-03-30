@@ -1,3 +1,7 @@
+<%  
+  def rcontext = _ctx.getRequestContext() ;
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPageEditForm.editPageContent('" + uicomponent.id + "')");
+%>
 <div class="UIWikiPageEditForm">
 <% uiform.begin();%>
 <div class="ClearFix">
