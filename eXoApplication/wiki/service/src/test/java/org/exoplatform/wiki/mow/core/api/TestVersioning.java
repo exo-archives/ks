@@ -60,7 +60,7 @@ public class TestVersioning extends AbstractMOWTestcase {
     wikipage.checkout();
     Iterator<NTVersion> iter = wikipage.getVersionableMixin().getVersionHistory().iterator();
     NTVersion version = iter.next();
-    assertEquals("rootVersion", version.getName());
+    assertEquals("jcr:rootVersion", version.getName());
     version = iter.next();
     NTFrozenNode frozenNode = version.getNTFrozenNode();
     assertEquals("testCreateVersionHistoryTree-ver1.0",
