@@ -817,7 +817,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       return getCategory(getCategoryHome(sProvider).getNode(categoryId));
     } catch (Exception e) {
-      log.error("Failed to get category, categoryId: " + categoryId, e);
+      if (log.isDebugEnabled()) log.debug("Failed to get category, categoryId: " + categoryId, e);
       return null;
     } finally {
       sProvider.close();
