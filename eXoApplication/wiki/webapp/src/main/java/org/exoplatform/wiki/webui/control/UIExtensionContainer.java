@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.ext.UIExtension;
 import org.exoplatform.webui.ext.UIExtensionManager;
@@ -32,7 +33,9 @@ import org.exoplatform.wiki.webui.UIWikiPortlet;
  *          hieu.lai@exoplatform.com
  * 14 Mar 2011  
  */
-public abstract class UIExtensionContainer extends UIContainer {  
+public abstract class UIExtensionContainer extends UIContainer {
+  
+  protected int extensionSize;
 
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
@@ -41,9 +44,13 @@ public abstract class UIExtensionContainer extends UIContainer {
     UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
     extContext.put(UIWikiPortlet.class.getName(), wikiPortlet);
     List<UIExtension> extensions = manager.getUIExtensions(getExtensionType());
+    extensionSize = 0;
     if (extensions != null && extensions.size()>0) {
       for (UIExtension extension : extensions) {
-        manager.addUIExtension(extension, extContext, this);
+        UIComponent uicomponent = manager.addUIExtension(extension, extContext, this);
+        if (uicomponent != null) {
+          extensionSize++;
+        }
       }
       super.processRender(context);
     }    
