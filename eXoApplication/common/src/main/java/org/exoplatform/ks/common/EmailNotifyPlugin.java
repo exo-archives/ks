@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -40,8 +40,7 @@ public class EmailNotifyPlugin extends BaseComponentPlugin {
    * 
    * @param params the params
    */
-  @SuppressWarnings("unchecked")
-	public EmailNotifyPlugin(InitParams params) {
+  public EmailNotifyPlugin(InitParams params) {
     PropertiesParam param = params.getPropertiesParam("email.configuration.info");
     if (param != null) {
       serverConfiguration_ = param.getProperties();

@@ -24,7 +24,7 @@ import java.util.Date;
  * This object intermediate to give search empty or quick search 
  * 
  * Author : Truong Nguyen
- *					truong.nguyen@exoplatform.com
+ *          truong.nguyen@exoplatform.com
  * May 7, 2008, 4:44:24 PM
  */
 public class ObjectSearchResult {

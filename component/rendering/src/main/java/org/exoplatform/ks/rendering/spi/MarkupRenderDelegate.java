@@ -8,14 +8,13 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.ks.rendering.spi;
-
 
 /**
  * A MarkupDelgate is reponsible for exposing an object for markup rendering
@@ -24,17 +23,16 @@ package org.exoplatform.ks.rendering.spi;
  */
 public interface MarkupRenderDelegate<T> {
 
-  
   /**
    * markup syntax used to select the appropriate renderer
    * @return
    */
   String getSyntax(T target);
-  
+
   /**
    * Actual markup
    * @return
    */
-  String getMarkup(T target) ;
-  
+  String getMarkup(T target);
+
 }

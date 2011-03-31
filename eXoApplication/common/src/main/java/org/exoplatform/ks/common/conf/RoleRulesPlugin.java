@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -32,7 +32,7 @@ import org.exoplatform.management.jmx.annotations.Property;
 /**
  * Created by The eXo Platform SARL
  * Author : Truong Nguyen
- *					truong.nguyen@exoplatform.com
+ *          truong.nguyen@exoplatform.com
  * Oct 28, 2008, 4:25:54 PM
  */
 
@@ -40,14 +40,14 @@ import org.exoplatform.management.jmx.annotations.Property;
 @NameTemplate({@Property(key="service", value="forum"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
 @ManagedDescription("Plugin that defines rules for administrator role")
 public class RoleRulesPlugin extends ManagedPlugin {
-	private Map<String, List<String>> rules_ = new LinkedHashMap<String, List<String>>();
+  private Map<String, List<String>> rules_ = new LinkedHashMap<String, List<String>>();
 
-	
+  
 
   @SuppressWarnings("unchecked")
   public RoleRulesPlugin(InitParams params) throws Exception {
-  	ValueParam vlParam = params.getValueParam("role") ;
-  	ValuesParam vlsParam = params.getValuesParam("rules") ;     
+    ValueParam vlParam = params.getValueParam("role") ;
+    ValuesParam vlsParam = params.getValuesParam("rules") ;     
     rules_.put(vlParam.getValue(), vlsParam.getValues());
   }
   

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -19,9 +19,6 @@ package org.exoplatform.poll.service;
 import java.util.List;
 
 import org.exoplatform.container.component.ComponentPlugin;
-
-
-
 
 /**
  * Main Facade for all BBCode related operations
@@ -35,15 +32,16 @@ public interface PollService {
    * @param plugin the plugin
    * @throws Exception the exception
    */
-	void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception;
-	/**
+  void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception;
+
+  /**
    * Gets the poll.
    * 
    * @param pollId
    * @return the poll
    * @throws Exception the exception
    */
-	Poll getPoll(String pollId) throws Exception;
+  Poll getPoll(String pollId) throws Exception;
 
   /**
    * Save poll.
@@ -70,15 +68,15 @@ public interface PollService {
    * @throws Exception the exception
    */
   void setClosedPoll(Poll poll) throws Exception;
-  
+
   /**
    * Gets list polls.
    * 
    * @return the list of polls
    * @throws Exception the exception
    */
-  public List<Poll>getPagePoll() throws Exception ;
-  
+  public List<Poll> getPagePoll() throws Exception;
+
   /**
    * Gets the poll summary.
    * 
@@ -86,5 +84,5 @@ public interface PollService {
    * @return the poll summary
    * @throws Exception the exception
    */
-  public PollSummary getPollSummary(List<String> groupOfUser) throws Exception ;
+  public PollSummary getPollSummary(List<String> groupOfUser) throws Exception;
 }

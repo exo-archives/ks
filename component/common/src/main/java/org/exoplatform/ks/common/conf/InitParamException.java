@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -29,21 +29,22 @@ public class InitParamException extends RuntimeException {
    * 
    */
   private static final long serialVersionUID = 6033741581889176606L;
-  protected  InitParams params;
-  protected Class<?> target;
 
- 
+  protected InitParams      params;
+
+  protected Class<?>        target;
+
   protected InitParamException(InitParams params, Class<?> target) {
     this.params = params;
     this.target = target;
   }
-  
-  public InitParamException(InitParams params, Class<?>  target, String message, Throwable t) {
-    this(message,t);
+
+  public InitParamException(InitParams params, Class<?> target, String message, Throwable t) {
+    this(message, t);
     this.params = params;
     this.target = target;
   }
-  
+
   public InitParamException() {
   }
 

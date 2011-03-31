@@ -30,7 +30,7 @@ import org.exoplatform.ks.common.jcr.KSDataLocation;
 /**
  * Created by The eXo Platform SARL
  * Author : Truong Nguyen
- *					truong.nguyen@exoplatform.com
+ *          truong.nguyen@exoplatform.com
  * Apr 10, 2008, 4:40:22 PM
  */
 public class Utils {

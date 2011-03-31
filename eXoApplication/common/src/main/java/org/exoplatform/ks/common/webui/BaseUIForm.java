@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -114,7 +114,7 @@ public class BaseUIForm extends UIForm {
   /**
    * Sends a warning message to ui
    * @param messageKey resource bundle key for the message
-   * @param messageType {@link MessageType}
+   * @param messageType {@link ApplicationMessage}
    */
   private void message(String messageKey, String[] args, int messageType) {
     UIApplication uiApp = this.getAncestorOfType(UIApplication.class) ;
@@ -155,7 +155,7 @@ public class BaseUIForm extends UIForm {
                                                 String popupId,
                                                 int width,
                                                 int height) throws Exception {
-  	AbstractPopupAction popupAction = parent.getChild(AbstractPopupAction.class);
+    AbstractPopupAction popupAction = parent.getChild(AbstractPopupAction.class);
     UIPopupContainer popupContainer = popupAction.prepareForNewForm();
 
     T form = popupContainer.addChild(componentType, null, null);
@@ -167,9 +167,9 @@ public class BaseUIForm extends UIForm {
       popupContainer.setId(generateComponentId(componentType));
     }
     if(parent instanceof UIPopupContainer)
-    	((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(parent);
+      ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(parent);
     else 
-    	((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(popupAction);
+      ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(popupAction);
     return form;
   }
   
@@ -190,18 +190,18 @@ public class BaseUIForm extends UIForm {
   }
 
   protected void cancelChildPopupAction() throws Exception {
-  	UIPopupContainer popupContainer = this.getAncestorOfType(UIPopupContainer.class) ;
-  	UIPopupAction popupAction;
-  	if(popupContainer != null) {
-			if(((UIComponent)this.getParent()).getId().equals(popupContainer.getId())){
-				popupAction = popupContainer.getAncestorOfType(UIPopupAction.class) ;
-			} else {
-				popupAction = popupContainer.getChild(UIPopupAction.class) ;
-			}
-  	} else {
-  		popupAction = this.getAncestorOfType(UIPopupAction.class);
-  	}
-  	popupAction.cancelPopupAction();
+    UIPopupContainer popupContainer = this.getAncestorOfType(UIPopupContainer.class) ;
+    UIPopupAction popupAction;
+    if(popupContainer != null) {
+      if(((UIComponent)this.getParent()).getId().equals(popupContainer.getId())){
+        popupAction = popupContainer.getAncestorOfType(UIPopupAction.class) ;
+      } else {
+        popupAction = popupContainer.getChild(UIPopupAction.class) ;
+      }
+    } else {
+      popupAction = this.getAncestorOfType(UIPopupAction.class);
+    }
+    popupAction.cancelPopupAction();
   }
   
 }

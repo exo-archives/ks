@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -32,18 +32,18 @@ import org.exoplatform.ks.bbcode.spi.BBCodePlugin;
  * @version $Revision$
  */
 public class MemoryBBCodeService implements BBCodeService {
-  
-  private Map<String,BBCode> bbcodes;
-  
+
+  private Map<String, BBCode> bbcodes;
+
   public MemoryBBCodeService() {
-   bbcodes = new HashMap<String,BBCode>(); 
+    bbcodes = new HashMap<String, BBCode>();
   }
-  
+
   public void delete(String bbcodeId) throws Exception {
     bbcodes.remove(bbcodeId);
   }
 
-  public BBCode findById(String bbcodeId) throws Exception {  
+  public BBCode findById(String bbcodeId) throws Exception {
     return bbcodes.get(bbcodeId);
   }
 
@@ -72,9 +72,9 @@ public class MemoryBBCodeService implements BBCodeService {
       addBBCode(bbCode);
     }
   }
-  
+
   public void addBBCode(BBCode code) {
-    code.setId(code.getTagName() + ((code.isOption()) ? "=":""));
+    code.setId(code.getTagName() + ((code.isOption()) ? "=" : ""));
     this.bbcodes.put(code.getId(), code);
   }
 

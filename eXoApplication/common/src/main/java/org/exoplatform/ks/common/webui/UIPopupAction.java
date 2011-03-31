@@ -30,13 +30,13 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
 
 @ComponentConfig(lifecycle = Lifecycle.class)
 public class UIPopupAction extends AbstractPopupAction {
-	public UIPopupAction() throws Exception {
-	  super();
+  public UIPopupAction() throws Exception {
+    super();
   }
 
   protected void afterProcessRender(WebuiRequestContext context) {
     String parentId = ((UIComponent) this.getParent()).getId();
-    	context.getJavascriptManager()
+      context.getJavascriptManager()
       .addOnLoadJavascript("function(){eXo.ks.KSUtils.setMaskLayer('" + parentId + "');}");
   }
  }

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -71,8 +71,8 @@ import org.quartz.JobDetail;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen Quang
- *					hung.nguyen@exoplatform.com
- * Jul 10, 2007	
+ *          hung.nguyen@exoplatform.com
+ * Jul 10, 2007  
  */
 @ManagedBy(ForumServiceManaged.class)
 public class ForumServiceImpl implements ForumService, Startable {
@@ -1140,7 +1140,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   /**
    * {@inheritDoc}
   public void updateDataImported() throws Exception{
-  	storage.updateDataImported();
+    storage.updateDataImported();
   }
    */
 

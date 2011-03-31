@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -45,75 +45,77 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
  */
 
 @ComponentConfig(
-		lifecycle = UIApplicationLifecycle.class,
-		template = "app:/templates/poll/webui/UIPollPortlet.gtmpl"
+    lifecycle = UIApplicationLifecycle.class,
+    template = "app:/templates/poll/webui/UIPollPortlet.gtmpl"
 )
 public class UIPollPortlet extends UIPortletApplication {
-	private boolean isAdmin = false;
-	private String userId = "";
+  private boolean isAdmin = false;
 
-	public UIPollPortlet() throws Exception {
-		addChild(UIPoll.class, null, null).setRendered(false);
-		addChild(UIPollManagement.class, null, null).setRendered(true);
-		addChild(UIPopupAction.class, null, "UIPollPopupAction");
-	}
+  private String  userId  = "";
 
-	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
-		PortletRequestContext portletReqContext = (PortletRequestContext) context;
-		if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
-			UIPoll uipoll = getChild(UIPoll.class).setRendered(true);
-			hasGroupAdminOfGatein();
-			uipoll.setPollId();
-			getChild(UIPollManagement.class).setRendered(false);
-		} else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
-			getChild(UIPoll.class).setRendered(false);
-			((UIPollManagement) getChild(UIPollManagement.class).setRendered(true)).updateGrid();
-		}
-		super.processRender(app, context);
-	}
+  public UIPollPortlet() throws Exception {
+    addChild(UIPoll.class, null, null).setRendered(false);
+    addChild(UIPollManagement.class, null, null).setRendered(true);
+    addChild(UIPopupAction.class, null, "UIPollPopupAction");
+  }
 
-	public void renderPopupMessages() throws Exception {
-		UIPopupMessages popupMess = getUIPopupMessages();
-		if (popupMess == null)
-			return;
-		WebuiRequestContext context = RequestContext.getCurrentInstance();
-		popupMess.processRender(context);
-	}
+  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
+    PortletRequestContext portletReqContext = (PortletRequestContext) context;
+    if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+      UIPoll uipoll = getChild(UIPoll.class).setRendered(true);
+      hasGroupAdminOfGatein();
+      uipoll.setPollId();
+      getChild(UIPollManagement.class).setRendered(false);
+    } else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+      getChild(UIPoll.class).setRendered(false);
+      ((UIPollManagement) getChild(UIPollManagement.class).setRendered(true)).updateGrid();
+    }
+    super.processRender(app, context);
+  }
 
-	public boolean isAdmin() {
-		return isAdmin;
-	}
+  public void renderPopupMessages() throws Exception {
+    UIPopupMessages popupMess = getUIPopupMessages();
+    if (popupMess == null)
+      return;
+    WebuiRequestContext context = RequestContext.getCurrentInstance();
+    popupMess.processRender(context);
+  }
 
-	public String getUserId() {
-		return userId;
-	}
-	
-	private void hasGroupAdminOfGatein() {
-		isAdmin = false;
-		try {
-			UserACL userACL = (UserACL)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
-			List<String> list = new ArrayList<String>();
-			Identity identity = ConversationState.getCurrent().getIdentity();
-			userId = identity.getUserId();
-			if(Utils.isEmpty(userId)) {
-				userId = UserHelper.getCurrentUser();
-			} else {
-				list.addAll(identity.getGroups());
-			}
-			list.add(userId);
-			for (String str : list) {
-				if(str.equals(userACL.getSuperUser()) || str.equals(userACL.getAdminGroups())) isAdmin = true;
-			}
-		} catch (Exception e) {
-			log.debug("Failed to check permision for user by component UserACL", e);
-		}
-	}
+  public boolean isAdmin() {
+    return isAdmin;
+  }
 
-	public void cancelAction() throws Exception {
-		WebuiRequestContext context = RequestContext.getCurrentInstance();
-		UIPopupAction popupAction = getChild(UIPopupAction.class);
-		popupAction.deActivate();
-		context.addUIComponentToUpdateByAjax(popupAction);
-	}
+  public String getUserId() {
+    return userId;
+  }
+
+  private void hasGroupAdminOfGatein() {
+    isAdmin = false;
+    try {
+      UserACL userACL = (UserACL) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
+      List<String> list = new ArrayList<String>();
+      Identity identity = ConversationState.getCurrent().getIdentity();
+      userId = identity.getUserId();
+      if (Utils.isEmpty(userId)) {
+        userId = UserHelper.getCurrentUser();
+      } else {
+        list.addAll(identity.getGroups());
+      }
+      list.add(userId);
+      for (String str : list) {
+        if (str.equals(userACL.getSuperUser()) || str.equals(userACL.getAdminGroups()))
+          isAdmin = true;
+      }
+    } catch (Exception e) {
+      log.debug("Failed to check permision for user by component UserACL", e);
+    }
+  }
+
+  public void cancelAction() throws Exception {
+    WebuiRequestContext context = RequestContext.getCurrentInstance();
+    UIPopupAction popupAction = getChild(UIPopupAction.class);
+    popupAction.deActivate();
+    context.addUIComponentToUpdateByAjax(popupAction);
+  }
 
 }

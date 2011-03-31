@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -438,11 +438,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   /**
-  	 * Get a Node by path using the current session of {@link JCRSessionManager}.<br/>
-  	 * Note that a session must have been initalized by {@link JCRSessionManager#openSession() before calling this method
-  	 * @param relPath path relative to root node of the workspace
-  	 * @return JCR node located at relPath relative path from root node of the current workspace
-  	 */
+     * Get a Node by path using the current session of {@link JCRSessionManager}.<br/>
+     * Note that a session must have been initalized by {@link JCRSessionManager#openSession() before calling this method
+     * @param relPath path relative to root node of the workspace
+     * @return JCR node located at relPath relative path from root node of the current workspace
+     */
   private Node getNodeAt(String relPath) throws Exception {
     return sessionManager.getCurrentSession().getRootNode().getNode(relPath);
   }
@@ -997,7 +997,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         session.logout();
       }
     } catch (Exception e) {
-      log.debug("PathNotFoundException	category node or forum node not found");
+      log.debug("PathNotFoundException  category node or forum node not found");
     }
   }
 

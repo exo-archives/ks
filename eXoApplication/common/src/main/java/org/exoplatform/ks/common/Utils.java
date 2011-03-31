@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -69,43 +69,43 @@ public class Utils {
    * @throws Exception
    */
   static public List<String> ValuesToList(Value[] values) throws Exception {
-  	List<String> list = new ArrayList<String>() ;
-  	if(values.length < 1) return list ;
-  	if(values.length == 1) {
-  		list.add(values[0].getString()) ;
-  		return list ;
-  	}
-  	for(int i = 0; i < values.length; ++i) {
-  		list.add(values[i].getString() );
-  	}
-  	return list;
+    List<String> list = new ArrayList<String>() ;
+    if(values.length < 1) return list ;
+    if(values.length == 1) {
+      list.add(values[0].getString()) ;
+      return list ;
+    }
+    for(int i = 0; i < values.length; ++i) {
+      list.add(values[i].getString() );
+    }
+    return list;
   }
 
   static public String getStandardId(String s) {
-  	int i=0;
-  	StringBuilder builder = new StringBuilder();
-  	while(i < s.length()) {
-  		int t = s.codePointAt(i);
-  		if(t > 48 && t < 122){
-  			builder.append(s.charAt(i)) ;
-  		} else {
-  			builder.append("id") ;
-  		}
-  		++i;
-  	}
-  	return builder.toString();
+    int i=0;
+    StringBuilder builder = new StringBuilder();
+    while(i < s.length()) {
+      int t = s.codePointAt(i);
+      if(t > 48 && t < 122){
+        builder.append(s.charAt(i)) ;
+      } else {
+        builder.append("id") ;
+      }
+      ++i;
+    }
+    return builder.toString();
   }
 
   static public String[] compareStr(String arr1[], String arr2[]) throws Exception {
-  	List<String> list = new ArrayList<String>();
-  	list.addAll(Arrays.asList(arr1));
-  	if(list.isEmpty() || list.get(0).equals(" ")) return new String[]{" "};
-  	for (int i = 0; i < arr2.length; i++) {
-  		if(!list.contains(arr2[i])) {
-  			list.add(arr2[i]);
-  		}
+    List<String> list = new ArrayList<String>();
+    list.addAll(Arrays.asList(arr1));
+    if(list.isEmpty() || list.get(0).equals(" ")) return new String[]{" "};
+    for (int i = 0; i < arr2.length; i++) {
+      if(!list.contains(arr2[i])) {
+        list.add(arr2[i]);
+      }
     }
-  	return list.toArray(new String[]{});
+    return list.toArray(new String[]{});
   }
   
   static public String generateCheckSum(byte[] b) throws Exception {
@@ -166,25 +166,25 @@ public class Utils {
   }
   
   public static String getRemoteIP() {
-		String remoteAddr = "";
-		try {
-			PortalRequestContext context = Util.getPortalRequestContext();
-			remoteAddr = ((HttpServletRequest)context.getRequest()).getRemoteAddr() ;
+    String remoteAddr = "";
+    try {
+      PortalRequestContext context = Util.getPortalRequestContext();
+      remoteAddr = ((HttpServletRequest)context.getRequest()).getRemoteAddr() ;
     } catch (Exception e) { 
-    	log.error("Can not get remote IP", e);
+      log.error("Can not get remote IP", e);
     }
     return remoteAddr;
   }
-	
+  
   public static String getImageUrl(String imagePath) throws Exception {
-  	StringBuilder url = new StringBuilder() ;
-  	ExoContainer container = ExoContainerContext.getCurrentContainer();
+    StringBuilder url = new StringBuilder() ;
+    ExoContainer container = ExoContainerContext.getCurrentContainer();
     try {
-    	ExoContainerContext exoContext = (ExoContainerContext)container.getComponentInstanceOfType(ExoContainerContext.class);
-    	url.append("/").append(exoContext.getRestContextName());
+      ExoContainerContext exoContext = (ExoContainerContext)container.getComponentInstanceOfType(ExoContainerContext.class);
+      url.append("/").append(exoContext.getRestContextName());
     } catch (Exception e) {
-    	log.error("Can not get portal name or rest context name, exception: ",e);
-    	return "";
+      log.error("Can not get portal name or rest context name, exception: ",e);
+      return "";
     }
     RepositoryService rService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class) ;
     url.append("/jcr/").append(rService.getCurrentRepository().getConfiguration().getName())
@@ -193,54 +193,54 @@ public class Utils {
   }
   
   public static String convertCodeHTML(String s) {
-  	if (s == null || s.length() <= 0)
-  		return "";
-  	s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
-  	s = s.replaceFirst("(<br/>)*", "");
-  	s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
-  	try {
-  		s = Utils.processBBCode(s);
-  		s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)( )(https?|ftp)", "$1$3")
-  				 .replaceAll("[^=\"|^=\'|^\'>|^\">](https?://|ftp://)([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", "<a target=\"_blank\" href=\"$1$2\">$1$2</a>");
-  		s = s.replaceAll("&apos;", "'");
+    if (s == null || s.length() <= 0)
+      return "";
+    s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
+    s = s.replaceFirst("(<br/>)*", "");
+    s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
+    try {
+      s = Utils.processBBCode(s);
+      s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)( )(https?|ftp)", "$1$3")
+           .replaceAll("[^=\"|^=\'|^\'>|^\">](https?://|ftp://)([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", "<a target=\"_blank\" href=\"$1$2\">$1$2</a>");
+      s = s.replaceAll("&apos;", "'");
     } catch (Exception e) {
       log.error("Failed to convert HTML",e);
-    	return "";
+      return "";
     }
-  	return s;
+    return s;
   }
   
   /**
-	 * This function will change email address in 'from' field by address of mail service which is configured as system property : <code>gatein.email.smtp.from</code> or
-	 * <code>mail.from</code>. <br>
-	 * That ensures that 'emailAddress' part of 'from' field in a message object is always the same identity with authentication of smtp configuration.<br>
-	 * It's because of 2 reasons: <li>we don't want notification message to show email address of user as sender. Instead, we use mail service of kernel.</li> <li>Almost
-	 * authenticated smtp systems do not allow to separate email address in <code>from</code> field of message from smtp authentication</b> (for now, GMX, MS exchange deny, Gmail
-	 * efforts to modify the such value)</li>
-	 * 
-	 * @param from
-	 * @return null if can not find suitable sender.
-	 */
-	public static String makeNotificationSender(String from) {
-		if (from == null)
-			return null;
-		Properties props = new Properties(System.getProperties());
-		String mailAddr = props.getProperty("gatein.email.smtp.from");
-		if (mailAddr == null || mailAddr.length() == 0)
-			mailAddr = props.getProperty("mail.from");
-		if (mailAddr != null) {
-			try {
-				return new InternetAddress(from + "<" + mailAddr + ">").toUnicodeString();
-			} catch (AddressException e) {
-				if (log.isDebugEnabled()) {
-					log.debug("value of 'gatein.email.smtp.from' or 'mail.from' in configuration file is not in format of mail address", e);
-				}
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
+   * This function will change email address in 'from' field by address of mail service which is configured as system property : <code>gatein.email.smtp.from</code> or
+   * <code>mail.from</code>. <br>
+   * That ensures that 'emailAddress' part of 'from' field in a message object is always the same identity with authentication of smtp configuration.<br>
+   * It's because of 2 reasons: <li>we don't want notification message to show email address of user as sender. Instead, we use mail service of kernel.</li> <li>Almost
+   * authenticated smtp systems do not allow to separate email address in <code>from</code> field of message from smtp authentication</b> (for now, GMX, MS exchange deny, Gmail
+   * efforts to modify the such value)</li>
+   * 
+   * @param from
+   * @return null if can not find suitable sender.
+   */
+  public static String makeNotificationSender(String from) {
+    if (from == null)
+      return null;
+    Properties props = new Properties(System.getProperties());
+    String mailAddr = props.getProperty("gatein.email.smtp.from");
+    if (mailAddr == null || mailAddr.length() == 0)
+      mailAddr = props.getProperty("mail.from");
+    if (mailAddr != null) {
+      try {
+        return new InternetAddress(from + "<" + mailAddr + ">").toUnicodeString();
+      } catch (AddressException e) {
+        if (log.isDebugEnabled()) {
+          log.debug("value of 'gatein.email.smtp.from' or 'mail.from' in configuration file is not in format of mail address", e);
+        }
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
 
   public static String processBBCode(String s) {
     MarkupRenderingService markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer()
@@ -263,23 +263,23 @@ public class Utils {
     if(context == null) return null;
     String portalName = context.getJobDetail().getGroup();
     if(portalName == null) {
-    	portalName = PortalContainer.getCurrentPortalContainerName();
+      portalName = PortalContainer.getCurrentPortalContainerName();
     }
     if(portalName.indexOf(":") > 0) portalName = portalName.substring(0, portalName.indexOf(":"));
     return ExoContainerContext.getContainerByName(portalName);
   }
   
   public static FCKEditorConfig getFCKConfig(){
-	  FCKEditorConfig fckconfig = new FCKEditorConfig();
-	  fckconfig.put("CustomConfigurationsPath", "/ksResources/fckconfig/fckconfig.js");
-	  return fckconfig;
+    FCKEditorConfig fckconfig = new FCKEditorConfig();
+    fckconfig.put("CustomConfigurationsPath", "/ksResources/fckconfig/fckconfig.js");
+    return fckconfig;
   }
   
-	public static String getRSSLink(String appType, String portalName, String objectId) {
-		return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + appType + "/rss/" + objectId;
-	}
+  public static String getRSSLink(String appType, String portalName, String objectId) {
+    return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + appType + "/rss/" + objectId;
+  }
 
-	public static String getUserRSSLink(String apptype, String userId) {
-		return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + apptype + "/rss/user/" + userId;
-	}
+  public static String getUserRSSLink(String apptype, String userId) {
+    return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + apptype + "/rss/user/" + userId;
+  }
 }

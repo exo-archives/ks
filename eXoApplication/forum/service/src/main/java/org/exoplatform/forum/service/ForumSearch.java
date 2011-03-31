@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -21,8 +21,8 @@ import java.util.Date;
 /**
  * Created by The eXo Platform SARL
  * Author : Duy Tu
- *		tu.duy@exoplatform.com
- * 14 Apr 2008, 07:09:02	
+ *    tu.duy@exoplatform.com
+ * 14 Apr 2008, 07:09:02  
  */
 public class ForumSearch {
   private String id;

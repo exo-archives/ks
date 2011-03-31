@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.exoplatform.ks.bbcode.spi.BBCodePlugin;
 
-
 /**
  * Main Facade for all BBCode related operations
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -28,34 +27,34 @@ import org.exoplatform.ks.bbcode.spi.BBCodePlugin;
  */
 public interface BBCodeService {
 
-  
   /**
    * Register a new BBCode plugin
    * @param plugin
    * @throws Exception
    */
   void registerBBCodePlugin(BBCodePlugin plugin) throws Exception;
-  
+
   /**
    * Save a list of BBCodes
    * @param bbcodes List of BBCodes to save
    * @throws Exception
    */
-  public void save(List<BBCode> bbcodes) throws Exception ;
-  
+  public void save(List<BBCode> bbcodes) throws Exception;
+
   /**
    * Retrieve all BBCodes
    * @return List of all registered BBCodes
    * @throws Exception
    */
-  public List<BBCode> getAll() throws Exception ;
-  
+  public List<BBCode> getAll() throws Exception;
+
   /**
    * Retrieve BBCode IDs that are active
    * @return List of BBCOde IDs
    * @throws Exception
    */
   public List<String> getActive() throws Exception;
+
   /**
    * Load a specific BBCode
    * @param bbcodeId ID of the BBCode
@@ -63,12 +62,12 @@ public interface BBCodeService {
    * @throws Exception
    */
   public BBCode findById(String bbcodeId) throws Exception;
-  
+
   /**
    * Delete an existing BBCode
    * @param bbcodeId
    * @throws Exception
    */
-  public void delete(String bbcodeId) throws Exception ;
-  
+  public void delete(String bbcodeId) throws Exception;
+
 }

@@ -32,16 +32,16 @@ import org.exoplatform.webui.event.EventListener;
 
 /**
  * Author : Hung Nguyen Quang
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Mar 04, 2008
  */
 
 @ComponentConfig(
-	 lifecycle = UIApplicationLifecycle.class,
-	 template = "app:/templates/forum/webui/info/UIForumPollPortlet.gtmpl",
-	 events = {
-		 	@EventConfig(listeners = UIForumPollPortlet.ForumPollEventActionListener.class)
-	 }
+   lifecycle = UIApplicationLifecycle.class,
+   template = "app:/templates/forum/webui/info/UIForumPollPortlet.gtmpl",
+   events = {
+       @EventConfig(listeners = UIForumPollPortlet.ForumPollEventActionListener.class)
+   }
 )
 public class UIForumPollPortlet extends UIPortletApplication {
   private boolean isRenderChild = false;

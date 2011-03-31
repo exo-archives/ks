@@ -19,7 +19,6 @@
 
 package org.exoplatform.wiki.mow.core.api.wiki;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import org.chromattic.api.RelationshipType;

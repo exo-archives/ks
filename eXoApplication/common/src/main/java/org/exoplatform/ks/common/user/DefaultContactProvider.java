@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -16,8 +16,8 @@
  */
 package org.exoplatform.ks.common.user;
 
-import org.exoplatform.services.log.Log;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserProfile;
@@ -60,15 +60,15 @@ public class DefaultContactProvider implements ContactProvider {
         contact.setFirstName(user.getFirstName());
         contact.setLastName(user.getLastName());
         if(profile.getUserInfoMap() != null) {
-	        contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
-	        contact.setBirthday(profile.getAttribute("user.bdate"));
-	        contact.setCity(profile.getAttribute("user.home-info.postal.city"));
-	        contact.setCountry(profile.getAttribute("user.home-info.postal.country"));
-	        contact.setGender(profile.getAttribute("user.gender"));
-	        contact.setJob(profile.getAttribute("user.jobtitle"));
-	        contact.setMobile(profile.getAttribute("user.home-info.telecom.mobile.number"));
-	        contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
-	        contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
+          contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
+          contact.setBirthday(profile.getAttribute("user.bdate"));
+          contact.setCity(profile.getAttribute("user.home-info.postal.city"));
+          contact.setCountry(profile.getAttribute("user.home-info.postal.country"));
+          contact.setGender(profile.getAttribute("user.gender"));
+          contact.setJob(profile.getAttribute("user.jobtitle"));
+          contact.setMobile(profile.getAttribute("user.home-info.telecom.mobile.number"));
+          contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
+          contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
         }
       } catch (Exception e) {
         log.error("Could not retrieve forum user profile for " + userId + ": " ,e);

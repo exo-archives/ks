@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -33,85 +33,85 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
 @ComponentConfig(lifecycle = Lifecycle.class)
 public abstract class AbstractPopupAction extends UIContainer {
 
-	public AbstractPopupAction() throws Exception {
-		UIPopupWindow popupWindow = createUIComponent(UIPopupWindow.class, null, null).setRendered(false);
-		popupWindow.setResizable(true);
-		addChild(popupWindow);
-	}
+  public AbstractPopupAction() throws Exception {
+    UIPopupWindow popupWindow = createUIComponent(UIPopupWindow.class, null, null).setRendered(false);
+    popupWindow.setResizable(true);
+    addChild(popupWindow);
+  }
 
-	@Override
-	public void processRender(WebuiRequestContext context) throws Exception {
-		context.getWriter().append("<span class=\"").append(getId()).append(
-		    " UIKSPopupAction\" id=\"").append(getId()).append("\">");
-		renderChildren(context);
-		context.getWriter().append("</span>");
-		afterProcessRender(context);
-	}
+  @Override
+  public void processRender(WebuiRequestContext context) throws Exception {
+    context.getWriter().append("<span class=\"").append(getId()).append(
+        " UIKSPopupAction\" id=\"").append(getId()).append("\">");
+    renderChildren(context);
+    context.getWriter().append("</span>");
+    afterProcessRender(context);
+  }
 
-	protected abstract void afterProcessRender(WebuiRequestContext context);
+  protected abstract void afterProcessRender(WebuiRequestContext context);
 
-	public <T extends UIComponent> T activate(Class<T> type, int width)
-	    throws Exception {
-		return activate(type, null, width, 0);
-	}
+  public <T extends UIComponent> T activate(Class<T> type, int width)
+      throws Exception {
+    return activate(type, null, width, 0);
+  }
 
-	public <T extends UIComponent> T activate(Class<T> type, String configId,
-	    int width, int height) throws Exception {
-		T comp = createUIComponent(type, configId, null);
-		activate(comp, width, height);
-		return comp;
-	}
+  public <T extends UIComponent> T activate(Class<T> type, String configId,
+      int width, int height) throws Exception {
+    T comp = createUIComponent(type, configId, null);
+    activate(comp, width, height);
+    return comp;
+  }
 
-	public void activate(UIComponent uiComponent, int width, int height)
-	    throws Exception {
-		activate(uiComponent, width, height, true);
-	}
+  public void activate(UIComponent uiComponent, int width, int height)
+      throws Exception {
+    activate(uiComponent, width, height, true);
+  }
 
-	public void activate(UIComponent uiComponent, int width, int height,
-	    boolean isResizeable) throws Exception {
-		UIPopupWindow popup = getChild(UIPopupWindow.class);
-		popup.setUIComponent(uiComponent);
-		((UIPopupComponent) uiComponent).activate();
-		popup.setWindowSize(width, height);
-		popup.setRendered(true);
-		popup.setShow(true);
-		popup.setResizable(isResizeable);
-	}
+  public void activate(UIComponent uiComponent, int width, int height,
+      boolean isResizeable) throws Exception {
+    UIPopupWindow popup = getChild(UIPopupWindow.class);
+    popup.setUIComponent(uiComponent);
+    ((UIPopupComponent) uiComponent).activate();
+    popup.setWindowSize(width, height);
+    popup.setRendered(true);
+    popup.setShow(true);
+    popup.setResizable(isResizeable);
+  }
 
-	public void deActivate() throws Exception {
-		UIPopupWindow popup = getChild(UIPopupWindow.class);
-		if (popup.getUIComponent() != null)
-			((UIPopupComponent) popup.getUIComponent()).deActivate();
-		popup.setUIComponent(null);
-		popup.setRendered(false);
-	}
+  public void deActivate() throws Exception {
+    UIPopupWindow popup = getChild(UIPopupWindow.class);
+    if (popup.getUIComponent() != null)
+      ((UIPopupComponent) popup.getUIComponent()).deActivate();
+    popup.setUIComponent(null);
+    popup.setRendered(false);
+  }
 
-	public void cancelPopupAction() throws Exception {
-		deActivate();
-		WebuiRequestContext context = RequestContext.getCurrentInstance();
-		context.addUIComponentToUpdateByAjax(this);
-	}
+  public void cancelPopupAction() throws Exception {
+    deActivate();
+    WebuiRequestContext context = RequestContext.getCurrentInstance();
+    context.addUIComponentToUpdateByAjax(this);
+  }
 
-	public final UIPopupContainer prepareForNewForm() throws Exception {
-		UIPopupContainer popupContainer = createUIComponent(UIPopupContainer.class,
-		    null, null);
-		String id = "UIPopup";
-		try {
-			id = getParent().getId();
-			if (!id.contains("Portlet") || id.contains("Container")) {
-				id = getAncestorOfType(UIPortletApplication.class).getId()
-				    .replaceFirst("Portlet", "");
-				setId(id + "ChildPopupAction");
-				getChild(UIPopupWindow.class).setId(id + "ChildPopupWindow");
-			}
-		} catch (Exception e) {
-		}
-		// prepare new child popup
-		AbstractPopupAction childPopupAction = popupContainer.addChild(getClass(),
-		    null, getName() + "ChildPopupAction").setRendered(true);
-		childPopupAction.getChild(UIPopupWindow.class).setId(
-		    getName() + "ChildPopupWindow");
-		return popupContainer;
-	}
+  public final UIPopupContainer prepareForNewForm() throws Exception {
+    UIPopupContainer popupContainer = createUIComponent(UIPopupContainer.class,
+        null, null);
+    String id = "UIPopup";
+    try {
+      id = getParent().getId();
+      if (!id.contains("Portlet") || id.contains("Container")) {
+        id = getAncestorOfType(UIPortletApplication.class).getId()
+            .replaceFirst("Portlet", "");
+        setId(id + "ChildPopupAction");
+        getChild(UIPopupWindow.class).setId(id + "ChildPopupWindow");
+      }
+    } catch (Exception e) {
+    }
+    // prepare new child popup
+    AbstractPopupAction childPopupAction = popupContainer.addChild(getClass(),
+        null, getName() + "ChildPopupAction").setRendered(true);
+    childPopupAction.getChild(UIPopupWindow.class).setId(
+        getName() + "ChildPopupWindow");
+    return popupContainer;
+  }
 
 }

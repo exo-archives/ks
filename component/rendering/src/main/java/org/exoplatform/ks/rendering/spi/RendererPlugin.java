@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -35,12 +35,12 @@ import org.exoplatform.services.log.Log;
 public class RendererPlugin extends BaseComponentPlugin {
 
   private Class<? extends Renderer> rendererType;
-  
-  @SuppressWarnings("unused")
-  private static Log log = ExoLogger.getLogger(RendererPlugin.class);
 
-  private Renderer renderer;
-  
+  @SuppressWarnings("unused")
+  private static Log                log = ExoLogger.getLogger(RendererPlugin.class);
+
+  private Renderer                  renderer;
+
   public RendererPlugin(InitParams params) {
 
     try {
@@ -50,7 +50,7 @@ public class RendererPlugin extends BaseComponentPlugin {
     }
 
   }
-  
+
   @Managed
   @ManagedName("Name")
   @ManagedDescription("The plugin name")
@@ -64,14 +64,14 @@ public class RendererPlugin extends BaseComponentPlugin {
   public String getDescription() {
     return super.getDescription();
   }
-  
+
   @Managed
   @ManagedName("ClassName")
   @ManagedDescription("The renderer class")
   public String getClassName() {
     return rendererType.getName();
   }
-  
+
   @Managed
   @ManagedName("Syntax")
   @ManagedDescription("The syntax managed by this renderer")
@@ -82,6 +82,5 @@ public class RendererPlugin extends BaseComponentPlugin {
   public Renderer getRenderer() {
     return renderer;
   }
-  
-  
+
 }

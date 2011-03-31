@@ -167,7 +167,7 @@ public class Category {
    * This method set one category is moderate question
    * 
    * @param isMod  is true when create question in this category will default is not approved
-   * 							else is approved
+   *               else is approved
    */
   public void setModerateQuestions(boolean isMod) {
     isModerateQuestions = isMod;

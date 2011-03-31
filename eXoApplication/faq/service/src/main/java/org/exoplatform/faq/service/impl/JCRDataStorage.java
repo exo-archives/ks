@@ -1474,11 +1474,23 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       StringBuffer queryString = null;
       if (categoryId == null || categoryId.trim().length() < 1)
         categoryId = "null";
-      queryString = new StringBuffer(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,").append(EXO_FAQ_QUESTION)
-                                              .append(")[((").append(AT).append(EXO_CATEGORY_ID).append("='").append(categoryId).append("')")
+      queryString = new StringBuffer(JCR_ROOT).append(categoryHome.getPath())
+                                              .append("//element(*,")
+                                              .append(EXO_FAQ_QUESTION)
+                                              .append(")[((")
+                                              .append(AT)
+                                              .append(EXO_CATEGORY_ID)
+                                              .append("='")
+                                              .append(categoryId)
+                                              .append("')")
                                               .append((categoryId.indexOf("/") > 0) ? (" or (" + AT + EXO_CATEGORY_ID + "='" + categoryId.substring(categoryId.lastIndexOf("/") + 1) + "'))") : ")")
-                                              .append(" and (").append(AT).append(EXO_IS_ACTIVATED).append("='true') and (")
-                                              .append(AT).append(EXO_IS_APPROVED).append("='false')]");
+                                              .append(" and (")
+                                              .append(AT)
+                                              .append(EXO_IS_ACTIVATED)
+                                              .append("='true') and (")
+                                              .append(AT)
+                                              .append(EXO_IS_APPROVED)
+                                              .append("='false')]");
       queryString.append("order by ").append(Utils.getOderBy(faqSetting));
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();

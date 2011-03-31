@@ -1,4 +1,5 @@
 package org.exoplatform.ks.common.jcr;
+
 import static org.exoplatform.commons.testing.AssertUtils.assertContains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -9,16 +10,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.Value;
 
 import junit.framework.TestCase;
 
-import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.jboss.util.property.PropertyException;
-
 
 /*
  * Copyright (C) 2003-2009 eXo Platform SAS.
@@ -30,7 +28,7 @@ import org.jboss.util.property.PropertyException;
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -46,8 +44,8 @@ public class TestPropertyReader extends TestCase {
 
   private Node           node;
 
-  private Property prop;
-  
+  private Property       prop;
+
   private PropertyReader reader;
 
   protected void setUp() throws Exception {
@@ -62,19 +60,18 @@ public class TestPropertyReader extends TestCase {
     when(prop.getDouble()).thenReturn(111d);
     assertEquals(111d, reader.d("foo"));
   }
-  
 
   public void testBool() throws Exception {
     boolean expected = true;
     bindProperty("bool");
     when(prop.getBoolean()).thenReturn(expected);
-    boolean actual =  reader.bool("bool");
-    assertEquals(expected,actual);
+    boolean actual = reader.bool("bool");
+    assertEquals(expected, actual);
 
     bindProperty("bool2");
     when(prop.getBoolean()).thenReturn(false);
     reader.bool("bool2", true);
-    assertEquals(expected,actual);
+    assertEquals(expected, actual);
   }
 
   public void testDate() throws Exception {
@@ -93,7 +90,7 @@ public class TestPropertyReader extends TestCase {
     long actual = reader.l("long");
     assertEquals(expected, actual);
 
- // test default value
+    // test default value
     when(prop.getLong()).thenThrow(new PropertyException());
     expected = 123L;
     actual = reader.l("long", expected);
@@ -101,47 +98,46 @@ public class TestPropertyReader extends TestCase {
   }
 
   public void testList() throws Exception {
-    String [] expected = new String [] {"foo","bar","zed"};
+    String[] expected = new String[] { "foo", "bar", "zed" };
     bindProperty("list");
-    Value [] mockValues = new Value [] {value(expected[0]),value(expected[1]),value(expected[2])};
+    Value[] mockValues = new Value[] { value(expected[0]), value(expected[1]), value(expected[2]) };
     when(prop.getValues()).thenReturn(mockValues);
     List<String> actual = reader.list("list");
     assertContains(actual, expected);
-    
+
     // test default value
     when(prop.getValues()).thenThrow(new PropertyException());
     actual = reader.list("list", Arrays.asList(new String[] { "1", "2", "3" }));
-    assertContains(actual, "1","2","3");
+    assertContains(actual, "1", "2", "3");
   }
-
 
   public void testString() throws Exception {
     String expected = "foo";
     bindProperty("string");
     when(prop.getString()).thenReturn(expected);
-    
+
     String actual = reader.string("string");
-    assertEquals(actual,expected);
-    
+    assertEquals(actual, expected);
+
     when(prop.getString()).thenThrow(new PropertyException());
     expected = "bar";
     actual = reader.string("string", expected);
-    assertEquals(actual,expected);
-    
+    assertEquals(actual, expected);
+
   }
 
   public void testStrings() throws Exception {
-    String [] expected = new String [] {"foo","bar","zed"};
+    String[] expected = new String[] { "foo", "bar", "zed" };
     bindProperty("strings");
-    Value [] mockValues = new Value [] {value(expected[0]),value(expected[1]),value(expected[2])};
+    Value[] mockValues = new Value[] { value(expected[0]), value(expected[1]), value(expected[2]) };
     when(prop.getValues()).thenReturn(mockValues);
-    String [] actual = reader.strings("strings");
+    String[] actual = reader.strings("strings");
     assertContains(actual, expected);
-    
+
     // test default value
     when(prop.getValues()).thenThrow(new PropertyException());
     actual = reader.strings("strings", new String[] { "1", "2", "3" });
-    assertContains(actual, "1","2","3");
+    assertContains(actual, "1", "2", "3");
   }
 
   /**
@@ -150,9 +146,8 @@ public class TestPropertyReader extends TestCase {
    * @throws Exception
    */
   private void bindProperty(String propertyName) throws Exception {
-    when(node.getProperty(propertyName)).thenReturn(prop); 
+    when(node.getProperty(propertyName)).thenReturn(prop);
   }
-  
 
   /**
    * Creates a Mock object for a JCR String {@link Value}
@@ -165,6 +160,5 @@ public class TestPropertyReader extends TestCase {
     when(stub.getString()).thenReturn(value);
     return stub;
   }
-
 
 }

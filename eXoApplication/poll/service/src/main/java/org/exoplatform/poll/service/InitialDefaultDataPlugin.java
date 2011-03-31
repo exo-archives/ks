@@ -29,22 +29,22 @@ import org.exoplatform.management.jmx.annotations.Property;
  *          tu.duy@exoplatform.com
  * Dec 21, 2010  
  */
-	@Managed
-	@NameTemplate({@Property(key="service", value="poll"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
-	@ManagedDescription("Plugin that allows to initialize default data for the poll")
-	public class InitialDefaultDataPlugin extends ManagedPlugin {
-		private PollInitialData initialData = new PollInitialData();
+@Managed
+@NameTemplate( { @Property(key = "service", value = "poll"), @Property(key = "view", value = "plugins"), @Property(key = "name", value = "{Name}") })
+@ManagedDescription("Plugin that allows to initialize default data for the poll")
+public class InitialDefaultDataPlugin extends ManagedPlugin {
+  private PollInitialData initialData = new PollInitialData();
 
-	  public InitialDefaultDataPlugin(InitParams params) throws Exception {
-	  	setPollInitialData((PollInitialData)params.getObjectParam("livedemo.default.configuration").getObject());
-	  }
+  public InitialDefaultDataPlugin(InitParams params) throws Exception {
+    setPollInitialData((PollInitialData) params.getObjectParam("livedemo.default.configuration").getObject());
+  }
 
-	  private void setPollInitialData(PollInitialData object) {
-	    this.initialData = object;
-	  }
+  private void setPollInitialData(PollInitialData object) {
+    this.initialData = object;
+  }
 
-	  public PollInitialData getPollInitialData() {
-	    return initialData;
-	  }
-	  
+  public PollInitialData getPollInitialData() {
+    return initialData;
+  }
+
 }

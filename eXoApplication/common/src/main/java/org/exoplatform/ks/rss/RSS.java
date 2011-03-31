@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -42,7 +42,7 @@ import com.sun.syndication.io.SyndFeedOutput;
 /**
  * Created by The eXo Platform SARL
  * Author : Ha Mai
- *					ha.mai@exoplatform.com
+ *          ha.mai@exoplatform.com
  * Jan 12, 2009, 5:55:37 PM
  */
 public class RSS {
@@ -54,29 +54,29 @@ public class RSS {
   public static final String DEFAULT_FEED_LINK = "http://www.exoplatform.com".intern();
 
   
-	private String fileName ;
-	private Node itemNode;
-	
-	public RSS(Node node) {
-	  itemNode = node;
-	}
-	
-	public static String getRSSLink(String appType, String portalName, String objectId){
-		return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + appType + "/rss/" + objectId;   
-	}
-	
-	
-	public static String getUserRSSLink(String apptype, String userId) {
-	  return "/" + PortalContainer.getInstance().getRestContextName() +  "/ks/" + apptype + "/rss/user/"+userId;
+  private String fileName ;
+  private Node itemNode;
+  
+  public RSS(Node node) {
+    itemNode = node;
   }
-	
-	public String getFileName() {
-		return fileName;
-	}
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-	
+  
+  public static String getRSSLink(String appType, String portalName, String objectId){
+    return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + appType + "/rss/" + objectId;   
+  }
+  
+  
+  public static String getUserRSSLink(String apptype, String userId) {
+    return "/" + PortalContainer.getInstance().getRestContextName() +  "/ks/" + apptype + "/rss/user/"+userId;
+  }
+  
+  public String getFileName() {
+    return fileName;
+  }
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
+  }
+  
   public InputStream getContent() {
     try {
       return getFeedNode().getProperty(CONTENT_PROPERTY).getValue().getStream();
@@ -96,21 +96,21 @@ public class RSS {
   }
 
   private Node getFeedNode() throws Exception {
-//  	System.out.println("\n\n itemNode: " + itemNode.getPath());
+//    System.out.println("\n\n itemNode: " + itemNode.getPath());
     try {
       return itemNode.getNode(RSS_NODE_NAME);
     } catch (Exception e) {
       e.printStackTrace() ;
-    	return itemNode.addNode(RSS_NODE_NAME, "exo:forumRSS");
+      return itemNode.addNode(RSS_NODE_NAME, "exo:forumRSS");
 //      throw new RuntimeException("Failed to get feed node", e);
     }
   }
 
   /**
-	 * Read a SyndFeed from the
-	 * @return
-	 * @throws Exception
-	 */
+   * Read a SyndFeed from the
+   * @return
+   * @throws Exception
+   */
   public SyndFeed read() {
     try {
     DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -124,7 +124,7 @@ public class RSS {
     return feed;
     }
     catch (Exception e) {
-    	e.printStackTrace();
+      e.printStackTrace();
       LOG.error("Failed to read RSS feed");
       throw new RuntimeException(e);
     }
@@ -257,5 +257,5 @@ public class RSS {
     }
     this.itemNode = itemNode;
   }
-	
+  
 }

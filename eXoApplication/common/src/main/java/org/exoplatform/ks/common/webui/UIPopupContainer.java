@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -24,16 +24,16 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
+ *          tu.duy@exoplatform.com
  * Octo 26, 2007 9:48:18 AM 
  */
 @ComponentConfig(lifecycle = UIContainerLifecycle.class)
 public class UIPopupContainer extends UIContainer implements UIPopupComponent {
-	public UIPopupContainer() throws Exception  {
+  public UIPopupContainer() throws Exception  {
     addChild(UIPopupAction.class, null, null).setRendered(true) ;
-	}
-	
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-	
+  }
+  
+  public void activate() throws Exception {}
+  public void deActivate() throws Exception {}
+  
 }

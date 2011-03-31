@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -32,55 +32,57 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
 
-@NameTemplate(@Property(key="service", value="poll"))
+@NameTemplate(@Property(key = "service", value = "poll"))
 public class PollServiceImpl implements Startable, PollService {
-	private JCRDataStorage            storage_;
-	private KSDataLocation dataLocator;
-	private static final Log log = ExoLogger.getLogger(PollServiceImpl.class);
-	
+  private JCRDataStorage   storage_;
+
+  private KSDataLocation   dataLocator;
+
+  private static final Log log = ExoLogger.getLogger(PollServiceImpl.class);
+
   public PollServiceImpl(InitParams params, KSDataLocation locator, NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
-  	this.dataLocator = locator;
-  	storage_ = new JCRDataStorage(nodeHierarchyCreator, dataLocator);
+    this.dataLocator = locator;
+    storage_ = new JCRDataStorage(nodeHierarchyCreator, dataLocator);
   }
-  
+
   public void addInitialDefaultDataPlugin(ComponentPlugin plugin) throws Exception {
-  	storage_.addInitialDefaultDataPlugin(plugin);
+    storage_.addInitialDefaultDataPlugin(plugin);
   }
-  
+
   public void start() {
-  	try {
-  		log.info("initializing Poll default data...");
-			storage_.initDefaultData();
-		} catch (Exception e) {
-			log.error("Failed to initializing default data for poll: ", e);
-		}
+    try {
+      log.info("initializing Poll default data...");
+      storage_.initDefaultData();
+    } catch (Exception e) {
+      log.error("Failed to initializing default data for poll: ", e);
+    }
   }
 
-	public void stop() {}
+  public void stop() {
+  }
 
-	public Poll getPoll(String pollId) throws Exception {
-		return storage_.getPoll(pollId);
-	}
+  public Poll getPoll(String pollId) throws Exception {
+    return storage_.getPoll(pollId);
+  }
 
-	public Poll removePoll(String pollId) throws Exception {
-		return storage_.removePoll(pollId);
-	}
+  public Poll removePoll(String pollId) throws Exception {
+    return storage_.removePoll(pollId);
+  }
 
-	public void savePoll(Poll poll, boolean isNew, boolean isVote) throws Exception {
-		storage_.savePoll(poll, isNew, isVote);
-	}
+  public void savePoll(Poll poll, boolean isNew, boolean isVote) throws Exception {
+    storage_.savePoll(poll, isNew, isVote);
+  }
 
-	public void setClosedPoll(Poll poll) throws Exception {
-		storage_.setClosedPoll(poll);
-	}
+  public void setClosedPoll(Poll poll) throws Exception {
+    storage_.setClosedPoll(poll);
+  }
 
-	public List<Poll> getPagePoll() throws Exception {
-		return storage_.getPagePoll();
-	}
+  public List<Poll> getPagePoll() throws Exception {
+    return storage_.getPagePoll();
+  }
 
-	public PollSummary getPollSummary(List<String> groupOfUser) throws Exception {
-		return storage_.getPollSummary(groupOfUser);
-	}
+  public PollSummary getPollSummary(List<String> groupOfUser) throws Exception {
+    return storage_.getPollSummary(groupOfUser);
+  }
 
-  
 }

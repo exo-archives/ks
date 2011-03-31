@@ -43,61 +43,84 @@ import org.exoplatform.wiki.service.search.TitleSearchResult;
  * @since   Mar 04, 2010
  */
 public interface WikiService {
-	
-	public Page createPage(String wikiType, String wikiOwner, String title, String parentId) throws Exception ;
-	public Template createTemplatePage(String title, WikiPageParams params) throws Exception ;
-	public void createDraftNewPage(String draftNewPageId) throws Exception ;
-	public boolean deletePage(String wikiType, String wikiOwner, String pageId) throws Exception ;
-	public void deleteTemplatePage(String wikiType, String wikiOwner, String templateId) throws Exception ;
-	public void deleteDraftNewPage(String draftNewPageId) throws Exception ;
-	public boolean renamePage(String wikiType, String wikiOwner, String pageName, String newName, String newTitle) throws Exception ;
-	public boolean movePage(WikiPageParams currentLocationParams, WikiPageParams newLocationParams) throws Exception ;
-	public List<PermissionEntry> getWikiPermission(String wikiType, String wikiOwner) throws Exception ;
-	public void setWikiPermission(String wikiType, String wikiOwner, List<PermissionEntry> permissionEntries) throws Exception ;
-	
-	public Page getPageById(String wikiType, String wikiOwner, String pageId) throws Exception ;
-	public Page getRelatedPage(String wikiType, String wikiOwner, String pageId) throws Exception;
-	public Page getExsitedOrNewDraftPageById(String wikiType, String wikiOwner, String pageId) throws Exception ;
-	public Page getPageByUUID(String uuid) throws Exception ;
-	public Template getTemplatePage(WikiPageParams params, String templateId) throws Exception;	
-	public PageList<SearchResult> searchContent(ContentSearchData data) throws Exception ;
-	public List<BreadcrumbData> getBreadcumb(String wikiType, String wikiOwner, String pageId) throws Exception ;
-	public WikiPageParams getWikiPageParams(BreadcrumbData data) throws Exception;
-	public PageList<SearchResult> search(ContentSearchData data) throws Exception ;
-	public List<TemplateSearchResult> searchTemplate(TemplateSearchData data) throws Exception;
-	public List<SearchResult> searchRenamedPage(String wikiType, String wikiOwner, String pageId) throws Exception  ;
-	public List<TitleSearchResult> searchDataByTitle(ContentSearchData data) throws Exception;
-	public Object findByPath(String path, String objectNodeType) throws Exception  ;
-	public String getDefaultWikiSyntaxId();
-	public String getPageTitleOfAttachment(String path) throws Exception ;
-	public InputStream getAttachmentAsStream(String path) throws Exception ;
-	public PageImpl getHelpSyntaxPage(String syntaxId) throws Exception;
-	public Map<String,Template> getTemplates(WikiPageParams params) throws Exception;
-	public TemplateContainer getTemplatesContainer(WikiPageParams params) throws Exception;
-	public void modifyTemplate(WikiPageParams params,
-                             Template template ,String newName,
-                             String newDescription,
-                             String newContent,
-                             String newSyntaxId) throws Exception;
-	
-	public boolean isExisting(String wikiType, String wikiOwner, String pageId) throws Exception ;
-	
-	/**
-	 * register a {@link PageWikiListener} 
-	 * @param listener
-	 */
-	public void addComponentPlugin(ComponentPlugin plugin);
-	/**
-	 * @return list of {@link PageWikiListener}
-	 */
-	public List<PageWikiListener> getPageListeners();
-	
-	public boolean addRelatedPage(WikiPageParams orginaryPageParams, WikiPageParams relatedPageParams) throws Exception;
-	
-	public List<Page> getRelatedPage(WikiPageParams pageParams) throws Exception;
-	
-	public boolean removeRelatedPage(WikiPageParams orginaryPageParams, WikiPageParams relatedPageParams) throws Exception;
-  
+
+  public Page createPage(String wikiType, String wikiOwner, String title, String parentId) throws Exception;
+
+  public Template createTemplatePage(String title, WikiPageParams params) throws Exception;
+
+  public void createDraftNewPage(String draftNewPageId) throws Exception;
+
+  public boolean deletePage(String wikiType, String wikiOwner, String pageId) throws Exception;
+
+  public void deleteTemplatePage(String wikiType, String wikiOwner, String templateId) throws Exception;
+
+  public void deleteDraftNewPage(String draftNewPageId) throws Exception;
+
+  public boolean renamePage(String wikiType, String wikiOwner, String pageName, String newName, String newTitle) throws Exception;
+
+  public boolean movePage(WikiPageParams currentLocationParams, WikiPageParams newLocationParams) throws Exception;
+
+  public List<PermissionEntry> getWikiPermission(String wikiType, String wikiOwner) throws Exception;
+
+  public void setWikiPermission(String wikiType, String wikiOwner, List<PermissionEntry> permissionEntries) throws Exception;
+
+  public Page getPageById(String wikiType, String wikiOwner, String pageId) throws Exception;
+
+  public Page getRelatedPage(String wikiType, String wikiOwner, String pageId) throws Exception;
+
+  public Page getExsitedOrNewDraftPageById(String wikiType, String wikiOwner, String pageId) throws Exception;
+
+  public Page getPageByUUID(String uuid) throws Exception;
+
+  public Template getTemplatePage(WikiPageParams params, String templateId) throws Exception;
+
+  public PageList<SearchResult> searchContent(ContentSearchData data) throws Exception;
+
+  public List<BreadcrumbData> getBreadcumb(String wikiType, String wikiOwner, String pageId) throws Exception;
+
+  public WikiPageParams getWikiPageParams(BreadcrumbData data) throws Exception;
+
+  public PageList<SearchResult> search(ContentSearchData data) throws Exception;
+
+  public List<TemplateSearchResult> searchTemplate(TemplateSearchData data) throws Exception;
+
+  public List<SearchResult> searchRenamedPage(String wikiType, String wikiOwner, String pageId) throws Exception;
+
+  public List<TitleSearchResult> searchDataByTitle(ContentSearchData data) throws Exception;
+
+  public Object findByPath(String path, String objectNodeType) throws Exception;
+
+  public String getDefaultWikiSyntaxId();
+
+  public String getPageTitleOfAttachment(String path) throws Exception;
+
+  public InputStream getAttachmentAsStream(String path) throws Exception;
+
+  public PageImpl getHelpSyntaxPage(String syntaxId) throws Exception;
+
+  public Map<String, Template> getTemplates(WikiPageParams params) throws Exception;
+
+  public TemplateContainer getTemplatesContainer(WikiPageParams params) throws Exception;
+
+  public void modifyTemplate(WikiPageParams params, Template template, String newName, String newDescription, String newContent, String newSyntaxId) throws Exception;
+
+  public boolean isExisting(String wikiType, String wikiOwner, String pageId) throws Exception;
+
+  /**
+   * register a {@link PageWikiListener} 
+   * @param listener
+   */
+  public void addComponentPlugin(ComponentPlugin plugin);
+
+  /**
+   * @return list of {@link PageWikiListener}
+   */
+  public List<PageWikiListener> getPageListeners();
+
+  public boolean addRelatedPage(WikiPageParams orginaryPageParams, WikiPageParams relatedPageParams) throws Exception;
+
+  public List<Page> getRelatedPage(WikiPageParams pageParams) throws Exception;
+
+  public boolean removeRelatedPage(WikiPageParams orginaryPageParams, WikiPageParams relatedPageParams) throws Exception;
+
 }
-
-

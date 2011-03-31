@@ -204,7 +204,7 @@ public class FileAttachment {
 
   /**
    * Get the name of Node file
-   * @return	name of node
+   * @return  name of node
    */
   public String getNodeName() {
     return nodeName;

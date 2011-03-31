@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -33,17 +33,17 @@ import org.exoplatform.services.scheduler.PeriodInfo;
 /**
  * Created by The eXo Platform SARL
  * Author : Truong Nguyen
- *					truong.nguyen@exoplatform.com
+ *          truong.nguyen@exoplatform.com
  * Oct 22, 2008, 12:02:18 PM
  */
 public class Common {
-	
-	public static Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
   
-	public Common (){}
-	
-	@SuppressWarnings({ "unchecked" })
-	public void sendEmailNotification(List<String> addresses, Message message, String gruopName) throws Exception {
+  public static Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
+  
+  public Common (){}
+  
+  @SuppressWarnings({ "unchecked" })
+  public void sendEmailNotification(List<String> addresses, Message message, String gruopName) throws Exception {
     Calendar cal = new GregorianCalendar();
     PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
     String name = String.valueOf(cal.getTime().getTime()) ;
@@ -51,15 +51,15 @@ public class Common {
     JobInfo info = new JobInfo(name, gruopName, clazz);
     ExoContainer container = ExoContainerContext.getCurrentContainer();
     JobSchedulerService schedulerService = 
-    	(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+      (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
     messagesInfoMap_.put(name, new NotifyInfo(addresses, message)) ;
     schedulerService.addPeriodJob(info, periodInfo);
   }
-	
-	public NotifyInfo getMessageInfo(String name) throws Exception {
-		NotifyInfo messageInfo = messagesInfoMap_.get(name) ;
-		messagesInfoMap_.remove(name) ;
-		return  messageInfo ;
-	}
-	
+  
+  public NotifyInfo getMessageInfo(String name) throws Exception {
+    NotifyInfo messageInfo = messagesInfoMap_.get(name) ;
+    messagesInfoMap_.remove(name) ;
+    return  messageInfo ;
+  }
+  
 }

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -25,43 +25,37 @@ import org.exoplatform.container.xml.InitParams;
  */
 public class RequiredParamException extends InitParamException {
 
-  
   /**
    * 
    */
   private static final long serialVersionUID = -1652969473404169213L;
-  
-  private String paramName;
-  private Class<?> expectedType;
 
+  private String            paramName;
+
+  private Class<?>          expectedType;
 
   public RequiredParamException(InitParams params, Class<?> target, String paramName, Class<?> expectedType) {
     super(params, target);
     this.paramName = paramName;
     this.expectedType = expectedType;
   }
-  
-  
+
   public String getMessage() {
-    String msg = "A required param of type " + expectedType +" is required for " + paramName + " as init-param of " + target + ". Received: " + params;
+    String msg = "A required param of type " + expectedType + " is required for " + paramName + " as init-param of " + target + ". Received: " + params;
     return msg;
   }
-
 
   public String getParamName() {
     return paramName;
   }
 
-
   public void setParamName(String paramName) {
     this.paramName = paramName;
   }
 
-
   public Class<?> getExpectedType() {
     return expectedType;
   }
-
 
   public void setExpectedType(Class<?> expectedType) {
     this.expectedType = expectedType;

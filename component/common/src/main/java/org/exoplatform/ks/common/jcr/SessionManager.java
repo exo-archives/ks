@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -33,7 +33,7 @@ public interface SessionManager {
    * @return a session to the model.
    */
   Session openSession();
-  
+
   /**
    * This method is here for backward compatibility, but will be removed to get rid of SessionProvider
    * @deprecated use {@link #openSession()} t
@@ -41,7 +41,7 @@ public interface SessionManager {
    * @return
    */
   Session getSession(SessionProvider sessionProvider);
-  
+
   /**
    * <p>Returns the session currently associated with the current thread of execution.<br/>
    * The current session is set with {@link #openSession()} </p>

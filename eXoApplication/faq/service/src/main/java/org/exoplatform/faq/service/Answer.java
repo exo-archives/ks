@@ -23,7 +23,7 @@ import org.exoplatform.services.jcr.util.IdGenerator;
 /**
  * Created by The eXo Platform SARL
  * Author : Ha Mai Van
- * 					ha.mai@exoplatform.com
+ *           ha.mai@exoplatform.com
  * Jan 16, 2009, 9:25:29 AM
  */
 public class Answer {

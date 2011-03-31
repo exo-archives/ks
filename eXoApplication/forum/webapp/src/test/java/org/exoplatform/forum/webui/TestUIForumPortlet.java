@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -32,38 +32,38 @@ import org.exoplatform.webui.application.WebuiRequestContext;
  * Feb 3, 2010 - 4:33:01 AM  
  */
 public class TestUIForumPortlet extends AbstractUIComponentTestCase<UIForumPortlet> {
-	protected Log log = ExoLogger.getLogger(this.getClass());
-	public TestUIForumPortlet() throws Exception {
-	  super();
+  protected Log log = ExoLogger.getLogger(this.getClass());
+  public TestUIForumPortlet() throws Exception {
+    super();
   }
 
-	public void testCheckCanView() throws Exception {
-		try {
-			component.checkCanView(new Category("categoryId"), new Forum(), new Topic());
+  public void testCheckCanView() throws Exception {
+    try {
+      component.checkCanView(new Category("categoryId"), new Forum(), new Topic());
     } catch (Exception e) {
-    	log.error("Can not check can view, unit test can not suppost IdGenerator.generate()");
+      log.error("Can not check can view, unit test can not suppost IdGenerator.generate()");
     }
   }
 
-	public void testCalculateRenderCompoRnent() throws Exception {
-		try {
-			WebuiRequestContext requestContext = WebuiRequestContext.getCurrentInstance();
-			component.calculateRenderComponent(Utils.FORUM_SERVICE, requestContext);
-		} catch (Exception e) {
-		}
-	}
-
-	public void testRenderComponentByURL() throws Exception {
-		try {
-			WebuiRequestContext requestContext = WebuiRequestContext.getCurrentInstance();
-			component.renderComponentByURL(requestContext);
+  public void testCalculateRenderCompoRnent() throws Exception {
+    try {
+      WebuiRequestContext requestContext = WebuiRequestContext.getCurrentInstance();
+      component.calculateRenderComponent(Utils.FORUM_SERVICE, requestContext);
     } catch (Exception e) {
     }
-	}
-	
-	@Override
+  }
+
+  public void testRenderComponentByURL() throws Exception {
+    try {
+      WebuiRequestContext requestContext = WebuiRequestContext.getCurrentInstance();
+      component.renderComponentByURL(requestContext);
+    } catch (Exception e) {
+    }
+  }
+  
+  @Override
   protected UIForumPortlet createComponent() throws Exception {
-	  return new UIForumPortlet();
+    return new UIForumPortlet();
   }
 
 }

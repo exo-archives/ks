@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -23,17 +23,17 @@ import org.exoplatform.management.annotations.ManagedName;
 
 public class DataLocationPlugin extends ManagedPlugin {
 
-	private String	workspace;
+  private String workspace;
 
-	public DataLocationPlugin(InitParams params) throws Exception {
-		this.workspace = params.getValueParam("workspace").getValue();
-	}
+  public DataLocationPlugin(InitParams params) throws Exception {
+    this.workspace = params.getValueParam("workspace").getValue();
+  }
 
-	@Managed
-	@ManagedName("workspace")
-	@ManagedDescription("workspace in repository where data is located")
-	public String getWorkspace() {
-		return workspace;
-	}
+  @Managed
+  @ManagedName("workspace")
+  @ManagedDescription("workspace in repository where data is located")
+  public String getWorkspace() {
+    return workspace;
+  }
 
 }

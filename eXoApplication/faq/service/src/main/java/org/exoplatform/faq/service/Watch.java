@@ -19,7 +19,7 @@ public class Watch {
 
   /**
    * Register user name for watch
-   * @param userName	user name of user
+   * @param userName  user name of user
    */
   public void setUser(String user) {
     this.user = user;
@@ -27,7 +27,7 @@ public class Watch {
 
   /**
    * Get email address of user
-   * @return	email address of user which is used to get email
+   * @return  email address of user which is used to get email
    */
   public String getEmails() {
     return emails;

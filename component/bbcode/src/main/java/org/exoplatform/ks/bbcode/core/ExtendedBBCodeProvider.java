@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -33,21 +33,20 @@ import org.exoplatform.services.log.Log;
 public class ExtendedBBCodeProvider implements BBCodeProvider {
 
   private static final Log log = ExoLogger.getLogger(ExtendedBBCodeProvider.class);
-  protected BBCodeService bbCodeService ;
-  
-  
+
+  protected BBCodeService  bbCodeService;
+
   protected BBCodeService getBBCodeService() {
     if (bbCodeService == null) {
-      bbCodeService = (BBCodeService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(BBCodeService.class) ;
+      bbCodeService = (BBCodeService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(BBCodeService.class);
     }
     return bbCodeService;
   }
-  
+
   public void setBBCodeService(BBCodeService bbCodeService) {
     this.bbCodeService = bbCodeService;
   }
-  
-  
+
   public BBCode getBBCode(String tagName) {
     try {
       return bbCodeService.findById(tagName);

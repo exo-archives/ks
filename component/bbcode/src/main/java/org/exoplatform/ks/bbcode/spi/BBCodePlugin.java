@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -30,35 +30,36 @@ import org.exoplatform.management.jmx.annotations.Property;
  * Managed plugin that holds registered BBCodes
  */
 @Managed
-@NameTemplate({@Property(key="service", value="ks"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
+@NameTemplate( { @Property(key = "service", value = "ks"), @Property(key = "view", value = "plugins"), @Property(key = "name", value = "{Name}") })
 @ManagedDescription("Plugin that defines the initial BBCodes available")
-public class BBCodePlugin extends BaseComponentPlugin  {
-	
+public class BBCodePlugin extends BaseComponentPlugin {
+
   private List<BBCodeData> bbcodeData = new ArrayList<BBCodeData>();
-	
-	
-	public BBCodePlugin() {
-	}
-	
-	public BBCodePlugin(InitParams params) {
-	  bbcodeData = params.getObjectParamValues(BBCodeData.class);
+
+  public BBCodePlugin() {
   }
-	public List<BBCodeData> getBBCodeData() {
-  	return bbcodeData;
+
+  public BBCodePlugin(InitParams params) {
+    bbcodeData = params.getObjectParamValues(BBCodeData.class);
   }
-	public void setBbcodeData(List<BBCodeData> bbcodeDatas) {
-  	this.bbcodeData = bbcodeDatas;
+
+  public List<BBCodeData> getBBCodeData() {
+    return bbcodeData;
   }
-	
+
+  public void setBbcodeData(List<BBCodeData> bbcodeDatas) {
+    this.bbcodeData = bbcodeDatas;
+  }
+
   @Managed
   @ManagedDescription("Get the list of BBCodes defined in this plugin")
   public List<String> getBBCodes() {
     List<String> result = new ArrayList<String>();
-   List<BBCodeData> data = getBBCodeData(); 
-   for (BBCodeData bbCodeData : data) {
-     result.add(bbCodeData.getTagName());
-   }
-   return result;
+    List<BBCodeData> data = getBBCodeData();
+    for (BBCodeData bbCodeData : data) {
+      result.add(bbCodeData.getTagName());
+    }
+    return result;
   }
-  
+
 }

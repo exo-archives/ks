@@ -37,7 +37,7 @@ import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
  * categories or questions.
  * 
  * @author  Hung Nguyen Quang
- * 					hung.nguyen@exoplatform.com
+ *           hung.nguyen@exoplatform.com
  * @since   Mar 04, 2008
  */
 public interface FAQService extends FAQServiceLegacy {
@@ -64,10 +64,10 @@ public interface FAQService extends FAQServiceLegacy {
    * This function is used to add new or edit category in list. User will input information of fields need
    * in form add category, so user save then category will persistent in data
    * 
-   * @param  	parentId is address id of the category parent where user want add sub category
+   * @param    parentId is address id of the category parent where user want add sub category
    * when paretId = null so this category is parent category else sub category  
-   * @param  	cat is properties that user input to interface will save on data
-   * @param		isAddNew is true when add new category else update category
+   * @param    cat is properties that user input to interface will save on data
+   * @param    isAddNew is true when add new category else update category
    * @return  List parent category or list sub category
    * @see     list category
    * @throws Exception the exception
@@ -85,7 +85,7 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * This method should check exists of category and remove it
    * 
-   * @param  	categoryId is address id of the category need remove 
+   * @param    categoryId is address id of the category need remove 
    * @throws Exception the exception
    */
   public void removeCategory(String categoryId) throws Exception;
@@ -94,7 +94,7 @@ public interface FAQService extends FAQServiceLegacy {
    * This method should lookup category via identify 
    * and convert to Category object and return
    * 
-   * @param  	categoryId is address id of the category so you want get
+   * @param    categoryId is address id of the category so you want get
    * @return  category is id = categoryId
    * @see     current category
    * @throws Exception the exception
@@ -267,8 +267,8 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Get path of question. For example question A is included in category C and C is child of
    * category B, then, this function will be return C > B
-   * @param categoryId	id of category is contain question
-   * @return	name of categories
+   * @param categoryId  id of category is contain question
+   * @return  name of categories
    * @throws Exception
    */
   public String getCategoryPathOfQuestion(String categoryId) throws Exception;
@@ -296,10 +296,10 @@ public interface FAQService extends FAQServiceLegacy {
    * so find child node of language node is searched
    * and find properties of child node, if contain input of user, get this question
    * 
-   * @param 	Question list
-   * @param 	langage want search
-   * @param 	term content want search in all field question
-   * @return 	Question list
+   * @param   Question list
+   * @param   langage want search
+   * @param   term content want search in all field question
+   * @return   Question list
    * @throws Exception the exception
    */
   // public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text) throws Exception ;
@@ -359,8 +359,8 @@ public interface FAQService extends FAQServiceLegacy {
    * You have to register your email for whenever there is new question is inserted 
    * in the category or new category then there will  a notification sent to you.
    * 
-   * @param		id of category with user want add watch on that category 
-   * @param		value, this address email (multiple value) with input to interface will save on data
+   * @param    id of category with user want add watch on that category 
+   * @param    value, this address email (multiple value) with input to interface will save on data
    * @throws Exception the exception
    *  
    */
@@ -370,18 +370,18 @@ public interface FAQService extends FAQServiceLegacy {
    * This method will get list mail of one category. User see list this mails and 
    * edit or delete mail if need
    * 
-   * @param		CategoryId is id of category
-   * @return	list email of current category
-   * @see			list email where user manager	
-   * @throws Exception the exception				
+   * @param    CategoryId is id of category
+   * @return  list email of current category
+   * @see      list email where user manager  
+   * @throws Exception the exception        
    */
   // public QuestionPageList getListMailInWatch(String categoryId) throws Exception ;
 
   /**
    * This method will delete watch in one category 
    * 
-   * @param	 categoryId is id of current category
-   * @param	 emails is location current of one watch with user want delete 
+   * @param   categoryId is id of current category
+   * @param   emails is location current of one watch with user want delete 
    * @throws Exception the exception
    */
   public void deleteCategoryWatch(String categoryId, String user) throws Exception;
@@ -389,8 +389,8 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * This method will un watch in one category 
    * 
-   * @param	 categoryId is id of current category
-   * @param	 userCurrent is user current then you un watch
+   * @param   categoryId is id of current category
+   * @param   userCurrent is user current then you un watch
    * @throws Exception the exception
    */
   public void unWatchCategory(String categoryId, String userCurrent) throws Exception;
@@ -398,8 +398,8 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * This method will un watch in one question 
    * 
-   * @param	 questionId is id of current category
-   * @param	 userCurrent is user current then you un watch
+   * @param   questionId is id of current category
+   * @param   userCurrent is user current then you un watch
    * @throws Exception the exception
    */
   public void unWatchQuestion(String questionID, String userCurrent) throws Exception;
@@ -411,7 +411,7 @@ public interface FAQService extends FAQServiceLegacy {
    * So to support to users can find their categories more quickly and accurate,
    *  user can use 'Search Category' function
    * 
-   * @param	 eventQuery is object save value in form advanced search 
+   * @param   eventQuery is object save value in form advanced search 
    * @throws Exception the exception
    */
   // public List<Category> getAdvancedSearchCategory(FAQEventQuery eventQuery) throws Exception ;
@@ -452,7 +452,7 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * This method will send message to address but you want send
    * 
-   * @param	 message is object save content with user want send to one or many address email
+   * @param   message is object save content with user want send to one or many address email
    * @throws Exception the exception
    */
   public void sendMessage(Message message) throws Exception;
@@ -486,9 +486,9 @@ public interface FAQService extends FAQServiceLegacy {
    * system will create setting for user (automatically) base on setting of admin 
    * (Default setting of FAQ system). After that, when user login again, his setting is getted.
    * 
-   * @param userName	the name of user
-   * @param faqSetting	the setting of user
-   * @throws Exception	when can't find user or faqSetting
+   * @param userName  the name of user
+   * @param faqSetting  the setting of user
+   * @throws Exception  when can't find user or faqSetting
    */
   public void getUserSetting(String userName, FAQSetting faqSetting) throws Exception;
 
@@ -502,8 +502,8 @@ public interface FAQService extends FAQServiceLegacy {
 
   /**
    * Check permission of user
-   * @param userName	id or user name of user who is checked permission
-   * @return	return <code>true</code> if user is addmin and <code>false</code> if opposite
+   * @param userName  id or user name of user who is checked permission
+   * @return  return <code>true</code> if user is addmin and <code>false</code> if opposite
    * @throws Exception
    */
   public boolean isAdminRole(String userName) throws Exception;

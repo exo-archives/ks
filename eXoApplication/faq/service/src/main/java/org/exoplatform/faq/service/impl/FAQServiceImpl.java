@@ -197,7 +197,7 @@ public class FAQServiceImpl implements FAQService, Startable {
 
   /**
    * This method get all the category
-   * @param	 sProvider is session provider
+   * @param   sProvider is session provider
    * @return Category list
    * @throws Exception the exception
    */
@@ -213,8 +213,8 @@ public class FAQServiceImpl implements FAQService, Startable {
   /**
    * This method get all the question 
    * and convert to list of question object (QuestionPageList)
-   * @param		sProvider
-   * @return 	QuestionPageList
+   * @param    sProvider
+   * @return   QuestionPageList
    * @throws Exception the exception
    */
   public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception {
@@ -229,8 +229,8 @@ public class FAQServiceImpl implements FAQService, Startable {
   /**
    * This method get all question node have not yet answer 
    * and convert to list of question object (QuestionPageList)
-   * @param		sProvider
-   * @return	QuestionPageList
+   * @param    sProvider
+   * @return  QuestionPageList
    * @throws Exception the exception
    */
   public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId, FAQSetting setting) throws Exception {
@@ -267,8 +267,8 @@ public class FAQServiceImpl implements FAQService, Startable {
    * Returns an category that can then be get property of this category.
    * <p>
    *
-   * @param  	categoryId is address id of the category so you want get
-   * @param  	sProvider
+   * @param    categoryId is address id of the category so you want get
+   * @param    sProvider
    * @return  category is id equal categoryId
    * @see     current category
    * @throws Exception the exception
@@ -284,9 +284,9 @@ public class FAQServiceImpl implements FAQService, Startable {
 
   /**
    * This method should get question node via identify
-   * @param 	question identify
-   * @param		sProvider
-   * @return 	Question
+   * @param   question identify
+   * @param    sProvider
+   * @return   Question
    * @throws Exception the exception 
    */
   public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception {
@@ -306,9 +306,9 @@ public class FAQServiceImpl implements FAQService, Startable {
    * This method should view questions, only question node is activated and approved  via category identify
    * and convert to list of question object
    * 
-   * @param		Category identify
-   * @param		sProvider
-   * @return 	QuestionPageList
+   * @param    Category identify
+   * @param    sProvider
+   * @return   QuestionPageList
    * @throws Exception the exception
    */
   public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
@@ -323,9 +323,9 @@ public class FAQServiceImpl implements FAQService, Startable {
   /**
    * This method get all questions via category identify and convert to list of question list
    * 
-   * @param 	Category identify
-   * @param		sProvider
-   * @return 	QuestionPageList
+   * @param   Category identify
+   * @param    sProvider
+   * @return   QuestionPageList
    * @throws Exception the exception
    */
   public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
@@ -339,11 +339,11 @@ public class FAQServiceImpl implements FAQService, Startable {
 
   /**
    * This method every category should get list question, all question convert to list of question object
-   * @param 	listCategoryId  is list via identify
-   * @param 	isNotYetAnswer  if isNotYetAnswer equal true then return list question is not yet answer
-   * 					isNotYetAnswer  if isNotYetAnswer equal false then return list all questions
-   * @param		sProvider
-   * @return 	QuestionPageList
+   * @param   listCategoryId  is list via identify
+   * @param   isNotYetAnswer  if isNotYetAnswer equal true then return list question is not yet answer
+   *           isNotYetAnswer  if isNotYetAnswer equal false then return list all questions
+   * @param    sProvider
+   * @return   QuestionPageList
    * @throws Exception the exception
    */
   public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception {
@@ -368,9 +368,9 @@ public class FAQServiceImpl implements FAQService, Startable {
    * This method should lookup languageNode of question
    * and find all child node of language node
    * 
-   * @param 	Question identify
-   * @param		sProvider
-   * @return 	language list
+   * @param   Question identify
+   * @param    sProvider
+   * @return   language list
    * @throws Exception the exception
    */
   public List<QuestionLanguage> getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
@@ -387,11 +387,11 @@ public class FAQServiceImpl implements FAQService, Startable {
    * so find child node of language node is searched
    * and find properties of child node, if contain input of user, get this question
    * 
-   * @param 	Question list
-   * @param 	langage want search
-   * @param 	term content want search in all field question
-   * @param		sProvider 
-   * @return 	Question list
+   * @param   Question list
+   * @param   langage want search
+   * @param   term content want search in all field question
+   * @param    sProvider 
+   * @return   Question list
    * @throws Exception the exception
    */
   /*
@@ -404,12 +404,12 @@ public class FAQServiceImpl implements FAQService, Startable {
    * so find child node of language node is searched
    * and find properties of child node, if contain input of user, get this question
    * 
-   * @param 	Question list
-   * @param 	langage want search
-   * @param 	question's content want search
-   * @param 	response's content want search
-   * @param		sProvider 
-   * @return 	Question list
+   * @param   Question list
+   * @param   langage want search
+   * @param   question's content want search
+   * @param   response's content want search
+   * @param    sProvider 
+   * @return   Question list
    * @throws Exception the exception
    */
   /*
@@ -424,8 +424,8 @@ public class FAQServiceImpl implements FAQService, Startable {
    * if categoryId equal null then list category is list parent category
    * else this view list category of one value parent category that you communicate categoryId 
    *  
-   * @param  	categoryId is address id of the category 
-   * @param  	sProvider
+   * @param    categoryId is address id of the category 
+   * @param    sProvider
    * @return  List parent category or list sub category
    * @see     list category
    * @throws Exception the exception
@@ -462,8 +462,8 @@ public class FAQServiceImpl implements FAQService, Startable {
    * <p>
    * This function is used to remove one category in list
    * 
-   * @param  	categoryId is address id of the category need remove 
-   * @param  	sProvider
+   * @param    categoryId is address id of the category need remove 
+   * @param    sProvider
    * @throws Exception the exception
    */
   public void removeCategory(String categoryId, SessionProvider sProvider) throws Exception {
@@ -480,8 +480,8 @@ public class FAQServiceImpl implements FAQService, Startable {
    * <p>
    * This function is used to remove one question in list
    * 
-   * @param  	question identify
-   * @param  	sProvider
+   * @param    question identify
+   * @param    sProvider
    * @throws Exception the exception
    */
   public void removeQuestion(String questionId, SessionProvider sProvider) throws Exception {
@@ -499,11 +499,11 @@ public class FAQServiceImpl implements FAQService, Startable {
    * This function is used to add new or edit category in list. User will input information of fields need
    * in form add category, so user save then category will persistent in data
    * 
-   * @param  	parentId is address id of the category parent where user want add sub category
+   * @param    parentId is address id of the category parent where user want add sub category
    * when paretId equal null so this category is parent category else sub category  
-   * @param  	cat is properties that user input to interface will save on data
-   * @param		isAddNew is true when add new category else update category
-   * @param		sProvider
+   * @param    cat is properties that user input to interface will save on data
+   * @param    isAddNew is true when add new category else update category
+   * @param    sProvider
    * @return  List parent category or list sub category
    * @see     list category
    * @throws Exception the exception
@@ -530,8 +530,8 @@ public class FAQServiceImpl implements FAQService, Startable {
    * This method should create new question or update exists question
    * @param question is information but user input or edit to form interface of question 
    * @param isAddNew equal true then add new question
-   * 				isAddNew equal false then update question
-   * @param	sProvider
+   *         isAddNew equal false then update question
+   * @param  sProvider
    */
   public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
     sProvider.close();
@@ -558,8 +558,8 @@ public class FAQServiceImpl implements FAQService, Startable {
    * <p>
    * This function is used(Users of FAQ Administrator) choose some properties in object FAQSetting
    * 
-   * @param	 newSetting is properties of object FAQSetting that user input to interface will save on data
-   * @param	 sProvider
+   * @param   newSetting is properties of object FAQSetting that user input to interface will save on data
+   * @param   sProvider
    * @return all value depend FAQSetting will configuration follow properties but user choose
    * @throws Exception the exception
    */
@@ -578,9 +578,9 @@ public class FAQServiceImpl implements FAQService, Startable {
    * This function is used to move category in list. User will right click on category need
    * move, so user choose in list category one another category want to put
    * 
-   * @param  	categoryId is address id of the category that user want plate
-   * @param  	destCategoryId is address id of the category that user want put( destination )
-   * @param		sProvider
+   * @param    categoryId is address id of the category that user want plate
+   * @param    destCategoryId is address id of the category that user want put( destination )
+   * @param    sProvider
    * @return  category will put new plate
    * @see     no see category this plate but user see that category at new plate
    * @throws Exception the exception
@@ -599,9 +599,9 @@ public class FAQServiceImpl implements FAQService, Startable {
    * You have to register your email for whenever there is new question is inserted 
    * in the category or new category then there will  a notification sent to you.
    * 
-   * @param		id of category with user want add watch on that category 
-   * @param		value, this address email (multiple value) with input to interface will save on data
-   * @param		sProvider
+   * @param    id of category with user want add watch on that category 
+   * @param    value, this address email (multiple value) with input to interface will save on data
+   * @param    sProvider
    * @throws Exception the exception
    *  
    */
@@ -618,11 +618,11 @@ public class FAQServiceImpl implements FAQService, Startable {
    * This method will get list mail of one category. User see list this mails and 
    * edit or delete mail if need
    * 
-   * @param		CategoryId is id of category
-   * @param		sProvider
-   * @return	list email of current category
-   * @see			list email where user manager	
-   * @throws Exception the exception				
+   * @param    CategoryId is id of category
+   * @param    sProvider
+   * @return  list email of current category
+   * @see      list email where user manager  
+   * @throws Exception the exception        
    */
   /*
    * public QuestionPageList getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception { sProvider.close() ; return getListMailInWatch(categoryId); } public QuestionPageList getListMailInWatch(String categoryId) throws Exception { return jcrData_.getListMailInWatch(categoryId); }
@@ -631,9 +631,9 @@ public class FAQServiceImpl implements FAQService, Startable {
   /**
    * This function will delete watch in one category 
    * 
-   * @param	 categoryId is id of current category
-   * @param	 sProvider
-   * @param	 emails is location current of one watch with user want delete 
+   * @param   categoryId is id of current category
+   * @param   sProvider
+   * @param   emails is location current of one watch with user want delete 
    * @throws Exception the exception
    */
   public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String user) throws Exception {
@@ -648,9 +648,9 @@ public class FAQServiceImpl implements FAQService, Startable {
   /**
    * This function will un watch in one category 
    * 
-   * @param	 categoryId is id of current category
-   * @param	 sProvider
-   * @param	 emails is location current of one watch with user want delete 
+   * @param   categoryId is id of current category
+   * @param   sProvider
+   * @param   emails is location current of one watch with user want delete 
    * @throws Exception the exception
    */
   public void UnWatch(String categoryId, SessionProvider sProvider, String userCurrent) throws Exception {
@@ -665,9 +665,9 @@ public class FAQServiceImpl implements FAQService, Startable {
   /**
    * This function will un watch in one category 
    * 
-   * @param	 categoryId is id of current category
-   * @param	 sProvider
-   * @param	 emails is location current of one watch with user want delete 
+   * @param   categoryId is id of current category
+   * @param   sProvider
+   * @param   emails is location current of one watch with user want delete 
    * @throws Exception the exception
    */
   public void UnWatchQuestion(String questionID, SessionProvider sProvider, String userCurrent) throws Exception {
@@ -685,7 +685,7 @@ public class FAQServiceImpl implements FAQService, Startable {
    * and convert to category object and return list of category object
    * 
    * @param  user is name when user login
-   * @param	 sProvider  
+   * @param   sProvider  
    * @return Category list
    * @throws Exception the exception
    */
@@ -705,8 +705,8 @@ public class FAQServiceImpl implements FAQService, Startable {
    * So to support to users can find their questions more quickly and accurate,
    *  user can use 'Search Question' function
    * 
-   * @param	 sProvider
-   * @param	 eventQuery is object save value in form advanced search 
+   * @param   sProvider
+   * @param   eventQuery is object save value in form advanced search 
    * @throws Exception the exception
    */
 
@@ -726,8 +726,8 @@ public class FAQServiceImpl implements FAQService, Startable {
    * So to support to users can find their questions more quickly and accurate,
    *  user can use 'Search Question' function
    * 
-   * @param	 sProvider
-   * @param	 eventQuery is object save value in form advanced search 
+   * @param   sProvider
+   * @param   eventQuery is object save value in form advanced search 
    * @throws Exception the exception
    */
   /*
@@ -737,7 +737,7 @@ public class FAQServiceImpl implements FAQService, Startable {
   /**
    * This method return path of category identify
    * @param  category identify
-   * @param	 sProvider
+   * @param   sProvider
    * @return list category name is sort(path of this category)
    * @throws Exception the exception
    */
@@ -753,7 +753,7 @@ public class FAQServiceImpl implements FAQService, Startable {
   /**
    * This function will send message to address but you want send
    * 
-   * @param	 message is object save content with user want send to one or many address email
+   * @param   message is object save content with user want send to one or many address email
    * @throws Exception the exception
    */
   public void sendMessage(Message message) throws Exception {

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -293,21 +293,21 @@ public final class AnswersFeedGenerator extends RSSProcess implements FeedConten
     }
 
     public VoidReturn execute(Session session) throws Exception {
-    	try {
-    		String categoryPath = path.substring(0, path.indexOf("/questions/"));
-    		Node categoryNode = (Node) session.getItem(categoryPath);
-    		if(categoryNode == null ) categoryNode = (Node) getCurrentSession().getItem(categoryPath);
-    		while (!categoryNode.isNodeType("exo:faqCategory")) {
-    			categoryNode = categoryNode.getParent();
-    		}
-    		String itemId = path.substring(path.lastIndexOf("/") + 1);
-    		RSS rss = new RSS(categoryNode);
-    		SyndFeed feed = rss.removeEntry(itemId);
-    		String title = new PropertyReader(categoryNode).string("exo:name", "Root");
-    		feed.setTitle(title);
-    		rss.saveFeed(feed, FAQ_RSS_TYPE);
+      try {
+        String categoryPath = path.substring(0, path.indexOf("/questions/"));
+        Node categoryNode = (Node) session.getItem(categoryPath);
+        if(categoryNode == null ) categoryNode = (Node) getCurrentSession().getItem(categoryPath);
+        while (!categoryNode.isNodeType("exo:faqCategory")) {
+          categoryNode = categoryNode.getParent();
+        }
+        String itemId = path.substring(path.lastIndexOf("/") + 1);
+        RSS rss = new RSS(categoryNode);
+        SyndFeed feed = rss.removeEntry(itemId);
+        String title = new PropertyReader(categoryNode).string("exo:name", "Root");
+        feed.setTitle(title);
+        rss.saveFeed(feed, FAQ_RSS_TYPE);
       } catch (Exception e) {
-      	e.printStackTrace();
+        e.printStackTrace();
       }
       return VoidReturn.VALUE;
     }

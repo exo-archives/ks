@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -32,8 +32,8 @@ import org.exoplatform.services.organization.User;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Jun 2, 2008 - 3:33:33 AM	
+ *          tu.duy@exoplatform.com
+ * Jun 2, 2008 - 3:33:33 AM  
  */
 public class Utils {
 
@@ -265,7 +265,7 @@ public class Utils {
   }
 
   /**
-   * Transforms a List of strings into a string array and clear any	blank entry. 
+   * Transforms a List of strings into a string array and clear any  blank entry. 
    * A blank entry is the 'space' value (aka " ").
    * @param list List of Strings to transform
    * @return String array cleared of blanks

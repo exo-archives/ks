@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -23,7 +23,6 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
-
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
@@ -34,13 +33,11 @@ public class JCRSessionManager implements SessionManager {
 
   /** . */
   private static final ThreadLocal<Session> currentSession = new ThreadLocal<Session>();
-  
-  
-  String workspaceName = "portal-system";
-  RepositoryService repositoryService;
 
- 
-  
+  String                                    workspaceName  = "portal-system";
+
+  RepositoryService                         repositoryService;
+
   /**
    * Constructor
    * @param workspace
@@ -52,9 +49,9 @@ public class JCRSessionManager implements SessionManager {
   }
 
   public JCRSessionManager(String workspace) {
-  	this.workspaceName = workspace;
+    this.workspaceName = workspace;
   }
-  
+
   public String getWorkspaceName() {
     return workspaceName;
   }
@@ -69,32 +66,31 @@ public class JCRSessionManager implements SessionManager {
    *
    * @return the current session if exists, null otherwise
    */
-  public Session getCurrentSession()
-  {
-     return currentSession.get();
+  public Session getCurrentSession() {
+    return currentSession.get();
   }
-  
+
   public static Session currentSession() {
     return currentSession.get();
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
    * @see org.exoplatform.ks.common.jcr.SessionManager#getSession(org.exoplatform.services.jcr.ext.common.SessionProvider)
    */
-	public Session getSession(SessionProvider sessionProvider) {
-		Session session = null;
-		try {
-			if (repositoryService == null) {
-				repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer()
-															.getComponentInstanceOfType(RepositoryService.class);
-			}
-			ManageableRepository repository = repositoryService.getCurrentRepository();
-			session = sessionProvider.getSession(workspaceName, repository);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		return session;
-	}
+  public Session getSession(SessionProvider sessionProvider) {
+    Session session = null;
+    try {
+      if (repositoryService == null) {
+        repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
+      }
+      ManageableRepository repository = repositoryService.getCurrentRepository();
+      session = sessionProvider.getSession(workspaceName, repository);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return session;
+  }
 
   /**
    * <p>Open and returns a session to the model. When the current thread is already associated with a previously
@@ -102,97 +98,81 @@ public class JCRSessionManager implements SessionManager {
    *
    * @return a session to the model.
    */
-  public Session openSession()
-  {
-     Session session = currentSession.get();
-     if (session == null)
-     {
-       session = createSession();
-        currentSession.set(session);
-     }
-     else
-     {
-        throw new IllegalStateException("A session is already opened.");
-     }
-     return session;
+  public Session openSession() {
+    Session session = currentSession.get();
+    if (session == null) {
+      session = createSession();
+      currentSession.set(session);
+    } else {
+      throw new IllegalStateException("A session is already opened.");
+    }
+    return session;
   }
-  
-  private Session openOrReuseSession()
-  {
-     Session session = currentSession.get();
-     if (session == null)
-     {
-       session = createSession();
-        currentSession.set(session);
-     }
-     return session;
-  }
-  
 
-  /* (non-Javadoc)
+  private Session openOrReuseSession() {
+    Session session = currentSession.get();
+    if (session == null) {
+      session = createSession();
+      currentSession.set(session);
+    }
+    return session;
+  }
+
+  /*
+   * (non-Javadoc)
    * @see org.exoplatform.ks.common.jcr.SessionManager#createSession()
    */
   public Session createSession() {
     Session session = null;
     try {
-    	if (repositoryService == null) {
-				repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer()
-															.getComponentInstanceOfType(RepositoryService.class);
-			}
-     ManageableRepository repository = repositoryService.getCurrentRepository();
-     session = repository.getSystemSession(workspaceName);
+      if (repositoryService == null) {
+        repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
+      }
+      ManageableRepository repository = repositoryService.getCurrentRepository();
+      session = repository.getSystemSession(workspaceName);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
     return session;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see org.exoplatform.ks.common.jcr.SessionManager#closeSession()
    */
-  public boolean closeSession()
-  {
-     return closeSession(false);
+  public boolean closeSession() {
+    return closeSession(false);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see org.exoplatform.ks.common.jcr.SessionManager#closeSession(boolean)
    */
-  public boolean closeSession(boolean save)
-  {
-     Session session = currentSession.get();
-     if (session == null)
-     {
-        // Should warn
+  public boolean closeSession(boolean save) {
+    Session session = currentSession.get();
+    if (session == null) {
+      // Should warn
+      return false;
+    } else {
+      currentSession.set(null);
+      try {
+        if (save) {
+          session.save();
+        }
+      } catch (Exception e) {
         return false;
-     }
-     else
-     {
-       currentSession.set(null);
-        try
-        {
-           if (save)
-           {
-              session.save();
-           }
-        }
-        catch(Exception e)
-        {
-        return false;
-        }
-        finally
-        {
-           session.logout();
-        }
-        return true;
-     }
+      } finally {
+        session.logout();
+      }
+      return true;
+    }
   }
-  
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see org.exoplatform.ks.common.jcr.SessionManager#executeAndSave(org.exoplatform.ks.common.jcr.JCRTask)
    */
-  public <T>T executeAndSave(JCRTask<T> jcrTask) {
+  public <T> T executeAndSave(JCRTask<T> jcrTask) {
     try {
       openOrReuseSession();
       return jcrTask.execute(getCurrentSession());
@@ -202,11 +182,12 @@ public class JCRSessionManager implements SessionManager {
       closeSession(true);
     }
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
    * @see org.exoplatform.ks.common.jcr.SessionManager#execute(org.exoplatform.ks.common.jcr.JCRTask)
    */
-  public <T>T execute(JCRTask<T> jcrTask) {
+  public <T> T execute(JCRTask<T> jcrTask) {
     try {
       openOrReuseSession();
       return jcrTask.execute(getCurrentSession());
@@ -216,5 +197,5 @@ public class JCRSessionManager implements SessionManager {
       closeSession(true);
     }
   }
-  
+
 }

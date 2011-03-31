@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -29,44 +29,44 @@ import org.exoplatform.webui.core.UIComponent;
  */
 public class BasePollForm extends BaseUIForm {
 
-	private PollService pollService;
+  private PollService pollService;
 
-	/**
-	 * Get a reference to the forum service
-	 * 
-	 * @return
-	 */
-	protected PollService getPollService() {
-		if (pollService == null) {
-			pollService = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
-		}
-		return pollService;
-	}
+  /**
+   * Get a reference to the forum service
+   * 
+   * @return
+   */
+  protected PollService getPollService() {
+    if (pollService == null) {
+      pollService = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
+    }
+    return pollService;
+  }
 
-	/**
-	 * Set poll service (used by unit tests)
-	 * 
-	 * @param pollService
-	 */
-	protected void setPollService(PollService pollService) {
-		this.pollService = pollService;
-	}
+  /**
+   * Set poll service (used by unit tests)
+   * 
+   * @param pollService
+   */
+  protected void setPollService(PollService pollService) {
+    this.pollService = pollService;
+  }
 
-	protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
-		UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class);
-		return openPopup(pollPortlet, componentType, popupId, width, height);
-	}
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
+    UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class);
+    return openPopup(pollPortlet, componentType, popupId, width, height);
+  }
 
-	protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
-		UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class);
-		return openPopup(pollPortlet, componentType, width, height);
-	}
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
+    UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class);
+    return openPopup(pollPortlet, componentType, width, height);
+  }
 
-	protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
-		return openPopup(componentType, width, 0);
-	}
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
+    return openPopup(componentType, width, 0);
+  }
 
-	protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
-		return openPopup(componentType, popupId, width, 0);
-	}
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
+    return openPopup(componentType, popupId, width, 0);
+  }
 }

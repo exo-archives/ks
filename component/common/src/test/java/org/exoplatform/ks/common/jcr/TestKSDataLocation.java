@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -16,9 +16,9 @@
  */
 package org.exoplatform.ks.common.jcr;
 
-import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
-
 import junit.framework.TestCase;
+
+import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -34,10 +34,9 @@ public class TestKSDataLocation extends TestCase {
 
     KSDataLocation location = new KSDataLocation("");
     String expected = Locations.USER_PROFILE_HOME + "/FOO/forumSubscriptionFOO";
-    
+
     assertEquals(expected, location.getUserSubscriptionLocation("FOO"));
-    
-  
+
   }
 
 }

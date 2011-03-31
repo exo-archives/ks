@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -35,44 +35,44 @@ import org.quartz.JobExecutionException;
 
 public class NotifyJob implements Job {
   @SuppressWarnings("unused")
-	private NotifyInfo notify_ ;
-	public NotifyJob() throws Exception {
-		
-	}
+  private NotifyInfo notify_ ;
+  public NotifyJob() throws Exception {
+    
+  }
 
-	public void setMessageInfo(NotifyInfo notifyInfo) {
-		this.notify_ = notifyInfo ;
-	}
-	
-	private static Log log_ = ExoLogger.getLogger(NotifyJob.class);
-	
+  public void setMessageInfo(NotifyInfo notifyInfo) {
+    this.notify_ = notifyInfo ;
+  }
+  
+  private static Log log_ = ExoLogger.getLogger(NotifyJob.class);
+  
   public void execute(JobExecutionContext context) throws JobExecutionException {
-	  try {
-	    ExoContainer exoContainer = Utils.getExoContainer(context);
-	    MailService mailService = (MailService)exoContainer.getComponentInstanceOfType(MailService.class) ;
-	    String name = context.getJobDetail().getName();
-	    Common common = new Common() ;
-	    NotifyInfo messageInfo = common.getMessageInfo(name) ;
-	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
-	    Message message = messageInfo.getMessage() ;
-		  JobSchedulerService schedulerService = (JobSchedulerService)exoContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
-		  JobInfo info = new JobInfo(name, "KnowledgeSuite", context.getJobDetail().getJobClass());
-		  if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
-		  	List<String> sentMessages = new ArrayList<String>() ;
-		  	int countEmail = 0;
-		  	for(String address : emailAddresses) {
-		  		if(!sentMessages.contains(address)) {
-		  			message.setTo(address) ;
-			  		mailService.sendMessage(message) ;
-			  		sentMessages.add(address) ;
-			  		countEmail ++;
-		  		}
-		  	}
-		  }
-		  schedulerService.removeJob(info) ;		  
+    try {
+      ExoContainer exoContainer = Utils.getExoContainer(context);
+      MailService mailService = (MailService)exoContainer.getComponentInstanceOfType(MailService.class) ;
+      String name = context.getJobDetail().getName();
+      Common common = new Common() ;
+      NotifyInfo messageInfo = common.getMessageInfo(name) ;
+      List<String> emailAddresses = messageInfo.getEmailAddresses() ;
+      Message message = messageInfo.getMessage() ;
+      JobSchedulerService schedulerService = (JobSchedulerService)exoContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
+      JobInfo info = new JobInfo(name, "KnowledgeSuite", context.getJobDetail().getJobClass());
+      if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
+        List<String> sentMessages = new ArrayList<String>() ;
+        int countEmail = 0;
+        for(String address : emailAddresses) {
+          if(!sentMessages.contains(address)) {
+            message.setTo(address) ;
+            mailService.sendMessage(message) ;
+            sentMessages.add(address) ;
+            countEmail ++;
+          }
+        }
+      }
+      schedulerService.removeJob(info) ;      
 
-	  } catch (Exception e) { 
-		  log_.error("Failed to execute email notification job", e)	;	
-	  }
+    } catch (Exception e) { 
+      log_.error("Failed to execute email notification job", e)  ;  
+    }
   }
 }

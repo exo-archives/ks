@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -33,54 +33,75 @@ import org.exoplatform.services.log.Log;
  * @version $Revision$
  */
 public class KSDataLocation {
-  
-  private static final Log log = ExoLogger.getLogger(KSDataLocation.class);
-  
+
+  private static final Log     log                     = ExoLogger.getLogger(KSDataLocation.class);
+
   /**
    * Parameter name use to designate the name of the repository where the data is stored. Should be passed in constructor's {@link InitParams}
    */
-//  public static final String REPOSITORY_PARAM = "repository";
-  
+  // public static final String REPOSITORY_PARAM = "repository";
+
   /**
    * Parameter name use to designate the name of the workspace in the repository where the data is stored. Should be passed in constructor's {@link InitParams}
    */
-  public static final String WORKSPACE_PARAM = "workspace";
-  
+  public static final String   WORKSPACE_PARAM         = "workspace";
+
   /**
    * Default repository name used if none is specified
    */
-  public static final String DEFAULT_REPOSITORY_NAME = "repository";
-  
+  public static final String   DEFAULT_REPOSITORY_NAME = "repository";
+
   /**
    * Default workspace name used if none is specified
    */
-  public static final String DEFAULT_WORKSPACE_NAME = "portal-system";
+  public static final String   DEFAULT_WORKSPACE_NAME  = "portal-system";
 
-  private String forumHomeLocation;
-  private String forumDataLocation;
-  private String topicTypesLocation;
-  private String forumSystemLocation;
-  private String banIPLocation;
-  private String statisticsLocation;
-  private String administrationLocation;
-  private String userProfilesLocation;
-  private String forumCategoriesLocation;
-  private String tagsLocation;
-  private String avatarsLocation;
-  private String forumBanIPLocation;
-  private String bbcodesLocation;
-  private String faqHomeLocation;
-  private String forumStatisticsLocation;
-  private String faqSettingsLocation;
-  private String faqUserSettingsLocation;
-  private String faqCategoriesLocation;
-  private String faqTemplatesLocation;
-  
+  private String               forumHomeLocation;
+
+  private String               forumDataLocation;
+
+  private String               topicTypesLocation;
+
+  private String               forumSystemLocation;
+
+  private String               banIPLocation;
+
+  private String               statisticsLocation;
+
+  private String               administrationLocation;
+
+  private String               userProfilesLocation;
+
+  private String               forumCategoriesLocation;
+
+  private String               tagsLocation;
+
+  private String               avatarsLocation;
+
+  private String               forumBanIPLocation;
+
+  private String               bbcodesLocation;
+
+  private String               faqHomeLocation;
+
+  private String               forumStatisticsLocation;
+
+  private String               faqSettingsLocation;
+
+  private String               faqUserSettingsLocation;
+
+  private String               faqCategoriesLocation;
+
+  private String               faqTemplatesLocation;
+
   private NodeHierarchyCreator creator;
-  private String workspace;
-  private SessionManager sessionManager;
-  private RepositoryService repositoryService;
-  
+
+  private String               workspace;
+
+  private SessionManager       sessionManager;
+
+  private RepositoryService    repositoryService;
+
   /**
    * Creates a new {@link KSDataLocation} and initializes pathes.
    * @param params {@link #REPOSITORY_PARAM} and {@link #WORKSPACE_PARAM} are expected as value-param 
@@ -93,51 +114,52 @@ public class KSDataLocation {
     this.sessionManager = new JCRSessionManager(workspace, repositoryService);
     initPathes();
   }
-  
+
   /**
    * Mainly used for tests
    * @param workspace
    */
   public KSDataLocation(String workspace, RepositoryService repositoryService) {
-  	this.workspace = workspace;
-  	this.repositoryService = repositoryService; 
+    this.workspace = workspace;
+    this.repositoryService = repositoryService;
     this.sessionManager = new JCRSessionManager(workspace, repositoryService);
     initPathes();
   }
 
   public KSDataLocation(String workspace) {
-  	this.workspace = workspace;
+    this.workspace = workspace;
     this.sessionManager = new JCRSessionManager(workspace, null);
     initPathes();
   }
+
   /**
    * Initializes all pathes with {@link #getPath(String)}
    */
   private void initPathes() {
-    forumHomeLocation = getPath(Locations.FORUM_SERVICE);   
+    forumHomeLocation = getPath(Locations.FORUM_SERVICE);
     avatarsLocation = getPath(Locations.KS_USER_AVATAR);
-    
+
     forumSystemLocation = getPath(Locations.FORUM_SYSTEM);
-    userProfilesLocation = getPath(Locations.USER_PROFILE_HOME);   
+    userProfilesLocation = getPath(Locations.USER_PROFILE_HOME);
     statisticsLocation = getPath(Locations.STATISTIC_HOME);
     forumStatisticsLocation = getPath(Locations.FORUM_STATISTIC);
-    
-    administrationLocation = getPath(Locations.ADMINISTRATION_HOME);   
+
+    administrationLocation = getPath(Locations.ADMINISTRATION_HOME);
     banIPLocation = getPath(Locations.BANIP_HOME);
     forumBanIPLocation = getPath(Locations.FORUM_BAN_IP);
-    
+
     forumDataLocation = getPath(Locations.FORUM_DATA);
     topicTypesLocation = getPath(Locations.TOPIC_TYPE_HOME);
     forumCategoriesLocation = getPath(Locations.FORUM_CATEGORIES_HOME);
     tagsLocation = getPath(Locations.TAG_HOME);
     bbcodesLocation = getPath(Locations.BBCODE_HOME);
-    faqHomeLocation = getPath(Locations.FAQ_SERVICE);  
+    faqHomeLocation = getPath(Locations.FAQ_SERVICE);
     faqSettingsLocation = getPath(Locations.SETTING_HOME);
     faqUserSettingsLocation = getPath(Locations.USER_SETTING_HOME);
     faqCategoriesLocation = getPath(Locations.FAQ_CATEGORIES_HOME);
-    faqTemplatesLocation = getPath(Locations.TEMPLATE_HOME);   
+    faqTemplatesLocation = getPath(Locations.TEMPLATE_HOME);
   }
-  
+
   /**
    * Change the storage location. Note that pathes are not reset
    * @param plugin plugin defining repository and workspace location for the data storage
@@ -145,8 +167,8 @@ public class KSDataLocation {
   public void setLocation(DataLocationPlugin plugin) {
     this.workspace = plugin.getWorkspace();
     this.sessionManager = new JCRSessionManager(workspace, repositoryService);
-  } 
-  
+  }
+
   /**
    * Get a jcr path by location name.
    * @param locationName name of the location such a defined in {@link Locations}
@@ -158,7 +180,7 @@ public class KSDataLocation {
     if (creator == null) {
       return locationName;
     }
-    
+
     String path = creator.getJcrPath(locationName);
     if (path != null) {
       path = path.substring(1);
@@ -171,7 +193,7 @@ public class KSDataLocation {
     try {
       result = params.getValueParam(name).getValue();
     } catch (Exception e) {
-      log.warn("No '"+ name +"' value-param. Using default value: " + defaultValue);
+      log.warn("No '" + name + "' value-param. Using default value: " + defaultValue);
     }
 
     if (result == null) {
@@ -181,11 +203,11 @@ public class KSDataLocation {
   }
 
   public String getRepository() {
-  	try {
-  		return repositoryService.getCurrentRepository().getConfiguration().getName();
-		} catch (Exception e) {
-			return DEFAULT_REPOSITORY_NAME;
-		}
+    try {
+      return repositoryService.getCurrentRepository().getConfiguration().getName();
+    } catch (Exception e) {
+      return DEFAULT_REPOSITORY_NAME;
+    }
   }
 
   public String getWorkspace() {
@@ -195,7 +217,7 @@ public class KSDataLocation {
   public SessionManager getSessionManager() {
     return sessionManager;
   }
-  
+
   public void setSessionManager(SessionManager manager) {
     this.sessionManager = manager;
   }
@@ -207,7 +229,7 @@ public class KSDataLocation {
   public String getForumHomeLocation() {
     return forumHomeLocation;
   }
-  
+
   /**
    * 
    * @return root path for forum user data
@@ -263,7 +285,6 @@ public class KSDataLocation {
   public String getUserProfilesLocation() {
     return userProfilesLocation;
   }
-
 
   /**
    * 
@@ -321,7 +342,6 @@ public class KSDataLocation {
     return faqSettingsLocation;
   }
 
-
   /**
    * 
    * @return root path for all user settings
@@ -353,21 +373,20 @@ public class KSDataLocation {
   public String getForumStatisticsLocation() {
     return forumStatisticsLocation;
   }
-  
-  
+
   public String toString() {
     return workspace;
   }
-  
+
   /**
    * Return the location of forum subscriptions for a given user
    * @param userId user id
    * @return
    */
   public String getUserSubscriptionLocation(String userId) {
-    return getUserProfilesLocation() +  "/" + userId + "/forumSubscription" + userId;
+    return getUserProfilesLocation() + "/" + userId + "/forumSubscription" + userId;
   }
-  
+
   /**
    * Location names for KS data storage
    * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -375,33 +394,46 @@ public class KSDataLocation {
    */
   public interface Locations {
 
-    public static final String FORUM_STATISTIC = "forumStatistic";
-    public static final String TEMPLATE_HOME = "templateHome";
-    public static final String USER_SETTING_HOME = "userSettingHome";
-    public static final String SETTING_HOME = "settingHome";
-    public static final String FAQ_SERVICE = "faqApp";
-    public static final String USER_PROFILE_HOME = "UserProfileHome";
-    public static final String ADMINISTRATION_HOME = "AdministrationHome";
-    public static final String STATISTIC_HOME = "StatisticHome";
-    public static final String BANIP_HOME = "BanIPHome";
-    public static final String FORUM_BAN_IP = "forumBanIP";
-    public static final String TOPIC_TYPE_HOME = "TopicTypeHome";
-    public static final String TAG_HOME = "TagHome";
-    public static final String FAQ_CATEGORIES_HOME = "categories";
-    public static final String FORUM_CATEGORIES_HOME = "CategoryHome";
-    
-    public static final String KS_USER_AVATAR = "ksUserAvatar";
+    public static final String FORUM_STATISTIC       = "forumStatistic";
 
-    public static final String BBCODE_HOME = "forumBBCode";
-    public static final String FORUM_DATA = "ForumData";
-    public static final String FORUM_SYSTEM = "ForumSystem";
-    public static final String FORUM_SERVICE = "ForumService";
+    public static final String TEMPLATE_HOME         = "templateHome";
+
+    public static final String USER_SETTING_HOME     = "userSettingHome";
+
+    public static final String SETTING_HOME          = "settingHome";
+
+    public static final String FAQ_SERVICE           = "faqApp";
+
+    public static final String USER_PROFILE_HOME     = "UserProfileHome";
+
+    public static final String ADMINISTRATION_HOME   = "AdministrationHome";
+
+    public static final String STATISTIC_HOME        = "StatisticHome";
+
+    public static final String BANIP_HOME            = "BanIPHome";
+
+    public static final String FORUM_BAN_IP          = "forumBanIP";
+
+    public static final String TOPIC_TYPE_HOME       = "TopicTypeHome";
+
+    public static final String TAG_HOME              = "TagHome";
+
+    public static final String FAQ_CATEGORIES_HOME   = "categories";
+
+    public static final String FORUM_CATEGORIES_HOME = "CategoryHome";
+
+    public static final String KS_USER_AVATAR        = "ksUserAvatar";
+
+    public static final String BBCODE_HOME           = "forumBBCode";
+
+    public static final String FORUM_DATA            = "ForumData";
+
+    public static final String FORUM_SYSTEM          = "ForumSystem";
+
+    public static final String FORUM_SERVICE         = "ForumService";
+
     public static final String DEFAULT_APPS_LOCATION = "exo:applications";
-    
+
   }
 
-
-  
-  
- 
 }

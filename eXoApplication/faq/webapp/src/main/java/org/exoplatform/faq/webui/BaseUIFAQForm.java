@@ -25,7 +25,7 @@ import org.exoplatform.webui.core.UIComponent;
 /**
  * Created by The eXo Platform SAS 
  * Author : Vu Duy Tu 
- * 					tu.duy@exoplatform.com
+ *           tu.duy@exoplatform.com
  * Jan 18, 2010 - 4:59:43 AM
  */
 public class BaseUIFAQForm extends BaseUIForm {

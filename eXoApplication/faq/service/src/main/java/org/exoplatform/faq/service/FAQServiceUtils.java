@@ -36,7 +36,7 @@ import org.exoplatform.services.organization.User;
 /**
  * Created by The eXo Platform SARL
  * Author : Truong Nguyen
- *					truong.nguyen@exoplatform.com
+ *          truong.nguyen@exoplatform.com
  * May 10, 2008, 4:26:37 PM
  */
 public class FAQServiceUtils {
@@ -122,8 +122,8 @@ public class FAQServiceUtils {
 
   /**
    * Repare permission of node
-   * @param node	Node which is repared permission
-   * @param owner	permission will be added for this node
+   * @param node  Node which is repared permission
+   * @param owner  permission will be added for this node
    * @throws Exception
    */
   public static void reparePermissions(Node node, String owner) throws Exception {

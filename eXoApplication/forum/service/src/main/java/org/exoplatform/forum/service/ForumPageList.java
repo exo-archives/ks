@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -71,7 +71,7 @@ public class ForumPageList extends JCRPageList {
 
   /**
    * Set ForumPageList for search user.
-   * @param listResult	result which is returned from search proccessing.
+   * @param listResult  result which is returned from search proccessing.
    */
   public ForumPageList(List listResult) {
     super(listResult.size());

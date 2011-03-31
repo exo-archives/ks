@@ -78,7 +78,7 @@ public class TestForumServiceUtils extends AbstractExoContainerTestCase {
     // organizationService.addMemberships("user1", "*:/platform/users");
     // organizationService.addMemberships("user2", "*:/platform/users");
     // organizationService.addMemberships("user3", "*:/platform");
-    //		
+    //    
     // assertEquals(2, ForumServiceUtils.getUserPermission(new String [] {"/platform/users"}).size());
     // AssertUtils.assertContains(ForumServiceUtils.getUserPermission(new String [] {"/platform/users"}), "user1", "user2");
     // AssertUtils.assertNotContains(ForumServiceUtils.getUserPermission(new String [] {"/platform/users"}), "user3");

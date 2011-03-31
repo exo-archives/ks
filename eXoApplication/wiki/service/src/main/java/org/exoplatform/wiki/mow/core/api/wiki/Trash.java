@@ -17,14 +17,11 @@
 package org.exoplatform.wiki.mow.core.api.wiki;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 
-import org.chromattic.api.DuplicateNameException;
 import org.chromattic.api.annotations.OneToMany;
 import org.chromattic.api.annotations.Path;
 import org.chromattic.api.annotations.PrimaryType;
-import org.chromattic.ext.ntdef.NTHierarchyNode;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 
 /**

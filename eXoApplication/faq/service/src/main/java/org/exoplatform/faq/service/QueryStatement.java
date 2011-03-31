@@ -49,7 +49,7 @@ public class QueryStatement {
   private String[]           orderBy;
 
   /** The order type. */
-  private String             orderType   = ASC;               // ascending or descending
+  private String             orderType   = ASC;              // ascending or descending
 
   /** The created date. */
   private Date               createdDate;

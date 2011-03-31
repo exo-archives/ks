@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -29,7 +29,6 @@ import org.exoplatform.ks.rendering.core.SupportedSyntaxes;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-
 /**
  * Renderer for BBCode markup. 
  * BBCode lookup is delegated to {@link BBCodeProvider}. By default, this implementation will use a {@link BuiltinBBCodeProvider}
@@ -37,41 +36,42 @@ import org.exoplatform.services.log.Log;
  * @version $Revision$
  */
 public class BBCodeRenderer implements Renderer {
-  
+
   public static final String BBCODE_SYNTAX_ID = "bbcode";
-  
-  protected BBCodeProvider bbCodeProvider;
-  
-  private static final Log log = ExoLogger.getLogger(BBCodeRenderer.class);
-  
+
+  protected BBCodeProvider   bbCodeProvider;
+
+  private static final Log   log              = ExoLogger.getLogger(BBCodeRenderer.class);
+
   public BBCodeRenderer() {
     bbCodeProvider = new BuiltinBBCodeProvider();
   }
-  
+
   public String getSyntax() {
     return SupportedSyntaxes.bbcode.name();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see org.exoplatform.ks.rendering.api.Renderer#render(java.lang.String)
    */
   public String render(String s) {
     for (BBCode bbcode : getBbcodes()) {
-    	s = processReplace(s, bbcode);
+      s = processReplace(s, bbcode);
     }
     return s;
   }
 
   public String processReplace(String s, BBCode bbcode) {
-		String bbc = bbcode.getTagName();
-    if(bbc.equals("URL")){
+    String bbc = bbcode.getTagName();
+    if (bbc.equals("URL")) {
       s = StringUtils.replace(s, "[link", "[URL");
       s = StringUtils.replace(s, "[/link]", "[/URL]");
       s = StringUtils.replace(s, "[LINK", "[URL");
       s = StringUtils.replace(s, "[/LINK]", "[/URL]");
     }
-    if(!bbc.equals("LIST")){
-      if(Boolean.valueOf(bbcode.isOption())){
+    if (!bbc.equals("LIST")) {
+      if (Boolean.valueOf(bbcode.isOption())) {
         s = processOptionedTag(s, bbcode);
       } else {
         s = processTag(s, bbcode);
@@ -79,9 +79,9 @@ public class BBCodeRenderer implements Renderer {
     } else {
       s = processList(s);
     }
-		return s;
-	}
-  
+    return s;
+  }
+
   String processTag(String s, BBCode bbcode) {
     String bbc = bbcode.getTagName();
     int clsIndex;
@@ -127,17 +127,21 @@ public class BBCodeRenderer implements Renderer {
         clsIndex = markup.indexOf(end, tagIndex);
         str = markup.substring(tagIndex + start.length(), clsIndex);
         option = str.substring(0, str.indexOf("]"));
-        if(option.indexOf("+")==0)option = option.replaceFirst("\\+", "");
-        if(option.indexOf("\"")==0)option = option.replaceAll("\"", "");
-        if(option.indexOf("'")==0)option = option.replaceAll("'", "");
-        if(option.indexOf("&quot;")==0)option = option.replaceAll("&quot;", "");
-        param = str.substring(str.indexOf("]")+1);
-        while(bbc.equals("CODE") && (param.indexOf("<br") >= 0)) {
-        	param = param.replaceAll("<br\\s*\\/?>", "\n");
+        if (option.indexOf("+") == 0)
+          option = option.replaceFirst("\\+", "");
+        if (option.indexOf("\"") == 0)
+          option = option.replaceAll("\"", "");
+        if (option.indexOf("'") == 0)
+          option = option.replaceAll("'", "");
+        if (option.indexOf("&quot;") == 0)
+          option = option.replaceAll("&quot;", "");
+        param = str.substring(str.indexOf("]") + 1);
+        while (bbc.equals("CODE") && (param.indexOf("<br") >= 0)) {
+          param = param.replaceAll("<br\\s*\\/?>", "\n");
         }
-        while(bbc.equals("CODE") && param.indexOf("<p>") >= 0 && param.indexOf("</p>") >= 0) {
-        	param = StringUtils.replace(param, "<p>", "");
-        	param = StringUtils.replace(param, "</p>", "\n");
+        while (bbc.equals("CODE") && param.indexOf("<p>") >= 0 && param.indexOf("</p>") >= 0) {
+          param = StringUtils.replace(param, "<p>", "");
+          param = StringUtils.replace(param, "</p>", "\n");
         }
         param = StringUtils.replace(bbcode.getReplacement(), "{param}", param);
         param = StringUtils.replace(param, "{option}", option.trim());
@@ -163,16 +167,16 @@ public class BBCodeRenderer implements Renderer {
       try {
         clsIndex = s.indexOf("[/list]", tagIndex);
         str = s.substring(tagIndex + 6, clsIndex);
-        String str_ =  "";
+        String str_ = "";
         str_ = StringUtils.replaceOnce(str, "[*]", "<li>");
         str_ = StringUtils.replace(str_, "[*]", "</li><li>");
-        if(str_.lastIndexOf("</li><li>") > 0) {
+        if (str_.lastIndexOf("</li><li>") > 0) {
           str_ = str_ + "</li>";
         }
-        if(str_.indexOf("<br/>") >= 0) {
+        if (str_.indexOf("<br/>") >= 0) {
           str_ = StringUtils.replace(str_, "<br/>", "");
         }
-        if(str_.indexOf("<p>") >= 0) {
+        if (str_.indexOf("<p>") >= 0) {
           str_ = StringUtils.replace(str_, "<p>", "");
           str_ = StringUtils.replace(str_, "</p>", "");
         }
@@ -181,12 +185,12 @@ public class BBCodeRenderer implements Renderer {
         continue;
       }
     }
-    
+
     lastIndex = 0;
     tagIndex = 0;
     while ((tagIndex = s.indexOf("[list=", lastIndex)) != -1) {
       lastIndex = tagIndex + 1;
-      
+
       try {
         clsIndex = s.indexOf("[/list]", tagIndex);
         String content = s.substring(tagIndex + 6, clsIndex);
@@ -194,24 +198,24 @@ public class BBCodeRenderer implements Renderer {
         String type = content.substring(0, clsType);
         type = type.replaceAll("\"", "").replaceAll("'", "");
         str = content.substring(clsType + 1);
-        String str_ =  "";
+        String str_ = "";
         str_ = StringUtils.replaceOnce(str, "[*]", "<li>");
         str_ = StringUtils.replace(str_, "[*]", "</li><li>");
-        if(str_.lastIndexOf("</li><li>") > 0) {
+        if (str_.lastIndexOf("</li><li>") > 0) {
           str_ = str_ + "</li>";
         }
-        if(str_.indexOf("<br/>") >= 0) {
+        if (str_.indexOf("<br/>") >= 0) {
           str_ = StringUtils.replace(str_, "<br/>", "");
         }
-        if(str_.indexOf("<p>") >= 0) {
+        if (str_.indexOf("<p>") >= 0) {
           str_ = StringUtils.replace(str_, "<p>", "");
           str_ = StringUtils.replace(str_, "</p>", "");
         }
-        if(" 1 i I a A ".indexOf(type) > 0) {
-        	s = StringUtils.replace(s, "[list=" + content + "[/list]", "<ol type=\""+type+"\">" + str_ + "</ol>");
+        if (" 1 i I a A ".indexOf(type) > 0) {
+          s = StringUtils.replace(s, "[list=" + content + "[/list]", "<ol type=\"" + type + "\">" + str_ + "</ol>");
         } else {
-        	str_ = StringUtils.replace(str_, "<li>", "<li type=\""+type+"\">");
-	        s = StringUtils.replace(s, "[list=" + content + "[/list]", "<ul>" + str_ + "</ul>");
+          str_ = StringUtils.replace(str_, "<li>", "<li type=\"" + type + "\">");
+          s = StringUtils.replace(s, "[list=" + content + "[/list]", "<ul>" + str_ + "</ul>");
         }
       } catch (Exception e) {
         continue;
@@ -233,7 +237,6 @@ public class BBCodeRenderer implements Renderer {
     return result;
   }
 
-
   private List<BBCode> convert(List<BBCodeData> bbc) {
     List<BBCode> bbcodes = new ArrayList<BBCode>();
     for (BBCodeData bbCodeData : bbc) {
@@ -249,28 +252,25 @@ public class BBCodeRenderer implements Renderer {
     return bbcodes;
   }
 
-
   public BBCodeProvider getBbCodeProvider() {
     return bbCodeProvider;
   }
-
-
 
   public void setBbCodeProvider(BBCodeProvider bbCodeProvider) {
     this.bbCodeProvider = bbCodeProvider;
   }
 
-  public String renderExample(String s, BBCode bbco){
-  	List<BBCode> bbcodes = new ArrayList<BBCode>();
-  	bbcodes.add(bbco);
-  	bbcodes.addAll(getBbcodes());
-  	for (BBCode bbcode : bbcodes) {
-  		if(bbcode.getId().equals(bbco.getId())){
-  			s = processReplace(s, bbco);
-  		} else {
-  			s = processReplace(s, bbcode);
-  		}
+  public String renderExample(String s, BBCode bbco) {
+    List<BBCode> bbcodes = new ArrayList<BBCode>();
+    bbcodes.add(bbco);
+    bbcodes.addAll(getBbcodes());
+    for (BBCode bbcode : bbcodes) {
+      if (bbcode.getId().equals(bbco.getId())) {
+        s = processReplace(s, bbco);
+      } else {
+        s = processReplace(s, bbcode);
+      }
     }
-  	return s;
+    return s;
   }
 }

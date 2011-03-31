@@ -26,15 +26,16 @@ import java.util.List;
  * Dec 21, 2010  
  */
 public class PollInitialData {
-	private List<PollData> pollDatas = new ArrayList<PollData>();
+  private List<PollData> pollDatas = new ArrayList<PollData>();
 
-  public PollInitialData() {}
-  
-	public List<PollData> getPollDatas() {
-  	return pollDatas;
+  public PollInitialData() {
   }
-	
-	public void setPollDatas(List<PollData> pollDatas) {
-  	this.pollDatas = pollDatas;
+
+  public List<PollData> getPollDatas() {
+    return pollDatas;
+  }
+
+  public void setPollDatas(List<PollData> pollDatas) {
+    this.pollDatas = pollDatas;
   }
 }

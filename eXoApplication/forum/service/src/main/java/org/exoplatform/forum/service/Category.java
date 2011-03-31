@@ -21,7 +21,7 @@ import java.util.Date;
 import org.exoplatform.services.jcr.util.IdGenerator;
 
 /**
- * March 2, 2007	
+ * March 2, 2007  
  */
 public class Category {
   private String   id;

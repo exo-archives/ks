@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -16,13 +16,13 @@
  */
 package org.exoplatform.ks.rendering.spi;
 
+import junit.framework.TestCase;
+
 import org.exoplatform.commons.testing.AssertUtils;
 import org.exoplatform.commons.testing.Closure;
 import org.exoplatform.commons.testing.KernelUtils;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ks.rendering.api.Renderer;
-
-import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -30,36 +30,34 @@ import junit.framework.TestCase;
  */
 public class TestRendererPlugin extends TestCase {
 
-  
   public void testConstructor() throws Exception {
     final InitParams params = new InitParams();
 
-    
     // null param not accepted
     AssertUtils.assertException(new Closure() {
       public void dothis() {
         new RendererPlugin(null);
       }
     });
-    
+
     // value-param "class" is required
     AssertUtils.assertException(new Closure() {
       public void dothis() {
         new RendererPlugin(params);
       }
     });
-    
+
     KernelUtils.addValueParam(params, "class", "FOO");
     // class should be an accessible type
     AssertUtils.assertException(new Closure() {
       public void dothis() {
         new RendererPlugin(params);
       }
-    });  
-    
+    });
+
     RendererPlugin plugin = createSampleRendererPlugin();
     assertEquals(SampleRenderer.class, plugin.getRenderer().getClass());
-    
+
   }
 
   public void testCreateRenderer() throws Exception {
@@ -67,15 +65,12 @@ public class TestRendererPlugin extends TestCase {
     Renderer actual = plugin.getRenderer();
     assertTrue("renderer should be an instance of Renderer", (actual instanceof Renderer));
   }
-  
-  
+
   private RendererPlugin createSampleRendererPlugin() {
     final InitParams params = new InitParams();
     KernelUtils.addObjectParam(params, "renderer", new SampleRenderer());
     RendererPlugin plugin = new RendererPlugin(params);
     return plugin;
   }
-  
-  
-  
+
 }

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -27,11 +27,11 @@ import org.exoplatform.commons.utils.ListAccess;
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public abstract class JCRListAccess<E> implements ListAccess<E>{
-  
+public abstract class JCRListAccess<E> implements ListAccess<E> {
+
   protected SessionManager manager;
 
-  public JCRListAccess(SessionManager manager){
+  public JCRListAccess(SessionManager manager) {
     this.manager = manager;
   }
 
@@ -53,8 +53,7 @@ public abstract class JCRListAccess<E> implements ListAccess<E>{
     }
   }
 
-  protected abstract E[] load(Session session, int index, int length) throws Exception,
-                                                                             IllegalArgumentException;
+  protected abstract E[] load(Session session, int index, int length) throws Exception, IllegalArgumentException;
 
   protected abstract int getSize(Session session) throws Exception;
 

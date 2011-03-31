@@ -27,7 +27,7 @@ import org.exoplatform.test.BasicTestCase;
 /**
  * Created by The eXo Platform SAS
  * Author : Hung Nguyen
- *          hung.nguyen@exoplatform.com 					
+ *          hung.nguyen@exoplatform.com           
  * july 3, 2007  
  */
 public abstract class ForumServiceTestCase extends BasicTestCase {

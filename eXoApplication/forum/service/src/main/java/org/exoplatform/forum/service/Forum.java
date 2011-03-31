@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -22,7 +22,7 @@ import java.util.List;
 import org.exoplatform.services.jcr.util.IdGenerator;
 
 /**
- * March 2, 2007	
+ * March 2, 2007  
  */
 public class Forum {
   private String       id;
@@ -96,7 +96,7 @@ public class Forum {
 
   /**
    * This method should:
-   * Calculate the category id	base on the forum id
+   * Calculate the category id  base on the forum id
    * @return The category id
    */
   public String getCategoryId() {

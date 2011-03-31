@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -29,13 +29,11 @@ import org.exoplatform.ks.bbcode.spi.BBCodeProvider;
  * @version $Revision$
  */
 public class BuiltinBBCodeProvider extends HashMap<String, BBCode> implements BBCodeProvider {
-   
-  
+
   /**
    * 
    */
   private static final long serialVersionUID = -4330438782881224247L;
-
 
   public BuiltinBBCodeProvider() {
     addBBCode("I", "<i>{param}</i>", false);
@@ -43,33 +41,33 @@ public class BuiltinBBCodeProvider extends HashMap<String, BBCode> implements BB
     addBBCode("U", "<u>{param}</u>", false);
     addBBCode("COLOR", "<font color='{option}'>{param}</font>", true);
     addBBCode("SIZE", "<font size='{option}'>{param}</font>", true);
-    
+
     addBBCode("FONT", "<font face='{option}'>{param}</font>", true);
     addBBCode("HIGHLIGHT", "<span class='highlighted'>{param}</span>", false);
     addBBCode("LEFT", "<div align='left'>{param}</div>", false);
     addBBCode("RIGHT", "<div align='right'>{param}</div>", false);
     addBBCode("CENTER", "<div align='center'>{param}</div>", false);
     addBBCode("JUSTIFY", "<div align='justify'>{param}</div>", false);
-    
+
     addBBCode("EMAIL", "<a href='mailto:{param}'>{param}</a>", false);
     addBBCode("EMAIL", "<a href='mailto:{option}'>{param}</a>", true);
-    
+
     addBBCode("URL", "<a target='_blank' href='{param}'>{param}</a>", false);
     addBBCode("URL", "<a target='_blank' href='{option}'>{param}</a>", true);
 
-    addBBCode("GOTO", "<a href='{option}'>{param}</a>", true);    
+    addBBCode("GOTO", "<a href='{option}'>{param}</a>", true);
     addBBCode("LIST", "", false);
     addBBCode("LIST", "", true);
     addBBCode("IMG", "<img border='0' alt='' src='{param}' class='inlineimg'/>", false);
-    addBBCode("QUOTE", "<blockquote>{param}</blockquote>", false);   
-    addBBCode("QUOTE", "<blockquote cite='{option}'>param</blockquote>", true);   
-    addBBCode("CSS", "<span class='{option}'>{param}</span>", true);       
+    addBBCode("QUOTE", "<blockquote>{param}</blockquote>", false);
+    addBBCode("QUOTE", "<blockquote cite='{option}'>param</blockquote>", true);
+    addBBCode("CSS", "<span class='{option}'>{param}</span>", true);
   }
 
   private void addBBCode(String tag, String replacement, boolean option) {
     replacement = replacement.replaceAll("'", "\"");
     BBCode bbCode = new BBCode();
-    String id = option?(tag+"="):tag;
+    String id = option ? (tag + "=") : tag;
     bbCode.setTagName(tag);
     bbCode.setId(id);
     bbCode.setReplacement(replacement);
@@ -82,9 +80,8 @@ public class BuiltinBBCodeProvider extends HashMap<String, BBCode> implements BB
     return get(tagName);
   }
 
-
   public Collection<String> getSupportedBBCodes() {
     return keySet();
   }
-  
+
 }

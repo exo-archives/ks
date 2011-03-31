@@ -32,8 +32,8 @@ import org.exoplatform.wiki.mow.core.api.wiki.PreferencesSyntax;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
-import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.UIWikiSyntaxPreferences;
+import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 
 /**
  * Created by The eXo Platform SAS

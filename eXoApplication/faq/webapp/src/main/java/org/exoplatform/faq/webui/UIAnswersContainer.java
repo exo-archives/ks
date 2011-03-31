@@ -39,7 +39,7 @@ import org.exoplatform.webui.core.UIContainer;
  */
 
 @ComponentConfig(
-		template = "app:/templates/faq/webui/UIAnswersContainer.gtmpl"
+    template = "app:/templates/faq/webui/UIAnswersContainer.gtmpl"
 )
 public class UIAnswersContainer extends UIContainer {
   private FAQSetting   faqSetting_   = null;

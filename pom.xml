@@ -398,10 +398,6 @@
     <module>extension</module>
     <module>demo</module>
     <module>ext</module>
-    <module>docs</module>
-	<module>server/tomcat/patch</module>
-    <module>server/jboss/patch-ear</module>
-    <module>packaging</module>
-	<module>testsuite</module>
+
   </modules>
 </project>

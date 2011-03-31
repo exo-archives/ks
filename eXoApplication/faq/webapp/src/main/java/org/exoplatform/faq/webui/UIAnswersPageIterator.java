@@ -29,13 +29,13 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS 
  * Author : Vu Duy Tu 
- * 					tu.duy@exoplatform.com 
+ *           tu.duy@exoplatform.com 
  * Nov 19, 2007 9:18:18 AM
  */
 
 @ComponentConfig(
-		template = "app:/templates/faq/webui/UIAnswersPageIterator.gtmpl",
-		events = { @EventConfig(listeners = UIAnswersPageIterator.GoPageActionListener.class) }
+    template = "app:/templates/faq/webui/UIAnswersPageIterator.gtmpl",
+    events = { @EventConfig(listeners = UIAnswersPageIterator.GoPageActionListener.class) }
 )
 public class UIAnswersPageIterator extends UIContainer {
   private JCRPageList pageList     = null;
