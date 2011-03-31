@@ -63,10 +63,7 @@ public class AddRelatedPageActionComponent extends UIComponent{
     protected void processEvent(Event<AddRelatedPageActionComponent> event) throws Exception {
       UIWikiPageInfo uicomponent = event.getSource().getAncestorOfType(UIWikiPageInfo.class);
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIWikiRelatedPages relatedCtn = null;
-      if (wikiPortlet.getChild(UIWikiMiddleArea.class) != null) {
-        relatedCtn = wikiPortlet.getChild(UIWikiMiddleArea.class).getChild(UIWikiRelatedPages.class);
-      }
+      UIWikiRelatedPages relatedCtn = wikiPortlet.findFirstComponentOfType(UIWikiRelatedPages.class);
       UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);
       UIWikiSelectPageForm selectPageForm = popupContainer.activate(UIWikiSelectPageForm.class, 600);
       selectPageForm.addUpdatedComponent(uicomponent);

@@ -23,6 +23,7 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.wiki.WikiPortletPreference;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
@@ -50,13 +51,14 @@ public class UIWikiMiddleArea extends UIWikiContainer {
         WikiMode.ADDTEMPLATE, WikiMode.EDITTEMPLATE });
     // TODO Auto-generated constructor stub
     addChild(UIWikiNavigationContainer.class, null, null);
-    addChild(UIWikiRelatedPages.class, null, null);
     addChild(UIWikiPageContainer.class, null, null);
   }
   
   private boolean isNavigationRender() {
+    WikiPortletPreference preferences = this.getAncestorOfType(UIWikiPortlet.class).getPortletPreferences();
     UIWikiNavigationContainer navigation = getChild(UIWikiNavigationContainer.class);
-    return (navigation.getAccept_Modes().contains(navigation.getCurrentMode()) && navigation.isRendered());
+    return (navigation.getAccept_Modes().contains(navigation.getCurrentMode())
+        && navigation.isRendered() && preferences.isShowNavigationTree());
   }
 
   public static class ShowHideActionListener extends EventListener<UIWikiMiddleArea> {

@@ -11,8 +11,7 @@ import org.exoplatform.wiki.webui.UIWikiPageContainer;
     <tr>
       <% if(uicomponent.isNavigationRender()) { %>
 	    <td class="Navigation" >
-		 		<% uicomponent.renderChild(UIWikiNavigationContainer.class); %>
-		 		<% uicomponent.renderChild(org.exoplatform.wiki.webui.UIWikiRelatedPages.class); %>
+		 		<% uicomponent.renderChild(UIWikiNavigationContainer.class); %>		 		
 		 	</td>
 		 	<% 
 		 	}

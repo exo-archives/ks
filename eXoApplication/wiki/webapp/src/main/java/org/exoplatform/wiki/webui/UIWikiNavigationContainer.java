@@ -43,11 +43,10 @@ import org.exoplatform.wiki.webui.tree.EventUIComponent.EVENTTYPE;
 public class UIWikiNavigationContainer extends UIWikiForm {
 
   public UIWikiNavigationContainer() throws Exception {
-    super();
-    // TODO Auto-generated constructor stub 
+    super();    
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE, WikiMode.ADDPAGE,
          WikiMode.DELETEPAGE, WikiMode.VIEWREVISION, WikiMode.SHOWHISTORY, WikiMode.ADVANCEDSEARCH, WikiMode.PAGEINFO });
-   
+    
     EventUIComponent eventComponent = new EventUIComponent("UIWikiPortlet",
                                                            UIWikiPortlet.REDIRECT_ACTION,
                                                            EVENTTYPE.URL);
@@ -57,6 +56,7 @@ public class UIWikiNavigationContainer extends UIWikiForm {
     StringBuilder childrenURLSb = new StringBuilder(Utils.getCurrentRestURL());
     childrenURLSb.append("/wiki/tree/").append(TREETYPE.CHILDREN.toString());
     uiTree.init(initURLSb.toString(), childrenURLSb.toString(), getInitParam(), eventComponent);
+    addChild(UIWikiRelatedPages.class, null, null);
   }
   
   @Override
@@ -66,10 +66,7 @@ public class UIWikiNavigationContainer extends UIWikiForm {
     if (initParam != null) {
       this.getChild(UITreeExplorer.class).setInitParam(initParam);
     }
-    WikiPortletPreference preferences = this.getAncestorOfType(UIWikiPortlet.class).getPortletPreferences();
-    if (preferences.isShowNavigationTree()) {
-      super.processRender(context);
-    }
+    super.processRender(context);
   }
   
   private String getInitParam() throws Exception {

@@ -364,7 +364,7 @@
 .UIWikiPortlet .UIWikiMiddleArea .UIWikiNavigationContainer{ 
   padding-top:8px;
 	visibility:'';
-	overflow: auto;
+	overflow: hidden;
 }
 
 .UIWikiPortlet .UIWikiMiddleArea .UIWikiPageContainer{

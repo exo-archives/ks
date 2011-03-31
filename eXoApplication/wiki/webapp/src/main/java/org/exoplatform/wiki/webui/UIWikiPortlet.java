@@ -121,9 +121,9 @@ public class UIWikiPortlet extends UIPortletApplication {
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
     PortletRequestContext portletReqContext = (PortletRequestContext) context;
     redirectURL = this.url(this.REDIRECT_ACTION);
+    loadPreferences();
     if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
-      if (mode.equals(WikiMode.PORTLETPREFERENCES)) {
-        loadPreferences();
+      if (mode.equals(WikiMode.PORTLETPREFERENCES)) {        
         changeMode(WikiMode.VIEW);
       }
       getChild(UIWikiUpperArea.class).getChild(UIWikiApplicationControlArea.class)

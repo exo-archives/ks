@@ -52,8 +52,10 @@ public abstract class UIExtensionContainer extends UIContainer {
           extensionSize++;
         }
       }
+    }
+    if (this.getChildren().size() > 0) {
       super.processRender(context);
-    }    
+    }
   }
 
   public abstract String getExtensionType();

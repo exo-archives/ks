@@ -99,11 +99,7 @@ public class RemoveRelatedPageActionComponent extends UIComponent {
       WebuiRequestContext requestContext = event.getRequestContext();
       UIWikiPageInfo uicomponent = event.getSource().getAncestorOfType(UIWikiPageInfo.class);
       UIWikiPortlet wikiPortlet = uicomponent.getAncestorOfType(UIWikiPortlet.class);
-      UIWikiRelatedPages relatedCtn = null;
-      if (wikiPortlet.getChild(UIWikiMiddleArea.class) != null) {
-        relatedCtn = wikiPortlet.getChild(UIWikiMiddleArea.class)
-                                .getChild(UIWikiRelatedPages.class);
-      }
+      UIWikiRelatedPages relatedCtn = wikiPortlet.findFirstComponentOfType(UIWikiRelatedPages.class);
       String wikiType = requestContext.getRequestParameter(WIKI_TYPE);
       String owner = requestContext.getRequestParameter(PAGE_OWNER);
       String pageId = requestContext.getRequestParameter(PAGE_ID);
