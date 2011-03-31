@@ -6,7 +6,7 @@
   String okLabel = _ctx.appRes("UIConfirmBox.label.Ok");
   String cancelLink = uicomponent.isNewMode() ? uicomponent.getCurrentPageURL() : "javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#');";
   rcontext.getJavascriptManager().importJavascript("eXo.wiki.UIConfirmBox", "/wiki/javascript/") ;
-  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIConfirmBox.init()");
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIConfirmBox.init();");
  %>
 <div id="$uicomponent.id">
    <a href="$cancelLink" onclick="return eXo.wiki.UIConfirmBox.render('$uicomponent.id','$titleMessage','$exitMessage', 'Delete Icon','$okLabel','$cancelLabel');" 
