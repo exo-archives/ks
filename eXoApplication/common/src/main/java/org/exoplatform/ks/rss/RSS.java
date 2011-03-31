@@ -100,7 +100,6 @@ public class RSS {
     try {
       return itemNode.getNode(RSS_NODE_NAME);
     } catch (Exception e) {
-      e.printStackTrace() ;
       return itemNode.addNode(RSS_NODE_NAME, "exo:forumRSS");
 //      throw new RuntimeException("Failed to get feed node", e);
     }
@@ -124,7 +123,6 @@ public class RSS {
     return feed;
     }
     catch (Exception e) {
-      e.printStackTrace();
       LOG.error("Failed to read RSS feed");
       throw new RuntimeException(e);
     }

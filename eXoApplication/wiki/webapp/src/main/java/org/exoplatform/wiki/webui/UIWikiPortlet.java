@@ -163,7 +163,6 @@ public class UIWikiPortlet extends UIPortletApplication {
         ((UIWikiPageTitleControlArea) findComponentById(UIWikiPageControlArea.TITLE_CONTROL)).getUIFormInputInfo()
                                                                                              .setValue(page.getTitle());      
       } catch (Exception e) {
-        e.printStackTrace();
         context.setAttribute("wikiPage", null);
         findFirstComponentOfType(UIWikiPageContentArea.class).setHtmlOutput(null);
         if (log.isWarnEnabled()) {

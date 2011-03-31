@@ -307,7 +307,7 @@ public final class AnswersFeedGenerator extends RSSProcess implements FeedConten
         feed.setTitle(title);
         rss.saveFeed(feed, FAQ_RSS_TYPE);
       } catch (Exception e) {
-        e.printStackTrace();
+        LOG.debug("Failed to get RSS.", e);
       }
       return VoidReturn.VALUE;
     }

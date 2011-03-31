@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -51,7 +53,7 @@ import org.xwiki.rendering.wiki.WikiModel;
 
 @Component("pagetree")
 public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
-  
+  private Log log = ExoLogger.getLogger(this.getClass());
   /**
    * The description of the macro
    */
@@ -96,8 +98,7 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
       root = generateTree(params, startDepth);
       return Collections.singletonList(root);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.debug("Failed to execute page tree macro", e);
       return Collections.emptyList();
     }
   }

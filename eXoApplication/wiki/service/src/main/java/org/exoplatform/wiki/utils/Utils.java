@@ -384,8 +384,7 @@ public class Utils {
       if (schedulerService != null)
         common.sendEmailNotification(emailList, message, "KnowledgeSuite");
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log_.debug("Failed to run job for send email notification", e);
 
     }
   }

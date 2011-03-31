@@ -38,15 +38,12 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
     }
 )
 public class UIWikiSearchSpaceArea extends UIWikiContainer {
-  public UIWikiSearchSpaceArea() throws Exception{
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.ADVANCEDSEARCH});
+  public UIWikiSearchSpaceArea() throws Exception {
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.ADVANCEDSEARCH });
     addChild(UIWikiAdvanceSearchForm.class, null, null);
     addChild(UIWikiAdvanceSearchResult.class, null, null);
   }
-  
-  private void sayHello() {
-    System.out.println(" ==> Hello");
-  }
+
   static public class CloseActionListener extends EventListener<UIWikiSearchSpaceArea> {
     @Override
     public void execute(Event<UIWikiSearchSpaceArea> event) throws Exception {

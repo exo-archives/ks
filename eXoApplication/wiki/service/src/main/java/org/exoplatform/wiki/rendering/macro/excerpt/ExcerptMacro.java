@@ -82,8 +82,6 @@ public class ExcerptMacro extends AbstractMacro<ExcerptMacroParameters> {
       Block result = new GroupBlock(contentBlocks, blockParams);
       return Collections.singletonList(result);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
       return Collections.emptyList();
     }
   }

@@ -17,6 +17,8 @@
 package org.exoplatform.wiki.service.search;
 
 import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 
 /**
@@ -26,6 +28,7 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
  * 28 Jan 2011  
  */
 public class TemplateSearchData extends SearchData {
+  private Log log = ExoLogger.getLogger(this.getClass());
   
   public static String TEMPLATE_PATH    = WikiNodeType.Definition.PREFERENCES + "/"
                                             + WikiNodeType.Definition.TEMPLATE_CONTAINER + "/%";
@@ -78,7 +81,7 @@ public class TemplateSearchData extends SearchData {
                  .append("') ");
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      log.debug("Failed to get statement ", e);
     }
     return statement.toString();
   }

@@ -508,7 +508,7 @@ public class TestForumService extends ForumServiceTestCase {
       forumService_.importXML(pathNode, byteArrayInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
       assertEquals("Can't import forum into category", forumService_.getForums(cat.getId(), "").size(), 1);
     } catch (IOException e) {
-      e.printStackTrace();
+      log.debug("Failed to test importXML", e);
     }
   }
 

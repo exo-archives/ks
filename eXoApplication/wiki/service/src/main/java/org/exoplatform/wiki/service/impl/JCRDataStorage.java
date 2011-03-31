@@ -124,7 +124,11 @@ public class JCRDataStorage implements DataStorage{
     QueryResult result = q.execute();
     NodeIterator iter = result.getNodes() ;
     while(iter.hasNext()) {      
-      try{resultList.add(getResult(iter.nextNode())) ;} catch(Exception e){ e.printStackTrace() ;}
+      try {
+        resultList.add(getResult(iter.nextNode()));
+      } catch (Exception e) {
+        log.debug("Failed to add item search result", e);
+      }
     }
     return resultList ;
   }
@@ -167,7 +171,7 @@ public class JCRDataStorage implements DataStorage{
       try {
         resultList.add(getTitleSearchResult(iter.nextRow()));
       } catch (Exception e) {
-        e.printStackTrace();
+        log.debug("Failed to search date by title", e);
       }
     }
   }

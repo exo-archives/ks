@@ -19,6 +19,8 @@ package org.exoplatform.wiki.webui;
 import java.util.Arrays;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.wiki.commons.Utils;
@@ -34,28 +36,27 @@ import org.exoplatform.wiki.webui.core.UIWikiComponent;
  *          viet.nguyen@exoplatform.com
  * Apr 26, 2010  
  */
-@ComponentConfig(
-  lifecycle = Lifecycle.class,
-  template = "app:/templates/wiki/webui/UIWikiPageNotFound.gtmpl"
-)
-
+@ComponentConfig(lifecycle = Lifecycle.class, template = "app:/templates/wiki/webui/UIWikiPageNotFound.gtmpl")
 public class UIWikiPageNotFound extends UIWikiComponent {
-  private WikiService wservice ;
-  public UIWikiPageNotFound() throws Exception{
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.PAGE_NOT_FOUND});
-    wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
+  private Log         log = ExoLogger.getLogger(this.getClass());
+
+  private WikiService wservice;
+
+  public UIWikiPageNotFound() throws Exception {
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.PAGE_NOT_FOUND });
+    wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
   }
-  
+
   private Page getRelatedPage() {
     try {
       WikiPageParams params = Utils.getCurrentWikiPageParams();
       return wservice.getRelatedPage(params.getType(), params.getOwner(), params.getPageId());
     } catch (Exception e) {
-      e.printStackTrace();
+     log.debug("Failed to get related page", e);
     }
     return null;
   }
-  
+
   private String getHomeURL(WikiPageParams param) throws Exception {
     param.setPageId(WikiNodeType.Definition.WIKI_HOME_NAME);
     return Utils.getURLFromParams(param);

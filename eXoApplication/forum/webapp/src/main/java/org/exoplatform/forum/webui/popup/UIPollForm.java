@@ -73,7 +73,13 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 
   public static final String       FIELD_MULTIVOTE_CHECKBOX = "MultiVote";
 
-  public static final int          MAX_TITLE                = 100;
+  public static final String       COLON                      = ":";
+
+  public static final String       DELETED                      = "deleted";
+
+  public static final String       ZERO                       = "0.0";
+
+  public static final int          MAX_TITLE                  = 100;
 
   private UIFormMultiValueInputSet uiFormMultiValue         = new UIFormMultiValueInputSet(FIELD_OPTIONS, FIELD_OPTIONS);
 
@@ -222,7 +228,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
         String[] newUser = null;
         String[] vote = new String[sizeOption];
         for (int j = 0; j < sizeOption; j++) {
-          vote[j] = "0.0";
+          vote[j] = ZERO;
         }
         if (uiForm.isUpdate) {
           List<Integer> listIndexItemRemoved = uiForm.uiFormMultiValue.getListIndexItemRemoved();
@@ -239,18 +245,22 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
             }
           }
           double leftPecent = 100 - rmPecent;
-
+          i = 0;
           for (int k = 0; k < oldVote.length; ++k) {
             if (listIndexItemRemoved.contains(k)) {
-              voteTp[k] = "deleted";
+              voteTp[k] = DELETED;
               continue;
             }
             if (leftPecent > 1) {
               double newVote = Double.parseDouble(oldVote[k]);
-              voteTp[k] = String.valueOf((newVote * 100) / leftPecent);
+              String vl = String.valueOf((newVote * 100) / leftPecent);
+              voteTp[k] = vl;
+              vote[i] = vl;
             } else {
-              voteTp[k] = "0.0";
+              voteTp[k] = ZERO;
+              vote[i] = ZERO;
             }
+            ++i;
           }
 
           if (!uiForm.poll.getIsMultiCheck()) {
@@ -259,7 +269,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
               for (String string : oldUserVote) {
                 boolean isAdd = true;
                 for (String j : voteRemoved) {
-                  if (string.indexOf(":" + j) > 0) {
+                  if (string.indexOf(COLON + j) > 0) {
                     isAdd = false;
                   }
                 }
@@ -271,13 +281,13 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
               i = 0;
               Map<String, String> mab = new HashMap<String, String>();
               for (int j = 0; j < voteTp.length; j++) {
-                if (voteTp[j].equals("deleted")) {
+                if (voteTp[j].equals(DELETED)) {
                   continue;
                 }
-                vote[i] = voteTp[j];
+//                vote[i] = voteTp[j];
                 for (String str : userL) {
-                  if (str.indexOf(":" + j) > 0) {
-                    mab.put(str, str.replace(":" + j, ":" + i));
+                  if (str.indexOf(COLON + j) > 0) {
+                    mab.put(str, str.replace(COLON + j, COLON + i));
                   } else {
                     if (!mab.keySet().contains(str)) {
                       mab.put(str, str);
@@ -295,31 +305,31 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
             List<String> newUserVote = new ArrayList<String>();
             for (String uv : oldUserVote) {
               StringBuffer sbUserInfo = new StringBuffer();
-              for (String string : uv.split(":")) {
+              for (String string : uv.split(COLON)) {
                 if (!voteRemoved.contains(string)) {
                   if (sbUserInfo.length() > 0)
-                    sbUserInfo.append(":");
+                    sbUserInfo.append(COLON);
                   sbUserInfo.append(string);
                 }
               }
               String userInfo = sbUserInfo.toString();
-              if (userInfo.split(":").length >= 2)
+              if (userInfo.split(COLON).length >= 2)
                 newUserVote.add(userInfo);
             }
 
             i = 0;
             Map<String, String> mab = new HashMap<String, String>();
             for (int j = 0; j < voteTp.length; j++) {
-              if (voteTp[j].equals("deleted")) {
+              if (voteTp[j].equals(DELETED)) {
                 continue;
               }
-              vote[i] = voteTp[j];
+//              vote[i] = voteTp[j];
               for (String str : newUserVote) {
-                if (str.indexOf(":" + j) > 0) {
+                if (str.indexOf(COLON + j) > 0) {
                   if (mab.containsKey(str))
-                    mab.put(str, mab.get(str).replace(":" + j, ":" + i));
+                    mab.put(str, mab.get(str).replace(COLON + j, COLON + i));
                   else
-                    mab.put(str, str.replace(":" + j, ":" + i));
+                    mab.put(str, str.replace(COLON + j, COLON + i));
                 } else {
                   if (!mab.keySet().contains(str)) {
                     mab.put(str, str);

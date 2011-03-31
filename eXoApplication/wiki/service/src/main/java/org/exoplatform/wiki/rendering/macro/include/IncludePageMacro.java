@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
@@ -50,7 +52,7 @@ import org.xwiki.rendering.wiki.WikiModel;
 
 @Component("includepage")
 public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> {
-  
+  private Log log = ExoLogger.getLogger(this.getClass());
   /**
    * The description of the macro
    */
@@ -114,8 +116,7 @@ public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> 
       Block result = new RawBlock(includeContent.toString(), Syntax.XHTML_1_0);
       return Collections.singletonList(result);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.debug("Failed to execute page macro", e);
       return Collections.emptyList();
     } finally {
       // Restore current context

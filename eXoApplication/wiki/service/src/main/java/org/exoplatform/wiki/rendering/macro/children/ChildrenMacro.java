@@ -23,6 +23,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
 import org.exoplatform.wiki.rendering.macro.MacroUtils;
@@ -61,7 +63,8 @@ import org.xwiki.rendering.wiki.WikiModel;
 
 @Component("children")
 public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
-  
+  private static final Log    log         = ExoLogger.getLogger(ChildrenMacro.class);
+
   /**
    * The description of the macro
    */
@@ -108,8 +111,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
       root = generateTree(params, descendant, childrenNum, depth);
       return Collections.singletonList(root);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.debug("Failed to ", e);
       return Collections.emptyList();
     }
   }
