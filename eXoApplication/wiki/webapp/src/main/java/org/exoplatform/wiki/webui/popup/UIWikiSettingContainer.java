@@ -61,7 +61,7 @@ public class UIWikiSettingContainer extends UIContainer implements UIPopupCompon
 
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
-    // TODO Auto-generated method stub
+
     UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
     Map<String, Object> extContext = new HashMap<String, Object>();
     UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
@@ -99,11 +99,11 @@ public class UIWikiSettingContainer extends UIContainer implements UIPopupCompon
   }
 
   public void activate() throws Exception {
-    // TODO Auto-generated method stub
+
   }
 
   public void deActivate() throws Exception {
-    // TODO Auto-generated method stub
+
   }
   
   static public class ActiveItemActionListener extends EventListener<UIWikiSettingContainer> {

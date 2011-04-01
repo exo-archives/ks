@@ -88,7 +88,6 @@ public final class AnswersFeedGenerator extends RSSProcess implements FeedConten
       this.updated = updated;
    }
 
-
    public VoidReturn execute(Session session) throws Exception {
      itemSaved(path,updated);
      return VoidReturn.VALUE;
@@ -282,7 +281,6 @@ public final class AnswersFeedGenerator extends RSSProcess implements FeedConten
   public void itemRemoved(String path)  {
     dataLocator.getSessionManager().executeAndSave(new ItemRemovedTask(path));
   }
-
 
   class ItemRemovedTask implements JCRTask<VoidReturn> {
 

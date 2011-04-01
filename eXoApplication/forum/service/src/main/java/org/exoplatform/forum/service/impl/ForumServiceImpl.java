@@ -181,7 +181,6 @@ public class ForumServiceImpl implements ForumService, Startable {
       log.error("Error while initializing Prune schedulers: " + e.getMessage());
     }
 
-    // TODO: JUnit test is fall.
     // management views
     try {
       log.info("initializing management view...");
@@ -225,9 +224,6 @@ public class ForumServiceImpl implements ForumService, Startable {
   public void stop() {
   }
 
-  /**
-   * @TODO : profileTemplate is currently ignored
-   */
   public void addMember(User user, UserProfile profileTemplate) throws Exception {
     boolean added = storage.populateUserProfile(user, profileTemplate, true);
     if (added) {
@@ -946,9 +942,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
   public void userLogin(String userId) throws Exception {
-
-    // TODO: login and onlineUserlist shoudl be anaged by
-    // forumStatisticsService.memberIn();
+    // Note: login and onlineUserlist shoudl be anaged by forumStatisticsService.memberIn();
     lastLogin_ = userId;
     if (!onlineUserList_.contains(userId)) {
       onlineUserList_.add(userId);

@@ -84,7 +84,6 @@ public abstract class RSSProcess {
   }
 
   protected String getPageLink() throws Exception {
-    // TODO: can not get org.exoplatform.portal.webui when run JUnit-test. So,
     // when run JUnit-test, you must comment content in this function and return
     // null.
     try {

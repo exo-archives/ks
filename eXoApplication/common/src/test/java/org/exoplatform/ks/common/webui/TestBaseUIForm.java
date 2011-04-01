@@ -77,7 +77,6 @@ public class TestBaseUIForm extends AbstractUIComponentTestCase<BaseUIForm> {
     assertApplicationMessage("Message");
   }
 
-
   @Override
   protected BaseUIForm createComponent() {
     BaseUIForm sampleForm = new BaseUIForm();

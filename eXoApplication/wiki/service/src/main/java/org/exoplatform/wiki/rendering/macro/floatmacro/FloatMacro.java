@@ -99,7 +99,7 @@ public class FloatMacro extends AbstractMacro<FloatMacroParameters> {
 
   @Override
   public boolean supportsInlineMode() {
-    // TODO Auto-generated method stub
+
     return true;
   }
   

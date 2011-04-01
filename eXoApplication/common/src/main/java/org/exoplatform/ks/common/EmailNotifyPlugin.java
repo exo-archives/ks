@@ -23,7 +23,6 @@ import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
 
-// TODO: Auto-generated Javadoc
 /**
  * Created by The eXo Platform SAS.
  * 

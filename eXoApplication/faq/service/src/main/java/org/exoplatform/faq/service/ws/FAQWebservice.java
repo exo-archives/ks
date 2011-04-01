@@ -32,7 +32,6 @@ public class FAQWebservice implements ResourceContainer {
   public FAQWebservice() {
   }
 
-  // TODO improve late about {resourceid:*}/
   @GET
   @Path("rss/{resourceid}")
   @Produces(MediaType.APPLICATION_XML)

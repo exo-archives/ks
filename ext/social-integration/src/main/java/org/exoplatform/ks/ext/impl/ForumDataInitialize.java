@@ -48,7 +48,6 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
   
   @Override
   public void applicationActivated(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
@@ -89,7 +88,6 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
 
       if(fServie.getForum(category.getId(), forum.getId()) == null) fServie.saveForum(category.getId(), forum, true); 
 
-
     }catch (Exception e) {
       log.debug(e.getMessage());
     }
@@ -101,43 +99,36 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
 
   @Override
   public void applicationRemoved(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void grantedLead(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void joined(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void left(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void revokedLead(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void spaceCreated(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void spaceRemoved(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 

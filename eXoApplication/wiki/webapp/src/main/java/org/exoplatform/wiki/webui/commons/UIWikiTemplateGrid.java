@@ -32,7 +32,6 @@ public class UIWikiTemplateGrid extends UIGrid {
 
   public UIWikiTemplateGrid() throws Exception {
     super();
-    // TODO Auto-generated constructor stub
   }
  
 }

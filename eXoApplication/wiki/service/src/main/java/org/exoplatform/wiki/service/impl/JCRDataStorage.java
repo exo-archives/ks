@@ -223,7 +223,7 @@ public class JCRDataStorage implements DataStorage{
   @Override
   public List<TemplateSearchResult> searchTemplate(ChromatticSession session,
                                                        TemplateSearchData data) throws Exception {
-    // TODO Auto-generated method stub
+
     List<TemplateSearchResult> resultList = new ArrayList<TemplateSearchResult>();
     String statement = data.getStatement();
     QueryManager qm = session.getJCRSession().getWorkspace().getQueryManager();

@@ -39,7 +39,6 @@ public class CommonContact {
   private String lastName = "";
 
 
-
   public CommonContact() {
     
   }

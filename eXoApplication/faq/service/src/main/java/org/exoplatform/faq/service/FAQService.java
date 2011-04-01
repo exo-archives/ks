@@ -130,7 +130,7 @@ public interface FAQService extends FAQServiceLegacy {
    * and convert to category object and return list of category object
    * 
    * @param categoryId the category id
-   * @param userView TODO
+   * @param userView the list of users to view categories.
    * @return Category list
    * 
    * @throws Exception the exception
@@ -340,8 +340,8 @@ public interface FAQService extends FAQServiceLegacy {
    * 
    * @param questions the questions
    * @param destCategoryId the dest category id
-   * @param questionLink TODO
-   * @param faqSetting TODO
+   * @param questionLink the question link
+   * @param faqSetting the FAQSetting
    * @throws Exception the exception
    */
   public void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception;

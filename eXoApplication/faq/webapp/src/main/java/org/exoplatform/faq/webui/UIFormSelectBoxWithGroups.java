@@ -148,7 +148,6 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
 
   @Override
   public void reset() {
-    // TODO Auto-generated method stub - dang.tung
     if (options_ == null || options_.size() < 1)
       return;
     for (SelectItem option : options_) {

@@ -119,7 +119,6 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
 
   @Override
   public void postDeletePage(String wikiType, String wikiOwner, String pageId) {
-    // TODO Auto-generated method stub
 
   }
 

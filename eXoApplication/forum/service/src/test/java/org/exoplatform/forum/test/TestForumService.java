@@ -223,7 +223,6 @@ public class TestForumService extends ForumServiceTestCase {
     forum = forumService_.getForum(catId, forumId);
     list.clear();
     list.addAll(Arrays.asList(forum.getModerators()));
-    // TODO KS-2439
     // assertEquals("Forum in category can not content moderatort user admin", list.contains("admin"), true);
 
     // test moveForum, Move list Forum from Category 'cat' to Category 'cate'
@@ -250,7 +249,6 @@ public class TestForumService extends ForumServiceTestCase {
     assertEquals("List forums can not equals 0", forums.size(), 0);
   }
 
-  // TODO: can not send alert job waiting for moderator
   public void testTopic() throws Exception {
     Category cat = createCategory(getId(Utils.CATEGORY));
     forumService_.saveCategory(cat, true);
@@ -547,13 +545,11 @@ public class TestForumService extends ForumServiceTestCase {
     assertNotNull(tag);
 
     // Get all tag
-    // TODO KS-2374
     // assertEquals("All tags size is not 3", 3, forumService_.getAllTags().size());
 
   }
 
   public void testSearch() throws Exception {
-    // TODO KS-2374 need to check later
     /*
      * setData(); //getQuickSearch List<String> users = new ArrayList<String>(); users.add("root"); String pathQuery = ""; // from ForumService/ String textQuery = "description"; String type = "true,all"; List<ForumSearch> forumSearchs = forumService_.getQuickSearch(textQuery, type, pathQuery, "root", null, null, null); assertEquals(forumSearchs.isEmpty(), false); //getAdvancedSearch
      * ForumEventQuery eventQuery = new ForumEventQuery(); eventQuery.setListOfUser(users); eventQuery.setUserPermission(0); eventQuery.setType(Utils.TOPIC) ; eventQuery.setKeyValue(textQuery) ; eventQuery.setValueIn("entire") ; eventQuery.setPath("") ; eventQuery.setByUser(""); eventQuery.setIsLock("") ; eventQuery.setIsClose("") ; eventQuery.setTopicCountMin("0") ;
@@ -571,11 +567,9 @@ public class TestForumService extends ForumServiceTestCase {
     forumService_.addWatch(1, topicPath, values, "root");
     // watch by user
     List<Watch> watchs = forumService_.getWatchByUser("root");
-    // TODO KS-2374
     assertEquals(watchs.get(0).getEmail(), values.get(0));
     forumService_.removeWatch(1, topicPath, "/" + values.get(0));
     watchs = forumService_.getWatchByUser("root");
-    // TODO KS-2439
     assertEquals(watchs.size(), 0);
   }
 

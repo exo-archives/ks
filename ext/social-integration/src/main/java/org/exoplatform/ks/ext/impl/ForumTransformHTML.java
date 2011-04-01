@@ -31,7 +31,6 @@ import org.apache.commons.lang.StringUtils;
 
 public class ForumTransformHTML {
 
-
   public static String cleanHtmlCode(String sms, List<String> bbcs) {
     if (sms == null || sms.trim().length() <= 0)
       return "";

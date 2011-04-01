@@ -30,7 +30,6 @@ import org.exoplatform.forum.service.Utils;
  */
 public class TestForumUtils extends TestCase {
 
-
   public TestForumUtils() throws Exception {
     super();
     

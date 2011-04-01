@@ -104,14 +104,6 @@ public class NewUserListener extends UserEventListener {
     }
   }
 
-  /**
-   * @TODO implement by using  init-params
-   * @return
-   */
-  private UserProfile newDefaultProfileTemplte() {
-    return null;
-  }
-
   private ForumService getForumService() {
     return (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }

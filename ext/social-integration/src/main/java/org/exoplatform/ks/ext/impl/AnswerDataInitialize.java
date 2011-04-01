@@ -49,7 +49,6 @@ public class AnswerDataInitialize extends SpaceListenerPlugin {
   
   @Override
   public void applicationActivated(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
@@ -102,43 +101,36 @@ public class AnswerDataInitialize extends SpaceListenerPlugin {
 
   @Override
   public void applicationRemoved(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void grantedLead(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void joined(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void left(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void revokedLead(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void spaceCreated(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   public void spaceRemoved(SpaceLifeCycleEvent event) {
-    // TODO Auto-generated method stub
 
   }
 

@@ -42,7 +42,7 @@ public class SpaceTreeNode extends TreeNode {
   
   @Override
   protected void addChildren(HashMap<String, Object> context) throws Exception {
-    // TODO Auto-generated method stub
+
     Collection<Wiki> wikis = Utils.getWikisByType(WikiType.valueOf(name.toUpperCase()));
     Iterator<Wiki> childWikiIterator = wikis.iterator();
     int count = 0;

@@ -43,7 +43,7 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
   
   @Override
   protected void setUp() throws Exception {
-    // TODO Auto-generated method stub    
+    
     super.setUp();
     setupDefaultWikiContext();
   }

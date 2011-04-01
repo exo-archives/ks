@@ -111,7 +111,6 @@ public class MacroUtils {
   }
 
 
-
   /**
    * Get the parser for the current syntax.
    * 

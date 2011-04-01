@@ -225,7 +225,7 @@ public class WikiServiceImpl implements WikiService {
 
   @Override
   public void deleteTemplatePage(String wikiType, String wikiOwner, String templateId) throws Exception {
-    // TODO Auto-generated method stub
+
    WikiPageParams params = new WikiPageParams(wikiType, wikiOwner, templateId);
    getTemplatePage(params, templateId).remove();
   }  
@@ -501,7 +501,7 @@ public class WikiServiceImpl implements WikiService {
   }
   
   public Page getPageByUUID(String uuid) throws Exception {
-    // TODO Auto-generated method stub
+
     return null;
   }
   
@@ -598,7 +598,6 @@ public class WikiServiceImpl implements WikiService {
         return wStore.getSession().findByPath(Template.class, relPath);
       }
     } catch (Exception e) {
-      // TODO: handle exception
       log.error("Can't find Object", e);
     }  
     return null;
@@ -812,7 +811,6 @@ public class WikiServiceImpl implements WikiService {
         PageImpl syntaxPage = addSyntaxPage(wStore, helpPage, syntaxName, shortFile, " Short help Page");
         addSyntaxPage(wStore, syntaxPage, syntaxName, fullFile, " Full help Page");
       } catch (Exception e) {
-        // TODO Auto-generated catch block
         log.error("Can not create Help page", e);
       }
     }
@@ -838,7 +836,6 @@ public class WikiServiceImpl implements WikiService {
       model.save();
       return template;
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       log.error("Can not create Template page", e);
     }
     return null;

@@ -98,7 +98,7 @@ public class Injector implements LifeCycleListener, StateChangeListener {
 
   @Override
   public void propertyChanged(String id, Object o, String propertyName, Object propertyValue) {
-    // TODO Auto-generated method stub
+
     if (o instanceof NTResource) {
       if ("jcr:data".equals(propertyName)) {
         ChromatticSession session = mowService.getSession();

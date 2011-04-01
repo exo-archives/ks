@@ -81,11 +81,11 @@ public class UIWikiEditPreferencesForm extends UIForm implements UIPopupComponen
   }
   
   public void activate() throws Exception {
-    // TODO Auto-generated method stub
+
   }
 
   public void deActivate() throws Exception {
-    // TODO Auto-generated method stub
+
   }
 
 }

@@ -64,7 +64,7 @@ public class UIFieldEditableForm extends UIForm {
     
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
-    // TODO Auto-generated method stub
+
     UIComponent titleComponent = this.getParent().findComponentById(EditableFieldId);
     if (titleComponent != null && titleComponent.isRendered())
       getChild(UIFormStringInput.class).setRendered(false);    

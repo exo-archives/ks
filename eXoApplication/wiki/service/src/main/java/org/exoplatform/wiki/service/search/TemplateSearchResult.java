@@ -32,7 +32,6 @@ public class TemplateSearchResult extends SearchResult {
 
   public TemplateSearchResult() {
     super();
-    // TODO Auto-generated constructor stub
   }
 
   public TemplateSearchResult(String name,
@@ -45,7 +44,6 @@ public class TemplateSearchResult extends SearchResult {
     super(null, title, path, type, updatedDate, createdDate);
     this.description = description;
     this.name = name;
-    // TODO Auto-generated constructor stub
   }
 
   public String getDescription() {

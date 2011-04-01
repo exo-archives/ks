@@ -168,7 +168,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
 
   @Override
   public boolean supportsInlineMode() {
-    // TODO Auto-generated method stub
+
     return true;
   }
   

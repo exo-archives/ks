@@ -98,7 +98,6 @@ public final class ForumFeedGenerator extends RSSProcess implements FeedContentP
       this.updated = updated;
    }
 
-
    public VoidReturn execute(Session session) throws Exception {
      Node node;
      node = (Node)getCurrentSession().getItem(path);
@@ -125,7 +124,6 @@ public final class ForumFeedGenerator extends RSSProcess implements FeedContentP
    public ItemRemovedTask(String path) {
       this.path = path;
    }
-
 
    public VoidReturn execute(Session session) throws Exception {
      String objectId = null;

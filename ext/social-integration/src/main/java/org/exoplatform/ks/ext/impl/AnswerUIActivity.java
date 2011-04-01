@@ -194,7 +194,6 @@ public class AnswerUIActivity extends BaseUIActivity {
     }
   }
 
-
   public static String getLinkDiscuss(String topicId) throws Exception {
     PortalRequestContext portalContext = Util.getPortalRequestContext();
     String link = portalContext.getRequest().getRequestURL().toString();
@@ -210,7 +209,6 @@ public class AnswerUIActivity extends BaseUIActivity {
         + "/" + topicId;
     return link;
   }
-
 
   public static class CommentQuestionActionListener extends EventListener<AnswerUIActivity> {
 

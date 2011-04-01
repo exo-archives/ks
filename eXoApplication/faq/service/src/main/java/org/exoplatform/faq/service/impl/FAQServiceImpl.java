@@ -54,6 +54,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.organization.User;
 import org.picocontainer.Startable;
 
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
@@ -146,12 +147,12 @@ public class FAQServiceImpl implements FAQService, Startable {
     }
 
     // management views
-    try {
+   /*try {
       log.info("initializing management view...");
-      // TODO call FAQServiceManaged to register mgmt beans
+      // Note: call FAQServiceManaged to register mgmt beans
     } catch (Exception e) {
       log.error("Error while initializing Management view: " + e.getMessage());
-    }
+    }*/
 
     try {
       log.info("initializing Question Node listeners...");
@@ -947,7 +948,9 @@ public class FAQServiceImpl implements FAQService, Startable {
     return jcrData_.getAnswerById(questionId, answerid);
   }
 
-  // TODO it should be mark as duplicate
+  /**
+   * @deprecated use {@link #saveAnswer(String questionId, Answer[] answers)}
+   */
   public void saveAnswer(String questionId, Answer[] answers, SessionProvider sProvider) throws Exception {
     sProvider.close();
     saveAnswer(questionId, answers);

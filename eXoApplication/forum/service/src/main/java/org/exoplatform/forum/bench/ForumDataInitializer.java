@@ -114,7 +114,6 @@ public class ForumDataInitializer implements Startable {
   }
 
   public void stop() {
-    // TODO Auto-generated method stub
 
   }
 

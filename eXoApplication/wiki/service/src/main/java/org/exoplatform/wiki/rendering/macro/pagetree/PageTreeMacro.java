@@ -105,7 +105,7 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
 
   @Override
   public boolean supportsInlineMode() {
-    // TODO Auto-generated method stub
+
     return true;
   }
   

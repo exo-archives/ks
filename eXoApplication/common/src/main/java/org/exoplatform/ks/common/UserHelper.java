@@ -104,7 +104,6 @@ public class UserHelper {
   }
 
 
-
   @SuppressWarnings("unchecked")
   public static boolean hasUserInGroup(String groupId, String userId) throws Exception {
     List<User> userList = new ArrayList<User>() ;

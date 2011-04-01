@@ -67,7 +67,7 @@ public class UIWikiPageTitleControlArea extends UIContainer {
   
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
-    // TODO Auto-generated method stub
+
     List<WikiMode> acceptEdiableModes = Arrays.asList(new WikiMode[] { WikiMode.VIEW,
         WikiMode.HELP, WikiMode.VIEWREVISION });
     WikiMode currentMode = getAncestorOfType(UIWikiPortlet.class).getWikiMode();

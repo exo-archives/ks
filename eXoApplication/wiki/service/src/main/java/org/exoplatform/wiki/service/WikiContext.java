@@ -114,7 +114,7 @@ public class WikiContext extends WikiPageParams implements Cloneable {
 
   @Override
   public WikiContext clone() throws CloneNotSupportedException {
-    // TODO Auto-generated method stub
+
     WikiContext obj = new WikiContext();
     obj.setAttachmentName(this.getAttachmentName());
     obj.setOwner(this.getOwner());

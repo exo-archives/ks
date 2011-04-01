@@ -46,7 +46,6 @@ public class AdminSpacePermissionFilter extends UIExtensionAbstractFilter {
 
   @Override
   public void onDeny(Map<String, Object> context) throws Exception {
-    // TODO Auto-generated method stub
 
   }
 

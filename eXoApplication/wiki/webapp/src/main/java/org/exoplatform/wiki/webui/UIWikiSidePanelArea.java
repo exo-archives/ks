@@ -67,7 +67,7 @@ public class UIWikiSidePanelArea extends UIContainer {
   
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
-    // TODO Auto-generated method stub
+
     RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
     WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
     UIWikiPageEditForm editForm = this.getAncestorOfType(UIWikiPageEditForm.class);    

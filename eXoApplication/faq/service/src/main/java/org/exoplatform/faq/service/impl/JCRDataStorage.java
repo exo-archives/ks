@@ -1090,8 +1090,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     questionNode.setProperty("exo:categoryId", catId);
     questionNode.setProperty("exo:isActivated", question.isActivated());
     questionNode.setProperty("exo:isApproved", question.isApproved());
-    // TODO: not need to save
-    // questionNode.setProperty("exo:relatives", question.getRelations()) ;
     questionNode.setProperty("exo:usersVote", question.getUsersVote());
     questionNode.setProperty("exo:markVote", question.getMarkVote());
     questionNode.setProperty("exo:link", question.getLink());
@@ -1136,10 +1134,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     question.setId(questionNode.getName());
     String catePath = questionNode.getParent().getParent().getPath();
     question.setCategoryId(catePath.substring(catePath.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
-    // TODO working now
-    /*
-     * if (faqSetting.getDisplayMode().equals("approved")) { // Send notification when question response or edited or watching if (question.isApproved() && question.isActivated()) { sendNotifyForQuestionWatcher(question, faqSetting); } } else { // Send notification when add new question in watching category if (isNew || question.isActivated()) { } }
-     */
     sendNotifyWatcher(question, faqSetting, isNew);
   }
 
@@ -1158,17 +1152,12 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         try {
           questionHome = category.getNode(Utils.QUESTION_HOME);
         } catch (PathNotFoundException ex) {
-          // TODO: JUnit test is fall
           questionHome = category.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome");
         }
         questionNode = questionHome.addNode(question.getId(), "exo:faqQuestion");
-        /*
-         * if(!question.getCategoryId().equals(Utils.CATEGORY_HOME)) { String catId = question.getCategoryId() ; question.setCategoryId(catId.substring(catId.lastIndexOf("/") + 1)) ; }
-         */
       } else {
         questionNode = getFAQServiceHome(sProvider).getNode(question.getPath());
       }
-      // System.out.println("questionNode ==>" + questionNode.getPath());
       saveQuestion(questionNode, question, isAddNew, sProvider, faqSetting);
       if (questionNode.isNew()) {
         questionNode.getSession().save();

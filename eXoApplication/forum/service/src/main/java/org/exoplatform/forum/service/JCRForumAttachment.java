@@ -30,7 +30,6 @@ import org.exoplatform.services.jcr.RepositoryService;
  *          hung.nguyen@exoplatform.com
  * Jul 9, 2007  
  * 
- * TODO: wrong location, rename to JCRMessageAttachment
  */
 public class JCRForumAttachment extends ForumAttachment {
 

@@ -88,7 +88,7 @@ public class ExcerptMacro extends AbstractMacro<ExcerptMacroParameters> {
 
   @Override
   public boolean supportsInlineMode() {
-    // TODO Auto-generated method stub
+
     return true;
   }
   

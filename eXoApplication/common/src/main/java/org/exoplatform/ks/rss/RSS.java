@@ -166,7 +166,6 @@ public class RSS {
   }
   
 
-
   public void saveFeed(SyndFeed feed, String rssNodeType) {
     try {
       boolean isNew = false;
@@ -189,7 +188,6 @@ public class RSS {
       LOG.error("Failed to save feed content", e);
     }
   }
-
 
 
 

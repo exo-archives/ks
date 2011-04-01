@@ -94,16 +94,15 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
     
     @Override
     public void saveCategory(Category category) {
-      // TODO Auto-generated method stub
+  
 
     }
 
     @Override
     public void saveForum(Forum forum) {
-      // TODO Auto-generated method stub
+  
 
     }
-
 
     @Override
     public void addPost(Post post, String categoryId, String forumId, String topicId) {
@@ -200,7 +199,6 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         LOG.error("Can not record Activity for space when add topic " +e.getMessage());
       }
     }
-
 
 
     @Override

@@ -130,7 +130,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
     this.topic = topic;
   }
 
-
   static public class SaveActionListener extends EventListener<UISplitTopicForm> {
     public void execute(Event<UISplitTopicForm> event) throws Exception {
       UISplitTopicForm uiForm = event.getSource();

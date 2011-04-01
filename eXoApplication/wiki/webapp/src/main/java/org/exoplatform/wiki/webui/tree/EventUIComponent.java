@@ -37,7 +37,6 @@ public class EventUIComponent {
 
   public EventUIComponent() {
     super();
-    // TODO Auto-generated constructor stub
   }
 
   public EventUIComponent(String id, String eventName, EVENTTYPE type) {

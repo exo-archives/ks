@@ -1448,7 +1448,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
-  // TODO: View again
   private void setModeratorForum(Session session, String[] strModerators, String[] oldModeratoForums, Forum forum, String categoryId, boolean isNew) throws Exception {
     Node userProfileHomeNode = session.getRootNode().getNode(dataLocator.getUserProfilesLocation());
     Node userProfileNode;
@@ -5103,7 +5102,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     sendTo = sendTo.replaceAll(";", ",");
     String[] strUserNames = sendTo.split(",");
     List<String> userNames;
-    // TODO: JUnit Test can't get OrganizationService
     try {
       userNames = ForumServiceUtils.getUserPermission(strUserNames);
     } catch (Exception e) {
@@ -5699,7 +5697,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         Node nodeObj = iter.nextNode();
         listSearchEvent.add(setPropertyForForumSearch(nodeObj, type));
       }
-      // TODO: Query Attachment in post.
+      // Note: Query Attachment in post.
       if ((type.equals(Utils.POST) || type.equals(Utils.TOPIC)) && !Utils.isEmpty(eventQuery.getKeyValue())) {
         boolean isAdmin = false;
         if (eventQuery.getUserPermission() == 0)
@@ -6846,15 +6844,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
-  /*
-   * Used function upateForum(String string) to update Data after imported public void updateDataImported() throws Exception{ SessionProvider sessionProvider = SessionProvider.createSystemProvider() ; // Update forum statistic ForumStatistic forumStatistic = getForumStatistic(); Node categoryHome = getCategoryHome(sessionProvider); QueryManager qm =
-   * categoryHome.getSession().getWorkspace().getQueryManager(); StringBuffer queryString = new StringBuffer(JCR_ROOT).append(categoryHome.getPath()). append("//element(*,exo:post)") ; Query query = qm.createQuery(queryString.toString(), Query.XPATH); QueryResult result = query.execute(); NodeIterator iterator = result.getNodes(); forumStatistic.setPostCount(iterator.getSize()); queryString = new
-   * StringBuffer(JCR_ROOT).append(categoryHome.getPath()). append("//element(*,exo:topic)") ; query = qm.createQuery(queryString.toString(), Query.XPATH); result = query.execute(); iterator = result.getNodes(); forumStatistic.setTopicCount(iterator.getSize()); saveForumStatistic(forumStatistic); // Update user infor: total post, total topic: TODO: logic failed. Node userHomeNode =
-   * getUserProfileHome(sessionProvider); iterator = userHomeNode.getNodes(); Node userNode = null; while(iterator.hasNext()){ userNode = iterator.nextNode(); // Update total post for user queryString = new StringBuffer(JCR_ROOT).append(categoryHome.getPath()). append("//element(*,exo:post)") ; query = qm.createQuery(queryString.toString(), Query.XPATH); result = query.execute();
-   * userNode.setProperty(EXO_TOTAL_POST, result.getNodes().getSize()); // Update total topic for user queryString = new StringBuffer(JCR_ROOT).append(categoryHome.getPath()). append("//element(*,exo:topic)") ; query = qm.createQuery(queryString.toString(), Query.XPATH); result = query.execute(); userNode.setProperty(EXO_TOTAL_TOPIC, result.getNodes().getSize()); userNode.save(); }
-   * userHomeNode.save(); sessionProvider.close(); }
-   */
-
   public void updateTopicAccess(String userId, String topicId) throws Exception {
     SessionProvider sysSession = SessionProvider.createSystemProvider();
     try {
@@ -7161,7 +7150,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumNode.getSession().save();
       else
         forumNode.save();
-      // TODO: JUnit -Test
       try {
         addOrRemoveSchedule(pruneSetting);
       } catch (Exception e) {

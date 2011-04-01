@@ -126,7 +126,7 @@ public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> 
 
   @Override
   public boolean supportsInlineMode() {
-    // TODO Auto-generated method stub
+
     return true;
   }
   

@@ -303,8 +303,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topicId));
     this.isUseAjax = forumPortlet.isUseAjax();
     listWatches = forumPortlet.getWatchingByCurrentUser();
-
-    // TODO : replace these 2 statements by ForumService.viewTopic(topicId, userName)
     this.topic = getForumService().getTopic(categoryId, forumId, topicId, userName);
     getForumService().setViewCountTopic((categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topicId), userName);
     setRenderInfoPorlet();

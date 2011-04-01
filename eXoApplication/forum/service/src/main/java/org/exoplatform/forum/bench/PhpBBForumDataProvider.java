@@ -156,7 +156,6 @@ public class PhpBBForumDataProvider implements ForumDataProvider {
   }
 
   public boolean isInitialized() {
-    // TODO Auto-generated method stub
     return false;
   }
 

@@ -45,7 +45,7 @@ public class UIWikiMaskWorkspace extends UIMaskWorkspace {
   }
 
   public void processRender(WebuiRequestContext context) throws Exception {
-    // TODO Auto-generated method stub
+
     WikiMode currentMode = getCurrentMode();    
     if (currentMode != null && accept_Modes.contains(currentMode))
       super.processRender(context);

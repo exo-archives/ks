@@ -177,7 +177,6 @@ public class FakeForumService implements ForumService {
     return 0;
   }
 
-
   public List<String> getBanList() throws Exception {
 
     return null;
@@ -343,7 +342,6 @@ public class FakeForumService implements ForumService {
 
     return null;
   }
-
 
   public Post getPost(String categoryId, String forumId, String topicId, String postId) throws Exception {
 
@@ -559,7 +557,6 @@ public class FakeForumService implements ForumService {
   public void removeMember(User user) throws Exception {
   }
 
-
   public Post removePost(String categoryId, String forumId, String topicId, String postId) throws Exception {
 
     return null;
@@ -738,37 +735,37 @@ public class FakeForumService implements ForumService {
 
   @Override
   public void calculateDeletedUser(String userName) throws Exception {
-    // TODO Auto-generated method stub
+
     
   }
 
   @Override
   public void addListenerPlugin(ForumEventListener listener) throws Exception {
-    // TODO Auto-generated method stub
+
     
   }
 
   @Override
   public Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception {
-    // TODO Auto-generated method stub
+
     return null;
   }
 
   @Override
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, MessageBuilder messageBuilder) throws Exception {
-    // TODO Auto-generated method stub
+
     
   }
 
   @Override
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, MessageBuilder messageBuilder) throws Exception {
-    // TODO Auto-generated method stub
+
     
   }
 
   @Override
   public List<Post> getNewPostsByUser(String userName, int number) throws Exception {
-    // TODO Auto-generated method stub
+
     return null;
   }
 

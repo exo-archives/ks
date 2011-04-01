@@ -29,12 +29,11 @@ public class RootTreeNode extends TreeNode {
 
   public RootTreeNode() {
     super();
-    // TODO Auto-generated constructor stub
   }
 
   @Override
   protected void addChildren(HashMap<String, Object> context) throws Exception {
-    // TODO Auto-generated method stub
+
     SpaceTreeNode portalNode = new SpaceTreeNode("portal");
     SpaceTreeNode groupNode = new SpaceTreeNode("group");
     SpaceTreeNode userNode = new SpaceTreeNode("user");

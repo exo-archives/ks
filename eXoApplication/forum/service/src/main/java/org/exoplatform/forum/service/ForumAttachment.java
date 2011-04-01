@@ -102,7 +102,6 @@ abstract public class ForumAttachment {
     this.pathNode = pathNode;
   }
 
-  // TODO: should not have Session in the api
   public abstract InputStream getInputStream() throws Exception;
 
   public String toString() {

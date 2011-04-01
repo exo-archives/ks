@@ -45,7 +45,7 @@ public class UIWikiApplicationControlArea extends UIContainer {
 
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
-    // TODO Auto-generated method stub
+
     UIWikiBreadCrumb wikiBreadCrumb = findFirstComponentOfType(UIWikiBreadCrumb.class);
     WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
     String currentActionLabel = getCurrentActionLabel();

@@ -47,7 +47,7 @@ public class WikiHomeTreeNode extends TreeNode {
 
   @Override
   protected void addChildren(HashMap<String, Object> context) throws Exception {
-    // TODO Auto-generated method stub
+
     Collection<PageImpl> pages = wikiHome.getChildPages().values();
     Iterator<PageImpl> childPageIterator = pages.iterator();
     int count=0;
@@ -63,7 +63,6 @@ public class WikiHomeTreeNode extends TreeNode {
   public WikiHome getWikiHome() {
     return wikiHome;
   }
-
 
   public PageTreeNode getChildByName(String name) throws Exception {
     for (TreeNode child : children) {

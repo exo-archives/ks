@@ -35,7 +35,6 @@ public class WebDavServiceImpl extends org.exoplatform.services.jcr.webdav.WebDa
                            RepositoryService repositoryService,
                            ThreadLocalSessionProviderService sessionProviderService) throws Exception {
     super(params, repositoryService, sessionProviderService);
-    // TODO Auto-generated constructor stub
   }
 
 }

@@ -153,7 +153,6 @@ public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
           }
         }
       }
-      // TODO KS-2469
       if (forum.getCreateTopicRole().length > 0 && !ForumUtils.isStringInStrings(forum.getCreateTopicRole(), this.userProfile.getUserId())) {
         continue;
       }

@@ -273,8 +273,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
                      .cacheControl(cc)
                      .build();
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      log.error(e.getMessage(), e);
+      log.error("Failed for get tree data by rest service.", e);
       return Response.serverError().entity(e.getMessage()).cacheControl(cc).build();
     }
   }

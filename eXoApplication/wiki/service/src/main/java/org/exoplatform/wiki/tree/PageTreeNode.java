@@ -52,7 +52,7 @@ public class PageTreeNode extends TreeNode {
 
   @Override
   protected void addChildren(HashMap<String, Object> context) throws Exception {
-    // TODO Auto-generated method stub
+
     Collection<PageImpl> pages =  page.getChildPages().values();
     Iterator<PageImpl> childPageIterator = pages.iterator();
     int count = 0;

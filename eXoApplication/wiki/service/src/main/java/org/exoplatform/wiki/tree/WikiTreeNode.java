@@ -46,7 +46,7 @@ public class WikiTreeNode extends TreeNode {
 
   @Override
   protected void addChildren(HashMap<String, Object> context) throws Exception {
-    // TODO Auto-generated method stub
+
     this.children.add(new WikiHomeTreeNode((WikiHome) wiki.getWikiHome()));
     super.addChildren(context);
   }

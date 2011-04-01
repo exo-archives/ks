@@ -185,7 +185,7 @@ public class TreeNode {
   }
   
   private void pushChildren(HashMap<String, Object> context) throws Exception {
-    // TODO Auto-generated method stub
+
     Stack<WikiPageParams> paramsStk = (Stack<WikiPageParams>) context.get(this.STACK_PARAMS);
 
     if (paramsStk == null) {

@@ -54,8 +54,7 @@ public class RenderHelper {
     }
 
     /**
-     * TODO when Forum will support more syntaxes, we should have the
-     * resolving logic here
+     * Note: when Forum will support more syntaxes, we should have the resolving logic here
      */
     public String getSyntax(Post target) {
       return SupportedSyntaxes.bbcode.name();
