@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.mow.core.api.wiki;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.chromattic.api.RelationshipType;
@@ -38,7 +39,16 @@ public abstract class WatchedMixin {
   public abstract void setEntity(PageImpl page);
 
  @Property(name = WikiNodeType.Definition.WATCHER) 
- public abstract List<String> getWatchers();
- public abstract void setWatchers( List<String> watchers);
+ public abstract List<String> getWatchersByChromattic();
+ public abstract void setWatchersByChromattic( List<String> watchers);
+ 
+  public List<String> getWatchers() {
+    List<String> watchers = getWatchersByChromattic();
+    return (watchers != null) ? watchers : new ArrayList<String>();
+  }
+
+  public void setWatchers(List<String> watchers) {
+    setWatchersByChromattic(watchers);
+  }
  
 }
