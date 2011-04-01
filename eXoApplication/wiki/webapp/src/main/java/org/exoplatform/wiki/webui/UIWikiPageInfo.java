@@ -17,6 +17,7 @@ import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.commons.VersionNameComparatorDesc;
 import org.exoplatform.wiki.mow.api.Page;
+import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -48,7 +49,7 @@ public class UIWikiPageInfo extends UIWikiContainer {
       Iterator<NTVersion> iter = pageImpl.getVersionableMixin().getVersionHistory().iterator();
       while (iter.hasNext()) {
         NTVersion version = iter.next();
-        if (!("jcr:rootVersion".equals(version.getName()))) {
+        if (!(WikiNodeType.Definition.ROOT_VERSION.equals(version.getName()))) {
           versions.add(version);
         }
       }

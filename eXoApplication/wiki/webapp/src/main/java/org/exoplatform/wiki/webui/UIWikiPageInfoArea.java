@@ -32,6 +32,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.commons.VersionNameComparatorDesc;
+import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
@@ -98,7 +99,7 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
     // TODO: sort descendant by updated date
     while (iter.hasNext()) {
       NTVersion version = iter.next();
-      if (!("jcr:rootVersion".equals(version.getName()))) {
+      if (!(WikiNodeType.Definition.ROOT_VERSION.equals(version.getName()))) {
         versionsList.add(version);
       }
     }

@@ -131,6 +131,8 @@ public interface WikiNodeType {
     public final static String UPDATED_DATE               = "updatedDate";
     
     public final static String OVERRIDEPERMISSION         = "isOverridePermission";
+    
+    public final static String ROOT_VERSION               = "rootVersion";
 
     public final static String CREATED                    = "jcr:created";
 
