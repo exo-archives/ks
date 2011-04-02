@@ -268,22 +268,8 @@
      <div class="Content">
      <!-- begin content part of forum activity-->
      <%
-       def title, linkTag;
-     
-       if (uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).equalsIgnoreCase(ForumSpaceActivityPublisher.POST_ADDED)) {
-         title = _ctx.appRes("ForumUIActivity.label.add-post")
-         linkTag = "<a href='" + uicomponent.getViewLink() + "'>" + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_NAME_KEY) + "</a>";
-       } else if (uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).equalsIgnoreCase(ForumSpaceActivityPublisher.POST_UPDATED)) {
-         title = _ctx.appRes("ForumUIActivity.label.update-post")
-         linkTag = "<a href='" + uicomponent.getViewLink() + "'>" + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.POST_NAME_KEY) + "</a>";
-       } else if (uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).equalsIgnoreCase(ForumSpaceActivityPublisher.TOPIC_ADDED)) {
-         title = _ctx.appRes("ForumUIActivity.label.add-topic")
-         linkTag = "<a href='" + uicomponent.getViewLink() + "'>" + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_NAME_KEY) +  "</a>";
-       } else if (uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.ACTIVITY_TYPE_KEY).equalsIgnoreCase(ForumSpaceActivityPublisher.TOPIC_UPDATED)) {
-         title = _ctx.appRes("ForumUIActivity.label.update-topic")
-         linkTag = "<a href='" + uicomponent.getViewLink() + "'>" + uicomponent.getActivityParamValue(ForumSpaceActivityPublisher.TOPIC_NAME_KEY) +  "</a>";
-       }
-       activityContentTitle = title.replace("{0}", uicomponent.getUriOfAuthor()).replace("{1}", linkTag);
+       	String herf = "<a href=\"{0}\">{1}</a>";
+     	activityContentTitle = uicomponent.getActivityContentTitle(_ctx, herf) ;
      %>
        $activityContentTitle<br>
        <div class="CommentBox">

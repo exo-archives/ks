@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ks.ext.impl;
 
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,254 +46,177 @@ import org.exoplatform.social.core.space.spi.SpaceService;
  * @version $Revision$
  */
 public class ForumSpaceActivityPublisher extends ForumEventListener {
-    
-    public static final String FORUM_APP_ID = "ks-forum:spaces";
-    public static final String FORUM_ID_KEY = "ForumId";
-    public static final String CATE_ID_KEY = "CateId";
-    public static final String ACTIVITY_TYPE_KEY = "ActivityType";
-    public static final String POST_ADDED = "AddPost";
-    public static final String TOPIC_ADDED = "AddTopic";
-    public static final String POST_UPDATED = "UpdatePost";
-    public static final String TOPIC_UPDATED = "UpdateTopic";
-    public static final String POST_ID_KEY = "PostId";
-    public static final String POST_OWNER_KEY = "PostOwner";
-    public static final String POST_LINK_KEY = "PostLink";
-    public static final String POST_NAME_KEY = "PostName";
-    public static final String TOPIC_ID_KEY = "TopicId";
-    public static final String TOPIC_OWNER_KEY = "TopicOwner";
-    public static final String TOPIC_LINK_KEY = "TopicLink";
-    public static final String TOPIC_NAME_KEY = "TopicName";
-    
-    private static Log      LOG = ExoLogger.getExoLogger(ForumSpaceActivityPublisher.class);
-    
-    private boolean isPublicPost(Post post, Topic topic) {
-      if (!isPublicTopic(topic)) {
-        return false;
-      }
-      if (post == null || 
-          post.getUserPrivate().length == 2 || post.getIsHidden() || !post.getIsActiveByTopic() || !post.getIsApproved()) {
-        // check permission of the post
-        // if the post is private or hidden by censored words or not active by topic or waiting for approving, return false. 
-        return false;
-      }
-      return true;
-    }
-    
-    private boolean isPublicTopic(Topic topic) {
-      if (topic == null || 
-          !topic.getIsActive() || topic.getIsWaiting() || topic.getIsClosed() ||
-          !Utils.isEmpty(topic.getCanView())) {
-        // check permission of topic
-        // if the topic is not active or waiting or closed or restricts users, return false
-        return false;
-      }
-      return true;
-    }
-    
-    @Override
-    public void saveCategory(Category category) {
+
+  public static final String FORUM_APP_ID      = "ks-forum:spaces";
+
+  public static final String FORUM_ID_KEY      = "ForumId";
+
+  public static final String CATE_ID_KEY       = "CateId";
+
+  public static final String ACTIVITY_TYPE_KEY = "ActivityType";
+
+  public static final String POST_ID_KEY       = "PostId";
+
+  public static final String POST_OWNER_KEY    = "PostOwner";
+
+  public static final String POST_LINK_KEY     = "PostLink";
+
+  public static final String POST_NAME_KEY     = "PostName";
+
+  public static final String TOPIC_ID_KEY      = "TopicId";
+
+  public static final String TOPIC_OWNER_KEY   = "TopicOwner";
+
+  public static final String TOPIC_LINK_KEY    = "TopicLink";
+
+  public static final String TOPIC_NAME_KEY    = "TopicName";
   
+  private static final int   TYPE_PRIVATE      = 2;
 
-    }
+  private static Log         LOG               = ExoLogger.getExoLogger(ForumSpaceActivityPublisher.class);
 
-    @Override
-    public void saveForum(Forum forum) {
-  
-
-    }
-
-    @Override
-    public void addPost(Post post, String categoryId, String forumId, String topicId) {
-      try {
-        Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-        if (forumId == null || forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) < 0) {
-          return;
-        }
-        ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-        Topic topic = forumService.getTopic(categoryId, forumId, topicId, "");
-        if (!isPublicPost(post, topic)) {
-          // ignore post which is not public
-          return;
-        }
-        
-        String msg = "@"+post.getOwner();
-        String body = ForumTransformHTML.getTitleInHTMLCode(post.getMessage(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-        IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
-        ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-        SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
-        String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
-        Space space = spaceS.getSpaceById(spaceId) ;
-        Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
-        Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, post.getOwner());
-        ExoSocialActivity activity = new ExoSocialActivityImpl();
-        activity.setUserId(userIdentity.getId());
-        activity.setTitle(msg);
-        activity.setBody(body);
-        activity.setType(FORUM_APP_ID);
-        Map<String, String> templateParams = new HashMap<String, String>();
-        templateParams.put(FORUM_ID_KEY, forumId);
-        templateParams.put(CATE_ID_KEY, categoryId);
-        templateParams.put(TOPIC_ID_KEY, topicId);
-        templateParams.put(POST_ID_KEY, post.getId());
-        templateParams.put(POST_LINK_KEY, post.getLink());
-        templateParams.put(POST_NAME_KEY, post.getName());
-        templateParams.put(POST_OWNER_KEY, "@" + post.getOwner());
-        templateParams.put(ACTIVITY_TYPE_KEY, POST_ADDED);
-        activity.setTemplateParams(templateParams);
-        
-        activityM.saveActivity(spaceIdentity, activity);
-
-      } catch (ClassNotFoundException e) {
-        if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
-      } catch (Exception e) {
-        LOG.error("Can not record Activity for space when post " +e.getMessage());
-      }
-
-    }
-
-    @Override
-    public void addTopic(Topic topic, String categoryId, String forumId) {
-      try {
-        Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-        if (forumId == null || forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) < 0) {
-          return;
-        }
-        
-        if (!isPublicTopic(topic)) {
-          // ignore topic which is not public
-          return;
-        }
-        
-        String msg = "@"+topic.getOwner();
-        String body = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-        IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
-        ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-        Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, topic.getOwner());
-        SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
-        String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
-        Space space = spaceS.getSpaceById(spaceId) ;
-        Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
-        
-        ExoSocialActivity activity = new ExoSocialActivityImpl();
-        activity.setUserId(userIdentity.getId());
-        activity.setTitle(msg);
-        activity.setBody(body);
-        activity.setType(FORUM_APP_ID);
-        
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(FORUM_ID_KEY, forumId);
-        params.put(CATE_ID_KEY, categoryId);
-        params.put(TOPIC_ID_KEY, topic.getId());
-        params.put(TOPIC_LINK_KEY, topic.getLink());
-        params.put(TOPIC_NAME_KEY, topic.getTopicName());
-        params.put(TOPIC_OWNER_KEY, topic.getOwner());
-        params.put(ACTIVITY_TYPE_KEY, TOPIC_ADDED);
-        activity.setTemplateParams(params);
-        
-        activityM.saveActivity(spaceIdentity, activity);
-      } catch (ClassNotFoundException e) {
-        if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
-      } catch (Exception e) {
-        LOG.error("Can not record Activity for space when add topic " +e.getMessage());
-      }
-    }
-
-
-    @Override
-    public void updatePost(Post post, String categoryId, String forumId, String topicId) {
-      try {
-        Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-        if (forumId == null || forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) < 0) {
-          return;
-        }
-        ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-        Topic topic = forumService.getTopic(categoryId, forumId, topicId, "");
-        if (!isPublicPost(post, topic)) {
-          // ignore post which is not public
-          return;
-        }
-        
-        String msg = "@" + post.getOwner();
-        String body = ForumTransformHTML.getTitleInHTMLCode(post.getMessage(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-        IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
-        ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-        Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, post.getOwner());
-        SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
-        String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
-        Space space = spaceS.getSpaceById(spaceId) ;
-        Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
-        
-        ExoSocialActivity activity = new ExoSocialActivityImpl();
-        activity.setUserId(userIdentity.getId());
-        activity.setTitle(msg);
-        activity.setBody(body);
-        activity.setType(FORUM_APP_ID);
-        Map<String, String> templateParams = new HashMap<String, String>();
-        templateParams.put(FORUM_ID_KEY, forumId);
-        templateParams.put(CATE_ID_KEY, categoryId);
-        templateParams.put(TOPIC_ID_KEY, topicId);
-        templateParams.put(POST_ID_KEY, post.getId());
-        templateParams.put(POST_LINK_KEY, post.getLink());
-        templateParams.put(POST_NAME_KEY, post.getName());
-        templateParams.put(POST_OWNER_KEY, post.getOwner());
-        templateParams.put(ACTIVITY_TYPE_KEY, POST_UPDATED);
-        activity.setTemplateParams(templateParams);
-        
-        activityM.saveActivity(spaceIdentity, activity);
-
-      } catch (ClassNotFoundException e) {
-        if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
-      } catch (Exception e) {
-        LOG.error("Can not record Activity for space when post " +e.getMessage());
-      }
-    }
-
-    @Override
-    public void updateTopic(Topic topic, String categoryId, String forumId) {
-      try {
-        Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-        if (forumId == null || forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) < 0) {
-          return;
-        }
-        
-        if (!isPublicTopic(topic)) {
-          // ignore topic which is not public
-          return;
-        }
-        
-        String msg = "@" + topic.getOwner();
-        String body = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-        IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
-        ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-        Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, topic.getOwner());
-        SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
-        String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
-        Space space = spaceS.getSpaceById(spaceId) ;
-        Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
-        
-        ExoSocialActivity activity = new ExoSocialActivityImpl();
-        activity.setUserId(userIdentity.getId());
-        activity.setTitle(msg);
-        activity.setBody(body);
-        activity.setType(FORUM_APP_ID);
-        
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(FORUM_ID_KEY, forumId);
-        params.put(CATE_ID_KEY, categoryId);
-        params.put(TOPIC_ID_KEY, topic.getId());
-        params.put(TOPIC_LINK_KEY, topic.getLink());
-        params.put(TOPIC_NAME_KEY, topic.getTopicName());
-        params.put(TOPIC_OWNER_KEY, topic.getOwner());
-        params.put(ACTIVITY_TYPE_KEY, TOPIC_UPDATED);
-        activity.setTemplateParams(params);
-        
-        activityM.saveActivity(spaceIdentity, activity);
-      } catch (ClassNotFoundException e) {
-        if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
-      } catch (Exception e) {
-        LOG.error("Can not record Activity for space when add topic " +e.getMessage());
-      }
-      
-    }
-
+  @Override
+  public void saveCategory(Category category) {
   }
+
+  @Override
+  public void saveForum(Forum forum) {
+  }
+
+  public static enum ACTIVITYTYPE {
+    AddPost, AddTopic, UpdatePost, UpdateTopic
+  }
+  
+  private void saveActivity(String categoryId, String forumId, ACTIVITYTYPE type, Topic topic, Post post) throws Exception {
+    IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class);
+    ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
+    Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, post.getOwner());
+    SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
+    String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
+    Space space = spaceS.getSpaceById(spaceId);
+    Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
+    ExoSocialActivity activity = new ExoSocialActivityImpl();
+    String body = ForumTransformHTML.getTitleInHTMLCode(post.getMessage(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+    activity.setUserId(userIdentity.getId());
+    activity.setTitle(post.getOwner());
+    activity.setBody(body);
+    activity.setType(FORUM_APP_ID);
+    Map<String, String> templateParams = new HashMap<String, String>();
+    templateParams.put(FORUM_ID_KEY, forumId);
+    templateParams.put(CATE_ID_KEY, categoryId);
+    templateParams.put(TOPIC_ID_KEY, topic.getId());
+    templateParams.put(ACTIVITY_TYPE_KEY, type.toString());
+    activity.setTemplateParams(createActivity(templateParams, topic, post, type));
+    activityM.saveActivity(spaceIdentity, activity);
+  }
+
+  private Map<String, String> createActivity(Map<String, String> templateParams, Topic topic, Post post, ACTIVITYTYPE type) throws Exception {
+    if (type.toString().indexOf("Post") > 0) {
+      templateParams.put(POST_ID_KEY, post.getId());
+      templateParams.put(POST_LINK_KEY, post.getLink());
+      templateParams.put(POST_NAME_KEY, post.getName());
+      templateParams.put(POST_OWNER_KEY, post.getOwner());
+    } else {
+      templateParams.put(TOPIC_LINK_KEY, topic.getLink());
+      templateParams.put(TOPIC_NAME_KEY, topic.getTopicName());
+      templateParams.put(TOPIC_OWNER_KEY, topic.getOwner());
+    }
+    return templateParams;
+  }
+
+  private Post convertTopicToPost(Topic topic) {
+    Post post = new Post();
+    post.setOwner(topic.getOwner());
+    post.setMessage(topic.getDescription());
+    return post;
+  }
+  
+  private Topic getTopicIfPublic (Post post, Topic topic, String categoryId, String forumId, String topicId) {
+    if(topic == null && post == null) return null ;
+    try {
+      if(topic == null) {
+        ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+        topic = forumService.getTopic(categoryId, forumId, topicId, "");
+      }
+      if (topic == null || !topic.getIsActive() || !topic.getIsApproved() || topic.getIsWaiting() || topic.getIsClosed() || !Utils.isEmpty(topic.getCanView())) {
+        // check permission of topic
+        // if the topic is not active or waiting or closed or restricts users, return null
+        return null;
+      }
+      if (post != null && (post.getUserPrivate().length == TYPE_PRIVATE || post.getIsHidden() || !post.getIsActiveByTopic() || !post.getIsApproved())) {
+        // check permission of the post
+        // if the post is private or hidden by censored words or not active by topic or waiting for approving, return null.
+        return null;
+      }
+      return topic;
+    } catch (Exception e) {
+      LOG.debug("Failed to check public", e);
+    }
+    return null;
+  }
+
+  private boolean hasSocial() throws Exception {
+    try {
+      Class.forName("org.exoplatform.social.core.manager.IdentityManager");
+      return true;
+    } catch (ClassNotFoundException e) {
+      LOG.debug("Please check the integrated project does the social deploy? " + e.getMessage());
+      return false;
+    }
+  }
+  
+  private boolean hasSpace(String forumId) throws Exception {
+    if(hasSocial()) {
+      if (!Utils.isEmpty(forumId) && forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) >= 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  private void saveActivityForPost(Post post, String categoryId, String forumId, String topicId, ACTIVITYTYPE type) {
+    try {
+      if(hasSpace(forumId)) {
+        Topic topic = getTopicIfPublic(post, null, categoryId, forumId, topicId);
+        if (topic != null) {
+          saveActivity(categoryId, forumId, type, topic, post);
+        }
+      }
+    } catch (Exception e) {
+      LOG.error("Can not record Activity for space when post ", e);
+    }
+  }
+  
+  private void saveActivityForTopic(Topic topic, String categoryId, String forumId, ACTIVITYTYPE type) {
+    try {
+      if(hasSpace(forumId)) {
+        topic = getTopicIfPublic(null, topic, categoryId, forumId, topic.getId());
+        if(topic != null) {
+          saveActivity(categoryId, forumId, type, topic, convertTopicToPost(topic));
+        }
+      }
+    } catch (Exception e) {
+      LOG.error("Can not record Activity for space when add topic " + e.getMessage());
+    }
+  }
+  
+  @Override
+  public void addPost(Post post, String categoryId, String forumId, String topicId) {
+    saveActivityForPost(post, categoryId, forumId, topicId, ACTIVITYTYPE.AddPost) ;
+  }
+
+  @Override
+  public void addTopic(Topic topic, String categoryId, String forumId) {
+    saveActivityForTopic(topic, categoryId, forumId, ACTIVITYTYPE.AddTopic);
+  }
+
+  @Override
+  public void updatePost(Post post, String categoryId, String forumId, String topicId) {
+    saveActivityForPost(post, categoryId, forumId, topicId, ACTIVITYTYPE.UpdatePost);
+  }
+
+  @Override
+  public void updateTopic(Topic topic, String categoryId, String forumId) {
+    saveActivityForTopic(topic, categoryId, forumId, ACTIVITYTYPE.UpdateTopic);
+  }
+}
