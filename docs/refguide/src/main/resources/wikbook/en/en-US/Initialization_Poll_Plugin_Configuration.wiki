@@ -82,62 +82,62 @@ The component-plugin named *addInitialDefaultDataPlugin* will refer to *org.exop
 After the *org.exoplatform.poll.service.InitialDefaultDataPlugin* object has been executed, the *org.exoplatform.poll.service.PollInitialData* object will be called. It returns a polls array. The value of poll array is defined by the *org.exoplatform.poll.service.PollData* object as below:
 
 {code:xml}
-	  <name>livedemo.default.configuration</name>
-      <description>initial data for live demo</description>
-      <object type="org.exoplatform.poll.service.PollInitialData">
-        <field name="pollDatas">
-          <collection type="java.util.ArrayList">
-            <value>
-              <object type="org.exoplatform.poll.service.PollData">
-                ....
-               </object>
-             </value>
-           </collection>
-         </field>
-       </object>
+<name>livedemo.default.configuration</name>
+<description>initial data for live demo</description>
+<object type="org.exoplatform.poll.service.PollInitialData">
+  <field name="pollDatas">
+    <collection type="java.util.ArrayList">
+      <value>
+        <object type="org.exoplatform.poll.service.PollData">
+          ....
+        </object>
+      </value>
+    </collection>
+  </field>
+</object>
 {code}
 
-* Poll includes some basic data which are defined in the *field* tag with a specific name as below:
+* A Poll includes some basic data which are defined in the *field* tag with a specific name as below:
 
 {code:xml}
-	..........
-		<field name="parentPath">
-		  <string>ksdemo/Polls</string>
-		</field>
-		<field name="owner">
-		  <string>root</string>
-		</field>
-		<field name="question">
-		  <string>What color do you like ?</string>
-		</field>
-		<field name="timeOut">
-		  <string>0</string>
-		</field>
-		<field name="isMultiCheck">
-		  <string>false</string>
-		</field>
-		<field name="isAgainVote">
-		  <string>false</string>
-		</field>
-		<field name="isClosed">
-		  <string>false</string>
-		</field>
-		 <field name="options">
-		 <collection type="java.util.ArrayList">
-		  <value><string>Green</string></value>
-		  <value><string>Blue</string></value>
-		  <value><string>Red</string></value>
-		  <value><string>Yellow</string></value>
-		  <value><string>Orange</string></value>
-		  <value><string>Purple</string></value>
-		 </collection>
-		</field>
-	....
+....
+<field name="parentPath">
+  <string>ksdemo/Polls</string>
+</field>
+<field name="owner">
+  <string>root</string>
+</field>
+<field name="question">
+  <string>What color do you like ?</string>
+</field>
+<field name="timeOut">
+  <string>0</string>
+</field>
+<field name="isMultiCheck">
+  <string>false</string>
+</field>
+<field name="isAgainVote">
+  <string>false</string>
+</field>
+<field name="isClosed">
+  <string>false</string>
+</field>
+<field name="options">
+  <collection type="java.util.ArrayList">
+    <value><string>Green</string></value>
+    <value><string>Blue</string></value>
+    <value><string>Red</string></value>
+    <value><string>Yellow</string></value>
+    <value><string>Orange</string></value>
+    <value><string>Purple</string></value>
+  </collection>
+</field>
+....
 {code}
 
 In which:
 
-||* Field* || *Possible value* || *Default value* || *Description* ||
+|| Field || Possible value || Default value || Description||
 | *parentPath*| {{string}} | {{ ksdemo/Polls}} | Parent path of poll data. |
 | *owner* | {{user id}} | {{root}} | The creator of Poll. |
 | *question* | {{string}} | {{What color do you like?}} | The question for Poll. |

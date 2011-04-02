@@ -70,7 +70,7 @@ h4. Answers Email Templates Configuration {anchor:id=KSref.Configuration.Answers
 h3. Poll Configuration {anchor:id=KSref.Configuration.PollConfiguration} 
 {include:document="Initialization_Poll_Plugin_Configuration.wiki"}
 
-h1. Knowledge JCR structure {anchor:id=KSref.Configuration.KS_JCRS_tructure} 
+h1. JCR structure {anchor:id=KSref.JCRStructure} 
 {include:document="KS_JCR_structure.wiki"}
 
 h1. Developer reference {anchor:id=KSref.DeveloperReference}
