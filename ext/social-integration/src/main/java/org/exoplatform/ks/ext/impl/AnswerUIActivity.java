@@ -41,7 +41,6 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 public class AnswerUIActivity extends BaseKSActivity {
 
   public AnswerUIActivity() {
-    System.out.println("\n\n initilaze AnswerUIActivity... ");
   }
   
   private List<ExoSocialActivity> questionComments_;

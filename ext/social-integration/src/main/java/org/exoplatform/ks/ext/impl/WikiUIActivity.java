@@ -15,7 +15,6 @@ import org.exoplatform.webui.core.lifecycle.WebuiBindingContext;
 public class WikiUIActivity extends BaseKSActivity {
 
   public WikiUIActivity() {
-    System.out.println("\n\n initilaze WikiUIActivity... ");
   }
   
   String getActivityMessage(WebuiBindingContext _ctx) throws Exception {
