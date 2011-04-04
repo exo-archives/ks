@@ -5,7 +5,7 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
 
 public class ContentSearchData extends SearchData {
 
-  public static String WIKIHOME_PATH    = WikiNodeType.Definition.WIKI_HOME_NAME + "/%";
+  public static String WIKIHOME_PATH    = WikiNodeType.Definition.WIKI_HOME_NAME;
 
   public static String ALL_PAGESPATH    = ALL_PATH + WIKIHOME_PATH;
 
@@ -15,6 +15,8 @@ public class ContentSearchData extends SearchData {
 
   public static String USER_PAGESPATH   = USER_PATH + WIKIHOME_PATH;
 
+  private String pagePath = "";
+  
   public ContentSearchData(String text,
                            String title,
                            String content,
@@ -38,20 +40,22 @@ public class ContentSearchData extends SearchData {
   }  
 
   public void createJcrQueryPath() {
+    
     if (wikiType == null && wikiOwner == null) {
-      this.jcrQueryPath = "jcr:path LIKE '" + ALL_PAGESPATH + "'";
+      pagePath = ALL_PAGESPATH;
     }
     if (wikiType != null) {
       if (wikiType.equals(PortalConfig.PORTAL_TYPE)) {
-        this.jcrQueryPath = "jcr:path LIKE '" + PORTAL_PAGESPATH + "'";
+        pagePath = PORTAL_PAGESPATH;
       } else if (wikiType.equals(PortalConfig.GROUP_TYPE))
-        this.jcrQueryPath = "jcr:path LIKE '" + GROUP_PAGESPATH + "'";
+        pagePath = GROUP_PAGESPATH;
       else if (wikiType.equals(PortalConfig.USER_TYPE))
-        this.jcrQueryPath = "jcr:path LIKE '" + USER_PAGESPATH + "'";
+        pagePath = USER_PAGESPATH;
       if (wikiOwner != null) {
-        this.jcrQueryPath = this.jcrQueryPath.replaceFirst("%", wikiOwner);
+        pagePath = pagePath.replaceFirst("%", wikiOwner);
       }
     }
+    this.jcrQueryPath = "jcr:path LIKE '" + pagePath + "/%'";
   }
 
   public String getStatementForTitle(boolean onlyHomePages) {
@@ -93,6 +97,26 @@ public class ContentSearchData extends SearchData {
     } catch (Exception e) {
     }
     return statement.toString();
+  }
+  
+  /**
+   * get SQL constraint for getting available page (be a child of <code>WikiHome</code> page and not removed).
+   * @return string in format:
+   *        <code>((jcr:path like [path to page node] or jcr:path = [path to home page]) AND (jcr:mixinTypes IS NULL OR NOT (jcr:mixinTypes = 'wiki:removed'))</code>
+   */
+  public String getPageConstraint() {
+    StringBuilder constraint = new StringBuilder();
+    String pagePart = "/%/" + pageId;
+    if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageId)) {
+      pagePart = "";
+    }
+    constraint.append('(')
+             .append('(').append("jcr:path LIKE '").append(pagePath).append(pagePart)
+               .append("' or (jcr:path = '").append(pagePath).append(pagePart.length() == 0 ? "" : '/' + pageId).append('\'')
+             .append("))")
+             .append(" AND ").append("(jcr:mixinTypes IS NULL OR NOT (jcr:mixinTypes = 'wiki:removed'))")
+             .append(')');
+    return constraint.toString();
   }
   
   private String getContentCdt(boolean onlyHomePages) {

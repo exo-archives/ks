@@ -165,9 +165,23 @@ public class WikiServiceImpl implements WikiService {
   }
   
   public boolean isExisting(String wikiType, String wikiOwner, String pageId) throws Exception {
-    WikiHome wikiHome = getWikiHome(wikiType, wikiOwner);
-    Page page = wikiHome.getWikiPage(pageId);
-    return page != null;
+    Model model = getModel();
+    WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+    String statement = new ContentSearchData(wikiType, wikiOwner, pageId).getPageConstraint();
+    if (statement != null) {
+      Iterator<PageImpl> result = wStore.getSession().createQueryBuilder(PageImpl.class)
+      .where(statement).get().objects();
+      boolean isExisted = result.hasNext();
+      if (!isExisted) {
+        Page page = getWikiHome(wikiType, wikiOwner);
+        String wikiHomeId = TitleResolver.getId(page.getTitle(), true);
+        if (wikiHomeId.equals(pageId)) {
+          isExisted = true;
+        }
+      }
+      return isExisted;
+    }
+    return false;
   }
   
   public boolean deletePage(String wikiType, String wikiOwner, String pageId) throws Exception {
