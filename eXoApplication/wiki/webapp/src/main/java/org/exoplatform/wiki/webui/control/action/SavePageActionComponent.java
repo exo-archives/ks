@@ -228,6 +228,7 @@ public class SavePageActionComponent extends UIComponent {
                                                 ApplicationMessage.ERROR));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
       } finally {
+        wikiPortlet.changeMode(WikiMode.VIEW);
         Utils.redirect(pageParams, WikiMode.VIEW);
         super.processEvent(event);
       }
