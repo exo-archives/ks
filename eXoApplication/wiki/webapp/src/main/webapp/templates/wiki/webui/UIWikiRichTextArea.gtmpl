@@ -53,7 +53,8 @@
   
   document.observe('xwiki:wysiwyg:loaded', function() {
     var editForm = document.getElementById('UIWikiPageEditForm');
-    var iframe = eXo.core.DOMUtil.findFirstDescendantByClass(editForm, 'iframe', 'gwt-RichTextArea');
+    var iframe = eXo.core.DOMUtil.findFirstDescendantByClass(editForm, 'iframe', 'gwt-RichTextArea');    
+    iframe.style.height ="380px";
     var doc = iframe.contentWindow.document;
     doc.body.id = 'body';
     doc.body.className = 'UIWikiPortlet UIWikiPortletWysiwygCss';

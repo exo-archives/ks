@@ -90,9 +90,12 @@ public class PreviewPageActionComponent extends AbstractFormActionComponent {
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
       String markup;
       if (isRichTextRendered) {
-        String htmlContent = wikiRichTextArea.getUIFormTextAreaInput().getValue();
-        Utils.feedDataForWYSIWYGEditor(wikiPageEditForm, htmlContent);        
-        markup = renderingService.render(htmlContent, Syntax.XHTML_1_0.toIdString(), markupSyntax, false);       
+        String htmlContent = wikiRichTextArea.getUIFormTextAreaInput().getValue();        
+        markup = renderingService.render(htmlContent,
+                                         Syntax.XHTML_1_0.toIdString(),
+                                         markupSyntax,
+                                         false);       
+        Utils.feedDataForWYSIWYGEditor(wikiPageEditForm, markup);
       } else {
         UIFormTextAreaInput markupInput = wikiPageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);        
         markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();

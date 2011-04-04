@@ -99,7 +99,7 @@ public class RichTextActionComponent extends AbstractFormActionComponent {
         wikiSidePanelArea.setRendered(true);
         bottomArea.setRendered(true);
       } else {
-        Utils.feedDataForWYSIWYGEditor(wikiPageEditForm, null);
+        Utils.feedDataForWYSIWYGEditor(wikiPageEditForm,null);
         wikiSidePanelArea.setRendered(false);
         bottomArea.setRendered(false);
       }

@@ -187,7 +187,7 @@ public class Utils {
     return store.getWiki(WikiType.valueOf(wikiType.toUpperCase()), owner);    
   }
 
-  public static void setUpWikiContext(UIWikiPortlet wikiPortlet) throws Exception {
+  public static WikiContext setUpWikiContext(UIWikiPortlet wikiPortlet) throws Exception {
     RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer()
                                                                               .getComponentInstanceOfType(RenderingService.class);
     Execution ec = ((RenderingServiceImpl) renderingService).getExecution();
@@ -196,25 +196,24 @@ public class Utils {
     }
     WikiContext wikiContext = createWikiContext(wikiPortlet);
     ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
+    return wikiContext;
   }
   
-  public static void feedDataForWYSIWYGEditor(UIWikiPageEditForm pageEditForm, String xhtmlContent) throws Exception {
+  public static void feedDataForWYSIWYGEditor(UIWikiPageEditForm pageEditForm, String markup) throws Exception {
     UIWikiPortlet wikiPortlet = pageEditForm.getAncestorOfType(UIWikiPortlet.class);
+    UIWikiRichTextArea richTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);
+    RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
     HttpSession session = Util.getPortalRequestContext().getRequest().getSession(false);
-    Utils.setUpWikiContext(wikiPortlet);
-    if (xhtmlContent == null) {
-      RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
-      UIFormTextAreaInput markupInput = pageEditForm.getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT);
-      UIWikiRichTextArea richTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);    
-      String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
-      String markupSyntax = pageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
-      String htmlContent = renderingService.render(markup, markupSyntax, Syntax.ANNOTATED_XHTML_1_0.toIdString(), false);
-      richTextArea.getUIFormTextAreaInput().setValue(htmlContent);
-      session.setAttribute(UIWikiRichTextArea.SESSION_KEY, htmlContent);
-    } else {
-      session.setAttribute(UIWikiRichTextArea.SESSION_KEY, xhtmlContent);
+    UIFormTextAreaInput markupInput = pageEditForm.getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT);
+    String markupSyntax = pageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
+    WikiContext wikiContext= Utils.setUpWikiContext(wikiPortlet);
+    if (markup == null) {
+      markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
     }
-    
+    String xhtmlContent = renderingService.render(markup, markupSyntax, Syntax.ANNOTATED_XHTML_1_0.toIdString(), false);
+    richTextArea.getUIFormTextAreaInput().setValue(xhtmlContent);
+    session.setAttribute(UIWikiRichTextArea.SESSION_KEY, xhtmlContent);
+    session.setAttribute(UIWikiRichTextArea.WIKI_CONTEXT, wikiContext);
     SessionManager sessionManager = (SessionManager) RootContainer.getComponent(SessionManager.class);
     sessionManager.addSessionContext(session.getId(), Utils.createWikiContext(wikiPortlet));
   }
@@ -437,8 +436,7 @@ public class Utils {
       String content= renderingService.render(macroName,
                                      wikiSyntax,
                                      Syntax.XHTML_1_0.toIdString(),
-                                     false);
-      removeWikiContext();
+                                     false);      
       return content;
     } catch (Exception e) {
       return "";

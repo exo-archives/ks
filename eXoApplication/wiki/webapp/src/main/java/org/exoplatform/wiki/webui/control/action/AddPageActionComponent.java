@@ -127,7 +127,7 @@ public class AddPageActionComponent extends AbstractEventActionComponent {
 
     UIWikiRichTextArea wikiRichTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);
     if (wikiRichTextArea.isRendered()) {
-      Utils.feedDataForWYSIWYGEditor(pageEditForm, null);
+      Utils.feedDataForWYSIWYGEditor(pageEditForm,null);
     }
 
     wikiPortlet.changeMode(WikiMode.ADDPAGE);

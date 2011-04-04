@@ -80,8 +80,7 @@ public class WikiRemoteServiceServlet extends RemoteServiceServlet {
         ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
       }
       RemoteService service = (RemoteService) renderingService.getComponent(req.getMethod().getDeclaringClass());
-      result = RPC.invokeAndEncodeResponse(service, req.getMethod(), req.getParameters(), req.getSerializationPolicy());
-      ec.removeContext();
+      result = RPC.invokeAndEncodeResponse(service, req.getMethod(), req.getParameters(), req.getSerializationPolicy());      
     } catch (IncompatibleRemoteServiceException ex) {
       log("IncompatibleRemoteServiceException in the processCall(String) method.", ex);
       result = RPC.encodeResponseForFailure(null, ex);

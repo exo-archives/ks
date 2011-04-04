@@ -45,6 +45,8 @@ public class UIWikiRichTextArea extends UIContainer {
   
   public static final String SESSION_KEY = "WIKI_RICH_TEXT_AREA_CONTENT";
   
+  public static final String WIKI_CONTEXT = "WIKI_CONTEXT";
+  
   public UIWikiRichTextArea(){
     UIFormTextAreaInput richTextAreaInput = new UIFormTextAreaInput(RICHTEXT_AREA_INPUT, RICHTEXT_AREA_INPUT, "");
     addChild(richTextAreaInput);
@@ -68,9 +70,11 @@ public class UIWikiRichTextArea extends UIContainer {
       } else {
         sb.append(UIWikiPageEditForm.UNTITLED);
       }
-      sb.append("/content");
-      sb.append("?portalURI=").append(Util.getPortalRequestContext().getPortalURI());
-      sb.append("&sessionKey=").append(SESSION_KEY);
+      sb.append("/content")
+        .append("?portalURI=")
+        .append(Util.getPortalRequestContext().getPortalURI())
+        .append("&sessionKey=").append(SESSION_KEY)
+        .append("&wikiContext=").append(WIKI_CONTEXT);
       
       return sb.toString();
       

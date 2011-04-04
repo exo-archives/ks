@@ -369,6 +369,7 @@
 
 .UIWikiPortlet .UIWikiMiddleArea .UIWikiPageContainer{
   margin:0;
+  overflow: hidden;
 }
 
 .UIWikiPortlet .UIWikiMiddleArea .Related {

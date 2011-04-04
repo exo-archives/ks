@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -50,6 +51,7 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.io.FilenameUtils;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.commons.utils.MimeTypeResolver;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -134,48 +136,53 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
                                      @PathParam("pageId") String pageId,
                                      @QueryParam("portalURI") String portalURI,
                                      @QueryParam("sessionKey") String sessionKey,
+                                     @QueryParam("wikiContext") String wikiContextKey,
                                      @QueryParam("markup") boolean isMarkup,
                                      @FormParam("html") String data) {
     String pageContent = "";
     String syntaxId = "";
-    if (data == null) {
-      if (sessionKey != null && sessionKey.length() > 0) {
-        EnvironmentContext env = EnvironmentContext.getCurrent();
-        HttpServletRequest request = (HttpServletRequest) env.get(HttpServletRequest.class);
-        pageContent = (String) request.getSession().getAttribute(sessionKey);
-        if (pageContent != null) {
-          return Response.ok(pageContent, MediaType.TEXT_HTML).cacheControl(cc).build();
+    EnvironmentContext env = EnvironmentContext.getCurrent();
+    WikiContext wikiContext = new WikiContext();
+    HttpServletRequest request = (HttpServletRequest) env.get(HttpServletRequest.class);
+
+    RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer()
+                                                                              .getComponentInstanceOfType(RenderingService.class);
+
+    try {
+      Page page = wikiService.getPageById(wikiType, wikiOwner, pageId);
+      if (page != null) {
+        pageContent = page.getContent().getText();
+        syntaxId = page.getSyntax();
+        syntaxId = (syntaxId != null) ? syntaxId : Syntax.XWIKI_2_0.toIdString();
+        if (data == null) {
+          if (sessionKey != null && sessionKey.length() > 0) {
+            data = (String) request.getSession().getAttribute(sessionKey);
+          }
         }
-      }
-      try {
-        Page page = wikiService.getPageById(wikiType, wikiOwner, pageId);
-        if (page != null) {
-          pageContent = page.getContent().getText();
-          syntaxId = page.getSyntax();
-          syntaxId = (syntaxId != null) ? syntaxId : Syntax.XWIKI_2_0.toIdString();
+        if (wikiContextKey != null && wikiContextKey.length() > 0) {
+          wikiContext = (WikiContext) request.getSession().getAttribute(wikiContextKey);
         }
-        if (!isMarkup) {
-          Execution ec = ((RenderingServiceImpl) renderingService).getExecution();
+        Execution ec = ((RenderingServiceImpl) renderingService).getExecution();
+        if (ec.getContext() == null) {
           ec.setContext(new ExecutionContext());
-          WikiContext wikiContext = new WikiContext();
-          wikiContext.setPortalURL(portalURI);
-          wikiContext.setPortletURI("wiki");
-          wikiContext.setType(wikiType);
-          wikiContext.setOwner(wikiOwner);
-          wikiContext.setPageId(pageId);
-          ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
-          pageContent = renderingService.render(pageContent,
-                                                syntaxId,
-                                                Syntax.ANNOTATED_XHTML_1_0.toIdString(),
-                                                false);
-          ec.removeContext();
         }
-      } catch (Exception e) {
-        log.error(e.getMessage(), e);
-        return Response.serverError().entity(e.getMessage()).cacheControl(cc).build();
+        ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
+        ServletContext wikiServletContext = PortalContainer.getInstance()
+                                                           .getPortalContext()
+                                                           .getContext("/wiki");
+        InputStream is = wikiServletContext.getResourceAsStream("/templates/wiki/webui/xwiki/wysiwyginput.html");
+        byte[] b = new byte[is.available()];
+        is.read(b);
+        data = renderingService.render(data, Syntax.XHTML_1_0.toIdString(), syntaxId, false);
+        data = renderingService.render(data,
+                                       syntaxId,
+                                       Syntax.ANNOTATED_XHTML_1_0.toIdString(),
+                                       false);
+        pageContent = new String(b).replace("$content", data);
       }
-    } else {
-      pageContent = data;
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      return Response.serverError().entity(e.getMessage()).cacheControl(cc).build();
     }
     return Response.ok(pageContent, MediaType.TEXT_HTML).cacheControl(cc).build();
   }
