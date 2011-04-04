@@ -53,7 +53,6 @@
 	border-bottom-color: #3C78B5;
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
-	font-size: 12px;
 	padding: 5px 15px 2px 0;
 	width: 100%;
 	background: none; 
@@ -65,12 +64,10 @@
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .label {
 	color: #666666;
-	font-size: 12px;
 	padding: 5px;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .content {
 	color: #666666;
-	font-size: 12px;
 	border-left: 15px;
 }

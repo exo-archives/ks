@@ -1,3 +1,4 @@
+@import url('UIWikiPageContent/Stylesheet.css') ;
 @import url('UIAdvancePageIterator/Stylesheet.css') ;
 @import url('UIWikiBreadCrumb/Stylesheet.css') ;
 @import url('UIWikiSearchBox/Stylesheet.css') ;
@@ -34,39 +35,6 @@
 	height:0;
 }
 
-.UIWikiPortlet h1, .UIWikiPortlet h2, .UIWikiPortlet h3, .UIWikiPortlet h4, .UIWikiPortlet h5, .UIWikiPortlet h6 {
-  font-weight: bold;
-	color: #333333;
-}
-
-.UIWikiPortlet h1, .UIWikiPortlet h2, .UIWikiPortlet h3, .UIWikiPortlet h4 {
-	border-bottom: 1px solid #CCCCCC;
-}
-
-.UIWikiPortlet h1 {
-	font-size:24px;
-}
-
-.UIWikiPortlet h2 {
-	font-size:18px;
-}
-
-.UIWikiPortlet h3 {
-	font-size:14px;
-}
-
-.UIWikiPortlet h4 {
-	font-size:12px;
-}
-
-.UIWikiPortlet h5 {
-	font-size:11px;
-}
-
-.UIWikiPortlet h6 {
-	font-size:10px;
-}
-
 .UIWikiPortlet dt {
   font-weight: bold;
 }
@@ -87,32 +55,6 @@
   quotes: none;
 }
 
-.UIWikiPortlet ol {
-	list-style-type:decimal outside none;
-}
-
-.UIWikiPortlet ul {
-	list-style-type: disc;
-}
-
-.UIWikiPortlet ul li ul {
-	list-style-type: circle;
-}
-
-.UIWikiPortlet ul li ul li ul{
-	list-style-type: square;
-}
-
-.UIWikiPortlet ul li ul li ul li ul {
-	list-style-type: none;
-	background: url("/wiki/skin/DefaultSkin/webui/background/EmptySquare.png") no-repeat 27px 6px;
-}
-
-.UIWikiPortlet ul li ul li ul li ul li ul {
-	list-style-type: none;
-	background: url("/wiki/skin/DefaultSkin/webui/background/AddIcon.png") no-repeat 27px 6px;
-}
-
 .UIWikiPortlet a {
 	color: #165FB3;
 }
@@ -124,10 +66,6 @@
 .UIWikiPortlet a:hover {
   cursor:pointer;
 	text-decoration: underline
-}
-
-.UIWikiPortlet p, .UIWikiPortlet dl, .UIWikiPortlet hr, .UIWikiPortlet h1, .UIWikiPortlet h2, .UIWikiPortlet h3, .UIWikiPortlet h4, .UIWikiPortlet h5, .UIWikiPortlet h6, .UIWikiPortlet ol, .UIWikiPortlet ul, .UIWikiPortlet pre, .UIWikiPortlet table, .UIWikiPortlet address, .UIWikiPortlet fieldset {
-	margin-bottom:20px;
 }
 
 .UIWikiPortlet .FL {
@@ -181,10 +119,6 @@
 }
 
 /*===========================*/
-
-.wikicreatelink a {
-  color: red;
-}
 
 .notemessage, .tipmessage, .errormessage, .warningmessage, .infomessage, .plainmessage {
   background:#F5F5F5 none no-repeat scroll 6px 8px;
@@ -255,10 +189,10 @@
 
 .code {
   background-color:#F1F7FF;
-  border:1px dotted #555555;
+  border:1px solid #DDDDDD;
   margin:1em 0;
   overflow:auto;
-  padding:0 1px;
+  padding:10px;
 }
 
 .code pre {
@@ -271,12 +205,16 @@
 	color: #333333;
 	background-color: #FFFFFF;
 	font-family: Tahoma,Verdana,Arial,Helvetica,sans-serif;
-	font-size: 11px;
+	font-size: 10pt;
+}
+
+.UIWikiPortlet .UIForm .HorizontalLayout input, .UIWikiPortlet .UIUserSelector .UIAddressSearchForm input, .UIWikiPortlet .UIUserSelector .UIAddressSearchForm select {
+  font-size: 10pt;
 }
 
 .UIWikiPortlet div, .UIWikiPortlet table, .UIWikiPortlet tr, .UIWikiPortlet td, .UIWikiPortlet img, .UIWikiPortlet form {
   font-family: Tahoma,Verdana,Arial,Helvetica,sans-serif;
-  font-size: 11px;
+  font-size: 10pt;
 }
 
 .UIWikiPortlet .ActionIcon {
@@ -329,7 +267,7 @@
 	float:left;
 	font-size:24px;
 	font-weight:bold;
-	color: #555555;
+	color: #333;
 	width: 50%;
 	padding: 2px 0px;
 }
@@ -380,12 +318,10 @@
 .UIWikiPortlet .UIWikiMiddleArea .Related .RelatedHeader {
 	background: none repeat scroll 0 0 #165FB3;
 	width: 100%;
-	height: 30px;
+	line-height: 25px;
 }
 
 .UIWikiPortlet .UIWikiMiddleArea .Related .RelatedHeader p {
-	font-family: Helvetica,Arial,sans-serif;
-	font-size: 15px;
 	color: #ffffff;
 	text-align: center;
 	margin-left: auto;
@@ -415,7 +351,6 @@
 	width: 50%;
 	border: 1px solid #dddddd;
 	background-color: #ffffff;
-	font-size: 14px;
 	color: #636363;
 	padding-left: 8px;
 }
@@ -460,7 +395,7 @@
 	width: 96%;
 	*width: 95%;
 	overflow: auto;
-	font-size: 12px;
+	font-size: 10pt;
 	margin-bottom: 10px;
 }
 
@@ -501,13 +436,10 @@
 }
 
 .UIWikiPageContentArea .DecorationVersion .Label{
-	font-size: 12px;
-	font-weight: bold;
-	font-family: arial;
+  font-weight: bold;
 }
 
 .UIWikiPageContentArea .DecorationVersion .Title{
-	font-size: 12px;
 	font-weight: bold;
 	font-family: arial;
 	color: #015e9c;
@@ -731,7 +663,6 @@
 
 .UIWikiSidePanelArea .BarTit {
 	background: #165fb3;
-	font-size: 12px;
 	font-weight: bold;
 	color: #ffffff;
 	line-height: 23px;
@@ -774,19 +705,19 @@
 	color: #363636;
 	margin-bottom: 15px;
 	padding: 2px 0 2px 8px;
+	font-size: 10pt;
 }
 
 .UIWikiAdvanceSearchForm .SearchInfo label {
 	color: #555555;
 	font-weight: bold;
-	font-size: 12px;
 	padding-right: 10px;
 }
 
 .UIWikiAdvanceSearchForm .SearchInfo select {
 	border: 1px solid #ebebeb;
 	color: #165fb3;
-	font-size: 11px;
+	font-size: 10pt;
 	height: 20px;
 	width: 125px;
 }
@@ -796,13 +727,12 @@
 	float: left;
 	width: 65px;
 	height: 21px;
-	padding: 3px 0 0 12px;
+	padding: 2px 0 0 12px;
 	cursor: pointer;
 }
 
 .UIWikiAdvanceSearchForm .SearchBtn a {
 	color: #ffffff;
-	font-size: 12px;
 	font-weight: bold;
 }
 
@@ -1099,7 +1029,6 @@
 
 .UIWikiPageInfoArea .TxtFeed {
 	text-align: right;
-	font-size: 10px;
 }
 
 .UIWikiPageInfoArea .TxtFeed .Link {
@@ -1161,7 +1090,7 @@
 
 .UIWikiAttachmentArea .UIFormGrid td {
 	text-align: left;
-	padding: 5px 8px 0px 12px;
+	padding: 5px 8px 2px 12px;
 	border-right: 1px solid #FFFFFF;
 }
 
@@ -1180,7 +1109,6 @@
 .UIWikiAttachmentArea .AttachmentTit {
 	background: #165fb3;
 	color: #ffffff;
-	font-size: 11px;
 	font-weight: bold;
 	padding: 3px 0 3px 10px;
 }
@@ -1385,7 +1313,6 @@
 
 .UIWikiPageVersionsCompare .ChangedForm .Label{
 	line-height: 30px;
-	font-size: 12px;
 }
 
 .diff  {

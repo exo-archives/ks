@@ -5,8 +5,7 @@
 
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .Icon {
 	float:right;
-	height: 12px;
-	padding: 6px 8px 6px 25px;
+	padding: 4px 8px 6px 25px;
 	margin: 0px;
 	text-transform:capitalize;
 	color: black;
@@ -57,6 +56,7 @@
 
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .HoverMenu .Icon {
 	float: none;
+	height:14px;
 	display:block;
 	padding: 6px 8px 12px 25px;
 }
@@ -81,7 +81,6 @@
 
 .UIWikiPageEditForm .UIPageToolBar .Icon {
   float: right;
-  height: 14px;
   margin: 0;
   padding: 6px 8px 6px 25px;
   text-transform: capitalize;
@@ -117,12 +116,12 @@
 
 .UIWikiPageEditForm .UIPageToolBar .SavePage {
   background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
-    -144px;
+    -142px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .SaveTemplate {
   background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
-    -144px;
+    -142px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .MinorEdit {

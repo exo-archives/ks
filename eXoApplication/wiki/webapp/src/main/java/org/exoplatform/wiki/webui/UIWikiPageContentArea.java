@@ -31,6 +31,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
+import org.xwiki.rendering.converter.ConversionException;
 import org.xwiki.rendering.syntax.Syntax;
 
 /**
@@ -77,7 +78,7 @@ public class UIWikiPageContentArea extends UIWikiContainer {
     
     //Setup wiki context
     Utils.setUpWikiContext(this.getAncestorOfType(UIWikiPortlet.class));
-    
+    try{
     // Render current content
     if (currentMode.equals(WikiMode.VIEW)) {
       this.htmlOutput = renderingService.render(wikipage.getContent().getText(), wikipage.getSyntax(), Syntax.XHTML_1_0.toIdString(), wikipage.hasPermission(PermissionType.EDITPAGE));
@@ -93,6 +94,9 @@ public class UIWikiPageContentArea extends UIWikiContainer {
       String pageContent = content.getText();
       String pageSyntax = wikipage.getSyntax();
       this.htmlOutput = renderingService.render(pageContent, pageSyntax, Syntax.XHTML_1_0.toIdString(), false);
+    }
+    }catch(ConversionException e){
+      this.htmlOutput = "Bad syntax in content! Cannot generate HTML content!";
     }
     Utils.removeWikiContext();
     
