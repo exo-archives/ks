@@ -104,6 +104,7 @@ import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
@@ -2081,53 +2082,60 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return topicNew;
   }
 
+  private Topic getTopicUpdate(Node topicNode, Topic topic, boolean isSummary) throws Exception {
+    PropertyReader reader = new PropertyReader(topicNode);
+    if (isSummary) {
+      topic.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
+      topic.setLastPostBy(reader.string(EXO_LAST_POST_BY));
+      topic.setOwner(reader.string(EXO_OWNER));
+      topic.setTopicName(reader.string(EXO_NAME));
+      topic.setTopicType(reader.string(EXO_TOPIC_TYPE, " "));
+      topic.setDescription(reader.string(EXO_DESCRIPTION));
+      topic.setPostCount(reader.l(EXO_POST_COUNT));
+      topic.setViewCount(reader.l(EXO_VIEW_COUNT));
+      topic.setNumberAttachment(reader.l(EXO_NUMBER_ATTACHMENTS));
+      
+      if (topicNode.getParent().getProperty(EXO_IS_LOCK).getBoolean())
+        topic.setIsLock(true);
+      else
+        topic.setIsLock(topicNode.getProperty(EXO_IS_LOCK).getBoolean());
+      
+      topic.setIsSticky(reader.bool(EXO_IS_STICKY));
+      topic.setIsWaiting(reader.bool(EXO_IS_WAITING));
+
+      topic.setIsActiveByForum(reader.bool(EXO_IS_ACTIVE_BY_FORUM));
+      topic.setUserVoteRating(reader.strings(EXO_USER_VOTE_RATING));
+      topic.setVoteRating(reader.d(EXO_VOTE_RATING));
+    }
+    topic.setCreatedDate(reader.date(EXO_CREATED_DATE));
+    topic.setModifiedBy(reader.string(EXO_MODIFIED_BY));
+    topic.setModifiedDate(reader.date(EXO_MODIFIED_DATE));
+    topic.setIsModeratePost(reader.bool(EXO_IS_MODERATE_POST));
+    topic.setIsNotifyWhenAddPost(reader.string(EXO_IS_NOTIFY_WHEN_ADD_POST, null));
+    topic.setLink(reader.string(EXO_LINK));
+    topic.setTagId(reader.strings(EXO_TAG_ID));
+    topic.setCanView(reader.strings(EXO_CAN_VIEW, new String[] {}));
+    topic.setCanPost(reader.strings(EXO_CAN_POST, new String[] {}));
+    if (topicNode.isNodeType(EXO_FORUM_WATCHING))
+      topic.setEmailNotification(reader.strings(EXO_EMAIL_WATCHING, new String[] {}));
+    String idFirstPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST);
+    try {
+      Node FirstPostNode = topicNode.getNode(idFirstPost);
+      if (reader.l(EXO_NUMBER_ATTACHMENTS) > 0) {
+        topic.setAttachments(getAttachmentsByNode(FirstPostNode));
+      }
+    } catch (Exception e) {
+      log.debug("Failed to set attachments in topic.", e);
+    }
+    return topic;
+  }
+  
   public Topic getTopicUpdate(Topic topic, boolean isSummary) throws Exception {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       Node forumHomeNode = getForumHomeNode(sProvider);
       Node topicNode = (Node) forumHomeNode.getSession().getItem(topic.getPath());
-      PropertyReader reader = new PropertyReader(topicNode);
-
-      if (isSummary) {
-        topic.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
-        topic.setLastPostBy(reader.string(EXO_LAST_POST_BY));
-        topic.setOwner(reader.string(EXO_OWNER));
-        topic.setTopicName(reader.string(EXO_NAME));
-        topic.setTopicType(reader.string(EXO_TOPIC_TYPE, " "));
-        topic.setDescription(reader.string(EXO_DESCRIPTION));
-        topic.setPostCount(reader.l(EXO_POST_COUNT));
-        topic.setViewCount(reader.l(EXO_VIEW_COUNT));
-        topic.setNumberAttachment(reader.l(EXO_NUMBER_ATTACHMENTS));
-        if (topicNode.getParent().getProperty(EXO_IS_LOCK).getBoolean())
-          topic.setIsLock(true);
-        else
-          topic.setIsLock(topicNode.getProperty(EXO_IS_LOCK).getBoolean());
-        topic.setIsSticky(reader.bool(EXO_IS_STICKY));
-        topic.setIsWaiting(reader.bool(EXO_IS_WAITING));
-
-        topic.setIsActiveByForum(reader.bool(EXO_IS_ACTIVE_BY_FORUM));
-        topic.setUserVoteRating(reader.strings(EXO_USER_VOTE_RATING));
-        topic.setVoteRating(reader.d(EXO_VOTE_RATING));
-      }
-      topic.setCreatedDate(reader.date(EXO_CREATED_DATE));
-      topic.setModifiedBy(reader.string(EXO_MODIFIED_BY));
-      topic.setModifiedDate(reader.date(EXO_MODIFIED_DATE));
-      topic.setIsModeratePost(reader.bool(EXO_IS_MODERATE_POST));
-      topic.setIsNotifyWhenAddPost(reader.string(EXO_IS_NOTIFY_WHEN_ADD_POST, null));
-      topic.setLink(reader.string(EXO_LINK));
-      topic.setTagId(reader.strings(EXO_TAG_ID));
-      topic.setCanView(reader.strings(EXO_CAN_VIEW, new String[] {}));
-      topic.setCanPost(reader.strings(EXO_CAN_POST, new String[] {}));
-      topic.setEmailNotification(reader.strings(EXO_EMAIL_WATCHING, new String[] {}));
-      String idFirstPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST);
-      try {
-        Node FirstPostNode = topicNode.getNode(idFirstPost);
-        if (reader.l(EXO_NUMBER_ATTACHMENTS) > 0) {
-          topic.setAttachments(getAttachmentsByNode(FirstPostNode));
-        }
-      } catch (Exception e) {
-        log.debug("Failed to set attachments in topic.", e);
-      }
+      return getTopicUpdate(topicNode, topic, isSummary);
     } catch (Exception e) {
       log.error("Failed to get topic", e);
     } finally {
@@ -2139,59 +2147,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   public Topic getTopicNode(Node topicNode) throws Exception {
     if (topicNode == null)
       return null;
-    Topic topicNew = new Topic();
-    PropertyReader reader = new PropertyReader(topicNode);
-    topicNew.setId(topicNode.getName());
-
-    topicNew.setPath(topicNode.getPath());
-    topicNew.setOwner(reader.string(EXO_OWNER));
-    topicNew.setTopicName(reader.string(EXO_NAME));
-    topicNew.setCreatedDate(reader.date(EXO_CREATED_DATE));
-    topicNew.setModifiedBy(reader.string(EXO_MODIFIED_BY));
-    topicNew.setModifiedDate(reader.date(EXO_MODIFIED_DATE));
-    topicNew.setLastPostBy(reader.string(EXO_LAST_POST_BY));
-    topicNew.setLastPostDate(reader.date(EXO_LAST_POST_DATE));
-    topicNew.setDescription(reader.string(EXO_DESCRIPTION));
-    topicNew.setTopicType(reader.string(EXO_TOPIC_TYPE, " "));
-    topicNew.setPostCount(reader.l(EXO_POST_COUNT));
-    topicNew.setViewCount(reader.l(EXO_VIEW_COUNT));
-    topicNew.setNumberAttachment(reader.l(EXO_NUMBER_ATTACHMENTS));
-    topicNew.setIcon(reader.string(EXO_ICON));
-    topicNew.setLink(reader.string(EXO_LINK));
-    topicNew.setIsNotifyWhenAddPost(reader.string(EXO_IS_NOTIFY_WHEN_ADD_POST, null));
-    topicNew.setIsModeratePost(reader.bool(EXO_IS_MODERATE_POST));
-    topicNew.setIsClosed(reader.bool(EXO_IS_CLOSED));
-
-    if (topicNode.getParent().getProperty(EXO_IS_LOCK).getBoolean())
-      topicNew.setIsLock(true);
-    else
-      topicNew.setIsLock(topicNode.getProperty(EXO_IS_LOCK).getBoolean());
-
-    topicNew.setIsApproved(reader.bool(EXO_IS_APPROVED));
-    topicNew.setIsSticky(reader.bool(EXO_IS_STICKY));
-    topicNew.setIsWaiting(reader.bool(EXO_IS_WAITING));
-    topicNew.setIsActive(reader.bool(EXO_IS_ACTIVE));
-    topicNew.setIsActiveByForum(reader.bool(EXO_IS_ACTIVE_BY_FORUM));
-    topicNew.setCanView(reader.strings(EXO_CAN_VIEW, new String[] {}));
-    topicNew.setCanPost(reader.strings(EXO_CAN_POST, new String[] {}));
-
-    topicNew.setIsPoll(reader.bool(EXO_IS_POLL));
-    topicNew.setUserVoteRating(reader.strings(EXO_USER_VOTE_RATING));
-    topicNew.setTagId(reader.strings(EXO_TAG_ID));
-    topicNew.setVoteRating(reader.d(EXO_VOTE_RATING));
-    if (topicNode.isNodeType(EXO_FORUM_WATCHING) && topicNode.hasProperty(EXO_EMAIL_WATCHING))
-      topicNew.setEmailNotification(reader.strings(EXO_EMAIL_WATCHING));
-    String idFirstPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST);
-    try {
-      Node FirstPostNode = topicNode.getNode(idFirstPost);
-      if (reader.l(EXO_NUMBER_ATTACHMENTS) > 0) {
-        topicNew.setAttachments(getAttachmentsByNode(FirstPostNode));
-      }
-
-      return topicNew;
-    } catch (PathNotFoundException e) {
-      return topicNew;
-    }
+    Topic topic = getTopicNodeSummary(topicNode);
+    return getTopicUpdate(topicNode, topic, true);
   }
 
   public JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception {
@@ -5474,7 +5431,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
       // If user isn't admin , get all membership of user
       if (!isAdmin) {
-        listOfUser = ForumServiceUtils.getAllGroupAndMembershipOfUser(userId);
+        listOfUser = UserHelper.getAllGroupAndMembershipOfUser(userId);
 
         // Get all category & forum that user can view
         Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds, "@exo:userPrivate");
@@ -6160,7 +6117,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
 
   }
-
+  
   private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
     pendingMessagesQueue.add(new SendMessageInfo(addresses, message));
   }
@@ -7684,7 +7641,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       List<String> categoryCanView = new ArrayList<String>();
       List<String> forumCanView = new ArrayList<String>();
       if (!isAdmin) {
-        List<String> listOfUser = ForumServiceUtils.getAllGroupAndMembershipOfUser(userName);
+        List<String> listOfUser = UserHelper.getAllGroupAndMembershipOfUser(userName);
         Map<String, List<String>> mapPrivate = getCategoryViewer(categoryHome, listOfUser, new ArrayList<String>(), new ArrayList<String>(), "@" + EXO_USER_PRIVATE);
         List<String> categoryIds = mapPrivate.get(Utils.CATEGORY);// all categoryid public for private user
 

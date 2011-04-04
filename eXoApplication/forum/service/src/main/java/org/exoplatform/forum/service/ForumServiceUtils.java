@@ -260,24 +260,6 @@ public class ForumServiceUtils {
     return cacheService.getCacheInstance("org.exoplatform.forum.ForumPermissionsUsers");
   }
 
-  public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception {
-    List<String> listOfUser = new ArrayList<String>();
-    listOfUser.add(userId);
-    String groupId = "";
-    String type = "";
-    Membership membership = null;
-
-    OrganizationService organizationService_ = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
-    for (Iterator iterator = organizationService_.getMembershipHandler().findMembershipsByUser(userId).iterator(); iterator.hasNext();) {
-      membership = (Membership) iterator.next();
-      groupId = membership.getGroupId();
-      listOfUser.add(groupId);
-      type = membership.getMembershipType() + ":" + type;
-      listOfUser.add(type);
-    }
-    return listOfUser;
-  }
-
   public static void reparePermissions(Node node, String owner) throws Exception {
     ExtendedNode extNode = (ExtendedNode) node;
     if (extNode.canAddMixin("exo:privilegeable"))
