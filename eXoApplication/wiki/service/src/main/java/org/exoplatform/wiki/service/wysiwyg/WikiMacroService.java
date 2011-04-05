@@ -185,9 +185,14 @@ public class WikiMacroService implements MacroService {
       List<MacroDescriptor> descriptors = new ArrayList<MacroDescriptor>();
       for (String category : categoryManager.getMacroCategories(syntax)) {
         for (MacroId macroId : categoryManager.getMacroIds(category, syntax)) {
-          MacroDescriptor descriptor = getUntranslatedMacroDescriptor(macroId.getId(), syntaxId);
-          descriptor.setCategory(category);
-          descriptors.add(macroDescriptorTranslator.translate(descriptor));
+          if (!"table".equals(macroId.getId()) && !"thead".equals(macroId.getId())
+              && !"th".equals(macroId.getId()) && !"table-row".equals(macroId.getId())
+              && !"table-cell".equals(macroId.getId()) && !"section".equals(macroId.getId())
+              && !"column".equals(macroId.getId())) {
+            MacroDescriptor descriptor = getUntranslatedMacroDescriptor(macroId.getId(), syntaxId);
+            descriptor.setCategory(category);
+            descriptors.add(macroDescriptorTranslator.translate(descriptor));
+          }
         }
       }
 
