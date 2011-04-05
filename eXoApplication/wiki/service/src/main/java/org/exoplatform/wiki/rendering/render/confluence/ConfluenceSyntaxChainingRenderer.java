@@ -351,7 +351,9 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
     // parser.
 
     if (getBlockState().isInLine()) {
-      if (getConfluenceSyntaxListenerChain().getConsecutiveNewLineStateChainingListener()
+      if (getBlockState().isInTableCell()) {
+        print("\\\\");
+      } else if (getConfluenceSyntaxListenerChain().getConsecutiveNewLineStateChainingListener()
                                             .getNewLineCount() > 1) {
         print("\\\\");
       } else if (getConfluenceSyntaxListenerChain().getLookaheadChainingListener().getNextEvent().eventType.isInlineEnd()) {
