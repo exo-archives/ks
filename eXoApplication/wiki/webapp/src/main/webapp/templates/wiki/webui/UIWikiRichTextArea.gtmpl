@@ -58,11 +58,14 @@
     var doc = iframe.contentWindow.document;
     doc.body.id = 'body';
     doc.body.className = 'UIWikiPortlet UIWikiPortletWysiwygCss';
-    var css = doc.createElement("link");
-    css.setAttribute("rel", "stylesheet");
-    css.setAttribute("type", "text/css");
-    css.setAttribute("href", "/wiki/skin/DefaultSkin/webui/Stylesheet.css");
-    doc.getElementsByTagName("head")[0].appendChild(css);
+    var links = doc.getElementsByTagName("link");    
+    if (links.length == 0) {
+      var css = doc.createElement("link");
+      css.setAttribute("rel", "stylesheet");
+      css.setAttribute("type", "text/css");
+      css.setAttribute("href", "/wiki/skin/DefaultSkin/webui/Stylesheet.css");
+      doc.getElementsByTagName("head")[0].appendChild(css);
+    }
   });
   
 </script>

@@ -90,7 +90,7 @@ table.xRichTextEditorTabPanel td {
 }
 
 .xSearchBox {
-  background-image: url(../images/search.gif);
+  background-image: url(images/search.gif);
   background-position: 2px center;
   background-repeat: no-repeat;
   border: 1px solid #666;
@@ -146,7 +146,7 @@ table.xRichTextEditorTabPanel td {
 /* XWIKI-2915: WYSIWYG editor crashes on key press in IE6 */
 html>body .xToolbar .gwt-PushButton-up-disabled,html>body .xToolbar .gwt-PushButton-down-disabled,html>body .xToolbar .gwt-ToggleButton-up-disabled,html>body .xToolbar .gwt-ToggleButton-down-disabled
   {
-  filter: alpha(opacity =               40);
+  filter: alpha(opacity =                 40);
   zoom: 1;
 }
 
@@ -486,7 +486,7 @@ table.gwt-TabBar {
 }
 
 .xMacroButton {
-  background-image: url(../images/macro.gif);
+  background-image: url(images/macro.gif);
   background-position: center center;
   background-repeat: no-repeat;
 }
@@ -515,16 +515,16 @@ table.gwt-TabBar {
 }
 
 .xAttachmentsSelector .xAttachPreview {
-  background-image: url(../images/attach.gif);
+  background-image: url(images/attach.gif);
 }
 
 .xPagesSelector .xPagePreview {
-  background-image: url(../images/page_white_text.gif);
+  background-image: url(images/page_white_text.gif);
 }
 
 .xAttachmentsSelector .xNewFilePreview,.xPagesSelector .xNewPagePreview
   {
-  background-image: url(../images/bullet_add.gif);
+  background-image: url(images/bullet_add.gif);
 }
 
 .xPagePreview .xPagePreviewTitle {
@@ -601,7 +601,7 @@ table.gwt-TabBar {
 }
 
 .xImagesSelector .xNewImagePreview .gwt-Label {
-  background-image: url(../images/bullet_add.gif);
+  background-image: url(images/bullet_add.gif);
   padding-left: 20px;
   padding-top: 1ex;
   padding-bottom: 1ex;
@@ -885,4 +885,8 @@ table.gwt-TabBar {
   padding: 2px;
   margin: 0px;
   border: 1px solid white;
+}
+
+.loading {
+  background: transparent url("images/spinner.gif") no-repeat center;
 }

@@ -19,7 +19,7 @@ html {
   overflow-y: scroll;
 }
 
-body.main { /*
+body.UIWikiPortletWysiwygCss { /*
     We force the background color to white because the Albatross skin uses a dark background color which makes the text
     difficult to read. The best solution would be to have a separate style sheet which affects only the page content
     and to import it without the rest of the style sheets.
@@ -42,7 +42,7 @@ body.main { /*
   width: auto;
 }
 
-* html body.main {
+* html body.UIWikiPortletWysiwygCss {
   height: 100%;
   width: 100%;
 }
@@ -51,7 +51,7 @@ body.main { /*
   Overwrite no matter what list-style-position to outside position to avoid the Firefox issues with editing lists
   with inside list style. 
 */
-.main ul,.main ol {
+.UIWikiPortletWysiwygCss ul,.UIWikiPortletWysiwygCss ol {
   list-style-position: outside !important;
 }
 
@@ -61,7 +61,7 @@ body.main { /*
   span when applying header style to the selection. In order to view headers as in view mode we have to block some of
   the CSS rules applied to the span and add then to the header. 
 */
-.main h1 span,.main h2 span,.main h3 span,.main h4 span {
+.UIWikiPortletWysiwygCss h1 span,.UIWikiPortletWysiwygCss h2 span,.UIWikiPortletWysiwygCss h3 span,.UIWikiPortletWysiwygCss h4 span {
   border-bottom: 0 none;
   margin: 0;
   /* IE behaves strangely when the span is displayed as block. */
@@ -73,18 +73,18 @@ body.main { /*
   position: static;
 }
 
-.main h1,.main h2,.main h3,.main h4 {
+.UIWikiPortletWysiwygCss h1,.UIWikiPortletWysiwygCss h2,.UIWikiPortletWysiwygCss h3,.UIWikiPortletWysiwygCss h4 {
   border-bottom: 1px solid #CCCCCC;
   margin: 20px 0;
 }
 
-.main h1 {
+.UIWikiPortletWysiwygCss h1 {
   margin: 25px 0 20px 0;
   /* Letter spacing affects the behavior of the Delete and Backspace keys in IE */
   letter-spacing: normal;
 }
 
-.main .macro {
+.UIWikiPortletWysiwygCss .macro {
   background-color: transparent;
   border: 1px dashed #CCCCCC;
   font-size: 100%;
@@ -98,14 +98,14 @@ body.main { /*
   white-space: nowrap;
 }
 
-.main .macro-inline {
+.UIWikiPortletWysiwygCss .macro-inline {
   display: inline;
   margin: 0px;
   /* Prevent horizontal resizing in IE */
   width: auto !important;
 }
 
-.main .macro-block {
+.UIWikiPortletWysiwygCss .macro-block {
   display: block;
   margin-right: auto;
   /*
@@ -116,12 +116,12 @@ body.main { /*
   width: 99% !important;
 }
 
-.main .macro-selected {
+.UIWikiPortletWysiwygCss .macro-selected {
   background-color: #E8F2FE;
 }
 
-.main .macro .macro-placeholder {
-  background-image: url(../images/macro.gif);
+.UIWikiPortletWysiwygCss .macro .macro-placeholder {
+  background-image: url(images/macro.gif);
   background-position: left center;
   background-repeat: no-repeat;
   color: gray;
@@ -130,8 +130,8 @@ body.main { /*
   padding-left: 20px;
 }
 
-.main .xEmbeddedObject {
-  background-image: url(../images/embed.gif);
+.UIWikiPortletWysiwygCss .xEmbeddedObject {
+  background-image: url(images/embed.gif);
   background-position: center center;
   background-repeat: no-repeat;
   border: 1px solid #CCC;

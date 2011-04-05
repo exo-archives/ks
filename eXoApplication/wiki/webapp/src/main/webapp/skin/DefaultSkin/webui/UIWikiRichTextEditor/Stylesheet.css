@@ -1,5 +1,6 @@
-@import url('RichTextArea.css') ;
-@import url('Wysiwyg.css') ;
+@import url('RichTextArea.css');
+
+@import url('Wysiwyg.css');
 
 .gwt-RichTextArea {
   width: 100%;
@@ -33,23 +34,6 @@
   width: 328px;
 }
 
-.main th {
-  background: none repeat scroll 0 0 #F4F9FE;
-  border: 1px solid #E5EFF8;
-  color: #66A3D3;
-  font: bold 1.2em/ 1.4em Arial, Helvetica, sans-serif;
-  padding: 0.3em 0.5em;
-  text-align: center;
+.gwt-PopupPanel table {
+  width: auto;
 }
-
-.main td {
-  border: 1px solid #E5EFF8;
-  color: #4E6172;
-  padding: 3px 4px;
-  vertical-align: middle;
-}
-
-div nobr {
-  float: left;
-}
-  
