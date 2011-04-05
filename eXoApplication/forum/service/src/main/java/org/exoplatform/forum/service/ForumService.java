@@ -952,7 +952,14 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   List<Post> getNewPosts(int number) throws Exception;
-
+  
+  /**
+   * Select number of lasted public post.
+   * 
+   * @param userName the user name's user login.
+   * @param number number of post
+   * @throws Exception the exception
+   */
   List<Post> getNewPostsByUser(String userName, int number) throws Exception;
 
   /**

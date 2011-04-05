@@ -13,9 +13,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.container.ExoContainerContext;
@@ -23,8 +26,8 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
 import org.exoplatform.services.rest.resource.ResourceContainer;
-import org.exoplatform.services.security.ConversationState;
 
 @Path("ks/forum")
 public class ForumWebservice implements ResourceContainer {
@@ -39,30 +42,41 @@ public class ForumWebservice implements ResourceContainer {
 
   private static Log            log               = ExoLogger.getLogger(ForumWebservice.class);
 
+  private static final CacheControl         cc;
+  static {
+    // TODO: to find the reason why RESTXMPPService loaded before ResourceBinder
+    RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
+    cc = new CacheControl();
+    cc.setNoCache(true);
+    cc.setNoStore(true);
+  }
+  
   public ForumWebservice() {
   }
 
+  private MessageBean getNewPosts(String userName, int maxcount) throws Exception {
+    ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+    List<Post> list = forumService.getNewPostsByUser(userName, maxcount);
+    if (list != null) {
+      for (Post post : list) {
+        post.setLink(post.getLink() + "/" + post.getId());
+      }
+    }
+    MessageBean data = new MessageBean();
+    data.setData(list);
+    return data;
+  }
+  
   @GET
   @Path("getmessage/{maxcount}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getMessage(@PathParam("maxcount") int maxcount) throws Exception {
-    CacheControl cacheControl = new CacheControl();
-    cacheControl.setNoCache(true);
-    cacheControl.setNoStore(true);
+  public Response getMessage(@PathParam("maxcount") int maxcount, @Context SecurityContext sc) throws Exception {
     try {
-      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-      String userName = getUserId();// if userName == null, for get new public posts.
-      List<Post> list = forumService.getNewPostsByUser(userName, maxcount);
-      if (list != null) {
-        for (Post post : list) {
-          post.setLink(post.getLink() + "/" + post.getId());
-        }
-      }
-      MessageBean data = new MessageBean();
-      data.setData(list);
-      return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+      MessageBean data = getNewPosts(sc.getUserPrincipal().getName(), maxcount);
+      return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cc).build();
     } catch (Exception e) {
-      return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cacheControl).build();
+      log.debug("Failed to get new post by user.");
+      return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cc).build();
     }
   }
 
@@ -70,32 +84,14 @@ public class ForumWebservice implements ResourceContainer {
   @Path("getpublicmessage/{maxcount}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getPulicMessage(@PathParam("maxcount") int maxcount) throws Exception {
-    CacheControl cacheControl = new CacheControl();
-    cacheControl.setNoCache(true);
-    cacheControl.setNoStore(true);
-    try {
-      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-      List<Post> list = forumService.getNewPostsByUser(null, maxcount);
-      if (list != null) {
-        for (Post post : list) {
-          post.setLink(post.getLink() + "/" + post.getId());
-        }
-      }
-      MessageBean data = new MessageBean();
-      data.setData(list);
-      return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-    } catch (Exception e) {
-      return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cacheControl).build();
-    }
+    MessageBean data = getNewPosts(null, maxcount);
+    return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cc).build();
   }
 
   @GET
   @Path("filter/{strIP}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response filterIps(@PathParam("strIP") String str) throws Exception {
-    CacheControl cacheControl = new CacheControl();
-    cacheControl.setNoCache(true);
-    cacheControl.setNoStore(true);
     ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     if (str.equals("all")) {
       ipsToJson.clear();
@@ -112,16 +108,13 @@ public class ForumWebservice implements ResourceContainer {
       }
       strQuery = str;
     }
-    return Response.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
+    return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
   }
 
   @GET
   @Path("filterIpBanforum/{strForumId}/{strIP}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response filterIpBanForum(@PathParam("strForumId") String forumId, @PathParam("strIP") String str) throws Exception {
-    CacheControl cacheControl = new CacheControl();
-    cacheControl.setNoCache(true);
-    cacheControl.setNoStore(true);
     ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     if (str.equals("all")) {
       ipsToJson.clear();
@@ -138,16 +131,13 @@ public class ForumWebservice implements ResourceContainer {
       }
       strQuery = str;
     }
-    return Response.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
+    return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
   }
 
   @GET
   @Path("filterTagNameForum/{userAndTopicId}/{strTagName}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response filterTagNameForum(@PathParam("strTagName") String str, @PathParam("userAndTopicId") String userAndTopicId) throws Exception {
-    CacheControl cacheControl = new CacheControl();
-    cacheControl.setNoCache(true);
-    cacheControl.setNoStore(true);
     ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     if (str.equals(" ")) {
       ipsToJson.clear();
@@ -165,20 +155,17 @@ public class ForumWebservice implements ResourceContainer {
           ipsToJson.add(new BanIP(ip));
       }
     }
-    return Response.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
+    return Response.ok(new BeanToJsons<BanIP>(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cc).build();
   }
 
   @GET
   @Path("rss/{resourceid}")
   @Produces(MediaType.APPLICATION_XML)
   public Response viewrss(@PathParam("resourceid") String resourceid) throws Exception {
-    CacheControl cacheControl = new CacheControl();
-    cacheControl.setNoCache(true);
-    cacheControl.setNoStore(true);
     try {
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       InputStream is = forumService.createForumRss(resourceid, "http://www.exoplatform.com");
-      return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cacheControl).build();
+      return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cc).build();
     } catch (Exception e) {
       log.trace("\nView RSS fail: " + e.getMessage() + "\n" + e.getCause());
       return Response.status(Status.INTERNAL_SERVER_ERROR).build();
@@ -189,25 +176,14 @@ public class ForumWebservice implements ResourceContainer {
   @Path("rss/user/{resourceid}")
   @Produces(MediaType.TEXT_XML)
   public Response userrss(@PathParam("resourceid") String resourceid) throws Exception {
-    CacheControl cacheControl = new CacheControl();
-    cacheControl.setNoCache(true);
-    cacheControl.setNoStore(true);
     try {
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       InputStream is = forumService.createUserRss(resourceid, "http://www.exoplatform.com");
-      return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cacheControl).build();
+      return Response.ok(is, MediaType.APPLICATION_XML).cacheControl(cc).build();
     } catch (Exception e) {
       log.trace("\nGet UserRSS fail: ", e);
       return Response.status(Status.INTERNAL_SERVER_ERROR).build();
     }
   }
 
-  private String getUserId() {
-    String username = "";
-    try {
-      username = ConversationState.getCurrent().getIdentity().getUserId();
-    } catch (Exception e) {
-    }
-    return username;
-  }
 }
