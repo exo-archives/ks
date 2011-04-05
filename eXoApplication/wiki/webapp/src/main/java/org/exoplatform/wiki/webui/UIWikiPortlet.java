@@ -47,6 +47,7 @@ import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
+import org.exoplatform.wiki.webui.control.AddExtensionContainer;
 import org.exoplatform.wiki.webui.control.UIPageToolBar;
 import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
 
@@ -153,7 +154,9 @@ public class UIWikiPortlet extends UIPortletApplication {
         uiExtensionContext.put(UIWikiPortlet.class.getName(), this);
         uiExtensionContext.put(WikiContext.PAGETITLE,
                                pageParams.getParameter(WikiContext.PAGETITLE));
-        if (manager.accept(UIPageToolBar.EXTENSION_TYPE, WikiContext.ADDPAGE, uiExtensionContext)) {
+        if (manager.accept(AddExtensionContainer.EXTENSION_TYPE,
+                           WikiContext.ADDPAGE,
+                           uiExtensionContext)) {
           AddPageActionComponent.processAddPageAction(uiExtensionContext);
         }
       }
