@@ -100,13 +100,17 @@ public class RenderingServiceImpl implements RenderingService, Startable {
         Map<String, String> spanParameters = new LinkedHashMap<String, String>();
         spanParameters.put("class", "EditSection");
         FormatBlock spanBlock = new FormatBlock(Collections.singletonList((Block) linkBlock), Format.NONE, spanParameters);
-        block.addChild(spanBlock);
         
         Map<String, String> params = new HashMap<String, String>();
+        params.put("class", "header-container");
+        Block headerContainer = new GroupBlock(params);
+        headerContainer.addChild(block);
+        headerContainer.addChild(spanBlock);
+        section.replaceChild(headerContainer, block);
+        
         params.put("class", "section-container");
         Block sectionContainer = new GroupBlock(params);
         sectionContainer.addChild(section);
-        
         parentBlock.replaceChild(sectionContainer, section);
       }
     }

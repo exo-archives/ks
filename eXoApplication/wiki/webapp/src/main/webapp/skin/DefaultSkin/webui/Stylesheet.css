@@ -408,20 +408,18 @@
 .UIWikiPageContentArea span.EditSection {
   display: none;
   float: right;
+  margin-top: -30px;
 }
 
 .UIWikiPageContentArea span.EditSection a {
-  background:url("/wiki/skin/DefaultSkin/webui/background/EditContentIcon.png") no-repeat scroll left top transparent;
-  line-height:24px;
-  margin:0 -40px 0 0;
-  display: inline-block;
-  visibility:visible;
+  background: url("/wiki/skin/DefaultSkin/webui/background/EditContentIcon.png") no-repeat scroll left top transparent;
+  line-height: 24px;
+  margin: 0px;
+  display: block;
+  visibility: visible;
   text-decoration: none;
-  font-size: 12px;
-}
-
-.UIWikiPageContentArea span.EditSection a span {
-  visibility: hidden;
+  width: 20px;
+  height: 20px;
 }
 
 .UIWikiPageContentArea .section-container {

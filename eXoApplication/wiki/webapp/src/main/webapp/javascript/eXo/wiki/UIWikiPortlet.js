@@ -247,12 +247,6 @@ UIWikiPortlet.prototype.highlightEditSection = function (header, highlight) {
   }
 };
 
-UIWikiPortlet.prototype.editSection = function(editLink) {
-  var linkLabel = eXo.core.DOMUtil.findDescendantsByTagName(editLink, 'span')[0];
-  eXo.wiki.UIWikiAjaxRequest.makeNewHash('#EditPage&' + linkLabel.innerHTML);
-};
-
-
 eXo.wiki.UIWikiPortlet = new UIWikiPortlet();
 
 /** ******************* Other functions ***************** */
