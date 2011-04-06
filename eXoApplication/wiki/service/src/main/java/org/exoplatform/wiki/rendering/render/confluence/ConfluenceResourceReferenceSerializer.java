@@ -41,7 +41,8 @@ public class ConfluenceResourceReferenceSerializer implements ResourceReferenceS
    */
   @Override
   public String serialize(ResourceReference reference) {
-    return COMPONENT_PREFIX + "/" + reference.getType().getScheme();
+    String ref = reference.getReference();
+    return ref != null ? ref.replace("|", "~|") : "";
   }
 
 }
