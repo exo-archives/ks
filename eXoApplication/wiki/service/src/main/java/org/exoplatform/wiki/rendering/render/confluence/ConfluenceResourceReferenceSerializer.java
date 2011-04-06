@@ -40,8 +40,8 @@ public class ConfluenceResourceReferenceSerializer implements ResourceReferenceS
    * @see org.xwiki.rendering.renderer.reference.ResourceReferenceTypeSerializer
    */
   @Override
-  public String serialize(ResourceReference reference) {       
-    return reference.getReference().replace("|", "~|");
+  public String serialize(ResourceReference reference) {
+    return COMPONENT_PREFIX + "/" + reference.getType().getScheme();
   }
 
 }
