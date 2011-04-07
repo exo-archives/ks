@@ -306,6 +306,7 @@
 .UIWikiPortlet td.Spliter {
 	background: #e1e1e1 ;
 	width: 1px;
+  min-width: 1px;
 	cursor: col-resize;
 	padding:0;
 }
