@@ -344,13 +344,10 @@
 
 .UIWikiPageEditForm .UIWikiTemplateDescriptionContainer input{
 	width: 50%;
-	background: #f8f8f8;
-	border: 1px solid #dcdcdc;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	color: #b7b7b7;
-	padding: 6px;
+	border: 1px solid #dddddd;
+	background-color: #ffffff;
+	color: #636363;
+	padding-left: 8px;
 }
 
 /* wiki homepage */
@@ -397,7 +394,7 @@
 }
 
 .UIWikiPageContentArea .DecorationVersion .Title {
-	color: #ff9403;
+	color: #4175B2;
 	font-weight: bold;
 	text-decoration: none;
 }
@@ -422,6 +419,10 @@
 	color: #464646;
 	font-size: 12px;
 	text-decoration: none;
+}
+
+.UIWikiAttachmentArea .UIFormGrid td a{
+	color: #4175b2;
 }
 
 .UIWikiPageContentArea .Breadcum .BCBT {
@@ -650,22 +651,12 @@
 	padding-bottom: 5px;
 }
 
-.UIWikiAdvanceSearchResult .ResultDetail {
-	padding:0px 0px 10px 0px;
-}
-
-.UIWikiAdvanceSearchResult .ResultDetail .LinkDetail {
-	color: #ff9403;
-	padding:2px 0px 0px 25px;
-	font-weight: bold;
-}
-
 .UIWikiAdvanceSearchResult .BlockResultFeed {
 	margin: 20px 0 10px;
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .TxtTitFeed {
-	color: #165fb3;
+	color: #ff9403;
 	font-weight: bold;
 	padding:2px 0 2px 20px;
 	height: 16px;
@@ -981,10 +972,6 @@
 	border-top: 1px solid #FFFFFF;
 }
 
-.UIWikiAttachmentArea .UIFormGrid td a{
-	color: #4175b2;
-}
-
 .UIWikiAttachmentArea .UIFormGrid .EvenRow {
 	background: #F2F2F2;
 }
@@ -1114,6 +1101,27 @@
 	margin: 0 0 20px;
 	padding: 0 0 0 30px;
 	line-height: 16px;
+}
+
+.UIWikiDeletePageConfirm .UIAction .LightBlueStyle .ButtonLeft {
+	background: none;
+	padding: 0;
+}
+
+.UIWikiDeletePageConfirm .UIAction .LightBlueStyle .ButtonRight {
+	background: none;
+	padding: 0;
+}
+
+.UIWikiDeletePageConfirm .UIAction .LightBlueStyle .ButtonMiddle {
+	background: url("/wiki/skin/DefaultSkin/webui/background/BtnSearch.gif") no-repeat center center;
+	width: 65px;
+	height: 21px;
+}
+
+.UIWikiDeletePageConfirm .UIAction a {
+	color: #ffffff;
+	font-weight: bold;
 }
 
 .UIWikiPortlet .UIWikiDeletePageConfirm td {
@@ -1316,7 +1324,7 @@
 	width: 98%;
 }
 
-.UIWikiPageEditForm .UIForm .UIWikiPageContentInputContainer textarea {
+.UIWikiPageEditForm .UIForm .UIWikiPageContentMarginRight textarea {
 	background: #f8f8f8;
 	border: 1px solid #dcdcdc;
 	border-radius: 5px;
@@ -1332,7 +1340,7 @@
 	font-size: 10pt;
 }
 
-.UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm, .UIWikiPageEditForm .UIWikiPageContentInputContainer, .UIWikiPageEditForm .SyntaxType, .UIWikiPageEditForm .CommentInput, .UIWikiPageEditForm .UIWikiTemplateDescriptionContainer {
+.UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm, .UIWikiPageEditForm .UIWikiPageContentInputContainer, .UIWikiPageEditForm .SyntaxType, .UIWikiPageEditForm .CommentInput {
 	margin-bottom: 15px;
 }
 
@@ -1342,10 +1350,6 @@
 	line-height:15px;
 	width:60px;
 	color: #636363;
-}
-
-.UIWikiPageEditForm .CommentInput .CommentTitle {
-	line-height: 28px;
 }
 
 .UIWikiPageEditForm .CommentInput input {
@@ -1458,6 +1462,7 @@
 	font-weight: bold;
 	border-bottom: 1px solid #e8e8e8;
 	line-height: 20px;
+	margin-top: 20px;
 }
 
 .UIWikiPagePreview .UIWikiPortlet a{
@@ -1509,7 +1514,7 @@
 
 .UIWikiPortlet .UIWikiTemplateForm .TemplateControl .SearchButton {
 	background: url(/wiki/skin/DefaultSkin/webui/background/BgButton.gif) repeat-x left top;
-	color: #464646;
+	color: #dbdfe6;
 	line-height: 15px;
 	border: 1px solid #acacac;
 	border-radius: 12px;
@@ -1517,6 +1522,11 @@
 	-webkit-border-radius: 12px;
 	padding: 3px 10px;
 	margin-left: 5px;
+}
+
+.UIWikiPortlet .UIWikiTemplateForm .TemplateControl .SearchButton:hover {
+	color: #555;
+	text-decoration: none;
 }
 
 .UIWikiPortlet .UIWikiTemplateForm .UIGrid .ActionContainer a {
@@ -1528,6 +1538,14 @@
 	text-decoration: underline;
 }
 
-.UIPopupWindow .UITreeExplorer .Hover {
-	background-color: #e1e1e1;
+.UIWikiPagePreview .UIWikiPortlet{
+	font-size: 9pt;
+}
+
+.UIWikiPagePreview .UIWikiPortlet ul{
+	margin: 18px 0px;
+}
+
+.UIWikiPageVersionsCompare .ChangedForm .Mar0{
+	margin: 0px;
 }
