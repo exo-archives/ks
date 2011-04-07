@@ -25,20 +25,40 @@ import org.exoplatform.wiki.commons.Utils;
     </div>
   <%uiform.end()%>
   <div class="SearchPopup">
-				<div class="MenuItem">	
-					<a class="ItemIcon DefaultPageIcon" title="" href="#">Forum</a>
-				</div>
+		<div class="SearchPopupTL">
+			<div class="SearchPopupTR">
+				<div class="SearchPopupTC"><span></span></div>
+	  	</div>
+		</div>
+		<div class="SearchPopupML">
+			<div class="SearchPopupMR">
+				<div class="SearchPopupMC">
+					<div class="SubBlock">
 
-				<div class="MenuItem">
-					<a class="ItemIcon DefaultPageIcon" title="" href="#">Thread</a>
-				</div>
+						<!--	<div class="MenuItem">	
+								<a class="ItemIcon MenuIcon" title="" href="#">Forum</a>
+							</div>
 
-				<div class="MenuItem">	
-					<a class="ItemIcon DefaultPageIcon" title="" href="#">Topic</a>
+							<div class="MenuItem">
+								<a class="ItemIcon MenuIcon" title="" href="#">Thread</a>
+							</div>
+
+							<div class="MenuItem">	
+								<a class="ItemIcon MenuIcon" title="" href="#">Topic</a>
+							</div>-->
+						
+					</div>
+					<!--<div class="MenuResult">	
+							Resul for "e"
+						</div>-->
 				</div>
-				<div class="MenuResult">	
-					Resul for "e"
-				</div>
-	
+			</div>
+		</div>	
+		<div class="SearchPopupBL">
+			<div class="SearchPopupBR">
+				<div class="SearchPopupBC"><span></span></div>
+		  	</div>
 	</div>
+	</div>
+ 
 </div>
