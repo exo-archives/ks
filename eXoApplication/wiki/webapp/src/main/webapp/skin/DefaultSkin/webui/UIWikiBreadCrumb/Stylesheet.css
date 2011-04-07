@@ -6,9 +6,8 @@
 
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea {
   margin: 0px;
-  padding: 0px 8px;
-  border: 1px solid #165fb3;
-  background: #165fb3;
+  padding: 5px 8px 0;
+  border: 1px solid #e1e1e1;
 }
 
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiBreadCrumb {
@@ -35,20 +34,19 @@
 }
 
 .UIWikiPortlet .UIWikiBreadCrumb .LeftBreadcumbsBar a.Selected {
-	color:white;
 	font-weight:normal;
 }
 
 .UIWikiPortlet .UIWikiBreadCrumb .LeftBreadcumbsBar a {
-	color:#d0dff0;
+	color:#707070;
 }
 
 .UIWikiPortlet .UIWikiBreadCrumb .LeftBreadcumbsBar .RightBlackGridArrowIcon {
-	float:left;
-	margin:2px 0 0;
-	background:url("background/BreadcumPopupBG.png") no-repeat 6px -58px;
-	height:20px;
-	width:16px;
+	float: left;
+	margin: 2px 0 0;
+	background: url("background/BreadcumPopupBG.png") no-repeat center center;
+	height: 22px;
+	width: 16px;
 }
 
 .UIWikiPortlet .BreadcumPopup{

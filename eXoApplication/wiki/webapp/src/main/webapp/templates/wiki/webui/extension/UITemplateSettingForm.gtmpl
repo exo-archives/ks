@@ -13,10 +13,7 @@
 
 <div class="UIForm UITemplateSettingForm">
 	<%uiform.begin();%>
-	  Templates
-	  <br/>
-	  <br/>
-	  <div class="TemplateControl">
+	  <div class="TemplateControl ClearFix">
 	    <div class="TemplateSearchBox" >	
   	    <% uiform.renderChild(uiform.TEMPLATE_SEARCHBOX);	%>
   	    <a class="AdvancedSearch" style="display:none"  onclick="<%=uiform.event(uiform.ACTION_SEARCH);%>"></a>
@@ -26,7 +23,6 @@
   		  <a onclick="$addLink" id="$actionId" style="display:none;">&nbsp;</a>
   		</div>
   	</div>
-  	<div class="ClearBoth"></div>
   	<div class="TemplateGrid">
   	  <% uiform.renderChild(uiform.	TEMPLATE_GRID);	%>
   	</div>				

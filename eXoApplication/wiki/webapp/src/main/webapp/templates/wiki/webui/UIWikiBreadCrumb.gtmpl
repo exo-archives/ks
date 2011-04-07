@@ -8,8 +8,8 @@
 %>
 <div class="UIWikiBreadCrumb UIBreadcumbs" id="$uicomponent.id">
   <div class="LeftBreadcumbsBar">
-    <div class="RightBreadcumbsBar">
-      <div class="BreadcumbsInfoBar">  
+    <div class="RightBreadcumbsBar ClearFix">
+      <div class="BreadcumbsInfoBar ClearFix">  
         <% if(breadCumbs!=null && breadCumbs.size() > 0) {
         	 	String note = "LeftBlock"; %>
         	 	<a class="$note" style="text-transform:capitalize;"><%= uicomponent.getWikiType(); %> : <%= uicomponent.getWikiName(); %> </a>
@@ -40,9 +40,7 @@
           			<div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
           			<span class="ActionLabel" >$label</span>
         			<% } %>
-        <div class="ClearLeft"><span></span></div>
       </div>
-      <div class="ClearLeft"></div>
     </div>
   </div>
 </div>

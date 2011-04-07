@@ -4,7 +4,7 @@
 
 .UITemplateSettingForm .TemplateControl {
   width: 90%;
-  margin: auto;
+  margin: 15px auto 0;
 }
 
 .UITemplateSettingForm .TemplateControl .TemplateSearchBox {
@@ -21,4 +21,9 @@
 
 .UITemplateSettingForm .TemplateActions {
   float: right;
+}
+
+.UITemplateSettingForm .TemplateActions .AddTemplate {
+	color: #ff9403;
+	font-weight: bold;
 }

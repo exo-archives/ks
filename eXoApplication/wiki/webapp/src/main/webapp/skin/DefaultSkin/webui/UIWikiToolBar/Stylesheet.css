@@ -4,28 +4,15 @@
   width: 100px;
 }
 
-.UIWikiPortlet .UIWikiToolBar .BrowseLink {
-	color:white;
-	background: url(../background/BrowseDownIcon.png) no-repeat right center;
-	padding-right: 12px;
-}
-
 .UIWikiPortlet .UIWikiToolBar .BrowseMenu {
-	width: 100px;
-	top: 20px;
-	right: -1px;  
+	top: 30px;
+	right: 0px;  
 }
 
 .UIWikiPortlet .UIWikiToolBar .Icon { 
-	line-height: 25px; 
-	padding-left:5px;
+	line-height: 30px; 
+	padding: 0px 25px 0px 8px;
 	margin: 0;
-}
-
-.UIWikiPortlet .UIWikiToolBar .HoverMenu {
-	border:none;
-	background: none;
-	width: auto;
 }
 
 .UIWikiPortlet .UIWikiToolBar a { 
@@ -36,53 +23,30 @@
 	text-decoration: none;
 }
 
-.UIWikiPortlet .UIWikiToolBar .BrowseMenu .Icon:hover {
-  text-decoration: none;
-  background: #1a7fdf;
-  color: white;				
+.UIWikiApplicationControlArea .UIWikiToolBar .BrowseActionComponent {
+  position:relative;
 }
 
-.UIWikiPortlet .UIWikiToolBar .BrowseMenuTL {
-	background: url(../background/MenuBrowseBG.png) no-repeat left top;
-	padding-left: 5px;
-}
-
-.UIWikiPortlet .UIWikiToolBar .BrowseMenuTR {
-	background: url(../background/MenuBrowseBG.png) no-repeat right -6px;
-	padding-right: 5px;
-}
-
-.UIWikiPortlet .UIWikiToolBar .BrowseMenuTC {
-	background: url(../background/MenuBrowseBG.png) repeat-x center -12px;
-	height: 5px;
-}
-
-.UIWikiPortlet .UIWikiToolBar .BrowseMenuML {
-	background: url(../background/MenuBrowseML.png) repeat-y left;
-	padding-left: 5px;
-}
-
-.UIWikiPortlet .UIWikiToolBar .BrowseMenuMR {
-	background: url(../background/MenuBrowseMR.png) repeat-y right;
-	padding-right: 5px;
-}
-
-.UIWikiPortlet .UIWikiToolBar .BrowseMenuMC {
-	background: white;
+.UIWikiPortlet .UIWikiApplicationControlArea .UIWikiToolBar .HoverMenu .Icon {
+	line-height: 14px;
+	display: block;
+	padding: 6px 15px 8px 15px;
+	border-bottom: 1px solid #d7d7d7;
+	color: #555;
+	background-color: #ececec;
+	font-size: 12px;
 	white-space: nowrap;
 }
 
-.UIWikiPortlet .UIWikiToolBar .BrowseMenuBL {
-	background: url(../background/MenuBrowseBG.png) no-repeat left -18px;
-	padding-left: 5px;
+.UIWikiPortlet .UIWikiApplicationControlArea .UIWikiToolBar .HoverMenu .Icon:hover {
+	background: #fff;
 }
 
-.UIWikiPortlet .UIWikiToolBar .BrowseMenuBR {
-	background: url(../background/MenuBrowseBG.png) no-repeat right -24px;
-	padding-right: 5px;
+.UIWikiApplicationControlArea .UIWikiToolBar .MoreLink {
+  background: url('../background/BrowseDownIcon.png') no-repeat 90% center;
+  cursor: pointer;
 }
 
-.UIWikiPortlet .UIWikiToolBar .BrowseMenuBC {
-	background: url(../background/MenuBrowseBG.png) repeat-x center -30px;
-	height: 5px;
+.UIWikiApplicationControlArea .UIWikiToolBar .MoreLink:hover {
+  background-color: #ececec;
 }
