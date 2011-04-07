@@ -207,12 +207,14 @@ eXoLastpostGadget.prototype.onLoadHander = function(){
 	eXoLastpostGadget.getData();
 }
 eXoLastpostGadget.prototype.ajaxAsyncGetRequest = function(url, callback) {
-	/*	
+	/* User when get this gadget by gedget service.
 	var params = {};  
-  params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
-  gadgets.io.makeRequest(url, callback, params);
-	return;
-*/
+	params[gadgets.io.RequestParameters.AUTHORIZATION] = gadgets.io.AuthorizationType.SIGNED;
+	params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+	params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
+  	gadgets.io.makeRequest(url, callback, params);
+  	return;
+	 */
 	var request =  parent.eXo.core.Browser.createHttpRequest() ;
 	request.open('GET', url, true) ;
 	request.setRequestHeader("Cache-Control", "max-age=86400") ;

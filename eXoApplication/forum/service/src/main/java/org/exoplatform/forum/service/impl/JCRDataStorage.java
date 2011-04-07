@@ -7636,7 +7636,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       NodeIterator iter = result.getNodes();
       int count = 0;
       /*
-       * cateids = list query cateids = listinput -> public for property (null for view) cateids = {cateid} for private --> can not view cateids = new array for view --> can not view
+       * cateids = list query 
+       * cateids = listinput -> public for property (null for view) 
+       * cateids = {cateid} for private --> can not view 
+       * cateids = new array for view --> can not view
        */
       List<String> categoryCanView = new ArrayList<String>();
       List<String> forumCanView = new ArrayList<String>();

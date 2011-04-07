@@ -78,10 +78,10 @@ public class Forum {
   public Forum() {
     notifyWhenAddTopic = new String[] {};
     notifyWhenAddPost = new String[] {};
-    viewer = new String[] {};
-    createTopicRole = new String[] {};
-    moderators = new String[] {};
-    poster = new String[] {};
+    viewer = new String[] {""};
+    createTopicRole = new String[] {""};
+    moderators = new String[] {""};
+    poster = new String[] {""};
     emailNotification = new String[] {};
     id = Utils.FORUM + IdGenerator.generate();
   }

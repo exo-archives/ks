@@ -5,6 +5,7 @@
 package org.exoplatform.forum.service.ws;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.RuntimeDelegate;
 
@@ -67,12 +69,38 @@ public class ForumWebservice implements ResourceContainer {
     return data;
   }
   
+  private String getUserId(SecurityContext sc, UriInfo uriInfo) {
+    try {
+      return sc.getUserPrincipal().getName();
+    } catch (NullPointerException e) {
+      return getViewerId(uriInfo);
+    } catch (Exception e) {
+      log.debug("Fialed to get user id", e);
+      return null;
+    }
+  }
+  
+  private String getViewerId(UriInfo uriInfo) {
+    URI uri = uriInfo.getRequestUri();
+    String requestString = uri.getQuery();
+    if (requestString == null) return null;
+    String[] queryParts = requestString.split("&");
+    for (String queryPart : queryParts) {
+      if (queryPart.startsWith("opensocial_viewer_id")) {
+        return queryPart.substring(queryPart.indexOf("=") + 1, queryPart.length());
+      }
+    }
+    return null;
+  }
+  
   @GET
   @Path("getmessage/{maxcount}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getMessage(@PathParam("maxcount") int maxcount, @Context SecurityContext sc) throws Exception {
+  public Response getMessage(@PathParam("maxcount") int maxcount, @Context SecurityContext sc,
+                                                                  @Context UriInfo uriInfo) throws Exception {
     try {
-      MessageBean data = getNewPosts(sc.getUserPrincipal().getName(), maxcount);
+      String userName = getUserId(sc, uriInfo);
+      MessageBean data = getNewPosts(userName, maxcount);
       return Response.ok(data, MediaType.APPLICATION_JSON).cacheControl(cc).build();
     } catch (Exception e) {
       log.debug("Failed to get new post by user.");
