@@ -78,6 +78,11 @@ public abstract class PageImpl extends NTFolder implements Page {
   
   private WikiService wService;
   
+  /**
+   * caching related pages for performance
+   */
+  private List<PageImpl> relatedPages = null;
+  
   private boolean isMinorEdit = false;
   
   public void setMOWService(MOWService mowService) {
@@ -471,7 +476,7 @@ public abstract class PageImpl extends NTFolder implements Page {
    * @throws NullPointerException if the param is null
    * @throws Exception when any error occurs.
    */
-  public String addRelatedPage(PageImpl page) throws Exception {
+  public synchronized String addRelatedPage(PageImpl page) throws Exception {
     Map<String, Value> referredUUIDs = getReferredUUIDs();
     Session jcrSession = getJCRSession();
     Node myJcrNode = (Node) jcrSession.getItem(getPath());
@@ -486,19 +491,23 @@ public abstract class PageImpl extends NTFolder implements Page {
     myJcrNode.setProperty(WikiNodeType.Definition.RELATION,
                           referredUUIDs.values().toArray(new Value[referredUUIDs.size()]));
     myJcrNode.save();
+    // cache a related page.
+    if (relatedPages != null) relatedPages.add(page);
     return referedUUID;
   }
   
   public List<PageImpl> getRelatedPages() throws Exception {
-    List<PageImpl> pages = new ArrayList<PageImpl>();
-    Iterator<Entry<String, Value>> refferedIter = getReferredUUIDs().entrySet().iterator();
-    ChromatticSession chSession = getChromatticSession();
-    while (refferedIter.hasNext()) {
-      Entry<String, Value> entry = refferedIter.next();
-      PageImpl page = chSession.findById(PageImpl.class, entry.getValue().getString());
-      pages.add(page);
+    if (relatedPages == null) {
+      relatedPages = new ArrayList<PageImpl>();
+      Iterator<Entry<String, Value>> refferedIter = getReferredUUIDs().entrySet().iterator();
+      ChromatticSession chSession = getChromatticSession();
+      while (refferedIter.hasNext()) {
+        Entry<String, Value> entry = refferedIter.next();
+        PageImpl page = chSession.findById(PageImpl.class, entry.getValue().getString());
+        relatedPages.add(page);
+      }
     }
-    return pages;
+    return new ArrayList<PageImpl>(relatedPages);
   }
   
   /**
@@ -508,7 +517,7 @@ public abstract class PageImpl extends NTFolder implements Page {
    *         null if removing failed.
    * @throws Exception when an error is thrown.
    */
-  public String removeRelatedPage(PageImpl page) throws Exception {
+  public synchronized String removeRelatedPage(PageImpl page) throws Exception {
     Map<String, Value> referedUUIDs = getReferredUUIDs();
     Session jcrSession = getJCRSession();
     Node referredJcrNode = (Node) jcrSession.getItem(page.getPath());
@@ -521,6 +530,8 @@ public abstract class PageImpl extends NTFolder implements Page {
     myJcrNode.setProperty(WikiNodeType.Definition.RELATION,
                           referedUUIDs.values().toArray(new Value[referedUUIDs.size()]));
     myJcrNode.save();
+    // remove page from cache
+    if (relatedPages != null) relatedPages.remove(page);
     return referredUUID;
   }
 
@@ -545,11 +556,13 @@ public abstract class PageImpl extends NTFolder implements Page {
     return referedUUIDs;
   }
   
-  public void removeAllRelatedPages() throws Exception {
+  public synchronized void removeAllRelatedPages() throws Exception {
     Session jcrSession = getJCRSession();
     Node myJcrNode = (Node) jcrSession.getItem(getPath());
     myJcrNode.setProperty(WikiNodeType.Definition.RELATION, (Value[]) null);
     myJcrNode.save();
+    // clear related pages in cache.
+    if (relatedPages != null) relatedPages.clear();
   }
   
 }

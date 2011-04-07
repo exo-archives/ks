@@ -1,8 +1,16 @@
+<%
+import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+PageImpl currentPage = (PageImpl) org.exoplatform.wiki.commons.Utils.getCurrentWikiPage();
+def relatedPages = currentPage.getRelatedPages();
+%>
+
 <div id="$uicomponent.id" class="Related">
-	 			<div class="RelatedHeader">
-	 				<p><%= _ctx.appRes("UIWikiMiddleArea.label.related-pages") %></p>
-	 			</div>
-	 			<div class="RelatedContent">
-	 				<%= org.exoplatform.wiki.commons.Utils.renderMacroToXHtml(uicomponent, "{{related}}", org.xwiki.rendering.syntax.Syntax.XWIKI_2_0.toIdString()); %>
-	 			</div>
+<% if (relatedPages.size() > 0) { %>
+  <div class="RelatedHeader">
+    <p><%= _ctx.appRes("UIWikiMiddleArea.label.related-pages") %></p>
+  </div>
+  <div class="RelatedContent">
+    <%= org.exoplatform.wiki.commons.Utils.renderMacroToXHtml(uicomponent, "{{related}}", org.xwiki.rendering.syntax.Syntax.XWIKI_2_0.toIdString()); %>
+  </div>
+<% } %>
 </div>
