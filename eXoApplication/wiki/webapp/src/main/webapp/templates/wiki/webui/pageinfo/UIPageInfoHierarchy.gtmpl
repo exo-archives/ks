@@ -10,13 +10,11 @@
 <div class="UIPageInfoItemTitle"><%= _ctx.appRes("UIWikiPageInfo.label.hierarchy")%></div>
   <% if (parentPage != null) { %>
   <span class="label"><%= _ctx.appRes("UIWikiPageInfo.label.parent-page")%></span>
-  <br>
   <div class="content">
     <div class="NodeLabel">
       <a href="$parentLink" title="$parentTitle" style="margin-left:15px;">$parentTitle</a>
     </div>
   </div>
-  <br>
   <% } %>
   <span class="label"><%= _ctx.appRes("UIWikiPageInfo.label.child-pages")%></span>
   <div class="content">

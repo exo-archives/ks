@@ -52,11 +52,6 @@
   font-weight: bold;
 }
 
-.UITreeExplorer .NodeLabel span {
-  font-style: italic;
-  color: #666;
-}
-
 .UITreeExplorer .ExpandIcon {
   background-position: 0 center;
   width: auto;

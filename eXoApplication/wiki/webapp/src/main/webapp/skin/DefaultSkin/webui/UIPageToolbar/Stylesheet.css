@@ -12,7 +12,7 @@
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .Icon:hover {
-	background-color: #fff;
+	background-color: #ececec;
 	text-decoration: none;
 }
 
@@ -93,7 +93,8 @@
 }
 
 .UIWikiPageEditForm .UIPageToolBar .Icon:hover {
-  background-color: #d0dff0;
+  background-color: #ececec;
+  border-radius: 3px 3px 3px 3px;
   -moz-border-radius: 3px 3px 3px 3px;
   -webkit-border-radius: 3px 3px 3px 3px;
   text-decoration: none;

@@ -13,7 +13,7 @@
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem {
 	border: 1px solid #d7d7d7;
-	margin: 2px 0px 8px 0px;
+	margin: 2px 0px 20px;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemTitle {
@@ -55,11 +55,11 @@
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .Name {
-	color: #ff9403;
+	color: #4175b2;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .Editor {
-	color: #ff9403;
+	color: #4175b2;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .Time {
@@ -90,7 +90,7 @@
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .content .NodeLabel a {
 	background: url(/wiki/skin/DefaultSkin/webui/background/ArrowInvertIcon.gif) no-repeat left center;
-	color: #ff9403;
+	color: #4175b2;
 	padding-left: 10px;
 	margin: 0px;
 	display: inline;

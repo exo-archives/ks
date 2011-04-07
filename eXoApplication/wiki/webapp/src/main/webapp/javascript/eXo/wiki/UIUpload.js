@@ -132,8 +132,8 @@ UIUpload.prototype.getStyleSheetContent = function(){
   styleText += ".UIUploadForm {position: relative; } ";
   styleText += ".FileHidden {position: relative; width: 250px; text-align: right; -moz-opacity:0 ; filter:alpha(opacity: 0); opacity: 0; z-index: 2; } ";
   styleText += ".StylingFileUpload {position: absolute; width: 250px; top: 0px; left: 0px; z-index: 1; } ";
-  styleText += ".FileName {width: 180px; padding: 1px 0 0; } ";
-  styleText += ".BrowseButton {float: right; width: 66px; text-align: center; color: #ffffff; font-family: Arial; font-size: 10pt; padding: 3px 0; margin-top:2px; background: url('/wiki/skin/DefaultSkin/webui/background/BtnSearch.gif') no-repeat left; }";
+  styleText += ".FileName {width: 160px; background: #F8F8F8; border: 1px solid #DCDCDC; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; color: #B7B7B7; padding: 3px 0 3px 6px; } ";
+  styleText += ".BrowseButton {float: right; width: 66px; text-align: center; font-size: 12px; color: #464646; background: url('/wiki/skin/DefaultSkin/webui/background/Button.gif') repeat-x  left top; border: 1px solid #ACACAC; border-radius: 12px 12px 12px 12px; padding: 4px 5px; }";
   styleText += ".ClearRight {clear: right; }";
   return styleText;
 }
