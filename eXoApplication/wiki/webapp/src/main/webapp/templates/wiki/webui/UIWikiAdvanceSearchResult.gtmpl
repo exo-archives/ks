@@ -82,18 +82,7 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.
 				String next = uicomponent.event("NextPage") ;
 			%>
 			<% uicomponent.renderChild(UIAdvancePageIterator.class) ; %>
-			<div class="ResultDetail">
-				<a href="#" class="DefaultPageIcon LinkDetail">Road map</a>
-				<p>this page used to <strong>describe</strong> the rosd map h1.Object h3.Main objectives Find a maximum of...</p>
-				<p style="margin: 0px;"><strong>portal space:</strong><span style="color: #c5c5c5"> classic</span></p>
-				<p style="margin-top: 0px;">created: mar 28, 2011 5:39 PM - last modified mar 28, 2011 6:39 PM</p> 
-			</div>
-			<div class="ResultDetail">
-				<a href="#" class="DefaultPageIcon LinkDetail">Road map</a>
-				<p>this page used to <strong>describe</strong> the rosd map h1.Object h3.Main objectives Find a maximum of...</p>
-				<p style="margin: 0px;"><strong>portal space:</strong><span style="color: #c5c5c5"> classic</span></p>
-				<p style="margin-top: 0px;">created: mar 28, 2011 5:39 PM - last modified mar 28, 2011 6:39 PM</p> 
-			</div>
+			
 	</div>	
 	
 	<%} else {

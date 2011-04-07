@@ -644,22 +644,12 @@
 	padding-bottom: 5px;
 }
 
-.UIWikiAdvanceSearchResult .ResultDetail {
-	padding:0px 0px 10px 0px;
-}
-
-.UIWikiAdvanceSearchResult .ResultDetail .LinkDetail {
-	color: #ff9403;
-	padding:2px 0px 0px 25px;
-	font-weight: bold;
-}
-
 .UIWikiAdvanceSearchResult .BlockResultFeed {
 	margin: 20px 0 10px;
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .TxtTitFeed {
-	color: #165fb3;
+	color: #ff9403;
 	font-weight: bold;
 	padding:2px 0 2px 20px;
 	height: 16px;
@@ -1469,6 +1459,7 @@
 	font-weight: bold;
 	border-bottom: 1px solid #e8e8e8;
 	line-height: 20px;
+	margin-top: 20px;
 }
 
 .UIWikiPagePreview .UIWikiPortlet a{
@@ -1542,4 +1533,16 @@
 
 .UIWikiPortlet .UIWikiTemplateForm .UIGrid .ActionContainer a:hover {
 	text-decoration: underline;
+}
+
+.UIWikiPagePreview .UIWikiPortlet{
+	font-size: 9pt;
+}
+
+.UIWikiPagePreview .UIWikiPortlet ul{
+	margin: 18px 0px;
+}
+
+.UIWikiPageVersionsCompare .ChangedForm .Mar0{
+	margin: 0px;
 }
