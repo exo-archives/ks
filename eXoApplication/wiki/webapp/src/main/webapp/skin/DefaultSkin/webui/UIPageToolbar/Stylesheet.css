@@ -5,25 +5,23 @@
 
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .Icon {
 	float:right;
-	padding: 4px 8px 6px 25px;
+	padding: 6px 8px 6px 25px;
 	margin: 0px;
 	text-transform:capitalize;
 	color: black;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .Icon:hover {
-	background-color: #d0dff0;
-	-moz-border-radius:3px 3px 3px 3px;
-	-webkit-border-radius: 3px;
+	background-color: #fff;
 	text-decoration: none;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .DeletePage {
-	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -304px;
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -302px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .EditPage {
-	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -261px;
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -260px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .AddPage {
@@ -55,20 +53,27 @@
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .HoverMenu .Icon {
+	background: none;
 	float: none;
-	height:14px;
-	display:block;
-	padding: 6px 8px 12px 25px;
+	height: 14px;
+	display: block;
+	padding: 6px 8px 8px 15px;
+	border-bottom: 1px solid #d7d7d7;
+	color: #555;
+	font-size: 12px;
+}
+
+.UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .HoverMenu .Icon:hover {
+	background: #fff;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MoreLink {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
-    -282px;
-  height: 14px;
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -281px;
+  cursor: pointer;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MoreLink:hover {
-  height: 14px;
+  background-color: #ececec;
 }
 
 /**************For edit form***********************/

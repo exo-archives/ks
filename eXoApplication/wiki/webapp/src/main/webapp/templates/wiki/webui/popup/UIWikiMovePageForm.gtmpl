@@ -22,7 +22,7 @@
  	  uiform.renderChild(uiform.LOCATION_CONTAINER);
  %> 
   <div class="ClearBoth"></div>
- <div class="UIAction"> 
+ <div class="UIAction ClearFix"> 
 	<table class="ActionContainer">
 		<tr>
 			<td>

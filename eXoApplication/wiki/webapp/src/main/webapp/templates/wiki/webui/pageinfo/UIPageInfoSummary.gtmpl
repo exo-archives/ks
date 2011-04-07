@@ -24,19 +24,20 @@
       <tbody>
         <tr class="OddClass">
           <td class="label" width="30%"><%= _ctx.appRes("UIWikiPageInfo.label.title")%></td>
-          <td colspan="2">$title</td>
+          <td>$title</td>
+		  <td class="Time"><span></span></td>
         </tr>
         
         <tr class="EvenClass">
           <td class="label" width="30%"><%= _ctx.appRes("UIWikiPageInfo.label.author")%></td>
-          <td width="30%">$author</td>
-          <td align="right">$createdDate</td>
+          <td class="Name">$author</td>
+          <td class="Time">$createdDate</td>
         </tr>
         
         <tr class="OddClass">
           <td class="label" width="30%"><%= _ctx.appRes("UIWikiPageInfo.label.last-changed-by")%></td>
-          <td width="30%">$editor</td>
-          <td align="right">$updateDate</td>
+          <td class="Name">$editor</td>
+          <td class="Time">$updateDate</td>
         </tr>
         
         <!-- tr class="EvenClass">

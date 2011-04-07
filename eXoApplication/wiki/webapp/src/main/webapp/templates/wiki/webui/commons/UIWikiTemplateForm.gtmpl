@@ -7,13 +7,11 @@
 
 <div class="UIForm UIWikiTemplateForm">
 	<%uiform.begin();%>
-	  Templates
-	  <br/>
-	  <br/>
-	  <div class="TemplateControl">
+	<div class="TemplateControl">
 	    <div class="TemplateSearchBox" >	
-  	    <% uiform.renderChild(uiform.TEMPLATE_SEARCHBOX);	%>
-  	    <a class="AdvancedSearch" style="display:none"  onclick="<%=uiform.event(uiform.ACTION_SEARCH);%>"></a>
+			<% uiform.renderChild(uiform.TEMPLATE_SEARCHBOX);	%>
+			<a class="SearchButton">Search</a>
+			<a class="AdvancedSearch" style="display:none"  onclick="<%=uiform.event(uiform.ACTION_SEARCH);%>"></a>
   		</div>
   	</div>
   	<div class="ClearBoth"></div>

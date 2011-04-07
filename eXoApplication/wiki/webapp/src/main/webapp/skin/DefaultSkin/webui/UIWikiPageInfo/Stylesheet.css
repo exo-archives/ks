@@ -12,23 +12,20 @@
 
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem {
-	border-width: 1px;
-	border-color: #3C78B5;
-	border-style: solid;
-	margin-top: 2px;
-	margin-bottom: 8px;
+	border: 1px solid #d7d7d7;
+	margin: 2px 0px 8px 0px;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemTitle {
-	padding: 5px;
+	padding: 8px 15px;
 	font-weight: bold;
-	color: black;
-	background-color: #F0F0F0;
-	margin: 0;
+	color: #515151;
+	background-color: #e6e6e6;
+	font-size: 12px;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody {
-	padding: 5px;
+	padding: 1px 0px 0px 1px;
 	margin: 0;
 }
 
@@ -41,33 +38,112 @@
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .EvenClass {
-	background-color: #F7F7F7;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody td {
+	background: #f7f7f7;
+	border-bottom: 1px solid #FFFFFF;
+    border-right: 1px solid #FFFFFF;
+    color: #545454;
+    line-height: 30px;
+	padding: 0px 15px;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .label {
+	background: #f4f4f4;
+	font-weight: bold;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .Name {
+	color: #ff9403;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .Editor {
+	color: #ff9403;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .Time {
+	background: #f9f9f9;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody a {
-    color:#165FB3;
+    color:#555555;
     height: 20px;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .tableview th {
-	border-bottom-color: #3C78B5;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	padding: 5px 15px 2px 0;
-	width: 100%;
-	background: none; 
+	background: #f4f4f4;
+	border: none;
+	border-bottom: 1px solid #FFFFFF;
+    border-right: 1px solid #FFFFFF;
+    color: #545454;
+    line-height: 30px;
+	padding: 0px 15px;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy {
-	
-}
-
-.UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .label {
-	color: #666666;
-	padding: 5px;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .content {
 	color: #666666;
-	border-left: 15px;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .content .NodeLabel a {
+	background: url(/wiki/skin/DefaultSkin/webui/background/ArrowInvertIcon.gif) no-repeat left center;
+	color: #ff9403;
+	padding-left: 10px;
+	margin: 0px;
+	display: inline;
+	cursor: pointer;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .content .NodeLabel a:hover {
+	text-decoration: underline;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .content .NodeGroup {
+	padding-left: 15px;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .content .NodeGroup .EmptyIcon {
+	background: none;
+	padding: 0px;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .content .NodeGroup .Page {
+	background: none;
+	padding: 0px;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .content .NodeGroup .NodeLabel {
+	margin: 0px;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .label {
+	color: #666666;
+	padding: 10px 15px;
+	display: block;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoRelatedPage .UIPageInfoItemBody td {
+	background: none;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoRelatedPage .UIPageInfoItemBody .ActionContainer a:hover {
+	text-decoration: none;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoChanges .UIPageInfoItemBody .AddButton {
+	background: url(/wiki/skin/DefaultSkin/webui/background/BgButton.gif) repeat-x left top;
+    color: #555555;
+    line-height: 15px;
+	border: 1px solid #acacac;
+	-moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+	padding: 3px 10px;
+}
+
+.UIWikiPortlet .UIWikiPageInfo .UIPageInfoChanges .UIPageInfoItemBody .AddButton:hover {
+    color: #363636;
+	text-decoration: none;
 }
