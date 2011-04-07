@@ -77,7 +77,19 @@
 	</div>
 	
 	<div class="ChangedForm">
-		<div class="Label"><span style="font-weight: bold;"><%= _ctx.appRes("UIWikiPageVersionsCompare.label.Changes").replace("{0}",  String.valueOf(uicomponent.changes)); %></span><a style="Color:#165fb3;" href="$link"> <%= _ctx.appRes("UIWikiPageVersionsCompare.label.ViewPageHistory"); %></a></div>
+		<div class="Label"><span style="font-weight: bold;"><%= _ctx.appRes("UIWikiPageVersionsCompare.label.Changes").replace("{0}",  String.valueOf(uicomponent.changes)); %></span><a style="Color:#ff9403;" href="$link"> <%= _ctx.appRes("UIWikiPageVersionsCompare.label.ViewPageHistory"); %></a></div>
+		<p>h1. Objectives</p>
+	<p>h3. Mail objectives<p>
+	<p> Find a maximum of blocker bugs for this GA version</p>
+	<p>* Sniff Tested for all product<p>
+	<p>* Intergation sniff test (PLF sniff test)<p>
+	<p>* ECMS user cases<p>
+	<p>* Agtein technical test<p>
+	<p>* Perfomance test<p>
+	<p> Tested portals<p>
+	<p>* +/intanet</a> for CS, KS and Social+
+	<p>* +/intanet</a> for WCM+
+	<p>* +/intanet and /acme+ for gatein+
 		<%= uicomponent.differencesAsHTML %>
 	</div>
 

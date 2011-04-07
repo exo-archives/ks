@@ -34,14 +34,14 @@
 	<%
     if(previousVersionsLink != null){
   %>
-    <a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.VIEW_REVISION/$prevVersionNumber');"><%= _ctx.appRes("UIWikiVersionSelect.label.Previous"); %></a>
+    <a class="BCBT" href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.VIEW_REVISION/$prevVersionNumber');"><%= _ctx.appRes("UIWikiVersionSelect.label.Previous"); %></a>
     <a  id="$prevVersionLinkId" onclick="$previousVersionsLink"></a>
   <% } %>
 	  <span class="Label"><%= "&nbsp;&nbsp;" +  currentVersion + "&nbsp;&nbsp;" %></span> 
 	<%
     if(nextVersionsLink != null){
   %>
-	  <a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.VIEW_REVISION/$nextVersionNumber');"><%= _ctx.appRes("UIWikiVersionSelect.label.Next"); %></a>
+	  <a class="BCBT" href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$uicomponent.VIEW_REVISION/$nextVersionNumber');"><%= _ctx.appRes("UIWikiVersionSelect.label.Next"); %></a>
 	  <a id="$nextVersionNumberLinkId" onclick="$nextVersionsLink"></a>
 	<% } %>
 	</div>

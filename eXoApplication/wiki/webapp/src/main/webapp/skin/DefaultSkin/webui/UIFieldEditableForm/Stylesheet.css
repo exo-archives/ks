@@ -1,9 +1,9 @@
-.UIFieldEditableForm input {
-  background:none repeat scroll 0 0 #F3F6FB;
-  border:1px dashed #D1DEEF;
+.UIWikiPortlet .UIFieldEditableForm input {
+  background:none repeat scroll 0 0 #f7f7f7;
+  border:1px dashed #e0e0e0;
   padding:0 12px;
   font-size:24px;
   font-weight:bold;
-  color: #555555;
+  color: #565656;
   width: 100%;
 }

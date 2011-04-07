@@ -25,7 +25,7 @@
 				<%uiform.renderChild("text")%>
 				<label><%=_ctx.appRes("UIWikiAdvanceSearchForm.label.space")%></label><%uiform.renderChild("wikiSpaces")%>
 			</div>
-			<div class="SearchBtn"> 			
+			<div class="Button"> 			
 		    <% for(action in uicomponent.getActions()) { 
 		    	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 		       String link = uicomponent.event(action) ;
