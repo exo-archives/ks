@@ -64,6 +64,16 @@
 	text-decoration: underline
 }
 
+.UIWikiPortlet .UIAction a {
+	text-decoration: none;
+	color: black;
+}
+
+.UIWikiPortlet .UIAction a:hover {
+	text-decoration: none;
+	color: #058EE6;
+}
+
 .UIWikiPortlet .FL {
 	float: left;
 }
@@ -224,12 +234,11 @@
 }
 
 .UIWikiPortlet .UIWikiPageTitleControlForm_PageControlArea {
-	float:left;
-	font-size:24px;
-	font-weight:bold;
+	float: left;
+	font-size: 24px;
+	font-weight: bold;
 	color: #333;
 	width: 50%;
-	padding: 2px 0px;
 	line-height: 28px;
 }
 
@@ -941,7 +950,7 @@
 
 .UIWikiPageNotFound p a.BackHome {
 	font-weight: bold;
-	color: #ff6600;
+	color: #4175B2;
 	text-decoration: none;
 }
 
@@ -1023,27 +1032,6 @@
 	margin: 0 0 20px;
 	padding: 0 0 0 30px;
 	line-height: 16px;
-}
-
-.UIWikiDeletePageConfirm .UIAction .LightBlueStyle .ButtonLeft {
-	background: none;
-	padding: 0;
-}
-
-.UIWikiDeletePageConfirm .UIAction .LightBlueStyle .ButtonRight {
-	background: none;
-	padding: 0;
-}
-
-.UIWikiDeletePageConfirm .UIAction .LightBlueStyle .ButtonMiddle {
-	background: url("/wiki/skin/DefaultSkin/webui/background/BtnSearch.gif") no-repeat center center;
-	width: 65px;
-	height: 21px;
-}
-
-.UIWikiDeletePageConfirm .UIAction a {
-	color: #ffffff;
-	font-weight: bold;
 }
 
 .UIWikiPortlet .UIWikiDeletePageConfirm td {
@@ -1411,7 +1399,6 @@
 	color: #555555;
 	line-height: 15px;
 	border: 1px solid #acacac;
-	border-radius: 12px;
 	-moz-border-radius: 12px;
 	-webkit-border-radius: 12px;
 	padding: 3px 10px;
@@ -1419,7 +1406,7 @@
 }
 
 .UIWikiPortlet .UIWikiTemplateForm .TemplateControl .SearchButton:hover {
-	color: #363636;
+	color: #058EE6;
 	text-decoration: none;
 }
 

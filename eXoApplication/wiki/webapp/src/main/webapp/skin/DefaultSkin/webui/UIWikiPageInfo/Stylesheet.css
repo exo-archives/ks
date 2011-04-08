@@ -13,7 +13,7 @@
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem {
 	border: 1px solid #d7d7d7;
-	margin: 2px 0px 20px;
+	margin: 10px;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemTitle {
@@ -64,11 +64,6 @@
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .Time {
 	background: #f9f9f9;
-}
-
-.UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody a {
-    color:#555555;
-    height: 20px;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem .UIPageInfoItemBody .tableview th {
@@ -134,14 +129,16 @@
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoChanges .UIPageInfoItemBody .AddButton {
-    color: #4175b2;
-	font-weight: bold;
-    line-height: 15px;
-	text-decoration: underline;
+	background: url(/wiki/skin/DefaultSkin/webui/background/BgButton.gif) repeat-x left top;
+	color: #555555;
+	line-height: 15px;
+	border: 1px solid #acacac;
+	-moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
 	padding: 3px 10px;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoChanges .UIPageInfoItemBody .AddButton:hover {
-    color: #363636;
+    color: #058EE6;
 	text-decoration: none;
 }
