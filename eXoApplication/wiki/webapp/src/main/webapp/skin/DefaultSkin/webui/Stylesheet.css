@@ -322,15 +322,6 @@
 	overflow: hidden;
 }
 
-.UIWikiPortlet .UIWikiMiddleArea .UIWikiPageContainer ul {
-	padding-left: 30px;
-}
-
-.UIWikiPortlet .UIWikiMiddleArea .UIWikiPageContainer ul li {
-	list-style-type: disc;
-	background: none;
-}
-
 .UIWikiPortlet .UIWikiMiddleArea .Related {
 	margin-top: 3px;
 	width: 100%;
@@ -512,6 +503,15 @@
 
 .UIWikiPageContentArea .NavigationSpacing a.CurrentVersion{
 	margin:15px;
+}
+
+.UIWikiPortlet .UIWikiPageContentArea ul {
+	padding-left: 30px;
+}
+
+.UIWikiPortlet .UIWikiPageContentArea ul li {
+	list-style-type: disc;
+	background: none;
 }
 
 /* wiki mask workspace */
