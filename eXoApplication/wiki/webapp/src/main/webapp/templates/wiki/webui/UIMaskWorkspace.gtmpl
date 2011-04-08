@@ -26,33 +26,16 @@
 	rcontext.getJavascriptManager().addCustomizedOnLoadScript(initHeight) ;
 	rcontext.getJavascriptManager().addOnResizeJavascript("eXo.wiki.UIWikiMaskWorkspace.resetPosition") ;
 %>
-<div class="UIMaskWorkspace" id="$maskId" style="display: none;">
-	<div class="TopLeftDecorator" >
-		<div class="TopRightDecorator">
-			<div class="TopCenterDecorator ClearFix">
-			<% String action = "";
-			   if(component != null){
-			     action = component.getActions()[0];
-			     action = component.event(action);
-			   } 
-			%>
-				<a href="$action" class="CloseButton"><span></span></a>
-				<div class="PopupTitle">Preview</div>
-			</div>
-		</div>
+<div class="UIWikiMaskWorkspace" id="$maskId" style="display: none;">
+	<div class="ClearFix">
+	<% String action = "";
+	   if(component != null){
+		 action = component.getActions()[0];
+		 action = component.event(action);
+	   } 
+	%>
+		<a href="$action" class="CloseButton"><span></span></a>
+		<div class="PopupTitle">Preview</div>
 	</div>
-  
-	<div class="MiddleLeftDecorator">
-		<div class="MiddleRightDecorator">
-			<div class="MaskContainer">
-				<%uicomponent.renderChildren();%>
-			</div>
-		</div>
-	</div>
-
-	<div class="BottomLeftDecorator">
-		<div class="BottomRightDecorator">
-			<div class="BottomCenterDecorator"><span></span></div>
-		</div>
-	</div>
+	<%uicomponent.renderChildren();%>
 </div>

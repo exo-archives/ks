@@ -230,6 +230,11 @@
 	color: #333;
 	width: 50%;
 	padding: 2px 0px;
+	overflow: hidden;
+    white-space: nowrap;
+    width: 470px;
+    word-wrap: break-word;
+	height: 30px;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea {
@@ -468,91 +473,49 @@
 }
 
 /* wiki mask workspace */
-#UIWikiMaskWorkspace {
-	width: 964px;
-	background-color: #ffffff;
-	line-height: 16px;
+.UIWikiMaskWorkspace {
+	 -moz-border-radius: 4px;
+	 -webkit-border-radius: 4px;
+    background-color: #E1E1E1;
+    padding: 9px 3px 6px 3px;
+    width: 538px;
 }
 
-#UIWikiMaskWorkspace .TopLeftDecorator {
-	background:url("/eXoResources/skin/DefaultSkin/webui/component/UIMaskWorkspace/background/MaskWorkspace.png") no-repeat left top;
-	padding: 0;
-}
 
-#UIWikiMaskWorkspace .TopLeftDecorator {
-	background-color: #d7d7d7;
-	background-image: none;
-	padding: 0;
-}
-
-#UIWikiMaskWorkspace .TopRightDecorator {
-	background-color: #d7d7d7;
-	background-image: none;
-	padding: 0;
-}
-
-#UIWikiMaskWorkspace .TopCenterDecorator {
-	background-color: #d7d7d7;
-	background-image: none;
-	height: 20px;
-}
-
-#UIWikiMaskWorkspace .MiddleLeftDecorator {
-	background: none;
-	padding: 0;
-}
-
-#UIWikiMaskWorkspace .MiddleRightDecorator {
-	background: none;
-	padding: 0;
-}
-
-#UIWikiMaskWorkspace .MaskContainer {
+.UIWikiMaskWorkspace .MaskContainer {
 	background: #ffffff;
 	font-size: 12px;
 	color: #636363;
 	padding: 0 5px 0 12px;
 }
 
-#UIWikiMaskWorkspace .MaskContainer .Tit {
+.UIWikiMaskWorkspace .MaskContainer .Tit {
 	font-weight: bold;
 	padding-left: 35px;
 }
 
-#UIWikiMaskWorkspace .BottomLeftDecorator {
-	background: none;
-	padding: 0;
-}
-
-#UIWikiMaskWorkspace .BottomRightDecorator {
-	background: none;
-	padding: 0;
-}
-
-#UIWikiMaskWorkspace .BottomCenterDecorator {
-	background: none;
-}
-
-#UIWikiMaskWorkspace .CloseButton {
+.UIWikiMaskWorkspace .CloseButton {
 	background: url("/wiki/skin/DefaultSkin/webui/background/CloseIcon.gif") no-repeat right top;
 	float: right;
 	height: 16px;
-	margin: 2px 5px 0 0;
+	margin: 2px 10px 0 0;
 	width: 16px;
 }
 
-#UIWikiMaskWorkspace .PopupTitle {
+.UIWikiMaskWorkspace .PopupTitle {
 	font-size: 14px;
 	font-weight: bold;
 	color: #464646;
-	padding: 0 0 0 7px;
+	padding: 0 0 0 10px;
 }
 
-/* Preview wiki page*/
 .UIWikiPagePreview {
-	height: 350px;
-	overflow-x: hidden;
-	overflow-y: auto;
+	background: white;
+    height: 350px;
+    margin-top: 6px;
+    overflow-x: hidden;
+    overflow-y: auto;
+	padding: 0px 8px 8px 8px;
 }
 
 /* Advance search */
