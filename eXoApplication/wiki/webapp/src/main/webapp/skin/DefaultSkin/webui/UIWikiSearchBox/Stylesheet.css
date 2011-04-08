@@ -20,6 +20,7 @@
   -moz-border-radius: 12px;
   -webkit-border-radius: 12px;
   padding: 0px 10px;
+  border: 1px solid #ececec;
 }
 
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox .Input .SearchIcon{

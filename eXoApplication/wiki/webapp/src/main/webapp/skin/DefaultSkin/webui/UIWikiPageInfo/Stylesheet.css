@@ -134,12 +134,10 @@
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoChanges .UIPageInfoItemBody .AddButton {
-	background: url(/wiki/skin/DefaultSkin/webui/background/BgButton.gif) repeat-x left top;
-    color: #555555;
+    color: #4175b2;
+	font-weight: bold;
     line-height: 15px;
-	border: 1px solid #acacac;
-	-moz-border-radius: 12px;
-	-webkit-border-radius: 12px;
+	text-decoration: underline;
 	padding: 3px 10px;
 }
 
