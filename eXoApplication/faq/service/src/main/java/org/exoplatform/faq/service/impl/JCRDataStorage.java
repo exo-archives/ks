@@ -90,8 +90,6 @@ import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
-import org.exoplatform.services.organization.Membership;
-import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.scheduler.PeriodInfo;
@@ -158,25 +156,6 @@ public class JCRDataStorage {
 		}		
 	}
 	
-	private List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
-		List<String> listOfUser = new ArrayList<String>();
-		listOfUser.add(userId);
-		String value = "";
-		String id = "";
-		Membership membership = null;
-		OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
-			id = object.toString();
-			id = id.replace("Membership[", "").replace("]", "");
-			membership = organizationService_.getMembershipHandler().findMembership(id);
-			value = membership.getGroupId();
-			listOfUser.add(value);
-			value = membership.getMembershipType() + ":" + value;
-			listOfUser.add(value);
-		}
-		return listOfUser;
-	}
-	
 	private boolean hasPermission(List<String> listPlugin, List<String> listOfUser){
 		for(String str : listPlugin){
 			if(listOfUser.contains(str)) return true;
@@ -194,7 +173,7 @@ public class JCRDataStorage {
 				if(cateHomeNode.hasProperty("exo:moderators")) 
 					list.addAll(ValuesToList(cateHomeNode.getProperty("exo:moderators").getValues())) ;
 				if(list.contains(userName)) return true;
-				return this.hasPermission(list, getAllGroupAndMembershipOfUser(userName));
+				return this.hasPermission(list, FAQServiceUtils.getAllGroupAndMembershipOfUser(userName));
 			}
 		} catch (Exception e) {
 			log.error("Can not check role for user: " + userName, e);;

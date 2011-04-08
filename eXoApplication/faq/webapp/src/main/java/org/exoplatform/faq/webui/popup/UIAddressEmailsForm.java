@@ -25,17 +25,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.exoplatform.commons.utils.ObjectPageList;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.SelectItem;
 import org.exoplatform.faq.webui.SelectOption;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIFormSelectBoxWithGroups;
 import org.exoplatform.faq.webui.UISendEmailsContainer;
+import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
-import org.exoplatform.services.organization.impl.GroupImpl;
+import org.exoplatform.services.organization.UserHandler;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -43,8 +43,8 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPageIterator;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -96,12 +96,10 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
   public List<SelectItem> getOptions() throws Exception {
   	List<SelectItem> options = new ArrayList<SelectItem>() ;
   	options.add(new SelectOption(FILED_ALL_GROUP, FILED_ALL_GROUP));
-  	OrganizationService organizationService =(OrganizationService)PortalContainer.getComponent(OrganizationService.class) ;
-	  Object[] objGroupIds = organizationService.getGroupHandler().getAllGroups().toArray() ;
 	  List<String> groupIds = new ArrayList<String>() ;
-	  for (Object object : objGroupIds) {
-	    groupIds.add(((GroupImpl)object).getId()) ;
-	  }
+	  for (Group gr : FAQUtils.getAllGroup()) {
+      groupIds.add(gr.getId()) ;
+    }
 	  if(!groupIds.isEmpty()){
 	    for(String publicCg : groupIds) {
 	    	options.add(new SelectOption(publicCg, publicCg));
@@ -114,30 +112,31 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
 		try {
 			Set<User> users = new HashSet<User>();
 			OrganizationService service = this.getApplicationComponent(OrganizationService.class) ;
+			UserHandler handler = service.getUserHandler() ;
 			keyWord = "*" + keyWord + "*" ;
 			Query q; 
 			// search by user name
 			q = new Query() ;
 			q.setUserName(keyWord) ;
-			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+			for(Object obj : handler.findUsers(q).getAll()){
 				users.add((User)obj);
 			}
 			// search by last name
 			q = new Query() ;
 			q.setLastName(keyWord) ;
-			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+			for(Object obj : handler.findUsers(q).getAll()){
 				users.add((User)obj);
 			}
 			// search by firstname
 			q = new Query() ;
 			q.setFirstName(keyWord) ;
-			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+			for(Object obj : handler.findUsers(q).getAll()){
 				users.add((User)obj);
 			}
 			// search by email
 			q = new Query() ;
 			q.setEmail(keyWord) ;
-			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+			for(Object obj : handler.findUsers(q).getAll()){
 				users.add((User)obj);
 			}
 

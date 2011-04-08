@@ -51,7 +51,7 @@ public class FAQServiceUtils {
   	List<String> users = new ArrayList<String> () ;
 		if(userGroupMembership == null || userGroupMembership.length <= 0 || 
 				(userGroupMembership.length == 1 && userGroupMembership[0].equals(" "))) return users ; 
-		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		OrganizationService organizationService = getOrganizationService();
 		for(String str : userGroupMembership) {
 			str = str.trim();
 			if(str.indexOf("/") >= 0) {
@@ -96,24 +96,27 @@ public class FAQServiceUtils {
 		return users ;
   }
   
+  public static OrganizationService getOrganizationService() {
+    OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+    return organizationService;
+  }
+  
+  @SuppressWarnings("unchecked")
   public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
-  	List<String> userGroupMembership = new ArrayList<String>();
-  	if(userId == null || userId.equals("null")) return userGroupMembership ; //for anonimous users  	
-		userGroupMembership.add(userId);
-		String value = "";
-		String id = "";
-		Membership membership = null;
-		OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
-			id = object.toString();
-			id = id.replace("Membership[", "").replace("]", "");
-			membership = organizationService_.getMembershipHandler().findMembership(id);
-			value = membership.getGroupId();
-			userGroupMembership.add(value);
-			value = membership.getMembershipType() + ":" + value;
-			userGroupMembership.add(value);
-		}
-		return userGroupMembership;
+    List<String> listOfUser = new ArrayList<String>();
+    if (userId == null) {
+      return listOfUser;
+    }
+    listOfUser.add(userId); //himself
+    String value = "";
+    Collection<Membership> memberships = getOrganizationService().getMembershipHandler().findMembershipsByUser(userId);
+    for (Membership membership : memberships) {
+       value = membership.getGroupId();
+        listOfUser.add(value); // its groups
+        value = membership.getMembershipType() + ":" + value;
+        listOfUser.add(value);  // its memberships
+    }
+    return listOfUser;
   }
   
   /**

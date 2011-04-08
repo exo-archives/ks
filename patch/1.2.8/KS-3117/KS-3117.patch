@@ -1,0 +1,192 @@
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/FAQServiceUtils.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/FAQServiceUtils.java	(revision 67799)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/FAQServiceUtils.java	(working copy)
+@@ -51,7 +51,7 @@
+   	List<String> users = new ArrayList<String> () ;
+ 		if(userGroupMembership == null || userGroupMembership.length <= 0 || 
+ 				(userGroupMembership.length == 1 && userGroupMembership[0].equals(" "))) return users ; 
+-		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
++		OrganizationService organizationService = getOrganizationService();
+ 		for(String str : userGroupMembership) {
+ 			str = str.trim();
+ 			if(str.indexOf("/") >= 0) {
+@@ -96,24 +96,27 @@
+ 		return users ;
+   }
+   
++  public static OrganizationService getOrganizationService() {
++    OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
++    return organizationService;
++  }
++  
++  @SuppressWarnings("unchecked")
+   public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
+-  	List<String> userGroupMembership = new ArrayList<String>();
+-  	if(userId == null || userId.equals("null")) return userGroupMembership ; //for anonimous users  	
+-		userGroupMembership.add(userId);
+-		String value = "";
+-		String id = "";
+-		Membership membership = null;
+-		OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+-		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
+-			id = object.toString();
+-			id = id.replace("Membership[", "").replace("]", "");
+-			membership = organizationService_.getMembershipHandler().findMembership(id);
+-			value = membership.getGroupId();
+-			userGroupMembership.add(value);
+-			value = membership.getMembershipType() + ":" + value;
+-			userGroupMembership.add(value);
+-		}
+-		return userGroupMembership;
++    List<String> listOfUser = new ArrayList<String>();
++    if (userId == null) {
++      return listOfUser;
++    }
++    listOfUser.add(userId); //himself
++    String value = "";
++    Collection<Membership> memberships = getOrganizationService().getMembershipHandler().findMembershipsByUser(userId);
++    for (Membership membership : memberships) {
++       value = membership.getGroupId();
++        listOfUser.add(value); // its groups
++        value = membership.getMembershipType() + ":" + value;
++        listOfUser.add(value);  // its memberships
++    }
++    return listOfUser;
+   }
+   
+   /**
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(revision 67799)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(working copy)
+@@ -90,8 +90,6 @@
+ import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.services.mail.MailService;
+ import org.exoplatform.services.mail.Message;
+-import org.exoplatform.services.organization.Membership;
+-import org.exoplatform.services.organization.OrganizationService;
+ import org.exoplatform.services.scheduler.JobInfo;
+ import org.exoplatform.services.scheduler.JobSchedulerService;
+ import org.exoplatform.services.scheduler.PeriodInfo;
+@@ -158,25 +156,6 @@
+ 		}		
+ 	}
+ 	
+-	private List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
+-		List<String> listOfUser = new ArrayList<String>();
+-		listOfUser.add(userId);
+-		String value = "";
+-		String id = "";
+-		Membership membership = null;
+-		OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+-		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
+-			id = object.toString();
+-			id = id.replace("Membership[", "").replace("]", "");
+-			membership = organizationService_.getMembershipHandler().findMembership(id);
+-			value = membership.getGroupId();
+-			listOfUser.add(value);
+-			value = membership.getMembershipType() + ":" + value;
+-			listOfUser.add(value);
+-		}
+-		return listOfUser;
+-	}
+-	
+ 	private boolean hasPermission(List<String> listPlugin, List<String> listOfUser){
+ 		for(String str : listPlugin){
+ 			if(listOfUser.contains(str)) return true;
+@@ -194,7 +173,7 @@
+ 				if(cateHomeNode.hasProperty("exo:moderators")) 
+ 					list.addAll(ValuesToList(cateHomeNode.getProperty("exo:moderators").getValues())) ;
+ 				if(list.contains(userName)) return true;
+-				return this.hasPermission(list, getAllGroupAndMembershipOfUser(userName));
++				return this.hasPermission(list, FAQServiceUtils.getAllGroupAndMembershipOfUser(userName));
+ 			}
+ 		} catch (Exception e) {
+ 			log.error("Can not check role for user: " + userName, e);;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAddressEmailsForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAddressEmailsForm.java	(revision 67799)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAddressEmailsForm.java	(working copy)
+@@ -25,17 +25,17 @@
+ import java.util.Set;
+ 
+ import org.exoplatform.commons.utils.ObjectPageList;
+-import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.faq.webui.FAQUtils;
+ import org.exoplatform.faq.webui.SelectItem;
+ import org.exoplatform.faq.webui.SelectOption;
+ import org.exoplatform.faq.webui.UIAnswersPortlet;
+ import org.exoplatform.faq.webui.UIFormSelectBoxWithGroups;
+ import org.exoplatform.faq.webui.UISendEmailsContainer;
++import org.exoplatform.services.organization.Group;
+ import org.exoplatform.services.organization.OrganizationService;
+ import org.exoplatform.services.organization.Query;
+ import org.exoplatform.services.organization.User;
+-import org.exoplatform.services.organization.impl.GroupImpl;
++import org.exoplatform.services.organization.UserHandler;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+@@ -43,8 +43,8 @@
+ import org.exoplatform.webui.core.UIPageIterator;
+ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+ import org.exoplatform.webui.event.Event;
+-import org.exoplatform.webui.event.EventListener;
+ import org.exoplatform.webui.event.Event.Phase;
++import org.exoplatform.webui.event.EventListener;
+ import org.exoplatform.webui.form.UIForm;
+ import org.exoplatform.webui.form.UIFormCheckBoxInput;
+ import org.exoplatform.webui.form.UIFormStringInput;
+@@ -96,12 +96,10 @@
+   public List<SelectItem> getOptions() throws Exception {
+   	List<SelectItem> options = new ArrayList<SelectItem>() ;
+   	options.add(new SelectOption(FILED_ALL_GROUP, FILED_ALL_GROUP));
+-  	OrganizationService organizationService =(OrganizationService)PortalContainer.getComponent(OrganizationService.class) ;
+-	  Object[] objGroupIds = organizationService.getGroupHandler().getAllGroups().toArray() ;
+ 	  List<String> groupIds = new ArrayList<String>() ;
+-	  for (Object object : objGroupIds) {
+-	    groupIds.add(((GroupImpl)object).getId()) ;
+-	  }
++	  for (Group gr : FAQUtils.getAllGroup()) {
++      groupIds.add(gr.getId()) ;
++    }
+ 	  if(!groupIds.isEmpty()){
+ 	    for(String publicCg : groupIds) {
+ 	    	options.add(new SelectOption(publicCg, publicCg));
+@@ -114,30 +112,31 @@
+ 		try {
+ 			Set<User> users = new HashSet<User>();
+ 			OrganizationService service = this.getApplicationComponent(OrganizationService.class) ;
++			UserHandler handler = service.getUserHandler() ;
+ 			keyWord = "*" + keyWord + "*" ;
+ 			Query q; 
+ 			// search by user name
+ 			q = new Query() ;
+ 			q.setUserName(keyWord) ;
+-			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
++			for(Object obj : handler.findUsers(q).getAll()){
+ 				users.add((User)obj);
+ 			}
+ 			// search by last name
+ 			q = new Query() ;
+ 			q.setLastName(keyWord) ;
+-			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
++			for(Object obj : handler.findUsers(q).getAll()){
+ 				users.add((User)obj);
+ 			}
+ 			// search by firstname
+ 			q = new Query() ;
+ 			q.setFirstName(keyWord) ;
+-			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
++			for(Object obj : handler.findUsers(q).getAll()){
+ 				users.add((User)obj);
+ 			}
+ 			// search by email
+ 			q = new Query() ;
+ 			q.setEmail(keyWord) ;
+-			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
++			for(Object obj : handler.findUsers(q).getAll()){
+ 				users.add((User)obj);
+ 			}
+ 
