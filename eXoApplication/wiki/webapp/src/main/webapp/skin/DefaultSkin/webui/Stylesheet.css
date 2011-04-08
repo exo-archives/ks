@@ -230,11 +230,7 @@
 	color: #333;
 	width: 50%;
 	padding: 2px 0px;
-	overflow: hidden;
-    white-space: nowrap;
-    width: 470px;
-    word-wrap: break-word;
-	height: 30px;
+	line-height: 28px;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea {
