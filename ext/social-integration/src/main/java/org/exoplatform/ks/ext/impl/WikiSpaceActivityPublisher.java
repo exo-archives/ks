@@ -15,9 +15,9 @@ import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvide
 import org.exoplatform.social.core.identity.provider.SpaceIdentityProvider;
 import org.exoplatform.social.core.manager.ActivityManager;
 import org.exoplatform.social.core.manager.IdentityManager;
-import org.exoplatform.social.core.space.SpaceException;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
+import org.exoplatform.social.core.storage.SpaceStorageException;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiService;
@@ -77,7 +77,7 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
     Space space = null;
     try {
       space = spaceService.getSpaceByGroupId(groupId);
-    } catch (SpaceException e) {
+    } catch (SpaceStorageException e) {
       if (LOG.isDebugEnabled()) {
         LOG.debug(String.format("Space %s not existed", groupId), e);
       }
