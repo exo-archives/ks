@@ -1,11 +1,4 @@
-.UITemplateSettingForm {
-  
-}
 
-.UITemplateSettingForm .TemplateControl {
-  width: 90%;
-  margin: 15px auto 0;
-}
 
 .UITemplateSettingForm .TemplateControl .TemplateSearchBox {
   float: left;
