@@ -177,25 +177,6 @@ All those accounts have the default password "gtn".
     * [KS-3174] - [wiki] Bad UI with relative pages in default wiki home
     * [KS-3200] - [wiki] Render macro when editting in WYSIWYG editor
 
-** Task
-    * [KS-2924] - Release KS 2.2
-    * [KS-3059] - [wiki] wiki preview crash
-    * [KS-3086] - [wiki] Wiki standalone extension for PLF 3.0
-    * [KS-3102] - [KS-WIKI] bad UI of new page form on Wiki page on IE7
-    * [KS-3104] - [Wiki] Fork and enable section&column macro
-    * [KS-3139] - Remove code duplications in KS Social integration package
-    * [KS-3140] - Remove code duplications in eXo KS Forum package
-    * [KS-3141] - Remove code duplication in eXo Wiki package
-    * [KS-3142] - Remove code duplications in eXo FAQ application trunk
-    * [KS-3148] - planning meeting and reveviw
-    * [KS-3155] - Upgrade to JCR 1.14-Beta3
-    * [KS-3183] - Remove all File Tab Characters in KS trunk's code
-    * [KS-3184] - Fix blocker and critical violations on Sonar in KS trunk
-    * [KS-3187] - Support PLF 3.0.5 and AIO 1.6.9
-    * [KS-3195] - Upgrade to chromattic 1.1 beta02
-    * [KS-3213] - Align dependencies with EXOGTN 3.2.0 Beta02
-
-
 - Version 2.2.0-Beta01
 
 Release Notes - eXo Knowledge - Version ks-2.2-beta01
@@ -236,11 +217,6 @@ Release Notes - eXo Knowledge - Version ks-2.2-beta01
     * [KS-2965] - [wiki] Page Templates
     * [KS-2966] - [wiki] Related Pages
     * [KS-2967] - [wiki] Social Integration
-
-** Task
-    * [KS-2773] - [wiki] Miscellaneous UI design collections for wiki portlet
-    * [KS-3103] - [wiki] Disable section&column macros to release KS 2.2-Beta1
-
 
 - Version 2.1.1 
 
