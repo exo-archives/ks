@@ -19,29 +19,21 @@
   color: #707070;
 }
 
-.UIWikiPortlet .UIWikiBreadCrumb .LeftBreadcumbsBar{
-  background: none;
-}
-
-.UIWikiPortlet .UIWikiBreadCrumb .RightBreadcumbsBar{
-	height: auto;
-}
-
 .UIWikiPortlet .UIWikiBreadCrumb .BreadcumbsInfoBar{
 	height: auto;	
 	white-space: normal;
 	float:left;
 }
 
-.UIWikiPortlet .UIWikiBreadCrumb .LeftBreadcumbsBar a.Selected {
+.UIWikiPortlet .UIWikiBreadCrumb a.Selected {
 	font-weight:normal;
 }
 
-.UIWikiPortlet .UIWikiBreadCrumb .LeftBreadcumbsBar a {
+.UIWikiPortlet .UIWikiBreadCrumb a {
 	color:#707070;
 }
 
-.UIWikiPortlet .UIWikiBreadCrumb .LeftBreadcumbsBar .RightBlackGridArrowIcon {
+.UIWikiPortlet .UIWikiBreadCrumb .RightBlackGridArrowIcon {
 	float: left;
 	margin: 2px 0 0;
 	background: url("background/BreadcumPopupBG.png") no-repeat center center;
@@ -50,76 +42,33 @@
 }
 
 .UIWikiPortlet .BreadcumPopup{
-  position: absolute;
-  display: none;
-}
-
-.UIWikiPortlet .BreadcumPopup .BreadcumPopupTL{
-  background:url("background/BreadcumPopupBG.png") no-repeat left top;
-  padding-left: 29px;
-}
-
-.UIWikiPortlet .BreadcumPopup .BreadcumPopupTR{
-  background:url("background/BreadcumPopupBG.png") no-repeat right -12px;
-  padding-right: 7px;
-}
-
-.UIWikiPortlet .BreadcumPopup .BreadcumPopupTC{
-  background:url("background/BreadcumPopupBG.png") repeat-x center -25px;
-  height: 10px;
-}
-
-.UIWikiPortlet .BreadcumPopup .BreadcumPopupML{
-  background:url("background/BreadcumPopupML.png") repeat-y left;
-  padding-left: 4px;
-}
-
-.UIWikiPortlet .BreadcumPopup .BreadcumPopupMR{
-  background:url("background/BreadcumPopupMR.png") repeat-y right;
-  padding-right: 4px;
-}
-
-.UIWikiPortlet .BreadcumPopup .BreadcumPopupMC{
-  background: #eff6ff;
-}
-
-.UIWikiPortlet .BreadcumPopup .BreadcumPopupBL{
-  background:url("background/BreadcumPopupBG.png") no-repeat left -37px;
-  padding-left: 7px;
-}
-
-.UIWikiPortlet .BreadcumPopup .BreadcumPopupBR{
-  background:url("background/BreadcumPopupBG.png") no-repeat right -46px;
-  padding-right: 7px;
-}
-
-.UIWikiPortlet .BreadcumPopup .BreadcumPopupBC{
-  background:url("background/BreadcumPopupBG.png") repeat-x center -55px;
-  height: 7px;
+	position: absolute;
+	display: none;
+	background: #E8E8E8;
+	border: 1px solid #D8D8D8;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 }
 
 .UIWikiPortlet .BreadcumPopup .MenuItem {
 	height:28px;
 	line-height:28px;
-	width:100%;
+	float: left;
 }
 
 .UIWikiPortlet .BreadcumPopup .MenuItem a {
 	padding-right:25px;
 	color:#3E3E3E;
 	display:block;
-	padding:0 5px 0 35px;
+	padding:0 5px 0 15px;
 	white-space:nowrap;
 }
 
-.UIWikiPortlet .BreadcumPopup .MenuItem a:hover {
-	background: white url("background/BreadcumPopupBG.png") no-repeat 12px -77px;
-}
-
 .UIWikiPortlet .BreadcumPopup .MenuItem .MarginLeftDiv {
-  margin-left: 20px;
+  margin-left: 15px;
 }
 
-.UIWikiPortlet .BreadcumPopup .MenuIcon {
-	background:url("background/BreadcumPopupBG.png") no-repeat 12px -77px;
+.UIWikiPortlet .BreadcumPopup .MarginLeftDiv .MenuIcon {
+	background:url("background/BreadcumPopupBG.png") no-repeat left center;
 }

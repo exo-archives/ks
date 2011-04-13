@@ -7,8 +7,6 @@
   rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPortlet.renderBreadcrumbs(\"" + uicomponent.id + "\","+ uicomponent.isLink +");"); 
 %>
 <div class="UIWikiBreadCrumb UIBreadcumbs" id="$uicomponent.id">
-  <div class="LeftBreadcumbsBar">
-    <div class="RightBreadcumbsBar ClearFix">
       <div class="BreadcumbsInfoBar ClearFix">  
         <% if(breadCumbs!=null && breadCumbs.size() > 0) {
         	 	String note = "LeftBlock"; %>
@@ -41,26 +39,8 @@
           			<span class="ActionLabel" >$label</span>
         			<% } %>
       </div>
-    </div>
-  </div>
 </div>
 <div class="BreadcumPopup">
-	<div class="BreadcumPopupTL">
-		<div class="BreadcumPopupTR">
-			<div class="BreadcumPopupTC"><span></span></div>
-	  	</div>
-	</div>
-	<div class="BreadcumPopupML">
-		<div class="BreadcumPopupMR">
-			<div class="BreadcumPopupMC">
-				<div class="SubBlock">
-				</div>
-			</div>
-		</div>
-	</div>	
-	<div class="BreadcumPopupBL">
-		<div class="BreadcumPopupBR">
-			<div class="BreadcumPopupBC"><span></span></div>
-	  	</div>
+	<div class="SubBlock">
 	</div>
 </div>

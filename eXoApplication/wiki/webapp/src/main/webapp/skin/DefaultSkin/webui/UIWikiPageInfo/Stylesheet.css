@@ -1,7 +1,3 @@
-.UIWikiPageInfo {
-
-}
-
 .UIWikiPortlet .UIWikiPageInfo .UIWikiPageInfoLayoutTable {
 	width: 100%;	
 }
@@ -9,7 +5,6 @@
 .UIWikiPortlet .UIWikiPageInfo .UIWikiPageInfoLayoutCell {
 	width: 50%;	
 }
-
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoItem {
 	border: 1px solid #d7d7d7;
@@ -84,11 +79,11 @@
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoHierarchy .content .NodeLabel a {
-	background: url(/wiki/skin/DefaultSkin/webui/background/ArrowInvertIcon.gif) no-repeat left center;
+	background: url(/wiki/skin/DefaultSkin/webui/background/ArrowInvertIcon.gif) no-repeat left 5px;
 	color: #4175b2;
 	padding-left: 10px;
 	margin: 0px;
-	display: inline;
+	display: block;
 	cursor: pointer;
 }
 
@@ -129,13 +124,11 @@
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoChanges .UIPageInfoItemBody .AddButton {
-	background: url(/wiki/skin/DefaultSkin/webui/background/BgButton.gif) repeat-x left top;
-	color: #555555;
+	background: none;
+	color: #4175b2;
 	line-height: 15px;
-	border: 1px solid #acacac;
-	-moz-border-radius: 12px;
-	-webkit-border-radius: 12px;
-	padding: 3px 10px;
+	font-weight: bold;
+	text-decoration: underline;
 }
 
 .UIWikiPortlet .UIWikiPageInfo .UIPageInfoChanges .UIPageInfoItemBody .AddButton:hover {

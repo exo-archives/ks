@@ -78,11 +78,6 @@
 	padding-left: 24px;
 }
 
-
-.UIWikiPortlet .SearchPopup .Horizon {
-	border-top: 1px solid #F0F0F0;
-}
-
 .UIWikiPortlet .SearchPopup .MenuItem .MenuText {	
 }
 
@@ -99,5 +94,5 @@
 }
 
 .UIWikiPortlet .SearchPopup .ItemOver {
-	background: #D0DFF0 url("background/UIWikiSearchBG.png") no-repeat 12px -118px;	
+	background: #ffffff url("background/UIWikiSearchBG.png") no-repeat 12px -118px;	
 }
