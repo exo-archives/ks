@@ -149,22 +149,36 @@ public class SavePageActionComponent extends UIComponent {
       String markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
       markup = markup.trim();
       String syntaxId = syntaxTypeSelectBox.getValue();
+      
+      String pageId = TitleResolver.getId(title, false);
+      if (!pageId.equals(page.getName()) && wikiService.isExisting(pageParams.getType(),
+                                                                   pageParams.getOwner(),
+                                                                   pageId)) {
+        // if page title is not changed or duplicated with existed page's after edited.
+        if (log.isDebugEnabled()) log.debug("The title '" + title + "' is already existing!");
+        uiApp.addMessage(new ApplicationMessage("SavePageAction.msg.warning-page-title-already-exist",
+                                                null,
+                                                ApplicationMessage.WARNING));
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        Utils.redirect(pageParams, wikiPortlet.getWikiMode());
+        return;
+      }
+      
       try {
-        String newPageId = TitleResolver.getId(title, false);
         if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
           if (wikiPortlet.getEditMode() == EditMode.SECTION) {
-            newPageId = page.getName();
+            pageId = page.getName();
             title = page.getTitle();
             markup = renderingService.updateContentOfSection(page.getContent().getText(),
                                                              page.getSyntax(),
                                                              wikiPortlet.getSectionIndex(),
                                                              markup);
           }
-          if (!page.getName().equals(newPageId)) {
+          if (!page.getName().equals(pageId)) {
             wikiService.renamePage(pageParams.getType(),
                                    pageParams.getOwner(),
                                    page.getName(),
-                                   newPageId,
+                                   pageId,
                                    title);
           }
           Object minorAtt = event.getRequestContext().getAttribute(MinorEditActionComponent.ACTION);
@@ -183,25 +197,12 @@ public class SavePageActionComponent extends UIComponent {
             page.setTitle(title);
             ((PageImpl) page).checkin();
             ((PageImpl) page).checkout();
-            pageParams.setPageId(newPageId);
+            pageParams.setPageId(pageId);
           } else {
             ((PageImpl) page).checkin();
             ((PageImpl) page).checkout();
           }
         } else if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
-          String pageId = TitleResolver.getId(title, false);
-          boolean isExist = wikiService.isExisting(pageParams.getType(),
-                                                   pageParams.getOwner(),
-                                                   pageId);
-          if (isExist) {
-            log.error("The title '" + title + "' is already existing!");
-            uiApp.addMessage(new ApplicationMessage("SavePageAction.msg.warning-page-title-already-exist",
-                                                    null,
-                                                    ApplicationMessage.WARNING));
-            event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
-            Utils.redirect(pageParams, wikiPortlet.getWikiMode());
-            return;
-          }
           String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
           Page draftPage = wikiService.getExsitedOrNewDraftPageById(null, null, sessionId);
           Collection<AttachmentImpl> attachs = ((PageImpl) draftPage).getAttachments();
