@@ -41,9 +41,9 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.
 					def timeMsg = _ctx.appRes("UIWikiAdvanceSearchResult.label.time");
 					timeMsg = timeMsg.replace("{0}", df.format(result.getCreatedDate().getTime())).replace("{1}", df.format(result.getUpdatedDate().getTime()));
 					spaceType = spaceType.replace("{0}", wikiType);
-					String pageURI = wikiURI + result.getNodeName() ;
+					String pageURI = wikiURI + result.getPageName() ;
 					Calendar updateDate= 	result.getUpdatedDate();				
-					if(WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())){						      	
+					if(WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())) {						      	
 		      	%>		      	
 		      	<div class="BlockResultFeed">
 							<a class="page TxtTitFeed" href="$pageURI"><%=result.getTitle()%></a>
@@ -74,6 +74,17 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.
 							</div>
 						</div>    	
 		      	<%
+		      } else if (WikiNodeType.WIKI_PAGE.equals(result.getType())) {
+		        %>
+		        <div class="BlockResultFeed">
+              <a class="page TxtTitFeed" href="$pageURI"><%=result.getTitle()%></a>
+              <div>
+                <strong>$spaceType: </strong><a class="TxtMark" href="$wikiURI">$space</a>
+                <br/>
+                $timeMsg
+              </div>
+            </div>
+		        <%
 		      }     
 		    }
 			%>			 	

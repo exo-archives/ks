@@ -2,12 +2,14 @@ package org.exoplatform.wiki.service.search;
 
 import java.util.Calendar;
 
+import org.exoplatform.wiki.mow.api.WikiNodeType;
+
 public class SearchResult {
   protected String excerpt ;
   protected String title ;
   protected String path ;
   protected String type ;
-  protected String nodeName ;
+  protected String pageName ;
   protected Calendar   updatedDate;  
   protected Calendar createdDate;
   
@@ -20,7 +22,7 @@ public class SearchResult {
     this.type = type;
     this.updatedDate = updatedDate;
     this.createdDate = createdDate;
-    evaluateNodeName(path);
+    evaluatePageName(path);
   }
   
   public void setTitle(String title) {
@@ -53,17 +55,21 @@ public class SearchResult {
     return type;
   }
   
-  private void evaluateNodeName(String path) {
-    String temp = path.substring(0, path.lastIndexOf("/"));
-    this.setNodeName(temp.substring(temp.lastIndexOf("/")));
+  private void evaluatePageName(String path) {
+    if (WikiNodeType.WIKI_PAGE.equals(type)) {
+      this.setPageName(path.substring(path.lastIndexOf("/")));
+    } else if (WikiNodeType.WIKI_ATTACHMENT.equals(type) || WikiNodeType.WIKI_PAGE_CONTENT.equals(type)) {
+      String temp = path.substring(0, path.lastIndexOf("/"));
+      this.setPageName(temp.substring(temp.lastIndexOf("/")));
+    }
   }
 
-  public void setNodeName(String nodeName) {
-    this.nodeName = nodeName;
+  public void setPageName(String pageName) {
+    this.pageName = pageName;
   }
 
-  public String getNodeName() {
-    return nodeName;
+  public String getPageName() {
+    return pageName;
   }
 
   public Calendar getUpdatedDate() {

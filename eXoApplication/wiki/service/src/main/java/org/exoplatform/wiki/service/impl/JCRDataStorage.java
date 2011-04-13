@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -98,7 +99,11 @@ public class JCRDataStorage implements DataStorage{
       updateDate = searchAtt.getUpdatedDate();
       PageImpl page = searchAtt.getParentPage();
       createdDate.setTime(page.getCreatedDate());
-    } 
+    } else if (WikiNodeType.WIKI_PAGE.equals(type)) {
+      PageImpl page = (PageImpl) Utils.getObject(path, type);
+      updateDate.setTime(page.getUpdatedDate());
+      createdDate.setTime(page.getCreatedDate());
+    }
     SearchResult result = new SearchResult(excerpt, title, path, type, updateDate, createdDate);
     return result;
   }
@@ -135,7 +140,7 @@ public class JCRDataStorage implements DataStorage{
   
   private SearchResult getResult(Node node)throws Exception {
     SearchResult result = new SearchResult() ;
-    result.setNodeName(node.getName()) ;
+    result.setPageName(node.getName()) ;
     String title = node.getProperty(WikiNodeType.Definition.TITLE).getString();
     InputStream data = node.getNode(WikiNodeType.Definition.CONTENT).getNode("jcr:content").getProperty("jcr:data").getStream();
     byte[] bytes = IO.getBytes(data);
@@ -197,10 +202,14 @@ public class JCRDataStorage implements DataStorage{
       att = (AttachmentImpl) Utils.getObject(attPath, WikiNodeType.WIKI_ATTACHMENT);
     } else if(WikiNodeType.WIKI_PAGE.equals(result.getType()) || WikiNodeType.WIKI_HOME.equals(result.getType())){
       page = (PageImpl) Utils.getObject(result.getPath(), WikiNodeType.WIKI_PAGE);
+    } else if (WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())) {
+      att = (AttachmentImpl) Utils.getObject(result.getPath(), WikiNodeType.WIKI_ATTACHMENT);
+      page = att.getParentPage();
     }
     if (att != null || page != null) {
-      for (int i = 0; i < list.size(); i++) {
-        SearchResult child = list.get(i);
+      Iterator<SearchResult> iter = list.iterator();
+      while (iter.hasNext()) {
+        SearchResult child = iter.next();
         if (WikiNodeType.WIKI_ATTACHMENT.equals(child.getType()) || WikiNodeType.WIKI_PAGE_CONTENT.equals(child.getType())) {
           AttachmentImpl tempAtt = (AttachmentImpl) Utils.getObject(child.getPath(),
                                                                     WikiNodeType.WIKI_ATTACHMENT);
@@ -210,9 +219,15 @@ public class JCRDataStorage implements DataStorage{
               child.setExcerpt(result.getExcerpt());
             }
             return true;
-          }
+          }               
           if (page != null && page.getName().equals(tempAtt.getParentPage())) {
             return true;
+          }     
+        }
+        else if (WikiNodeType.WIKI_PAGE.equals(child.getType())) {
+          if (page != null && page.getPath().equals(child.getPath())) {
+            iter.remove();
+            return false;
           }
         }
       }

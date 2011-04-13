@@ -353,7 +353,7 @@ public class DefaultWikiService implements WikiService {
   private List<DocumentReference> prepareDocumentReferenceList(PageList<SearchResult> results) throws Exception {
     List<DocumentReference> documentReferences = new ArrayList<DocumentReference>();
     for (SearchResult result : results.getAll()) {
-      String nodeName = result.getNodeName();
+      String nodeName = result.getPageName();
       if (nodeName != null && nodeName.length() > 0 && nodeName.startsWith("/")) {
         nodeName = nodeName.substring(1);
       }
