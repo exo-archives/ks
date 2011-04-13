@@ -22,6 +22,7 @@ import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.IdentityConstants;
 import org.exoplatform.wiki.mow.api.Model;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiType;
@@ -58,6 +59,8 @@ public abstract class AbstractMOWTestcase extends TestCase {
 
   protected void setUp() throws Exception {
     begin();
+    Identity systemIdentity = new Identity(IdentityConstants.SYSTEM);
+    ConversationState.setCurrent(new ConversationState(systemIdentity));
   }
 
   protected void tearDown() throws Exception {
@@ -86,12 +89,6 @@ public abstract class AbstractMOWTestcase extends TestCase {
     } catch (Exception e) {
       throw new RuntimeException("Failed to initialize standalone container: " + e.getMessage(), e);
     }
-  }
-
-  protected void startSessionAs(String user) {
-    Identity identity = new Identity(user);
-    ConversationState state = new ConversationState(identity);
-    ConversationState.setCurrent(state);
   }
   
   protected Wiki getWiki(WikiType wikiType, String wikiName, Model model) {

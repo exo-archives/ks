@@ -23,7 +23,6 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.AccessControlList;
 import org.exoplatform.services.jcr.access.PermissionType;
-import org.exoplatform.services.jcr.access.SystemIdentity;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -31,6 +30,7 @@ import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.IdentityConstants;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
@@ -251,7 +251,7 @@ public class Utils {
     return store.getWikis().toArray(new Wiki[]{}) ;
   } 
   
-  public static boolean isDescendantPage(PageImpl page, PageImpl parentPage) {
+  public static boolean isDescendantPage(PageImpl page, PageImpl parentPage) throws Exception {
     Iterator<PageImpl> iter = parentPage.getChildPages().values().iterator();
     while (iter.hasNext()) {
       PageImpl childpage = (PageImpl) iter.next();
@@ -421,16 +421,16 @@ public class Utils {
    * @return boolean
    */
   public static boolean hasPermission(AccessControlList acl, String[] permission, Identity user) {
-
+   
     String userId = user.getUserId();
-    if (userId.equals(SystemIdentity.SYSTEM)) {
+    if (userId.equals(IdentityConstants.SYSTEM)) {
       // SYSTEM has permission everywhere
       return true;
     } else if (userId.equals(acl.getOwner())) {
       // Current user is owner of node so has all privileges
       return true;
-    } else if (userId.equals(SystemIdentity.ANONIM)) {
-      List<String> anyPermissions = acl.getPermissions(SystemIdentity.ANY);
+    } else if (userId.equals(IdentityConstants.ANONIM)) {
+      List<String> anyPermissions = acl.getPermissions(IdentityConstants.ANY);
 
       if (anyPermissions.size() < permission.length)
         return false;
@@ -460,7 +460,7 @@ public class Utils {
       // match action
       if (testPermission.equals(ace.getPermission())) {
         // match any
-        if (SystemIdentity.ANY.equals(ace.getIdentity()))
+        if (IdentityConstants.ANY.equals(ace.getIdentity()))
           return true;
         else if (ace.getIdentity().indexOf(":") == -1) {
           // just user

@@ -50,10 +50,10 @@ import org.chromattic.ext.ntdef.NTFolder;
 import org.chromattic.ext.ntdef.Resource;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.AccessControlList;
-import org.exoplatform.services.jcr.access.SystemIdentity;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.IdentityConstants;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.chromattic.ext.ntdef.VersionableMixin;
 import org.exoplatform.wiki.mow.api.Page;
@@ -329,7 +329,20 @@ public abstract class PageImpl extends NTFolder implements Page {
   public abstract void setTrash(Trash trash);
   
   @OneToMany
-  public abstract Map<String, PageImpl> getChildPages();
+  public abstract Map<String, PageImpl> getChildrenContainer();
+  
+  public Map<String, PageImpl> getChildPages() throws Exception {
+    Map<String, PageImpl> result = new HashMap<String, PageImpl>();
+    Iterator<Entry<String, PageImpl>> iter = getChildrenContainer().entrySet().iterator();
+    while (iter.hasNext()) {
+      Entry<String, PageImpl> entry = iter.next();
+      PageImpl page = entry.getValue();
+      if (page != null && page.hasPermission(PermissionType.VIEWPAGE)) {
+        result.put(page.getName(), page);
+      }
+    }
+    return result;
+  }
   
   @Property(name = WikiNodeType.Definition.OVERRIDEPERMISSION)
   public abstract boolean getOverridePermission();
@@ -347,13 +360,12 @@ public abstract class PageImpl extends NTFolder implements Page {
 
     ExtendedNode pageNode = (ExtendedNode) getJCRPageNode();
     AccessControlList acl = pageNode.getACL();
-
     ConversationState conversationState = ConversationState.getCurrent();
     Identity user = null;
     if (conversationState != null) {
       user = conversationState.getIdentity();
     } else {
-      user = new Identity(SystemIdentity.ANONIM);
+      user = new Identity(IdentityConstants.ANONIM);
     }
     return Utils.hasPermission(acl, permission, user);
   }
@@ -388,7 +400,7 @@ public abstract class PageImpl extends NTFolder implements Page {
       pageNode.setPermissions(permissions);
     } else {
       pageNode.clearACL();
-      pageNode.setPermission(SystemIdentity.ANY, org.exoplatform.services.jcr.access.PermissionType.ALL);
+      pageNode.setPermission(IdentityConstants.ANY, org.exoplatform.services.jcr.access.PermissionType.ALL);
     }
   }
   
@@ -402,7 +414,7 @@ public abstract class PageImpl extends NTFolder implements Page {
     if (page == null) {
       throw new NullPointerException();
     }
-    Map<String, PageImpl> children = getChildPages();
+    Map<String, PageImpl> children = getChildrenContainer();
     if (children.containsKey(pageName)) {
       throw new IllegalStateException();
     }
@@ -417,7 +429,7 @@ public abstract class PageImpl extends NTFolder implements Page {
   }
   
   
-  public PageImpl getWikiPage(String pageId){
+  public PageImpl getWikiPage(String pageId) throws Exception{
     if(WikiNodeType.Definition.WIKI_HOME_NAME.equalsIgnoreCase(pageId)){
       return this;
     }

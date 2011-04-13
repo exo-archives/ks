@@ -38,7 +38,7 @@ public class TestWikiPage extends AbstractMOWTestcase {
     assertNotNull(wikiHomePage) ;
   }
 
-  public void testAddWikiPage() {
+  public void testAddWikiPage() throws Exception {
     Model model = mowService.getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
@@ -78,7 +78,7 @@ public class TestWikiPage extends AbstractMOWTestcase {
     assertNotNull(page) ;
   }
   
-  public void testUpdateWikiPage() {
+  public void testUpdateWikiPage() throws Exception {
     Model model = mowService.getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
@@ -101,7 +101,7 @@ public class TestWikiPage extends AbstractMOWTestcase {
     assertNotNull(editedPage.getUpdatedDate()) ;
   }
   
-  public void testDeleteWikiPage() {
+  public void testDeleteWikiPage() throws Exception {
     Model model = mowService.getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);

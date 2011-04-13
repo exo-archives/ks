@@ -18,6 +18,7 @@ package org.exoplatform.wiki.mow.core.api;
 
 import java.util.Date;
 
+import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.wiki.mow.api.Model;
 import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
@@ -32,8 +33,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
  */
 public class TestJCRExtActions extends AbstractMOWTestcase {
 
-  public void testUpdateWikiPageAction() {
-    startSessionAs("root");
+  public void testUpdateWikiPageAction() throws Exception {
     //Get wiki home of webos portal
     Model model = mowService.getModel();
     WikiHome wikiHomePage = getWikiHomeOfWiki(WikiType.PORTAL, "webos", model);
@@ -44,7 +44,7 @@ public class TestJCRExtActions extends AbstractMOWTestcase {
     wikiHomePage.addWikiPage(wikipage);
     wikipage.setOwner("Root") ;
     assertNotNull(wikipage.getAuthor()) ;
-    assertEquals("root", wikipage.getAuthor());
+    assertEquals(ConversationState.getCurrent().getIdentity().getUserId(), wikipage.getAuthor());
     assertNotNull(wikipage.getUpdatedDate()) ;
     Date d1 = wikipage.getUpdatedDate();
     //update UpdateWikiPageAction-001 page
@@ -52,7 +52,6 @@ public class TestJCRExtActions extends AbstractMOWTestcase {
     assertNotNull(addedPage);
     addedPage.setOwner("Demo") ;
     model.save();
-    assertEquals("root", addedPage.getAuthor());
     Date d2 = addedPage.getUpdatedDate();
     //d2 must after d1 because owner property is modified
    /* assertTrue(d2.after(d1));

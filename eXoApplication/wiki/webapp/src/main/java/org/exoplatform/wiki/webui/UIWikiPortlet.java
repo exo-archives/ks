@@ -133,7 +133,7 @@ public class UIWikiPortlet extends UIPortletApplication {
       String requestURL = Utils.getCurrentRequestURL();
       PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
       Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode());
-      if (page == null || (page != null && !page.hasPermission(PermissionType.VIEWPAGE))) {
+      if (page == null) {
         changeMode(WikiMode.PAGE_NOT_FOUND);
         super.processRender(app, context);
         return;

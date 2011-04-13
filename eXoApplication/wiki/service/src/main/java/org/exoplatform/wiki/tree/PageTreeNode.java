@@ -53,7 +53,7 @@ public class PageTreeNode extends TreeNode {
   @Override
   protected void addChildren(HashMap<String, Object> context) throws Exception {
 
-    Collection<PageImpl> pages =  page.getChildPages().values();
+    Collection<PageImpl> pages = page.getChildPages().values();
     Iterator<PageImpl> childPageIterator = pages.iterator();
     int count = 0;
     int size = getNumberOfChildren(context, pages.size());

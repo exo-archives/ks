@@ -39,9 +39,10 @@ import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriBuilderException;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -87,8 +88,8 @@ import org.exoplatform.wiki.service.search.ContentSearchData;
 import org.exoplatform.wiki.service.search.TitleSearchResult;
 import org.exoplatform.wiki.tree.JsonNodeData;
 import org.exoplatform.wiki.tree.TreeNode;
-import org.exoplatform.wiki.tree.TreeNode.TREETYPE;
 import org.exoplatform.wiki.tree.WikiTreeNode;
+import org.exoplatform.wiki.tree.TreeNode.TREETYPE;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.context.Execution;
@@ -369,16 +370,19 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
         isWikiHome = false;
       }
       page = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, parentId);
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-    }
-    if (isWikiHome) {
-      pages.getPageSummary().add(createPageSummary(objectFactory, uriInfo.getBaseUri(), page));
-    } else {
-      for (PageImpl childPage : page.getChildPages().values()) {
-        pages.getPageSummary().add(createPageSummary(objectFactory, uriInfo.getBaseUri(), childPage));
+      if (isWikiHome) {
+        pages.getPageSummary().add(createPageSummary(objectFactory, uriInfo.getBaseUri(), page));
+      } else {
+        for (PageImpl childPage : page.getChildPages().values()) {
+          pages.getPageSummary().add(createPageSummary(objectFactory,
+                                                       uriInfo.getBaseUri(),
+                                                       childPage));
+        }
       }
+    } catch (Exception e) {
+      log.error("Can't get children pages of:" + parentFilterExpression, e);
     }
+
     return pages;
   }
   
@@ -520,7 +524,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     return page;
   }
 
-  public PageSummary createPageSummary(ObjectFactory objectFactory, URI baseUri, PageImpl doc) {
+  public PageSummary createPageSummary(ObjectFactory objectFactory, URI baseUri, PageImpl doc) throws IllegalArgumentException, UriBuilderException, Exception {
     PageSummary pageSummary = objectFactory.createPageSummary();
     fillPageSummary(pageSummary, objectFactory, baseUri, doc);
     String wikiName = Utils.getWikiType(doc.getWiki());
@@ -579,7 +583,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
   private static void fillPageSummary(PageSummary pageSummary,
                                       ObjectFactory objectFactory,
                                       URI baseUri,
-                                      PageImpl doc) {
+                                      PageImpl doc) throws IllegalArgumentException, UriBuilderException, Exception {
     pageSummary.setWiki(Utils.getWikiType(doc.getWiki()));
     pageSummary.setFullName(doc.getTitle());
     pageSummary.setId(Utils.getWikiType(doc.getWiki())+ ":" + doc.getWiki().getOwner() + "." + doc.getName());

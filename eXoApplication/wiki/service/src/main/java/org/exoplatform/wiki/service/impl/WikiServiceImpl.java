@@ -98,13 +98,13 @@ public class WikiServiceImpl implements WikiService {
 
   private static final Log      log               = ExoLogger.getLogger(WikiServiceImpl.class);
 
-  public WikiServiceImpl(ConfigurationManager configManager,               
+  public WikiServiceImpl(ConfigurationManager configManager,
                          NodeHierarchyCreator creator,
                          JCRDataStorage jcrDataStorage,
                          InitParams initParams) {
     this.configManager = configManager;
     this.nodeCreator = creator;
-    this.jcrDataStorage = jcrDataStorage;      
+    this.jcrDataStorage = jcrDataStorage;
     if (initParams != null) {
       syntaxHelpParams = initParams.getValuesParamIterator();
       preferencesParams = initParams.getPropertiesParam(PREFERENCES);
@@ -161,7 +161,7 @@ public class WikiServiceImpl implements WikiService {
       oldDraftPage.remove();
     }
     PageImpl draftNewPage = wStore.createPage();
-    draftNewPagesContainer.getChildPages().put(draftNewPageId, draftNewPage);
+    draftNewPagesContainer.addPage(draftNewPageId, draftNewPage);
   }
   
   public boolean isExisting(String wikiType, String wikiOwner, String pageId) throws Exception {
@@ -232,7 +232,8 @@ public class WikiServiceImpl implements WikiService {
     Model model = getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     PageImpl draftNewPagesContainer = wStore.getDraftNewPagesContainer();
-    draftNewPagesContainer.getChildPages().remove(newDraftPageId);
+    PageImpl draftPage = (PageImpl) draftNewPagesContainer.getChild(newDraftPageId);
+    draftPage.remove();
   }
 
   public boolean renamePage(String wikiType,
@@ -460,7 +461,9 @@ public class WikiServiceImpl implements WikiService {
           page = null;
         }
       }
-      return page;
+      if (page != null && page.hasPermission(PermissionType.VIEWPAGE)) {
+        return page;
+      }
     }
     return null;
   }
@@ -633,13 +636,16 @@ public class WikiServiceImpl implements WikiService {
     return getBreadcumb(null, wikiType, wikiOwner, pageId);
   }
 
-  public PageImpl getHelpSyntaxPage(String syntaxId) {
+  public PageImpl getHelpSyntaxPage(String syntaxId) throws Exception {
     Model model = getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     if (wStore.getHelpPagesContainer().getChildPages().size() == 0) {
       createHelpPages(wStore);
     }
-    Iterator<PageImpl> syntaxPageIterator = wStore.getHelpPagesContainer().getChildPages().values().iterator();
+    Iterator<PageImpl> syntaxPageIterator = wStore.getHelpPagesContainer()
+                                                  .getChildPages()
+                                                  .values()
+                                                  .iterator();
     while (syntaxPageIterator.hasNext()) {
       PageImpl syntaxPage = syntaxPageIterator.next();
       if (syntaxPage.getSyntax().equals(syntaxId)) {
