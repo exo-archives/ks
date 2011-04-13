@@ -81,7 +81,6 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
         attachform.setRendered(false);
       else
         attachform.setRendered(true);
-      event.getRequestContext().addUIComponentToUpdateByAjax(wikiBottomArea);
     }
   }
 
