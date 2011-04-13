@@ -75,12 +75,13 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
   public static class ToggleAttachmentsActionListener extends EventListener<UIWikiPageInfoArea> {
     @Override
     public void execute(Event<UIWikiPageInfoArea> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIWikiAttachmentArea attachform = wikiPortlet.findFirstComponentOfType(UIWikiAttachmentArea.class);
+      UIWikiBottomArea wikiBottomArea = event.getSource().getAncestorOfType(UIWikiBottomArea.class);
+      UIWikiAttachmentArea attachform = wikiBottomArea.findFirstComponentOfType(UIWikiAttachmentArea.class);
       if (attachform.isRendered())
         attachform.setRendered(false);
       else
-        attachform.setRendered(true);     
+        attachform.setRendered(true);
+      event.getRequestContext().addUIComponentToUpdateByAjax(wikiBottomArea);
     }
   }
 
