@@ -423,8 +423,10 @@ public class WikiServiceImpl implements WikiService {
           }
         }
       }
-      actions.append(":").append(entry.getIdType()).append(":").append(entry.getId());
-      permissions.add(actions.toString());
+      if (actions.toString().length() > 0) {
+        actions.append(":").append(entry.getIdType()).append(":").append(entry.getId());
+        permissions.add(actions.toString());
+      }
       if (permlist.size() > 0) {
         permMap.put(entry.getId(), permlist.toArray(new String[permlist.size()]));
       }

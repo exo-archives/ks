@@ -34,12 +34,12 @@ import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.organization.UIGroupMembershipSelector;
 import org.exoplatform.webui.organization.account.UIGroupSelector;
 import org.exoplatform.webui.organization.account.UIUserSelector;
@@ -267,6 +267,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
                 permissions = new Permission[4];
                 permissions[0] = new Permission();
                 permissions[0].setPermissionType(PermissionType.VIEWPAGE);
+                permissions[0].setAllowed(true);
                 permissions[1] = new Permission();
                 permissions[1].setPermissionType(PermissionType.EDITPAGE);
                 permissions[2] = new Permission();
@@ -277,6 +278,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
                 permissions = new Permission[2];
                 permissions[0] = new Permission();
                 permissions[0].setPermissionType(PermissionType.VIEWPAGE);
+                permissions[0].setAllowed(true);
                 permissions[1] = new Permission();
                 permissions[1].setPermissionType(PermissionType.EDITPAGE);
               }
