@@ -122,7 +122,7 @@ public class UIWikiVersionSelect extends UIWikiContainer {
     @Override
     public void execute(Event<UIWikiVersionSelect> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIWikiPageInfoArea.processShowHistoryAction(wikiPortlet);
+      Utils.processShowHistoryAction(wikiPortlet);
       event.getSource().getAncestorOfType(UIWikiPortlet.class).changeMode(WikiMode.SHOWHISTORY);
     }
   }

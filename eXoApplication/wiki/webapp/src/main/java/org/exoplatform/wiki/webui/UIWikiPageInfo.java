@@ -28,7 +28,8 @@ import org.xwiki.rendering.syntax.Syntax;
 @ComponentConfig(
   template = "app:/templates/wiki/webui/UIWikiPageInfo.gtmpl",
   events = {
-    @EventConfig(listeners = UIWikiPageInfo.ViewRevisionActionListener.class)
+    @EventConfig(listeners = UIWikiPageInfo.ViewRevisionActionListener.class),
+    @EventConfig(listeners = UIWikiPageInfo.ShowHistoryActionListener.class)
   }
 )
 public class UIWikiPageInfo extends UIWikiContainer {
@@ -92,4 +93,11 @@ public class UIWikiPageInfo extends UIWikiContainer {
     }
   }
 
+  public static class ShowHistoryActionListener extends EventListener<UIWikiPageInfo> {
+    @Override
+    public void execute(Event<UIWikiPageInfo> event) throws Exception {
+      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
+      Utils.processShowHistoryAction(wikiPortlet);
+    }
+  }
 }

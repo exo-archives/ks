@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +51,10 @@ import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
+import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
@@ -68,7 +71,9 @@ import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.impl.SessionManager;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
+import org.exoplatform.wiki.webui.UIWikiHistorySpaceArea;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
+import org.exoplatform.wiki.webui.UIWikiPageVersionsList;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.WikiMode;
@@ -450,4 +455,23 @@ public class Utils {
       ec.removeContext();
     }
   }
+  
+  public static void processShowHistoryAction(UIWikiPortlet wikiPortlet) throws Exception {
+    PageImpl wikipage = (PageImpl) getCurrentWikiPage();
+    Iterator<NTVersion> iter = wikipage.getVersionableMixin().getVersionHistory().iterator();
+    List<NTVersion> versionsList = new ArrayList<NTVersion>();
+    // TODO: sort descendant by updated date
+    while (iter.hasNext()) {
+      NTVersion version = iter.next();
+      if (!(WikiNodeType.Definition.ROOT_VERSION.equals(version.getName()))) {
+        versionsList.add(version);
+      }
+    }
+    Collections.sort(versionsList, new VersionNameComparatorDesc());
+    UIWikiHistorySpaceArea historySpaceArea = wikiPortlet.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
+    UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class);
+    pageVersionsList.setVersionsList(versionsList);
+    wikiPortlet.changeMode(WikiMode.SHOWHISTORY);
+  }
+  
 }

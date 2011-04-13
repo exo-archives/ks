@@ -89,26 +89,8 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
     @Override
     public void execute(Event<UIWikiPageInfoArea> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      processShowHistoryAction(wikiPortlet);
+      Utils.processShowHistoryAction(wikiPortlet);
     }
-  }
-  
-  public static void processShowHistoryAction(UIWikiPortlet wikiPortlet) throws Exception {
-    PageImpl wikipage = (PageImpl) Utils.getCurrentWikiPage();
-    Iterator<NTVersion> iter = wikipage.getVersionableMixin().getVersionHistory().iterator();
-    List<NTVersion> versionsList = new ArrayList<NTVersion>();
-    // TODO: sort descendant by updated date
-    while (iter.hasNext()) {
-      NTVersion version = iter.next();
-      if (!(WikiNodeType.Definition.ROOT_VERSION.equals(version.getName()))) {
-        versionsList.add(version);
-      }
-    }
-    Collections.sort(versionsList, new VersionNameComparatorDesc());
-    UIWikiHistorySpaceArea historySpaceArea = wikiPortlet.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
-    UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class);
-    pageVersionsList.setVersionsList(versionsList);
-    wikiPortlet.changeMode(WikiMode.SHOWHISTORY);
   }
 
 }

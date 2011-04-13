@@ -8,6 +8,7 @@
   DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, rcontext.getLocale());
   def rowClass = "OldClass";
   def isOddRow = true;
+  def showHistoryId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + "ShowHistory";
 %>
 
 <div class="UIPageInfoItem UIPageInfoChanges">
@@ -36,6 +37,7 @@
           versionLabel = "v. " + versionLabel;
         }
         def viewLinkId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + "ViewRevision/"+versionNumber;
+        def viewId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + "ViewRevision";
         def viewLink = uicomponent.event("ViewRevision", version.getName());
         def updatedDate = df.format(frozenNode.getUpdatedDate());
         def author = frozenNode.getAuthor();
@@ -50,6 +52,7 @@
         <tr class="$rowClass">
           <td style="width: 40%">
             <a href="#ViewRevision/$versionNumber" title="$versionLabel" >$versionLabel</a>
+            <a style="display: none;" id="$viewLinkId" onclick="<%=uicomponent.event("ViewRevision", versionNumber)%>">&nbsp;</a>
           </td>
           <td colspan="2" class="Editor">$author</td>
           <!-- td style="width: 30%"><a href="$viewLinkId"><%= _ctx.appRes("UIWikiPageInfo.label.view-change")%></a></td -->
@@ -58,7 +61,10 @@
       </tbody>
     </table>
     <% if (currentVersions.size() > 0) { %>
-      <div align="center" style="padding: 10px;"><a class="AddButton" href="#ShowHistory"><%= _ctx.appRes("UIWikiPageInfo.label.view-page-history")%></a></div>
+      <div align="center" style="padding: 10px;">
+      	<a class="AddButton" href="#ShowHistory"><%= _ctx.appRes("UIWikiPageInfo.label.view-page-history")%></a>
+      	<a style="display: none;" id="$showHistoryId" onclick="<%=uicomponent.event("ShowHistory")%>">&nbsp;</a>
+      </div>
     <% } %>
   </div>
 
