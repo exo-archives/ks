@@ -113,8 +113,8 @@
               
                 if (Utils.getModeFromAction(action)){
                  %>
-               <a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');" class="${action}Icon">$title</a>               
-               <a onclick="$actionLink" id="$actionId" style="display:none;">&nbsp;</a>
+               <a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor/$beanId');" class="${action}Icon">$title</a>               
+               <a onclick="$actionLink" id="$actionId/$beanId" style="display:none;">&nbsp;</a>
                <% } else { %>
                <a onclick="$actionLink" alt="$action">$title</a>
                <% } 
