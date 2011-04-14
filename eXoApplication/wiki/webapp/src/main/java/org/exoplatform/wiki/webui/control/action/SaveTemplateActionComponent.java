@@ -152,6 +152,7 @@ public class SaveTemplateActionComponent extends AbstractFormActionComponent {
           template.setDescription(description);
           template.getContent().setText(markup);
           template.setSyntax(syntaxId);
+          template.setNonePermission();
           uiApp.addMessage(new ApplicationMessage("SaveTemplateAction.msg.Create-template-successfully",
                                                   msgArg,
                                                   ApplicationMessage.INFO));

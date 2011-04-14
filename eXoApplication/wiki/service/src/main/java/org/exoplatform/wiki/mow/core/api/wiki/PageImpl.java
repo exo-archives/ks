@@ -329,7 +329,7 @@ public abstract class PageImpl extends NTFolder implements Page {
   public abstract void setTrash(Trash trash);
   
   @OneToMany
-  public abstract Map<String, PageImpl> getChildrenContainer();
+  protected abstract Map<String, PageImpl> getChildrenContainer();
   
   public Map<String, PageImpl> getChildPages() throws Exception {
     Map<String, PageImpl> result = new HashMap<String, PageImpl>();
@@ -404,10 +404,14 @@ public abstract class PageImpl extends NTFolder implements Page {
     }
   }
   
+  public void setNonePermission() throws Exception {
+    setPagePermission(null);
+  }
+  
   /*public void addWikiPage(PageImpl wikiPage) throws DuplicateNameException {
     getChildPages().add(wikiPage);
   }*/
-  public void addPage(String pageName, PageImpl page) {
+  protected void addPage(String pageName, PageImpl page) {
     if (pageName == null) {
       throw new NullPointerException();
     }
@@ -426,6 +430,11 @@ public abstract class PageImpl extends NTFolder implements Page {
       throw new NullPointerException();
     }
     addPage(page.getName(), page);
+  }
+  
+  public void addPublicPage(PageImpl page) throws Exception {
+    addWikiPage(page);
+    page.setNonePermission();
   }
   
   

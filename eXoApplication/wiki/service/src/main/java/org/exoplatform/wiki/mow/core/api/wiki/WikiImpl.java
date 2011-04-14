@@ -51,7 +51,7 @@ public abstract class WikiImpl implements Wiki {
       home.setSyntax(home.getWikiService().getDefaultWikiSyntaxId());
       content.setText("This is a Wiki Home page of " + getOwner());
       try {
-        home.setPagePermission(null);
+        home.setNonePermission();
         home.checkin();
         home.checkout();
       } catch (Exception e) {

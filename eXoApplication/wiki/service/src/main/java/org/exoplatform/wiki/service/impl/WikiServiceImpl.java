@@ -27,6 +27,7 @@ import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -161,7 +162,8 @@ public class WikiServiceImpl implements WikiService {
       oldDraftPage.remove();
     }
     PageImpl draftNewPage = wStore.createPage();
-    draftNewPagesContainer.addPage(draftNewPageId, draftNewPage);
+    draftNewPage.setName(draftNewPageId);
+    draftNewPagesContainer.addPublicPage(draftNewPage);
   }
   
   public boolean isExisting(String wikiType, String wikiOwner, String pageId) throws Exception {
@@ -246,7 +248,8 @@ public class WikiServiceImpl implements WikiService {
     PageImpl currentPage = (PageImpl) getPageById(wikiType, wikiOwner, pageName);
     currentPage.setTitle(newTitle) ;
     PageImpl parentPage = currentPage.getParentPage();
-    parentPage.addPage(newName, currentPage) ;
+    currentPage.setName(newName);
+    getModel().save();
     if(currentPage.getRenamedMixin() != null) {
       RenamedMixin mix = currentPage.getRenamedMixin() ;
       List<String> ids = new ArrayList<String>() ;
@@ -865,11 +868,12 @@ public class WikiServiceImpl implements WikiService {
     PageImpl syntaxPage = wStore.createPage();
     String realName = name.replace("/", "");
     syntaxPage.setName(realName + type);
-    syntaxPage.setParentPage(parentPage);
+    parentPage.addPublicPage(syntaxPage);
     AttachmentImpl content = syntaxPage.getContent();
     syntaxPage.setTitle(realName + type);
     content.setText(stringContent.toString());
     syntaxPage.setSyntax(name);
+    syntaxPage.setNonePermission();
     inputContent.close();
     bufferReader.close();
     return syntaxPage;

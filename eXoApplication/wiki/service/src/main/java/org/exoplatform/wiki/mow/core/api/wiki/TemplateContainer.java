@@ -42,7 +42,7 @@ public abstract class TemplateContainer {
   public abstract Map<String,Template> getTemplates();
   public abstract void setTemplates(Map<String,Template> templates);
   
-  public Template addPage(String templateName, Template template) {
+  public Template addPage(String templateName, Template template) throws Exception {
     if (templateName == null) {
       throw new NullPointerException();
     }
@@ -54,6 +54,7 @@ public abstract class TemplateContainer {
       return template;
     }
     children.put(templateName, template);
+    template.setNonePermission();
     return template;
   }
   
