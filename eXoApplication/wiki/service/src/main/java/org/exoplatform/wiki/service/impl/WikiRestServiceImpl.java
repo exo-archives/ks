@@ -254,9 +254,9 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     try {
       List<JsonNodeData> responseData = new ArrayList<JsonNodeData>();
       HashMap<String, Object> context = new HashMap<String, Object>();
-      path = URLDecoder.decode(path, "utf-8").replace(".", "/");
+      path = URLDecoder.decode(path, "utf-8");
       if (currentPath != null){
-        currentPath = URLDecoder.decode(currentPath, "utf-8").replace(".", "/");
+        currentPath = URLDecoder.decode(currentPath, "utf-8");
         context.put(TreeNode.CURRENT_PATH, currentPath);
       }   
       context.put(TreeNode.SHOW_EXCERPT, showExcerpt);

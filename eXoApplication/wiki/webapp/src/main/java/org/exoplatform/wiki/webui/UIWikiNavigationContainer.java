@@ -72,7 +72,7 @@ public class UIWikiNavigationContainer extends UIWikiForm {
     StringBuilder initParamSb = new StringBuilder();
     String currentPath = Utils.getCurrentWikiPagePath();
     if (currentPath != null) {    
-      initParamSb.append("?").append(TreeNode.PATH).append("=").append(currentPath.replaceAll("/", "."));
+      initParamSb.append("?").append(TreeNode.PATH).append("=").append(currentPath);
       return initParamSb.toString();
     }
     return null;

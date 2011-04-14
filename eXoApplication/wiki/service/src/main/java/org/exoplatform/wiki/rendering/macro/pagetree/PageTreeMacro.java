@@ -138,7 +138,7 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
     initSb.append("?")
           .append(TreeNode.PATH)
           .append("=")
-          .append(node.getPath().replaceAll("/", "."))
+          .append(node.getPath())
           .append("&")
           .append(TreeNode.SHOW_EXCERPT)
           .append("=")

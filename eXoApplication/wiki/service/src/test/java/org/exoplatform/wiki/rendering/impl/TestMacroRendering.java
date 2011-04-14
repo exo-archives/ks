@@ -168,7 +168,7 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
     wikiContext.setPageId("rootPage");
     ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
  
-    String xwikiExpectedHtml = "<div class=\"UITreeExplorer\" id =\"PageTree123\">  <div>   <input class=\"ChildrenURL\" type=\"hidden\" value=\"/wiki/tree/children/\" />   <a class=\"SelectNode\" style=\"display:none\" href=\"http://localhost:8080/portal/classic/\" /></a><div class=\"NodeGroup\">  <script> eXo.wiki.UITreeExplorer.init(\"PageTree123\",\"?path=portal.classic.rootPage&excerpt=false&depth=\",false ); </script></div>  </div></div>" ;    
+    String xwikiExpectedHtml = "<div class=\"UITreeExplorer\" id =\"PageTree123\">  <div>   <input class=\"ChildrenURL\" type=\"hidden\" value=\"/wiki/tree/children/\" />   <a class=\"SelectNode\" style=\"display:none\" href=\"http://localhost:8080/portal/classic/\" /></a><div class=\"NodeGroup\">  <script> eXo.wiki.UITreeExplorer.init(\"PageTree123\",\"?path=portal/classic/rootPage&excerpt=false&depth=\",false ); </script></div>  </div></div>" ;    
     assertEquals(xwikiExpectedHtml, renderingService.render("{{pagetree /}}",
                                                             Syntax.XWIKI_2_0.toIdString(),
                                                             Syntax.XHTML_1_0.toIdString(),

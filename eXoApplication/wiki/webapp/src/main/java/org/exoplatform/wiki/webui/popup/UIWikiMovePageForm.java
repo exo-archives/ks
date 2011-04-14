@@ -140,7 +140,7 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
   
   private String getInitParam() throws Exception {
     StringBuilder sb = new StringBuilder();
-    String currentPath = Utils.getCurrentWikiPagePath().replaceAll("/", ".");
+    String currentPath = Utils.getCurrentWikiPagePath();
     sb.append("?")
       .append(TreeNode.PATH)
       .append("=")
