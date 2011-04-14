@@ -132,7 +132,7 @@
     <!-- We enforce Java 6 to build to use Chromattic and APT -->
     <jdk.min.version>1.6</jdk.min.version>
     <!-- maven-release-plugin -->
-    <arguments>-Prelease,java-api-compat,pkg-tomcat,arc-tomcat,run-its -Dgatein.working.dir=target</arguments>
+    <arguments>-Prelease,java-api-compat,pkg-tomcat,arc-tomcat -Dgatein.working.dir=target</arguments>
   </properties>
   <dependencyManagement>
     <!-- TODO : import dependencyManagement of platform, instead of redefining those properties -->
