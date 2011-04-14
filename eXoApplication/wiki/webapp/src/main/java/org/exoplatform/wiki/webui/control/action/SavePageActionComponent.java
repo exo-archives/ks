@@ -40,6 +40,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.NameValidator;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
+import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
@@ -150,11 +151,13 @@ public class SavePageActionComponent extends UIComponent {
       markup = markup.trim();
       String syntaxId = syntaxTypeSelectBox.getValue();
       
-      String pageId = TitleResolver.getId(title, false);
-      if (!pageId.equals(page.getName()) && wikiService.isExisting(pageParams.getType(),
-                                                                   pageParams.getOwner(),
-                                                                   pageId)) {
-        // if page title is not changed or duplicated with existed page's after edited.
+      String newPageId = TitleResolver.getId(title, false);
+      if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(page.getName()) && wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
+        // as wiki home page has fixed name (never edited anymore), every title changing is accepted. 
+        ;
+      } else if (!newPageId.equals(page.getName())
+          && wikiService.isExisting(pageParams.getType(), pageParams.getOwner(), newPageId)) {
+        // if page title is not changed or new one is duplicated with existed page's.
         if (log.isDebugEnabled()) log.debug("The title '" + title + "' is already existing!");
         uiApp.addMessage(new ApplicationMessage("SavePageAction.msg.warning-page-title-already-exist",
                                                 null,
@@ -167,18 +170,18 @@ public class SavePageActionComponent extends UIComponent {
       try {
         if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
           if (wikiPortlet.getEditMode() == EditMode.SECTION) {
-            pageId = page.getName();
+            newPageId = page.getName();
             title = page.getTitle();
             markup = renderingService.updateContentOfSection(page.getContent().getText(),
                                                              page.getSyntax(),
                                                              wikiPortlet.getSectionIndex(),
                                                              markup);
           }
-          if (!page.getName().equals(pageId)) {
+          if (!page.getName().equals(newPageId)) {
             wikiService.renamePage(pageParams.getType(),
                                    pageParams.getOwner(),
                                    page.getName(),
-                                   pageId,
+                                   newPageId,
                                    title);
           }
           Object minorAtt = event.getRequestContext().getAttribute(MinorEditActionComponent.ACTION);
@@ -197,7 +200,7 @@ public class SavePageActionComponent extends UIComponent {
             page.setTitle(title);
             ((PageImpl) page).checkin();
             ((PageImpl) page).checkout();
-            pageParams.setPageId(pageId);
+            pageParams.setPageId(newPageId);
           } else {
             ((PageImpl) page).checkin();
             ((PageImpl) page).checkout();
@@ -218,7 +221,7 @@ public class SavePageActionComponent extends UIComponent {
           ((PageImpl) subPage).getAttachments().addAll(attachs);
           ((PageImpl) subPage).checkin();
           ((PageImpl) subPage).checkout();
-          pageParams.setPageId(pageId);
+          pageParams.setPageId(newPageId);
           ((PageImpl) draftPage).remove();
           return;
         }
