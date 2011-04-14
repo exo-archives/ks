@@ -37,3 +37,11 @@
 .gwt-PopupPanel table {
   width: auto;
 }
+
+.gwt-PopupPanel .xDialogBody, .gwt-PopupPanel .xMacroSelector, .gwt-PopupPanel .xPagesSelector {
+  overflow: hidden;
+}
+
+.gwt-PopupPanel .xPagesSelector .xSearchForm input {
+  width:365px;
+}
