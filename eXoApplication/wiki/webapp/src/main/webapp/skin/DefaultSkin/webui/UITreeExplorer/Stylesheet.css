@@ -33,7 +33,7 @@
 }
 
 .UITreeExplorer .Node a {
-  display: block;
+  display: inline;
   color: #555;
   line-height: 18px;
   /*white-space: normal;*/

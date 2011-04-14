@@ -83,14 +83,18 @@
 }
 
 /*===========================*/
+.box {
+  border:1px solid #DDDDDD;
+  margin:1em 0;
+  display:block;
+  padding:8px;
+}
+
 .notemessage, .tipmessage, .errormessage, .warningmessage, .infomessage, .plainmessage {
 	background:#F5F5F5 none no-repeat scroll 6px 8px;
-	border:1px solid #DDDDDD;
 	color:#555555;
-	margin:4px 0;
 	padding:8px 28px;
 	text-align:justify;
-	display: block;
 }
 
 .notemessage {
@@ -152,14 +156,16 @@
 
 .code {
 	background-color:#F1F7FF;
-	border:1px solid #DDDDDD;
-	margin:1em 0;
 	overflow:auto;
-	padding:10px;
 }
 
 .code pre {
 	font-family:courier,courier new,monospace;
+}
+
+span.Excerpt p {
+  display: inline;
+  color: #555555;
 }
 
 /*===========================*/

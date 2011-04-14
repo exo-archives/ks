@@ -100,10 +100,12 @@ public class MacroUtils {
       for (MacroBlock block : mBlocks) {
 
         if (block.getId().equals(ExcerptMacro.MACRO_ID)) {
-          sb.append(renderingService.render(block.getContent(),
+          sb.append("<span class=\"Excerpt\">");
+          sb.append(renderingService.render(" (" + block.getContent() + ")",
                                             sourceSyntax,
                                             Syntax.XHTML_1_0.toIdString(),
                                             false));
+          sb.append("</span>");
         }
       }
     }
