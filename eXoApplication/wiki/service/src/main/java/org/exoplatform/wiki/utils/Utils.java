@@ -306,9 +306,11 @@ public class Utils {
   public static Stack<WikiPageParams> getStackParams(PageImpl page) throws Exception {
     Stack<WikiPageParams> stack = new Stack<WikiPageParams>();
     Wiki wiki = page.getWiki();
-    while (page != null) {
-      stack.push(new WikiPageParams(Utils.getWikiType(wiki), wiki.getOwner(), page.getName()));
-      page = page.getParentPage();
+    if (wiki != null) {
+      while (page != null) {
+        stack.push(new WikiPageParams(Utils.getWikiType(wiki), wiki.getOwner(), page.getName()));
+        page = page.getParentPage();
+      }      
     }
     return stack;
   }
