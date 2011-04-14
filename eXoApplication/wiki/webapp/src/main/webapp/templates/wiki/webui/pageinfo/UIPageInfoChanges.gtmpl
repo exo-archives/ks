@@ -37,7 +37,6 @@
           versionLabel = "v. " + versionLabel;
         }
         def viewLinkId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + "ViewRevision/"+versionNumber;
-        def viewId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + "ViewRevision";
         def viewLink = uicomponent.event("ViewRevision", version.getName());
         def updatedDate = df.format(frozenNode.getUpdatedDate());
         def author = frozenNode.getAuthor();
