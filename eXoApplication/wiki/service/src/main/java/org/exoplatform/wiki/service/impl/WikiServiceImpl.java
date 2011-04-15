@@ -120,10 +120,9 @@ public class WikiServiceImpl implements WikiService {
     WikiImpl wiki = (WikiImpl) getWiki(wikiType, wikiOwner, model);
     PageImpl page = wiki.createWikiPage();
     PageImpl parentPage = null;
-    String statement = getStatement(wikiType, wikiOwner, parentId);
-    parentPage = searchPage(statement, wStore.getSession());
+    parentPage = (PageImpl) getPageById(wikiType, wikiOwner, parentId);
     if (parentPage == null)
-      throw new Exception();    
+      throw new IllegalArgumentException(String.format("[%s]:[%s]:[%s] is not [wikiType]:[wikiOwner]:[pageId] of an existed page!", wikiType, wikiOwner, parentId));    
     page.setName(pageId);
     parentPage.addWikiPage(page);
     ConversationState conversationState = ConversationState.getCurrent();
@@ -449,14 +448,14 @@ public class WikiServiceImpl implements WikiService {
 
     Model model = getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+    if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageId) || pageId == null) {
+      return getWikiHome(wikiType, wikiOwner);
+    }
 
-    String statement = getStatement(wikiType, wikiOwner, pageId);
+    String statement = new ContentSearchData(wikiType, wikiOwner, pageId).getPageConstraint();
     if (statement != null) {
       PageImpl page = searchPage(statement, wStore.getSession());
       // page.setChromatticSession(wStore.getSession()) ;
-      if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageId) || pageId == null) {
-        return getWikiHome(wikiType, wikiOwner);
-      }
       if (page == null) {
         page = getWikiHome(wikiType, wikiOwner);
         String wikiHomeId = TitleResolver.getId(page.getTitle(), true);
@@ -687,50 +686,6 @@ public class WikiServiceImpl implements WikiService {
     MOWService mowService = (MOWService) ExoContainerContext.getCurrentContainer()
                                                             .getComponentInstanceOfType(MOWService.class);
     return mowService.getModel();
-  }
-
-  private String getStatement(String wikiType, String wikiOwner, String pageId) throws Exception {
-    String path = null;
-    if (PortalConfig.PORTAL_TYPE.equals(wikiType)) {
-      path = Utils.getPortalWikisPath();
-    } else if (PortalConfig.GROUP_TYPE.equals(wikiType)) {
-      path = nodeCreator.getJcrPath(GROUPS_PATH);
-      path = (path != null) ? path : "/Groups";
-    } else if (PortalConfig.USER_TYPE.equals(wikiType)) {
-      path = nodeCreator.getJcrPath(USERS_PATH);
-      path = (path != null) ? path : "/Users";
-    }
-
-    if (path != null) {
-      path = path + "/" + Utils.validateWikiOwner(wikiType, wikiOwner);
-      if (!PortalConfig.PORTAL_TYPE.equals(wikiType)) {
-        String appPath = null;
-        if (PortalConfig.GROUP_TYPE.equals(wikiType)) {
-          appPath = nodeCreator.getJcrPath(GROUP_APPLICATION);
-        } else {
-          appPath = nodeCreator.getJcrPath(USER_APPLICATION);
-        }
-        appPath = (appPath != null) ? appPath : "ApplicationData";
-        path = path + "/" + appPath + "/" + WikiNodeType.Definition.WIKI_APPLICATION;
-      }
-      StringBuilder statement = new StringBuilder();
-      statement.append("(jcr:path LIKE '")
-               .append(path)
-               .append("/%/")
-               .append(pageId)
-               .append("' OR ")
-               .append("jcr:path='")
-               .append(path)
-               .append("/")
-               .append(pageId)
-               .append("')");
-      statement.append(" AND ")
-               .append("( jcr:mixinTypes IS NULL OR NOT(jcr:mixinTypes = '")
-               .append(WikiNodeType.WIKI_REMOVED)
-               .append("') )");
-      return statement.toString();
-    }
-    return null;
   }
 
   private PageImpl searchPage(String statement, ChromatticSession session) throws Exception {

@@ -138,10 +138,10 @@ public class TestWikiService extends AbstractMOWTestcase {
     assertEquals("Breadcumb1", breadCumbs.get(1).getId());
     assertEquals("Breadcumb2", breadCumbs.get(2).getId());
     assertEquals("Breadcumb3", breadCumbs.get(3).getId());
-    wService.createPage(PortalConfig.GROUP_TYPE, "/platform/users", "GroupBreadcumb1", "WikiHome") ;
-    wService.createPage(PortalConfig.GROUP_TYPE, "/platform/users/", "GroupBreadcumb2", "GroupBreadcumb1") ;
+    wService.createPage(PortalConfig.GROUP_TYPE, "platform/users", "GroupBreadcumb1", "WikiHome") ;
+    wService.createPage(PortalConfig.GROUP_TYPE, "platform/users", "GroupBreadcumb2", "GroupBreadcumb1") ;
     wService.createPage(PortalConfig.GROUP_TYPE, "platform/users", "GroupBreadcumb3", "GroupBreadcumb2") ;
-    breadCumbs = wService.getBreadcumb(PortalConfig.GROUP_TYPE, "/platform/users", "GroupBreadcumb3");
+    breadCumbs = wService.getBreadcumb(PortalConfig.GROUP_TYPE, "platform/users", "GroupBreadcumb3");
     assertEquals(4, breadCumbs.size());
     assertEquals("WikiHome", breadCumbs.get(0).getId());
     assertEquals("GroupBreadcumb1", breadCumbs.get(1).getId());
@@ -460,19 +460,19 @@ public class TestWikiService extends AbstractMOWTestcase {
     wService.renamePage(PortalConfig.PORTAL_TYPE, "classic", "RenamedOriginalPage2", "RenamedOriginalPage3", "RenamedOriginalPage3");
     relatedPage = (PageImpl) wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "OriginalPage");
     assertEquals("RenamedOriginalPage3", relatedPage.getName());
-    wService.createPage(PortalConfig.GROUP_TYPE, "/platform/users", "OriginalParentPage", "WikiHome");
+    wService.createPage(PortalConfig.GROUP_TYPE, "platform/users", "OriginalParentPage", "WikiHome");
     // Move RenamedOriginalPage3 from portal type to group type
     currentPageParams.setPageId("RenamedOriginalPage3");
     currentPageParams.setOwner("classic");
     currentPageParams.setType(PortalConfig.PORTAL_TYPE);
     newPageParams.setPageId("OriginalParentPage");
-    newPageParams.setOwner("/platform/users");
+    newPageParams.setOwner("platform/users");
     newPageParams.setType(PortalConfig.GROUP_TYPE);
     //
     wService.movePage(currentPageParams,newPageParams);
     relatedPage = (PageImpl) wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "OriginalPage");
     assertEquals("RenamedOriginalPage3", relatedPage.getName());
-    wService.deletePage(PortalConfig.GROUP_TYPE, "/platform/users", "RenamedOriginalPage3");
+    wService.deletePage(PortalConfig.GROUP_TYPE, "platform/users", "RenamedOriginalPage3");
     assertNull(wService.getRelatedPage(PortalConfig.PORTAL_TYPE, "classic", "OriginalPage"));
   }
   

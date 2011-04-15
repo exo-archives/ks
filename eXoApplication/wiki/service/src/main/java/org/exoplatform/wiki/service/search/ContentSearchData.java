@@ -100,20 +100,37 @@ public class ContentSearchData extends SearchData {
   }
   
   /**
-   * get SQL constraint for getting available page (be a child of <code>WikiHome</code> page and not removed).
-   * @return string in format:
-   *        <code>((jcr:path like [path to page node] or jcr:path = [path to home page]) AND (jcr:mixinTypes IS NULL OR NOT (jcr:mixinTypes = 'wiki:removed'))</code>
+   * get SQL constraint for searching available page (be a child of <code>WikiHome</code> page and not removed).
+   * @return 
+   *        <li>
+   *         returned string is in format:
+   *        <code>((jcr:path like [path to page node likely] or jcr:path = [path to page node]) 
+   *        AND (jcr:mixinTypes IS NULL OR NOT (jcr:mixinTypes = 'wiki:removed'))</code>
+   *        </li>
+   *        <li>
+   *        if <code>wikiType</code> or <code>wikiOwner</code> is null, 
+   *        paths of the constraint are <code>/%/pageId</code> and <code>/pageId</code>. 
+   *        It means that pages of which id is <code>pageId</code> are searched from <code>root</code>.  
+   *        </li> 
    */
   public String getPageConstraint() {
     StringBuilder constraint = new StringBuilder();
-    String pagePart = "/%/" + pageId;
+    
+    String absPagePath = pagePath + "/" + pageId;
+    String pageLikePath = pagePath + "/%/" + pageId;
+    boolean isWikiHome = false;
     if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageId)) {
-      pagePart = "";
+      absPagePath = pagePath;
+     isWikiHome = true;
+    }
+    if (wikiType == null || wikiOwner == null) {
+      absPagePath = "/" + pageId;
+      pageLikePath = "/%/" + pageId;
     }
     constraint.append('(')
-             .append('(').append("jcr:path LIKE '").append(pagePath).append(pagePart)
-               .append("' or (jcr:path = '").append(pagePath).append(pagePart.length() == 0 ? "" : '/' + pageId).append('\'')
-             .append("))")
+             .append('(').append("jcr:path LIKE '").append(pageLikePath).append('\'');
+    if (!isWikiHome) constraint.append(" or (jcr:path = '").append(absPagePath).append('\'').append(')');
+    constraint.append(")")
              .append(" AND ").append("(jcr:mixinTypes IS NULL OR NOT (jcr:mixinTypes = 'wiki:removed'))")
              .append(')');
     return constraint.toString();

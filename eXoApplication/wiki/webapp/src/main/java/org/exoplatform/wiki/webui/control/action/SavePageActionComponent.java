@@ -155,9 +155,11 @@ public class SavePageActionComponent extends UIComponent {
       if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(page.getName()) && wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
         // as wiki home page has fixed name (never edited anymore), every title changing is accepted. 
         ;
-      } else if (!newPageId.equals(page.getName())
-          && wikiService.isExisting(pageParams.getType(), pageParams.getOwner(), newPageId)) {
-        // if page title is not changed or new one is duplicated with existed page's.
+      } else if (newPageId.equals(page.getName()) && wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
+        // if page title is not changed in editing phase, do not need to check its existence.
+        ;
+      } else if (wikiService.isExisting(pageParams.getType(), pageParams.getOwner(), newPageId)) {
+        // if new page title is duplicated with existed page's.
         if (log.isDebugEnabled()) log.debug("The title '" + title + "' is already existing!");
         uiApp.addMessage(new ApplicationMessage("SavePageAction.msg.warning-page-title-already-exist",
                                                 null,
