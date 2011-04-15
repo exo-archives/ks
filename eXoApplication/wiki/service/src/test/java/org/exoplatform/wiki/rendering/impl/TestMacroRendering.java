@@ -182,6 +182,14 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
                                                             false));
   }
   
+  public void testRenderAnchorMacro() throws Exception {
+    String expectedHtml = "<span class=\"wikilink\"><a name=\"Hlevel1\" href=\"#Hlevel1\">level1</a></span>";
+    assertEquals(expectedHtml, renderingService.render("{{anchor name=\"level1\" /}}",
+                                                       Syntax.XWIKI_2_0.toIdString(),
+                                                       Syntax.XHTML_1_0.toIdString(),
+                                                       false));
+  }
+  
   private void setupDefaultWikiContext() throws ComponentLookupException, ComponentRepositoryException {
     Execution ec = renderingService.getExecution();
     ec.setContext(new ExecutionContext());
