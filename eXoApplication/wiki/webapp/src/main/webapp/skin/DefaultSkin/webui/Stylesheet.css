@@ -309,11 +309,12 @@ span.Excerpt p {
 }
 
 .UIWikiPageEditForm .UIWikiTemplateDescriptionContainer input{
-	width: 50%;
-	border: 1px solid #dddddd;
-	background-color: #ffffff;
-	color: #636363;
-	padding-left: 8px;
+	width: 90%;
+	border: none;
+	background-color: #f8f8f8;
+	color: #b7b7b7;
+	line-height: 24px;
+	font-size: 14px;
 }
 
 /* wiki homepage */
@@ -336,6 +337,11 @@ span.Excerpt p {
 	visibility:visible;
 	text-decoration: none;
 	font-size: 12px;
+}
+
+.UIWikiPageContentArea .EditSection .wikiexternallink  .wikimodel-freestanding {
+	margin:0 6px 0 0;
+	width: 18px; height: 18px;
 }
 
 .UIWikiPageContentArea span.EditSection a span {
@@ -483,13 +489,21 @@ span.Excerpt p {
 	text-decoration: none;
 }
 
+#UIMoveTree .Hover {
+    background-color: #FFFFFF;
+}
+
+#UIPageTree .Hover {
+    background-color: #FFFFFF;
+}
+
 /* wiki mask workspace */
 .UIWikiMaskWorkspace {
 	 -moz-border-radius: 4px;
 	 -webkit-border-radius: 4px;
     background-color: #E1E1E1;
     padding: 9px 3px 6px 3px;
-    width: 538px;
+    width: 800px;
 }
 
 
@@ -1240,7 +1254,7 @@ span.Excerpt p {
 	width: 98%;
 }
 
-.UIWikiPageEditForm .UIForm .UIWikiPageContentMarginRight textarea {
+.UIWikiPageEditForm .UIForm .UIWikiPageContentInputContainer textarea {
 	background: #f8f8f8;
 	border: 1px solid #dcdcdc;
 	border-radius: 5px;
@@ -1255,6 +1269,19 @@ span.Excerpt p {
 	overflow: auto;
 	font-size: 10pt;
 }
+
+.UIWikiPageEditForm .UIWikiTemplateDescriptionContainer {
+	background: #f8f8f8;
+	border: 1px solid #dcdcdc;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	margin: 0px 0px 13px;
+	width: 30%;
+	float: left;
+	padding: 7px 0px 7px 5px;
+}
+
 
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm, .UIWikiPageEditForm .UIWikiPageContentInputContainer, .UIWikiPageEditForm .SyntaxType, .UIWikiPageEditForm .CommentInput {
 	margin-bottom: 15px;
