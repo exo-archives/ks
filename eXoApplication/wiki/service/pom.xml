@@ -274,9 +274,9 @@
     </dependency>
     <!--javassist is the necessary dependency for the HibernateService component used in unit test -->
     <dependency>
-      <groupId>javassist</groupId>
+      <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
-      <version>${javassist.version}</version>
+      <version>${org.javassist.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -285,7 +285,12 @@
       <version>${org.slf4j.version}</version>
       <scope>test</scope>
     </dependency>
-    
+    <dependency>
+      <groupId>org.hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>${org.hsqldb.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

@@ -51,7 +51,7 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>quartz</groupId>
+      <groupId>org.quartz-scheduler</groupId>
       <artifactId>quartz</artifactId>
       <scope>provided</scope>
     </dependency>
@@ -119,8 +119,11 @@
       <artifactId>rome</artifactId>
       <scope>provided</scope>
     </dependency>
-    
-   
-
+    <dependency>
+      <groupId>org.hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>${org.hsqldb.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
