@@ -2,6 +2,7 @@
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox {
   float: right;
   width: 185px;
+  margin-bottom: 4px;
 }
 
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiSearchBox .AdvancedSearch {
