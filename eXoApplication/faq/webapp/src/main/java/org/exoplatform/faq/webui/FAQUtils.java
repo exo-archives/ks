@@ -16,6 +16,8 @@
  */
 package org.exoplatform.faq.webui;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -38,6 +40,7 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
+import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
@@ -492,6 +495,26 @@ public class FAQUtils {
     return (isFieldEmpty(url)) ? org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL : url;
   }
 
+  public static String getFileSource(FileAttachment attachment) throws Exception {
+    DownloadService dservice = (DownloadService)PortalContainer.getComponent(DownloadService.class);
+    try {
+      InputStream input = attachment.getInputStream();
+      String fileName = attachment.getName();
+      byte[] imageBytes = null;
+      if (input != null) {
+        imageBytes = new byte[input.available()];
+        input.read(imageBytes);
+        ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+        InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
+        dresource.setDownloadName(fileName);
+        return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+      }
+    } catch (Exception e) {
+      log.error("Can not get File Source, exception: " + e.getMessage());
+    }
+    return "";
+  }
+  
   public static String getLink(String link, String componentId, String componentIdhasAction, String action, String actionRep, String objectId) {
     PortalRequestContext portalContext = Util.getPortalRequestContext();
     String url = portalContext.getRequest().getRequestURL().toString();

@@ -183,12 +183,11 @@ public class Utils {
       ExoContainerContext exoContext = (ExoContainerContext)container.getComponentInstanceOfType(ExoContainerContext.class);
       url.append("/").append(exoContext.getRestContextName());
     } catch (Exception e) {
+      url.append("/portal");
       log.error("Can not get portal name or rest context name, exception: ",e);
-      return "";
     }
     RepositoryService rService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class) ;
-    url.append("/jcr/").append(rService.getCurrentRepository().getConfiguration().getName())
-    .append(imagePath).append("/");
+    url.append("/jcr/").append(rService.getCurrentRepository().getConfiguration().getName()).append(imagePath).append("/");
     return url.toString();
   }
   

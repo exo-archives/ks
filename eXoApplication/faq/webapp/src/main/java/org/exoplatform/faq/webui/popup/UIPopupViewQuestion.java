@@ -145,32 +145,6 @@ public class UIPopupViewQuestion extends BaseUIForm implements UIPopupComponent 
     return result;
   }
 
-  private String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
-    byte[] imageBytes = null;
-    if (input != null) {
-      imageBytes = new byte[input.available()];
-      input.read(imageBytes);
-      ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-      InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
-      dresource.setDownloadName(fileName);
-      return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-    }
-    return null;
-  }
-
-  @SuppressWarnings("unused")
-  private String getFileSource(FileAttachment attachment) throws Exception {
-    DownloadService dservice = getApplicationComponent(DownloadService.class);
-    try {
-      InputStream input = attachment.getInputStream();
-      String fileName = attachment.getName();
-      return getFileSource(input, fileName, dservice);
-    } catch (Exception e) {
-      log.error("Can not get File Source, exception: " + e.getMessage());
-      return null;
-    }
-  }
-
   public void activate() throws Exception {
   }
 

@@ -731,25 +731,28 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   public JCRPageList getPageListAnswer(String questionId, boolean isSortByVote) throws Exception {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
-      Node answerHome = getFAQServiceHome(sProvider).getNode(questionId + "/" + Utils.ANSWER_HOME);
-      QueryManager qm = answerHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer queryString = new StringBuffer("/jcr:root").append(answerHome.getPath()).append("//element(*,exo:answer)");
-      if ((Boolean) isSortByVote == null)
-        queryString.append("order by @exo:dateResponse ascending");
-      else if (isSortByVote)
-        queryString.append("order by @exo:MarkVotes ascending");
-      else
-        queryString.append("order by @exo:MarkVotes descending");
-      Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-      QueryResult result = query.execute();
-      QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true);
-      return pageList;
+      Node questionNode = getFAQServiceHome(sProvider).getNode(questionId);
+      if(questionNode.hasNode(Utils.ANSWER_HOME)) {
+        Node answerHome =  questionNode.getNode(Utils.ANSWER_HOME);
+        QueryManager qm = answerHome.getSession().getWorkspace().getQueryManager();
+        StringBuffer queryString = new StringBuffer("/jcr:root").append(answerHome.getPath()).append("//element(*,exo:answer)");
+        if ((Boolean) isSortByVote == null)
+          queryString.append("order by @exo:dateResponse ascending");
+        else if (isSortByVote)
+          queryString.append("order by @exo:MarkVotes ascending");
+        else
+          queryString.append("order by @exo:MarkVotes descending");
+        Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+        QueryResult result = query.execute();
+        QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true);
+        return pageList;
+      }
     } catch (Exception e) {
       log.error("Failed to get page list answers", e);
-      return null;
     } finally {
       sProvider.close();
     }
+    return null;
   }
 
   /*
