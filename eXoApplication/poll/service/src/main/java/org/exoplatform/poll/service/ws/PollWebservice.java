@@ -5,7 +5,9 @@ package org.exoplatform.poll.service.ws;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,6 +30,7 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.MembershipEntry;
 
 /**
  * @author Uoc Nguyen
@@ -58,20 +61,22 @@ public class PollWebservice implements ResourceContainer {
           // poll.setIsAdmin(String.valueOf(hasGroupAdminOfGatein()));
           poll.setIsAdmin("true");
           String group = poll.getParentPath();
+          boolean hasPerminsion = false;
           if (group.indexOf(PollNodeTypes.APPLICATION_DATA) > 0 && poll.getIsAdmin().equals("false")) {
             group = group.substring(group.indexOf(PollNodeTypes.GROUPS + "/") + PollNodeTypes.GROUPS.length(), group.indexOf("/" + PollNodeTypes.APPLICATION_DATA));
-            boolean hasPerminsion = false;
             for (String group_ : getGroupsOfUser()) {
-              if (group_.indexOf(group) == 0) {
+              if (group_.indexOf(group) >= 0) {
                 hasPerminsion = true;
                 break;
               }
             }
-            if (!hasPerminsion) {
-              poll = new Poll();
-              poll.setId("DoNotPermission");
-              return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
-            }
+          } else {
+            hasPerminsion = pollService.hasPermissionInForum(group+"/"+poll.getId(), getAllGroupAndMembershipOfUser()) ;
+          }
+          if (!hasPerminsion) {
+            poll = new Poll();
+            poll.setId("DoNotPermission");
+            return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
           }
           poll.setVotes();
           poll.setInfoVote();
@@ -86,7 +91,7 @@ public class PollWebservice implements ResourceContainer {
     /*
      * if(hasGroupAdminOfGatein()) { pollSummary = pollService.getPollSummary(); pollSummary.setIsAdmin("true"); } else { pollSummary.setId("DoNotPermission"); }
      */
-    pollSummary = pollService.getPollSummary(getGroupsOfUser());
+    pollSummary = pollService.getPollSummary(getAllGroupAndMembershipOfUser());
     pollSummary.setIsAdmin("true");
     return Response.ok(pollSummary, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
   }
@@ -264,11 +269,32 @@ public class PollWebservice implements ResourceContainer {
     return username;
   }
 
+  private List<String> getAllGroupAndMembershipOfUser() {
+    List<String> listOfUser = new ArrayList<String>();
+    try {
+      Identity identity = ConversationState.getCurrent().getIdentity();
+      listOfUser.add(identity.getUserId());
+      Set<String> list = new HashSet<String>();
+      list.addAll(identity.getGroups());
+      for (MembershipEntry membership : identity.getMemberships()) {
+        String value = membership.getGroup();
+        list.add(value); // its groups
+        value = membership.getMembershipType() + ":" + value;
+        list.add(value);
+      }
+      listOfUser.addAll(list);
+    } catch (Exception e) {
+      log.warn("Failed to add all info of user.");
+    }
+    return listOfUser;
+  }
+
   private List<String> getGroupsOfUser() {
     try {
       return new ArrayList<String>(ConversationState.getCurrent().getIdentity().getGroups());
     } catch (Exception e) {
+      log.warn("Failed to add group of user.");
+      return new ArrayList<String>();
     }
-    return new ArrayList<String>();
   }
 }

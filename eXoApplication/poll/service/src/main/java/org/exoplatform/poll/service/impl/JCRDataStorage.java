@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -243,45 +245,142 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
     QueryResult result = query.execute();
     return result.getNodes();
   }
-
-  public PollSummary getPollSummary(List<String> groupOfUser) throws Exception {
+  
+  private boolean isListEmpty(List<String> list) {
+    if(list == null || list.size() == 0) return true;
+    for (String string : list) {
+      if(string != null && string.trim().length() > 0) return false;
+    }
+    return true;
+  }
+  
+  private long getUserRoleOfForum(SessionProvider sProvider, String userName) {
+    if(isEmpty(userName)) return 3;
+    try {
+      String userPatch = "/"+dataLocator.getUserProfilesLocation() + "/" + userName;
+      Node userNode = getNodeByPath(userPatch, sProvider);
+      return new PropertyReader(userNode).l("exo:userRole", 3);
+    } catch (Exception e) {
+      log.debug("Failed to get user role of forum.", e);
+    }
+    return 3;
+  }
+  
+  public boolean hasPermissionInForum(String pollPath, List<String> allInfoOfUser) throws Exception {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
-    PollSummary poll = new PollSummary();
+    try {
+      Node pollNode = getNodeByPath(pollPath, sProvider);
+      return hasPermissionInForum(sProvider, pollNode, allInfoOfUser);
+    } catch (Exception e) {
+      log.error("Failed to checking has permission in poll from forum", e);
+    } finally {
+      sProvider.close();
+    }
+   return false;
+  }
+  
+  private boolean hasPermissionInForum(SessionProvider sProvider, Node pollNode, List<String> allInfoOfUser) throws Exception {
+    try {
+      long userRole = getUserRoleOfForum(sProvider, (allInfoOfUser.size() > 0)?allInfoOfUser.get(0):"");
+      // check for administrators. If is admin --> return true;
+      if(userRole == 0) return true;
+      Node topicNode = pollNode.getParent();
+      Node forumNode = topicNode.getParent();
+      Node categoryNode = forumNode.getParent();
+      PropertyReader reader = new PropertyReader(topicNode);
+
+      // permission in topic
+      Set<String> viewers = reader.set("exo:canView", new HashSet<String>());
+      // user's permission of the topic content this poll.
+      boolean hasNotPremissionByTopic = (reader.bool("exo:isClosed") || !reader.bool("exo:isApproved") ||
+                                         reader.bool("exo:isWaiting") || !reader.bool("exo:isActive"));
+
+      // permission in forum
+      reader = new PropertyReader(forumNode);
+      viewers.addAll(reader.set("exo:viewer", new HashSet<String>()));
+      // forum is closed --> return false;
+      if(reader.bool("exo:isClosed")) return false;
+      // check for moderators
+      if(userRole == 1) {
+        List<String> moderators = reader.list("exo:moderators", new ArrayList<String>());
+        if(!isListEmpty(allInfoOfUser)) {
+          for (String string : moderators) {
+            // user's moderator of the forum content the poll.
+            if(allInfoOfUser.contains(string)) return true;
+          }
+        }
+      }
+      //checking when user has not moderator of the forum content the poll.
+      if(hasNotPremissionByTopic) return false;
+
+      // permission in category
+      reader = new PropertyReader(categoryNode);
+      // check viewer
+      viewers.addAll(reader.set("exo:viewer", new HashSet<String>()));
+      // check user private.
+      viewers.addAll(reader.set("exo:userPrivate", new HashSet<String>()));
+      // if user login and viewer list not empty.
+      if(!isListEmpty(allInfoOfUser)) {
+        for (String string : viewers) {
+          if(allInfoOfUser.contains(string.trim())) return true;
+        }
+      } else {
+        if(isListEmpty(new ArrayList<String>(viewers))) return true;
+      }
+    } catch (Exception e) {
+      log.debug("Failed to checking has premission viewing poll add in forum.");
+    }
+    return false;
+  }
+
+  public PollSummary getPollSummary(List<String> allInfoOfUser) throws Exception {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    PollSummary pollSmr = new PollSummary();
     try {
       NodeIterator iter = getIterNodePoll(sProvider);
-      List<String> pollId = new ArrayList<String>();
-      List<String> pollName = new ArrayList<String>();
-      List<String> groupPrivate = new ArrayList<String>();
+      List<String> pollIds = new ArrayList<String>();
+      List<String> pollNames = new ArrayList<String>();
+      List<String> groupPrivates = new ArrayList<String>();
       String path;
       boolean isAdd = false;
       while (iter.hasNext()) {
         Node node = iter.nextNode();
         path = node.getPath();
-        if (path.indexOf(APPLICATION_DATA) > 0 && groupOfUser != null) {
-          isAdd = false;
-          for (String group : groupOfUser) {
-            if (group.indexOf(path.substring(path.indexOf(GROUPS + "/") + GROUPS.length(), path.indexOf("/" + APPLICATION_DATA))) == 0) {
-              isAdd = true;
-              break;
+        isAdd = false;
+        // check permission for poll of forum
+        if (path.indexOf(dataLocator.getForumCategoriesLocation()) >= 0) {
+          isAdd = hasPermissionInForum(sProvider, node, allInfoOfUser);
+        } else {
+          // check permission for poll private.
+          if (path.indexOf(APPLICATION_DATA) > 0) {
+            path = path.substring(path.indexOf(GROUPS + "/") + GROUPS.length(), path.indexOf("/" + APPLICATION_DATA));
+            for (String group : allInfoOfUser) {
+              if (group.indexOf(":") < 0) {
+                if (group.indexOf(path) == 0) {
+                  isAdd = true;
+                  break;
+                }
+              }
             }
+          } else {
+            isAdd = true;
           }
-          if (!isAdd)
-            continue;
         }
-        pollId.add(node.getName());
-        pollName.add(node.getProperty(EXO_QUESTION).getString());
-        groupPrivate.add(path);
+        if (isAdd) {
+          pollIds.add(node.getName());
+          pollNames.add(node.getProperty(EXO_QUESTION).getString());
+          groupPrivates.add(path);
+        }
       }
-      poll.setPollId(pollId);
-      poll.setPollName(pollName);
-      poll.setGroupPrivate(groupPrivate);
+      pollSmr.setPollId(pollIds);
+      pollSmr.setPollName(pollNames);
+      pollSmr.setGroupPrivate(groupPrivates);
     } catch (Exception e) {
       log.error("Failed to get poll summary", e);
     } finally {
       sProvider.close();
     }
-    return poll;
-
+    return pollSmr;
   }
 
   public Poll removePoll(String pollId) throws Exception {
@@ -300,10 +399,11 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
       if (parentNode.hasProperty(EXO_IS_POLL)) {
         parentNode.setProperty(EXO_IS_POLL, false);
       }
-      if (parentNode.isNew())
+      if (parentNode.isNew()) {
         parentNode.getSession().save();
-      else
+      } else {
         parentNode.save();
+      }
     } catch (Exception e) {
       log.error("Failed to remove poll: " + pollId, e);
     } finally {
@@ -314,9 +414,9 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
 
   private Node getNode(Node nodeApp, String ids) throws Exception {
     Node node = null;
-    if (ids.indexOf("/") < 0)
+    if (ids.indexOf("/") < 0) {
       node = nodeApp.addNode(ids);
-    else {
+    } else {
       String[] ar = ids.split("/");
       for (int i = 0; i < ar.length; i++) {
         try {
@@ -326,10 +426,11 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
         }
         nodeApp = node;
       }
-      if (nodeApp.isNew())
+      if (nodeApp.isNew()) {
         nodeApp.getSession().save();
-      else
+      } else {
         nodeApp.getParent().save();
+      }
     }
     return node;
   }

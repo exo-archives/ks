@@ -81,6 +81,10 @@ public class PollServiceImpl implements Startable, PollService {
     return storage_.getPagePoll();
   }
 
+  public boolean hasPermissionInForum(String pollPath, List<String> allInfoOfUser) throws Exception {
+    return storage_.hasPermissionInForum(pollPath, allInfoOfUser);
+  }
+  
   public PollSummary getPollSummary(List<String> groupOfUser) throws Exception {
     return storage_.getPollSummary(groupOfUser);
   }

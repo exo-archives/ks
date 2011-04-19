@@ -14,5 +14,7 @@ public interface DataStorage {
 
   List<Poll> getPagePoll() throws Exception;
 
+  boolean hasPermissionInForum(String pollPath, List<String> allInfoOfUser) throws Exception;
+
   PollSummary getPollSummary(List<String> groupOfUser) throws Exception;
 }
