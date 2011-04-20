@@ -16,14 +16,18 @@
  */
 package org.exoplatform.wiki.service;
 
+import java.io.Serializable;
+
 /**
  * Created by The eXo Platform SAS
  * Author : viet.nguyen
  *          viet.nguyen@exoplatform.com
  * Apr 8, 2010  
  */
-public class WikiContext extends WikiPageParams implements Cloneable {
+public class WikiContext extends WikiPageParams implements Cloneable, Serializable {
   
+  private static final long serialVersionUID = 1L;
+
   public static final String WIKICONTEXT = "wikicontext";
 
   public static final String ACTION      = "action";
