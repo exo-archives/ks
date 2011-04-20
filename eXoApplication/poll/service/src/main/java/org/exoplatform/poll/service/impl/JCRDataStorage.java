@@ -319,13 +319,16 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
       viewers.addAll(reader.set("exo:viewer", new HashSet<String>()));
       // check user private.
       viewers.addAll(reader.set("exo:userPrivate", new HashSet<String>()));
+      // if viewer is empty then poll public.
+      if (isListEmpty(new ArrayList<String>(viewers))) {
+        return true;
+      }
       // if user login and viewer list not empty.
-      if(!isListEmpty(allInfoOfUser)) {
+      if (!isListEmpty(allInfoOfUser)) {
         for (String string : viewers) {
-          if(allInfoOfUser.contains(string.trim())) return true;
+          if (allInfoOfUser.contains(string.trim()))
+            return true;
         }
-      } else {
-        if(isListEmpty(new ArrayList<String>(viewers))) return true;
       }
     } catch (Exception e) {
       log.debug("Failed to checking has premission viewing poll add in forum.");
