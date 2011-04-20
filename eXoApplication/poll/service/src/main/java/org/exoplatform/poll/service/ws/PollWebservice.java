@@ -70,8 +70,10 @@ public class PollWebservice implements ResourceContainer {
                 break;
               }
             }
+          } else if (group.indexOf(PollNodeTypes.POLLS) < 0) {
+            hasPerminsion = pollService.hasPermissionInForum(group + "/" + poll.getId(), getAllGroupAndMembershipOfUser());
           } else {
-            hasPerminsion = pollService.hasPermissionInForum(group+"/"+poll.getId(), getAllGroupAndMembershipOfUser()) ;
+            hasPerminsion = true;
           }
           if (!hasPerminsion) {
             poll = new Poll();
