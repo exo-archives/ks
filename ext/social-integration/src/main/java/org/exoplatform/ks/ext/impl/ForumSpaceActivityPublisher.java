@@ -26,6 +26,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.ext.impl.ForumTransformHTML;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
@@ -66,7 +67,31 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
     public static final String TOPIC_NAME_KEY = "TopicName";
     
     private static Log      LOG = ExoLogger.getExoLogger(ForumSpaceActivityPublisher.class);
-
+    
+    private boolean isPublicPost(Post post, Topic topic) {
+      if (!isPublicTopic(topic)) {
+        return false;
+      }
+      if (post == null || 
+          post.getUserPrivate().length == 2 || post.getIsHidden() || !post.getIsActiveByTopic() || !post.getIsApproved()) {
+        // check permission of the post
+        // if the post is private or hidden by censored words or not active by topic or waiting for approving, return false. 
+        return false;
+      }
+      return true;
+    }
+    
+    private boolean isPublicTopic(Topic topic) {
+      if (topic == null || 
+          !topic.getIsActive() || topic.getIsWaiting() || topic.getIsClosed() ||
+          !Utils.isEmpty(topic.getCanView())) {
+        // check permission of topic
+        // if the topic is not active or waiting or closed or restricts users, return false
+        return false;
+      }
+      return true;
+    }
+    
     @Override
     public void saveCategory(Category category) {
       // TODO Auto-generated method stub
@@ -85,6 +110,12 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
       try {
         Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
         if (forumId == null || forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) < 0) {
+          return;
+        }
+        ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+        Topic topic = forumService.getTopic(categoryId, forumId, topicId, "");
+        if (!isPublicPost(post, topic)) {
+          // ignore post which is not public
           return;
         }
         
@@ -113,7 +144,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         templateParams.put(ACTIVITY_TYPE_KEY, POST_ADDED);
         activity.setTemplateParams(templateParams);
         
-        activityM.recordActivity(spaceIdentity, activity);
+        activityM.saveActivity(spaceIdentity, activity);
 
       } catch (ClassNotFoundException e) {
         if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
@@ -128,6 +159,11 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
       try {
         Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
         if (forumId == null || forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) < 0) {
+          return;
+        }
+        
+        if (!isPublicTopic(topic)) {
+          // ignore topic which is not public
           return;
         }
         
@@ -157,7 +193,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         params.put(ACTIVITY_TYPE_KEY, TOPIC_ADDED);
         activity.setTemplateParams(params);
         
-        activityM.recordActivity(spaceIdentity, activity);
+        activityM.saveActivity(spaceIdentity, activity);
       } catch (ClassNotFoundException e) {
         if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
       } catch (Exception e) {
@@ -172,6 +208,12 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
       try {
         Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
         if (forumId == null || forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) < 0) {
+          return;
+        }
+        ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+        Topic topic = forumService.getTopic(categoryId, forumId, topicId, "");
+        if (!isPublicPost(post, topic)) {
+          // ignore post which is not public
           return;
         }
         
@@ -201,7 +243,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         templateParams.put(ACTIVITY_TYPE_KEY, POST_UPDATED);
         activity.setTemplateParams(templateParams);
         
-        activityM.recordActivity(spaceIdentity, activity);
+        activityM.saveActivity(spaceIdentity, activity);
 
       } catch (ClassNotFoundException e) {
         if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
@@ -215,6 +257,11 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
       try {
         Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
         if (forumId == null || forumId.indexOf(Utils.FORUM_SPACE_ID_PREFIX) < 0) {
+          return;
+        }
+        
+        if (!isPublicTopic(topic)) {
+          // ignore topic which is not public
           return;
         }
         
@@ -244,7 +291,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         params.put(ACTIVITY_TYPE_KEY, TOPIC_UPDATED);
         activity.setTemplateParams(params);
         
-        activityM.recordActivity(spaceIdentity, activity);
+        activityM.saveActivity(spaceIdentity, activity);
       } catch (ClassNotFoundException e) {
         if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
       } catch (Exception e) {
