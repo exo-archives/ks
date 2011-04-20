@@ -1,0 +1,113 @@
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java	(revision 67799)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java	(working copy)
+@@ -737,7 +737,7 @@
+ 				postForm.setMod(topicDetail.isMod) ;
+ 				
+ 				popupContainer.setId("UIAddPostContainer") ;
+-				popupAction.activate(popupContainer, 900, 460) ;
++				popupAction.activate(popupContainer, 900, 520) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+ 			} catch (Exception e) {
+ 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+@@ -981,7 +981,7 @@
+ 				postForm.updatePost(postId, false, false, post) ;
+ 				postForm.setMod(topicDetail.isMod) ;
+ 				popupContainer.setId("UIEditPostContainer") ;
+-				popupAction.activate(popupContainer, 900, 460) ;
++				popupAction.activate(popupContainer, 900, 545) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+ 			} else {
+ 				Object[] args = { };
+@@ -1017,7 +1017,7 @@
+ 				postForm.updatePost(postId, true, false, post) ;
+ 				postForm.setMod(topicDetail.isMod);
+ 				popupContainer.setId("UIQuoteContainer") ;
+-				popupAction.activate(popupContainer, 900, 500) ;
++				popupAction.activate(popupContainer, 900, 520) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+ 			} else {
+ 				Object[] args = { };
+@@ -1040,7 +1040,7 @@
+ 				postForm.updatePost(postId, false, true, post) ;
+ 				postForm.setMod(topicDetail.isMod) ;
+ 				popupContainer.setId("UIPrivatePostContainer") ;
+-				popupAction.activate(popupContainer, 900, 460) ;
++				popupAction.activate(popupContainer, 900, 520) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+ 			} else {
+ 				Object[] args = { };
+@@ -1062,11 +1062,10 @@
+ 				topicForm.setMod(topicDetail.isMod) ;
+ 				topicForm.setIsDetail(true);
+ 				popupContainer.setId("UIEditTopicContainer") ;
+-				popupAction.activate(popupContainer, 900, 460) ;
++				popupAction.activate(popupContainer, 850, 545) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+ 				topicDetail.isEditTopic = true ;
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+ 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicContainer.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicContainer.java	(revision 67799)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicContainer.java	(working copy)
+@@ -562,7 +562,7 @@
+ 			topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum, uiTopicContainer.userProfile.getUserRole()) ;
+ 			topicForm.setMod(uiTopicContainer.isModerator) ;
+ 			popupContainer.setId("UIAddTopicContainer") ;
+-			popupAction.activate(popupContainer, 850, 500) ;
++			popupAction.activate(popupContainer, 850, 520) ;
+ 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+ 		}
+ 	}
+@@ -891,7 +891,7 @@
+ 				topicForm.setUpdateTopic(topic, true) ;
+ 				topicForm.setMod(uiTopicContainer.isModerator) ;
+ 				popupContainer.setId("UIEditTopicContainer") ;
+-				popupAction.activate(popupContainer, 850, 460) ;
++				popupAction.activate(popupContainer, 850, 545) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+ 			} else {
+ 				Object[] args = { };
+Index: eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/popup/UITopicForm/Stylesheet.css
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/popup/UITopicForm/Stylesheet.css	(revision 67799)
++++ eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/popup/UITopicForm/Stylesheet.css	(working copy)
+@@ -1,6 +1,5 @@
+ .UITopicForm {
+-	width: 850px;
+-	padding: 10px 0px 0px 10px;
++	padding: 5px 5px 0px 5px;
+ }
+ 
+ .UITopicForm .UIFormInputSet .UIFormGrid td.FieldLabel {
+@@ -8,6 +7,10 @@
+ 	white-space: nowrap;
+ }
+ 
++.UITopicForm .UIForm .HorizontalLayout .UIFormInputSet {
++	padding: 5px;
++}
++
+ .UITopicForm .UIForm .HorizontalLayout .ThreadContent input {
+ 	width: 450px;
+ }
+@@ -46,6 +49,14 @@
+ 	height: auto;
+ }
+ 
++.UITopicForm .UIFormTabPane {
++	padding: 0px;
++}
++
++.UITopicForm .UIFormTabPane .UITabPane .TabPaneContent {
++	padding: 0px 8px;
++}
++
+ .UITopicForm .UIFormTabPane .ThreadPermission .HorizontalLayout {
+ 	border:1px solid #B7B7B7;
+ 	padding-top: 8px;

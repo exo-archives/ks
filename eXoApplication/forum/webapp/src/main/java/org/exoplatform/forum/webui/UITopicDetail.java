@@ -737,7 +737,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				postForm.setMod(topicDetail.isMod) ;
 				
 				popupContainer.setId("UIAddPostContainer") ;
-				popupAction.activate(popupContainer, 900, 460) ;
+				popupAction.activate(popupContainer, 900, 520) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} catch (Exception e) {
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
@@ -981,7 +981,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				postForm.updatePost(postId, false, false, post) ;
 				postForm.setMod(topicDetail.isMod) ;
 				popupContainer.setId("UIEditPostContainer") ;
-				popupAction.activate(popupContainer, 900, 460) ;
+				popupAction.activate(popupContainer, 900, 545) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				Object[] args = { };
@@ -1017,7 +1017,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				postForm.updatePost(postId, true, false, post) ;
 				postForm.setMod(topicDetail.isMod);
 				popupContainer.setId("UIQuoteContainer") ;
-				popupAction.activate(popupContainer, 900, 500) ;
+				popupAction.activate(popupContainer, 900, 520) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				Object[] args = { };
@@ -1040,7 +1040,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				postForm.updatePost(postId, false, true, post) ;
 				postForm.setMod(topicDetail.isMod) ;
 				popupContainer.setId("UIPrivatePostContainer") ;
-				popupAction.activate(popupContainer, 900, 460) ;
+				popupAction.activate(popupContainer, 900, 520) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				Object[] args = { };
@@ -1062,11 +1062,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				topicForm.setMod(topicDetail.isMod) ;
 				topicForm.setIsDetail(true);
 				popupContainer.setId("UIEditTopicContainer") ;
-				popupAction.activate(popupContainer, 900, 460) ;
+				popupAction.activate(popupContainer, 850, 545) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				topicDetail.isEditTopic = true ;
 			} catch (Exception e) {
-				e.printStackTrace();
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
