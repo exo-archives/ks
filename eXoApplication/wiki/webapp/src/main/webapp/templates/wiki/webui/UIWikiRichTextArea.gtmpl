@@ -36,6 +36,7 @@
   if(eXo.wiki.WysiwygEditor){
     try{
       eXo.wiki.WysiwygEditor.release();
+      instance =0;
     }catch(e){
       if(window.console){
         window.console.error(e);
@@ -45,7 +46,10 @@
   
   try{
     if(WysiwygEditor){
+     if (instance==0) {
       eXo.wiki.createWysiwygEditor();
+      instance =1;
+      }
     }
   }catch(e){
     eXo.wiki.Wysiwyg.onModuleLoad(eXo.wiki.createWysiwygEditor);
