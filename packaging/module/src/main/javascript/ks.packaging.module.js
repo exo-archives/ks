@@ -64,7 +64,6 @@ function getModule(params) {
     addDependency(new Project("com.google.gwt", "gwt-user", "jar",  "${gwt.version}")).
     addDependency(new Project("net.sourceforge.cssparser", "cssparser", "jar",  "${cssparser.version}")).
     addDependency(new Project("org.xwiki.platform", "xwiki-web-gwt-wysiwyg-client", "jar",  "${org.xwiki.platform.version}")).
-    addDependency(new Project("org.apache.pdfbox", "fontbox", "jar",  "${org.apache.pdfbox.fontbox.version}")).
     addDependency(new Project("javax.validation", "validation-api", "jar",  "${javax.validation.version}")).
     addDependency(new Project("org.hibernate", "hibernate-validator", "jar",  "${hibernate-validator.version}")).
     addDependency(new Project("org.python", "jython-standalone", "jar",  "${jython-standalone.version}")).
