@@ -30,47 +30,53 @@ public class BBCodeData {
 	private String isActive;
 
 	public BBCodeData() {
-  }
-	
+	}
+
 	public String getTagName() {
-  	return tagName;
-  }
+		return tagName;
+	}
+
 	public void setTagName(String tagName) {
-  	this.tagName = tagName;
-  }
-	
+		this.tagName = tagName;
+	}
+
 	public String getReplacement() {
-  	return replacement;
-  }
+		return replacement;
+	}
+
 	public void setReplacement(String replacement) {
-  	this.replacement = replacement;
-  }
-	
+		this.replacement = replacement;
+	}
+
 	public String getDescription() {
-  	return description;
-  }
+		return description;
+	}
+
 	public void setDescription(String description) {
-  	this.description = description;
-  }
-	
+		this.description = description;
+	}
+
 	public String getExample() {
-  	return example;
-  }
+		return example;
+	}
+
 	public void setExample(String example) {
-  	this.example = example;
-  }
-	
+		this.example = example;
+	}
+
 	public String getIsOption() {
-  	return isOption;
-  }
+		return isOption;
+	}
+
 	public void setIsOption(String isOption) {
-  	this.isOption = isOption;
-  }
+		this.isOption = isOption;
+	}
 
 	public String getIsActive() {
-  	return isActive;
-  }
+		return isActive;
+	}
+
 	public void setIsActive(String isActive) {
-  	this.isActive = isActive;
-  }
+		this.isActive = isActive;
+	}
 }

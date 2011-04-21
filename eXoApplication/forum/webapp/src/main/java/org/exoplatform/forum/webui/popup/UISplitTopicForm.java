@@ -18,9 +18,7 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
@@ -31,7 +29,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
@@ -170,7 +167,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 						String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
 						uiForm.forumService.movePost(postPaths.toArray(new String[]{}), destTopicPath, true, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link);
 					} catch (Exception e) {
-						e.printStackTrace();
 						UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;

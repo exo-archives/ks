@@ -160,11 +160,7 @@ public class UICategory extends UIForm	{
 	
 	private Category getCategory() throws Exception{
 		if(this.isEditCategory || this.category == null) {
-			try {
-				this.category = forumService.getCategory(this.categoryId);
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
+			this.category = forumService.getCategory(this.categoryId);
 			this.isEditCategory = false ;
 		}
 		return category ;
@@ -184,11 +180,7 @@ public class UICategory extends UIForm	{
 		if(this.isEditForum) {
 			String strQuery = "";
 			if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
-			try {
-				this.forums = forumService.getForumSummaries(this.categoryId, strQuery);
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
+			this.forums = forumService.getForumSummaries(this.categoryId, strQuery);
 			this.isEditForum = false ;
 			this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true) ;
 		}
@@ -222,12 +214,7 @@ public class UICategory extends UIForm	{
 	
 	private Topic getLastTopic(String topicPath) throws Exception {
 		Topic topic;
-		try {
-			topic = forumService.getTopicByPath(topicPath, true) ;
-		}catch (Exception e) {
-			topic = null;
-			e.printStackTrace();
-		}
+		topic = forumService.getTopicByPath(topicPath, true) ;
 		if(topic != null) {
 			String topicId = topic.getId() ;
 			if(this.MaptopicLast.containsKey(topicId)) {
@@ -726,7 +713,6 @@ public class UICategory extends UIForm	{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(category) ;
 			} catch (Exception e) {
-				e.printStackTrace();
 				Object[] args = { };
 				UIApplication uiApp = category.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
@@ -749,7 +735,6 @@ public class UICategory extends UIForm	{
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			} catch (Exception e) {
-				e.printStackTrace();
 				Object[] args = { };
 				UIApplication uiApp = category.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;

@@ -56,14 +56,12 @@ public class UIFAQPortlet extends UIPortletApplication{
     		}
     	} 
     }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
-    	try{
-    		if(getChild(UIViewer.class) != null) {
-    			removeChild(UIViewer.class);
-    		}
-    		if(getChild(UIFAQSettingForm.class) == null) {
-    			addChild(UIFAQSettingForm.class, null, null) ;
-    		}
-    	} catch (Exception e) { e.printStackTrace();}
+			if (getChild(UIViewer.class) != null) {
+				removeChild(UIViewer.class);
+			}
+			if (getChild(UIFAQSettingForm.class) == null) {
+				addChild(UIFAQSettingForm.class, null, null);
+			}
     }
     super.processRender(app, context) ;
   }

@@ -224,7 +224,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				}
 			}
     } catch (Exception e) {
-    	e.printStackTrace();
+    	log.error("Failed to get icon of topic type.", e);
 	    return new String[]{" "};
     }
 	}
@@ -631,7 +631,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer) ;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("Failed to open topic in forum.", e);
 			}
 		}
 	}
@@ -796,7 +796,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				popupAction.activate(watchToolsForm, 500, 365) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } catch (Exception e) {
-      	e.printStackTrace();
       	UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -990,15 +989,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	static public class SetUnLockTopicActionListener extends EventListener<UITopicContainer> {
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			try{
-				if(uiTopicContainer.getForum().getIsLock()){
-					UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.ForumIsLocked", new Object[]{}, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-					return;
-				}
-			} catch (Exception e){
-				e.printStackTrace();
+			if(uiTopicContainer.getForum().getIsLock()){
+				UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.ForumIsLocked", new Object[]{}, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return;
 			}
 			List<Topic> topics = new ArrayList<Topic>();
@@ -1155,7 +1149,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 						try{
 							uiTopicContainer.forumService.removeTopic(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic_.getId()) ;
 						}catch(Exception e){
-							e.printStackTrace();
+							log.error("Failed to remove topic in this forum.", e);
 						}
 					}
 				} catch(Exception e) {
@@ -1290,7 +1284,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			} catch (Exception e) {
-				e.printStackTrace();
 				Object[] args = { };
 				UIApplication uiApp = topicContainer.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;

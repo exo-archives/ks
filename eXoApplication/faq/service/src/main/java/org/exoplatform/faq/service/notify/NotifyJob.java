@@ -72,7 +72,7 @@ public class NotifyJob implements Job{
 		  schedulerService.removeJob(info) ;		  
 
 	  } catch (Exception e) {
-		  e.printStackTrace();			
+	  	log_.debug("Failed to send email notifications for thread save question.", e);	
 	  }
   }
 }

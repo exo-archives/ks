@@ -28,14 +28,17 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.log.ExoLogger;
 
 
 public class BBCodeOperator {
+	private static Log log = ExoLogger.getLogger(BBCodeOperator.class);
 	private NodeHierarchyCreator nodeHierarchyCreator_;
 	private RepositoryService rService_ ;
 	private List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
@@ -52,6 +55,7 @@ public class BBCodeOperator {
   	try {
 			return appNode.getNode(CommonUtils.FORUM_SERVICE+"/"+CommonUtils.FORUM_DATA);
 		} catch (Exception e) {
+			log.debug("Failed to get forum data home.", e);
 			return null;
 		}
 	}
@@ -62,6 +66,7 @@ public class BBCodeOperator {
 		} catch (PathNotFoundException e) {
 			return getForumDataHome(sProvider).addNode(CommonUtils.BBCODE_HOME, CommonUtils.BBCODE_HOME_NODE_TYPE);			
 		} catch(Exception e) {
+			log.debug("Failed to get BBcode home.", e);
 			return null ;
 		}		
 	}
@@ -97,6 +102,7 @@ public class BBCodeOperator {
 		    }
 			}
     } catch (Exception e) {
+    	log.debug("Failed to init default BBCode.", e);
     }finally { sProvider.close() ;}	  
   }
 	
@@ -130,6 +136,7 @@ public class BBCodeOperator {
 				bbCodeHome.save();
 			}
 		}catch(Exception e) {
+			log.debug("Failed to save BBCode ", e);
 		}finally { sProvider.close() ;}		
 	}
 	
@@ -189,16 +196,13 @@ public class BBCodeOperator {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		BBCode bbCode = new BBCode();
 		Node bbcNode;
+		Node bbCodeHome = getBBcodeHome(sProvider);
 		try{
-			Node bbCodeHome = getBBcodeHome(sProvider);
-			try {
-				bbcNode = bbCodeHome.getNode(id);
-				bbCode.setId(bbcNode.getName());
-		    bbCode.setTagName(bbcNode.getProperty("exo:tagName").getString());
-		    bbCode.setReplacement(bbcNode.getProperty("exo:replacement").getString());
-		    bbCode.setOption(bbcNode.getProperty("exo:isOption").getBoolean());
-      } catch (Exception e) {
-      }
+			bbcNode = bbCodeHome.getNode(id);
+			bbCode.setId(bbcNode.getName());
+	    bbCode.setTagName(bbcNode.getProperty("exo:tagName").getString());
+	    bbCode.setReplacement(bbcNode.getProperty("exo:replacement").getString());
+	    bbCode.setOption(bbcNode.getProperty("exo:isOption").getBoolean());
 		}finally { sProvider.close() ;}
 		return bbCode ;
 	}
@@ -210,7 +214,7 @@ public class BBCodeOperator {
 			bbCodeHome.getNode(bbcodeId).remove();
 			bbCodeHome.save();
     } catch (Exception e) {
-    	e.printStackTrace() ;
+    	log.debug("Failed to remove BBCode by id: " + bbcodeId, e);
     }finally{
     	sProvider.close();
     }

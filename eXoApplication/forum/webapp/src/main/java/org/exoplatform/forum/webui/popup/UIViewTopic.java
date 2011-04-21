@@ -154,13 +154,9 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 			}
 		}
 		if(userNames.size() > 0) {
-			try{
-				List<UserProfile> profiles = forumService.getQuickProfiles(userNames) ;
-				for(UserProfile profile : profiles) {
-					mapUserProfile.put(profile.getUserId(), profile) ;
-				}
-			}catch(Exception e) {
-				e.printStackTrace() ;
+			List<UserProfile> profiles = forumService.getQuickProfiles(userNames) ;
+			for(UserProfile profile : profiles) {
+				mapUserProfile.put(profile.getUserId(), profile) ;
 			}
 		}
 	}
@@ -246,12 +242,8 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 			topic.setIsWaiting(false);
 			List<Topic> topics = new ArrayList<Topic>();
 			topics.add(topic);
-			try{
-				uiForm.forumService.modifyTopic(topics, 3);
-				uiForm.forumService.modifyTopic(topics, 5);
-			}catch(Exception e) {
-				e.printStackTrace() ;
-			}
+			uiForm.forumService.modifyTopic(topics, 3);
+			uiForm.forumService.modifyTopic(topics, 5);
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
@@ -271,13 +263,9 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIViewTopic> event) throws Exception {
 			UIViewTopic uiForm = event.getSource() ;
 			Topic topic = uiForm.topic;
-			try {
-				String []path = topic.getPath().split("/");
-				int l = path.length ;
-	      uiForm.forumService.removeTopic(path[l-3], path[l-2], topic.getId());
-      } catch (Exception e) {
-	      e.printStackTrace();
-      }
+			String []path = topic.getPath().split("/");
+			int l = path.length ;
+			uiForm.forumService.removeTopic(path[l-3], path[l-2], topic.getId());
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);

@@ -37,24 +37,23 @@ import org.exoplatform.management.jmx.annotations.Property;
 @ManagedDescription("Plugin that defines the initial BBCodes available")
 public class InitBBCodePlugin extends ManagedPlugin {
 	private BBCodePlugin initialData = new BBCodePlugin();
-  public InitBBCodePlugin(InitParams params) throws Exception {
-  	initialData = (BBCodePlugin)params.getObjectParam("bbcode.default.configuration").getObject();
-  }
-  
-  public BBCodePlugin getBBCodePlugin() {
-	  return initialData ;
-  }
-  
-  @Managed
-  @ManagedDescription("Get the list of BBCodes defined in this plugin")
-  public List<String> getBBCodes() {
-    List<String> result = new ArrayList<String>();
-   List<BBCodeData> data = initialData.getBbcodeDatas(); 
-   for (BBCodeData bbCodeData : data) {
-     result.add(bbCodeData.getTagName());
-   }
-   return result;
-  }
-  
 
+	public InitBBCodePlugin(InitParams params) throws Exception {
+		initialData = (BBCodePlugin) params.getObjectParam("bbcode.default.configuration").getObject();
+	}
+
+	public BBCodePlugin getBBCodePlugin() {
+		return initialData;
+	}
+
+	@Managed
+	@ManagedDescription("Get the list of BBCodes defined in this plugin")
+	public List<String> getBBCodes() {
+		List<String> result = new ArrayList<String>();
+		List<BBCodeData> data = initialData.getBbcodeDatas();
+		for (BBCodeData bbCodeData : data) {
+			result.add(bbCodeData.getTagName());
+		}
+		return result;
+	}
 }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -35,6 +36,7 @@ import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -93,6 +95,7 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 )
 
 public class UIForumForm extends UIForm implements UIPopupComponent, UISelector {
+	private static final Log log = ExoLogger.getLogger(UIForumForm.class);
 	private ForumService forumService ;
 	private boolean isCategoriesUpdate = true;
 	private boolean isForumUpdate = false;
@@ -459,7 +462,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error("Failed to save portletDeference for list of invisible category/forum.", e);
 			}
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
 			
@@ -623,7 +626,9 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
 			}
 			textArea.setValue(values);
-    } catch (Exception e) {e.printStackTrace();}
+    } catch (Exception e) {
+    	log.error("Failed to set value into component UIFormTextAreaInput.", e);
+    }
 	}
 	
   static  public class AddActionListener extends EventListener<UIUserSelector> {

@@ -372,17 +372,16 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   }
   
 	private String getUserSelect(String vls, String values) throws Exception {
-		try {
-			if(!FAQUtils.isFieldEmpty(vls)) {
-				values = values + "," + vls;
-				List<String> list = new ArrayList<String>();
-				for (String string : Arrays.asList(values.split(","))) {
-					if(!list.contains(string) && string.trim().length() > 0)list.add(string);
-        }
-				values = list.toString().replace('['+"", "").replace(']'+"", "").replaceAll(", ", ",");
+		if (!FAQUtils.isFieldEmpty(vls)) {
+			values = values + "," + vls;
+			List<String> list = new ArrayList<String>();
+			for (String string : Arrays.asList(values.split(","))) {
+				if (!list.contains(string) && string.trim().length() > 0)
+					list.add(string);
 			}
-    } catch (Exception e) {e.printStackTrace();}
-    return values;
+			values = list.toString().replace('[' + "", "").replace(']' + "", "").replaceAll(", ", ",");
+		}
+		return values;
 	}
 	
   static  public class AddActionListener extends EventListener<UIUserSelector> {

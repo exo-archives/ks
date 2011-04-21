@@ -64,13 +64,12 @@ public class SendMailJob implements Job {
 		  		}
 		  	}
 		  	if (log_.isDebugEnabled()) {
-		  		log_.debug("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
+		  		log_.debug("\n\nEmail notifications have been sent to " + countEmail + " addresses");
 		  	}
 		  }
 		  schedulerService.removeJob(info) ;		  
-
-	  } catch (Exception e) {
-		  e.printStackTrace();			
-	  }
+		} catch (Exception e) {
+			log_.error("Failed to send notifications by forum portlet.", e);
+		}
   }
 }

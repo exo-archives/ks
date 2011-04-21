@@ -133,8 +133,9 @@ public class ForumServiceImpl implements ForumService, Startable {
   		storage_.initCategoryListener() ;
   		log.info("updating forum stats...");
   		updateForumStatistic(systemSession);  		
-  	}catch (Exception e) {}
-  	finally{
+  	}catch (Exception e) {
+  		log.error("Falied to initialize user profiles...", e);
+  	} finally{
   		systemSession.close() ;
   	}
   	systemSession = SessionProvider.createSystemProvider() ;
@@ -142,7 +143,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   	  log.info("initializing user profiles...");
   		initUserProfile(systemSession);  		
   	}catch (Exception e) {
-  		e.printStackTrace() ;
+  		log.error("Falied to initialize user profiles...");
   	}finally{
   		systemSession.close() ;
   	}
@@ -151,9 +152,8 @@ public class ForumServiceImpl implements ForumService, Startable {
   	try{
   	  log.info("initializing RSS listeners...");
   		storage_.addRSSEventListenner();  
-  		
   	} catch (Exception e){
-//  		e.printStackTrace();
+  		log.error("Falied to initialize RSS listeners...");
   	}
   	
   	try{
@@ -162,14 +162,14 @@ public class ForumServiceImpl implements ForumService, Startable {
   		log.info("initializing default BBCodes...");
   		bbcodeObject_.initDefaultBBCode();
   	}catch(Exception e) {
-  		e.printStackTrace() ;
+  		log.error("Failed to initialize default forum data...", e);
   	}  	
 
   	try{
   	  log.info("Calculating active users...");
   		storage_.evaluateActiveUsers("");
   	}catch (Exception e) {
-  		e.printStackTrace() ;  		
+  		log.error("Failed to calculate active users...", e);	
   	}  	
   	
   //init Calculate Moderators listeners
@@ -177,7 +177,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   	  log.info("initializing Calculate Moderators listeners...");
   		storage_.addCalculateModeratorEventListenner();
   	} catch (Exception e){
-//  		e.printStackTrace();
+  		log.error("Failed to Calculate Moderators listeners...", e);
   	}
   	
   	// initialize auto prune schedules
@@ -185,6 +185,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   	  log.info("initializing prune schedulers...");
   		storage_.initAutoPruneSchedules() ;
   	} catch (Exception e){
+  		log.error("Failed to initialize prune schedulers...", e);
   	}
 
 //  TODO: JUnit test is fall.
@@ -194,6 +195,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   		manageStorage();  	
   		manageJobs();
     } catch (Exception e) {
+    	log.error("Failed to initializ plugins and jobs...", e);
     }
 	}
 
@@ -244,7 +246,6 @@ public class ForumServiceImpl implements ForumService, Startable {
 		updateForumStatistic() ; 	
 	}
 	
-	@SuppressWarnings("unchecked")
   public void updateForumStatistic() throws Exception{
 		SessionProvider systemSession = SessionProvider.createSystemProvider() ;
 		try{
@@ -268,7 +269,7 @@ public class ForumServiceImpl implements ForumService, Startable {
 			}
 			
 		}catch(Exception e){
-			e.printStackTrace() ;
+			log.error("Failed to ", e);
 		}finally {
 			systemSession.close() ;
 		}		 	
@@ -324,7 +325,7 @@ public class ForumServiceImpl implements ForumService, Startable {
 	    	}  		
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error("Failed to create UserProfile", e);
 		}finally {
 			sysSession.close() ;
 		}		
@@ -1057,7 +1058,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     	userProfileHome.getNode(userId).getProperty("exo:lastLoginDate").setValue((Value)null) ;
     	userProfileHome.save() ;    	    	
     }catch(Exception e) {
-    	e.printStackTrace() ;
+    	log.error("Failed to remove UserProfile", e);
     }finally{sysProvider.close() ;}
   }
   
@@ -1116,7 +1117,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     try{
       if(onlineUserList_.contains(userId)) return true ;			
     }	catch (Exception e) {
-      e.printStackTrace() ;
+      log.error("Failed to set online users.", e);
     }
     return false; 
   }

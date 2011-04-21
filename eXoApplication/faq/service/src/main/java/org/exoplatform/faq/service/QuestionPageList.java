@@ -28,10 +28,12 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.log.ExoLogger;
 
 /**
  * All questions and their properties, methods are getted from database
@@ -42,7 +44,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
  * @since Mar 08, 2008
  */
 public class QuestionPageList extends JCRPageList {
-
+	private static final Log log = ExoLogger.getLogger(QuestionPageList.class);
   /** The iter_. */
   private NodeIterator iter_ = null ;
   
@@ -129,7 +131,7 @@ public class QuestionPageList extends JCRPageList {
       	}
       	if(languages != null && languages.trim().length() > 0) listQuestions_.add(getQuestion(questionNode).setLanguagesNotYetAnswered(languages));
       } catch (Exception e) {
-        e.printStackTrace();
+        log.error("Failed to set total questions.");
       }
   	}
   	setAvailablePage(listQuestions_.size()) ;
@@ -587,7 +589,7 @@ public class QuestionPageList extends JCRPageList {
           else attachment.setSize(0) ;
         } catch (Exception e) {
           attachment.setSize(0) ;
-          e.printStackTrace() ;
+          log.error("Failed to set attachment into question.", e);
         }
         listFile.add(attachment);
       }
@@ -647,7 +649,7 @@ public class QuestionPageList extends JCRPageList {
 			}
 			return comments;
 		} catch (Exception e){
-			e.printStackTrace();
+			log.error("Failed to get comment.", e);
 			return new Comment[]{};
 		}
 	}

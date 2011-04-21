@@ -57,15 +57,11 @@ public class UISelectCategoryForumForm extends UIForm implements UIPopupComponen
   	listcate = forumService.getCategories();
 	}
 	
-  List<Forum> getForums(String categoryId) {
-  	List<Forum>listForum = new ArrayList<Forum>();
+	List<Forum> getForums(String categoryId) throws Exception {
+		List<Forum> listForum = new ArrayList<Forum>();
 		if (categoryId != null && categoryId.trim().length() > 0) {
-			try {
-				String strQuery = "@exo:isClosed='false' and @exo:isLock='false'";
-				listForum = forumService.getForums(categoryId, strQuery);
-			} catch (Exception e) {
-				e.printStackTrace();
-			} 
+			String strQuery = "@exo:isClosed='false' and @exo:isLock='false'";
+			listForum = forumService.getForums(categoryId, strQuery);
 		}
 		return listForum;
 	}

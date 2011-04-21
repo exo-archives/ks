@@ -19,6 +19,7 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
@@ -32,6 +33,7 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -56,11 +58,11 @@ import org.exoplatform.webui.form.UIFormTabPane;
 				@EventConfig(listeners = UIUserWatchManager.CancelActionListener.class)
 		}
 )
-public class UIUserWatchManager  extends UIFormTabPane implements UIPopupComponent{
+@SuppressWarnings("unused")
+public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponent {
+	private static Log log = ExoLogger.getLogger(UIUserWatchManager.class);
 	private FAQSetting faqSetting_ = null;
-	@SuppressWarnings("unused")
 	private UIAnswersPageIterator pageIteratorCate ;
-	@SuppressWarnings("unused")
 	private JCRPageList pageListCate ;
 	private UIAnswersPageIterator pageIteratorQues ;
 	private UIAnswersPageIterator pageIteratorCates ;
@@ -71,7 +73,6 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	private int tabSelect = 0;
 	private String emailAddress;
 	
-	@SuppressWarnings("unused")
 	//private String[] tabs = new String[]{"watchCategoryTab", "watchQuestionTab"};
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIUserWatchManager() throws Exception {
@@ -138,12 +139,11 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 			}
   		return listCategories;
   	}catch (Exception e){
-  		e.printStackTrace();
+  		log.error("Failed to get list categories watching.", e);
   		return null;
   	}
   }
   
-  @SuppressWarnings("unused")
 	private List<Question> getListQuestionsWatch(){
   	try{
   		if(pageListQues == null){
@@ -166,18 +166,17 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
       }
   		return listQuestion_;
   	}catch (Exception e){
-  		e.printStackTrace();
+  		log.error("Failed to get list of watching question.", e);
   	}
   	return null;
   }
   
-  @SuppressWarnings("unused")
   private long getTotalpages(String pageInteratorId) {
     UIAnswersPageIterator pageIterator = this.getChildById(pageInteratorId) ;
     try {
       return pageIterator.getInfoPage().get(3) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to get total pages.", e);
       return 1 ;
     }
   }

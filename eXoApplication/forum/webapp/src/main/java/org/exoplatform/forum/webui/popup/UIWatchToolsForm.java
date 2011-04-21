@@ -77,18 +77,14 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 		emails = getListEmail().toArray(new String[]{});
 		return emails;
 	}
-	public void setEmails(String[] emails) {
+	public void setEmails(String[] emails) throws Exception {
 		listEmail.clear();
 		listEmail.addAll(Arrays.asList(emails));
 		pageList = new ForumPageList(6, listEmail.size());
 		pageList.setPageSize(6);
 		pageIterator = this.getChild(UIForumPageIterator.class);
 		pageIterator.updatePageList(pageList);
-		try {
-			if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
 	}
 	
 	@SuppressWarnings("unchecked")

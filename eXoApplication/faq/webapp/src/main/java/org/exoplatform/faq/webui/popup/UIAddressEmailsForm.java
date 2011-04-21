@@ -37,6 +37,7 @@ import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserHandler;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -143,8 +144,9 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
 			ObjectPageList objPageList = new ObjectPageList(new ArrayList<User>(users), 10) ;
 		    uiPageList_.setPageList(objPageList) ;
 		} catch (Exception e) {
-			//this.isViewSearchUser = false;
-			e.printStackTrace();
+			UIApplication uiApp = this.getAncestorOfType(UIApplication.class) ;
+      uiApp.addMessage(new ApplicationMessage("UIAddressEmailsForm.msg.search-user-failed",null)) ;
+      ((WebuiRequestContext)WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 		}
 	}
   

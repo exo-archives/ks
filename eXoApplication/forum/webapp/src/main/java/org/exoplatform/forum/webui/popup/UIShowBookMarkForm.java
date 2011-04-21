@@ -82,11 +82,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 	
 	@SuppressWarnings({ "unused", "unchecked" })
 	private List<String> getBookMark() throws Exception {
-		try{
-			bookMarks = forumService.getBookmarks( this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId());
-		}catch(Exception e) {
-			e.printStackTrace() ;
-		}
+		bookMarks = forumService.getBookmarks( this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId());
 		pageList = new ForumPageList(6, bookMarks.size());
 		pageList.setPageSize(6);
 		pageIterator = this.getChild(UIForumPageIterator.class);
@@ -94,11 +90,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 		List<String>list = new ArrayList<String>();
 		list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), this.bookMarks)) ;
 		pageIterator.setSelectPage(pageList.getCurrentPage());
-		try {
-			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
 		return list ;
 	} 
 	

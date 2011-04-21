@@ -175,7 +175,6 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 				}
 				file = (File)service.exportXML(categoryId, forumId, listId, nodePath, bos, exportForm.isExportAll);
 			} catch(Exception e){
-				e.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsNoLonagerExist", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				return;

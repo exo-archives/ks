@@ -16,7 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.List;

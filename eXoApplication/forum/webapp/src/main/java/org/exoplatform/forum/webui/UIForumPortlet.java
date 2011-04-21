@@ -26,6 +26,7 @@ import javax.portlet.PortletPreferences;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
@@ -44,6 +45,7 @@ import org.exoplatform.forum.webui.popup.UISettingEditModeForm;
 import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
@@ -77,6 +79,7 @@ import org.exoplatform.webui.exception.MessageException;
 	 }
 )
 public class UIForumPortlet extends UIPortletApplication {
+	private static final Log log = ExoLogger.getLogger(UIForumPortlet.class);
 	private ForumService forumService;
 	private boolean isCategoryRendered = true;
 	private boolean isForumRendered = false;
@@ -235,7 +238,7 @@ public class UIForumPortlet extends UIPortletApplication {
 			invisibleCategories.addAll(getListInValus(portletPref.getValue("invisibleCategories", ""))) ;
 			invisibleForums.addAll(getListInValus(portletPref.getValue("invisibleForums", ""))) ;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to load portletPreferences.", e);
 		}
 		if(invisibleCategories.size() == 1 && invisibleCategories.get(0).equals(" ")) invisibleCategories.clear();
 	}
@@ -352,7 +355,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		try {
 			userId = ForumSessionUtils.getCurrentUser() ;
 		} catch (Exception e) {
-			e.printStackTrace() ;
+			log.error("Failed to get currently user.", e);
 		}
 		try{
 			if(enableBanIP) {
@@ -503,7 +506,7 @@ public class UIForumPortlet extends UIPortletApplication {
 				UserProfile selectProfile = forumPortlet.forumService.getUserInformations(forumPortlet.forumService.getQuickProfile(userId.trim())) ;
 				viewUserProfile.setUserProfile(selectProfile) ;
 			}catch(Exception e) {
-				e.printStackTrace() ;
+				log.error("Failed to get userProfile viewing.", e);
 			}
 			viewUserProfile.setUserProfileLogin(forumPortlet.userProfile) ;
 			ForumContact contact = forumPortlet.getPersonalContact(userId.trim());

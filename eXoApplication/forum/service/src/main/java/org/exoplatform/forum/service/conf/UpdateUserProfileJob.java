@@ -16,9 +16,6 @@
  **/
 package org.exoplatform.forum.service.conf;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -35,7 +32,6 @@ public class UpdateUserProfileJob implements Job {
   public UpdateUserProfileJob() throws Exception {}
 		
 	
-	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
 	  	ExoContainer container = ExoContainerContext.getCurrentContainer();
@@ -51,7 +47,7 @@ public class UpdateUserProfileJob implements Job {
 	  	}		  
 		  schedulerService.removeJob(info) ;
 	  } catch (Exception e) {
-		  e.printStackTrace();			
+	  	log_.error("Failed to update UserProfile.", e);
 	  }
   }
 }

@@ -1112,7 +1112,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       MultiLanguages.addLanguage(questionNode, language) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to add language.", e);
     }finally {sProvider.close() ;}
   }
   
@@ -1122,7 +1122,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       MultiLanguages.deleteAnswerQuestionLang(questionNode, answerId, language) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to delete answer language.", e);
     }finally {sProvider.close() ;}
   }
   
@@ -1132,7 +1132,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       MultiLanguages.deleteCommentQuestionLang(questionNode, commentId, language) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to delete comment language.", e);
     }finally {sProvider.close() ;}
   }
   
@@ -1142,7 +1142,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       return MultiLanguages.getQuestionLanguageByLanguage(questionNode, language) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to get question by language:" + language, e);
     }finally {sProvider.close() ;}
     return null ;
   }
@@ -1153,7 +1153,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       return MultiLanguages.getCommentById(questionNode, commentId, language) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to get comment by id:" + commentId, e);
     }finally {sProvider.close() ;}
     return null ;
   }
@@ -1164,7 +1164,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       return MultiLanguages.getAnswerById(questionNode, answerid, language) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to get answer by id:" + answerid, e);
     }finally {sProvider.close() ;}
     return null ;
   }
@@ -1177,7 +1177,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       MultiLanguages.saveAnswer(questionNode, answer, language) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to save answer.", e);
     }finally {sProvider.close() ;}
   }
   
@@ -1187,7 +1187,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       MultiLanguages.saveAnswer(questionNode, questionLanguage) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to save answer.", e);
     }finally {sProvider.close() ;}
   }
   
@@ -1197,7 +1197,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       MultiLanguages.saveComment(questionNode, comment, languge) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to save comment.", e);
     }finally {sProvider.close() ;}
   }
   
@@ -1208,7 +1208,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       MultiLanguages.removeLanguage(questionNode, listLanguage) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to remove language.", e);
     }finally {sProvider.close() ;}
   }  
   
@@ -1218,7 +1218,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node answerNode = jcrData_.getFAQServiceHome(sProvider).getNode(answerPath) ;
       MultiLanguages.voteAnswer(answerNode, userName, isUp) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to vote answer.", e);
     }finally {sProvider.close() ;}
   }
   
@@ -1228,7 +1228,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       MultiLanguages.voteQuestion(questionNode, userName, number) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to vote question.", e);
     }finally {sProvider.close() ;}
   }
   
@@ -1238,7 +1238,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       MultiLanguages.unVoteQuestion(questionNode, userName);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to unvote question", e);
     }finally {sProvider.close() ;}
   } 	
   

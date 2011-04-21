@@ -41,45 +41,58 @@ public class BBCode {
   }
 	
 	public String getId() {
-  	return id;
-  }
+		return id;
+	}
+
 	public void setId(String id) {
-  	this.id = id;
-  }
+		this.id = id;
+	}
+
 	public String getTagName() {
-  	return tagName;
-  }
+		return tagName;
+	}
+
 	public void setTagName(String name) {
-  	this.tagName = name;
-  }
+		this.tagName = name;
+	}
+
 	public String getReplacement() {
 		return replacement;
 	}
+
 	public void setReplacement(String replacement) {
 		this.replacement = replacement;
 	}
+
 	public String getDescription() {
-  	return description;
-  }
+		return description;
+	}
+
 	public void setDescription(String description) {
-  	this.description = description;
-  }
+		this.description = description;
+	}
+
 	public String getExample() {
 		return example;
 	}
+
 	public void setExample(String example) {
 		this.example = example;
 	}
+
 	public boolean isActive() {
-  	return isActive;
-  }
+		return isActive;
+	}
+
 	public void setActive(boolean isActive) {
-  	this.isActive = isActive;
-  }
+		this.isActive = isActive;
+	}
+
 	public boolean isOption() {
-  	return isOption;
-  }
+		return isOption;
+	}
+
 	public void setOption(boolean isOption) {
-  	this.isOption = isOption;
-  }
+		this.isOption = isOption;
+	}
 }

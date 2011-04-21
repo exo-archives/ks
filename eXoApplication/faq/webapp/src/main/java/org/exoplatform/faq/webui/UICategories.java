@@ -69,14 +69,13 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UICategories.ExportActionListener.class),
 				@EventConfig(listeners = UICategories.ImportActionListener.class),
 				@EventConfig(listeners = UICategories.ChangeIndexActionListener.class),
-				//@EventConfig(listeners = UICategories.RSSActionListener.class),
 				@EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
 				@EventConfig(listeners = UICategories.FilterQuestionsActionListener.class),
 				@EventConfig(listeners = UICategories.MoveCategoryIntoActionListener.class)
 		}
 )
 
-public class UICategories extends UIContainer{
+public class UICategories extends UIContainer {
 	private String FILTER_QUESTIONS = "allQuestions";
 	private String FILTER_OPEN_QUESTIONS = "openQuestions";
 	private String FILTER_PENDING_QUESTIONS = "pendingQuestions";
@@ -203,7 +202,6 @@ public class UICategories extends UIContainer{
 	    	}else {
 	    		currentCategoryName = faqService_.getCategoryById(parentCateID_).getName();
 	    	}
-				e.printStackTrace();
 			}
 			viewBackIcon = true;
 			if(newList.isEmpty()) {
@@ -267,17 +265,13 @@ public class UICategories extends UIContainer{
 	}
 	
 	@SuppressWarnings("unused")
-	private String[] getActionCategoryWithUser(String cateId) {
-		try {
-			if(FAQUtils.getCurrentUser() != null){
-				if(isWatched(cateId)) return userActionsCateUnWatch_;
-				else return userActionsCate_ ;
-			}
-			else return new String[]{userActionsCate_[0]};
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new String[]{userActionsCate_[0]};
+	private String[] getActionCategoryWithUser(String cateId) throws Exception {
+		if (FAQUtils.getCurrentUser() != null) {
+			if (isWatched(cateId))
+				return userActionsCateUnWatch_;
+			else return userActionsCate_;
 		}
+		return new String[]{userActionsCate_[0]};
 	}
 	
 	static	public class OpenCategoryActionListener extends EventListener<UICategories> {
@@ -378,7 +372,6 @@ public class UICategories extends UIContainer{
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 				FAQUtils.findCateExist(uiCategories.faqService_, uiCategories.getAncestorOfType(UIAnswersContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -411,7 +404,6 @@ public class UICategories extends UIContainer{
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 				FAQUtils.findCateExist(uiCategories.faqService_, uiCategories.getAncestorOfType(UIAnswersContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -610,7 +602,6 @@ public class UICategories extends UIContainer{
 				uiCategories.faqService_.swapCategories(objectIds[0], objectIds[1]);
 				//uiCategories.resetListCate();
 			} catch (Exception e) {
-				e.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
@@ -685,7 +676,6 @@ public class UICategories extends UIContainer{
 					popupAction.activate(popupContainer, 600, 400) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} catch (Exception e) {
-				e.printStackTrace() ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet) ;
@@ -715,7 +705,6 @@ public class UICategories extends UIContainer{
 					//return;
 				}
 			}catch (Exception e) {
-				e.printStackTrace();
 				UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

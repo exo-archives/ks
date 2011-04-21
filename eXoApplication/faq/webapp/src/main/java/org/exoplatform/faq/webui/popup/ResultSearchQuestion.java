@@ -19,6 +19,7 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
@@ -31,6 +32,7 @@ import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIResultContainer;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -56,6 +58,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
+	private static Log log = ExoLogger.getLogger(ResultSearchQuestion.class);
 	private List<Question> listQuestion_ = null ;
 	private static String language_ = "" ;
 	public ResultSearchQuestion() throws Exception {
@@ -73,7 +76,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 		try {
 			listQuestion_.addAll(pageList.getPageResultQuestionsSearch(pageSelected, FAQUtils.getCurrentUser()));
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to get list questions.", e);
 		}
 		return listQuestion_ ;
 	}
@@ -86,7 +89,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 			pageIterator = this.getChildById(LIST_RESULT_SEARCH);
 			pageIterator.updatePageList(pageList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to set list questions.", e);
 		}
 	}
 
@@ -96,7 +99,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 		try {
 			return pageIterator.getInfoPage().get(3) ;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to get total pages.", e);
 			return 1 ;
 		}
 	}
@@ -191,7 +194,6 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet.getChild(UIAnswersContainer.class));
 				answerPortlet.cancelAction() ;
 			} catch (Exception e) {
-				e.printStackTrace();
 				UIApplication uiApplication = resultSearch.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

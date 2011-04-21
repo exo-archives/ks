@@ -103,7 +103,6 @@ public class UIModerationForum extends UIForm implements UIPopupComponent {
 			list_ = forumService.getJobWattingForModerator(getPath()) ;
 		} catch (Exception e) {
 			list_ = new ArrayList<ForumSearch>();
-			e.printStackTrace();
 		}
 		pageList = new ForumPageList(10, list_.size());
 		pageList.setPageSize(10);
@@ -134,27 +133,19 @@ public class UIModerationForum extends UIForm implements UIPopupComponent {
 			ForumSearch forumSearch = moderationForum.getObject(objectId); 
 			UIPopupContainer popupContainer = moderationForum.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-			if(forumSearch.getType().equals(Utils.TOPIC)) {
-				try {
-					Topic topic = moderationForum.forumService.getTopicByPath(forumSearch.getPath(), false);
-					UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
-					viewTopic.setTopic(topic) ;
-					viewTopic.setActionForm(new String[] {"Approve", "DeleteTopic", "Close"});
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			if (forumSearch.getType().equals(Utils.TOPIC)) {
+				Topic topic = moderationForum.forumService.getTopicByPath(forumSearch.getPath(), false);
+				UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700);
+				viewTopic.setTopic(topic);
+				viewTopic.setActionForm(new String[] { "Approve", "DeleteTopic", "Close" });
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
 			} else {
-				try {
-	        Post post = moderationForum.forumService.getPost("", "", "", forumSearch.getPath());
-					UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700) ;
-					viewPost.setPostView(post) ;
-					viewPost.setViewUserInfo(false) ;
-					viewPost.setActionForm(new String[] {"Approve", "DeletePost", "Close", "OpenTopicLink"});
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				Post post = moderationForum.forumService.getPost("", "", "", forumSearch.getPath());
+				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700);
+				viewPost.setPostView(post);
+				viewPost.setViewUserInfo(false);
+				viewPost.setActionForm(new String[] { "Approve", "DeletePost", "Close", "OpenTopicLink" });
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
 			}
 		}
 	}

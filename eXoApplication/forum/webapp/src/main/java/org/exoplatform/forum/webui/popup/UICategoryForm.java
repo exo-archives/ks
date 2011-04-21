@@ -417,15 +417,13 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   }
   
 	private void setValueField(UIFormInputWithActions withActions, String field, String values) throws Exception {
-		try {
-			UIFormTextAreaInput textArea = withActions.getUIFormTextAreaInput(field);
-			String vls = textArea.getValue();
-			if(!ForumUtils.isEmpty(vls)) {
-				values = values + "," + vls;
-				values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
-			}
-			textArea.setValue(values);
-    } catch (Exception e) {e.printStackTrace();}
+		UIFormTextAreaInput textArea = withActions.getUIFormTextAreaInput(field);
+		String vls = textArea.getValue();
+		if (!ForumUtils.isEmpty(vls)) {
+			values = values + "," + vls;
+			values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+		}
+		textArea.setValue(values);
 	}
 	
   static  public class AddActionListener extends EventListener<UIUserSelector> {

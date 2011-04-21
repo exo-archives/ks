@@ -93,7 +93,6 @@ public class UIQuickSearchForm extends UIForm {
 					list = forumService.getQuickSearch(text, type, "", userProfile.getUserId(),
 															forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), forumIdsOfModerator);
 				}catch (Exception e) {
-					e.printStackTrace();
 					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 					uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 					return ;

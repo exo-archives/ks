@@ -380,7 +380,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicTag) ;
 				} catch (Exception e) {
-					e.printStackTrace();
 					Object[] args = { };
 					UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
 					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
@@ -405,7 +404,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicTag) ;
 			} catch (Exception e) {
-				e.printStackTrace();
 				Object[] args = { };
 				UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;

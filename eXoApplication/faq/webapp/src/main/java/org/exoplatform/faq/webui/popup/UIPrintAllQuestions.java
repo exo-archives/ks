@@ -58,7 +58,6 @@ import org.exoplatform.webui.form.UIForm;
 public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
 	private String categoryId = null;
-	private String currentUser_;
 	private boolean canEditQuestion = false;
 	private FAQService faqService_ = null;
 	private FAQSetting faqSetting_ = null;
@@ -67,23 +66,13 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 	public void activate() throws Exception { }
 	public void deActivate() throws Exception { }
 	public UIPrintAllQuestions(){
-		try {
-			currentUser_ = FAQUtils.getCurrentUser();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
-	private String getQuestionRelationById(String questionId) {
+	private String getQuestionRelationById(String questionId) throws Exception {
 		Question question = new Question();
-		//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		try {
-			question = faqService_.getQuestionById(questionId);
-			if(question != null) {
-				return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		question = faqService_.getQuestionById(questionId);
+		if (question != null) {
+			return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
 		}
 		return "" ;
 	}
@@ -101,18 +90,6 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 		}
 		return null;
 	}
-
-	/*private String getFileSource(FileAttachment attachment) throws Exception {
-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		try {
-			InputStream input = attachment.getInputStream() ;
-			String fileName = attachment.getName() ;
-			//String fileName = attachment.getNodeName() ;
-			return getFileSource(input, fileName, dservice);
-		} catch (Exception e) {			
-		}
-		return null;
-	}*/
 
 	public String getRepository() throws Exception {
 		RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    

@@ -146,7 +146,7 @@ public class JCRDataStorage {
 				rulesPlugins_.add((RoleRulesPlugin)plugin) ;
 			}
 		} catch (Exception e) {
-			log.error("Can not add Plugin Role", e);;
+			log.error("Can not add Plugin Role.", e);
 		}
 	}
 	

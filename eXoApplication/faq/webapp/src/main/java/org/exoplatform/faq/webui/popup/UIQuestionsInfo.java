@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.FAQService;
@@ -32,6 +33,7 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPageIterator;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -67,6 +69,8 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 
 @SuppressWarnings("unused")
 public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
+	private static Log log = ExoLogger.getLogger(UIQuestionsInfo.class);
+	
   private static final String LIST_QUESTION_INTERATOR = "FAQUserPageIteratorTab1" ;
   private static final String LIST_QUESTION_NOT_ANSWERED_INTERATOR = "FAQUserPageIteratorTab2" ;
   private static final String LIST_CATEGORIES = "ListCategories";
@@ -139,9 +143,8 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       			moderateCates.add(Utils.CATEGORY_HOME) ;
   				}
   			}catch(Exception e) {
-  				e.printStackTrace() ;
+  				log.error("Failed to add category into category list.", e);
   			}
-  			
   		}
   	}    
   }
@@ -171,7 +174,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     try {
       return pageIterator.getInfoPage().get(3) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to get total pages.", e);
       return 1 ;
     }
   }
@@ -223,7 +226,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   	try{
   		return faqService_.getParentCategoriesName(questionPath.substring(0, questionPath.indexOf("/"+Utils.QUESTION_HOME)));
   	}catch(Exception e){
-  		e.printStackTrace();
+  		log.error("Failed to get category by path.", e);
   		return questionPath;
   	}
   }
@@ -243,7 +246,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
 	        }
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        log.error("Failed to get question list.", e);
       }
     }
     isChangeTab_ = false;
@@ -268,7 +271,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
           pageIterator.setSelectPage(pageSelectNotAnswer) ;
         }
       } catch (Exception e) {
-        e.printStackTrace();
+        log.error("Failed to get question list not answer.", e);
       }
     }
     isChangeTab_ = false;
@@ -454,7 +457,6 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       	}
       	event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
   		}catch (Exception e){
-  			e.printStackTrace() ;
   			UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

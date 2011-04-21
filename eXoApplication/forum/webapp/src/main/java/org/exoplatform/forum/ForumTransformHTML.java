@@ -335,7 +335,6 @@ public class ForumTransformHTML {
 				b = StringUtils.replace(b, "[code]" + text + "[/code]", buffer.toString());
 			} catch (Exception e) {
 				System.out.println("Error in BBcodeSmall near char: " + tagIndex);
-				e.printStackTrace();
 				continue;
 			}
 		}

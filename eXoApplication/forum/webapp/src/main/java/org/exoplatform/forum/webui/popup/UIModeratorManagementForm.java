@@ -21,11 +21,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
@@ -33,7 +30,6 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumLinkData;
-import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
@@ -45,8 +41,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicsTag;
-import org.exoplatform.services.organization.OrganizationService;
-import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -799,11 +793,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			userProfile.setBanReason(banReason);
 			userProfile.setBanCounter(banCounter);
 			userProfile.setBanReasonSummary(banReasonSummaries);
-			try {
-				uiForm.forumService.saveUserProfile(userProfile, true, true) ;
-			} catch (Exception e) {
-				e.printStackTrace() ;
-			} 
+			uiForm.forumService.saveUserProfile(userProfile, true, true) ;
 			if(userProfile.getUserId().equals(ForumSessionUtils.getCurrentUser())) {
 				forumPortlet.updateUserProfileInfo() ;
 				userProfile = forumPortlet.getUserProfile();

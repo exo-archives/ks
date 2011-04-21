@@ -23,8 +23,8 @@ import java.util.List;
 import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Category;
@@ -44,6 +44,7 @@ import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.portal.webui.workspace.UIMaskWorkspace;
 import org.exoplatform.portal.webui.workspace.UIPortalApplication;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -70,6 +71,7 @@ import org.exoplatform.webui.event.EventListener;
 )
 @SuppressWarnings("unused")
 public class UIBreadcumbs extends UIContainer {
+	private static final Log log = ExoLogger.getLogger(UIBreadcumbs.class);
   private boolean useAjax = true;
 	private ForumService forumService ;
 	private List<String> breadcumbs_ = new ArrayList<String>();
@@ -227,7 +229,7 @@ public class UIBreadcumbs extends UIContainer {
 					}
 				}
       } catch (Exception e) {
-      	e.printStackTrace();
+      	log.error("Failed to check link private or not.", e);
       }
 		}else	if(id.indexOf(Utils.CATEGORY) == 0) {
 			try {
@@ -236,7 +238,7 @@ public class UIBreadcumbs extends UIContainer {
 					isPrivate = true;
 				}
       } catch (Exception e) {
-      	e.printStackTrace();
+      	log.error("Failed to get category by id: " + id, e);
       }
 		}else if(id.indexOf(Utils.FORUM) == 0){
       try {
@@ -251,7 +253,7 @@ public class UIBreadcumbs extends UIContainer {
 					}
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
+				log.error("Failed to get forum by id: " + id, e);
 			}
 		}
 		return isPrivate;
@@ -442,7 +444,6 @@ public class UIBreadcumbs extends UIContainer {
 							path = FORUM_SERVICE;
 						}
 					}catch(Exception e) {
-						e.printStackTrace();
 						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", new String[]{ForumUtils.FORUM}, ApplicationMessage.WARNING)) ;
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 						categoryContainer.updateIsRender(true) ;
@@ -465,7 +466,6 @@ public class UIBreadcumbs extends UIContainer {
 							path = FORUM_SERVICE;
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
 						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 						categoryContainer.updateIsRender(true) ;

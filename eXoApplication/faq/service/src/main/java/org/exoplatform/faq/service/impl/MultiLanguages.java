@@ -31,6 +31,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
@@ -38,6 +39,7 @@ import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.services.jcr.impl.core.value.DateValue;
 import org.exoplatform.services.jcr.impl.core.value.StringValue;
+import org.exoplatform.services.log.ExoLogger;
 
 /**
  * MultiLanguages class allow question and category have multi language.
@@ -51,6 +53,9 @@ import org.exoplatform.services.jcr.impl.core.value.StringValue;
  */
 
 public class MultiLanguages {
+	
+	private static Log log = ExoLogger.getLogger(MultiLanguages.class);
+	
   /** The Constant EXO_LANGUAGE. */
   final static public String EXO_LANGUAGE = "exo:language" ;
   
@@ -350,7 +355,7 @@ public class MultiLanguages {
 			}
 			return comments;
 		} catch (Exception e){
-			e.printStackTrace();
+			log.error("Failed to get comment by node.", e);
 			return new Comment[]{};
 		}
 	}
@@ -382,7 +387,7 @@ public class MultiLanguages {
 			}
 			return answers.toArray(new Answer[]{});
 		} catch (Exception e){
-			e.printStackTrace() ;
+			log.error("Failed to get answer by node.", e);
 		}
 		return new Answer[]{};
 	}
@@ -449,6 +454,7 @@ public class MultiLanguages {
       answer.setLanguage(answerNode.getProperty("exo:responseLanguage").getValue().getString()) ;
       return answer;
   	} catch (Exception e){
+  		log.error("Failed to get answer by Id: " + answerid, e);
   	}
   	return null;
   }
@@ -573,12 +579,12 @@ public class MultiLanguages {
   }
   
   public static void saveComment(Node questionNode, Comment comment, String language) throws Exception{
-  	String lang ;
+//  	String lang ;
   	Node commentHome ;
   	Node commentNode ;
   	if(language != null && language.length() > 0) {
   		Node languageNode = getLanguageNodeByLanguage(questionNode, language);
-  		lang = language ;
+//  		lang = language ;
     	if(!languageNode.isNodeType("mix:faqi18n")) {
     		languageNode.addMixin("mix:faqi18n") ;
     	}
@@ -593,7 +599,7 @@ public class MultiLanguages {
     	} catch (Exception e){
     		commentHome = questionNode.addNode(Utils.COMMENT_HOME, "exo:commentHome");
     	}
-    	lang = questionNode.getProperty("exo:language").getString() ;
+//    	lang = questionNode.getProperty("exo:language").getString() ;
   	}  	
   	try{
   		commentNode = commentHome.getNode(comment.getId());
@@ -656,7 +662,7 @@ public class MultiLanguages {
       }
       questionNode.getSession().save() ;
     } catch (Exception e) {
-      e.printStackTrace();
+    	log.error("Failed to remove language.", e);	
     }
   }
   
@@ -667,7 +673,7 @@ public class MultiLanguages {
       languageNode.getNode(lang.getId()).remove() ;
       questionNode.save() ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to remove language", e);
     }
   }
   public static void voteAnswer(Node answerNode, String userName, boolean isUp) throws Exception {

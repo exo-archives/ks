@@ -353,7 +353,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			param.setRenderRule(true);
 			actionRes.setEvent(new QName("ForumRuleEvent"), param) ;
     } catch (Exception e) {
-	    e.printStackTrace();
+	    log.error("Failed to set render by porlet info.", e);
     }
 	}
 	
@@ -640,7 +640,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 						mapUserProfile.put(profile.getUserId(), profile) ;
 					}
 				}catch(Exception e) {
-					e.printStackTrace() ;
+					log.error("Failed to get quick userProfiles.", e);
 				}
 			}
 		} catch (Exception e) {
@@ -698,7 +698,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			try{
 				mapUserProfile.put(userName, forumService.getQuickProfile(userName)) ;			
 			}catch(Exception e){
-				e.printStackTrace() ;
+				log.error("Failed to get quick userProfile by user: " + userName, e);
 			}
 		}
 		return mapUserProfile.get(userName) ;
@@ -832,7 +832,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					try {
 						topicDetail.forumService.addTag(tags, topicDetail.userName, topicDetail.topic.getPath());
 	        } catch (Exception e) {
-		        e.printStackTrace();
+		        log.error("Failed to add tag in this topic.", e);
 	        }
 				} else {
 					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
@@ -1359,7 +1359,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -1612,7 +1611,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				try {
 					topicDetail.forumService.removePost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post.getId()) ;
 				} catch(Exception e){
-					e.printStackTrace();
+					log.error("Failed to remove post in this topic.", e);
 				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 			}
@@ -1630,7 +1629,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				UserProfile selectProfile = topicDetail.forumService.getUserInformations(topicDetail.mapUserProfile.get(userId)) ;
 				viewUserProfile.setUserProfile(selectProfile) ;
 			}catch(Exception e) {
-				e.printStackTrace() ;
+				log.error("Failed to get userProfile viewing in this topic.", e);
 			}
 			viewUserProfile.setUserProfileLogin(topicDetail.userProfile) ;
 			ForumContact contact = null ;
@@ -1998,7 +1997,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 				} catch (Exception e) {
-					e.printStackTrace();
 					Object[] args = { };
 					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
@@ -2036,7 +2034,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				} catch (Exception e) {
-					e.printStackTrace();
 					Object[] args = { };
 					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;

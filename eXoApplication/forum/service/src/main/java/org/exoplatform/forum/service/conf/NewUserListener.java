@@ -16,10 +16,12 @@
  */
 package org.exoplatform.forum.service.conf;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserEventListener;
 
@@ -28,7 +30,7 @@ import org.exoplatform.services.organization.UserEventListener;
  * hung.nguyen@exoplatform.com Nov 23, 2007 3:09:21 PM
  */
 public class NewUserListener extends UserEventListener {
-
+	private static final Log log = ExoLogger.getLogger(NewUserListener.class);
   //private ForumService fservice_ ;
   public NewUserListener(InitParams params) throws Exception {
     //fservice_ = fservice;
@@ -44,13 +46,13 @@ public class NewUserListener extends UserEventListener {
 	      statistic.setMembersCount(statistic.getMembersCount() + 1) ;
 	      fservice.saveForumStatistic(statistic) ;
 	    }catch(Exception e) {
-	    	e.printStackTrace() ;
+	    	log.error("Failed to save forum statistics when adding new user.", e);
 	    }
 	    //Create Profile
 	    try{
 	    	fservice.createUserProfile(user) ;
 	    }catch(Exception e) {
-	    	e.printStackTrace() ;
+	    	log.error("Failed to create UserProfile when adding new user.", e);
 	    }
     } else {
     	fservice.updateUserProfile(user);
@@ -70,7 +72,7 @@ public class NewUserListener extends UserEventListener {
         fservice.saveForumStatistic(statistic) ;
       }      
     }catch(Exception e) {
-    	e.printStackTrace() ;
+    	log.error("Failed to save forum statistic when deleted user.", e);
     }
   }
 }

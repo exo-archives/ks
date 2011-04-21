@@ -27,15 +27,15 @@ import java.util.List;
  */
 public class BBCodePlugin {
 	private List<BBCodeData> bbcodeDatas = new ArrayList<BBCodeData>();
-	public BBCodePlugin() {
-  }
-	public List<BBCodeData> getBbcodeDatas() {
-  	return bbcodeDatas;
-  }
-	public void setBbcodeDatas(List<BBCodeData> bbcodeDatas) {
-  	this.bbcodeDatas = bbcodeDatas;
-  }
-	
 
-	
+	public BBCodePlugin() {
+	}
+
+	public List<BBCodeData> getBbcodeDatas() {
+		return bbcodeDatas;
+	}
+
+	public void setBbcodeDatas(List<BBCodeData> bbcodeDatas) {
+		this.bbcodeDatas = bbcodeDatas;
+	}
 }

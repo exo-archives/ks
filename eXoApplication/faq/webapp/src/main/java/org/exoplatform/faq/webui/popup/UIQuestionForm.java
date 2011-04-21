@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
@@ -39,6 +40,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -77,6 +79,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
     }
 )
 public class UIQuestionForm extends UIForm implements UIPopupComponent  {
+	private static Log log = ExoLogger.getLogger(UIQuestionForm.class);
   public static final String AUTHOR = "Author" ;
   public static final String EMAIL_ADDRESS = "EmailAddress" ;
   public static final String QUESTION_CONTENT = "QuestionTitle";
@@ -199,7 +202,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     try{
       inputAttachcment.setActionField(FILE_ATTACHMENTS, getActionList()) ;
     } catch (Exception e) {
-      e.printStackTrace() ;
+      log.error("Failed to set attachment into component UIFormInputInfo.", e);
     }
     
     inputQuestionDetail = new UIFormWYSIWYGInput(QUESTION_DETAIL, QUESTION_DETAIL, "") ;
@@ -237,7 +240,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       try {
         refreshUploadFileList() ;
       } catch (Exception e) {
-        e.printStackTrace();
+        log.error("Failed to refresh file upload list.", e);
       }
     }
   }
@@ -250,7 +253,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   			isMode = true;
   		}
   		return isMode ;
-    } catch (Exception e) {e.printStackTrace();}
+    } catch (Exception e) {
+    	log.error("Failed to check user is moderator.", e);
+    }
     return false;
 	}
   
@@ -290,7 +295,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       inputQuestionContent.setValue(question.getQuestion());
       inputQuestionDetail.setValue(question_.getDetail()) ;      
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to set editing question.", e);
       initPage(false) ;
     } 
   }
@@ -566,7 +571,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 									forumService.saveTopic(ids[t - 3], ids[t - 2], topic, false, false, "");
 								}
 	            } catch (Exception e) {
-	              e.printStackTrace();
+	              log.error("Failed to save topic by id: " + topicId, e);
 	            }
 						}
 					}
@@ -589,7 +594,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	          }
 	        }
 	      } catch (Exception e) {
-	        e.printStackTrace() ;
+	        log.error("Failed to discuss question into forum.", e);
 	      }
 	      
 	      if(!questionForm.isChildOfManager) {
@@ -615,7 +620,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       	}
         event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersContainer.class)) ;
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		log.error("Failed to save question.", e);
       }
     }
   }

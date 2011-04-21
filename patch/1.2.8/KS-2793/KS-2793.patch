@@ -1,0 +1,4553 @@
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/QuestionPageList.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/QuestionPageList.java	(revision 68473)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/QuestionPageList.java	(working copy)
+@@ -28,10 +28,12 @@
+ import javax.jcr.query.QueryManager;
+ import javax.jcr.query.QueryResult;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.ExoContainer;
+ import org.exoplatform.container.ExoContainerContext;
+ import org.exoplatform.services.jcr.RepositoryService;
+ import org.exoplatform.services.jcr.ext.common.SessionProvider;
++import org.exoplatform.services.log.ExoLogger;
+ 
+ /**
+  * All questions and their properties, methods are getted from database
+@@ -42,7 +44,7 @@
+  * @since Mar 08, 2008
+  */
+ public class QuestionPageList extends JCRPageList {
+-
++	private static final Log log = ExoLogger.getLogger(QuestionPageList.class);
+   /** The iter_. */
+   private NodeIterator iter_ = null ;
+   
+@@ -129,7 +131,7 @@
+       	}
+       	if(languages != null && languages.trim().length() > 0) listQuestions_.add(getQuestion(questionNode).setLanguagesNotYetAnswered(languages));
+       } catch (Exception e) {
+-        e.printStackTrace();
++        log.error("Failed to set total questions.");
+       }
+   	}
+   	setAvailablePage(listQuestions_.size()) ;
+@@ -587,7 +589,7 @@
+           else attachment.setSize(0) ;
+         } catch (Exception e) {
+           attachment.setSize(0) ;
+-          e.printStackTrace() ;
++          log.error("Failed to set attachment into question.", e);
+         }
+         listFile.add(attachment);
+       }
+@@ -647,7 +649,7 @@
+ 			}
+ 			return comments;
+ 		} catch (Exception e){
+-			e.printStackTrace();
++			log.error("Failed to get comment.", e);
+ 			return new Comment[]{};
+ 		}
+ 	}
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/MultiLanguages.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/MultiLanguages.java	(revision 68473)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/MultiLanguages.java	(working copy)
+@@ -31,6 +31,7 @@
+ import javax.jcr.Session;
+ import javax.jcr.Value;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.commons.utils.ISO8601;
+ import org.exoplatform.faq.service.Answer;
+ import org.exoplatform.faq.service.Comment;
+@@ -38,6 +39,7 @@
+ import org.exoplatform.faq.service.Utils;
+ import org.exoplatform.services.jcr.impl.core.value.DateValue;
+ import org.exoplatform.services.jcr.impl.core.value.StringValue;
++import org.exoplatform.services.log.ExoLogger;
+ 
+ /**
+  * MultiLanguages class allow question and category have multi language.
+@@ -51,6 +53,9 @@
+  */
+ 
+ public class MultiLanguages {
++	
++	private static Log log = ExoLogger.getLogger(MultiLanguages.class);
++	
+   /** The Constant EXO_LANGUAGE. */
+   final static public String EXO_LANGUAGE = "exo:language" ;
+   
+@@ -350,7 +355,7 @@
+ 			}
+ 			return comments;
+ 		} catch (Exception e){
+-			e.printStackTrace();
++			log.error("Failed to get comment by node.", e);
+ 			return new Comment[]{};
+ 		}
+ 	}
+@@ -382,7 +387,7 @@
+ 			}
+ 			return answers.toArray(new Answer[]{});
+ 		} catch (Exception e){
+-			e.printStackTrace() ;
++			log.error("Failed to get answer by node.", e);
+ 		}
+ 		return new Answer[]{};
+ 	}
+@@ -449,6 +454,7 @@
+       answer.setLanguage(answerNode.getProperty("exo:responseLanguage").getValue().getString()) ;
+       return answer;
+   	} catch (Exception e){
++  		log.error("Failed to get answer by Id: " + answerid, e);
+   	}
+   	return null;
+   }
+@@ -573,12 +579,12 @@
+   }
+   
+   public static void saveComment(Node questionNode, Comment comment, String language) throws Exception{
+-  	String lang ;
++//  	String lang ;
+   	Node commentHome ;
+   	Node commentNode ;
+   	if(language != null && language.length() > 0) {
+   		Node languageNode = getLanguageNodeByLanguage(questionNode, language);
+-  		lang = language ;
++//  		lang = language ;
+     	if(!languageNode.isNodeType("mix:faqi18n")) {
+     		languageNode.addMixin("mix:faqi18n") ;
+     	}
+@@ -593,7 +599,7 @@
+     	} catch (Exception e){
+     		commentHome = questionNode.addNode(Utils.COMMENT_HOME, "exo:commentHome");
+     	}
+-    	lang = questionNode.getProperty("exo:language").getString() ;
++//    	lang = questionNode.getProperty("exo:language").getString() ;
+   	}  	
+   	try{
+   		commentNode = commentHome.getNode(comment.getId());
+@@ -656,7 +662,7 @@
+       }
+       questionNode.getSession().save() ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++    	log.error("Failed to remove language.", e);	
+     }
+   }
+   
+@@ -667,7 +673,7 @@
+       languageNode.getNode(lang.getId()).remove() ;
+       questionNode.save() ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to remove language", e);
+     }
+   }
+   public static void voteAnswer(Node answerNode, String userName, boolean isUp) throws Exception {
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/FAQServiceImpl.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/FAQServiceImpl.java	(revision 68473)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/FAQServiceImpl.java	(working copy)
+@@ -1112,7 +1112,7 @@
+       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+       MultiLanguages.addLanguage(questionNode, language) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to add language.", e);
+     }finally {sProvider.close() ;}
+   }
+   
+@@ -1122,7 +1122,7 @@
+       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+       MultiLanguages.deleteAnswerQuestionLang(questionNode, answerId, language) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to delete answer language.", e);
+     }finally {sProvider.close() ;}
+   }
+   
+@@ -1132,7 +1132,7 @@
+       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+       MultiLanguages.deleteCommentQuestionLang(questionNode, commentId, language) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to delete comment language.", e);
+     }finally {sProvider.close() ;}
+   }
+   
+@@ -1142,7 +1142,7 @@
+       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+       return MultiLanguages.getQuestionLanguageByLanguage(questionNode, language) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to get question by language:" + language, e);
+     }finally {sProvider.close() ;}
+     return null ;
+   }
+@@ -1153,7 +1153,7 @@
+       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+       return MultiLanguages.getCommentById(questionNode, commentId, language) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to get comment by id:" + commentId, e);
+     }finally {sProvider.close() ;}
+     return null ;
+   }
+@@ -1164,7 +1164,7 @@
+       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+       return MultiLanguages.getAnswerById(questionNode, answerid, language) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to get answer by id:" + answerid, e);
+     }finally {sProvider.close() ;}
+     return null ;
+   }
+@@ -1177,7 +1177,7 @@
+       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+       MultiLanguages.saveAnswer(questionNode, answer, language) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to save answer.", e);
+     }finally {sProvider.close() ;}
+   }
+   
+@@ -1187,7 +1187,7 @@
+       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+       MultiLanguages.saveAnswer(questionNode, questionLanguage) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to save answer.", e);
+     }finally {sProvider.close() ;}
+   }
+   
+@@ -1197,7 +1197,7 @@
+       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+       MultiLanguages.saveComment(questionNode, comment, languge) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to save comment.", e);
+     }finally {sProvider.close() ;}
+   }
+   
+@@ -1208,7 +1208,7 @@
+       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+       MultiLanguages.removeLanguage(questionNode, listLanguage) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to remove language.", e);
+     }finally {sProvider.close() ;}
+   }  
+   
+@@ -1218,7 +1218,7 @@
+       Node answerNode = jcrData_.getFAQServiceHome(sProvider).getNode(answerPath) ;
+       MultiLanguages.voteAnswer(answerNode, userName, isUp) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to vote answer.", e);
+     }finally {sProvider.close() ;}
+   }
+   
+@@ -1228,7 +1228,7 @@
+       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+       MultiLanguages.voteQuestion(questionNode, userName, number) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to vote question.", e);
+     }finally {sProvider.close() ;}
+   }
+   
+@@ -1238,7 +1238,7 @@
+       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+       MultiLanguages.unVoteQuestion(questionNode, userName);
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to unvote question", e);
+     }finally {sProvider.close() ;}
+   } 	
+   
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(revision 68473)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(working copy)
+@@ -146,7 +146,7 @@
+ 				rulesPlugins_.add((RoleRulesPlugin)plugin) ;
+ 			}
+ 		} catch (Exception e) {
+-			log.error("Can not add Plugin Role", e);;
++			log.error("Can not add Plugin Role.", e);
+ 		}
+ 	}
+ 	
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/notify/NotifyJob.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/notify/NotifyJob.java	(revision 68473)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/notify/NotifyJob.java	(working copy)
+@@ -72,7 +72,7 @@
+ 		  schedulerService.removeJob(info) ;		  
+ 
+ 	  } catch (Exception e) {
+-		  e.printStackTrace();			
++	  	log_.debug("Failed to send email notifications for thread save question.", e);	
+ 	  }
+   }
+ }
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuickSearch.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuickSearch.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuickSearch.java	(working copy)
+@@ -98,7 +98,6 @@
+ 				try {
+ 					list = faqService.getSearchResults(eventQuery);
+ 				} catch (Exception e) {
+-					e.printStackTrace();
+ 					uiApp = uiQuickSearch.getAncestorOfType(UIApplication.class) ;
+ 					uiApp.addMessage(new ApplicationMessage("UIQuickSearch.msg.failure", null, ApplicationMessage.WARNING)) ;
+ 					return ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/viewer/UIFAQPortlet.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/viewer/UIFAQPortlet.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/viewer/UIFAQPortlet.java	(working copy)
+@@ -56,14 +56,12 @@
+     		}
+     	} 
+     }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+-    	try{
+-    		if(getChild(UIViewer.class) != null) {
+-    			removeChild(UIViewer.class);
+-    		}
+-    		if(getChild(UIFAQSettingForm.class) == null) {
+-    			addChild(UIFAQSettingForm.class, null, null) ;
+-    		}
+-    	} catch (Exception e) { e.printStackTrace();}
++			if (getChild(UIViewer.class) != null) {
++				removeChild(UIViewer.class);
++			}
++			if (getChild(UIFAQSettingForm.class) == null) {
++				addChild(UIFAQSettingForm.class, null, null);
++			}
+     }
+     super.processRender(app, context) ;
+   }
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/viewer/UIViewer.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/viewer/UIViewer.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/viewer/UIViewer.java	(working copy)
+@@ -85,18 +85,10 @@
+ 		List<String> list = new ArrayList<String>();
+ 		list = FAQUtils.getCategoriesIdFAQPortlet();
+ 		useAjax = FAQUtils.getUseAjaxFAQPortlet();
+-		try {
+-			categoryInfo = this.fAqService.getCategoryInfo(this.path, list);
+-    } catch (Exception e) {
+-    	e.printStackTrace();
+-    }
+-    
++		categoryInfo = this.fAqService.getCategoryInfo(this.path, list);
+     List<String> bbcName = new ArrayList<String>();
+ 		List<BBCode> bbcs = new ArrayList<BBCode>();
+-		try {
+-			bbcName = fAqService.getActiveBBCode();
+-    } catch (Exception e) {
+-    }
++		bbcName = fAqService.getActiveBBCode();
+     boolean isAdd = true;
+     BBCode bbCode;
+     for (String string : bbcName) {
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UICategories.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UICategories.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UICategories.java	(working copy)
+@@ -69,14 +69,13 @@
+ 				@EventConfig(listeners = UICategories.ExportActionListener.class),
+ 				@EventConfig(listeners = UICategories.ImportActionListener.class),
+ 				@EventConfig(listeners = UICategories.ChangeIndexActionListener.class),
+-				//@EventConfig(listeners = UICategories.RSSActionListener.class),
+ 				@EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
+ 				@EventConfig(listeners = UICategories.FilterQuestionsActionListener.class),
+ 				@EventConfig(listeners = UICategories.MoveCategoryIntoActionListener.class)
+ 		}
+ )
+ 
+-public class UICategories extends UIContainer{
++public class UICategories extends UIContainer {
+ 	private String FILTER_QUESTIONS = "allQuestions";
+ 	private String FILTER_OPEN_QUESTIONS = "openQuestions";
+ 	private String FILTER_PENDING_QUESTIONS = "pendingQuestions";
+@@ -203,7 +202,6 @@
+ 	    	}else {
+ 	    		currentCategoryName = faqService_.getCategoryById(parentCateID_).getName();
+ 	    	}
+-				e.printStackTrace();
+ 			}
+ 			viewBackIcon = true;
+ 			if(newList.isEmpty()) {
+@@ -267,17 +265,13 @@
+ 	}
+ 	
+ 	@SuppressWarnings("unused")
+-	private String[] getActionCategoryWithUser(String cateId) {
+-		try {
+-			if(FAQUtils.getCurrentUser() != null){
+-				if(isWatched(cateId)) return userActionsCateUnWatch_;
+-				else return userActionsCate_ ;
+-			}
+-			else return new String[]{userActionsCate_[0]};
+-		} catch (Exception e) {
+-			e.printStackTrace();
+-			return new String[]{userActionsCate_[0]};
++	private String[] getActionCategoryWithUser(String cateId) throws Exception {
++		if (FAQUtils.getCurrentUser() != null) {
++			if (isWatched(cateId))
++				return userActionsCateUnWatch_;
++			else return userActionsCate_;
+ 		}
++		return new String[]{userActionsCate_[0]};
+ 	}
+ 	
+ 	static	public class OpenCategoryActionListener extends EventListener<UICategories> {
+@@ -378,7 +372,6 @@
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+ 				}
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				FAQUtils.findCateExist(uiCategories.faqService_, uiCategories.getAncestorOfType(UIAnswersContainer.class));
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+@@ -411,7 +404,6 @@
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+ 				}
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				FAQUtils.findCateExist(uiCategories.faqService_, uiCategories.getAncestorOfType(UIAnswersContainer.class));
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+@@ -610,7 +602,6 @@
+ 				uiCategories.faqService_.swapCategories(objectIds[0], objectIds[1]);
+ 				//uiCategories.resetListCate();
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+ 			}
+@@ -685,7 +676,6 @@
+ 					popupAction.activate(popupContainer, 600, 400) ;
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+ 			} catch (Exception e) {
+-				e.printStackTrace() ;
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet) ;
+@@ -715,7 +705,6 @@
+ 					//return;
+ 				}
+ 			}catch (Exception e) {
+-				e.printStackTrace();
+ 				UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIWatchManager.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIWatchManager.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIWatchManager.java	(working copy)
+@@ -19,6 +19,7 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.faq.service.FAQService;
+ import org.exoplatform.faq.service.JCRPageList;
+@@ -30,6 +31,7 @@
+ import org.exoplatform.faq.webui.UICategories;
+ import org.exoplatform.faq.webui.UIQuestions;
+ import org.exoplatform.faq.webui.UIWatchContainer;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+@@ -53,7 +55,8 @@
+ 				@EventConfig(listeners = UIWatchManager.CancelActionListener.class)
+ 		}
+ )
+-public class UIWatchManager  extends UIForm	implements UIPopupComponent{
++public class UIWatchManager extends UIForm	implements UIPopupComponent {
++	private static Log log = ExoLogger.getLogger(UIWatchManager.class);
+ 	private static String categoryId_ = "";
+ 	private List<Watch> listWatchs_ = new ArrayList<Watch>() ;
+ 	private String LIST_EMAILS_WATCH = "listEmailsWatch";
+@@ -80,7 +83,7 @@
+ 	    pageIterator = this.getChildById(LIST_EMAILS_WATCH);
+ 	    pageIterator.updatePageList(pageList);
+     } catch (Exception e) {
+-    	 e.printStackTrace();
++    	 log.error("Failed to set category by id: " + s, e);
+     }
+   }
+   
+@@ -100,7 +103,7 @@
+     try {
+       return pageIterator.getInfoPage().get(3) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to get total pages.", e);
+       return 1 ;
+     }
+   }
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/ResultQuickSearch.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/ResultQuickSearch.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/ResultQuickSearch.java	(working copy)
+@@ -153,7 +153,6 @@
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet.getChild(UIAnswersContainer.class));
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				UIApplication uiApplication = resultQuickSearch.getAncestorOfType(UIApplication.class) ;
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/ResultSearchCategory.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/ResultSearchCategory.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/ResultSearchCategory.java	(working copy)
+@@ -19,6 +19,7 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.faq.service.Category;
+ import org.exoplatform.faq.service.FAQService;
+ import org.exoplatform.faq.service.JCRPageList;
+@@ -30,6 +31,7 @@
+ import org.exoplatform.faq.webui.UIBreadcumbs;
+ import org.exoplatform.faq.webui.UICategories;
+ import org.exoplatform.faq.webui.UIQuestions;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+@@ -54,6 +56,7 @@
+ 		}
+ )
+ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
++	private static Log log = ExoLogger.getLogger(ResultSearchCategory.class);
+ 	private List<Category> listCategory_ = null ;
+ 	private String LIST_RESULT_SEARCH = "listResultCategoriesSearch";
+ 	private UIAnswersPageIterator pageIterator ;
+@@ -69,7 +72,7 @@
+ 		try {
+ 			listCategory_.addAll(pageList.getPageResultCategoriesSearch(pageSelected, FAQUtils.getCurrentUser()));
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to get category list.", e);
+ 		}
+ 		return listCategory_ ;
+ 	}
+@@ -82,7 +85,7 @@
+ 			pageIterator = this.getChildById(LIST_RESULT_SEARCH);
+ 			pageIterator.updatePageList(pageList);
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to set category list.", e);
+ 		}
+ 	}
+ 
+@@ -92,7 +95,7 @@
+ 		try {
+ 			return pageIterator.getInfoPage().get(3) ;
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to get total pages.", e);
+ 			return 1 ;
+ 		}
+ 	}
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAddressEmailsForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAddressEmailsForm.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAddressEmailsForm.java	(working copy)
+@@ -37,6 +37,7 @@
+ import org.exoplatform.services.organization.User;
+ import org.exoplatform.services.organization.UserHandler;
+ import org.exoplatform.web.application.ApplicationMessage;
++import org.exoplatform.webui.application.WebuiRequestContext;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+ import org.exoplatform.webui.core.UIApplication;
+@@ -143,8 +144,9 @@
+ 			ObjectPageList objPageList = new ObjectPageList(new ArrayList<User>(users), 10) ;
+ 		    uiPageList_.setPageList(objPageList) ;
+ 		} catch (Exception e) {
+-			//this.isViewSearchUser = false;
+-			e.printStackTrace();
++			UIApplication uiApp = this.getAncestorOfType(UIApplication.class) ;
++      uiApp.addMessage(new ApplicationMessage("UIAddressEmailsForm.msg.search-user-failed",null)) ;
++      ((WebuiRequestContext)WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 		}
+ 	}
+   
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionsInfo.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionsInfo.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionsInfo.java	(working copy)
+@@ -20,6 +20,7 @@
+ import java.util.List;
+ import java.util.ResourceBundle;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.faq.service.Cate;
+ import org.exoplatform.faq.service.FAQService;
+@@ -32,6 +33,7 @@
+ import org.exoplatform.faq.webui.UIAnswersPageIterator;
+ import org.exoplatform.faq.webui.UIAnswersPortlet;
+ import org.exoplatform.faq.webui.UIQuestions;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.application.WebuiRequestContext;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+@@ -67,6 +69,8 @@
+ 
+ @SuppressWarnings("unused")
+ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
++	private static Log log = ExoLogger.getLogger(UIQuestionsInfo.class);
++	
+   private static final String LIST_QUESTION_INTERATOR = "FAQUserPageIteratorTab1" ;
+   private static final String LIST_QUESTION_NOT_ANSWERED_INTERATOR = "FAQUserPageIteratorTab2" ;
+   private static final String LIST_CATEGORIES = "ListCategories";
+@@ -139,9 +143,8 @@
+       			moderateCates.add(Utils.CATEGORY_HOME) ;
+   				}
+   			}catch(Exception e) {
+-  				e.printStackTrace() ;
++  				log.error("Failed to add category into category list.", e);
+   			}
+-  			
+   		}
+   	}    
+   }
+@@ -171,7 +174,7 @@
+     try {
+       return pageIterator.getInfoPage().get(3) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to get total pages.", e);
+       return 1 ;
+     }
+   }
+@@ -223,7 +226,7 @@
+   	try{
+   		return faqService_.getParentCategoriesName(questionPath.substring(0, questionPath.indexOf("/"+Utils.QUESTION_HOME)));
+   	}catch(Exception e){
+-  		e.printStackTrace();
++  		log.error("Failed to get category by path.", e);
+   		return questionPath;
+   	}
+   }
+@@ -243,7 +246,7 @@
+ 	        }
+         }
+       } catch (Exception e) {
+-        e.printStackTrace();
++        log.error("Failed to get question list.", e);
+       }
+     }
+     isChangeTab_ = false;
+@@ -268,7 +271,7 @@
+           pageIterator.setSelectPage(pageSelectNotAnswer) ;
+         }
+       } catch (Exception e) {
+-        e.printStackTrace();
++        log.error("Failed to get question list not answer.", e);
+       }
+     }
+     isChangeTab_ = false;
+@@ -454,7 +457,6 @@
+       	}
+       	event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+   		}catch (Exception e){
+-  			e.printStackTrace() ;
+   			UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
+         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICommentForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICommentForm.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICommentForm.java	(working copy)
+@@ -21,6 +21,7 @@
+ 
+ import javax.servlet.http.HttpServletRequest;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.faq.service.Comment;
+ import org.exoplatform.faq.service.FAQService;
+@@ -37,6 +38,7 @@
+ import org.exoplatform.forum.service.Post;
+ import org.exoplatform.forum.service.Topic;
+ import org.exoplatform.ks.common.bbcode.BBCode;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+@@ -65,6 +67,7 @@
+ )
+ 
+ public class UICommentForm extends UIForm implements UIPopupComponent {
++	private static Log log = ExoLogger.getLogger(UICommentForm.class);
+ 	private String languageSelected ;
+ 	private Question question_ ;
+ 	private Comment comment ;
+@@ -186,8 +189,7 @@
+ 			UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class) ;
+       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+       UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
+-      ValidatorDataInput validatorDataInput = new ValidatorDataInput();
+-      if(comment == null || comment.trim().length() == 0 || !validatorDataInput.fckContentIsNotEmpty(comment)){
++      if(comment == null || comment.trim().length() == 0 || !ValidatorDataInput.fckContentIsNotEmpty(comment)){
+ 				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
+         uiApplication.addMessage(new ApplicationMessage("UICommentForm.msg.comment-is-null", null, ApplicationMessage.WARNING)) ;
+         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+@@ -238,7 +240,7 @@
+ 							try {
+ 								forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
+ 	            } catch (Exception e) {
+-	              e.printStackTrace();
++	              log.error("Failed to save post in topic has id: " + post.getId(), e);
+ 	            }
+ 							commentForm.comment.setPostId(post.getId());
+ 						} else {
+@@ -268,7 +270,7 @@
+ 									post.setMessage(comment);
+ 									forumService.savePost(ids[t-3], ids[t-2], topicId, post, isNew, "");
+ 	              } catch (Exception e) {
+-		              e.printStackTrace();
++	              	log.error("Failed to save post in topic has id: " + postId, e);
+ 	              }
+ 							}
+ 						}
+@@ -289,12 +291,10 @@
+ 	        }
+ 				} else {questions.updateQuestionLanguageByLanguage(commentForm.question_.getPath(), commentForm.languageSelected);}
+ 			} catch(Exception e){
+-				e.printStackTrace();
+ 				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
+         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+ 			}
+-      //questions.setDefaultLanguage() ;
+       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+       popupAction.deActivate() ;
+       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionForm.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionForm.java	(working copy)
+@@ -24,6 +24,7 @@
+ import java.util.Locale;
+ import java.util.Map;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.faq.service.FAQService;
+ import org.exoplatform.faq.service.FAQSetting;
+@@ -39,6 +40,7 @@
+ import org.exoplatform.forum.service.Topic;
+ import org.exoplatform.forum.service.Utils;
+ import org.exoplatform.portal.webui.util.Util;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.services.resources.LocaleConfig;
+ import org.exoplatform.services.resources.LocaleConfigService;
+ import org.exoplatform.web.application.ApplicationMessage;
+@@ -77,6 +79,7 @@
+     }
+ )
+ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
++	private static Log log = ExoLogger.getLogger(UIQuestionForm.class);
+   public static final String AUTHOR = "Author" ;
+   public static final String EMAIL_ADDRESS = "EmailAddress" ;
+   public static final String QUESTION_CONTENT = "QuestionTitle";
+@@ -199,7 +202,7 @@
+     try{
+       inputAttachcment.setActionField(FILE_ATTACHMENTS, getActionList()) ;
+     } catch (Exception e) {
+-      e.printStackTrace() ;
++      log.error("Failed to set attachment into component UIFormInputInfo.", e);
+     }
+     
+     inputQuestionDetail = new UIFormWYSIWYGInput(QUESTION_DETAIL, QUESTION_DETAIL, "") ;
+@@ -237,7 +240,7 @@
+       try {
+         refreshUploadFileList() ;
+       } catch (Exception e) {
+-        e.printStackTrace();
++        log.error("Failed to refresh file upload list.", e);
+       }
+     }
+   }
+@@ -250,7 +253,9 @@
+   			isMode = true;
+   		}
+   		return isMode ;
+-    } catch (Exception e) {e.printStackTrace();}
++    } catch (Exception e) {
++    	log.error("Failed to check user is moderator.", e);
++    }
+     return false;
+ 	}
+   
+@@ -290,7 +295,7 @@
+       inputQuestionContent.setValue(question.getQuestion());
+       inputQuestionDetail.setValue(question_.getDetail()) ;      
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to set editing question.", e);
+       initPage(false) ;
+     } 
+   }
+@@ -566,7 +571,7 @@
+ 									forumService.saveTopic(ids[t - 3], ids[t - 2], topic, false, false, "");
+ 								}
+ 	            } catch (Exception e) {
+-	              e.printStackTrace();
++	              log.error("Failed to save topic by id: " + topicId, e);
+ 	            }
+ 						}
+ 					}
+@@ -589,7 +594,7 @@
+ 	          }
+ 	        }
+ 	      } catch (Exception e) {
+-	        e.printStackTrace() ;
++	        log.error("Failed to discuss question into forum.", e);
+ 	      }
+ 	      
+ 	      if(!questionForm.isChildOfManager) {
+@@ -615,7 +620,7 @@
+       	}
+         event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersContainer.class)) ;
+     	} catch (Exception e) {
+-    		e.printStackTrace();
++    		log.error("Failed to save question.", e);
+       }
+     }
+   }
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIPrintAllQuestions.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIPrintAllQuestions.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIPrintAllQuestions.java	(working copy)
+@@ -58,7 +58,6 @@
+ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
+ 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
+ 	private String categoryId = null;
+-	private String currentUser_;
+ 	private boolean canEditQuestion = false;
+ 	private FAQService faqService_ = null;
+ 	private FAQSetting faqSetting_ = null;
+@@ -67,23 +66,13 @@
+ 	public void activate() throws Exception { }
+ 	public void deActivate() throws Exception { }
+ 	public UIPrintAllQuestions(){
+-		try {
+-			currentUser_ = FAQUtils.getCurrentUser();
+-		} catch (Exception e) {
+-			e.printStackTrace();
+-		}
+ 	}
+ 	
+-	private String getQuestionRelationById(String questionId) {
++	private String getQuestionRelationById(String questionId) throws Exception {
+ 		Question question = new Question();
+-		//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+-		try {
+-			question = faqService_.getQuestionById(questionId);
+-			if(question != null) {
+-				return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
+-			}
+-		} catch (Exception e) {
+-			e.printStackTrace();
++		question = faqService_.getQuestionById(questionId);
++		if (question != null) {
++			return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
+ 		}
+ 		return "" ;
+ 	}
+@@ -102,18 +91,6 @@
+ 		return null;
+ 	}
+ 
+-	/*private String getFileSource(FileAttachment attachment) throws Exception {
+-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+-		try {
+-			InputStream input = attachment.getInputStream() ;
+-			String fileName = attachment.getName() ;
+-			//String fileName = attachment.getNodeName() ;
+-			return getFileSource(input, fileName, dservice);
+-		} catch (Exception e) {			
+-		}
+-		return null;
+-	}*/
+-
+ 	public String getRepository() throws Exception {
+ 		RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
+ 		return rService.getCurrentRepository().getConfiguration().getName() ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICategoryForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICategoryForm.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICategoryForm.java	(working copy)
+@@ -372,17 +372,16 @@
+   }
+   
+ 	private String getUserSelect(String vls, String values) throws Exception {
+-		try {
+-			if(!FAQUtils.isFieldEmpty(vls)) {
+-				values = values + "," + vls;
+-				List<String> list = new ArrayList<String>();
+-				for (String string : Arrays.asList(values.split(","))) {
+-					if(!list.contains(string) && string.trim().length() > 0)list.add(string);
+-        }
+-				values = list.toString().replace('['+"", "").replace(']'+"", "").replaceAll(", ", ",");
++		if (!FAQUtils.isFieldEmpty(vls)) {
++			values = values + "," + vls;
++			List<String> list = new ArrayList<String>();
++			for (String string : Arrays.asList(values.split(","))) {
++				if (!list.contains(string) && string.trim().length() > 0)
++					list.add(string);
+ 			}
+-    } catch (Exception e) {e.printStackTrace();}
+-    return values;
++			values = list.toString().replace('[' + "", "").replace(']' + "", "").replaceAll(", ", ",");
++		}
++		return values;
+ 	}
+ 	
+   static  public class AddActionListener extends EventListener<UIUserSelector> {
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UISettingForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UISettingForm.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UISettingForm.java	(working copy)
+@@ -492,15 +492,13 @@
+ 				UISelectCategoryForumForm listCateForm = popupAction.activate(UISelectCategoryForumForm.class, 400) ;
+ 				listCateForm.setListCategory();
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(pupupContainer) ;
+-      } catch (ClassCastException e) {
++      } catch (Exception e) {
+       	UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ; 
+       	UISelectCategoryForumForm listCateForm = popupAction.createUIComponent(UISelectCategoryForumForm.class, null, null) ;
+       	listCateForm.setListCategory();
+       	popupAction.activate(listCateForm, 400, 400);
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+-      } catch (Exception e) {
+-      	e.printStackTrace();
+-			}
++      }
+ 		}
+ 	}
+ 
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UISelectCategoryForumForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UISelectCategoryForumForm.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UISelectCategoryForumForm.java	(working copy)
+@@ -57,15 +57,11 @@
+   	listcate = forumService.getCategories();
+ 	}
+ 	
+-  List<Forum> getForums(String categoryId) {
+-  	List<Forum>listForum = new ArrayList<Forum>();
++	List<Forum> getForums(String categoryId) throws Exception {
++		List<Forum> listForum = new ArrayList<Forum>();
+ 		if (categoryId != null && categoryId.trim().length() > 0) {
+-			try {
+-				String strQuery = "@exo:isClosed='false' and @exo:isLock='false'";
+-				listForum = forumService.getForums(categoryId, strQuery);
+-			} catch (Exception e) {
+-				e.printStackTrace();
+-			} 
++			String strQuery = "@exo:isClosed='false' and @exo:isLock='false'";
++			listForum = forumService.getForums(categoryId, strQuery);
+ 		}
+ 		return listForum;
+ 	}
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAddRelationForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAddRelationForm.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAddRelationForm.java	(working copy)
+@@ -83,15 +83,11 @@
+   	this.faqSetting_ = faqSetting;
+   }
+   
+-  public void setRelationed(List<String> listRelation) {
+-    quesIdsSelect = listRelation ;    
+-    try{ 
+-    	homeCategoryName = faqService.getCategoryNameOf(Utils.CATEGORY_HOME);
+-    	setListCate(Utils.CATEGORY_HOME) ;
+-      initPage() ;
+-    } catch (Exception e) {
+-      e.printStackTrace();
+-    }
++  public void setRelationed(List<String> listRelation) throws Exception {
++		quesIdsSelect = listRelation;
++		homeCategoryName = faqService.getCategoryNameOf(Utils.CATEGORY_HOME);
++		setListCate(Utils.CATEGORY_HOME);
++		initPage();
+   }
+   
+   public void setQuestionId(String questionId) {
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UISendMailForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UISendMailForm.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UISendMailForm.java	(working copy)
+@@ -120,11 +120,7 @@
+ 	}
+ 	
+ 	public void addPlugin(ComponentPlugin plugin) throws Exception {
+-		try {
+-			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
+-		} catch(Exception e) {
+-			e.printStackTrace() ;
+-		}
++		serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
+ 	}
+ 
+ 	public void setUpdateQuestion(String questionPath, String language) throws Exception {
+@@ -295,7 +291,6 @@
+ 			} catch(Exception e) {
+ 				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-error", null)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+-				e.printStackTrace() ;
+ 				return ;
+ 			}
+ 			uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-success", null, ApplicationMessage.INFO)) ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIMoveQuestionForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIMoveQuestionForm.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIMoveQuestionForm.java	(working copy)
+@@ -135,7 +135,6 @@
+ 					faqService_.moveQuestions(questionList, cateId, link, moveQuestionForm.faqSetting_) ;
+ 					questions.updateCurrentQuestionList() ;
+ 				}catch (Exception e) {				
+-					e.printStackTrace() ;
+ 					UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
+ 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIResponseForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIResponseForm.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIResponseForm.java	(working copy)
+@@ -25,6 +25,7 @@
+ 
+ import javax.jcr.PathNotFoundException;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.faq.service.Answer;
+ import org.exoplatform.faq.service.FAQService;
+@@ -41,6 +42,7 @@
+ import org.exoplatform.forum.service.Post;
+ import org.exoplatform.forum.service.Topic;
+ import org.exoplatform.ks.common.bbcode.BBCode;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+@@ -74,6 +76,7 @@
+ )
+ 
+ public class UIResponseForm extends UIForm implements UIPopupComponent {
++	private static Log log = ExoLogger.getLogger(UIResponseForm.class);
+ 	private static final String QUESTION_LANGUAGE = "Language" ;
+ 	private static final String RESPONSE_CONTENT = "QuestionRespone" ;
+ 	private static final String SHOW_ANSWER = "QuestionShowAnswer" ;
+@@ -148,7 +151,7 @@
+ 			}			
+ 			this.setListRelation();
+ 		} catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to set default question.", e);
+ 		}
+ 		this.questionId_ = question.getPath() ;
+ 		
+@@ -170,7 +173,7 @@
+ 					listLanguageToReponse.add(new SelectItemOption<String>(language.getLanguage(), language.getLanguage()));
+ 			}
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to set question language.", e);
+ 		}
+ 		
+ 		checkShowAnswer_.setChecked(question_.isActivated()) ;
+@@ -312,7 +315,6 @@
+ 									post.setIsApproved(false);
+ 									forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
+ 								}else {
+-									//post.setIsApproved(false);
+ 									post.setMessage(question_.getAnswers()[i].getResponses());
+ 									forumService.savePost(ids[t-3], ids[t-2], topicId, post, false, "");
+ 								}
+@@ -328,234 +330,225 @@
+ 								question_.getAnswers()[i].setPostId(post.getId());
+ 							}
+ 						} catch (Exception e) {
+-							e.printStackTrace();
++							log.error("Failed to save post for discuss question into forum.", e);
+ 						}
+ 	        }
+ 				}
+ 			}
+ 		}
+ 	}
+-
+ 	
+-	
+-		public Question getQuestion() {
+-    return question_;
+-  }
++	public Question getQuestion() {
++		return question_;
++	}
+ 
+-
+-
+-    static public class SaveActionListener extends EventListener<UIResponseForm> {
+-			@SuppressWarnings("unchecked")
+-			public void execute(Event<UIResponseForm> event) throws Exception {
+-				UIResponseForm responseForm = event.getSource() ;
+-				String language = responseForm.questionLanguages_.getValue() ;
+-				String responseQuestionContent = responseForm.inputResponseQuestion_.getValue() ;
+-				Answer answer;
+-				if(ValidatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {						
+-					if(responseForm.mapAnswers.containsKey(language)){
+-						answer = responseForm.mapAnswers.get(language);
+-						answer.setResponses(responseQuestionContent);
+-						answer.setNew(true) ;
+-					} else {
+-						answer = new Answer();
+-						answer.setDateResponse(new Date());
+-						String currentUser = FAQUtils.getCurrentUser() ;
+-						answer.setResponseBy(currentUser);
+-						answer.setFullName(FAQUtils.getFullName(currentUser)) ;
+-						answer.setNew(true);
+-						answer.setResponses(responseQuestionContent);
+-						answer.setLanguage(language) ;
+-					}
+-					// author: Vu Duy Tu. set show answer
+-					answer.setApprovedAnswers(((UIFormCheckBoxInput<Boolean>)responseForm.getChildById(IS_APPROVED)).isChecked()) ;
+-					answer.setActivateAnswers(((UIFormCheckBoxInput<Boolean>)responseForm.getChildById(SHOW_ANSWER)).isChecked()) ;
++	static public class SaveActionListener extends EventListener<UIResponseForm> {
++		@SuppressWarnings("unchecked")
++		public void execute(Event<UIResponseForm> event) throws Exception {
++			UIResponseForm responseForm = event.getSource();
++			String language = responseForm.questionLanguages_.getValue();
++			String responseQuestionContent = responseForm.inputResponseQuestion_.getValue();
++			Answer answer;
++			if (ValidatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
++				if (responseForm.mapAnswers.containsKey(language)) {
++					answer = responseForm.mapAnswers.get(language);
++					answer.setResponses(responseQuestionContent);
++					answer.setNew(true);
++				} else {
++					answer = new Answer();
++					answer.setDateResponse(new Date());
++					String currentUser = FAQUtils.getCurrentUser();
++					answer.setResponseBy(currentUser);
++					answer.setFullName(FAQUtils.getFullName(currentUser));
++					answer.setNew(true);
++					answer.setResponses(responseQuestionContent);
++					answer.setLanguage(language);
++				}
++				// author: Vu Duy Tu. set show answer
++				answer.setApprovedAnswers(((UIFormCheckBoxInput<Boolean>) responseForm.getChildById(IS_APPROVED)).isChecked());
++				answer.setActivateAnswers(((UIFormCheckBoxInput<Boolean>) responseForm.getChildById(SHOW_ANSWER)).isChecked());
++				responseForm.mapAnswers.put(language, answer);
++			} else {
++				if (responseForm.mapAnswers.containsKey(language)) {
++					answer = responseForm.mapAnswers.get(language);
++					answer.setNew(false);
+ 					responseForm.mapAnswers.put(language, answer);
+-				} else{
+-					if(responseForm.mapAnswers.containsKey(language)){
+-						answer = responseForm.mapAnswers.get(language);
+-						answer.setNew(false) ;						
+-						responseForm.mapAnswers.put(language, answer) ;
+-					}
+ 				}
++			}
+ 
+-				if(responseForm.mapAnswers.isEmpty()){
+-					UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
+-					uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-null", null, ApplicationMessage.WARNING)) ;
+-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+-					return ;
+-				}
+-				
+-				// set relateion of question:
+-				responseForm.getQuestion().setRelations(responseForm.getListIdQuesRela().toArray(new String[]{})) ;
+-				
++			if (responseForm.mapAnswers.isEmpty()) {
++				UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class);
++				uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-null", null, ApplicationMessage.WARNING));
++				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
++				return;
++			}
+ 
+-				//link
+-				UIAnswersPortlet portlet = responseForm.getAncestorOfType(UIAnswersPortlet.class) ;
+-				UIQuestions uiQuestions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
+-				
+-				//Link Question to send mail 
+-				String link = FAQUtils.getLink(responseForm.getLink(), responseForm.getId(), "UIQuestions", "AddRelation", "ViewQuestion", "OBJECTID");
+-				String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
+-				link = link.replaceFirst("OBJECTID", responseForm.getQuestion().getPath());
+-				responseForm.getQuestion().setLink(link) ;
+-				
+-				// set answer to question for discuss forum function  
+-				if(responseForm.mapAnswers.containsKey(responseForm.getQuestion().getLanguage())) {
+-				  responseForm.getQuestion().setAnswers(new Answer[]{responseForm.mapAnswers.get(responseForm.getQuestion().getLanguage())});
++			// set relateion of question:
++			responseForm.getQuestion().setRelations(responseForm.getListIdQuesRela().toArray(new String[] {}));
++
++			// link
++			UIAnswersPortlet portlet = responseForm.getAncestorOfType(UIAnswersPortlet.class);
++			UIQuestions uiQuestions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
++
++			// Link Question to send mail
++			String link = FAQUtils.getLink(responseForm.getLink(), responseForm.getId(), "UIQuestions", "AddRelation", "ViewQuestion", "OBJECTID");
++			String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
++			link = link.replaceFirst("OBJECTID", responseForm.getQuestion().getPath());
++			responseForm.getQuestion().setLink(link);
++
++			// set answer to question for discuss forum function
++			if (responseForm.mapAnswers.containsKey(responseForm.getQuestion().getLanguage())) {
++				responseForm.getQuestion().setAnswers(new Answer[] { responseForm.mapAnswers.get(responseForm.getQuestion().getLanguage()) });
++			}
++			try {
++				FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
++				// save answers and question
++				Answer[] answers = responseForm.mapAnswers.values().toArray(new Answer[] {});
++				// Fix for problem: can not send email when add new answers.
++				if (answers.length > 0) {
++					answers[0].setPath(link + "///" + responseForm.faqSetting_.getEmailSettingSubject() + "///" + responseForm.faqSetting_.getEmailSettingContent());
+ 				}
+-				try{
+-					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
+-					//save answers and question
+-					Answer[] answers = responseForm.mapAnswers.values().toArray(new Answer[]{}) ;
+-					//Fix for problem: can not send email when add new answers.
+-					if(answers.length > 0){
+-						answers[0].setPath(link +"///"+responseForm.faqSetting_.getEmailSettingSubject()+"///"+responseForm.faqSetting_.getEmailSettingContent());
+-					}
+-					FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+-					
+-					faqService.saveAnswer(responseForm.getQuestion().getPath(), answers) ;
+-					faqService.updateQuestionRelatives(responseForm.getQuestion().getPath(), responseForm.getQuestion().getRelations()) ;
+-					// author: Vu Duy Tu. Make discuss forum
+-					responseForm.updateDiscussForum(linkForum);
+-				} catch (PathNotFoundException e) {
+-					e.printStackTrace();
+-					UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
+-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+-				} catch (Exception e) {
+-					e.printStackTrace() ;
+-				}
++				FAQService faqService = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+ 
+-				//cancel
+-				if(!responseForm.isChildOfQuestionManager_) {
+-					uiQuestions.updateCurrentQuestionList() ;
+-					//uiQuestions.updateCurrentLanguage() ;
+-					uiQuestions.updateLanguageMap() ;
+-					uiQuestions.setLanguageView(responseForm.currentLanguage) ;
+-					UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+-					popupAction.deActivate() ;
+-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+-					event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class)) ; 
+-				} else {
+-					UIQuestionManagerForm questionManagerForm = responseForm.getParent() ;
+-					UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class) ;
+-					if(questionManagerForm.isEditQuestion && responseForm.questionId_.equals(questionForm.getQuestionId())) {
+-						questionForm.setIsChildOfManager(true) ;
+-						questionForm.setQuestion(responseForm.getQuestion()) ;
+-						questionForm.setIsMode(true);
+-					}
+-					questionManagerForm.isResponseQuestion = false ;
+-					UIPopupContainer popupContainer = questionManagerForm.getParent() ;
+-					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
++				faqService.saveAnswer(responseForm.getQuestion().getPath(), answers);
++				faqService.updateQuestionRelatives(responseForm.getQuestion().getPath(), responseForm.getQuestion().getRelations());
++				// author: Vu Duy Tu. Make discuss forum
++				responseForm.updateDiscussForum(linkForum);
++			} catch (PathNotFoundException e) {
++				UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class);
++				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING));
++				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
++			} catch (Exception e) {
++				log.error("Failed to save answer.", e);
++			}
++
++			// cancel
++			if (!responseForm.isChildOfQuestionManager_) {
++				uiQuestions.updateCurrentQuestionList();
++				// uiQuestions.updateCurrentLanguage() ;
++				uiQuestions.updateLanguageMap();
++				uiQuestions.setLanguageView(responseForm.currentLanguage);
++				UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
++				popupAction.deActivate();
++				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
++				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class));
++			} else {
++				UIQuestionManagerForm questionManagerForm = responseForm.getParent();
++				UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class);
++				if (questionManagerForm.isEditQuestion && responseForm.questionId_.equals(questionForm.getQuestionId())) {
++					questionForm.setIsChildOfManager(true);
++					questionForm.setQuestion(responseForm.getQuestion());
++					questionForm.setIsMode(true);
+ 				}
++				questionManagerForm.isResponseQuestion = false;
++				UIPopupContainer popupContainer = questionManagerForm.getParent();
++				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+ 			}
+ 		}
++	}
+ 
+-		static public class CancelActionListener extends EventListener<UIResponseForm> {
+-			public void execute(Event<UIResponseForm> event) throws Exception {
+-				UIResponseForm response = event.getSource() ;
+-				UIAnswersPortlet portlet = response.getAncestorOfType(UIAnswersPortlet.class) ;
+-				if(!response.isChildOfQuestionManager_) {
+-					UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+-					popupAction.deActivate() ;
+-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+-				} else {
+-					UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
+-					questionManagerForm.isResponseQuestion = false ;
++	static public class CancelActionListener extends EventListener<UIResponseForm> {
++		public void execute(Event<UIResponseForm> event) throws Exception {
++			UIResponseForm response = event.getSource();
++			UIAnswersPortlet portlet = response.getAncestorOfType(UIAnswersPortlet.class);
++			if (!response.isChildOfQuestionManager_) {
++				UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
++				popupAction.deActivate();
++				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
++			} else {
++				UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class);
++				questionManagerForm.isResponseQuestion = false;
+ 
+-					UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class) ;
+-					UIAttachMentForm attachMentForm = popupContainer.findFirstComponentOfType(UIAttachMentForm.class) ;
+-					if(attachMentForm != null) {
+-						UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+-						popupAction.deActivate() ;
+-					} else {
+-						UIAddRelationForm addRelationForm = popupContainer.findFirstComponentOfType(UIAddRelationForm.class) ;
+-						if(addRelationForm != null) {
+-							UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+-							popupAction.deActivate() ;
+-						}
++				UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
++				UIAttachMentForm attachMentForm = popupContainer.findFirstComponentOfType(UIAttachMentForm.class);
++				if (attachMentForm != null) {
++					UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
++					popupAction.deActivate();
++				} else {
++					UIAddRelationForm addRelationForm = popupContainer.findFirstComponentOfType(UIAddRelationForm.class);
++					if (addRelationForm != null) {
++						UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
++						popupAction.deActivate();
+ 					}
+-					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+ 				}
++				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+ 			}
+ 		}
++	}
+ 
+-		static public class AddRelationActionListener extends EventListener<UIResponseForm> {
+-			public void execute(Event<UIResponseForm> event) throws Exception {
+-				UIResponseForm response = event.getSource() ;
+-				UIPopupContainer popupContainer = response.getAncestorOfType(UIPopupContainer.class);
+-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+-				UIAddRelationForm addRelationForm = popupAction.activate(UIAddRelationForm.class, 500) ;
+-				addRelationForm.setQuestionId(response.questionId_) ;
+-				addRelationForm.setRelationed(response.getListIdQuesRela()) ;
+-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+-			}
++	static public class AddRelationActionListener extends EventListener<UIResponseForm> {
++		public void execute(Event<UIResponseForm> event) throws Exception {
++			UIResponseForm response = event.getSource();
++			UIPopupContainer popupContainer = response.getAncestorOfType(UIPopupContainer.class);
++			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true);
++			UIAddRelationForm addRelationForm = popupAction.activate(UIAddRelationForm.class, 500);
++			addRelationForm.setQuestionId(response.questionId_);
++			addRelationForm.setRelationed(response.getListIdQuesRela());
++			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+ 		}
++	}
+ 
+-		static public class RemoveRelationActionListener extends EventListener<UIResponseForm> {
+-			public void execute(Event<UIResponseForm> event) throws Exception {
+-				UIResponseForm questionForm = event.getSource() ;
+-				String quesId = event.getRequestContext().getRequestParameter(OBJECTID);
+-				for(int i = 0 ; i < questionForm.listQuestIdRela.size(); i ++) {
+-					if(questionForm.listQuestIdRela.get(i).equals(quesId)) {
+-						questionForm.listRelationQuestion.remove(i) ;
+-						break ;
+-					}
++	static public class RemoveRelationActionListener extends EventListener<UIResponseForm> {
++		public void execute(Event<UIResponseForm> event) throws Exception {
++			UIResponseForm questionForm = event.getSource();
++			String quesId = event.getRequestContext().getRequestParameter(OBJECTID);
++			for (int i = 0; i < questionForm.listQuestIdRela.size(); i++) {
++				if (questionForm.listQuestIdRela.get(i).equals(quesId)) {
++					questionForm.listRelationQuestion.remove(i);
++					break;
+ 				}
+-				questionForm.listQuestIdRela.remove(quesId) ;
+-				event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
+ 			}
++			questionForm.listQuestIdRela.remove(quesId);
++			event.getRequestContext().addUIComponentToUpdateByAjax(questionForm);
+ 		}
++	}
+ 
+-		static public class ChangeLanguageActionListener extends EventListener<UIResponseForm> {
+-			@SuppressWarnings("static-access")
+-			public void execute(Event<UIResponseForm> event) throws Exception {
+-				UIResponseForm responseForm = event.getSource() ;
+-				String newLanguage = responseForm.questionLanguages_.getValue() ;
+-				String responseContent = responseForm.inputResponseQuestion_.getValue() ;
+-				String user = FAQUtils.getCurrentUser();
+-				Answer answer;
+-				//System.out.println(">>>>>>>>>>> New lang:" + newLanguage);
+-				//System.out.println(">>>>>>>>>>> cur lang:" + responseForm.currentLanguage);
+-				if(ValidatorDataInput.fckContentIsNotEmpty(responseContent)){
+-					if(responseForm.mapAnswers.containsKey(responseForm.currentLanguage)){
+-						answer = responseForm.mapAnswers.get(responseForm.currentLanguage);
+-						answer.setResponses(responseContent);
+-					} else {
+-						answer = new Answer();
+-						answer.setNew(true);
+-						answer.setActivateAnswers(true);
+-						answer.setApprovedAnswers(responseForm.isAnswerApproved);
+-						answer.setDateResponse(new Date());
+-						answer.setResponseBy(user);
+-						answer.setResponses(responseContent);
+-						answer.setLanguage(responseForm.currentLanguage) ;
+-					}
+-					responseForm.mapAnswers.put(responseForm.currentLanguage, answer);
++	static public class ChangeLanguageActionListener extends EventListener<UIResponseForm> {
++		public void execute(Event<UIResponseForm> event) throws Exception {
++			UIResponseForm responseForm = event.getSource();
++			String newLanguage = responseForm.questionLanguages_.getValue();
++			String responseContent = responseForm.inputResponseQuestion_.getValue();
++			String user = FAQUtils.getCurrentUser();
++			Answer answer;
++			if (ValidatorDataInput.fckContentIsNotEmpty(responseContent)) {
++				if (responseForm.mapAnswers.containsKey(responseForm.currentLanguage)) {
++					answer = responseForm.mapAnswers.get(responseForm.currentLanguage);
++					answer.setResponses(responseContent);
+ 				} else {
+-					if(responseForm.mapAnswers.containsKey(responseForm.currentLanguage)){
+-						answer = responseForm.mapAnswers.get(responseForm.currentLanguage);
+-						answer.setNew(false) ;
+-						responseForm.mapAnswers.put(responseForm.currentLanguage, answer) ;
+-					}
++					answer = new Answer();
++					answer.setNew(true);
++					answer.setActivateAnswers(true);
++					answer.setApprovedAnswers(responseForm.isAnswerApproved);
++					answer.setDateResponse(new Date());
++					answer.setResponseBy(user);
++					answer.setResponses(responseContent);
++					answer.setLanguage(responseForm.currentLanguage);
+ 				}
+-				
+-				//get Question by language
+-				responseForm.currentLanguage = newLanguage ;
+-				if(newLanguage.equals(responseForm.question_.getLanguage())){
+-					responseForm.questionDetail = responseForm.question_.getDetail();
+-					responseForm.questionContent = responseForm.question_.getQuestion();
+-				} else {
+-					responseForm.questionDetail = responseForm.languageMap.get(newLanguage).getDetail();
+-					responseForm.questionContent = responseForm.languageMap.get(newLanguage).getQuestion();
++				responseForm.mapAnswers.put(responseForm.currentLanguage, answer);
++			} else {
++				if (responseForm.mapAnswers.containsKey(responseForm.currentLanguage)) {
++					answer = responseForm.mapAnswers.get(responseForm.currentLanguage);
++					answer.setNew(false);
++					responseForm.mapAnswers.put(responseForm.currentLanguage, answer);
+ 				}
+-				
+-				//get answer by language
+-				if(responseForm.mapAnswers.containsKey(newLanguage))
+-					responseForm.inputResponseQuestion_.setValue(responseForm.mapAnswers.get(newLanguage).getResponses()) ;
+-				else responseForm.inputResponseQuestion_.setValue("") ;
+-				event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;
+ 			}
++
++			// get Question by language
++			responseForm.currentLanguage = newLanguage;
++			if (newLanguage.equals(responseForm.question_.getLanguage())) {
++				responseForm.questionDetail = responseForm.question_.getDetail();
++				responseForm.questionContent = responseForm.question_.getQuestion();
++			} else {
++				responseForm.questionDetail = responseForm.languageMap.get(newLanguage).getDetail();
++				responseForm.questionContent = responseForm.languageMap.get(newLanguage).getQuestion();
++			}
++
++			// get answer by language
++			if (responseForm.mapAnswers.containsKey(newLanguage))
++				responseForm.inputResponseQuestion_.setValue(responseForm.mapAnswers.get(newLanguage).getResponses());
++			else responseForm.inputResponseQuestion_.setValue("");
++			event.getRequestContext().addUIComponentToUpdateByAjax(responseForm);
+ 		}
++	}
+ }
+ 
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIPopupViewQuestion.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIPopupViewQuestion.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIPopupViewQuestion.java	(working copy)
+@@ -21,6 +21,7 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.download.DownloadService;
+ import org.exoplatform.download.InputStreamDownloadResource;
+@@ -31,6 +32,7 @@
+ import org.exoplatform.faq.service.Utils;
+ import org.exoplatform.ks.common.bbcode.BBCode;
+ import org.exoplatform.services.jcr.RepositoryService;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+ import org.exoplatform.webui.core.UIPopupWindow;
+@@ -54,6 +56,7 @@
+ 		}
+ )
+ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
++	private static Log log = ExoLogger.getLogger(UIPopupViewQuestion.class);
+ 	private String questionId_ = null ;
+   private String language_ = "" ;
+   private static	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+@@ -115,7 +118,6 @@
+   
+   public Question getViewQuestion() {
+   	Question question = null;
+-  	//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+     try {
+ 	    question = faqService_.getQuestionById(questionId_);
+ 	    List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
+@@ -124,13 +126,11 @@
+ 	    	if(questionLanguage.getLanguage().equals(language_)) {
+ 	    		question.setDetail(questionLanguage.getDetail()) ;
+ 	    		question.setQuestion(questionLanguage.getQuestion());
+-//	    		question.setAnswers(questionLanguage.getAnswers()) ;
+ 	    	}
+ 	    }
+     } catch (Exception e) {
+-	    e.printStackTrace();
++	    log.error("Failed to get question display.", e);
+     }
+-    //sessionProvider.close();
+   	return question;
+   }
+   
+@@ -153,7 +153,7 @@
+         return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
+       }
+     } catch (Exception e) {
+-    	e.printStackTrace() ;
++    	log.error("Failed to get question relation by id: " + questionId, e);
+     }
+     return "" ;
+   }
+@@ -199,7 +199,7 @@
+       String fileName = attachment.getName() ;
+       return getFileSource(input, fileName, dservice);
+     } catch (Exception e) {
+-      e.printStackTrace() ;
++      log.error("Failed to get file source", e);
+       return null;
+     }
+   }
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIMoveCategoryForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIMoveCategoryForm.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIMoveCategoryForm.java	(working copy)
+@@ -138,7 +138,6 @@
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.already-in-destination", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+ 			}catch (Exception e) {
+-				//e.printStackTrace() ;
+ 				UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/ResultSearchQuestion.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/ResultSearchQuestion.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/ResultSearchQuestion.java	(working copy)
+@@ -19,6 +19,7 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.faq.service.FAQService;
+ import org.exoplatform.faq.service.JCRPageList;
+ import org.exoplatform.faq.service.Question;
+@@ -31,6 +32,7 @@
+ import org.exoplatform.faq.webui.UICategories;
+ import org.exoplatform.faq.webui.UIQuestions;
+ import org.exoplatform.faq.webui.UIResultContainer;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+@@ -56,6 +58,7 @@
+ 		}
+ )
+ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
++	private static Log log = ExoLogger.getLogger(ResultSearchQuestion.class);
+ 	private List<Question> listQuestion_ = null ;
+ 	private static String language_ = "" ;
+ 	public ResultSearchQuestion() throws Exception {
+@@ -73,7 +76,7 @@
+ 		try {
+ 			listQuestion_.addAll(pageList.getPageResultQuestionsSearch(pageSelected, FAQUtils.getCurrentUser()));
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to get list questions.", e);
+ 		}
+ 		return listQuestion_ ;
+ 	}
+@@ -86,7 +89,7 @@
+ 			pageIterator = this.getChildById(LIST_RESULT_SEARCH);
+ 			pageIterator.updatePageList(pageList);
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to set list questions.", e);
+ 		}
+ 	}
+ 
+@@ -96,7 +99,7 @@
+ 		try {
+ 			return pageIterator.getInfoPage().get(3) ;
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to get total pages.", e);
+ 			return 1 ;
+ 		}
+ 	}
+@@ -191,7 +194,6 @@
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet.getChild(UIAnswersContainer.class));
+ 				answerPortlet.cancelAction() ;
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				UIApplication uiApplication = resultSearch.getAncestorOfType(UIApplication.class) ;
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIUserWatchManager.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIUserWatchManager.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIUserWatchManager.java	(working copy)
+@@ -19,6 +19,7 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.faq.service.Category;
+ import org.exoplatform.faq.service.FAQService;
+@@ -32,6 +33,7 @@
+ import org.exoplatform.faq.webui.UIBreadcumbs;
+ import org.exoplatform.faq.webui.UICategories;
+ import org.exoplatform.faq.webui.UIQuestions;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+@@ -56,11 +58,11 @@
+ 				@EventConfig(listeners = UIUserWatchManager.CancelActionListener.class)
+ 		}
+ )
+-public class UIUserWatchManager  extends UIFormTabPane implements UIPopupComponent{
++@SuppressWarnings("unused")
++public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponent {
++	private static Log log = ExoLogger.getLogger(UIUserWatchManager.class);
+ 	private FAQSetting faqSetting_ = null;
+-	@SuppressWarnings("unused")
+ 	private UIAnswersPageIterator pageIteratorCate ;
+-	@SuppressWarnings("unused")
+ 	private JCRPageList pageListCate ;
+ 	private UIAnswersPageIterator pageIteratorQues ;
+ 	private UIAnswersPageIterator pageIteratorCates ;
+@@ -71,7 +73,6 @@
+ 	private int tabSelect = 0;
+ 	private String emailAddress;
+ 	
+-	@SuppressWarnings("unused")
+ 	//private String[] tabs = new String[]{"watchCategoryTab", "watchQuestionTab"};
+ 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+ 	public UIUserWatchManager() throws Exception {
+@@ -138,12 +139,11 @@
+ 			}
+   		return listCategories;
+   	}catch (Exception e){
+-  		e.printStackTrace();
++  		log.error("Failed to get list categories watching.", e);
+   		return null;
+   	}
+   }
+   
+-  @SuppressWarnings("unused")
+ 	private List<Question> getListQuestionsWatch(){
+   	try{
+   		if(pageListQues == null){
+@@ -166,18 +166,17 @@
+       }
+   		return listQuestion_;
+   	}catch (Exception e){
+-  		e.printStackTrace();
++  		log.error("Failed to get list of watching question.", e);
+   	}
+   	return null;
+   }
+   
+-  @SuppressWarnings("unused")
+   private long getTotalpages(String pageInteratorId) {
+     UIAnswersPageIterator pageIterator = this.getChildById(pageInteratorId) ;
+     try {
+       return pageIterator.getInfoPage().get(3) ;
+     } catch (Exception e) {
+-      e.printStackTrace();
++      log.error("Failed to get total pages.", e);
+       return 1 ;
+     }
+   }
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java	(working copy)
+@@ -17,7 +17,6 @@
+ package org.exoplatform.faq.webui;
+ 
+ import java.util.ArrayList;
+-import java.util.Arrays;
+ import java.util.HashMap;
+ import java.util.LinkedHashMap;
+ import java.util.List;
+@@ -25,6 +24,7 @@
+ 
+ import javax.servlet.http.HttpServletRequest;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.faq.service.Answer;
+ import org.exoplatform.faq.service.Category;
+@@ -59,6 +59,7 @@
+ import org.exoplatform.ks.common.bbcode.BBCode;
+ import org.exoplatform.ks.rss.RSS;
+ import org.exoplatform.services.jcr.RepositoryService;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.services.organization.User;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+@@ -115,6 +116,7 @@
+ )
+ @SuppressWarnings("unused")
+ public class UIQuestions extends UIContainer {
++	private static Log log = ExoLogger.getLogger(UIQuestions.class);
+ 	private static String SEARCH_INPUT = "SearchInput" ;
+ 	private static String COMMENT_ITER = "CommentIter" ;
+ 	private static String ANSWER_ITER = "AnswerIter" ;
+@@ -224,7 +226,7 @@
+ 				pageList = null;
+ 			}
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to set list question by category.", e);
+ 		}
+ 	}
+ 
+@@ -375,9 +377,8 @@
+ 	private Question[] getListQuestion(){
+ 		try{
+ 			updateCurrentQuestionList() ;
+-			
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to get list question.", e);
+ 		}		
+ 		return questionMap_.values().toArray(new Question[]{}) ;
+ 	}
+@@ -452,7 +453,7 @@
+ 			} 
+     } catch (Exception e) {
+     	viewingQuestionId_ = "";
+-    	e.printStackTrace();
++    	log.error("Failed to update language map.", e);
+     }
+ 	}
+ 	
+@@ -462,7 +463,7 @@
+ 			ids.add(questionId) ;
+ 			return faqService_.getQuestionContents(ids).get(0);			
+ 		} catch (Exception e) {
+-			//e.printStackTrace();			
++			log.error("Failed to get question content by id: " + questionId, e);			
+ 		}
+ 		return "" ;
+ 	}
+@@ -684,7 +685,6 @@
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+ 				}
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIAnswersContainer.class));
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+@@ -796,7 +796,6 @@
+ 				uiQuestions.updateCurrentQuestionList() ;
+ 				uiQuestions.updateCurrentLanguage() ;
+ 			} catch(Exception e) {
+-				e.printStackTrace();				
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+ 			}
+@@ -881,7 +880,7 @@
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class)) ;
+ 				return ;
+ 			} catch (Exception e) { 
+-				e.printStackTrace() ;
++				log.error("Failed to get question by id: " + uiQuestions.viewingQuestionId_, e);
+ 			} 
+ 			UIAnswersPortlet portlet = uiQuestions.getAncestorOfType(UIAnswersPortlet.class) ;
+ 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+@@ -1101,7 +1100,7 @@
+ 					return ;
+ 				}
+       } catch (Exception e) {
+-        e.printStackTrace();
++        log.error("Failed to comment question.", e);
+       }
+ 		}
+ 	}
+@@ -1245,7 +1244,6 @@
+ 					}
+ 				}
+ 			} catch (Exception e){
+-				e.printStackTrace() ;
+ 				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+@@ -1364,7 +1362,6 @@
+       	UIApplication uiApplication = uiForm.getAncestorOfType(UIApplication.class) ;
+       	uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.Discuss-forum-fall", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+-	      e.printStackTrace();
+       } 
+ 			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+ 		}
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIAnswersPortlet.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIAnswersPortlet.java	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIAnswersPortlet.java	(working copy)
+@@ -62,22 +62,20 @@
+ 	    	addChild(UIAnswersContainer.class, null, null) ;
+     	} 
+     }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+-    	try{
+-    		if(isFirstTime){
+-    			isFirstTime = false;
+-		    	UIQuestions questions = getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
+-		  		FAQSetting faqSetting = questions.getFAQSetting();
+-		    	if(getChild(UISettingForm.class) == null) {
+-		    		if(faqSetting.isAdmin()){
+-			    		removeChild(UIAnswersContainer.class);
+-				    	UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
+-				    	settingForm.setRendered(true);
+-				    	settingForm.setIsEditPortlet(true);
+-				    	settingForm.init();
+-			    	}
+-		    	}
+-    		}
+-    	} catch (Exception e) { e.printStackTrace();}
++			if (isFirstTime) {
++				isFirstTime = false;
++				UIQuestions questions = getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
++				FAQSetting faqSetting = questions.getFAQSetting();
++				if (getChild(UISettingForm.class) == null) {
++					if (faqSetting.isAdmin()) {
++						removeChild(UIAnswersContainer.class);
++						UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
++						settingForm.setRendered(true);
++						settingForm.setIsEditPortlet(true);
++						settingForm.init();
++					}
++				}
++			}
+     }
+     
+     super.processRender(app, context) ;
+Index: eXoApplication/faq/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/faq/AnswersPortlet_en.properties
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/faq/AnswersPortlet_en.properties	(revision 68473)
++++ eXoApplication/faq/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/faq/AnswersPortlet_en.properties	(working copy)
+@@ -692,8 +692,8 @@
+ UIAddressEmailsForm.label.email=Email
+ UIAddressEmailsForm.label.add-address=Add
+ UIAddressEmailsForm.label.cancel=Close
++UIAddressEmailsForm.msg.search-user-failed=Failed to search user.
+ 
+-
+ #############################################################################
+ #												UIFormPrintAllQuestions												 #
+ #############################################################################
+Index: eXoApplication/common/src/main/java/org/exoplatform/ks/common/CommonContact.java
+===================================================================
+--- eXoApplication/common/src/main/java/org/exoplatform/ks/common/CommonContact.java	(revision 68473)
++++ eXoApplication/common/src/main/java/org/exoplatform/ks/common/CommonContact.java	(working copy)
+@@ -40,66 +40,83 @@
+     
+   }
+   
+-  public String getEmailAddress() {
+-    return emailAddress;
+-  }
+-  public void setEmailAddress(String emailAddress) {
+-    this.emailAddress = emailAddress;
+-  }
+-  public String getCity() {
+-    return city;
+-  }
+-  public void setCity(String city) {
+-    this.city = city;
+-  }
+-  public String getCountry() {
+-    return country;
+-  }
+-  public void setCountry(String country) {
+-    this.country = country;
+-  }
+-  public String getAvatarUrl() {
+-    return avatarUrl;
+-  }
+-  public void setAvatarUrl(String avatarUrl) {
+-    this.avatarUrl = avatarUrl;
+-  }
+-  public String getBirthday() {
+-    return birthday;
+-  }
+-  public void setBirthday(String birthday) {
+-    this.birthday = birthday;
+-  }
+-  public String getGender() {
+-    return gender;
+-  }
+-  public void setGender(String gender) {
+-    this.gender = gender;
+-  }
+-  public String getJob() {
+-    return job;
+-  }
+-  public void setJob(String job) {
+-    this.job = job;
+-  }
+-  public String getPhone() {
+-    return phone;
+-  }
+-  public void setPhone(String phone) {
+-    this.phone = phone;
+-  }
+-  public String getMobile() {
+-    return mobile;
+-  }
+-  public void setMobile(String mobile) {
+-    this.mobile = mobile;
+-  }
+-  public String getWebSite() {
+-    return webSite;
+-  }
+-  public void setWebSite(String webSite) {
+-    this.webSite = webSite;
+-  }
+-  
++	public String getEmailAddress() {
++		return emailAddress;
++	}
+ 
++	public void setEmailAddress(String emailAddress) {
++		this.emailAddress = emailAddress;
++	}
++
++	public String getCity() {
++		return city;
++	}
++
++	public void setCity(String city) {
++		this.city = city;
++	}
++
++	public String getCountry() {
++		return country;
++	}
++
++	public void setCountry(String country) {
++		this.country = country;
++	}
++
++	public String getAvatarUrl() {
++		return avatarUrl;
++	}
++
++	public void setAvatarUrl(String avatarUrl) {
++		this.avatarUrl = avatarUrl;
++	}
++
++	public String getBirthday() {
++		return birthday;
++	}
++
++	public void setBirthday(String birthday) {
++		this.birthday = birthday;
++	}
++
++	public String getGender() {
++		return gender;
++	}
++
++	public void setGender(String gender) {
++		this.gender = gender;
++	}
++
++	public String getJob() {
++		return job;
++	}
++
++	public void setJob(String job) {
++		this.job = job;
++	}
++
++	public String getPhone() {
++		return phone;
++	}
++
++	public void setPhone(String phone) {
++		this.phone = phone;
++	}
++
++	public String getMobile() {
++		return mobile;
++	}
++
++	public void setMobile(String mobile) {
++		this.mobile = mobile;
++	}
++
++	public String getWebSite() {
++		return webSite;
++	}
++
++	public void setWebSite(String webSite) {
++		this.webSite = webSite;
++	}
+ }
+Index: eXoApplication/common/src/main/java/org/exoplatform/ks/common/notify/NotifyJob.java
+===================================================================
+--- eXoApplication/common/src/main/java/org/exoplatform/ks/common/notify/NotifyJob.java	(revision 68473)
++++ eXoApplication/common/src/main/java/org/exoplatform/ks/common/notify/NotifyJob.java	(working copy)
+@@ -71,7 +71,6 @@
+ 	    MailService mailService = (MailService)portalContainer.getComponentInstanceOfType(MailService.class) ;
+ 	    String name = context.getJobDetail().getName();
+ 	    Common common = new Common() ;
+-	    System.out.println("\n\n===>common:" + common);
+ 	    NotifyInfo messageInfo = common.getMessageInfo(name) ;
+ 	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
+ 	    Message message = messageInfo.getMessage() ;
+@@ -95,7 +94,7 @@
+ 		  schedulerService.removeJob(info) ;		  
+ 
+ 	  } catch (Exception e) {
+-		  e.printStackTrace();			
++	  	log_.debug("Failed to send email notifications for thread save question.", e);
+ 	  }
+   }
+ }
+Index: eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/InitBBCodePlugin.java
+===================================================================
+--- eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/InitBBCodePlugin.java	(revision 68473)
++++ eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/InitBBCodePlugin.java	(working copy)
+@@ -37,24 +37,23 @@
+ @ManagedDescription("Plugin that defines the initial BBCodes available")
+ public class InitBBCodePlugin extends ManagedPlugin {
+ 	private BBCodePlugin initialData = new BBCodePlugin();
+-  public InitBBCodePlugin(InitParams params) throws Exception {
+-  	initialData = (BBCodePlugin)params.getObjectParam("bbcode.default.configuration").getObject();
+-  }
+-  
+-  public BBCodePlugin getBBCodePlugin() {
+-	  return initialData ;
+-  }
+-  
+-  @Managed
+-  @ManagedDescription("Get the list of BBCodes defined in this plugin")
+-  public List<String> getBBCodes() {
+-    List<String> result = new ArrayList<String>();
+-   List<BBCodeData> data = initialData.getBbcodeDatas(); 
+-   for (BBCodeData bbCodeData : data) {
+-     result.add(bbCodeData.getTagName());
+-   }
+-   return result;
+-  }
+-  
+ 
++	public InitBBCodePlugin(InitParams params) throws Exception {
++		initialData = (BBCodePlugin) params.getObjectParam("bbcode.default.configuration").getObject();
++	}
++
++	public BBCodePlugin getBBCodePlugin() {
++		return initialData;
++	}
++
++	@Managed
++	@ManagedDescription("Get the list of BBCodes defined in this plugin")
++	public List<String> getBBCodes() {
++		List<String> result = new ArrayList<String>();
++		List<BBCodeData> data = initialData.getBbcodeDatas();
++		for (BBCodeData bbCodeData : data) {
++			result.add(bbCodeData.getTagName());
++		}
++		return result;
++	}
+ }
+Index: eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/BBCodeData.java
+===================================================================
+--- eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/BBCodeData.java	(revision 68473)
++++ eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/BBCodeData.java	(working copy)
+@@ -30,47 +30,53 @@
+ 	private String isActive;
+ 
+ 	public BBCodeData() {
+-  }
+-	
++	}
++
+ 	public String getTagName() {
+-  	return tagName;
+-  }
++		return tagName;
++	}
++
+ 	public void setTagName(String tagName) {
+-  	this.tagName = tagName;
+-  }
+-	
++		this.tagName = tagName;
++	}
++
+ 	public String getReplacement() {
+-  	return replacement;
+-  }
++		return replacement;
++	}
++
+ 	public void setReplacement(String replacement) {
+-  	this.replacement = replacement;
+-  }
+-	
++		this.replacement = replacement;
++	}
++
+ 	public String getDescription() {
+-  	return description;
+-  }
++		return description;
++	}
++
+ 	public void setDescription(String description) {
+-  	this.description = description;
+-  }
+-	
++		this.description = description;
++	}
++
+ 	public String getExample() {
+-  	return example;
+-  }
++		return example;
++	}
++
+ 	public void setExample(String example) {
+-  	this.example = example;
+-  }
+-	
++		this.example = example;
++	}
++
+ 	public String getIsOption() {
+-  	return isOption;
+-  }
++		return isOption;
++	}
++
+ 	public void setIsOption(String isOption) {
+-  	this.isOption = isOption;
+-  }
++		this.isOption = isOption;
++	}
+ 
+ 	public String getIsActive() {
+-  	return isActive;
+-  }
++		return isActive;
++	}
++
+ 	public void setIsActive(String isActive) {
+-  	this.isActive = isActive;
+-  }
++		this.isActive = isActive;
++	}
+ }
+Index: eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/BBCodeOperator.java
+===================================================================
+--- eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/BBCodeOperator.java	(revision 68473)
++++ eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/BBCodeOperator.java	(working copy)
+@@ -28,14 +28,17 @@
+ import javax.jcr.query.QueryManager;
+ import javax.jcr.query.QueryResult;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.component.ComponentPlugin;
+ import org.exoplatform.ks.common.CommonUtils;
+ import org.exoplatform.services.jcr.RepositoryService;
+ import org.exoplatform.services.jcr.ext.common.SessionProvider;
+ import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
++import org.exoplatform.services.log.ExoLogger;
+ 
+ 
+ public class BBCodeOperator {
++	private static Log log = ExoLogger.getLogger(BBCodeOperator.class);
+ 	private NodeHierarchyCreator nodeHierarchyCreator_;
+ 	private RepositoryService rService_ ;
+ 	private List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
+@@ -52,6 +55,7 @@
+   	try {
+ 			return appNode.getNode(CommonUtils.FORUM_SERVICE+"/"+CommonUtils.FORUM_DATA);
+ 		} catch (Exception e) {
++			log.debug("Failed to get forum data home.", e);
+ 			return null;
+ 		}
+ 	}
+@@ -62,6 +66,7 @@
+ 		} catch (PathNotFoundException e) {
+ 			return getForumDataHome(sProvider).addNode(CommonUtils.BBCODE_HOME, CommonUtils.BBCODE_HOME_NODE_TYPE);			
+ 		} catch(Exception e) {
++			log.debug("Failed to get BBcode home.", e);
+ 			return null ;
+ 		}		
+ 	}
+@@ -97,6 +102,7 @@
+ 		    }
+ 			}
+     } catch (Exception e) {
++    	log.debug("Failed to init default BBCode.", e);
+     }finally { sProvider.close() ;}	  
+   }
+ 	
+@@ -130,6 +136,7 @@
+ 				bbCodeHome.save();
+ 			}
+ 		}catch(Exception e) {
++			log.debug("Failed to save BBCode ", e);
+ 		}finally { sProvider.close() ;}		
+ 	}
+ 	
+@@ -189,16 +196,13 @@
+ 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+ 		BBCode bbCode = new BBCode();
+ 		Node bbcNode;
++		Node bbCodeHome = getBBcodeHome(sProvider);
+ 		try{
+-			Node bbCodeHome = getBBcodeHome(sProvider);
+-			try {
+-				bbcNode = bbCodeHome.getNode(id);
+-				bbCode.setId(bbcNode.getName());
+-		    bbCode.setTagName(bbcNode.getProperty("exo:tagName").getString());
+-		    bbCode.setReplacement(bbcNode.getProperty("exo:replacement").getString());
+-		    bbCode.setOption(bbcNode.getProperty("exo:isOption").getBoolean());
+-      } catch (Exception e) {
+-      }
++			bbcNode = bbCodeHome.getNode(id);
++			bbCode.setId(bbcNode.getName());
++	    bbCode.setTagName(bbcNode.getProperty("exo:tagName").getString());
++	    bbCode.setReplacement(bbcNode.getProperty("exo:replacement").getString());
++	    bbCode.setOption(bbcNode.getProperty("exo:isOption").getBoolean());
+ 		}finally { sProvider.close() ;}
+ 		return bbCode ;
+ 	}
+@@ -210,7 +214,7 @@
+ 			bbCodeHome.getNode(bbcodeId).remove();
+ 			bbCodeHome.save();
+     } catch (Exception e) {
+-    	e.printStackTrace() ;
++    	log.debug("Failed to remove BBCode by id: " + bbcodeId, e);
+     }finally{
+     	sProvider.close();
+     }
+Index: eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/BBCodePlugin.java
+===================================================================
+--- eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/BBCodePlugin.java	(revision 68473)
++++ eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/BBCodePlugin.java	(working copy)
+@@ -27,15 +27,15 @@
+  */
+ public class BBCodePlugin {
+ 	private List<BBCodeData> bbcodeDatas = new ArrayList<BBCodeData>();
++
+ 	public BBCodePlugin() {
+-  }
++	}
++
+ 	public List<BBCodeData> getBbcodeDatas() {
+-  	return bbcodeDatas;
+-  }
++		return bbcodeDatas;
++	}
++
+ 	public void setBbcodeDatas(List<BBCodeData> bbcodeDatas) {
+-  	this.bbcodeDatas = bbcodeDatas;
+-  }
+-	
+-
+-	
++		this.bbcodeDatas = bbcodeDatas;
++	}
+ }
+Index: eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/BBCode.java
+===================================================================
+--- eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/BBCode.java	(revision 68473)
++++ eXoApplication/common/src/main/java/org/exoplatform/ks/common/bbcode/BBCode.java	(working copy)
+@@ -41,45 +41,58 @@
+   }
+ 	
+ 	public String getId() {
+-  	return id;
+-  }
++		return id;
++	}
++
+ 	public void setId(String id) {
+-  	this.id = id;
+-  }
++		this.id = id;
++	}
++
+ 	public String getTagName() {
+-  	return tagName;
+-  }
++		return tagName;
++	}
++
+ 	public void setTagName(String name) {
+-  	this.tagName = name;
+-  }
++		this.tagName = name;
++	}
++
+ 	public String getReplacement() {
+ 		return replacement;
+ 	}
++
+ 	public void setReplacement(String replacement) {
+ 		this.replacement = replacement;
+ 	}
++
+ 	public String getDescription() {
+-  	return description;
+-  }
++		return description;
++	}
++
+ 	public void setDescription(String description) {
+-  	this.description = description;
+-  }
++		this.description = description;
++	}
++
+ 	public String getExample() {
+ 		return example;
+ 	}
++
+ 	public void setExample(String example) {
+ 		this.example = example;
+ 	}
++
+ 	public boolean isActive() {
+-  	return isActive;
+-  }
++		return isActive;
++	}
++
+ 	public void setActive(boolean isActive) {
+-  	this.isActive = isActive;
+-  }
++		this.isActive = isActive;
++	}
++
+ 	public boolean isOption() {
+-  	return isOption;
+-  }
++		return isOption;
++	}
++
+ 	public void setOption(boolean isOption) {
+-  	this.isOption = isOption;
+-  }
++		this.isOption = isOption;
++	}
+ }
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/ForumSessionListener.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/ForumSessionListener.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/ForumSessionListener.java	(working copy)
+@@ -71,8 +71,7 @@
+   	    fservice.userLogout(ConversationState.getCurrent().getIdentity().getUserId()) ;
+   	  }
+     } catch(Exception ex) {
+-    	ex.printStackTrace() ;
+-      log.error("Error while destroying a portal session",ex);
++      log.error("Error while destroying portal session",ex);
+     } finally {
+       PortalContainer.setInstance(null) ;
+     }
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/RecountActiveUserJob.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/RecountActiveUserJob.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/RecountActiveUserJob.java	(working copy)
+@@ -63,10 +63,8 @@
+ 	    		}
+ 		    }
+ 	    }	    
+-		}catch(NumberFormatException nfe) {
+-  		nfe.printStackTrace() ;
+   	}catch(Exception e) {
+-  		e.printStackTrace() ;
++  		log_.error("Failed to run the class RecoundActiveUserJob.", e);
+ 		}	  
+   }
+ }
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/UpdateDataJob.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/UpdateDataJob.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/UpdateDataJob.java	(working copy)
+@@ -32,8 +32,6 @@
+ 	private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
+   public UpdateDataJob() throws Exception {}
+ 		
+-	
+-	@SuppressWarnings("deprecation")
+   public void execute(JobExecutionContext context) throws JobExecutionException {
+ 	  try {
+ 	  	ExoContainer container = ExoContainerContext.getCurrentContainer();	    
+@@ -49,7 +47,7 @@
+ 	  	}
+ 		  schedulerService.removeJob(info) ;
+ 	  } catch (Exception e) {
+-		  e.printStackTrace();			
++	  	log_.error("Failed to update forum statistics.", e);
+ 	  }
+   }
+ }
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/StatisticEventListener.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/StatisticEventListener.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/StatisticEventListener.java	(working copy)
+@@ -20,12 +20,15 @@
+ import javax.jcr.observation.EventIterator;
+ import javax.jcr.observation.EventListener;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.ExoContainer;
+ import org.exoplatform.container.ExoContainerContext;
+ import org.exoplatform.forum.service.ForumService;
+ import org.exoplatform.forum.service.Utils;
++import org.exoplatform.services.log.ExoLogger;
+ 
+ public class StatisticEventListener implements EventListener{
++	private static final Log log = ExoLogger.getLogger(StatisticEventListener.class);
+ 	private String workspace_ ;
+ 	private String repository_ ; 
+ 	private String path_ ;
+@@ -43,35 +46,35 @@
+   public void setPath(String path ){ path_  = path ; }
+   
+ 	public void onEvent(EventIterator evIter){		
+-		try{
++		try {
+ 			ExoContainer container = ExoContainerContext.getCurrentContainer();
+-			ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
++			ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
+ 			long topicCount = 0;
+-			long postCount = 0 ;
+-			while(evIter.hasNext()) {
+-				Event ev = evIter.nextEvent() ;
+-				if(ev.getType() == Event.NODE_ADDED){
+-					String id = ev.getPath().substring(ev.getPath().lastIndexOf("/")) ;
+-					if(id.indexOf(Utils.TOPIC) > 0) {
+-						topicCount = topicCount + 1 ;
+-					}else if(id.indexOf(Utils.POST) > 0){
+-						postCount = postCount + 1 ;
+-					}					
+-				}else if(ev.getType() == Event.NODE_REMOVED) {
+-					String id = ev.getPath().substring(ev.getPath().lastIndexOf("/")) ;					
+-					if(id.indexOf(Utils.TOPIC) > 0) {						
+-					  topicCount = topicCount - 1 ;
+-					}else if(id.indexOf(Utils.POST) > 0){
+-						postCount = postCount - 1 ;
+-					}			
+-				}				
++			long postCount = 0;
++			while (evIter.hasNext()) {
++				Event ev = evIter.nextEvent();
++				if (ev.getType() == Event.NODE_ADDED) {
++					String id = ev.getPath().substring(ev.getPath().lastIndexOf("/"));
++					if (id.indexOf(Utils.TOPIC) > 0) {
++						topicCount = topicCount + 1;
++					} else if (id.indexOf(Utils.POST) > 0) {
++						postCount = postCount + 1;
++					}
++				} else if (ev.getType() == Event.NODE_REMOVED) {
++					String id = ev.getPath().substring(ev.getPath().lastIndexOf("/"));
++					if (id.indexOf(Utils.TOPIC) > 0) {
++						topicCount = topicCount - 1;
++					} else if (id.indexOf(Utils.POST) > 0) {
++						postCount = postCount - 1;
++					}
++				}
+ 			}
+-			if(topicCount != 0 || postCount != 0) {
+-				forumService.updateStatisticCounts(topicCount, postCount) ;
++			if (topicCount != 0 || postCount != 0) {
++				forumService.updateStatisticCounts(topicCount, postCount);
+ 			}
+-		}catch(Exception e) {
+-			e.printStackTrace() ;
+-		}		
++		} catch (Exception e) {
++			log.error("Failed to update forum statistics when adding or removing post/topic.", e);
++		}
+ 	}
+   
+ }
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/DeactiveJob.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/DeactiveJob.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/DeactiveJob.java	(working copy)
+@@ -78,10 +78,8 @@
+ 	    		}
+ 		    }
+ 	    }	    
+-		}catch(NumberFormatException nfe) {
+-  		nfe.printStackTrace() ;
+   	}catch(Exception e) {
+-  		//e.printStackTrace() ;
++  		log_.debug("Failed to run the class DeactiveJob.\n", e);
+ 		}	  
+   }
+ }
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/CategoryEventListener.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/CategoryEventListener.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/CategoryEventListener.java	(working copy)
+@@ -20,11 +20,15 @@
+ import javax.jcr.observation.EventIterator;
+ import javax.jcr.observation.EventListener;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.ExoContainer;
+ import org.exoplatform.container.ExoContainerContext;
+ import org.exoplatform.forum.service.ForumService;
++import org.exoplatform.services.log.ExoLogger;
+ 
+ public class CategoryEventListener implements EventListener{
++	private static final Log log = ExoLogger.getLogger(CategoryEventListener.class);
++	
+ 	private String workspace_ ;
+ 	private String repository_ ; 
+ 	
+@@ -52,7 +56,7 @@
+ 				}				
+ 			}			
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to run category event listener.", e);
+ 		}		
+ 	}
+   
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/SendMailJob.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/SendMailJob.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/SendMailJob.java	(working copy)
+@@ -64,13 +64,12 @@
+ 		  		}
+ 		  	}
+ 		  	if (log_.isDebugEnabled()) {
+-		  		log_.debug("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
++		  		log_.debug("\n\nEmail notifications have been sent to " + countEmail + " addresses");
+ 		  	}
+ 		  }
+ 		  schedulerService.removeJob(info) ;		  
+-
+-	  } catch (Exception e) {
+-		  e.printStackTrace();			
+-	  }
++		} catch (Exception e) {
++			log_.error("Failed to send notifications by forum portlet.", e);
++		}
+   }
+ }
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/UpdateUserProfileJob.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/UpdateUserProfileJob.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/UpdateUserProfileJob.java	(working copy)
+@@ -16,9 +16,6 @@
+  **/
+ package org.exoplatform.forum.service.conf;
+ 
+-import java.util.ArrayList;
+-import java.util.List;
+-
+ import org.apache.commons.logging.Log;
+ import org.exoplatform.container.ExoContainer;
+ import org.exoplatform.container.ExoContainerContext;
+@@ -35,7 +32,6 @@
+   public UpdateUserProfileJob() throws Exception {}
+ 		
+ 	
+-	@SuppressWarnings("deprecation")
+   public void execute(JobExecutionContext context) throws JobExecutionException {
+ 	  try {
+ 	  	ExoContainer container = ExoContainerContext.getCurrentContainer();
+@@ -51,7 +47,7 @@
+ 	  	}		  
+ 		  schedulerService.removeJob(info) ;
+ 	  } catch (Exception e) {
+-		  e.printStackTrace();			
++	  	log_.error("Failed to update UserProfile.", e);
+ 	  }
+   }
+ }
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/NewUserListener.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/NewUserListener.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/conf/NewUserListener.java	(working copy)
+@@ -16,10 +16,12 @@
+  */
+ package org.exoplatform.forum.service.conf;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.ExoContainerContext;
+ import org.exoplatform.container.xml.InitParams;
+ import org.exoplatform.forum.service.ForumService;
+ import org.exoplatform.forum.service.ForumStatistic;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.services.organization.User;
+ import org.exoplatform.services.organization.UserEventListener;
+ 
+@@ -28,7 +30,7 @@
+  * hung.nguyen@exoplatform.com Nov 23, 2007 3:09:21 PM
+  */
+ public class NewUserListener extends UserEventListener {
+-
++	private static final Log log = ExoLogger.getLogger(NewUserListener.class);
+   //private ForumService fservice_ ;
+   public NewUserListener(InitParams params) throws Exception {
+     //fservice_ = fservice;
+@@ -44,13 +46,13 @@
+ 	      statistic.setMembersCount(statistic.getMembersCount() + 1) ;
+ 	      fservice.saveForumStatistic(statistic) ;
+ 	    }catch(Exception e) {
+-	    	e.printStackTrace() ;
++	    	log.error("Failed to save forum statistics when adding new user.", e);
+ 	    }
+ 	    //Create Profile
+ 	    try{
+ 	    	fservice.createUserProfile(user) ;
+ 	    }catch(Exception e) {
+-	    	e.printStackTrace() ;
++	    	log.error("Failed to create UserProfile when adding new user.", e);
+ 	    }
+     } else {
+     	fservice.updateUserProfile(user);
+@@ -70,7 +72,7 @@
+         fservice.saveForumStatistic(statistic) ;
+       }      
+     }catch(Exception e) {
+-    	e.printStackTrace() ;
++    	log.error("Failed to save forum statistic when deleted user.", e);
+     }
+   }
+ }
+\ No newline at end of file
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/ForumService.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/ForumService.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/ForumService.java	(working copy)
+@@ -16,7 +16,6 @@
+  ***************************************************************************/
+ package org.exoplatform.forum.service;
+ 
+-import java.io.ByteArrayInputStream;
+ import java.io.ByteArrayOutputStream;
+ import java.io.InputStream;
+ import java.util.List;
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/ForumServiceImpl.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/ForumServiceImpl.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/ForumServiceImpl.java	(working copy)
+@@ -133,8 +133,9 @@
+   		storage_.initCategoryListener() ;
+   		log.info("updating forum stats...");
+   		updateForumStatistic(systemSession);  		
+-  	}catch (Exception e) {}
+-  	finally{
++  	}catch (Exception e) {
++  		log.error("Falied to initialize user profiles...", e);
++  	} finally{
+   		systemSession.close() ;
+   	}
+   	systemSession = SessionProvider.createSystemProvider() ;
+@@ -142,7 +143,7 @@
+   	  log.info("initializing user profiles...");
+   		initUserProfile(systemSession);  		
+   	}catch (Exception e) {
+-  		e.printStackTrace() ;
++  		log.error("Falied to initialize user profiles...");
+   	}finally{
+   		systemSession.close() ;
+   	}
+@@ -151,9 +152,8 @@
+   	try{
+   	  log.info("initializing RSS listeners...");
+   		storage_.addRSSEventListenner();  
+-  		
+   	} catch (Exception e){
+-//  		e.printStackTrace();
++  		log.error("Falied to initialize RSS listeners...");
+   	}
+   	
+   	try{
+@@ -162,14 +162,14 @@
+   		log.info("initializing default BBCodes...");
+   		bbcodeObject_.initDefaultBBCode();
+   	}catch(Exception e) {
+-  		e.printStackTrace() ;
++  		log.error("Failed to initialize default forum data...", e);
+   	}  	
+ 
+   	try{
+   	  log.info("Calculating active users...");
+   		storage_.evaluateActiveUsers("");
+   	}catch (Exception e) {
+-  		e.printStackTrace() ;  		
++  		log.error("Failed to calculate active users...", e);	
+   	}  	
+   	
+   //init Calculate Moderators listeners
+@@ -177,7 +177,7 @@
+   	  log.info("initializing Calculate Moderators listeners...");
+   		storage_.addCalculateModeratorEventListenner();
+   	} catch (Exception e){
+-//  		e.printStackTrace();
++  		log.error("Failed to Calculate Moderators listeners...", e);
+   	}
+   	
+   	// initialize auto prune schedules
+@@ -185,6 +185,7 @@
+   	  log.info("initializing prune schedulers...");
+   		storage_.initAutoPruneSchedules() ;
+   	} catch (Exception e){
++  		log.error("Failed to initialize prune schedulers...", e);
+   	}
+ 
+ //  TODO: JUnit test is fall.
+@@ -194,6 +195,7 @@
+   		manageStorage();  	
+   		manageJobs();
+     } catch (Exception e) {
++    	log.error("Failed to initializ plugins and jobs...", e);
+     }
+ 	}
+ 
+@@ -244,7 +246,6 @@
+ 		updateForumStatistic() ; 	
+ 	}
+ 	
+-	@SuppressWarnings("unchecked")
+   public void updateForumStatistic() throws Exception{
+ 		SessionProvider systemSession = SessionProvider.createSystemProvider() ;
+ 		try{
+@@ -268,7 +269,7 @@
+ 			}
+ 			
+ 		}catch(Exception e){
+-			e.printStackTrace() ;
++			log.error("Failed to ", e);
+ 		}finally {
+ 			systemSession.close() ;
+ 		}		 	
+@@ -324,7 +325,7 @@
+ 	    	}  		
+ 			}
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to create UserProfile", e);
+ 		}finally {
+ 			sysSession.close() ;
+ 		}		
+@@ -1057,7 +1058,7 @@
+     	userProfileHome.getNode(userId).getProperty("exo:lastLoginDate").setValue((Value)null) ;
+     	userProfileHome.save() ;    	    	
+     }catch(Exception e) {
+-    	e.printStackTrace() ;
++    	log.error("Failed to remove UserProfile", e);
+     }finally{sysProvider.close() ;}
+   }
+   
+@@ -1116,7 +1117,7 @@
+     try{
+       if(onlineUserList_.contains(userId)) return true ;			
+     }	catch (Exception e) {
+-      e.printStackTrace() ;
++      log.error("Failed to set online users.", e);
+     }
+     return false; 
+   }
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java	(working copy)
+@@ -283,7 +283,7 @@
+ 			observation.addEventListener(moderatorListener, Event.PROPERTY_ADDED + Event.PROPERTY_CHANGED + Event.PROPERTY_REMOVED,
+ 					                         path, false, null, null, false) ;		
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to add listener for calculating moderator", e);
+ 		}
+ 	}
+ 	
+@@ -313,7 +313,7 @@
+ 			}
+ 			
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to initialize listener for category", e);
+ 		}finally{
+ 			sProvider.close() ;	
+ 		}
+@@ -346,7 +346,7 @@
+ 				if(ForumServiceUtils.hasPermission(adminrules, userName))return true;
+ 			}
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to check admin role. ", e);
+ 		}
+ 		return false ;
+ 	}
+@@ -503,7 +503,7 @@
+ 				}
+ 			}
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to set default avatar.", e);
+ 		}finally {sProvider.close() ; }		
+ 	}
+ 
+@@ -533,7 +533,7 @@
+ 						return attachments.get(0);
+ 					} catch (Exception e) {
+ 						attachment.setSize(0) ;
+-						e.printStackTrace() ;
++						log.error("Failed to get user avatar of user: " + userName, e);
+ 					}
+ 				}
+ 				return null;
+@@ -560,7 +560,7 @@
+ 			if(avatarNode.isNew()) ksAvatarHomnode.getSession().save();
+ 			else ksAvatarHomnode.save();
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to save user avatar.", e);
+ 		}finally{ sysSession.close() ;}		
+ 	}
+ 
+@@ -589,7 +589,7 @@
+ 				forumAdminNode.save();
+ 			}
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to save forum administration..", e);
+ 		}finally {sProvider.close() ;}		
+ 	}
+ 
+@@ -697,7 +697,7 @@
+ 				}
+ 			}
+ 		} catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to initialize default data", e);
+ 		}finally {
+ 			sProvider.close();
+ 		}
+@@ -1121,7 +1121,7 @@
+ 	      }
+ 				categoryNode.save();
+       } catch (Exception e) {
+-      	e.printStackTrace() ;
++      	log.error("Failed to revove category " + categoryId, e);
+       }
+       categoryNode.remove();
+ 			categoryHome.save() ;		
+@@ -1343,7 +1343,7 @@
+ 				pruneSetting.save() ;
+ 			}
+ 		} catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to save forum", e);
+ 		}finally{ sProvider.close() ;}
+ 	}
+ 	//TODO: View again
+@@ -1490,7 +1490,7 @@
+ 					}
+ 				}
+ 			} catch (Exception e) {
+-				e.printStackTrace();
++				log.error("Failed to save forum moderators", e);
+ 			}
+ 		}
+ 		if(categoryHomeNode.isNew()){
+@@ -1685,7 +1685,7 @@
+ 				forumHomeNode.save();
+ 			}
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to move forum", e);
+ 		}finally{ sProvider.close() ;}
+ 	}
+ 
+@@ -1947,8 +1947,8 @@
+ 			} else {
+ 				forumNode.save();
+ 			}
+-		} catch (PathNotFoundException e) {
+-			e.printStackTrace();
++		} catch (Exception e) {
++			log.error("Failed to get node last topic in forum.", e);
+ 			return null;
+ 		}
+ 		return topicNode;
+@@ -2398,7 +2398,7 @@
+ 				}
+ 			}
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to save topic", e);
+ 		} finally { sProvider.close() ;}		
+ 	}
+ 
+@@ -2440,7 +2440,7 @@
+ 			}
+ 			infoMap_.remove(name) ;
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to update UserProfile info.", e);
+ 		}finally{ sysProvider.close() ;}
+ 		
+ 	}
+@@ -2585,7 +2585,7 @@
+ 				try {
+ 					calculateLastRead(sProvider, destForumId, srcForumId, topic.getId());
+ 	      } catch (Exception e) {
+-		      e.printStackTrace();
++		      log.error("Failed to calculate last read topic of forum.", e);
+ 	      }
+ 			}
+ 			if(forumHomeNode.isNew()) {
+@@ -2647,7 +2647,9 @@
+ 	              }
+               }
+ 	      		}
+-          } catch (Exception e) { e.printStackTrace(); }
++          } catch (Exception e) { 
++          	log.error("Failed to calculate last read", e);
++          }
+       	}
+       	if(string.indexOf(srcForumId) >=0 ){// remove last read src forum if last read this forum is this topic.
+       		list2.remove(string);
+@@ -3114,7 +3116,7 @@
+ 				getTotalJobWatting(userIdsp);
+ 			}
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to save post.", e);
+     }finally {
+     	sProvider.close() ;
+     }
+@@ -3389,7 +3391,7 @@
+ 				}
+ 			}
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to send notification email.", e);
+ 		} finally {
+ 			bbcodeObject = null ;
+ 		}
+@@ -3503,7 +3505,7 @@
+ 				}
+ 				getTotalJobWatting(userIdsp) ;
+ 			} catch (PathNotFoundException e) {
+-				e.printStackTrace();
++				log.error("Failed to modify post.", e);
+ 			}
+ 		}
+ 		sProvider.close() ;
+@@ -3888,7 +3890,7 @@
+ 				topicNode.save();
+ 			}
+ 		} catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to save poll in topic.", e);
+ 		} finally {sProvider.close() ;}
+ 	}
+ 
+@@ -3911,7 +3913,7 @@
+ 				}
+ 			}
+ 		} catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to close poll.", e);
+ 		} finally { sProvider.close() ;}
+ 	}
+ 
+@@ -3948,7 +3950,7 @@
+ 			}
+ 			
+ 		}catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to add tag in topic.", e);
+ 		}finally {sProvider.close() ;}
+ 		
+ 	}
+@@ -4000,7 +4002,7 @@
+ 				tagNode.save();
+ 			}
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to untag in topic.", e);
+ 		} finally { sProvider.close() ;}
+ 	}
+ 
+@@ -4256,7 +4258,7 @@
+ 				tagHome.save();
+ 			}
+ 		}catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to save tag in topic.", e);
+ 		} finally { sProvider.close() ;}
+ 		
+ 	}
+@@ -4444,6 +4446,8 @@
+ 			userProfile.setMaxPostInPage(profileNode.getProperty("exo:maxPost").getLong());
+ 			userProfile.setMaxTopicInPage(profileNode.getProperty("exo:maxTopic").getLong());
+ 			userProfile.setIsShowForumJump(profileNode.getProperty("exo:isShowForumJump").getBoolean());
++		} catch (Exception e) {
++			log.error("Failed to get user profile settings", e);
+ 		}finally{ sProvider.close() ;}
+ 		return userProfile ;
+ 	}
+@@ -4469,7 +4473,7 @@
+ 			profileNode.setProperty("exo:isAutoWatchTopicIPost", userProfile.getIsAutoWatchTopicIPost());
+ 			profileNode.save();
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to save user profile settings", e);
+ 		}finally{ sProvider.close() ;}
+ 	}
+ 	
+@@ -4517,7 +4521,7 @@
+ 			profileNode.setProperty("exo:lastReadPostOfTopic", lastReadPostOfTopic);
+ 			profileHome.save();
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to save last post read of user: " + userId, e);
+ 		}finally{ sProvider.close() ;}
+ 	}
+ 	
+@@ -4965,7 +4969,7 @@
+ 					messageNode.setProperty("exo:isUnread", false);
+ 				}
+ 			} catch (PathNotFoundException e) {
+-				e.printStackTrace();
++				log.error("Failed to get message by id: " + messageId, e);
+ 			}
+ 			if (type.equals(Utils.RECEIVE_MESSAGE) && isNew) {
+ 				if (profileNode.hasProperty("exo:newMessage")) {
+@@ -5115,7 +5119,7 @@
+ 			messageNode.remove();
+ 			profileNode.save();			
+ 		} catch (PathNotFoundException e) {
+-			e.printStackTrace();
++			log.error("Failed to remove private message", e);
+ 		}finally { sProvider.close() ;}
+ 	}
+ 
+@@ -5155,7 +5159,7 @@
+       	profileNode.save();
+       }
+     } catch (Exception e) {
+-    	e.printStackTrace();
++    	log.error("Failed to save forumSubscription", e);
+     }finally {sProvider.close();}
+   }
+ 	
+@@ -5182,7 +5186,7 @@
+       	profileNode.save();
+       }
+     } catch (Exception e) {
+-    	e.printStackTrace();
++    	log.error("Failed to add forumSubscription", e);
+     }
+ 	}
+ 	
+@@ -5210,7 +5214,7 @@
+ 			forumStatistic.setNewMembers(forumStatisticNode.getProperty("exo:newMembers").getString());
+ 			forumStatistic.setMostUsersOnline(forumStatisticNode.getProperty("exo:mostUsersOnline").getString());
+ 		} catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to get forum statistic.", e);
+ 		}finally { sProvider.close() ;}
+ 		return forumStatistic;
+ 	}
+@@ -5805,7 +5809,7 @@
+ 			}
+ //			if(watchType == -1)addForumSubscription(sProvider, currentUser, watchingNode.getName());
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to add watch.", e);
+ 		}finally {sProvider.close() ;}
+ 	}
+ 
+@@ -5856,7 +5860,7 @@
+ 				}
+ 			}
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to remove watch", e);
+ 		} finally{ sProvider.close() ;}
+ 	}
+ 	
+@@ -5901,7 +5905,7 @@
+ 				watchingNode.save();
+ 			}
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to update watch email.", e);
+ 		}finally { sProvider.close() ;}
+ 		
+ 	}
+@@ -5999,7 +6003,7 @@
+ 			JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+ 			schedulerService.addPeriodJob(info, periodInfo, jdatamap);			
+ 		} catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to update imported data.", e);
+ 		}
+ 	}
+ 	
+@@ -6095,7 +6099,7 @@
+ 			}
+ 			profileHome.save() ;
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to update forum.", e);
+ 		}finally{ sProvider.close() ;}				
+ 	}
+ 	
+@@ -6253,7 +6257,7 @@
+ 				newProfileNode.save();
+ 			}
+ 		}catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to get total jobs waiting for moderator", e);
+ 		}
+ 		return totalJob;
+ 	}
+@@ -6276,7 +6280,7 @@
+ 				}
+ 			}
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to send total job waiting for moderator", e);
+ 		}finally {
+ 			sProvider.close();
+ 		}
+@@ -6700,7 +6704,7 @@
+ 			Node banNode = getForumBanNode(sProvider) ;
+ 			if(banNode.hasProperty("exo:ips")) return ValuesToList(banNode.getProperty("exo:ips").getValues()) ;
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to get banned ip list.", e);
+ 		}finally{ sProvider.close() ; }
+ 		return new ArrayList<String>() ;
+ 	}
+@@ -6720,7 +6724,7 @@
+ 			}			
+ 			return true ;
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to add banned ip", e);
+ 		}finally{ sProvider.close() ;}
+ 		return false ;
+ 	}
+@@ -6735,7 +6739,7 @@
+ 				banNode.setProperty("exo:ips", getStringsInList(ips)) ;
+ 				banNode.save() ;			
+ 			}catch(Exception e) {
+-				e.printStackTrace() ;
++				log.error("Failed to remove banned ip.", e);
+ 			}finally{ sProvider.close() ; }
+ 		}
+ 	}
+@@ -6749,7 +6753,7 @@
+ 			if (forumNode.hasProperty("exo:banIPs"))
+ 				list.addAll(ValuesToList(forumNode.getProperty("exo:banIPs").getValues()));
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to get banned ip list of forum", e);
+ 		}finally {
+ 			sProvider.close() ;
+ 		}
+@@ -6773,7 +6777,7 @@
+ 			}			
+ 			return true ;
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to add banned ip in forum.", e);
+ 		}finally {
+ 			sProvider.close() ;
+ 		}
+@@ -6797,7 +6801,7 @@
+ 				}			
+ 			}
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to remove banned ip in forum", e);
+ 		}finally {
+ 			sProvider.close() ;
+ 		}
+@@ -6836,7 +6840,7 @@
+ 			}
+ 			forumStatisticNode.save() ;
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to update statistic count.", e);
+ 		}finally { sysProvider.close() ; }	
+ 	}
+ 
+@@ -6918,7 +6922,7 @@
+       	addOrRemoveSchedule(pruneSetting) ;
+       } catch (Exception e) {}
+ 		}catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to save pruneSetting", e);
+ 		}finally { sProvider.close() ;}
+ 	}
+ 	
+@@ -6967,7 +6971,7 @@
+ 			setting.setProperty("exo:lastRunDate", getGreenwichMeanTime()) ;
+ 			forumNode.save() ;
+ 		}catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to run prune ", e);
+ 		}finally {sProvider.close() ;}
+ 	}
+ 	
+@@ -6985,7 +6989,7 @@
+ 			QueryResult result = query.execute();
+ 			return result.getNodes().getSize() ;
+ 		}catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to check prune", e);
+ 		}finally{ sProvider.close();}
+ 		return 0 ;
+ 	}
+@@ -7055,6 +7059,7 @@
+ 				Node node = nodeHome.getNode(topicTypeId);
+ 				node.remove();
+ 			} catch (Exception e) {
++				log.error("Failed to get topic type node.",e);
+ 			}
+ 			if(nodeHome.isNew()) {
+ 				nodeHome.getSession().save();
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/PruneSetting.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/PruneSetting.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/PruneSetting.java	(working copy)
+@@ -18,8 +18,6 @@
+ 
+ import java.util.Date;
+ 
+-import org.exoplatform.services.jcr.util.IdGenerator;
+-
+ /**
+  * Created by The eXo Platform SAS
+  * Author : Vu Duy Tu
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/CalculateModeratorEventListener.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/CalculateModeratorEventListener.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/CalculateModeratorEventListener.java	(working copy)
+@@ -20,11 +20,14 @@
+ import javax.jcr.observation.EventIterator;
+ import javax.jcr.observation.EventListener;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.ExoContainer;
+ import org.exoplatform.container.ExoContainerContext;
+ import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
++import org.exoplatform.services.log.ExoLogger;
+ 
+ public class CalculateModeratorEventListener implements EventListener{
++	protected static Log log = ExoLogger.getLogger(CalculateModeratorEventListener.class);
+ 	private NodeHierarchyCreator nodeHierarchyCreator_;
+ 	private String path_ ;
+ 	private String workspace_ ;
+@@ -47,21 +50,18 @@
+ 			while(evIter.hasNext()) {
+ 				Event ev = evIter.nextEvent() ;
+ 				if(ev.getType() == Event.PROPERTY_ADDED){
+-//					System.out.println("\n\nEvent.PROPERTY_ADDED : "+ ev.getPath()) ;
+ 					String evPath = ev.getPath();
+ 					if(evPath.substring(evPath.lastIndexOf("/")+1).equals("exo:moderators")) {
+ 						forumService.calculateModerator(path_, true);
+ 					}
+ 					// exo:moderators
+ 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
+-//					System.out.println("\n\nEvent.PROPERTY_CHANGED : "+ ev.getPath());
+ 					String evPath = ev.getPath();
+ 					if(evPath.substring(evPath.lastIndexOf("/")+1).equals("exo:moderators")) {
+ 						forumService.calculateModerator(path_, false);
+ 					}
+ 					// exo:moderators, tempModerators
+ 				}else if(ev.getType() == Event.PROPERTY_REMOVED) {
+-//					System.out.println("\n\n ==> Event.PROPERTY_REMOVED : " + ev.getPath());
+ 					String evPath = ev.getPath();
+ 					if(evPath.substring(evPath.lastIndexOf("/")+1).equals("exo:moderators")) {
+ 						forumService.calculateModerator(path_, false);
+@@ -70,7 +70,7 @@
+ 				}
+ 			}
+ 		}catch(Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to run the class CalculateModeratorEventListener for calculate moderator.", e);
+ 		}		
+ 	}
+ }
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/user/AutoPruneJob.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/user/AutoPruneJob.java	(revision 68473)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/user/AutoPruneJob.java	(working copy)
+@@ -35,13 +35,12 @@
+ 	  	ExoContainer container = ExoContainerContext.getCurrentContainer();
+ 	  	String desc = context.getJobDetail().getDescription();
+ 	  	ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
+-	  	//System.out.println("\n\n >>>>>> AutoPrune Job");
+ 	  	forumService.runPrune(desc) ;
+ 	  	if (log_.isDebugEnabled()) {
+ 	  		log_.debug("\n\nAuto prune has worked on " + desc + " forum");
+ 	  	}
+ 	  } catch (Exception e) {
+-		  e.printStackTrace();			
++	  	log_.error("Falied to run the class AutoPruneJob.", e);
+ 	  }
+   }
+ }
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/ForumTransformHTML.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/ForumTransformHTML.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/ForumTransformHTML.java	(working copy)
+@@ -335,7 +335,6 @@
+ 				b = StringUtils.replace(b, "[code]" + text + "[/code]", buffer.toString());
+ 			} catch (Exception e) {
+ 				System.out.println("Error in BBcodeSmall near char: " + tagIndex);
+-				e.printStackTrace();
+ 				continue;
+ 			}
+ 		}
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java	(working copy)
+@@ -353,7 +353,7 @@
+ 			param.setRenderRule(true);
+ 			actionRes.setEvent(new QName("ForumRuleEvent"), param) ;
+     } catch (Exception e) {
+-	    e.printStackTrace();
++	    log.error("Failed to set render by porlet info.", e);
+     }
+ 	}
+ 	
+@@ -640,7 +640,7 @@
+ 						mapUserProfile.put(profile.getUserId(), profile) ;
+ 					}
+ 				}catch(Exception e) {
+-					e.printStackTrace() ;
++					log.error("Failed to get quick userProfiles.", e);
+ 				}
+ 			}
+ 		} catch (Exception e) {
+@@ -698,7 +698,7 @@
+ 			try{
+ 				mapUserProfile.put(userName, forumService.getQuickProfile(userName)) ;			
+ 			}catch(Exception e){
+-				e.printStackTrace() ;
++				log.error("Failed to get quick userProfile by user: " + userName, e);
+ 			}
+ 		}
+ 		return mapUserProfile.get(userName) ;
+@@ -832,7 +832,7 @@
+ 					try {
+ 						topicDetail.forumService.addTag(tags, topicDetail.userName, topicDetail.topic.getPath());
+ 	        } catch (Exception e) {
+-		        e.printStackTrace();
++		        log.error("Failed to add tag in this topic.", e);
+ 	        }
+ 				} else {
+ 					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+@@ -1359,7 +1359,6 @@
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 				}
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+ 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+@@ -1612,7 +1611,7 @@
+ 				try {
+ 					topicDetail.forumService.removePost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post.getId()) ;
+ 				} catch(Exception e){
+-					e.printStackTrace();
++					log.error("Failed to remove post in this topic.", e);
+ 				}
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+ 			}
+@@ -1630,7 +1629,7 @@
+ 				UserProfile selectProfile = topicDetail.forumService.getUserInformations(topicDetail.mapUserProfile.get(userId)) ;
+ 				viewUserProfile.setUserProfile(selectProfile) ;
+ 			}catch(Exception e) {
+-				e.printStackTrace() ;
++				log.error("Failed to get userProfile viewing in this topic.", e);
+ 			}
+ 			viewUserProfile.setUserProfileLogin(topicDetail.userProfile) ;
+ 			ForumContact contact = null ;
+@@ -1998,7 +1997,6 @@
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+ 				} catch (Exception e) {
+-					e.printStackTrace();
+ 					Object[] args = { };
+ 					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+ 					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
+@@ -2036,7 +2034,6 @@
+ 					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO)) ;
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 				} catch (Exception e) {
+-					e.printStackTrace();
+ 					Object[] args = { };
+ 					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+ 					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumPortlet.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumPortlet.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumPortlet.java	(working copy)
+@@ -26,6 +26,7 @@
+ import javax.servlet.http.HttpServletRequest;
+ import javax.xml.namespace.QName;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.forum.ForumSessionUtils;
+ import org.exoplatform.forum.ForumUtils;
+@@ -44,6 +45,7 @@
+ import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
+ import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
+ import org.exoplatform.forum.webui.popup.UIViewUserProfile;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.web.application.RequestContext;
+ import org.exoplatform.webui.application.WebuiApplication;
+@@ -77,6 +79,7 @@
+ 	 }
+ )
+ public class UIForumPortlet extends UIPortletApplication {
++	private static final Log log = ExoLogger.getLogger(UIForumPortlet.class);
+ 	private ForumService forumService;
+ 	private boolean isCategoryRendered = true;
+ 	private boolean isForumRendered = false;
+@@ -235,7 +238,7 @@
+ 			invisibleCategories.addAll(getListInValus(portletPref.getValue("invisibleCategories", ""))) ;
+ 			invisibleForums.addAll(getListInValus(portletPref.getValue("invisibleForums", ""))) ;
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to load portletPreferences.", e);
+ 		}
+ 		if(invisibleCategories.size() == 1 && invisibleCategories.get(0).equals(" ")) invisibleCategories.clear();
+ 	}
+@@ -352,7 +355,7 @@
+ 		try {
+ 			userId = ForumSessionUtils.getCurrentUser() ;
+ 		} catch (Exception e) {
+-			e.printStackTrace() ;
++			log.error("Failed to get currently user.", e);
+ 		}
+ 		try{
+ 			if(enableBanIP) {
+@@ -503,7 +506,7 @@
+ 				UserProfile selectProfile = forumPortlet.forumService.getUserInformations(forumPortlet.forumService.getQuickProfile(userId.trim())) ;
+ 				viewUserProfile.setUserProfile(selectProfile) ;
+ 			}catch(Exception e) {
+-				e.printStackTrace() ;
++				log.error("Failed to get userProfile viewing.", e);
+ 			}
+ 			viewUserProfile.setUserProfileLogin(forumPortlet.userProfile) ;
+ 			ForumContact contact = forumPortlet.getPersonalContact(userId.trim());
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumKeepStickPageIterator.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumKeepStickPageIterator.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumKeepStickPageIterator.java	(working copy)
+@@ -21,7 +21,9 @@
+ import java.util.List;
+ import java.util.Map;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.forum.service.JCRPageList;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.core.UIComponent;
+ import org.exoplatform.webui.event.Event;
+@@ -39,7 +41,7 @@
+ )
+ 
+ public class UIForumKeepStickPageIterator extends UIForm {
+-
++	public static final Log log = ExoLogger.getLogger(UIForumKeepStickPageIterator.class);
+ 	public int pageSelect = 1 ;
+ 	public int maxPage = 1;
+ 	@SuppressWarnings("unchecked")
+@@ -147,17 +149,13 @@
+ 			UIForumKeepStickPageIterator keepStickPageIter = event.getSource() ;
+ 			UIComponent component = keepStickPageIter;
+ 			List<String> checkedList =  new ArrayList<String>();
+-			try{
+-				List<UIComponent> children = keepStickPageIter.getChildren() ;
+-				for(UIComponent child : children) {
+-					if(child instanceof UIFormCheckBoxInput) {
+-						if(((UIFormCheckBoxInput)child).isChecked()) {
+-							checkedList.add(child.getId()) ;
+-						}
++			List<UIComponent> children = keepStickPageIter.getChildren();
++			for (UIComponent child : children) {
++				if (child instanceof UIFormCheckBoxInput) {
++					if (((UIFormCheckBoxInput) child).isChecked()) {
++						checkedList.add(child.getId());
+ 					}
+ 				}
+-			} catch (Exception e) {
+-				e.printStackTrace();
+ 			}
+ 			if(component instanceof UITopicDetail) {
+ 				UITopicDetail topicDetail = (UITopicDetail) component;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIBreadcumbs.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIBreadcumbs.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIBreadcumbs.java	(working copy)
+@@ -23,8 +23,8 @@
+ import javax.portlet.ActionResponse;
+ import javax.xml.namespace.QName;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.PortalContainer;
+-import org.exoplatform.forum.ForumSessionUtils;
+ import org.exoplatform.forum.ForumUtils;
+ import org.exoplatform.forum.info.ForumParameter;
+ import org.exoplatform.forum.service.Category;
+@@ -44,6 +44,7 @@
+ import org.exoplatform.portal.webui.util.Util;
+ import org.exoplatform.portal.webui.workspace.UIMaskWorkspace;
+ import org.exoplatform.portal.webui.workspace.UIPortalApplication;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.application.WebuiRequestContext;
+ import org.exoplatform.webui.application.portlet.PortletRequestContext;
+@@ -70,6 +71,7 @@
+ )
+ @SuppressWarnings("unused")
+ public class UIBreadcumbs extends UIContainer {
++	private static final Log log = ExoLogger.getLogger(UIBreadcumbs.class);
+   private boolean useAjax = true;
+ 	private ForumService forumService ;
+ 	private List<String> breadcumbs_ = new ArrayList<String>();
+@@ -227,7 +229,7 @@
+ 					}
+ 				}
+       } catch (Exception e) {
+-      	e.printStackTrace();
++      	log.error("Failed to check link private or not.", e);
+       }
+ 		}else	if(id.indexOf(Utils.CATEGORY) == 0) {
+ 			try {
+@@ -236,7 +238,7 @@
+ 					isPrivate = true;
+ 				}
+       } catch (Exception e) {
+-      	e.printStackTrace();
++      	log.error("Failed to get category by id: " + id, e);
+       }
+ 		}else if(id.indexOf(Utils.FORUM) == 0){
+       try {
+@@ -251,7 +253,7 @@
+ 					}
+ 				}
+ 			}catch(Exception e) {
+-				e.printStackTrace();
++				log.error("Failed to get forum by id: " + id, e);
+ 			}
+ 		}
+ 		return isPrivate;
+@@ -442,7 +444,6 @@
+ 							path = FORUM_SERVICE;
+ 						}
+ 					}catch(Exception e) {
+-						e.printStackTrace();
+ 						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", new String[]{ForumUtils.FORUM}, ApplicationMessage.WARNING)) ;
+ 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+ 						categoryContainer.updateIsRender(true) ;
+@@ -465,7 +466,6 @@
+ 							path = FORUM_SERVICE;
+ 						}
+ 					} catch (Exception e) {
+-						e.printStackTrace();
+ 						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+ 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+ 						categoryContainer.updateIsRender(true) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UICategory.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UICategory.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UICategory.java	(working copy)
+@@ -160,11 +160,7 @@
+ 	
+ 	private Category getCategory() throws Exception{
+ 		if(this.isEditCategory || this.category == null) {
+-			try {
+-				this.category = forumService.getCategory(this.categoryId);
+-			}catch (Exception e) {
+-				e.printStackTrace();
+-			}
++			this.category = forumService.getCategory(this.categoryId);
+ 			this.isEditCategory = false ;
+ 		}
+ 		return category ;
+@@ -184,11 +180,7 @@
+ 		if(this.isEditForum) {
+ 			String strQuery = "";
+ 			if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
+-			try {
+-				this.forums = forumService.getForumSummaries(this.categoryId, strQuery);
+-			}catch (Exception e) {
+-				e.printStackTrace();
+-			}
++			this.forums = forumService.getForumSummaries(this.categoryId, strQuery);
+ 			this.isEditForum = false ;
+ 			this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true) ;
+ 		}
+@@ -222,12 +214,7 @@
+ 	
+ 	private Topic getLastTopic(String topicPath) throws Exception {
+ 		Topic topic;
+-		try {
+-			topic = forumService.getTopicByPath(topicPath, true) ;
+-		}catch (Exception e) {
+-			topic = null;
+-			e.printStackTrace();
+-		}
++		topic = forumService.getTopicByPath(topicPath, true) ;
+ 		if(topic != null) {
+ 			String topicId = topic.getId() ;
+ 			if(this.MaptopicLast.containsKey(topicId)) {
+@@ -726,7 +713,6 @@
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(category) ;
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				Object[] args = { };
+ 				UIApplication uiApp = category.getAncestorOfType(UIApplication.class) ;
+ 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
+@@ -749,7 +735,6 @@
+ 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				Object[] args = { };
+ 				UIApplication uiApp = category.getAncestorOfType(UIApplication.class) ;
+ 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UISearchForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UISearchForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UISearchForm.java	(working copy)
+@@ -429,7 +429,6 @@
+ 			try {
+ 				list = uiForm.forumService.getAdvancedSearch(eventQuery, forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums());
+ 			}catch (Exception e) {
+-				e.printStackTrace();
+ 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+ 				uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+ 				return ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumDescription.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumDescription.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumDescription.java	(working copy)
+@@ -54,12 +54,7 @@
+ 	private Forum getForum() throws Exception {
+     if(forum == null || isForum) {
+   		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+-			try {
+-				return forumService.getForum(categoryId, forumId);
+-			}catch (Exception e) {
+-				e.printStackTrace();
+-				return null;
+-			}
++  		return forumService.getForum(categoryId, forumId);
+     } else {
+       return this.forum ;
+     }
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicsTag.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicsTag.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicsTag.java	(working copy)
+@@ -380,7 +380,6 @@
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(topicTag) ;
+ 				} catch (Exception e) {
+-					e.printStackTrace();
+ 					Object[] args = { };
+ 					UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
+ 					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
+@@ -405,7 +404,6 @@
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(topicTag) ;
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				Object[] args = { };
+ 				UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
+ 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumListSearch.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumListSearch.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumListSearch.java	(working copy)
+@@ -161,14 +161,10 @@
+ 			Forum forum = null;
+ 			Topic topic = null;
+ 			Post post = null;
+-			try{
+-				category = forumService.getCategory(cateId) ;
+-				forum = forumService.getForum(cateId, forumId) ;
+-				topic = forumService.getTopic(cateId, forumId, topicId, userProfile.getUserId());
+-				post = forumService.getPost(cateId , forumId, topicId, path) ;
+-			} catch (Exception e) { 
+-				e.printStackTrace();
+-			}
++			category = forumService.getCategory(cateId) ;
++			forum = forumService.getForum(cateId, forumId) ;
++			topic = forumService.getTopic(cateId, forumId, topicId, userProfile.getUserId());
++			post = forumService.getPost(cateId , forumId, topicId, path) ;
+ 			isRead = uiForm.canView(category, forum, topic, post, userProfile);
+ 			
+ 			if(type.equals(Utils.CATEGORY)) {
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicContainer.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicContainer.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicContainer.java	(working copy)
+@@ -224,7 +224,7 @@
+ 				}
+ 			}
+     } catch (Exception e) {
+-    	e.printStackTrace();
++    	log.error("Failed to get icon of topic type.", e);
+ 	    return new String[]{" "};
+     }
+ 	}
+@@ -631,7 +631,7 @@
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer) ;
+ 				}
+ 			} catch (Exception e) {
+-				e.printStackTrace();
++				log.error("Failed to open topic in forum.", e);
+ 			}
+ 		}
+ 	}
+@@ -796,7 +796,6 @@
+ 				popupAction.activate(watchToolsForm, 500, 365) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+       } catch (Exception e) {
+-      	e.printStackTrace();
+       	UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
+ 				uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+@@ -990,15 +989,10 @@
+ 	static public class SetUnLockTopicActionListener extends EventListener<UITopicContainer> {
+ 		public void execute(Event<UITopicContainer> event) throws Exception {
+ 			UITopicContainer uiTopicContainer = event.getSource();
+-			try{
+-				if(uiTopicContainer.getForum().getIsLock()){
+-					UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
+-					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.ForumIsLocked", new Object[]{}, ApplicationMessage.WARNING)) ;
+-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+-					return;
+-				}
+-			} catch (Exception e){
+-				e.printStackTrace();
++			if(uiTopicContainer.getForum().getIsLock()){
++				UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
++				uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.ForumIsLocked", new Object[]{}, ApplicationMessage.WARNING)) ;
++				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 				return;
+ 			}
+ 			List<Topic> topics = new ArrayList<Topic>();
+@@ -1155,7 +1149,7 @@
+ 						try{
+ 							uiTopicContainer.forumService.removeTopic(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic_.getId()) ;
+ 						}catch(Exception e){
+-							e.printStackTrace();
++							log.error("Failed to remove topic in this forum.", e);
+ 						}
+ 					}
+ 				} catch(Exception e) {
+@@ -1290,7 +1284,6 @@
+ 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				Object[] args = { };
+ 				UIApplication uiApp = topicContainer.getAncestorOfType(UIApplication.class) ;
+ 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UITopicForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UITopicForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UITopicForm.java	(working copy)
+@@ -822,15 +822,13 @@
+   }
+   
+ 	private void setValueField(UIForumInputWithActions withActions, String field, String values) throws Exception {
+-		try {
+-			UIFormTextAreaInput textArea = withActions.getUIFormTextAreaInput(field);
+-			String vls = textArea.getValue();
+-			if(!ForumUtils.isEmpty(vls)) {
+-				values = values + "," + vls;
+-				values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+-			}
+-			textArea.setValue(values);
+-    } catch (Exception e) {e.printStackTrace();}
++		UIFormTextAreaInput textArea = withActions.getUIFormTextAreaInput(field);
++		String vls = textArea.getValue();
++		if (!ForumUtils.isEmpty(vls)) {
++			values = values + "," + vls;
++			values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
++		}
++		textArea.setValue(values);
+ 	}
+ 	
+   static  public class AddActionListener extends EventListener<UIUserSelector> {
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIExportForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIExportForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIExportForm.java	(working copy)
+@@ -175,7 +175,6 @@
+ 				}
+ 				file = (File)service.exportXML(categoryId, forumId, listId, nodePath, bos, exportForm.isExportAll);
+ 			} catch(Exception e){
+-				e.printStackTrace();
+ 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsNoLonagerExist", null, ApplicationMessage.WARNING));
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+ 				return;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumUserSettingForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumUserSettingForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumUserSettingForm.java	(working copy)
+@@ -151,12 +151,7 @@
+ 	
+ 	@SuppressWarnings({ "unchecked" })
+ 	private void initForumOption() throws Exception {
+-		try {
+-			this.userProfile = forumService.getUserSettingProfile(ForumSessionUtils.getCurrentUser()) ;
+-		} catch (Exception e) {			
+-			e.printStackTrace() ;
+-		}
+-		
++		this.userProfile = forumService.getUserSettingProfile(ForumSessionUtils.getCurrentUser()) ;
+ 		List<SelectItemOption<String>> list ;
+ 		String []timeZone1 = getLabel(FIELD_TIMEZONE).split("/") ;
+ 		list = new ArrayList<SelectItemOption<String>>() ;
+@@ -324,11 +319,7 @@
+ 		pageIterator = addChild(UIForumPageIterator.class, null, WATCHES_ITERATOR);
+ 		pageList = new ForumPageList(7, listWatches.size());
+ 		pageIterator.updatePageList(pageList);
+-		try {
+-			if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
+-		} catch (Exception e) {
+-			e.printStackTrace();
+-		}
++		if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
+ 	}
+ 	
+ 	@SuppressWarnings("unchecked")
+@@ -502,11 +493,7 @@
+ 			userProfile.setIsAutoWatchTopicIPost(isAutoWatchTopicIPost);
+ 			
+ 			uiForm.forumService.saveUserSettingProfile(userProfile);
+-			try {
+-	      uiForm.saveForumSubscription();
+-      } catch (Exception e) {
+-      	e.printStackTrace();
+-      }
++			uiForm.saveForumSubscription();
+ 			forumPortlet.updateUserProfileInfo() ;
+ 			userProfile = forumPortlet.getUserProfile();
+ 			forumPortlet.setRenderForumLink();
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModerationForum.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModerationForum.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModerationForum.java	(working copy)
+@@ -103,7 +103,6 @@
+ 			list_ = forumService.getJobWattingForModerator(getPath()) ;
+ 		} catch (Exception e) {
+ 			list_ = new ArrayList<ForumSearch>();
+-			e.printStackTrace();
+ 		}
+ 		pageList = new ForumPageList(10, list_.size());
+ 		pageList.setPageSize(10);
+@@ -134,27 +133,19 @@
+ 			ForumSearch forumSearch = moderationForum.getObject(objectId); 
+ 			UIPopupContainer popupContainer = moderationForum.getAncestorOfType(UIPopupContainer.class) ;
+ 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+-			if(forumSearch.getType().equals(Utils.TOPIC)) {
+-				try {
+-					Topic topic = moderationForum.forumService.getTopicByPath(forumSearch.getPath(), false);
+-					UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
+-					viewTopic.setTopic(topic) ;
+-					viewTopic.setActionForm(new String[] {"Approve", "DeleteTopic", "Close"});
+-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+-				} catch (Exception e) {
+-					e.printStackTrace();
+-				}
++			if (forumSearch.getType().equals(Utils.TOPIC)) {
++				Topic topic = moderationForum.forumService.getTopicByPath(forumSearch.getPath(), false);
++				UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700);
++				viewTopic.setTopic(topic);
++				viewTopic.setActionForm(new String[] { "Approve", "DeleteTopic", "Close" });
++				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+ 			} else {
+-				try {
+-	        Post post = moderationForum.forumService.getPost("", "", "", forumSearch.getPath());
+-					UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700) ;
+-					viewPost.setPostView(post) ;
+-					viewPost.setViewUserInfo(false) ;
+-					viewPost.setActionForm(new String[] {"Approve", "DeletePost", "Close", "OpenTopicLink"});
+-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+-				} catch (Exception e) {
+-					e.printStackTrace();
+-				}
++				Post post = moderationForum.forumService.getPost("", "", "", forumSearch.getPath());
++				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700);
++				viewPost.setPostView(post);
++				viewPost.setViewUserInfo(false);
++				viewPost.setActionForm(new String[] { "Approve", "DeletePost", "Close", "OpenTopicLink" });
++				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+ 			}
+ 		}
+ 	}
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIAddBBCodeForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIAddBBCodeForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIAddBBCodeForm.java	(working copy)
+@@ -145,7 +145,10 @@
+ 				bbcodes.add(uiForm.bbcode);
+ 				uiForm.forumService.saveBBCode(bbcodes);
+       } catch (Exception e) {
+-	      e.printStackTrace();
++      	UIApplication uiApplication = uiForm.getAncestorOfType(UIApplication.class) ;
++				uiApplication.addMessage(new ApplicationMessage("UIAddBBCodeForm.msg.failedSaveBBCode", null, ApplicationMessage.WARNING)) ;
++				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
++      	return;
+       }
+       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+ 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumForm.java	(working copy)
+@@ -20,6 +20,7 @@
+ import java.util.Date;
+ import java.util.List;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.forum.ForumSessionUtils;
+ import org.exoplatform.forum.ForumTransformHTML;
+@@ -35,6 +36,7 @@
+ import org.exoplatform.forum.webui.UIForumLinks;
+ import org.exoplatform.forum.webui.UIForumPortlet;
+ import org.exoplatform.forum.webui.UITopicContainer;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.services.organization.User;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.application.WebuiRequestContext;
+@@ -93,6 +95,7 @@
+ )
+ 
+ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector {
++	private static final Log log = ExoLogger.getLogger(UIForumForm.class);
+ 	private ForumService forumService ;
+ 	private boolean isCategoriesUpdate = true;
+ 	private boolean isForumUpdate = false;
+@@ -459,7 +462,7 @@
+ 					}
+ 				}
+ 			} catch (Exception e) {
+-				e.printStackTrace();
++				log.error("Failed to save portletDeference for list of invisible category/forum.", e);
+ 			}
+ 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
+ 			
+@@ -623,7 +626,9 @@
+ 				values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+ 			}
+ 			textArea.setValue(values);
+-    } catch (Exception e) {e.printStackTrace();}
++    } catch (Exception e) {
++    	log.error("Failed to set value into component UIFormTextAreaInput.", e);
++    }
+ 	}
+ 	
+   static  public class AddActionListener extends EventListener<UIUserSelector> {
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIQuickReplyForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIQuickReplyForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIQuickReplyForm.java	(working copy)
+@@ -181,14 +181,10 @@
+ 					}
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 				} else {
+-					try {
+-						ActionResponse actionRes = event.getRequestContext().getResponse() ;
+-						ForumParameter param = new ForumParameter() ;
+-						param.setTopicId(topic.getId());
+-						actionRes.setEvent(new QName("ReLoadPortletEvent"), param) ;
+-	        } catch (Exception e) {
+-		        e.printStackTrace();
+-	        }
++					ActionResponse actionRes = event.getRequestContext().getResponse() ;
++					ForumParameter param = new ForumParameter() ;
++					param.setTopicId(topic.getId());
++					actionRes.setEvent(new QName("ReLoadPortletEvent"), param) ;
+ 				}
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(quickReply) ;
+ 			}else {
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIBanIPForumManagerForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIBanIPForumManagerForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIBanIPForumManagerForm.java	(working copy)
+@@ -93,12 +93,9 @@
+ 		List<String>list = new ArrayList<String>();
+ 		list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), listIpBan)) ;
+ 		pageIterator.setSelectPage(pageList.getCurrentPage());
+-		try {
+-			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
+-			else  pageIterator.setRendered(true);
+-		} catch (Exception e) {
+-			e.printStackTrace();
+-		}
++		if (pageList.getAvailablePage() <= 1)
++			pageIterator.setRendered(false);
++		else  pageIterator.setRendered(true);
+ 		return list;
+ 	}
+ 	
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumAdministrationForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumAdministrationForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumAdministrationForm.java	(working copy)
+@@ -19,6 +19,7 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ 
++import org.apache.commons.logging.Log;
+ import org.exoplatform.container.ExoContainerContext;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.forum.ForumUtils;
+@@ -36,6 +37,7 @@
+ import org.exoplatform.forum.webui.UITopicDetail;
+ import org.exoplatform.forum.webui.UITopicDetailContainer;
+ import org.exoplatform.ks.common.bbcode.BBCode;
++import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+@@ -86,6 +88,7 @@
+ 		}
+ )
+ public class UIForumAdministrationForm extends UIForm implements UIPopupComponent {
++	private static final Log log = ExoLogger.getLogger(UIForumAdministrationForm.class);
+ 	private ForumService forumService ;
+ 	private ForumAdministration administration ;
+ 	private int id = 0 ;
+@@ -272,7 +275,7 @@
+ 		try {
+ 			listBBCode.addAll(forumService.getAllBBCode());
+     } catch (Exception e) {
+-	    e.printStackTrace();
++	    log.error("Failed to add all bbcodes.");
+     }
+ 	}
+ 	
+@@ -324,7 +327,7 @@
+ 		try {
+ 			listIpBan.addAll(forumService.getBanList());
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to add all banned ip list.");
+ 		}
+ 		pageList = new ForumPageList(8, listIpBan.size());
+ 		pageList.setPageSize(8);
+@@ -337,7 +340,7 @@
+ 			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
+ 			else  pageIterator.setRendered(true);
+ 		} catch (Exception e) {
+-			e.printStackTrace();
++			log.error("Failed to set rendered component UIForumPageIterator.");
+ 		}
+ 		return list;
+ 	}
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIAttachFileForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIAttachFileForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIAttachFileForm.java	(working copy)
+@@ -117,7 +117,6 @@
+ 				} catch (Exception e) {
+ 					uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-error", null, ApplicationMessage.WARNING));
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+-					e.printStackTrace() ;
+ 					return ;
+ 				}
+ 				uploadService.removeUpload(input.getUploadId()) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UICategoryForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UICategoryForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UICategoryForm.java	(working copy)
+@@ -417,15 +417,13 @@
+   }
+   
+ 	private void setValueField(UIFormInputWithActions withActions, String field, String values) throws Exception {
+-		try {
+-			UIFormTextAreaInput textArea = withActions.getUIFormTextAreaInput(field);
+-			String vls = textArea.getValue();
+-			if(!ForumUtils.isEmpty(vls)) {
+-				values = values + "," + vls;
+-				values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
+-			}
+-			textArea.setValue(values);
+-    } catch (Exception e) {e.printStackTrace();}
++		UIFormTextAreaInput textArea = withActions.getUIFormTextAreaInput(field);
++		String vls = textArea.getValue();
++		if (!ForumUtils.isEmpty(vls)) {
++			values = values + "," + vls;
++			values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
++		}
++		textArea.setValue(values);
+ 	}
+ 	
+   static  public class AddActionListener extends EventListener<UIUserSelector> {
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIPageListPostByUser.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIPageListPostByUser.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIPageListPostByUser.java	(working copy)
+@@ -97,17 +97,13 @@
+ 	private List<Post> getPostsByUser() throws Exception {
+ 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
+ 		List<Post> posts = null;
+-		try {
+-			boolean isMod = false;
+-			if(this.userProfile.getUserRole() < 2) isMod = true;
+-			JCRPageList pageList	= forumService.getPagePostByUser(this.userName, this.userProfile.getUserId(), isMod, strOrderBy) ;
+-			forumPageIterator.updatePageList(pageList) ;
+-			if(pageList != null) pageList.setPageSize(6) ;
+-			posts = pageList.getPage(forumPageIterator.getPageSelected());
+-			forumPageIterator.setSelectPage(pageList.getCurrentPage());
+-		}catch (Exception e) {
+-			e.printStackTrace();
+-		}
++		boolean isMod = false;
++		if(this.userProfile.getUserRole() < 2) isMod = true;
++		JCRPageList pageList	= forumService.getPagePostByUser(this.userName, this.userProfile.getUserId(), isMod, strOrderBy) ;
++		forumPageIterator.updatePageList(pageList) ;
++		if(pageList != null) pageList.setPageSize(6) ;
++		posts = pageList.getPage(forumPageIterator.getPageSelected());
++		forumPageIterator.setSelectPage(pageList.getCurrentPage());
+ 		if(posts == null) posts = new ArrayList<Post>();
+ 		this.posts = posts ;
+ 		return posts ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewTopic.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewTopic.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewTopic.java	(working copy)
+@@ -154,13 +154,9 @@
+ 			}
+ 		}
+ 		if(userNames.size() > 0) {
+-			try{
+-				List<UserProfile> profiles = forumService.getQuickProfiles(userNames) ;
+-				for(UserProfile profile : profiles) {
+-					mapUserProfile.put(profile.getUserId(), profile) ;
+-				}
+-			}catch(Exception e) {
+-				e.printStackTrace() ;
++			List<UserProfile> profiles = forumService.getQuickProfiles(userNames) ;
++			for(UserProfile profile : profiles) {
++				mapUserProfile.put(profile.getUserId(), profile) ;
+ 			}
+ 		}
+ 	}
+@@ -246,12 +242,8 @@
+ 			topic.setIsWaiting(false);
+ 			List<Topic> topics = new ArrayList<Topic>();
+ 			topics.add(topic);
+-			try{
+-				uiForm.forumService.modifyTopic(topics, 3);
+-				uiForm.forumService.modifyTopic(topics, 5);
+-			}catch(Exception e) {
+-				e.printStackTrace() ;
+-			}
++			uiForm.forumService.modifyTopic(topics, 3);
++			uiForm.forumService.modifyTopic(topics, 5);
+ 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+ 			if(popupContainer != null) {
+ 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+@@ -271,13 +263,9 @@
+ 		public void execute(Event<UIViewTopic> event) throws Exception {
+ 			UIViewTopic uiForm = event.getSource() ;
+ 			Topic topic = uiForm.topic;
+-			try {
+-				String []path = topic.getPath().split("/");
+-				int l = path.length ;
+-	      uiForm.forumService.removeTopic(path[l-3], path[l-2], topic.getId());
+-      } catch (Exception e) {
+-	      e.printStackTrace();
+-      }
++			String []path = topic.getPath().split("/");
++			int l = path.length ;
++			uiForm.forumService.removeTopic(path[l-3], path[l-2], topic.getId());
+ 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+ 			if(popupContainer != null) {
+ 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIWatchToolsForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIWatchToolsForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIWatchToolsForm.java	(working copy)
+@@ -77,18 +77,14 @@
+ 		emails = getListEmail().toArray(new String[]{});
+ 		return emails;
+ 	}
+-	public void setEmails(String[] emails) {
++	public void setEmails(String[] emails) throws Exception {
+ 		listEmail.clear();
+ 		listEmail.addAll(Arrays.asList(emails));
+ 		pageList = new ForumPageList(6, listEmail.size());
+ 		pageList.setPageSize(6);
+ 		pageIterator = this.getChild(UIForumPageIterator.class);
+ 		pageIterator.updatePageList(pageList);
+-		try {
+-			if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
+-		} catch (Exception e) {
+-			e.printStackTrace();
+-		}
++		if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
+ 	}
+ 	
+ 	@SuppressWarnings("unchecked")
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModeratorManagementForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModeratorManagementForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModeratorManagementForm.java	(working copy)
+@@ -21,11 +21,8 @@
+ import java.util.Calendar;
+ import java.util.Date;
+ import java.util.GregorianCalendar;
+-import java.util.HashMap;
+ import java.util.List;
+-import java.util.Map;
+ import java.util.ResourceBundle;
+-import java.util.concurrent.CopyOnWriteArrayList;
+ 
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.download.DownloadService;
+@@ -33,7 +30,6 @@
+ import org.exoplatform.forum.ForumTransformHTML;
+ import org.exoplatform.forum.ForumUtils;
+ import org.exoplatform.forum.service.ForumLinkData;
+-import org.exoplatform.forum.service.ForumPageList;
+ import org.exoplatform.forum.service.ForumService;
+ import org.exoplatform.forum.service.JCRPageList;
+ import org.exoplatform.forum.service.UserProfile;
+@@ -45,8 +41,6 @@
+ import org.exoplatform.forum.webui.UITopicContainer;
+ import org.exoplatform.forum.webui.UITopicDetail;
+ import org.exoplatform.forum.webui.UITopicsTag;
+-import org.exoplatform.services.organization.OrganizationService;
+-import org.exoplatform.services.organization.Query;
+ import org.exoplatform.services.organization.User;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.webui.application.WebuiRequestContext;
+@@ -799,11 +793,7 @@
+ 			userProfile.setBanReason(banReason);
+ 			userProfile.setBanCounter(banCounter);
+ 			userProfile.setBanReasonSummary(banReasonSummaries);
+-			try {
+-				uiForm.forumService.saveUserProfile(userProfile, true, true) ;
+-			} catch (Exception e) {
+-				e.printStackTrace() ;
+-			} 
++			uiForm.forumService.saveUserProfile(userProfile, true, true) ;
+ 			if(userProfile.getUserId().equals(ForumSessionUtils.getCurrentUser())) {
+ 				forumPortlet.updateUserProfileInfo() ;
+ 				userProfile = forumPortlet.getUserProfile();
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UISplitTopicForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UISplitTopicForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UISplitTopicForm.java	(working copy)
+@@ -18,9 +18,7 @@
+ 
+ import java.util.ArrayList;
+ import java.util.Collections;
+-import java.util.HashMap;
+ import java.util.List;
+-import java.util.Map;
+ import java.util.ResourceBundle;
+ 
+ import org.exoplatform.container.PortalContainer;
+@@ -31,7 +29,6 @@
+ import org.exoplatform.forum.service.JCRPageList;
+ import org.exoplatform.forum.service.Post;
+ import org.exoplatform.forum.service.Topic;
+-import org.exoplatform.forum.service.TopicType;
+ import org.exoplatform.forum.service.UserProfile;
+ import org.exoplatform.forum.service.Utils;
+ import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
+@@ -170,7 +167,6 @@
+ 						String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
+ 						uiForm.forumService.movePost(postPaths.toArray(new String[]{}), destTopicPath, true, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link);
+ 					} catch (Exception e) {
+-						e.printStackTrace();
+ 						UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+ 						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
+ 						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewPost.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewPost.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewPost.java	(working copy)
+@@ -193,12 +193,8 @@
+ 			post.setIsHidden(false);
+ 			List<Post> posts = new ArrayList<Post>();
+ 			posts.add(post);
+-			try{
+-				uiForm.forumService.modifyPost(posts, 1);
+-				uiForm.forumService.modifyPost(posts, 2);
+-			}catch(Exception e) {
+-				e.printStackTrace() ;
+-			}
++			uiForm.forumService.modifyPost(posts, 1);
++			uiForm.forumService.modifyPost(posts, 2);
+ 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+ 			if(popupContainer != null) {
+ 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+@@ -218,13 +214,9 @@
+ 		public void execute(Event<UIViewPost> event) throws Exception {
+ 			UIViewPost uiForm = event.getSource() ;
+ 			Post post = uiForm.post;
+-			try{
+-				String []path = post.getPath().split("/");
+-				int l = path.length ;
+-				uiForm.forumService.removePost(path[l-4], path[l-3], path[l-2], post.getId());
+-			}catch(Exception e) {
+-				e.printStackTrace() ;
+-			}
++			String []path = post.getPath().split("/");
++			int l = path.length ;
++			uiForm.forumService.removePost(path[l-4], path[l-3], path[l-2], post.getId());
+ 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+ 			if(popupContainer != null) {
+ 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIMergeTopicForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIMergeTopicForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIMergeTopicForm.java	(working copy)
+@@ -25,8 +25,6 @@
+ import org.exoplatform.forum.ForumTransformHTML;
+ import org.exoplatform.forum.ForumUtils;
+ import org.exoplatform.forum.service.ForumService;
+-import org.exoplatform.forum.service.JCRPageList;
+-import org.exoplatform.forum.service.Post;
+ import org.exoplatform.forum.service.Topic;
+ import org.exoplatform.forum.webui.UIForumPortlet;
+ import org.exoplatform.web.application.ApplicationMessage;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIShowBookMarkForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIShowBookMarkForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIShowBookMarkForm.java	(working copy)
+@@ -82,11 +82,7 @@
+ 	
+ 	@SuppressWarnings({ "unused", "unchecked" })
+ 	private List<String> getBookMark() throws Exception {
+-		try{
+-			bookMarks = forumService.getBookmarks( this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId());
+-		}catch(Exception e) {
+-			e.printStackTrace() ;
+-		}
++		bookMarks = forumService.getBookmarks( this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId());
+ 		pageList = new ForumPageList(6, bookMarks.size());
+ 		pageList.setPageSize(6);
+ 		pageIterator = this.getChild(UIForumPageIterator.class);
+@@ -94,11 +90,7 @@
+ 		List<String>list = new ArrayList<String>();
+ 		list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), this.bookMarks)) ;
+ 		pageIterator.setSelectPage(pageList.getCurrentPage());
+-		try {
+-			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
+-		} catch (Exception e) {
+-			e.printStackTrace();
+-		}
++		if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
+ 		return list ;
+ 	} 
+ 	
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UICategories.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UICategories.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UICategories.java	(working copy)
+@@ -261,11 +261,7 @@
+ 				if(topicPath.indexOf("ForumService") < 0){
+ 					topicPath = forumService.getForumHomePath() + "/" + topicPath;
+ 				}
+-				try {
+-					topic = forumService.getTopicSummary(topicPath) ;
+-			  } catch (Exception e) {
+-					e.printStackTrace();
+-				}
++				topic = forumService.getTopicSummary(topicPath) ;
+ 				if(topic != null) maptopicLast.put(topic.getId(), topic) ;
+ 			}
+ 		}
+@@ -293,11 +289,7 @@
+ 			String[] id = objects.split(",");
+ 			String userName = uiContainer.userProfile.getUserId();
+ 			if (!userName.equals(UserProfile.USER_GUEST)) {
+-				try {
+-					uiContainer.forumService.saveCollapsedCategories(userName, id[0], Boolean.parseBoolean(id[1]));
+-				} catch (Exception e) {
+-					e.printStackTrace();
+-				}
++				uiContainer.forumService.saveCollapsedCategories(userName, id[0], Boolean.parseBoolean(id[1]));
+ 				uiContainer.getAncestorOfType(UIForumPortlet.class).updateUserProfileInfo();
+ 			}
+ 			if (uiContainer.collapCategories.contains(id[0])) {
+@@ -458,11 +450,7 @@
+ 					Topic topic = uiContainer.getLastTopic(path) ;
+ 					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topic.getId();
+ 				}
+-				try {
+-					uiContainer.forumService.saveUserBookmark(userName, path, true) ;
+-				}catch (Exception e) {
+-					e.printStackTrace();
+-				}
++				uiContainer.forumService.saveUserBookmark(userName, path, true) ;
+ 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
+ 				forumPortlet.updateUserProfileInfo() ;
+ 			}
+@@ -505,7 +493,6 @@
+ 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				Object[] args = { };
+ 				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
+ 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
+@@ -528,7 +515,6 @@
+ 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+ 				Object[] args = { };
+ 				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
+ 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIQuickSearchForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIQuickSearchForm.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIQuickSearchForm.java	(working copy)
+@@ -93,7 +93,6 @@
+ 					list = forumService.getQuickSearch(text, type, "", userProfile.getUserId(),
+ 															forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), forumIdsOfModerator);
+ 				}catch (Exception e) {
+-					e.printStackTrace();
+ 					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+ 					uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+ 					return ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumLinks.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumLinks.java	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumLinks.java	(working copy)
+@@ -224,9 +224,7 @@
+ 						actionRes.setEvent(new QName("OpenLink"), param) ;
+ 						event.getRequestContext().addUIComponentToUpdateByAjax(linkPortlet);
+       		}
+-        } catch (Exception ex) {
+-	        ex.printStackTrace();
+-        }
++        } catch (Exception ex) {}
+       }
+ 		}
+ 	}
+Index: eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_en.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_en.properties	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet_en.properties	(working copy)
+@@ -1207,6 +1207,7 @@
+ UIAddBBCodeForm.text.UseOptionHelp=Setting this option to yes will allow you to create a [tag=option][/tag] style tag, rather than just a [tag][/tag] style tag.
+ 
+ UIAddBBCodeForm.msg.addDuplicateBBCode=This tag has been already defined.
++UIAddBBCodeForm.msg.failedSaveBBCode=Failed to save bbcode.  Please check your inputted data and try again.
+ 
+ #############################################################################
+ #												UISettingEditModeForm      														  #
+Index: eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet.properties	(revision 68473)
++++ eXoApplication/forum/webapp/src/main/webapp/WEB-INF/classes/locale/portlet/forum/ForumPortlet.properties	(working copy)
+@@ -1207,6 +1207,7 @@
+ UIAddBBCodeForm.text.UseOptionHelp=Setting this option to yes will allow you to create a [tag=option][/tag] style tag, rather than just a [tag][/tag] style tag.
+ 
+ UIAddBBCodeForm.msg.addDuplicateBBCode=This tag has been already defined.
++UIAddBBCodeForm.msg.addDuplicateBBCode=Failed to save bbcode. Please check your inputted data and try again.
+ 
+ #############################################################################
+ #												UISettingEditModeForm      														  #

@@ -98,7 +98,6 @@ public class UIQuickSearch  extends UIForm {
 				try {
 					list = faqService.getSearchResults(eventQuery);
 				} catch (Exception e) {
-					e.printStackTrace();
 					uiApp = uiQuickSearch.getAncestorOfType(UIApplication.class) ;
 					uiApp.addMessage(new ApplicationMessage("UIQuickSearch.msg.failure", null, ApplicationMessage.WARNING)) ;
 					return ;

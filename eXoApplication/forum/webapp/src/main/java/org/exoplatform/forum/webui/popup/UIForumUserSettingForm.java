@@ -151,12 +151,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings({ "unchecked" })
 	private void initForumOption() throws Exception {
-		try {
-			this.userProfile = forumService.getUserSettingProfile(ForumSessionUtils.getCurrentUser()) ;
-		} catch (Exception e) {			
-			e.printStackTrace() ;
-		}
-		
+		this.userProfile = forumService.getUserSettingProfile(ForumSessionUtils.getCurrentUser()) ;
 		List<SelectItemOption<String>> list ;
 		String []timeZone1 = getLabel(FIELD_TIMEZONE).split("/") ;
 		list = new ArrayList<SelectItemOption<String>>() ;
@@ -324,11 +319,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		pageIterator = addChild(UIForumPageIterator.class, null, WATCHES_ITERATOR);
 		pageList = new ForumPageList(7, listWatches.size());
 		pageIterator.updatePageList(pageList);
-		try {
-			if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -502,11 +493,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			userProfile.setIsAutoWatchTopicIPost(isAutoWatchTopicIPost);
 			
 			uiForm.forumService.saveUserSettingProfile(userProfile);
-			try {
-	      uiForm.saveForumSubscription();
-      } catch (Exception e) {
-      	e.printStackTrace();
-      }
+			uiForm.saveForumSubscription();
 			forumPortlet.updateUserProfileInfo() ;
 			userProfile = forumPortlet.getUserProfile();
 			forumPortlet.setRenderForumLink();

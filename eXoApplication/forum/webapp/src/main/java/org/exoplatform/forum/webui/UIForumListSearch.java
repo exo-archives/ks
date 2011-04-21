@@ -161,14 +161,10 @@ public class UIForumListSearch extends UIContainer {
 			Forum forum = null;
 			Topic topic = null;
 			Post post = null;
-			try{
-				category = forumService.getCategory(cateId) ;
-				forum = forumService.getForum(cateId, forumId) ;
-				topic = forumService.getTopic(cateId, forumId, topicId, userProfile.getUserId());
-				post = forumService.getPost(cateId , forumId, topicId, path) ;
-			} catch (Exception e) { 
-				e.printStackTrace();
-			}
+			category = forumService.getCategory(cateId) ;
+			forum = forumService.getForum(cateId, forumId) ;
+			topic = forumService.getTopic(cateId, forumId, topicId, userProfile.getUserId());
+			post = forumService.getPost(cateId , forumId, topicId, path) ;
 			isRead = uiForm.canView(category, forum, topic, post, userProfile);
 			
 			if(type.equals(Utils.CATEGORY)) {

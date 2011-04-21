@@ -145,7 +145,10 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 				bbcodes.add(uiForm.bbcode);
 				uiForm.forumService.saveBBCode(bbcodes);
       } catch (Exception e) {
-	      e.printStackTrace();
+      	UIApplication uiApplication = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIAddBBCodeForm.msg.failedSaveBBCode", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+      	return;
       }
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);

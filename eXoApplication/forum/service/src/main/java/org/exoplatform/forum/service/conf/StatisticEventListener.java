@@ -20,12 +20,15 @@ import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.services.log.ExoLogger;
 
 public class StatisticEventListener implements EventListener{
+	private static final Log log = ExoLogger.getLogger(StatisticEventListener.class);
 	private String workspace_ ;
 	private String repository_ ; 
 	private String path_ ;
@@ -43,35 +46,35 @@ public class StatisticEventListener implements EventListener{
   public void setPath(String path ){ path_  = path ; }
   
 	public void onEvent(EventIterator evIter){		
-		try{
+		try {
 			ExoContainer container = ExoContainerContext.getCurrentContainer();
-			ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
+			ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
 			long topicCount = 0;
-			long postCount = 0 ;
-			while(evIter.hasNext()) {
-				Event ev = evIter.nextEvent() ;
-				if(ev.getType() == Event.NODE_ADDED){
-					String id = ev.getPath().substring(ev.getPath().lastIndexOf("/")) ;
-					if(id.indexOf(Utils.TOPIC) > 0) {
-						topicCount = topicCount + 1 ;
-					}else if(id.indexOf(Utils.POST) > 0){
-						postCount = postCount + 1 ;
-					}					
-				}else if(ev.getType() == Event.NODE_REMOVED) {
-					String id = ev.getPath().substring(ev.getPath().lastIndexOf("/")) ;					
-					if(id.indexOf(Utils.TOPIC) > 0) {						
-					  topicCount = topicCount - 1 ;
-					}else if(id.indexOf(Utils.POST) > 0){
-						postCount = postCount - 1 ;
-					}			
-				}				
+			long postCount = 0;
+			while (evIter.hasNext()) {
+				Event ev = evIter.nextEvent();
+				if (ev.getType() == Event.NODE_ADDED) {
+					String id = ev.getPath().substring(ev.getPath().lastIndexOf("/"));
+					if (id.indexOf(Utils.TOPIC) > 0) {
+						topicCount = topicCount + 1;
+					} else if (id.indexOf(Utils.POST) > 0) {
+						postCount = postCount + 1;
+					}
+				} else if (ev.getType() == Event.NODE_REMOVED) {
+					String id = ev.getPath().substring(ev.getPath().lastIndexOf("/"));
+					if (id.indexOf(Utils.TOPIC) > 0) {
+						topicCount = topicCount - 1;
+					} else if (id.indexOf(Utils.POST) > 0) {
+						postCount = postCount - 1;
+					}
+				}
 			}
-			if(topicCount != 0 || postCount != 0) {
-				forumService.updateStatisticCounts(topicCount, postCount) ;
+			if (topicCount != 0 || postCount != 0) {
+				forumService.updateStatisticCounts(topicCount, postCount);
 			}
-		}catch(Exception e) {
-			e.printStackTrace() ;
-		}		
+		} catch (Exception e) {
+			log.error("Failed to update forum statistics when adding or removing post/topic.", e);
+		}
 	}
   
 }

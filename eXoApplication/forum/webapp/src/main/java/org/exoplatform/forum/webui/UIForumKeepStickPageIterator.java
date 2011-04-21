@@ -21,7 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
@@ -39,7 +41,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 )
 
 public class UIForumKeepStickPageIterator extends UIForm {
-
+	public static final Log log = ExoLogger.getLogger(UIForumKeepStickPageIterator.class);
 	public int pageSelect = 1 ;
 	public int maxPage = 1;
 	@SuppressWarnings("unchecked")
@@ -147,17 +149,13 @@ public class UIForumKeepStickPageIterator extends UIForm {
 			UIForumKeepStickPageIterator keepStickPageIter = event.getSource() ;
 			UIComponent component = keepStickPageIter;
 			List<String> checkedList =  new ArrayList<String>();
-			try{
-				List<UIComponent> children = keepStickPageIter.getChildren() ;
-				for(UIComponent child : children) {
-					if(child instanceof UIFormCheckBoxInput) {
-						if(((UIFormCheckBoxInput)child).isChecked()) {
-							checkedList.add(child.getId()) ;
-						}
+			List<UIComponent> children = keepStickPageIter.getChildren();
+			for (UIComponent child : children) {
+				if (child instanceof UIFormCheckBoxInput) {
+					if (((UIFormCheckBoxInput) child).isChecked()) {
+						checkedList.add(child.getId());
 					}
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 			if(component instanceof UITopicDetail) {
 				UITopicDetail topicDetail = (UITopicDetail) component;

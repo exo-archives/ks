@@ -54,12 +54,7 @@ public class UIForumDescription extends UIContainer	{
 	private Forum getForum() throws Exception {
     if(forum == null || isForum) {
   		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			try {
-				return forumService.getForum(categoryId, forumId);
-			}catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
+  		return forumService.getForum(categoryId, forumId);
     } else {
       return this.forum ;
     }

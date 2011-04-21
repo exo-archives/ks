@@ -93,12 +93,9 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 		List<String>list = new ArrayList<String>();
 		list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), listIpBan)) ;
 		pageIterator.setSelectPage(pageList.getCurrentPage());
-		try {
-			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
-			else  pageIterator.setRendered(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		if (pageList.getAvailablePage() <= 1)
+			pageIterator.setRendered(false);
+		else  pageIterator.setRendered(true);
 		return list;
 	}
 	

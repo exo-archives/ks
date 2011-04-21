@@ -32,8 +32,6 @@ public class UpdateDataJob implements Job {
 	private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
   public UpdateDataJob() throws Exception {}
 		
-	
-	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
 	  	ExoContainer container = ExoContainerContext.getCurrentContainer();	    
@@ -49,7 +47,7 @@ public class UpdateDataJob implements Job {
 	  	}
 		  schedulerService.removeJob(info) ;
 	  } catch (Exception e) {
-		  e.printStackTrace();			
+	  	log_.error("Failed to update forum statistics.", e);
 	  }
   }
 }

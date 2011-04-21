@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
@@ -37,6 +38,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -65,6 +67,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 )
 
 public class UICommentForm extends UIForm implements UIPopupComponent {
+	private static Log log = ExoLogger.getLogger(UICommentForm.class);
 	private String languageSelected ;
 	private Question question_ ;
 	private Comment comment ;
@@ -186,8 +189,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 			UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
-      ValidatorDataInput validatorDataInput = new ValidatorDataInput();
-      if(comment == null || comment.trim().length() == 0 || !validatorDataInput.fckContentIsNotEmpty(comment)){
+      if(comment == null || comment.trim().length() == 0 || !ValidatorDataInput.fckContentIsNotEmpty(comment)){
 				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UICommentForm.msg.comment-is-null", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -238,7 +240,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 							try {
 								forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
 	            } catch (Exception e) {
-	              e.printStackTrace();
+	              log.error("Failed to save post in topic has id: " + post.getId(), e);
 	            }
 							commentForm.comment.setPostId(post.getId());
 						} else {
@@ -268,7 +270,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 									post.setMessage(comment);
 									forumService.savePost(ids[t-3], ids[t-2], topicId, post, isNew, "");
 	              } catch (Exception e) {
-		              e.printStackTrace();
+	              	log.error("Failed to save post in topic has id: " + postId, e);
 	              }
 							}
 						}
@@ -289,12 +291,10 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 	        }
 				} else {questions.updateQuestionLanguageByLanguage(commentForm.question_.getPath(), commentForm.languageSelected);}
 			} catch(Exception e){
-				e.printStackTrace();
 				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-      //questions.setDefaultLanguage() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

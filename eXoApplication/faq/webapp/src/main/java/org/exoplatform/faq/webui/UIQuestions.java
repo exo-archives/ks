@@ -17,7 +17,6 @@
 package org.exoplatform.faq.webui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,6 +24,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
@@ -59,6 +59,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -115,6 +116,7 @@ import org.exoplatform.webui.event.EventListener;
 )
 @SuppressWarnings("unused")
 public class UIQuestions extends UIContainer {
+	private static Log log = ExoLogger.getLogger(UIQuestions.class);
 	private static String SEARCH_INPUT = "SearchInput" ;
 	private static String COMMENT_ITER = "CommentIter" ;
 	private static String ANSWER_ITER = "AnswerIter" ;
@@ -224,7 +226,7 @@ public class UIQuestions extends UIContainer {
 				pageList = null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to set list question by category.", e);
 		}
 	}
 
@@ -375,9 +377,8 @@ public class UIQuestions extends UIContainer {
 	private Question[] getListQuestion(){
 		try{
 			updateCurrentQuestionList() ;
-			
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error("Failed to get list question.", e);
 		}		
 		return questionMap_.values().toArray(new Question[]{}) ;
 	}
@@ -452,7 +453,7 @@ public class UIQuestions extends UIContainer {
 			} 
     } catch (Exception e) {
     	viewingQuestionId_ = "";
-    	e.printStackTrace();
+    	log.error("Failed to update language map.", e);
     }
 	}
 	
@@ -462,7 +463,7 @@ public class UIQuestions extends UIContainer {
 			ids.add(questionId) ;
 			return faqService_.getQuestionContents(ids).get(0);			
 		} catch (Exception e) {
-			//e.printStackTrace();			
+			log.error("Failed to get question content by id: " + questionId, e);			
 		}
 		return "" ;
 	}
@@ -684,7 +685,6 @@ public class UIQuestions extends UIContainer {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 				FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIAnswersContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -796,7 +796,6 @@ public class UIQuestions extends UIContainer {
 				uiQuestions.updateCurrentQuestionList() ;
 				uiQuestions.updateCurrentLanguage() ;
 			} catch(Exception e) {
-				e.printStackTrace();				
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
@@ -881,7 +880,7 @@ public class UIQuestions extends UIContainer {
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class)) ;
 				return ;
 			} catch (Exception e) { 
-				e.printStackTrace() ;
+				log.error("Failed to get question by id: " + uiQuestions.viewingQuestionId_, e);
 			} 
 			UIAnswersPortlet portlet = uiQuestions.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
@@ -1101,7 +1100,7 @@ public class UIQuestions extends UIContainer {
 					return ;
 				}
       } catch (Exception e) {
-        e.printStackTrace();
+        log.error("Failed to comment question.", e);
       }
 		}
 	}
@@ -1245,7 +1244,6 @@ public class UIQuestions extends UIContainer {
 					}
 				}
 			} catch (Exception e){
-				e.printStackTrace() ;
 				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -1364,7 +1362,6 @@ public class UIQuestions extends UIContainer {
       	UIApplication uiApplication = uiForm.getAncestorOfType(UIApplication.class) ;
       	uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.Discuss-forum-fall", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-	      e.printStackTrace();
       } 
 			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 		}

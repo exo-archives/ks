@@ -193,12 +193,8 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 			post.setIsHidden(false);
 			List<Post> posts = new ArrayList<Post>();
 			posts.add(post);
-			try{
-				uiForm.forumService.modifyPost(posts, 1);
-				uiForm.forumService.modifyPost(posts, 2);
-			}catch(Exception e) {
-				e.printStackTrace() ;
-			}
+			uiForm.forumService.modifyPost(posts, 1);
+			uiForm.forumService.modifyPost(posts, 2);
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
@@ -218,13 +214,9 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIViewPost> event) throws Exception {
 			UIViewPost uiForm = event.getSource() ;
 			Post post = uiForm.post;
-			try{
-				String []path = post.getPath().split("/");
-				int l = path.length ;
-				uiForm.forumService.removePost(path[l-4], path[l-3], path[l-2], post.getId());
-			}catch(Exception e) {
-				e.printStackTrace() ;
-			}
+			String []path = post.getPath().split("/");
+			int l = path.length ;
+			uiForm.forumService.removePost(path[l-4], path[l-3], path[l-2], post.getId());
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;

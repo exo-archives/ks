@@ -62,22 +62,20 @@ public class UIAnswersPortlet extends UIPortletApplication {
 	    	addChild(UIAnswersContainer.class, null, null) ;
     	} 
     }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
-    	try{
-    		if(isFirstTime){
-    			isFirstTime = false;
-		    	UIQuestions questions = getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
-		  		FAQSetting faqSetting = questions.getFAQSetting();
-		    	if(getChild(UISettingForm.class) == null) {
-		    		if(faqSetting.isAdmin()){
-			    		removeChild(UIAnswersContainer.class);
-				    	UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
-				    	settingForm.setRendered(true);
-				    	settingForm.setIsEditPortlet(true);
-				    	settingForm.init();
-			    	}
-		    	}
-    		}
-    	} catch (Exception e) { e.printStackTrace();}
+			if (isFirstTime) {
+				isFirstTime = false;
+				UIQuestions questions = getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
+				FAQSetting faqSetting = questions.getFAQSetting();
+				if (getChild(UISettingForm.class) == null) {
+					if (faqSetting.isAdmin()) {
+						removeChild(UIAnswersContainer.class);
+						UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
+						settingForm.setRendered(true);
+						settingForm.setIsEditPortlet(true);
+						settingForm.init();
+					}
+				}
+			}
     }
     
     super.processRender(app, context) ;

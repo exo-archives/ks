@@ -19,6 +19,7 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
@@ -30,6 +31,7 @@ import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIWatchContainer;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -53,7 +55,8 @@ import org.exoplatform.webui.form.UIForm;
 				@EventConfig(listeners = UIWatchManager.CancelActionListener.class)
 		}
 )
-public class UIWatchManager  extends UIForm	implements UIPopupComponent{
+public class UIWatchManager extends UIForm	implements UIPopupComponent {
+	private static Log log = ExoLogger.getLogger(UIWatchManager.class);
 	private static String categoryId_ = "";
 	private List<Watch> listWatchs_ = new ArrayList<Watch>() ;
 	private String LIST_EMAILS_WATCH = "listEmailsWatch";
@@ -80,7 +83,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 	    pageIterator = this.getChildById(LIST_EMAILS_WATCH);
 	    pageIterator.updatePageList(pageList);
     } catch (Exception e) {
-    	 e.printStackTrace();
+    	 log.error("Failed to set category by id: " + s, e);
     }
   }
   
@@ -100,7 +103,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
     try {
       return pageIterator.getInfoPage().get(3) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Failed to get total pages.", e);
       return 1 ;
     }
   }

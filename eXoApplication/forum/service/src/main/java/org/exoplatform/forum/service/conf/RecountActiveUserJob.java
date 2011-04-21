@@ -63,10 +63,8 @@ public class RecountActiveUserJob implements Job{
 	    		}
 		    }
 	    }	    
-		}catch(NumberFormatException nfe) {
-  		nfe.printStackTrace() ;
   	}catch(Exception e) {
-  		e.printStackTrace() ;
+  		log_.error("Failed to run the class RecoundActiveUserJob.", e);
 		}	  
   }
 }

@@ -20,11 +20,15 @@ import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.services.log.ExoLogger;
 
 public class CategoryEventListener implements EventListener{
+	private static final Log log = ExoLogger.getLogger(CategoryEventListener.class);
+	
 	private String workspace_ ;
 	private String repository_ ; 
 	
@@ -52,7 +56,7 @@ public class CategoryEventListener implements EventListener{
 				}				
 			}			
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error("Failed to run category event listener.", e);
 		}		
 	}
   

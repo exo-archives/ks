@@ -20,11 +20,14 @@ import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.log.ExoLogger;
 
 public class CalculateModeratorEventListener implements EventListener{
+	protected static Log log = ExoLogger.getLogger(CalculateModeratorEventListener.class);
 	private NodeHierarchyCreator nodeHierarchyCreator_;
 	private String path_ ;
 	private String workspace_ ;
@@ -47,21 +50,18 @@ public class CalculateModeratorEventListener implements EventListener{
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
 				if(ev.getType() == Event.PROPERTY_ADDED){
-//					System.out.println("\n\nEvent.PROPERTY_ADDED : "+ ev.getPath()) ;
 					String evPath = ev.getPath();
 					if(evPath.substring(evPath.lastIndexOf("/")+1).equals("exo:moderators")) {
 						forumService.calculateModerator(path_, true);
 					}
 					// exo:moderators
 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
-//					System.out.println("\n\nEvent.PROPERTY_CHANGED : "+ ev.getPath());
 					String evPath = ev.getPath();
 					if(evPath.substring(evPath.lastIndexOf("/")+1).equals("exo:moderators")) {
 						forumService.calculateModerator(path_, false);
 					}
 					// exo:moderators, tempModerators
 				}else if(ev.getType() == Event.PROPERTY_REMOVED) {
-//					System.out.println("\n\n ==> Event.PROPERTY_REMOVED : " + ev.getPath());
 					String evPath = ev.getPath();
 					if(evPath.substring(evPath.lastIndexOf("/")+1).equals("exo:moderators")) {
 						forumService.calculateModerator(path_, false);
@@ -70,7 +70,7 @@ public class CalculateModeratorEventListener implements EventListener{
 				}
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error("Failed to run the class CalculateModeratorEventListener for calculate moderator.", e);
 		}		
 	}
 }

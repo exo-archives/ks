@@ -19,6 +19,7 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
@@ -30,6 +31,7 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -54,6 +56,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class ResultSearchCategory extends UIForm implements UIPopupComponent{
+	private static Log log = ExoLogger.getLogger(ResultSearchCategory.class);
 	private List<Category> listCategory_ = null ;
 	private String LIST_RESULT_SEARCH = "listResultCategoriesSearch";
 	private UIAnswersPageIterator pageIterator ;
@@ -69,7 +72,7 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 		try {
 			listCategory_.addAll(pageList.getPageResultCategoriesSearch(pageSelected, FAQUtils.getCurrentUser()));
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to get category list.", e);
 		}
 		return listCategory_ ;
 	}
@@ -82,7 +85,7 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 			pageIterator = this.getChildById(LIST_RESULT_SEARCH);
 			pageIterator.updatePageList(pageList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to set category list.", e);
 		}
 	}
 
@@ -92,7 +95,7 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 		try {
 			return pageIterator.getInfoPage().get(3) ;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to get total pages.", e);
 			return 1 ;
 		}
 	}

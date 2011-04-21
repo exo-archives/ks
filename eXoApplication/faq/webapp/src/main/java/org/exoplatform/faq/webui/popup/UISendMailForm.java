@@ -120,11 +120,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 	}
 	
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
-		try {
-			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
-		} catch(Exception e) {
-			e.printStackTrace() ;
-		}
+		serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
 	}
 
 	public void setUpdateQuestion(String questionPath, String language) throws Exception {
@@ -295,7 +291,6 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 			} catch(Exception e) {
 				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-error", null)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				e.printStackTrace() ;
 				return ;
 			}
 			uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-success", null, ApplicationMessage.INFO)) ;

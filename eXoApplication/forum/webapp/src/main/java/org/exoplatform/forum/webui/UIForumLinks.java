@@ -224,9 +224,7 @@ public class UIForumLinks extends UIForm {
 						actionRes.setEvent(new QName("OpenLink"), param) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(linkPortlet);
       		}
-        } catch (Exception ex) {
-	        ex.printStackTrace();
-        }
+        } catch (Exception ex) {}
       }
 		}
 	}

@@ -71,8 +71,7 @@ public class ForumSessionListener implements HttpSessionListener {
   	    fservice.userLogout(ConversationState.getCurrent().getIdentity().getUserId()) ;
   	  }
     } catch(Exception ex) {
-    	ex.printStackTrace() ;
-      log.error("Error while destroying a portal session",ex);
+      log.error("Error while destroying portal session",ex);
     } finally {
       PortalContainer.setInstance(null) ;
     }

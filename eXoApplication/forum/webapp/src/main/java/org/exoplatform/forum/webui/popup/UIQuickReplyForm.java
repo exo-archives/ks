@@ -181,14 +181,10 @@ public class UIQuickReplyForm extends UIForm {
 					}
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				} else {
-					try {
-						ActionResponse actionRes = event.getRequestContext().getResponse() ;
-						ForumParameter param = new ForumParameter() ;
-						param.setTopicId(topic.getId());
-						actionRes.setEvent(new QName("ReLoadPortletEvent"), param) ;
-	        } catch (Exception e) {
-		        e.printStackTrace();
-	        }
+					ActionResponse actionRes = event.getRequestContext().getResponse() ;
+					ForumParameter param = new ForumParameter() ;
+					param.setTopicId(topic.getId());
+					actionRes.setEvent(new QName("ReLoadPortletEvent"), param) ;
 				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(quickReply) ;
 			}else {

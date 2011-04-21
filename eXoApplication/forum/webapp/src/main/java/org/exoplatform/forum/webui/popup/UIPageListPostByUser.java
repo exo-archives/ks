@@ -97,17 +97,13 @@ public class UIPageListPostByUser extends UIContainer {
 	private List<Post> getPostsByUser() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		List<Post> posts = null;
-		try {
-			boolean isMod = false;
-			if(this.userProfile.getUserRole() < 2) isMod = true;
-			JCRPageList pageList	= forumService.getPagePostByUser(this.userName, this.userProfile.getUserId(), isMod, strOrderBy) ;
-			forumPageIterator.updatePageList(pageList) ;
-			if(pageList != null) pageList.setPageSize(6) ;
-			posts = pageList.getPage(forumPageIterator.getPageSelected());
-			forumPageIterator.setSelectPage(pageList.getCurrentPage());
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
+		boolean isMod = false;
+		if(this.userProfile.getUserRole() < 2) isMod = true;
+		JCRPageList pageList	= forumService.getPagePostByUser(this.userName, this.userProfile.getUserId(), isMod, strOrderBy) ;
+		forumPageIterator.updatePageList(pageList) ;
+		if(pageList != null) pageList.setPageSize(6) ;
+		posts = pageList.getPage(forumPageIterator.getPageSelected());
+		forumPageIterator.setSelectPage(pageList.getCurrentPage());
 		if(posts == null) posts = new ArrayList<Post>();
 		this.posts = posts ;
 		return posts ;

@@ -78,10 +78,8 @@ public class DeactiveJob implements Job{
 	    		}
 		    }
 	    }	    
-		}catch(NumberFormatException nfe) {
-  		nfe.printStackTrace() ;
   	}catch(Exception e) {
-  		//e.printStackTrace() ;
+  		log_.debug("Failed to run the class DeactiveJob.\n", e);
 		}	  
   }
 }

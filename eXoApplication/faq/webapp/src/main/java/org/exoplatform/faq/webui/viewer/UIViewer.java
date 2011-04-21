@@ -85,18 +85,10 @@ public class UIViewer extends UIContainer {
 		List<String> list = new ArrayList<String>();
 		list = FAQUtils.getCategoriesIdFAQPortlet();
 		useAjax = FAQUtils.getUseAjaxFAQPortlet();
-		try {
-			categoryInfo = this.fAqService.getCategoryInfo(this.path, list);
-    } catch (Exception e) {
-    	e.printStackTrace();
-    }
-    
+		categoryInfo = this.fAqService.getCategoryInfo(this.path, list);
     List<String> bbcName = new ArrayList<String>();
 		List<BBCode> bbcs = new ArrayList<BBCode>();
-		try {
-			bbcName = fAqService.getActiveBBCode();
-    } catch (Exception e) {
-    }
+		bbcName = fAqService.getActiveBBCode();
     boolean isAdd = true;
     BBCode bbCode;
     for (String string : bbcName) {

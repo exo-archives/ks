@@ -83,15 +83,11 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   	this.faqSetting_ = faqSetting;
   }
   
-  public void setRelationed(List<String> listRelation) {
-    quesIdsSelect = listRelation ;    
-    try{ 
-    	homeCategoryName = faqService.getCategoryNameOf(Utils.CATEGORY_HOME);
-    	setListCate(Utils.CATEGORY_HOME) ;
-      initPage() ;
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+  public void setRelationed(List<String> listRelation) throws Exception {
+		quesIdsSelect = listRelation;
+		homeCategoryName = faqService.getCategoryNameOf(Utils.CATEGORY_HOME);
+		setListCate(Utils.CATEGORY_HOME);
+		initPage();
   }
   
   public void setQuestionId(String questionId) {

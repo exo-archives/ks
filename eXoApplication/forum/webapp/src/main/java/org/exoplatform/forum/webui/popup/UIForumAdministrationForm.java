@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
@@ -36,6 +37,7 @@ import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -86,6 +88,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 		}
 )
 public class UIForumAdministrationForm extends UIForm implements UIPopupComponent {
+	private static final Log log = ExoLogger.getLogger(UIForumAdministrationForm.class);
 	private ForumService forumService ;
 	private ForumAdministration administration ;
 	private int id = 0 ;
@@ -272,7 +275,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		try {
 			listBBCode.addAll(forumService.getAllBBCode());
     } catch (Exception e) {
-	    e.printStackTrace();
+	    log.error("Failed to add all bbcodes.");
     }
 	}
 	
@@ -324,7 +327,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		try {
 			listIpBan.addAll(forumService.getBanList());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to add all banned ip list.");
 		}
 		pageList = new ForumPageList(8, listIpBan.size());
 		pageList.setPageSize(8);
@@ -337,7 +340,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
 			else  pageIterator.setRendered(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to set rendered component UIForumPageIterator.");
 		}
 		return list;
 	}

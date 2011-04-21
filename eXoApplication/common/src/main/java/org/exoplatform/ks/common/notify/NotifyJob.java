@@ -71,7 +71,6 @@ public class NotifyJob extends Thread implements Job, Runnable  {
 	    MailService mailService = (MailService)portalContainer.getComponentInstanceOfType(MailService.class) ;
 	    String name = context.getJobDetail().getName();
 	    Common common = new Common() ;
-	    System.out.println("\n\n===>common:" + common);
 	    NotifyInfo messageInfo = common.getMessageInfo(name) ;
 	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
 	    Message message = messageInfo.getMessage() ;
@@ -95,7 +94,7 @@ public class NotifyJob extends Thread implements Job, Runnable  {
 		  schedulerService.removeJob(info) ;		  
 
 	  } catch (Exception e) {
-		  e.printStackTrace();			
+	  	log_.debug("Failed to send email notifications for thread save question.", e);
 	  }
   }
 }

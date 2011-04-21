@@ -35,13 +35,12 @@ public class AutoPruneJob implements Job{
 	  	ExoContainer container = ExoContainerContext.getCurrentContainer();
 	  	String desc = context.getJobDetail().getDescription();
 	  	ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
-	  	//System.out.println("\n\n >>>>>> AutoPrune Job");
 	  	forumService.runPrune(desc) ;
 	  	if (log_.isDebugEnabled()) {
 	  		log_.debug("\n\nAuto prune has worked on " + desc + " forum");
 	  	}
 	  } catch (Exception e) {
-		  e.printStackTrace();			
+	  	log_.error("Falied to run the class AutoPruneJob.", e);
 	  }
   }
 }
