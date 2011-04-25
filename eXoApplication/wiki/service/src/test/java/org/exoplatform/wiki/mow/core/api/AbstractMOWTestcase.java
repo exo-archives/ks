@@ -16,10 +16,18 @@
  */
 package org.exoplatform.wiki.mow.core.api;
 
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.Session;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
+
 import junit.framework.TestCase;
 
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityConstants;
@@ -41,12 +49,19 @@ import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
  */
 public abstract class AbstractMOWTestcase extends TestCase {
 
-  protected static StandaloneContainer container;
+  protected static RepositoryService    repositoryService;
+
+  protected static StandaloneContainer  container;
+
+  protected final static String         KNOWLEDGE_WS           = "knowledge".intern();
+
+  protected static Node                 root_                  = null;
 
   protected static MOWService          mowService;
 
   static {
     initContainer();
+    initJCR();
   }
 
   protected void begin() {
@@ -88,6 +103,38 @@ public abstract class AbstractMOWTestcase extends TestCase {
 
     } catch (Exception e) {
       throw new RuntimeException("Failed to initialize standalone container: " + e.getMessage(), e);
+    }
+  }
+  
+  private static void initJCR() {
+    try {
+      repositoryService = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
+      // Initialize datas
+      Session session = repositoryService.getCurrentRepository().getSystemSession(KNOWLEDGE_WS);
+      root_ = session.getRootNode();
+      // Remove old data before to starting test case.
+      StringBuffer stringBuffer = new StringBuffer();
+      stringBuffer.append("/jcr:root").append("//*[fn:name() = 'eXoWiki' or fn:name() = 'ApplicationData']");
+      QueryManager qm = session.getWorkspace().getQueryManager();
+      Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+      QueryResult result = query.execute();
+      NodeIterator iter = result.getNodes();
+      while (iter.hasNext()) {
+        Node node = iter.nextNode();
+        try {
+          removeNodes(node);
+        } catch (Exception e) {}
+      }
+      session.save();
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to initialize JCR: ", e);
+    }
+  }
+  
+  private static void removeNodes(Node node) throws Exception {
+    NodeIterator iter = node.getNodes();
+    while (iter.hasNext()) {
+      iter.nextNode().remove();
     }
   }
   
