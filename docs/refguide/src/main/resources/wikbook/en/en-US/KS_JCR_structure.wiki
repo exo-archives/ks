@@ -13,7 +13,7 @@ The Forum System node is stored in {{/exo:applications/ForumService/ForumSystem}
 
 h3. User Profile and User Profile Home {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumSystem.UserProfileAndUserProfileHome}
 The User Profile and User Profile Home node are used to store information of each user. User Profile is automatically created by a listener when a user registers to the organization service. Private message and forum subscription can be added to User Profile as a child node. 
-These node types exo:forumUserProfile, exo:userProfileHome, exo:privateMessage and exo:forumSubcription are defined as child nodes of exo:forumUserProfile.
+These node types exo:forumUserProfile, exo:userProfileHome, exo:privateMessage and exo:forumSubscription are defined as child nodes of exo:forumUserProfile.
 The User Profile node is stored under ForumSystem node: {{/exo:applications/ForumService/ForumSystem/exo:userProfileHome/exo:forumUserProfile}}.
 
 - The node type exo:forumUserProfile has the following properties:
@@ -387,12 +387,12 @@ Answers and comments node are stored under the Answer home and the Comment home 
 | exo:id | String | false | The id of the answer. |
 | exo:questionId | String | false | The id of the question. |
 | exo:categoryId | String | false | The id of the category containing the question. |
-| exo:responses | String | false | The content of the anwser. |
+| exo:responses | String | false | The content of the answer. |
 | exo:dateResponse | Date | false | The date when the response was posted. |
-| exo:responseBy | String | false | The id of the user who responsed the answer. |
+| exo:responseBy | String | false | The id of the user who responded the answer. |
 | exo:responseLanguage | String | false | The language of the answer response. |
 | exo:approveResponses | Boolean | false | The response is pending for approval if the value is set to "false". |
-| exo:activateResponses | Boolean | false | The state of the anwser: activated/deactivated . |
+| exo:activateResponses | Boolean | false | The state of the answer: activated/deactivated . |
 | exo:usersVoteAnswer | String | true | The list of user ids who voted for the answer. |
 | exo:MarkVotes | Long | false | The average vote scores of the answer. |
 | exo:postId | String | false | The post id. |
@@ -450,10 +450,145 @@ The Poll node is stored under eXoPolls node {{/exo:applications/eXoPolls/%Portal
 | exo:lastVote | Date | false | The date and time when the last vote was made. |
 | exo:question | String | false | The question content of poll. |
 | exo:timeOut | Long | false | The time when the poll will be closed. |
-| exo:option | String | true | The list of options for poll. Each option is seperated by a comma. |
+| exo:option | String | true | The list of options for poll. Each option is separated by a comma. |
 | exo:vote | String | true | The list of votes by users. |
 | exo:userVote | String | true | The list of user ids who voted. |
 | exo:isMultiCheck | Boolean | false | Enable/disable the multi check. User can vote for more than one option if the value is set to "true". |
 | exo:isAgainVote | Boolean | false | Enable/disable the option to vote again. User can change their vote if the value is set to "true". |
 | exo:isClosed | Boolean | false | The poll status: open/closed. The poll is closed if the value is set to "true". |
+
+h1. Wiki JCR structure
+The Wiki portlet is a JCR-based application. The Wiki data are stored in the eXo JCR storage. The Wiki application of eXo Knowledge supports several wikis, each wiki is organized as a tree of pages and hosted in different locations, depending on the type of wiki:
+
+* Portal wikis: _{noformat}/exo:applications/eXoWiki/wikis/$PORTAL/WikiHome{noformat}_
+* Group wikis: _{noformat}/Groups/$GROUP/ApplicationData/eXoWiki/WikiHome{noformat}_
+* User wikis: _{noformat}/Users/$USERNAME/ApplicationData/eXoWiki/WikiHome{noformat}_
+
+_WikiHome_ a conventional name of the root page of a Wiki. The type of _WikiHome_ is "exo:wikihome". 
+Each page may have a number of sub-pages and attachments.
+
+Other Wiki metadata are organized below _{noformat}/exo:applications/eXoWiki/wikimetadata{noformat}_.
+
+The whole Wiki JCR structure can be visualized in the following diagram:
+
+!wiki-jcr.png!
+
+
+h2. Wiki data
+Depending on the Wiki type (portal, group or user); its pages, attachments and default syntax are stored under a node with either of node types: "wiki:portalwiki", "wiki:groupwiki" or "wiki:userwiki", respectively. Such a node has four child nodes: WikiHome, Preferences, LinkRegistry and Trash.
+These node types have the super type "wiki:wiki" that has the following properties:
+
+|| Properties name || Required type || Multiple ||||Description ||
+|ref|Reference|false|The reference to one of three following nodes: portalwikis, groupwikis or userwikis.|
+|owner|String|false|The name of the wiki.|
+|wikiPermissions|String|true|The property consists of the permission information of the wiki. The permission string has the format: VIEWPAGE,EDITPAGE,ADMINPAGE,ADMINSPACE:USER:john; VIEWPAGE:GROUP:/platform/users; VIEWPAGE,EDITPAGE,ADMINPAGE,ADMINSPACE:MEMBERSHIP:manager:/platform/administrators.|
+|isDefaultPermissionsInited|Boolean|true|Check whether the default permission is applied to all the wiki tree or not. Its default value is "false".|
+
+h3. WikiHome
+The WikiHome node stores the root page of a Wiki. It has the node type "exo:wikihome" that has the super type "wiki:page" inherited from "nt:folder". The super type has the following properties:
+
+|| Properties name || Required type || Multiple ||Description ||
+|owner|String|false|The creator of the page.|
+|author|String|false|The last person who modifies the page.|
+|createdDate|Date|false|The date when the page is created.|
+|updatedDate|Date|false|The last date when the page is updated.|
+|syntax|String|false|The Wiki syntax is used to write the page.|
+|title|String|false|The title of the page.|
+|comment|String|false|The comment explains what is modified in the page.|
+|url|String|false|The URL to the page.|
+|isOverridePermission|Boolean|false|Check whether the default permission is overridden on the page or not. Its default value is "false".|
+|exo:relation|Reference|true|The property consists of the UUIDs of the related pages.|
+
+The nodes that have the type "wiki:page", have a child node named "content" and other child nodes including attachments with the type "wiki:attachment" inherited from "nt:file".
+The node type "wiki:attachment" has the following properties:
+|| Properties name || Required type || Multiple ||Description ||
+|title|String|false|The name of the attachment.|
+|fileType|String|false|The type of the attachment.|
+|creator|String|false|The creator of the attachment.|
+
+* Three mixin node types: "wiki:removed", "wiki:renamed" and "wiki:watched" may be added to the node type "wiki:page".
+
+The mixin node type "wiki:removed" has the following properties:
+|| Properties name || Required type || Multiple ||Description ||
+|removedBy|String|false|The person who deleted the page.|
+|removedDate|Date|false|The date when the page is deleted.|
+|parentPath|String|false|The path to the parent page of the deleted page.|
+
+
+
+The mixin node type "wiki:renamed" has the following properties:
+|| Properties name || Required type || Multiple ||Description ||
+|oldPageIds|String|true|The old Ids of the renamed page.|
+
+
+The mixin node type "wiki:watched" has the following properties:
+|| Properties name || Required type || Multiple ||Description ||
+|watcher|String|false|The Id of the person who is watching the page.|
+
+
+h3. Preferences
+The "Preferences" node stores the default syntax and page templates of the Wiki. It has the node type "wiki:preferences" and two child nodes "PreferencesSyntax" and "TemplateContainer".
+
+* The "PreferencesSyntax" node has the node type "wiki:preferencessyntax" that has the following properties:
+|| Properties name || Required type || Multiple ||Description ||
+|defaultSyntax|String|false|The default Wiki syntax of each wiki.|
+|allowMutipleSyntaxes|Boolean|false|Specify whether multiple syntaxes are enabled or not.|
+
+* The "TemplateContainer" node stores the page templates. Its child node has the node type "wiki:template" inherited from the node type "wiki:page". 
+The node type "wiki:template" has the following properties:
+
+|| Properties name || Required type || Multiple ||Description ||
+|description|String|false|The description of the template.|
+
+
+h3. LinkRegistry
+
+The "LinkRegistry" node stores the entries to keep track of renaming or moving pages. Each link entry has the node type "wiki:linkentry" that has the following properties:
+|| Properties name || Required type || Multiple ||Description ||
+|alias|String|false|The Id of a page that is moved or renamed. Its format is "wikitype@wikiowner@page_name".|
+|newlink|Path|false|A new path to the wiki page that has been moved or renamed.|
+
+h3. Trash
+The "Trash" node stores deleted pages.
+
+
+h2. Wiki metadata
+Wiki metadata are stored in the node wikimetadata that has the node type "wiki:store". These metadata consist of information about help contents, draft contents and the way to find the wikis in the system.
+The nodes portalwikis, groupwikis and userwikis allow finding the wikis under the type: portal, group and user, basing on the JCR reference features. These nodes have the node types "wiki:portalwikis", "wiki:groupwikis" and "wiki:userwikis" relatively.
+
+*Help pages*
+
+Help-related information about Wiki syntaxes are stored under the "helppages" node which has the node type "wiki:page". For syntax help, there are two help pages (summary and detailed) for each syntax. The summary page suggests the simple syntax, while the detailed page provides the full syntax-related information. The detailed page is arranged as the child page of the summary page, and both of which have the same node type "wiki:page".
+
+*Draft pages*
+
+The unsaved content of a new page is stored under the "draftNewPages" node that has the node type "wiki:page".
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
