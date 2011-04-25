@@ -52,7 +52,6 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.io.FilenameUtils;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.commons.utils.MimeTypeResolver;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -130,62 +129,51 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
    * {@inheritDoc}
    */
   @POST
-  @Path("/{wikiType}/{wikiOwner:.+}/{pageId}/content/")
+  @Path("/content/")
   @Produces(MediaType.TEXT_HTML)
-  public Response getWikiPageContent(@PathParam("wikiType") String wikiType,
-                                     @PathParam("wikiOwner") String wikiOwner,
-                                     @PathParam("pageId") String pageId,
-                                     @QueryParam("portalURI") String portalURI,
-                                     @QueryParam("sessionKey") String sessionKey,
+  public Response getWikiPageContent(@QueryParam("sessionKey") String sessionKey,
                                      @QueryParam("wikiContext") String wikiContextKey,
                                      @QueryParam("markup") boolean isMarkup,
                                      @FormParam("html") String data) {
-    String pageContent = "";
-    String syntaxId = "";
     EnvironmentContext env = EnvironmentContext.getCurrent();
     WikiContext wikiContext = new WikiContext();
     HttpServletRequest request = (HttpServletRequest) env.get(HttpServletRequest.class);
-
-    RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer()
-                                                                              .getComponentInstanceOfType(RenderingService.class);
-
     try {
-      Page page = wikiService.getPageById(wikiType, wikiOwner, pageId);
-      if (page != null) {
-        pageContent = page.getContent().getText();
-        syntaxId = page.getSyntax();
-        syntaxId = (syntaxId != null) ? syntaxId : Syntax.XWIKI_2_0.toIdString();
-        if (data == null) {
-          if (sessionKey != null && sessionKey.length() > 0) {
-            data = (String) request.getSession().getAttribute(sessionKey);
-          }
+      if (data == null) {
+        if (sessionKey != null && sessionKey.length() > 0) {
+          data = (String) request.getSession().getAttribute(sessionKey);
         }
-        if (wikiContextKey != null && wikiContextKey.length() > 0) {
-          wikiContext = (WikiContext) request.getSession().getAttribute(wikiContextKey);
-        }
-        Execution ec = ((RenderingServiceImpl) renderingService).getExecution();
-        if (ec.getContext() == null) {
-          ec.setContext(new ExecutionContext());
-        }
-        ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
-        ServletContext wikiServletContext = PortalContainer.getInstance()
-                                                           .getPortalContext()
-                                                           .getContext("/wiki");
-        InputStream is = wikiServletContext.getResourceAsStream("/templates/wiki/webui/xwiki/wysiwyginput.html");
-        byte[] b = new byte[is.available()];
-        is.read(b);
-        data = renderingService.render(data, Syntax.XHTML_1_0.toIdString(), syntaxId, false);
-        data = renderingService.render(data,
-                                       syntaxId,
-                                       Syntax.ANNOTATED_XHTML_1_0.toIdString(),
-                                       false);
-        pageContent = new String(b).replace("$content", data);
       }
+      if (wikiContextKey != null && wikiContextKey.length() > 0) {
+        wikiContext = (WikiContext) request.getSession().getAttribute(wikiContextKey);
+      }
+      Execution ec = ((RenderingServiceImpl) renderingService).getExecution();
+      if (ec.getContext() == null) {
+        ec.setContext(new ExecutionContext());
+      }
+      ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
+      ServletContext wikiServletContext = PortalContainer.getInstance()
+                                                         .getPortalContext()
+                                                         .getContext("/wiki");
+      InputStream is = wikiServletContext.getResourceAsStream("/templates/wiki/webui/xwiki/wysiwyginput.html");
+      byte[] b = new byte[is.available()];
+      is.read(b);
+      is.close();
+      data = renderingService.render(data,
+                                     Syntax.XHTML_1_0.toIdString(),
+                                     Syntax.XWIKI_2_0.toIdString(),
+                                     false);
+      data = renderingService.render(data,
+                                     Syntax.XWIKI_2_0.toIdString(),
+                                     Syntax.ANNOTATED_XHTML_1_0.toIdString(),
+                                     false);
+      data = new String(b).replace("$content", data);
+
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       return Response.serverError().entity(e.getMessage()).cacheControl(cc).build();
     }
-    return Response.ok(pageContent, MediaType.TEXT_HTML).cacheControl(cc).build();
+    return Response.ok(data, MediaType.TEXT_HTML).cacheControl(cc).build();
   }
 
   @POST

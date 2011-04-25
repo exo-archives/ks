@@ -63,17 +63,9 @@ public class UIWikiRichTextArea extends UIContainer {
       WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
       StringBuilder sb = new StringBuilder();
       sb.append("/").append(PortalContainer.getCurrentPortalContainerName()).append("/");
-      sb.append(PortalContainer.getCurrentRestContextName()).append("/wiki/");
-      sb.append(pageParams.getType()).append("/").append(pageParams.getOwner()).append("/");
-      if (wikiPortlet.getWikiMode() == WikiMode.EDITPAGE) {
-        sb.append(pageParams.getPageId());
-      } else {
-        sb.append(UIWikiPageEditForm.UNTITLED);
-      }
+      sb.append(PortalContainer.getCurrentRestContextName()).append("/wiki");
       sb.append("/content")
-        .append("?portalURI=")
-        .append(Util.getPortalRequestContext().getPortalURI())
-        .append("&sessionKey=").append(SESSION_KEY)
+        .append("?sessionKey=").append(SESSION_KEY)
         .append("&wikiContext=").append(WIKI_CONTEXT);
       
       return sb.toString();
