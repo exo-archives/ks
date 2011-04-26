@@ -28,6 +28,7 @@ import org.exoplatform.services.jcr.observation.ExtendedEvent;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
+import org.exoplatform.wiki.mow.api.WikiNodeType.Definition;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.listener.PageWikiListener;
 import org.exoplatform.wiki.utils.Utils;
@@ -103,6 +104,12 @@ public class AddWikiPageJcrListener implements Action {
       return false;
     }
     Node pageNode = currentNode.getParent(); // expect wiki node is parent of content node.
+    
+    Node ancestor = pageNode.getParent();
+    if (ancestor != null && Definition.HELP_PAGES.equals(ancestor.getParent())) {
+      // filter events on help pages.
+      return false;
+    }
     
     if (log.isDebugEnabled()) {
       log.debug(String.format("Executing listener [%s] on item [%s] for adding new page event!", toString(), currentNode.getPath()));
