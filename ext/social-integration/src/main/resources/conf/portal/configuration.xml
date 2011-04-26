@@ -37,7 +37,7 @@
       <init-params>
 				<value-param>
 					<name>wikiPortletName</name>
-					<value>WikiPortlet</value>
+					<value>wiki</value>
 				</value-param>
 			</init-params>
     </component-plugin>

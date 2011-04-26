@@ -53,7 +53,7 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
     this.params = params;
   }
 
-  private void saveActivity(String wikiType, String wikiOwner, String pageId, String addType) throws Exception {
+  private void saveActivity(String wikiType, String wikiOwner, String pageId, Page page, String addType) throws Exception {
     try {
       Class.forName("org.exoplatform.social.core.space.spi.SpaceService");
     } catch (ClassNotFoundException e) {
@@ -67,12 +67,8 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
       return;
     }
     WikiService wikiService = (WikiService) PortalContainer.getInstance().getComponentInstanceOfType(WikiService.class);
-    Page page = wikiService.getPageById(wikiType, wikiOwner, pageId);
 
-    String jcrPath = ((PageImpl) page).getPath();
-    String[] parts = jcrPath.split("/");
-    // expect jcrPath like '/Group/spaces/[space name]/.../...'
-    String groupId = "/" + parts[2] + "/" + parts[3];
+    String groupId = "/" + wikiOwner;
     SpaceService spaceService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
     Space space = null;
     try {
@@ -109,17 +105,17 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
   }
 
   @Override
-  public void postAddPage(String wikiType, String wikiOwner, String pageId) throws Exception {
-    saveActivity(wikiType, wikiOwner, pageId, ADD_PAGE_TYPE);
+  public void postAddPage(String wikiType, String wikiOwner, String pageId, Page page) throws Exception {
+    saveActivity(wikiType, wikiOwner, pageId, page, ADD_PAGE_TYPE);
   }
 
   @Override
-  public void postDeletePage(String wikiType, String wikiOwner, String pageId) {
+  public void postDeletePage(String wikiType, String wikiOwner, String pageId, Page page) {
 
   }
 
   @Override
-  public void postUpdatePage(String wikiType, String wikiOwner, String pageId) throws Exception {
-    saveActivity(wikiType, wikiOwner, pageId, UPDATE_PAGE_TYPE);
+  public void postUpdatePage(String wikiType, String wikiOwner, String pageId, Page page) throws Exception {
+    saveActivity(wikiType, wikiOwner, pageId, page, UPDATE_PAGE_TYPE);
   }
 }
