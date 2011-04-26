@@ -9,6 +9,9 @@ import java.util.Properties;
 import java.util.Stack;
 
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.ValueFormatException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
@@ -36,6 +39,7 @@ import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiType;
+import org.exoplatform.wiki.mow.api.WikiNodeType.Definition;
 import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.ModelImpl;
 import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
@@ -43,6 +47,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.GroupWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PortalWiki;
+import org.exoplatform.wiki.mow.core.api.wiki.SimplePageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.UserWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
@@ -152,8 +157,15 @@ public class Utils {
     }
   }
   
+  /**
+   * Validate {@code wikiOwner} depending on {@code wikiType}. <br>
+   * If wikiType is {@link PortalConfig#GROUP_TYPE}, {@code wikiOwner} is checked to removed slashes at the begin and the end point of it.
+   * @param wikiType
+   * @param wikiOwner
+   * @return wikiOwner after validated.
+   */ 
   public static String validateWikiOwner(String wikiType, String wikiOwner){
-    if(wikiType.equals(PortalConfig.GROUP_TYPE)) {
+    if(wikiType != null && wikiType.equals(PortalConfig.GROUP_TYPE)) {
       if(wikiOwner == null || wikiOwner.length() == 0){
         return null;
       }
@@ -513,4 +525,22 @@ public class Utils {
     return result;
   }
 
+  public static Page makeSimplePage(Node pageNode) throws ValueFormatException, PathNotFoundException, RepositoryException {
+    String title = pageNode.getProperty(Definition.TITLE).getString();
+    String name = pageNode.getProperty("exo:name").getString();
+    String owner = pageNode.getProperty(Definition.OWNER).getString();
+    SimplePageImpl page = new SimplePageImpl(name, title, owner);
+    if (pageNode.hasProperty(Definition.CREATED_DATE)) 
+      page = page.createDate(pageNode.getProperty(Definition.CREATED_DATE).getDate().getTime());
+    if (pageNode.hasProperty(Definition.UPDATED_DATE))
+      page = page.updateDate(pageNode.getProperty(Definition.UPDATED_DATE).getDate().getTime());
+    if (pageNode.hasProperty(Definition.AUTHOR))
+      page = page.author(pageNode.getProperty(Definition.AUTHOR).getString());
+    if (pageNode.hasProperty(Definition.SYNTAX))
+      page = page.syntax(pageNode.getProperty(Definition.SYNTAX).getString());
+    if (pageNode.hasProperty(Definition.COMMENT))
+      page = page.comment(pageNode.getProperty(Definition.COMMENT).getString());
+    return page;
+  }
+  
 }

@@ -17,6 +17,7 @@
 package org.exoplatform.wiki.service.search;
 
 import org.exoplatform.wiki.mow.api.WikiNodeType;
+import org.exoplatform.wiki.utils.Utils;
 
 
 /**
@@ -57,7 +58,7 @@ public class SearchData {
     this.title = title;
     this.content = content;
     this.wikiType = wikiType;
-    this.wikiOwner = wikiOwner;
+    this.wikiOwner = Utils.validateWikiOwner(wikiType, wikiOwner);
     this.pageId = pageId;
   }
 

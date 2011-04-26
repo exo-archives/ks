@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.chain.Context;
 import org.exoplatform.container.ExoContainer;
@@ -30,86 +31,93 @@ public class PageListenersInAction implements Action {
   
   private static final Log      log               = ExoLogger.getLogger(PageListenersInAction.class);
   
+  private static final String SIGN = "executedListeners";
+  
+  public enum PageEvent {PAGE_ADDED, PAGE_EDITED}
+  
   @Override
   public boolean execute(Context context) throws Exception {
+    if (context.containsKey(SIGN)) return false;
     Object currentItemObj = context.get(InvocationContext.CURRENT_ITEM);
     Object eventObj = context.get(InvocationContext.EVENT);
+    boolean result;
+    if ((currentItemObj instanceof Node) && Integer.parseInt(eventObj.toString()) == ExtendedEvent.NODE_ADDED) {
+      result = processAddNode(context);
+    } else if ((currentItemObj instanceof Property) && Integer.parseInt(eventObj.toString()) == ExtendedEvent.PROPERTY_CHANGED) {
+      result = processChangeProperty(context);
+    } else {
+      throw new IllegalStateException("The listener is not configured properly!");
+    }
+    context.put(SIGN, true);
+    return result;
+  }
+  
+  private Node getPageNode(Node descendant) throws RepositoryException {
+    Node pageNode = null;
+    if (descendant.isNodeType(WikiNodeType.WIKI_PAGE)) {
+      pageNode = descendant;
+    }
+    if (WikiNodeType.Definition.CONTENT.equals(descendant.getName())) {
+      pageNode = descendant.getParent();
+    }
+    if (descendant.isNodeType("nt:resource")) {
+      pageNode = (Node) descendant.getAncestor(descendant.getDepth() - 2);
+      if (pageNode != null && !pageNode.isNodeType(WikiNodeType.WIKI_PAGE)) {
+        // descendant is another resource but not content of wiki page.
+        return null;
+      }
+    }
+    if (pageNode == null) throw new IllegalStateException(String.format("Can not get wiki:page node from [%s]", descendant.getPath()));
+    return pageNode;
+  }
+  
+  private boolean executeListeners(Context context, Node pageNode, PageEvent event) throws RepositoryException {
     ExoContainer container = (ExoContainer) context.get(InvocationContext.EXO_CONTAINER);
-    
-    
-    if (!(currentItemObj instanceof Property)) {
-      return false;
-    }
-    
-    Property textProperty = (Property) currentItemObj;
-    if (!WikiNodeType.Definition.TEXT.equals(textProperty.getName())) {
-      return false;
-    }
-    
-    Node ancestor = textProperty.getParent();
-    if (!ancestor.isNodeType(WikiNodeType.WIKI_PAGE_CONTENT)) {
-      return false;
-    }
-    
-    ancestor = ancestor.getParent();
-    if (!ancestor.isNodeType(WikiNodeType.WIKI_PAGE)) {
-      return false;
-    }
-    
-    if (ancestor.isNodeType(WikiNodeType.WIKI_TEMPLATE)) {
-      return false;
-    }
-    
-    if (log.isDebugEnabled()) {
-      log.debug(String.format("Executing listener [%s] at item [%s] due to event code [%s]", toString(), textProperty.getPath(), eventObj));
-    }
-    
     WikiService wikiService = (WikiService) container.getComponentInstanceOfType(WikiService.class);
-    String jcrPathOfPage = ancestor.getPath();
-    String wikiType = "", owner = "";
+    String pageJcrPath = pageNode.getPath();
+    String wikiType, owner, pageId;
     try {
-      wikiType = Utils.getWikiType(jcrPathOfPage);
-      owner = Utils.getSpaceIdByJcrPath(jcrPathOfPage);
+      wikiType = Utils.getWikiType(pageJcrPath);
+      owner = Utils.getSpaceIdByJcrPath(pageJcrPath);
+      pageId = pageNode.getName();
     } catch (IllegalArgumentException ie) {
-      if (log.isDebugEnabled()) {
-        log.debug(String.format("can not get wikiType and owner from [%s]", jcrPathOfPage), ie);
+      if (log.isWarnEnabled()) {
+        log.warn(String.format("can not get wikiType and owner from [%s]", pageJcrPath), ie);
       }
       return false;
     }
-    String pageId = ancestor.getName();
-    boolean moreVersionsThan1 = false;
-    try {
-      
-      moreVersionsThan1 = ancestor.getVersionHistory().getAllVersions().getSize() > 1;
-    } catch (NullPointerException e) {
-      if (log.isDebugEnabled()) {
-        log.debug(String.format("can not count the number of versions of page [%s]", pageId), e);
-      }
-    }
-    if (Integer.parseInt(eventObj.toString()) == ExtendedEvent.PROPERTY_ADDED) {
-      List<PageWikiListener> listeners = wikiService.getPageListeners();
-      for (PageWikiListener l : listeners) {
-        try {
-          l.postAddPage(wikiType, owner, pageId);
-        } catch (Exception e) {
-          if (log.isWarnEnabled()) {
-            log.warn(String.format("executing listener [%s] at property [%s] failed", l.toString(), textProperty.getPath()), e);
-          }
-        }
-      }
-    } else if (Integer.parseInt(eventObj.toString()) == ExtendedEvent.PROPERTY_CHANGED && moreVersionsThan1) {
-      List<PageWikiListener> listeners = wikiService.getPageListeners();
-      for (PageWikiListener l : listeners) {
-        try {
-          l.postUpdatePage(wikiType, owner, pageId);
-        } catch (Exception e) {
-          if (log.isWarnEnabled()) {
-            log.warn(String.format("executing listener [%s] at property [%s] failed", l.toString(), textProperty.getPath()), e);
-          }
+    List<PageWikiListener> listeners = wikiService.getPageListeners();
+    for (PageWikiListener l : listeners) {
+      try {
+        if (event == PageEvent.PAGE_ADDED) 
+          l.postAddPage(wikiType, owner, pageId, Utils.makeSimplePage(pageNode));
+        else if (event == PageEvent.PAGE_EDITED) 
+          l.postUpdatePage(wikiType, owner, pageId, Utils.makeSimplePage(pageNode));
+      } catch (Exception e) {
+        if (log.isWarnEnabled()) {
+          log.warn(String.format("executing listener [%s] on [%s] failed", l.toString(), pageNode.getPath()), e);
         }
       }
     }
     return false;
   }
+  
+  private boolean processAddNode(Context context) throws RepositoryException {
+    Object currentItemObj = context.get(InvocationContext.CURRENT_ITEM);
+    Node currentNode = (Node) currentItemObj;
+    Node pageNode = getPageNode(currentNode);
+    if (pageNode == null) return false;
+    return executeListeners(context, pageNode, PageEvent.PAGE_ADDED);
+  }
 
+  private boolean processChangeProperty(Context context) throws RepositoryException {
+    Object currentItemObj = context.get(InvocationContext.CURRENT_ITEM);
+    Property currentProperty = (Property) currentItemObj;
+    
+    Node pageNode = getPageNode(currentProperty.getParent());
+    if (pageNode == null) return false;
+    pageNode.getVersionHistory().getAllVersions().getSize();
+    return executeListeners(context, pageNode, PageEvent.PAGE_EDITED);
+  }
+  
 }
