@@ -875,7 +875,7 @@ public class QuestionPageList extends JCRPageList {
    * @see             Session
    */
   private Session getJCRSession() throws Exception {
-    return sessionManager.openSession();
+    return (sessionManager.getCurrentSession() != null) ? sessionManager.getCurrentSession() : sessionManager.openSession();
   }
 
   private void closeSession() throws Exception {
