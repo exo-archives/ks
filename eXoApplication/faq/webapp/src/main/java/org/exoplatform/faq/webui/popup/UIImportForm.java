@@ -60,7 +60,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
         UIFormUploadInput uploadInput = (UIFormUploadInput) importForm.getChildById(importForm.FILE_UPLOAD);
 
         if (uploadInput.getUploadResource() == null) {
-          importForm.warning("UIAttachMentForm.msg.file-not-found");
+          importForm.warning("UIAttactmentForm  .msg.file-not-found");
           return;
         }
         String fileName = uploadInput.getUploadResource().getFileName();

@@ -420,7 +420,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
   static public class ChangeAvatarActionListener extends BaseEventListener<UISettingForm> {
     public void onEvent(Event<UISettingForm> event, UISettingForm settingForm, String objectId) throws Exception {
       UIPopupContainer watchContainer = settingForm.getAncestorOfType(UIPopupContainer.class);
-      UIAttachMentForm attachMentForm = openPopup(watchContainer, UIAttachMentForm.class, 550, 0);
+      UIAttactmentForm attachMentForm = openPopup(watchContainer, UIAttactmentForm.class, 550, 0);
       attachMentForm.setIsChangeAvatar(true);
       attachMentForm.setNumberUpload(1);
     }

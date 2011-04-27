@@ -39,10 +39,10 @@
         <read-only>false</read-only>
       </preference>
       <preference>
-			  <name>uploadFileSizeLimitMB</name>
-			  <value>10</value>
-			  <read-only>false</read-only>
-			</preference>
+        <name>uploadFileSizeLimitMB</name>
+        <value>10</value>
+        <read-only>false</read-only>
+      </preference>
     </portlet-preferences>      
   </portlet>  
 </portlet-app>

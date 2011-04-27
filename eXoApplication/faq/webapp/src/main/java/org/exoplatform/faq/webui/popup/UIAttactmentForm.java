@@ -45,13 +45,13 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class, 
-    template = "app:/templates/faq/webui/popup/UIAttachMentForm.gtmpl", 
+    template = "app:/templates/faq/webui/popup/UIAttactmentForm.gtmpl", 
     events = {
-        @EventConfig(listeners = UIAttachMentForm.SaveActionListener.class), 
-        @EventConfig(listeners = UIAttachMentForm.CancelActionListener.class) 
+        @EventConfig(listeners = UIAttactmentForm.SaveActionListener.class), 
+        @EventConfig(listeners = UIAttactmentForm.CancelActionListener.class) 
     }
 )
-public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
+public class UIAttactmentForm extends BaseUIForm implements UIPopupComponent {
   private int                 numberUpload   = 5;
 
   private static final String FILE_UPLOAD    = "FileUpload";
@@ -79,13 +79,13 @@ public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
   public void deActivate() throws Exception {
   }
 
-  public UIAttachMentForm() {
+  public UIAttactmentForm() {
     this.setRendered(false);
   }
 
-  static public class SaveActionListener extends EventListener<UIAttachMentForm> {
-    public void execute(Event<UIAttachMentForm> event) throws Exception {
-      UIAttachMentForm attachMentForm = event.getSource();
+  static public class SaveActionListener extends EventListener<UIAttactmentForm> {
+    public void execute(Event<UIAttactmentForm> event) throws Exception {
+      UIAttactmentForm attachMentForm = event.getSource();
       UploadService uploadService = attachMentForm.getApplicationComponent(UploadService.class);
 
       List<FileAttachment> listFileAttachment = new ArrayList<FileAttachment>();
@@ -109,7 +109,7 @@ public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
           fileAttachment.setNodeName(IdGenerator.generate() + uploadResource.getFileName().substring(uploadResource.getFileName().lastIndexOf(".")));
           listFileAttachment.add(fileAttachment);
         } else {
-          attachMentForm.warning("UIAttachMentForm.msg.size-of-file-is-0", new String[] { uploadResource.getFileName() });
+          attachMentForm.warning("UIAttactmentForm  .msg.size-of-file-is-0", new String[] { uploadResource.getFileName() });
           return;
         }
         // remove temp file in upload service and server
@@ -117,14 +117,14 @@ public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
       }
 
       if (listFileAttachment.isEmpty()) {
-        attachMentForm.warning("UIAttachMentForm.msg.file-not-found");
+        attachMentForm.warning("UIAttactmentForm  .msg.file-not-found");
         return;
       }
 
       UIAnswersPortlet portlet = attachMentForm.getAncestorOfType(UIAnswersPortlet.class);
       if (attachMentForm.isChangeAvatar) {
         if (listFileAttachment.get(0).getMimeType().indexOf("image") < 0) {
-          attachMentForm.warning("UIAttachMentForm.msg.fileIsNotImage");
+          attachMentForm.warning("UIAttactmentForm  .msg.fileIsNotImage");
           return;
         }
         String currentUser = FAQUtils.getCurrentUser();
@@ -143,9 +143,9 @@ public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
     }
   }
 
-  static public class CancelActionListener extends EventListener<UIAttachMentForm> {
-    public void execute(Event<UIAttachMentForm> event) throws Exception {
-      UIAttachMentForm attachMentForm = event.getSource();
+  static public class CancelActionListener extends EventListener<UIAttactmentForm> {
+    public void execute(Event<UIAttactmentForm> event) throws Exception {
+      UIAttactmentForm attachMentForm = event.getSource();
       // remove temp file in upload service and server
       UploadService uploadService = attachMentForm.getApplicationComponent(UploadService.class);
       UIFormUploadInput uploadInput;
