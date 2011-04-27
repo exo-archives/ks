@@ -75,7 +75,9 @@ public class FAQUtils {
 
   public static String DISPLAYBOTH      = "both";
 
-  public static String UPLOAD_FILE_SIZE = "uploadFileSizeLimitMB";
+  public static String UPLOAD_FILE_SIZE   = "uploadFileSizeLimitMB";
+
+  public static String UPLOAD_AVATAR_SIZE = "uploadAvatarSizeLimitMB";
 
   static private Log   log              = ExoLogger.getLogger(FAQUtils.class);
 
@@ -543,14 +545,17 @@ public class FAQUtils {
     return link;
   }
 
-  public static int getLimitUploadSize() {
+  public static int getLimitUploadSize(boolean isAvatar) {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    int limitMB;
+    int limitMB = -1;
     try {
-      limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, "").trim());
+      if (isAvatar) {
+        limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_AVATAR_SIZE, "").trim());
+      } else {
+        limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, "").trim());
+      }
     } catch (Exception e) {
-      limitMB = -1;
     }
     return limitMB;
   }

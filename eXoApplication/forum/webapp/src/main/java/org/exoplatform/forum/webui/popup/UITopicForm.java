@@ -744,7 +744,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
       UIAttachFileForm attachFileForm = uiForm.openPopup(popupContainer, UIAttachFileForm.class, 500, 0);
       attachFileForm.updateIsTopicForm(true);
-      attachFileForm.setMaxField(5);
+      attachFileForm.setMaxField(5, false);
     }
   }
 

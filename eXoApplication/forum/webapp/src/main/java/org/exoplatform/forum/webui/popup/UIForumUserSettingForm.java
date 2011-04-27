@@ -503,7 +503,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       UIAttachFileForm attachFileForm = uiForm.openPopup(popupContainer, UIAttachFileForm.class, 500, 0);
       attachFileForm.updateIsTopicForm(false);
       attachFileForm.setIsChangeAvatar(true);
-      attachFileForm.setMaxField(1);
+      attachFileForm.setMaxField(1, true);
     }
   }
 

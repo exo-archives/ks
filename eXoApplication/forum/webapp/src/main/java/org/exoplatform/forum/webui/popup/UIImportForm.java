@@ -52,11 +52,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
   }
 
   public UIImportForm() {
-    int sizeLimit = ForumUtils.getLimitUploadSize();
-    if (sizeLimit >= 0)
-      this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD, sizeLimit));
-    else
-      this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD));
+    this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD, true));
     categoryPath = null;
   }
 
@@ -159,7 +155,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
       }
       // remove temp file in upload service and server
       UploadService uploadService = importForm.getApplicationComponent(UploadService.class);
-      uploadService.removeUpload(uploadInput.getUploadId());
+      uploadService.removeUploadResource(uploadInput.getUploadId());
       if (!isUdateForm) {
         popupAction.deActivate();
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
@@ -181,7 +177,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
       // remove temp file in upload service and server
       UIFormUploadInput uploadInput = (UIFormUploadInput) importForm.getChildById(importForm.FILE_UPLOAD);
       UploadService uploadService = importForm.getApplicationComponent(UploadService.class);
-      uploadService.removeUpload(uploadInput.getUploadId());
+      uploadService.removeUploadResource(uploadInput.getUploadId());
 
       UIForumPortlet portlet = importForm.getAncestorOfType(UIForumPortlet.class);
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);

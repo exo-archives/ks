@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.portlet.PortletPreferences;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -472,6 +473,18 @@ public class Utils {
     UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class);
     pageVersionsList.setVersionsList(versionsList);
     wikiPortlet.changeMode(WikiMode.SHOWHISTORY);
+  }
+  
+  public static int getLimitUploadSize() {
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+    int limitMB = -1;
+    try {
+      limitMB = Integer.parseInt(portletPref.getValue("uploadFileSizeLimitMB", "").trim());
+    } catch (Exception e) {
+      limitMB = 10;
+    }
+    return limitMB;
   }
   
 }

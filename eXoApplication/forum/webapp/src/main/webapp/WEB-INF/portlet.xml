@@ -76,6 +76,12 @@
 			</preference>
 
 			<preference>
+			  <name>uploadAvatarSizeLimitMB</name>
+			  <value>1</value>
+			  <read-only>false</read-only>
+			</preference>
+
+			<preference>
 			  <name>isShowForumJump</name>
 			  <value>true</value><!--true/false -->
 			  <read-only>false</read-only>

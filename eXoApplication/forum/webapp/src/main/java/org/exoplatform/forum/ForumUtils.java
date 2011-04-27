@@ -68,7 +68,9 @@ public class ForumUtils {
 
   public static final String FIELD_SEARCHFORUM_LABEL = "SearchForum".intern();
 
-  public static String       UPLOAD_FILE_SIZE        = "uploadFileSizeLimitMB".intern();
+  public static final String UPLOAD_FILE_SIZE        = "uploadFileSizeLimitMB".intern();
+
+  public static final String UPLOAD_AVATAR_SIZE      = "uploadAvatarSizeLimitMB".intern();
 
   public static final String SEARCHFORM_ID           = "SearchForm".intern();
 
@@ -554,14 +556,17 @@ public class ForumUtils {
     return list;
   }
 
-  public static int getLimitUploadSize() {
+  public static int getLimitUploadSize(boolean isAvatar) {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    int limitMB;
+    int limitMB = -1;
     try {
-      limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, EMPTY_STR).trim());
+      if (isAvatar) {
+        limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_AVATAR_SIZE, EMPTY_STR).trim());
+      } else {
+        limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, EMPTY_STR).trim());
+      }
     } catch (Exception e) {
-      limitMB = -1;
     }
     return limitMB;
   }

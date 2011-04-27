@@ -685,6 +685,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       UIQuestionForm questionForm = event.getSource();
       UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class);
       UIAttachMentForm attachMentForm = questionForm.openPopup(popupContainer, UIAttachMentForm.class, 550, 0);
+      attachMentForm.setIsChangeAvatar(false);
       attachMentForm.setNumberUpload(5);
     }
   }

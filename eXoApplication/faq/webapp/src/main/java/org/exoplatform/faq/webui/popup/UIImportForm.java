@@ -42,11 +42,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
   }
 
   public UIImportForm() {
-    int sizeLimit = FAQUtils.getLimitUploadSize();
-    if (sizeLimit >= 0)
-      this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD, sizeLimit));
-    else
-      this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD));
+    this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD, true));
   }
 
   public void setCategoryId(String categoryId) {
@@ -96,7 +92,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
         }
 
         UploadService uploadService = importForm.getApplicationComponent(UploadService.class);
-        uploadService.removeUpload(uploadInput.getUploadId());
+        uploadService.removeUploadResource(uploadInput.getUploadId());
       } catch (Exception e) {
         FAQUtils.findCateExist(service, portlet.findFirstComponentOfType(UIAnswersContainer.class));
         importForm.warning("UIQuestions.msg.admin-moderator-removed-action");

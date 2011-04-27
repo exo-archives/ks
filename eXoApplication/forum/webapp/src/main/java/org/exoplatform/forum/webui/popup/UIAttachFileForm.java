@@ -66,16 +66,16 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
     setMultiPart(true);
   }
 
-  public void setMaxField(int maxField) {
+  public void setMaxField(int maxField, boolean isAvatar) {
     this.maxField = maxField;
-    int sizeLimit = ForumUtils.getLimitUploadSize();
+    int sizeLimit = ForumUtils.getLimitUploadSize(isAvatar);
     UIFormUploadInput uiInput;
     int i = 0;
     while (i++ < maxField) {
       if (sizeLimit >= 0)
-        uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i), sizeLimit);
+        uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i), sizeLimit, true);
       else
-        uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i));
+        uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i), true);
       addUIFormInput(uiInput);
     }
   }
@@ -124,7 +124,7 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
           uiForm.warning("UIAttachFileForm.msg.upload-error");
           return;
         }
-        uploadService.removeUpload(input.getUploadId());
+        uploadService.removeUploadResource(input.getUploadId());
       }
       if (files.isEmpty()) {
         uiForm.warning("UIAttachFileForm.msg.upload-not-save");
@@ -141,10 +141,6 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
       } else if (uiForm.isChangeAvatar_) {
         if (files.get(0).getMimeType().indexOf("image") < 0) {
           uiForm.warning("UIAttachFileForm.msg.fileIsNotImage");
-          return;
-        }
-        if (files.get(0).getSize() >= (2 * 1048576)) {
-          uiForm.warning("UIAttachFileForm.msg.avatar-upload-long");
           return;
         }
         ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
@@ -171,7 +167,7 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
       UIFormUploadInput input;
       while (i++ < uiForm.maxField) {
         input = (UIFormUploadInput) uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
-        uploadService.removeUpload(input.getUploadId());
+        uploadService.removeUploadResource(input.getUploadId());
       }
       uiForm.cancelChildPopupAction();
     }

@@ -512,7 +512,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
       UIAttachFileForm attachFileForm = uiForm.openPopup(popupContainer, UIAttachFileForm.class, 500, 0);
       attachFileForm.updateIsTopicForm(false);
-      attachFileForm.setMaxField(5);
+      attachFileForm.setMaxField(5, false);
     }
   }
 

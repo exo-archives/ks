@@ -64,12 +64,12 @@ public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
 
   public void setNumberUpload(int number) {
     numberUpload = number;
-    int sizeLimit = FAQUtils.getLimitUploadSize();
+    int sizeLimit = FAQUtils.getLimitUploadSize(isChangeAvatar);
     for (int i = 0; i < numberUpload; i++) {
       if (sizeLimit >= 0)
-        addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i, sizeLimit));
+        addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i, sizeLimit, true));
       else
-        addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i));
+        addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i, true));
     }
   }
 
@@ -113,7 +113,7 @@ public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
           return;
         }
         // remove temp file in upload service and server
-        uploadService.removeUpload(uploadInput.getUploadId());
+        uploadService.removeUploadResource(uploadInput.getUploadId());
       }
 
       if (listFileAttachment.isEmpty()) {
@@ -125,10 +125,6 @@ public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
       if (attachMentForm.isChangeAvatar) {
         if (listFileAttachment.get(0).getMimeType().indexOf("image") < 0) {
           attachMentForm.warning("UIAttachMentForm.msg.fileIsNotImage");
-          return;
-        }
-        if (listFileAttachment.get(0).getSize() >= (2 * 1048576)) {
-          attachMentForm.warning("UIAttachMentForm.msg.avatar-upload-long");
           return;
         }
         String currentUser = FAQUtils.getCurrentUser();
@@ -156,7 +152,7 @@ public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
       for (int i = 0; i < attachMentForm.numberUpload; i++) {
         try {
           uploadInput = attachMentForm.getChildById(FILE_UPLOAD + i);
-          uploadService.removeUpload(uploadInput.getUploadId());
+          uploadService.removeUploadResource(uploadInput.getUploadId());
         } catch (Exception e) {
         }
       }
