@@ -136,6 +136,7 @@ UIWikiPortlet.prototype.renderBreadcrumbs = function(uicomponentid, isLink){
     itemArray.shift();
     itemArray.shift();
     var lastItem = itemArray.pop();
+    if (lastItem == undefined) return;
     var popupItems = new Array();     
     var firstTime=true;
     while (breadcrumb.offsetWidth > shortenFractor*breadcrumb.parentNode.offsetWidth) {
