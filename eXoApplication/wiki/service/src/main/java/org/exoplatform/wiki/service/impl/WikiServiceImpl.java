@@ -40,6 +40,7 @@ import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.GroupWiki;
+import org.exoplatform.wiki.mow.core.api.wiki.HelpPage;
 import org.exoplatform.wiki.mow.core.api.wiki.LinkEntry;
 import org.exoplatform.wiki.mow.core.api.wiki.LinkRegistry;
 import org.exoplatform.wiki.mow.core.api.wiki.MovedMixin;
@@ -772,7 +773,7 @@ public class WikiServiceImpl implements WikiService {
         ArrayList<String> syntaxValues = syntaxhelpParam.getValues();
         String shortFile = syntaxValues.get(0);
         String fullFile = syntaxValues.get(1);
-        PageImpl syntaxPage = addSyntaxPage(wStore, helpPage, syntaxName, shortFile, " Short help Page");
+        HelpPage syntaxPage = addSyntaxPage(wStore, helpPage, syntaxName, shortFile, " Short help Page");
         addSyntaxPage(wStore, syntaxPage, syntaxName, fullFile, " Full help Page");
       } catch (Exception e) {
         log.error("Can not create Help page", e);
@@ -805,7 +806,7 @@ public class WikiServiceImpl implements WikiService {
     return null;
   }
 
-  private PageImpl addSyntaxPage(WikiStoreImpl wStore,
+  private HelpPage addSyntaxPage(WikiStoreImpl wStore,
                                  PageImpl parentPage,
                                  String name,
                                  String path,
@@ -820,7 +821,7 @@ public class WikiServiceImpl implements WikiService {
       stringContent.append(tempLine + "\n");
     }
 
-    PageImpl syntaxPage = wStore.createPage();
+    HelpPage syntaxPage = wStore.createHelpPage();
     String realName = name.replace("/", "");
     syntaxPage.setName(realName + type);
     parentPage.addPublicPage(syntaxPage);

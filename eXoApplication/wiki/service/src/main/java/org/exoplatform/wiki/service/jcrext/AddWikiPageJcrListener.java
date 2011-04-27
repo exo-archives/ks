@@ -105,9 +105,8 @@ public class AddWikiPageJcrListener implements Action {
     }
     Node pageNode = currentNode.getParent(); // expect wiki node is parent of content node.
     
-    Node ancestor = pageNode.getParent();
-    if (ancestor != null && Definition.HELP_PAGES.equals(ancestor.getParent())) {
-      // filter events on help pages.
+    if (pageNode.isNodeType(WikiNodeType.WIKI_HELP_PAGE) || pageNode.isNodeType(WikiNodeType.WIKI_TEMPLATE)) {
+      // filter events on help or template page.
       return false;
     }
     

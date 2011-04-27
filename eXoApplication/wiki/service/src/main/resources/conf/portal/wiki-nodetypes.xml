@@ -468,6 +468,12 @@
     <childNodeDefinitions/>
   </nodeType>
   
+  <nodeType name="wiki:helppage" isMixin="false" hasOrderableChildNodes="false">
+    <supertypes>
+      <supertype>wiki:page</supertype>      
+    </supertypes>
+  </nodeType>
+  
   <nodeType name="wiki:watched" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
     <propertyDefinitions>
       <propertyDefinition name="watcher" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">

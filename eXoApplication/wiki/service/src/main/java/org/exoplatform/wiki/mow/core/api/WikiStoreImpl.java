@@ -30,6 +30,7 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiStore;
 import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.wiki.GroupWikiContainer;
+import org.exoplatform.wiki.mow.core.api.wiki.HelpPage;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PortalWikiContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.UserWikiContainer;
@@ -87,10 +88,13 @@ public abstract class WikiStoreImpl implements WikiStore {
   @Create
   public abstract PageImpl createPage();
   
-  public PageImpl getHelpPagesContainer() {
-    PageImpl page = getHelpPageByChromattic();
+  @Create
+  public abstract HelpPage createHelpPage();
+  
+  public HelpPage getHelpPagesContainer() {
+    HelpPage page = getHelpPageByChromattic();
     if (page == null) {
-      page = createPage();
+      page = createHelpPage();
       setHelpPageByChromattic(page);
     }
     return page;
@@ -138,9 +142,9 @@ public abstract class WikiStoreImpl implements WikiStore {
   @OneToOne
   @Owner
   @MappedBy(WikiNodeType.Definition.HELP_PAGES)
-  protected abstract PageImpl getHelpPageByChromattic();
+  protected abstract HelpPage getHelpPageByChromattic();
   
-  protected abstract void setHelpPageByChromattic(PageImpl page);
+  protected abstract void setHelpPageByChromattic(HelpPage page);
   
   @OneToOne
   @Owner

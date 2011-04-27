@@ -77,7 +77,9 @@ public interface WikiNodeType {
   public final static String WIKI_TEMPLATE           = "wiki:template";
 
   public final static String WIKI_WATCHED            = "wiki:watched";
-
+  
+  public final static String WIKI_HELP_PAGE            = "wiki:helppage";
+  
   public interface Definition {
 
     public final static String WIKI_APPLICATION           = "eXoWiki";

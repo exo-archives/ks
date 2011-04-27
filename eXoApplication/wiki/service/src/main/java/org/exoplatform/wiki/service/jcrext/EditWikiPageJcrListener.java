@@ -105,9 +105,8 @@ public class EditWikiPageJcrListener implements Action {
       return false;
     }
     
-    Node ancestor = pageNode.getParent();
-    if (ancestor != null && Definition.HELP_PAGES.equals(ancestor.getParent())) {
-      // filter events on help pages.
+    if (pageNode.isNodeType(WikiNodeType.WIKI_HELP_PAGE) || pageNode.isNodeType(WikiNodeType.WIKI_TEMPLATE)) {
+      // filter events on help or template page.
       return false;
     }
     
@@ -117,7 +116,7 @@ public class EditWikiPageJcrListener implements Action {
     }
     
     if (log.isDebugEnabled()) {
-      log.debug(String.format("Executing listener [%s] on item [%s] for adding new page event!", toString(), currentProperty.getPath()));
+      log.debug(String.format("Executing listener [%s] on item [%s] for editing page event!", toString(), currentProperty.getPath()));
     }
     WikiService wikiService = (WikiService) container.getComponentInstanceOfType(WikiService.class);
     String pageJcrPath = pageNode.getPath();
