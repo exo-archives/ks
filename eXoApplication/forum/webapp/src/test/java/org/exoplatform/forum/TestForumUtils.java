@@ -181,7 +181,51 @@ public class TestForumUtils extends TestCase {
     voteRating = 4.75;
     assertEquals("[star, star, star, star, star, 4.7]", Arrays.asList(ForumUtils.getStarNumber(voteRating)).toString());
   }
-  
+
+  public void testGetCensoredKeyword() throws Exception {
+    // for keys null
+    String stringKey = null;
+    assertEquals(0, ForumUtils.getCensoredKeyword(stringKey).length);
+    // for keys is empty
+    stringKey = "";
+    assertEquals(0, ForumUtils.getCensoredKeyword(stringKey).length);
+
+    // for keys one value
+    stringKey = "key";
+    assertEquals("[key]", Arrays.asList(ForumUtils.getCensoredKeyword(stringKey)).toString());
+
+    // for keys one value and content some ',' and ';' and ' '
+    stringKey = " ,;   key word,,;";
+    assertEquals("[key word]", Arrays.asList(ForumUtils.getCensoredKeyword(stringKey)).toString());
+
+    // for keys one value and content some ' ' and ';'
+    stringKey = "    key key    ; ;";
+    assertEquals("[key key]", Arrays.asList(ForumUtils.getCensoredKeyword(stringKey)).toString());
+
+    // for keys more values and content ", " and " "
+    stringKey = "key 1, key 2    ";
+    assertEquals("[key 1, key 2]", Arrays.asList(ForumUtils.getCensoredKeyword(stringKey)).toString());
+
+    // for keys more values and content ", " and " ," and " "
+    stringKey = "key 1, key 2 ,        key 3";
+    assertEquals("[key 1, key 2, key 3]", Arrays.asList(ForumUtils.getCensoredKeyword(stringKey)).toString());
+
+    // for keys more values and content ", " and " ," and ",,"
+    stringKey = "key 1, key 2 ,key 3 ,,,,key 4";
+    assertEquals("[key 1, key 2, key 3, key 4]", Arrays.asList(ForumUtils.getCensoredKeyword(stringKey)).toString());
+
+    // for keys more values and content ", " and " ," and ",," and ", ,"
+    stringKey = "key 1, key 2 ,key 3 ,,, , , , , key 4, ";
+    assertEquals("[key 1, key 2, key 3, key 4]", Arrays.asList(ForumUtils.getCensoredKeyword(stringKey)).toString());
+
+    // for keys more values and content ", " and " ," and ",," and ", ," and ";"
+    stringKey = "key 1, key 2 ,key 3 ,,, , , , , key 4,;key 5;";
+    assertEquals("[key 1, key 2, key 3, key 4, key 5]", Arrays.asList(ForumUtils.getCensoredKeyword(stringKey)).toString());
+
+    stringKey = "key 1, key 2 ,key 3 ,;,,,,key 4;key 5;,, , ,";
+    assertEquals("[key 1, key 2, key 3, key 4, key 5]", Arrays.asList(ForumUtils.getCensoredKeyword(stringKey)).toString());
+  }
+
   public void testGetOrderBy() throws Exception {
     String param = "dateTime", strOrderBy = ForumUtils.EMPTY_STR;
     assertEquals("dateTime ascending",ForumUtils.getOrderBy(strOrderBy, param));

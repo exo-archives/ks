@@ -277,9 +277,19 @@ public class ForumUtils {
   
   public static String[] getCensoredKeyword(ForumService forumService) throws Exception {
     ForumAdministration forumAdministration = forumService.getForumAdministration();
-    String stringKey = forumAdministration.getCensoredKeyword();
-    if (!ForumUtils.isEmpty(stringKey)) {
-      stringKey = stringKey.toLowerCase().replaceAll(COMMA+" ", COMMA).replaceAll(" "+COMMA, COMMA).replaceAll(";", COMMA);
+    return getCensoredKeyword(forumAdministration.getCensoredKeyword());
+  }
+
+  public static String[] getCensoredKeyword(String stringKey) throws Exception {
+    if (!isEmpty(stringKey)) {
+      String str = EMPTY_STR;
+      while (!stringKey.equals(str)) {
+        str = stringKey;
+        stringKey = stringKey.toLowerCase().replaceAll(";", COMMA).replaceAll(COMMA + " ", COMMA).replaceAll(" " + COMMA, COMMA).replaceAll(COMMA + COMMA, COMMA);
+        if (stringKey.indexOf(COMMA) == 0) {
+          stringKey = stringKey.replaceFirst(COMMA, EMPTY_STR);
+        }
+      }
       return stringKey.trim().split(COMMA);
     }
     return new String[] {};
