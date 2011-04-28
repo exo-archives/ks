@@ -1,0 +1,560 @@
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAttachMentForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAttachMentForm.java	(revision 68796)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAttachMentForm.java	(working copy)
+@@ -20,7 +20,6 @@
+ import java.util.List;
+ 
+ import org.exoplatform.container.PortalContainer;
+-import org.exoplatform.download.DownloadService;
+ import org.exoplatform.faq.service.FAQService;
+ import org.exoplatform.faq.service.FileAttachment;
+ import org.exoplatform.faq.webui.FAQUtils;
+@@ -137,23 +136,17 @@
+           event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+           return ;
+       	}
+-      	FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+-      	//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+-      	service.saveUserAvatar(FAQUtils.getCurrentUser(), listFileAttachment.get(0));
+-      	String avatarUrl = FAQUtils.getFileSource(((FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class))
+-																																				.getUserAvatar(FAQUtils.getCurrentUser()), 
+-																									attachMentForm.getApplicationComponent(DownloadService.class)) ;
+-				if(avatarUrl == null || avatarUrl.trim().length() < 1)
+-					avatarUrl = "/faq/skin/DefaultSkin/webui/background/Avatar1.gif"; //TODO should to get from resource bundle
+-      	//sessionProvider.close();
+-      	UIWatchContainer watchContainer = attachMentForm.getAncestorOfType(UIWatchContainer.class);
+-      	UISettingForm settingForm = watchContainer.getChild(UISettingForm.class);
+-      	settingForm.setAvatarUrl(avatarUrl);
+-      	event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer);
+-      	
++      	String currentUser = FAQUtils.getCurrentUser();
++				FAQService service = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
++				service.saveUserAvatar(currentUser, listFileAttachment.get(0));
++				UIWatchContainer watchContainer = attachMentForm.getAncestorOfType(UIWatchContainer.class);
++				UISettingForm settingForm = watchContainer.getChild(UISettingForm.class);
++				settingForm.setAvatarUrl(FAQUtils.getUserAvatar(currentUser));
++				event.getRequestContext().addUIComponentToUpdateByAjax(settingForm);
+       	UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
+       	popupAction.deActivate() ;
+-      	event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
++      	event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer);
++//      	event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+       	return;
+       } else{
+         UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIViewUserProfile.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIViewUserProfile.java	(revision 68796)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIViewUserProfile.java	(working copy)
+@@ -76,21 +76,8 @@
+ 	}
+ 
+ 	@SuppressWarnings("unused")
+-	private String getAvatarUrl(CommonContact contact) throws Exception {
+-//	DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+-//	try {
+-//		ContactAttachment attachment = contact.getAttachment() ; 
+-//		InputStream input = attachment.getInputStream() ;
+-//		String fileName = attachment.getFileName() ;
+-//		return ForumSessionUtils.getFileSource(input, fileName, dservice);
+-//	} catch (NullPointerException e) {
+-//		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+-//	}
+-		if (contact.getAvatarUrl() == null || contact.getAvatarUrl().trim().length() < 1) {
+-			return "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
+-		} else {
+-			return contact.getAvatarUrl();
+-		}
++	private String getAvatarUrl(String userId) throws Exception {
++		return FAQUtils.getUserAvatar(userId);
+ 	}
+ 	
+ 	public void setUser(User userName, FAQService faqService) {
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIPrintAllQuestions.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIPrintAllQuestions.java	(revision 68796)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIPrintAllQuestions.java	(working copy)
+@@ -16,14 +16,10 @@
+  */
+ package org.exoplatform.faq.webui.popup;
+ 
+-import java.io.ByteArrayInputStream;
+-import java.io.InputStream;
+ import java.util.ArrayList;
+ import java.util.List;
+ 
+ import org.exoplatform.container.PortalContainer;
+-import org.exoplatform.download.DownloadService;
+-import org.exoplatform.download.InputStreamDownloadResource;
+ import org.exoplatform.faq.service.Answer;
+ import org.exoplatform.faq.service.Comment;
+ import org.exoplatform.faq.service.FAQService;
+@@ -77,19 +73,6 @@
+ 		return "" ;
+ 	}
+ 	
+-	@SuppressWarnings("unused")  
+-	private String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
+-		byte[] imageBytes = null;
+-		if (input != null) {
+-			imageBytes = new byte[input.available()];
+-			input.read(imageBytes);
+-			ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+-			InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
+-			dresource.setDownloadName(fileName);
+-			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+-		}
+-		return null;
+-	}
+ 
+ 	public String getRepository() throws Exception {
+ 		RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
+@@ -101,14 +84,8 @@
+ 		return pcontainer.getPortalContainerInfo().getContainerName() ;  
+ 	}
+ 	
+-	private String getAvatarUrl(String userId){
+-		try{
+-			String url = FAQUtils.getFileSource(faqService_.getUserAvatar(userId), null);
+-			if(FAQUtils.isFieldEmpty(url)) url = Utils.DEFAULT_AVATAR_URL;
+-			return url;
+-		} catch (Exception e){
+-		}
+-		return Utils.DEFAULT_AVATAR_URL;
++	private String getAvatarUrl(String userId) throws Exception{
++		return FAQUtils.getUserAvatar(userId);
+ 	}
+ 	
+ 	private String convertSize(long size){
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UISettingForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UISettingForm.java	(revision 68796)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UISettingForm.java	(working copy)
+@@ -22,8 +22,6 @@
+ 
+ import javax.portlet.PortletPreferences;
+ 
+-import org.exoplatform.container.PortalContainer;
+-import org.exoplatform.download.DownloadService;
+ import org.exoplatform.faq.service.Cate;
+ import org.exoplatform.faq.service.FAQService;
+ import org.exoplatform.faq.service.FAQServiceUtils;
+@@ -265,11 +263,7 @@
+ 			
+ 			addUIFormInput((new UIFormCheckBoxInput<Boolean>(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
+ 			
+-			avatarUrl = FAQUtils.getFileSource(((FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class))
+-																													.getUserAvatar(FAQUtils.getCurrentUser()), getApplicationComponent(DownloadService.class)) ;
+-			
+-			if(avatarUrl == null || avatarUrl.trim().length() < 1)
+-				avatarUrl = Utils.DEFAULT_AVATAR_URL;
++			setAvatarUrl(FAQUtils.getUserAvatar(FAQUtils.getCurrentUser()));
+ 		}
+ 	}
+ 	
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/FAQUtils.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/FAQUtils.java	(revision 68796)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/FAQUtils.java	(working copy)
+@@ -16,8 +16,6 @@
+  */
+ package org.exoplatform.faq.webui;
+ 
+-import java.io.ByteArrayInputStream;
+-import java.io.InputStream;
+ import java.text.DateFormat;
+ import java.text.Format;
+ import java.text.SimpleDateFormat;
+@@ -39,7 +37,6 @@
+ import org.exoplatform.container.ExoContainerContext;
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.download.DownloadService;
+-import org.exoplatform.download.InputStreamDownloadResource;
+ import org.exoplatform.faq.service.FAQService;
+ import org.exoplatform.faq.service.FAQSetting;
+ import org.exoplatform.faq.service.FileAttachment;
+@@ -48,6 +45,7 @@
+ import org.exoplatform.portal.application.PortalRequestContext;
+ import org.exoplatform.portal.webui.util.SessionProviderFactory;
+ import org.exoplatform.portal.webui.util.Util;
++import org.exoplatform.services.jcr.RepositoryService;
+ import org.exoplatform.services.jcr.ext.common.SessionProvider;
+ import org.exoplatform.services.organization.Group;
+ import org.exoplatform.services.organization.OrganizationService;
+@@ -210,11 +208,11 @@
+ 		if(profile.getAttribute("user.business-info.telecom.mobile.number") != null)contact.setMobile(profile.getAttribute("user.business-info.telecom.mobile.number"));
+ 		if(profile.getAttribute("user.business-info.telecom.telephone.number") != null)contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
+ 		if(profile.getAttribute("user.home-info.online.uri") != null)contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
+-		FileAttachment fileAttachment = faqService.getUserAvatar(userId);
+-		if(fileAttachment == null || fileAttachment.getSize() == 0){
+-			if(profile.getAttribute("user.other-info.avatar.url") != null)contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
++		String urlAvt = getUserAvatar(userId);
++		if (urlAvt.indexOf(org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL) >= 0 && profile.getAttribute("user.other-info.avatar.url") != null) {
++				contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
+ 		} else {
+-			contact.setAvatarUrl(getFileSource(fileAttachment, dservice));
++			contact.setAvatarUrl(urlAvt);
+ 		}
+ 	}
+   
+@@ -566,33 +564,31 @@
+ 		return getFormatDate(DateFormat.SHORT, myDate);
+ 	}
+ 	
+-	private static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
+-		byte[] imageBytes = null;
+-		if (input != null) {
+-			imageBytes = new byte[input.available()];
+-			input.read(imageBytes);
+-			ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+-			InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
+-			dresource.setDownloadName(fileName);
+-			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+-		}
+-		return null;
+-	}
++  public static String getImageUrl(String imagePath) throws Exception {
++    StringBuilder url = new StringBuilder() ;
++    PortalContainer pcontainer =  PortalContainer.getInstance() ;
++    try {
++      url.append("/").append(pcontainer.getPortalContainerInfo().getContainerName());
++    } catch (Exception e) {
++      url.append("/portal");
++    }
++    RepositoryService rService = (RepositoryService)pcontainer.getComponentInstanceOfType(RepositoryService.class) ;
++    url.append("/rest/jcr/").append(rService.getCurrentRepository().getConfiguration().getName()).append(imagePath);
++    return url.toString();
++  }
+ 	
+-	public static String getFileSource(FileAttachment attachment, DownloadService dservice){
+-		if(dservice == null)dservice = (DownloadService)PortalContainer.getComponent(DownloadService.class) ;
+-		try {
+-			InputStream input = attachment.getInputStream() ;
+-			String fileName = attachment.getName() ;
+-			if(fileName == null || fileName.trim().length() < 1)
+-				fileName = "avatar." + attachment.getMimeType();
+-			//String fileName = attachment.getNodeName() ;
+-			return getFileSource(input, fileName, dservice);
+-		} catch (Exception e) {			
+-		}
+-		return null;
+-	}
+-	
++  public static String getUserAvatar(String userName) throws Exception {
++    String url = "";
++    try {
++      FAQService service = getFAQService();
++      FileAttachment avatar = service.getUserAvatar(userName);
++      if (avatar != null) {
++        url = getImageUrl(avatar.getPath()) + "?size=" + avatar.getSize();
++      }
++    } catch (Exception e) {}
++    return (isFieldEmpty(url)) ? org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL : url;
++  }
++  
+ 	public static String getLink(String link, String componentId, String componentIdhasAction, String action, String actionRep, String objectId) {
+ 		PortalRequestContext portalContext = Util.getPortalRequestContext();
+ 		String url = portalContext.getRequest().getRequestURL().toString();
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java	(revision 68796)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java	(working copy)
+@@ -397,14 +397,8 @@
+ 	}
+ 
+ 	
+-	private String getAvatarUrl(String userId){
+-		try{
+-			String url = FAQUtils.getFileSource(faqService_.getUserAvatar(userId), null);
+-			if(FAQUtils.isFieldEmpty(url)) url = Utils.DEFAULT_AVATAR_URL;
+-			return url;
+-		} catch (Exception e){
+-		}
+-		return Utils.DEFAULT_AVATAR_URL;
++	private String getAvatarUrl(String userId) throws Exception {
++		return FAQUtils.getUserAvatar(userId);
+ 	}
+ 
+ 	public String getCategoryId(){
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIViewUserProfile.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIViewUserProfile.gtmpl	(revision 68796)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIViewUserProfile.gtmpl	(working copy)
+@@ -51,7 +51,7 @@
+ 						<td class="UserContainer">
+ 							<div class="UserContent">
+ 								<%	
+-									avatarUrl = uiform.getAvatarUrl(contact) ;
++									avatarUrl = uiform.getAvatarUrl(userName) ;
+ 								%>
+ 								<img id="ImgAvatar" src="$avatarUrl" class="Img" onload="eXo.faq.UIAnswersPortlet.reSizeAvatar(this);" alt=""/>
+ 								<div class="Rank"><%=user.getFullName();%></div>
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java	(revision 68797)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java	(working copy)
+@@ -68,7 +68,6 @@
+ import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
+ import org.exoplatform.ks.common.bbcode.BBCode;
+ import org.exoplatform.ks.rss.RSS;
+-import org.exoplatform.services.jcr.RepositoryService;
+ import org.exoplatform.web.application.ApplicationMessage;
+ import org.exoplatform.web.application.RequestContext;
+ import org.exoplatform.webui.application.WebuiRequestContext;
+@@ -523,15 +522,6 @@
+ 		return true;
+ 	}
+ 	
+-	public String getPortalName() {
+-    PortalContainer pcontainer =  PortalContainer.getInstance() ;
+-    return pcontainer.getPortalContainerInfo().getContainerName() ;  
+-  }
+-  public String getRepository() throws Exception {
+-    RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
+-    return rService.getCurrentRepository().getConfiguration().getName() ;
+-  }
+-
+   private String getFileSource(ForumAttachment attachment) throws Exception {
+ 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+ 		try {
+@@ -558,9 +548,8 @@
+ 		return contact ;
+ 	}
+ 	
+-	private String getAvatarUrl(ForumContact contact, String userId) throws Exception {
+-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+-		return ForumSessionUtils.getUserAvatarURL(userId, this.forumService, dservice);
++	private String getAvatarUrl(String userId) throws Exception {
++		return ForumSessionUtils.getUserAvatarURL(userId, forumService);
+ 	}
+ 
+ 	private void initPage() throws Exception {
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumUserSettingForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumUserSettingForm.java	(revision 68796)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumUserSettingForm.java	(working copy)
+@@ -25,7 +25,6 @@
+ import java.util.ResourceBundle;
+ 
+ import org.exoplatform.container.PortalContainer;
+-import org.exoplatform.download.DownloadService;
+ import org.exoplatform.forum.ForumSessionUtils;
+ import org.exoplatform.forum.ForumTransformHTML;
+ import org.exoplatform.forum.ForumUtils;
+@@ -131,7 +130,6 @@
+ 	private List<Watch> listWatches = new ArrayList<Watch>();
+ 	private JCRPageList pageList ;
+ 	UIForumPageIterator pageIterator ;
+-	private final String defaultAvatar = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+ 	
+ 	public UIForumUserSettingForm() throws Exception {
+ 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+@@ -376,16 +374,8 @@
+ 	}
+ 	
+ 	@SuppressWarnings("unused")
+-  private String getAvatarUrl(){
+-		String url = defaultAvatar;
+-		try {
+-			DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+-			url = ForumSessionUtils.getUserAvatarURL(ForumSessionUtils.getCurrentUser(), this.forumService, dservice);
+-		} catch (Exception e) {
+-			url = defaultAvatar;
+-		}
+-		if(url == null || url.trim().length() < 1) url = defaultAvatar;
+-		return url;
++  private String getAvatarUrl() throws Exception{
++		return ForumSessionUtils.getUserAvatarURL(userProfile.getUserId(), forumService);
+ 	}
+ 	
+ 	public UIFormSelectBoxForum getUIFormSelectBoxForum(String name) {
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewUserProfile.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewUserProfile.java	(revision 68796)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewUserProfile.java	(working copy)
+@@ -17,7 +17,6 @@
+ package org.exoplatform.forum.webui.popup;
+ 
+ import org.exoplatform.container.PortalContainer;
+-import org.exoplatform.download.DownloadService;
+ import org.exoplatform.forum.ForumSessionUtils;
+ import org.exoplatform.forum.service.ForumService;
+ import org.exoplatform.forum.service.UserProfile;
+@@ -105,10 +104,8 @@
+ 		return contact ;
+ 	}
+ 	
+-	private String getAvatarUrl(ForumContact contact) throws Exception {
+-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+-		String url = ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService, dservice);
+-		return url;
++	private String getAvatarUrl() throws Exception {
++		return ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService);
+ 	}
+ 	
+ 	private String[] getLabelProfile() {
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewTopic.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewTopic.java	(revision 68797)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewTopic.java	(working copy)
+@@ -235,8 +235,7 @@
+ 	
+ 	@SuppressWarnings("unused")
+ 	private String getAvatarUrl(String userId) throws Exception {
+-		String url = ForumSessionUtils.getUserAvatarURL(userId, forumService, getApplicationComponent(DownloadService.class));
+-		return url;
++		return ForumSessionUtils.getUserAvatarURL(userId, forumService);
+ 	}
+ 	@SuppressWarnings("unused")
+ 	private boolean isOnline(String userId) throws Exception {
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModeratorManagementForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModeratorManagementForm.java	(revision 68796)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModeratorManagementForm.java	(working copy)
+@@ -536,8 +536,8 @@
+ 		return this.forumLinks ;
+ 	}
+ 	
+-	public void setUserAvatarURL(String userId){
+-		userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, forumService, getApplicationComponent(DownloadService.class));
++	public void setUserAvatarURL(String userId) throws Exception{
++		userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, forumService);
+ 	}
+ 	
+ 	private void searchUserProfileByKey(String keyword) throws Exception {
+@@ -839,13 +839,13 @@
+ 	static	public class SetDeaultAvatarActionListener extends EventListener<UIModeratorManagementForm> {
+ 		public void execute(Event<UIModeratorManagementForm> event) throws Exception {
+ 			UIModeratorManagementForm uiForm = event.getSource() ;
+-			if(uiForm.userAvartarUrl.equals("/forum/skin/DefaultSkin/webui/background/Avatar1.gif")) return;
++			if(uiForm.userAvartarUrl.equals(ForumSessionUtils.DEFAULT_AVATAR)) return;
+ 			String userId = ((UIFormStringInput)uiForm.findComponentById(FIELD_USERID_INPUT)).getValue();
+ 			try {
+ 				uiForm.forumService.setDefaultAvatar(userId);
+ 			} catch (Exception e) {
+ 			}
+-			uiForm.userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, uiForm.forumService, uiForm.getApplicationComponent(DownloadService.class));
++			uiForm.userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, uiForm.forumService);
+ 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+ 		}
+ 	}
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/ForumSessionUtils.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/ForumSessionUtils.java	(revision 68796)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/ForumSessionUtils.java	(working copy)
+@@ -31,6 +31,7 @@
+ import org.exoplatform.forum.service.user.ForumContact;
+ import org.exoplatform.portal.application.PortalRequestContext;
+ import org.exoplatform.portal.webui.util.Util;
++import org.exoplatform.services.jcr.RepositoryService;
+ import org.exoplatform.services.organization.Membership;
+ import org.exoplatform.services.organization.OrganizationService;
+ import org.exoplatform.services.organization.User;
+@@ -43,7 +44,7 @@
+  */
+ 
+ public class ForumSessionUtils {
+-	
++	public final static String DEFAULT_AVATAR = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif"; 
+ 	static public String getCurrentUser() throws Exception {
+ 		return Util.getPortalRequestContext().getRemoteUser();
+ 	}
+@@ -81,18 +82,31 @@
+ 		return false;
+ 	}
+ 	
+-	public static String getUserAvatarURL(String userName, ForumService forumService, DownloadService dservice){
+-		String url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
++	public static String getImageUrl(String imagePath) throws Exception {
++  	StringBuilder url = new StringBuilder() ;
++  	PortalContainer pcontainer =  PortalContainer.getInstance() ;
++    try {
++    	url.append("/").append(pcontainer.getPortalContainerInfo().getContainerName());
++    } catch (Exception e) {
++    	return "portal";
++    }
++    RepositoryService rService = (RepositoryService)pcontainer.getComponentInstanceOfType(RepositoryService.class) ;
++    url.append("/rest/jcr/").append(rService.getCurrentRepository().getConfiguration().getName()).append(imagePath);
++    return url.toString();
++  }
++	
++	public static String getUserAvatarURL(String userName, ForumService forumService) throws Exception{
++		String url = null;
+ 		try{
+ 			ForumAttachment attachment = forumService.getUserAvatar(userName);
+-			url = ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
+-			if(url == null || url.trim().length() < 1){
+-				ForumContact contact = getPersonalContact(userName) ;
+-				if(contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0){
+-					url = contact.getAvatarUrl();
+-				}
+-			}
+-		}catch (Exception e){
++			url = getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
++		}catch (Exception e){}
++    if(url == null || url.trim().length() < 1){
++    	ForumContact contact = getPersonalContact(userName);
++	    if (contact != null && contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0) {
++	      url = contact.getAvatarUrl();
++	    }
++		  url = (url == null || url.trim().length() < 1)?DEFAULT_AVATAR:url;
+ 		}
+ 		return url;
+ 	}
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicDetail.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicDetail.gtmpl	(revision 68797)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicDetail.gtmpl	(working copy)
+@@ -7,7 +7,6 @@
+ 	import org.exoplatform.forum.service.Topic ;
+ 	import org.exoplatform.forum.service.Forum ;
+ 	import org.exoplatform.forum.ForumSessionUtils; 
+-	import org.exoplatform.services.jcr.ext.common.SessionProvider;
+ 	import org.exoplatform.forum.ForumUtils;
+ 	import org.exoplatform.forum.ForumTransformHTML;
+ 	import org.exoplatform.forum.service.UserProfile ;
+@@ -795,7 +794,7 @@
+ 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
+ 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
+ 									if(isDisplayAvatar) {
+-										avatarUrl = uiform.getAvatarUrl(contact, post.getOwner()) ;
++										avatarUrl = uiform.getAvatarUrl(post.getOwner()) ;
+ 										String idAv = "avatar" + nb;
+ 										onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
+ 										 ++nb;
+@@ -992,7 +991,7 @@
+ 								%>
+ 										<div class="AttachmentBox">
+ 										<% if(typeFile.indexOf("image") >= 0) {
+-										   String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +attachment.getPath() ;
++										   String attLink = ForumSessionUtils.getImageUrl(attachment.getPath()) ;
+ 										%>
+ 											<div class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt=""/></div> 
+ 						 					<div class="LabelBox">
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIForumUserSettingForm.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIForumUserSettingForm.gtmpl	(revision 68796)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIForumUserSettingForm.gtmpl	(working copy)
+@@ -68,7 +68,7 @@
+ 																			<%=_ctx.appRes("UIForumUserSettingForm.label.ChangeAvatar")%>
+ 																		</a>
+ 																		<%
+-																		if(!uicomponent.defaultAvatar.equals(uicomponent.getAvatarUrl())){
++																		if(!org.exoplatform.forum.ForumSessionUtils.DEFAULT_AVATAR.equals(uicomponent.getAvatarUrl())){
+ 																		%>
+ 																			|
+ 																			<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>')){<%=uiform.event("SetDefaultAvatar")%>};" style="color:blue;">
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIViewMemberProfile.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIViewMemberProfile.gtmpl	(revision 68796)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIViewMemberProfile.gtmpl	(working copy)
+@@ -59,7 +59,7 @@
+ 								boolean isDisplayAvatar = userProfile.getIsDisplayAvatar(); 
+ 								String userTitle = userProfile.getUserTitle();
+ 								if(isDisplayAvatar) {
+-									avatarUrl = uiform.getAvatarUrl(contact) ;
++									avatarUrl = uiform.getAvatarUrl() ;
+ 								%>
+ 								<img id="ImgAvatar" src="$avatarUrl" class="Img" alt="" width="70px" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
+ 								<% } %>

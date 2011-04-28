@@ -7,7 +7,6 @@
 	import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.ForumSessionUtils; 
-	import org.exoplatform.services.jcr.ext.common.SessionProvider;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
@@ -795,7 +794,7 @@
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
-										avatarUrl = uiform.getAvatarUrl(contact, post.getOwner()) ;
+										avatarUrl = uiform.getAvatarUrl(post.getOwner()) ;
 										String idAv = "avatar" + nb;
 										onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
 										 ++nb;
@@ -992,7 +991,7 @@
 								%>
 										<div class="AttachmentBox">
 										<% if(typeFile.indexOf("image") >= 0) {
-										   String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +attachment.getPath() ;
+										   String attLink = ForumSessionUtils.getImageUrl(attachment.getPath()) ;
 										%>
 											<div class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt=""/></div> 
 						 					<div class="LabelBox">

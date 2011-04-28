@@ -536,8 +536,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		return this.forumLinks ;
 	}
 	
-	public void setUserAvatarURL(String userId){
-		userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, forumService, getApplicationComponent(DownloadService.class));
+	public void setUserAvatarURL(String userId) throws Exception{
+		userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, forumService);
 	}
 	
 	private void searchUserProfileByKey(String keyword) throws Exception {
@@ -839,13 +839,13 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	static	public class SetDeaultAvatarActionListener extends EventListener<UIModeratorManagementForm> {
 		public void execute(Event<UIModeratorManagementForm> event) throws Exception {
 			UIModeratorManagementForm uiForm = event.getSource() ;
-			if(uiForm.userAvartarUrl.equals("/forum/skin/DefaultSkin/webui/background/Avatar1.gif")) return;
+			if(uiForm.userAvartarUrl.equals(ForumSessionUtils.DEFAULT_AVATAR)) return;
 			String userId = ((UIFormStringInput)uiForm.findComponentById(FIELD_USERID_INPUT)).getValue();
 			try {
 				uiForm.forumService.setDefaultAvatar(userId);
 			} catch (Exception e) {
 			}
-			uiForm.userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, uiForm.forumService, uiForm.getApplicationComponent(DownloadService.class));
+			uiForm.userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, uiForm.forumService);
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}

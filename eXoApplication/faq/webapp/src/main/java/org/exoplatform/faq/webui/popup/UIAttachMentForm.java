@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -137,23 +136,17 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
           return ;
       	}
-      	FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
-      	//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-      	service.saveUserAvatar(FAQUtils.getCurrentUser(), listFileAttachment.get(0));
-      	String avatarUrl = FAQUtils.getFileSource(((FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class))
-																																				.getUserAvatar(FAQUtils.getCurrentUser()), 
-																									attachMentForm.getApplicationComponent(DownloadService.class)) ;
-				if(avatarUrl == null || avatarUrl.trim().length() < 1)
-					avatarUrl = "/faq/skin/DefaultSkin/webui/background/Avatar1.gif"; //TODO should to get from resource bundle
-      	//sessionProvider.close();
-      	UIWatchContainer watchContainer = attachMentForm.getAncestorOfType(UIWatchContainer.class);
-      	UISettingForm settingForm = watchContainer.getChild(UISettingForm.class);
-      	settingForm.setAvatarUrl(avatarUrl);
-      	event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer);
-      	
+      	String currentUser = FAQUtils.getCurrentUser();
+				FAQService service = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+				service.saveUserAvatar(currentUser, listFileAttachment.get(0));
+				UIWatchContainer watchContainer = attachMentForm.getAncestorOfType(UIWatchContainer.class);
+				UISettingForm settingForm = watchContainer.getChild(UISettingForm.class);
+				settingForm.setAvatarUrl(FAQUtils.getUserAvatar(currentUser));
+				event.getRequestContext().addUIComponentToUpdateByAjax(settingForm);
       	UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
       	popupAction.deActivate() ;
-      	event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer);
+//      	event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       	return;
       } else{
         UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;

@@ -16,8 +16,6 @@
  */
 package org.exoplatform.faq.webui;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -39,7 +37,6 @@ import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
-import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
@@ -48,6 +45,7 @@ import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
@@ -210,11 +208,11 @@ public class FAQUtils {
 		if(profile.getAttribute("user.business-info.telecom.mobile.number") != null)contact.setMobile(profile.getAttribute("user.business-info.telecom.mobile.number"));
 		if(profile.getAttribute("user.business-info.telecom.telephone.number") != null)contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
 		if(profile.getAttribute("user.home-info.online.uri") != null)contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
-		FileAttachment fileAttachment = faqService.getUserAvatar(userId);
-		if(fileAttachment == null || fileAttachment.getSize() == 0){
-			if(profile.getAttribute("user.other-info.avatar.url") != null)contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
+		String urlAvt = getUserAvatar(userId);
+		if (urlAvt.indexOf(org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL) >= 0 && profile.getAttribute("user.other-info.avatar.url") != null) {
+				contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
 		} else {
-			contact.setAvatarUrl(getFileSource(fileAttachment, dservice));
+			contact.setAvatarUrl(urlAvt);
 		}
 	}
   
@@ -566,33 +564,31 @@ public class FAQUtils {
 		return getFormatDate(DateFormat.SHORT, myDate);
 	}
 	
-	private static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
-		byte[] imageBytes = null;
-		if (input != null) {
-			imageBytes = new byte[input.available()];
-			input.read(imageBytes);
-			ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-			InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
-			dresource.setDownloadName(fileName);
-			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-		}
-		return null;
-	}
+  public static String getImageUrl(String imagePath) throws Exception {
+    StringBuilder url = new StringBuilder() ;
+    PortalContainer pcontainer =  PortalContainer.getInstance() ;
+    try {
+      url.append("/").append(pcontainer.getPortalContainerInfo().getContainerName());
+    } catch (Exception e) {
+      url.append("/portal");
+    }
+    RepositoryService rService = (RepositoryService)pcontainer.getComponentInstanceOfType(RepositoryService.class) ;
+    url.append("/rest/jcr/").append(rService.getCurrentRepository().getConfiguration().getName()).append(imagePath);
+    return url.toString();
+  }
 	
-	public static String getFileSource(FileAttachment attachment, DownloadService dservice){
-		if(dservice == null)dservice = (DownloadService)PortalContainer.getComponent(DownloadService.class) ;
-		try {
-			InputStream input = attachment.getInputStream() ;
-			String fileName = attachment.getName() ;
-			if(fileName == null || fileName.trim().length() < 1)
-				fileName = "avatar." + attachment.getMimeType();
-			//String fileName = attachment.getNodeName() ;
-			return getFileSource(input, fileName, dservice);
-		} catch (Exception e) {			
-		}
-		return null;
-	}
-	
+  public static String getUserAvatar(String userName) throws Exception {
+    String url = "";
+    try {
+      FAQService service = getFAQService();
+      FileAttachment avatar = service.getUserAvatar(userName);
+      if (avatar != null) {
+        url = getImageUrl(avatar.getPath()) + "?size=" + avatar.getSize();
+      }
+    } catch (Exception e) {}
+    return (isFieldEmpty(url)) ? org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL : url;
+  }
+  
 	public static String getLink(String link, String componentId, String componentIdhasAction, String action, String actionRep, String objectId) {
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
 		String url = portalContext.getRequest().getRequestURL().toString();

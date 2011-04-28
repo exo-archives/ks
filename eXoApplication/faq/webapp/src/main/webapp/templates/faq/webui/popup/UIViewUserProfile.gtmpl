@@ -51,7 +51,7 @@
 						<td class="UserContainer">
 							<div class="UserContent">
 								<%	
-									avatarUrl = uiform.getAvatarUrl(contact) ;
+									avatarUrl = uiform.getAvatarUrl(userName) ;
 								%>
 								<img id="ImgAvatar" src="$avatarUrl" class="Img" onload="eXo.faq.UIAnswersPortlet.reSizeAvatar(this);" alt=""/>
 								<div class="Rank"><%=user.getFullName();%></div>

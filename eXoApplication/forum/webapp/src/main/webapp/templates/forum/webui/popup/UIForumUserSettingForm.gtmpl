@@ -68,7 +68,7 @@ import org.exoplatform.forum.service.Utils;
 																			<%=_ctx.appRes("UIForumUserSettingForm.label.ChangeAvatar")%>
 																		</a>
 																		<%
-																		if(!uicomponent.defaultAvatar.equals(uicomponent.getAvatarUrl())){
+																		if(!org.exoplatform.forum.ForumSessionUtils.DEFAULT_AVATAR.equals(uicomponent.getAvatarUrl())){
 																		%>
 																			|
 																			<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>')){<%=uiform.event("SetDefaultAvatar")%>};" style="color:blue;">

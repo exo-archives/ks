@@ -16,14 +16,10 @@
  */
 package org.exoplatform.faq.webui.popup;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
-import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
@@ -77,19 +73,6 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 		return "" ;
 	}
 	
-	@SuppressWarnings("unused")  
-	private String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
-		byte[] imageBytes = null;
-		if (input != null) {
-			imageBytes = new byte[input.available()];
-			input.read(imageBytes);
-			ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-			InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
-			dresource.setDownloadName(fileName);
-			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-		}
-		return null;
-	}
 
 	public String getRepository() throws Exception {
 		RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
@@ -101,14 +84,8 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 		return pcontainer.getPortalContainerInfo().getContainerName() ;  
 	}
 	
-	private String getAvatarUrl(String userId){
-		try{
-			String url = FAQUtils.getFileSource(faqService_.getUserAvatar(userId), null);
-			if(FAQUtils.isFieldEmpty(url)) url = Utils.DEFAULT_AVATAR_URL;
-			return url;
-		} catch (Exception e){
-		}
-		return Utils.DEFAULT_AVATAR_URL;
+	private String getAvatarUrl(String userId) throws Exception{
+		return FAQUtils.getUserAvatar(userId);
 	}
 	
 	private String convertSize(long size){

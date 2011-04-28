@@ -22,8 +22,6 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletPreferences;
 
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
@@ -265,11 +263,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			
 			addUIFormInput((new UIFormCheckBoxInput<Boolean>(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
 			
-			avatarUrl = FAQUtils.getFileSource(((FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class))
-																													.getUserAvatar(FAQUtils.getCurrentUser()), getApplicationComponent(DownloadService.class)) ;
-			
-			if(avatarUrl == null || avatarUrl.trim().length() < 1)
-				avatarUrl = Utils.DEFAULT_AVATAR_URL;
+			setAvatarUrl(FAQUtils.getUserAvatar(FAQUtils.getCurrentUser()));
 		}
 	}
 	

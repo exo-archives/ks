@@ -68,7 +68,6 @@ import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -523,15 +522,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		return true;
 	}
 	
-	public String getPortalName() {
-    PortalContainer pcontainer =  PortalContainer.getInstance() ;
-    return pcontainer.getPortalContainerInfo().getContainerName() ;  
-  }
-  public String getRepository() throws Exception {
-    RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
-    return rService.getCurrentRepository().getConfiguration().getName() ;
-  }
-
   private String getFileSource(ForumAttachment attachment) throws Exception {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 		try {
@@ -558,9 +548,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		return contact ;
 	}
 	
-	private String getAvatarUrl(ForumContact contact, String userId) throws Exception {
-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		return ForumSessionUtils.getUserAvatarURL(userId, this.forumService, dservice);
+	private String getAvatarUrl(String userId) throws Exception {
+		return ForumSessionUtils.getUserAvatarURL(userId, forumService);
 	}
 
 	private void initPage() throws Exception {

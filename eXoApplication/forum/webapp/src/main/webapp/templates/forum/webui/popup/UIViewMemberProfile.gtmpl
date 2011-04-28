@@ -59,7 +59,7 @@
 								boolean isDisplayAvatar = userProfile.getIsDisplayAvatar(); 
 								String userTitle = userProfile.getUserTitle();
 								if(isDisplayAvatar) {
-									avatarUrl = uiform.getAvatarUrl(contact) ;
+									avatarUrl = uiform.getAvatarUrl() ;
 								%>
 								<img id="ImgAvatar" src="$avatarUrl" class="Img" alt="" width="70px" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
 								<% } %>

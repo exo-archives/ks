@@ -31,6 +31,7 @@ import org.exoplatform.forum.service.user.ContactProvider;
 import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -43,7 +44,7 @@ import org.exoplatform.services.organization.impl.GroupImpl;
  */
 
 public class ForumSessionUtils {
-	
+	public final static String DEFAULT_AVATAR = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif"; 
 	static public String getCurrentUser() throws Exception {
 		return Util.getPortalRequestContext().getRemoteUser();
 	}
@@ -81,18 +82,31 @@ public class ForumSessionUtils {
 		return false;
 	}
 	
-	public static String getUserAvatarURL(String userName, ForumService forumService, DownloadService dservice){
-		String url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+	public static String getImageUrl(String imagePath) throws Exception {
+  	StringBuilder url = new StringBuilder() ;
+  	PortalContainer pcontainer =  PortalContainer.getInstance() ;
+    try {
+    	url.append("/").append(pcontainer.getPortalContainerInfo().getContainerName());
+    } catch (Exception e) {
+    	return "portal";
+    }
+    RepositoryService rService = (RepositoryService)pcontainer.getComponentInstanceOfType(RepositoryService.class) ;
+    url.append("/rest/jcr/").append(rService.getCurrentRepository().getConfiguration().getName()).append(imagePath);
+    return url.toString();
+  }
+	
+	public static String getUserAvatarURL(String userName, ForumService forumService) throws Exception{
+		String url = null;
 		try{
 			ForumAttachment attachment = forumService.getUserAvatar(userName);
-			url = ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
-			if(url == null || url.trim().length() < 1){
-				ForumContact contact = getPersonalContact(userName) ;
-				if(contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0){
-					url = contact.getAvatarUrl();
-				}
-			}
-		}catch (Exception e){
+			url = getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
+		}catch (Exception e){}
+    if(url == null || url.trim().length() < 1){
+    	ForumContact contact = getPersonalContact(userName);
+	    if (contact != null && contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0) {
+	      url = contact.getAvatarUrl();
+	    }
+		  url = (url == null || url.trim().length() < 1)?DEFAULT_AVATAR:url;
 		}
 		return url;
 	}

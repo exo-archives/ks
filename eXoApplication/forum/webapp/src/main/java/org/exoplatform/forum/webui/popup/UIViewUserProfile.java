@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui.popup;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
@@ -105,10 +104,8 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		return contact ;
 	}
 	
-	private String getAvatarUrl(ForumContact contact) throws Exception {
-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		String url = ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService, dservice);
-		return url;
+	private String getAvatarUrl() throws Exception {
+		return ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService);
 	}
 	
 	private String[] getLabelProfile() {
