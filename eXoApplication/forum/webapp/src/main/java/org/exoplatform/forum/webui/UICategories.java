@@ -504,7 +504,7 @@ public class UICategories extends UIContainer {
           Category category = uiContainer.getCategory(path);
           path = "CategoryNormalIcon//" + category.getCategoryName() + "//" + path;
         } else {
-          path = path.substring(path.indexOf("//") + 2);
+          path = path.substring(path.lastIndexOf(ForumUtils.SLASH)+1);
           Topic topic = uiContainer.maptopicLast.get(path);
           path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topic.getId();
         }
