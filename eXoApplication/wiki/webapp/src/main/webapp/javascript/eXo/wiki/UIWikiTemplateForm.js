@@ -48,8 +48,7 @@ UIWikiTemplateForm.prototype.pressHandler = function(evt, textbox) {
     return;
   switch (keyNum) {
   case 13:
-    if (textbox.value.trim() != "")
-      me.enterHandler(evt);
+    me.enterHandler(evt);
     break;
   case 27:
     me.escapeHandler();

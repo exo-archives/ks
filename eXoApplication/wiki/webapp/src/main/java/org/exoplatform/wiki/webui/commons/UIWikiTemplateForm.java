@@ -19,8 +19,8 @@ package org.exoplatform.wiki.webui.commons;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 
 import org.exoplatform.commons.utils.LazyPageList;
 import org.exoplatform.container.PortalContainer;
@@ -115,18 +115,20 @@ public class UIWikiTemplateForm extends UIForm{
       UIWikiTemplateForm form = event.getSource();
       WikiPageParams params = Utils.getCurrentWikiPageParams();
       UIFormStringInput searchbox = form.findComponentById(UIWikiTemplateForm.TEMPLATE_SEARCHBOX);
-      TemplateSearchData data = new TemplateSearchData(searchbox.getValue(),
-                                                       params.getType(),
-                                                       params.getOwner());
-      List<TemplateSearchResult> results = form.wService.searchTemplate(data);
-      List<TemplateBean> listBean = new ArrayList<TemplateBean>();
-      for (int i = 0; i < results.size(); i++) {
-        TemplateSearchResult result = results.get(i);
-        listBean.add(new TemplateBean(result.getName(), result.getTitle(), result.getDescription()));
+      String searchKeyword = searchbox.getValue();
+      if (searchKeyword == null || (searchKeyword != null && searchKeyword.trim().length() == 0)) {
+        form.initGrid();
+      } else {
+        TemplateSearchData data = new TemplateSearchData(searchKeyword, params.getType(), params.getOwner());
+        List<TemplateSearchResult> results = form.wService.searchTemplate(data);
+        List<TemplateBean> listBean = new ArrayList<TemplateBean>();
+        for (int i = 0; i < results.size(); i++) {
+          TemplateSearchResult result = results.get(i);
+          listBean.add(new TemplateBean(result.getName(), result.getTitle(), result.getDescription()));
+        }
+        LazyPageList<TemplateBean> lazylist = new LazyPageList<TemplateBean>(new WikiTemplateListAccess(listBean), ITEMS_PER_PAGE);
+        form.grid.getUIPageIterator().setPageList(lazylist);
       }
-      LazyPageList<TemplateBean> lazylist = new LazyPageList<TemplateBean>(new WikiTemplateListAccess(listBean),
-                                                                           ITEMS_PER_PAGE);
-      form.grid.getUIPageIterator().setPageList(lazylist);
       event.getRequestContext().addUIComponentToUpdateByAjax(form);
     }
   }
