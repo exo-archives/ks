@@ -684,7 +684,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     public void execute(Event<UIQuestionForm> event) throws Exception {
       UIQuestionForm questionForm = event.getSource();
       UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class);
-      UIAttactmentForm attachMentForm = questionForm.openPopup(popupContainer, UIAttactmentForm.class, 550, 0);
+      UIAttachmentForm attachMentForm = questionForm.openPopup(popupContainer, UIAttachmentForm.class, 550, 0);
       attachMentForm.setIsChangeAvatar(false);
       attachMentForm.setNumberUpload(5);
     }
