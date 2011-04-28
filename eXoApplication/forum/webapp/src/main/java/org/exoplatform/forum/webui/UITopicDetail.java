@@ -723,6 +723,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		}
 		return "";
 	}
+	
+	private String getViewScreenName(String screenName) {
+		if(screenName != null && screenName.trim().length() > 17 && !screenName.contains(" "))
+			screenName = "<spam title=\""+screenName+"\">"+ForumUtils.getSubString(screenName, 16)+"</span>";
+		return screenName;
+	}
 
 	static public class AddPostActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {

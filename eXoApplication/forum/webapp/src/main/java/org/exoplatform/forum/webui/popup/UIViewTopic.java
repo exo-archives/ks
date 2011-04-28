@@ -27,6 +27,7 @@ import javax.jcr.PathNotFoundException;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
@@ -223,6 +224,13 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		} catch (PathNotFoundException e) {
 			return null;
 		}
+	}
+	
+	@SuppressWarnings("unused")
+	private String getViewScreenName(String screenName) {
+		if(screenName != null && screenName.trim().length() > 17 && !screenName.contains(" "))
+			screenName = "<spam title=\""+screenName+"\">"+ForumUtils.getSubString(screenName, 16)+"</span>";
+		return screenName;
 	}
 	
 	@SuppressWarnings("unused")
