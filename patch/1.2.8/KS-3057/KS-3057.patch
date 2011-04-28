@@ -1,0 +1,269 @@
+Index: eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/TestFAQEventQuery.java
+===================================================================
+--- eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/TestFAQEventQuery.java	(revision 0)
++++ eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/TestFAQEventQuery.java	(revision 0)
+@@ -0,0 +1,148 @@
++/*
++ * Copyright (C) 2003-2011 eXo Platform SAS.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Affero General Public License
++ * as published by the Free Software Foundation; either version 3
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see<http://www.gnu.org/licenses/>.
++ */
++package org.exoplatform.faq.service;
++
++import java.util.Arrays;
++import java.util.Calendar;
++
++import org.exoplatform.commons.utils.ISO8601;
++import org.exoplatform.faq.test.FAQTestCase;
++
++/**
++ * Created by The eXo Platform SAS
++ * Author : eXoPlatform
++ *          exo@exoplatform.com
++ * Mar 28, 2011  
++ */
++public class TestFAQEventQuery extends FAQTestCase {
++  
++  public void testGetQuery() throws Exception {
++    
++    /*#############test Question query ############## */
++    FAQEventQuery eventQuery = new FAQEventQuery();
++    eventQuery.setType("faqQuestion");
++    String expectation = "/jcr:root{rel_path}//* [{constraint}]";
++    String relPath = "";
++    String constraint = "()";
++    // >>>>> test path
++    relPath = "/mypath";
++    eventQuery.setPath(relPath);
++    assertEquals(expectation.replace("{rel_path}", relPath).replace("{constraint}", constraint).trim()
++                 , eventQuery.getQuery().trim());
++    // >>>>> test categories filter
++    eventQuery.setViewingCategories(Arrays.asList("category1", "category2"));
++    constraint = "(exo:categoryId='category1' or exo:categoryId='category2')";
++    assertEquals(expectation.replace("{rel_path}", relPath).replace("{constraint}", constraint).trim()
++                 , eventQuery.getQuery().trim());
++    
++    // >>>>> test author filter
++    eventQuery.setAuthor("john");
++    constraint = "(jcr:contains(@exo:author, 'john')) and (exo:categoryId='category1' or exo:categoryId='category2')";
++    assertEquals(expectation.replace("{rel_path}", relPath).replace("{constraint}", constraint).trim()
++                 , eventQuery.getQuery().trim());
++    
++    // >>>>> test email filter
++    eventQuery.setEmail("john@example.com");
++    constraint = "(jcr:contains(@exo:author, 'john') and jcr:contains(@exo:email, 'john@example.com'))" +
++    		          " and (exo:categoryId='category1' or exo:categoryId='category2')";
++    assertEquals(expectation.replace("{rel_path}", relPath).replace("{constraint}", constraint).trim()
++                 , eventQuery.getQuery().trim());
++    
++    // >>>>> test start date filter
++    Calendar fromDate = Calendar.getInstance();
++    fromDate.setTimeInMillis(System.currentTimeMillis() - 5 * 24 * 60 * 60 * 1000);
++    eventQuery.setFromDate(fromDate);
++    constraint = "(" +
++    		"jcr:contains(@exo:author, 'john')" +
++    		" and jcr:contains(@exo:email, 'john@example.com')" +
++    		" and (@exo:createdDate >= xs:dateTime('" + ISO8601.format(fromDate) + "')" +  
++    		")" +
++    		") and (exo:categoryId='category1' or exo:categoryId='category2')";
++    assertEquals(expectation.replace("{rel_path}", relPath).replace("{constraint}", constraint).trim()
++                 , eventQuery.getQuery().trim());
++    
++    // >>>>> test to Date filter
++    Calendar toDate = Calendar.getInstance();
++    toDate.setTimeInMillis(System.currentTimeMillis() + 5 * 24 * 60 * 60 * 1000);
++    eventQuery.setToDate(toDate);
++    constraint = "(" +
++        "jcr:contains(@exo:author, 'john')" +
++        " and jcr:contains(@exo:email, 'john@example.com')" +
++        " and (@exo:createdDate >= xs:dateTime('" + ISO8601.format(fromDate) + "')" +
++        ")" +
++        " and (@exo:createdDate <= xs:dateTime('" + ISO8601.format(toDate) + "')" +
++        ")" +
++        ") and (exo:categoryId='category1' or exo:categoryId='category2')";
++    assertEquals(expectation.replace("{rel_path}", relPath).replace("{constraint}", constraint).trim()
++                 , eventQuery.getQuery().trim());
++    
++    //  >>>>> test question filter
++    eventQuery.setQuestion("question text");
++    eventQuery.setLanguage("english");
++    constraint = "(" +
++    "jcr:contains(@exo:author, 'john')" +
++    " and jcr:contains(@exo:email, 'john@example.com')" +
++    " and (@exo:createdDate >= xs:dateTime('" + ISO8601.format(fromDate) + "')" +
++    ")" +
++    " and (@exo:createdDate <= xs:dateTime('" + ISO8601.format(toDate) + "')" +
++    ")" +
++    ")" + 
++    " and (((exo:language='english') and ( jcr:contains(@exo:title,'question text') or jcr:contains(@exo:name, 'question text') )))" +
++    " and (exo:categoryId='category1' or exo:categoryId='category2')";
++    assertEquals(expectation.replace("{rel_path}", relPath).replace("{constraint}", constraint).trim()
++                 , eventQuery.getQuery().trim());
++    
++    // >>>>> test answer filter
++    eventQuery.setResponse("my answer");
++    constraint = "(" +
++    "jcr:contains(@exo:author, 'john')" +
++    " and jcr:contains(@exo:email, 'john@example.com')" +
++    " and (@exo:createdDate >= xs:dateTime('" + ISO8601.format(fromDate) + "')" +
++    ")" +
++    " and (@exo:createdDate <= xs:dateTime('" + ISO8601.format(toDate) + "')"+
++    ")" +
++    ")" + 
++    " and (" +
++      "((exo:language='english') and ( jcr:contains(@exo:title,'question text') or jcr:contains(@exo:name, 'question text') ))" +
++        " or ( exo:responseLanguage='english' and jcr:contains(@exo:responses,'my answer'))" +
++      ")" +
++    " and (exo:categoryId='category1' or exo:categoryId='category2')";
++    assertEquals(expectation.replace("{rel_path}", relPath).replace("{constraint}", constraint).trim()
++                 , eventQuery.getQuery().trim());
++    
++    // >>>>> test term filter
++    eventQuery.setText("term words");
++    constraint = "(" +
++    "jcr:contains(@exo:author, 'john')" +
++    " and jcr:contains(@exo:email, 'john@example.com')" +
++    " and (@exo:createdDate >= xs:dateTime('" + ISO8601.format(fromDate) + "')" +
++    ")" +
++    " and (@exo:createdDate <= xs:dateTime('" + ISO8601.format(toDate) + "')"+
++    ")" +
++    ")" + 
++    " and (" +
++      "((exo:language='english') and ( jcr:contains(@exo:title,'question text') or jcr:contains(@exo:name, 'question text') ))" +
++        " or ( exo:responseLanguage='english' and jcr:contains(@exo:responses,'my answer'))" +
++        " or (jcr:contains(., 'term words') and (  exo:language='english' or exo:responseLanguage='english'))" +
++      ")" +
++    " and (exo:categoryId='category1' or exo:categoryId='category2')";
++    assertEquals(expectation.replace("{rel_path}", relPath).replace("{constraint}", constraint).trim()
++                 , eventQuery.getQuery().trim());
++    
++  }
++  
++}
+
+Property changes on: eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/TestFAQEventQuery.java
+___________________________________________________________________
+Added: svn:keywords
+   + Id Revision
+Added: svn:eol-style
+   + LF
+
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/FAQEventQuery.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/FAQEventQuery.java	(revision 67614)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/FAQEventQuery.java	(working copy)
+@@ -484,36 +484,22 @@
+   		}  		
+   		searchCategoryScoping.append(")") ;
+   		
+-  		boolean isAdd = false ;
+   		if( questionSearch.length() > 2) {
+-  			System.out.println("questionSearch" + questionSearch.toString());
+-  			queryString.append("(").append(questionSearch.toString()) ;  			
+-  			isAdd = true ;
++  			queryString.append(questionSearch.toString()) ;  			
+   		}
++  		boolean isAdd = false ;
++  		StringBuilder quesAnsComClause = new StringBuilder();
++  		
+   		if(questionLanguageSearch.length() > 0) {
+-  			if(isSearchOnDefaultLanguage()) {
+-    			
+-    			if(isAdd) {
+-    				queryString.append(" and ").append(questionLanguageSearch.toString()) ;
+-    			}else {
+-    				queryString.append("(").append(questionLanguageSearch.toString()) ;
+-    				isAdd = true ;
+-    			}  			
+-    		}else {
+-    			if(isAdd) {
+-    				queryString.append(" or ").append(questionLanguageSearch.toString()) ;
+-    			}else {
+-    				queryString.append("(").append(questionLanguageSearch.toString()) ;
+-    				isAdd = true ;
+-    			}
+-    		}
++			  quesAnsComClause.append("(").append(questionLanguageSearch.toString()) ;
++				isAdd = true ;
+   		}
+   		
+   		if(answerSearch.length() > 2) {
+   			if(isAdd) {
+-  				queryString.append(" or ").append(answerSearch.toString()) ;
++  			  quesAnsComClause.append(" or ").append(answerSearch.toString()) ;
+   			}else {
+-  				queryString.append("(").append(answerSearch.toString()) ;
++  			  quesAnsComClause.append("(").append(answerSearch.toString()) ;
+   				isAdd = true ;
+   			}
+   		}
+@@ -527,28 +513,42 @@
+   			}
+   		}*/
+   		
+-  		if (isAdd)queryString.append(")") ; // finish
+-  		
++  		StringBuilder textClause = new StringBuilder();
+   		if(text != null && text.length() > 0 ) {
+-  			if(isAdd){
+-  				queryString.append(" or (  jcr:contains(., '").append(text).append("')") ;  				
+-  			}else {
+-  				queryString.append("jcr:contains(., '").append(text).append("')") ;  				
+-  			} 
+-				queryString.append(" and ( " )
+-				.append(" exo:language='").append(language).append("'")
+-				//.append(" or exo:commentLanguage='").append(language).append("'")
+-				.append(" or exo:responseLanguage='").append(language).append("'")
+-				.append(")") ;
+-				if(isAdd) queryString.append(" ) " ) ;
++  		  textClause.append("(").append("jcr:contains(., '").append(text).append("')")
++      		  .append(" and ( " )
++            .append(" exo:language='").append(language).append("'")
++            //.append(" or exo:commentLanguage='").append(language).append("'")
++            .append(" or exo:responseLanguage='").append(language).append("'")
++            .append("))") ;
+ 				isLanguageLevelSearch = false ;
+ 				isAnswerCommentLevelSearch = false ;
+   			isQuestionLevelSearch = false ;
+-  			isAdd = true ;
+       }
+   		
+-  		if(isAdd) {
+-  			queryString.append(" and ").append(searchCategoryScoping.toString()) ;
++  		if (textClause.length() > 2) {
++  		  if (isAdd) {
++  		    quesAnsComClause.append(" or ").append(textClause);
++  		  } else {
++  		    quesAnsComClause.append("(").append(textClause);
++  		    isAdd = true;
++  		  }
++  		}
++  		
++      if (isAdd)quesAnsComClause.append(")") ; // close question, answer, comment search clause.
++
++      if (quesAnsComClause.length() > 0) {
++        if (isAnd) {
++          queryString.append(" and ").append(quesAnsComClause);
++        } else {
++          queryString.append(quesAnsComClause);
++          isAnd = true;
++        }
++      }
++      
++  		
++  		if(isAnd) {
++  			queryString.append(" and ").append(searchCategoryScoping.toString());
+   		} else {
+   			queryString.append(searchCategoryScoping.toString()) ;
+   			isAdd = true ;
