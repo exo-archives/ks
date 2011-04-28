@@ -102,6 +102,8 @@ public class ForumUtils {
 
   public static final int    MAXTITLE                = 100;
 
+  public static final int DEFAULT_VALUE_UPLOAD_PORTAL = -1;  
+
   public static final long   MAXMESSAGE              = 10000;
 
   static String buildForumLink(String url, String selectedNode, String portalName, String type, String id) throws Exception {
@@ -559,7 +561,7 @@ public class ForumUtils {
   public static int getLimitUploadSize(boolean isAvatar) {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    int limitMB = -1;
+    int limitMB = DEFAULT_VALUE_UPLOAD_PORTAL;
     try {
       if (isAvatar) {
         limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_AVATAR_SIZE, EMPTY_STR).trim());

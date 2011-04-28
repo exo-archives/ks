@@ -65,11 +65,11 @@ public class UIWikiAttachmentArea extends UIWikiForm {
   final static public String FIELD_UPLOAD    = "upload";
   final static public String DOWNLOAD_ACTION = "DownloadAttachment";
   final static public String DELETE_ACTION   = "RemoveAttachment";
-  public static int          sizeLimit       = 10;
+  public static int          SIZE_LIMIT      = -1;
 
   public UIWikiAttachmentArea() throws Exception {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW,WikiMode.EDITPAGE,WikiMode.ADDPAGE});   
-    sizeLimit = Utils.getLimitUploadSize();
+    SIZE_LIMIT = Utils.getLimitUploadSize();
     UIWikiFormUploadInput uiInput = new UIWikiFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
     uiInput.setAutoUpload(true);    
     addUIFormInput(uiInput);    
@@ -145,7 +145,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
       WikiResource attachfile = null;
       if (uploadResource != null) {
         long fileSize = ((long) uploadResource.getUploadedSize());
-        if (fileSize >= sizeLimit * 1024 * 1024) {
+        if (SIZE_LIMIT > 0 && fileSize >= SIZE_LIMIT * 1024 * 1024) {
           uiApp.addMessage(new ApplicationMessage("UIWikiAttachmentArea.msg.attachment-exceed-10M",
                                                   null,
                                                   ApplicationMessage.WARNING));

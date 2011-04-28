@@ -66,10 +66,11 @@ public class UIAttachmentForm extends BaseUIForm implements UIPopupComponent {
     numberUpload = number;
     int sizeLimit = FAQUtils.getLimitUploadSize(isChangeAvatar);
     for (int i = 0; i < numberUpload; i++) {
-      if (sizeLimit >= 0)
-        addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i, sizeLimit, true));
-      else
-        addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i, true));
+      if (sizeLimit != FAQUtils.DEFAULT_VALUE_UPLOAD_PORTAL) {
+        addUIFormInput(new UIFormUploadInput(FILE_UPLOAD + String.valueOf(i), FILE_UPLOAD + String.valueOf(i), sizeLimit, true));
+      } else {
+        addUIFormInput(new UIFormUploadInput(FILE_UPLOAD + String.valueOf(i), FILE_UPLOAD + String.valueOf(i), true));
+      }
     }
   }
 

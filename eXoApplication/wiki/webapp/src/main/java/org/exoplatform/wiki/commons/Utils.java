@@ -43,9 +43,9 @@ import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.AccessControlList;
-import org.exoplatform.services.jcr.access.SystemIdentity;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.IdentityConstants;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.core.UIComponent;
@@ -91,6 +91,7 @@ import org.xwiki.rendering.syntax.Syntax;
 public class Utils {
   
   public static final String WITH = "With";
+  public static final int DEFAULT_VALUE_UPLOAD_PORTAL = -1;
   
   public static String getCurrentRequestURL() throws Exception {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
@@ -397,7 +398,7 @@ public class Utils {
     if (conversationState != null) {
       user = conversationState.getIdentity();
     } else {
-      user = new Identity(SystemIdentity.ANONIM);
+      user = new Identity(IdentityConstants.ANONIM);
     }
     List<AccessControlEntry> aces = new ArrayList<AccessControlEntry>();
     for (PermissionEntry permissionEntry : permissionEntries) {
@@ -478,7 +479,7 @@ public class Utils {
   public static int getLimitUploadSize() {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    int limitMB = -1;
+    int limitMB = DEFAULT_VALUE_UPLOAD_PORTAL;
     try {
       limitMB = Integer.parseInt(portletPref.getValue("uploadFileSizeLimitMB", "").trim());
     } catch (Exception e) {

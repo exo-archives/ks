@@ -79,6 +79,8 @@ public class FAQUtils {
 
   public static String UPLOAD_AVATAR_SIZE = "uploadAvatarSizeLimitMB";
 
+  public static final int DEFAULT_VALUE_UPLOAD_PORTAL = -1;
+
   static private Log   log              = ExoLogger.getLogger(FAQUtils.class);
 
   public static FAQService getFAQService() throws Exception {
@@ -548,7 +550,7 @@ public class FAQUtils {
   public static int getLimitUploadSize(boolean isAvatar) {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    int limitMB = -1;
+    int limitMB = DEFAULT_VALUE_UPLOAD_PORTAL;
     try {
       if (isAvatar) {
         limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_AVATAR_SIZE, "").trim());
