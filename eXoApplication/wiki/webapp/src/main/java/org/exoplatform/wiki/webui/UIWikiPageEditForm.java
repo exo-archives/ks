@@ -96,6 +96,8 @@ public class UIWikiPageEditForm extends UIWikiForm {
 
   public void setTemplate(boolean isTemplate) {
     this.isTemplate = isTemplate;
+    
+    System.out.println("\n\n\n\n set temp \n\n\n\n");
   }
 
   public String getTemplateId() {
