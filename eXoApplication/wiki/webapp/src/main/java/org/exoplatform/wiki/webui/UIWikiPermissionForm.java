@@ -380,8 +380,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       UIFormInputWithActions inputWithActions = uiWikiPermissionForm.getChild(UIFormInputWithActions.class);
       UIFormStringInput uiFormStringInput = inputWithActions.getChild(UIFormStringInput.class);
       uiFormStringInput.setValue(values);
-      uiPopup.setUIComponent(null);
-      uiPopup.setShow(false);
+      closePopupAction(uiPopup, event);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
     }
   }
@@ -408,9 +407,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       UIFormStringInput uiFormStringInput = inputWithActions.getChild(UIFormStringInput.class);
       uiFormStringInput.setValue(groupId);
       UIPopupWindow uiPopup = uiWikiPermissionForm.getChildById(PERMISSION_POPUP_SELECTOR);
-      uiPopup.setUIComponent(null);
-      uiPopup.setShow(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
+      closePopupAction(uiPopup, event);
     }
   }
 
@@ -438,31 +435,27 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       UIFormStringInput uiFormStringInput = inputWithActions.getChild(UIFormStringInput.class);
       uiFormStringInput.setValue(membershipId + ":" + currentGroup);
       UIPopupWindow uiPopup = uiWikiPermissionForm.getChildById(PERMISSION_POPUP_SELECTOR);
-      uiPopup.setUIComponent(null);
-      uiPopup.setShow(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
+      closePopupAction(uiPopup, event);
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm.getParent());
     }
   }
 
+  private static void closePopupAction(UIPopupWindow uiPopupWindow, Event event) {
+    // To avoid duplicate component id
+    uiPopupWindow.setUIComponent(null);
+    uiPopupWindow.setShow(false);
+    event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupWindow.getParent());
+  }
+  
   static public class ClosePopupActionListener extends EventListener<UIPopupWindow> {
-    @Override
     public void execute(Event<UIPopupWindow> event) throws Exception {
-      UIPopupWindow uiPopupWindow = event.getSource();
-      // To avoid duplicate component id
-      uiPopupWindow.setUIComponent(null);
-      uiPopupWindow.setShow(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupWindow.getParent());
+      closePopupAction(event.getSource(), event);
     }
   }
 
   static public class CloseUserPopupActionListener extends EventListener<UIUserSelector> {
-    @Override
     public void execute(Event<UIUserSelector> event) throws Exception {
-      UIPopupWindow uiPopupWindow = event.getSource().getParent();
-      // To avoid duplicate component id
-      uiPopupWindow.setUIComponent(null);
-      uiPopupWindow.setShow(false);
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupWindow.getParent());
+      closePopupAction((UIPopupWindow)event.getSource().getParent(), event);
     }
   }
 

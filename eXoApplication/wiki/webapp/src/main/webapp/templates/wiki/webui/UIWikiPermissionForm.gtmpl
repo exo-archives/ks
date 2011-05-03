@@ -1,8 +1,5 @@
 <%
-  import org.exoplatform.webui.core.UIPopupWindow;
-  
-  def uiUserPopupWindow = uicomponent.getChildById(uicomponent.USER_PERMISSION_POPUP_SELECTOR);
-  uicomponent.renderChild(uiUserPopupWindow) ;
+  uicomponent.renderChild(uicomponent.USER_PERMISSION_POPUP_SELECTOR) ;
 %>
 <div class="UIForm $uicomponent.id">
   <%uiform.begin()%>
