@@ -15,10 +15,12 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.chromattic.api.ChromatticSession;
+import org.exoplatform.commons.chromattic.ChromatticManager;
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
@@ -70,9 +72,10 @@ import org.exoplatform.wiki.service.search.TemplateSearchData;
 import org.exoplatform.wiki.service.search.TemplateSearchResult;
 import org.exoplatform.wiki.service.search.TitleSearchResult;
 import org.exoplatform.wiki.utils.Utils;
+import org.picocontainer.Startable;
 import org.xwiki.rendering.syntax.Syntax;
 
-public class WikiServiceImpl implements WikiService {
+public class WikiServiceImpl implements WikiService, Startable {
 
   final static private String   USERS_PATH        = "usersPath";
 
@@ -235,7 +238,7 @@ public class WikiServiceImpl implements WikiService {
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     PageImpl draftNewPagesContainer = wStore.getDraftNewPagesContainer();
     PageImpl draftPage = (PageImpl) draftNewPagesContainer.getChild(newDraftPageId);
-    draftPage.remove();
+    if (draftPage != null) draftPage.remove();
   }
 
   public boolean renamePage(String wikiType,
@@ -927,6 +930,29 @@ public class WikiServiceImpl implements WikiService {
     PageImpl orginary = (PageImpl) getPageById(orginaryPageParams.getType(), orginaryPageParams.getOwner(), orginaryPageParams.getPageId());
     PageImpl related = (PageImpl) getPageById(relatedPageParams.getType(), relatedPageParams.getOwner(), relatedPageParams.getPageId());
     return orginary.removeRelatedPage(related) != null;
+  }
+  
+  private void removeDraftPages() {
+    Model model = getModel();
+    WikiStoreImpl wikiStore = (WikiStoreImpl) model.getWikiStore();
+    PageImpl draftPages = wikiStore.getDraftNewPagesContainer();
+    draftPages.remove();
+  }
+  
+  @Override
+  public void start() {
+    if (log.isInfoEnabled())
+      log.info("removing draft page container ...");
+    ChromatticManager chromatticManager = (ChromatticManager) ExoContainerContext.getCurrentContainer()
+                                                                                 .getComponentInstanceOfType(ChromatticManager.class);
+    RequestLifeCycle.begin(chromatticManager);
+    removeDraftPages();
+    RequestLifeCycle.end();
+  }
+
+  @Override
+  public void stop() {
+    
   }
   
 }

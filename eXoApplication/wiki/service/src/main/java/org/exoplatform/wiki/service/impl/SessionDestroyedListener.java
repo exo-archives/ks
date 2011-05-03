@@ -52,10 +52,13 @@ public class SessionDestroyedListener extends Listener<PortalContainer, HttpSess
     if (LOG.isTraceEnabled()) {
       LOG.trace("Removed the key: " + sessionId);
     }
-
-    WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
-    RequestLifeCycle.begin(PortalContainer.getInstance());
-    wikiService.deleteDraftNewPage(sessionId);
-    RequestLifeCycle.end();
+    
+    PortalContainer container = event.getSource();
+    if (container.isStarted()) {
+      WikiService wikiService = (WikiService) container.getComponentInstanceOfType(WikiService.class);
+      RequestLifeCycle.begin(PortalContainer.getInstance());
+      wikiService.deleteDraftNewPage(sessionId);
+      RequestLifeCycle.end();
+    }
   }
 }
