@@ -175,6 +175,7 @@ public class DefaultWikiModel implements WikiModel {
         LOG.warn("An exception happened when checking available status of document: "
             + documentName, e);
       }
+      return false;
     }
     return true;
   }
