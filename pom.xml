@@ -54,7 +54,7 @@
     <exo.product.specification>1.2</exo.product.specification>
     <!-- Dependencies -->
     <com.thoughtworks.xstream.version>1.2</com.thoughtworks.xstream.version>
-    <org.apache.shindig.version>0.8.1-1-r719456</org.apache.shindig.version>
+    <org.apache.shindig.version>trunk-r719456-eXo03</org.apache.shindig.version>
     <javagroups.version>2.5.2</javagroups.version>
     <rome.version>0.9</rome.version>
     <jdom.version>1.0</jdom.version>
