@@ -17,9 +17,7 @@
 package org.exoplatform.poll.service.impl;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +27,6 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -44,6 +41,7 @@ import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollData;
 import org.exoplatform.poll.service.PollInitialData;
 import org.exoplatform.poll.service.PollSummary;
+import org.exoplatform.poll.service.Utils;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
@@ -246,16 +244,8 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
     return result.getNodes();
   }
   
-  private boolean isListEmpty(List<String> list) {
-    if(list == null || list.size() == 0) return true;
-    for (String string : list) {
-      if(string != null && string.trim().length() > 0) return false;
-    }
-    return true;
-  }
-  
   private long getUserRoleOfForum(SessionProvider sProvider, String userName) {
-    if(isEmpty(userName)) return 3;
+    if(Utils.isEmpty(userName)) return 3;
     try {
       String userPatch = "/"+dataLocator.getUserProfilesLocation() + "/" + userName;
       Node userNode = getNodeByPath(userPatch, sProvider);
@@ -303,7 +293,7 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
       // check for moderators
       if(userRole == 1) {
         List<String> moderators = reader.list("exo:moderators", new ArrayList<String>());
-        if(!isListEmpty(allInfoOfUser)) {
+        if(!Utils.isListEmpty(allInfoOfUser)) {
           for (String string : moderators) {
             // user's moderator of the forum content the poll.
             if(allInfoOfUser.contains(string)) return true;
@@ -320,11 +310,11 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
       // check user private.
       viewers.addAll(reader.set("exo:userPrivate", new HashSet<String>()));
       // if viewer is empty then poll public.
-      if (isListEmpty(new ArrayList<String>(viewers))) {
+      if (Utils.isListEmpty(new ArrayList<String>(viewers))) {
         return true;
       }
       // if user login and viewer list not empty.
-      if (!isListEmpty(allInfoOfUser)) {
+      if (!Utils.isListEmpty(allInfoOfUser)) {
         for (String string : viewers) {
           if (allInfoOfUser.contains(string.trim()))
             return true;
@@ -449,7 +439,7 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
         pollNode.setProperty(EXO_VOTE, poll.getVote());
         pollNode.setProperty(EXO_USER_VOTE, poll.getUserVote());
         try {
-          pollNode.setProperty(EXO_LASTVOTE, getGreenwichMeanTime());// new property 2.0 to 2.1
+          pollNode.setProperty(EXO_LASTVOTE, Utils.getGreenwichMeanTime());// new property 2.0 to 2.1
         } catch (RepositoryException e) {
         }
       } else {
@@ -460,13 +450,13 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
           pollNode.setProperty(EXO_ID, pollId);
           pollNode.setProperty(EXO_OWNER, poll.getOwner());
           pollNode.setProperty(EXO_USER_VOTE, new String[] {});
-          pollNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
-          pollNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
+          pollNode.setProperty(EXO_CREATED_DATE, Utils.getGreenwichMeanTime());
+          pollNode.setProperty(EXO_MODIFIED_DATE, Utils.getGreenwichMeanTime());
           if (parentNode.hasProperty(EXO_IS_POLL)) {
             parentNode.setProperty(EXO_IS_POLL, true);
           }
         } else {
-          if (!isEmpty(poll.getOldParentPath()) && !parentNode.getPath().equals(poll.getOldParentPath())) {
+          if (!Utils.isEmpty(poll.getOldParentPath()) && !parentNode.getPath().equals(poll.getOldParentPath())) {
             Session session = getSession(sProvider);
             session.move(poll.getOldParentPath() + "/" + pollId, parentNode.getPath() + "/" + pollId);
             session.save();
@@ -482,7 +472,7 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
 
         if (!isNew) {
           if (pollNode.getProperty(EXO_TIME_OUT).getLong() != poll.getTimeOut())
-            pollNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
+            pollNode.setProperty(EXO_MODIFIED_DATE, Utils.getGreenwichMeanTime());
         }
         pollNode.setProperty(EXO_TIME_OUT, poll.getTimeOut());
         pollNode.setProperty(EXO_QUESTION, poll.getQuestion());
@@ -510,7 +500,7 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
       Node pollNode = appNode.getNode(poll.getId());
       pollNode.setProperty(EXO_IS_CLOSED, poll.getIsClosed());
       if (poll.getTimeOut() == 0) {
-        pollNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
+        pollNode.setProperty(EXO_MODIFIED_DATE, Utils.getGreenwichMeanTime());
         pollNode.setProperty(EXO_TIME_OUT, 0);
       }
       appNode.save();
@@ -519,44 +509,6 @@ public class JCRDataStorage implements DataStorage, PollNodeTypes {
     } finally {
       sProvider.close();
     }
-  }
-
-  public static Calendar getGreenwichMeanTime() {
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setLenient(false);
-    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
-    return calendar;
-  }
-
-  public static boolean isEmpty(String s) {
-    return (s == null || s.trim().length() <= 0) ? true : false;
-  }
-
-  public String[] valuesToArray(Value[] Val) throws Exception {
-    if (Val.length < 1)
-      return new String[] {};
-    List<String> list = new ArrayList<String>();
-    String s;
-    for (int i = 0; i < Val.length; ++i) {
-      s = Val[i].getString();
-      if (!isEmpty(s))
-        list.add(s);
-    }
-    return list.toArray(new String[list.size()]);
-  }
-
-  public List<String> valuesToList(Value[] values) throws Exception {
-    List<String> list = new ArrayList<String>();
-    if (values.length < 1)
-      return list;
-    String s;
-    for (int i = 0; i < values.length; ++i) {
-      s = values[i].getString();
-      if (!isEmpty(s))
-        list.add(s);
-    }
-    return list;
   }
 
 }

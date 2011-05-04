@@ -22,7 +22,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollService;
 import org.exoplatform.poll.service.PollSummary;
-import org.exoplatform.poll.service.impl.JCRDataStorage;
+import org.exoplatform.poll.service.Utils;
 import org.exoplatform.poll.service.impl.PollNodeTypes;
 import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.services.log.ExoLogger;
@@ -33,7 +33,7 @@ import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.MembershipEntry;
 
 /**
- * @author Uoc Nguyen
+ * @author Vu Duy Tu
  * 
  */
 @Path("private/ks/poll")
@@ -47,14 +47,13 @@ public class PollWebservice implements ResourceContainer {
 
   @GET
   @Path("/viewpoll/{resourceid}")
-  //
   @Produces(MediaType.APPLICATION_JSON)
   public Response viewPoll(@PathParam("resourceid") String pollId) throws Exception {
     CacheControl cacheControl = new CacheControl();
     cacheControl.setNoCache(true);
     cacheControl.setNoStore(true);
     PollService pollService = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
-    if (!JCRDataStorage.isEmpty(pollId)) {
+    if (!Utils.isEmpty(pollId)) {
       try {
         Poll poll = pollService.getPoll(pollId);
         if (poll != null) {
@@ -91,8 +90,13 @@ public class PollWebservice implements ResourceContainer {
     }
     PollSummary pollSummary = new PollSummary();
     /*
-     * if(hasGroupAdminOfGatein()) { pollSummary = pollService.getPollSummary(); pollSummary.setIsAdmin("true"); } else { pollSummary.setId("DoNotPermission"); }
-     */
+    if (hasGroupAdminOfGatein()) {
+      pollSummary = pollService.getPollSummary();
+      pollSummary.setIsAdmin("true");
+    } else {
+      pollSummary.setId("DoNotPermission");
+    }
+    */
     pollSummary = pollService.getPollSummary(getAllGroupAndMembershipOfUser());
     pollSummary.setIsAdmin("true");
     return Response.ok(pollSummary, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
@@ -100,13 +104,12 @@ public class PollWebservice implements ResourceContainer {
 
   @GET
   @Path("/votepoll/{pollId}/{indexVote}")
-  //
   @Produces(MediaType.APPLICATION_JSON)
   public Response votePoll(@PathParam("pollId") String pollId, @PathParam("indexVote") String indexVote) throws Exception {
     CacheControl cacheControl = new CacheControl();
     cacheControl.setNoCache(true);
     cacheControl.setNoStore(true);
-    if (!JCRDataStorage.isEmpty(pollId) && !JCRDataStorage.isEmpty(indexVote)) {
+    if (!Utils.isEmpty(pollId) && !Utils.isEmpty(indexVote)) {
       try {
         PollService pollService = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
         Poll poll = pollService.getPoll(pollId.trim());
@@ -193,7 +196,7 @@ public class PollWebservice implements ResourceContainer {
       String[] posHaveVoted = (setUserVote[pos].substring(setUserVote[pos].indexOf(":"))).split(":");
       setUserVote[pos] = setUserVote[pos].substring(0, setUserVote[pos].indexOf(":"));
       for (String posVoted : posHaveVoted) {
-        if (JCRDataStorage.isEmpty(posVoted)) {
+        if (Utils.isEmpty(posVoted)) {
           doubleVote[Integer.parseInt(posVoted)] -= 1;
           totalVote -= 1;
         }
@@ -227,12 +230,12 @@ public class PollWebservice implements ResourceContainer {
     if (poll_.getIsClosed())
       return true;
     if (poll_.getTimeOut() > 0) {
-      Date today = JCRDataStorage.getGreenwichMeanTime().getTime();
+      Date today = Utils.getGreenwichMeanTime().getTime();
       if ((today.getTime() - poll_.getCreatedDate().getTime()) >= poll_.getTimeOut() * 86400000)
         return true;
     }
     String username = getUserId();
-    if (JCRDataStorage.isEmpty(username))
+    if (Utils.isEmpty(username))
       return true;
     String[] userVotes = poll_.getUserVote();
     for (String string : userVotes) {
