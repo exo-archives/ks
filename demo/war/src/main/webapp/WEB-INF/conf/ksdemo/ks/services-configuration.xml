@@ -126,7 +126,7 @@
     <component-plugin>
       <name>default.data</name>
       <set-method>addInitialDefaultDataPlugin</set-method>
-      <type>org.exoplatform.forum.service.conf.InitializeForumPlugin</type>
+      <type>org.exoplatform.forum.service.InitializeForumPlugin</type>
       <description>description</description>
       <init-params>
         <object-param>

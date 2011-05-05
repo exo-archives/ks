@@ -24,7 +24,6 @@ import java.util.List;
 
 import javax.jcr.Value;
 
-import org.exoplatform.faq.service.impl.FAQNodeTypes;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 
 /**

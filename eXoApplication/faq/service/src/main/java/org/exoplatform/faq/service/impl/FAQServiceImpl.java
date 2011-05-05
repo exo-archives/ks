@@ -54,7 +54,6 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.Message;
-import org.exoplatform.services.organization.User;
 import org.picocontainer.Startable;
 
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;

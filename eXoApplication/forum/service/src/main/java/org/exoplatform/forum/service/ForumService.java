@@ -25,8 +25,6 @@ import java.util.List;
 import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.forum.service.conf.SendMessageInfo;
-import org.exoplatform.forum.service.impl.ForumEventListener;
 import org.exoplatform.services.organization.User;
 
 /**

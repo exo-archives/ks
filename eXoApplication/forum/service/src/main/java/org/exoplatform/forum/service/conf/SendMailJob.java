@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.ks.common.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;

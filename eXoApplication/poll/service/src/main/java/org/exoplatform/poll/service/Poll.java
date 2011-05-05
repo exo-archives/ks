@@ -18,7 +18,6 @@ package org.exoplatform.poll.service;
 
 import java.util.Date;
 
-import org.exoplatform.poll.service.impl.PollNodeTypes;
 import org.exoplatform.services.jcr.util.IdGenerator;
 
 /**

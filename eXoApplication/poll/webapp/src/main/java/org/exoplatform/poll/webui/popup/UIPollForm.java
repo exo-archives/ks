@@ -30,7 +30,7 @@ import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.poll.Utils;
 import org.exoplatform.poll.service.Poll;
-import org.exoplatform.poll.service.impl.PollNodeTypes;
+import org.exoplatform.poll.service.PollNodeTypes;
 import org.exoplatform.poll.webui.BasePollForm;
 import org.exoplatform.poll.webui.UIPollManagement;
 import org.exoplatform.poll.webui.UIPollPortlet;

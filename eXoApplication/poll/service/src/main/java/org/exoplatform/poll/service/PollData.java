@@ -19,8 +19,6 @@ package org.exoplatform.poll.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.poll.service.impl.PollNodeTypes;
-
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform

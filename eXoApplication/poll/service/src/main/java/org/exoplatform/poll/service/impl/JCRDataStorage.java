@@ -40,6 +40,7 @@ import org.exoplatform.poll.service.InitialDefaultDataPlugin;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollData;
 import org.exoplatform.poll.service.PollInitialData;
+import org.exoplatform.poll.service.PollNodeTypes;
 import org.exoplatform.poll.service.PollSummary;
 import org.exoplatform.poll.service.Utils;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;

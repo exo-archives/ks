@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.forum.service.impl.ForumNodeTypes;
 import org.exoplatform.services.mail.Message;
 
 /**

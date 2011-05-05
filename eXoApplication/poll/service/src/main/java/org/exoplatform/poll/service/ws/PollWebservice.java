@@ -20,10 +20,10 @@ import javax.ws.rs.core.Response.Status;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.poll.service.Poll;
+import org.exoplatform.poll.service.PollNodeTypes;
 import org.exoplatform.poll.service.PollService;
 import org.exoplatform.poll.service.PollSummary;
 import org.exoplatform.poll.service.Utils;
-import org.exoplatform.poll.service.impl.PollNodeTypes;
 import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;

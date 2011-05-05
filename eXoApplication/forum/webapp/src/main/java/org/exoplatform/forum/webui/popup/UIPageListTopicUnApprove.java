@@ -21,9 +21,9 @@ import java.util.List;
 
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.service.ForumNodeTypes;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.impl.ForumNodeTypes;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;

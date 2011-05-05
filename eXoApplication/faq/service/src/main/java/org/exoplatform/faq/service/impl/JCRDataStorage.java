@@ -70,6 +70,7 @@ import org.exoplatform.faq.service.CategoryInfo;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.DataStorage;
 import org.exoplatform.faq.service.FAQEventQuery;
+import org.exoplatform.faq.service.FAQNodeTypes;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;

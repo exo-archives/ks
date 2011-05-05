@@ -29,8 +29,6 @@ import java.util.Map;
 import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.forum.service.conf.SendMessageInfo;
-import org.exoplatform.forum.service.impl.ForumEventListener;
 import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.services.organization.User;
 

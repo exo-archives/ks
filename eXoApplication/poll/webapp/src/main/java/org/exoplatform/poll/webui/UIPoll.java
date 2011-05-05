@@ -23,12 +23,11 @@ import java.util.List;
 import javax.portlet.PortletPreferences;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.poll.Utils;
 import org.exoplatform.poll.service.Poll;
-import org.exoplatform.poll.service.impl.PollNodeTypes;
+import org.exoplatform.poll.service.PollNodeTypes;
 import org.exoplatform.poll.webui.popup.UIPollForm;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;

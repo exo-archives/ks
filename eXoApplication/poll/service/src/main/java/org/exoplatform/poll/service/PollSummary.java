@@ -3,8 +3,6 @@ package org.exoplatform.poll.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.poll.service.impl.PollNodeTypes;
-
 public class PollSummary {
   private String       id;
 
