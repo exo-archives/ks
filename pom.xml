@@ -83,6 +83,7 @@
     <jdom.version>1.0</jdom.version>
     
 	<c3p0.version>0.9.1.2</c3p0.version>
+  <bouncycastle.version>136</bouncycastle.version>
 	<net.oauth.version>20080621</net.oauth.version>
 	<cglib.version>2.2</cglib.version>
 	<commons-dbcp.version>1.2.1</commons-dbcp.version>
