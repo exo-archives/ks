@@ -1,9 +1,10 @@
+
 .UITopicDetail {
 	
 }
 
 .UITopicDetail .ButtomAndPageListContainer {
-	margin: 0px 0px 1px 0px;
+	margin: 10px 0px 1px 0px;
 }
 
 .UITopicDetail .PostReplyIcon {
@@ -23,7 +24,7 @@
 }
 
 .UITopicDetail .IPIcon {
-	float: left;
+	float: right;
 	width: 16px;
 	height: 16px;
 	cursor: pointer;
@@ -102,27 +103,24 @@
 
 .UITopicDetail .MemberContent .State {
 	float: left;
-	width: 16px;
 	height: 20px;
 	cursor: pointer;
 }
 
 .UITopicDetail .MemberContent .AvailableIcon {
-	background: url('icons/16x16/OnlineIcon.gif') no-repeat center;
+	background: url('icons/16x16/OnlineIcon.gif') no-repeat left center;
 }
 
 .UITopicDetail .MemberContent .BusyIcon {
-	background: url('../skinIcons/16x16/icons/BusyIcon.gif') no-repeat
-		center;
+	background: url('../skinIcons/16x16/icons/BusyIcon.gif') no-repeat left center;
 }
 
 .UITopicDetail .MemberContent .Name {
-	float: left;
+	float: none;
 	color: #135bbe;
-	font-size: 14px;
-	font-weight: bold;
 	line-height: 20px;
-	padding: 0px 5px;
+	padding: 0px 5px 0px 20px;
+	margin: 0px;
 }
 
 .UITopicDetail .MemberContent .Action {
@@ -168,15 +166,16 @@
 }
 
 .UITopicDetail .PostViewContainer .PostViewIcon {
-	font-weight: bold;
-	font-size: 12px;
-	font-family: arial;
 	line-height: 20px;
 	padding-left: 20px;
+	margin: 0px;
 }
 
 .UITopicDetail .PostViewContainer .PostTime {
 	padding: 2px 0px 0px 20px;
+	margin-right:4px;
+	font-size:10px; 
+	color:gray;
 }
 
 .UITopicDetail .PostViewContainer .PostContentContainer {
@@ -186,25 +185,19 @@
 .UITopicDetail .PostViewContainer .PostContent {
 	width: 100%;
 	overflow-x: auto;
+	padding-top: 8px;
 }
 
 .UITopicDetail .PostViewContainer .PostContent table {
 	border-collapse: separate;
 }
 
-.UITopicDetail .PostViewContainer a {
-	color: blue;
-}
-
-.UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentTitle
-	{
-	background: #e7e7e7
-		url('/forum/skin/DefaultSkin/webui/skinIcons/16x16/icons/AttachmentIcon.gif')
-		no-repeat 3px center;
+.UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentTitle	{
+	background: #e7e7e7 url('/forum/skin/DefaultSkin/webui/skinIcons/16x16/icons/AttachmentIcon.gif') no-repeat 3px center;
 	padding-left: 20px;
 	line-height: 25px;
-	font-weight: bold;
 	white-space: nowrap;
+	margin: 0px;
 }
 
 .UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentBox {
@@ -219,16 +212,16 @@
 .UITopicDetail .AttachmentContainer .Image {
 	float: left;
 	margin: 0px 10px 0px 0px;
+	cursor: pointer;
 }
 
 .UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentIcon {
-	float: left;
 	height: 20px;
-	width: 20px;
+	width: auto;
+	padding-left: 20px;
 }
 
-.UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentLabel
-	{
+.UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentLabel{
 	color: #1555b5;
 	line-height: 20px;
 	font-weight: bold;
@@ -244,7 +237,6 @@
 }
 
 .UITopicDetail .PostViewContainer .AttachmentContainer .Action .Icon {
-	float: left;
 	color: #1555b5;
 	padding-left: 20px;
 	line-height: 20px;
@@ -263,13 +255,14 @@
 }
 
 .UITopicDetail .PostViewContainer .AttachmentContainer .Size {
-	padding-left: 25px;
+	padding-left: 33px;
 }
 
 .UITopicDetail .PostViewContainer .FootPost {
 	border-top: 1px dotted #9b9b9b;
 	padding: 5px 8px 0px 8px;
 	width: auto;
+	margin-bottom: 2px;
 }
 
 .UITopicDetail .PostViewContainer .PostInfo {
@@ -278,8 +271,10 @@
 }
 
 .UITopicDetail .PostViewContainer .ButtonContainer {
-	float: right;
-	padding: 0px 0px 0px 0px;
+	padding: 0px;
+	color: gray;
+	text-align: justify;
+	font-size: 11px;
 }
 
 /***************************************** Quote ****************************************/
@@ -340,6 +335,7 @@
 }
 
 /*----------------------ForumQuickReply-----------------------*/
+
 .UITopicDetail .ActionContainer {
 	width: 100%;
 }
@@ -407,4 +403,96 @@
 
 .UITopicDetail .MenuTagContainer .TagItem{
 	float: left;
+}
+
+.UIForumPortlet .UITopicDetail .SearchForm .UIPopupCategory .SearchTopic .InputPage{
+	padding: 0px;
+}
+
+.UIForumPortlet .UITopicDetail .ContentAction .UIRightPopupMenuContainer .UIActionForum{
+	padding: 0px 0px 0px 1px;
+}
+
+.UITopicDetail .SearchForm .UIPopupCategory .UIRightPopupMenuContainer .SearchTopic {
+	border-bottom: 1px solid #7B7B7B;
+	margin: 0 5px 3px 5px;
+	padding-bottom: 5px;
+}
+
+/*---------------------- Optimization CSS UITopicDetail-----------------------*/
+
+.UITopicDetail .ButtomAndPageListContainer .TitleTag{
+	padding-left: 20px; 
+	line-height: 24px;
+}
+
+.UITopicDetail .GotoPageIcon .BntGoPage{
+	width:20px; 
+	height:16px;
+	display: block;
+}
+
+.UITopicDetail .ButtonHeadBar .UIPopupCategory .BlockAddTag{
+	padding:5px 0px;
+	min-width:155px;
+	display:block; 
+	left:-103px;
+}
+
+.UITopicDetail .ButtonHeadBar .UIPopupCategory .BlockAddTag input{
+	margin-left: 5px;
+}
+
+.UITopicDetail .ContentContainer{
+	margin: 2px 0px 0px 0px;
+}
+
+.UITopicDetail .MemberContent .ContentAction .ImgAvatar{
+	width: 70px;
+	cursor:pointer;
+	max-width: 165px;
+}
+.UITopicDetail .PostViewContainer .UIPopupCategory .BloclPopupIP{
+	display:block; 
+	left:-60px;
+	width:165px;
+	min-width:164px;
+}
+
+.UITopicDetail .PostViewContainer .UIPopupCategory{
+	position: relative;
+}
+
+.UITopicDetail .ContentContainer .PostViewTitleOtherAcc{
+	width: 100%;
+}
+
+.UITopicDetail .ContentAction .UIPopupCategory ul {
+	list-style: none;
+	padding: 0px;
+}
+
+.UITopicDetail .UIPopupCategory{
+	position: relative;
+}
+
+.UIForumContainer .ContentContainer .MemberContent .InfoMember span{
+	display: block;
+}
+
+.UITopicDetail .MemberContent .MemberName .TxtTitleName{
+	cursor:pointer;
+}
+
+.UITopicDetail .PostViewContainer .PostViewHeader .CheckPost .checkbox{
+	margin: 2px;
+	padding: 0px;
+}
+
+.UITopicDetail .PostsInThreadContainer .FootPost .TxtLastEdit{
+	text-align: right;
+}
+
+.UITopicDetail .PostsInThreadContainer .FootPost .TxtLastEdit .TxtRoot{
+	color:blue;
 }
