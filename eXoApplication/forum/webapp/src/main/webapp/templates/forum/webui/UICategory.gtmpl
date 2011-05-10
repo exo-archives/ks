@@ -48,17 +48,9 @@
 					<div class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 				<% if(isShowMenu){ %>
 					<div class="ForumSeparatorLine"><span></span></div>
-					<div class="ToolbarActionsContainer" onclick="eXo.forum.UIForumPortlet.checkAction(this, event, 6);">
-						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-							<div class="LeftOverButton">
-								<div class="RightOverButton">
-									<div class="CenterOverButton">
-										<div class="ManageCategoryButton">
-											<div class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.manageCategory");%></div>
-										</div>
-									</div>
-								</div>
-							</div>
+					<div class="ToolbarActionsContainer DefaultStyle" onclick="eXo.forum.UIForumPortlet.checkAction(this, event, 6);" >
+						<div class="ManageCategoryButton StatusIcon">
+							<div class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.manageCategory");%></div>
 						</div>
 						<div class="fixPupupMenu">
 						<% /*Begin Popup Menu*/ %>
@@ -118,20 +110,13 @@
 						</div>
 					</div>
 					<% } %>
-					<div class="ContentAction" style="float:right; margin:2px 0px 0px 0px;">
-						<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
-							<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-								<div class="LeftOverButton" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>">
-									<div class="RightOverButton">
-										<div class="CenterOverButton">
-											<div class="SearchIcon">
-												<div class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.SearchThisCategory");%></div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div style="position:relative;">
+					<div class="ContentAction SearchForm DefaultStyle" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>"  style="float:right;">
+
+						<div class="SearchIcon StatusIcon">
+							<div class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.SearchThisCategory");%></div>
+						</div>
+
+						<div style="position:relative;">
 							<% /*Begin Popup Menu*/ %>
 								<div class="UIPopupCategory SearchPopup" style="display:none; top:auto;">
 									<div class="UIRightClickPopupMenu" style="display:block;">
@@ -179,52 +164,27 @@
 									</div>
 								</div>
 							<% /*End Popup Menu*/ %>
-							</div>
 						</div>
 					</div>
-					<div class="ButtonHeadBar">
-						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-							<div class="LeftOverButton">
-								<div class="RightOverButton">
-									<div class="CenterOverButton">
-										<div class="AddRSS ForumRSSFeed" style="padding-left:16px;line-height:22px;">
-											<a style="display:block;" href="javascript:window.open('<%=uicomponent.getRSSLink(categoryId)%>'); <%=uicomponent.event("RSS", categoryId).replace("javascript:","")%>;">&nbsp;RSS</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+					<div class="ButtonHeadBar DefaultStyle" >
+
+						<a style="padding-left:16px;line-height:20px; display:block;" class="AddRSS ForumRSSFeed StatusIcon " href="javascript:window.open('<%=uicomponent.getRSSLink(categoryId)%>'); <%=uicomponent.event("RSS", categoryId).replace("javascript:","")%>;">&nbsp;RSS</a>
+
 					</div>
 				<%if(uicomponent.userProfile.getUserRole() < 3){%>
-					<div class="ButtonHeadBar">
-						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-							<div class="LeftOverButton">
-								<div class="RightOverButton">
-									<div class="CenterOverButton">
-										<div class="AddLinkToBookIcon" style="padding-left:16px;">
-											<a style="display:block;" href="<%=uicomponent.event("AddBookMark","category//"+categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+					<div class="ButtonHeadBar DefaultStyle" >
+
+						<a class="AddLinkToBookIcon" style="display:block; padding-left:16px;" href="<%=uicomponent.event("AddBookMark","category//"+categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+
 					</div>
-					<div class="ButtonHeadBar">
-						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-							<div class="LeftOverButton">
-								<div class="RightOverButton">
-									<div class="CenterOverButton">
-										<div class="AddWatchingIcon" style="padding-left:16px;">
-										<% if(uicomponent.isWatching(category.getPath())) {%>
-											<a style="display:block;" href="<%=uicomponent.event("UnWatch",categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
-										<% } else { %>
-											<a style="display:block;" href="<%=uicomponent.event("AddWatching",categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
-										<% } %>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+					<div class="ButtonHeadBar DefaultStyle">
+
+						<% if(uicomponent.isWatching(category.getPath())) {%>
+							<a class="AddWatchingIcon" style="display:block; padding-left:16px;" href="<%=uicomponent.event("UnWatch",categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+						<% } else { %>
+							<a class="AddWatchingIcon" style="display:block; padding-left:16px;" href="<%=uicomponent.event("AddWatching",categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+						<% } %>
+
 					</div>
 				<% } %>	
 					

@@ -265,6 +265,10 @@
 	color: #058ee6;
 }
 
+.UIForumPortlet .ContentContainer .UITopicList .UIRightClickPopupMenu a {
+	padding-left: 30px;
+}
+
 .UIForumPortlet .ContentContainer .ForumStatsList a {
 	color: #058ee6;
 }
@@ -339,6 +343,14 @@
 	line-height: 14px;
 }
 
+.UIForumPortlet .ContentContainer .LastPostInfos .LastPostCategory{
+	display:none; 
+	left:2px; 
+	top:2px; 
+	width:auto; 
+	position: relative;
+}
+
 .UIForumPortlet .ContentContainer .UITopicList .PostBy {
 	color: #038ee6;
 }
@@ -357,6 +369,7 @@
 
 .UIForumPortlet .ButtomAndPageListContainer {
 	height: 24px;
+	padding-top: 4px;
 }
 
 .UIListTopicOld .UITopicList .IconContent {
@@ -491,45 +504,4 @@
 	background: url('background/BottomCenter1x20.png') repeat-x bottom;
 	height:20px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

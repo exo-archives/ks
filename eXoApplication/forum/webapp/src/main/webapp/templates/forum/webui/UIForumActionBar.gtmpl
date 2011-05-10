@@ -36,27 +36,23 @@
 										} else isAdm = false;
 								%>
 
-									<div class="DefaultStyle ControlButton ForumBar" id="$action" onmouseover="eXo.forum.UIForumPortlet.OverButton(this);" onmouseout="eXo.forum.UIForumPortlet.OverButton(this);">
+									<div class="DefaultStyle ControlButton ForumBar" id="$action" >
 										<%if(isAdm){%>
 										<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">	
 										<%}%>
-											<div class="LeftOverButton">
-												<div class="RightOverButton">
-													<div class="CenterOverButton">
+											
 														<div class="Icon $action">
 														<%if(isAdm){%>
-															<div class="DownArrow1Icon" style="padding-right:16px;">
-																<a href="javaScript: void(0);"><%=_ctx.appRes("UIForumActionBar.label.Administrations");%></a>
-															</div>
+
+															<a class="DownArrow1Icon" style="padding-right:16px;" href="javaScript: void(0);"><%=_ctx.appRes("UIForumActionBar.label.Administrations");%></a>
+
 														<%} else {%>
 															<a href="<%=uicomponent.event(action)%>" style="display:block;">
-																<span><%= _ctx.appRes("UIForumActionBar.label." + action); %></span>
+																<%= _ctx.appRes("UIForumActionBar.label." + action); %>
 															</a>
 														<%}%>
 														</div>
-													</div>
-												</div>
-											</div>
+													
 										<%if(isAdm){%>
 											<div style="position:relative;">
 											<% /*Begin Popup Menu*/ %>

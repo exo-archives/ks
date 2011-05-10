@@ -117,13 +117,13 @@
 	margin-top: 3px;
 	float: right; 
 	width: 21px; height: 17px;
+	display: block;
+	cursor: pointer;
 }
 
 .UIForumPortlet .GotoPageIcon .UIPopupCategory {
-	left:-30px;
-	position: absolute;
-	top: 2px;
-	width:120px;
+	left:-90px;
+	position: relative;
 	z-index: 1010;
 }
 
@@ -131,10 +131,16 @@
 	padding: 2px 6px;
 }
 
-.UIForumPortlet .SearchForm .UIPopupCategory .InputPage input{
-	width: 95px;
+.UIForumPortlet .SearchForm .UIPopupCategory input{
+	width: 68px;
 	height: 12px;
 	font-size: 11px;
+	float: left;
+}
+
+.UIForumPortlet .SearchForm .UIPopupCategory .BorderSearch{
+	border-bottom: 1px solid #707070;
+	padding-bottom: 6px;
 }
 
 .UIForumPortlet .GotoPageIcon .UIPopupCategory .InputPage {
@@ -145,4 +151,24 @@
 	width:30px;
 	height: 12px;
 	font-size: 12px;
+}
+
+/*=========================== Add ==========================*/
+
+.UIForumPortlet .GotoPageIcon .UIRightClickPopupMenu{
+	width: 122px;
+	right: 0px;
+	padding: 10px 12px;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu{
+	background: #f6f6f6;
+	border: 1px solid #d9d9d9;
+	z-index: 100;
+}
+
+.UIForumPortlet .GotoPageIcon .UIRightClickPopupMenu input{
+	width: 50px;
+	height: 13px;
+	float: left;
 }

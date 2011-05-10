@@ -159,7 +159,7 @@ UIForumPortlet.prototype.checkAll = function(obj) {
 
 //DungJs
 UIForumPortlet.prototype.checkAction = function(obj, evt) {
-	eXo.webui.UIPopupSelectCategory.show(obj, evt) ;
+	eXo.forum.UIForumPortlet.showPopup(obj, evt) ;
 	var uiCategory = document.getElementById("UICategory") ;
 	var uiRightClickPopupMenu = eXo.core.DOMUtil.findFirstDescendantByClass(uiCategory, "div", "UIRightClickPopupMenu") ;
 	var checkboxes = eXo.core.DOMUtil.findDescendantsByClass(uiCategory, "input", "checkbox") ;
@@ -205,41 +205,12 @@ UIForumPortlet.prototype.checkAction = function(obj, evt) {
 	}
 } ;
 
-UIForumPortlet.prototype.visibleAction = function(id) {
-	var parent = document.getElementById(id);
-	var DOMUtil = eXo.core.DOMUtil;
-	var addCategory = DOMUtil.findFirstDescendantByClass(parent, "div", "AddCategory") ;
-	if(!addCategory) return ;
-	var addForum = DOMUtil.findFirstDescendantByClass(parent, "div", "AddForum") ;
-	var isIE = document.all?true:false;
-	if(document.getElementById("UICategories")){
-		addCategory.className = "Icon AddCategory";
-		addForum.className = "Icon AddForum";
-	} else if(document.getElementById("UICategory")){
-		addCategory.className = "Icon AddCategory DisableAction";
-		addForum.className = "Icon AddForum";
-		if(isIE)addCategory.firstChild.href = "javascript:void(0);";
-		else addCategory.childNodes[1].href = "javascript:void(0);";
-	} else {
-		addCategory.className = "Icon AddCategory DisableAction";
-		addForum.className = "Icon AddForum DisableAction";
-		if(isIE){
-			addCategory.firstChild.href = "javascript:void(0);";
-			addForum.firstChild.href = "javascript:void(0);";		
-		}else{
-			addCategory.childNodes[1].href = "javascript:void(0);";
-			addForum.childNodes[1].href = "javascript:void(0);";
-		}
-	}
-};
-
 UIForumPortlet.prototype.checkActionTopic = function(obj, evt) {
-	eXo.webui.UIPopupSelectCategory.show(obj, evt) ;
-	var DOMUtil = eXo.core.DOMUtil;
+	eXo.forum.UIForumPortlet.showPopup(obj, evt) ;
 	var parentMenu = document.getElementById("ModerationMenu") ;
 	var menuItems = parentMenu.getElementsByTagName("a") ;
 	var parentContent = document.getElementById("UITopicContent") ;
-	var checkBoxs = DOMUtil.findDescendantsByClass(parentContent, "input", "checkbox") ;
+	var checkBoxs = eXo.core.DOMUtil.findDescendantsByClass(parentContent, "input", "checkbox") ;
 	var clen = checkBoxs.length ;
 	var mlen = menuItems.length ;
 	var divChecked = document.getElementById('divChecked'); 
@@ -252,14 +223,12 @@ UIForumPortlet.prototype.checkActionTopic = function(obj, evt) {
 		}
 	}
 	if(j === 0) {
-		for(var k = 0; k < mlen; k ++) {
-			if(DOMUtil.findAncestorByClass(menuItems[k], "SetUnWaiting") != null) break;
+		for(var k = 0; k < mlen-1; k ++) {
 			if(!menuItems[k].getAttribute("tmpClass")) {
 				menuItems[k].setAttribute("tmpClass",menuItems[k].className) ;
 				menuItems[k].setAttribute("tmpHref",menuItems[k].href) ;
 				menuItems[k].className = "DisableMenuItem" ;
 				menuItems[k].href = "javascript:void(0);" ;
-				DOMUtil.findAncestorByClass(menuItems[k], "ItemIcon").onclick = eXo.forum.UIForumPortlet.cancel;
 			}	
 		}	
 	} else {
@@ -338,16 +307,6 @@ UIForumPortlet.prototype.checkedChildNode = function(elm) {
   }
 } ;
 
-UIForumPortlet.prototype.OverButton = function(oject) {
-	if(oject.className.indexOf("Action") > 0){
-		var Srt = "";
-		for(var i=0; i<oject.className.length - 6; i++) {
-			Srt = Srt + oject.className.charAt(i);
-		}
-		oject.className = Srt;
-	}	else oject.className = oject.className + "Action";
-};
-
 UIForumPortlet.prototype.initVote = function(voteId, rate) {
 	var vote = document.getElementById(voteId) ;
 	var DOMUtil = eXo.core.DOMUtil ;
@@ -395,8 +354,8 @@ UIForumPortlet.prototype.showPopup = function(elevent,e) {
 	}
 	if(!e) e = window.event ;
 		e.cancelBubble = true ;
-	var parend = eXo.core.DOMUtil.findAncestorByTagName(elevent, "div") ;
-	var popup = eXo.core.DOMUtil.findFirstDescendantByClass(parend, "div", "UIPopupCategory") ;
+	//var parend = eXo.core.DOMUtil.findAncestorByTagName(elevent, "div") ;
+	var popup = eXo.core.DOMUtil.findFirstDescendantByClass(elevent, "div", "UIPopupCategory") ;
 	if(popup.style.display === "none") {
 		popup.style.display = "block" ;
 		eXo.core.DOMUtil.listHideElements(popup) ;
@@ -417,7 +376,7 @@ UIForumPortlet.prototype.goLastPost = function(idLastPost) {
 			var body = document.getElementsByTagName('body')[0];
 			if(body.scrollTop > 250) {
 				script:scroll(0,0);
-				var viewPage = document.getElementById('KSMaskLayer') ;
+				var viewPage = document.getElementById('MaskLayerForum') ;
 				if(viewPage)viewPage.scrollIntoView(true) ;
 			}
 		} else {
@@ -465,8 +424,6 @@ UIForumPortlet.prototype.hidePicture = function() {
 } ;
 
 UIForumPortlet.prototype.showPicture = function(src) {
-  eXo.ks.MaskLayerControl.showPicture(src);
-	/*
   var containerNode = document.createElement('div') ;
   var imageNode = document.createElement('img') ;
   imageNode.src = src ;
@@ -479,7 +436,6 @@ UIForumPortlet.prototype.showPicture = function(src) {
 	this.showFullScreen(imageNode,containerNode);
   var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
 	eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.ks.MaskLayerControl.scrollHandler) ;
-	*/
 };
 
 UIForumPortlet.prototype.getImageSize = function(imageNode){
@@ -532,27 +488,48 @@ UIForumPortlet.prototype.onClickDisableTexarea = function() {
 	}
 };
 
-UIForumPortlet.prototype.setDisableInfo = function() {
-	var strs = new Array("CanPost","CanView");
-	for (var i = 0; i < strs.length; i++) {
-		var elm = document.getElementById(strs[i]) ;
-		if(elm === null) return ;
-		eXo.forum.UIForumPortlet.setShowInfo(elm);
-		elm.onkeyup= function() {
-			eXo.forum.UIForumPortlet.setShowInfo(this);
-		};
-  }
-};
-
-UIForumPortlet.prototype.setShowInfo = function(elm) {
-	var info = document.getElementById(elm.id+"Info");
-	if(elm.value === ''){
-		info.style.display = 'block';
-	} else {
-		info.style.display = 'none';
+UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
+	var objCmdElm = document.getElementById(cmdElm);
+	var objElm = document.getElementById(elm) ;
+	if(objCmdElm === null) return ;
+	var parentElm = eXo.core.DOMUtil.findAncestorByClass(objElm, "FieldComponent") ;
+	var tagA = parentElm.getElementsByTagName('a') ;
+	var imgA = parentElm.getElementsByTagName('img') ;
+	for(var i=0; i < tagA.length; ++i) {
+		tagA[i].setAttribute("tmpHref",tagA[i].href) ;
+		tagA[i].href = "javascript:void(0);" ;
 	}
+	objElm.disabled = 'disabled' ;
+	if(objCmdElm.value === '') {
+		objElm.disabled = 'disabled' ;
+		objElm.value = '' ;
+		for(var i=0; i < tagA.length; ++i) {
+			tagA[i].href = "javascript:void(0);" ;
+		}
+	} else {
+		objElm.disabled = '' ;
+		for(var i=0; i < tagA.length; ++i) {
+			tagA[i].href = tagA[i].getAttribute("tmpHref") ;
+		}
+	}
+	objCmdElm.onkeyup= function() {
+		if(this.value != '') {
+			objElm.disabled = '' ;
+			for(var i=0; i < tagA.length; ++i) {
+				tagA[i].href = tagA[i].getAttribute("tmpHref") ;
+			}
+		} else {
+			objElm.disabled = 'disabled' ;
+			objElm.value = '' ;
+			for(var i=0; i < tagA.length; ++i) {
+				tagA[i].href = "javascript:void(0);" ;
+			}
+			if(elm === 'Postable') {
+				eXo.forum.UIForumPortlet.setDisableInput('Viewer','Postable') ;
+			}
+		}
+	};
 };
-
 
 //UIForumPortlet.prototype.finterImage = function(elm_, isFT) {
 //	var isIE = document.all?true:false;
@@ -564,6 +541,38 @@ UIForumPortlet.prototype.setShowInfo = function(elm) {
 //		else elm_.filters[0].opacity = "100";
 //	}
 //};
+
+UIForumPortlet.prototype.setMaskLayer = function(id) {
+	var DOMUtil = eXo.core.DOMUtil;
+	var forumPortlet = document.getElementById(id) ;
+	var masklayer = DOMUtil.findFirstDescendantByClass(forumPortlet, "div", "MaskLayerForum") ;
+	var popupAction = DOMUtil.findFirstDescendantByClass(forumPortlet, "span", "UIForumPopupAction") ;
+	var popupWindow = DOMUtil.findFirstDescendantByClass(popupAction, "div", "UIPopupWindow") ;
+ 	if(masklayer) {
+  	masklayer.style.width = "auto";
+  	masklayer.style.height = "auto";
+	 	if(popupWindow) {
+		 	if(popupWindow.style.display == "block") {
+				masklayer.style.width = (forumPortlet.offsetWidth - 3) + "px";
+				masklayer.style.height = (forumPortlet.offsetHeight - 3) + "px";
+			}
+			var closeButton = DOMUtil.findFirstDescendantByClass(popupAction, "div", "CloseButton") ;
+			if(closeButton) {
+				var newDiv = DOMUtil.findFirstDescendantByClass(closeButton, "div", "ClosePopup") ;
+				if(!newDiv) newDiv = document.createElement("div");
+				closeButton.appendChild(newDiv);
+				newDiv.style.width = "16px";
+				newDiv.style.height = "16px";
+				newDiv.className = "ClosePopup";
+				newDiv.innerHTML = '<span></span>' ;
+				newDiv.onclick = function(){
+					masklayer.style.width = "auto";
+					masklayer.style.height = "auto";
+				};
+			}
+	 	}
+	}
+};
 
 UIForumPortlet.prototype.onloadReSizeAvatar = function(idElm) {
 	setTimeout("eXo.forum.UIForumPortlet.reSizeAvatar('"+idElm+"')", 1000);
@@ -757,10 +766,6 @@ UIForumPortlet.prototype.loadScroll = function(e) {
 		
     uiNav.scrollManagerLoaded = true;
     uiNav.initScroll() ;
-    var lastButton = document.getElementById('OpenBookMarkSp');
-    if(lastButton && lastButton.style.display=="none"){
-    	document.getElementById('OpenBookMark').style.display = "none";
-    }
   }
 } ;
 
@@ -825,7 +830,7 @@ UIForumPortlet.prototype.initTagScroll = function() {
 		}
 		else {
 			tmp = elements[i].cloneNode(true);
-			eXo.core.DOMUtil.replaceClass(tmp,"FloatLeft","TagItem");
+			eXo.core.DOMUtil.replaceClass(tmp,"FloatLeft","MenuItem");
 			tmp.style.display = "block";
 			menuContainer.appendChild(tmp)		
 			elements[i].style.display = "none";
@@ -842,9 +847,9 @@ UIForumPortlet.prototype.initTagScroll = function() {
 	function setPosition(menu){
 		var uiPopupCategory = eXo.core.DOMUtil.findAncestorByClass(menu,"UIPopupCategory");
 		uiPopupCategory.style.display = "block";
-//		var posX = 24*2 - uiPopupCategory.offsetWidth ;
+		var posX = 24*2 - uiPopupCategory.offsetWidth ;
 		uiPopupCategory.style.top = "24px";
-		uiPopupCategory.style.left = "-400px";//posX + "px";
+		uiPopupCategory.style.left = posX + "px";
 		uiPopupCategory.style.display = "none";
 	};
 	
@@ -865,27 +870,10 @@ UIForumPortlet.prototype.setTagContainerWidth = function(container){
 	var i = nodes.length;
 	while(i--){
 		if((nodes[i].className == container.className) || !nodes[i].className) continue;
-			if(nodes[i].className == "UIForumPageIterator"){
-			var right = eXo.core.DOMUtil.findFirstDescendantByClass(nodes[i],"div","RightPageIteratorBlock");
-			var left = eXo.core.DOMUtil.findFirstDescendantByClass(nodes[i],"div","LeftPageIteratorBlock");
-			width += getWidth(left,"div") + getWidth(right,"a");
-			continue;
-		}
-		width += eXo.forum.UIForumPortlet.tagScrollMgr.getElementSpace(nodes[i]);
+		width += nodes[i].offsetWidth;
 	}
-	width = eXo.forum.UIForumPortlet.tagScrollMgr.getElementSpace(container.parentNode) - width - 15;
+	width = container.parentNode.offsetWidth - width -1;
 	container.style.width = width + "px";
-	//Private method to get real width of the element by html tag name
-	function getWidth(obj,tag){
-		if(!obj) return 0;
-		var children = eXo.core.DOMUtil.findDescendantsByTagName(obj,tag);
-		var w = 0;
-		var i = children.length;
-		while(i--){
-			w += children[i].offsetWidth;
-		}
-		return w;
-	};
 };
 
 UIForumPortlet.prototype.executeLink = function(evt) {
@@ -896,28 +884,17 @@ UIForumPortlet.prototype.executeLink = function(evt) {
 } ;
 
 UIForumPortlet.prototype.createLink = function(cpId,isAjax) {
-	if(!isAjax || isAjax === 'false') {
-		var isM = document.getElementById("SetMode"); 
-		if(isM && isM.innerHTML === 'true'){
-			eXo.forum.UIForumPortlet.addLink(cpId, "ActionIsMod");
-		}
-		return ;
-	}
-	eXo.forum.UIForumPortlet.addLink(cpId, "ActionLink");
-} ;
-
-UIForumPortlet.prototype.addLink = function(cpId, clazzAction) {
-	var comp = document.getElementById(cpId);
-	var uiCategoryTitle = eXo.core.DOMUtil.findDescendantsByClass(comp,"a", clazzAction);
+	if(!isAjax || isAjax === 'false') return ;
+  var comp = document.getElementById(cpId);
+	var uiCategoryTitle = eXo.core.DOMUtil.findDescendantsByClass(comp,"a","ActionLink");
 	var i = uiCategoryTitle.length;
 	if(!i || (i <=0)) return ;
 	while(i--){
 		uiCategoryTitle[i].onclick = this.executeLink ;
 	}
-};
+} ;
 
-UIForumPortlet.prototype.setAutoScrollTable = function(idroot, idParent, idChild){
-	var rootEl = document.getElementById(idroot);
+UIForumPortlet.prototype.setAutoScrollTable = function(idParent, idChild){
 	var grid = document.getElementById(idChild);
 	var tableContent = document.getElementById(idParent);
 	var isIE = document.all?true:false;
@@ -931,10 +908,6 @@ UIForumPortlet.prototype.setAutoScrollTable = function(idroot, idParent, idChild
 	} else {
 		tableContent.style.padding = "1px";
 		tableContent.style.width = "100%";
-		if(isIE){
-			rootEl.style.width = "96%";
-			rootEl.style.margin = "auto";
-		}
 	}
 };
 
@@ -1024,7 +997,7 @@ eXo.forum.CheckBox = {
 			var len = checkboxes.length ;
 			for(var i = 1 ; i < len ; i ++) {
 				checkboxes[i].onclick = this.check ;
-				//if(checkboxes[i].getAttribute("checked") != "checked")checkboxes[i].checked = false;
+				if(checkboxes[i].getAttribute("checked") != "checked")checkboxes[i].checked = false;
 				eXo.ks.CheckBox.checkItem(checkboxes[i]);
 			}
 		}

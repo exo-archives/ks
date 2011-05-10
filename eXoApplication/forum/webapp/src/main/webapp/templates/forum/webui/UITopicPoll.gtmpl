@@ -45,15 +45,10 @@
           <div class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
         <% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>  
           <div class="ForumSeparatorLine"><span></span></div>
-          <div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-            <div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-              <div class="LeftOverButton">
-                <div class="RightOverButton">
-                  <div class="CenterOverButton"><%=_ctx.appRes("UITopicDetail.label.ThreadTools");%></div>
-                </div>
-              </div>
-            </div>
-            
+          <div class="ContentAction DefaultStyle" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" >
+
+                <%=_ctx.appRes("UITopicDetail.label.ThreadTools");%>
+
             <% /*Begin Popup Menu*/ %>
               <div style="position:relative;">
                 <div class="UIPopupCategory" style="display:none;">
