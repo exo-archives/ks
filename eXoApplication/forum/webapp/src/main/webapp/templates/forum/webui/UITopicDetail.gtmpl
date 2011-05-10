@@ -676,10 +676,9 @@
 								</div>
 								<% } %>
 								
-								<div class="ButtonContainer FR UIActionForum">
 									<%
 									if(isShowMenu) {
-										String[] actions = ["Edit","Delete","PrivatePost","Quote"] ; 
+										String[] actions = ["Quote","PrivatePost","Delete","Edit"] ; 
 										boolean isShowAction = true, isShowPri = true ;
 										for(action in actions) {
 											isShowAction = true;
@@ -715,7 +714,6 @@
 										} 
 									checked = 1; 
 									} %>
-								</div>
 							</div>
 						</td>
 	<!-- End PostViewContainer -->

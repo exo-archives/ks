@@ -500,3 +500,7 @@
 .UIForumPortlet .UITopicDetail .PostsInThreadContainer .ContentAction .UIPopupCategory{
 	left: -5px;
 }
+
+.UIForumPortlet .UITopicDetail .FootPost .ActionButton{
+	float: right;
+}
