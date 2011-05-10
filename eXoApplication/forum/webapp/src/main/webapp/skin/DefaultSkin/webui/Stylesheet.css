@@ -222,7 +222,7 @@ ul,li{
 	border-radius: 3px 3px 0px 0px;
 	-moz-border-radius: 3px 3px 0px 0px;
 	-webkit-border-radius: 3px 3px 0px 0px;
-	padding: 1px 10px;
+	padding: 1px 0px;
 	height: 23px;
 	border-bottom: none;
 }
@@ -252,6 +252,7 @@ ul,li{
 .UIForumPortlet .ForumToolbar .Title {
 	float:left;
 	margin:6px 0px 0px 8px;
+	font-weight: bold;
 }
 
 

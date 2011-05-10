@@ -4,7 +4,7 @@
 }
 
 .UITopicDetail .ButtomAndPageListContainer {
-	margin: 10px 0px 1px 0px;
+	margin: 5px 0px 1px 0px;
 }
 
 .UITopicDetail .PostReplyIcon {
@@ -495,4 +495,8 @@
 
 .UITopicDetail .PostsInThreadContainer .FootPost .TxtLastEdit .TxtRoot{
 	color:blue;
+}
+
+.UIForumPortlet .UITopicDetail .PostsInThreadContainer .ContentAction .UIPopupCategory{
+	left: -5px;
 }
