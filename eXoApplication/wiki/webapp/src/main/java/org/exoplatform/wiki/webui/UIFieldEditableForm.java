@@ -18,9 +18,12 @@ package org.exoplatform.wiki.webui;
 
 import java.lang.reflect.Method;
 
+import org.exoplatform.services.jcr.datamodel.IllegalNameException;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -28,6 +31,8 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.wiki.commons.NameValidator;
+import org.exoplatform.wiki.commons.Utils;
 
 /**
  * Created by The eXo Platform SAS
@@ -60,6 +65,7 @@ public class UIFieldEditableForm extends UIForm {
   public UIFieldEditableForm() {
     UIFormStringInput titleInput = new UIFormStringInput(FIELD_TITLEINPUT, FIELD_TITLEINPUT, null);
     addChild(titleInput);
+    
   }
     
   @Override
@@ -136,11 +142,27 @@ public class UIFieldEditableForm extends UIForm {
 
       UIFormStringInput titleInput = editableForm.getChild(UIFormStringInput.class)
                                                  .setRendered(false);
-      Method m = editableForm.getParent()
-                             .getClass()
-                             .getMethod(editableForm.getParentFunctionName(), editableForm.getFunctionArgType());
+      try {
+        NameValidator.validate(titleInput.getValue());
+      } catch (IllegalNameException ex) {
+        String msg = ex.getMessage();
+        ApplicationMessage appMsg = new ApplicationMessage("WikiPageNameValidator.msg.EmptyTitle",
+                                                           null,
+                                                           ApplicationMessage.WARNING);
+        if (msg != null) {
+          Object[] arg = { msg };
+          appMsg = new ApplicationMessage("WikiPageNameValidator.msg.Invalid-char",
+                                          arg,
+                                          ApplicationMessage.WARNING);
+        }
+        UIApplication uiApp = event.getSource().getAncestorOfType(UIApplication.class);
+        uiApp.addMessage(appMsg);
+        Utils.redirect(Utils.getCurrentWikiPageParams(), WikiMode.VIEW);
+        return;
+      }
+      Method m = editableForm.getParent().getClass()
+        .getMethod(editableForm.getParentFunctionName(), editableForm.getFunctionArgType());
       m.invoke(editableForm.getParent(), titleInput.getValue().trim(), event);
-    
     }
   }
 }
