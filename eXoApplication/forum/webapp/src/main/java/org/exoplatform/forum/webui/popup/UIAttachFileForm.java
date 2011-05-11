@@ -69,7 +69,7 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
   public void setMaxField(int maxField, boolean isAvatar) {
     this.maxField = maxField;
     int sizeLimit = ForumUtils.getLimitUploadSize(isAvatar);
-    for (int i = 0; i < maxField; i++) {
+    for (int i = 1; i <= maxField; i++) {
       if (sizeLimit != ForumUtils.DEFAULT_VALUE_UPLOAD_PORTAL) {
         addUIFormInput(new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i), sizeLimit, true));
       } else {
@@ -96,10 +96,9 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
     public void execute(Event<UIAttachFileForm> event) throws Exception {
       UIAttachFileForm uiForm = event.getSource();
       List<BufferAttachment> files = new ArrayList<BufferAttachment>();
-      int i = 0;
       BufferAttachment attachfile;
       UploadService uploadService = uiForm.getApplicationComponent(UploadService.class);
-      while (i++ < uiForm.maxField) {
+      for (int i = 1; i <= uiForm.maxField; i++) {
         UIFormUploadInput input = (UIFormUploadInput) uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
         UploadResource uploadResource = input.getUploadResource();
         if (uploadResource == null) {
