@@ -385,8 +385,8 @@ UIForumPortlet.prototype.showPopup = function(elevent,e) {
 	}
 	if(!e) e = window.event ;
 		e.cancelBubble = true ;
-	var parend = eXo.core.DOMUtil.findAncestorByTagName(elevent, "div") ;
-	var popup = eXo.core.DOMUtil.findFirstDescendantByClass(parend, "div", "UIPopupCategory") ;
+//	var parend = eXo.core.DOMUtil.findAncestorByTagName(elevent, "div") ;
+	var popup = eXo.core.DOMUtil.findFirstDescendantByClass(elevent, "div", "UIPopupCategory") ;
 	if(popup.style.display === "none") {
 		popup.style.display = "block" ;
 		eXo.core.DOMUtil.listHideElements(popup) ;
