@@ -736,7 +736,7 @@ UIForumPortlet.prototype.loadScroll = function(e) {
     uiNav.scrollMgr = eXo.portal.UIPortalControl.newScrollManager("UIForumActionBar") ;
     uiNav.scrollMgr.initFunction = uiNav.initScroll ;
     uiNav.scrollMgr.mainContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "td", "ControlButtonContainer") ;
-    uiNav.scrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ScrollButtons") ;
+    uiNav.scrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "li", "ScrollButtons") ;
     uiNav.scrollMgr.loadElements("ControlButton", true) ;
     
     var button = eXo.core.DOMUtil.findDescendantsByTagName(uiNav.scrollMgr.arrowsContainer, "div");
@@ -767,7 +767,7 @@ UIForumPortlet.prototype.initScroll = function() {
 ScrollManager.prototype.loadItems = function(elementClass, clean) {
 	if (clean) this.cleanElements();
 	this.elements.clear();
-	var items = eXo.core.DOMUtil.findDescendantsByClass(this.mainContainer, "div", elementClass);
+	var items = eXo.core.DOMUtil.findDescendantsByClass(this.mainContainer, "li", elementClass);
 	for(var i = 0; i < items.length; i++){
 		this.elements.push(items[i]);
 	}
@@ -779,8 +779,8 @@ UIForumPortlet.prototype.loadTagScroll = function() {
   if(container) {
     uiNav.tagScrollMgr = eXo.portal.UIPortalControl.newScrollManager("TagContainer") ;
     uiNav.tagScrollMgr.initFunction = uiNav.initTagScroll ;
-    uiNav.tagScrollMgr.mainContainer = container.parentNode ;
-    uiNav.tagScrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ScrollButtons") ;
+    uiNav.tagScrollMgr.mainContainer = container ;
+    uiNav.tagScrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "li", "ScrollButtons") ;
     uiNav.tagScrollMgr.loadItems("MenuItem",true) ;
     
     var button = eXo.core.DOMUtil.findDescendantsByTagName(uiNav.tagScrollMgr.arrowsContainer, "div");
@@ -799,13 +799,12 @@ UIForumPortlet.prototype.initTagScroll = function() {
 	var uiNav = eXo.forum.UIForumPortlet ;
 	//if(!uiNav.scrollManagerLoaded) uiNav.loadTagScroll() ;
 	var elements = uiNav.tagScrollMgr.elements ;
-	var menu = eXo.core.DOMUtil.findFirstDescendantByClass(uiNav.tagScrollMgr.arrowsContainer,"div","UIRightPopupMenuContainer") ;
+	var menu = eXo.core.DOMUtil.findFirstDescendantByClass(uiNav.tagScrollMgr.arrowsContainer,"ul","UIRightPopupMenuContainer") ;
 	var tmp = null;
 	uiNav.setTagContainerWidth(uiNav.tagScrollMgr.mainContainer);
 	uiNav.tagScrollMgr.init() ;
 	uiNav.tagScrollMgr.checkAvailableSpace() ;
-	var menuContainer = document.createElement("div");
-	menuContainer.className = "MenuTagContainer";
+	 
 	removeChildren(menu);
 	uiNav.tagScrollMgr.arrowsContainer.onmouseover = over;
 	uiNav.tagScrollMgr.arrowsContainer.onmouseout = out;
@@ -817,12 +816,12 @@ UIForumPortlet.prototype.initTagScroll = function() {
 			tmp = elements[i].cloneNode(true);
 			eXo.core.DOMUtil.replaceClass(tmp,"FloatLeft","TagItem");
 			tmp.style.display = "block";
-			menuContainer.appendChild(tmp)		
+			menu.appendChild(tmp);
 			elements[i].style.display = "none";
 			uiNav.tagScrollMgr.arrowsContainer.style.display = "block";	
 		}
 	}
-	menu.appendChild(menuContainer);	
+	
 	setPosition(menu);
 	function removeChildren(cont){
 		var firstChild = eXo.core.DOMUtil.findFirstChildByClass(cont,"div","MenuTagContainer")

@@ -137,6 +137,7 @@
 .UIForumPortlet .GotoPageIcon .UIRightClickPopupMenu{
 	width: 122px;
 	right: 0px;
+	top: 15px;
 	padding: 10px 12px;
 }
 

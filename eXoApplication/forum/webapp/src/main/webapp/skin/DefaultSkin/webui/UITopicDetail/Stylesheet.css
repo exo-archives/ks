@@ -4,7 +4,7 @@
 }
 
 .UITopicDetail .ButtomAndPageListContainer {
-	margin: 5px 0px 1px 0px;
+	margin: 3px 0px 1px 0px;
 }
 
 .UITopicDetail .PostReplyIcon {
@@ -38,10 +38,6 @@
 
 .UITopicDetail .ToolbarActionsContainer {
 	padding-right: 10px;
-}
-
-.UITopicDetail .PostsInThreadContainer .ForumToolbar {
-	border-bottom: solid 1px #b7b7b7;
 }
 
 .UITopicDetail .ForumToolbar .SearchIcon {
@@ -89,6 +85,7 @@
 	border-collapse: separate;
 	border: 1px solid #c4c4c4;
 	table-layout: fixed;
+	margin-bottom: 2px;
 }
 
 .UITopicDetail .MemberContainer {
@@ -336,9 +333,6 @@
 
 /*----------------------ForumQuickReply-----------------------*/
 
-.UITopicDetail .ActionContainer {
-	width: 100%;
-}
 
 .UITopicDetail .ForumQuickReply {
 	width: 100%;
@@ -437,14 +431,11 @@
 	min-width:155px;
 	display:block; 
 	left:-103px;
+	top: 20px;
 }
 
 .UITopicDetail .ButtonHeadBar .UIPopupCategory .BlockAddTag input{
 	margin-left: 5px;
-}
-
-.UITopicDetail .ContentContainer{
-	margin: 2px 0px 0px 0px;
 }
 
 .UITopicDetail .MemberContent .ContentAction .ImgAvatar{
@@ -503,4 +494,10 @@
 
 .UIForumPortlet .UITopicDetail .FootPost .ActionButton{
 	float: right;
+}
+
+.UITopicDetail .ForumQuickReply .TitleQuickReply{
+	margin: 0px;
+	padding: 0px 0px 0px 10px;
+	line-height: 25px;
 }

@@ -108,35 +108,37 @@
 				List<Tag> tags = uicomponent.getTagsByTopic();
 				if(!tags.isEmpty()){
 			%>
-				<div class="FL TitleTag"><%=_ctx.appRes("UITopicContainer.label.Tag");%>:</div>
+			<div class="FL TitleTag"><%=_ctx.appRes("UITopicContainer.label.Tag");%>:</div>
 			<%}%>
-			<div class="TagContainer FL TagContent" id="TagContainer">
+			<ul class="TagContainer FL TagContent" id="TagContainer">
 				<%
 					for(tag in tags) {
 						String tagName = tag.getName();
 				%>
-					<div class="FL MenuItem">
+					<li class="FL MenuItem">
 						<a class="TagIcon FL BlueTagIcon" title="$tagName" href="javaScript:void(0);" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
 						<span class="UntagIcon FL" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>"></span>
-					</div>
+					</li>
 				<%} %>
-					<div class="ScrollButtons" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+					<li class="ScrollButtons" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
 									<% /*Begin Popup Menu*/ %>
 						<div class="UIPopupCategory" style="display: none;">
-							<div class="UIRightClickPopupMenu UIRightPopupMenuContainer" style="display:block;">
-							</div>
+							<ul class="UIRightClickPopupMenu UIRightPopupMenuContainer MenuTagContainer" style="display:block;">
+							</ul>
 						</div>
 						<% /*End Popup Menu*/ %>
-					</div>
-			</div>
+					</li>
+			</ul>
 			<% if(uicomponent.maxPage > 1) { %>
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon">
 				<% /*Begin Popup Menu*/ %>
 				<div id="goPage1" class="UIPopupCategory" style="display:none">
-					<div class="UIRightClickPopupMenu" style="display:block;">
+					<ul class="UIRightClickPopupMenu" style="display:block;">
+						<li>
 							<% uicomponent.renderChild(ForumUtils.GOPAGE_ID_T) ; %>
 							<a class="NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("GoNumberPage","1")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a>
-					</div>
+						</li>
+					</ul>
 				</div>
 				<% /*End Popup Menu*/ %>
 			</div>
@@ -205,19 +207,16 @@
 								<% /*Begin Popup Menu*/ %>
 
 								<div class="UIPopupCategory" style="display:none;">
-											<div class="UIRightClickPopupMenu" style="display:block;">
-												<ul id="SearchInTopic" class="SearchPopup">
-													<li class="ClearFix SearchTopic BorderSearch">
-															<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
-														 <a class="SearchLink NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
-													</li>
-													<li class="ItemIcon AdvancedSearchIcon MenuItem" onclick="<%=uicomponent.event("AdvancedSearch")%>">
-														<a href="javaScript:void(0)"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
-													</li>
-												</ul>
-											</div>
-										</div>
-
+									<ul id="SearchInTopic" class="SearchPopup UIRightClickPopupMenu"  style="display:block;">
+										<li class="ClearFix SearchTopic BorderSearch">
+												<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
+											 <a class="SearchLink NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+										</li>
+										<li class="ItemIcon AdvancedSearchIcon MenuItem" onclick="<%=uicomponent.event("AdvancedSearch")%>">
+											<a href="javaScript:void(0)"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
+										</li>
+									</ul>
+								</div>
 								<% /*End Popup Menu*/ %>
 							</div>
 						<% if((canEdit && isShowMenu) || isUserCreatedTopic) { %>	
@@ -333,23 +332,23 @@
 							<div class="ButtonHeadBar">
 								<div class="SearchForm DefaultStyle" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=uicomponent.FIELD_ADD_TAG%>').focus();">
 											<a id="ButtonSearch" class="StatusIcon TagIcon" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.Tag");%></a>
-									<div id="AddTagId">
 									<% /*Begin Popup Menu*/ %>
-											<div class="UIPopupCategory" style="display:none;">
-												<div class="UIRightClickPopupMenu ClearFix BlockAddTag">
+											<div id="AddTagId" class="UIPopupCategory" style="display:none;">
+												<ul class="UIRightClickPopupMenu ClearFix BlockAddTag">
+													<li>
 														<% uicomponent.renderChild(uicomponent.FIELD_ADD_TAG) ; %>
 														<div class="SearchTagName" id="searchTagName" restPath="<%=uicomponent.getRestPath();%>" linkSubmit="<%=uicomponent.event("AddTagTopic")%>" inputId="<%=uicomponent.FIELD_ADD_TAG%>" userAndTopicId="$userLogin,<%=topic.getId()%>">
 															<div class="TagNameItem Selected"></div>
 														</div>
-													<div class="UIActionForum FL">
-														<div class="NormalButtomBT">
-															 <div onclick="<%=uicomponent.event("AddTagTopic")%>"><%=_ctx.appRes("UITopicDetail.label.AddTag");%></div>
+														<div class="UIActionForum FL">
+															<div class="NormalButtomBT">
+																 <div onclick="<%=uicomponent.event("AddTagTopic")%>"><%=_ctx.appRes("UITopicDetail.label.AddTag");%></div>
+															</div>
 														</div>
-													</div>
-												</div>
+													</li>
+												</ul>
 											</div>
 									<% /*End Popup Menu*/ %>
-									</div>
 								</div>
 							</div>
 							<div class="ButtonHeadBar DefaultStyle"  onclick="<%=uicomponent.event("RatingTopic")%>">
@@ -447,7 +446,7 @@
 				if(isAnd) alert = alert + "!</span>) "
 				else alert = " " ;
 		%>
-		<table class="TablePost ContentContainer" id="$postId" cellspacing="0" border="0" cellpadding="0">
+		<table class="TablePost ContentContainer" id="$postId">
 				<tbody>
 					<tr>
 	<!-- Start MemberContainer -->
@@ -665,13 +664,14 @@
 											if(!ForumUtils.isEmpty(editBy)) {
 									%>
 								<div class="TxtLastEdit">
-											<span><%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> <span class="TxtRoot">$editBy</span> <%=_ctx.appRes("UITopicDetail.label.on");%> $editDate</span>
+											<%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> <span class="TxtRoot">$editBy</span> <%=_ctx.appRes("UITopicDetail.label.on");%> $editDate
 											<%
 												String reason = post.getEditReason() ;
 												if(!ForumUtils.isEmpty(reason)) { 
 													reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
 											%>
-											<div>$reason</div>
+											<br>
+											$reason
 											<% } %>
 								</div>
 								<% } %>
@@ -752,10 +752,12 @@
 		<div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon ClearFix" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
 			<% /*Begin Popup Menu*/ %>
 				<div id="goPage2" class="UIPopupCategory" style="display:none;">
-					<div class="UIRightClickPopupMenu" style="display:block;">
+					<ul class="UIRightClickPopupMenu" style="display:block;">
+						<li>
 							<% uicomponent.renderChild(ForumUtils.GOPAGE_ID_B) ; %>
 							<a class="NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("GoNumberPage","2")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a>
-					</div>
+						</li>
+					</ul>
 				</div>
 			<% /*End Popup Menu*/ %>
 		</div>
@@ -763,45 +765,44 @@
 		<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
 	</div>
 <% if(isCanReply && uicomponent.isShowQuickReply()){ %>
-	<div class="UIAction"> 
-		<table class="ActionContainer">
-			<tbody>
-				<tr>
-					<td>
-						<div class="ForumCategory ForumQuickReply">
-							<div class="ForumToolbar ClearFix ForumActionToolbar">
-								<h6 class="Title FL"><%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%></h6>
-								<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
-							</div>
-							<div class="ContentContainer">
-								<div class="ForumList" id="QuickReply">
-									<%=_ctx.appRes("UITopicDetail.label.Message");%>:
-									<%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%>
-								</div>
-								<div class="ActionContent">
-							<% for(action in uicomponent.getActions()) { 
-									 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-									 String link = uicomponent.event(action);
-									 if(action.equals("QuickReply")) link = link + "; eXo.forum.UIForumPortlet.resetFielForm('QuickReply');" 
-							%>
-									<div onclick="$link" class="ActionButton LightBlueStyle">
-										<div class="ButtonLeft">
-											<div class="ButtonRight">
-												<div class="ButtonMiddle">
-													<a href="javascript:void(0);">$actionLabel</a>
-												</div>
-											</div>
-										</div>
+
+	<div class="ForumCategory ForumQuickReply">
+		<h6 class="TitleQuickReply ForumToolbar ForumActionToolbar"><%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%>
+		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+		</h6>
+		<div class="ContentContainer">
+			<div class="ForumList" id="QuickReply">
+				<%=_ctx.appRes("UITopicDetail.label.Message");%>:
+				<%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%>
+			</div>
+			<div class="UIAction"> 
+				<table class="ActionContainer" align="center">
+					<tbody>
+						<tr>
+							<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+						 String link = uicomponent.event(action);
+						 if(action.equals("QuickReply")) link = link + "; eXo.forum.UIForumPortlet.resetFielForm('QuickReply');" 
+				%>
+						<div onclick="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">$actionLabel</a>
 									</div>
-							<%}%>
 								</div>
 							</div>
 						</div>
-					</td>
-				</tr>
-			</tbody>
- 		</table> 
+				<%}%>
+							</td>
+						</tr>
+					</tbody>
+				</table> 
+			</div>
+		</div>
 	</div>
+					
 <% } %>
 	<% } else { 
 		uicomponent.renderPoll();
