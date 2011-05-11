@@ -101,9 +101,9 @@
 								</div>
 
 								<% /*Begin Popup Menu*/ %>
-									<div class="UIPopupCategory" style="display:none;">
+									<div class="UIPopupCategory" style="display:none; left:7px;">
 										
-											<ul class="UIRightClickPopupMenu" style="display:block; left:-12px;">
+											<ul class="UIRightClickPopupMenu" id="ModerationMenu" style="display:block; left:-12px;">
 												 <% 
 													for(action in uicomponent.getActionMenuTopic()) {
 														String link = uicomponent.event(action,uicomponent.getName(),"forum") ;
@@ -156,7 +156,7 @@
 								</div>
 
 								<% /*Begin Popup Menu*/ %>
-								<div class="UIPopupCategory SearchPopup" style="display:none;">
+								<div class="UIPopupCategory SearchPopup" style="display:none; left:-5px;">
 									<div class="UIRightClickPopupMenu" style="display:block;">
 										<div id="SearchInForum" class="SearchPopup">
 											<div class="BorderSearch ClearFix">
@@ -180,7 +180,7 @@
 								</div>
 
 								<% /*Begin Popup Menu*/ %>
-									<div class="UIPopupCategory" style="display:none;">
+									<div class="UIPopupCategory" style="display:none; left:-5px;">
 										
 											<ul  class="UIRightClickPopupMenu" style="display:block;">
 														<% if(!isLock && hasCreadTopic) { %>	 
@@ -230,23 +230,23 @@
 						<% } %>	
 							<div class="ButtonHeadBar DefaultStyle">
 								
-										<a class="AddRSS ForumRSSFeed" style="padding-left:16px;" href="javascript:window.open('<%=uicomponent.getRSSLink(forum.getId())%>'); <%=uicomponent.event("RSS", forum.getId()).replace("javascript:","")%>;">&nbsp;<%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
+										<a class="StatusIcon AddRSS ForumRSSFeed" href="javascript:window.open('<%=uicomponent.getRSSLink(forum.getId())%>'); <%=uicomponent.event("RSS", forum.getId()).replace("javascript:","")%>;">&nbsp;<%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
 								
 							</div>
 						<%if(uicomponent.userProfile.getUserRole() < 3){%>
 							<div class="ButtonHeadBar DefaultStyle" >
 
 								
-										<a class="AddLinkToBookIcon" style="padding-left:16px;" href="<%=uicomponent.event("AddBookMark","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+										<a class="StatusIcon AddLinkToBookIcon" href="<%=uicomponent.event("AddBookMark","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 								
 
 							</div>
 							<div class="ButtonHeadBar DefaultStyle" >
 
 									<% if(uicomponent.isWatching(forum.getPath())) {%>
-										<a class="AddWatchingIcon" style="padding-left:16px;" href="<%=uicomponent.event("UnWatch","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+										<a class="StatusIcon AddWatchingIcon" href="<%=uicomponent.event("UnWatch","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
 									<% } else { %>
-										<a class="AddWatchingIcon" style="padding-left:16px;" href="<%=uicomponent.event("AddWatching","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+										<a class="StatusIcon AddWatchingIcon" href="<%=uicomponent.event("AddWatching","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
 									<% } %>
 
 							</div>
@@ -257,7 +257,7 @@
 			
 			<div class="ContentContainer" id="UITopicContent">
 				<div class="UITopicList">
-					<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+					<table class="UIGrid">
 						<thead>
 							<tr>
 								<th style="width:40px;">&nbsp;</th>
