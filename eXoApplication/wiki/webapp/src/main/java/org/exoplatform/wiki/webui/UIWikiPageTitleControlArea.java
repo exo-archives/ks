@@ -128,4 +128,8 @@ public class UIWikiPageTitleControlArea extends UIContainer {
     WikiMode currentMode = (WikiMode) this.getAncestorOfType(UIWikiPortlet.class).getWikiMode();
     return currentMode.equals(WikiMode.ADDPAGE);
   }
+  
+  public String getTitle() {
+    return this.getChild(UIFormStringInput.class).getValue();
+  }
 }

@@ -47,6 +47,8 @@ public class UIWikiPagePreview extends UIContainer {
 
   final static public String[] ACTIONS = { "Close" };
   
+  private String pageTitle;
+  
   private String htmlOutput;
 
   public String[] getActions() {
@@ -74,6 +76,10 @@ public class UIWikiPagePreview extends UIContainer {
       uiMaskWS.setWindowSize(-1, -1);
       Util.getPortalRequestContext().addUIComponentToUpdateByAjax(uiMaskWS);
     }
+  }
+  
+  public void setPageTitle(String title) {
+    this.pageTitle = title;
   }
   
 }

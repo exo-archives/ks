@@ -543,6 +543,15 @@ span.Excerpt p {
 	padding: 0px 8px 8px 8px;
 }
 
+.UIWikiPagePreview .UIWikiPageTitlePreview {
+  border-bottom: 1px solid #C7C7C7;
+  margin: 10px 0px;
+  color: #333333;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 28px;
+}
+
 /* Advance search */
 .UIWikiSearchSpaceArea {	
 	padding: 8px 20px;

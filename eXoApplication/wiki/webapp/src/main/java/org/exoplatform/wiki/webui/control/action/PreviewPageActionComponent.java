@@ -18,8 +18,9 @@ package org.exoplatform.wiki.webui.control.action;
 
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.ResourceBundle;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.event.Event;
@@ -31,6 +32,7 @@ import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.webui.UIWikiMaskWorkspace;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
+import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
@@ -81,10 +83,13 @@ public class PreviewPageActionComponent extends AbstractFormActionComponent {
     @Override
     protected void processEvent(Event<PreviewPageActionComponent> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
+      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+      ResourceBundle res = context.getApplicationResourceBundle() ;
       UIWikiMaskWorkspace uiMaskWS = wikiPortlet.getChild(UIWikiMaskWorkspace.class);
       UIWikiPageEditForm wikiPageEditForm = event.getSource().getAncestorOfType(UIWikiPageEditForm.class);
       UIWikiPagePreview wikiPagePreview = uiMaskWS.createUIComponent(UIWikiPagePreview.class, null, null);
       UIWikiRichTextArea wikiRichTextArea = wikiPageEditForm.getChild(UIWikiRichTextArea.class);
+      UIWikiPageTitleControlArea wikiPageTitleArea = wikiPageEditForm.getChild(UIWikiPageTitleControlArea.class);
       String markupSyntax = wikiPageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
       boolean isRichTextRendered = wikiRichTextArea.isRendered();
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
@@ -101,6 +106,11 @@ public class PreviewPageActionComponent extends AbstractFormActionComponent {
         markup = (markupInput.getValue() == null) ? "" : markupInput.getValue();
       }
       wikiPagePreview.renderWikiMarkup(markup, markupSyntax);
+      String pageTitle = wikiPageTitleArea.getTitle();
+      if (pageTitle != null) wikiPagePreview.setPageTitle(wikiPageTitleArea.getTitle());
+      else {
+        wikiPagePreview.setPageTitle(res.getString("UIWikiPageTitleControlArea.label.Untitled"));
+      }
       uiMaskWS.setUIComponent(wikiPagePreview);
       uiMaskWS.setShow(true);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiMaskWS);
