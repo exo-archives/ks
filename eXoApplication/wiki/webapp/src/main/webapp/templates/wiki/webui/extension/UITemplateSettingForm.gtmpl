@@ -15,9 +15,13 @@
 	<%uiform.begin();%>
 	  <div class="TemplateControl ClearFix">
 	    <div class="TemplateSearchBox" >	
-  	    <% uiform.renderChild(uiform.TEMPLATE_SEARCHBOX);	%>
-  	    <a class="AdvancedSearch" style="display:none"  onclick="<%=uiform.event(uiform.ACTION_SEARCH);%>"></a>
+  	    <% uiform.renderChild(uiform.TEMPLATE_SEARCHBOX);	%> 
   		</div>
+  		<div class="SearchButton"> 
+  		  <div class="AdvancedSearch" onclick="<%=uiform.event(uiform.ACTION_SEARCH);%>">
+  		    <a href="javascript:void(0)"><%=_ctx.appRes("UITemplateSettingForm.label.Search")%></a>
+  		  </div>
+  		</div> 
   		<div class="TemplateActions" >
   		  <a class="AddTemplate" onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');">Add more...</a>
   		  <a onclick="$addLink" id="$actionId" style="display:none;">&nbsp;</a>

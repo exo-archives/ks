@@ -89,7 +89,7 @@ UIWikiTemplateForm.prototype.typeHandler = function(textbox) {
 UIWikiTemplateForm.prototype.doAdvanceSearch = function() {
 	var me = eXo.wiki.UIWikiTemplateForm;
 	if (me.component) {
-  	var action = eXo.core.DOMUtil.findFirstDescendantByClass(me.component, "a", "AdvancedSearch");
+  	var action = eXo.core.DOMUtil.findFirstDescendantByClass(me.component, "div", "AdvancedSearch");
   	action.onclick();
   }
 }
