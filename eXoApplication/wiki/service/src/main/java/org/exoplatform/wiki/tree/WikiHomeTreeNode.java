@@ -39,7 +39,7 @@ public class WikiHomeTreeNode extends TreeNode {
   private WikiHome           wikiHome;  
 
   public WikiHomeTreeNode(WikiHome wikiHome) throws Exception {
-    super(WikiNodeType.Definition.WIKI_HOME_TITLE, TreeNodeType.WIKIHOME);
+    super(wikiHome.getTitle(), TreeNodeType.WIKIHOME);
     this.wikiHome = wikiHome;
     this.path = this.buildPath();
     this.hasChild = wikiHome.getChildPages().size() > 0;
