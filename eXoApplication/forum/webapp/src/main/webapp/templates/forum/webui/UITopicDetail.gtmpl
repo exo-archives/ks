@@ -767,8 +767,9 @@
 <% if(isCanReply && uicomponent.isShowQuickReply()){ %>
 
 	<div class="ForumCategory ForumQuickReply">
-		<h6 class="TitleQuickReply ForumToolbar ForumActionToolbar"><%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%>
-		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+		<h6 class="TitleQuickReply ForumToolbar ForumActionToolbar">
+			<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+			<%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%>
 		</h6>
 		<div class="ContentContainer">
 			<div class="ForumList" id="QuickReply">
@@ -776,24 +777,24 @@
 				<%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%>
 			</div>
 			<div class="UIAction"> 
-				<table class="ActionContainer" align="center">
+				<table class="ActionContainer">
 					<tbody>
 						<tr>
-							<td align="center">
+							<td>
 				<% for(action in uicomponent.getActions()) { 
 						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 						 String link = uicomponent.event(action);
 						 if(action.equals("QuickReply")) link = link + "; eXo.forum.UIForumPortlet.resetFielForm('QuickReply');" 
 				%>
-						<div onclick="$link" class="ActionButton LightBlueStyle">
-							<div class="ButtonLeft">
-								<div class="ButtonRight">
-									<div class="ButtonMiddle">
-										<a href="javascript:void(0);">$actionLabel</a>
+								<div onclick="$link" class="ActionButton LightBlueStyle">
+									<div class="ButtonLeft">
+										<div class="ButtonRight">
+											<div class="ButtonMiddle">
+												<a href="javascript:void(0);">$actionLabel</a>
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
 				<%}%>
 							</td>
 						</tr>

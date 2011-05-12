@@ -79,11 +79,13 @@
 }
 
 .UIForumPortlet .ExpandButton {
-	background: url('icons/Expand.gif') no-repeat ;
+	background: url('icons/Expand.gif') no-repeat right center;
+	width: 16px;
 }
 
 .UIForumPortlet .CollapseButton {
-	background: url('icons/Collapser.gif') no-repeat ;
+	background: url('icons/Collapser.gif') no-repeat right center;
+	width: 16px;
 }
 
 .UIForumPortlet .Voted {

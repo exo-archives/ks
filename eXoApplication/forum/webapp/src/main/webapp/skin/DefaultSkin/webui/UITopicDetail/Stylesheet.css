@@ -432,6 +432,7 @@
 	display:block; 
 	left:-103px;
 	top: 20px;
+	*top: 0px;
 }
 
 .UITopicDetail .ButtonHeadBar .UIPopupCategory .BlockAddTag input{
