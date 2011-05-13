@@ -742,3 +742,9 @@ ul,li{
  box-shadow: 1px 1px 2px #b3b3b3;
  margin: 0px 0px 0px 3px;
 }
+
+.UIForumPortlet .TitleForum{
+	line-height: 25px;
+	margin: 0;
+	padding: 0 0 0 10px;
+}

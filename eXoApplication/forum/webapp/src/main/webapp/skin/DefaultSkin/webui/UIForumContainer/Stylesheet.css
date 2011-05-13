@@ -169,7 +169,7 @@
 	line-height: 18px;
 }
 
-.UIPostRules .ForumCategory .ContentContainer .BoldTitle {
+.UIPostRules .ContentContainer .BoldTitle {
 	font-weight: bold ;
 	line-height: 18px;
 }
@@ -178,4 +178,8 @@
 	border: 1px outset ;
 	color: black;
 	padding: 10px;
+}
+
+.UIForumPortlet .UIPostRules .TxtRules{
+	padding: 5px;
 }
