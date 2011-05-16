@@ -44,12 +44,14 @@
   background: url("/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/MiscIcons/Info.png") no-repeat 5px center;
 }
 
-.UIWikiPageControlArea .UIPageToolBar .AddExtensionContainer {
+.UIWikiPageControlArea .UIPageToolBar .AddExtensionContainer.MoreLink {
   position:relative;
+  padding: 6px 22px 6px 10px;
 }
 
-.UIWikiPageControlArea .UIPageToolBar .MoreExtensionContainer {
+.UIWikiPageControlArea .UIPageToolBar .MoreExtensionContainer.MoreLink {
   position:relative;
+  padding: 6px 22px 6px 8px;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .HoverMenu .Icon {
@@ -68,7 +70,7 @@
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MoreLink {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -281px;
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat right -281px;
   cursor: pointer;
 }
 
