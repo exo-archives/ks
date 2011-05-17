@@ -246,7 +246,7 @@ public class UIForumActionBar extends UIContainer {
       UIForumUserSettingForm forumUserSettingForm = popupContainer.addChild(UIForumUserSettingForm.class, null, null);
       popupContainer.setId("ForumUserSettingForm");
       forumUserSettingForm.activate();
-      popupAction.activate(popupContainer, 580, 480);
+      popupAction.activate(popupContainer, 700, 480);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }
