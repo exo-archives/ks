@@ -21,13 +21,11 @@ import java.util.List;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
-import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollService;
 import org.exoplatform.poll.service.PollSummary;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.picocontainer.Startable;
 
@@ -35,11 +33,9 @@ import org.picocontainer.Startable;
 public class PollServiceImpl implements Startable, PollService {
 	private JCRDataStorage            storage_;
 	private KSDataLocation dataLocator;
-	private SessionManager sessionManager;
 	
   public PollServiceImpl(InitParams params, KSDataLocation locator, NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
   	this.dataLocator = locator;
-  	this.sessionManager = dataLocator.getSessionManager();
   	storage_ = new JCRDataStorage(nodeHierarchyCreator, dataLocator);
   }
   
@@ -71,6 +67,10 @@ public class PollServiceImpl implements Startable, PollService {
 		return storage_.getPagePoll();
 	}
 
+  public boolean hasPermissionInForum(String pollPath, List<String> allInfoOfUser) throws Exception {
+    return storage_.hasPermissionInForum(pollPath, allInfoOfUser);
+  }
+	
 	public PollSummary getPollSummary(List<String> groupOfUser) throws Exception {
 		return storage_.getPollSummary(groupOfUser);
 	}

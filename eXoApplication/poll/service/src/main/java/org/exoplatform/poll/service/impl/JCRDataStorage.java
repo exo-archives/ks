@@ -17,16 +17,15 @@
 package org.exoplatform.poll.service.impl;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -37,6 +36,7 @@ import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.poll.service.DataStorage;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollSummary;
+import org.exoplatform.poll.service.Utils;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
@@ -177,45 +177,142 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 		return result.getNodes();
 	}
 	
-	public PollSummary getPollSummary(List<String> groupOfUser) throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider();
-		PollSummary poll = new PollSummary();
-		try {
-			NodeIterator iter = getIterNodePoll(sProvider);
-			List<String> pollId = new ArrayList<String>();
-			List<String> pollName = new ArrayList<String>();
-			List<String> groupPrivate = new ArrayList<String>();
-			String path;
-			boolean isAdd = false;
-			while (iter.hasNext()) {
-				Node node = iter.nextNode();
-				path = node.getPath();
-				if(path.indexOf(APPLICATION_DATA) > 0 && groupOfUser != null){
-					isAdd = false;
-					for (String group : groupOfUser) {
-						if(group.indexOf(path.substring(path.indexOf(GROUPS + "/") + GROUPS.length(), path.indexOf("/" + APPLICATION_DATA))) == 0){
-							isAdd = true;
-							break;
-						}
-					}
-					if(!isAdd) continue;
-				}
-				pollId.add(node.getName());
-				pollName.add(node.getProperty(EXO_QUESTION).getString());
-				groupPrivate.add(path);
-			}
-			poll.setPollId(pollId);
-			poll.setPollName(pollName);
-			poll.setGroupPrivate(groupPrivate);
-		} catch (Exception e) {
-			log.error("Failed to get poll summary", e);
-		} finally {
-			sProvider.close();
-		}
-		return poll;
-		
-	}
-	
+  
+  private long getUserRoleOfForum(SessionProvider sProvider, String userName) {
+    if (Utils.isEmpty(userName))
+      return 3;
+    try {
+      String userPatch = "/" + dataLocator.getUserProfilesLocation() + "/" + userName;
+      Node userNode = getNodeByPath(userPatch, sProvider);
+      return new PropertyReader(userNode).l("exo:userRole", 3);
+    } catch (Exception e) {
+      log.debug("Failed to get user role of forum.", e);
+    }
+    return 3;
+  }
+
+  public boolean hasPermissionInForum(String pollPath, List<String> allInfoOfUser) throws Exception {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    try {
+      Node pollNode = getNodeByPath(pollPath, sProvider);
+      return hasPermissionInForum(sProvider, pollNode, allInfoOfUser);
+    } catch (Exception e) {
+      log.error("Failed to checking has permission in poll from forum", e);
+    } finally {
+      sProvider.close();
+    }
+    return false;
+  }
+
+  private boolean hasPermissionInForum(SessionProvider sProvider, Node pollNode, List<String> allInfoOfUser) throws Exception {
+    try {
+      long userRole = getUserRoleOfForum(sProvider, (allInfoOfUser.size() > 0) ? allInfoOfUser.get(0) : "");
+      // check for administrators. If is admin --> return true;
+      if (userRole == 0)
+        return true;
+      Node topicNode = pollNode.getParent();
+      Node forumNode = topicNode.getParent();
+      Node categoryNode = forumNode.getParent();
+      PropertyReader reader = new PropertyReader(topicNode);
+
+      // permission in topic
+      Set<String> viewers = reader.set("exo:canView", new HashSet<String>());
+      // user's permission of the topic content this poll.
+      boolean hasNotPremissionByTopic = (reader.bool("exo:isClosed") || !reader.bool("exo:isApproved") || reader.bool("exo:isWaiting") || !reader.bool("exo:isActive"));
+
+      // permission in forum
+      reader = new PropertyReader(forumNode);
+      viewers.addAll(reader.set("exo:viewer", new HashSet<String>()));
+      // forum is closed --> return false;
+      if (reader.bool("exo:isClosed"))
+        return false;
+      // check for moderators
+      if (userRole == 1) {
+        List<String> moderators = reader.list("exo:moderators", new ArrayList<String>());
+        if (!Utils.isListEmpty(allInfoOfUser)) {
+          for (String string : moderators) {
+            // user's moderator of the forum content the poll.
+            if (allInfoOfUser.contains(string))
+              return true;
+          }
+        }
+      }
+      // checking when user has not moderator of the forum content the poll.
+      if (hasNotPremissionByTopic)
+        return false;
+
+      // permission in category
+      reader = new PropertyReader(categoryNode);
+      // check viewer
+      viewers.addAll(reader.set("exo:viewer", new HashSet<String>()));
+      // check user private.
+      viewers.addAll(reader.set("exo:userPrivate", new HashSet<String>()));
+      // if viewer is empty then poll public.
+      if (Utils.isListEmpty(new ArrayList<String>(viewers))) {
+        return true;
+      }
+      // if user login and viewer list not empty.
+      if (!Utils.isListEmpty(allInfoOfUser)) {
+        for (String string : viewers) {
+          if (allInfoOfUser.contains(string.trim()))
+            return true;
+        }
+      }
+    } catch (Exception e) {
+      log.debug("Failed to checking has premission viewing poll add in forum.");
+    }
+    return false;
+  }
+
+  public PollSummary getPollSummary(List<String> allInfoOfUser) throws Exception {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    PollSummary poll = new PollSummary();
+    try {
+      NodeIterator iter = getIterNodePoll(sProvider);
+      List<String> pollId = new ArrayList<String>();
+      List<String> pollName = new ArrayList<String>();
+      List<String> groupPrivate = new ArrayList<String>();
+      String path;
+      boolean isAdd = false;
+      while (iter.hasNext()) {
+        Node node = iter.nextNode();
+        path = node.getPath();
+        isAdd = false;
+        // check permission for poll of forum
+        if (path.indexOf(dataLocator.getForumCategoriesLocation()) >= 0) {
+          isAdd = hasPermissionInForum(sProvider, node, allInfoOfUser);
+        } else {
+          // check permission for poll private.
+          if (path.indexOf(APPLICATION_DATA) > 0) {
+            path = path.substring(path.indexOf(GROUPS + "/") + GROUPS.length(), path.indexOf("/" + APPLICATION_DATA));
+            for (String group : allInfoOfUser) {
+              if (group.indexOf(":") < 0) {
+                if (group.indexOf(path) == 0) {
+                  isAdd = true;
+                  break;
+                }
+              }
+            }
+          } else {
+            isAdd = true;
+          }
+        }
+        if (isAdd) {
+          pollId.add(node.getName());
+          pollName.add(node.getProperty(EXO_QUESTION).getString());
+          groupPrivate.add(path);
+        }
+      }
+      poll.setPollId(pollId);
+      poll.setPollName(pollName);
+      poll.setGroupPrivate(groupPrivate);
+    } catch (Exception e) {
+      log.error("Failed to get poll summary", e);
+    } finally {
+      sProvider.close();
+    }
+    return poll;
+  }
 	
 	public Poll removePoll(String pollId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
@@ -273,7 +370,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 				pollNode.setProperty(EXO_VOTE, poll.getVote());
 				pollNode.setProperty(EXO_USER_VOTE, poll.getUserVote());
 				try {
-					pollNode.setProperty(EXO_LASTVOTE, getGreenwichMeanTime());// new property 2.0 to 2.1
+					pollNode.setProperty(EXO_LASTVOTE, Utils.getGreenwichMeanTime());// new property 2.0 to 2.1
 				} catch (RepositoryException e) {
 				}
 			} else {
@@ -283,13 +380,13 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 					pollNode.setProperty(EXO_ID, pollId);
 					pollNode.setProperty(EXO_OWNER, poll.getOwner());
 					pollNode.setProperty(EXO_USER_VOTE, new String[] {});
-					pollNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
-					pollNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
+					pollNode.setProperty(EXO_CREATED_DATE, Utils.getGreenwichMeanTime());
+					pollNode.setProperty(EXO_MODIFIED_DATE, Utils.getGreenwichMeanTime());
 					if(parentNode.hasProperty(EXO_IS_POLL)){
 						parentNode.setProperty(EXO_IS_POLL, true);
 					}
 				} else {
-					if(!isEmpty(poll.getOldParentPath()) && !parentNode.getPath().equals(poll.getOldParentPath())) {
+					if(!Utils.isEmpty(poll.getOldParentPath()) && !parentNode.getPath().equals(poll.getOldParentPath())) {
 						Session session = getSession(sProvider);
 						session.move(poll.getOldParentPath()+"/"+pollId, parentNode.getPath()+"/"+pollId);
 						session.save();
@@ -305,7 +402,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 				
 				if (!isNew) {
 					if(pollNode.getProperty(EXO_TIME_OUT).getLong() != poll.getTimeOut())
-						pollNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
+						pollNode.setProperty(EXO_MODIFIED_DATE, Utils.getGreenwichMeanTime());
 				}
 				pollNode.setProperty(EXO_TIME_OUT, poll.getTimeOut());
 				pollNode.setProperty(EXO_QUESTION, poll.getQuestion());
@@ -331,7 +428,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 			Node pollNode = appNode.getNode(poll.getId());
 			pollNode.setProperty(EXO_IS_CLOSED, poll.getIsClosed());
 			if (poll.getTimeOut() == 0) {
-				pollNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
+				pollNode.setProperty(EXO_MODIFIED_DATE, Utils.getGreenwichMeanTime());
 				pollNode.setProperty(EXO_TIME_OUT, 0);
 			}
 			appNode.save();
@@ -341,40 +438,4 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 			sProvider.close();
 		}
 	}
-	
-	public static Calendar getGreenwichMeanTime() {
-		Calendar calendar = GregorianCalendar.getInstance();
-		calendar.setLenient(false);
-		int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-		calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
-		return calendar;
-	}
-	
-	public static boolean isEmpty(String s) {
-		return (s == null || s.trim().length() <= 0)?true:false;
-  }
-	
-	public String[] valuesToArray(Value[] Val) throws Exception {
-    if (Val.length < 1) return new String[] {};
-    List<String> list = new ArrayList<String>();
-    String s;
-    for (int i = 0; i < Val.length; ++i) {
-    	 s = Val[i].getString();
-    	 if(!isEmpty(s)) list.add(s);
-    }
-    return list.toArray(new String[list.size()]);
-  }
-	
-	public List<String> valuesToList(Value[] values) throws Exception {
-    List<String> list = new ArrayList<String>();
-    if (values.length < 1) return list;
-    String s;
-    for (int i = 0; i < values.length; ++i) {
-			s = values[i].getString();
-			if (!isEmpty(s)) list.add(s);
-    }
-    return list;
-  }
-
-  
 }

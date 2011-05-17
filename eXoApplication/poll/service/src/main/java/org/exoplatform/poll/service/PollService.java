@@ -69,5 +69,15 @@ public interface PollService {
   
   public List<Poll>getPagePoll() throws Exception ;
   
+  /**
+   * check has permission of user viewer the poll in the forum.
+   * 
+   * @param allInfoOfUser user, group and membership of the user.
+   * @param pollPath the path of the poll.
+   * @return boolean
+   * @throws Exception the exception
+   */
+  public boolean hasPermissionInForum(String pollPath, List<String> allInfoOfUser) throws Exception;
+
   public PollSummary getPollSummary(List<String> groupOfUser) throws Exception ;
 }
