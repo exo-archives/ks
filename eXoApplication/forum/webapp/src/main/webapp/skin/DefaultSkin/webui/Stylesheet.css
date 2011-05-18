@@ -746,5 +746,9 @@ ul,li{
 .UIForumPortlet .TitleForum{
 	line-height: 25px;
 	margin: 0;
-	padding: 0 0 0 10px;
+	padding: 1px 0px 1px 10px;
+}
+
+.UIForumPortlet .UIForumContainer .ContentContainer{
+	border: 1px solid #B7B7B7;
 }

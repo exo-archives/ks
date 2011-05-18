@@ -338,10 +338,6 @@
 	width: 100%;
 }
 
-.UITopicDetail .ForumQuickReply .ContentContainer {
-	border: solid 1px #b7b7b7;
-}
-
 .UITopicDetail .ForumQuickReply .ForumList {
 	width: 400px;
 	margin: 0px auto;
@@ -491,6 +487,10 @@
 
 .UIForumPortlet .UITopicDetail .PostsInThreadContainer .ContentAction .UIPopupCategory{
 	left: -5px;
+}
+
+.UIForumPortlet .UITopicDetail .ContentAction .UIPopupCategory .SearchPopup{
+	padding: 5px;
 }
 
 .UIForumPortlet .UITopicDetail .FootPost .ActionButton{
