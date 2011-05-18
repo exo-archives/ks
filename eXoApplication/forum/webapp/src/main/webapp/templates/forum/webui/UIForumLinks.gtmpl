@@ -2,39 +2,12 @@
 	import org.exoplatform.forum.webui.UIForumLinks ;
 %>
 
-<div class="UIForumLinks">
+<div class="UIForumLinks HorizontalLayout">
 	 <% uiform.begin(); 
 	 	 uiform.setUpdateForumLinks() ;
 	 %>
-		<div class="HorizontalLayout" >
-			<div class="FormContainer">
-				<table class="UIFormGrid" style="float:right">
-					<tbody>
-						<tr>
-							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_FORUMLINK_SELECTBOX)%>:</td>
-							<td style="width:242px;">
-								<% uicomponent.renderChild(uiform.FIELD_FORUMLINK_SELECTBOX); %>
-							</td>
-							<td>
-								<div class="UIActionForum" onclick="<%=uicomponent.event("Select")%>;script:scroll(0,0);">
-									<div class="NormalButtom">
-										<div class="ButtonLeft">
-											<div class="ButtonRight">
-												<div class="ButtonMiddle">
-												 <div style="padding:0px 10px;">
-												 	<a href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Go");%></a>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				<div style="clear:left;"><span></span></div>
-			</div>
-		</div>
+		<%=uicomponent.getLabel(uiform.FIELD_FORUMLINK_SELECTBOX)%>:
+		<% uicomponent.renderChild(uiform.FIELD_FORUMLINK_SELECTBOX); %>
+		<a onclick="<%=uicomponent.event("Select")%>;script:scroll(0,0);" class="NormalButtomBT" href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Go");%></a>
 	<%uiform.end()%>
 </div>

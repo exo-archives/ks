@@ -1,6 +1,6 @@
 .UIForumLinks {
 	margin: 0px 10px;
-	overflow: auto;
+	text-align: right;
 }
 
 .UIForumLinks .HorizontalLayout {
@@ -9,6 +9,14 @@
 }
 
 .UIForumLinks .HorizontalLayout .UIFormGrid td.FieldLabel {
+	line-height: 20px;
+	white-space:nowrap;
+	padding: 0px 4px;
+	width: 100%;
+	width: expression("auto");
+}
+
+.UIForumLinks .UIFormGrid td.FieldLabel {
 	line-height: 20px;
 	white-space:nowrap;
 	padding: 0px 4px;
@@ -47,4 +55,12 @@
 
 .UIForumPortlet .timeZone {
 	line-height: 16px;
+}
+
+.UIForumLinks .UIForm  .UIFormGrid td.FieldLabel{
+	padding: 0px;
+}
+
+.UIForumPortlet .UIForm select{
+	*height: 19px;
 }
