@@ -29,14 +29,14 @@
 	}
 %>
 <div id="$uicomponent.id" class="UIPostRules ForumCategory">
-		<h6 class="TitleForum ForumActionToolbar ForumToolbar">
-			<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
-			<%=_ctx.appRes("UIPostRules.label.PostRules")%>
-		</h6>
-		<ul class="ContentContainer TxtRules">
-			<li>$you <span class="BoldTitle">$canCreatThread</span> <%=_ctx.appRes("UIPostRules.label.postNewThread") ;%></li>
-			<li>$you <span class="BoldTitle">$canPost</span> <%=_ctx.appRes("UIPostRules.label.postReplies") ;%></li>
-			<li>$you <span class="BoldTitle">$canPost</span> <%=_ctx.appRes("UIPostRules.label.postAttachments") ;%></li>
-			<li>$you <span class="BoldTitle">$canPost</span> <%=_ctx.appRes("UIPostRules.label.editYourPosts") ;%></li>
-		</ul>
+	<h6 class="TitleForum ForumActionToolbar ForumToolbar">
+		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+		<%=_ctx.appRes("UIPostRules.label.PostRules")%>
+	</h6>
+	<ul class="ContentContainer TxtRules">
+		<li>$you <strong>$canCreatThread</strong> <%=_ctx.appRes("UIPostRules.label.postNewThread") ;%></li>
+		<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.postReplies") ;%></li>
+		<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.postAttachments") ;%></li>
+		<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.editYourPosts") ;%></li>
+	</ul>
 </div>

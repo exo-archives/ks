@@ -169,11 +169,6 @@
 	line-height: 18px;
 }
 
-.UIPostRules .ContentContainer .BoldTitle {
-	font-weight: bold ;
-	line-height: 18px;
-}
-
 .UIForumContainer .UITopicContainer .TopicDeleted {
 	border: 1px outset ;
 	color: black;
