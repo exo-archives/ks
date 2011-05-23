@@ -352,5 +352,37 @@ public class TestForumUtils extends TestCase {
   	assertEquals("<span title='abc@abc.com'>abc@abc.com</span>,<br/><span title='emailverylong@exoplaforum.com'>emailverylong@e...</span>", 
   			ForumUtils.getCalculateListEmail(s));
   }
+  
+  public void testGetScreenName() throws Exception {
+    String screenName = null;
+    assertEquals(null, ForumUtils.getScreenName(screenName));
+    
+    screenName = "";
+    assertEquals("", ForumUtils.getScreenName(screenName));
+    
+    screenName = "12345678900000017";
+    assertEquals("12345678900000017", ForumUtils.getScreenName(screenName));
+    
+    screenName = "<s>456789000000</s>";
+    assertEquals("<s>456789000000</s>", ForumUtils.getScreenName(screenName));
+    
+    screenName = "123456789000000018";
+    assertEquals("<span title=\"123456789000000018\">123456789000...</span>", ForumUtils.getScreenName(screenName));
+    
+    screenName = "123456789 000000019";
+    assertEquals("123456789 000000019", ForumUtils.getScreenName(screenName));
+    
+    screenName = "1234567890000000 0021";
+    assertEquals("1234567890000000 0021", ForumUtils.getScreenName(screenName));
+    
+    screenName = "123456789000000000 21";
+    assertEquals("<span title=\"123456789000000000 21\">123456789000...</span>", ForumUtils.getScreenName(screenName));
+    
+    screenName = "<s>123456789000000 00021</s>";
+    assertEquals("<s>123456789000000 00021</s>", ForumUtils.getScreenName(screenName));
+    
+    screenName = "<s>12345678900000000021</s>";
+    assertEquals("<span title=\"12345678900000000021\"><s>123456789000...</s></span>", ForumUtils.getScreenName(screenName));
+  }
 
 }

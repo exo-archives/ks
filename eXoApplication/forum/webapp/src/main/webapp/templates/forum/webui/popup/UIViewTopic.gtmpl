@@ -1,7 +1,7 @@
 <%
   import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.forum.service.UserProfile;
-  import org.exoplatform.forum.service.Topic ;
+    import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.webui.UIForumPageIterator;	
 	import org.exoplatform.forum.service.Post;
 	import org.exoplatform.ks.common.user.CommonContact;
@@ -55,6 +55,7 @@
 			}
 			UserProfile userInfo = uicomponent.getUserInfo(owner) ;
 			screenName = userInfo.getScreenName();
+			String viewScreenName = ForumUtils.getScreenName(screenName);
 			String classIconPost = post.getIcon() ;
 			if(ForumUtils.isEmpty(classIconPost)) 
 				classIconPost = "NormalTopicIcon" ;
@@ -113,7 +114,7 @@
 								%>
 								<div class="MemberName">
 									<div class="State $userSmile" title="${screenName}'s $titleSmile"><span></span></div>
-									<div class="Name">$screenName</div>
+									<div class="Name">$viewScreenName</div>
 									<div style="clear:left;"><span></span></div>
 								</div>
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>

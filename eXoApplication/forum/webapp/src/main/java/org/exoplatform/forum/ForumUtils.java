@@ -458,4 +458,20 @@ public class ForumUtils {
     }
 		return builder.toString();
 	}
+	
+  static public String getScreenName(String screenName) throws Exception {
+    if(!isEmpty(screenName)) {
+      String s = screenName.replace("<s>", "").replace("</s>", "").trim();
+      if(screenName != null && s.length() > 17 && (s.indexOf(" ") > 17 || s.indexOf(" ") < 0)){
+        boolean isDelted = false;
+        if(screenName.indexOf("<s>") >= 0) {
+          screenName = s;
+          isDelted = true;
+        }
+        screenName = "<span title=\""+screenName+"\">"+((isDelted)?"<s>":"")+
+                      getSubString(screenName.trim(), 12)+((isDelted)?"</s></span>":"</span>"); 
+      }
+    }
+    return screenName ;
+  }
 }

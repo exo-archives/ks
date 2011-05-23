@@ -1,0 +1,294 @@
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java	(revision 69692)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/impl/JCRDataStorage.java	(working copy)
+@@ -4573,14 +4573,20 @@
+ 	}
+ 
+ 	private String getScreenName(SessionProvider sProvider, String userName) throws Exception {
+-		String userTemp = userName;
+ 		try {
+ 			Node userProfile = getUserProfileNode(getUserProfileHome(sProvider), userName);
+-			PropertyReader reader = new PropertyReader(userProfile);
+-			userName = reader.string(EXO_SCREEN_NAME, reader.string(EXO_FULL_NAME, userName));
++			return getScreenName(userName, userProfile);
+ 		} catch (Exception e) {
+-			log.debug("Failed to get scrennName for user " + userName, e);
++			return getScreenName(userName, null);
+ 		}
++	}
++
++	private String getScreenName(String userName, Node userProfile) throws Exception {
++		String userTemp = userName;
++		if(userProfile != null) {
++			PropertyReader reader = new PropertyReader(userProfile);
++			userName = reader.string(EXO_SCREEN_NAME, reader.string(EXO_FULL_NAME, userName));
++		} 
+ 		return (userTemp.contains(Utils.DELETED)) ? "<s>"
+ 				+ ((userName.contains(Utils.DELETED)) ? userName.substring(0, userName.indexOf(Utils.DELETED)) : userName) + "</s>" : userName;
+ 	}
+@@ -4597,12 +4603,7 @@
+ 			Node profileNode = getUserProfileHome(sProvider).getNode(userName);
+ 			userProfile.setUserId(userName) ;
+ 			userProfile.setUserTitle(profileNode.getProperty(EXO_USER_TITLE).getString());
+-			try{
+-				userProfile.setScreenName(profileNode.getProperty(EXO_SCREEN_NAME).getString());
+-			}catch(Exception e) {
+-				userProfile.setScreenName(userName);
+-			}
+-			
++			userProfile.setScreenName(getScreenName(userName, profileNode));
+ 			userProfile.setSignature(profileNode.getProperty(EXO_SIGNATURE).getString());
+ 			userProfile.setIsDisplaySignature(profileNode.getProperty(EXO_IS_DISPLAY_SIGNATURE).getBoolean()) ;
+ 			userProfile.setIsDisplayAvatar(profileNode.getProperty(EXO_IS_DISPLAY_AVATAR).getBoolean()) ;
+@@ -4752,8 +4753,7 @@
+ 			newProfileNode = getUserProfileNode(userProfileNode, userName);
+ 			PropertyReader reader = new PropertyReader(newProfileNode);
+ 			userProfile.setUserId(userName);
+-
+-			userProfile.setScreenName(reader.string(EXO_SCREEN_NAME, userName));			
++			userProfile.setScreenName(getScreenName(userName, newProfileNode));		
+ 			userProfile.setFullName(reader.string(EXO_FULL_NAME));
+ 			userProfile.setFirstName(reader.string(EXO_FIRST_NAME));
+ 			userProfile.setLastName(reader.string(EXO_LAST_NAME));
+@@ -4795,16 +4795,17 @@
+ 		List<UserProfile> profiles = new ArrayList<UserProfile>() ;
+ 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+ 		PropertyReader reader ;
++		Node userProfileNode;
+ 		try {
+ 			Node userProfileHome = getUserProfileHome(sProvider);
+-			for(String userName : userList) {
++			for (String userName : userList) {
+ 				userProfile = new UserProfile();
+-				reader = new PropertyReader(getUserProfileNode(userProfileHome, userName));
+-				userProfile.setUserId(userName) ;
+-				userProfile.setUserRole((userName.contains(Utils.DELETED))?4:reader.l(EXO_USER_ROLE, 2));
+-				userProfile.setUserTitle(reader.string(EXO_USER_TITLE, "")) ;
+-				userProfile.setScreenName(reader.string(EXO_SCREEN_NAME, userName));
+-				
++				userProfileNode = getUserProfileNode(userProfileHome, userName) ;
++				reader = new PropertyReader(userProfileNode);
++				userProfile.setUserId(userName);
++				userProfile.setUserRole((userName.contains(Utils.DELETED)) ? 4 : reader.l(EXO_USER_ROLE, 2));
++				userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
++				userProfile.setScreenName(getScreenName(userName, userProfileNode));
+ 				userProfile.setJoinedDate(reader.date(EXO_JOINED_DATE, new Date())) ;
+ 				userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR, false)) ;
+ 				userProfile.setTotalPost(reader.l(EXO_TOTAL_POST)) ;
+@@ -4828,12 +4829,12 @@
+ 		try{
+ 			Node userProfileHome = getUserProfileHome(sProvider);
+ 			userProfile = new UserProfile();
+-			PropertyReader reader = new PropertyReader(getUserProfileNode(userProfileHome, userName));
+-			userProfile.setUserId(userName) ;
+-			userProfile.setUserRole((userName.contains(Utils.DELETED))?4:reader.l(EXO_USER_ROLE, 2));
+-			userProfile.setUserTitle(reader.string(EXO_USER_TITLE, "")) ;
+-			userProfile.setScreenName(reader.string(EXO_SCREEN_NAME, userName));
+-			
++			Node userProfileNode = getUserProfileNode(userProfileHome, userName);
++			PropertyReader reader = new PropertyReader(userProfileNode);
++			userProfile.setUserId(userName);
++			userProfile.setUserRole((userName.contains(Utils.DELETED)) ? 4 : reader.l(EXO_USER_ROLE, 2));
++			userProfile.setUserTitle(reader.string(EXO_USER_TITLE, ""));
++			userProfile.setScreenName(getScreenName(userName, userProfileNode));
+ 			userProfile.setJoinedDate(reader.date(EXO_JOINED_DATE, new Date())) ;
+ 			userProfile.setIsDisplayAvatar(reader.bool(EXO_IS_DISPLAY_AVATAR, false)) ;
+ 			userProfile.setTotalPost(reader.l(EXO_TOTAL_POST)) ;
+@@ -4950,11 +4951,7 @@
+ 		UserProfile userProfile = new UserProfile() ;
+ 		userProfile.setUserId(userProfileNode.getName());
+ 		userProfile.setUserTitle(userProfileNode.getProperty(EXO_USER_TITLE).getString());
+-		try{
+-			userProfile.setScreenName(userProfileNode.getProperty(EXO_SCREEN_NAME).getString());
+-		}catch(Exception e) {
+-			userProfile.setScreenName(userProfileNode.getName());
+-		}		
++		userProfile.setScreenName(getScreenName(userProfileNode.getName(), userProfileNode));	
+ 		userProfile.setFullName(userProfileNode.getProperty(EXO_FULL_NAME).getString());
+ 		userProfile.setFirstName(userProfileNode.getProperty(EXO_FIRST_NAME).getString());
+ 		userProfile.setLastName(userProfileNode.getProperty(EXO_LAST_NAME).getString());
+Index: eXoApplication/forum/webapp/src/test/java/org/exoplatform/forum/TestForumUtils.java
+===================================================================
+--- eXoApplication/forum/webapp/src/test/java/org/exoplatform/forum/TestForumUtils.java	(revision 69692)
++++ eXoApplication/forum/webapp/src/test/java/org/exoplatform/forum/TestForumUtils.java	(working copy)
+@@ -352,5 +352,37 @@
+   	assertEquals("<span title='abc@abc.com'>abc@abc.com</span>,<br/><span title='emailverylong@exoplaforum.com'>emailverylong@e...</span>", 
+   			ForumUtils.getCalculateListEmail(s));
+   }
++  
++  public void testGetScreenName() throws Exception {
++    String screenName = null;
++    assertEquals(null, ForumUtils.getScreenName(screenName));
++    
++    screenName = "";
++    assertEquals("", ForumUtils.getScreenName(screenName));
++    
++    screenName = "12345678900000017";
++    assertEquals("12345678900000017", ForumUtils.getScreenName(screenName));
++    
++    screenName = "<s>456789000000</s>";
++    assertEquals("<s>456789000000</s>", ForumUtils.getScreenName(screenName));
++    
++    screenName = "123456789000000018";
++    assertEquals("<span title=\"123456789000000018\">123456789000...</span>", ForumUtils.getScreenName(screenName));
++    
++    screenName = "123456789 000000019";
++    assertEquals("123456789 000000019", ForumUtils.getScreenName(screenName));
++    
++    screenName = "1234567890000000 0021";
++    assertEquals("1234567890000000 0021", ForumUtils.getScreenName(screenName));
++    
++    screenName = "123456789000000000 21";
++    assertEquals("<span title=\"123456789000000000 21\">123456789000...</span>", ForumUtils.getScreenName(screenName));
++    
++    screenName = "<s>123456789000000 00021</s>";
++    assertEquals("<s>123456789000000 00021</s>", ForumUtils.getScreenName(screenName));
++    
++    screenName = "<s>12345678900000000021</s>";
++    assertEquals("<span title=\"12345678900000000021\"><s>123456789000...</s></span>", ForumUtils.getScreenName(screenName));
++  }
+ 
+ }
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/ForumUtils.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/ForumUtils.java	(revision 69692)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/ForumUtils.java	(working copy)
+@@ -458,4 +458,20 @@
+     }
+ 		return builder.toString();
+ 	}
++	
++  static public String getScreenName(String screenName) throws Exception {
++    if(!isEmpty(screenName)) {
++      String s = screenName.replace("<s>", "").replace("</s>", "").trim();
++      if(screenName != null && s.length() > 17 && (s.indexOf(" ") > 17 || s.indexOf(" ") < 0)){
++        boolean isDelted = false;
++        if(screenName.indexOf("<s>") >= 0) {
++          screenName = s;
++          isDelted = true;
++        }
++        screenName = "<span title=\""+screenName+"\">"+((isDelted)?"<s>":"")+
++                      getSubString(screenName.trim(), 12)+((isDelted)?"</s></span>":"</span>"); 
++      }
++    }
++    return screenName ;
++  }
+ }
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java	(revision 69692)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java	(working copy)
+@@ -484,12 +484,6 @@
+ 		return isMod;
+ 	}
+ 	
+-	private String getScreenName(String userName, String screenName) throws Exception {
+-		return (userName.contains(Utils.DELETED)) ? "<s>"
+-				+ ((screenName.contains(Utils.DELETED)) ? 
+-						screenName.substring(0, screenName.indexOf(Utils.DELETED)) : screenName) + "</s>" : screenName;
+-	}
+-	 
+ 	private Topic getTopic() throws Exception {
+ 		try {
+ 			if(this.isEditTopic || this.topic == null) {
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewTopic.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewTopic.java	(revision 69692)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewTopic.java	(working copy)
+@@ -27,6 +27,7 @@
+ import org.exoplatform.container.ExoContainerContext;
+ import org.exoplatform.download.DownloadService;
+ import org.exoplatform.forum.ForumSessionUtils;
++import org.exoplatform.forum.ForumUtils;
+ import org.exoplatform.forum.rendering.RenderHelper;
+ import org.exoplatform.forum.rendering.RenderingException;
+ import org.exoplatform.forum.service.ForumAttachment;
+@@ -40,7 +41,6 @@
+ import org.exoplatform.ks.common.user.CommonContact;
+ import org.exoplatform.ks.common.webui.UIPopupAction;
+ import org.exoplatform.ks.common.webui.UIPopupContainer;
+-import org.exoplatform.services.jcr.RepositoryService;
+ import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.services.log.Log;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicDetail.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicDetail.gtmpl	(revision 69692)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicDetail.gtmpl	(working copy)
+@@ -684,7 +684,8 @@
+ 					}
+ 				}
+ 				UserProfile userInfo = uicomponent.getUserInfo(owner) ;
+-				screenName = uicomponent.getScreenName(owner, userInfo.getScreenName());
++				screenName = userInfo.getScreenName() ;
++				String viewScreenName = ForumUtils.getScreenName(screenName);
+ 				String classIconPost = post.getIcon() ;
+ 				if(ForumUtils.isEmpty(classIconPost)) 
+ 					classIconPost = "NormalTopicIcon" ;
+@@ -745,7 +746,7 @@
+ 								<div class="MemberName">
+ 									<div class="State $userSmile" title="${screenName}'s $titleSmile"><span></span></div>
+ 									<div class="ContentAction" style="float:left;" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+-										<div class="Name" style="float:none; cursor:pointer;">$screenName</div>
++										<div class="Name" style="float:none; cursor:pointer;">$viewScreenName</div>
+ 										<div style="position:relative;">
+ 											<div class="UIPopupCategory" style="display:none; left:2px; top:-2px; ">
+ 												<div class="UIRightClickPopupMenu" style="display:block;">
+@@ -764,7 +765,7 @@
+ 																		  if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+ 																			String linkView = uicomponent.event(viewAction, owner) ;
+ 																			String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+-																			if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + screenName ;
++																			if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
+ 																	%>
+ 																			<div class="MenuItem" onclick="$linkView">
+ 																				<div class="ItemIcon IconsView $viewAction" style="padding-left:30px;">
+@@ -817,7 +818,7 @@
+ 																			  if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+ 																				String linkView = uicomponent.event(viewAction, owner) ;
+ 																				String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+-																				if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + screenName ;
++																				if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
+ 																		%>
+ 																				<div class="MenuItem" onclick="$linkView">
+ 																					<div class="ItemIcon IconsView $viewAction" style="padding-left:30px;">
+@@ -853,7 +854,7 @@
+ 									<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>:$totalPost</div>
+ 									<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
+ 									<% } else {%>
+-									<div><strong>$screenName</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
++									<div><strong>$viewScreenName</strong> <%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
+ 									<% } 
+ 									 if(!ForumUtils.isEmpty(location)) {
+ 									%>
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIViewTopic.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIViewTopic.gtmpl	(revision 69692)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIViewTopic.gtmpl	(working copy)
+@@ -1,7 +1,7 @@
+ <%
+   import org.exoplatform.web.application.JavascriptManager;
+ 	import org.exoplatform.forum.service.UserProfile;
+-  import org.exoplatform.forum.service.Topic ;
++    import org.exoplatform.forum.service.Topic ;
+ 	import org.exoplatform.forum.webui.UIForumPageIterator;	
+ 	import org.exoplatform.forum.service.Post;
+ 	import org.exoplatform.ks.common.user.CommonContact;
+@@ -55,6 +55,7 @@
+ 			}
+ 			UserProfile userInfo = uicomponent.getUserInfo(owner) ;
+ 			screenName = userInfo.getScreenName();
++			String viewScreenName = ForumUtils.getScreenName(screenName);
+ 			String classIconPost = post.getIcon() ;
+ 			if(ForumUtils.isEmpty(classIconPost)) 
+ 				classIconPost = "NormalTopicIcon" ;
+@@ -113,7 +114,7 @@
+ 								%>
+ 								<div class="MemberName">
+ 									<div class="State $userSmile" title="${screenName}'s $titleSmile"><span></span></div>
+-									<div class="Name">$screenName</div>
++									<div class="Name">$viewScreenName</div>
+ 									<div style="clear:left;"><span></span></div>
+ 								</div>
+ 								<div class="Rank"><%=userInfo.getUserTitle();%></div>

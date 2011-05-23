@@ -484,12 +484,6 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		return isMod;
 	}
 	
-	private String getScreenName(String userName, String screenName) throws Exception {
-		return (userName.contains(Utils.DELETED)) ? "<s>"
-				+ ((screenName.contains(Utils.DELETED)) ? 
-						screenName.substring(0, screenName.indexOf(Utils.DELETED)) : screenName) + "</s>" : screenName;
-	}
-	 
 	private Topic getTopic() throws Exception {
 		try {
 			if(this.isEditTopic || this.topic == null) {
