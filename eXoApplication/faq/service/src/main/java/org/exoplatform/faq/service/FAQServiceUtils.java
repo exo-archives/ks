@@ -18,24 +18,19 @@ package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.jcr.Node;
 
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.organization.Membership;
-import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -58,14 +53,12 @@ public class FAQServiceUtils {
   	List<String> users = new ArrayList<String> () ;
 		if(userGroupMembership == null || userGroupMembership.length <= 0 || 
 				(userGroupMembership.length == 1 && userGroupMembership[0].equals(" "))) return users ; 
-		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
 		for(String str : userGroupMembership) {
 			str = str.trim();
 			if(str.indexOf("/") >= 0) {
 				if(str.indexOf(":") >= 0) { //membership
 					String[] array = str.split(":") ;
-					PageList userPageList = organizationService.getUserHandler().findUsersByGroup(array[1]) ;					
-					//List<User> userList = organizationService.getUserHandler().findUsersByGroup(array[1]).getAll() ;
+					PageList userPageList = UserHelper.getUserPageListByGroupId(array[1]);					
 					if(array[0].length() > 1){
 					  List<User> userList = new ArrayList<User>() ;
 					  for(int i = 1; i <= userPageList.getAvailablePage(); i++) {
@@ -73,7 +66,7 @@ public class FAQServiceUtils {
 					    userList.addAll(userPageList.getPage(i)) ;
 				      for (User user : userList) {
 				        if(!users.contains(user.getUserName())){
-	                Collection<Membership> memberships = organizationService.getMembershipHandler().findMembershipsByUser(user.getUserName()) ;
+				          Collection<Membership> memberships = UserHelper.findMembershipsByUser(user.getUserName());
 	                for(Membership member : memberships){
 	                  if(member.getMembershipType().equals(array[0])) {
 	                    users.add(user.getUserName()) ;
@@ -114,8 +107,7 @@ public class FAQServiceUtils {
 						}
 					}
 				}else { //group
-					//List<User> userList = organizationService.getUserHandler().findUsersByGroup(str).getAll() ;
-				  PageList userPageList = organizationService.getUserHandler().findUsersByGroup(str) ;
+				  PageList userPageList = UserHelper.getUserPageListByGroupId(str);
 				  List<User> userList = new ArrayList<User>() ;
           for(int i = 1; i <= userPageList.getAvailablePage(); i++) {
             userList.clear() ;

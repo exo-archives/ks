@@ -21,12 +21,12 @@ import java.util.Collection;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.UISelectComponent;
 import org.exoplatform.ks.common.webui.UISelector;
 import org.exoplatform.services.organization.Group;
-import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
@@ -94,11 +94,7 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
 
   @SuppressWarnings({ "unchecked", "cast" })
   public List getChildGroup() throws Exception {
-    List children = new ArrayList() ;    
-    OrganizationService service = getApplicationComponent(OrganizationService.class) ;
-    for (Object child : service.getGroupHandler().findGroups(this.getCurrentGroup())) {
-      children.add((Group)child) ;
-    }
+    List children = UserHelper.findGroups(getCurrentGroup());
     return children ;
   }
   public boolean isSelectGroup() {return TYPE_GROUP.equals(type_);}
@@ -107,9 +103,8 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
   @SuppressWarnings({ "unchecked", "cast" })
   public List<String> getList() throws Exception {
     List<String> children = new ArrayList<String>() ; 
-    OrganizationService service = getApplicationComponent(OrganizationService.class) ;
     if(TYPE_USER.equals(type_)){
-      PageList userPageList = service.getUserHandler().findUsersByGroup(this.getCurrentGroup().getId()) ;
+      PageList<User> userPageList = UserHelper.getUserPageListByGroupId(this.getCurrentGroup().getId());
       List<User> userList = new ArrayList<User>() ;
       for(int i = 1; i <= userPageList.getAvailablePage(); i++) {
         userList.clear() ;
@@ -127,7 +122,7 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
         children.add(child) ;
       } 
     } else if(TYPE_GROUP.equals(type_)) {
-      Collection  groups = service.getGroupHandler().findGroups(this.getCurrentGroup()) ;    
+      Collection groups = UserHelper.findGroups(getCurrentGroup());    
       for(Object child : groups){
         children.add(((Group)child).getGroupName()) ;
       }

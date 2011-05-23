@@ -19,9 +19,6 @@ package org.exoplatform.ks.common;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.PortalContainer;
@@ -39,169 +36,187 @@ import org.exoplatform.services.organization.impl.GroupImpl;
  * @version $Revision$
  */
 public class UserHelper {
-  
-  private static OrganizationService getOrganizationService() {
+
+  public static OrganizationService getOrganizationService() {
     OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
     return organizationService;
   }
-  
+
   private static UserHandler getUserHandler() {
     return getOrganizationService().getUserHandler();
   }
-  
+
   private static GroupHandler getGroupHandler() {
     return getOrganizationService().getGroupHandler();
   }
 
   public static List<Group> getAllGroup() throws Exception {
-    PageList pageList = (PageList) getGroupHandler().getAllGroups() ;
-    List<Group> list = pageList.getAll() ;
+    Collection<Group> pageList = getGroupHandler().getAllGroups();
+    List<Group> list = new ArrayList<Group>(pageList);
     return list;
   }
 
   public static String checkValueUser(String values) throws Exception {
-  	String errorUser = null;
-  	if(values != null && values.trim().length() > 0) {
-  		String[] userIds = values.split(",");
-  		for (String str : userIds) {
-  			str = str.trim() ;
-  			if(str.indexOf("$") >= 0) str = str.replace("$", "&#36");
-  			  
-  			if(str.indexOf("/") >= 0) {
-  				if(!UserHelper.hasGroupIdAndMembershipId(str)){
-  					if(errorUser == null) errorUser = str ;
-  					else errorUser = errorUser + ", " + str;
-  				}
-  			}else {//user
-  				if((getUserHandler().findUserByName(str) == null)) {
-  					if(errorUser == null) errorUser = str ;
-  					else errorUser = errorUser + ", " + str;
-  				}
-  			}
-  		}
-  	}
-  	return errorUser;
+    String errorUser = null;
+    if (values != null && values.trim().length() > 0) {
+      String[] userIds = values.split(",");
+      for (String str : userIds) {
+        str = str.trim();
+        if (str.indexOf("$") >= 0)
+          str = str.replace("$", "&#36");
+
+        if (str.indexOf("/") >= 0) {
+          if (!UserHelper.hasGroupIdAndMembershipId(str)) {
+            if (errorUser == null)
+              errorUser = str;
+            else
+              errorUser = errorUser + ", " + str;
+          }
+        } else {// user
+          if ((getUserHandler().findUserByName(str) == null)) {
+            if (errorUser == null)
+              errorUser = str;
+            else
+              errorUser = errorUser + ", " + str;
+          }
+        }
+      }
+    }
+    return errorUser;
   }
 
   public static boolean hasGroupIdAndMembershipId(String str) throws Exception {
-  	if(str.indexOf(":") >= 0) { //membership
-  		String[] array = str.split(":") ;
-  		try {
-  		  getGroupHandler().findGroupById(array[1]).getId() ;
-  		}catch (Exception e) {
-  			return false ;
-  		}
-  		if(array[0].length() == 1 && array[0].charAt(0) == '*') {
-  			return true ;
-  		}else if(array[0].length() > 0){
-  			if(getOrganizationService().getMembershipTypeHandler().findMembershipType(array[0])== null) return false ;
-  		}else return false ;
-  	}else { //group
-  		try {
-  		  getGroupHandler().findGroupById(str).getId() ;
-  		}catch (Exception e) {
-  			return false ;
-  		}
-  	}
-  	return true ;
+    if (str.indexOf(":") >= 0) { // membership
+      String[] array = str.split(":");
+      try {
+        getGroupHandler().findGroupById(array[1]).getId();
+      } catch (Exception e) {
+        return false;
+      }
+      if (array[0].length() == 1 && array[0].charAt(0) == '*') {
+        return true;
+      } else if (array[0].length() > 0) {
+        if (getOrganizationService().getMembershipTypeHandler().findMembershipType(array[0]) == null)
+          return false;
+      } else
+        return false;
+    } else { // group
+      try {
+        getGroupHandler().findGroupById(str).getId();
+      } catch (Exception e) {
+        return false;
+      }
+    }
+    return true;
   }
-
-
 
   @SuppressWarnings("unchecked")
   public static boolean hasUserInGroup(String groupId, String userId) throws Exception {
-    List<User> userList = new ArrayList<User>() ;
-  	PageList pageList = getUserHandler().findUsersByGroup(groupId) ;
-  	for(int i = 1; i <= pageList.getAvailablePage(); i++) {
-  	  userList.clear() ;
-  	  userList.addAll(pageList.getPage(i)) ;
-  	  for (User user : userList) {
-        if(user.getUserName().equals(userId)) return true ;
+    List<User> userList = new ArrayList<User>();
+    PageList pageList = getUserHandler().findUsersByGroup(groupId);
+    for (int i = 1; i <= pageList.getAvailablePage(); i++) {
+      userList.clear();
+      userList.addAll(pageList.getPage(i));
+      for (User user : userList) {
+        if (user.getUserName().equals(userId))
+          return true;
       }
-  	}
-  	
-  	return false ;
+    }
+
+    return false;
   }
 
-  //@SuppressWarnings("unchecked")
-  /*public static List<User> getUserByGroupId(String groupId) throws Exception {
-  	return getUserHandler().findUsersByGroup(groupId).getAll() ;
-  }*/
+  // @SuppressWarnings("unchecked")
+  /*
+   * public static List<User> getUserByGroupId(String groupId) throws Exception { return getUserHandler().findUsersByGroup(groupId).getAll() ; }
+   */
 
   @SuppressWarnings("unchecked")
   public static PageList getUserPageListByGroupId(String groupId) throws Exception {
-    return getUserHandler().findUsersByGroup(groupId) ;
+    return getUserHandler().findUsersByGroup(groupId);
   }
-  
+
   public static User getUserByUserId(String userId) throws Exception {
-  	return getUserHandler().findUserByName(userId) ;
+    return getUserHandler().findUserByName(userId);
   }
 
-  /*@SuppressWarnings("unchecked")
-  **
-   * @deprecated this method is danngerous and may not work with all OrganizationService impl
-   *
-  public static List<User> getAllUser() throws Exception {
-  	PageList pageList = getUserHandler().getUserPageList(10) ;
-  	List<User>list = pageList.getAll() ;
-  	return list;
-  }*/
-  
-  /*public static PageList getAllUserPageList() throws Exception {
-    return getUserHandler().getUserPageList(10);
-  }*/
-  
+  /*
+   * @SuppressWarnings("unchecked")*
+   * @deprecated this method is danngerous and may not work with all OrganizationService impl public static List<User> getAllUser() throws Exception { PageList pageList = getUserHandler().getUserPageList(10) ; List<User>list = pageList.getAll() ; return list; }
+   */
+
+  /*
+   * public static PageList getAllUserPageList() throws Exception { return getUserHandler().getUserPageList(10); }
+   */
+
   public static String[] getUserGroups() throws Exception {
-  	Object[] objGroupIds = getGroupHandler().findGroupsOfUser(UserHelper.getCurrentUser()).toArray();
-  	String[] groupIds = new String[objGroupIds.length];
-  	for (int i = 0; i < groupIds.length; i++) {
-  		groupIds[i] = ((GroupImpl) objGroupIds[i]).getId();
-  	}
-  	return groupIds;
+    Object[] objGroupIds = getGroupHandler().findGroupsOfUser(UserHelper.getCurrentUser()).toArray();
+    String[] groupIds = new String[objGroupIds.length];
+    for (int i = 0; i < groupIds.length; i++) {
+      groupIds[i] = ((GroupImpl) objGroupIds[i]).getId();
+    }
+    return groupIds;
   }
 
-  public static PageList getPageListUser() throws Exception {
-  	return getUserHandler().getUserPageList(10);
+  public static List<String> getAllGroupId() throws Exception {
+    List<String> grIds = new ArrayList<String>();
+    for (Group gr : getAllGroup()) {
+      grIds.add(gr.getId());
+    }
+    return grIds;
   }
 
-  public static boolean isAnonim() throws Exception {
-  	String userId = UserHelper.getCurrentUser();
-  	if (userId == null)
-  		return true;
-  	return false;
+  public static List<Group> findGroups(Group group) throws Exception {
+    return (List<Group>) getGroupHandler().findGroups(group);
   }
 
   @SuppressWarnings("unchecked")
-  public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
+  public static PageList getPageListUser() throws Exception {
+    return getUserHandler().getUserPageList(10);
+  }
+
+  public static boolean isAnonim() throws Exception {
+    String userId = UserHelper.getCurrentUser();
+    if (userId == null)
+      return true;
+    return false;
+  }
+
+  public static Collection findMembershipsByUser(String userId) throws Exception {
+    return getOrganizationService().getMembershipHandler().findMembershipsByUser(userId);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception {
     List<String> listOfUser = new ArrayList<String>();
     if (userId == null) {
       return listOfUser; // should we throw an IllegalArgumentException instead ?
     }
 
-  	listOfUser.add(userId); //himself
-  	String value = "";
-  	Collection<Membership> memberships = getOrganizationService().getMembershipHandler().findMembershipsByUser(userId);
-  	for (Membership membership : memberships) {
-       value = membership.getGroupId();
-        listOfUser.add(value); // its groups
-        value = membership.getMembershipType() + ":" + value;
-        listOfUser.add(value);  // its memberships
+    listOfUser.add(userId); // himself
+    String value = "";
+    Collection<Membership> memberships = findMembershipsByUser(userId);
+    for (Membership membership : memberships) {
+      value = membership.getGroupId();
+      listOfUser.add(value); // its groups
+      value = membership.getMembershipType() + ":" + value;
+      listOfUser.add(value); // its memberships
     }
-  	
-  	return listOfUser;
+
+    return listOfUser;
   }
 
   static public String getEmailUser(String userName) throws Exception {
-  	User user = getUserHandler().findUserByName(userName) ;
-  	String email = user.getEmail() ;
-  	return email;
+    User user = getUserHandler().findUserByName(userName);
+    String email = user.getEmail();
+    return email;
   }
 
   static public String getCurrentUser() throws Exception {
-  	try {
-  		return Util.getPortalRequestContext().getRemoteUser();
+    try {
+      return Util.getPortalRequestContext().getRemoteUser();
     } catch (Exception e) {
-	    return null;
+      return null;
     }
   }
 

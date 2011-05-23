@@ -26,7 +26,6 @@ import java.util.Set;
 
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.webui.SelectItem;
 import org.exoplatform.faq.webui.SelectOption;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
@@ -37,7 +36,6 @@ import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
-import org.exoplatform.services.organization.idm.ExtGroup;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPageIterator;
@@ -101,13 +99,8 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 	public List<SelectItem> getOptions() throws Exception {
 		List<SelectItem> options = new ArrayList<SelectItem>() ;
 		options.add(new SelectOption(FILED_ALL_GROUP, FILED_ALL_GROUP));
-		OrganizationService organizationService =(OrganizationService)PortalContainer.getComponent(OrganizationService.class) ;
-		Object[] objGroupIds = organizationService.getGroupHandler().getAllGroups().toArray() ;
 		try {
-			List<String> groupIds = new ArrayList<String>() ;
-			for (Object object : objGroupIds) {
-				groupIds.add(((ExtGroup)object).getId()) ;
-			}
+			List<String> groupIds = UserHelper.getAllGroupId();
 			if(!groupIds.isEmpty()){
 				for(String publicCg : groupIds) {
 					options.add(new SelectOption(publicCg, publicCg));

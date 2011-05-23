@@ -95,8 +95,6 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
-import org.exoplatform.services.organization.Membership;
-import org.exoplatform.services.organization.OrganizationService;
 
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
@@ -168,25 +166,6 @@ public class JCRDataStorage implements DataStorage {
 		}*/		
   }
 
-  private List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
-    List<String> listOfUser = new ArrayList<String>();
-    listOfUser.add(userId);
-    String value = "";
-    String id = "";
-    Membership membership = null;
-    OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-    for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
-      id = object.toString();
-      id = id.replace("Membership[", "").replace("]", "");
-      membership = organizationService_.getMembershipHandler().findMembership(id);
-      value = membership.getGroupId();
-      listOfUser.add(value);
-      value = membership.getMembershipType() + ":" + value;
-      listOfUser.add(value);
-    }
-    return listOfUser;
-  }
-
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#isAdminRole(java.lang.String)
    */
@@ -200,7 +179,7 @@ public class JCRDataStorage implements DataStorage {
         if(cateHomeNode.hasProperty("exo:moderators")) 
           list.addAll(Utils.valuesToList(cateHomeNode.getProperty("exo:moderators").getValues())) ;
         if(list.contains(userName)) return true;
-        if(Utils.hasPermission(list, getAllGroupAndMembershipOfUser(userName))) return true;
+        if(Utils.hasPermission(list, UserHelper.getAllGroupAndMembershipOfUser(userName))) return true;
       }
     } catch (Exception e) {
       log.debug("Check user whether is admin: ", e);
