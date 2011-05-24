@@ -48,7 +48,7 @@
 			<div class="UIPopupCategory" style="display:none;">
 				<ul class="UIRightClickPopupMenu TopicPollTop" style="display:block;">
 					<li class="MenuItem" onclick="<%=uicomponent.event("EditPoll")%>">
-							<a class="ItemIcon EditPollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UITopicPoll.label.EditPoll"); %></a>
+						<a class="ItemIcon EditPollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UITopicPoll.label.EditPoll"); %></a>
 					</li>
 					<li class="MenuItem" onclick="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut);%>">
 						<% if(poll.getIsClosed() || isTimeOut){ %>
@@ -58,7 +58,7 @@
 						<% } %>
 					</li>
 					<li class="MenuItem" onclick="<%=uicomponent.event("RemovePoll","UITopicPoll","poll");%>">
-						 <a class="ItemIcon DeletePollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UITopicPoll.label.RemovePoll"); %></a>
+				 		<a class="ItemIcon DeletePollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UITopicPoll.label.RemovePoll"); %></a>
 					</li>
 				</ul>
 			</div>
@@ -74,36 +74,34 @@
     <p class="PollTime">$timeOutDate</p>
     <%} %>
     <div class="UIFormTabPane">
-         <% if(uicomponent.isGuestPermission() == false) { %> 
-              <h6 class="PollQuestion">${question}</h6>
-							<table class="UIFormGrid">
-								<tr>
-									<td class="FieldComponent PollForm">
-									<%
-										uicomponent.renderChildren() ;  
-									%>
-									</td>
-								</tr>
-							</table>
-							<div class="UIAction">
-								<table class="ActionContainer">
-									<tr>
-										<td>
-											<div class="ActionButton LightBlueStyle">
-												<div class="ButtonLeft">
-													<div class="ButtonRight">
-														<div class="ButtonMiddle">
-															<a href="<%=uicomponent.event("Vote")%>"><%=_ctx.appRes("UITopicPoll.label.Votenow"); %></a>
-														</div>
-													</div>
-												</div>
-											</div>
-										</td>
-									</tr>
-								</table>
+     <% if(uicomponent.isGuestPermission() == false) { %> 
+          <h6 class="PollQuestion">${question}</h6>
+			<table class="UIFormGrid">
+				<tr>
+					<td class="FieldComponent PollForm">
+					<%
+						uicomponent.renderChildren() ;  
+					%>
+					</td>
+				</tr>
+			</table>
+			<div class="UIAction">
+				<table class="ActionContainer">
+					<tr>
+						<td>
+							<div class="ActionButton LightBlueStyle">
+								<div class="ButtonLeft">
+									<div class="ButtonRight">
+										<div class="ButtonMiddle">
+											<a href="<%=uicomponent.event("Vote")%>"><%=_ctx.appRes("UITopicPoll.label.Votenow"); %></a>
+										</div>
+									</div>
+								</div>
 							</div>
-                    
-                 
+						</td>
+					</tr>
+				</table>
+			</div>
           <% } else { %>
               <table  id="UIGrid" class="UIGrid ViewPollForm">
                 <thead>
@@ -132,11 +130,11 @@
                      <tr class="$classCss">
                       <td class="text">$option</td>
                       <td>
-												<ul class="Percen">
-													<li class="BackgroudColor"><span class="Chart" style="background-color:$color; width:${percent}%;"></span></li>
-													<li class="Percentage"><span>${percent}%</span></li>
-												</ul>
-											</td>
+						<ul class="Percen">
+							<li class="BackgroudColor"><span class="Chart" style="background-color:$color; width:${percent}%;"></span></li>
+							<li class="Percentage"><span>${percent}%</span></li>
+						</ul>
+						</td>
                       <td class="Number">$vote</td>
                     </tr>
                 <%     i = i + 1;
@@ -171,7 +169,6 @@
              <% } %>
           <% } %>
     </div>
-    
   </div>
 </div>
   <%} else {

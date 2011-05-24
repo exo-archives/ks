@@ -80,17 +80,19 @@
 }
 
 .UIForumContainer .ContentContainer .VoteIcon {
-	width: 16px; height: 16px;
+	width: 16px; 
+	height: 16px;
 	float: left;
 }
 
 .UIForumContainer .ContentContainer .ThreadStatusIcon {
 	margin: auto;
-	width: 24px; height: 24px;
+	width: 24px; 
+	height: 24px;
 }
 
 .UIForumContainer .ContentContainer span{
-	display: block;
+	display: inline-block;
 }
 
 .UIForumContainer .ContentContainer .AttachmentIcon {

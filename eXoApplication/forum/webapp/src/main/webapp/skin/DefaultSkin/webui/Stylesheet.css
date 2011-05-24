@@ -227,7 +227,7 @@ ul,li{
 	-moz-border-radius: 3px 3px 0px 0px;
 	-webkit-border-radius: 3px 3px 0px 0px;
 	padding: 1px 10px;
-	height: 23px;
+	height: 24px;
 	border-bottom: none;
 	-moz-box-shadow: 1px 1px 0 white inset, -1px -1px 0 white inset;
 }
@@ -745,6 +745,6 @@ ul,li{
 	padding: 1px 0px 1px 10px;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer{
-	border: 1px solid #B7B7B7;
+.UIForumPortlet .UIForumContainer .UITopicDetailContainer .ContentContainer{
+	border: 1px solid #C7C7C7;
 }
