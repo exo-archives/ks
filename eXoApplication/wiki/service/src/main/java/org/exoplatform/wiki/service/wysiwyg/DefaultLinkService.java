@@ -16,11 +16,14 @@
  */
 package org.exoplatform.wiki.service.wysiwyg;
 
+import java.io.UnsupportedEncodingException;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.annotation.Component;
@@ -132,7 +135,19 @@ public class DefaultLinkService implements LinkService {
                                                destRelativeStrRef));
     return entityConfig;
   }
-
+  
+  private String getPageId(String pageName) {
+    String pageId;
+    try {
+      pageId = TitleResolver.getId(pageName, false);
+    } catch (UnsupportedEncodingException e1) {
+      if (log.isWarnEnabled()) 
+        log.warn(String.format("Getting Page Id from %s failed because of UnspportedEncodingException. Using page name(%s) instead (Not recommended. Fix it if possible!!!)", pageName), e1);
+      pageId = pageName;
+    }
+    return pageId;
+  }
+  
   /**
    * @param entityReference an entity reference
    * @return the URL to access the specified entity
@@ -146,7 +161,7 @@ public class DefaultLinkService implements LinkService {
     PageImpl page;
     switch (entityReference.getType()) {
     case DOCUMENT:
-      String pageId = entityReference.getName();
+      String pageId = getPageId(entityReference.getName());
       String wikiOwner = entityReference.getParent().getName();
       String wikiType = entityReference.getParent().getParent().getName();
       context.setType(wikiType);
@@ -163,7 +178,7 @@ public class DefaultLinkService implements LinkService {
       return null;
     case ATTACHMENT:
       String attachmentId = entityReference.getName();
-      pageId = entityReference.getParent().getName();
+      pageId = getPageId(entityReference.getParent().getName());
       wikiOwner = entityReference.getParent().getParent().getName();
       wikiType = entityReference.getParent().getParent().getParent().getName();
       try {
