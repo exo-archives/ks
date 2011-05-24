@@ -41,6 +41,8 @@ public class TestPageContent extends AbstractMOWTestcase {
     content.setText("This is a content of page");
     assertEquals(wikipage.getSyntax(), "xwiki_2.0");
     assertEquals(content.getText(), "This is a content of page");
+    wikipage.checkin();
+    wikipage.checkout();
     content.setText("This is a content of page - edited");
     wikipage.setSyntax("xwiki_2.1");
 

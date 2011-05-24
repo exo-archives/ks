@@ -16,6 +16,15 @@
  */
 package org.exoplatform.wiki.service.search;
 
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+
+import org.chromattic.api.NoSuchNodeException;
+import org.chromattic.api.UndeclaredRepositoryException;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.utils.Utils;
 
@@ -41,25 +50,43 @@ public class SearchData {
 
   public String jcrQueryPath;
   
-  public static String ALL_PATH    = "%/";
+  public static final String ALL_PATH    = "%/";
 
-  public static String PORTAL_PATH = "/exo:applications/"
-                                       + WikiNodeType.Definition.WIKI_APPLICATION + "/"
-                                       + WikiNodeType.Definition.WIKIS + "/%/";
+  protected static String    PORTAL_PATH = "/exo:applications/"
+                                             + WikiNodeType.Definition.WIKI_APPLICATION + "/"
+                                             + WikiNodeType.Definition.WIKIS + "/%/";
 
-  public static String GROUP_PATH  = "/Groups/%/ApplicationData/"
-                                       + WikiNodeType.Definition.WIKI_APPLICATION + "/";
+  protected static String    GROUP_PATH  = "/Groups/%/ApplicationData/"
+                                             + WikiNodeType.Definition.WIKI_APPLICATION + "/";
 
-  public static String USER_PATH   = "/Users/%/ApplicationData/"
-                                       + WikiNodeType.Definition.WIKI_APPLICATION + "/";
+  protected String           USER_PATH;
 
-  public SearchData(String text, String title, String content, String wikiType, String wikiOwner, String pageId) {
+  public SearchData(String text,
+                    String title,
+                    String content,
+                    String wikiType,
+                    String wikiOwner,
+                    String pageId) {
     this.text = text;
     this.title = title;
     this.content = content;
     this.wikiType = wikiType;
     this.wikiOwner = Utils.validateWikiOwner(wikiType, wikiOwner);
     this.pageId = pageId;
+    if (PortalConfig.USER_TYPE.equals(wikiType)) {
+      NodeHierarchyCreator nodeHierachyCreator = (NodeHierarchyCreator) ExoContainerContext.getCurrentContainer()
+                                                                                           .getComponentInstanceOfType(NodeHierarchyCreator.class);
+      try {
+        Node userNode = nodeHierachyCreator.getUserApplicationNode(SessionProvider.createSystemProvider(),
+                                                                   wikiOwner);
+        USER_PATH = userNode.getPath() + "/" + WikiNodeType.Definition.WIKI_APPLICATION + "/";
+      } catch (Exception e) {
+        if (e instanceof PathNotFoundException)
+          throw new NoSuchNodeException(e);
+        else
+          throw new UndeclaredRepositoryException(e.getMessage());
+      }
+    }
   }
 
   public String getText() {

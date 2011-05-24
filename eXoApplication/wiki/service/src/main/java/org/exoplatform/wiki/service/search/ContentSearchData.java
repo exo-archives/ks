@@ -13,8 +13,6 @@ public class ContentSearchData extends SearchData {
 
   public static String GROUP_PAGESPATH  = GROUP_PATH + WIKIHOME_PATH;
 
-  public static String USER_PAGESPATH   = USER_PATH + WIKIHOME_PATH;
-
   private String pagePath = "";
   
   public ContentSearchData(String text,
@@ -40,19 +38,22 @@ public class ContentSearchData extends SearchData {
   }  
 
   public void createJcrQueryPath() {
-    
+
     if (wikiType == null && wikiOwner == null) {
       pagePath = ALL_PAGESPATH;
     }
     if (wikiType != null) {
-      if (wikiType.equals(PortalConfig.PORTAL_TYPE)) {
-        pagePath = PORTAL_PAGESPATH;
-      } else if (wikiType.equals(PortalConfig.GROUP_TYPE))
-        pagePath = GROUP_PAGESPATH;
-      else if (wikiType.equals(PortalConfig.USER_TYPE))
-        pagePath = USER_PAGESPATH;
-      if (wikiOwner != null) {
-        pagePath = pagePath.replaceFirst("%", wikiOwner);
+      if (wikiType.equals(PortalConfig.USER_TYPE)){
+        pagePath = USER_PATH + WIKIHOME_PATH;
+      }
+      else {
+        if (wikiType.equals(PortalConfig.PORTAL_TYPE)) {
+          pagePath = PORTAL_PAGESPATH;
+        } else if (wikiType.equals(PortalConfig.GROUP_TYPE))
+          pagePath = GROUP_PAGESPATH;
+        if (wikiOwner != null) {
+          pagePath = pagePath.replaceFirst("%", wikiOwner);
+        }
       }
     }
     this.jcrQueryPath = "jcr:path LIKE '" + pagePath + "/%'";

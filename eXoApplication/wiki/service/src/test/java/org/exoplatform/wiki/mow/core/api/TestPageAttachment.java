@@ -48,6 +48,7 @@ public class TestPageAttachment extends AbstractMOWTestcase {
     PageImpl wikipage = wiki.createWikiPage();
     wikipage.setName("AddPageAttachment-001") ;
     wikiHomePage.addWikiPage(wikipage);
+    wikipage.makeVersionable();
     
     AttachmentImpl attachment1 = wikipage.createAttachment("attachment1.jpg", Resource.createPlainText("foo")) ;
     attachment1.setCreator("you") ;    
@@ -64,6 +65,7 @@ public class TestPageAttachment extends AbstractMOWTestcase {
     wikipage = wiki.createWikiPage();
     wikipage.setName("AddPageAttachment-002");
     wikiHomePage.addWikiPage(wikipage);
+    wikipage.makeVersionable();
   }
   
   public void testGetPageAttachment() throws Exception{

@@ -27,15 +27,15 @@
     <url>https://ci.exoplatform.org/job/ks-trunk-ci/</url>
   </ciManagement>
    <properties>
-    <org.exoplatform.kernel.version>2.3.0-CR1</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>2.4.0-CR1</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>2.2.0-CR1</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>1.14.0-CR1</org.exoplatform.jcr.version>
+    <org.exoplatform.kernel.version>2.3.0-CR2</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>2.4.0-CR2</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>2.2.0-CR2</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.14.0-CR2</org.exoplatform.jcr.version>
     <org.exoplatform.portal.version>3.2.0-PLF-SNAPSHOT</org.exoplatform.portal.version>
     <org.exoplatform.ecms.version>2.2.0-Beta3-SNAPSHOT</org.exoplatform.ecms.version> 
     <gatein.wci.version>2.0.2-GA</gatein.wci.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
-    <org.exoplatform.exopackage.version>1.1.1</org.exoplatform.exopackage.version>
+    <org.exoplatform.exopackage.version>1.1.2</org.exoplatform.exopackage.version>
     <org.chromattic.version>1.1.0-beta5</org.chromattic.version>
     
 	<!--commons dependencies-->
@@ -62,7 +62,7 @@
     <javax.jcr.api.version>1.0</javax.jcr.api.version>
     <org.jibx.jibx-run.version>1.2.1</org.jibx.jibx-run.version>
     <javax.activation.activation.version>1.1</javax.activation.activation.version>
-    <org.slf4j.version>1.5.6</org.slf4j.version>
+    <org.slf4j.version>1.5.8</org.slf4j.version>
     <xml-apis.version>1.0.b2</xml-apis.version>
     <pull-parser.version>2</pull-parser.version>
     <rome.version>0.9</rome.version>

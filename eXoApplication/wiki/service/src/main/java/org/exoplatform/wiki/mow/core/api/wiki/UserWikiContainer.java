@@ -18,13 +18,16 @@ package org.exoplatform.wiki.mow.core.api.wiki;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 
 import org.chromattic.api.ChromatticSession;
+import org.chromattic.api.NoSuchNodeException;
 import org.chromattic.api.UndeclaredRepositoryException;
 import org.chromattic.api.annotations.MappedBy;
 import org.chromattic.api.annotations.OneToOne;
 import org.chromattic.api.annotations.PrimaryType;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
 
@@ -41,24 +44,29 @@ public abstract class UserWikiContainer extends WikiContainer<UserWiki> {
   public abstract WikiStoreImpl getMultiWiki();
 
   public UserWiki addWiki(String wikiOwner) {
-    //User wikis is stored in /Users/$wikiOwner/ApplicationData/eXoWiki/WikiHome
+    NodeHierarchyCreator nodeHierachyCreator = (NodeHierarchyCreator) ExoContainerContext.getCurrentContainer()
+                                                                                         .getComponentInstanceOfType(NodeHierarchyCreator.class);    
     wikiOwner = validateWikiOwner(wikiOwner);
     if(wikiOwner == null){
       return null;
     }
     ChromatticSession session = getMultiWiki().getSession();
     Node wikiNode = null;
-    try {
-      Node rootNode = session.getJCRSession().getRootNode();
-      Node userDataNode = rootNode.getNode("Users" + "/" + wikiOwner + "/" + "ApplicationData");
+    try {      
+      Node tempNode = nodeHierachyCreator.getUserApplicationNode(SessionProvider.createSystemProvider(),
+                                                                 wikiOwner);      
+      Node userDataNode = (Node) session.getJCRSession().getItem(tempNode.getPath());        
       try {
         wikiNode = userDataNode.getNode(WikiNodeType.Definition.WIKI_APPLICATION);
       } catch (PathNotFoundException e) {
         wikiNode = userDataNode.addNode(WikiNodeType.Definition.WIKI_APPLICATION, WikiNodeType.USER_WIKI);
         userDataNode.save();
       }
-    } catch (RepositoryException e) {
-      throw new UndeclaredRepositoryException(e);
+    } catch (Exception e) {
+      if (e instanceof PathNotFoundException)
+        throw new NoSuchNodeException(e);
+      else
+        throw new UndeclaredRepositoryException(e.getMessage());
     }
     UserWiki uwiki = session.findByNode(UserWiki.class, wikiNode);
     uwiki.setOwner(wikiOwner);

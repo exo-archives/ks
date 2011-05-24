@@ -39,8 +39,6 @@ public class TemplateSearchData extends SearchData {
 
   public static String GROUP_TEMPLATESPATH  = GROUP_PATH + TEMPLATE_PATH;
 
-  public static String USER_TEMPLATESPATH   = USER_PATH + TEMPLATE_PATH;
-
   public TemplateSearchData(String title, String wikiType, String wikiOwner) {
     super(null, title, null, wikiType, wikiOwner, null);
     createJcrQueryPath();
@@ -51,14 +49,17 @@ public class TemplateSearchData extends SearchData {
       this.jcrQueryPath = "jcr:path LIKE '" + ALL_TEMPLATESPATH + "'";
     }
     if (wikiType != null) {
-      if (wikiType.equals(PortalConfig.PORTAL_TYPE)) {
-        this.jcrQueryPath = "jcr:path LIKE '" + PORTAL_TEMPLATESPATH + "'";
-      } else if (wikiType.equals(PortalConfig.GROUP_TYPE))
-        this.jcrQueryPath = "jcr:path LIKE '" + GROUP_TEMPLATESPATH + "'";
-      else if (wikiType.equals(PortalConfig.USER_TYPE))
-        this.jcrQueryPath = "jcr:path LIKE '" + USER_TEMPLATESPATH + "'";
-      if (wikiOwner != null) {
-        this.jcrQueryPath = this.jcrQueryPath.replaceFirst("%", wikiOwner);
+      if (wikiType.equals(PortalConfig.USER_TYPE))
+        this.jcrQueryPath = "jcr:path LIKE '" + USER_PATH + TEMPLATE_PATH + "'";
+      else {
+        if (wikiType.equals(PortalConfig.PORTAL_TYPE)) {
+          this.jcrQueryPath = "jcr:path LIKE '" + PORTAL_TEMPLATESPATH + "'";
+        } else if (wikiType.equals(PortalConfig.GROUP_TYPE))
+          this.jcrQueryPath = "jcr:path LIKE '" + GROUP_TEMPLATESPATH + "'";
+
+        if (wikiOwner != null) {
+          this.jcrQueryPath = this.jcrQueryPath.replaceFirst("%", wikiOwner);
+        }
       }
     }
   }
