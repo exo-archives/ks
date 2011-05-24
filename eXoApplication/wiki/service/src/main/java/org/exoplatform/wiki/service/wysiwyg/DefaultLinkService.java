@@ -16,8 +16,6 @@
  */
 package org.exoplatform.wiki.service.wysiwyg;
 
-import java.io.UnsupportedEncodingException;
-
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -135,19 +133,7 @@ public class DefaultLinkService implements LinkService {
                                                destRelativeStrRef));
     return entityConfig;
   }
-  
-  private String getPageId(String pageName) {
-    String pageId;
-    try {
-      pageId = TitleResolver.getId(pageName, false);
-    } catch (UnsupportedEncodingException e1) {
-      if (log.isWarnEnabled()) 
-        log.warn(String.format("Getting Page Id from %s failed because of UnspportedEncodingException. Using page name(%s) instead (Not recommended. Fix it if possible!!!)", pageName), e1);
-      pageId = pageName;
-    }
-    return pageId;
-  }
-  
+
   /**
    * @param entityReference an entity reference
    * @return the URL to access the specified entity
@@ -161,7 +147,7 @@ public class DefaultLinkService implements LinkService {
     PageImpl page;
     switch (entityReference.getType()) {
     case DOCUMENT:
-      String pageId = getPageId(entityReference.getName());
+      String pageId = TitleResolver.getId(entityReference.getName(), false);
       String wikiOwner = entityReference.getParent().getName();
       String wikiType = entityReference.getParent().getParent().getName();
       context.setType(wikiType);
@@ -178,7 +164,7 @@ public class DefaultLinkService implements LinkService {
       return null;
     case ATTACHMENT:
       String attachmentId = entityReference.getName();
-      pageId = getPageId(entityReference.getParent().getName());
+      pageId = TitleResolver.getId(entityReference.getParent().getName(), false);
       wikiOwner = entityReference.getParent().getParent().getName();
       wikiType = entityReference.getParent().getParent().getParent().getName();
       try {

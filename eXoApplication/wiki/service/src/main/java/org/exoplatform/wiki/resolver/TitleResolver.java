@@ -20,6 +20,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.StringTokenizer;
 
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
 /**
  * Created by The eXo Platform SAS
  * Author : viet nguyen
@@ -27,15 +30,23 @@ import java.util.StringTokenizer;
  * May 7, 2010  
  */
 public class TitleResolver {
-
-  public static String getId(String title, boolean isEncoded) throws UnsupportedEncodingException {
+  
+  private static final Log      log               = ExoLogger.getLogger(TitleResolver.class);
+  
+  public static String getId(String title, boolean isEncoded) {
     if (title == null) {
       return null;
     }
+    String id = title;
     if (isEncoded) {
-      title = URLDecoder.decode(title, "UTF-8");
+      try {
+        id = URLDecoder.decode(title, "UTF-8");
+      } catch (UnsupportedEncodingException e1) {
+        if (log.isWarnEnabled()) 
+          log.warn(String.format("Getting Page Id from %s failed because of UnspportedEncodingException. Using page title(%s) instead (Not recommended. Fix it if possible!!!)", title), e1);
+      }
     }
-    return replaceSpacebyUnderscore(title);
+    return replaceSpacebyUnderscore(id);
   }
 
   private static String replaceSpacebyUnderscore(String s) {
