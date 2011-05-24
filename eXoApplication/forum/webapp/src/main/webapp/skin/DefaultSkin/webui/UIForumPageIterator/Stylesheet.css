@@ -141,11 +141,6 @@
 	padding: 10px 12px;
 }
 
-.UIForumPortlet .UIRightClickPopupMenu{
-	background: #f6f6f6;
-	border: 1px solid #d9d9d9;
-}
-
 .UIForumPortlet .GotoPageIcon .UIRightClickPopupMenu input{
 	width: 50px;
 	height: 13px;

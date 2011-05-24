@@ -144,16 +144,14 @@
 }
 /******************************************** UIForumActionBar ****************************************/
 .UIForumPortlet .UIForumActionBar {
+	background: #F9F9FD url('background/BgToolbar1x28.gif') repeat-x top;
 	border: 1px solid #9499d8;
 	margin: 7px 10px;
-	height: 30px;
-}
-
-.UIForumPortlet .UIForumActionBar .ControlbarCotainer {
-	border: 2px solid white;
-	border-bottom: none;
-	background: #F9F9FD url('background/BgToolbar1x28.gif') repeat-x top;
-	padding-left: 5px;
+	height: 28px;
+	padding:2px 5px 0px 5px;
+	box-shadow: 2px 2px 0px white inset, -2px 0px 0px white inset; 
+	-moz-box-shadow: 2px 2px 0px white inset, -2px 0px 0px white inset; 
+	-webkit-box-shadow: 2px 2px 0px white inset, -2px 0px 0px white inset; 
 }
 
 .UIForumPortlet .UIForumActionBar .Icon {
@@ -165,17 +163,28 @@
 .UIForumPortlet .UIForumActionBar .SeparatorLineForum {
 	float: left;
 	background: url('background/SeparatorLineToolbar1x27.gif') no-repeat ;
-	height: 27px;	width: 2px;
+	height: 25px;	width: 2px;
+	margin: 0px 2px;
+}
+
+.UIForumPortlet .UIForumActionBar .RightLine{
+	float:right;
+	width:auto; 
+	padding:0px 5px;
 }
 
 .UIForumPortlet .UIForumActionBar .AddCategory {
 	background: url('icons/24x24/AddCategory.gif') no-repeat left center;
 }
 
+.UIForumPortlet .UIForumActionBar .DefaultStyle .DisableAction {
+	opacity:0.5;filter:alpha(opacity=50);
+}
+
 .UIForumPortlet .ToolbarActionsTag {
 	float:right;
 	margin: 2px 6px 0px 0px;
-	width: 120px;	cursor: pointer ;
+	cursor: pointer ;
 }
 
 /******************************************** UIForumDescription ****************************************/

@@ -20,7 +20,7 @@
 
 .UIForumContainer .ForumToolbar .StatusIcon {
 	background-position: left center;
-	line-height: 20px;
+	line-height: 21px;
 	padding-left: 22px;
 	margin: 0px;
 	width: auto; height: auto;
@@ -89,6 +89,10 @@
 	width: 24px; height: 24px;
 }
 
+.UIForumContainer .ContentContainer span{
+	display: block;
+}
+
 .UIForumContainer .ContentContainer .AttachmentIcon {
 	margin: 2px 0px 0px 12px;
 	width: 16px; height: 16px;
@@ -112,6 +116,7 @@
 .UIForumContainer .ContentContainer .DownArrow1Icon {
 	padding-right: 16px;
 	cursor: pointer;
+	display: block;
 }
 
 
