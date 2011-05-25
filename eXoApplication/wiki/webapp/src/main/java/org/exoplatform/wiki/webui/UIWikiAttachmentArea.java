@@ -17,6 +17,7 @@
 package org.exoplatform.wiki.webui;
 
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -209,7 +210,7 @@ public class UIWikiAttachmentArea extends UIWikiForm {
       UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);
       UIWikiAttachmentArea uiForm = event.getSource();
       Page page = uiForm.getCurrentWikiPage();
-      String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
+      String attFileId = URLDecoder.decode(event.getRequestContext().getRequestParameter(OBJECTID), "UTF-8");
       ((PageImpl) page).removeAttachment(attFileId);      
       event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea);
       if (WikiMode.VIEW.equals(wikiPortlet.getWikiMode())) {

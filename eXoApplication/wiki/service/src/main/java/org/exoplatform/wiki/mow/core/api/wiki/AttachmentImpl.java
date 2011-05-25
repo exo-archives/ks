@@ -16,6 +16,8 @@
  */
 package org.exoplatform.wiki.mow.core.api.wiki;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -93,11 +95,17 @@ public abstract class AttachmentImpl extends NTFile implements Attachment {
     return null ;
   }
   
-  public String getDownloadURL(){
+  public String getDownloadURL() {
     StringBuilder sb = new StringBuilder();
     sb.append(Utils.getDefaultRepositoryWebDavUri());
     sb.append(getWorkspace());
-    sb.append(getPath());
+    String path = getPath();
+    try {
+      String parentPath = path.substring(0, path.lastIndexOf("/"));
+      sb.append(parentPath + "/" + URLEncoder.encode(getName(), "UTF-8"));
+    } catch (UnsupportedEncodingException e) {
+      sb.append(path);
+    }
     return sb.toString();
   }
   

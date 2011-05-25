@@ -2,6 +2,7 @@
   import java.util.Locale;
   import java.text.DateFormat;
   import org.exoplatform.portal.webui.util.Util;
+  import java.net.URLEncoder;
   
   Locale currentLocale = Util.getPortalRequestContext().getLocale();
 %>
@@ -40,7 +41,7 @@
           creator = uicomponent.getFullName(creator);
         }
         downloadLink = attachment.getDownloadURL();
-        deleteLink = uicomponent.event(uicomponent.DELETE_ACTION, attachment.getName());
+        deleteLink = uicomponent.event(uicomponent.DELETE_ACTION, URLEncoder.encode(attachment.getName(), "UTF-8"));
     %>
         <tr class="$rowClass">
           <td class="Tit"><a title="<%= _ctx.appRes("UIWikiAttachmentArea.label.DownloadAttachment"); %>" target="_blank" href="$downloadLink"><%= attachment.getFullTitle() %></a></td>

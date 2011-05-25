@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.rendering.impl;
 
+import java.net.URLEncoder;
 import java.util.Map;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -132,7 +133,7 @@ public class DefaultWikiModel implements WikiModel {
         sb.append("/");
         AttachmentImpl att = page.getAttachment(wikiMarkupContext.getAttachmentName());
         if (att != null) {
-          sb.append(att.getName());
+          sb.append(URLEncoder.encode(att.getName(), "UTF-8"));
         }
       }
     } catch (Exception e) {
