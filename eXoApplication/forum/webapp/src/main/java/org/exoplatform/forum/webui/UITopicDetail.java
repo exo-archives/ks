@@ -756,7 +756,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class RatingTopicActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       try {
-        String userName = UserHelper.getCurrentUser();
+        String userName = topicDetail.getUserProfile().getUserId();
         String[] userVoteRating = topicDetail.topic.getUserVoteRating();
         boolean erro = false;
         for (String string : userVoteRating) {
@@ -768,7 +768,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           ratingForm.updateRating(topicDetail.topic);
           topicDetail.isEditTopic = true;
         } else {
-          warning("UITopicDetail.sms.VotedRating", userName);
+          warning("UITopicDetail.sms.VotedRating", topicDetail.getUserProfile().getScreenName());
         }
       } catch (Exception e) {
         warning("UIForumPortlet.msg.topicEmpty");

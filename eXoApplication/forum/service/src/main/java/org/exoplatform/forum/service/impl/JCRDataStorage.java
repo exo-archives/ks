@@ -4296,7 +4296,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       } catch (Exception e) {
         userProfile.setModerateCategory(new String[] {});
       }
-
+      userProfile.setScreenName(getScreenName(userName, profileNode));
       userProfile.setNewMessage(profileNode.getProperty(EXO_NEW_MESSAGE).getLong());
       userProfile.setTimeZone(profileNode.getProperty(EXO_TIME_ZONE).getDouble());
       userProfile.setShortDateFormat(profileNode.getProperty(EXO_SHORT_DATEFORMAT).getString());
