@@ -17,9 +17,12 @@
 package org.exoplatform.wiki.service.search;
 
 import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.utils.Utils;
 
 /**
@@ -29,6 +32,9 @@ import org.exoplatform.wiki.utils.Utils;
  * Sep 22, 2010  
  */
 public class TitleSearchResult {
+  
+  private static final Log log = ExoLogger.getLogger(TitleSearchResult.class);
+  
   private String fullTitle;
 
   private String type;
@@ -40,7 +46,7 @@ public class TitleSearchResult {
   public TitleSearchResult() {
   }
 
-  public TitleSearchResult(String fullTitle, String path, String type) throws Exception {
+  public TitleSearchResult(String fullTitle, String path, String type) {
     this.fullTitle = fullTitle;
     this.type = type;
     this.path = path;
@@ -73,45 +79,47 @@ public class TitleSearchResult {
 
   private Wiki getWiki() throws Exception {
     Wiki searchWiki = null;
-    try {
-      if (WikiNodeType.WIKI_PAGE_CONTENT.equals(getType()) || WikiNodeType.WIKI_ATTACHMENT.equals(getType())) {
-        AttachmentImpl searchContent = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(getPath(),
-                                                                                             getType());
-        searchWiki = searchContent.getParentPage().getWiki();
-      }
-    } catch (Exception e) {
+    if (WikiNodeType.WIKI_PAGE.equals(getType())) {
+      PageImpl pageImpl = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(getPath(),
+                                                                                getType());
+      searchWiki = pageImpl.getWiki();
+    }
+
+    if (WikiNodeType.WIKI_ATTACHMENT.equals(getType())) {
+      AttachmentImpl searchContent = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(getPath(),
+                                                                                                 getType());
+      searchWiki = searchContent.getParentPage().getWiki();
     }
     return searchWiki;
   }
 
   private String getWikiType() throws Exception {
-    try {
-      return org.exoplatform.wiki.utils.Utils.getWikiType(getWiki());
-    } catch (Exception e) {
-    }
-    return null;
+    return org.exoplatform.wiki.utils.Utils.getWikiType(getWiki());
   }
 
   public String getUri() {
     return uri;
   }
 
-  private void setUri() throws Exception {
+  private void setUri() {
     StringBuilder sb = new StringBuilder();
-    if (WikiNodeType.WIKI_PAGE_CONTENT.equals(getType())) {
-      String temp = path.substring(0, path.lastIndexOf("/"));
-      String wikiType = getWikiType();
-      if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(wikiType)) {
-        sb.append("/");
-        sb.append(wikiType);
-        sb.append("/");
-        sb.append(Utils.validateWikiOwner(wikiType, getWiki().getOwner()));
+    try {
+      if (WikiNodeType.WIKI_PAGE.equals(getType())) {
+        String wikiType = getWikiType();
+        if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(wikiType)) {
+          sb.append("/");
+          sb.append(wikiType);
+          sb.append("/");
+          sb.append(Utils.validateWikiOwner(wikiType, getWiki().getOwner()));
+        }
+        sb.append(path.substring(path.lastIndexOf("/")));
+      } else if (WikiNodeType.WIKI_ATTACHMENT.equals(getType())) {
+        AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(getPath(),
+                                                                                               getType());
+        sb.append(searchAtt.getDownloadURL());
       }
-      sb.append(temp.substring(temp.lastIndexOf("/")));
-    } else if (WikiNodeType.WIKI_ATTACHMENT.equals(getType())) {
-      AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(getPath(),
-                                                                                             getType());
-      sb.append(searchAtt.getDownloadURL());
+    } catch (Exception e) {
+      if (log.isWarnEnabled()) log.warn("failed to make uri for resource " + path, e);
     }
     uri = sb.toString();
   }
