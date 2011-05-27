@@ -46,7 +46,6 @@ public class ForumWebservice implements ResourceContainer {
 
   private static final CacheControl         cc;
   static {
-    // TODO: to find the reason why RESTXMPPService loaded before ResourceBinder
     RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
     cc = new CacheControl();
     cc.setNoCache(true);
@@ -58,7 +57,7 @@ public class ForumWebservice implements ResourceContainer {
 
   private MessageBean getNewPosts(String userName, int maxcount) throws Exception {
     ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-    List<Post> list = forumService.getNewPostsByUser(userName, maxcount);
+    List<Post> list = forumService.getRecentPostsForUser(userName, maxcount);
     if (list != null) {
       for (Post post : list) {
         post.setLink(post.getLink() + "/" + post.getId());
@@ -75,7 +74,7 @@ public class ForumWebservice implements ResourceContainer {
     } catch (NullPointerException e) {
       return getViewerId(uriInfo);
     } catch (Exception e) {
-      log.debug("Fialed to get user id", e);
+      log.debug("Failed to get user id", e);
       return null;
     }
   }
@@ -92,7 +91,16 @@ public class ForumWebservice implements ResourceContainer {
     }
     return null;
   }
-  
+
+  /**
+   * The rest can gets response is recent posts for user and limited by number post.
+   * 
+   * @param maxcount is max number post for render in gadget
+   * @param sc is SecurityContext for get userId login when we use rest link to render gadget.
+   * @param uriInfo is UriInfo for get userId login when we render gadget via gadgets service
+   * @return the response is json-data content list recent post for user.
+   * @throws Exception the exception
+   */
   @GET
   @Path("getmessage/{maxcount}")
   @Produces(MediaType.APPLICATION_JSON)
@@ -108,6 +116,13 @@ public class ForumWebservice implements ResourceContainer {
     }
   }
 
+  /**
+   * The rest can gets response is recent public post limited by number post.
+   * 
+   * @param maxcount is max number post for render in gadget
+   * @return the response is json-data content list recent public post.
+   * @throws Exception the exception
+   */
   @GET
   @Path("getpublicmessage/{maxcount}")
   @Produces(MediaType.APPLICATION_JSON)

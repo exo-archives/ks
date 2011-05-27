@@ -353,7 +353,7 @@ public interface DataStorage {
 
   List<Post> getNewPosts(int number) throws Exception;
 
-  List<Post> getNewPostsByUser(String userName, int number) throws Exception;
+  List<Post> getRecentPostsForUser(String userName, int number) throws Exception;
 
   Map<String, String> getServerConfig();
 
