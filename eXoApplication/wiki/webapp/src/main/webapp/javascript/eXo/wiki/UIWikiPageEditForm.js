@@ -44,4 +44,12 @@ UIWikiPageEditForm.prototype.editPageContent = function(pageEditFormId) {
   }
 };
 
+UIWikiPageEditForm.prototype.cancel = function(uicomponentId, titleMessage, message, submitClass, submitLabel, cancelLabel){
+  if (eXo.wiki.UIWikiPageEditForm.changed == true) {
+    eXo.wiki.UIConfirmBox.render(uicomponentId, titleMessage, message, submitClass, submitLabel, cancelLabel);
+    return false;
+  }
+  return true;
+};
+
 eXo.wiki.UIWikiPageEditForm = new UIWikiPageEditForm();

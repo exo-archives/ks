@@ -30,8 +30,6 @@ UIConfirmBox.prototype.init = function() {
 UIConfirmBox.prototype.render = function(uicomponentId, titleMessage, message,
     submitClass, submitLabel, cancelLabel) {
   
-  if (eXo.wiki.UIWikiPageEditForm.changed != true) return;
-  
   var me = eXo.wiki.UIConfirmBox;
   var uicomponent = document.getElementById(uicomponentId);
   var submitAction = eXo.core.DOMUtil.findFirstDescendantByClass(uicomponent,
