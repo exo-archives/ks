@@ -65,6 +65,17 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.wiki.service</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.wiki.webapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.web.ksResources</artifactId>
       <version>${project.version}</version>
       <type>war</type>
@@ -210,12 +221,38 @@
               <contextRoot>poll</contextRoot>
               <bundleFileName>poll.war</bundleFileName>
             </webModule>
+            <jarModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.eXoApplication.wiki.service</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <webModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.eXoApplication.wiki.webapp</artifactId>
+              <contextRoot>wiki</contextRoot>
+              <bundleFileName>wiki.war</bundleFileName>
+            </webModule>
             <webModule>
               <groupId>org.exoplatform.ks</groupId>
               <artifactId>exo.ks.web.ksResources</artifactId>
               <contextRoot>ksResources</contextRoot>
               <bundleFileName>ksResources.war</bundleFileName>
             </webModule>
+            <jarModule>
+              <groupId>javax.validation</groupId>
+              <artifactId>validation-api</artifactId>
+              <excluded>true</excluded>
+            </jarModule>
+            <jarModule>
+              <groupId>org.slf4j</groupId>
+              <artifactId>slf4j-api</artifactId>
+              <excluded>true</excluded>
+            </jarModule>
+            <jarModule>
+              <groupId>javax.jcr</groupId>
+              <artifactId>jcr</artifactId>
+              <excluded>true</excluded>
+            </jarModule>
           </modules>
         </configuration>
       </plugin>

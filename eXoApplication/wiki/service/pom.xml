@@ -98,6 +98,12 @@
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-core-model</artifactId>
       <version>${org.xwiki.platform.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-lang</groupId>
+          <artifactId>commons-lang</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
@@ -126,19 +132,18 @@
           <groupId>org.jdom</groupId>
           <artifactId>jdom</artifactId>
         </exclusion>
-        <!--<exclusion>
+        <exclusion>
           <groupId>dom4j</groupId>
           <artifactId>dom4j</artifactId>
         </exclusion>
-        --><exclusion>
+        <exclusion>
           <groupId>commons-lang</groupId>
           <artifactId>commons-lang</artifactId>
         </exclusion>
-        <!--<exclusion>
-          <groupId>commons-beanutils</groupId>
-          <artifactId>commons-beanutils</artifactId>
+        <exclusion>
+          <groupId>xerces</groupId>
+          <artifactId>xercesImpl</artifactId>
         </exclusion>
-			-->
         <exclusion>
           <groupId>commons-logging</groupId>
           <artifactId>commons-logging</artifactId>
@@ -164,17 +169,35 @@
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-core-script</artifactId>
       <version>${org.xwiki.platform.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.livetribe</groupId>
+          <artifactId>livetribe-jsr223</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-core-rendering-syntax-wikimodel</artifactId>
       <version>${org.xwiki.platform.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>net.java.dev.javacc</groupId>
+          <artifactId>javacc</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- Macros -->
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-core-rendering-macro-toc</artifactId>
       <version>${org.xwiki.platform.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-beanutils</groupId>
+          <artifactId>commons-beanutils</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
@@ -191,6 +214,12 @@
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-core-rendering-macro-code</artifactId>
       <version>2.3.2</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-io</groupId>
+          <artifactId>commons-io</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!--dependency>
       <groupId>org.xwiki.contrib</groupId>
@@ -208,6 +237,12 @@
       <artifactId>xwiki-web-gwt-wysiwyg-client</artifactId>
       <version>${org.xwiki.platform.version}</version>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.xwiki.platform</groupId>
+          <artifactId>xwiki-web-gwt-user</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- Diff engine - http://www.suigeneris.org/kb/display/jrcs/JRCS+Home -->
     <dependency>
@@ -229,6 +264,12 @@
       <groupId>net.sourceforge.cssparser</groupId>
       <artifactId>cssparser</artifactId>
       <version>${cssparser.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.w3c.css</groupId>
+          <artifactId>sac</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- Code macro depends on -->
     <dependency>
@@ -271,6 +312,12 @@
       <artifactId>hibernate-validator</artifactId>
       <version>${hibernate-validator.version}</version>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.xml.bind</groupId>
+          <artifactId>jaxb-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!--javassist is the necessary dependency for the HibernateService component used in unit test -->
     <dependency>

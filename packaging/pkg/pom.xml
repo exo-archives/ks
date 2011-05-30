@@ -553,6 +553,11 @@
     </dependency>
     <dependency>
       <groupId>org.gatein.wsrp</groupId>
+      <artifactId>wsrp-wsrp2-ws</artifactId>
+      <version>${org.gatein.wsrp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.gatein.wsrp</groupId>
       <artifactId>wsrp-integration-api</artifactId>
       <version>${org.gatein.wsrp.version}</version>
     </dependency>

@@ -26,5 +26,10 @@
       <artifactId>exo.ks.component.common</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+      <scope>provided</scope>
+    </dependency>
  </dependencies>
 </project>
