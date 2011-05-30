@@ -33,7 +33,7 @@
 							<property name="dialect" value="hsqldb" />
 							<property name="multi-db" value="false" />
 							<property name="update-storage" value="true" />
-							<property name="max-buffer-size" value="204800" />
+							<property name="max-buffer-size" value="200k"/>
 							<property name="swap-directory" value="../temp/swap/sample-ws${container.name.suffix}" />
 						</properties>
 						<value-storages>
@@ -58,8 +58,9 @@
             <properties>
               <property name="jbosscache-configuration" value="conf/jcr/jbosscache/${gatein.jcr.config.type}/config.xml" />
               <property name="jgroups-configuration" value="jar:/conf/jcr/jbosscache/cluster/udp-mux.xml" />
-              <property name="jgroups-multiplexer-stack" value="true" />
-              <property name="jbosscache-cluster-name" value="jcr-${container.name.suffix}-knowledge" />
+              <property name="jbosscache-cluster-name" value="jcr-cache${container.name.suffix}" />
+              <property name="jbosscache-shareable" value="true" />
+              <property name="jbosscache-expiration-time" value="${gatein.jcr.cache.expiration.time}" />
             </properties>
           </cache>
 					<query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
