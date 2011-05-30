@@ -2,11 +2,23 @@ package org.exoplatform.ks.ext.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.social.webui.activity.BaseUIActivity;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.lifecycle.WebuiBindingContext;
 
-@ComponentConfig (
-     template = "classpath:groovy/ks/social-integration/plugin/space/ForumUIActivity.gtmpl"
+@ComponentConfig(
+    lifecycle = UIFormLifecycle.class, template = "classpath:groovy/ks/social-integration/plugin/space/ForumUIActivity.gtmpl", 
+    events = {
+      @EventConfig(listeners = BaseUIActivity.ToggleDisplayLikesActionListener.class),
+      @EventConfig(listeners = BaseUIActivity.ToggleDisplayCommentFormActionListener.class),
+      @EventConfig(listeners = BaseUIActivity.LikeActivityActionListener.class),
+      @EventConfig(listeners = BaseUIActivity.SetCommentListStatusActionListener.class),
+      @EventConfig(listeners = BaseUIActivity.PostCommentActionListener.class),
+      @EventConfig(listeners = BaseUIActivity.DeleteActivityActionListener.class, confirm = "UIActivity.msg.Are_You_Sure_To_Delete_This_Activity"),
+      @EventConfig(listeners = BaseUIActivity.DeleteCommentActionListener.class, confirm = "UIActivity.msg.Are_You_Sure_To_Delete_This_Comment") 
+    }
 )
 public class ForumUIActivity extends BaseKSActivity {
 

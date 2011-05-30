@@ -23,18 +23,29 @@ import org.exoplatform.social.core.activity.model.ExoSocialActivityImpl;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
+import org.exoplatform.social.webui.activity.BaseUIActivity;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.lifecycle.WebuiBindingContext;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 
-@ComponentConfig(
-        template = "classpath:groovy/ks/social-integration/plugin/space/AnswerUIActivity.gtmpl", events = {
+@ComponentConfig (
+    lifecycle = UIFormLifecycle.class,
+    template = "classpath:groovy/ks/social-integration/plugin/space/AnswerUIActivity.gtmpl",
+    events = {
+        @EventConfig(listeners = BaseUIActivity.ToggleDisplayLikesActionListener.class),
+        @EventConfig(listeners = BaseUIActivity.ToggleDisplayCommentFormActionListener.class),
+        @EventConfig(listeners = BaseUIActivity.LikeActivityActionListener.class),
+        @EventConfig(listeners = BaseUIActivity.SetCommentListStatusActionListener.class),
+        @EventConfig(listeners = BaseUIActivity.PostCommentActionListener.class),
+        @EventConfig(listeners = BaseUIActivity.DeleteActivityActionListener.class, confirm = "UIActivity.msg.Are_You_Sure_To_Delete_This_Activity"),
+        @EventConfig(listeners = BaseUIActivity.DeleteCommentActionListener.class, confirm = "UIActivity.msg.Are_You_Sure_To_Delete_This_Comment"),
         @EventConfig(listeners = AnswerUIActivity.CommentQuestionActionListener.class)
     }
 )
