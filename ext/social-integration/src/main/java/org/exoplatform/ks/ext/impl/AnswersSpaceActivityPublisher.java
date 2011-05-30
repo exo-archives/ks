@@ -79,6 +79,11 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
         return;
       }
       
+      if (!q.isActivated() || !q.isApproved() || !answer.getApprovedAnswers() || !answer.getActivateAnswers()) {
+        // Do not make activity if the question is not activated or approved or the answer is that also. 
+        return;
+      }
+      
       //TODO resource bundle needed 
       String msg = "@"+answer.getResponseBy();
       String body = answer.getResponses();
@@ -179,8 +184,12 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       if (catId == null || catId.indexOf(Utils.CATE_SPACE_ID_PREFIX) < 0) {
         return;
       }
-      
-    //TODO resource bundle needed 
+        
+      if (!question.isActivated() || !question.isApproved()) {
+        // filter the question if it is not approved or not activated.
+        return;
+      }
+      //TODO resource bundle needed 
       String msg = "@"+question.getAuthor();
       String body = question.getDetail();
       String spaceId = catId.split(Utils.CATE_SPACE_ID_PREFIX)[1];
