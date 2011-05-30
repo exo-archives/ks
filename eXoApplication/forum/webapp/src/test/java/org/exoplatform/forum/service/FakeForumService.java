@@ -751,4 +751,9 @@ public class FakeForumService implements ForumService {
 		return null;
 	}
 
+	@Override
+	public List<Post> getRecentPostsForUser(String userName, int number) throws Exception {
+		return null;
+	}
+
 }

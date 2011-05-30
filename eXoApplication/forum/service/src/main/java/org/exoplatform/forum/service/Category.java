@@ -44,12 +44,12 @@ public class Category {
 	private String[] emailNotification;
 	public Category(String id) {
 		this.id = id;
-		userPrivate = new String[] {" "};
-		moderators = new String[] {" "};
+		userPrivate = new String[] {""};
+		moderators = new String[] {""};
 		emailNotification = new String [] {} ;
-		viewer = new String[] {" "};
-		createTopicRole = new String[] {" "};
-		poster = new String[] {" "};
+		viewer = new String[] {""};
+		createTopicRole = new String[] {""};
+		poster = new String[] {""};
 	}
 	public Category(){
 		this(Utils.CATEGORY + IdGenerator.generate());

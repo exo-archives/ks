@@ -104,6 +104,7 @@ import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
@@ -118,6 +119,7 @@ import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
+import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -5538,7 +5540,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 
 			// If user isn't admin , get all membership of user
 			if(!isAdmin){
-				listOfUser = ForumServiceUtils.getAllGroupAndMembershipOfUser(userId);
+				listOfUser = UserHelper.getAllGroupAndMembershipOfUser(userId);
 				
 				// Get all category & forum that user can view
 				Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds,"@exo:userPrivate");
@@ -5691,17 +5693,15 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		StringBuilder queryString = new StringBuilder();
 		
 		// select all forum
-		queryString.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,exo:forum)");
-		
-		int i = 0;
+		queryString.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,exo:forum)[");
 		// where exo:viewer =	'user' -- who belong to the list
+		boolean isOr = false;
 		for (String user : listOfUser) {
-			if(i==0) queryString.append("[(not(@exo:viewer) or @exo:viewer='' or @exo:viewer='").append(user).append("')").append(" or (@exo:moderators='").append(user).append("')");
-			else queryString.append(" or (@exo:viewer='").append(user).append("')").append(" or (@exo:moderators='").append(user).append("')");
-			i = 1;
+		  if(!isOr) queryString.append("(not(@exo:viewer) or @exo:viewer='')");
+			queryString.append(" or (@exo:moderators='").append(user).append("') or ").append("(@exo:viewer='").append(user).append("')");
+			isOr = true;
 		}
-		
-		if(i==1) queryString.append("]");
+		queryString.append("]");
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
@@ -7701,25 +7701,170 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		}finally{sysProvider.close() ;}
 	}
 
+  //get all categories for user can view.
+  private List<String> getCategoriesUserCanview(Node categoryHome, List<String> listOfUser) throws Exception {
+  /*      
+   * cateids = list query cateids = listinput -> public for property (null for view) 
+   * cateids = {cateid} for private --> can not view 
+   * cateids = new array for view --> can not view
+   */
+    List<String> categoryCanView = new ArrayList<String>();
+    Map<String, List<String>> mapPrivate = getCategoryViewer(categoryHome, listOfUser, new ArrayList<String>(), new ArrayList<String>(), "@" + EXO_USER_PRIVATE);
+    // all categoryid public for private user
+    List<String> categoryIds = mapPrivate.get(Utils.CATEGORY);
+    // all categoryid public for Viewer
+    Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, null, new ArrayList<String>(), "@" + EXO_VIEWER);
+    List<String> categoryView = mapList.get(Utils.CATEGORY);
+    // user not in restricted audience or can not viewer
+    if (categoryIds.contains("cateId") || (categoryView != null && categoryView.isEmpty())){
+      return null;
+    }
+    if (categoryIds.isEmpty()) {
+      categoryCanView.addAll((categoryView == null ? new ArrayList<String>() : categoryView));
+    } else {
+      for (String string : categoryIds) {
+        if (categoryView == null || categoryView.contains(string)) {
+          categoryCanView.add(string);
+        }
+      }
+    }
+    return categoryCanView;
+  }
 
-	public List<Post> getNewPosts(int number) throws Exception {
-		List<Post> list = null ;
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node forumHomeNode = getForumHomeNode(sProvider) ;
-		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
-		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append(JCR_ROOT).append(forumHomeNode.getPath()).append("//element(*,exo:post) [((@exo:isApproved='true') and (@exo:isHidden='false') and (@exo:isActiveByTopic='true') and (@exo:userPrivate='exoUserPri'))] order by @exo:createdDate descending" );
-		Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		NodeIterator iter = result.getNodes();
-		int count = 0 ;
-		while(iter.hasNext() && count++ < number){
-			if(list == null) list = new ArrayList<Post>() ;
-			Post p = getPost(iter.nextNode())	;
-			list.add(p) ;
-		}
-		return list;
-	}
+  // check permission for everyone can view the post
+  private boolean postIsPublicByParent(Node postNode) throws Exception {
+    Node node = postNode.getParent();
+    // checking from the topic parent. Check by canView
+    if (!new PropertyReader(node).list(EXO_CAN_VIEW, Collections.EMPTY_LIST).isEmpty())
+      return false;
+    // checking from the forum parent. Check by canView
+    if (!new PropertyReader(node = node.getParent()).list(EXO_VIEWER, Collections.EMPTY_LIST).isEmpty())
+      return false;
+    // checking from the category parent. Check by canView
+    if (!new PropertyReader(node = node.getParent()).list(EXO_VIEWER, Collections.EMPTY_LIST).isEmpty())
+      return false;
+    //  Check by restricted audience  
+    if (!new PropertyReader(node).list(EXO_USER_PRIVATE, Collections.EMPTY_LIST).isEmpty())
+      return false;
+    return true;
+  }
+  // check permssion user can view
+  private boolean checkPermssionCanView(Node postNode, boolean isUserLogin, List<String> categoryCanView, List<String> forumCanView) throws Exception {
+    if(isUserLogin) {
+      String []path = postNode.getPath().split("/");
+      return (categoryCanView.isEmpty() || categoryCanView.contains(path[path.length - 4])) && (forumCanView.isEmpty() || forumCanView.contains(path[path.length - 3]));
+    } else {
+      return postIsPublicByParent(postNode);
+    }
+  }
+  // get post by query.
+  private List<Post> getPostByQuery(Node categoryHome, QueryImpl impl, int number, String userName, boolean isAdmin) throws Exception {
+    List<Post> list = new ArrayList<Post>();
+    List<String> categoryCanView = new ArrayList<String>();
+    List<String> forumCanView = new ArrayList<String>();
+    boolean isUserLogin = false;
+    if (!Utils.isEmpty(userName) && !UserProfile.USER_GUEST.equals(userName)) {
+      isUserLogin = true;
+      if (!isAdmin) {
+        List<String> listOfUser = UserHelper.getAllGroupAndMembershipOfUser(userName);
+        categoryCanView = getCategoriesUserCanview(categoryHome, listOfUser);
+        if (categoryCanView == null){
+          return list;
+        }
+        forumCanView.addAll(getForumUserCanView(categoryHome, listOfUser, new ArrayList<String>()));
+      }
+    }
+
+    int offset = 0, count = 0, limit;
+    QueryResult qr;
+    NodeIterator iter;
+    Node node;
+    while (count < number) {
+      impl.setOffset(offset);
+      limit = number + offset;
+      impl.setLimit(limit);
+      qr = impl.execute();
+      iter = qr.getNodes();
+      if (iter.getSize() <= 0) {
+        return list;
+      }
+      while (iter.hasNext()) {
+        node = iter.nextNode();
+        if (isAdmin || checkPermssionCanView(node, isUserLogin, categoryCanView, forumCanView)) {
+          list.add(getPost(node));
+          count++;
+          if (count == number){
+            break;
+          }
+        }
+      }
+      offset = limit;
+    }
+    return list;
+  }
+
+// the function use to get recent post for user.
+  public List<Post> getRecentPostsForUser(String userName, int number) throws Exception {
+    if (number <= 0){
+      return new ArrayList<Post>();
+    }
+    if (Utils.isEmpty(userName) || UserProfile.USER_GUEST.equals(userName)) {
+      return getNewPosts(number);
+    }
+    List<Post> list = new ArrayList<Post>();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    try {
+      boolean isAdmin = isAdminRole(userName);
+      if (!isAdmin) {
+        isAdmin = (new PropertyReader(getUserProfileNode(getUserProfileHome(sProvider), userName)).l(EXO_USER_ROLE, 3) == 0) ? true : false;
+      }
+      Node categoryHome = getCategoryHome(sProvider);
+            
+      StringBuffer stringBuffer = new StringBuffer();
+      stringBuffer.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,").append(EXO_POST).append(")[(");
+      if (!isAdmin) stringBuffer.append("(@").append(EXO_IS_APPROVED).append("='true') and (@").append(EXO_IS_HIDDEN).append("='false') and (@")
+                                .append(EXO_IS_ACTIVE_BY_TOPIC).append("='true') and ");
+      stringBuffer.append("(@").append(EXO_USER_PRIVATE).append("='exoUserPri' or @").append(EXO_USER_PRIVATE).append("='").append(userName)
+                  .append("'))]").append(" order by @").append(EXO_CREATED_DATE).append(" descending");
+      
+      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+      Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+      // get posts
+      if(query instanceof QueryImpl){
+        list = getPostByQuery(categoryHome, (QueryImpl)query, number, userName, isAdmin);
+      }
+    } catch (Exception e) {
+      log.debug("Failed to get new post.", e);
+    } finally {
+      sProvider.close();
+    }
+    return list;
+  }
+
+//the function use to get recent post for everyone.  
+  public List<Post> getNewPosts(int number) throws Exception {
+    List<Post> list = new ArrayList<Post>();
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    try {
+      Node categoryHome = getCategoryHome(sProvider);
+      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+      StringBuffer stringBuffer = new StringBuffer();
+      stringBuffer.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,").append(EXO_POST)
+                  .append(") [((@").append(EXO_IS_APPROVED).append("='true') and (@").append(EXO_IS_HIDDEN).append("='false') and (@")
+                  .append(EXO_IS_ACTIVE_BY_TOPIC).append("='true') and (@").append(EXO_USER_PRIVATE).append("='exoUserPri'))] order by @")
+                  .append(EXO_CREATED_DATE).append(" descending");
+      Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+      // get posts
+      if(query instanceof QueryImpl){
+        list = getPostByQuery(categoryHome, (QueryImpl)query, number, "", false);
+      }
+    } catch (Exception e) {
+      log.debug("Failed to get new post.", e);
+    } finally {
+      sProvider.close();
+    }
+    return list;
+  }
 	
 	public boolean deleteUserProfile(String userId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();

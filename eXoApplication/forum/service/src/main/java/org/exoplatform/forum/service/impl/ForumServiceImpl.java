@@ -1022,6 +1022,13 @@ public class ForumServiceImpl implements ForumService, Startable {
   public List<Post> getNewPosts(int number) throws Exception{
     return storage.getNewPosts(number);
   }
+
+  /**
+   * {@inheritDoc}
+   */
+  public List<Post> getRecentPostsForUser(String userName, int number) throws Exception{
+  	return storage.getRecentPostsForUser(userName, number);
+  }
   
   public NodeIterator search(String queryString) throws Exception {
   	return storage.search(queryString) ;

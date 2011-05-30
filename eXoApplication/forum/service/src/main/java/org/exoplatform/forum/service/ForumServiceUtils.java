@@ -26,7 +26,6 @@ import javax.jcr.Node;
 
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.services.cache.CacheService;
@@ -259,23 +258,24 @@ public class ForumServiceUtils {
 		return cacheService.getCacheInstance("org.exoplatform.forum.ForumPermissionsUsers");
 	}
 
-	public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
+  /**
+  * @deprecated use {@link #org.exoplatform.ks.common.UserHelper.getAllGroupAndMembershipOfUser(String userId)}
+  */
+  public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception {
     List<String> listOfUser = new ArrayList<String>();
     listOfUser.add(userId);
     String groupId = "";
-    String type = "";
     Membership membership = null;
 
     OrganizationService organizationService_ = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
     for (Iterator iterator = organizationService_.getMembershipHandler().findMembershipsByUser(userId).iterator(); iterator.hasNext();) {
-      membership = (Membership)iterator.next();
+      membership = (Membership) iterator.next();
       groupId = membership.getGroupId();
       listOfUser.add(groupId);
-      type = membership.getMembershipType() + ":" + type;
-      listOfUser.add(type);
+      listOfUser.add(membership.getMembershipType() + ":" + groupId);
     }
-		return listOfUser;
-	}
+    return listOfUser;
+  }
 	
 	public static void reparePermissions(Node node, String owner) throws Exception {
 		ExtendedNode extNode = (ExtendedNode)node ;

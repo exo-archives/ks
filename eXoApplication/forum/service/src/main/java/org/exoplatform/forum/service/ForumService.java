@@ -836,12 +836,23 @@ public interface ForumService extends ForumServiceLegacy {
   boolean isAdminRole(String userName) throws Exception;
 
   /**
-   * Select number of lasted public post.
+   * Gets recent public posts limited by number post.
    * 
-   * @param in number number of post
+   * @param number is number of post
+   * @return the list recent public post.
    * @throws Exception the exception
    */
   List<Post> getNewPosts(int number) throws Exception;
+  
+  /**
+   * Gets recent posts for user and limited by number post.
+   * 
+   * @param userName is userId for check permission.
+   * @param number is number of post
+   * @return the list recent post for user.
+   * @throws Exception the exception
+   */
+  List<Post> getRecentPostsForUser(String userName, int number) throws Exception;
 
   NodeIterator search(String queryString) throws Exception;
 
