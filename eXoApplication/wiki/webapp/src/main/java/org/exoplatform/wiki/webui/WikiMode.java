@@ -37,6 +37,8 @@ public enum WikiMode {
   ADVANCEDSEARCH,
 
   SHOWHISTORY,
+  
+  COMPAREREVISION,
 
   PAGE_NOT_FOUND,
 

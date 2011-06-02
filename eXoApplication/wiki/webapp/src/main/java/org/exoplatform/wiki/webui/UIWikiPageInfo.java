@@ -97,7 +97,11 @@ public class UIWikiPageInfo extends UIWikiContainer {
     @Override
     public void execute(Event<UIWikiPageInfo> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      Utils.processShowHistoryAction(wikiPortlet);
+      UIWikiHistorySpaceArea historySpaceArea = wikiPortlet.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
+      UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class);
+      List<NTVersion> versions = Utils.processShowRevisionAction();
+      pageVersionsList.setVersionsList(versions);
+      pageVersionsList.renderVersionsDifference(versions, event.getRequestContext());
     }
   }
 }

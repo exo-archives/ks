@@ -100,7 +100,7 @@ public class UIWikiVersionSelect extends UIWikiContainer {
           break;
         }
       }
-      uiVersionsList.renderVersionsDifference(comparedVersions);
+      uiVersionsList.renderVersionsDifference(comparedVersions, event.getRequestContext());
       wikiPortlet.changeMode(WikiMode.SHOWHISTORY);
     }
   }
@@ -122,8 +122,11 @@ public class UIWikiVersionSelect extends UIWikiContainer {
     @Override
     public void execute(Event<UIWikiVersionSelect> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      Utils.processShowHistoryAction(wikiPortlet);
-      event.getSource().getAncestorOfType(UIWikiPortlet.class).changeMode(WikiMode.SHOWHISTORY);
+      UIWikiHistorySpaceArea historySpaceArea = wikiPortlet.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
+      UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class);
+      List<NTVersion> versions = Utils.processShowRevisionAction();
+      pageVersionsList.setVersionsList(versions);
+      pageVersionsList.renderVersionsDifference(versions, event.getRequestContext());
     }
   }
   

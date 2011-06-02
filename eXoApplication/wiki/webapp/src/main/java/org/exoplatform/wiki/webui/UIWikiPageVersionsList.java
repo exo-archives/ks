@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -82,14 +83,27 @@ public class UIWikiPageVersionsList extends UIForm {
     }
   }
 
-  public void renderVersionsDifference(List<NTVersion> versions) throws Exception {
+  public void renderVersionsDifference(List<NTVersion> versions, WebuiRequestContext context) throws Exception {
     Collections.sort(versions, new VersionNameComparatorDesc());
     NTVersion toVersion = versions.get(0);
     String toVersionContent = ((AttachmentImpl) toVersion.getNTFrozenNode().getChildren().get(WikiNodeType.Definition.CONTENT)).getText();
     NTVersion fromVersion = versions.get(1);
     String fromVersionContent = ((AttachmentImpl) fromVersion.getNTFrozenNode().getChildren().get(WikiNodeType.Definition.CONTENT)).getText();
     DiffService diffService = this.getApplicationComponent(DiffService.class);
-    UIWikiPageVersionsCompare uiPageVersionsCompare = ((UIWikiHistorySpaceArea) this.getParent()).getChild(UIWikiPageVersionsCompare.class);
+    
+    UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
+    UIWikiPageContainer wikiPageContainer = getAncestorOfType(UIWikiPageContainer.class);
+    if(!wikiPortlet.getWikiMode().equals(WikiMode.SHOWHISTORY)){
+      wikiPortlet.changeMode(WikiMode.SHOWHISTORY);
+      if(!(this.getParent() instanceof UIWikiHistorySpaceArea)){
+        UIWikiHistorySpaceArea historySpaceArea = wikiPageContainer.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
+        UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class).setRendered(false);
+        pageVersionsList.setVersionsList(versionsList);
+      }
+    } else {
+      setRendered(false);
+    }
+    UIWikiPageVersionsCompare uiPageVersionsCompare = wikiPageContainer.findFirstComponentOfType(UIWikiPageVersionsCompare.class);
     uiPageVersionsCompare.setRendered(true);
     uiPageVersionsCompare.setFromVersion(fromVersion);
     uiPageVersionsCompare.setToVersion(toVersion);
@@ -97,7 +111,7 @@ public class UIWikiPageVersionsList extends UIForm {
     DiffResult diffResult= diffService.getDifferencesAsHTML(fromVersionContent, toVersionContent, true);
     uiPageVersionsCompare.setDifferencesAsHTML(diffResult.getDiffHTML());
     uiPageVersionsCompare.setChanges(diffResult.getChanges());
-    this.setRendered(false);
+    context.addUIComponentToUpdateByAjax(wikiPageContainer);
   }
   
   static public class RestoreActionListener extends EventListener<UIWikiPageVersionsList> {
@@ -127,21 +141,20 @@ public class UIWikiPageVersionsList extends UIForm {
       UIWikiPageVersionsList uiForm = event.getSource();
       UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
       for (NTVersion version : uiForm.versionsList) {
-        UIFormCheckBoxInput uiCheckBox = uiForm.getChildById(version.getName());
+        UIFormCheckBoxInput<Boolean> uiCheckBox = uiForm.getChildById(version.getName());
         if (uiCheckBox.isChecked()) {
           uiForm.checkedVersions.put(uiCheckBox.getId(), version);
         } else {
           uiForm.checkedVersions.remove(uiCheckBox.getId());
         }
       }
-      
       if (uiForm.checkedVersions.size() != 2) {
         uiApp.addMessage(new ApplicationMessage("UIWikiPageVersionsList.msg.checkGroup-required", null, ApplicationMessage.WARNING));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
         return;
       } else {
         List<NTVersion> checkedVersions = new ArrayList<NTVersion>(uiForm.checkedVersions.values());
-        uiForm.renderVersionsDifference(checkedVersions);
+        uiForm.renderVersionsDifference(checkedVersions, event.getRequestContext());
       }
     }
   }

@@ -16,10 +16,7 @@
  */
 package org.exoplatform.wiki.webui;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.exoplatform.services.log.ExoLogger;
@@ -31,8 +28,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
-import org.exoplatform.wiki.commons.VersionNameComparatorDesc;
-import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
@@ -47,6 +42,7 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
   template = "app:/templates/wiki/webui/UIWikiPageInfoArea.gtmpl",
   events = {
     @EventConfig(listeners = UIWikiPageInfoArea.ShowHistoryActionListener.class),
+    @EventConfig(listeners = UIWikiPageInfoArea.ShowRevisionActionListener.class),
     @EventConfig(listeners = UIWikiPageInfoArea.ToggleAttachmentsActionListener.class)
   }
 )
@@ -56,12 +52,15 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
 
   public static String TOGGLE_ATTACHMENTS_ACTION = "ToggleAttachments";
   
+  public static String SHOW_REVISION = "ShowRevision";
+  
   public static String SHOW_HISTORY = "ShowHistory";
 
   public UIWikiPageInfoArea() {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW });
   }
 
+  @SuppressWarnings("unused")
   private PageImpl getCurrentWikiPage() {
     PageImpl currentPage = null;
     try {
@@ -77,18 +76,47 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
     public void execute(Event<UIWikiPageInfoArea> event) throws Exception {
       UIWikiBottomArea wikiBottomArea = event.getSource().getAncestorOfType(UIWikiBottomArea.class);
       UIWikiAttachmentArea attachform = wikiBottomArea.findFirstComponentOfType(UIWikiAttachmentArea.class);
-      if (attachform.isRendered())
+      if (attachform.isRendered()) {
         attachform.setRendered(false);
-      else
+      } else {
         attachform.setRendered(true);
+        UIWikiPageVersionsList pageVersions = wikiBottomArea.findFirstComponentOfType(UIWikiPageVersionsList.class);
+        if (pageVersions.isRendered()) {
+          pageVersions.setRendered(false);
+        }
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(wikiBottomArea);
+    }
+  }
+
+  public static class ShowRevisionActionListener extends EventListener<UIWikiPageInfoArea> {
+    public void execute(Event<UIWikiPageInfoArea> event) throws Exception {
+      UIWikiPageInfoArea infoArea = event.getSource();
+      UIWikiBottomArea bottomArea = infoArea.getParent();
+      UIWikiPageVersionsList pageVersions = bottomArea.getChild(UIWikiPageVersionsList.class);
+      if (pageVersions.isRendered()) {
+        pageVersions.setRendered(false);
+      } else {
+        UIWikiAttachmentArea attachform = bottomArea.getChild(UIWikiAttachmentArea.class);
+        if (attachform.isRendered()) {
+          attachform.setRendered(false);
+        }
+        pageVersions.setRendered(true);
+        pageVersions.setVersionsList(Utils.processShowRevisionAction());
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea.getParent());
     }
   }
 
   public static class ShowHistoryActionListener extends EventListener<UIWikiPageInfoArea> {
-    @Override
     public void execute(Event<UIWikiPageInfoArea> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      Utils.processShowHistoryAction(wikiPortlet);
+      wikiPortlet.changeMode(WikiMode.SHOWHISTORY);
+      UIWikiHistorySpaceArea historySpaceArea = wikiPortlet.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
+      UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class);
+      List<NTVersion> versions = Utils.processShowRevisionAction();
+      pageVersionsList.setVersionsList(versions);
+      pageVersionsList.renderVersionsDifference(versions, event.getRequestContext());
     }
   }
 

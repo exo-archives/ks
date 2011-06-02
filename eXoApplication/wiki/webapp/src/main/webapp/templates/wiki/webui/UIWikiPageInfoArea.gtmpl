@@ -24,13 +24,12 @@
   String addedByLabel = _ctx.appRes("UIWikiPageInfoArea.label.AddedBy").replace("{0}", "<a class=\"Link\" href=\"\">" + creator + "</a>").replace("{1}", createdDate);
   String lastModifiedByLabel = _ctx.appRes("UIWikiPageInfoArea.label.LastModifiedBy").replace("{0}", "<a class=\"Link\" href=\"\">" + author + "</a>").replace("{1}", updatedDate);
   String totalAttachmentsLabel = _ctx.appRes("UIWikiPageInfoArea.label.TotalAttachments").replace("{0}", "<div class=\"TxtFeed\"><b>" + attachmentsTotal + "</b><a class=\"Link\" href=\"" + togglelink + "\">");
-  String totalRevisionsLabel = _ctx.appRes("UIWikiPageInfoArea.label.TotalRevisions").replace("{0}", versionsTotal + "</b> <a class=\"Link\" href=\"\">");
-%>
+  %>
 <div class="UIWikiPageInfoArea">
 	<div class="TxtFeed">
 	  ${addedByLabel}&nbsp;-&nbsp;$lastModifiedByLabel
 	  <a class="Link" href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('$historyAnchor');"><%= "(" + _ctx.appRes("UIWikiPageInfoArea.label.ViewChange") + ")"; %></a>
 	  <a onclick="<%=uicomponent.event(uicomponent.SHOW_HISTORY);%>" id="$historyActionId" style="display:none;">&nbsp;</a>
 	</div>
-	<%= totalAttachmentsLabel %></a>  - <b><%= totalRevisionsLabel %></a></div>
+	<%= totalAttachmentsLabel %></a>&nbsp;-&nbsp;<b>$versionsTotal</b><a class="Link" href="<%=uicomponent.event(uicomponent.SHOW_REVISION);%>">&nbsp;<%=_ctx.appRes("UIWikiPageInfoArea.label.TotalRevisions")%></a></div>
 </div>

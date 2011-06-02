@@ -73,6 +73,10 @@ UIWikiPortlet.prototype.onKeyUp = function(evt) {
 }
 
 UIWikiPortlet.prototype.changeMode = function(event) {
+  setTimeout("eXo.wiki.UIWikiPortlet.timeChangeMode()", 200);
+};
+
+UIWikiPortlet.prototype.timeChangeMode = function() {
   var me = eXo.wiki.UIWikiPortlet;
   var currentURL = document.location.href;
   var mode = "";
@@ -94,8 +98,7 @@ UIWikiPortlet.prototype.changeMode = function(event) {
   else
     link.href = link.href.substring(0, modeIndex) + "&mode=" + mode + "')";
   window.location = link.href;
-
-}
+};
 
 UIWikiPortlet.prototype.showPopup = function(elevent, e) {
   var strs = [ "AddTagId", "goPageTop", "goPageBottom", "SearchForm" ];
@@ -247,6 +250,23 @@ UIWikiPortlet.prototype.highlightEditSection = function (header, highlight) {
     sectionContainer.style.backgroundColor = '';
   }
 };
+
+UIWikiPortlet.prototype.createURLHistory = function (uicomponentId, isShow) {
+  if(isShow || isShow === 'true'){
+    setTimeout("eXo.wiki.UIWikiPortlet.urlHistory('"+uicomponentId+"')", 500);
+  }
+};
+
+UIWikiPortlet.prototype.urlHistory = function (uicomponentId) {
+  var component = document.getElementById(uicomponentId);
+  if(component) {
+    var local = String(window.location);
+    if(local.indexOf('#') < 0 || local.indexOf('#') === (local.length-1)) {
+      window.location = local.replace('#', '') + '#ShowHistory';
+    }
+  }
+};
+
 
 eXo.wiki.UIWikiPortlet = new UIWikiPortlet();
 

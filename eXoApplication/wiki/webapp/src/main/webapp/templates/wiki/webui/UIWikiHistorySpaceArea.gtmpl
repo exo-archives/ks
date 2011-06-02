@@ -1,5 +1,12 @@
-<div class="UIWikiHistorySpaceArea">
+<div id="$uicomponent.id" class="UIWikiHistorySpaceArea">
 <%
+ if(uicomponent.isShowVersion()) {
+%>
+  <h1 class="HistoryLabel"><%= _ctx.appRes("UIWikiPageVersionsList.label.HistoryLabel"); %></h1>
+<%} else { %>
+  <h1 class="HistoryLabel"><%= _ctx.appRes("UIWikiPageVersionsList.label.CompareLabel"); %></h1>
+<%
+  }
   List children = uicomponent.getChildren() ;
   for(component in children) {
     if(component.isRendered()){
@@ -8,6 +15,7 @@
   }
 %>
 <%
-  String link = uicomponent.event(uicomponent.RETURN_VIEW_MODE);
+  //String link = uicomponent.event(uicomponent.RETURN_VIEW_MODE);
+  _ctx.getRequestContext().getJavascriptManager().addJavascript("eXo.wiki.UIWikiPortlet.createURLHistory('"+uicomponent.id+ "', "+uicomponent.isShowHistorySpace()+");"); 
 %>
 </div>

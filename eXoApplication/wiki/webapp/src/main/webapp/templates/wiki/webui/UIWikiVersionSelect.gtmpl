@@ -2,7 +2,7 @@
   import org.exoplatform.wiki.webui.UIWikiPortlet;  
 %>
 
-<div class="UIWikiVersionSelect">
+<div class="UIWikiVersionSelect" id="$uicomponent.id">
 	<%
       String viewCurrentVersionLink = uicomponent.event(uicomponent.VIEW_CURRENT_VERSION);
       String compareLink = uicomponent.event(uicomponent.COMPARE_ACTION);

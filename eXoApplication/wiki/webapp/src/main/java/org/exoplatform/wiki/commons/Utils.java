@@ -72,9 +72,7 @@ import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.impl.SessionManager;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
-import org.exoplatform.wiki.webui.UIWikiHistorySpaceArea;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
-import org.exoplatform.wiki.webui.UIWikiPageVersionsList;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.WikiMode;
@@ -458,7 +456,7 @@ public class Utils {
     }
   }
   
-  public static void processShowHistoryAction(UIWikiPortlet wikiPortlet) throws Exception {
+  public static List<NTVersion> processShowRevisionAction() throws Exception {
     PageImpl wikipage = (PageImpl) getCurrentWikiPage();
     Iterator<NTVersion> iter = wikipage.getVersionableMixin().getVersionHistory().iterator();
     List<NTVersion> versionsList = new ArrayList<NTVersion>();
@@ -470,10 +468,7 @@ public class Utils {
       }
     }
     Collections.sort(versionsList, new VersionNameComparatorDesc());
-    UIWikiHistorySpaceArea historySpaceArea = wikiPortlet.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
-    UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class);
-    pageVersionsList.setVersionsList(versionsList);
-    wikiPortlet.changeMode(WikiMode.SHOWHISTORY);
+    return versionsList;
   }
   
   public static int getLimitUploadSize() {

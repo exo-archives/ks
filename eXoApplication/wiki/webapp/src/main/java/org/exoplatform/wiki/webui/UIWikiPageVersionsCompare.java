@@ -137,7 +137,7 @@ public class UIWikiPageVersionsCompare extends UIContainer {
         }
       }
 
-      uiForm.renderVersionsDifference(versions);
+      uiForm.renderVersionsDifference(versions, event.getRequestContext());
     }
   }
   

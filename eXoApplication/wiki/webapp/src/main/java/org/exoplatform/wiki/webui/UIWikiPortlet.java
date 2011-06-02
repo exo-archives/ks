@@ -222,9 +222,10 @@ public class UIWikiPortlet extends UIPortletApplication {
     if (newMode== WikiMode.HELP)
         this.previousMode = mode;
     if (newMode.equals(WikiMode.VIEW)) {
-      findFirstComponentOfType(UIWikiAttachmentArea.class).setRendered(false);
       findFirstComponentOfType(UIWikiPageTitleControlArea.class).toInfoMode();
-      findFirstComponentOfType(UIWikiBottomArea.class).setRendered(true);
+      UIWikiBottomArea bottomArea = findFirstComponentOfType(UIWikiBottomArea.class).setRendered(true);
+      bottomArea.getChild(UIWikiAttachmentArea.class).setRendered(false);
+      bottomArea.getChild(UIWikiPageVersionsList.class).setRendered(false);
     }
     if (newMode.equals(WikiMode.EDITPAGE)||newMode.equals(WikiMode.ADDPAGE)) {
       findFirstComponentOfType(UIWikiSidePanelArea.class).setRendered(true);
@@ -234,8 +235,9 @@ public class UIWikiPortlet extends UIPortletApplication {
       findFirstComponentOfType(UIWikiPageEditForm.class).getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT).setRendered(true);
     }
     if (newMode.equals(WikiMode.SHOWHISTORY)) {
-      findFirstComponentOfType(UIWikiPageVersionsList.class).setRendered(true);
-      findFirstComponentOfType(UIWikiPageVersionsCompare.class).setRendered(false);
+      UIWikiHistorySpaceArea historySpaceArea = findFirstComponentOfType(UIWikiHistorySpaceArea.class);
+      historySpaceArea.getChild(UIWikiPageVersionsList.class).setRendered(true);
+      historySpaceArea.getChild(UIWikiPageVersionsCompare.class).setRendered(false);
     }
     mode = newMode;
   }

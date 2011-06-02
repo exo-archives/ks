@@ -46,17 +46,28 @@ public class UIWikiHistorySpaceArea extends UIWikiContainer {
   public UIWikiHistorySpaceArea() throws Exception {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.SHOWHISTORY});
     
-    addChild(UIWikiPageVersionsList.class, null, null).setRendered(true);
+    addChild(UIWikiPageVersionsList.class, null, "UIWikiPageVersionsList1").setRendered(true);
     addChild(UIWikiPageVersionsCompare.class, null, null).setRendered(false);
   }
 
+  public boolean isShowVersion() {
+    return getChild(UIWikiPageVersionsList.class).isRendered();
+  }
+
+  public boolean isShowHistorySpace(){
+    WikiMode mode = getAncestorOfType(UIWikiPortlet.class).getWikiMode();
+    if(mode.equals(WikiMode.VIEWREVISION) || mode.equals(WikiMode.SHOWHISTORY)) return true;
+    return false;
+  }
+  
   public static void viewRevision(Event<?> event) throws Exception {
     UIWikiPortlet wikiPortlet = ((UIComponent) event.getSource()).getAncestorOfType(UIWikiPortlet.class);
     UIWikiPageContentArea pageContentArea = wikiPortlet.findFirstComponentOfType(UIWikiPageContentArea.class);
     String versionName = event.getRequestContext().getRequestParameter(OBJECTID);
-    wikiPortlet.findFirstComponentOfType(UIWikiVersionSelect.class).setVersionName(versionName);
-    pageContentArea.renderVersion();
+    UIWikiVersionSelect wikiVersionSelect = pageContentArea.getChild(UIWikiVersionSelect.class);
+    wikiVersionSelect.setVersionName(versionName);
     wikiPortlet.changeMode(WikiMode.VIEWREVISION);
+    pageContentArea.renderVersion(true);
   }
   
   static public class ReturnViewModeActionListener extends EventListener<UIWikiHistorySpaceArea> {

@@ -38,6 +38,7 @@ public class UIWikiBottomArea extends UIWikiContainer {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE, WikiMode.ADDPAGE });    
     addChild(UIWikiPageInfoArea.class, null, null);
     addChild(UIWikiAttachmentArea.class, null, null).setRendered(false);
+    addChild(UIWikiPageVersionsList.class, null, "UIWikiPageVersionsList2").setRendered(false);
   }
   
 }
