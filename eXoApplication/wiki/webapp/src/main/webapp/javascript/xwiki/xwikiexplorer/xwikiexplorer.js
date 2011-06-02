@@ -819,7 +819,7 @@ isc.XWETreeGrid.addMethods({
                 // page parent from the xmlDoc response. If the parent has already been loaded, it opens it, if not
                 // it calls the openParent method again, this time with the parent of the resource.
                 var fetchCallback = function(xmlDoc, xmlText, rpcResponse, rpcRequest) {
-                    if (xmlDoc.httpResponseCode == 200 && xmlDoc.data[0]) {
+                    if (xmlDoc.httpResponseCode == 200 && xmlDoc.data[0] && xmlDoc.data[0].parent) {
                         var parentRes = XWiki.resource.get(xmlDoc.data[0].parent);
                         var parentNode = rt.findById(parentRes.fullName);
                         // Store the parent / child relationship in the cache to avoid the need of another request if this
@@ -1108,4 +1108,3 @@ isc.XWETreeGrid.addMethods({
         return this.getSelectedRecord().isNewAttachment;
     }
 });
-

@@ -43,8 +43,6 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriBuilderException;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
@@ -62,7 +60,6 @@ import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiType;
-import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
@@ -112,14 +109,11 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
 
   private final CacheControl     cc;
   
-  private final MOWService mowService;
-  
   private ObjectFactory  objectFactory = new ObjectFactory();
   
-  public WikiRestServiceImpl(WikiService wikiService, RenderingService renderingService, MOWService mowService) {
+  public WikiRestServiceImpl(WikiService wikiService, RenderingService renderingService) {
     this.wikiService = wikiService;
     this.renderingService = renderingService;
-    this.mowService = mowService;
     cc = new CacheControl();
     cc.setNoCache(true);
     cc.setNoStore(true);
@@ -311,7 +305,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     for (String spaceName : spaceNames) {
       try {
         Page page = wikiService.getPageById(wikiType, spaceName, WikiNodeType.Definition.WIKI_HOME_NAME);
-        spaces.getSpace().add(createSpace(objectFactory, uriInfo.getBaseUri(), wikiType, spaceName, page));
+        spaces.getSpaces().add(createSpace(objectFactory, uriInfo.getBaseUri(), wikiType, spaceName, page));
       } catch (Exception e) {
         log.error(e.getMessage(), e);
       }
@@ -359,10 +353,10 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       }
       page = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, parentId);
       if (isWikiHome) {
-        pages.getPageSummary().add(createPageSummary(objectFactory, uriInfo.getBaseUri(), page));
+        pages.getPageSummaries().add(createPageSummary(objectFactory, uriInfo.getBaseUri(), page));
       } else {
         for (PageImpl childPage : page.getChildPages().values()) {
-          pages.getPageSummary().add(createPageSummary(objectFactory,
+          pages.getPageSummaries().add(createPageSummary(objectFactory,
                                                        uriInfo.getBaseUri(),
                                                        childPage));
         }
@@ -383,12 +377,14 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
                                                               @PathParam("pageId") String pageId) {
     PageImpl page;
     try {
-      page = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, WikiNodeType.Definition.WIKI_HOME_NAME);
-      return createPage(objectFactory, uriInfo.getBaseUri(), uriInfo.getAbsolutePath(), page);
+      page = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, pageId);
+      if (page != null) {
+        return createPage(objectFactory, uriInfo.getBaseUri(), uriInfo.getAbsolutePath(), page);
+      }
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      return objectFactory.createPage();
     }
+    return objectFactory.createPage();
   }
   
   @GET
@@ -406,7 +402,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       page = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, pageId);
       Collection<AttachmentImpl> pageAttachments = page.getAttachmentsExcludeContent();
       for (AttachmentImpl pageAttachment : pageAttachments) {
-        attachments.getAttachment().add(createAttachment(objectFactory, uriInfo.getBaseUri(), pageAttachment, "attachment", "attachment"));
+        attachments.getAttachments().add(createAttachment(objectFactory, uriInfo.getBaseUri(), pageAttachment, "attachment", "attachment"));
       }
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -451,7 +447,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     Link pagesLink = objectFactory.createLink();
     pagesLink.setHref(pagesUri);
     pagesLink.setRel(Relations.PAGES);
-    space.getLink().add(pagesLink);
+    space.getLinks().add(pagesLink);
 
     if (home != null) {
       String homeUri = UriBuilder.fromUri(baseUri)
@@ -461,7 +457,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       Link homeLink = objectFactory.createLink();
       homeLink.setHref(homeUri);
       homeLink.setRel(Relations.HOME);
-      space.getLink().add(homeLink);
+      space.getLinks().add(homeLink);
     }
 
     String searchUri = UriBuilder.fromUri(baseUri)
@@ -471,7 +467,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     Link searchLink = objectFactory.createLink();
     searchLink.setHref(searchUri);
     searchLink.setRel(Relations.SEARCH);
-    space.getLink().add(searchLink);
+    space.getLinks().add(searchLink);
 
     return space;
 
@@ -491,15 +487,13 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     page.setCreator(doc.getOwner());
 
     GregorianCalendar calendar = new GregorianCalendar();
-    XMLGregorianCalendar xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
-    page.setCreated(xgcal);
+    page.setCreated(calendar);
 
     page.setModifier(doc.getAuthor());
 
     calendar = new GregorianCalendar();
     calendar.setTime(doc.getUpdatedDate());
-    xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
-    page.setModified(xgcal);
+    page.setModified(calendar);
 
     page.setContent(doc.getContent().getText());
 
@@ -507,7 +501,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       Link pageLink = objectFactory.createLink();
       pageLink.setHref(self.toString());
       pageLink.setRel(Relations.SELF);
-      page.getLink().add(pageLink);
+      page.getLinks().add(pageLink);
     }
     return page;
   }
@@ -524,7 +518,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     Link pageLink = objectFactory.createLink();
     pageLink.setHref(pageUri);
     pageLink.setRel(Relations.PAGE);
-    pageSummary.getLink().add(pageLink);
+    pageSummary.getLinks().add(pageLink);
 
     return pageSummary;
   }
@@ -547,7 +541,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     Link attachmentLink = objectFactory.createLink();
     attachmentLink.setHref(attachmentUri);
     attachmentLink.setRel(Relations.ATTACHMENT_DATA);
-    attachment.getLink().add(attachmentLink);
+    attachment.getLinks().add(attachmentLink);
 
     return attachment;
   }  
@@ -600,7 +594,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     Link spaceLink = objectFactory.createLink();
     spaceLink.setHref(spaceUri);
     spaceLink.setRel(Relations.SPACE);
-    pageSummary.getLink().add(spaceLink);
+    pageSummary.getLinks().add(spaceLink);
 
     if (parent != null) {
       String parentUri = UriBuilder.fromUri(baseUri)
@@ -612,7 +606,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       Link parentLink = objectFactory.createLink();
       parentLink.setHref(parentUri);
       parentLink.setRel(Relations.PARENT);
-      pageSummary.getLink().add(parentLink);
+      pageSummary.getLinks().add(parentLink);
     }
 
     if (!doc.getChildPages().isEmpty()) {
@@ -625,7 +619,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       Link pageChildrenLink = objectFactory.createLink();
       pageChildrenLink.setHref(pageChildrenUri);
       pageChildrenLink.setRel(Relations.CHILDREN);
-      pageSummary.getLink().add(pageChildrenLink);
+      pageSummary.getLinks().add(pageChildrenLink);
     }
 
     if (!doc.getAttachmentsExcludeContent().isEmpty()) {
@@ -640,7 +634,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       Link attachmentsLink = objectFactory.createLink();
       attachmentsLink.setHref(attachmentsUri);
       attachmentsLink.setRel(Relations.ATTACHMENTS);
-      pageSummary.getLink().add(attachmentsLink);
+      pageSummary.getLinks().add(attachmentsLink);
     }
 
   }
@@ -664,8 +658,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
 
     GregorianCalendar calendar = new GregorianCalendar();
     calendar.setTime(pageAttachment.getCreated());
-    XMLGregorianCalendar xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
-    attachment.setDate(xgcal);
+    attachment.setDate(calendar);
 
     attachment.setXwikiRelativeUrl(xwikiRelativeUrl);
     attachment.setXwikiAbsoluteUrl(xwikiAbsoluteUrl);
@@ -677,7 +670,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     Link pageLink = objectFactory.createLink();
     pageLink.setHref(pageUri);
     pageLink.setRel(Relations.PAGE);
-    attachment.getLink().add(pageLink);
+    attachment.getLinks().add(pageLink);
   }
   
 }
