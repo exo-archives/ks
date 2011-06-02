@@ -75,7 +75,7 @@
         <object-param>
           <name>DeletePage</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.webui.control.UIPageToolBar</string></field>
+            <field name="type"><string>org.exoplatform.wiki.webui.control.MoreExtensionContainer</string></field>
             <field name="rank"><int>100</int></field>
             <field name="name"><string>DeletePage</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.DeletePageActionComponent</string></field>

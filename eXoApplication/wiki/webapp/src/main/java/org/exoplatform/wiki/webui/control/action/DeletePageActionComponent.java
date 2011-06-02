@@ -38,7 +38,7 @@ import org.exoplatform.wiki.webui.control.action.core.AbstractEventActionCompone
 import org.exoplatform.wiki.webui.control.filter.DeniedOnWikiHomePageFilter;
 import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
 import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
-import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
+import org.exoplatform.wiki.webui.control.listener.MoreContainerActionListener;
 
 /**
  * Created by The eXo Platform SAS
@@ -74,7 +74,7 @@ public class DeletePageActionComponent extends AbstractEventActionComponent {
     return true;
   }
   
-  public static class DeletePageActionListener extends UIPageToolBarActionListener<DeletePageActionComponent> {
+  public static class DeletePageActionListener extends MoreContainerActionListener<DeletePageActionComponent> {
     @Override
     protected void processEvent(Event<DeletePageActionComponent> event) throws Exception {    
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
