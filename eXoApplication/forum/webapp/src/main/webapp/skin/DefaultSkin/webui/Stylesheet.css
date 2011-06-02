@@ -665,3 +665,8 @@
 	right:6px;
 	width:18px;
 }
+
+.UIForumPortlet .DownArrow1Icon .THFixHidden {
+  overflow: hidden;
+  word-wrap: break-word;
+}

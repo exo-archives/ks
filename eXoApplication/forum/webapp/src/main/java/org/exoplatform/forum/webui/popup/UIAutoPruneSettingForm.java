@@ -18,10 +18,13 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -61,6 +64,7 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
 	public static final String FIELD_VALUEMONTHS = "Months" ;
 	
 	private PruneSetting pruneSetting;
+	private Locale locale ;
 	private long topicOld = 0;
 	private boolean isTest = false;
 	private boolean isActivate = false;
@@ -69,20 +73,8 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
 		UIFormStringInput inActiveDay = new UIFormStringInput(FIELD_INACTIVEDAY_INPUT, FIELD_INACTIVEDAY_INPUT, null);
 		UIFormStringInput jobDay = new UIFormStringInput(FIELD_JOBDAY_INPUT, FIELD_JOBDAY_INPUT, null);
 		
-		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEDAY), FIELD_VALUEDAY)) ;
-		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEWEEKS), FIELD_VALUEWEEKS)) ;
-		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEMONTHS), FIELD_VALUEMONTHS)) ;
-		
-		UIFormSelectBox inActiveDayType = new UIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX, FIELD_INACTIVEDAY_SELECTBOX, list) ;
-		inActiveDayType.setDefaultValue(FIELD_VALUEDAY);
-		
-		list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEDAY), FIELD_VALUEDAY+"_Id")) ;
-		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEWEEKS), FIELD_VALUEWEEKS+"_Id")) ;
-		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEMONTHS), FIELD_VALUEMONTHS+"_Id")) ;
-		UIFormSelectBox jobDayType = new UIFormSelectBox(FIELD_JOBDAY_SELECTBOX, FIELD_JOBDAY_SELECTBOX, list) ;
-		jobDayType.setDefaultValue(FIELD_VALUEDAY+"_Id");
+		UIFormSelectBox inActiveDayType = getSelectBox(FIELD_INACTIVEDAY_SELECTBOX, false);
+		UIFormSelectBox jobDayType = getSelectBox(FIELD_JOBDAY_SELECTBOX, true);
 		
 		addUIFormInput(inActiveDay);
 		addUIFormInput(inActiveDayType);
@@ -90,6 +82,31 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
 		addUIFormInput(jobDayType);
 		setActions(new String[]{"Save", "Close"});
   }
+	
+	private void setLocale() throws Exception {
+	  PortalRequestContext portalContext = Util.getPortalRequestContext();
+	  Locale locale = portalContext.getLocale();
+	  if (this.locale == null || !locale.getLanguage().equals(this.locale.getLanguage())) {
+	    getSelectBox(FIELD_INACTIVEDAY_SELECTBOX, false);
+	    getSelectBox(FIELD_JOBDAY_SELECTBOX, true);
+	    this.locale = locale;
+	  }
+	}
+	
+	private UIFormSelectBox getSelectBox(String field, boolean isJobDay) {
+	  List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
+	  list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEDAY), FIELD_VALUEDAY + ((isJobDay) ? "_Id" : "")));
+	  list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEWEEKS), FIELD_VALUEWEEKS + ((isJobDay) ? "_Id" : "")));
+	  list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEMONTHS), FIELD_VALUEMONTHS + ((isJobDay) ? "_Id" : "")));
+	  UIFormSelectBox selectBox = getUIFormSelectBox(field);
+	  if (selectBox == null) {
+	    selectBox = new UIFormSelectBox(field, field, list);
+	    selectBox.setDefaultValue(FIELD_VALUEDAY + ((isJobDay) ? "_Id" : ""));
+	  } else {
+	    selectBox.setOptions(list);
+	  }
+	  return selectBox;
+	}
 	
   public boolean isActivate() {
   	return isActivate;
@@ -108,7 +125,7 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
 				else if(i%30 == 0) {i = i/30; type = FIELD_VALUEMONTHS;}
 			}
 		  getUIStringInput(FIELD_INACTIVEDAY_INPUT).setValue(String.valueOf(i));
-		  getUIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX).setValue(type) ;
+		  getSelectBox(FIELD_INACTIVEDAY_SELECTBOX, false).setValue(type) ;
 		  i = pruneSetting.getPeriodTime();
 		  type = FIELD_VALUEDAY;
 		  if(i != 0){
@@ -117,8 +134,10 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
 		  }
 		  type = type+"_Id";
 		  getUIStringInput(FIELD_JOBDAY_INPUT).setValue(String.valueOf(i));
-		  getUIFormSelectBox(FIELD_JOBDAY_SELECTBOX).setValue(type) ;
+		  getSelectBox(FIELD_JOBDAY_SELECTBOX, true).setValue(type) ;
 		  isTest = false;
+		} else {
+		  setLocale();
 		}
   }
 

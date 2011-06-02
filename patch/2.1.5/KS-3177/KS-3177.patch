@@ -1,0 +1,2224 @@
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionForm.java	(revision 70049)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionForm.java	(working copy)
+@@ -21,6 +21,7 @@
+ import java.util.ArrayList;
+ import java.util.HashMap;
+ import java.util.List;
++import java.util.Locale;
+ import java.util.Map;
+ 
+ import javax.jcr.Node;
+@@ -44,6 +45,9 @@
+ import org.exoplatform.ks.common.webui.BaseEventListener;
+ import org.exoplatform.ks.common.webui.UIPopupAction;
+ import org.exoplatform.ks.common.webui.UIPopupContainer;
++import org.exoplatform.portal.webui.util.Util;
++import org.exoplatform.services.resources.LocaleConfig;
++import org.exoplatform.services.resources.LocaleConfigService;
+ import org.exoplatform.services.jcr.ext.common.SessionProvider;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+@@ -123,6 +127,7 @@
+   private boolean isChildOfManager = false ;
+   private boolean isModerate = false;
+   private boolean isAddCheckBox = false;
++  private Locale currentLocale = null;
+   private boolean isRenderSelectLang = false;
+   private FAQSetting faqSetting_ ;
+   public void activate() throws Exception { }
+@@ -149,25 +154,49 @@
+ 		listFileAttach_.clear() ;
+ 	}
+ 	
++
++  private String capitalizeFirstLetter(String word) {
++    if (word == null) {
++      return null;
++    }
++    if (word.length() == 0) {
++      return word;
++    }
++    StringBuilder result = new StringBuilder(word);
++    result.replace(0, 1, result.substring(0, 1).toUpperCase());
++    return result.toString();
++  }
++
++  public void setLanguages() throws Exception {
++    Locale currentLocale = Util.getPortalRequestContext().getLocale();
++    if (this.currentLocale == null
++        || !this.currentLocale.getLanguage().equals(currentLocale.getLanguage())) {
++      this.currentLocale = currentLocale;
++      setListSystemLanguages();
++    }
++  }
++	
+ 	private void setListSystemLanguages() throws Exception{
+ 		listSystemLanguages.clear();
+ 		List<String> languages = FAQUtils.getAllLanguages(this) ;
+ 		if(languages.size() <= 1) isRenderSelectLang = false;
+ 		else isRenderSelectLang = true;
+-    for(String lang : languages) {
+-      if(lang.equals(defaultLanguage_))
+-      	listSystemLanguages.add(new SelectItemOption<String>(lang + " (default) ", lang)) ;
+-      else
+-      	listSystemLanguages.add(new SelectItemOption<String>(lang, lang)) ;
+-    }
++		try {
++		  LocaleConfigService localeConfigService = getApplicationComponent(LocaleConfigService.class);
++		  String displyByLocal, lang;
++		  for(LocaleConfig localeConfig : localeConfigService.getLocalConfigs()) {
++		    lang = localeConfig.getLocale().getDisplayLanguage();
++		    displyByLocal = capitalizeFirstLetter(localeConfig.getLocale().getDisplayLanguage(currentLocale));
++		    if(lang.equals(defaultLanguage_))
++		      listSystemLanguages.add(new SelectItemOption<String>(displyByLocal + " ("+ getLabel("default") + ") ", lang)) ;
++		    else
++		      listSystemLanguages.add(new SelectItemOption<String>(displyByLocal, lang)) ;
++		    }
++		  } catch (Exception e) {}
+ 	}
+ 
+   public void initPage(boolean isEdit) throws Exception {
+-  	try {
+-	    setListSystemLanguages();
+-    } catch (Exception e1) {
+-	    e1.printStackTrace();
+-    }
++    setLanguages() ;
+     inputAuthor = new UIFormStringInput(AUTHOR, AUTHOR, author_) ;
+     if(author_.trim().length() > 0) inputAuthor.setEditable(false);
+     inputEmailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_) ;
+Index: eXoApplication/faq/webapp/src/main/resources/locale/portlet/faq/AnswersPortlet_en.properties
+===================================================================
+--- eXoApplication/faq/webapp/src/main/resources/locale/portlet/faq/AnswersPortlet_en.properties	(revision 70049)
++++ eXoApplication/faq/webapp/src/main/resources/locale/portlet/faq/AnswersPortlet_en.properties	(working copy)
+@@ -79,6 +79,7 @@
+ UIQuestionForm.label.FileAttach=File
+ UIQuestionForm.label.IsApproved=Approved
+ UIQuestionForm.label.IsActivated=Activated
++UIQuestionForm.label.default=default
+  
+ UIQuestionForm.label.Language=Language
+ UIQuestionForm.label.Remove=Remove
+Index: eXoApplication/faq/webapp/src/main/resources/locale/portlet/faq/AnswersPortlet_fr.properties
+===================================================================
+--- eXoApplication/faq/webapp/src/main/resources/locale/portlet/faq/AnswersPortlet_fr.properties	(revision 70049)
++++ eXoApplication/faq/webapp/src/main/resources/locale/portlet/faq/AnswersPortlet_fr.properties	(working copy)
+@@ -1,4 +1,4 @@
+-javax.portlet.title=Answers Portlet
++javax.portlet.title=Portlet d'administration FAQ
+ NameValidator.msg.erro-large-number="{0}" devrait être un nombre.
+ UIDropDownControl.item.IconSet16x16=
+ UICalendar.NextMonth=Mois Suivant
+@@ -18,25 +18,25 @@
+ #############################################################################
+ #							UICategoryForm																							 #
+ #############################################################################
+-UIAnswersPopupWindow.title.AddCategoryForm=Catégorie
++UIAnswersPopupWindow.title.AddCategoryForm=Ajouter une catégorie
+ UIPopupWindow.title.UICategoryForm=Catégorie
+ UICategoryForm.action.Cancel=Annuler
+ UICategoryForm.action.Save=Enregistrer
+ UICategoryForm.label.action.SelectUser=Choisir un utilisateur
+ UICategoryForm.label.action.SelectGroup=Choisir un groupe
+ UICategoryForm.label.action.SelectMemberShip=Choisir un rôle
+-UIGroupSelector.label.selectMemberShip=Role
++UIGroupSelector.label.selectMemberShip=Rôle
+ UICategoryForm.label.eventCategoryName=Catégorie
+ UICategoryForm.label.description=Description
+ UICategoryForm.label.userPrivate=Audience restreinte
+-UICategoryForm.label.moderatequestions=Modération des nouvelles questions
++UICategoryForm.label.moderatequestions=Modération de nouvelles questions
+ UICategoryForm.label.moderateAnswers=Modération des réponses
+-UICategoryForm.label.moderator=Moderateur
++UICategoryForm.label.moderator=Modérateur
+ UICategoryForm.label.index=Ordre 
+ UICategoryForm.label.ViewAuthorInfor=Afficher l'auteur de question
+ UICategoryForm.msg.name-required=Donnez un nom à la catégorie.
+ UICategoryForm.msg.moderator-required=Choisissez un modérateur.
+-UICategoryForm.label.UIAddCategoryForm=UICategoryForm
++UICategoryForm.label.UIAddCategoryForm=Formulaire de catégorie
+ UIAnswersPopupWindow.title.SubCategoryForm=Ajouter une catégorie
+ UICategoryForm.msg.error-registry=Cette catégorie n'existe plus.
+ UICateforyForm.sms.user-same-name=Cette catégorie existe déjà.
+@@ -52,6 +52,7 @@
+ #############################################################################
+ #							UIBreadcumbs                                                  #
+ #############################################################################
++UIBreadcumbs.label.eXoFAQ=Accueil
+ UIBreadcumbs.label.categories=Accueil
+ UIBreadcumbs.label.Previous=Précédent
+ UIBreadcumbs.label.Next=Suivant
+@@ -66,20 +67,21 @@
+ UIAnswersPopupWindow.title.AddQuestion=Ajouter une question
+ UIAnswersPopupWindow.title.UISelectForumForm=Choisissez un forum
+ UIQuestionForm.action.Save=Enregistrer
+-UIQuestionForm.action.Cancel=Annuler
++UIQuestionForm.action.Cancel=#{word.cancel}
+ UIQuestionForm.action.AddLanguage=Traductions
+-UIQuestionForm.action.Attachment=Fichiers
++UIQuestionForm.action.Attachment=Attacher des fichiers
+ UIQuestionForm.label.action.RemoveFile=Supprimer
+ UIQuestionForm.label.Author=Auteur
+ UIQuestionForm.label.EmailAddress=Email
+ UIQuestionForm.label.Question=Détail
+ UIQuestionForm.label.ListQuestion=Question
+-UIQuestionForm.label.Attachment=Fichiers
++UIQuestionForm.label.Attachment=Attacher des fichiers
+ UIQuestionForm.label.AttachAFile=Ajouter un fichier
+ UIQuestionForm.label.FileAttach=Fichier
+ UIQuestionForm.label.IsApproved=Approuvée
+ UIQuestionForm.label.IsActivated=Activée
+- 
++
++UIQuestionForm.label.default=défaut
+ UIQuestionForm.label.Language=Langue
+ UIQuestionForm.label.Remove=Supprimer
+ UIQuestionForm.label.AllLanguages=Langue
+@@ -91,29 +93,29 @@
+ UIQuestionForm.msg.DeleteQuestionInLanguage=Confirmez-vous la suppression de la question en {0}
+ UIQuestionForm.msg.email-address-invalid=Cette adresse email est invalide.
+ UIQuestionForm.msg.author-is-null=L'auteur est obligatoire.
+-UIQuestionForm.msg.author-is-duplicate=Le nom dans le champs auteur n'est pas autorisé car il s'agit du nom d'un membre inscrit. Veuillez-vous authentifier ou bien indiquer un nom différent.
++UIQuestionForm.msg.author-is-duplicate=Le nom d'auteur n'est pas autorisé car il s'agit du nom d'un membre inscrit. Veuillez utiliser un nom différent.
+ UIQuestionForm.msg.question-null=Veuillez saisir le texte de la question.
+ UIQuestionForm.msg.default-question-null=Veuillez saisir une question pour la langue par défaut.
+-UIQuestionForm.msg.mutil-language-question-null=Veuillez soumettre la question en {0}. 
++UIQuestionForm.msg.mutil-language-question-null=Veuillez soumettre la question en {0} langue.
+ UIQuestionForm.msg.add-new-question-successful=La question a été posée.
+ UIQuestionForm.msg.question-not-is-approved=La question a été soumise aux modérateurs.
+  
+ ##############################################################################
+ #												UIAttachMentForm																	#
+ ##############################################################################
+-UIAnswersChildPopupWindow.title.UIAttachMentForm=Télécharger un fichier
++UIAnswersChildPopupWindow.title.UIAttachMentForm=Attacher un fichier
+ UIAnswersChildPopupWindow.title.AttachMentForm=Télécharger un fichier
+ UIAttachMentForm.label.FileUpload=Fichier
+ UIAttachMentForm.label.AvatarURL=/faq/skin/DefaultSkin/webui/background/Avatar1.gif
+ UIAttachMentForm.action.Add=Ajouter un autre fichier
+-UIAttachMentForm.action.Remove=Supprimer le ernier attachement
++UIAttachMentForm.action.Remove=Supprimer le dernier attachement
+ UIAttachMentForm.action.Save=Enregistrer
+ UIAttachMentForm.action.Cancel=Annuler
+  
+-UIAttachMentForm.msg.file-not-found=Assurez vous d'avoir téléchargé sur le serveur le fichier sélectionné à l'aide de l'icône
++UIAttachMentForm.msg.file-not-found=Assurez-vous d'avoir téléchargé sur le serveur le fichier sélectionné à l'aide de l'icône
+ UIAttachMentForm.msg.fileIsNotImage=Le fichier téléchargé, n'est pas une image.
+-UIAttachMentForm.msg.size-of-file-is-0=L'envoi du fichier " {0} " a échoué :<br>Assurez vous qu'il soit valide et d'un poids inférieur à la limite autorisée.
+-UIAttachMentForm.msg.avatar-upload-long=Assurez-vous que le fichier téléchargé dépasse pas la limite autorisée.
++UIAttachMentForm.msg.size-of-file-is-0=L'envoi du fichier " {0} " a échoué :<br>Assurez-vous qu'il ne soit pas vide.
++UIAttachMentForm.msg.avatar-upload-long=Assurez-vous que le fichier téléchargé ne dépasse pas la limite autorisée.
+  
+ ##############################################################################
+ #												UIResponseForm																			#
+@@ -126,7 +128,7 @@
+  
+ UIResponseForm.label.QuestionContent=Question
+ UIResponseForm.label.Language=Langue
+-UIResponseForm.label.QuestionAttach=Fichiers
++UIResponseForm.label.QuestionAttach=Attacher des fichiers
+ UIResponseForm.label.QuestionRespone=Réponse
+ UIResponseForm.label.QuestionRelation=Questions liées
+ UIResponseForm.action.AddRelation=Lier
+@@ -136,13 +138,13 @@
+ UIResponseForm.label.Language=Langue
+ UIResponseForm.label.Relation=Questions liées
+ UIResponseForm.label.Remove=Supprimer
+-UIResponseForm.label.AddNewAnswer=Nouvelle réponse
++UIResponseForm.label.AddNewAnswer=Ajouter une nouvelle réponse
+ UIResponseForm.label.IndexOfAnswer=Répondre
+ UIResponseForm.label.MultiAnswer=Réponse multiple
+ UIResponseForm.label.QuestionTitle=Question 
+  
+-UIResponseForm.msg.question-null=Vuillez saisir le texte de la question.
+-UIResponseForm.msg.response-null=Veuillez saisir le texte de la réponse.
++UIResponseForm.msg.question-null=Veuillez saisir le texte de la question.
++UIResponseForm.msg.response-null=Veuillez fournir une réponse à la question.
+ UIResponseForm.msg.author-is-null=L'auteur est obligatoire.
+ UIResponseForm.msg.response-invalid=Vous devez donner une réponse au moins dans la langue par défaut.
+ 
+@@ -166,7 +168,7 @@
+ #############################################################################
+ #							UIGroupSelector																							 #
+ #############################################################################
+-UIAnswersChildPopupWindow.title.UIMemberShipSelector=Choisir une rôle
++UIAnswersChildPopupWindow.title.UIMemberShipSelector=Choisir un rôle
+ UIAnswersChildPopupWindow.title.GroupSelector=Choisir un rôle
+ UIChildPopupWindow.title.GroupSelector=Choisir un groupe
+ UIChildPopupWindow.title.UIMebershipSelector=Choisir une rôle
+@@ -197,7 +199,7 @@
+ UIQuestions.action.AddNewQuestion=Soumettre une question
+ UIQuestions.action.Settings=Préférences
+ UIQuestions.action.Watch=Suivi
+-UIQuestions.msg.confirm-delete-category=Confirmez-vous la suppression de cette catégorie?
++UIQuestions.msg.confirm-delete-category=Confirmez-vous la suppression de cette catégorie ?
+ UIQuestions.msg.confirm-delete-comment=Voulez-vous supprimer ce commentaire ?
+ UIQuestions.msg.confirm-delete-answer=Voulez-vous supprimer cette réponse ?
+ UIQuestions.msg.erroDonotHavePermissionEdit=Vous n'êtes pas autorisé à modifier cette catégorie.
+@@ -218,10 +220,10 @@
+ UIQuestions.label.move-down=Descendre
+ UIQuestions.label.move-up=Monter
+ UIQuestions.label.editRootCategory=Modifier
+-UIQuestions.label.on=
++UIQuestions.label.on=Activé
+ UIQuestions.label.category-setting=Paramètres de catégorie
+ UIQuestions.label.watch=Suivi
+-UIQuestions.action.CustomView=
++UIQuestions.action.CustomView=Vue personnalisée
+ UIQuestions.action.SubCategory=Sous-catégorie
+ UIQuestions.title.watch-manager=Gérer les suivis
+ UIQuestions.title.un-watch=Ne plus suivre
+@@ -242,22 +244,22 @@
+ UIQuestions.action.AddCommentQuestion=Commenter
+ UIQuestions.action.VoteQuestion=Noter la question
+ UIQuestions.action.VoteAnser=Noter la réponse
+-UIQuestions.action.VoteAnserAgain=Renoter
++UIQuestions.action.VoteAnserAgain=Noter une autre fois
+ UIQuestions.action.UnVoteQuestion=Enlever la note
+ UIQuestions.action.DeleteAnswer=Supprimer la réponse
+-UIQuestions.label.SizeFile=Poids
++UIQuestions.label.SizeFile=Taile
+ UIQuestions.label.FileAttached=Fichiers
+ UIQuestions.label.RelatedQuestion=Questions liées
+-UIQuestions.label.QuestionResponsedBy=Réponse par
++UIQuestions.label.QuestionResponsedBy=Répondue par
+ UIQuestions.label.QuestionResponsedContent=Réponse
+-UIQuestions.label.QuestionNotYetAnswered=Personne n'a répondu à cette question
+-UIQuestions.label.lostFile=Ce fichier a été perdu.
+-UIQuestions.label.CanSendToFriend=Cette entrêe doit être approuvée et activée pour pouvoir être envoyée.
++UIQuestions.label.QuestionNotYetAnswered=Personne n'a répondu à cette question.
++UIQuestions.label.lostFile=Ce fichier s'est perdu.
++UIQuestions.label.CanSendToFriend=Cette entrée doit être approuvée et activée pour pouvoir être envoyée.
+ UIQuestions.label.TotalCategories=catégories
+ UIQuestions.label.TotalQuestions=questions
+ UIQuestions.label.TotalQuestionsNotYetAnswered=sans réponse
+ UIQuestions.label.TotalQuestionsNotApproved=non approuvées
+-UIQuestions.label.QuestionCommentBy=Commenté par
++UIQuestions.label.QuestionCommentBy=Commentée par
+ UIQuestions.label.HileLeftPanels=Masquer le panneau latéral
+ UIQuestions.label.ShowLeftPanels=Etendre le panneau latéral
+ UIQuestions.label.Rss=RSS
+@@ -267,7 +269,7 @@
+ UIQuestions.label.Comments=Commentaires
+ UIQuestions.alert.LoginBeforVote=Vous devez vous authentifier pour pouvoir noter
+ UIQuestions.action.CommentToAnswer=Promouvoir comme réponse
+-UIQuestions.action.EditComment=Modfier le commentaire
++UIQuestions.action.EditComment=Modifier le commentaire
+ UIQuestions.action.DeleteComment=Supprimer le commentaire
+ UIQuestions.action.SortAnswerByVote=Triez les réponses par note
+ UIQuestions.msg.question-id-deleted=Cette entrée n'existe plus.
+@@ -289,11 +291,11 @@
+ #												UIQuestionsInfo											 #
+ #############################################################################
+ UIAnswersPopupWindow.title.FAQQuestionManagerment=Gestion des questions
+-UIQuestionsInfo.label.SelectCategory=Selectionner une catégorie
++UIQuestionsInfo.label.SelectCategory=Sélectionner une catégorie
+ UIQuestionsInfo.label.TabQuestionManagement=Toutes les questions
+ UIQuestionsInfo.label.TabQuestionNotYetAnswered=Questions en attente
+ UIQuestionsInfo.label.Question=Question
+-UIQuestionsInfo.label.Languages=Traductions
++UIQuestionsInfo.label.Languages=Langues
+ UIQuestionsInfo.label.QuestionIsApproved=Approuvée
+ UIQuestionsInfo.label.QuestionIsActivated=Activée
+ UIQuestionsInfo.label.Action=
+@@ -336,7 +338,7 @@
+ UIDeleteQuestion.label.Author=Auteur
+ UIDeleteQuestion.label.Email=Email
+ UIDeleteQuestion.label.Question=Question
+-UIDeleteQuestion.label.reallyDeleteQuestion=Confirmez-vous la suppresion de cette entrée?
++UIDeleteQuestion.label.reallyDeleteQuestion=Confirmez-vous la suppresion de cette question et ses réponses ?
+ UIDeleteQuestion.title.confirm-delete=Confirmez la suppression
+ #############################################################################
+ #												FAQMoveQuestion     												 #
+@@ -357,26 +359,26 @@
+ UISendMailForm.label.From=Email
+ UISendMailForm.label.Detail=Détail :
+ UISendMailForm.label.To=A
+-UISendMailForm.label.AddCc=CC
+-UISendMailForm.label.AddBcc=BCC
+-UISendMailForm.label.Subject=Objet
++UISendMailForm.label.AddCc=Cc
++UISendMailForm.label.AddBcc=Cci
++UISendMailForm.label.Subject=Sujet
+ UISendMailForm.label.Language=Langue
+ UISendMailForm.label.Message=Message
+ UISendMailForm.label.Question=Question :
+ UISendMailForm.label.Response=Réponse :
+ # Can not edit <link> #
+-UISendMailForm.label.Link=<p>Click <a href="<link>">here</a> for more details</p>.
++UISendMailForm.label.Link=<p>Cliquer <a href="<link>">ici</a> pour plus de details</p>.
+ UISendMailForm.label.change-title= 
+ UISendMailForm.label.change-content=<p>Bonjour,</p>Cette question pourrait vous intéresser:
+ UISendMailForm.action.Send=Envoyer
+ UISendMailForm.action.Cancel=Annuler
+ UISendMailForm.msg.fromName-field-empty=Le champ "De la part de" est obligatoire.
+-UISendMailForm.msg.from-field-empty=Le champ "Email"est oligatoire.
++UISendMailForm.msg.from-field-empty=Le champ "Email" est obligatoire.
+ UISendMailForm.msg.to-field-empty=Indiquez au moins un destinataire.
+-UISendMailForm.msg.subject-field-empty=The field "Sujet" is required
++UISendMailForm.msg.subject-field-empty=Le champ "Sujet" est obligatoire
+ UISendMailForm.msg.invalid-to-field=Entrez une adresse email valide pour le champ A
+-UISendMailForm.msg.invalid-cc-field==Entrez une adresse email valide pour le champ CC
+-UISendMailForm.msg.invalid-bcc-field==Entrez une adresse email valide pour le champ BCC
++UISendMailForm.msg.invalid-cc-field=Entrez une adresse email valide pour le champ Cc
++UISendMailForm.msg.invalid-bcc-field=Entrez une adresse email valide pour le champ Cci
+ UISendMailForm.msg.invalid-from-field=Entrez une adresse email valide pour le champ Email
+ UISendMailForm.msg.send-mail-error=L'envoi de l'entrée par email a échoué.
+ UISendMailForm.msg.send-mail-success=Votre message a été envoyé.
+@@ -386,14 +388,14 @@
+ UIPopupWindow.title.CategorySettingForm=Préférences
+ UIAnswersPopupWindow.title.CategorySettingForm=Préférences
+ UIAnswersPopupWindow.title.UISettingForm=Préférences
+-UIAnswersPopupWindow.title.UIListCategoryForumForm=Selectionnez une catégorie
++UIAnswersPopupWindow.title.UIListCategoryForumForm=Sélectionnez une catégorie
+ UIAnswersPopupWindow.title.UISelectPathForumAppForm=Selectionnez le forum
+ UISettingForm.label.Avatar=Avatar
+ UISettingForm.label.resetAvatar=Réinitialiser
+ UISettingForm.label.display-mode=Afficher :
+ UISettingForm.label.order-by=Par ordre :
+ UISettingForm.label.option.vote=Trier par popularité
+-UISettingForm.label.order-type=
++UISettingForm.label.order-type=Type d'ordre
+ UISettingForm.label.option.approved=Approuvé
+ UISettingForm.label.option.both=Les deux
+ UISettingForm.label.option.created=Chronologique
+@@ -401,27 +403,27 @@
+ UISettingForm.label.option.asc=Ascendant
+ UISettingForm.label.option.desc=Descendant
+ UISettingForm.label.user-watch-manager=Suivis
+-UISettingForm.label.UserSettingTab=Préférences
+-UISettingForm.label.BBCodeSettingTab=Paramètres BBCode
++UISettingForm.label.UserSettingTab=Paramètres d'utilisateur
++UISettingForm.label.BBCodeSettingTab=Paramètres de BBCode
+ UISettingForm.title.user-watch-manager=Suivis
+ UISettingForm.action.Save=Enregistrer
+ UISettingForm.action.Cancel=Annuler
+ UISettingForm.action.ChangeAvatar=Mettre à jour
+-UISettingForm.msg.update-successful=Les préférences ont été sauvées.
++UISettingForm.msg.update-successful=Les préférences ont été enregistrées.
+ UISettingForm.msg.pathCategory-empty=Veuillez sélectionner un forum.
+ UISettingForm.label.resetMailContent=Recharger le modèle par défaut
+-UISettingForm.msg.SetDeFaultAvatar=Voulez-vous utiliser l'avatar par défaut?
+-UIAnswersPopupWindow.title.UISelectCategoryForumForm=Selection de forum
++UISettingForm.msg.SetDeFaultAvatar=Voulez-vous utiliser l'avatar par défaut ?
++UIAnswersPopupWindow.title.UISelectCategoryForumForm=Sélectionner un forum
+ FAQPortletSetting.label.enableVotComment=Activer les votes et commentaires
+ FAQPortletSetting.label.enableAnonymousSubmitQuestion=Activer la soumission de questions par les anonymes
+ FAQPortletSetting.label.enableRSS=Activer RSS automatique
+ FAQPortletSetting.label.enableViewAvatar=Activer l'affichage des avatars
+ FAQPortletSetting.label.display-mode=Afficher :
+ FAQPortletSetting.label.order-by=Trié par:
+-FAQPortletSetting.label.order-type=
+-FAQPortletSetting.label.EmailAddNewQuestion=Modèle d'email:
+-FAQPortletSetting.label.EmailEditQuestion=Modèle d'email:
+-FAQPortletSetting.label.EmailMoveQuestion=Modèle d'email:
++FAQPortletSetting.label.order-type=Type d'ordre
++FAQPortletSetting.label.EmailAddNewQuestion=Modèle d'email :
++FAQPortletSetting.label.EmailEditQuestion=Modèle d'email :
++FAQPortletSetting.label.EmailMoveQuestion=Modèle d'email :
+ FAQPortletSetting.label.option.approved=Approuvées
+ FAQPortletSetting.label.option.both=Toutes
+ FAQPortletSetting.label.option.created=Date de création
+@@ -429,7 +431,7 @@
+ FAQPortletSetting.label.option.asc=Ascendant
+ FAQPortletSetting.label.option.desc=Descendant
+ FAQPortletSetting.label.CategoryPath=Choisir un forum
+-FAQPortletSetting.label.ChooseForum=Cliquez sur le forum destination pour les discussions
++FAQPortletSetting.label.ChooseForum=Cliquez sur le forum destinataire pour les discussions
+ FAQPortletSetting.label.ForumId=Forum
+ FAQPortletSetting.label.EnableDiscuss=Discuter les questions dans le forum
+ UISettingForm.tab.label.DisplayTab=Mode d'affichage
+@@ -437,8 +439,8 @@
+ UISettingForm.tab.label.Discussion=Discussion
+ UISettingForm.tab.label.AddNewQuestionTab=Nouvelle question
+ UISettingForm.tab.label.EditQuestionTab=Modification/réponse
+-FAQPortletSetting.label.action.SelectCategoryForum=Sélectionner un forum
+-FAQPortletSetting.label.action.SelectForum=
++FAQPortletSetting.label.action.SelectCategoryForum=Sélectionner une catégorie de discussion
++FAQPortletSetting.label.action.SelectForum=Sélectionner une discussion
+ UISettingForm.tab.label.CategoryScoping=Catégories restreintes
+ UISettingForm.tab.label.EmailMoveQuestionTab=Déplacement de question
+ #############################################################################
+@@ -451,7 +453,7 @@
+ UIWatchForm.label.emailAddress=Adresse email
+ UIWatchForm.action.Save=Enregistrer
+ UIWatchForm.action.Cancel=Annuler
+-UIWatchForm.msg.name-field-empty=L'Utilisateur est obligatoire
++UIWatchForm.msg.name-field-empty=L'utilisateur est obligatoire
+ UIWatchForm.msg.to-field-empty=Indiquez au moins un destinataire.
+ UIWatchForm.msg.invalid-to-field=Entrez une adresse email valide dans le champ Email.
+ UIWatchForm.msg.successful=Le suivi a été enregistré, les modifications de cette catégorie seront notifiées.
+@@ -468,7 +470,7 @@
+ UIWatchManager.title.edit-watch=Modifier
+ UIWatchManager.title.delete-watch=Supprimer
+ UIWatchManager.action.Cancel=Fermer
+-UIWatchManager.msg.confirm-delete-watch=Confirmez-vous la suppression de ce suivi?
++UIWatchManager.msg.confirm-delete-watch=Confirmez-vous la suppression de ce suivi ?
+ UIWatchManager.msg.watch-id-deleted=Ce suivi n'existe plus.
+  
+ #############################################################################
+@@ -489,9 +491,9 @@
+ #												ResultQuickSearch																	#
+ #############################################################################
+ UIAnswersPopupWindow.title.UIResultQuickSearch=Résultats de recherche
+-ResultQuickSearch.title.icon=
++ResultQuickSearch.title.icon=Icône
+ ResultQuickSearch.title.name=Nom
+-ResultQuickSearch.title.createdate=Créée le
++ResultQuickSearch.title.createdate=Créé le
+ ResultQuickSearch.title.action=
+ UIQuickSeach.msg.no-text-to-search=Entrez un terme de recherche.
+ ResultQuickSearch.action.Close=Fermer
+@@ -501,7 +503,7 @@
+ #												ResultSearchCategory  													 #
+ #############################################################################
+ UIAnswersPopupWindow.title.ResultSearchCategory=Résultats de recherche
+-ResultSearchCategory.title.icon=
++ResultSearchCategory.title.icon=Icône
+ ResultSearchCategory.title.category=Catégorie
+ ResultSearchCategory.title.description=Description
+ ResultSearchCategory.title.created-date=Créée
+@@ -513,7 +515,7 @@
+ #												ResultSearchQuestion  													 #
+ #############################################################################
+ UIAnswersPopupWindow.title.ResultSearchQuestion=Résultats de recherche
+-ResultSearchQuestion.title.icon=
++ResultSearchQuestion.title.icon=Icône
+ ResultSearchQuestion.title.author=Auteur
+ ResultSearchQuestion.title.email=Email
+ ResultSearchQuestion.title.question=Question
+@@ -531,15 +533,15 @@
+ UIPopupViewQuestion.title.not-answer=Cette question n'a pas encore de réponse
+ UIPopupViewQuestion.label.QuestionContent=Question
+ UIPopupViewQuestion.label.QuestionResponsedContent=Réponse
+-UIPopupViewQuestion.label.file-attached=Fichiers:
+-UIPopupViewQuestion.label.size=Taille:
++UIPopupViewQuestion.label.file-attached=Fichiers :
++UIPopupViewQuestion.label.size=Taille :
+ UIPopupViewQuestion.label.view=Voir
+ UIPopupViewQuestion.label.download=Télécharger
+-UIPopupViewQuestion.label.related-question=Questions liées:
+-UIPopupViewQuestion.label.response-by=Réponse par:
+-UIPopupViewQuestion.label.lostFile=Le fichier a été perdu.
++UIPopupViewQuestion.label.related-question=Questions liées :
++UIPopupViewQuestion.label.response-by=Répondue par :
++UIPopupViewQuestion.label.lostFile=Le fichier s'est perdu.
+ UIPopupViewQuestion.action.Close=Fermer
+-ResultSearch.title.no-matches=pas de résultats.
++ResultSearch.title.no-matches=pas de résultat.
+ 	
+ #############################################################################
+ #												AdvancedSearch																	 #
+@@ -548,14 +550,14 @@
+ UIAdvancedSearchForm.action.Search=Rechercher
+ UIAdvancedSearchForm.action.Cancel=Fermer
+ UIAdvancedSearchForm.label.SearchObject=Chercher dans
+-UIAdvancedSearchForm.label.option.categoryAndQuestion=
+-UIAdvancedSearchForm.label.option.AllCategories=
++UIAdvancedSearchForm.label.option.categoryAndQuestion=Catégorie et question
++UIAdvancedSearchForm.label.option.AllCategories=Toutes les catégories
+ UIAdvancedSearchForm.label.option.faqCategory=Catégories
+ UIAdvancedSearchForm.label.option.faqQuestion=Entrées
+ UIAdvancedSearchForm.label.Text=Terme
+ UIAdvancedSearchForm.label.CategoryName=Nom
+ UIAdvancedSearchForm.label.IsModerateQuestion=Approuvée
+-UIAdvancedSearchForm.label.option.empty2=
++UIAdvancedSearchForm.label.option.empty2=vide
+ UIAdvancedSearchForm.label.option.true=Oui
+ UIAdvancedSearchForm.label.option.false=Non
+ UIAdvancedSearchForm.label.CategoryModerator=Modérateur
+@@ -565,18 +567,18 @@
+ UIAdvancedSearchForm.label.Author=Auteur
+ UIAdvancedSearchForm.label.EmailAddress=Email auteur
+ UIAdvancedSearchForm.label.Language=Langue
+-UIAdvancedSearchForm.label.option.English=Anglais
+-UIAdvancedSearchForm.label.option.Vietnamese=Vietnamien
+-UIAdvancedSearchForm.label.option.French=Français
++UIAdvancedSearchForm.label.option.English=anglais
++UIAdvancedSearchForm.label.option.Vietnamese=vietnamien
++UIAdvancedSearchForm.label.option.French=français
+ UIAdvancedSearchForm.label.Question=Question
+ UIAdvancedSearchForm.label.Response=Réponse
+ UIAdvancedSearchForm.label.Comment=Commentaire
+-UIAdvancedSearchForm.msg.error-input-text-date="{0}" n'est pas dans un format de date valide.
++UIAdvancedSearchForm.msg.error-input-text-date="{0}" n'est pas au bon format de date.
+ UIAdvancedSearchForm.msg.date-time-invalid=Période invalide, changez les dates.
+ UIAdvancedSearchForm.msg.email-invalid=L'adresse email est invalide.
+ UIAdvancedSearchForm.msg.failure=Entrez un terme de recherche plus simple.
+ UIAdvancedSearchForm.msg.erro-empty-search=Entrez au moins un terme de recherche.
+-UIAdvancedSearchForm.msg.erro-from-less-than-to=Vuillez indiquer un intervalle de dates valide.
++UIAdvancedSearchForm.msg.erro-from-less-than-to=Veuillez indiquer un intervalle de dates valide.
+  ############################################################################################
+  #                          Email default content                                           #
+  # Note: please don't translate any thing which is between characters '&' and '_', because  #
+@@ -645,7 +647,7 @@
+ UICategories.action.UnWatch=Ne plus suivre
+ UICategories.title.Categories=Catégories
+ UICategories.title.Questions=Questions
+-UICategories.title.CategoryInfo=
++UICategories.title.CategoryInfo=Informations sur la catégorie
+ UICategories.action.ChangeIndex=Changer l'index
+  
+ UICategories.label.SubCategories=Catégories
+@@ -660,7 +662,7 @@
+ UICommentForm.title.Author=Auteur
+ UICommentForm.title.Language=Langue
+ UICommentForm.title.Question=Question
+-UICommentForm.title.Detail=Detail
++UICommentForm.title.Detail=Détail
+ UICommentForm.title.Comment=Commentaire
+ UICommentForm.msg.comment-is-null=Entrez un commentaire.
+  
+@@ -672,7 +674,7 @@
+ UIViewUserProfile.label.userName=Utilisateur
+ UIViewUserProfile.label.firstName=Nom
+ UIViewUserProfile.label.lastName=Prénom
+-UIViewUserProfile.label.birthDay=Né le
++UIViewUserProfile.label.birthDay=Né(e) le
+ UIViewUserProfile.label.gender=Sexe
+ UIViewUserProfile.label.email=Email
+ UIViewUserProfile.label.jobTitle=Titre
+@@ -706,4 +708,4 @@
+ #												UIFormPrintAllQuestions												 #
+ #############################################################################
+ UIAnswersPopupWindow.title.FAQPrintAllQuestion=Tout imprimer
+-UIAnswersContainer.label.NotPermission=Cette catégorie est protégée. Vous ne disposez pas des droits suffisants pour la visualiser.<br/> Contactez votre administrateur.
+\ No newline at end of file
++UIAnswersContainer.label.NotPermission=Cette catégorie est protégée. Vous ne disposez pas de droits suffisants pour la visualiser.<br/> Contactez votre administrateur.
+\ No newline at end of file
+Index: eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIQuestionForm.gtmpl
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIQuestionForm.gtmpl	(revision 70049)
++++ eXoApplication/faq/webapp/src/main/webapp/templates/faq/webui/popup/UIQuestionForm.gtmpl	(working copy)
+@@ -1,4 +1,7 @@
+-<%import org.exoplatform.faq.webui.FAQUtils;%>
++<%
++	import org.exoplatform.faq.webui.FAQUtils;
++	uicomponent.setLanguages();
++%>
+ <div class="UIQuestionForm $uicomponent.id">
+ 	<% uiform.begin() %>
+ 		<div class="HorizontalLayout" style="padding:10px 0px;">
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIFormDateTimePicker.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIFormDateTimePicker.java	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIFormDateTimePicker.java	(working copy)
+@@ -23,6 +23,7 @@
+ import java.util.Calendar;
+ import java.util.Date;
+ import java.util.GregorianCalendar;
++import java.util.Locale;
+ 
+ import org.exoplatform.webui.application.WebuiRequestContext;
+ import org.exoplatform.webui.form.UIFormInputBase;
+@@ -39,52 +40,130 @@
+   /**
+    * The DateFormat
+    */
+-  private DateFormat dateFormat ;
+-  /**
+-   * Whether to display the full time (with hours, minutes and seconds), not only the date
+-   */
++  private String titleShowCalendar = "Show Calendar";
++  private String dateStyle_ = "MM/dd/yyyy" ;
++  private String timeStyle_ = "HH:mm:ss" ;
++  private Date date_ ;
+   private boolean isDisplayTime_ ;
+-  private String titleShowCalendar = "Show Calendar";
+-  public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime, String titleShowCalendar) {
++  private Locale locale_  ;
++
++  public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime) {
+     super(name, bindField, String.class) ;
+-    setDisplayTime(isDisplayTime) ;
+-    if(date != null) value_ = dateFormat.format(date) ;
+-    setTitleShowCalendar(titleShowCalendar);
++    date_ = date ;
++    isDisplayTime_ = isDisplayTime ; 
++    if(date != null) value_ = getFormater().format(date) ;
++    if(date != null) value_ = getFormater().format(date) ;
+   }
+-  
+-  public void setTitleShowCalendar(String titleShowCalendar) {
+-	  this.titleShowCalendar = titleShowCalendar;
++
++  public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime, Locale locale) {
++    super(name, bindField, String.class) ;
++    date_ = date ;
++    isDisplayTime_ = isDisplayTime ; 
++    locale_ = locale ;
++    if(date != null) value_ = getFormater().format(date) ;
++    if(date != null) value_ = getFormater().format(date) ;
+   }
++
++  public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime, String titleShowCalendar, Locale locale, String dateStyle) {
++    super(name, bindField, String.class) ;
++    dateStyle_ = dateStyle ;
++    isDisplayTime_ = isDisplayTime ;
++    locale_ = locale ;
++    date_ = date ;
++    this.titleShowCalendar = titleShowCalendar;
++    if(date != null) value_ = getFormater().format(date) ;
++  }
++  public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime, String titleShowCalendar, Locale locale, String dateStyle, String timeStyle) {
++    super(name, bindField, String.class) ;
++    dateStyle_ = dateStyle ;
++    timeStyle_ = timeStyle ;
++    locale_ = locale ;
++    date_ = date ;
++    isDisplayTime_ = isDisplayTime ;
++    this.titleShowCalendar = titleShowCalendar;
++    if(date != null) value_ = getFormater().format(date) ;
++  }
+   public UIFormDateTimePicker(String name, String bindField, Date date) {
+-    this(name, bindField, date, true, "") ;
++    this(name, bindField, date, true) ;
+   }
+-  /**
+-   * By default, creates a date of format Month/Day/Year
+-   * If isDisplayTime is true, adds the time of format Hours:Minutes:Seconds
+-   * TODO : Display time depending on the locale of the client.
+-   * @param isDisplayTime
+-   */
++  public UIFormDateTimePicker(String name, String bindField, Date date, String dateStyle) {
++    this(name, bindField, date, false, "Show Calendar", null, dateStyle) ;
++  }
++  public UIFormDateTimePicker(String name, String bindField, Date date, String dateStyle, String timeStyle) {
++    this(name, bindField, date, true, "Show Calendar", null, dateStyle, timeStyle) ;
++  }
+   public void setDisplayTime(boolean isDisplayTime) {
+     isDisplayTime_ = isDisplayTime;
+-    if(isDisplayTime_) dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+-    else dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+   }
+   
+-  public void setCalendar(Calendar date) { value_ = dateFormat.format(date.getTime()) ; }
++  public void setTitleShowCalendar(String titleShowCalendar) {
++		this.titleShowCalendar = titleShowCalendar;
++	}
++
++  public void setCalendar(Calendar date) { 
++    date_ = date.getTime() ;
++    value_ = getFormater().format(date.getTime()) ; 
++  }
+   public Calendar getCalendar() {
+     try {
+       Calendar calendar = new GregorianCalendar() ;
+-      calendar.setTime(dateFormat.parse(value_ + " 0:0:0")) ;
++      calendar.setTime(getFormater().parse(value_ + " 0:0:0")) ;
+       return calendar ;
+     } catch (ParseException e) {
+       return null;
+     }
+   }
+-  
++  public Date getDateValue() {
++    try {
++      Calendar calendar = new GregorianCalendar() ;
++      calendar.setTime(getFormater().parse(value_ + " 0:0:0")) ;
++      return calendar.getTime() ;
++    } catch (ParseException e) {
++      return null;
++    }
++  }
++  public void setDateFormatStyle(String dateStyle) {
++    dateStyle_ = dateStyle ;
++    value_ = getFormater().format(date_) ;
++
++  }
++  public void setTimeFormatStyle(String timeStyle) {
++    timeStyle_ = timeStyle ;
++    value_ = getFormater().format(date_) ;
++  }
++  @SuppressWarnings("unused")
+   public void decode(Object input, WebuiRequestContext context) throws Exception {
+     if(input != null) value_ = ((String)input).trim();
+   }
+-
++  public String getFormatStyle() {
++    if(isDisplayTime_) return dateStyle_ + " " + timeStyle_ ;
++    return dateStyle_ ;
++  }
++  
++  private int getFirstDayOfWeek() {
++    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
++    Locale locale = context.getParentAppRequestContext().getLocale();
++    Calendar calendar = GregorianCalendar.getInstance(locale);
++    return calendar.getFirstDayOfWeek();
++  }
++  
++  private String getLang() {
++    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
++    Locale locale = context.getParentAppRequestContext().getLocale() ;
++    return locale.getLanguage();
++  }
++  private DateFormat getFormater() {
++    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
++    Locale locale = context.getParentAppRequestContext().getLocale() ;
++    if(locale_ == null) locale_ = locale ;
++    return new SimpleDateFormat(getFormatStyle(), locale_) ;
++  }
++  public void setInfo(String titleShowCalendar, Locale locale, String dateStyle, String timeStyle) {
++  	this.titleShowCalendar = titleShowCalendar;
++  	dateStyle_ = dateStyle ;
++    timeStyle_ = timeStyle ;
++    locale_ = locale ;
++  }
+   public void processRender(WebuiRequestContext context) throws Exception {
+   	context.getJavascriptManager().importJavascript("eXo.ks.UIDateTimePicker","/ksResources/javascript/") ;
+     Writer w = context.getWriter();
+@@ -92,10 +171,10 @@
+     w.write("name='") ;
+     w.write(getName()) ; w.write('\'') ;
+     if(value_ != null && value_.length() > 0) {      
+-      w.write(" value='"); w.write(value_); w.write('\'');
++      w.write(" value='"); w.write(value_.toString()); w.write('\'');
+     }
+     w.write("/>");
+-    w.write("<div class='CalendarIcons' onclick='eXo.ks.UIDateTimePicker.init(this,");
++    w.write("<div class='CalendarIcons' lang='" + getLang() + "' fistweekday='" + getFirstDayOfWeek() + "' format='" + getFormatStyle() + "' onclick='eXo.ks.UIDateTimePicker.init(this,");
+     w.write(String.valueOf(isDisplayTime_)+");' title='"+titleShowCalendar+"'><span></span></div>");
+   }
+ }
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UISearchForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UISearchForm.java	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UISearchForm.java	(working copy)
+@@ -19,6 +19,7 @@
+ import java.util.ArrayList;
+ import java.util.Calendar;
+ import java.util.List;
++import java.util.Locale;
+ import java.util.ResourceBundle;
+ 
+ import org.exoplatform.container.ExoContainerContext;
+@@ -34,9 +35,12 @@
+ import org.exoplatform.ks.common.webui.UIPopupContainer;
+ import org.exoplatform.ks.common.webui.UISelector;
+ import org.exoplatform.ks.common.webui.UIUserSelect;
++import org.exoplatform.portal.application.PortalRequestContext;
++import org.exoplatform.portal.webui.util.Util;
+ import org.exoplatform.services.log.ExoLogger;
+ import org.exoplatform.services.log.Log;
+ import org.exoplatform.web.application.ApplicationMessage;
++import org.exoplatform.webui.application.WebuiRequestContext;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.ComponentConfigs;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+@@ -45,8 +49,8 @@
+ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+ import org.exoplatform.webui.core.model.SelectItemOption;
+ import org.exoplatform.webui.event.Event;
++import org.exoplatform.webui.event.Event.Phase;
+ import org.exoplatform.webui.event.EventListener;
+-import org.exoplatform.webui.event.Event.Phase;
+ import org.exoplatform.webui.exception.MessageException;
+ import org.exoplatform.webui.form.UIForm;
+ import org.exoplatform.webui.form.UIFormCheckBoxInput;
+@@ -119,6 +123,7 @@
+ 	private final static String USER_SEARCH_POPUP_WINDOW_ID = "UIUserSearchPopupWindow";
+ 	private ForumService forumService;
+ 	private List<TopicType> listTT = new ArrayList<TopicType>();
++	private Locale locale ;
+ 	public UISearchForm() throws Exception {
+ 		if(this.getId() == null)setId("UISearchForm");
+ 		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+@@ -132,29 +137,17 @@
+ 		UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX, FIELD_SEARCHTYPE_SELECTBOX, list) ;
+ 		searchType.setOnChange("Onchange") ;
+ 		
+-		list = new ArrayList<SelectItemOption<String>>() ;
+-		list.add(new SelectItemOption<String>(getLabel("All"), "all")) ;
+-		for (TopicType topicType : listTT) {
+-			list.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
+-    }
+-		UIFormSelectBox topicType = new UIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX, FIELD_TOPICTYPE_SELECTBOX, list) ;
+-		topicType.setValue(TopicType.DEFAULT_ID);
++		UIFormSelectBox topicType = new UIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX, FIELD_TOPICTYPE_SELECTBOX, null) ;
++		UIFormRadioBoxInput boxInput = new UIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX, FIELD_SCOPE_RADIOBOX, null);
+ 		
+-		list = new ArrayList<SelectItemOption<String>>() ;
+-		list.add(new SelectItemOption<String>(getLabel("Full"), "entire")) ;
+-		list.add(new SelectItemOption<String>(getLabel("Titles"), "title")) ;
+-		UIFormRadioBoxInput boxInput = new UIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX, FIELD_SCOPE_RADIOBOX, list);
+-		boxInput.setValue("entire");
+-		
+ 		UIFormCheckBoxInput<Boolean> isLock = new UIFormCheckBoxInput<Boolean>(FIELD_ISLOCK_CHECKBOX, FIELD_ISLOCK_CHECKBOX, false);
+ 		UIFormCheckBoxInput<Boolean> isUnLock = new UIFormCheckBoxInput<Boolean>(FIELD_ISUNLOCK_CHECKBOX, FIELD_ISUNLOCK_CHECKBOX, false);
+ 		UIFormCheckBoxInput<Boolean> isClosed = new UIFormCheckBoxInput<Boolean>(FIELD_ISCLOSED_CHECKBOX, FIELD_ISCLOSED_CHECKBOX, false);
+ 		UIFormCheckBoxInput<Boolean> isOpent = new UIFormCheckBoxInput<Boolean>(FIELD_ISOPEN_CHECKBOX, FIELD_ISOPEN_CHECKBOX, false);
+-		String showCalendar = getLabel("ShowCalendar");
+-		UIFormDateTimePicker FromDateCreated = new UIFormDateTimePicker(FROMDATECREATED, FROMDATECREATED, null, false, showCalendar) ;
+-		UIFormDateTimePicker ToDateCreated = new UIFormDateTimePicker(TODATECREATED, TODATECREATED, null, false, showCalendar) ;
+-		UIFormDateTimePicker FromDateCreatedLastPost = new UIFormDateTimePicker(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false, showCalendar) ;
+-		UIFormDateTimePicker ToDateCreatedLastPost = new UIFormDateTimePicker(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false, showCalendar) ;
++		UIFormDateTimePicker FromDateCreated = new UIFormDateTimePicker(FROMDATECREATED, FROMDATECREATED, null, false) ;
++		UIFormDateTimePicker ToDateCreated = new UIFormDateTimePicker(TODATECREATED, TODATECREATED, null, false) ;
++		UIFormDateTimePicker FromDateCreatedLastPost = new UIFormDateTimePicker(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false) ;
++		UIFormDateTimePicker ToDateCreatedLastPost = new UIFormDateTimePicker(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false) ;
+ 
+     UISliderControl topicCountMin = new UISliderControl(FIELD_TOPICCOUNTMIN_SLIDER, FIELD_TOPICCOUNTMIN_SLIDER, "0") ;//Sliders 
+ 
+@@ -185,6 +178,46 @@
+ 		setActions(new String[]{"Search","ResetField", "Cancel"});
+ 	}
+ 	
++	@SuppressWarnings("unused")
++	private void setLocale() throws Exception {
++		PortalRequestContext portalContext = Util.getPortalRequestContext();
++		Locale locale = portalContext.getLocale();
++		if(this.locale == null || !locale.getLanguage().equals(this.locale.getLanguage())) {
++			initDefaultContent();
++			this.locale = locale;
++		}
++	}
++	
++	public void initDefaultContent() throws Exception {
++		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
++		list.add(new SelectItemOption<String>(getLabel("Category"), Utils.CATEGORY)) ;
++		list.add(new SelectItemOption<String>(getLabel("Forum"), Utils.FORUM)) ;
++		list.add(new SelectItemOption<String>(getLabel("Topic"), Utils.TOPIC)) ;
++		list.add(new SelectItemOption<String>(getLabel("Post"), Utils.POST)) ;
++		this.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(list);
++		
++		list = new ArrayList<SelectItemOption<String>>() ;
++		list.add(new SelectItemOption<String>(getLabel("Full"), "entire")) ;
++		list.add(new SelectItemOption<String>(getLabel("Titles"), "title")) ;
++		UIFormRadioBoxInput boxInput = this.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setOptions(list);
++		boxInput.setValue("entire");
++		
++		list = new ArrayList<SelectItemOption<String>>() ;
++		list.add(new SelectItemOption<String>(getLabel("All"), "all")) ;
++		for (TopicType topicType : listTT) {
++			list.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
++    }
++		UIFormSelectBox topicType = this.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setOptions(list);
++		topicType.setValue(TopicType.DEFAULT_ID);
++		
++		if(userProfile == null) setUserProfile(null);
++		String showCalendar = getLabel("ShowCalendar");
++		getUIFormDateTimePicker(FROMDATECREATED).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
++		getUIFormDateTimePicker(TODATECREATED).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
++		getUIFormDateTimePicker(FROMDATECREATEDLASTPOST).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
++		getUIFormDateTimePicker(TODATECREATEDLASTPOST).setInfo(showCalendar, locale, userProfile.getShortDateFormat(), userProfile.getTimeFormat());
++	}
++	
+ 	public boolean getIsSearchCate() {return isSearchCate;}
+ 	public boolean getIsSearchForum() { return isSearchForum;}
+ 	public void setIsSearchForum(boolean isSearchForum){this.isSearchForum = isSearchForum;}
+@@ -198,12 +231,9 @@
+ 	}
+ 	
+ 	public void setUserProfile(UserProfile userProfile) throws Exception {
+-		try {
+-			this.userProfile = userProfile ;
+-		} catch (Exception e) {
+-			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+-		}
++			this.userProfile = (userProfile != null)?userProfile : this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+ 	}
++	
+ 	private boolean getIsMod() {
+ 		if(this.userProfile != null) {
+ 			if(this.userProfile.getUserRole() < 2) return true ;
+@@ -254,6 +284,12 @@
+ 			return id ;
+ 		}
+ 	}
++
++	public String getLabel(String id) throws Exception {
++		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
++		ResourceBundle res = context.getApplicationResourceBundle() ;
++		return getLabel(res, id);
++	}
+ 	
+ 	private String checkValue(String input) throws Exception {
+ 		if(!ForumUtils.isEmpty(input)){
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UITopicForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UITopicForm.java	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UITopicForm.java	(working copy)
+@@ -169,7 +169,7 @@
+ 		
+ 		setTopicType();
+ 		ls = new ArrayList<SelectItemOption<String>>();
+-		ls.add(new SelectItemOption<String>("none", getLabel("None")));
++		ls.add(new SelectItemOption<String>(getLabel("None"), "none"));
+ 		for (TopicType topicType : listTT) {
+ 			ls.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
+     }
+@@ -299,7 +299,7 @@
+ 	public void addNewTopicType() throws Exception {
+ 		setTopicType();
+ 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
+-		ls.add(new SelectItemOption<String>("none", getLabel("None")));
++		ls.add(new SelectItemOption<String>(getLabel("None"), "none"));
+ 		for (TopicType topicType : listTT) {
+ 			ls.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
+     }
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIAutoPruneSettingForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIAutoPruneSettingForm.java	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIAutoPruneSettingForm.java	(working copy)
+@@ -18,10 +18,13 @@
+ 
+ import java.util.ArrayList;
+ import java.util.List;
++import java.util.Locale;
+ 
+ import org.exoplatform.forum.service.PruneSetting;
+ import org.exoplatform.forum.webui.BaseForumForm;
+ import org.exoplatform.forum.webui.UIForumPortlet;
++import org.exoplatform.portal.application.PortalRequestContext;
++import org.exoplatform.portal.webui.util.Util;
+ import org.exoplatform.webui.config.annotation.ComponentConfig;
+ import org.exoplatform.webui.config.annotation.EventConfig;
+ import org.exoplatform.webui.core.UIPopupComponent;
+@@ -61,6 +64,7 @@
+ 	public static final String FIELD_VALUEMONTHS = "Months" ;
+ 	
+ 	private PruneSetting pruneSetting;
++	private Locale locale ;
+ 	private long topicOld = 0;
+ 	private boolean isTest = false;
+ 	private boolean isActivate = false;
+@@ -69,21 +73,9 @@
+ 		UIFormStringInput inActiveDay = new UIFormStringInput(FIELD_INACTIVEDAY_INPUT, FIELD_INACTIVEDAY_INPUT, null);
+ 		UIFormStringInput jobDay = new UIFormStringInput(FIELD_JOBDAY_INPUT, FIELD_JOBDAY_INPUT, null);
+ 		
+-		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
+-		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEDAY), FIELD_VALUEDAY)) ;
+-		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEWEEKS), FIELD_VALUEWEEKS)) ;
+-		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEMONTHS), FIELD_VALUEMONTHS)) ;
++		UIFormSelectBox inActiveDayType = getSelectBox(FIELD_INACTIVEDAY_SELECTBOX, false);
++		UIFormSelectBox jobDayType = getSelectBox(FIELD_JOBDAY_SELECTBOX, true);
+ 		
+-		UIFormSelectBox inActiveDayType = new UIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX, FIELD_INACTIVEDAY_SELECTBOX, list) ;
+-		inActiveDayType.setDefaultValue(FIELD_VALUEDAY);
+-		
+-		list = new ArrayList<SelectItemOption<String>>() ;
+-		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEDAY), FIELD_VALUEDAY+"_Id")) ;
+-		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEWEEKS), FIELD_VALUEWEEKS+"_Id")) ;
+-		list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEMONTHS), FIELD_VALUEMONTHS+"_Id")) ;
+-		UIFormSelectBox jobDayType = new UIFormSelectBox(FIELD_JOBDAY_SELECTBOX, FIELD_JOBDAY_SELECTBOX, list) ;
+-		jobDayType.setDefaultValue(FIELD_VALUEDAY+"_Id");
+-		
+ 		addUIFormInput(inActiveDay);
+ 		addUIFormInput(inActiveDayType);
+ 		addUIFormInput(jobDay);
+@@ -91,6 +83,31 @@
+ 		setActions(new String[]{"Save", "Close"});
+   }
+ 	
++	private void setLocale() throws Exception {
++	  PortalRequestContext portalContext = Util.getPortalRequestContext();
++	  Locale locale = portalContext.getLocale();
++	  if (this.locale == null || !locale.getLanguage().equals(this.locale.getLanguage())) {
++	    getSelectBox(FIELD_INACTIVEDAY_SELECTBOX, false);
++	    getSelectBox(FIELD_JOBDAY_SELECTBOX, true);
++	    this.locale = locale;
++	  }
++	}
++	
++	private UIFormSelectBox getSelectBox(String field, boolean isJobDay) {
++	  List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
++	  list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEDAY), FIELD_VALUEDAY + ((isJobDay) ? "_Id" : "")));
++	  list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEWEEKS), FIELD_VALUEWEEKS + ((isJobDay) ? "_Id" : "")));
++	  list.add(new SelectItemOption<String>(getLabel(FIELD_VALUEMONTHS), FIELD_VALUEMONTHS + ((isJobDay) ? "_Id" : "")));
++	  UIFormSelectBox selectBox = getUIFormSelectBox(field);
++	  if (selectBox == null) {
++	    selectBox = new UIFormSelectBox(field, field, list);
++	    selectBox.setDefaultValue(FIELD_VALUEDAY + ((isJobDay) ? "_Id" : ""));
++	  } else {
++	    selectBox.setOptions(list);
++	  }
++	  return selectBox;
++	}
++	
+   public boolean isActivate() {
+   	return isActivate;
+   }
+@@ -108,7 +125,7 @@
+ 				else if(i%30 == 0) {i = i/30; type = FIELD_VALUEMONTHS;}
+ 			}
+ 		  getUIStringInput(FIELD_INACTIVEDAY_INPUT).setValue(String.valueOf(i));
+-		  getUIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX).setValue(type) ;
++		  getSelectBox(FIELD_INACTIVEDAY_SELECTBOX, false).setValue(type) ;
+ 		  i = pruneSetting.getPeriodTime();
+ 		  type = FIELD_VALUEDAY;
+ 		  if(i != 0){
+@@ -117,8 +134,10 @@
+ 		  }
+ 		  type = type+"_Id";
+ 		  getUIStringInput(FIELD_JOBDAY_INPUT).setValue(String.valueOf(i));
+-		  getUIFormSelectBox(FIELD_JOBDAY_SELECTBOX).setValue(type) ;
++		  getSelectBox(FIELD_JOBDAY_SELECTBOX, true).setValue(type) ;
+ 		  isTest = false;
++		} else {
++		  setLocale();
+ 		}
+   }
+ 
+Index: eXoApplication/forum/webapp/src/main/resources/locale/portlet/forum/ForumPortlet_en.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/resources/locale/portlet/forum/ForumPortlet_en.properties	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/resources/locale/portlet/forum/ForumPortlet_en.properties	(working copy)
+@@ -243,11 +243,11 @@
+ UITopicForm.action.Cancel=Cancel
+ UITopicForm.action.Attachment=Attachments
+ UITopicForm.action.RemoveAttachment=Remove
+-UITopicForm.action.AddTypeTopic=Add Topic type
+ 
+-UITopicForm.label.action.SelectUser=Select a user
+-UITopicForm.label.action.SelectMemberShip=Select a role
+-UITopicForm.label.action.SelectGroup=Select a group
++UITopicForm.label.AddTypeTopic=Add Topic type
++UITopicForm.label.SelectUser=Select a user
++UITopicForm.label.SelectMemberShip=Select a role
++UITopicForm.label.SelectGroup=Select a group
+ UITopicForm.label.None=Untyped
+ UITopicForm.label.ThreadTitle=Title
+ UITopicForm.label.editReason=Reason
+@@ -496,6 +496,8 @@
+ UIBBCodeManagerForm.label.Active=Active
+ UIBBCodeManagerForm.label.Edit/Delete=Edit/Delete
+ UIBBCodeManagerForm.label.Option=Option
++UIBBCodeManagerForm.label.EditBBCode=Edit BBCode
++UIBBCodeManagerForm.label.DeleteBBCode=Delete BBCode
+ 
+ UIBBCodeManagerForm.msg.confirm-delete-BBCode=Are you sure you want delete this BBCode?
+ UIBBCodeManagerForm.msg.inactiveAllBBCode=Please activate at least one BBCode tag.
+@@ -508,8 +510,11 @@
+ UIRunPruneForm.action.Close=Close
+ UIAutoPruneForm.label.LastRun=Last Run
+ UIAutoPruneForm.label.Active=Active
++UIAutoPruneForm.label.PruneSetting=Prune Setting
+ 
+ UIAutoPruneForm.sms.not-set-activeDay=Please configure prune settings for this item.
++
++UIRunPruneForm.label.Warning=Warning<br/>This Forum has <keyWord> topic(s). Do you confirm to run pruning now?
+ #############################################################################
+ #							UITopicTypeManagerForm																				#
+ #############################################################################
+@@ -589,10 +594,10 @@
+ UISearchForm.label.Posts=Posts
+ UISearchForm.label.Views=Views
+ 
+-UISearchForm.label.category=Category
+-UISearchForm.label.forum=Forum
+-UISearchForm.label.topic=Topic
+-UISearchForm.label.post=Post
++UISearchForm.label.Category=#{UIForumPortlet.label.category}
++UISearchForm.label.Forum=#{UIForumPortlet.label.forum}
++UISearchForm.label.Topic=#{UIForumPortlet.label.topic}
++UISearchForm.label.Post=#{UIForumPortlet.label.post}
+ 
+ UISearchForm.msg.checkEmpty=Please enter a search term.
+ UIQuickSearchForm.msg.checkEmpty=Please enter a search term.
+@@ -890,6 +895,7 @@
+ UITopicDetail.label.Message=Message
+ UITopicDetail.label.Moderation=Moderation
+ UITopicDetail.label.Tag=Tag
++UITopicDetail.label.AddTag=Add Tag
+ UITopicDetail.label.VoteThread=Rate
+ UITopicDetail.label.SearchThisThread=Search this topic
+ UITopicDetail.label.ThreadTools=More actions
+@@ -1286,11 +1292,11 @@
+ UIAutoPruneSettingForm.label.Note=The prune function allows to clean old and inactive topics from your forums. Pruned topics are not deleted they are set inactive.
+ UIAutoPruneSettingForm.label.topicPrun=topics would be pruned
+ 
+-AutoPruneSettingForm.label.inActiveDay=Clear topics that have been inactive for
+-AutoPruneSettingForm.label.jobDay=Run prune job every
+-AutoPruneSettingForm.label.Day=days
+-AutoPruneSettingForm.label.Weeks=weeks
+-AutoPruneSettingForm.label.Months=months
++UIAutoPruneSettingForm.label.inActiveDay=Clear topics that have been inactive for
++UIAutoPruneSettingForm.label.jobDay=Run prune job every
++UIAutoPruneSettingForm.label.Day=days
++UIAutoPruneSettingForm.label.Weeks=weeks
++UIAutoPruneSettingForm.label.Months=months
+ 
+ UIAutoPruneSettingForm.label.Test=Dry Run
+ 
+Index: eXoApplication/forum/webapp/src/main/resources/locale/portlet/forum/ForumPortlet_fr.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/resources/locale/portlet/forum/ForumPortlet_fr.properties	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/resources/locale/portlet/forum/ForumPortlet_fr.properties	(working copy)
+@@ -237,11 +237,11 @@
+ UITopicForm.action.Cancel=Annuler
+ UITopicForm.action.Attachment=Fichiers
+ UITopicForm.action.RemoveAttachment=Supprimer
+-UITopicForm.action.AddTypeTopic=Ajouer un type
++UITopicForm.label.AddTypeTopic=Ajouter un type
+ 
+-UITopicForm.label.action.SelectUser=Choisir un utilisateur
+-UITopicForm.label.action.SelectMemberShip=Choisir un rôle
+-UITopicForm.label.action.SelectGroup=Choisir un groupe
++UITopicForm.label.SelectUser=Choisir un utilisateur
++UITopicForm.label.SelectMemberShip=Choisir un rôle
++UITopicForm.label.SelectGroup=Choisir un groupe
+ UITopicForm.label.None=Pas de type
+ UITopicForm.label.ThreadTitle=Titre
+ UITopicForm.label.editReason=Raison
+@@ -425,9 +425,9 @@
+ #############################################################################
+ #							UISortSettingForm     																				#
+ #############################################################################
+-UIForumPopupWindow.title.UISortSettingForm=Sort Setting
+-UISortSettingForm.action.Save=Save
+-UISortSettingForm.action.Close=Close
++UIForumPopupWindow.title.UISortSettingForm=Trier Paramètres
++UISortSettingForm.action.Save=Enregistrer
++UISortSettingForm.action.Close=Fermer
+ 
+ UISortSettingForm.label.forumSortBy=Trier les forums par
+ UISortSettingForm.label.forumSortByType=Direction
+@@ -441,32 +441,30 @@
+ UISortSettingForm.label.modifiedDate=Date de modification
+ UISortSettingForm.label.topicCount=Nombre de discussions
+ UISortSettingForm.label.postCount=Nombre de messages
+-
+ UISortSettingForm.label.threadName=Nom
+ UISortSettingForm.label.lastPostDate=Date du dernier message
+ UISortSettingForm.label.viewCount=Nombre de fois vu
+ UISortSettingForm.label.numberAttachments=Nombre d'attachements
+-
+ UISortSettingForm.label.ascending=Ascendant
+ UISortSettingForm.label.descending=Descendant
+ #############################################################################
+ #							UICensorKeywordForm    																				#
+ #############################################################################
+-UIForumPopupWindow.title.UICensorKeywordForm=Censor Keyword
+-UICensorKeywordForm.action.Save=Save
+-UICensorKeywordForm.action.Close=Close
++UIForumPopupWindow.title.UICensorKeywordForm=Mots Censurés
++UICensorKeywordForm.action.Save=Enregistrer
++UICensorKeywordForm.action.Close=Fermer
+ 
+ UICensorKeywordForm.label.censorKeyword=Mots censurés : <br/><br/><span style="text-align: center;"><i>(séparés par des virgules)</i></span>
+ #############################################################################
+ #							UINotificationForm     																				#
+ #############################################################################
+ UIForumPopupWindow.title.UINotificationForm=Notifications
+-UINotificationForm.action.Save=Save
+-UINotificationForm.action.Close=Close
++UINotificationForm.action.Save=Enregistrer
++UINotificationForm.action.Close=Fermer
+ UINotificationForm.label.action.TitleResetMail=Reinitialiser
+ 
+-UINotificationForm.label.notifyEmailAddNewTab=New Posts Notification
+-UINotificationForm.label.notifyEmailMoveTab=Moved Notification
++UINotificationForm.label.notifyEmailAddNewTab=Message de notification
++UINotificationForm.label.notifyEmailMoveTab=Notification de déplacement
+ UINotificationForm.label.notifyEmail=Message de notification
+ UINotificationForm.label.notifyEmailMoved=Notification de déplacement
+ UINotificationForm.label.enableHeaderSubject=Ajouter un préfixe aux notifications
+@@ -479,42 +477,46 @@
+ #############################################################################
+ #							UIBBCodeManagerForm																						#
+ #############################################################################
+-UIForumPopupWindow.title.BBCodeManagerForm=BBCode Manager
+-UIBBCodeManagerForm.action.Save=Save
+-UIBBCodeManagerForm.action.Close=Close
+-UIBBCodeManagerForm.action.AddNewBBCode=Add BBCode
++UIForumPopupWindow.title.BBCodeManagerForm=Management de BBCode
++UIBBCodeManagerForm.action.Save=Enregistrer
++UIBBCodeManagerForm.action.Close=Fermer
++UIBBCodeManagerForm.action.AddNewBBCode=Ajouter le BBcode
+ 
+-UIBBCodeManagerForm.label.TAG=TAG
++UIBBCodeManagerForm.label.TAG=Etiquette
+ UIBBCodeManagerForm.label.Description=Description
+-UIBBCodeManagerForm.label.Active=Active
+-UIBBCodeManagerForm.label.Edit/Delete=Edit/Delete
++UIBBCodeManagerForm.label.Active=Activé
++UIBBCodeManagerForm.label.Edit/Delete=Action
+ UIBBCodeManagerForm.label.Option=Option
++UIBBCodeManagerForm.label.EditBBCode=Modifier BBCode
++UIBBCodeManagerForm.label.DeleteBBCode=Supprimer BBCode
+ 
+-UIBBCodeManagerForm.msg.confirm-delete-BBCode=Are you sure you want delete this BBCode?
++UIBBCodeManagerForm.msg.confirm-delete-BBCode=Etes-vous sûr de vouloir supprimer ce BBCode?
+ UIBBCodeManagerForm.msg.inactiveAllBBCode=Vous devez activer au moins un BBCode.
+ 
+ #############################################################################
+ #							UIRunPruneForm     																						#
+ #############################################################################
+-UIForumPopupWindow.title.AutoPruneForm=Auto Prune
+-UIRunPruneForm.action.Run=Run
+-UIRunPruneForm.action.Close=Close
+-UIAutoPruneForm.label.LastRun=Last Run
+-UIAutoPruneForm.label.Active=Active
++UIForumPopupWindow.title.AutoPruneForm=Auto-nettoyage
++UIRunPruneForm.action.Run=Executer
++UIRunPruneForm.action.Close=Fermer
++UIAutoPruneForm.label.LastRun=La dernière exécution
++UIAutoPruneForm.label.Active=Activé
++UIAutoPruneForm.label.PruneSetting=Paramètres d'auto-nettoyage
+ 
+ UIAutoPruneForm.sms.not-set-activeDay=Vous devez d'abord configurer les paramètres de cet élément.
++UIRunPruneForm.label.Warning=Attention <br/> Ce Forum a <keyWord> discussion(s).Confirmez-vous d'exécuter le nettoyage maintenant ? 
+ #############################################################################
+ #							UITopicTypeManagerForm																				#
+ #############################################################################
+-UIForumPopupWindow.title.TopicTypeManagerForm=Topic Type Manager
+-UITopicTypeManagerForm.action.AddTopicType=Add Topic Type
+-UITopicTypeManagerForm.action.Close=Close
++UIForumPopupWindow.title.TopicTypeManagerForm=Types de discussions
++UITopicTypeManagerForm.action.AddTopicType=Ajout de type de sujet
++UITopicTypeManagerForm.action.Close=Fermer
+ 
+-UITopicTypeManagerForm.title.Edit=Edit this topic type.
+-UITopicTypeManagerForm.title.Delete=Delete this topic type.
++UITopicTypeManagerForm.title.Edit=Modifier ce type de thème.
++UITopicTypeManagerForm.title.Delete=Supprimer ce type de thème.
+ 
+-UITopicTypeManagerForm.label.Icon=Icon
+-UITopicTypeManagerForm.label.TypeName=Type Name
++UITopicTypeManagerForm.label.Icon=Icône
++UITopicTypeManagerForm.label.TypeName=Nom de type
+ 
+ #############################################################################
+ #												UIBanIPForumManagerForm														  #
+@@ -524,7 +526,7 @@
+ 
+ UIBanIPForumManagerForm.label.Add=Ajouter
+ UIBanIPForumManagerForm.label.Posts=Messages
+-UIBanIPForumManagerForm.label.Filter=Filter
++UIBanIPForumManagerForm.label.Filter=Filtre
+ 
+ UIBanIPForumManagerForm.sms.ipBanRemoveFalse=IP {0} cannot be removed. 
+ UIBanIPForumManagerForm.sms.ipBanFalse=IP {0} is already existing or can not add.
+@@ -546,7 +548,7 @@
+ UISearchForm.label.InputSearchForm=
+ UISearchForm.action.Search=Rechercher
+ UISearchForm.action.Cancel=Annuler
+-UISearchForm.action.ResetField=Clear fields
++UISearchForm.action.ResetField=Réinitialiser les champs
+ UISearchForm.label.action.SearchUser=Selectionner un utilisateur
+ UISearchForm.label.SearchType=Chercher dans
+ UISearchForm.label.TopicType=Type
+@@ -581,6 +583,10 @@
+ UISearchForm.label.Posts=Messages
+ UISearchForm.label.Views=Affichages
+ 
++UISearchForm.label.Category=#{UIForumPortlet.label.category}
++UISearchForm.label.Forum=#{UIForumPortlet.label.forum}
++UISearchForm.label.Topic=#{UIForumPortlet.label.topic}
++UISearchForm.label.Post=#{UIForumPortlet.label.post}
+ 
+ UISearchForm.msg.checkEmpty=Saisissez un terme à rechercher.
+ UIQuickSearchForm.msg.checkEmpty=Saisissez un terme à rechercher.
+@@ -877,6 +883,7 @@
+ UITopicDetail.label.Message=Message
+ UITopicDetail.label.Moderation=Modération
+ UITopicDetail.label.Tag=Tagger
++UITopicDetail.label.AddTag=Ajouter une étiquette
+ UITopicDetail.label.VoteThread=Noter
+ UITopicDetail.label.SearchThisThread=Rechercher dans la discussion
+ UITopicDetail.label.ThreadTools=Autres actions
+@@ -1288,11 +1295,11 @@
+ UIAutoPruneSettingForm.label.Note=La fonction d'auto-nettoyage, permet de purger les discussions anciennes et inactives de vos forums. Les discussion nettoyées ne sont pas supprimées mais simplement désactivées.
+ UIAutoPruneSettingForm.label.topicPrun=discussions seraient nettoyées
+ 
+-AutoPruneSettingForm.label.inActiveDay=Nettoyer les discussions incatives depuis 
+-AutoPruneSettingForm.label.jobDay=Exécuter le nettoyage tous les
+-AutoPruneSettingForm.label.Day=jours
+-AutoPruneSettingForm.label.Weeks=semaines
+-AutoPruneSettingForm.label.Months=mois
++UIAutoPruneSettingForm.label.inActiveDay=Nettoyer les discussions inactives depuis
++UIAutoPruneSettingForm.label.jobDay=Exécuter le nettoyage tous les
++UIAutoPruneSettingForm.label.Day=jours
++UIAutoPruneSettingForm.label.Weeks=semaines
++UIAutoPruneSettingForm.label.Months=mois
+ 
+ UIAutoPruneSettingForm.label.Test=Tir à blanc
+ 
+@@ -1312,7 +1319,7 @@
+ UIForumChildPopupWindow.title.EditTopicTypeForm=Type de discussion
+ UIForumPopupWindow.title.EditTopicTypeForm=Type de discussion
+ 
+-UIAddTopicTypeForm.topicTypeIcon.title.SetDefault=Set Default
++UIAddTopicTypeForm.topicTypeIcon.title.SetDefault=Défaut
+ UIAddTopicTypeForm.action.Cancel=Annuler
+ UIAddTopicTypeForm.action.Save=Enregistrer
+ UIAddTopicTypeForm.label.topicTypeName=Type
+@@ -1324,4 +1331,4 @@
+ #												UIAddTopicTypeForm    														  #
+ #############################################################################
+ UIForumChildPopupWindow.title.SelectCategoryForm=Choisir des catégories
+-UISelectCategoryForm.label.ChooseDestinationCategory=Sélectionnez les catégories
+\ No newline at end of file
++UISelectCategoryForm.label.ChooseDestinationCategory=Sélectionnez les catégories
+Index: eXoApplication/forum/webapp/src/main/resources/locale/portlet/forum/ForumPortlet.properties
+===================================================================
+--- eXoApplication/forum/webapp/src/main/resources/locale/portlet/forum/ForumPortlet.properties	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/resources/locale/portlet/forum/ForumPortlet.properties	(working copy)
+@@ -122,14 +122,14 @@
+ UIPrivateMessageForm.label.SendTo=Send to
+ UIPrivateMessageForm.label.MailTitle=Title
+ UIPrivateMessageForm.label.MailMessage=Message
+-UIPrivateMessageForm.label.MessageTab=
++UIPrivateMessageForm.label.MessageTab= 
+ UIPrivateMessageForm.label.inbox=&nbsp; Inbox &nbsp;
+ UIPrivateMessageForm.label.send=Sent messages
+ UIPrivateMessageForm.label.sendMessage=Compose new message
+ UIPrivateMessageForm.label.MailList=Message
+ UIPrivateMessageForm.label.From=From
+ UIPrivateMessageForm.label.Receivedate=Received on
+-UIPrivateMessageForm.label.Action=
++UIPrivateMessageForm.label.Action= 
+ UIPrivateMessageForm.label.To=To
+ UIPrivateMessageForm.label.SendDate=Sent on
+ UIPrivateMessageForm.label.Reply=Reply
+@@ -142,7 +142,7 @@
+ #############################################################################
+ #							UIViewPrivateMessageForm 																		  #
+ #############################################################################
+-UIForumChildPopupWindow.title.UIViewPrivateMessageForm=Private Message
++UIPopupWindow.title.UIViewPrivateMessageForm=Private Message
+ 
+ #############################################################################
+ #							UIGroupSelector																							 #
+@@ -151,7 +151,11 @@
+ UIForumChildPopupWindow.title.UIUserSelector=Select a user
+ UIForumChildPopupWindow.title.UIMemberShipSelector=Select a role
+ UIForumChildPopupWindow.title.GroupSelector=Select a group
++UIPopupWindow.title.UIMemberShipSelector=Select a role
++UIPopupWindow.title.UIGroupSelector=Select a group
++UIPopupWindow.title.UIUserSelector=Select a user
+ 
++
+ UIGroupSelector.label.selectGroup=Group
+ UIGroupSelector.label.selectUser=User
+ UIGroupSelector.label.selectMemberShip=Role
+@@ -175,7 +179,7 @@
+ UICategoryForm.label.CategoryOrder=Order
+ UICategoryForm.label.Description=Description
+ UICategoryForm.label.UserPrivate=Restricted audience
+-UICategoryForm.label.category=
++UICategoryForm.label.category= 
+ UICategoryForm.label.Topicable=Who can start topics ?
+ UICategoryForm.label.Postable=Who can post ?
+ UICategoryForm.label.Viewer=Who can only view posts ?
+@@ -239,11 +243,11 @@
+ UITopicForm.action.Cancel=Cancel
+ UITopicForm.action.Attachment=Attachments
+ UITopicForm.action.RemoveAttachment=Remove
+-UITopicForm.action.AddTypeTopic=Add Topic type
+ 
+-UITopicForm.label.action.SelectUser=Select a user
+-UITopicForm.label.action.SelectMemberShip=Select a role
+-UITopicForm.label.action.SelectGroup=Select a group
++UITopicForm.label.AddTypeTopic=Add Topic type
++UITopicForm.label.SelectUser=Select a user
++UITopicForm.label.SelectMemberShip=Select a role
++UITopicForm.label.SelectGroup=Select a group
+ UITopicForm.label.None=Untyped
+ UITopicForm.label.ThreadTitle=Title
+ UITopicForm.label.editReason=Reason
+@@ -293,8 +297,7 @@
+ #										UIPostForm																						#
+ #############################################################################
+ UIForumChildPopupWindow.title.UIViewPost=View Post
+-UIForumChildPopupWindow.title.ViewPost=View Post
+-UIForumPopupWindow.title.ViewPost=View Post
++UIForumPopupWindow.title.UIViewPost=View Post
+ UIPopupWindow.title.UIViewPost=View Post
+ UIViewPost.action.Close=Close
+ UIViewPost.action.Approve=Approve
+@@ -450,6 +453,7 @@
+ 
+ UISortSettingForm.label.ascending=Ascending
+ UISortSettingForm.label.descending=Descending
++
+ #############################################################################
+ #							UICensorKeywordForm    																				#
+ #############################################################################
+@@ -470,14 +474,14 @@
+ UINotificationForm.label.notifyEmailAddNewTab=New Posts Notification
+ UINotificationForm.label.notifyEmailMoveTab=Moved Notification
+ 
+-UINotificationForm.label.notifyEmail=Notification Messgae
+-UINotificationForm.label.notifyEmailMoved=Move Notification Message
++UINotificationForm.label.notifyEmail=Content Notification
++UINotificationForm.label.notifyEmailMoved=Content Notification
+ UINotificationForm.label.enableHeaderSubject=Add a prefix to notifications
+-UINotificationForm.label.headerSubject=Subject template
++UINotificationForm.label.headerSubject=Notification subject template
+ UINotificationForm.label.notifyEmailContentDefault=Hi,</br> You receive this email because you registered for eXo Forum and Topic Watching notification.<br/>We would like to inform you that there is a new $ADD_TYPE in the $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> with the following content: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, posted by <b>$POSTER</b> .</div> Go directly to the post: $VIEWPOST_LINK <br/>Or go to reply to the post: $REPLYPOST_LINK
+ UINotificationForm.label.EmailToAuthorMoved=<p>Your $OBJECT_TYPE: "<b>$OBJECT_NAME</b>" has been moved to $OBJECT_PARENT_TYPE "<b>$OBJECT_PARENT_NAME</b>"</p><p>Go directly to the topic : $VIEWPOST_LINK</p> 
+ UINotificationForm.label.notifyEmailHeaderSubjectDefault=[$CATEGORY][$FORUM] $TOPIC
+-UINotificationForm.msg.mailContentInvalid=The notification message is required.
++UINotificationForm.msg.mailContentInvalid=The notification email is required.
+ 
+ #############################################################################
+ #							UIBBCodeManagerForm																						#
+@@ -492,6 +496,8 @@
+ UIBBCodeManagerForm.label.Active=Active
+ UIBBCodeManagerForm.label.Edit/Delete=Edit/Delete
+ UIBBCodeManagerForm.label.Option=Option
++UIBBCodeManagerForm.label.EditBBCode=Edit BBCode
++UIBBCodeManagerForm.label.DeleteBBCode=Delete BBCode
+ 
+ UIBBCodeManagerForm.msg.confirm-delete-BBCode=Are you sure you want delete this BBCode?
+ UIBBCodeManagerForm.msg.inactiveAllBBCode=Please activate at least one BBCode tag.
+@@ -504,8 +510,11 @@
+ UIRunPruneForm.action.Close=Close
+ UIAutoPruneForm.label.LastRun=Last Run
+ UIAutoPruneForm.label.Active=Active
++UIAutoPruneForm.label.PruneSetting=Prune Setting
+ 
+ UIAutoPruneForm.sms.not-set-activeDay=Please configure prune settings for this item.
++
++UIRunPruneForm.label.Warning=Warning<br/>This Forum has <keyWord> topic(s). Do you confirm to run pruning now?
+ #############################################################################
+ #							UITopicTypeManagerForm																				#
+ #############################################################################
+@@ -585,6 +594,10 @@
+ UISearchForm.label.Posts=Posts
+ UISearchForm.label.Views=Views
+ 
++UISearchForm.label.Category=#{UIForumPortlet.label.category}
++UISearchForm.label.Forum=#{UIForumPortlet.label.forum}
++UISearchForm.label.Topic=#{UIForumPortlet.label.topic}
++UISearchForm.label.Post=#{UIForumPortlet.label.post}
+ 
+ UISearchForm.msg.checkEmpty=Please enter a search term.
+ UIQuickSearchForm.msg.checkEmpty=Please enter a search term.
+@@ -882,6 +895,7 @@
+ UITopicDetail.label.Message=Message
+ UITopicDetail.label.Moderation=Moderation
+ UITopicDetail.label.Tag=Tag
++UITopicDetail.label.AddTag=Add Tag
+ UITopicDetail.label.VoteThread=Rate
+ UITopicDetail.label.SearchThisThread=Search this topic
+ UITopicDetail.label.ThreadTools=More actions
+@@ -1107,7 +1121,7 @@
+ #############################################################################
+ UICategoryInfo.label.What=What's Going on?
+ UICategoryInfo.label.CurrentUsers=Current Active Users:
+-UICategoryInfo.label.MostUsers=Maximum numer of online users was
++UICategoryInfo.label.MostUsers=Maximum number of online users was
+ UICategoryInfo.label.ForumStatistics=Forums Statistics
+ UICategoryInfo.label.TotalThreads=Total topics
+ UICategoryInfo.label.TotalPosts=Total posts
+@@ -1207,17 +1221,10 @@
+ UIExportForm.action.Save=Save
+ UIExportForm.action.Cancel=Cancel
+ UIExportForm.msg.nameFileExport=Please enter a file name for export.
+-UIForumActionBar.label.ExportCategory=Export
+ UIImportForm.msg.ObjectIsNoLonagerExist=Data no longer exists.
+  
+ 
+ #############################################################################
+-#												UIPageListPostByIP															 #
+-#############################################################################
+-UIForumChildPopupWindow.title.UIPageListPostByIP=Messages
+-UIForumAdministrationForm.label.Filter=Filtrer
+-
+-#############################################################################
+ #												UIModerationForum      														  #
+ #############################################################################
+ UIForumChildPopupWindow.title.UIModerationForum=Waiting for approval
+@@ -1285,11 +1292,11 @@
+ UIAutoPruneSettingForm.label.Note=The prune function allows to clean old and inactive topics from your forums. Pruned topics are not deleted they are set inactive.
+ UIAutoPruneSettingForm.label.topicPrun=topics would be pruned
+ 
+-AutoPruneSettingForm.label.inActiveDay=Clear topics that have been inactive for
+-AutoPruneSettingForm.label.jobDay=Run prune job every
+-AutoPruneSettingForm.label.Day=days
+-AutoPruneSettingForm.label.Weeks=weeks
+-AutoPruneSettingForm.label.Months=months
++UIAutoPruneSettingForm.label.inActiveDay=Clear topics that have been inactive for
++UIAutoPruneSettingForm.label.jobDay=Run prune job every
++UIAutoPruneSettingForm.label.Day=days
++UIAutoPruneSettingForm.label.Weeks=weeks
++UIAutoPruneSettingForm.label.Months=months
+ 
+ UIAutoPruneSettingForm.label.Test=Dry Run
+ 
+Index: eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/Stylesheet.css
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/Stylesheet.css	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/Stylesheet.css	(working copy)
+@@ -665,3 +665,8 @@
+ 	right:6px;
+ 	width:18px;
+ }
++
++.UIForumPortlet .DownArrow1Icon .THFixHidden {
++  overflow: hidden;
++  word-wrap: break-word;
++}
+Index: eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/UIForumPortlet/Stylesheet.css
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/UIForumPortlet/Stylesheet.css	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/UIForumPortlet/Stylesheet.css	(working copy)
+@@ -270,8 +270,10 @@
+ }
+ 
+ .UIForumPortlet .ContentContainer .UIGrid th {
+-	background: url(background/ForumTitleBar1x19.gif) repeat-x;
++  background: #f0f0f0 url(background/ForumTitleBar1x19.gif) repeat-x;
+ 	border: 1px solid #d2d4dc;
++  overflow: hidden;
++  word-wrap: break-word;
+ }
+ 
+ .UIForumPortlet .ContentContainer .UIGrid td {
+Index: eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/popup/UITopicForm/Stylesheet.css
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/popup/UITopicForm/Stylesheet.css	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/popup/UITopicForm/Stylesheet.css	(working copy)
+@@ -57,10 +57,13 @@
+ }
+ 
+ .UITopicForm .HorizontalLayout .ThreadOption .UIFormGrid {
+-	width: 400px;
+-	*width: 420px;
++	width: auto;
+ }
+ 
++.UITopicForm .HorizontalLayout .ThreadOption .UIFormGrid td.FieldComponent {
++	width: auto;
++}
++
+ .UITopicForm .HorizontalLayout .ThreadOption .selectbox {
+ 	float: left;
+ }
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicDetail.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicDetail.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicDetail.gtmpl	(working copy)
+@@ -563,7 +563,7 @@
+ 																			<div class="ButtonLeft">
+ 																				<div class="ButtonRight">
+ 																					<div class="ButtonMiddle">
+-																					 <div onclick="<%=uicomponent.event("AddTagTopic")%>">Add Tag</div>
++																					 <div onclick="<%=uicomponent.event("AddTagTopic")%>"><%=_ctx.appRes("UITopicDetail.label.AddTag");%></div>
+ 																					</div>
+ 																				</div>
+ 																			</div>
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UICategory.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UICategory.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UICategory.gtmpl	(working copy)
+@@ -242,8 +242,8 @@
+ 						<th style="width:30px;">&nbsp;</th>
+ 						<th><%=_ctx.appRes("UICategory.label.Forums");%></th>
+ 						<th style="width:30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
+-						<th style="width:65px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
+-						<th style="width:55px;"><%=_ctx.appRes("UICategory.label.post");%></th>
++						<th style="width:75px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
++						<th style="width:65px;"><%=_ctx.appRes("UICategory.label.post");%></th>
+ 						<% if(isShowMenu){ %>
+ 						<th style="width:30px;"><input id="UIFORUMCheckAllForum" type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
+ 						<% } %>
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicContainer.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicContainer.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UITopicContainer.gtmpl	(working copy)
+@@ -422,22 +422,30 @@
+ 								<th style="width:40px;"><div class="AttachmentIcon" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"><span></span></div></th>
+ 								<th style="width:96px;">
+ 									<div class="<%=uicomponent.getCssClassForSorting("voteRating");%>" onclick="<%=uicomponent.event("SetOrderBy","voteRating");%>">
+-										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
++									  <div class="THFixHidden" style="width: 80px;">
++									    <a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
++									  </div>
+ 									</div>
+ 								</th>
+ 								<th style="width:130px;">
+ 									<div class="<%=uicomponent.getCssClassForSorting("lastPostDate");%>" onclick="<%=uicomponent.event("SetOrderBy","lastPostDate");%>">
+-										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
++									  <div class="THFixHidden" style="width: 114px;">
++									    <a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
++									  </div>
+ 									</div>
+ 								</th>
+-								<th style="width:60px;">
++								<th style="width:80px;">
+ 									<div class="<%=uicomponent.getCssClassForSorting("postCount");%>" onclick="<%=uicomponent.event("SetOrderBy","postCount");%>">
+-										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a>
++									  <div class="THFixHidden" style="width: 64px;">
++									    <a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a>
++									  </div>
+ 									</div>
+ 								</th>
+ 								<th style="width:60px;">
+ 									<div class="<%=uicomponent.getCssClassForSorting("viewCount");%>" onclick="<%=uicomponent.event("SetOrderBy","viewCount");%>">
+-										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Views");%></a>
++									  <div class="THFixHidden" style="width: 44px;">
++									    <a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Views");%></a>
++									  </div>
+ 									</div>
+ 								</th>
+ 								<% if(canEdit) { %>
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIAutoPruneForm.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIAutoPruneForm.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIAutoPruneForm.gtmpl	(working copy)
+@@ -47,10 +47,10 @@
+ 						<td width="60px">
+ 							<div class="ActionContainer" style="margin:0px auto; width:52px;">
+ 								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
+-									 <div title="Prune Setting" class="PruneSettingIcon"><span></span></div>							
++									 <div title="<%=_ctx.appRes("UIAutoPruneForm.label.PruneSetting");%>" class="PruneSettingIcon"><span></span></div>							
+ 								</div>
+ 								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
+-									 <div title="Run" class="RunIcon"><span></span></div>							
++									 <div title="<%=_ctx.appRes("UIRunPruneForm.action.Run");%>" class="RunIcon"><span></span></div>							
+ 								</div>
+ 								<div style="clear:left;"><span></span></div>
+ 							</div>
+@@ -77,10 +77,10 @@
+ 						<td width="60px">
+ 							<div class="ActionContainer" style="margin:0px auto; width:52px;">
+ 								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
+-									 <div title="Prune Setting" class="PruneSettingIcon"><span></span></div>							
++									 <div title="<%=_ctx.appRes("UIAutoPruneForm.label.PruneSetting");%>" class="PruneSettingIcon"><span></span></div>							
+ 								</div>
+ 								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
+-									 <div title="Run" class="RunIcon"><span></span></div>							
++									 <div title="<%=_ctx.appRes("UIRunPruneForm.action.Run");%>" class="RunIcon"><span></span></div>							
+ 								</div>
+ 								<div style="clear:left;"><span></span></div>
+ 							</div>
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIPageListPostByUser.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIPageListPostByUser.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIPageListPostByUser.gtmpl	(working copy)
+@@ -32,7 +32,7 @@
+ 									</div>
+ 									</div>
+ 								</th>
+-								<th style="width:120px">
++								<th style="width:130px">
+ 									<div onclick="<%=uicomponent.event("SetOrderBy","createdDate");%>">
+ 										<div class="DownArrow1Icon" style="cursor:pointer">
+ 											<%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%>
+@@ -42,7 +42,7 @@
+ 								<%if(isAdmin){ 
+ 								    if(isShowIP) {
+ 								%>
+-									<th style="width:120px; margin:0px auto;"><%=_ctx.appRes("UIPageListPostByUser.label.IPLogging");%></th>
++									<th style="width:130px; margin:0px auto;"><%=_ctx.appRes("UIPageListPostByUser.label.IPLogging");%></th>
+ 								<%  }%>
+ 								<%} %>
+ 									<th style="width:60px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UISearchForm.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UISearchForm.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UISearchForm.gtmpl	(working copy)
+@@ -1,3 +1,6 @@
++<%
++	uicomponent.setLocale();
++%>
+ <div class="UIFormForum UIAdvancedSearchForm">
+ 	<% uiform.begin() %>
+ 		<div class="HorizontalLayout">
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl	(working copy)
+@@ -43,21 +43,33 @@
+ 								</th>
+ 								<th style="width:130px;">
+ 									<div onclick="<%=uicomponent.event("SetOrderBy","lastPostDate");%>">
+-										<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
++									  <div class="DownArrow1Icon">
++									    <div class="THFixHidden" style="width: 114px;">
++									      <%=_ctx.appRes("UITopicContainer.label.LastPosts");%>
++									    </div>
++									  </div>
+ 									</div>
+ 								</th>
+ 								<th style="width:60px;">
+ 									<div onclick="<%=uicomponent.event("SetOrderBy","postCount");%>">
+-										<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a>
++									  <div class="DownArrow1Icon">
++									    <div class="THFixHidden" style="width: 44px;">
++									      <%=_ctx.appRes("UITopicContainer.label.Replies");%>
++									    </div>
++									  </div>
+ 									</div>
+ 								</th>
+ 								<th style="width:60px;">
+ 									<div onclick="<%=uicomponent.event("SetOrderBy","viewCount");%>">
+-										<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></a>
++									  <div class="DownArrow1Icon">
++									    <div class="THFixHidden" style="width: 44px;">
++									      <%=_ctx.appRes("UITopicContainer.label.Views");%>
++									    </div>
++									  </div>
+ 									</div>
+ 								</th>
+ 								<%if(isAdmin){ %>
+-									<th style="width:40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
++								  <th style="width:50px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
+ 								<%}%>
+ 							</tr>
+ 						</thead>
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIRunPruneForm.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIRunPruneForm.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIRunPruneForm.gtmpl	(working copy)
+@@ -1,7 +1,7 @@
+ <div class="UIFormForum $uicomponent.id">
+ 	<% uiform.begin() %>
+ 		<div class="LabelConten" align="center">
+-			<span>Warning<br/>This Forum has <%= uiform.getTopicOld()%> topic(s). Do you confirm to run pruning now?</span>
++			<span><%=org.exoplatform.forum.ForumUtils.getLabel(_ctx.appRes("UIRunPruneForm.label.Warning"), (uiform.getTopicOld()+""));%></span>
+ 		</div>
+ 		<div class="UIAction"> 
+ 			<table class="ActionContainer">
+@@ -15,9 +15,7 @@
+ 							<div class="ButtonLeft">
+ 								<div class="ButtonRight">
+ 									<div class="ButtonMiddle">
+-										<a href="javascript:void(0);">
+-											$actionLabel
+-										</a>
++										<a href="javascript:void(0);">$actionLabel</a>
+ 									</div>
+ 								</div>
+ 							</div>
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIPageListPostByIP.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIPageListPostByIP.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIPageListPostByIP.gtmpl	(working copy)
+@@ -35,7 +35,11 @@
+ 									</th>
+ 									<th style="width:120px">
+ 										<div onclick="<%=uicomponent.event("SetOrderBy","createdDate");%>">
+-											<div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></div>
++										  <div class="DownArrow1Icon">
++										    <div class="THFixHidden" style="width: 114px;">
++										      <%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%>
++										    </div>
++										  </div>
+ 										</div>
+ 									</th>
+ 									<th style="width:40px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
+@@ -63,9 +67,9 @@
+ 										<td class="Tdbox">
+ 										<%
+ 											if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())){%>
+-												<%=_ctx.appRes("UIPageListPostByIP.label.Topic");%>
++												<%=_ctx.appRes("UIForumPortlet.label.topic");%>
+ 										<%} else {%>
+-												<%=_ctx.appRes("UIPageListPostByIP.label.Post");%>
++												<%=_ctx.appRes("UIForumPortlet.label.post");%>
+ 										<%}
+ 										%>
+ 										</td>
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIAutoPruneSettingForm.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIAutoPruneSettingForm.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIAutoPruneSettingForm.gtmpl	(working copy)
+@@ -20,7 +20,7 @@
+ 						</tr>
+ 						<tr>
+ 							<td colspan="3">
+-								<div class="UIAction" style="width:100px;  float:left;"> 
++								<div class="UIAction" style="max-width:115px;  float:left;"> 
+ 									<table class="ActionContainer">
+ 										<tr>
+ 											<td align="center">
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIMoveTopicForm.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIMoveTopicForm.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIMoveTopicForm.gtmpl	(working copy)
+@@ -6,7 +6,7 @@
+ 
+ <div class="UIMoveTopicForm">
+ 	<% uiform.begin() %>
+-	<div class="TitleMoveThreads">Choose a Destination Forum:</div>
++	<div class="TitleMoveThreads"><%=_ctx.appRes("UISelectItemForum.label.ChooseDestinationForum")%>:</div>
+ 	<div class="UITree ScrollArea">
+ 		<div class="TreeContainer ParentNode">
+ 		<% 
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIBBCodeManagerForm.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIBBCodeManagerForm.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/popup/UIBBCodeManagerForm.gtmpl	(working copy)
+@@ -40,10 +40,10 @@
+ 					<td style="width:60px;text-align:center">
+ 						<div class="ActionContainer" style="margin:0px auto; width:42px;">
+ 							<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("EditBBCode", bbcodeId)%>">
+-								 <div title="Edit BBCode" class="Icon16x16 EditIcon"><span></span></div>							
++								 <div title="<%=_ctx.appRes("UIBBCodeManagerForm.label.EditBBCode");%>" class="Icon16x16 EditIcon"><span></span></div>							
+ 							</div>
+ 							<div style="cursor:pointer; float:left; margin:2px;" onclick="if(confirm('<%=_ctx.appRes("UIBBCodeManagerForm.msg.confirm-delete-BBCode")%>')){<%=uiform.event("DeleteBBCode", bbcodeId)%>;}">
+-								 <div title="Delete BBCode" class="Icon16x16 DeleteIcon"><span></span></div>							
++								 <div title="<%=_ctx.appRes("UIBBCodeManagerForm.label.DeleteBBCode");%>" class="Icon16x16 DeleteIcon"><span></span></div>							
+ 							</div>
+ 							<div style="clear:left;"><span></span></div>
+ 						</div>
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UICategories.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UICategories.gtmpl	(revision 70049)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UICategories.gtmpl	(working copy)
+@@ -103,8 +103,8 @@
+ 									<th style="width:30px;">&nbsp;</th>
+ 									<th><%=_ctx.appRes("UICategory.label.Forums");%></th>
+ 									<th style="width:30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
+-									<th style="width:50px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
+-									<th style="width:50px;"><%=_ctx.appRes("UICategory.label.post");%></th>
++									<th style="width:75px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
++									<th style="width:65px;"><%=_ctx.appRes("UICategory.label.post");%></th>
+ 								</tr>
+ 							</thead>
+ 							<tbody>
+Index: web/ksResources/src/main/webapp/javascript/eXo/ks/UIDateTimePicker.js
+===================================================================
+--- web/ksResources/src/main/webapp/javascript/eXo/ks/UIDateTimePicker.js	(revision 70049)
++++ web/ksResources/src/main/webapp/javascript/eXo/ks/UIDateTimePicker.js	(working copy)
+@@ -1,24 +1,51 @@
+ UIDateTimePicker = function(calendarId) {
+ 	this.calendarId = calendarId ;
+-  this.dateField = null ;
+-  this.currentDate = null ; 	// Datetime value base of selectedDate for displaying calendar below
+-  														// if selectedDate is invalid, currentDate deals with system time;
+-  this.selectedDate = null ; //Datetime value of input date&time field
+-  this.months = ['January','February','March','April','May','June','July','August','September','October','November','December'] ;
++	this.dateField = null ;
++	this.currentDate = null ; 	// Datetime value base of selectedDate for displaying calendar below
++															// if selectedDate is invalid, currentDate deals with system time;
++	this.selectedDate = null ; //Datetime value of input date&time field
++	this.months = ['January','February','March','April','May','June','July','August','September','October','November','December'] ;
++	this.weekdays = ['S','M','T','W','T','F','S'] ;
++	this.tooltip = ['Previous Year', 'Previous Month', 'Next Month', 'Next Year'];
++	this.pathResource = "/ksResources/javascript/eXo/ks/lang/";
++	this.lang = "";
++	this.fistWeekDay = 0; // sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 
+ }
+ 
++UIDateTimePicker.prototype.getLang = function() {
++	try {
++	  var day = this.dateField.getAttribute('fistweekday');
++	  if (day) this.fistWeekDay = day * 1 - 1; // attribute 'fistweekday' includes: sunday: 1, monday: 2,..., saturday: 7 
++		var lang = this.dateField.getAttribute('lang'); 
++		if (this.lang == lang) 
++			return;
++		this.lang = lang;
++		var languages = eval(ajaxAsyncGetRequest(this.pathResource + this.lang.toLowerCase() + ".js", false));
++		if (!languages || (typeof(languages) != "object")) 
++			return;
++	this.months = languages[0];
++	this.weekdays = languages[1];
++	this.tooltip = languages[2];
++	} 
++	catch (e) {}
++} ;
++
+ UIDateTimePicker.prototype.init = function(field, isDisplayTime) {
+ 	this.isDisplayTime = isDisplayTime ;
+ 	if (this.dateField) {
+ 		this.dateField.parentNode.style.position = '' ;
+ 	}
+ 	this.dateField = field ;
+-	if (!document.getElementById(this.calendarId)) this.create() ;
++	eXo.ks.UIDateTimePicker.getLang() ;
++	if (!document.getElementById(this.calendarId)) {
++		this.create() ;
++	}
+ //	field.parentNode.style.position = 'relative' ;
+-  field.parentNode.insertBefore(document.getElementById(this.calendarId), field) ;
+-  this.show() ;
++	field.parentNode.insertBefore(document.getElementById(this.calendarId), field) ;
++	this.show() ;
+ };
+ 
++
+ UIDateTimePicker.prototype.create = function() {
+ 	var clndr = document.createElement("div") ;
+ 	clndr.id = this.calendarId ;
+@@ -34,38 +61,38 @@
+ UIDateTimePicker.prototype.show = function() {
+ 	document.onmousedown = new Function('eXo.ks.UIDateTimePicker.hide()') ;
+ 	var re = /^(\d{1,2}\/\d{1,2}\/\d{1,4})\s*(\s+\d{1,2}:\d{1,2}:\d{1,2})?$/i ;
+-  this.selectedDate = new Date() ;
++	this.selectedDate = new Date() ;
+ 	if (re.test(this.dateField.value)) {
+-	  var dateParts = this.dateField.value.split(" ") ;
+-	  var arr = dateParts[0].split("/") ;
+-	  this.selectedDate.setMonth(parseInt(arr[0],10) - 1) ;
+-	  this.selectedDate.setDate(parseInt(arr[1],10)) ;
+-	  this.selectedDate.setFullYear(parseInt(arr[2],10)) ;
+-	  if (dateParts.length > 1 && dateParts[dateParts.length - 1] != "") {
+-	  	arr = dateParts[dateParts.length - 1].split(":") ;
+-	  	this.selectedDate.setHours(arr[0], 10) ;
+-	  	this.selectedDate.setMinutes(arr[1], 10) ;
+-	  	this.selectedDate.setSeconds(arr[2], 10) ;
+-	  }
++		var dateParts = this.dateField.value.split(" ") ;
++		var arr = dateParts[0].split("/") ;
++		this.selectedDate.setMonth(parseInt(arr[0],10) - 1) ;
++		this.selectedDate.setDate(parseInt(arr[1],10)) ;
++		this.selectedDate.setFullYear(parseInt(arr[2],10)) ;
++		if (dateParts.length > 1 && dateParts[dateParts.length - 1] != "") {
++			arr = dateParts[dateParts.length - 1].split(":") ;
++			this.selectedDate.setHours(arr[0], 10) ;
++			this.selectedDate.setMinutes(arr[1], 10) ;
++			this.selectedDate.setSeconds(arr[2], 10) ;
++		}
+ 	}
+-  var fieldDateTime = eXo.core.DOMUtil.findFirstDescendantByClass(this.dateField.parentNode, "input","DateTimeInput") ;
++	var fieldDateTime = eXo.core.DOMUtil.findFirstDescendantByClass(this.dateField.parentNode, "input","DateTimeInput") ;
+ 	this.currentDate = new Date(this.selectedDate.valueOf()) ;
+-  var clndr = document.getElementById(this.calendarId) ;
+-  clndr.firstChild.lastChild.innerHTML = this.renderCalendar() ;
+-  var x = 0 ; 
+-  //var y = this.dateField.offsetHeight ;
+-  var y = fieldDateTime.offsetHeight ;
+-  if(eXo.core.Browser.getBrowserType() == "ie")  {
+-    x = -(eXo.core.Browser.findPosX(this.dateField) - eXo.core.Browser.findPosX(fieldDateTime)+this.dateField.offsetWidth);
+-  }
+-  with (clndr.firstChild.style) {
+-  	display = 'block' ;
+-	  left = x+"px";
+-	  top = y +2+ "px" ;
+-  }
++	var clndr = document.getElementById(this.calendarId) ;
++	clndr.firstChild.lastChild.innerHTML = this.renderCalendar() ;
++	var x = 0 ; 
++	//var y = this.dateField.offsetHeight ;
++	var y = fieldDateTime.offsetHeight ;
++	if(eXo.core.Browser.getBrowserType() == "ie")	{
++		x = -(eXo.core.Browser.findPosX(this.dateField) - eXo.core.Browser.findPosX(fieldDateTime)+this.dateField.offsetWidth);
++	}
++	with (clndr.firstChild.style) {
++		display = 'block' ;
++		left = x+"px";
++		top = y +2+ "px" ;
++	}
+ 
+ 	var drag = document.getElementById("BlockCaledar");
+-	var component =  eXo.core.DOMUtil.findAncestorByClass(drag, "UICalendarComponent");
++	var component =	eXo.core.DOMUtil.findAncestorByClass(drag, "UICalendarComponent");
+ 	var calendar = eXo.core.DOMUtil.findFirstChildByClass(drag, "div", "UICalendar");
+ 	var innerWidth = drag.offsetWidth;
+ 	drag.onmousedown = function(evt) {
+@@ -80,66 +107,75 @@
+ };
+ 
+ UIDateTimePicker.prototype.hide = function() {
+-  if (this.dateField) {
+-    document.getElementById(this.calendarId).firstChild.style.display = 'none' ;
++	if (this.dateField) {
++		document.getElementById(this.calendarId).firstChild.style.display = 'none' ;
+ //		this.dateField.parentNode.style.position = '' ;
+-    this.dateField = null ;
+-  }
++		this.dateField = null ;
++	}
+  	document.onmousedown = null ;
+ };
+ 
+ /* TODO: Move HTML code to a javascript template file (.jstmpl) */
+ UIDateTimePicker.prototype.renderCalendar = function() {
+-  var dayOfMonth = 1 ;
+-  var validDay = 0 ;
+-  var startDayOfWeek = this.getDayOfWeek(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, dayOfMonth) ;
+-  var daysInMonth = this.getDaysInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth()) ;
+-  var clazz = null;
++	var dayOfMonth = 1 ;
++	var validDay = 0 ;
++	var startDayOfWeek = this.getDayOfWeek(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, dayOfMonth) ;
++	var daysInMonth = this.getDaysInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth()) ;
++	var clazz = null;
++	var dayIdx = this.fistWeekDay;
+ 	var table = '<div id="BlockCaledar" class="BlockCalendar">' ;
+ 	table += 		'<div class="UICalendar" onmousedown="event.cancelBubble = true">' ;
+ 	table += 		'	<table class="MonthYearBox">' ;
+-	table += 		'	  <tr>' ;
+-	table += 		'			<td class="MonthButton"><a class="PreviousMonth" href="javascript:eXo.ks.UIDateTimePicker.changeMonth(-1);"></a></td>' ;
+-	table += 		'			<td class="YearButton"><a class="PreviousYear" href="javascript:eXo.ks.UIDateTimePicker.changeYear(-1);"></a></td>' ;
++	table += 		'		<tr>' ;
++	table += 		'			<td class="MonthButton"><a class="PreviousMonth" title="' + this.tooltip[1]+ '" href="javascript:eXo.ks.UIDateTimePicker.changeMonth(-1);"></a></td>' ;
++	table += 		'			<td class="YearButton"><a class="PreviousYear" title="' + this.tooltip[0]+ '" href="javascript:eXo.ks.UIDateTimePicker.changeYear(-1);"></a></td>' ;
+ 	table += 		'			<td><font color="#f89302">' + this.months[this.currentDate.getMonth()] + '</font> - ' + this.currentDate.getFullYear() + '</td>' ;
+-	table += 		'			<td class="YearButton"><a class="NextYear" href="javascript:eXo.ks.UIDateTimePicker.changeYear(1);"></a></td>' ;
+-	table += 		'			<td class="MonthButton"><a class="NextMonth" href="javascript:eXo.ks.UIDateTimePicker.changeMonth(1);"></a></td>' ;
++	table += 		'			<td class="YearButton"><a class="NextYear" title="' + this.tooltip[3]+ '" href="javascript:eXo.ks.UIDateTimePicker.changeYear(1);"></a></td>' ;
++	table += 		'			<td class="MonthButton"><a class="NextMonth" title="' + this.tooltip[2]+ '" href="javascript:eXo.ks.UIDateTimePicker.changeMonth(1);"></a></td>' ;
+ 	table += 		'		</tr>' ;
+ 	table += 		'	</table>' ;
+ 	table += 		'	<div style="margin-top: 6px;padding: 0px 5px;">' ;
+ 	table += 		'		<table>' ;
+ 	table += 		'			<tr>' ;
+-	table += 		'				<td><font color="red">S</font></td><td>M</td><td>T</td><td>W</td><td>T</td><td>F</td><td>S</td>' ;
++	for (var i = 0; i < 7; i++) {
++	 if (dayIdx == 0) {
++	   table += '       <td><font color="red">' + this.weekdays[dayIdx] + '</font></td>';
++	 } else {
++	   table += '       <td><font>' + this.weekdays[dayIdx] + '</font></td>';
++	 }
++	 dayIdx = ++dayIdx % 7;
++	}
+ 	table += 		'			</tr>' ;
+ 	table += 		'		</table>' ;
+ 	table += 		'	</div>' ;
+ 	table += 		'	<div class="CalendarGrid">' ;
+ 	table += 		'	<table>' ;
+-  for (var week=0; week < 6; week++) {
+-    table += "<tr>";
+-    for (var dayOfWeek=0; dayOfWeek < 7; dayOfWeek++) {
+-      if (week == 0 && startDayOfWeek == dayOfWeek) {
+-        validDay = 1;
+-      } else if (validDay == 1 && dayOfMonth > daysInMonth) {
+-        validDay = 0;
+-      }
+-      if (validDay) {
+-        if (dayOfMonth == this.selectedDate.getDate() && this.currentDate.getFullYear() == this.selectedDate.getFullYear() && this.currentDate.getMonth() == this.selectedDate.getMonth()) {
+-          clazz = 'Current';
+-        } else if (dayOfWeek == 0 || dayOfWeek == 6) {
+-          clazz = 'Weekend';
+-        } else {
+-          clazz = 'Weekday';
+-        }
++	for (var week=0; week < 6; week++) {
++		table += "<tr>";
++		for (var dayOfWeek=0; dayOfWeek < 7; dayOfWeek++) {
++		  var currentWeekDay = (dayOfWeek + this.fistWeekDay) % 7;
++			if (week == 0 && startDayOfWeek == currentWeekDay) {
++				validDay = 1;
++			} else if (validDay == 1 && dayOfMonth > daysInMonth) {
++				validDay = 0;
++			}
++			if (validDay) {
++				if (dayOfMonth == this.selectedDate.getDate() && this.currentDate.getFullYear() == this.selectedDate.getFullYear() && this.currentDate.getMonth() == this.selectedDate.getMonth()) {
++					clazz = 'Current';
++				} else if (dayOfWeek == 0 || dayOfWeek == 6) {
++					clazz = 'Weekend';
++				} else {
++					clazz = 'Weekday';
++				}
+ 
+-        table = table + "<td><a class='"+clazz+"' href=\"javascript:eXo.ks.UIDateTimePicker.setDate("+this.currentDate.getFullYear()+","+(this.currentDate.getMonth() + 1)+","+dayOfMonth+")\">"+dayOfMonth+"</a></td>" ;
+-        dayOfMonth++ ;
+-      } else {
+-        table = table + "<td class='empty'><div>&nbsp;</div></td>" ;
+-      }
+-    }
+-    table += "</tr>" ;
+-  }		
++				table = table + "<td><a class='"+clazz+"' href=\"javascript:eXo.ks.UIDateTimePicker.setDate("+this.currentDate.getFullYear()+","+(this.currentDate.getMonth() + 1)+","+dayOfMonth+")\">"+dayOfMonth+"</a></td>" ;
++				dayOfMonth++ ;
++			} else {
++				table = table + "<td class='empty'><div>&nbsp;</div></td>" ;
++			}
++		}
++		table += "</tr>" ;
++	}		
+ 	table += 		'		</table>' ;
+ 	table += 		'	</div>' ;
+ 	if (this.isDisplayTime) {
+@@ -163,32 +199,32 @@
+ UIDateTimePicker.prototype.changeMonth = function(change) {
+ 	this.currentDate.setDate(1);
+ 	this.currentDate.setMonth(this.currentDate.getMonth() + change) ;
+-  var clndr = document.getElementById(this.calendarId) ;
+-  clndr.firstChild.lastChild.innerHTML = this.renderCalendar() ;
++	var clndr = document.getElementById(this.calendarId) ;
++	clndr.firstChild.lastChild.innerHTML = this.renderCalendar() ;
+ };
+ 
+ UIDateTimePicker.prototype.changeYear = function(change) {
+-  this.currentDate.setFullYear(this.currentDate.getFullYear() + change) ;
+-  this.currentDay = 0 ;
+-  var clndr = document.getElementById(this.calendarId) ;
+-  clndr.firstChild.lastChild.innerHTML = this.renderCalendar() ;
++	this.currentDate.setFullYear(this.currentDate.getFullYear() + change) ;
++	this.currentDay = 0 ;
++	var clndr = document.getElementById(this.calendarId) ;
++	clndr.firstChild.lastChild.innerHTML = this.renderCalendar() ;
+ };
+ 
+ UIDateTimePicker.prototype.setDate = function(year, month, day) {	
+-  if (this.dateField) {
+-    if (month < 10) month = "0" + month ;
+-    if (day < 10) day = "0" + day ;
+-    var dateString = month + "/" + day + "/" + year ;
+-    if (!this.currentHours) this.currentHours = new Date().getHours() ;
+-    if (!this.currentMinutes) this.currentMinutes = new Date().getMinutes() ;
+-    if (!this.currentSeconds) this.currentSeconds = new Date().getSeconds() ;
+-    if(this.isDisplayTime) dateString += " " + this.currentHours + ":" + this.currentMinutes + ":" + this.currentSeconds ;
+-    var objRoot = this.dateField.parentNode;
+-    var fielDateTime = eXo.core.DOMUtil.findFirstDescendantByClass(objRoot, "input","DateTimeInput") ; 
+-    fielDateTime.value = dateString ;
+-    this.hide() ;
+-  }
+-  return ;
++	if (this.dateField) {
++		if (month < 10) month = "0" + month ;
++		if (day < 10) day = "0" + day ;
++		var dateString = month + "/" + day + "/" + year ;
++		if (!this.currentHours) this.currentHours = new Date().getHours() ;
++		if (!this.currentMinutes) this.currentMinutes = new Date().getMinutes() ;
++		if (!this.currentSeconds) this.currentSeconds = new Date().getSeconds() ;
++		if(this.isDisplayTime) dateString += " " + this.currentHours + ":" + this.currentMinutes + ":" + this.currentSeconds ;
++		var objRoot = this.dateField.parentNode;
++		var fielDateTime = eXo.core.DOMUtil.findFirstDescendantByClass(objRoot, "input","DateTimeInput") ; 
++		fielDateTime.value = dateString ;
++		this.hide() ;
++	}
++	return ;
+ };
+ 
+ UIDateTimePicker.prototype.setSeconds = function(object) {
+@@ -199,7 +235,7 @@
+ 				return;
+ 			}
+ //			this.currentHours = this.currentDate.getHours() ;
+-//    	this.currentMinutes = this.currentDate.getMinutes() ;
++//			this.currentMinutes = this.currentDate.getMinutes() ;
+ 			if(seconds.length < 2) seconds = "0" + seconds;
+ 			var timeString = this.currentDate.getHours() + ":" + this.currentDate.getMinutes() + ":" + seconds;
+ 			this.currentDate.setSeconds(seconds);
+@@ -241,7 +277,7 @@
+ 				return;
+ 			}
+ //			this.currentMinutes = this.currentDate.getMinutes() ;
+-//    	this.currentSeconds = this.currentDate.getSeconds() ;
++//			this.currentSeconds = this.currentDate.getSeconds() ;
+ 			if(hour.length < 2) hour = "0" + hour;
+ 			this.currentDate.setHours(hour);
+ 			var timeString = hour + ":" + this.currentDate.getMinutes() + ":" + this.currentDate.getSeconds();
+@@ -255,27 +291,17 @@
+ };
+ 
+ UIDateTimePicker.prototype.clearDate = function() {
+-  this.dateField.value = '' ;
+-  this.hide() ;
++	this.dateField.value = '' ;
++	this.hide() ;
+ };
+ 
+ UIDateTimePicker.prototype.getDayOfWeek = function(year, month, day) {
+-  var date = new Date(year, month - 1, day) ;
+-  return date.getDay() ;
++	var date = new Date(year, month - 1, day) ;
++	return date.getDay() ;
+ };
+ 
+ UIDateTimePicker.prototype.getDaysInMonth = function(year, month) {
+ 	return [31, ((!(year % 4 ) && ( (year % 100 ) || !( year % 400 ) ))? 29:28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+ };
+ 
+-//UIDateTimePicker.prototype.getChangedTime = function(input, type) {
+-//	var time = input.value ;
+-//	if (isNaN(time)) {
+-//		return ; 
+-//	}
+-//	if (type == 'h') this.currentHours = time ;
+-//	else if (type == 'm') this.currentMinutes = time ;
+-//	else if (type == 's') this.currentSeconds = time ;
+-//}
+-
+ eXo.ks.UIDateTimePicker = new UIDateTimePicker('UICalendarControl') ;
+\ No newline at end of file

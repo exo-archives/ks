@@ -1,3 +1,6 @@
+<%
+	uicomponent.setLocale();
+%>
 <div class="UIFormForum UIAdvancedSearchForm">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout">

@@ -1,4 +1,7 @@
-<%import org.exoplatform.faq.webui.FAQUtils;%>
+<%
+	import org.exoplatform.faq.webui.FAQUtils;
+	uicomponent.setLanguages();
+%>
 <div class="UIQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout" style="padding:10px 0px;">

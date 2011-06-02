@@ -20,7 +20,7 @@
 						</tr>
 						<tr>
 							<td colspan="3">
-								<div class="UIAction" style="width:100px;  float:left;"> 
+								<div class="UIAction" style="max-width:115px;  float:left;"> 
 									<table class="ActionContainer">
 										<tr>
 											<td align="center">

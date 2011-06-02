@@ -1,7 +1,7 @@
 <div class="UIFormForum $uicomponent.id">
 	<% uiform.begin() %>
 		<div class="LabelConten" align="center">
-			<span>Warning<br/>This Forum has <%= uiform.getTopicOld()%> topic(s). Do you confirm to run pruning now?</span>
+			<span><%=org.exoplatform.forum.ForumUtils.getLabel(_ctx.appRes("UIRunPruneForm.label.Warning"), (uiform.getTopicOld()+""));%></span>
 		</div>
 		<div class="UIAction"> 
 			<table class="ActionContainer">
@@ -15,9 +15,7 @@
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
-										<a href="javascript:void(0);">
-											$actionLabel
-										</a>
+										<a href="javascript:void(0);">$actionLabel</a>
 									</div>
 								</div>
 							</div>

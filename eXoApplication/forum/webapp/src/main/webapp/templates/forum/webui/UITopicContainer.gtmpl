@@ -422,22 +422,30 @@
 								<th style="width:40px;"><div class="AttachmentIcon" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"><span></span></div></th>
 								<th style="width:96px;">
 									<div class="<%=uicomponent.getCssClassForSorting("voteRating");%>" onclick="<%=uicomponent.event("SetOrderBy","voteRating");%>">
-										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
+									  <div class="THFixHidden" style="width: 80px;">
+									    <a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
+									  </div>
 									</div>
 								</th>
 								<th style="width:130px;">
 									<div class="<%=uicomponent.getCssClassForSorting("lastPostDate");%>" onclick="<%=uicomponent.event("SetOrderBy","lastPostDate");%>">
-										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
+									  <div class="THFixHidden" style="width: 114px;">
+									    <a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
+									  </div>
 									</div>
 								</th>
-								<th style="width:60px;">
+								<th style="width:80px;">
 									<div class="<%=uicomponent.getCssClassForSorting("postCount");%>" onclick="<%=uicomponent.event("SetOrderBy","postCount");%>">
-										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a>
+									  <div class="THFixHidden" style="width: 64px;">
+									    <a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a>
+									  </div>
 									</div>
 								</th>
 								<th style="width:60px;">
 									<div class="<%=uicomponent.getCssClassForSorting("viewCount");%>" onclick="<%=uicomponent.event("SetOrderBy","viewCount");%>">
-										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Views");%></a>
+									  <div class="THFixHidden" style="width: 44px;">
+									    <a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Views");%></a>
+									  </div>
 									</div>
 								</th>
 								<% if(canEdit) { %>

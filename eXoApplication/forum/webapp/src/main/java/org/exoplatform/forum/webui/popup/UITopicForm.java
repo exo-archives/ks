@@ -169,7 +169,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 		
 		setTopicType();
 		ls = new ArrayList<SelectItemOption<String>>();
-		ls.add(new SelectItemOption<String>("none", getLabel("None")));
+		ls.add(new SelectItemOption<String>(getLabel("None"), "none"));
 		for (TopicType topicType : listTT) {
 			ls.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
     }
@@ -299,7 +299,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 	public void addNewTopicType() throws Exception {
 		setTopicType();
 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>("none", getLabel("None")));
+		ls.add(new SelectItemOption<String>(getLabel("None"), "none"));
 		for (TopicType topicType : listTT) {
 			ls.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
     }
