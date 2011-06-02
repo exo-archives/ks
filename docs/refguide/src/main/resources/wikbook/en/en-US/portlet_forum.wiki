@@ -1,4 +1,4 @@
-h1. Overview
+h1. Overview {anchor:id=KSref.ForumPortlet.Overview}
 
 || Portlet name || War name || Description ||
 | *ForumPortlet* | forum.war | The Forum portlet is the application for users to post and read messages on different topics. |
@@ -14,10 +14,10 @@ h1. Overview
 	</portlet-application>
 {code}	
 
-h1. Portlet.xml
+h1. Portlet.xml {anchor:id=KSref.FoumPortlet.ForumPortletxml}
 * See the portlet.xml file in the project following this path: forum/WEB-INF/portlet.xml.
 	
-h1. Preferences
+h1. Preferences {anchor:id=KSref.ForumPortlet.ForumPortletPreferences}
 
 || Preference name || Possible value || Default value || Description ||
 | *useAjax* | {{true}}, {{false}} | {{true}} | To define if links in the Forum will be plain hrefs or javascript ajax (better for SEO) or not. |
@@ -37,7 +37,7 @@ h1. Preferences
 | *isShowStatistics* | {{true}}, {{false}} | {{true}} | To specify if the statistics panel is shown or not. |
 
 
-h1. Events
+h1. Events {anchor:id=KSref.ForumPortlet.Event}
 
 || *Name* || *Description* ||
 | *ForumLinkEvent* | To set the render for UIForumLinkPortlet and set values for UIForumLinks. |
@@ -48,7 +48,7 @@ h1. Events
 | *ForumRuleEvent* | To setRender for UIForumRulePortlet. |
 | *QuickReplyEvent* | To setRender for UIForumQuickReplyPortlet. |
 
-h2. ForumLinkEvent
+h2. ForumLinkEvent {anchor:id=KSref.ForumPortlet.ForumLinkEvent}
 This event is fired through UIForumLinkPortlet. 
 
 To receive ForumLinkEvent, you must use the _ForumParameter_ class with two properties:
@@ -72,7 +72,7 @@ String path = forum.getPath();
 	actionRes.setEvent(new QName("ForumLinkEvent"), param) ;
 {code}
 
-h2. ReLoadPortletEvent
+h2. ReLoadPortletEvent {anchor:id=KSref.ForumPortlet.ReLoadPortletEvent}
 This event is fired through UIForumPortlet. 
 
 To receive ReLoadPortletEvent, you must use the _ForumParameter_ class with two properties:
@@ -90,7 +90,7 @@ To receive ReLoadPortletEvent, you must use the _ForumParameter_ class with two 
 		actionRes.setEvent(new QName("ReLoadPortletEvent"), param) ;
 {code}
 
-h2. OpenLink
+h2. OpenLink {anchor:id=KSref.ForumPortlet.OpenLink}
 This event is fired through UIForumPortlet. 
 
 To receive OpenLink, you must use the _ForumParameter_ class with one property:
@@ -106,7 +106,7 @@ To receive OpenLink, you must use the _ForumParameter_ class with one property:
 		actionRes.setEvent(new QName("OpenLink"), param) ; 
 {code}
 
-h2. ForumPollEvent
+h2. ForumPollEvent {anchor:id=KSref.ForumPortlet.ForumPollEvent}
 This event is fired through UIForumPollPortlet.
 
 To receive ForumPollEvent, you must use the _ForumParameter_ class with four properties:
@@ -127,7 +127,7 @@ To receive ForumPollEvent, you must use the _ForumParameter_ class with four pro
 	param.setRenderPoll(topic.getIsPoll());
 	actionRes.setEvent(new QName("ForumPollEvent"), param);
 {code}
-h2. ForumModerateEvent
+h2. ForumModerateEvent {anchor:id=KSref.ForumPortlet.ForumModerateEvent}
 This event is fired through UIForumModeratePortlet.
 
 To receive ForumModerateEvent, you must use the _ForumParameter_ class with two properties:
@@ -146,7 +146,7 @@ To receive ForumModerateEvent, you must use the _ForumParameter_ class with two 
 	actionRes.setEvent(new QName("ForumPollEvent"), param);
 {code}
 
-h2. ForumRuleEvent
+h2. ForumRuleEvent {anchor:id=KSref.ForumPortlet.ForumRuleEvent}
 This event is fired through UIForumRulePortlet.
 
 To receive ForumRuleEvent, you must use the _ForumParameter_ class with two properties:
@@ -173,7 +173,7 @@ To receive ForumRuleEvent, you must use the _ForumParameter_ class with two prop
 	actionRes.setEvent(new QName("ForumRuleEvent"), param) ;
 {code}
 
-h2. QuickReplyEvent
+h2. QuickReplyEvent {anchor:id=KSref.ForumPortlet.QuickReplyEvent}
 This event is fired through UIQuickReplyPortlet.
 
 To receive QuickReplyEvent, you must use the _ForumParameter_ class with five properties:

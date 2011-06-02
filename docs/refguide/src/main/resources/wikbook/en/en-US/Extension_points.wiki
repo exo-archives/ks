@@ -1,12 +1,12 @@
 There are some extension points in eXo Knowledge, so that you can control how these components work by implementing or extending default implementations, then reconfigure these new components in the _configuration.xml_ file.
 
 
-h1. ForumEventLifeCycle
-h2. Overview
+h1. ForumEventLifeCycle {anchor:id=KSref.ExtensionPoints.ForumEventLifeCycle}
+h2. Overview {anchor:id=KSref.ExtensionPoints.ForumEventLifeCycle.Overview}
 
 {{ForumEventLifeCycle}} enables you to listen to the lifecycle of a forum. By implementing ForumEventLifeCycle, you can be notified of new posts and replies, categories and topics. This installation will be injected when the data flow is called to save data. 
 
-h2. Configuration plug-in
+h2. Configuration plug-in {anchor:id=KSref.ExtensionPoints.ForumEventLifeCycleConfiguration}
 
 You can find the configuration file of this component at: _ext/social-integration/src/main/resources/conf/portal/configuration.xml_.
 
@@ -22,7 +22,7 @@ For example, to add a Forum to a space of the Social application and keep new ac
 </external-component-plugins>
 {code}
 
-h2. Tutorial
+h2. Tutorial {anchor:id=KSref.ExtensionPoints.ForumEventLifeCycleTutorial}
 To use *ForumEventLifeCycle* class, do the following steps:
 
 *Step 1*: Create a new class that extends _ForumEventListener_.
@@ -89,11 +89,11 @@ To use *ForumEventLifeCycle* class, do the following steps:
 {code}
 
 
-h1. AnswerEventLifeCycle
-h2. Overview
+h1. AnswerEventLifeCycle {anchor:id=KSref.ExtensionPoints.AnswerEventLifeCycle}
+h2. Overview {anchor:id=KSref.ExtensionPoints.AnswerEventLifeCycle.Overview}
 {{AnswerEventLifeCycle}} installs event updates for the Answers data that is injected while saving answers, saving questions or posting comments.
 
-h2. Configuration plug-in
+h2. Configuration plug-in {anchor:id=KSref.ExtensionPoints.AnswerEventLifeCycleConfiguration}
 
 You can find the configuration file of this component at:_ext/social-integration/src/main/resources/conf/portal/configuration.xml_.
 
@@ -111,7 +111,7 @@ For example, to add Answers to a space of the Social application and keep new ac
 
 In which, {{AnswersSpaceActivityPublisher}} is the class to implement {{ForumEventLifeCycle}}.
 
-h2. Tutorial
+h2. Tutorial {anchor:id=KSref.ExtensionPoints.AnswerEventLifeCycleTutorial}
 
 To use *AnswerEventLifeCycle* class, do the following steps:
 
@@ -168,7 +168,7 @@ To use *AnswerEventLifeCycle* class, do the following steps:
 </external-component-plugins>
 {code}
 
-h1. BBCodeRenderer
+h1. BBCodeRenderer {anchor:id=KSref.ExtensionPoints.BBCodeRenderer}
 
 {{BBCodeRenderer}} is used in the core of eXo Knowledge to render BBCodes. In which, the data input is text, containing BBCode tags. The data output will be BBCode tags which have been encrypted into HTML tags.
 
