@@ -31,6 +31,7 @@ import org.chromattic.api.annotations.WorkspaceName;
 import org.chromattic.ext.ntdef.NTFile;
 import org.chromattic.ext.ntdef.Resource;
 import org.exoplatform.wiki.mow.api.Attachment;
+import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.utils.Utils;
 
@@ -97,14 +98,37 @@ public abstract class AttachmentImpl extends NTFile implements Attachment {
   
   public String getDownloadURL() {
     StringBuilder sb = new StringBuilder();
-    sb.append(Utils.getDefaultRepositoryWebDavUri());
-    sb.append(getWorkspace());
-    String path = getPath();
-    try {
-      String parentPath = path.substring(0, path.lastIndexOf("/"));
-      sb.append(parentPath + "/" + URLEncoder.encode(getName(), "UTF-8"));
-    } catch (UnsupportedEncodingException e) {
-      sb.append(path);
+    String mimeType = getContentResource().getMimeType();
+    boolean isImage = false;
+    if (mimeType != null && mimeType.startsWith("image/")) {
+      isImage = true;
+    }
+    if (isImage) {
+      PageImpl page = this.getParentPage();
+      Wiki wiki = page.getWiki();
+      sb.append(Utils.getDefaultRestContext())
+        .append("/")
+        .append("wiki")
+        .append("/")
+        .append("images")
+        .append("/")
+        .append(Utils.getWikiType(wiki))
+        .append("/")
+        .append(wiki.getOwner())
+        .append("/")
+        .append(page.getName())
+        .append("/")
+        .append(this.getName());
+    } else {
+      sb.append(Utils.getDefaultRepositoryWebDavUri());
+      sb.append(getWorkspace());
+      String path = getPath();
+      try {
+        String parentPath = path.substring(0, path.lastIndexOf("/"));
+        sb.append(parentPath + "/" + URLEncoder.encode(getName(), "UTF-8"));
+      } catch (UnsupportedEncodingException e) {
+        sb.append(path);
+      }
     }
     return sb.toString();
   }

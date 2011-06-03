@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URLDecoder;
@@ -50,6 +51,7 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.io.FilenameUtils;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.commons.utils.MimeTypeResolver;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -70,6 +72,7 @@ import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiResource;
 import org.exoplatform.wiki.service.WikiRestService;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.service.image.impl.ResizeImageServiceImpl;
 import org.exoplatform.wiki.service.related.JsonRelatedData;
 import org.exoplatform.wiki.service.related.RelatedUtil;
 import org.exoplatform.wiki.service.rest.model.Attachment;
@@ -421,6 +424,30 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
                      .cacheControl(cc)
                      .build();
     } catch (Exception e) {
+      return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cc).build();
+    }
+  }
+  
+  @GET
+  @Path("/images/{wikiType}/{wikiOwner}/{pageId}/{imageId}")
+  @Produces("image")
+  public Response getImage(@Context UriInfo uriInfo,
+                           @PathParam("wikiType") String wikiType,
+                           @PathParam("wikiOwner") String wikiOwner,
+                           @PathParam("pageId") String pageId,
+                           @PathParam("imageId") String imageId,
+                           @QueryParam("width") Integer width) {
+    InputStream result = null;
+    try {
+      ResizeImageServiceImpl resizeImgService = (ResizeImageServiceImpl) ExoContainerContext.getCurrentContainer()
+                                                                                    .getComponentInstanceOfType(ResizeImageServiceImpl.class);
+      PageImpl page = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, pageId);
+      AttachmentImpl att = page.getAttachment(imageId);
+      ByteArrayInputStream bis = new ByteArrayInputStream(att.getContentResource().getData());
+      result = resizeImgService.resizeImageByWidth(imageId, bis, width);
+      return Response.ok(result, "image").cacheControl(cc).build();
+    } catch (Exception e) {
+      log.debug(String.format("Can't get image name: %s of page %s", imageId, pageId), e);
       return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cc).build();
     }
   }
