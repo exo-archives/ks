@@ -3,44 +3,45 @@
   
   def rcontext = _ctx.getRequestContext() ;
   List breadCumbs = uicomponent.getBreadCumbs();
-  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiPortlet', '/wiki/javascript/') ;
+//  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiPortlet', '/wiki/javascript/') ;
   rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPortlet.renderBreadcrumbs(\"" + uicomponent.id + "\","+ uicomponent.isLink +");"); 
 %>
 <div class="UIWikiBreadCrumb UIBreadcumbs" id="$uicomponent.id">
-      <div class="BreadcumbsInfoBar ClearFix">  
-        <% if(breadCumbs!=null && breadCumbs.size() > 0) {
-        	 	String note = "LeftBlock"; %>
-        	 	<a class="$note" style="text-transform:capitalize;"><%= uicomponent.getWikiType(); %> : <%= uicomponent.getWikiName(); %> </a>
-        	 	<div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
-        	  <% for(i in 0 .. breadCumbs.size()-1) {
-              breadcumbData = breadCumbs.get(i);
-              String title = breadcumbData.getTitle();
-              String actionLink = uicomponent.createActionLink(breadcumbData);
-              if(uicomponent.isLink && i == breadCumbs.size()-1) note = "Selected";
-        	%>
-        			<% if (uicomponent.isLink) {%>
-                	<a href="<%=(breadcumbData.getId() == null) ? "#" : actionLink%>" class="$note">$title</a>
-        			<%} else {%>
-          		<a class="$note">$title</a>
-        			<% } %>
-        			<%      
-                if(i != breadCumbs.size()-1) {
-        			%>
-                	<div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
-        			<%
-               	 }
-              	}
-            	}
-          		String actionLabel= uicomponent.getActionLabel();
-          		if (actionLabel!=null && !actionLabel.equals("")){  
-         		 		String label= _ctx.appRes(actionLabel);        
-        			%>
-          			<div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
-          			<span class="ActionLabel" >$label</span>
-        			<% } %>
-      </div>
-</div>
-<div class="BreadcumPopup">
-	<div class="SubBlock">
-	</div>
+   <div class="BreadcumbsInfoBar ClearFix">  
+   <% if(breadCumbs!=null && breadCumbs.size() > 0) {
+        String note = "LeftBlock"; %>
+        <a class="$note" style="text-transform:capitalize;"><%= uicomponent.getWikiType(); %> : <%= uicomponent.getWikiName(); %> </a>
+        <div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
+     <% for(i in 0 .. breadCumbs.size()-1) {
+          breadcumbData = breadCumbs.get(i);
+          String title = breadcumbData.getTitle();
+          String actionLink = uicomponent.createActionLink(breadcumbData);
+          if(uicomponent.isLink && i == breadCumbs.size()-1) note = "Selected";
+     %>
+       <% if (uicomponent.isLink) {%>
+             <a href="<%=(breadcumbData.getId() == null) ? "#" : actionLink%>" class="$note">$title</a>
+       <% } else {%>
+         <a class="$note">$title</a>
+       <% } %>
+         <%      
+          if(i != breadCumbs.size()-1) {
+         %>
+             <div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
+         <%
+          }
+        }
+      }
+      String actionLabel= uicomponent.getActionLabel();
+      if(actionLabel!=null && !actionLabel.equals("")) {  
+        String label= _ctx.appRes(actionLabel);        
+   %>
+         <div class="RightBlackGridArrowIcon LeftBlock RightBlackGridArrow16x16Icon"><span></span></div>
+         <span class="ActionLabel" >$label</span>
+   <% } %>
+  </div>
+
+  <div class="BreadcumPopup">
+    <div class="SubBlock"></div>
+  </div>
+
 </div>

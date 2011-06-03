@@ -128,21 +128,29 @@ UIWikiPortlet.prototype.cancel = function(evt) {
 /*
  * Render the breadcrumb again to fit with a half of screen width
  */
-UIWikiPortlet.prototype.renderBreadcrumbs = function(uicomponentid, isLink){
+UIWikiPortlet.prototype.renderBreadcrumbs = function(uicomponentid, isLink) {
   var me = eXo.wiki.UIWikiPortlet;
   var component = document.getElementById(uicomponentid);
-  var breadcrumb = eXo.core.DOMUtil.findFirstDescendantByClass(component, 'div', 'BreadcumbsInfoBar');
-  var breadcrumbPopup = eXo.core.DOMUtil.findNextElementByTagName(component, 'div');
-  breadcrumbPopup = eXo.core.DOMUtil.findFirstDescendantByClass(breadcrumbPopup, 'div', 'SubBlock');
-  var itemArray = eXo.core.DOMUtil.findDescendantsByTagName(breadcrumb, "a");
-   var shortenFractor = 3/4;
-    itemArray.shift();
-    itemArray.shift();
-    var lastItem = itemArray.pop();
-    if (lastItem == undefined) return;
-    var popupItems = new Array();     
-    var firstTime=true;
-    while (breadcrumb.offsetWidth > shortenFractor*breadcrumb.parentNode.offsetWidth) {
+  var DOMUtil = eXo.core.DOMUtil;
+  var breadcrumb = DOMUtil.findFirstDescendantByClass(component, 'div', 'BreadcumbsInfoBar');
+  var breadcrumbPopup = DOMUtil.findFirstDescendantByClass(component, 'div', 'SubBlock');
+  // breadcrumbPopup = DOMUtil.findFirstDescendantByClass(breadcrumbPopup, 'div', 'SubBlock');
+  var itemArray = DOMUtil.findDescendantsByTagName(breadcrumb, "a");
+  var shortenFractor = 3 / 4;
+  itemArray.shift();
+  var ancestorItem = itemArray.shift();
+  var lastItem = itemArray.pop();
+  if (lastItem == undefined){
+    return;
+  }
+  var parentLastItem = itemArray.pop();
+  if(parentLastItem == undefined) {
+    return;
+  }
+  var popupItems = new Array();
+  var firstTime = true;
+  var content = String(lastItem.innerHTML);
+  while (breadcrumb.offsetWidth > shortenFractor * breadcrumb.parentNode.offsetWidth) {
     if (itemArray.length > 0) {
       var arrayLength = itemArray.length;
       var item = itemArray.pop();
@@ -153,24 +161,21 @@ UIWikiPortlet.prototype.renderBreadcrumbs = function(uicomponentid, isLink){
         newItem.innerHTML = ' ... ';
         if (isLink) {
           newItem.href = '#';
-          eXo.core.Browser.eventListener(newItem, 'mouseover', this.showBreadcrumbPopup);
+          eXo.core.Browser.eventListener(newItem, 'mouseover', me.showBreadcrumbPopup);
         }
         breadcrumb.replaceChild(newItem, item);
-      }
-      else {
-        var leftBlock = eXo.core.DOMUtil.findPreviousElementByTagName(item, 'div');
+      } else {
+        var leftBlock = DOMUtil.findPreviousElementByTagName(item, 'div');
         breadcrumb.removeChild(leftBlock);
         breadcrumb.removeChild(item);
       }
-      
-    }
-    else {
-      if (lastItem.innerHTML.length >5){
-      lastItem.innerHTML = lastItem.innerHTML.substring(0, lastItem.innerHTML.length - 5) + "...";
-     }
-     else 
+    } else {
       break;
     }
+  }
+
+  if (content.length != lastItem.innerHTML.length) {
+    lastItem.innerHTML = '<span title="' + content + '">' + lastItem.innerHTML + '...' + '</span>';
   }
   me.createPopup(popupItems, isLink, breadcrumbPopup);
 };
@@ -221,8 +226,7 @@ UIWikiPortlet.prototype.shortenUntil = function(item, condition) {
 
 UIWikiPortlet.prototype.getBreadcrumbPopup = function() {
   var breadcrumb = document.getElementById("UIWikiBreadCrumb");
-  var breadcrumbsInfoBar = eXo.core.DOMUtil.findDescendantsByClass(breadcrumb, 'div', 'BreadcumbsInfoBar')[0];
-  var breadcrumbPopup = eXo.core.DOMUtil.findNextElementByTagName(breadcrumb, 'div');
+  var breadcrumbPopup = eXo.core.DOMUtil.findFirstDescendantByClass(breadcrumb, 'div', 'BreadcumPopup');
   return breadcrumbPopup;
 };
 
@@ -232,6 +236,7 @@ UIWikiPortlet.prototype.showBreadcrumbPopup = function(evt) {
   var isRTL = eXo.core.I18n.isRT();
   var offsetLeft = eXo.core.Browser.findPosX(ellipsis, isRTL) - 20;
   var offsetTop = eXo.core.Browser.findPosY(ellipsis) + 20;
+  breadcrumbPopup.style.zIndex= '100';
   breadcrumbPopup.style.display = 'block';
   breadcrumbPopup.style.left = offsetLeft + 'px';
   breadcrumbPopup.style.top = offsetTop + 'px';
