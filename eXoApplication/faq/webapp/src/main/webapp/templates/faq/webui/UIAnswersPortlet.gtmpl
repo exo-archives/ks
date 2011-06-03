@@ -10,7 +10,7 @@
 
 <div class="UIAnswersPortlet" id="$uicomponent.id">
 	<div class="ParentMaskLayer">
-		<div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
+		<div id="KSMaskLayer" class="KSMaskLayer" onselectstart="return false;" ondragstart="return false;" unselectable="on"><span></span></div>
 	</div>
 	<%
 		List children = uicomponent.getChildren() ;
