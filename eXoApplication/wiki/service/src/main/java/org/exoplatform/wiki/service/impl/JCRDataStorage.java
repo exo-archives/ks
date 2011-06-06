@@ -82,7 +82,7 @@ public class JCRDataStorage implements DataStorage{
       updateDate = searchAtt.getUpdatedDate();
       PageImpl page = searchAtt.getParentPage();
       createdDate.setTime(page.getCreatedDate());
-      title = searchAtt.getTitle();
+      title = page.getTitle();
       } else {
         String pagePath = path.substring(0, path.lastIndexOf("/" + WikiNodeType.Definition.CONTENT));
         type = WikiNodeType.WIKI_PAGE_CONTENT.toString();

@@ -114,6 +114,8 @@ public class UIWikiSelectTemplateForm extends UIWikiTemplateForm implements UIPo
                                                         templateId);
       AttachmentImpl content = template.getContent();
       wikiPagePreview.renderWikiMarkup(content.getText(), template.getSyntax());
+      String pageTitle = template.getTitle();
+      if (pageTitle != null) wikiPagePreview.setPageTitle(pageTitle);
       mask.setUIComponent(wikiPagePreview);
       mask.setShow(true);
       event.getRequestContext().addUIComponentToUpdateByAjax(mask);
