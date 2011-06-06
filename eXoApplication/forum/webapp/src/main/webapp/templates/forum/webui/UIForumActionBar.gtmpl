@@ -71,11 +71,11 @@
 						</div>	
 						<%}%>
 					</div>
-					<span class="SeparatorLineForum ControlButton" id="${action}Sp"></span>
+					<div class="SeparatorLineForum ControlButton" id="${action}Sp"><span></span></div>
 				<% }%>
 				<div class="ScrollButtons" style="width:35px;">
 					<div title="Previous">
-						<span title="Next"></span>
+						<div title="Next"><span></span></div>
 					</div>
 				</div>
 			</td>
@@ -84,7 +84,8 @@
 				String priMessage="", pending="";
 				int total = 0;
 			%>
-			<td style="width:245px;" id="tdWidth divWidth">
+			<td style="width:245px;" id="tdWidth">
+				<div style="width:245px;" id="divWidth">
 				
 			<%
 				if(!UserHelper.isAnonim() && numberOfNewMessage >= 0){
@@ -120,7 +121,7 @@
 						setWitdh();
 					</script>
 				<% } %>
-				
+				</div>
 			</td>
 		</tr>
 	</table>

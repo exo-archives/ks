@@ -739,7 +739,7 @@ UIForumPortlet.prototype.loadScroll = function(e) {
     uiNav.scrollMgr = eXo.portal.UIPortalControl.newScrollManager("UIForumActionBar") ;
     uiNav.scrollMgr.initFunction = uiNav.initScroll ;
     uiNav.scrollMgr.mainContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "td", "ControlButtonContainer") ;
-    uiNav.scrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "li", "ScrollButtons") ;
+    uiNav.scrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ScrollButtons") ;
     uiNav.scrollMgr.loadElements("ControlButton", true) ;
     
     var button = eXo.core.DOMUtil.findDescendantsByTagName(uiNav.scrollMgr.arrowsContainer, "div");
