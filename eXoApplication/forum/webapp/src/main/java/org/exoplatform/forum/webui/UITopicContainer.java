@@ -565,7 +565,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	static public class AddTopicActionListener extends BaseEventListener<UITopicContainer> {
 		public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
-			UITopicForm topicForm = uiTopicContainer.openPopup(UITopicForm.class, "UIAddTopicContainer", 900, 460);
+			UITopicForm topicForm = uiTopicContainer.openPopup(UITopicForm.class, "UIAddTopicContainer", 900, 520);
 			topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum, uiTopicContainer.userProfile.getUserRole()) ;
 			topicForm.setMod(uiTopicContainer.isModerator) ;
 		}
@@ -850,7 +850,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				}
 			}
 			if(checked) {
-				UITopicForm topicForm = uiTopicContainer.openPopup(UITopicForm.class, "UIEditTopicContainer", 850, 460) ;
+				UITopicForm topicForm = uiTopicContainer.openPopup(UITopicForm.class, "UIEditTopicContainer", 900, 545) ;
 				topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum, uiTopicContainer.userProfile.getUserRole()) ;
 				topicForm.setUpdateTopic(topic, true) ;
 				topicForm.setMod(uiTopicContainer.isModerator) ;

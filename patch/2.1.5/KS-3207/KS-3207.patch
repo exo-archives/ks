@@ -1,0 +1,115 @@
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java	(revision 70174)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicDetail.java	(working copy)
+@@ -743,7 +743,7 @@
+ 	static public class AddPostActionListener extends BaseEventListener<UITopicDetail> {
+ 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
+ 			try { 
+-				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIAddPostContainer", 900, 460);
++				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIAddPostContainer", 900, 520);
+ 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
+ 				postForm.updatePost("", false, false, null) ;
+ 				postForm.setMod(topicDetail.isMod) ;				
+@@ -932,7 +932,7 @@
+ 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
+ 			Post post = topicDetail.getPost(postId);
+ 			if(post !=  null) {
+-				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIEditPostContainer", 900, 460);
++				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIEditPostContainer", 900, 545);
+ 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
+ 				postForm.updatePost(postId, false, false, post) ;
+ 			} else {
+@@ -957,7 +957,7 @@
+ 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
+ 			Post post = topicDetail.getPost(postId);
+ 			if(post !=  null) {
+-				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIQuoteContainer", 900, 500);			
++				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIQuoteContainer", 900, 520);			
+ 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
+ 				postForm.updatePost(postId, true, false, post) ;
+ 				postForm.setMod(topicDetail.isMod);
+@@ -971,7 +971,7 @@
+ 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
+ 			Post post = topicDetail.getPost(postId);
+ 			if(post !=  null) {
+-				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIPrivatePostContainer", 900, 460);
++				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIPrivatePostContainer", 900, 520);
+ 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
+ 				postForm.updatePost(postId, false, true, post) ;
+ 				postForm.setMod(topicDetail.isMod) ;
+@@ -986,7 +986,7 @@
+ 			
+ 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+ 			try{
+-				UITopicForm topicForm = openPopup(forumPortlet, UITopicForm.class, "UIEditTopicContainer", 900, 460);
++				UITopicForm topicForm = openPopup(forumPortlet, UITopicForm.class, "UIEditTopicContainer", 900, 545);
+ 				topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum, topicDetail.userProfile.getUserRole()) ;
+ 				topicForm.setUpdateTopic(topicDetail.getTopic(), true) ;
+ 				topicForm.setMod(topicDetail.isMod) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicContainer.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicContainer.java	(revision 70174)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UITopicContainer.java	(working copy)
+@@ -565,7 +565,7 @@
+ 	
+ 	static public class AddTopicActionListener extends BaseEventListener<UITopicContainer> {
+ 		public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
+-			UITopicForm topicForm = uiTopicContainer.openPopup(UITopicForm.class, "UIAddTopicContainer", 900, 460);
++			UITopicForm topicForm = uiTopicContainer.openPopup(UITopicForm.class, "UIAddTopicContainer", 900, 520);
+ 			topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum, uiTopicContainer.userProfile.getUserRole()) ;
+ 			topicForm.setMod(uiTopicContainer.isModerator) ;
+ 		}
+@@ -850,7 +850,7 @@
+ 				}
+ 			}
+ 			if(checked) {
+-				UITopicForm topicForm = uiTopicContainer.openPopup(UITopicForm.class, "UIEditTopicContainer", 850, 460) ;
++				UITopicForm topicForm = uiTopicContainer.openPopup(UITopicForm.class, "UIEditTopicContainer", 900, 545) ;
+ 				topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum, uiTopicContainer.userProfile.getUserRole()) ;
+ 				topicForm.setUpdateTopic(topic, true) ;
+ 				topicForm.setMod(uiTopicContainer.isModerator) ;
+Index: eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/popup/UITopicForm/Stylesheet.css
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/popup/UITopicForm/Stylesheet.css	(revision 70174)
++++ eXoApplication/forum/webapp/src/main/webapp/skin/DefaultSkin/webui/popup/UITopicForm/Stylesheet.css	(working copy)
+@@ -1,6 +1,6 @@
+ .UITopicForm {
+ 	width: 850px;
+-	padding: 10px 0px 0px 10px;
++	padding: 5px 5px 0px 5px;
+ }
+ 
+ .UITopicForm .UIFormInputSet .UIFormGrid td.FieldLabel {
+@@ -8,6 +8,10 @@
+ 	white-space: nowrap;
+ }
+ 
++.UITopicForm .UIForm .HorizontalLayout .UIFormInputSet {
++	padding: 5px;
++}
++
+ .UITopicForm .UIForm .HorizontalLayout .ThreadContent input {
+ 	width: 450px;
+ }
+@@ -46,11 +50,19 @@
+ 	height: auto;
+ }
+ 
++.UITopicForm .UIFormTabPane {
++	padding: 0px;
++}
++
++.UITopicForm .UIFormTabPane .UITabPane .TabPaneContent {
++	padding: 0px 8px;
++}
++
+ .UITopicForm .UIFormTabPane .ThreadPermission .HorizontalLayout {
+ 	border:1px solid #B7B7B7;
+ 	padding-top: 8px;
+ }
+-
++
+ .UITopicForm .UIFormWithTitle {
+ 	margin: auto;
+ 	padding-top: 5px;

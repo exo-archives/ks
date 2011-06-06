@@ -743,7 +743,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	static public class AddPostActionListener extends BaseEventListener<UITopicDetail> {
 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			try { 
-				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIAddPostContainer", 900, 460);
+				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIAddPostContainer", 900, 520);
 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
 				postForm.updatePost("", false, false, null) ;
 				postForm.setMod(topicDetail.isMod) ;				
@@ -932,7 +932,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
 			Post post = topicDetail.getPost(postId);
 			if(post !=  null) {
-				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIEditPostContainer", 900, 460);
+				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIEditPostContainer", 900, 545);
 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
 				postForm.updatePost(postId, false, false, post) ;
 			} else {
@@ -957,7 +957,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
 			Post post = topicDetail.getPost(postId);
 			if(post !=  null) {
-				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIQuoteContainer", 900, 500);			
+				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIQuoteContainer", 900, 520);			
 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
 				postForm.updatePost(postId, true, false, post) ;
 				postForm.setMod(topicDetail.isMod);
@@ -971,7 +971,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
 			Post post = topicDetail.getPost(postId);
 			if(post !=  null) {
-				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIPrivatePostContainer", 900, 460);
+				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIPrivatePostContainer", 900, 520);
 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
 				postForm.updatePost(postId, false, true, post) ;
 				postForm.setMod(topicDetail.isMod) ;
@@ -986,7 +986,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 			
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			try{
-				UITopicForm topicForm = openPopup(forumPortlet, UITopicForm.class, "UIEditTopicContainer", 900, 460);
+				UITopicForm topicForm = openPopup(forumPortlet, UITopicForm.class, "UIEditTopicContainer", 900, 545);
 				topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum, topicDetail.userProfile.getUserRole()) ;
 				topicForm.setUpdateTopic(topicDetail.getTopic(), true) ;
 				topicForm.setMod(topicDetail.isMod) ;

@@ -1,11 +1,15 @@
 .UITopicForm {
 	width: 850px;
-	padding: 10px 0px 0px 10px;
+	padding: 5px 5px 0px 5px;
 }
 
 .UITopicForm .UIFormInputSet .UIFormGrid td.FieldLabel {
 	text-align: left ;
 	white-space: nowrap;
+}
+
+.UITopicForm .UIForm .HorizontalLayout .UIFormInputSet {
+	padding: 5px;
 }
 
 .UITopicForm .UIForm .HorizontalLayout .ThreadContent input {
@@ -44,6 +48,14 @@
 .UITopicForm .UITabContent {
 	min-height: 268px;
 	height: auto;
+}
+
+.UITopicForm .UIFormTabPane {
+	padding: 0px;
+}
+
+.UITopicForm .UIFormTabPane .UITabPane .TabPaneContent {
+	padding: 0px 8px;
 }
 
 .UITopicForm .UIFormTabPane .ThreadPermission .HorizontalLayout {
