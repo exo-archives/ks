@@ -125,7 +125,7 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent {
       UIForumPortlet forumPortlet = bookMark.getAncestorOfType(UIForumPortlet.class);
       bookMark.forumService.saveUserBookmark(forumPortlet.getUserProfile().getUserId(), path, false);
       forumPortlet.updateUserProfileInfo();
-      event.getRequestContext().addUIComponentToUpdateByAjax(bookMark.getParent());
+      event.getRequestContext().addUIComponentToUpdateByAjax(bookMark.getParent().getParent());
     }
   }
 
