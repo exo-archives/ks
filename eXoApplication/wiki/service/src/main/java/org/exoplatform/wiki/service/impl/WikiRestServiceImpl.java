@@ -444,7 +444,11 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       PageImpl page = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, pageId);
       AttachmentImpl att = page.getAttachment(imageId);
       ByteArrayInputStream bis = new ByteArrayInputStream(att.getContentResource().getData());
-      result = resizeImgService.resizeImageByWidth(imageId, bis, width);
+      if (width != null) {
+        result = resizeImgService.resizeImageByWidth(imageId, bis, width);
+      } else {
+        result = bis;
+      }      
       return Response.ok(result, "image").cacheControl(cc).build();
     } catch (Exception e) {
       log.debug(String.format("Can't get image name: %s of page %s", imageId, pageId), e);
