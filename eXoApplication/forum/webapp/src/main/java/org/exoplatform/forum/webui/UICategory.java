@@ -301,11 +301,7 @@ public class UICategory extends BaseForumForm {
       } catch (Exception e) {
       }
       UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
-      UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-      categoryContainer.updateIsRender(true);
-      forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-      forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
-      forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks();
+      forumPortlet.rederForumHome();
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
@@ -670,13 +666,9 @@ public class UICategory extends BaseForumForm {
       uiCategory.isEditCategory = true;
       Category category = uiCategory.getCategory();
       if (category == null) {
-        warning("UIForumPortlet.msg.catagory-deleted");
         UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-        UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-        categoryContainer.updateIsRender(true);
-        categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
-        forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+        forumPortlet.rederForumHome();
+        warning("UIForumPortlet.msg.catagory-deleted");
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;
       }
@@ -689,13 +681,9 @@ public class UICategory extends BaseForumForm {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String path) throws Exception {
       Category cate = uiCategory.getCategory();
       if (cate == null) {
-        warning("UITopicContainer.msg.forum-deleted");
         UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-        UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-        categoryContainer.updateIsRender(true);
-        categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
-        forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+        forumPortlet.rederForumHome();
+        warning("UITopicContainer.msg.forum-deleted");
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;
       }

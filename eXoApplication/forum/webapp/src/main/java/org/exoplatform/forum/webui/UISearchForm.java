@@ -515,11 +515,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     public void execute(Event<UISearchForm> event) throws Exception {
       UISearchForm uiForm = event.getSource();
       UIForumPortlet forumPortlet = uiForm.getParent();
-      forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-      UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-      categoryContainer.updateIsRender(true);
-      categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
-      forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+      forumPortlet.rederForumHome();
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }

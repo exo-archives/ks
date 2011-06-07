@@ -161,11 +161,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
       }
       if (isErr) {
-        forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-        UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-        categoryContainer.updateIsRender(true);
-        categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
-        forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+        forumPortlet.rederForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
     }

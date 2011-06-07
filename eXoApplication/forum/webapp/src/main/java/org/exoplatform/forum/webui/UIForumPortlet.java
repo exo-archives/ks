@@ -280,6 +280,15 @@ public class UIForumPortlet extends UIPortletApplication {
     }
   }
 
+  public void rederForumHome() throws Exception {
+    updateIsRendered(ForumUtils.CATEGORIES);
+    UICategoryContainer categoryContainer = getChild(UICategoryContainer.class);
+    categoryContainer.updateIsRender(true);
+    categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
+    getChild(UIForumLinks.class).setUpdateForumLinks();
+    getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+  }
+  
   public void setRenderForumLink() throws Exception {
     if (userProfile == null)
       updateUserProfileInfo();
@@ -618,10 +627,7 @@ public class UIForumPortlet extends UIPortletApplication {
     UIApplication uiApp = (UIApplication) this;
     ResourceBundle res = context.getApplicationResourceBundle();
     if (path.equals(Utils.FORUM_SERVICE)) {
-      this.updateIsRendered(ForumUtils.CATEGORIES);
-      UICategoryContainer categoryContainer = this.getChild(UICategoryContainer.class);
-      categoryContainer.updateIsRender(true);
-      categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
+      rederForumHome();
     } else if (path.lastIndexOf(Utils.TOPIC) >= 0) {
       boolean isReply = false, isQuote = false;
       if (path.indexOf("/true") > 0) {
@@ -716,19 +722,13 @@ public class UIForumPortlet extends UIPortletApplication {
             }
           } else {
             uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[] { topic.getTopicName(), res.getString("UIForumPortlet.label.topic").toLowerCase() }, ApplicationMessage.WARNING));
-            this.updateIsRendered(ForumUtils.CATEGORIES);
-            UICategoryContainer categoryContainer = this.getChild(UICategoryContainer.class);
-            categoryContainer.updateIsRender(true);
-            categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
+            rederForumHome();
             path = Utils.FORUM_SERVICE;
           }
         }
       } catch (Exception e) {
         uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING));
-        this.updateIsRendered(ForumUtils.CATEGORIES);
-        UICategoryContainer categoryContainer = this.getChild(UICategoryContainer.class);
-        categoryContainer.updateIsRender(true);
-        categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
+        rederForumHome();
         path = Utils.FORUM_SERVICE;
       }
     } else if ((path.lastIndexOf(Utils.FORUM) == 0 && path.lastIndexOf(Utils.CATEGORY) < 0) || (path.lastIndexOf(Utils.FORUM) > 0)) {
@@ -766,16 +766,12 @@ public class UIForumPortlet extends UIPortletApplication {
           forumContainer.getChild(UITopicContainer.class).setUpdateForum(cateId, forum, page);
         } else {
           uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[] { forum.getForumName(), res.getString("UIForumPortlet.label.forum").toLowerCase() }, ApplicationMessage.WARNING));
-          this.updateIsRendered(ForumUtils.CATEGORIES);
-          categoryContainer.updateIsRender(true);
-          categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
+          rederForumHome();
           path = Utils.FORUM_SERVICE;
         }
       } catch (Exception e) {
         uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", new String[] { res.getString("UIForumPortlet.label.forum") }, ApplicationMessage.WARNING));
-        this.updateIsRendered(ForumUtils.CATEGORIES);
-        categoryContainer.updateIsRender(true);
-        categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
+        rederForumHome();
         path = Utils.FORUM_SERVICE;
       }
     } else if (path.indexOf(Utils.CATEGORY) >= 0 && path.indexOf(ForumUtils.SLASH) < 0) {
@@ -788,24 +784,17 @@ public class UIForumPortlet extends UIPortletApplication {
           this.updateIsRendered(ForumUtils.CATEGORIES);
         } else {
           uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[] { category.getCategoryName(), res.getString("UIForumPortlet.label.category").toLowerCase() }, ApplicationMessage.WARNING));
-          this.updateIsRendered(ForumUtils.CATEGORIES);
-          categoryContainer.updateIsRender(true);
-          categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
+          rederForumHome();
           path = Utils.FORUM_SERVICE;
         }
       } catch (Exception e) {
         uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING));
-        this.updateIsRendered(ForumUtils.CATEGORIES);
-        categoryContainer.updateIsRender(true);
-        categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
+        rederForumHome();
         path = Utils.FORUM_SERVICE;
       }
     } else {
       uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING));
-      this.updateIsRendered(ForumUtils.CATEGORIES);
-      UICategoryContainer categoryContainer = this.getChild(UICategoryContainer.class);
-      categoryContainer.updateIsRender(true);
-      categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
+      rederForumHome();
       path = Utils.FORUM_SERVICE;
     }
     UIBreadcumbs uiBreadcumbs = getChild(UIBreadcumbs.class);

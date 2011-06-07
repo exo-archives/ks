@@ -1454,6 +1454,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       if (topicDetail.isDoubleClickQuickReply)
         return;
       topicDetail.isDoubleClickQuickReply = true;
+      UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
       try {
         UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA);
         String message = ForumUtils.EMPTY_STR;
@@ -1463,7 +1464,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           topicDetail.log.warn("Failed read quick reply: " + e.getMessage(), e);
         }
         String checksms = message;
-        UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
         if (message != null && message.trim().length() > 0) {
           if (forumPortlet.checkForumHasAddPost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId)) {
             boolean isOffend = false;
@@ -1528,6 +1528,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
               topicDetail.IdPostView = "lastpost";
             }
           } else {
+            topicDetail.topic = null;
+            topicDetail.getTopic();
+            topicDetail.setRenderInfoPorlet();
             warning("UIPostForm.msg.no-permission");
           }
           refresh();
@@ -1537,7 +1540,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         }
       } catch (Exception e) {
         warning("UIPostForm.msg.isParentDelete", ForumUtils.EMPTY_STR);
-        refresh();
+        forumPortlet.rederForumHome();
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
     }
   }

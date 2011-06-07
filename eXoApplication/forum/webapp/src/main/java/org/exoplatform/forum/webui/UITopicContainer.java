@@ -618,11 +618,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
               event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);
             } else if(!uiTopicContainer.isModerator){
               if(uiTopicContainer.forum.getIsClosed()) {
-                forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-                UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-                categoryContainer.updateIsRender(true);
-                categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
-                forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+                forumPortlet.rederForumHome();
                 warning("UIForumPortlet.msg.do-not-permission");
                 event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
                 return;
@@ -657,11 +653,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
             context.addUIComponentToUpdateByAjax(uiForumContainer);
             context.addUIComponentToUpdateByAjax(forumPortlet.getChild(UIBreadcumbs.class));
           } else {
-            forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-            UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-            categoryContainer.updateIsRender(true);
-            categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
-            forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+            forumPortlet.rederForumHome();
             warning("UITopicContainer.msg.forum-deleted");
             event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
           }
@@ -789,12 +781,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       if (forum == null) {
         warning("UITopicContainer.msg.forum-deleted");
         UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class);
-        UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-        forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-        categoryContainer.updateIsRender(false);
-        categoryContainer.getChild(UICategory.class).updateByBreadcumbs(uiTopicContainer.categoryId);
-        forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(uiTopicContainer.categoryId);
-        forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks();
+        forumPortlet.rederForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;
       }

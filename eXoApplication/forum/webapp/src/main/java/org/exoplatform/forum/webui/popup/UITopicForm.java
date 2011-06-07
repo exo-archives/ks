@@ -653,11 +653,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
                   uiForm.isDetail = false;
                 }
               } catch (PathNotFoundException e) {
-                forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-                UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-                categoryContainer.updateIsRender(true);
-                categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
-                forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+                forumPortlet.rederForumHome();
                 forumPortlet.cancelAction();
                 warning("UITopicForm.msg.forum-deleted");
                 event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

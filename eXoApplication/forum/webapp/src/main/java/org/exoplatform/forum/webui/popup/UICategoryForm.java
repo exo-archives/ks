@@ -354,10 +354,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         }
       } catch (Exception e) {
         warning("UIForumPortlet.msg.catagory-deleted");
-        forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-        categoryContainer.updateIsRender(true);
-        categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
-        forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+        forumPortlet.rederForumHome();
       }
       forumPortlet.cancelAction();
       uiForm.isDoubleClickSubmit = true;

@@ -289,11 +289,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
         topicsTag.isUpdateTag = true;
         Tag tag = topicsTag.getTagById();
         if (tag == null || tag.getUserTag() == null || tag.getUserTag().length == 0) {
-          UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-          forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-          categoryContainer.updateIsRender(true);
-          UIBreadcumbs uiBreadcumbs = forumPortlet.findFirstComponentOfType(UIBreadcumbs.class);
-          uiBreadcumbs.setUpdataPath(Utils.FORUM_SERVICE);
+          forumPortlet.rederForumHome();
         }
         topicsTag.isUpdateTag = false;
       }
