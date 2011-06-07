@@ -613,6 +613,27 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
           topic = uiTopicContainer.getForumService().getTopicUpdate(topic, false);
           uiTopicContainer.forum = uiTopicContainer.getForumService().getForum(uiTopicContainer.categoryId, uiTopicContainer.forumId);
           if (uiTopicContainer.forum != null) {
+            if(topic == null) {
+              warning("UIForumPortlet.msg.topicEmpty");
+              event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);
+            } else if(!uiTopicContainer.isModerator){
+              if(uiTopicContainer.forum.getIsClosed()) {
+                forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+                UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
+                categoryContainer.updateIsRender(true);
+                categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
+                forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+                warning("UIForumPortlet.msg.do-not-permission");
+                event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+                return;
+              }
+              if(topic.getIsClosed() || topic.getIsWaiting() || !topic.getIsActive() 
+                  || !topic.getIsActiveByForum()) {
+                warning("UIForumPortlet.msg.do-not-permission");
+                event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);
+                return;
+              }
+            }
             UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
             UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class);
             uiForumContainer.setIsRenderChild(false);

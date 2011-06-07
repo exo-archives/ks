@@ -2096,19 +2096,20 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       topic.setPostCount(reader.l(EXO_POST_COUNT));
       topic.setViewCount(reader.l(EXO_VIEW_COUNT));
       topic.setNumberAttachment(reader.l(EXO_NUMBER_ATTACHMENTS));
-      
-      if (topicNode.getParent().getProperty(EXO_IS_LOCK).getBoolean())
-        topic.setIsLock(true);
-      else
-        topic.setIsLock(topicNode.getProperty(EXO_IS_LOCK).getBoolean());
-      
       topic.setIsSticky(reader.bool(EXO_IS_STICKY));
-      topic.setIsWaiting(reader.bool(EXO_IS_WAITING));
-
-      topic.setIsActiveByForum(reader.bool(EXO_IS_ACTIVE_BY_FORUM));
       topic.setUserVoteRating(reader.strings(EXO_USER_VOTE_RATING));
       topic.setVoteRating(reader.d(EXO_VOTE_RATING));
     }
+    // some properties get again because update new data.
+    topic.setIsWaiting(reader.bool(EXO_IS_WAITING));
+    topic.setIsActive(reader.bool(EXO_IS_ACTIVE));
+    topic.setIsActiveByForum(reader.bool(EXO_IS_ACTIVE_BY_FORUM));
+    if (topicNode.getParent().getProperty(EXO_IS_LOCK).getBoolean())
+      topic.setIsLock(true);
+    else
+      topic.setIsLock(topicNode.getProperty(EXO_IS_LOCK).getBoolean());
+    topic.setIsClosed(reader.bool(EXO_IS_CLOSED));
+    // update more properties for topic.
     topic.setCreatedDate(reader.date(EXO_CREATED_DATE));
     topic.setModifiedBy(reader.string(EXO_MODIFIED_BY));
     topic.setModifiedDate(reader.date(EXO_MODIFIED_DATE));
