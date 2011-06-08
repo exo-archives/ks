@@ -690,7 +690,7 @@ table.gwt-TabBar {
   letter-spacing: 1px;
 }
 
-.xDialogBody {
+.gwt-PopupPanel .xDialogContent .xDialogBody {
   border-top: 2px solid #EEE;
   border-bottom: 2px solid #EEE;
   height: 350px;
@@ -710,10 +710,9 @@ table.gwt-TabBar {
 }
 
 .xDialogFooter button {
-  -moz-border-radius-bottomleft: 5px;
-  -moz-border-radius-bottomright: 5px;
-  -moz-border-radius-topleft: 5px;
-  -moz-border-radius-topright: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
   border: 1px solid #AAA;
   height: 25px;
   line-height: 17px;
