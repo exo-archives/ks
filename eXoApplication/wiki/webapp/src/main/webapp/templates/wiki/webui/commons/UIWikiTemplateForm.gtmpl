@@ -10,8 +10,7 @@
 	<div class="TemplateControl">
 	    <div class="TemplateSearchBox" >	
 			<% uiform.renderChild(uiform.TEMPLATE_SEARCHBOX);	%>
-			<a class="SearchButton">Search</a>
-			<a class="AdvancedSearch" style="display:none"  onclick="<%=uiform.event(uiform.ACTION_SEARCH);%>"></a>
+      <a class="SearchButton" onclick="<%=uiform.event(uiform.ACTION_SEARCH);%>"><%=_ctx.appRes("UITemplateSettingForm.label.Search")%></a>			
   		</div>
   	</div>
   	<div class="ClearBoth"></div>

@@ -1,18 +1,3 @@
-
-
-.UITemplateSettingForm .TemplateControl .TemplateSearchBox {
-  float: left;
-  padding: 1px 0px;
-}
-
-.UITemplateSettingForm .TemplateControl .TemplateSearchBox input {
-  width: 200px;
-}
-
-.UIWikiTemplateGrid {
-  width: 90%;
-}
-
 .UITemplateSettingForm .TemplateActions {
   float: right;
 }
@@ -20,16 +5,4 @@
 .UITemplateSettingForm .TemplateActions .AddTemplate {
 	color: #4175b2;
 	font-weight: bold;
-}
-
-.UITemplateSettingForm .TemplateControl .SearchButton {
-  float: left;
-  background: url("/wiki/skin/DefaultSkin/webui/background/Button.gif") repeat-x scroll 0 0 transparent;
-  border: 1px solid #ACACAC;
-  color: #464646;
-  cursor: pointer;
-  line-height: 21px;
-  padding: 0 16px;
-  -moz-border-radius: 12px 12px 12px 12px;
-  margin-left: 5px;
 }
