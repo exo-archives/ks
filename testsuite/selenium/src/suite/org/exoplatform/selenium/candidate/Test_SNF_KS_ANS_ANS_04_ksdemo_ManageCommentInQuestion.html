@@ -63,12 +63,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
@@ -152,9 +152,19 @@
 	<td>root@localhost.vn</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>AllLanguages</td>
+	<td></td>
+</tr>
+<tr>
 	<td>select</td>
 	<td>AllLanguages</td>
 	<td>label=French</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//option[@value='French']</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
