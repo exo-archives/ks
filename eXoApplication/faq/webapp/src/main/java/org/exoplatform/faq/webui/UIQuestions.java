@@ -18,6 +18,7 @@ package org.exoplatform.faq.webui;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -532,7 +533,13 @@ public class UIQuestions extends UIContainer {
   }
 
   private String calculateTimeMessageOfLastActivity(long time) {
-    long current = GregorianCalendar.getInstance().getTimeInMillis();
+    
+    
+    Calendar calendar = GregorianCalendar.getInstance();
+    calendar.setLenient(false);
+    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
+    long current = calendar.getTimeInMillis();
     long interval = current - time;
     if (interval < 60 * 60 * 1000) { // if interval is less than one hour.
       String msg = FAQUtils.getResourceBundle(this.getId() + ".label.last-act-time-minute");
