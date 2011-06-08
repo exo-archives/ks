@@ -117,8 +117,9 @@ public class UIMoveForumForm extends BaseUIForm implements UIPopupComponent {
           UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
           uiForumContainer.setIsRenderChild(true);
           UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class);
-          uiForumContainer.getChild(UIForumDescription.class).setForum(forums.get(0));
-          uiTopicContainer.setUpdateForum(categoryId, forums.get(0), 0);
+          Forum forum = forumService.getForum(categoryId, forums.get(0).getId());
+          uiForumContainer.getChild(UIForumDescription.class).setForum(forum); 
+          uiTopicContainer.setUpdateForum(categoryId, forum, 0);
           event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         } else {
           UICategory uiCategory = forumPortlet.findFirstComponentOfType(UICategory.class);
