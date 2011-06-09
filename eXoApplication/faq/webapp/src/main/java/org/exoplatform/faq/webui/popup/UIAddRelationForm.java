@@ -122,6 +122,7 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
     UIFormCheckBoxInput<Boolean> checkQuestion;
 
     for (Question question : listQuestion) {
+      if (!question.isApproved()) { continue ; }
       mapQuestion_.get(question.getCategoryId()).add(question);
       if (quesIdsSelect.contains(question.getId())) {
         checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), true).setChecked(true);
