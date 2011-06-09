@@ -889,3 +889,7 @@ table.gwt-TabBar {
 .loading {
   background: transparent url("images/spinner.gif") no-repeat center;
 }
+
+.gwt-MenuBarPopup table {
+  width: auto;
+}
