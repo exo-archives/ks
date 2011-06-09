@@ -21,6 +21,7 @@ import org.chromattic.api.annotations.ManyToOne;
 import org.chromattic.api.annotations.MappedBy;
 import org.chromattic.api.annotations.PrimaryType;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
+import org.exoplatform.wiki.mow.api.WikiType;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
@@ -29,6 +30,10 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
  */
 @PrimaryType(name = WikiNodeType.GROUP_WIKI)
 public abstract class GroupWiki extends WikiImpl {
+  
+  public WikiType getWikiType() {
+    return WikiType.GROUP;
+  }
   
   @ManyToOne(type = RelationshipType.REFERENCE)
   @MappedBy(WikiNodeType.Definition.WIKI_CONTAINER_REFERENCE)

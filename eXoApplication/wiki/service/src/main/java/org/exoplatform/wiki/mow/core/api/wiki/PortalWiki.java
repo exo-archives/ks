@@ -21,6 +21,7 @@ import org.chromattic.api.annotations.ManyToOne;
 import org.chromattic.api.annotations.MappedBy;
 import org.chromattic.api.annotations.PrimaryType;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
+import org.exoplatform.wiki.mow.api.WikiType;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
@@ -30,6 +31,10 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
 @PrimaryType(name = WikiNodeType.PORTAL_WIKI )
 public abstract class PortalWiki extends WikiImpl {
 
+  public WikiType getWikiType() {
+    return WikiType.PORTAL;
+  }
+  
   @ManyToOne(type = RelationshipType.REFERENCE)
   @MappedBy(WikiNodeType.Definition.WIKI_CONTAINER_REFERENCE)
   public abstract PortalWikiContainer getPortalWikis();

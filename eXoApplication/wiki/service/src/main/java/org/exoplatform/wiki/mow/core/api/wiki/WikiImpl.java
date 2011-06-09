@@ -28,6 +28,7 @@ import org.chromattic.api.annotations.Path;
 import org.chromattic.api.annotations.Property;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
+import org.exoplatform.wiki.mow.api.WikiType;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
@@ -39,6 +40,8 @@ public abstract class WikiImpl implements Wiki {
   @Create
   public abstract PageImpl createWikiPage();
 
+  public abstract WikiType getWikiType();
+  
   public WikiHome getWikiHome() {
     WikiHome home = getHome();
     if (home == null) {
@@ -49,7 +52,15 @@ public abstract class WikiImpl implements Wiki {
       AttachmentImpl content = home.getContent();
       home.setTitle(WikiNodeType.Definition.WIKI_HOME_TITLE);
       home.setSyntax(home.getWikiService().getDefaultWikiSyntaxId());
-      content.setText("This is a Wiki Home page of " + getOwner());
+      StringBuilder sb = new StringBuilder("{tip}\nWelcome to Wiki Home of ");
+      sb.append(getOwner()).append(" ");
+      if (WikiType.PORTAL.equals(getWikiType())) {
+        sb.append("portal");
+      } else if (WikiType.GROUP.equals(getWikiType())) {
+        sb.append("group");
+      }
+      sb.append(".").append("\n* See *[Sandbox space|group:sandbox.WikiHome]* for an example wiki with sample content.\n{tip}");
+      content.setText(sb.toString());
       try {
         home.setNonePermission();
         home.checkin();

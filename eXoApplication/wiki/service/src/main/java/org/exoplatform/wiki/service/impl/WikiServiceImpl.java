@@ -29,7 +29,6 @@ import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
-import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -947,6 +946,11 @@ public class WikiServiceImpl implements WikiService, Startable {
                                                                                  .getComponentInstanceOfType(ChromatticManager.class);
     RequestLifeCycle.begin(chromatticManager);
     removeDraftPages();
+    try {
+      getWikiHome(PortalConfig.GROUP_TYPE, "sandbox");
+    } catch (Exception e) {
+      log.warn("Cannot init sandbox wiki ...");
+    }
     RequestLifeCycle.end();
   }
 

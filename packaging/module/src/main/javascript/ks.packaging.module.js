@@ -33,7 +33,8 @@ function getModule(params) {
 
   // KS components
   module.component = {};
-  module.component.common = new Project("org.exoplatform.ks", "exo.ks.component.common", "jar", module.version);
+  module.component.common = new Project("org.exoplatform.ks", "exo.ks.component.common", "jar", module.version).
+                            addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.component", "jar", "${org.exoplatform.commons.version}"));
   module.component.rendering = new Project("org.exoplatform.ks", "exo.ks.component.rendering", "jar", module.version);
   module.component.bbcode = new Project("org.exoplatform.ks", "exo.ks.component.bbcode", "jar", module.version);
 
