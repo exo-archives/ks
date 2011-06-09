@@ -98,22 +98,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AddCategory']/div/div/div/div</td>
+	<td>link=Ajouter</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AddCategory']/div/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id='AddCategory']/div/div/div/div/a/span</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@id='AddCategory']/div/div/div/div/a/span</td>
+	<td>link=Ajouter</td>
 	<td></td>
 </tr>
 <tr>
@@ -143,12 +133,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AddForum']/div/div/div/div/a/span</td>
+	<td>link=Créer un forum</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AddForum']/div/div/div/div/a/span</td>
+	<td>link=Créer un forum</td>
 	<td></td>
 </tr>
 <tr>
@@ -273,127 +263,27 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-- Delete topic</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=REG_AIO_FOR_004</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=REG_AIO_FOR_004</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id='UITopicContent']/div/table/tbody/tr/td[9]/input</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@id='UITopicContent']/div/table/tbody/tr/td[9]/input</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//form[@id='UITopicContainer']/div[4]/div/div[1]/div/div/div/div[2]/div[1]/div/div/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//form[@id='UITopicContainer']/div[4]/div/div[1]/div/div/div/div[2]/div[1]/div/div/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Supprimer</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Supprimer</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertConfirmation</td>
-	<td>Etes-vous certain de vouloir supprimer cette discussion?</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>-- Delete forum</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>2000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=REG_AIO168_FOR_004</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=REG_AIO168_FOR_004</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategory']/div[4]/div/table/tbody/tr/td[7]/input</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//form[@id='UICategory']/div[4]/div/table/tbody/tr/td[7]/input</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategory']/div[3]/div/div/div/div[4]/div[1]/div/div/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//form[@id='UICategory']/div[3]/div/div/div/div[4]/div[1]/div/div/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategory']/div[3]/div/div/div/div[4]/div[2]/div/div/div/div/div[2]/div/div/div[14]/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//form[@id='UICategory']/div[3]/div/div/div/div[4]/div[2]/div/div/div/div/div[2]/div/div/div[14]/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertConfirmation</td>
-	<td>Etes-vous certain de vouloir supprimer ce forum?</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>2000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
 	<td>-- Delete category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UICategory']/div[3]/div/div/div/div[4]/div[1]/div/div/div/div/div</td>
+	<td>link=REG_AIO168_FOR_004</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UICategory']/div[3]/div/div/div/div[4]/div[1]/div/div/div/div/div</td>
+	<td>link=REG_AIO168_FOR_004</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Catégories</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Catégories</td>
 	<td></td>
 </tr>
 <tr>
@@ -461,7 +351,6 @@
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>
