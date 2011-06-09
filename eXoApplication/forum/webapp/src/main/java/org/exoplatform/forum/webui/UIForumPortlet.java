@@ -433,9 +433,9 @@ public class UIForumPortlet extends UIPortletApplication {
   public void updateWatching() throws Exception {
     listWatches = forumService.getWatchByUser(userProfile.getUserId());
   }
-
+// TODO will improvement
   public List<Watch> getWatchingByCurrentUser() throws Exception {
-    if (listWatches == null)
+//    if (listWatches == null)
       updateWatching();
     return listWatches;
   }
