@@ -266,6 +266,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       UIFormInputWithActions inputset = uiCategory.getChildById(CATEGORY_DETAIL_TAB);
       long index = 1;
       String strIndex = inputset.getUIStringInput(FIELD_INDEX_INPUT).getValue();
+      UIAnswersPortlet answerPortlet = uiCategory.getAncestorOfType(UIAnswersPortlet.class);
       if (strIndex != null && strIndex.trim().length() > 0) {
         try {
           index = Long.parseLong(strIndex);
@@ -273,6 +274,11 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
           uiCategory.warning("NameValidator.msg.erro-large-number", new String[] { uiCategory.getLabel(FIELD_INDEX_INPUT) });
           return;
         }
+        if (index > (answerPortlet.findFirstComponentOfType(UICategories.class).getListCate().size()+1)) {
+          uiCategory.warning("UICateforyForm.msg.over-index-number");
+          return;
+        }
+        
       }
       if (index > uiCategory.maxIndex)
         index = uiCategory.maxIndex;
@@ -308,7 +314,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       boolean viewAuthorInfor = inputset.getUIFormCheckBoxInput(VIEW_AUTHOR_INFOR).isChecked();
       String[] users = FAQUtils.splitForFAQ(moderator);
 
-      UIAnswersPortlet answerPortlet = uiCategory.getAncestorOfType(UIAnswersPortlet.class);
+      
       // UIQuestions questions = answerPortlet.findFirstComponentOfType(UIQuestions.class) ;
       // SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       Category cat;

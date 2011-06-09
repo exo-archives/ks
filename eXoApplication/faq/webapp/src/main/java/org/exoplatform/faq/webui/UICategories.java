@@ -152,7 +152,7 @@ public class UICategories extends UIContainer {
     return result;
   }
 
-  private List<Category> getListCate() {
+  public List<Category> getListCate() {
     return this.listCate;
   }
 
