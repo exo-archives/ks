@@ -477,14 +477,6 @@ public class FAQUtils {
     return getFormatDate(DateFormat.SHORT, myDate);
   }
 
-  public static Calendar getInstanceTempCalendar() {
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setLenient(false);
-    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
-    return calendar;
-  }
-
   public static String getUserAvatar(String userName) throws Exception {
     String url = "";
     try {

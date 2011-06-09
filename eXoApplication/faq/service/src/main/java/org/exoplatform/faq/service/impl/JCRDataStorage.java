@@ -1081,6 +1081,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     questionNode.setProperty("exo:author", question.getAuthor());
     questionNode.setProperty("exo:email", question.getEmail());
     questionNode.setProperty("exo:title", question.getQuestion());
+    questionNode.setProperty("exo:lastActivity", getLastActivityInfo(question.getAuthor(), Utils.getInstanceTempCalendar().getTimeInMillis()));
     if (isNew) {
       GregorianCalendar cal = new GregorianCalendar();
       cal.setTime(question.getCreatedDate());
@@ -3706,7 +3707,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
             // admin changed this answer to public ...
             if (timeOfLastActivity < answerTime) {
               String author = answerNode.getProperty("exo:responseBy").getString();
-              quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(answerTime));
+              quesNode.setProperty("exo:lastActivity", getLastActivityInfo(author, answerTime));
             }
             quesNode.save();
 
@@ -4138,5 +4139,9 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   private Node getTemplateHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getFaqTemplatesLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
+  }
+  
+  private String getLastActivityInfo (String author, long answerTime) {
+    return author + "-" + String.valueOf(answerTime);
   }
 }

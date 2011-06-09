@@ -533,12 +533,7 @@ public class UIQuestions extends UIContainer {
   }
 
   private String calculateTimeMessageOfLastActivity(long time) {
-    
-    
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setLenient(false);
-    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
+    Calendar calendar = Utils.getInstanceTempCalendar();
     long current = calendar.getTimeInMillis();
     long interval = current - time;
     if (interval < 60 * 60 * 1000) { // if interval is less than one hour.

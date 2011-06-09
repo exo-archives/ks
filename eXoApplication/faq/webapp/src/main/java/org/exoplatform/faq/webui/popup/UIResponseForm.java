@@ -366,7 +366,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
           answer.setNew(true);
         } else {
           answer = new Answer();
-          answer.setDateResponse(FAQUtils.getInstanceTempCalendar().getTime());
+          answer.setDateResponse(org.exoplatform.faq.service.Utils.getInstanceTempCalendar().getTime());
           String currentUser = FAQUtils.getCurrentUser();
           answer.setResponseBy(currentUser);
           answer.setFullName(FAQUtils.getFullName(currentUser));
@@ -515,7 +515,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
           answer.setNew(true);
           answer.setActivateAnswers(true);
           answer.setApprovedAnswers(responseForm.isAnswerApproved);
-          answer.setDateResponse(FAQUtils.getInstanceTempCalendar().getTime());
+          answer.setDateResponse(org.exoplatform.faq.service.Utils.getInstanceTempCalendar().getTime());
           answer.setResponseBy(user);
           answer.setResponses(responseContent);
           answer.setLanguage(responseForm.currentLanguage);

@@ -505,7 +505,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     public void onEvent(Event<UIQuestionForm> event, UIQuestionForm questionForm, String objectId) throws Exception {
       try {
         boolean isNew = true;
-        Date date = FAQUtils.getInstanceTempCalendar().getTime();
+        Date date = org.exoplatform.faq.service.Utils.getInstanceTempCalendar().getTime();
         String author = questionForm.inputAuthor.getValue();
         String emailAddress = questionForm.inputEmailAddress.getValue();
         String questionContent = questionForm.inputQuestionContent.getValue();

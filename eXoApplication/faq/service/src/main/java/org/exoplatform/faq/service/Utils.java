@@ -18,8 +18,10 @@ package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.jcr.Value;
@@ -267,6 +269,14 @@ public class Utils {
       queryString.append(FAQSetting.ORDERBY_DESC);
     }
     return queryString.toString();
+  }
+  
+  public static Calendar getInstanceTempCalendar() {
+    Calendar calendar = GregorianCalendar.getInstance();
+    calendar.setLenient(false);
+    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
+    return calendar;
   }
 
 }
