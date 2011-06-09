@@ -72,7 +72,8 @@ public class ResizeImageServiceImpl implements ResizeImageService {
       try {
         result = new BufferedInputStream(new FileInputStream(cacheFile));
       } catch (FileNotFoundException e) {
-        log.debug("Cached image is not found", e);
+        if (log.isDebugEnabled())
+          log.debug("Cached image is not found", e);
       }
     } else {
       try {
@@ -90,7 +91,8 @@ public class ResizeImageServiceImpl implements ResizeImageService {
         file.deleteOnExit();
         ImageIO.write(renderedImage, "png", file);
       } catch (IOException e) {
-        log.debug("Can't not get image", e);
+        if (log.isDebugEnabled())
+          log.debug("Can't not get image", e);
       } finally {
         image.flush();
       }

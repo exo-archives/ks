@@ -451,7 +451,8 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       }      
       return Response.ok(result, "image").cacheControl(cc).build();
     } catch (Exception e) {
-      log.debug(String.format("Can't get image name: %s of page %s", imageId, pageId), e);
+      if (log.isDebugEnabled())
+        log.debug(String.format("Can't get image name: %s of page %s", imageId, pageId), e);
       return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cc).build();
     }
   }

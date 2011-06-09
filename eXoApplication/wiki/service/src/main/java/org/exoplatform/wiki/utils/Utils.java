@@ -179,7 +179,7 @@ public class Utils {
     return wikiOwner;
   }
   
-  public static String getDefaultRestContext() {
+  public static String getDefaultRestBaseURI() {
     StringBuilder sb = new StringBuilder();
     sb.append("/");
     sb.append(PortalContainer.getCurrentPortalContainerName());
@@ -190,7 +190,7 @@ public class Utils {
 
   public static String getDefaultRepositoryWebDavUri() {
     StringBuilder sb = new StringBuilder();
-    sb.append(getDefaultRestContext());
+    sb.append(getDefaultRestBaseURI());
     sb.append(JCR_WEBDAV_SERVICE_BASE_URI);
     sb.append("/");
     RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
