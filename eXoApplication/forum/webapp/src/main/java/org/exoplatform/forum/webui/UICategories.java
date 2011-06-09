@@ -376,16 +376,23 @@ public class UICategories extends UIContainer {
       UICategories categories = event.getSource();
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
       String[] id = path.trim().split(ForumUtils.SLASH);
+      Forum forum = categories.forumService.getForum(id[0], id[1]);
       UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class);
-      forumPortlet.updateIsRendered(ForumUtils.FORUM);
-      UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
-      uiForumContainer.setIsRenderChild(true);
-      UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class);
-      uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
-      uiTopicContainer.updateByBreadcumbs(id[0], id[1], false, 0);
-      forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
-      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+      if(forum == null){
+        categories.AllForum.clear();
+        categories.mapListForum.clear();
+        ((UIApplication) forumPortlet).addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", new String[] {}, ApplicationMessage.WARNING));
+      } else {
+        forumPortlet.updateIsRendered(ForumUtils.FORUM);
+        UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
+        uiForumContainer.setIsRenderChild(true);
+        UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class);
+        uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+        uiTopicContainer.updateByBreadcumbs(id[0], id[1], false, 0);
+        forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
+      }
       categories.maptopicLast.clear();
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
 
@@ -395,8 +402,7 @@ public class UICategories extends UIContainer {
       WebuiRequestContext context = event.getRequestContext();
       String path = context.getRequestParameter(OBJECTID);
       String[] id = path.trim().split(ForumUtils.SLASH);
-      Forum forum = categories.getForumById(id[0], id[1]);
-      Topic topic = categories.maptopicLast.get(id[2]);
+      Topic topic = categories.forumService.getTopicSummary(id[0]+ForumUtils.SLASH+id[1]+ForumUtils.SLASH+id[2]);
       UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class);
       if (topic == null) {
         Object[] args = { ForumUtils.EMPTY_STR };
@@ -410,6 +416,7 @@ public class UICategories extends UIContainer {
         UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class);
         uiForumContainer.setIsRenderChild(false);
         UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class);
+        Forum forum = categories.getForumById(id[0], id[1]);
         uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
         uiTopicDetail.setUpdateForum(forum);
         uiTopicDetail.initInfoTopic(id[0], id[1], topic, 0);
@@ -428,12 +435,7 @@ public class UICategories extends UIContainer {
       WebuiRequestContext context = event.getRequestContext();
       String path = context.getRequestParameter(OBJECTID);// cateid/forumid/topicid/postid/
       String[] id = path.trim().split(ForumUtils.SLASH);
-      Topic topic = categories.maptopicLast.get(id[2]);
-      if (topic == null) {
-        topic = (Topic) categories.forumService.getObjectNameById(id[2], Utils.TOPIC);
-      } else {
-        topic = categories.forumService.getTopicUpdate(topic, true);
-      }
+      Topic topic = categories.forumService.getTopicSummary(id[0]+ForumUtils.SLASH+id[1]+ForumUtils.SLASH+id[2]);
       UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class);
       if (topic == null) {
         Object[] args = { ForumUtils.EMPTY_STR };
@@ -442,6 +444,7 @@ public class UICategories extends UIContainer {
         context.addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
         forumPortlet.updateUserProfileInfo();
       } else {
+        topic = categories.forumService.getTopicUpdate(topic, true);
         path = topic.getPath();
         Forum forum;
         if (path.indexOf(id[1]) < 0) {

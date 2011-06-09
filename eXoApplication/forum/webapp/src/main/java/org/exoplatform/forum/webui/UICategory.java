@@ -472,23 +472,30 @@ public class UICategory extends BaseForumForm {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String Id) throws Exception {
       String[] id = Id.trim().split(ForumUtils.SLASH);
       UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
-      forumPortlet.updateIsRendered(ForumUtils.FORUM);
-      UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
-      UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class);
-      uiForumContainer.setIsRenderChild(false);
-      UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class);
-      uiForumContainer.getChild(UIForumDescription.class).setForum(uiCategory.getForum(id[0]));
-      Topic topic = uiCategory.getTopic(id[1]);
-      topic = uiCategory.getForumService().getTopicUpdate(topic, true);
-      uiTopicDetail.setUpdateForum(uiCategory.getForum(id[0]));
-      uiTopicDetail.initInfoTopic(uiCategory.categoryId, id[0], topic, 0);
-      String lastPostId = ForumUtils.EMPTY_STR;
-      uiTopicDetail.setLastPostId(lastPostId);
-      if (lastPostId == null || lastPostId.length() < 0)
-        lastPostId = "lastpost";
-      uiTopicDetail.setIdPostView(lastPostId);
-      uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(uiCategory.categoryId, id[0], topic.getId());
-      forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId + ForumUtils.SLASH + id[0] + " "));
+      Topic topic = uiCategory.getForumService().getTopicSummary(uiCategory.categoryId+ForumUtils.SLASH+Id);
+      if(topic != null) {
+        forumPortlet.updateIsRendered(ForumUtils.FORUM);
+        UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
+        UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class);
+        uiForumContainer.setIsRenderChild(false);
+        UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class);
+        uiForumContainer.getChild(UIForumDescription.class).setForum(uiCategory.getForum(id[0]));
+        topic = uiCategory.getForumService().getTopicUpdate(topic, true);
+        uiTopicDetail.setUpdateForum(uiCategory.getForum(id[0]));
+        uiTopicDetail.initInfoTopic(uiCategory.categoryId, id[0], topic, 0);
+        String lastPostId = ForumUtils.EMPTY_STR;
+        uiTopicDetail.setLastPostId(lastPostId);
+        if (lastPostId == null || lastPostId.length() < 0)
+          lastPostId = "lastpost";
+        uiTopicDetail.setIdPostView(lastPostId);
+        uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(uiCategory.categoryId, id[0], topic.getId());
+        forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId + ForumUtils.SLASH + id[0] + " "));
+      } else {
+        Object[] args = { ForumUtils.EMPTY_STR };
+        UIApplication uiApp = (UIApplication)forumPortlet;
+        uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING));
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+      }
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
@@ -497,17 +504,13 @@ public class UICategory extends BaseForumForm {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, String path) throws Exception {
       WebuiRequestContext context = event.getRequestContext();
       String[] id = path.trim().split(ForumUtils.SLASH);
-      Topic topic = uiCategory.getTopic(id[2]);
-      if (topic == null) {
-        topic = (Topic) uiCategory.getForumService().getObjectNameById(id[2], Utils.TOPIC);
-      } else {
-        topic = uiCategory.getForumService().getTopicUpdate(topic, true);
-      }
+      Topic topic = uiCategory.getForumService().getTopicSummary(id[0]+ForumUtils.SLASH+id[1]+ForumUtils.SLASH+id[2]);
       UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
       if (topic == null) {
         warning("UIForumPortlet.msg.topicEmpty");
         forumPortlet.updateUserProfileInfo();
       } else {
+        topic = uiCategory.getForumService().getTopicUpdate(topic, true);
         path = topic.getPath();
         Forum forum;
         if (path.indexOf(id[1]) < 0) {

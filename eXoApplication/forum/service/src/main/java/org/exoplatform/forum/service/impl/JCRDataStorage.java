@@ -1269,7 +1269,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       return forums;
     } catch (Exception e) {
-      log.error("Error retrieving forums for category " + categoryId, e);
+      log.debug("Failed to retrieving forums for category " + categoryId, e);
       return new ArrayList<Forum>();
     } finally {
       sProvider.close();
@@ -1643,6 +1643,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   private Forum getForum(Node forumNode) throws Exception {
+    if(forumNode == null) return null;
     Forum forum = new Forum();
     PropertyReader reader = new PropertyReader(forumNode);
     forum.setId(forumNode.getName());
@@ -2028,15 +2029,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   private Node queryLastTopic(SessionProvider sProvider, String forumPath) throws Exception {
     Node forumHomeNode = getForumHomeNode(sProvider);
-    Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
-    QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
-    String queryString = JCR_ROOT + forumPath + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false'] order by @exo:lastPostDate descending";
-    Query query = qm.createQuery(queryString, Query.XPATH);
-    QueryResult result = query.execute();
-    NodeIterator iter = result.getNodes();
     Node topicNode = null;
-    boolean isSavePath = false;
     try {
+      Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
+      QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
+      String queryString = JCR_ROOT + forumPath + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false'] order by @exo:lastPostDate descending";
+      Query query = qm.createQuery(queryString, Query.XPATH);
+      QueryResult result = query.execute();
+      NodeIterator iter = result.getNodes();
+      boolean isSavePath = false;
       while (iter.hasNext()) {
         topicNode = iter.nextNode();
         if (!forumNode.hasProperty(EXO_IS_MODERATE_TOPIC) && !forumNode.getProperty(EXO_IS_MODERATE_TOPIC).getBoolean()) {
