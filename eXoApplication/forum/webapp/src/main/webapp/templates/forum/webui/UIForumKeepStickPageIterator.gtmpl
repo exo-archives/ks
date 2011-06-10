@@ -55,7 +55,7 @@
 			<% if(uicomponent.isLink) { %>
 				<% if(uicomponent.isUseAjax || isMod){ %>
 			<a title="<%=_ctx.appRes("UIForumPageIterator.label.NextPage");%>" class="ActionLink ActionIsMod Icon NextPageIcon"  actions="<%=uicomponent.event("GoPage","next")%>" href="<%=uicomponent.getURLGopage(String.valueOf(pageSelected+1))%>"></a>
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.ReturnLastPage");%>" class="ActionLink ActionIsMod Icon NextTopPageIcon" actions="<%=uicomponent.event("GoPage","next")%>" href="<%=uicomponent.getURLGopage(String.valueOf(max_page))%>"></a>
+			<a title="<%=_ctx.appRes("UIForumPageIterator.label.ReturnLastPage");%>" class="ActionLink ActionIsMod Icon NextTopPageIcon" actions="<%=uicomponent.event("GoPage","last")%>" href="<%=uicomponent.getURLGopage(String.valueOf(max_page))%>"></a>
 				<% } else { %>
 			<a title="<%=_ctx.appRes("UIForumPageIterator.label.NextPage");%>" class="ActionLink Icon NextPageIcon" href="<%=uicomponent.getURLGopage(String.valueOf(pageSelected+1))%>"></a>
 			<a title="<%=_ctx.appRes("UIForumPageIterator.label.ReturnLastPage");%>" class="ActionLink Icon NextTopPageIcon" href="<%=uicomponent.getURLGopage(String.valueOf(max_page))%>"></a>
