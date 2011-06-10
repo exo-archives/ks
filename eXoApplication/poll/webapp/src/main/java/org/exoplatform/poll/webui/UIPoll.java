@@ -87,18 +87,16 @@ public class UIPoll extends BasePollForm {
     UIPollPortlet pollPortlet = getAncestorOfType(UIPollPortlet.class);
     isAdmin = pollPortlet.isAdmin();
     userId = pollPortlet.getUserId();
+    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+    pollId = portletPref.getValue(Utils.POLL_ID_SHOW, "");
     if (Utils.isEmpty(pollId)) {
-      PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-      PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-      pollId = portletPref.getValue(Utils.POLL_ID_SHOW, "");
-      if (Utils.isEmpty(pollId)) {
-        List<String> list = getPollService().getPollSummary(null).getPollId();
-        if (!list.isEmpty()) {
-          pollId = list.get(0);
-        }
+      List<String> list = getPollService().getPollSummary(null).getPollId();
+      if (!list.isEmpty()) {
+        pollId = list.iterator().next();
       }
-      this.isEditPoll = true;
     }
+    this.isEditPoll = true;
   }
 
   public boolean hasUserInGroup(String groupId, String userId) throws Exception {
