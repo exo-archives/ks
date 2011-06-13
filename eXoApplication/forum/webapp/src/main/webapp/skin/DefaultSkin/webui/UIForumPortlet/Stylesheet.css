@@ -290,8 +290,8 @@
 
 .UIForumPortlet .ContentContainer .UIGrid td {
 	padding: 5px ;
-	border-right: 1px solid #e4e4e4;
-	border-left: 1px solid #e4e4e4;
+	border-right: 1px solid #D2D4DC;
+	border-left: 1px solid #D2D4DC;
 }
 
 .UIForumPortlet .ContentContainer .ForumStatusIcon {
@@ -336,7 +336,7 @@
 	padding-left: 20px;
 }
 
-.UIForumPortlet .ContentContainer .UIGrid .Tdbox	{
+.UIForumPortlet .UIGrid .Tdbox	{
 	padding: 0px;
 	text-align: center;
 	vertical-align: middle;
@@ -348,7 +348,7 @@
 }
 
 .UIForumPortlet .ContentContainer .LastPostInfos {
-	line-height: 14px;
+	line-height: 16px;
 }
 
 .UIForumPortlet .ContentContainer .LastPostInfos .LastPostCategory{
@@ -359,7 +359,7 @@
 	position: relative;
 }
 
-.UIForumPortlet .ContentContainer .UITopicList .PostBy {
+.UIForumPortlet .ContentContainer .PostBy {
 	color: #038ee6;
 }
 
@@ -387,6 +387,7 @@
 }
 
 /*============================= BBCode====================*/
+
 .UIForumPortlet .QuoteContent {
 	padding: 10px;
 }
@@ -475,9 +476,6 @@
 	height:17px;
 }
 
-
-
-
 .RightBBCodeHelpPopup .BBCodeHelpTL {
 	background: url('background/TopLeft28x49.png') no-repeat top left;
 	padding-left:28px;
@@ -513,3 +511,46 @@
 	height:20px;
 }
 
+/*============================= BBCode====================*/
+
+/*============================= UITopicsTag	====================*/
+
+.UITopicsTag .ForumContainer{
+	margin: 2px 0px;
+}
+
+.UIForumContainer .ContentContainer .WidthStatus{
+	width: 40px;
+}
+
+.UIForumContainer .ContentContainer .WidthRating{
+	width: 96px;
+}
+
+.UIForumContainer .ContentContainer .WidthLastPost{
+	width: 160px;	
+}
+
+.UIForumContainer .ContentContainer .WidthReplies{
+	width: 65px;
+}
+
+.UIForumContainer .ContentContainer .WidthCheck{
+	width: 30px;
+}
+
+.UIForumContainer .ContentContainer .TxtPopupTag{
+	left:2px; 
+	top:2px; 
+	width:140px
+}
+
+.UIForumContainer .ContentContainer .NotAvailableTheard{
+	text-align:center;
+	padding: 15px 0px;
+	font-weight: bold;
+}
+
+.UIForumPortlet .UITopicsTag .ForumToolbar .Title{
+	font-weight: normal;
+}
