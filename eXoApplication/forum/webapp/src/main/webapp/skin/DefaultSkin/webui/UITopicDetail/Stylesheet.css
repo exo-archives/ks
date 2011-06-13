@@ -1,8 +1,3 @@
-
-.UITopicDetail {
-	
-}
-
 .UITopicDetail .ButtomAndPageListContainer {
 	margin: 3px 0px 1px 0px;
 }
@@ -81,6 +76,14 @@
 	padding-bottom: 5px;
 }
 
+.UITopicDetail .ViewTopicContainer {
+	padding:10px 8px;
+}
+
+.UITopicDetail .ViewTopicContainer .ViewTopicPageIterator {
+	padding-bottom: 3px;
+}
+
 .UITopicDetail .TablePost {
 	border-collapse: separate;
 	border: 1px solid #c4c4c4;
@@ -99,9 +102,12 @@
 }
 
 .UITopicDetail .MemberContent .State {
-	float: left;
 	height: 20px;
 	cursor: pointer;
+	color: #135bbe;
+	line-height: 20px;
+	padding: 0px 5px 0px 20px;
+	margin: 0px;
 }
 
 .UITopicDetail .MemberContent .AvailableIcon {
@@ -110,14 +116,6 @@
 
 .UITopicDetail .MemberContent .BusyIcon {
 	background: url('../skinIcons/16x16/icons/BusyIcon.gif') no-repeat left center;
-}
-
-.UITopicDetail .MemberContent .Name {
-	float: none;
-	color: #135bbe;
-	line-height: 20px;
-	padding: 0px 5px 0px 20px;
-	margin: 0px;
 }
 
 .UITopicDetail .MemberContent .Action {
@@ -159,7 +157,7 @@
 }
 
 .UITopicDetail .PostViewContainer .BackgroundHeader {
-	background-color:#d0e4fe;
+	background-color: #d0e4fe;
 }
 
 .UITopicDetail .PostViewContainer .PostViewIcon {
@@ -170,9 +168,9 @@
 
 .UITopicDetail .PostViewContainer .PostTime {
 	padding: 2px 0px 0px 20px;
-	margin-right:4px;
-	font-size:10px; 
-	color:gray;
+	margin-right: 4px;
+	font-size: 10px; 
+	color: gray;
 }
 
 .UITopicDetail .PostViewContainer .PostContentContainer {
@@ -241,13 +239,11 @@
 	cursor: pointer;
 }
 
-.UITopicDetail .PostViewContainer .AttachmentContainer .Action .MaxView
-	{
+.UITopicDetail .PostViewContainer .AttachmentContainer .Action .MaxView {
 	background: url('icons/16x16/ViewIcon.gif') no-repeat left center;
 }
 
-.UITopicDetail .PostViewContainer .AttachmentContainer .Action .MiniView
-	{
+.UITopicDetail .PostViewContainer .AttachmentContainer .Action .MiniView {
 	background: url('icons/16x16/ViewIcon.gif') no-repeat left center;
 }
 
@@ -435,11 +431,11 @@
 	margin-left: 5px;
 }
 
-.UITopicDetail .MemberContent .ContentAction .ImgAvatar{
-	width: 70px;
+.UITopicDetail .MemberContent .ImgAvatar{
 	cursor:pointer;
 	max-width: 165px;
 }
+
 .UITopicDetail .PostViewContainer .UIPopupCategory .BloclPopupIP{
 	display:block; 
 	left:-60px;
@@ -464,7 +460,7 @@
 	position: relative;
 }
 
-.UIForumContainer .ContentContainer .MemberContent .InfoMember span{
+.UITopicDetail .ContentContainer .MemberContent .InfoMember span{
 	display: block;
 }
 
