@@ -2150,6 +2150,7 @@
 
 .UIViewerSettingForm .UITabPane .UITabContentContainer .UITabContent {
 	 border: none;
+	 height: auto;
 }
 
 .UIViewerSettingForm #FAQRootChildren {
