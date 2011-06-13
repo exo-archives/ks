@@ -1,7 +1,7 @@
 .UIForumPageIterator {    
 	float:right;
 	margin: 0px ;
-	padding: 3px 0px 0px 5px ;
+	padding: 3px 0px 3px 5px ;
 	overflow: hidden; 
 }
 
@@ -13,7 +13,8 @@
 .UIForumPageIterator .Icon {
   float: left ;
   margin: 0px 2px 0px 0px ;
-  width: 18px ; height: 17px ;
+  width: 18px ; 
+  height: 17px ;
 }
 
 
