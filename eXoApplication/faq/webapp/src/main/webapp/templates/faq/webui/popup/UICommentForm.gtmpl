@@ -9,7 +9,7 @@
 						uicomponent.setLink(url);
 						%>
 						<tr>
-							<td style="white-space:nowrap; width:120px" align="right"><div style="padding-right:10px;line-height:24px">
+							<td style="white-space:nowrap;" align="right"><div style="padding-right:10px;line-height:24px">
 								<%=_ctx.appRes("UICommentForm.title.Author")%> : </div>
 							</td>
 							<td>
