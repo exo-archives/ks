@@ -41,6 +41,7 @@ import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.AttachmentReferenceResolver;
 import org.xwiki.model.reference.DocumentReferenceResolver;
 import org.xwiki.model.reference.EntityReference;
+import org.xwiki.model.reference.ObjectReferenceResolver;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.wiki.WikiModel;
@@ -207,11 +208,14 @@ public class DefaultWikiModel implements WikiModel {
     try {
       DocumentReferenceResolver<String> stringDocumentReferenceResolver = componentManager.lookup(DocumentReferenceResolver.class);
       AttachmentReferenceResolver<String> stringAttachmentReferenceResolver = componentManager.lookup(AttachmentReferenceResolver.class);
+      ObjectReferenceResolver<String> stringObjectReferenceResolver = componentManager.lookup(ObjectReferenceResolver.class);
+      boolean isConfluenceSyntax = (objectName.indexOf('^') > 0) ? true : false;
       EntityReference entityReference = null;
       if (ResourceType.DOCUMENT.equals(type)) {
         entityReference = stringDocumentReferenceResolver.resolve(objectName);
       } else if (ResourceType.ATTACHMENT.equals(type)) {
-        entityReference = stringAttachmentReferenceResolver.resolve(objectName);
+        entityReference = (isConfluenceSyntax) ? stringObjectReferenceResolver.resolve(objectName)
+                                              : stringAttachmentReferenceResolver.resolve(objectName);
       }
       ExecutionContext ec = execution.getContext();
       WikiContext wikiContext = null;
@@ -225,7 +229,8 @@ public class DefaultWikiModel implements WikiModel {
                                                       .getName());
         wikiMarkupContext.setPageId(wikiMarkupContext.getPageTitle());
         wikiMarkupContext.setPageId(TitleResolver.getId(wikiMarkupContext.getPageId(), false));
-        EntityReference attachmentReference = entityReference.extractReference(EntityType.ATTACHMENT);
+        EntityReference attachmentReference = (isConfluenceSyntax) ? entityReference.extractReference(EntityType.OBJECT)
+                                                                  : entityReference.extractReference(EntityType.ATTACHMENT);
         if (attachmentReference != null) {
           wikiMarkupContext.setAttachmentName(attachmentReference.getName());
         }
