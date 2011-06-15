@@ -28,8 +28,10 @@
 <div class="UIWikiPageInfoArea">
 	<div class="TxtFeed">
 	  ${addedByLabel}&nbsp;-&nbsp;$lastModifiedByLabel
+	  <% if (versionsTotal>1) { %>
 	  <a class="Link" href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('$historyAnchor');"><%= "(" + _ctx.appRes("UIWikiPageInfoArea.label.ViewChange") + ")"; %></a>
 	  <a onclick="<%=uicomponent.event(uicomponent.SHOW_HISTORY);%>" id="$historyActionId" style="display:none;">&nbsp;</a>
+	  <% }%>
 	</div>
 	<%= totalAttachmentsLabel %></a>&nbsp;-&nbsp;<b>$versionsTotal</b><a class="Link" href="<%=uicomponent.event(uicomponent.SHOW_REVISION);%>">&nbsp;<%=_ctx.appRes("UIWikiPageInfoArea.label.TotalRevisions")%></a></div>
 </div>
