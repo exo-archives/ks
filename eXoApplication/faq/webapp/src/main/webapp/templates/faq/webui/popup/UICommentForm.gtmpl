@@ -1,6 +1,6 @@
 <div class="UIResponse $uicomponent.id">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" style="*width:93%;">
+		<div class="HorizontalLayout" style="*width:92%;">
 			<div class="UIFormInput">
 				<table width="100%">
 					<tbody>
@@ -9,11 +9,11 @@
 						uicomponent.setLink(url);
 						%>
 						<tr>
-							<td style="white-space:nowrap;" align="right"><div style="padding-right:10px;line-height:24px">
-								<%=_ctx.appRes("UICommentForm.title.Author")%> : </div>
+							<td style="white-space:nowrap;" align="right">
+							<div style="padding-right:10px;line-height:24px;*line-height:20px"><%=_ctx.appRes("UICommentForm.title.Author")%>: </div>
 							</td>
 							<td>
-								<div style="margin:0px 0px 5px 5px;"></div><% uiform.renderChild(uicomponent.TITLE_USERNAME) %>
+								<div style="padding-right:10px;line-height:24px"><% uiform.renderChild(uicomponent.TITLE_USERNAME) %></div>
 							</td>
 						</tr>
 						<tr>
@@ -75,5 +75,3 @@
 		</div>
 	<%uiform.end()%>
 </div>
-
-
