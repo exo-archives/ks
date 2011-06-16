@@ -387,7 +387,6 @@
 }
 
 /*============================= BBCode====================*/
-
 .UIForumPortlet .QuoteContent {
 	padding: 10px;
 }
@@ -416,102 +415,50 @@
 }
 
 .UIForumPortlet .IconBBCodeHelp {
- 	width: 16px; height:16px;
- 	float: left; margin: 0px 0px 0px 5px;
+ 	padding: 0px 8px;
+ 	margin: 0px 0px 0px 5px;
+  width: 16px; height: 16px;
  	cursor: pointer;
+  display: inline-block;
 }
 
-.UIForumPortlet .BBCodeHelpContent {
-  position: absolute;
-  display:none;
-  top: 8px;
-  left: 0px;
-  z-index: 100;
+.UIForumPortlet .LeftBBCodeHelpPopup .LeftBBCodeHelp {
+	background: url('background/TopLeft28x49.png') no-repeat top left;
+	left: 0px;
+}
+
+.UIForumPortlet .RightBBCodeHelpPopup .LeftBBCodeHelp {
+	background: url('background/TopRightLeft31x47.png') no-repeat top right;
+	right: 0px;
+}
+
+.UIForumPortlet .LeftBBCodeHelp {
+	position: absolute;
+	width: 18px; height: 49px;
+	z-index: 10;
+}
+
+.UIForumPortlet .LeftBBCodeHelpPopup .ContentHelp {
+	margin-left: 17px;
+}
+
+.UIForumPortlet .RightBBCodeHelpPopup .ContentHelp {
+	margin-right: 17px;
 }
 
 .UIForumPortlet .ContentHelp {
-	white-space:normal;
-	cursor: text;
-  position: absolute;
-  top: -35px;
+	-moz-border-radius: 9px 9px 9px 9px;
+	-webkit-border-radius: 9px 9px 9px 9px;
+	border-radius: 9px 9px 9px 9px;
+    -moz-box-shadow: 1px 1px 4px #A7A7A7;
+	-webkit-box-shadow: 1px 1px 4px #A7A7A7;
+	box-shadow: 1px 1px 4px #A7A7A7;
+  background: none repeat scroll 0 0 white;
+  border: 1px solid #717171;
+  padding: 8px;
+	white-space: normal;
+  cursor: text;
 }
-
-.BBCodeHelpPopup .ContentPosition {
-	position: relative;
-	background: #ffffff;
-}
-
-.LeftBBCodeHelpPopup .BBCodeHelpTL {
-	background: url('background/TopLeftLeft13x47.png') no-repeat top left;
-	padding-left:13px;
-}
-.LeftBBCodeHelpPopup .BBCodeHelpTR {
-	background: url('background/TopRightLeft31x47.png') no-repeat top right;
-	padding-right:31px;
-}
-.LeftBBCodeHelpPopup .BBCodeHelpTC {
-	background: #ffffff url('background/TopCenterLeft1x14.png') repeat-x top;
-	height:47px;
-}
-
-.LeftBBCodeHelpPopup .BBCodeHelpML {
-	background: url('background/LeftMiddleLeft13x1.png') repeat-y top left;
-	padding-left:13px;
-}
-.LeftBBCodeHelpPopup .BBCodeHelpMR {
-	background: url('background/MiddleRightLeft31x1.png') repeat-y top right;
-	padding-right:31px;
-}
-
-.LeftBBCodeHelpPopup .BBCodeHelpBL {
-	background: url('background/BottomLeftLeft13x17.png') no-repeat top left;
-	padding-left:13px;
-}
-.LeftBBCodeHelpPopup .BBCodeHelpBR {
-	background: url('background/BottomRightLeft31x17.png') no-repeat top right;
-	padding-right:31px;
-}
-.LeftBBCodeHelpPopup .BBCodeHelpBC {
-	background: url('background/BottomCenterLeft1x17.png') repeat-x top;
-	height:17px;
-}
-
-.RightBBCodeHelpPopup .BBCodeHelpTL {
-	background: url('background/TopLeft28x49.png') no-repeat top left;
-	padding-left:28px;
-}
-.RightBBCodeHelpPopup .BBCodeHelpTR {
-	background: url('background/TopRight15x49.png') no-repeat top right;
-	padding-right:15px;
-}
-.RightBBCodeHelpPopup .BBCodeHelpTC {
-	background: #ffffff url('background/TopCenter1x12.png') repeat-x top;
-	height:49px;
-}
-
-.RightBBCodeHelpPopup .BBCodeHelpML {
-	background: url('background/MiddleLeft28x1.png') repeat-y top left;
-	padding-left:28px;
-}
-.RightBBCodeHelpPopup .BBCodeHelpMR {
-	background: url('background/MiddleRight15x1.png') repeat-y top right;
-	padding-right:15px;
-}
-
-.RightBBCodeHelpPopup .BBCodeHelpBL {
-	background: url('background/BottomLeft28x20.png') no-repeat bottom left;
-	padding-left:28px;
-}
-.RightBBCodeHelpPopup .BBCodeHelpBR {
-	background: url('background/BottomRight16x20.png') no-repeat bottom right;
-	padding-right:16px;
-}
-.RightBBCodeHelpPopup .BBCodeHelpBC {
-	background: url('background/BottomCenter1x20.png') repeat-x bottom;
-	height:20px;
-}
-
-/*============================= BBCode====================*/
 
 /*============================= UITopicsTag	====================*/
 

@@ -1,7 +1,7 @@
 <div class="UIAddBBCodeForm">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout">
-			<div class="UIFormInput">
+
 				<table class="UIFormGrid">
 					<tbody>
 					<% if(!uiform.getPriview()) {
@@ -11,149 +11,58 @@
 						<tr>
 							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_TAGNAME_INPUT);%></td>
 							<td class="FieldComponent" colspan="2">
-								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%></div>
+								<%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%>
 								<% id = uiform.FIELD_TAGNAME_INPUT + "Help"; %>
-								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
-									<div style="position: absolute;">
-										<div class="BBCodeHelpContent">
-										
-											<div class="BBCodeHelpPopup">
-												<div id="${id}ID" class="LeftBBCodeHelpPopup">
-													<div class="BBCodeHelpTL">
-														<div class="BBCodeHelpTR">
-															<div class="BBCodeHelpTC"><span></span></div>
-														</div>
-													</div>
-													<div class="BBCodeHelpML">
-														<div class="BBCodeHelpMR">
-															<div class="ContentPosition">
-																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
-															</div>
-														</div>
-													</div>
-													<div class="BBCodeHelpBL">
-														<div class="BBCodeHelpBR">
-															<div class="BBCodeHelpBC"><span></span></div>
-														</div>
-													</div>
-												</div>
-											</div>
-										
-										</div>
-									</div>
+								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')"></a>
+								<div id="$id" style="position: absolute;">
+                  <div id="${id}ID" class="LeftBBCodeHelpPopup" style="position:absolute; top:8px; left:-2px z-index:100; display:none;">
+                    <span class="LeftBBCodeHelp"></span>
+                    <div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+                  </div>
 								</div>
-								<div style="clear:left;"><span></span></div>
 							</td>
 						</tr>
 						<tr>
 							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_REPLACEMENT_TEXTARE);%></td>
 							<td class="FieldComponent" colspan="2">
-								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%></div>
+								<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
 								<% id = uiform.FIELD_REPLACEMENT_TEXTARE + "Help"; %>
-								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
-									<div style="position: absolute;">
-										<div class="BBCodeHelpContent">
-										
-											<div class="BBCodeHelpPopup">
-												<div id="${id}ID" class="LeftBBCodeHelpPopup">
-													<div class="BBCodeHelpTL">
-														<div class="BBCodeHelpTR">
-															<div class="BBCodeHelpTC"><span></span></div>
-														</div>
-													</div>
-													<div class="BBCodeHelpML">
-														<div class="BBCodeHelpMR">
-															<div class="ContentPosition">
-																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
-															</div>
-														</div>
-													</div>
-													<div class="BBCodeHelpBL">
-														<div class="BBCodeHelpBR">
-															<div class="BBCodeHelpBC"><span></span></div>
-														</div>
-													</div>
-												</div>
-											</div>
-										
+								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')"></a>
+                <div id="$id" style="position: absolute;">
+										<div id="${id}ID" class="LeftBBCodeHelpPopup" style="position:absolute; top:8px; left:-2px z-index:100; display:none;">
+											<span class="LeftBBCodeHelp"></span>
+											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
 										</div>
-									</div>
 								</div>
-								<div style="clear:left;"><span></span></div>
+								
 							</td>
 						</tr>
 						<tr>
 							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_DESCRIPTION_TEXTARE);%></td>
 							<td class="FieldComponent" colspan="2">
-								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%></div>
+								<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
 								<% id = uiform.FIELD_DESCRIPTION_TEXTARE + "Help"; %>
-								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
-									<div style="position: absolute;">
-										<div class="BBCodeHelpContent">
-										
-											<div class="BBCodeHelpPopup">
-												<div id="${id}ID" class="LeftBBCodeHelpPopup">
-													<div class="BBCodeHelpTL">
-														<div class="BBCodeHelpTR">
-															<div class="BBCodeHelpTC"><span></span></div>
-														</div>
-													</div>
-													<div class="BBCodeHelpML">
-														<div class="BBCodeHelpMR">
-															<div class="ContentPosition">
-																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
-															</div>
-														</div>
-													</div>
-													<div class="BBCodeHelpBL">
-														<div class="BBCodeHelpBR">
-															<div class="BBCodeHelpBC"><span></span></div>
-														</div>
-													</div>
-												</div>
-											</div>
-										
+								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')"></a>
+								<div id="$id" style="position: absolute;">
+										<div id="${id}ID" class="LeftBBCodeHelpPopup" style="position:absolute; top:8px; left:-2px z-index:100; display:none;">
+											<span class="LeftBBCodeHelp"></span>
+											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
 										</div>
-									</div>
 								</div>
-								<div style="clear:left;"><span></span></div>
 							</td>
 						</tr>
 						<tr>
 							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_EXAMPLE_TEXTARE);%></td>
 							<td class="FieldComponent" style="width:360px;">
-								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%></div>
+								<%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%>
 								<% id = uiform.FIELD_EXAMPLE_TEXTARE + "Help"; %>
-								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
-									<div style="position: absolute;">
-										<div class="BBCodeHelpContent">
-										
-											<div class="BBCodeHelpPopup">
-												<div id="${id}ID" class="LeftBBCodeHelpPopup">
-													<div class="BBCodeHelpTL">
-														<div class="BBCodeHelpTR">
-															<div class="BBCodeHelpTC"><span></span></div>
-														</div>
-													</div>
-													<div class="BBCodeHelpML">
-														<div class="BBCodeHelpMR">
-															<div class="ContentPosition">
-																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
-															</div>
-														</div>
-													</div>
-													<div class="BBCodeHelpBL">
-														<div class="BBCodeHelpBR">
-															<div class="BBCodeHelpBC"><span></span></div>
-														</div>
-													</div>
-												</div>
-											</div>
-										
+								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')"></a>
+								<div id="$id" style="position: absolute;">
+										<div id="${id}ID" class="LeftBBCodeHelpPopup" style="position:absolute; top:8px; left:-2px z-index:100; display:none;">
+											<span class="LeftBBCodeHelp"></span>
+											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
 										</div>
-									</div>
 								</div>
-								<div style="clear:left;"><span></span></div>
 							</td>
 							<td class="FieldComponent">
 								<div class="UIAction"> 
@@ -164,9 +73,7 @@
 													<div class="ButtonLeft">
 														<div class="ButtonRight">
 															<div class="ButtonMiddle">
-																<a href="$actionPriview">
-																	<span><%=_ctx.appRes("UIAddBBCodeForm.action.Preview");%></span>
-																</a>
+																<a href="$actionPriview"><%=_ctx.appRes("UIAddBBCodeForm.action.Preview");%></a>
 															</div>
 														</div>
 													</div>
@@ -182,36 +89,13 @@
 							<td class="FieldComponent" colspan="2">
 								<div class="FloatLeft" id="<%=uiform.FIELD_USEOPTION_CHECKBOX%>"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%></div>
 								<% id = uiform.FIELD_USEOPTION_CHECKBOX + "Help"; %>
-								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
-									<div style="position: absolute;">
-										<div class="BBCodeHelpContent">
-										
-											<div class="BBCodeHelpPopup">
-												<div id="${id}ID" class="LeftBBCodeHelpPopup">
-													<div class="BBCodeHelpTL">
-														<div class="BBCodeHelpTR">
-															<div class="BBCodeHelpTC"><span></span></div>
-														</div>
-													</div>
-													<div class="BBCodeHelpML">
-														<div class="BBCodeHelpMR">
-															<div class="ContentPosition">
-																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
-															</div>
-														</div>
-													</div>
-													<div class="BBCodeHelpBL">
-														<div class="BBCodeHelpBR">
-															<div class="BBCodeHelpBC"><span></span></div>
-														</div>
-													</div>
-												</div>
-											</div>
-										
+								<div class="IconBBCodeHelp ShowHelpIcon" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')"></a>
+								<div id="$id" style="position: absolute;">
+										<div id="${id}ID" class="LeftBBCodeHelpPopup" style="position:absolute; top:8px; left:-2px z-index:100; display:none;">
+											<span class="LeftBBCodeHelp"></span>
+											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
 										</div>
-									</div>
 								</div>
-								<div style="clear:left;"><span></span></div>
 							</td>
 						</tr>
 						<% } else { 
@@ -228,7 +112,7 @@
 								<div class="UIAction"> 
 									<table class="ActionContainer">
 										<tr>
-											<td align="center">
+											<td>
 												<div onclick="link" class="ActionButton LightBlueStyle">
 													<div class="ButtonLeft">
 														<div class="ButtonRight">
@@ -246,10 +130,8 @@
 						</tr>
 						<tr>
 							<td class="FieldPriview">
-								<div class="PreviewContainer">
-									<% String example = uiform.getReplaceByBBCode(); %>
-									<samp>$example</samp>
-								</div>
+              <% String example = uiform.getReplaceByBBCode(); %>
+								<div class="PreviewContainer">$example</div>
 							</td>
 						</tr>
 						<tr>
@@ -257,7 +139,7 @@
 								<div class="UIAction"> 
 									<table class="ActionContainer">
 										<tr>
-											<td align="center">
+											<td >
 												<div class="ActionButton LightBlueStyle">
 													<div class="ButtonLeft">
 														<div class="ButtonRight">
@@ -285,7 +167,7 @@
 					<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
 					</div>
 				<% } %>
-			</div>
+
 		</div>
 		<div class="UIAction"> 
 			<table class="ActionContainer">
