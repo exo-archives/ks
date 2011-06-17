@@ -30,7 +30,7 @@ import org.exoplatform.wiki.webui.WikiMode;
  */
 public class ShowHistoryActionListener extends EventListener<UIComponent> {
 
-  public static final String SHOWHISTORY = "ShowHistory";
+  public static final String SHOW_HISTORY = "ShowHistory";
   
   @Override
   public void execute(Event<UIComponent> event) throws Exception {

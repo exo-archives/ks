@@ -67,7 +67,7 @@ public class UIWikiPageVersionsCompare extends UIWikiContainer {
   
   private int changes;
   
-  public static final String SHOWHISTORY    = ShowHistoryActionListener.SHOWHISTORY;
+  public static final String SHOW_HISTORY    = ShowHistoryActionListener.SHOW_HISTORY;
   
   public static final String VIEW_REVISION  = "ViewRevision";
   

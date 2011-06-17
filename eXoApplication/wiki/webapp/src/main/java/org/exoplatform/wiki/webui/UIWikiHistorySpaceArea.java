@@ -36,13 +36,13 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
 )
 public class UIWikiHistorySpaceArea extends UIWikiContainer {
   
-  public static final String VERSIONLISTCOMPONENT = "UIWikiHistorySpaceArea_UIWikiPageVersionsList";
+  public static final String VERSION_LIST_COMPONENT = "UIWikiHistorySpaceArea_UIWikiPageVersionsList";
 
   public UIWikiHistorySpaceArea() throws Exception {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.SHOWHISTORY,
         WikiMode.COMPAREREVISION });
     
-    addChild(UIWikiPageVersionsList.class, null, VERSIONLISTCOMPONENT);
+    addChild(UIWikiPageVersionsList.class, null, VERSION_LIST_COMPONENT);
     addChild(UIWikiPageVersionsCompare.class, null, null);
   }
 

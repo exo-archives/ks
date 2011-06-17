@@ -57,7 +57,7 @@ public class UIWikiVersionSelect extends UIWikiContainer {
   public static final String VIEW_CURRENT_VERSION = "ViewCurrentVersion";
   public static final String COMPARE_ACTION = "CompareRevision";
   public static final String RESTORE_ACTION = "Restore";
-  public static final String SHOW_HISTORY = ShowHistoryActionListener.SHOWHISTORY;
+  public static final String SHOW_HISTORY = ShowHistoryActionListener.SHOW_HISTORY;
   public static final String NEXT_VERSION = "NextVersion";
   public static final String PREVIOUS_VERSION = "PreviousVersion";
   public static final String VIEW_REVISION  = "ViewRevision";

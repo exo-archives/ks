@@ -11,10 +11,10 @@
 %>
 <div class="UIWikiPageVersionsCompare" id="$uicomponent.id">
 <%
-  String showHistory = uicomponent.SHOWHISTORY;
+  String showHistory = uicomponent.SHOW_HISTORY;
   String anchor = "#" + showHistory;
   String showHistoryLinkId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + showHistory;;
-  String showHistoryLink = uicomponent.event(uicomponent.SHOWHISTORY);
+  String showHistoryLink = uicomponent.event(uicomponent.SHOW_HISTORY);
   String fromVersionName = uicomponent.getFromVersion().getName();
   String fromVersionViewLink = uicomponent.event(uicomponent.VIEW_REVISION, fromVersionName);
   String fromVersionAuthor = uicomponent.getFromVersion().getNTFrozenNode().getAuthor();
