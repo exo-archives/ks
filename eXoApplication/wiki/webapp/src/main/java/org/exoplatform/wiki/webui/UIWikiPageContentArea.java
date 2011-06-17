@@ -47,7 +47,6 @@ import org.xwiki.rendering.syntax.Syntax;
 public class UIWikiPageContentArea extends UIWikiContainer {
 
   private String htmlOutput;
-  private boolean isRunned;
   
   public UIWikiPageContentArea() throws Exception{
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.HELP, WikiMode.VIEWREVISION });
@@ -65,14 +64,11 @@ public class UIWikiPageContentArea extends UIWikiContainer {
   
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
-    if(!isRunned) {
-      renderVersion(true);
-    }
+    renderVersion();
     super.processRender(context);
   }
 
-  public void renderVersion(boolean isRunned) throws Exception {
-    this.isRunned = isRunned;
+  public void renderVersion() throws Exception {
     String currentVersionName= this.getChild(UIWikiVersionSelect.class).getVersionName();
     UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
     WikiMode currentMode= wikiPortlet.getWikiMode();

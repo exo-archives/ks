@@ -19,11 +19,9 @@ package org.exoplatform.wiki.webui;
 import java.util.Arrays;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
@@ -34,20 +32,18 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
  */
 @ComponentConfig(
   lifecycle = Lifecycle.class,
-  template = "app:/templates/wiki/webui/UIWikiHistorySpaceArea.gtmpl",
-  events = {
-    @EventConfig(listeners = UIWikiHistorySpaceArea.ReturnViewModeActionListener.class)
-  }
+  template = "app:/templates/wiki/webui/UIWikiHistorySpaceArea.gtmpl"
 )
 public class UIWikiHistorySpaceArea extends UIWikiContainer {
-
-  public static final String RETURN_VIEW_MODE = "ReturnViewMode";
+  
+  public static final String VERSIONLISTCOMPONENT = "UIWikiHistorySpaceArea_UIWikiPageVersionsList";
 
   public UIWikiHistorySpaceArea() throws Exception {
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.SHOWHISTORY});
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.SHOWHISTORY,
+        WikiMode.COMPAREREVISION });
     
-    addChild(UIWikiPageVersionsList.class, null, "UIWikiPageVersionsList1").setRendered(true);
-    addChild(UIWikiPageVersionsCompare.class, null, null).setRendered(false);
+    addChild(UIWikiPageVersionsList.class, null, VERSIONLISTCOMPONENT);
+    addChild(UIWikiPageVersionsCompare.class, null, null);
   }
 
   public boolean isShowVersion() {
@@ -67,15 +63,6 @@ public class UIWikiHistorySpaceArea extends UIWikiContainer {
     UIWikiVersionSelect wikiVersionSelect = pageContentArea.getChild(UIWikiVersionSelect.class);
     wikiVersionSelect.setVersionName(versionName);
     wikiPortlet.changeMode(WikiMode.VIEWREVISION);
-    pageContentArea.renderVersion(true);
-  }
-  
-  static public class ReturnViewModeActionListener extends EventListener<UIWikiHistorySpaceArea> {
-    @Override
-    public void execute(Event<UIWikiHistorySpaceArea> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      wikiPortlet.changeMode(WikiMode.VIEW);
-    }
   }
 
 }

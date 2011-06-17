@@ -23,9 +23,20 @@ function UIWikiPageVersionsList(){
 
 UIWikiPageVersionsList.prototype.init = function(formId) {
   var me = eXo.wiki.UIWikiPageVersionsList;
+  var DOMUtil = eXo.core.DOMUtil;
   me.selectedCheckbox = new Array();
   var versionListForm = document.getElementById(formId);
-  var inputs = eXo.core.DOMUtil.findDescendantsByTagName(versionListForm,"input");
+  var inputs = DOMUtil.findDescendantsByTagName(versionListForm,"input");
+  var compareButton = DOMUtil.findFirstDescendantByClass(versionListForm,"div","RefreshModeTarget");
+  compareButton.onclick = function(evt){
+    if (me.selectedCheckbox.length == 2) {
+      eXo.wiki.UIWikiAjaxRequest.makeNewHash("#CompareRevision");
+    }
+    else {
+      alert(compareButton.getAttribute("msg"));
+    }
+  };
+  
   var ln = inputs.length;
   for ( var i = 0; i < ln; i++) {
     var input = inputs[i];

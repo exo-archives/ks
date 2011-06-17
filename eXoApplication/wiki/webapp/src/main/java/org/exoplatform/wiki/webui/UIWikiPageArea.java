@@ -35,7 +35,7 @@ public class UIWikiPageArea extends UIWikiContainer {
   public UIWikiPageArea() throws Exception{
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE,
         WikiMode.ADDPAGE, WikiMode.PAGE_NOT_FOUND, WikiMode.DELETEPAGE, WikiMode.HELP,
-        WikiMode.VIEWREVISION, WikiMode.ADDTEMPLATE, WikiMode.EDITTEMPLATE });
+        WikiMode.VIEWREVISION, WikiMode.ADDTEMPLATE, WikiMode.EDITTEMPLATE});
     
     addChild(UIWikiPageContentArea.class, null, null);
     addChild(UIWikiPageEditForm.class, null, null);

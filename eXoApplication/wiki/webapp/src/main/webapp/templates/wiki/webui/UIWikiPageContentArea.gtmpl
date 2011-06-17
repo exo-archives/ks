@@ -10,5 +10,4 @@
 	<div class="WikiContent">
 	 ${uicomponent.htmlOutput}
 	</div>
-	<%uicomponent.isRunned = false;%>
 </div>

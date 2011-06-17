@@ -16,13 +16,14 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -41,7 +42,7 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
   lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPageInfoArea.gtmpl",
   events = {
-    @EventConfig(listeners = UIWikiPageInfoArea.ShowHistoryActionListener.class),
+    @EventConfig(listeners = UIWikiPageInfoArea.CompareRevisionActionListener.class),
     @EventConfig(listeners = UIWikiPageInfoArea.ShowRevisionActionListener.class),
     @EventConfig(listeners = UIWikiPageInfoArea.ToggleAttachmentsActionListener.class)
   }
@@ -54,7 +55,7 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
   
   public static String SHOW_REVISION = "ShowRevision";
   
-  public static String SHOW_HISTORY = "ShowHistory";
+  public static String COMPARE_REVISION = "CompareRevision";
 
   public UIWikiPageInfoArea() {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW });
@@ -102,21 +103,17 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
           attachform.setRendered(false);
         }
         pageVersions.setRendered(true);
-        pageVersions.setVersionsList(Utils.processShowRevisionAction());
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea.getParent());
     }
   }
 
-  public static class ShowHistoryActionListener extends EventListener<UIWikiPageInfoArea> {
-    public void execute(Event<UIWikiPageInfoArea> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      wikiPortlet.changeMode(WikiMode.SHOWHISTORY);
-      UIWikiHistorySpaceArea historySpaceArea = wikiPortlet.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
-      UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class);
-      List<NTVersion> versions = Utils.processShowRevisionAction();
-      pageVersionsList.setVersionsList(versions);
-      pageVersionsList.renderVersionsDifference(versions, event.getRequestContext());
+  public static class CompareRevisionActionListener
+                                                   extends
+                                                   org.exoplatform.wiki.webui.control.action.CompareRevisionActionListener {
+    public void execute(Event<UIComponent> event) throws Exception {
+      this.setVersionToCompare(new ArrayList<NTVersion>((Utils.getCurrentPageRevisions())));
+      super.execute(event);
     }
   }
 

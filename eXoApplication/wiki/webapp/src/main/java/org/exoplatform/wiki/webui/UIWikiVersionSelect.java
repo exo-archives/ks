@@ -22,12 +22,15 @@ import java.util.List;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.webui.control.action.RestoreActionListener;
+import org.exoplatform.wiki.webui.control.action.ShowHistoryActionListener;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
@@ -40,9 +43,9 @@ import org.exoplatform.wiki.webui.core.UIWikiContainer;
   lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiVersionSelect.gtmpl",
   events = {
-    @EventConfig(listeners = UIWikiVersionSelect.CompareActionListener.class),
-    @EventConfig(listeners = UIWikiVersionSelect.RestoreActionListener.class),
-    @EventConfig(listeners = UIWikiVersionSelect.ShowHistoryActionListener.class),
+    @EventConfig(listeners = UIWikiVersionSelect.CompareRevisionActionListener.class),
+    @EventConfig(listeners = RestoreActionListener.class),
+    @EventConfig(listeners = ShowHistoryActionListener.class),
     @EventConfig(listeners = UIWikiVersionSelect.NextVersionActionListener.class),
     @EventConfig(listeners = UIWikiVersionSelect.PreviousVersionActionListener.class)
   }
@@ -52,9 +55,9 @@ public class UIWikiVersionSelect extends UIWikiContainer {
   private String versionName;
   
   public static final String VIEW_CURRENT_VERSION = "ViewCurrentVersion";
-  public static final String COMPARE_ACTION = "Compare";
+  public static final String COMPARE_ACTION = "CompareRevision";
   public static final String RESTORE_ACTION = "Restore";
-  public static final String SHOW_HISTORY = "ShowHistory";
+  public static final String SHOW_HISTORY = ShowHistoryActionListener.SHOWHISTORY;
   public static final String NEXT_VERSION = "NextVersion";
   public static final String PREVIOUS_VERSION = "PreviousVersion";
   public static final String VIEW_REVISION  = "ViewRevision";
@@ -84,49 +87,22 @@ public class UIWikiVersionSelect extends UIWikiContainer {
     return (version < versionTotals) ? true : false;
   } 
   
-  static public class CompareActionListener extends EventListener<UIWikiVersionSelect> {
+  static public class CompareRevisionActionListener
+                                                   extends
+                                                   org.exoplatform.wiki.webui.control.action.CompareRevisionActionListener {
     @Override
-    public void execute(Event<UIWikiVersionSelect> event) throws Exception {
-      UIWikiVersionSelect versionSelect = event.getSource();
-      UIWikiPortlet wikiPortlet = versionSelect.getAncestorOfType(UIWikiPortlet.class);
-      UIWikiHistorySpaceArea uiHistorySpace = wikiPortlet.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
-      UIWikiPageVersionsList uiVersionsList = uiHistorySpace.getChild(UIWikiPageVersionsList.class);
-      List<NTVersion> comparedVersions = new ArrayList<NTVersion>();
-      List<NTVersion> versionsList = uiVersionsList.getVersionsList();
-      comparedVersions.add(versionsList.get(0));
-      for (NTVersion version : versionsList) {
-        if (version.getName().equals(versionSelect.versionName)) {
-          comparedVersions.add(version);
+    public void execute(Event<UIComponent> event) throws Exception {
+      UIWikiVersionSelect versionSelect = (UIWikiVersionSelect) event.getSource();
+      List<NTVersion> versionsList = Utils.getCurrentPageRevisions();
+      this.setVersionToCompare(new ArrayList<NTVersion>(versionsList));
+      this.setTo(0);
+      for (int i = 0; i < versionsList.size(); i++) {
+        if (versionsList.get(i).getName().equals(versionSelect.versionName)) {
+          this.setFrom(i);
           break;
         }
       }
-      uiVersionsList.renderVersionsDifference(comparedVersions, event.getRequestContext());
-      wikiPortlet.changeMode(WikiMode.SHOWHISTORY);
-    }
-  }
-  
-  static public class RestoreActionListener extends EventListener<UIWikiVersionSelect> {
-    @Override
-    public void execute(Event<UIWikiVersionSelect> event) throws Exception {
-      UIWikiVersionSelect versionSelect = event.getSource();
-      PageImpl wikipage = (PageImpl) Utils.getCurrentWikiPage();
-      wikipage.restore(versionSelect.versionName, false);
-      wikipage.checkout();
-      wikipage.checkin();
-      wikipage.checkout();
-      event.getSource().getAncestorOfType(UIWikiPortlet.class).changeMode(WikiMode.VIEW);
-    }
-  }
-  
-  static public class ShowHistoryActionListener extends EventListener<UIWikiVersionSelect> {
-    @Override
-    public void execute(Event<UIWikiVersionSelect> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIWikiHistorySpaceArea historySpaceArea = wikiPortlet.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
-      UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class);
-      List<NTVersion> versions = Utils.processShowRevisionAction();
-      pageVersionsList.setVersionsList(versions);
-      pageVersionsList.renderVersionsDifference(versions, event.getRequestContext());
+      super.execute(event);
     }
   }
   

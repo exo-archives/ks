@@ -43,12 +43,10 @@ import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.resolver.PageResolver;
 import org.exoplatform.wiki.resolver.TitleResolver;
-import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.webui.control.AddExtensionContainer;
-import org.exoplatform.wiki.webui.control.UIPageToolBar;
 import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
 
 /**
@@ -233,11 +231,6 @@ public class UIWikiPortlet extends UIPortletApplication {
       findFirstComponentOfType(UIWikiAttachmentArea.class).setRendered(true);
       findFirstComponentOfType(UIWikiRichTextArea.class).setRendered(false);
       findFirstComponentOfType(UIWikiPageEditForm.class).getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT).setRendered(true);
-    }
-    if (newMode.equals(WikiMode.SHOWHISTORY)) {
-      UIWikiHistorySpaceArea historySpaceArea = findFirstComponentOfType(UIWikiHistorySpaceArea.class);
-      historySpaceArea.getChild(UIWikiPageVersionsList.class).setRendered(true);
-      historySpaceArea.getChild(UIWikiPageVersionsCompare.class).setRendered(false);
     }
     mode = newMode;
   }

@@ -11,8 +11,6 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.commons.VersionNameComparatorDesc;
@@ -22,14 +20,16 @@ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.webui.control.UIRelatedPagesContainer;
+import org.exoplatform.wiki.webui.control.action.ShowHistoryActionListener;
+import org.exoplatform.wiki.webui.control.action.ViewRevisionActionListener;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
 import org.xwiki.rendering.syntax.Syntax;
 
 @ComponentConfig(
   template = "app:/templates/wiki/webui/UIWikiPageInfo.gtmpl",
   events = {
-    @EventConfig(listeners = UIWikiPageInfo.ViewRevisionActionListener.class),
-    @EventConfig(listeners = UIWikiPageInfo.ShowHistoryActionListener.class)
+    @EventConfig(listeners = ViewRevisionActionListener.class),
+    @EventConfig(listeners = ShowHistoryActionListener.class)
   }
 )
 public class UIWikiPageInfo extends UIWikiContainer {
@@ -86,22 +86,4 @@ public class UIWikiPageInfo extends UIWikiContainer {
     return Utils.getCurrentWikiPage();
   }
   
-  static public class ViewRevisionActionListener extends EventListener<UIWikiPageInfo> {
-    @Override
-    public void execute(Event<UIWikiPageInfo> event) throws Exception {
-      UIWikiHistorySpaceArea.viewRevision(event);
-    }
-  }
-
-  public static class ShowHistoryActionListener extends EventListener<UIWikiPageInfo> {
-    @Override
-    public void execute(Event<UIWikiPageInfo> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIWikiHistorySpaceArea historySpaceArea = wikiPortlet.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
-      UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class);
-      List<NTVersion> versions = Utils.processShowRevisionAction();
-      pageVersionsList.setVersionsList(versions);
-      pageVersionsList.renderVersionsDifference(versions, event.getRequestContext());
-    }
-  }
 }

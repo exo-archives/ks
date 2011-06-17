@@ -456,11 +456,10 @@ public class Utils {
     }
   }
   
-  public static List<NTVersion> processShowRevisionAction() throws Exception {
+  public static List<NTVersion> getCurrentPageRevisions() throws Exception {
     PageImpl wikipage = (PageImpl) getCurrentWikiPage();
     Iterator<NTVersion> iter = wikipage.getVersionableMixin().getVersionHistory().iterator();
     List<NTVersion> versionsList = new ArrayList<NTVersion>();
-    // TODO: sort descendant by updated date
     while (iter.hasNext()) {
       NTVersion version = iter.next();
       if (!(WikiNodeType.Definition.ROOT_VERSION.equals(version.getName()))) {

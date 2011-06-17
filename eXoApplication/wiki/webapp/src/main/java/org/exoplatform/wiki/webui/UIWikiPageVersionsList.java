@@ -17,29 +17,22 @@
 package org.exoplatform.wiki.webui;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
-import org.exoplatform.wiki.commons.VersionNameComparatorDesc;
-import org.exoplatform.wiki.mow.api.WikiNodeType;
-import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
-import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
-import org.exoplatform.wiki.service.diff.DiffResult;
-import org.exoplatform.wiki.service.diff.DiffService;
+import org.exoplatform.wiki.webui.control.action.RestoreActionListener;
+import org.exoplatform.wiki.webui.control.action.ViewRevisionActionListener;
+import org.exoplatform.wiki.webui.core.UIWikiForm;
 
 /**
  * Created by The eXo Platform SAS
@@ -51,110 +44,75 @@ import org.exoplatform.wiki.service.diff.DiffService;
   lifecycle = UIFormLifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPageVersionsList.gtmpl",
   events = {
-    @EventConfig(listeners = UIWikiPageVersionsList.RestoreActionListener.class),
-    @EventConfig(listeners = UIWikiPageVersionsList.ViewRevisionActionListener.class),
-    @EventConfig(listeners = UIWikiPageVersionsList.CompareActionListener.class)
+    @EventConfig(listeners = RestoreActionListener.class),
+    @EventConfig(listeners = ViewRevisionActionListener.class),
+    @EventConfig(listeners = UIWikiPageVersionsList.CompareRevisionActionListener.class)
   }
 )
-public class UIWikiPageVersionsList extends UIForm {
-
-  private List<NTVersion> versionsList;
+public class UIWikiPageVersionsList extends UIWikiForm {
   
-  private Map<String, NTVersion> checkedVersions = new LinkedHashMap<String, NTVersion>();
+  private List<NTVersion>    versionsList;
 
   public static final String RESTORE_ACTION = "Restore";
 
   public static final String VIEW_REVISION  = "ViewRevision";
   
-  public static final String COMPARE_ACTION = "Compare";
+  public static final String COMPARE_ACTION = "CompareRevision";
 
-  public List<NTVersion> getVersionsList() {
-    return versionsList;
+  public UIWikiPageVersionsList() throws Exception {
+    super();
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.SHOWHISTORY, WikiMode.VIEW });    
   }
 
-  public void setVersionsList(List<NTVersion> versionsList) {
-    this.versionsList = versionsList;
+  @Override
+  public void processRender(WebuiRequestContext context) throws Exception {
+    this.versionsList = Utils.getCurrentPageRevisions();
     getChildren().clear();
-    if (this.versionsList == null) {
-      return;
-    }
-    for (NTVersion version : versionsList) {
+    for (NTVersion version : this.versionsList) {
       addUIFormInput(new UIFormCheckBoxInput<Boolean>(version.getName(), "", false));
     }
+    super.processRender(context);
   }
 
-  public void renderVersionsDifference(List<NTVersion> versions, WebuiRequestContext context) throws Exception {
-    Collections.sort(versions, new VersionNameComparatorDesc());
-    NTVersion toVersion = versions.get(0);
-    String toVersionContent = ((AttachmentImpl) toVersion.getNTFrozenNode().getChildren().get(WikiNodeType.Definition.CONTENT)).getText();
-    NTVersion fromVersion = versions.get(1);
-    String fromVersionContent = ((AttachmentImpl) fromVersion.getNTFrozenNode().getChildren().get(WikiNodeType.Definition.CONTENT)).getText();
-    DiffService diffService = this.getApplicationComponent(DiffService.class);
-    
-    UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
-    UIWikiPageContainer wikiPageContainer = getAncestorOfType(UIWikiPageContainer.class);
-    if(!wikiPortlet.getWikiMode().equals(WikiMode.SHOWHISTORY)){
-      wikiPortlet.changeMode(WikiMode.SHOWHISTORY);
-      if(!(this.getParent() instanceof UIWikiHistorySpaceArea)){
-        UIWikiHistorySpaceArea historySpaceArea = wikiPageContainer.findFirstComponentOfType(UIWikiHistorySpaceArea.class);
-        UIWikiPageVersionsList pageVersionsList = historySpaceArea.getChild(UIWikiPageVersionsList.class).setRendered(false);
-        pageVersionsList.setVersionsList(versionsList);
-      }
-    } else {
-      setRendered(false);
-    }
-    UIWikiPageVersionsCompare uiPageVersionsCompare = wikiPageContainer.findFirstComponentOfType(UIWikiPageVersionsCompare.class);
-    uiPageVersionsCompare.setRendered(true);
-    uiPageVersionsCompare.setFromVersion(fromVersion);
-    uiPageVersionsCompare.setToVersion(toVersion);
-    uiPageVersionsCompare.setCurrentVersionIndex(String.valueOf(this.versionsList.size()));
-    DiffResult diffResult= diffService.getDifferencesAsHTML(fromVersionContent, toVersionContent, true);
-    uiPageVersionsCompare.setDifferencesAsHTML(diffResult.getDiffHTML());
-    uiPageVersionsCompare.setChanges(diffResult.getChanges());
-    context.addUIComponentToUpdateByAjax(wikiPageContainer);
+  public List<NTVersion> getVersionsList() throws Exception {
+    return versionsList;
   }
   
-  static public class RestoreActionListener extends EventListener<UIWikiPageVersionsList> {
+  static public class CompareRevisionActionListener
+                                                   extends
+                                                   org.exoplatform.wiki.webui.control.action.CompareRevisionActionListener {
     @Override
-    public void execute(Event<UIWikiPageVersionsList> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      String versionName = event.getRequestContext().getRequestParameter(OBJECTID);
-      PageImpl wikipage = (PageImpl) Utils.getCurrentWikiPage();
-      wikipage.restore(versionName, false);
-      wikipage.checkout();
-      wikipage.checkin();
-      wikipage.checkout();
-      wikiPortlet.changeMode(WikiMode.VIEW);
-    }
-  }
-
-  static public class ViewRevisionActionListener extends EventListener<UIWikiPageVersionsList> {
-    @Override
-    public void execute(Event<UIWikiPageVersionsList> event) throws Exception {
-      UIWikiHistorySpaceArea.viewRevision(event);
-    }
-  }
-  
-  static public class CompareActionListener extends EventListener<UIWikiPageVersionsList> {
-    @Override
-    public void execute(Event<UIWikiPageVersionsList> event) throws Exception {
-      UIWikiPageVersionsList uiForm = event.getSource();
-      UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
-      for (NTVersion version : uiForm.versionsList) {
+    public void execute(Event<UIComponent> event) throws Exception {
+      UIWikiPageVersionsList uiForm = (UIWikiPageVersionsList) event.getSource();
+      List<NTVersion> checkedVersions = new ArrayList<NTVersion>();
+      UIWikiPortlet wikiPortlet = uiForm.getAncestorOfType(UIWikiPortlet.class);
+      List<NTVersion> versions = uiForm.versionsList;
+      for (NTVersion version : versions) {
         UIFormCheckBoxInput<Boolean> uiCheckBox = uiForm.getChildById(version.getName());
         if (uiCheckBox.isChecked()) {
-          uiForm.checkedVersions.put(uiCheckBox.getId(), version);
-        } else {
-          uiForm.checkedVersions.remove(uiCheckBox.getId());
+          checkedVersions.add(version);
         }
       }
-      if (uiForm.checkedVersions.size() != 2) {
-        uiApp.addMessage(new ApplicationMessage("UIWikiPageVersionsList.msg.checkGroup-required", null, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+      if (checkedVersions.size() != 2) {
+        wikiPortlet.addMessage(new ApplicationMessage("UIWikiPageVersionsList.msg.checkGroup-required",
+                                                null,
+                                                ApplicationMessage.WARNING));
+        event.getRequestContext().addUIComponentToUpdateByAjax(wikiPortlet.getUIPopupMessages());
         return;
       } else {
-        List<NTVersion> checkedVersions = new ArrayList<NTVersion>(uiForm.checkedVersions.values());
-        uiForm.renderVersionsDifference(checkedVersions, event.getRequestContext());
+        this.setVersionToCompare(new ArrayList<NTVersion>(uiForm.versionsList));
+        String fromVersionName = checkedVersions.get(0).getName();
+        String toVersionName = checkedVersions.get(1).getName();
+        for (int i = 0; i < versions.size(); i++) {
+          NTVersion version = versions.get(i);
+          if (version.getName().equals(fromVersionName)) {
+            this.setFrom(i);
+          }
+          if (version.getName().equals(toVersionName)) {
+            this.setTo(i);
+          }
+        }
+        super.execute(event);
       }
     }
   }

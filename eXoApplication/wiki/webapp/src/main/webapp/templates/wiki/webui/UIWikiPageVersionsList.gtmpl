@@ -19,6 +19,12 @@
   if(versionsList == null){
     versionsList = new ArrayList<NTVersion>();
   }
+  
+  String compareAction = uicomponent.COMPARE_ACTION;
+  
+  String anchor = "#" + compareAction;
+  String compareActionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + compareAction;
+  String compareActionLink = uicomponent.event(compareAction);
 %>
 <div class="UIWikiPageVersionsList UIWikiAttachmentArea">
  <% uiform.begin(); %>
@@ -30,8 +36,9 @@
 						<div class="ActionButton LightBlueStyle" >
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle RefreshModeTarget" onclick="<%= uicomponent.event(uicomponent.COMPARE_ACTION); %>">
-										<a href="javascript:void(0);"><%= _ctx.appRes("UIWikiPageVersionsList.label.CompareSelected"); %></a> 
+                <div class="ButtonMiddle RefreshModeTarget" msg='<%=_ctx.appRes("UIWikiPageVersionsList.msg.checkGroup-required");%>' >
+										<a href="javascript:void(0);"><%= _ctx.appRes("UIWikiPageVersionsList.label.CompareSelected"); %></a>
+										<a onclick="$compareActionLink" id="$compareActionId" style="display:none;"></a> 
 									</div>
 								</div>
 							</div>

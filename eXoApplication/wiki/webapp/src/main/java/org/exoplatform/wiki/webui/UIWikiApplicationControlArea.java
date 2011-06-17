@@ -76,6 +76,8 @@ public class UIWikiApplicationControlArea extends UIContainer {
       return "UIWikiPortlet.label.Edit-Template";
     case ADDTEMPLATE:
       return "UIWikiPortlet.label.Add-Template";
+    case COMPAREREVISION:
+      return "UIWikiPortlet.label.Compare-Revision";
     default:
       return "";
     }

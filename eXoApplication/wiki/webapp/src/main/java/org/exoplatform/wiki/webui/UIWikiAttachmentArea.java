@@ -214,7 +214,6 @@ public class UIWikiAttachmentArea extends UIWikiForm {
       ((PageImpl) page).removeAttachment(attFileId);      
       event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea);
       if (WikiMode.VIEW.equals(wikiPortlet.getWikiMode())) {
-        contentArea.renderVersion(true);
         event.getRequestContext().addUIComponentToUpdateByAjax(contentArea);
       }
     }

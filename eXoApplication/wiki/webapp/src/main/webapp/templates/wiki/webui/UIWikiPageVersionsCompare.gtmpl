@@ -4,13 +4,17 @@
   import org.exoplatform.portal.webui.util.Util;
   import org.exoplatform.wiki.mow.api.WikiNodeType;
   import org.exoplatform.web.application.Parameter;
+  import org.exoplatform.wiki.webui.UIWikiPortlet;
 
   Locale currentLocale = Util.getPortalRequestContext().getLocale();
   DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, currentLocale);
 %>
-<div class="UIWikiPageVersionsCompare">
+<div class="UIWikiPageVersionsCompare" id="$uicomponent.id">
 <%
-  String link = uicomponent.event(uicomponent.RETURN_VERSIONS_LIST);
+  String showHistory = uicomponent.SHOWHISTORY;
+  String anchor = "#" + showHistory;
+  String showHistoryLinkId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + showHistory;;
+  String showHistoryLink = uicomponent.event(uicomponent.SHOWHISTORY);
   String fromVersionName = uicomponent.getFromVersion().getName();
   String fromVersionViewLink = uicomponent.event(uicomponent.VIEW_REVISION, fromVersionName);
   String fromVersionAuthor = uicomponent.getFromVersion().getNTFrozenNode().getAuthor();
@@ -77,7 +81,9 @@
 	</div>
 	
 	<div class="ChangedForm">
-		<div class="Label"><span style="font-weight: bold;"><%= _ctx.appRes("UIWikiPageVersionsCompare.label.Changes").replace("{0}",  String.valueOf(uicomponent.changes)); %></span><a style="Color:#4175B2;" href="$link"> <%= _ctx.appRes("UIWikiPageVersionsCompare.label.ViewPageHistory"); %></a></div>
+		<div class="Label"><span style="font-weight: bold;"><%= _ctx.appRes("UIWikiPageVersionsCompare.label.Changes").replace("{0}",  String.valueOf(uicomponent.changes)); %></span>
+		<a style="Color:#4175B2;" href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('#$showHistory');"> <%= _ctx.appRes("UIWikiPageVersionsCompare.label.ViewPageHistory"); %></a></div>
+		<a style="display:none" id="$showHistoryLinkId" onclick="$showHistoryLink"></a>
 		<%= uicomponent.differencesAsHTML %>
 	</div>
 

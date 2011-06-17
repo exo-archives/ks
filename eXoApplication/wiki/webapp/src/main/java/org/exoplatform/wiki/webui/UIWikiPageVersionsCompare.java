@@ -17,15 +17,26 @@
 package org.exoplatform.wiki.webui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
+import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.commons.VersionNameComparatorDesc;
+import org.exoplatform.wiki.mow.api.WikiNodeType;
+import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
+import org.exoplatform.wiki.service.diff.DiffResult;
+import org.exoplatform.wiki.service.diff.DiffService;
+import org.exoplatform.wiki.webui.control.action.CompareRevisionActionListener;
+import org.exoplatform.wiki.webui.control.action.ShowHistoryActionListener;
+import org.exoplatform.wiki.webui.control.action.ViewRevisionActionListener;
+import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -37,16 +48,18 @@ import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
   lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPageVersionsCompare.gtmpl",
   events = {
-    @EventConfig(listeners = UIWikiPageVersionsCompare.ReturnVersionsListActionListener.class),
-    @EventConfig(listeners = UIWikiPageVersionsCompare.ViewRevisionActionListener.class),
+    @EventConfig(listeners = ShowHistoryActionListener.class),
+    @EventConfig(listeners = ViewRevisionActionListener.class),
     @EventConfig(listeners = UIWikiPageVersionsCompare.CompareActionListener.class)
   }
 )
-public class UIWikiPageVersionsCompare extends UIContainer {
+public class UIWikiPageVersionsCompare extends UIWikiContainer {
 
   private String differencesAsHTML;
   
   private String currentVersionIndex;
+  
+  private List<NTVersion> versions;
   
   private NTVersion fromVersion;
   
@@ -54,7 +67,7 @@ public class UIWikiPageVersionsCompare extends UIContainer {
   
   private int changes;
   
-  public static final String RETURN_VERSIONS_LIST = "ReturnVersionsList";
+  public static final String SHOWHISTORY    = ShowHistoryActionListener.SHOWHISTORY;
   
   public static final String VIEW_REVISION  = "ViewRevision";
   
@@ -63,6 +76,19 @@ public class UIWikiPageVersionsCompare extends UIContainer {
   public static final String FROM_PARAM = "from";
   
   public static final String TO_PARAM = "to";
+
+  public UIWikiPageVersionsCompare() {
+    super();
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.COMPAREREVISION });
+  }
+
+  public List<NTVersion> getVersions() {
+    return versions;
+  }
+
+  public void setVersions(List<NTVersion> versions) {
+    this.versions = versions;
+  }
 
   public String getDifferencesAsHTML() {
     return differencesAsHTML;
@@ -104,40 +130,53 @@ public class UIWikiPageVersionsCompare extends UIContainer {
     this.changes = changes;
   }
 
-  static public class ReturnVersionsListActionListener extends EventListener<UIWikiPageVersionsCompare> {
-    @Override
-    public void execute(Event<UIWikiPageVersionsCompare> event) throws Exception {
-      UIWikiPageVersionsCompare pageVersionsCompare = event.getSource();
-      pageVersionsCompare.setRendered(false);
-      UIWikiPageVersionsList pageVersionsList = ((UIWikiHistorySpaceArea) pageVersionsCompare.getParent()).getChild(UIWikiPageVersionsList.class);
-      pageVersionsList.setRendered(true);
+  public void renderVersionsDifference(List<NTVersion> versions, int from, int to) throws Exception {
+    Collections.sort(versions, new VersionNameComparatorDesc());
+    if (from < to) {
+      int temp = to;
+      to = from;
+      from = temp;
     }
+    this.versions = versions;
+    NTVersion toVersion = versions.get(to);
+    String toVersionContent = ((AttachmentImpl) toVersion.getNTFrozenNode()
+                                                         .getChildren()
+                                                         .get(WikiNodeType.Definition.CONTENT)).getText();
+    NTVersion fromVersion = versions.get(from);
+    String fromVersionContent = ((AttachmentImpl) fromVersion.getNTFrozenNode()
+                                                             .getChildren()
+                                                             .get(WikiNodeType.Definition.CONTENT)).getText();
+    DiffService diffService = this.getApplicationComponent(DiffService.class);
+    this.setRendered(true);
+    this.setFromVersion(fromVersion);
+    this.setToVersion(toVersion);
+    this.setCurrentVersionIndex(String.valueOf(versions.size()));
+    DiffResult diffResult = diffService.getDifferencesAsHTML(fromVersionContent,
+                                                             toVersionContent,
+                                                             true);
+    this.setDifferencesAsHTML(diffResult.getDiffHTML());
+    this.setChanges(diffResult.getChanges());
   }
   
-  static public class ViewRevisionActionListener extends EventListener<UIWikiPageVersionsCompare> {
+  static public class CompareActionListener extends CompareRevisionActionListener {
     @Override
-    public void execute(Event<UIWikiPageVersionsCompare> event) throws Exception {
-      UIWikiHistorySpaceArea.viewRevision(event);
-    }
-  }
-  
-  static public class CompareActionListener extends EventListener<UIWikiPageVersionsCompare> {
-    @Override
-    public void execute(Event<UIWikiPageVersionsCompare> event) throws Exception {
-      UIWikiPageVersionsList uiForm = ((UIWikiHistorySpaceArea) event.getSource().getParent()).getChild(UIWikiPageVersionsList.class);
+    public void execute(Event<UIComponent> event) throws Exception {
+      UIWikiPageVersionsCompare component = (UIWikiPageVersionsCompare) event.getSource();
       String fromVersionName = event.getRequestContext().getRequestParameter(FROM_PARAM);
       String toVersionName = event.getRequestContext().getRequestParameter(TO_PARAM);
-      List<NTVersion> versions = new ArrayList<NTVersion>();
-      for (NTVersion version : uiForm.getVersionsList()) {
-        if (version.getName().equals(fromVersionName) || version.getName().equals(toVersionName)) {
-          versions.add(version);
-          if (versions.size() == 2) {
-            break;
-          }
+      List<NTVersion> versions = Utils.getCurrentPageRevisions();
+      this.setVersionToCompare(new ArrayList<NTVersion>(versions));
+      for (int i = 0; i < versions.size(); i++) {
+        NTVersion version = versions.get(i);
+        if (version.getName().equals(fromVersionName)) {
+          this.setFrom(i);
+        }
+        if (version.getName().equals(toVersionName)) {
+          this.setTo(i);
         }
       }
-
-      uiForm.renderVersionsDifference(versions, event.getRequestContext());
+      super.execute(event);
+      event.getRequestContext().addUIComponentToUpdateByAjax(component);
     }
   }
   

@@ -29,6 +29,7 @@ function UIWikiAjaxRequest() {
 UIWikiAjaxRequest.prototype.init = function(actionPrefix, defaultAction) {
   this.actionPrefix = actionPrefix;
   this.defaultAction = defaultAction;
+  this.isEnableCheck = true;
   if (this.actionPrefix && this.defaultAction) {
     this.autoCheckAnchorId = window.setInterval(this.autoCheckAnchor, this.DEFAULT_TIMEOUT_CHECK);
     this.addEventListener(window, 'unload', this.destroyAll, false);

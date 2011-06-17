@@ -17,8 +17,10 @@
   int attachmentsTotal =  currentWikiPage.getAttachmentsExcludeContent().size();
   int versionsTotal = currentWikiPage.getVersionableMixin().getVersionHistory().getChildren().size() -1 ;
   
-  String historyAnchor = "#" + uicomponent.SHOW_HISTORY;
-  String historyActionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + uicomponent.SHOW_HISTORY;
+  String viewChangeSufix = "/changes";
+  String viewChangeAnchor = "#" + uicomponent.COMPARE_REVISION +viewChangeSufix;
+  
+  String viewChangeActionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + uicomponent.COMPARE_REVISION + viewChangeSufix;
   String togglelink= uicomponent.event(uicomponent.TOGGLE_ATTACHMENTS_ACTION);
   
   String addedByLabel = _ctx.appRes("UIWikiPageInfoArea.label.AddedBy").replace("{0}", "<a class=\"Link\" href=\"\">" + creator + "</a>").replace("{1}", createdDate);
@@ -29,8 +31,8 @@
 	<div class="TxtFeed">
 	  ${addedByLabel}&nbsp;-&nbsp;$lastModifiedByLabel
 	  <% if (versionsTotal>1) { %>
-	  <a class="Link" href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('$historyAnchor');"><%= "(" + _ctx.appRes("UIWikiPageInfoArea.label.ViewChange") + ")"; %></a>
-	  <a onclick="<%=uicomponent.event(uicomponent.SHOW_HISTORY);%>" id="$historyActionId" style="display:none;">&nbsp;</a>
+	  <a class="Link" href="javascript:eXo.wiki.UIWikiAjaxRequest.makeNewHash('$viewChangeAnchor');"><%= "(" + _ctx.appRes("UIWikiPageInfoArea.label.ViewChange") + ")"; %></a>
+	  <a onclick="<%=uicomponent.event(uicomponent.COMPARE_REVISION);%>" id="$viewChangeActionId" style="display:none;">&nbsp;</a>
 	  <% }%>
 	</div>
 	<%= totalAttachmentsLabel %></a>&nbsp;-&nbsp;<b>$versionsTotal</b><a class="Link" href="<%=uicomponent.event(uicomponent.SHOW_REVISION);%>">&nbsp;<%=_ctx.appRes("UIWikiPageInfoArea.label.TotalRevisions")%></a></div>

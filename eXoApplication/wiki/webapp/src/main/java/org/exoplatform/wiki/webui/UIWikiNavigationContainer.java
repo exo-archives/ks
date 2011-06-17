@@ -43,8 +43,9 @@ public class UIWikiNavigationContainer extends UIWikiForm {
 
   public UIWikiNavigationContainer() throws Exception {
     super();    
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE, WikiMode.ADDPAGE,
-         WikiMode.DELETEPAGE, WikiMode.VIEWREVISION, WikiMode.SHOWHISTORY, WikiMode.ADVANCEDSEARCH, WikiMode.PAGEINFO });
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE,
+        WikiMode.ADDPAGE, WikiMode.DELETEPAGE, WikiMode.VIEWREVISION, WikiMode.SHOWHISTORY,
+        WikiMode.ADVANCEDSEARCH, WikiMode.PAGEINFO, WikiMode.COMPAREREVISION });
     
     EventUIComponent eventComponent = new EventUIComponent("UIWikiPortlet",
                                                            UIWikiPortlet.REDIRECT_ACTION,

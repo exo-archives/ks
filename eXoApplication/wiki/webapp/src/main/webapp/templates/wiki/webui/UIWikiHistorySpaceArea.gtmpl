@@ -14,8 +14,4 @@
     }
   }
 %>
-<%
-  //String link = uicomponent.event(uicomponent.RETURN_VIEW_MODE);
-  _ctx.getRequestContext().getJavascriptManager().addJavascript("eXo.wiki.UIWikiPortlet.createURLHistory('"+uicomponent.id+ "', "+uicomponent.isShowHistorySpace()+");"); 
-%>
 </div>
