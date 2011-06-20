@@ -622,14 +622,6 @@ span.Excerpt p {
 	padding-right: 10px;
 }
 
-.UIWikiAdvanceSearchForm .SearchInfo select {
-	border: 1px solid #ebebeb;
-	color: #165fb3;
-	font-size: 10pt;
-	height: 20px;
-	width: 125px;
-}
-
 .UIWikiAdvanceSearchForm .SearchBtn {
 	background: url("/wiki/skin/DefaultSkin/webui/background/BtnSearch.gif") no-repeat left top;
 	float: left;
