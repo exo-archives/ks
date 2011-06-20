@@ -274,7 +274,9 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
           uiCategory.warning("NameValidator.msg.erro-large-number", new String[] { uiCategory.getLabel(FIELD_INDEX_INPUT) });
           return;
         }
-        if (index > (answerPortlet.findFirstComponentOfType(UICategories.class).getListCate().size()+1)) {
+        long indexLimited = uiCategory.getFAQService().getMaxindexCategory(uiCategory.parentId_);
+        if (uiCategory.isAddNew_) indexLimited += 1;
+        if (index > indexLimited) {
           uiCategory.warning("UICateforyForm.msg.over-index-number");
           return;
         }
