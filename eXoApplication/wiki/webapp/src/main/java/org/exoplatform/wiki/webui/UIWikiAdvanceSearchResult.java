@@ -91,7 +91,9 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(wikiType)) {
       sb.append("/");
       sb.append(wikiType);
-      sb.append("/");
+      if (wikiType.indexOf("/") < 0 && wiki.getOwner().indexOf("/") != 0){
+        sb.append("/");
+      }
       sb.append(wiki.getOwner());
     }
     return sb.toString();
