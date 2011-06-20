@@ -29,6 +29,7 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.search.SearchResult;
+import org.exoplatform.wiki.utils.Utils;
 import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 
 /**
@@ -91,10 +92,8 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(wikiType)) {
       sb.append("/");
       sb.append(wikiType);
-      if (wikiType.indexOf("/") < 0 && wiki.getOwner().indexOf("/") != 0){
-        sb.append("/");
-      }
-      sb.append(wiki.getOwner());
+      sb.append("/");
+      sb.append(Utils.validateWikiOwner(wikiType, wiki.getOwner()));
     }
     return sb.toString();
   } 

@@ -167,7 +167,7 @@ public class Utils {
   public static String validateWikiOwner(String wikiType, String wikiOwner){
     if(wikiType != null && wikiType.equals(PortalConfig.GROUP_TYPE)) {
       if(wikiOwner == null || wikiOwner.length() == 0){
-        return null;
+        return "";
       }
       if(wikiOwner.startsWith("/")){
         wikiOwner = wikiOwner.substring(1,wikiOwner.length());
