@@ -4,7 +4,7 @@
   def uiParent = uicomponent.getParent();
 %>
 <div id="$uicomponent.id">
-  <table cellspacing="0" class="UIGrid">
+  <table cellspacing="0" class="UIFormGrid">
     <thead>
       <tr>
       <%
@@ -24,13 +24,21 @@
       <%}%>
       </tr>
     </thead>
-    <tbody class="FeedBox">
+    <tbody>
     <%
   List children = uicomponent.getChildren() ;
+  int index = 0;
+  String rowClass;
   for(component in children) {
-    if(component.isRendered()){%>
-      <tr class="EvenRow"><% uicomponent.renderChild(component); %></tr>
-      
+  	if(component.isRendered()){
+  	  index++;
+      if(index%2 == 1){
+        rowClass = "EvenRow";
+      }else{
+        rowClass = "OddRow";
+      }
+      %>
+      <tr class="$rowClass"><% uicomponent.renderChild(component); %></tr>
    <% }
   }
 %>
