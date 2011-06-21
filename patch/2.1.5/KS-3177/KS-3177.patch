@@ -2222,3 +2222,49 @@ Index: web/ksResources/src/main/webapp/javascript/eXo/ks/UIDateTimePicker.js
 -
  eXo.ks.UIDateTimePicker = new UIDateTimePicker('UICalendarControl') ;
 \ No newline at end of file
+Index: web/ksResources/src/main/webapp/javascript/eXo/ks/lang/fr.js
+===================================================================
+--- web/ksResources/src/main/webapp/javascript/eXo/ks/lang/fr.js	(revision 0)
++++ web/ksResources/src/main/webapp/javascript/eXo/ks/lang/fr.js	(revision 0)
+@@ -0,0 +1,6 @@
++// ISO standard language abbreviation
++[
++ ['janvier','février','mars','avril ','mai','juin','juillet','août','septembre','octobre','novembre','décembre'],
++ ['D', 'L', 'M', 'M', 'J', 'V', 'S'], // Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday  
++ ['Année précédente', 'Mois précédent', 'Mois prochain', 'L\'année prochaine']
++]
+Index: web/ksResources/src/main/webapp/javascript/eXo/ks/lang/de.js
+===================================================================
+--- web/ksResources/src/main/webapp/javascript/eXo/ks/lang/de.js	(revision 0)
++++ web/ksResources/src/main/webapp/javascript/eXo/ks/lang/de.js	(revision 0)
+@@ -0,0 +1,7 @@
++// ISO standard language abbreviation
++[
++	[ 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
++	['S','M','D','M','D','F','S'],
++	[ 'Vorjahr', 'Vorhergehender Monat', 'Next Month', 'Nächstes Jahr']
++]
++
+Index: web/ksResources/src/main/webapp/javascript/eXo/ks/lang/vi.js
+===================================================================
+--- web/ksResources/src/main/webapp/javascript/eXo/ks/lang/vi.js	(revision 0)
++++ web/ksResources/src/main/webapp/javascript/eXo/ks/lang/vi.js	(revision 0)
+@@ -0,0 +1,6 @@
++[
++	['Tháng một','tháng hai','tháng ba','Tháng tư','tháng năm','tháng sáu','tháng bảy','tháng tám','tháng chín','tháng mười','tháng mười một','tháng mười hai'],
++	['C','H','B','B','N','S','B'],
++	['Năm trước', 'Tháng trước', 'Tháng sau', 'Năm sau']
++]
++
+Index: web/ksResources/src/main/webapp/javascript/eXo/ks/lang/EN.js
+===================================================================
+--- web/ksResources/src/main/webapp/javascript/eXo/ks/lang/EN.js	(revision 0)
++++ web/ksResources/src/main/webapp/javascript/eXo/ks/lang/EN.js	(revision 0)
+@@ -0,0 +1,7 @@
++// ISO standard language abbreviation
++[
++	['January','February','March','April','May','June','July','August','September','October','November','December'],
++	['S','M','T','W','T','F','S'],
++	['Previous Year', 'Previous Month', 'Next Month', 'Next Year']
++]
++
