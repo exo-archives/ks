@@ -253,27 +253,37 @@ span.Excerpt p {
 	border-bottom:1px solid #C7C7C7;
 }
 
-.UIWikiPortlet .UIWikiMiddleArea {
-	display:block;
-	overflow: auto;
-}
-
-.UIWikiPortlet table.WikiLayout {
+.UIWikiPortlet .WikiLayout {
+  position: relative; 
 	width: 100%;
 	margin: 0;
 }
 
-.UIWikiPortlet td.Navigation {
+.UIWikiPortlet .UILeftContainerAre {
+  position: absolute;
+  top:0px; left:0px;
+  z-index: 0;
 	width:300px;
- padding:0px;
+  overflow: auto;
+  padding:0px;
 }
 
-.UIWikiPortlet td.Spliter {
+.UIWikiPortlet .UIRightContainerAre {
+  position: absolute;
+  top:0px; left:301px;
+  z-index: 0;
+  overflow: auto;
+  padding:0px;
+}
+
+.UIWikiPortlet .Spliter {
+  position: absolute;
+  top:0px; left:300px;
+  z-index: 0;
 	background: #e1e1e1 ;
 	width: 1px;
-  min-width: 1px;
 	cursor: col-resize;
-	padding:0;
+	padding:0px;
 }
 
 .UIWikiPortlet .UIWikiMiddleArea .UIWikiNavigationContainer{ 
@@ -320,9 +330,11 @@ span.Excerpt p {
 /* wiki homepage */
 .UIWikiPageArea {
 	padding: 0 15px;
-	min-height: 400px;
 }
 
+body {
+overflow: hidden;
+}
 .UIWikiPageContentArea table {
   table-layout: fixed;
   border-spacing: 0;
@@ -620,6 +632,14 @@ span.Excerpt p {
 	color: #555555;
 	font-weight: bold;
 	padding-right: 10px;
+}
+
+.UIWikiAdvanceSearchForm .SearchInfo select {
+	border: 1px solid #ebebeb;
+	color: #165fb3;
+	font-size: 10pt;
+	height: 20px;
+	width: 125px;
 }
 
 .UIWikiAdvanceSearchForm .SearchBtn {
@@ -1504,35 +1524,4 @@ span.Excerpt p {
 
 .UIWikiPageVersionsCompare .ChangedForm .Mar0{
 	margin: 0px;
-}
-
-.UIWikiPagePermissionForm .UIFormGrid {
-	width: 100%;
-	border-collapse: collapse;
-	border: 1px solid #d7d7d7;
-}
-
-.UIWikiPagePermissionForm .UIFormGrid th {
-	background: url('background/TitBarBG.png') repeat-x left top;
-	color: #636363;
-	text-align: left;
-	line-height: 27px;
-	padding-left: 12px;
-	border: none;
-	border-right: 1px solid #FFFFFF;
-}
-
-.UIWikiPagePermissionForm .UIFormGrid td {
-	text-align: left;
-	padding: 5px 8px 2px 12px;
-	border-right: 1px solid #FFFFFF;
-	border-top: 1px solid #FFFFFF;
-}
-
-.UIWikiPagePermissionForm .UIFormGrid .EvenRow {
-	background: #F2F2F2;
-}
-
-.UIWikiPagePermissionForm .UIFormGrid .OddRow {
-	background: #F9F9F9;
 }
