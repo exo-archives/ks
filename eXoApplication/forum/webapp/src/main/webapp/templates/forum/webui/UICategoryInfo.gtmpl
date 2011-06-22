@@ -56,60 +56,36 @@
 									<% } %>					
 									<div style="position:relative;">
 										<div class="UIPopupCategory" style="display:none; left:2px; top:2px; ">
-											<div class="UIRightClickPopupMenu" style="display:block;">
-												<div class="UIContextMenuContainer">
-													<div class="TopLeftRightClickPopupMenu">
-														<div class="TopRightRightClickPopupMenu">
-															<div class="TopCenterRightClickPopupMenu"><span></span></div>
-														</div>
-													</div>
-													<div class="MiddleLeftRightClickPopupMenu">
-														<div class="MiddleRightRightClickPopupMenu">
-															<div class="UIRightPopupMenuContainer">
-															<%
-																String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", user);
-															%>
-																<div class="MenuItem" onclick="$linkProf">
-																	<div class="ItemIcon IconsView ViewPublicUserInfo" style="padding-left:30px;">
-																		<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
-																	</div>
-																</div>
-															<%
-															  if(userProfile.getUserRole() < 3){
-																	String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", user);
-															%>
-																<div class="MenuItem" onclick="$sendPrSms">
-																	<div class="ItemIcon IconsView PrivateMessage" style="padding-left:30px;">
-																		<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
-																	</div>
-																</div>
-															<%
-																}
-																String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", user);
-															%>
-																<div class="MenuItem" onclick="$viewPosted">
-																	<div class="ItemIcon IconsView ViewPostedByUser" style="padding-left:30px;">
-																		<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $userView</a>
-																	</div>
-																</div>
-															<%
-																String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", user);
-															%>
-																<div class="MenuItem" onclick="$viewThread">
-																	<div class="ItemIcon IconsView ViewThreadByUser" style="padding-left:30px;">
-																		<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $userView</a>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="BottomLeftRightClickPopupMenu">
-														<div class="BottomRightRightClickPopupMenu">
-															<div class="BottomCenterRightClickPopupMenu"><span></span></div>
-														</div>
-													</div>
-												</div>
-											</div>
+											<ul class="UIRightClickPopupMenu" style="display:block;">
+															
+												<%
+													String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", user);
+												%>
+													<li class="MenuItem" onclick="$linkProf">
+														<a class="ItemIcon IconsView ViewPublicUserInfo" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
+													</li>
+												<%
+												  if(userProfile.getUserRole() < 3){
+														String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", user);
+												%>
+													<li class="MenuItem" onclick="$sendPrSms">
+														<a class="ItemIcon IconsView PrivateMessage" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
+													</li>
+												<%
+													}
+													String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", user);
+												%>
+													<li class="MenuItem" onclick="$viewPosted">
+														<a class="ItemIcon IconsView ViewPostedByUser" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $userView</a>
+													</li>
+												<%
+													String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", user);
+												%>
+													<li class="MenuItem" onclick="$viewThread">
+														<a class="ItemIcon IconsView ViewThreadByUser" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $userView</a>
+													</li>
+													
+											</ul>
 										</div>
 									</div>
 									
@@ -139,60 +115,38 @@
 								<a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$viewNewMember</a>
 								<div class="fixPupupMenu">
 									<div class="UIPopupCategory" style="display:none; left:60px; top:0px; width:140px">
-										<div class="UIRightClickPopupMenu" style="display:block;">
-											<div class="UIContextMenuContainer">
-												<div class="TopLeftRightClickPopupMenu">
-													<div class="TopRightRightClickPopupMenu">
-														<div class="TopCenterRightClickPopupMenu"><span></span></div>
-													</div>
-												</div>
-												<div class="MiddleLeftRightClickPopupMenu">
-													<div class="MiddleRightRightClickPopupMenu">
-														<div class="UIRightPopupMenuContainer">
-														<%
-															String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", newMember);
-														%>
-															<div class="MenuItem" onclick="$linkProf">
-																<div class="ItemIcon IconsView ViewPublicUserInfo" style="padding-left:30px;">
-																	<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
-																</div>
-															</div>
-														<%
-														  if(userProfile.getUserRole() < 3){
-																String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", newMember);
-														%>
-															<div class="MenuItem" onclick="$sendPrSms">
-																<div class="ItemIcon IconsView PrivateMessage" style="padding-left:30px;">
-																	<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
-																</div>
-															</div>
-														<%
-															}
-															String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", newMember);
-														%>
-															<div class="MenuItem" onclick="$viewPosted">
-																<div class="ItemIcon IconsView ViewPostedByUser" style="padding-left:30px;">
-																	<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $viewNewMember</a>
-																</div>
-															</div>
-														<%
-															String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", newMember);
-														%>
-															<div class="MenuItem" onclick="$viewThread">
-																<div class="ItemIcon IconsView ViewThreadByUser" style="padding-left:30px;">
-																	<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $viewNewMember</a>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="BottomLeftRightClickPopupMenu">
-													<div class="BottomRightRightClickPopupMenu">
-														<div class="BottomCenterRightClickPopupMenu"><span></span></div>
-													</div>
-												</div>
-											</div>
-										</div>
+									
+										<ul class="UIRightClickPopupMenu" style="display:block;">
+														
+											<%
+												String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", newMember);
+											%>
+												<li class="MenuItem" onclick="$linkProf">
+													<a class="ItemIcon IconsView ViewPublicUserInfo" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
+												</li>
+											<%
+											  if(userProfile.getUserRole() < 3){
+													String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", newMember);
+											%>
+												<li class="MenuItem" onclick="$sendPrSms">
+													<a class="ItemIcon IconsView PrivateMessage" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
+												</li>
+											<%
+												}
+												String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", newMember);
+											%>
+												<li class="MenuItem" onclick="$viewPosted">
+													<a class="ItemIcon IconsView ViewPostedByUser" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $viewNewMember</a>
+												</li>
+											<%
+												String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", newMember);
+											%>
+												<li class="MenuItem" onclick="$viewThread">
+													<a class="ItemIcon IconsView ViewThreadByUser" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $viewNewMember</a>
+												</li>
+															
+										</ul>
+										
 									</div>
 								</div>
 							</div>

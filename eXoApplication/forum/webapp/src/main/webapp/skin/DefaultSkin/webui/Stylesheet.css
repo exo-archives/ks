@@ -66,28 +66,6 @@ ul,li{
 
 /**************************** Fix UIRightClickPopupMenu *********************************/
 
-.UIForumPortlet .UIRightClickPopupMenu .UIContextMenuContainer {
-    border: 1px solid #c6c7c9;
-}
-
-.UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer {
-    margin: 0px;
-	background: none;
-}
-
-.UIForumPortlet .UIForumActionBar .SearchPopup .UIRightClickPopupMenu .UIRightPopupMenuContainer {
-	min-width: 140px !important;
-	width: 160px !important;
-}
-
-*html .UIForumPortlet  .SearchPopup .UIRightClickPopupMenu .UIRightPopupMenuContainer {
-	width:170px;
-}
-
-.UIForumPortlet  .SearchPopup .UIRightClickPopupMenu .UIRightPopupMenuContainer {
-	min-width:170px;
-}
-
 .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .ItemIcon {
 	min-width:110px;
 }
@@ -122,22 +100,7 @@ ul,li{
 	background-color: #DEE4F2;
 }
 
-.UIForumPortlet .ContentAction .UIRightClickPopupMenu .UIRightPopupMenuContainer {
-	min-width: 150px;
-}
 
-*html .UIForumPortlet .ContentAction .UIRightClickPopupMenu .UIRightPopupMenuContainer {
-	width: 150px;
-}
-
-.Vista .UIForumPortlet .UIRightClickPopupMenu {
-	width:180px;
-}
-
-.UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer a:hover {
-	color: orange;
-	background-color: transparent;
-}
 
 /**************************** UIActionForum *********************************/
 .UIForumPortlet .UIActionForum {
@@ -302,11 +265,6 @@ ul,li{
 	color: gray;
 }
 
-.UIForumPortlet .UIRightClickPopupMenu ul {
-	list-style: none;
-	padding: 0px;
-	margin: 5px 0px;
-}
 /******************************	OverButton	***************************************/
 
 .UIForumPortlet .ButtonHeadBar {
@@ -475,9 +433,7 @@ ul,li{
 }
 
 .UIForumPortlet .ToolbarActionsTag .UIPopupCategory {
-	display:none; 
-	top: 24px; 
-	left: -5px;
+	display:none; top: 20px; left: -5px;
 }
 
 .UIForumPortlet .UIForm .HorizontalLayout {
@@ -505,10 +461,6 @@ ul,li{
 }
 
 .UIForumPortlet .UIRightClickPopupMenu .DisableMenuItem .ItemIcon:hover {
-	color: gray;
-}
-
-.UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer .DisableMenuItem:hover {
 	color: gray;
 }
 
@@ -618,16 +570,16 @@ ul,li{
 	width:13px;
 }
 .UIForumPortlet .FixLeftPopup {
-	left:92px;
-	*left:30px;
+  left:92px;
+  *left:30px;
 }
 
 *html .UIForumPortlet .FixLeftPopup {
-	left:28px;
+  left:28px;
 }
 
 .UIForumPortlet .Refresh {
-	background:transparent url(background/refresh.png) no-repeat center bottom;
+  background:transparent url(background/refresh.png) no-repeat center bottom;
 	float:left;
 	margin-top: 16px;
 	height:16px;
@@ -688,25 +640,25 @@ ul,li{
 }
 
 .UIForumPortlet .DownArrow1Icon .THFixHidden {
-	overflow: hidden;
-	word-wrap: break-word;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 /* ============== UIButtonForum =====================*/
 
 .UIForumPortlet .StartTopicForum{
-	padding: 0px 6px;
-	background:url('background/buttons/UIButtonForum.gif') repeat-x top;
-	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border: 1px solid #4d67aa;
-	-moz-box-shadow: 1px 1px 2px #B3B3B3;
-	-webkit-box-shadow: 1px 1px 2px #B3B3B3;
-	box-shadow: 1px 1px 2px #B3B3B3;
+  padding: 0px 6px;
+  background:url('background/buttons/UIButtonForum.gif') repeat-x top;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border: 1px solid #4d67aa;
+  -moz-box-shadow: 1px 1px 2px #B3B3B3;
+  -webkit-box-shadow: 1px 1px 2px #B3B3B3;
+  box-shadow: 1px 1px 2px #B3B3B3;
 }
 
-.UIForumPortlet .ForumToolbar .SearchForm .UIRightClickPopupMenu .SearchPopup {
+.UIForumPortlet .ForumToolbar .SearchForm  .SearchPopup {
 	padding: 10px 12px 6px 12px;
 }
 
@@ -723,17 +675,17 @@ ul,li{
 }
 
 .UIForumPortlet .BntPostReply {
-	background:url('background/buttons/BntNormalStyle.gif') repeat-x top;
-	padding: 0px 4px;
-	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border: 1px solid #4d67aa;
-	line-height:16px;
-	-moz-box-shadow: 1px 1px 2px #b3b3b3;
-	-webkit-box-shadow: 1px 1px 2px #b3b3b3;
-	box-shadow: 1px 1px 2px #b3b3b3;
-	margin: 0px 0px 0px 3px;
+ background:url('background/buttons/BntNormalStyle.gif') repeat-x top;
+ padding: 0px 4px;
+ border-radius: 4px;
+ -moz-border-radius: 4px;
+ -webkit-border-radius: 4px;
+ border: 1px solid #4d67aa;
+ line-height:16px;
+ -moz-box-shadow: 1px 1px 2px #b3b3b3;
+ -webkit-box-shadow: 1px 1px 2px #b3b3b3;
+ box-shadow: 1px 1px 2px #b3b3b3;
+ margin: 0px 0px 0px 3px;
 }
 
 .UIForumPortlet .TitleForum{

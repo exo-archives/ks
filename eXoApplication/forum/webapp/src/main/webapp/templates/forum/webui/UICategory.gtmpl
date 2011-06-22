@@ -41,97 +41,96 @@
 <%uiform.begin()%>
   <div style="display:none;" id="divChecked" checked="0"><span></span></div>
 	<div class="ForumToolbar ForumActionToolbar ClearFix">
-					<div class="Title"><%=category.getCategoryName()%> : <span title="$description">$subDescription</span></div>
-					<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
-				<% if(isShowMenu){ %>
-					<div class="ForumSeparatorLine"><span></span></div>
-					<div class="ContentAction ToolbarActionsContainer DefaultStyle" onclick="eXo.forum.UIForumPortlet.checkAction(this, event, 6);" >
-						<div class="ManageCategoryButton StatusIcon">
-							<a class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.manageCategory");%></a>
+			<div class="Title"><%=category.getCategoryName()%> : <span title="$description">$subDescription</span></div>
+			<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+		<% if(isShowMenu){ %>
+			<div class="ForumSeparatorLine"><span></span></div>
+			<div class="ContentAction ToolbarActionsContainer DefaultStyle" onclick="eXo.forum.UIForumPortlet.checkAction(this, event, 6);" >
+				<div class="ManageCategoryButton StatusIcon">
+					<a class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.manageCategory");%></a>
+				</div>
+				
+				<% /*Begin Popup Menu*/ %>
+					<div class="UIPopupCategory" style="display:none;">
+							<ul class="UIRightClickPopupMenu" style="display:block;">
+									
+												<%
+													for(action in uicomponent.getActions()) {
+														String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
+														String classIconItem = action + "Icon";
+														String link = uicomponent.event(action,uicomponent.id,"category") ;
+														if(!action.equals("RemoveForum")){
+												%>
+															 
+													<li class="ItemIcon $classIconItem">
+														<a class="MenuItem" href="$link"><%=nameItem%></a>
+													</li>
+												 
+												<%	} else {%>
+															
+													<li class="ItemIcon $classIconItem">
+														<a class="MenuItem" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UICategory.confirm.DeleteMoreForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.RemoveForum")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckForum")%>')){$link;}"><%=nameItem%></a>
+													</li>
+														
+													<%}
+														if(action.equals("WatchOption")) { %>
+															<div class="LineMenu"><span></span></div>
+												<%	}
+													} 
+												%>
+												<div class="RightClickCustomItem"></div>
+									
+								</ul>
+					
+					</div>
+				<% /*End Popup Menu*/ %>
+				
+			</div>
+			<% } %>
+			<div class="ContentAction SearchForm DefaultStyle" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>"  style="float:right;">
+
+				<div class="SearchIcon StatusIcon">
+					<a class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.SearchThisCategory");%></a>
+				</div>
+
+				
+					<% /*Begin Popup Menu*/ %>
+						<div class="UIPopupCategory" style="display:none;">
+							<ul class="UIRightClickPopupMenu SearchPopup" id="SearchInCategory" style="display:block;">
+									
+									<li class="BorderSearch ClearFix">
+										<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
+										<a class="NormalButtomBT SearchLink FL" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+									</li>
+									<li>
+										<a class="MenuItem AdvancedSearchIcon ItemIcon" href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
+									</li>
+							</ul>
 						</div>
-						
-						<% /*Begin Popup Menu*/ %>
-							<div class="UIPopupCategory" style="display:none;">
-									<ul class="UIRightClickPopupMenu" style="display:block;">
-											
-														<%
-															for(action in uicomponent.getActions()) {
-																String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
-																String classIconItem = action + "Icon";
-																String link = uicomponent.event(action,uicomponent.id,"category") ;
-																if(!action.equals("RemoveForum")){
-														%>
-																 	 
-															<li class="ItemIcon $classIconItem">
-																<a class="MenuItem" href="$link"><%=nameItem%></a>
-															</li>
-														 
-														<%	} else {%>
-																	
-															<li class="ItemIcon $classIconItem">
-																<a class="MenuItem" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UICategory.confirm.DeleteMoreForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.RemoveForum")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckForum")%>')){$link;}"><%=nameItem%></a>
-															</li>
-															 	
-															<%}
-																if(action.equals("WatchOption")) { %>
-															 		<div class="LineMenu"><span></span></div>
-														<%	}
-															} 
-														%>
-														<div class="RightClickCustomItem"></div>
-											
-										</ul>
-							
-							</div>
-						<% /*End Popup Menu*/ %>
-						
-					</div>
-					<% } %>
-					<div class="ContentAction SearchForm DefaultStyle" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>"  style="float:right;">
+					<% /*End Popup Menu*/ %>
+				
+			</div>
+			<div class="ButtonHeadBar DefaultStyle" >
 
-						<div class="SearchIcon StatusIcon">
-							<a class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.SearchThisCategory");%></a>
-						</div>
+				<a style="padding-left:16px;line-height:20px; display:block;" class="AddRSS ForumRSSFeed StatusIcon " href="javascript:window.open('<%=uicomponent.getRSSLink(categoryId)%>'); <%=uicomponent.event("RSS", categoryId).replace("javascript:","")%>;">&nbsp;RSS</a>
 
-						
-							<% /*Begin Popup Menu*/ %>
-								<div class="UIPopupCategory" style="display:none;">
-									<div class="UIRightClickPopupMenu" style="display:block;">
-											
-										<div class="SearchPopup" id="SearchInCategory">
-											<div class="BorderSearch ClearFix">
-												<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
-												<a class="NormalButtomBT SearchLink FL" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
-											</div>
-											<a class="MenuItem AdvancedSearchIcon ItemIcon" href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
-										</div>
-											
-									</div>
-								</div>
-							<% /*End Popup Menu*/ %>
-						
-					</div>
-					<div class="ButtonHeadBar DefaultStyle" >
+			</div>
+		<%if(uicomponent.userProfile.getUserRole() < 3){%>
+			<div class="ButtonHeadBar DefaultStyle" >
 
-						<a style="padding-left:16px;line-height:20px; display:block;" class="AddRSS ForumRSSFeed StatusIcon " href="javascript:window.open('<%=uicomponent.getRSSLink(categoryId)%>'); <%=uicomponent.event("RSS", categoryId).replace("javascript:","")%>;">&nbsp;RSS</a>
+				<a class="AddLinkToBookIcon" style="padding-left:16px;" href="<%=uicomponent.event("AddBookMark","category//"+categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 
-					</div>
-				<%if(uicomponent.userProfile.getUserRole() < 3){%>
-					<div class="ButtonHeadBar DefaultStyle" >
+			</div>
+			<div class="ButtonHeadBar DefaultStyle">
 
-						<a class="AddLinkToBookIcon" style="padding-left:16px;" href="<%=uicomponent.event("AddBookMark","category//"+categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+				<% if(uicomponent.isWatching(category.getPath())) {%>
+					<a class="AddWatchingIcon" style="padding-left:16px;" href="<%=uicomponent.event("UnWatch",categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+				<% } else { %>
+					<a class="AddWatchingIcon" style="padding-left:16px;" href="<%=uicomponent.event("AddWatching",categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+				<% } %>
 
-					</div>
-					<div class="ButtonHeadBar DefaultStyle">
-
-						<% if(uicomponent.isWatching(category.getPath())) {%>
-							<a class="AddWatchingIcon" style="padding-left:16px;" href="<%=uicomponent.event("UnWatch",categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
-						<% } else { %>
-							<a class="AddWatchingIcon" style="padding-left:16px;" href="<%=uicomponent.event("AddWatching",categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
-						<% } %>
-
-					</div>
-				<% } %>	
+			</div>
+		<% } %>	
 	</div>
 	<div class="ContentContainer">
 		<div class="ForumList">
@@ -297,9 +296,9 @@
 												<a ctxMenuId="UIPopupCategory${rCNB}" href="$url" class="ActionLink ForumTitle" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
 										<%}%>
 											<div id="UIPopupCategory${rCNB}" style="display:none;">
-												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
-													<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
-												</div>
+											
+													<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
+												
 											</div>
 										</span>
 										<% if(!ForumUtils.isEmpty(lastReadPost)) {
@@ -340,9 +339,7 @@
 										 			<a ctxMenuId="UIPopupCategory${rCNB}" href="$urlLastPost" title="$titleTopic" class="ActionLink LastPostTitle" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 											<%}%>
 											<div id="UIPopupCategory${rCNB}" style="display:none;">
-												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
-													<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
-												</div>
+												<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
 											</div>
 										</div>
 										<div style="clear:left;"><span></span></div>
@@ -410,9 +407,7 @@
 	<% //Begin RightClick Bookmark	%>
 	<div id="RightClickContainer" style="display:none;">
 		<%if(uicomponent.userProfile.getUserRole() < 3){%>
-
-
-				<ul class="UIRightPopupMenuContainer">
+				
 					<li class="ItemIcon AddLinkToBookIcon">
 						<a class="MenuItem AddBookmark" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 					</li>
@@ -422,9 +417,7 @@
  					<li class="ItemIcon ForumRSSFeed">
 						<a class="MenuItem AddRSS" href=""><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
 					</li>
-				</ul>
-
-
+				
 	 <% } %>
 	</div>
 	<% //End RightClick Bookmark%>

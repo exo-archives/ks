@@ -156,15 +156,16 @@
 								</div>
 
 								<% /*Begin Popup Menu*/ %>
-								<div class="UIPopupCategory SearchPopup" style="display:none; left:-5px;">
-									<div class="UIRightClickPopupMenu" style="display:block;">
-										<div id="SearchInForum" class="SearchPopup">
-											<div class="BorderSearch ClearFix">
+								<div class="UIPopupCategory" style="display:none; left:-5px;">
+									<div class="UIRightClickPopupMenu SearchPopup" id="SearchInForum" style="display:block;">
+										
+											<li class="BorderSearch ClearFix">
 												<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
 													<a class="NormalButtomBT SearchLink UIActionForum FL" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
-											</div>
-											<a class="MenuItem ItemIcon AdvancedSearchIcon" href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
-										</div>
+											</li>
+											<li>
+												<a class="MenuItem ItemIcon AdvancedSearchIcon" href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
+											</li>
 													
 									</div>
 								</div>
@@ -422,9 +423,7 @@
 												<%}%>
 												
 												<div id="UIPopupCategory${rCNB}" style="display:none;">
-													<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
-														<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
-													</div>
+														<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu"><span></span></ul>
 												</div>
 											
 											
@@ -659,7 +658,6 @@
 	</div>
 	<% //Begin RightClick Bookmark	%>
 	<div id="RightClickContainer" style="display:none;">
-		<ul>
 <%if(isShowMenu){%>
  		
 		<li class="MenuItem AddLinkToBookIcon">
@@ -675,7 +673,6 @@
 
 			 <% } 
 		 %>
-		</ul>
 </div>
 	<% //End RightClick Bookmark %>
 	

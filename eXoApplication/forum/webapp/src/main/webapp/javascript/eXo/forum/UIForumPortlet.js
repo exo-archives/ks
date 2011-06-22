@@ -667,7 +667,7 @@ UIForumPortlet.prototype.resetFielForm = function(idElm) {
 UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 	var ancestor= document.getElementById(elmId);
 	var DOMUtil = eXo.core.DOMUtil ;
-	var popupContents= DOMUtil.findDescendantsByClass(ancestor, "div","ClickPopupContent");
+	var popupContents= DOMUtil.findDescendantsByClass(ancestor, "ul","ClickPopupContent");
 	if(popupContents == null) return;
 	var popupContainer = document.getElementById('RightClickContainer') ;
 	if(popupContainer == null) return;

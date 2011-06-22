@@ -7,6 +7,12 @@ body, html, div, table, tr, td, img, form {
 	padding:0;
 }
 
+ul, li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
 .UIPollPortlet .UIGrid {
 	width: 100%;
 }
@@ -39,9 +45,37 @@ body, html, div, table, tr, td, img, form {
   float:right;
 }
 
-.UIPollPortlet .UIRightClickPopupMenu .FixHeight {
-	height:0px;
-	width:0px;
+/**************************** Fix UIRightClickPopupMenu *********************************/
+
+
+.UIPollPortlet .UIRightClickPopupMenu {
+    background: #F6F6F6;
+	border: 1px solid #d3d3d3;
+	-moz-box-shadow: 1px 1px white inset, -1px -1px white inset, 2px 2px 2px #d5d5d5;
+	-wedkit-box-shadow: 1px 1px white inset, -1px -1px white inset, 2px 2px 2px #d5d5d5;
+}
+
+.UIPollPortlet .UIRightClickPopupMenu .ItemIcon {
+	text-align:left;
+	display: block;
+	margin: 0px;
+	min-width:60px;
+	padding: 0px 5px 0px 28px;
+	background-position: 6px;
+	line-height: 24px;
+	white-space: nowrap;
+}
+
+*html .UIPollPortlet .ForumToolbar .UIRightClickPopupMenu .ItemIcon {
+	width:110px;
+}
+
+*html .UIPollPortlet .UIRightClickPopupMenu .ItemIcon {
+	width:60px;
+}
+
+.UIPollPortlet .UIRightClickPopupMenu .ItemIcon:hover {
+	background-color: #DEE4F2;
 }
 
 /******************************** ViewPollForm *******************************/

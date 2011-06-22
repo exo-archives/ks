@@ -68,10 +68,8 @@
 						}
 		 %>
 			<div class="UIForumCategory">
-				<div class="ForumToolbar" $styleForumToolBar>
-					<div class="LeftBar">
-						<div class="RightBar">
-							<div class="CenterBar">
+				<div class="ForumToolbar ForumActionToolbar ClearFix" $styleForumToolBar>
+				
 								<div class="Title" title="$title" oncontextmenu="return false;">
 									<div>
 										<% ++rCNB; %>
@@ -82,17 +80,12 @@
 										<%}%>
 										
 											<div id="UIPopupCategory${rCNB}" style="display:none;">
-												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; font-weight:normal;">
-													<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
-												</div>
+													<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
 											</div>
 										</div>
 								</div>
 								<div class="$classCssCollap" title="$titleCollap" onclick="$actionCollap;"><span></span></div>
-								<div style="clear:both;"><span></span></div>
-							</div>
-						</div>
-					</div>
+							
 				</div>
 				<div class="ContentContainer" style="display:$display">
 					<div class="ForumList">
@@ -239,9 +232,7 @@
 															<a ctxMenuId="UIPopupCategory${rCNB}" href="$url" class="ForumTitle ActionLink" style="$lineHeight;font-weight:$fontWeight" >$forumTitle</a><span class="ForumQuantity"></span>
 													<%}%>
 													<div id="UIPopupCategory${rCNB}" style="display:none;">
-														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
-															<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
-														</div>
+															<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
 													</div>
 												</span>
 												
@@ -285,9 +276,7 @@
 												 			<a ctxMenuId="UIPopupCategory${rCNB}" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 													<%}%>
 													<div id="UIPopupCategory${rCNB}" style="display:none">
-														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
-															<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
-														</div>
+															<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
 													</div>
 												</div>
 												<div style="clear:left;"><span></span></div>
@@ -297,64 +286,38 @@
 													<a style="color:#058EE6;" href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$screemNamePost</a>
 													<span class="DateTime">&nbsp;($dateTime)</span>
 
-													<div style="position:relative;">
-														<div class="UIPopupCategory" style="display:none; left:2px; top:2px; ">
-															<div class="UIRightClickPopupMenu" style="display:block;">
-																<div class="UIContextMenuContainer">
-																	<div class="TopLeftRightClickPopupMenu">
-																		<div class="TopRightRightClickPopupMenu">
-																			<div class="TopCenterRightClickPopupMenu"><span></span></div>
-																		</div>
-																	</div>
-																	<div class="MiddleLeftRightClickPopupMenu">
-																		<div class="MiddleRightRightClickPopupMenu">
-																			<div class="UIRightPopupMenuContainer">
-																			<%
-																				String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", lastPostBy);
-																			%>
-																				<div class="MenuItem" onclick="$linkProf">
-																					<div class="ItemIcon IconsView ViewPublicUserInfo" style="padding-left:30px;">
-																						<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
-																					</div>
-																				</div>
-																			<%
-																			  if(userProfile.getUserRole() < 3 && lastPostBy.indexOf(Utils.DELETED) < 0){
-																					String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", lastPostBy);
-																			%>
-																				<div class="MenuItem" onclick="$sendPrSms">
-																					<div class="ItemIcon IconsView PrivateMessage" style="padding-left:30px;">
-																						<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
-																					</div>
-																				</div>
-																			<%
-																				}
-																				String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", lastPostBy);
-																			%>
-																				<div class="MenuItem" onclick="$viewPosted">
-																					<div class="ItemIcon IconsView ViewPostedByUser" style="padding-left:30px;">
-																						<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $screemNamePost</a>
-																					</div>
-																				</div>
-																			<%
-																				String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", lastPostBy);
-																			%>
-																				<div class="MenuItem" onclick="$viewThread">
-																					<div class="ItemIcon IconsView ViewThreadByUser" style="padding-left:30px;">
-																						<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $screemNamePost</a>
-																					</div>
-																				</div>
-																			</div>
-																		</div>
-																	</div>
-																	<div class="BottomLeftRightClickPopupMenu">
-																		<div class="BottomRightRightClickPopupMenu">
-																			<div class="BottomCenterRightClickPopupMenu"><span></span></div>
-																		</div>
-																	</div>
-																</div>
-															</div>
+													
+														<div class="UIPopupCategory" style="display:none;">
+															<ul class="UIRightClickPopupMenu" style="display:block;">
+																<%
+																	String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", lastPostBy);
+																%>
+																<li class="ItemIcon IconsView ViewPublicUserInfo" onclick="$linkProf">
+																	<a class="MenuItem" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
+																</li>
+																<%
+																  if(userProfile.getUserRole() < 3 && lastPostBy.indexOf(Utils.DELETED) < 0){
+																		String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", lastPostBy);
+																%>
+																<li class="ItemIcon IconsView PrivateMessage" onclick="$sendPrSms">
+																	<a class="MenuItem" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
+																</li>
+																<%
+																	}
+																	String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", lastPostBy);
+																%>
+																<li class="ItemIcon IconsView ViewPostedByUser" onclick="$viewPosted">
+																	<a class="MenuItem" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $screemNamePost</a>
+																</li>
+																<%
+																	String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", lastPostBy);
+																%>
+																<li class="ItemIcon IconsView ViewThreadByUser" onclick="$viewThread">
+																	<a class="MenuItem" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $screemNamePost</a>
+																</li>
+															</ul>			
 														</div>
-													</div>
+										
 													
 												</div>	
 											<%} else { %>	
@@ -383,37 +346,19 @@
 	<% } %>
 	</div>
 	<% //Begin RightClick Bookmark	%>
-	<div id="RightClickContainer"	style="display:none">
-		<div class="RightClickCustomItem" style="display:none; height:0px;"><span></span></div>
+	<div id="RightClickContainer" style="display:none">
 	<%if(uicomponent.userProfile.getUserRole() < 3){%>
-		<div class="TopLeftRightClickPopupMenu">
-			<div class="TopRightRightClickPopupMenu">
-				<div class="TopCenterRightClickPopupMenu"><span></span></div>
-				<div class="RightClickCustomItem" style="display:none; height:0px"><span></span></div>
-			</div>
-		</div>
-		<div class="MiddleLeftRightClickPopupMenu">
-			<div class="MiddleRightRightClickPopupMenu">
-				<div class="UIRightPopupMenuContainer">
-					<div class="ItemIcon AddLinkToBookIcon">
+				
+					<li class="ItemIcon AddLinkToBookIcon">
 						<a class="MenuItem AddBookmark" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
-					</div>
-					<div class="ItemIcon AddWatchingIcon">
+					</li>
+					<li class="ItemIcon AddWatchingIcon">
 						<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
- 					</div>
- 					<div class="ItemIcon ForumRSSFeed">
+ 					</li>
+ 					<li class="ItemIcon ForumRSSFeed">
 						<a class="MenuItem AddRSS" href="#"><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="BottomLeftRightClickPopupMenu">
-			<div class="BottomRightRightClickPopupMenu">
-				<div class="BottomCenterRightClickPopupMenu">
-					<div class="FixHeight"><span></span></div>
-				</div>
-			</div>
-		</div>
+					</li>
+				
 		<% } %>
 	</div>
 	<% //End RightClick Bookmark%>

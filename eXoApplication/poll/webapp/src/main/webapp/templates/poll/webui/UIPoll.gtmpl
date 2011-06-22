@@ -44,49 +44,22 @@
             <% /*Begin Popup Menu*/ %>
               <div style="position:relative;">
                 <div class="UIPopupCategory" style="display:none;">
-                  <div class="UIRightClickPopupMenu" style="display:block; left:58px; top:-15px;">
-                    <div class="UIContextMenuContainer">
-                      <div class="TopLeftRightClickPopupMenu">
-                        <div class="TopRightRightClickPopupMenu">
-                          <div class="TopCenterRightClickPopupMenu"><span></span></div>
-                        </div>
-                      </div>
-                      <div class="MiddleLeftRightClickPopupMenu">
-                        <div class="MiddleRightRightClickPopupMenu">
-                          <div class="UIRightPopupMenuContainer">
+					<ul class="UIRightClickPopupMenu" style="display:block; left:58px; top:-15px;">
                           
-                            <div class="MenuItem" onclick="<%=uicomponent.event("EditPoll")%>">
-                              <div class="ItemIcon EditPollIcon">
-                                <a href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.EditPoll"); %></a>
-                              </div>
-                            </div>
-                            <div class="MenuItem" onclick="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut);%>">
-                              <% if(poll.getIsClosed() || isTimeOut){ %>
-                                <div class="ItemIcon OpenPollIcon">
-                                  <a href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.OpenPoll"); %></a>
-                                </div>
-                              <% } else { %>
-                                <div class="ItemIcon ClosePollIcon">
-                                  <a href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.ClosePoll"); %></a>
-                                </div>
-                              <% } %>
-                            </div>
-                            <div class="MenuItem" onclick="<%=uicomponent.event("RemovePoll","UIPoll","poll");%>">
-                              <div class="ItemIcon DeletePollIcon">
-                                 <a href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.RemovePoll"); %></a>
-                              </div>
-                            </div>
-                            
-                          </div>
-                        </div>
-                      </div>
-                      <div class="BottomLeftRightClickPopupMenu">
-                        <div class="BottomRightRightClickPopupMenu">
-                          <div class="BottomCenterRightClickPopupMenu"><span></span></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+						<li class="MenuItem" onclick="<%=uicomponent.event("EditPoll")%>">
+							<a class="ItemIcon EditPollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.EditPoll"); %></a>
+						</li>
+						<li class="MenuItem" onclick="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut);%>">
+							<% if(poll.getIsClosed() || isTimeOut){ %>
+							  <a class="ItemIcon OpenPollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.OpenPoll"); %></a>
+							<% } else { %>
+							  <a class="ItemIcon ClosePollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.ClosePoll"); %></a>
+							<% } %>
+						</li>
+						<li class="MenuItem" onclick="<%=uicomponent.event("RemovePoll","UIPoll","poll");%>">
+							 <a class="ItemIcon DeletePollIcon" href="javaScript:void(0);"><%=_ctx.appRes("UIPoll.label.RemovePoll"); %></a>
+						</li>
+					</ul>
                 </div>
               </div>
             <% /*End Popup Menu*/ %>
