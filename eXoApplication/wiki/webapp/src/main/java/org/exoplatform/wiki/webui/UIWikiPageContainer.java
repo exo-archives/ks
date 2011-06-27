@@ -18,7 +18,6 @@ package org.exoplatform.wiki.webui;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 
 /**
  * Created by The eXo Platform SAS
@@ -27,7 +26,7 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
  * 7 Dec 2010  
  */
 @ComponentConfig(
-                 lifecycle = UIContainerLifecycle.class
+                 template = "app:/templates/wiki/webui/UIWikiPageContainer.gtmpl"
                )
 public class UIWikiPageContainer extends UIContainer {
   public UIWikiPageContainer() throws Exception {

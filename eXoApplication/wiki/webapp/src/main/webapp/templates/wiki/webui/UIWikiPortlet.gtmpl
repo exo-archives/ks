@@ -1,6 +1,7 @@
 <%
   import org.exoplatform.wiki.mow.api.Page;
   import org.exoplatform.container.PortalContainer;
+  import org.exoplatform.web.application.JavascriptManager;
   
   def rcontext = _ctx.getRequestContext() ;
  		
@@ -10,10 +11,12 @@
   
   String changeModeLink= uicomponent.event(uicomponent.CHANGE_MODE_ACTION);
   String changeModeLinkId = uicomponent.WIKI_PORTLET_ACTION_PREFIX + uicomponent.CHANGE_MODE_ACTION; 
-  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiPortlet', '/wiki/javascript/') ;
-  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiAjaxRequest', '/wiki/javascript/') ;
-  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAjaxRequest.init('" + uicomponent.WIKI_PORTLET_ACTION_PREFIX + "', '" + uicomponent.VIEW_PAGE_ACTION + "');");  
-  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPortlet.init('"+uicomponent.id+ "', '" + changeModeLinkId + "');"); 
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.importJavascript('eXo.wiki.UIWikiPortlet', '/wiki/javascript/') ;
+  jsmanager.importJavascript('eXo.wiki.UIWikiAjaxRequest', '/wiki/javascript/') ;
+  jsmanager.addJavascript("eXo.wiki.UIWikiAjaxRequest.init('" + uicomponent.WIKI_PORTLET_ACTION_PREFIX + "', '" + uicomponent.VIEW_PAGE_ACTION + "');");  
+  jsmanager.addJavascript("eXo.wiki.UIWikiPortlet.init('"+uicomponent.id+ "', '" + changeModeLinkId + "');");
+  jsmanager.addJavascript("eXo.wiki.WikiLayout.init('" + uicomponent.id + "') ;") ; 
 %>
 <script type="text/javascript"> 
   if(!eXo.env.rest){
@@ -39,7 +42,7 @@
 <!--  -->
 <div class="UIWikiPortlet" id="$uicomponent.id" >
   <div class="ParentMaskLayer">
-    <div id="MaskLayerWiki" class="MaskLayerWiki"><span></span></div>
+    <div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
   </div>
   <% Page page = _ctx.getRequestContext().getAttribute("wikiPage");%>
   <%

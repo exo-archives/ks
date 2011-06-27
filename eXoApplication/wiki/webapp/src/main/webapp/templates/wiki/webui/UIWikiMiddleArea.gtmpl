@@ -1,23 +1,23 @@
 <% 
 import org.exoplatform.wiki.webui.UIWikiNavigationContainer;
 import org.exoplatform.wiki.webui.UIWikiPageContainer;
-import org.exoplatform.web.application.JavascriptManager;
-  def rcontext = _ctx.getRequestContext() ;
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript("eXo.wiki.TableSpliter.init('" + uicomponent.id + "') ;") ;
+  //import org.exoplatform.web.application.JavascriptManager;
+  //def rcontext = _ctx.getRequestContext() ;
+  //JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  //jsmanager.addJavascript("eXo.wiki.WikiLayout.init('" + uicomponent.id + "') ;") ;
   String showHideAction = uicomponent.event(uicomponent.SHOW_HIDE_ACTION);
 %>
 <div class="UIWikiMiddleArea" id="$uicomponent.id">
-  <div class="WikiLayout" style="height: 450px;">
+  <div class="WikiLayout">
       <% if(uicomponent.isNavigationRender()) { %>
-      <div class="UILeftContainerAre">
+      <div class="UILeftContainerArea">
       <% uicomponent.renderChild(UIWikiNavigationContainer.class); %>       
     </div>
       <% 
       }
       %>
       <div class="Spliter" ondblclick="$showHideAction"><span></span></div>
-    <div class="UIRightContainerAre">
+    <div class="UIRightContainerArea">
       <% uicomponent.renderChild(UIWikiPageContainer.class); %>
     </div>
   </div>

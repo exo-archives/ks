@@ -86,7 +86,7 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
           pageVersions.setRendered(false);
         }
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(wikiBottomArea);
+      event.getRequestContext().addUIComponentToUpdateByAjax(wikiBottomArea.getParent());
     }
   }
 

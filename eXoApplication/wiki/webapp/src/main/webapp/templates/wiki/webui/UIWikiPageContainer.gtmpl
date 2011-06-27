@@ -1,0 +1,15 @@
+<%
+	def rcontext = _ctx.getRequestContext() ;
+	rcontext.getJavascriptManager().addJavascript("eXo.wiki.WikiLayout.setHeightRightContent() ;") ; 
+%>
+
+<div class="UIWikiPageContainer" id="$uicomponent.id">
+<%
+  List children = uicomponent.getChildren() ;
+  for(component in children) {
+    if(component.isRendered()){
+      uicomponent.renderChild(component.getClass()) ;
+    }
+  }
+%>
+</div>

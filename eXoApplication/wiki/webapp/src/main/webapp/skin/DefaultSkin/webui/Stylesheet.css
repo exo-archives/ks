@@ -26,6 +26,10 @@
 
 @import url('UIPageToolbar/Stylesheet.css');
 
+body,html {
+	overflow: hidden;
+}
+
 .ClearFix:after {
 	content: ".";
 	display: block;
@@ -38,10 +42,6 @@
 	display: inline-block; !
 	zoom: 1; !
 	display: block;
-}
-
-body,html {
-	overflow: hidden;
 }
 
 .UIWikiPortlet hr {
@@ -272,11 +272,12 @@ span.Excerpt p {
 
 .UIWikiPortlet .WikiLayout {
 	width: 100%;
+	height: 450px;
 	margin: 0;
 	position: relative;
 }
 
-.UIWikiPortlet .UILeftContainerAre {
+.UIWikiPortlet .UILeftContainerArea {
 	top: 0px;
 	left: 0px;
 	z-index: 1;
@@ -286,7 +287,7 @@ span.Excerpt p {
 	position: absolute;
 }
 
-.UIWikiPortlet .UIRightContainerAre {
+.UIWikiPortlet .UIRightContainerArea {
 	top: 0px;
 	left: 301px;
 	z-index: 1;
