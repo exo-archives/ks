@@ -100,5 +100,9 @@ public interface Page {
    */
   void setPagePermission(HashMap<String, String[]> permissions) throws Exception;
   
+  /**
+   * get URL of page. The domain part of link can be fixed.
+   */
+  String getURL();
   
 }

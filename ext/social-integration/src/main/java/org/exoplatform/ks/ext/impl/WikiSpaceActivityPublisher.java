@@ -19,7 +19,6 @@ import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.social.core.storage.SpaceStorageException;
 import org.exoplatform.wiki.mow.api.Page;
-import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.listener.PageWikiListener;
 
@@ -41,9 +40,7 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
 
   public static final String PAGE_TITLE_KEY    = "page_name".intern();
 
-  public static final String SPACE_URL_KEY     = "space_url".intern();
-
-  public static final String PORTLET_NAME_KEY  = "portlet_name".intern();
+  public static final String URL_KEY           = "page_url".intern();
 
   private static Log         LOG               = ExoLogger.getExoLogger(WikiSpaceActivityPublisher.class);
 
@@ -84,8 +81,8 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
     IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class);
     ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
 
-    Identity spaceIdentity = identityM.getIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
-    Identity userIdentity = identityM.getIdentity(OrganizationIdentityProvider.NAME, page.getAuthor(), false);
+    Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getPrettyName(), false);
+    Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, page.getAuthor(), false);
 
     ExoSocialActivity activity = new ExoSocialActivityImpl();
     activity.setUserId(userIdentity.getId());
@@ -98,8 +95,7 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
     templateParams.put(PAGE_OWNER_KEY, wikiOwner);
     templateParams.put(PAGE_TYPE_KEY, wikiType);
     templateParams.put(PAGE_TITLE_KEY, page.getTitle());
-    templateParams.put(PORTLET_NAME_KEY, params.getValueParam("wikiPortletName").getValue());
-    templateParams.put(SPACE_URL_KEY, space.getUrl());
+    templateParams.put(URL_KEY, page.getURL());
     activity.setTemplateParams(templateParams);
     activityM.saveActivity(spaceIdentity, activity);
   }

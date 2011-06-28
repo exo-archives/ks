@@ -545,6 +545,8 @@ public class Utils {
       page = page.syntax(pageNode.getProperty(Definition.SYNTAX).getString());
     if (pageNode.hasProperty(Definition.COMMENT))
       page = page.comment(pageNode.getProperty(Definition.COMMENT).getString());
+    if (pageNode.hasProperty(Definition.URL))
+      page = page.url(pageNode.getProperty(Definition.URL).getString());
     return page;
   }
   

@@ -47,6 +47,7 @@ public class SimplePageImpl implements Page {
   private String title;
   private Date updateDate;
   private boolean hasPermission;
+  private String url;
   
   public SimplePageImpl(String name, String title, String owner) {
     this.name = name;
@@ -61,6 +62,11 @@ public class SimplePageImpl implements Page {
   
   public SimplePageImpl comment(String comment) {
     this.comment = comment;
+    return this;
+  }
+  
+  public SimplePageImpl url(String url) {
+    this.url = url;
     return this;
   }
   
@@ -177,4 +183,10 @@ public class SimplePageImpl implements Page {
     this.title = title;
   }
 
+  @Override
+  public String getURL() {
+    return this.url;
+  }
+
+  
 }
