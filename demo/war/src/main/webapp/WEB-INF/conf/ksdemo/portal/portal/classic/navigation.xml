@@ -4,12 +4,12 @@
   <owner-id>classic</owner-id>
   <priority>1</priority>
   <page-nodes>
-    <!-- node>
+    <node>
       <uri>home</uri>
       <name>home</name>
       <label>#{portal.classic.home}</label>
       <page-reference>portal::classic::homepage</page-reference>
-    </node-->
+    </node>
     <node>
       <uri>forum</uri>
       <name>forum</name>

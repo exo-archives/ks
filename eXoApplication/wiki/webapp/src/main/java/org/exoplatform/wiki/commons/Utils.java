@@ -96,7 +96,7 @@ public class Utils {
     HttpServletRequest request = portalRequestContext.getRequest();
     String requestURL = request.getRequestURL().toString();   
     UIPortal uiPortal = Util.getUIPortal();
-    String pageNodeSelected = uiPortal.getSelectedNode().getUri();
+    String pageNodeSelected = uiPortal.getSelectedUserNode().getURI();
     if (!requestURL.contains(pageNodeSelected)) {
       // Happens at the first time processRender() called when add wiki portlet manually
       requestURL = portalRequestContext.getPortalURI() + pageNodeSelected;
@@ -107,7 +107,7 @@ public class Utils {
   public static WikiPageParams getCurrentWikiPageParams() throws Exception {
     String requestURL = getCurrentRequestURL();
     PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
-    WikiPageParams params = pageResolver.extractWikiPageParams(requestURL, Util.getUIPortal().getSelectedNode());
+    WikiPageParams params = pageResolver.extractWikiPageParams(requestURL, Util.getUIPortal().getSelectedUserNode());
     HttpServletRequest request = Util.getPortalRequestContext().getRequest();
     Map<String, String[]> paramsMap = request.getParameterMap();
     params.setParameters(paramsMap);
@@ -121,7 +121,7 @@ public class Utils {
       return helpPage;
     }
     PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
-    Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedNode());
+    Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedUserNode());
     return page;
   }
   
@@ -132,7 +132,7 @@ public class Utils {
     String domainURL = requestURL.substring(0, requestURL.indexOf(portalURI));
 
     UIPortal uiPortal = Util.getUIPortal();
-    String pageNodeSelected = uiPortal.getSelectedNode().getUri();
+    String pageNodeSelected = uiPortal.getSelectedUserNode().getURI();
     StringBuilder sb = new StringBuilder(domainURL);
     sb.append(portalURI);
     sb.append(pageNodeSelected);
@@ -255,7 +255,7 @@ public class Utils {
     String portalURI = portalRequestContext.getPortalURI();
     String domainURL = requestURL.substring(0, requestURL.indexOf(portalURI));
     String portalURL = domainURL + portalURI;
-    String pageNodeSelected = uiPortal.getSelectedNode().getUri();
+    String pageNodeSelected = uiPortal.getSelectedUserNode().getURI();
     String treeRestURL = getCurrentRestURL().concat("/wiki/tree/children/");
 
     WikiContext wikiContext = new WikiContext();
@@ -281,7 +281,7 @@ public class Utils {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     StringBuilder sb = new StringBuilder(portalRequestContext.getPortalURI());
     UIPortal uiPortal = Util.getUIPortal();
-    String pageNodeSelected = uiPortal.getSelectedNode().getUri();
+    String pageNodeSelected = uiPortal.getSelectedUserNode().getURI();
     sb.append(pageNodeSelected);   
     return sb.toString();
   }

@@ -23,9 +23,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -524,7 +522,7 @@ public class FAQUtils {
     PortalRequestContext portalContext = Util.getPortalRequestContext();
     String link = portalContext.getRequest().getRequestURL().toString();
     try {
-      String selectedNode = Util.getUIPortal().getSelectedNode().getUri();
+      String selectedNode = Util.getUIPortal().getSelectedUserNode().getURI();
       String portalName = "/" + Util.getUIPortal().getName();
       if (link.indexOf(portalName) > 0) {
         if (link.indexOf(portalName + "/" + selectedNode) < 0) {

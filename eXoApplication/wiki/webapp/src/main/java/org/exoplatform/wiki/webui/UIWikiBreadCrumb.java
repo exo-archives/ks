@@ -108,7 +108,7 @@ public class UIWikiBreadCrumb extends UIContainer {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     StringBuilder sb = new StringBuilder(portalRequestContext.getPortalURI());
     UIPortal uiPortal = Util.getUIPortal();
-    String pageNodeSelected = uiPortal.getSelectedNode().getUri();
+    String pageNodeSelected = uiPortal.getSelectedUserNode().getURI();
     sb.append(pageNodeSelected);
     sb.append("/");
     if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(breadCumbData.getWikiType())) {

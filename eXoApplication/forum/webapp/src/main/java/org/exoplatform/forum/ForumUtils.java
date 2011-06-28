@@ -129,7 +129,7 @@ public class ForumUtils {
   public static String createdForumLink(String type, String id) throws Exception {
     PortalRequestContext portalContext = Util.getPortalRequestContext();
     String url = portalContext.getRequest().getRequestURL().toString();
-    String selectedNode = Util.getUIPortal().getSelectedNode().getUri();
+    String selectedNode = Util.getUIPortal().getSelectedUserNode().getURI();
     String portalName = portalContext.getPortalOwner();
     return buildForumLink(url, selectedNode, portalName, type, id);
   }

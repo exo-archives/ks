@@ -1,7 +1,7 @@
 package org.exoplatform.wiki.resolver;
 
-import org.exoplatform.portal.config.model.PageNode;
 import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.portal.mop.user.UserNode;
 import org.exoplatform.portal.pom.config.Utils;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -11,13 +11,13 @@ public class URLResolver extends Resolver{
   public URLResolver(OrganizationService orgSerivce) throws Exception {
     this.orgSerivce = orgSerivce ;
   }
-  public WikiPageParams extractPageParams(String requestURL, PageNode portalPageNode) throws Exception {
+  public WikiPageParams extractPageParams(String requestURL, UserNode portalUserNode) throws Exception {
     WikiPageParams params = new WikiPageParams() ;
     String wikiPageName;
-    if (portalPageNode == null) {
+    if (portalUserNode == null) {
       wikiPageName = "wiki";
     } else {
-      wikiPageName = portalPageNode.getUri();
+      wikiPageName = portalUserNode.getURI();
     }
     String uri = extractURI(requestURL, wikiPageName) ; 
     if (uri == null) return params ;
@@ -57,9 +57,9 @@ public class URLResolver extends Resolver{
         params.setPageId(array[1]) ;
       }
     }else{
-      if (portalPageNode != null && portalPageNode.getPageReference() != null
-          && !portalPageNode.getPageReference().startsWith(PortalConfig.PORTAL_TYPE)) {
-        String[] components = Utils.split("::", portalPageNode.getPageReference());
+      if (portalUserNode != null && portalUserNode.getPageRef() != null
+          && !portalUserNode.getPageRef().startsWith(PortalConfig.PORTAL_TYPE)) {
+        String[] components = Utils.split("::", portalUserNode.getPageRef());
         params.setType(components[0]);
         params.setOwner(components[1]);
       } else {

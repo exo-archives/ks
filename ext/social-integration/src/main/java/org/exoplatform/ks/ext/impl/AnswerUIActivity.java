@@ -144,7 +144,7 @@ public class AnswerUIActivity extends BaseKSActivity {
   public static String getLinkDiscuss(String topicId) throws Exception {
     PortalRequestContext portalContext = Util.getPortalRequestContext();
     String link = portalContext.getRequest().getRequestURL().toString();
-    String selectedNode = Util.getUIPortal().getSelectedNode().getUri();
+    String selectedNode = Util.getUIPortal().getSelectedUserNode().getURI();
     String portalName = "/" + Util.getUIPortal().getName();
     if (link.indexOf(portalName) > 0) {
       if (link.indexOf(portalName + "/" + selectedNode) < 0) {

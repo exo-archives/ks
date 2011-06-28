@@ -87,7 +87,7 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     StringBuilder sb = new StringBuilder(portalRequestContext.getPortalURI());
     UIPortal uiPortal = Util.getUIPortal();
-    String pageNodeSelected = uiPortal.getSelectedNode().getUri();
+    String pageNodeSelected = uiPortal.getSelectedUserNode().getURI();
     sb.append(pageNodeSelected);
     if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(wikiType)) {
       sb.append("/");
