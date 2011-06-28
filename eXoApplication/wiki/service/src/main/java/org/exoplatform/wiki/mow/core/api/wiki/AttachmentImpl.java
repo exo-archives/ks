@@ -102,7 +102,7 @@ public abstract class AttachmentImpl extends NTFile implements Attachment {
     if (mimeType != null && mimeType.startsWith("image/")) {
       PageImpl page = this.getParentPage();
       Wiki wiki = page.getWiki();
-      String wikiType = Utils.getWikiType(wiki);
+      String wikiType = wiki.getType();
       // Build REST url to view image
       sb.append(Utils.getDefaultRestBaseURI())
         .append("/wiki/images/")

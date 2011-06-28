@@ -27,10 +27,10 @@ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.Template;
 import org.exoplatform.wiki.service.DataStorage;
-import org.exoplatform.wiki.service.search.ContentSearchData;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.service.search.TemplateSearchData;
 import org.exoplatform.wiki.service.search.TemplateSearchResult;
+import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.TitleSearchResult;
 import org.exoplatform.wiki.utils.Utils;
 
@@ -39,14 +39,14 @@ public class JCRDataStorage implements DataStorage{
   
   private static final int searchSize = 10;
   
-  public PageList<SearchResult> search(ChromatticSession session, ContentSearchData data) throws Exception {
+  public PageList<SearchResult> search(ChromatticSession session, WikiSearchData data) throws Exception {
     List<SearchResult> resultList = new ArrayList<SearchResult>();
     search(session, data, resultList, false);
     return new ObjectPageList<SearchResult>(resultList, searchSize);
   }
   
   private void search(ChromatticSession session,
-                      ContentSearchData data,
+                      WikiSearchData data,
                       List<SearchResult> resultList,
                       boolean onlyHomePages) throws Exception {
     String statement = data.getStatement(onlyHomePages);
@@ -121,7 +121,7 @@ public class JCRDataStorage implements DataStorage{
     return result;
   }
   
-  public List<SearchResult> searchRenamedPage(ChromatticSession session, ContentSearchData data) throws Exception {
+  public List<SearchResult> searchRenamedPage(ChromatticSession session, WikiSearchData data) throws Exception {
     List<SearchResult> resultList = new ArrayList<SearchResult>() ;
     String statement = data.getStatementForRenamedPage() ;
     QueryManager qm = session.getJCRSession().getWorkspace().getQueryManager();
@@ -156,7 +156,7 @@ public class JCRDataStorage implements DataStorage{
     return attContent.getProperty("jcr:data").getStream() ;    
   }
   
-  public List<TitleSearchResult> searchDataByTitle(ChromatticSession session, ContentSearchData data) throws Exception {
+  public List<TitleSearchResult> searchDataByTitle(ChromatticSession session, WikiSearchData data) throws Exception {
     List<TitleSearchResult> resultList = new ArrayList<TitleSearchResult>();
     searchDataByTitle(session, data, resultList, true);
     searchDataByTitle(session, data, resultList, false);
@@ -164,7 +164,7 @@ public class JCRDataStorage implements DataStorage{
   }  
   
   private void searchDataByTitle(ChromatticSession session,
-                                 ContentSearchData data,
+                                 WikiSearchData data,
                                  List<TitleSearchResult> resultList,
                                  boolean onlyHomePages) throws Exception {
     String statement = data.getStatementForTitle(onlyHomePages);

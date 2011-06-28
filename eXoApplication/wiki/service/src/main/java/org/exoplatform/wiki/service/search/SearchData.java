@@ -59,7 +59,7 @@ public class SearchData {
   protected static String    GROUP_PATH  = "/Groups/%/ApplicationData/"
                                              + WikiNodeType.Definition.WIKI_APPLICATION + "/";
 
-  protected String           USER_PATH;
+  protected String           USER_PATH   = "/Users/%/ApplicationData/" + WikiNodeType.Definition.WIKI_APPLICATION + "/";
 
   public SearchData(String text,
                     String title,
@@ -77,9 +77,10 @@ public class SearchData {
       NodeHierarchyCreator nodeHierachyCreator = (NodeHierarchyCreator) ExoContainerContext.getCurrentContainer()
                                                                                            .getComponentInstanceOfType(NodeHierarchyCreator.class);
       try {
-        Node userNode = nodeHierachyCreator.getUserApplicationNode(SessionProvider.createSystemProvider(),
-                                                                   wikiOwner);
-        USER_PATH = userNode.getPath() + "/" + WikiNodeType.Definition.WIKI_APPLICATION + "/";
+        if (wikiOwner != null && wikiOwner.length() > 0) {
+          Node userNode = nodeHierachyCreator.getUserApplicationNode(SessionProvider.createSystemProvider(), wikiOwner);
+          USER_PATH = userNode.getPath() + "/" + WikiNodeType.Definition.WIKI_APPLICATION + "/";
+        }
       } catch (Exception e) {
         if (e instanceof PathNotFoundException)
           throw new NoSuchNodeException(e);

@@ -89,7 +89,7 @@ public class WikiHomeTreeNode extends TreeNode {
   @Override
   public String buildPath() {
     Wiki wiki = this.wikiHome.getWiki();
-    WikiPageParams params = new WikiPageParams(Utils.getWikiType(wiki), wiki.getOwner(),WikiNodeType.Definition.WIKI_HOME_NAME );
+    WikiPageParams params = new WikiPageParams(wiki.getType(), wiki.getOwner(),WikiNodeType.Definition.WIKI_HOME_NAME );
     return TreeUtils.getPathFromPageParams(params);
   }
 }

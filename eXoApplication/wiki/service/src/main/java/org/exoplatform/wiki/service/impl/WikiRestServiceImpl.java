@@ -83,7 +83,7 @@ import org.exoplatform.wiki.service.rest.model.PageSummary;
 import org.exoplatform.wiki.service.rest.model.Pages;
 import org.exoplatform.wiki.service.rest.model.Space;
 import org.exoplatform.wiki.service.rest.model.Spaces;
-import org.exoplatform.wiki.service.search.ContentSearchData;
+import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.TitleSearchResult;
 import org.exoplatform.wiki.tree.JsonNodeData;
 import org.exoplatform.wiki.tree.TreeNode;
@@ -418,7 +418,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
   @Produces(MediaType.APPLICATION_JSON)
   public Response searchData(@PathParam("keyword") String keyword) throws Exception {
     try {
-      ContentSearchData data = new ContentSearchData(null, keyword.toLowerCase(), null, null, null);
+      WikiSearchData data = new WikiSearchData(null, keyword.toLowerCase(), null, null, null);
       List<TitleSearchResult> result = wikiService.searchDataByTitle(data);
       return Response.ok(new BeanToJsons(result), MediaType.APPLICATION_JSON)
                      .cacheControl(cc)
@@ -541,7 +541,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
   public PageSummary createPageSummary(ObjectFactory objectFactory, URI baseUri, PageImpl doc) throws IllegalArgumentException, UriBuilderException, Exception {
     PageSummary pageSummary = objectFactory.createPageSummary();
     fillPageSummary(pageSummary, objectFactory, baseUri, doc);
-    String wikiName = Utils.getWikiType(doc.getWiki());
+    String wikiName = doc.getWiki().getType();
     String spaceName = doc.getWiki().getOwner();
     String pageUri = UriBuilder.fromUri(baseUri)
                                .path("/wiki/{wikiName}/spaces/{spaceName}/pages/{pageName}")
@@ -568,7 +568,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
 
     String attachmentUri = UriBuilder.fromUri(baseUri)
                                      .path("/wiki/{wikiName}/spaces/{spaceName}/pages/{pageName}/attachments/{attachmentName}")
-                                     .build(Utils.getWikiType(page.getWiki()), page.getWiki().getOwner(), page.getName(), pageAttachment.getName())
+                                     .build(page.getWiki().getType(), page.getWiki().getOwner(), page.getName(), pageAttachment.getName())
                                      .toString();
     Link attachmentLink = objectFactory.createLink();
     attachmentLink.setHref(attachmentUri);
@@ -598,9 +598,10 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
                                       ObjectFactory objectFactory,
                                       URI baseUri,
                                       PageImpl doc) throws IllegalArgumentException, UriBuilderException, Exception {
-    pageSummary.setWiki(Utils.getWikiType(doc.getWiki()));
+    String wikiType = doc.getWiki().getType();
+    pageSummary.setWiki(wikiType);
     pageSummary.setFullName(doc.getTitle());
-    pageSummary.setId(Utils.getWikiType(doc.getWiki())+ ":" + doc.getWiki().getOwner() + "." + doc.getName());
+    pageSummary.setId(wikiType + ":" + doc.getWiki().getOwner() + "." + doc.getName());
     pageSummary.setSpace(doc.getWiki().getOwner());
     pageSummary.setName(doc.getName());
     pageSummary.setTitle(doc.getTitle());
@@ -621,7 +622,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
 
     String spaceUri = UriBuilder.fromUri(baseUri)
                                 .path("/wiki/{wikiName}/spaces/{spaceName}")
-                                .build(Utils.getWikiType(doc.getWiki()), doc.getWiki().getOwner())
+                                .build(wikiType, doc.getWiki().getOwner())
                                 .toString();
     Link spaceLink = objectFactory.createLink();
     spaceLink.setHref(spaceUri);
@@ -631,7 +632,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     if (parent != null) {
       String parentUri = UriBuilder.fromUri(baseUri)
                                    .path("/wiki/{wikiName}/spaces/{spaceName}/pages/{pageName}")
-                                   .build(Utils.getWikiType(parent.getWiki()),
+                                   .build(parent.getWiki().getType(),
                                           parent.getWiki().getOwner(),
                                           parent.getName())
                                    .toString();
@@ -644,7 +645,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     if (!doc.getChildPages().isEmpty()) {
       String pageChildrenUri = UriBuilder.fromUri(baseUri)
                                          .path("/wiki/{wikiName}/spaces/{spaceName}/pages/{pageName}/children")
-                                         .build(Utils.getWikiType(doc.getWiki()),
+                                         .build(wikiType,
                                                 doc.getWiki().getOwner(),
                                                 doc.getName())
                                          .toString();
@@ -658,7 +659,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       String attachmentsUri;
       attachmentsUri = UriBuilder.fromUri(baseUri)
                                  .path("/wiki/{wikiName}/spaces/{spaceName}/pages/{pageName}/attachments")
-                                 .build(Utils.getWikiType(doc.getWiki()),
+                                 .build(wikiType,
                                         doc.getWiki().getOwner(),
                                         doc.getName())
                                  .toString();
@@ -697,7 +698,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
 
     String pageUri = UriBuilder.fromUri(baseUri)
                                .path("/wiki/{wikiName}/spaces/{spaceName}/pages/{pageName}")
-                               .build(Utils.getWikiType(page.getWiki()), page.getWiki().getOwner(), page.getName())
+                               .build(page.getWiki().getType(), page.getWiki().getOwner(), page.getName())
                                .toString();
     Link pageLink = objectFactory.createLink();
     pageLink.setHref(pageUri);

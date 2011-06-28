@@ -20,6 +20,7 @@ import org.chromattic.api.RelationshipType;
 import org.chromattic.api.annotations.ManyToOne;
 import org.chromattic.api.annotations.MappedBy;
 import org.chromattic.api.annotations.PrimaryType;
+import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiType;
 
@@ -40,5 +41,10 @@ public abstract class PortalWiki extends WikiImpl {
   public abstract PortalWikiContainer getPortalWikis();
   
   public abstract void setPortalWikis(PortalWikiContainer pWikiContainer);
+
+  @Override
+  public String getType() {
+    return PortalConfig.PORTAL_TYPE;
+  }
 
 }

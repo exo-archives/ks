@@ -127,6 +127,8 @@ public abstract class WikiImpl implements Wiki {
     throw new UnsupportedOperationException();
   }
   
+  public abstract String getType();
+  
   @OneToOne
   @Owner
   @MappedBy(WikiNodeType.Definition.WIKI_HOME_NAME)

@@ -16,7 +16,7 @@ import org.exoplatform.wiki.commons.DateTimeFomatter;
 		if(relatedPage != null) {
 			WikiPageParams param = Utils.getWikiPageParams(relatedPage);
 			Wiki relatedWiki = relatedPage.getWiki();
-			String relatedLocation = Utils.getWikiType(relatedWiki) +" : " +relatedWiki.getOwner();
+			String relatedLocation = relatedWiki.getType() +" : " +relatedWiki.getOwner();
 			String content = relatedPage.getContent().getText();
 			String summaryContent =  (content.length() >100) ? content.substring(0,100) + " ..." : content ;
 			String url = org.exoplatform.wiki.commons.Utils.getURLFromParams(param);

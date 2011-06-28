@@ -20,6 +20,7 @@ import org.chromattic.api.RelationshipType;
 import org.chromattic.api.annotations.ManyToOne;
 import org.chromattic.api.annotations.MappedBy;
 import org.chromattic.api.annotations.PrimaryType;
+import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiType;
 
@@ -40,4 +41,12 @@ public abstract class GroupWiki extends WikiImpl {
   public abstract GroupWikiContainer getGroupWikis();
   
   public abstract void setGroupWikis(GroupWikiContainer groupWikiContainer);
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getType() {
+    return PortalConfig.GROUP_TYPE;
+  }
 }

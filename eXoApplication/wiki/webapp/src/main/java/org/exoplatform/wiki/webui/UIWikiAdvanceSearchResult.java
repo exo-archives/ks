@@ -83,7 +83,7 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
   
   private String getWikiNodeUri(SearchResult result) throws Exception {
     Wiki wiki= getWiki(result);
-    String wikiType= org.exoplatform.wiki.utils.Utils.getWikiType(wiki);
+    String wikiType = wiki.getType();
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     StringBuilder sb = new StringBuilder(portalRequestContext.getPortalURI());
     UIPortal uiPortal = Util.getUIPortal();

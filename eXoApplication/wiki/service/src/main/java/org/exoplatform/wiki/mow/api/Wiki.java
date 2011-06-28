@@ -39,6 +39,14 @@ public interface Wiki {
    * @return
    */
   String getOwner();
+  
+  /**
+   * Type of this wiki. May be a portal type, a group type or a
+   * user type.
+   * 
+   * @return type of wiki
+   */
+  String getType();
 
   /**
    * Get the home page of the wiki

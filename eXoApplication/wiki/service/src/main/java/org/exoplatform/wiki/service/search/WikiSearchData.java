@@ -3,7 +3,7 @@ package org.exoplatform.wiki.service.search;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 
-public class ContentSearchData extends SearchData {
+public class WikiSearchData extends SearchData {
 
   public static String WIKIHOME_PATH    = WikiNodeType.Definition.WIKI_HOME_NAME;
 
@@ -15,7 +15,7 @@ public class ContentSearchData extends SearchData {
 
   private String pagePath = "";
   
-  public ContentSearchData(String text,
+  public WikiSearchData(String text,
                            String title,
                            String content,
                            String wikiType,
@@ -25,11 +25,11 @@ public class ContentSearchData extends SearchData {
     createJcrQueryPath();
   }
 
-  public ContentSearchData(String wikiType, String wikiOwner, String pageId) {
+  public WikiSearchData(String wikiType, String wikiOwner, String pageId) {
     this(null, null, null, wikiType, wikiOwner, pageId);
   }
 
-  public ContentSearchData(String text,
+  public WikiSearchData(String text,
                            String title,
                            String content,
                            String wikiType,
@@ -51,7 +51,7 @@ public class ContentSearchData extends SearchData {
           pagePath = PORTAL_PAGESPATH;
         } else if (wikiType.equals(PortalConfig.GROUP_TYPE))
           pagePath = GROUP_PAGESPATH;
-        if (wikiOwner != null) {
+        if (wikiOwner != null && wikiOwner.length() > 0) {
           pagePath = pagePath.replaceFirst("%", wikiOwner);
         }
       }
@@ -116,24 +116,25 @@ public class ContentSearchData extends SearchData {
    */
   public String getPageConstraint() {
     StringBuilder constraint = new StringBuilder();
-    
+
     String absPagePath = pagePath + "/" + pageId;
     String pageLikePath = pagePath + "/%/" + pageId;
     boolean isWikiHome = false;
     if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageId)) {
       absPagePath = pagePath;
-     isWikiHome = true;
+      isWikiHome = true;
     }
     if (wikiType == null || wikiOwner == null) {
       absPagePath = "/" + pageId;
       pageLikePath = "/%/" + pageId;
     }
-    constraint.append('(')
-             .append('(').append("jcr:path LIKE '").append(pageLikePath).append('\'');
-    if (!isWikiHome) constraint.append(" or (jcr:path = '").append(absPagePath).append('\'').append(')');
+    constraint.append('(').append('(').append("jcr:path LIKE '").append(pageLikePath).append('\'');
+    if (!isWikiHome)
+      constraint.append(" or (jcr:path = '").append(absPagePath).append('\'').append(')');
     constraint.append(")")
-             .append(" AND ").append("(jcr:mixinTypes IS NULL OR NOT (jcr:mixinTypes = 'wiki:removed'))")
-             .append(')');
+              .append(" AND ")
+              .append("(jcr:mixinTypes IS NULL OR NOT (jcr:mixinTypes = 'wiki:removed'))")
+              .append(')');
     return constraint.toString();
   }
   

@@ -35,7 +35,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.PortalWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.UserWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
-import org.exoplatform.wiki.service.search.ContentSearchData;
+import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.service.search.TemplateSearchData;
 import org.exoplatform.wiki.service.search.TemplateSearchResult;
@@ -243,10 +243,20 @@ public class TestWikiService extends AbstractMOWTestcase {
   }
   
   public void testSearchRenamedPage() throws Exception{    
-    PageImpl page = (PageImpl)wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "Page", "WikiHome") ;
-    page.getContent().setText("This is a rename page test") ;
-    assertTrue(wService.renamePage(PortalConfig.PORTAL_TYPE, "classic", "Page", "Page01", "Page01")) ;
-    assertEquals(1, wService.searchRenamedPage(PortalConfig.PORTAL_TYPE, "classic", "Page").size()) ;
+    PageImpl page = (PageImpl) wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "Page", "WikiHome");
+    page.getContent().setText("This is a rename page test");
+    assertTrue(wService.renamePage(PortalConfig.PORTAL_TYPE, "classic", "Page", "Page01", "Page01"));
+    assertEquals(1, wService.searchRenamedPage(PortalConfig.PORTAL_TYPE, "classic", "Page").size());
+
+    PageImpl guestPage = (PageImpl) wService.createPage(PortalConfig.GROUP_TYPE, "/platform/guests", "Page", "WikiHome");
+    guestPage.getContent().setText("This is a rename guest page test");
+    assertTrue(wService.renamePage(PortalConfig.GROUP_TYPE, "/platform/guests", "Page", "Page01", "Page01"));
+    assertEquals(1, wService.searchRenamedPage(PortalConfig.GROUP_TYPE, "/platform/guests", "Page").size());
+    
+    PageImpl demoPage = (PageImpl) wService.createPage(PortalConfig.USER_TYPE, "demo", "Page", "WikiHome");
+    demoPage.getContent().setText("This is a rename demo page test");
+    assertTrue(wService.renamePage(PortalConfig.USER_TYPE, "demo", "Page", "Page01", "Page01"));
+    assertEquals(1, wService.searchRenamedPage(PortalConfig.USER_TYPE, "demo", "Page").size());
   }
   
   public void testSearchContent() throws Exception {
@@ -283,55 +293,73 @@ public class TestWikiService extends AbstractMOWTestcase {
                                                      "collaboration suite",
                                                      "WikiHome");
     cspage.getContent().setText("calendar mail contact chat");
+    
+    PageImpl guestPage = (PageImpl) wService.createPage(PortalConfig.GROUP_TYPE,
+                                                     "/platform/guests",
+                                                     "Guest page",
+                                                     "WikiHome");
+    guestPage.getContent().setText("Playground");
 
-    cspage.getChromatticSession().save();
+    guestPage.getChromatticSession().save();
     // fulltext search
-    ContentSearchData data = new ContentSearchData("suite", null, null, "portal", "classic");
+    WikiSearchData data = new WikiSearchData("suite", null, null, "portal", "classic");
     PageList<SearchResult> result = wService.searchContent(data);
     assertEquals(2, result.getAll().size());
 
-    data = new ContentSearchData("suite", null, null, "portal", null);
+    data = new WikiSearchData("suite", null, null, "portal", null);
 
     result = wService.searchContent(data);
     assertEquals(3, result.getAll().size());
 
-    data = new ContentSearchData("suite", null, null, null, null);
+    data = new WikiSearchData("suite", null, null, null, null);
     result = wService.searchContent(data);
     assertEquals(4, result.getAll().size());
 
     // title search
-    data = new ContentSearchData(null, "knowledge", null, "portal", "classic");
+    data = new WikiSearchData(null, "knowledge", null, "portal", "classic");
     result = wService.searchContent(data);
     assertEquals(1, result.getAll().size());
 
-    data = new ContentSearchData(null, "collaboration", null, "portal", "classic");
+    data = new WikiSearchData(null, "collaboration", null, "portal", "classic");
     result = wService.searchContent(data);
     assertEquals(1, result.getAll().size());
 
-    data = new ContentSearchData(null, "knowledge", null, "portal", null);
+    data = new WikiSearchData(null, "knowledge", null, "portal", null);
     result = wService.searchContent(data);
     assertEquals(2, result.getAll().size());
 
-    data = new ContentSearchData(null, "knowledge", null, null, null);
+    data = new WikiSearchData(null, "knowledge", null, null, null);
     result = wService.searchContent(data);
     assertEquals(3, result.getAll().size());
 
     // content search
-    data = new ContentSearchData(null, null, "forum", "portal", "classic");
+    data = new WikiSearchData(null, null, "forum", "portal", "classic");
     result = wService.searchContent(data);
     assertEquals(1, result.getAll().size());
 
-    data = new ContentSearchData(null, null, "calendar", "portal", "classic");
+    data = new WikiSearchData(null, null, "calendar", "portal", "classic");
     result = wService.searchContent(data);
     assertEquals(1, result.getAll().size());
 
-    data = new ContentSearchData(null, null, "forum", "portal", null);
+    data = new WikiSearchData(null, null, "forum", "portal", null);
     result = wService.searchContent(data);
     assertEquals(2, result.getAll().size());
 
-    data = new ContentSearchData(null, null, "forum", null, null);
+    data = new WikiSearchData(null, null, "forum", null, null);
     result = wService.searchContent(data);
     assertEquals(3, result.getAll().size());
+    
+    data = new WikiSearchData("Playground", null, null, PortalConfig.GROUP_TYPE, "/platform/guests");
+    result = wService.searchContent(data);
+    assertEquals(1, result.getAll().size());
+    
+    data = new WikiSearchData("forum", null, null, PortalConfig.USER_TYPE, null);
+    result = wService.searchContent(data);
+    assertEquals(1, result.getAll().size());
+    
+    data = new WikiSearchData("forum", null, null, PortalConfig.USER_TYPE, "demo");
+    result = wService.searchContent(data);
+    assertEquals(1, result.getAll().size());
 
     // content & title search
     //TODO: search on many node types with AND operator
@@ -353,7 +381,7 @@ public class TestWikiService extends AbstractMOWTestcase {
     Model model = mowService.getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     WikiContainer<PortalWiki> portalContainer = wStore.getWikiContainer(WikiType.PORTAL);
-    PortalWiki portalWiki=  portalContainer.addWiki("ext");
+    portalContainer.addWiki("ext");
     
     PageImpl kspage = (PageImpl)wService.createPage(PortalConfig.PORTAL_TYPE, "classic", "knowledge", "WikiHome") ;
     kspage.getContent().setText("forum faq wiki exoplatform") ;
@@ -365,27 +393,56 @@ public class TestWikiService extends AbstractMOWTestcase {
     attachment1.setCreator("you") ;    
     assertEquals(attachment1.getName(), "attachment1.txt") ;
     assertNotNull(attachment1.getContentResource()) ;
-    attachment1.setContentResource(Resource.createPlainText("exoplatform content mamagement")) ;    
-    kspage.getChromatticSession().save();
-    ContentSearchData data = new ContentSearchData("exoplatform", null, null,"portal","classic") ;
-   
-    PageList<SearchResult> result = wService.search(data) ;
-    assertEquals(2, result.getAll().size()) ;    
+    attachment1.setContentResource(Resource.createPlainText("exoplatform content mamagement")) ;
     
-    data = new ContentSearchData("exoplatform", null, null,"portal",null) ;
+    PageImpl guestPage = (PageImpl) wService.createPage(PortalConfig.GROUP_TYPE, "/platform/guests", "guest platform", "WikiHome");
+    guestPage.getContent().setText("exoplatform");
+    
+    PageImpl userPage = (PageImpl) wService.createPage(PortalConfig.USER_TYPE, "demo", "demo", "WikiHome");
+    userPage.getContent().setText("exoplatform");
+    
+    kspage.getChromatticSession().save();
+    WikiSearchData data = new WikiSearchData("exoplatform", null, null, null, null);
+
+    PageList<SearchResult> result = wService.search(data);
+    assertEquals(5, result.getAll().size());
+    
+    data = new WikiSearchData("exoplatform", null, null,"portal",null) ;
     result = wService.search(data) ;
-    assertEquals(3, result.getAll().size()) ;    
+    assertEquals(3, result.getAll().size()) ;
+    
+    data = new WikiSearchData("exoplatform", null, null, "portal", "classic");
+
+    result = wService.search(data);
+    assertEquals(2, result.getAll().size());    
+    
+    data = new WikiSearchData("exoplatform", null, null, PortalConfig.GROUP_TYPE, null);
+    result = wService.search(data);
+    assertEquals(1, result.getAll().size());
+    
+    data = new WikiSearchData("exoplatform", null, null, PortalConfig.GROUP_TYPE, "/platform/guests");
+    result = wService.search(data);
+    assertEquals(1, result.getAll().size());
+    
+    data = new WikiSearchData("exoplatform", null, null, PortalConfig.USER_TYPE, null);
+    result = wService.search(data);
+    assertEquals(1, result.getAll().size());
+    
+    data = new WikiSearchData("exoplatform", null, null, PortalConfig.USER_TYPE, "demo");
+    result = wService.search(data);
+    assertEquals(1, result.getAll().size());
       
   }
   
-  public void testSearchTitle() throws Exception {
-    Model model = mowService.getModel();
-    WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+  public void testSearchTitle() throws Exception {    
     PageImpl kspage = (PageImpl) wService.createPage(PortalConfig.PORTAL_TYPE,
                                                      "classic",
                                                      "dumpPage",
                                                      "WikiHome");
     assertNotNull(wService.getPageById(PortalConfig.PORTAL_TYPE, "classic", "dumpPage"));
+    wService.createPage(PortalConfig.GROUP_TYPE, "/platform/guests", "Dump guest Page", "WikiHome");
+    
+    wService.createPage(PortalConfig.USER_TYPE, "demo", "Dump demo Page", "WikiHome");
 
     AttachmentImpl attachment1 = kspage.createAttachment("dumpFile.txt",
                                                          Resource.createPlainText("foo"));
@@ -393,17 +450,56 @@ public class TestWikiService extends AbstractMOWTestcase {
     assertNotNull(attachment1.getContentResource());
     kspage.getChromatticSession().save();
 
-    ContentSearchData data = new ContentSearchData(null, "dump", null, "portal", "classic");
+    WikiSearchData data = new WikiSearchData(null, "dump", null, null, null);
     List<TitleSearchResult> result = wService.searchDataByTitle(data);
+    assertEquals(4, result.size());
+      
+    data= new WikiSearchData(null, "dump", null, "portal", "classic");
+    result = wService.searchDataByTitle(data);
     assertEquals(2, result.size());
+    
+    data = new WikiSearchData(null, "dump", null, PortalConfig.GROUP_TYPE, null);
+    result = wService.searchDataByTitle(data);
+    assertEquals(1, result.size());
+
+    data = new WikiSearchData(null, "dump", null, PortalConfig.GROUP_TYPE, "/platform/guests");
+    result = wService.searchDataByTitle(data);
+    assertEquals(1, result.size());
+    
+    data = new WikiSearchData(null, "dump", null, PortalConfig.USER_TYPE, null);
+    result = wService.searchDataByTitle(data);
+    assertEquals(1, result.size());
+
+    data = new WikiSearchData(null, "dump", null, PortalConfig.USER_TYPE, "demo");
+    result = wService.searchDataByTitle(data);
+    assertEquals(1, result.size());
+    
+    
   }
   
   public void testSearchTemplate() throws Exception {    
     WikiPageParams params= new WikiPageParams(PortalConfig.PORTAL_TYPE,  "classic", null);
     wService.createTemplatePage("Sample Search Template", params);
     assertNotNull(wService.getTemplatePage(params, "Sample_Search_Template"));
+    
+    params= new WikiPageParams(PortalConfig.GROUP_TYPE,  "/platform/guests", null);
+    wService.createTemplatePage("Sample Group Search Template", params);
+    assertNotNull(wService.getTemplatePage(params, "Sample_Group_Search_Template"));
+    
+    params= new WikiPageParams(PortalConfig.USER_TYPE,  "demo", null);
+    wService.createTemplatePage("Sample User Search Template", params);
+    assertNotNull(wService.getTemplatePage(params, "Sample_User_Search_Template"));
+    
     TemplateSearchData data = new TemplateSearchData("Template",PortalConfig.PORTAL_TYPE,  "classic");
     List<TemplateSearchResult> result = wService.searchTemplate(data);
+    assertEquals(1, result.size());
+    
+    data = new TemplateSearchData("Template", PortalConfig.GROUP_TYPE, "/platform/guests");
+    result = wService.searchTemplate(data);
+    assertEquals(1, result.size());
+    
+    data = new TemplateSearchData("Template", PortalConfig.USER_TYPE, "demo");
+    result = wService.searchTemplate(data);
     assertEquals(1, result.size());
   }
   

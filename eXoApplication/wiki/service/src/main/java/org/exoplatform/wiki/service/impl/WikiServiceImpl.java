@@ -65,7 +65,7 @@ import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.listener.PageWikiListener;
-import org.exoplatform.wiki.service.search.ContentSearchData;
+import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.service.search.TemplateSearchData;
 import org.exoplatform.wiki.service.search.TemplateSearchResult;
@@ -171,7 +171,7 @@ public class WikiServiceImpl implements WikiService, Startable {
   public boolean isExisting(String wikiType, String wikiOwner, String pageId) throws Exception {
     Model model = getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
-    String statement = new ContentSearchData(wikiType, wikiOwner, pageId).getPageConstraint();
+    String statement = new WikiSearchData(wikiType, wikiOwner, pageId).getPageConstraint();
     if (statement != null) {
       Iterator<PageImpl> result = wStore.getSession().createQueryBuilder(PageImpl.class)
       .where(statement).get().objects();
@@ -455,7 +455,7 @@ public class WikiServiceImpl implements WikiService, Startable {
       return getWikiHome(wikiType, wikiOwner);
     }
 
-    String statement = new ContentSearchData(wikiType, wikiOwner, pageId).getPageConstraint();
+    String statement = new WikiSearchData(wikiType, wikiOwner, pageId).getPageConstraint();
     if (statement != null) {
       PageImpl page = searchPage(statement, wStore.getSession());
       // page.setChromatticSession(wStore.getSession()) ;
@@ -546,7 +546,7 @@ public class WikiServiceImpl implements WikiService, Startable {
     }
   }
 
-  public PageList<SearchResult> searchContent(ContentSearchData data) throws Exception {
+  public PageList<SearchResult> searchContent(WikiSearchData data) throws Exception {
     List<SearchResult> results = search(data).getAll();
     for (SearchResult result : results) {
       if (WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())) {
@@ -556,7 +556,7 @@ public class WikiServiceImpl implements WikiService, Startable {
     return new ObjectPageList<SearchResult>(results, 10);
   }
   
-  public PageList<SearchResult> search(ContentSearchData data) throws Exception {
+  public PageList<SearchResult> search(WikiSearchData data) throws Exception {
 
     Model model = getModel();
     try {
@@ -587,7 +587,7 @@ public class WikiServiceImpl implements WikiService, Startable {
   public List<SearchResult> searchRenamedPage(String wikiType, String wikiOwner, String pageId) throws Exception {
     Model model = getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
-    ContentSearchData data = new ContentSearchData(wikiType, wikiOwner, pageId);
+    WikiSearchData data = new WikiSearchData(wikiType, wikiOwner, pageId);
     return jcrDataStorage.searchRenamedPage(wStore.getSession(), data);
   }
 
@@ -674,7 +674,7 @@ public class WikiServiceImpl implements WikiService, Startable {
     return null;
   }
   
-  public List<TitleSearchResult> searchDataByTitle(ContentSearchData data) throws Exception {
+  public List<TitleSearchResult> searchDataByTitle(WikiSearchData data) throws Exception {
     try {
       Model model = getModel();
       WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();

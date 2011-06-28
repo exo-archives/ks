@@ -94,7 +94,7 @@ public class TitleSearchResult {
   }
 
   private String getWikiType() throws Exception {
-    return org.exoplatform.wiki.utils.Utils.getWikiType(getWiki());
+    return getWiki().getType();
   }
 
   public String getUri() {

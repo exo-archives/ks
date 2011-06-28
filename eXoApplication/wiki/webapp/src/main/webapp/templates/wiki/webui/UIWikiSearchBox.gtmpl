@@ -14,7 +14,7 @@ import org.exoplatform.wiki.commons.Utils;
 <div class="UIWikiSearchBox">
   <% uiform.begin() %>
     <div class="SearchForm">
-      <a class="AdvancedSearch" title="<%=_ctx.appRes("UIWikiPortlet.label.AdvancedSearch")%>" onclick="<%=uicomponent.event("AdvancedSearch");%>"></a>
+      <a class="AdvancedSearch" title="<%=_ctx.appRes("UIWikiPortlet.label.Advanced-Search")%>" onclick="<%=uicomponent.event("AdvancedSearch");%>"></a>
       <div class="Input">
 		<div class="SearchIcon">
         <%

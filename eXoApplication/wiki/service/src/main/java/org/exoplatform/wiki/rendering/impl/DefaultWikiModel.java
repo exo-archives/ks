@@ -188,12 +188,9 @@ public class DefaultWikiModel implements WikiModel {
       PageImpl page = (PageImpl) wikiService.getRelatedPage(context.getType(), context.getOwner(), context.getPageId());
       if (page != null) {
         Wiki wiki = page.getWiki();
-        String wikiType = Utils.getWikiType(wiki);
-        String wikiOwner = wiki.getOwner();
-        String pageId = page.getName();
-        context.setType(wikiType);
-        context.setOwner(wikiOwner);
-        context.setPageId(pageId);
+        context.setType(wiki.getType());
+        context.setOwner(wiki.getOwner());
+        context.setPageId(page.getName());
       }
     } catch (Exception e) {
       if (LOG.isWarnEnabled()) {

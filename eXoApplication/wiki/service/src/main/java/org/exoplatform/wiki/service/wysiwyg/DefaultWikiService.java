@@ -31,7 +31,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiContext;
-import org.exoplatform.wiki.service.search.ContentSearchData;
+import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.annotation.Component;
@@ -126,7 +126,7 @@ public class DefaultWikiService implements WikiService {
 
     try {
       WikiContext wikiContext = getWikiContext();
-      ContentSearchData data = new ContentSearchData(null,
+      WikiSearchData data = new WikiSearchData(null,
                                                      "",
                                                      null,
                                                      wikiContext.getType(),
@@ -172,7 +172,7 @@ public class DefaultWikiService implements WikiService {
 
     try {
       WikiContext wikiContext = getWikiContext();
-      ContentSearchData data = new ContentSearchData(null,
+      WikiSearchData data = new WikiSearchData(null,
                                                      escapedKeyword,
                                                      null,
                                                      wikiContext.getType(),

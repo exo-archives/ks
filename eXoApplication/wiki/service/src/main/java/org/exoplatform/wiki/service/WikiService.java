@@ -27,7 +27,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.Template;
 import org.exoplatform.wiki.mow.core.api.wiki.TemplateContainer;
 import org.exoplatform.wiki.service.listener.PageWikiListener;
-import org.exoplatform.wiki.service.search.ContentSearchData;
+import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.service.search.TemplateSearchData;
 import org.exoplatform.wiki.service.search.TemplateSearchResult;
@@ -74,19 +74,19 @@ public interface WikiService {
 
   public Template getTemplatePage(WikiPageParams params, String templateId) throws Exception;
 
-  public PageList<SearchResult> searchContent(ContentSearchData data) throws Exception;
+  public PageList<SearchResult> searchContent(WikiSearchData data) throws Exception;
 
   public List<BreadcrumbData> getBreadcumb(String wikiType, String wikiOwner, String pageId) throws Exception;
 
   public WikiPageParams getWikiPageParams(BreadcrumbData data) throws Exception;
 
-  public PageList<SearchResult> search(ContentSearchData data) throws Exception;
+  public PageList<SearchResult> search(WikiSearchData data) throws Exception;
 
   public List<TemplateSearchResult> searchTemplate(TemplateSearchData data) throws Exception;
 
   public List<SearchResult> searchRenamedPage(String wikiType, String wikiOwner, String pageId) throws Exception;
 
-  public List<TitleSearchResult> searchDataByTitle(ContentSearchData data) throws Exception;
+  public List<TitleSearchResult> searchDataByTitle(WikiSearchData data) throws Exception;
 
   public Object findByPath(String path, String objectNodeType) throws Exception;
 

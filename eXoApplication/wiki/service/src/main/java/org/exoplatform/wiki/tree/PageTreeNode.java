@@ -76,7 +76,7 @@ public class PageTreeNode extends TreeNode {
   @Override
   public String buildPath() {
     Wiki wiki = (Wiki) this.page.getWiki();
-    WikiPageParams params = new WikiPageParams(Utils.getWikiType(wiki), wiki.getOwner(),this.page.getName() );
+    WikiPageParams params = new WikiPageParams(wiki.getType(), wiki.getOwner(),this.page.getName() );
     return TreeUtils.getPathFromPageParams(params);    
   }
 

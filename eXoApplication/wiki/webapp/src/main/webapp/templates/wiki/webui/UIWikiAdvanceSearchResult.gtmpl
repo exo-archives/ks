@@ -36,11 +36,11 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.
 			    String wikiURI = uicomponent.getWikiNodeUri(result) ;
 			    def wiki= uicomponent.getWiki(result);
 					String space = wiki.getOwner();
-					String wikiType=org.exoplatform.wiki.utils.Utils.getWikiType(wiki);
-					String spaceType = _ctx.appRes("UIWikiAdvanceSearchResult.label.Space");
+					String wikiType= wiki.getType();
+					String wikiLabel = _ctx.appRes("UIWikiAdvanceSearchResult.label.Wiki");
 					def timeMsg = _ctx.appRes("UIWikiAdvanceSearchResult.label.time");
 					timeMsg = timeMsg.replace("{0}", df.format(result.getCreatedDate().getTime())).replace("{1}", df.format(result.getUpdatedDate().getTime()));
-					spaceType = spaceType.replace("{0}", wikiType);
+					wikiLabel = wikiLabel.replace("{0}", wikiType);
 					String pageURI = wikiURI + result.getPageName() ;
 					Calendar updateDate= 	result.getUpdatedDate();				
 					if(WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())) {						      	
@@ -51,7 +51,7 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.
 									<div class="TxtDetail"><%=result.getExcerpt()%></div>
 								<% } %>
 							<div>
-							<strong>$spaceType: </strong><a class="TxtMark" href="$wikiURI">$space</a>
+							<strong>$wikiLabel: </strong><a class="TxtMark" href="$wikiURI">$space</a>
 							<br>
 							$timeMsg
 							</div>
@@ -69,7 +69,7 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.
 							<div class="TxtDetail"><%=result.getExcerpt()%></div>
 							<% } %>
 							<div>
-							<strong>$spaceType: </strong><a class="TxtMark" href="$wikiURI">$space</a> > <a class="TxtMark" href="$pageURI"><%=att.getParentPage().getTitle()%></a>&nbsp;
+							<strong>$wikiLabel: </strong><a class="TxtMark" href="$wikiURI">$space</a> > <a class="TxtMark" href="$pageURI"><%=att.getParentPage().getTitle()%></a>&nbsp;
 							<%= df.format(updateDate.getTime()); %>
 							</div>
 						</div>    	
@@ -79,7 +79,7 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.
 		        <div class="BlockResultFeed">
               <a class="page TxtTitFeed" href="$pageURI"><%=result.getTitle()%></a>
               <div>
-                <strong>$spaceType: </strong><a class="TxtMark" href="$wikiURI">$space</a>
+                <strong>$wikiLabel: </strong><a class="TxtMark" href="$wikiURI">$space</a>
                 <br/>
                 $timeMsg
               </div>

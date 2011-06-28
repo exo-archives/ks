@@ -249,18 +249,6 @@ public class Utils {
     }
     return null;
   }
-
-  public static String getWikiType(Wiki wiki) {
-    if (wiki instanceof PortalWiki) {
-      return PortalConfig.PORTAL_TYPE;
-    } else if (wiki instanceof GroupWiki) {
-      return PortalConfig.GROUP_TYPE;
-    } else if (wiki instanceof UserWiki) {
-      return PortalConfig.USER_TYPE;
-    } else {
-      return null;
-    }
-  }
   
   public static Wiki[] getAllWikiSpace() {
     MOWService mowService = (MOWService) PortalContainer.getComponent(MOWService.class);
@@ -325,7 +313,7 @@ public class Utils {
     Wiki wiki = page.getWiki();
     if (wiki != null) {
       while (page != null) {
-        stack.push(new WikiPageParams(Utils.getWikiType(wiki), wiki.getOwner(), page.getName()));
+        stack.push(new WikiPageParams(wiki.getType(), wiki.getOwner(), page.getName()));
         page = page.getParentPage();
       }      
     }
@@ -335,7 +323,7 @@ public class Utils {
   
   public static WikiPageParams getWikiPageParams(Page page) {
     Wiki wiki = ((PageImpl) page).getWiki();
-    String wikiType = getWikiType(wiki);
+    String wikiType = wiki.getType();
     WikiPageParams params = new WikiPageParams(wikiType, wiki.getOwner(), page.getName());
     return params;
   }

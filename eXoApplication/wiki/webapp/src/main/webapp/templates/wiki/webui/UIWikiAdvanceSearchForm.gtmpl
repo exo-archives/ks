@@ -23,7 +23,7 @@
 		<div class="ClearFix">
 			<div class="SearchInfo">
 				<%uiform.renderChild("text")%>
-				<label><%=_ctx.appRes("UIWikiAdvanceSearchForm.label.space")%></label><%uiform.renderChild("wikiSpaces")%>
+				<label><%=_ctx.appRes("UIWikiAdvanceSearchForm.label.wiki")%></label><%uiform.renderChild(uicomponent.WIKIS)%>
 			</div>
 			<div class="Button"> 			
 		    <% for(action in uicomponent.getActions()) { 
