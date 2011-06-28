@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
@@ -60,8 +59,8 @@ public class AnswerUIActivity extends BaseKSActivity {
     ExoSocialActivity activity = null;
     if (comment != null) {
       activity = new ExoSocialActivityImpl();
-      IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class);
-      Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, comment.getCommentBy());
+      IdentityManager identityM = (IdentityManager) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(IdentityManager.class);
+      Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, comment.getCommentBy(), false);
       activity.setUserId(userIdentity.getId());
       activity.setTitle(comment.getComments());
       activity.setPostedTime(comment.getDateComment().getTime());
@@ -130,7 +129,7 @@ public class AnswerUIActivity extends BaseKSActivity {
 
   static public String getFullName(String userName) throws Exception {
     try {
-      OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+      OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
       User user = organizationService.getUserHandler().findUserByName(userName);
       String fullName = user.getFullName();
       if (fullName == null || fullName.trim().length() <= 0)
@@ -182,7 +181,7 @@ public class AnswerUIActivity extends BaseKSActivity {
       // add new corresponding post to forum.
       String topicId = question.getTopicIdDiscuss();
       if (topicId != null && topicId.length() > 0) {
-        ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+        ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
         Topic topic = (Topic) forumService.getObjectNameById(topicId, org.exoplatform.forum.service.Utils.TOPIC);
         if (topic != null) {
           String remoteAddr = org.exoplatform.ks.common.Utils.getRemoteIP();

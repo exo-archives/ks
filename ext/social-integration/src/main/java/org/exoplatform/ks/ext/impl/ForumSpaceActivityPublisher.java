@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumEventListener;
@@ -88,13 +89,14 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
   }
   
   private void saveActivity(String categoryId, String forumId, ACTIVITYTYPE type, Topic topic, Post post) throws Exception {
-    IdentityManager identityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class);
-    ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-    Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, post.getOwner());
-    SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
+    ExoContainer exoContainer = ExoContainerContext.getCurrentContainer();
+    IdentityManager identityM = (IdentityManager) exoContainer.getComponentInstanceOfType(IdentityManager.class);
+    ActivityManager activityM = (ActivityManager) exoContainer.getComponentInstanceOfType(ActivityManager.class);
+    SpaceService spaceS = (SpaceService) exoContainer.getComponentInstanceOfType(SpaceService.class);
+    Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, post.getOwner(), false);
     String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
     Space space = spaceS.getSpaceById(spaceId);
-    Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
+    Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getPrettyName(), false);
     ExoSocialActivity activity = new ExoSocialActivityImpl();
     String body = ForumTransformHTML.getTitleInHTMLCode(post.getMessage(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
     activity.setUserId(userIdentity.getId());
@@ -107,7 +109,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
     templateParams.put(TOPIC_ID_KEY, topic.getId());
     templateParams.put(ACTIVITY_TYPE_KEY, type.toString());
     activity.setTemplateParams(createActivity(templateParams, topic, post, type));
-    activityM.saveActivity(spaceIdentity, activity);
+    activityM.saveActivityNoReturn(spaceIdentity, activity);
   }
 
   private Map<String, String> createActivity(Map<String, String> templateParams, Topic topic, Post post, ACTIVITYTYPE type) throws Exception {
@@ -135,7 +137,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
     if(topic == null && post == null) return null ;
     try {
       if(topic == null) {
-        ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+        ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
         topic = forumService.getTopic(categoryId, forumId, topicId, "");
       }
       if (topic == null || !topic.getIsActive() || !topic.getIsApproved() || topic.getIsWaiting() || topic.getIsClosed() || !Utils.isEmpty(topic.getCanView())) {

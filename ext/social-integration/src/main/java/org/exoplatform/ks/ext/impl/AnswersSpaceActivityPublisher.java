@@ -19,7 +19,8 @@ package org.exoplatform.ks.ext.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
@@ -35,6 +36,8 @@ import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvide
 import org.exoplatform.social.core.identity.provider.SpaceIdentityProvider;
 import org.exoplatform.social.core.manager.ActivityManager;
 import org.exoplatform.social.core.manager.IdentityManager;
+import org.exoplatform.social.core.space.model.Space;
+import org.exoplatform.social.core.space.spi.SpaceService;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
@@ -69,7 +72,7 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
   public void saveAnswer(String questionId, Answer answer, boolean isNew) {
     try {
       Class.forName("org.exoplatform.social.core.manager.IdentityManager");
-      FAQService faqS = (FAQService) PortalContainer.getInstance()
+      FAQService faqS = (FAQService) ExoContainerContext.getCurrentContainer()
                                                     .getComponentInstanceOfType(FAQService.class);
       Question q = faqS.getQuestionById(questionId);
       
@@ -88,15 +91,14 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       String msg = "@"+answer.getResponseBy();
       String body = answer.getResponses();
       String spaceId = catId.split(Utils.CATE_SPACE_ID_PREFIX)[1];
-      IdentityManager identityM = (IdentityManager) PortalContainer.getInstance()
-                                                                    .getComponentInstanceOfType(IdentityManager.class);
-      ActivityManager activityM = (ActivityManager) PortalContainer.getInstance()
-                                                                   .getComponentInstanceOfType(ActivityManager.class);
+      ExoContainer exoContainer = ExoContainerContext.getCurrentContainer();
+      IdentityManager identityM = (IdentityManager) exoContainer.getComponentInstanceOfType(IdentityManager.class);
+      ActivityManager activityM = (ActivityManager) exoContainer.getComponentInstanceOfType(ActivityManager.class);
+      SpaceService spaceService  = (SpaceService)exoContainer.getComponentInstanceOfType(SpaceService.class);
+      Space space = spaceService.getSpaceById(spaceId);
       
-      Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME,
-                                                              spaceId,
-                                                              false);
-      Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, answer.getResponseBy());
+      Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getPrettyName(), false);
+      Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, answer.getResponseBy(), false);
       ExoSocialActivity activity = new ExoSocialActivityImpl();
       activity.setUserId(userIdentity.getId());
       activity.setTitle(msg);
@@ -112,7 +114,7 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       params.put(LANGUAGE_KEY, q.getLanguage());
       activity.setTemplateParams(params);
       
-      activityM.saveActivity(spaceIdentity, activity);
+      activityM.saveActivityNoReturn(spaceIdentity, activity);
 
     } catch (ClassNotFoundException e) {
       if (LOG.isDebugEnabled())
@@ -127,7 +129,7 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
   public void saveComment(String questionId, Comment comment, boolean isNew) {
     /*try {
       Class.forName("org.exoplatform.social.core.manager.IdentityManager");
-      FAQService faqS = (FAQService) PortalContainer.getInstance()
+      FAQService faqS = (FAQService) ExoContainerContext.getCurrentContainer()
                                                     .getComponentInstanceOfType(FAQService.class);
       Question q = faqS.getQuestionById(questionId);
       
@@ -142,12 +144,12 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       String msg = "@" + comment.getCommentBy();
       String body = comment.getComments();
       String spaceId = catId.split(Utils.CATE_SPACE_ID_PREFIX)[1];
-      IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance()
+      IdentityManager indentityM = (IdentityManager) ExoContainerContext.getCurrentContainer()
                                                                     .getComponentInstanceOfType(IdentityManager.class);
-      ActivityManager activityM = (ActivityManager) PortalContainer.getInstance()
+      ActivityManager activityM = (ActivityManager) ExoContainerContext.getCurrentContainer()
                                                                    .getComponentInstanceOfType(ActivityManager.class);
       // SpaceService spaceS = (SpaceService)
-      // PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
+      // ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(SpaceService.class);
       // Space space = spaceS.getSpaceById(spaceId) ;
       Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME,
                                                               spaceId,
@@ -193,14 +195,14 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       String msg = "@"+question.getAuthor();
       String body = question.getDetail();
       String spaceId = catId.split(Utils.CATE_SPACE_ID_PREFIX)[1];
-      IdentityManager identityM = (IdentityManager) PortalContainer.getInstance()
-                                                                    .getComponentInstanceOfType(IdentityManager.class);
-      ActivityManager activityM = (ActivityManager) PortalContainer.getInstance()
-                                                                   .getComponentInstanceOfType(ActivityManager.class);
-      Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME,
-                                                              spaceId,
-                                                              false);
-      Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, question.getAuthor());
+      if(spaceId.indexOf("/") > 0) spaceId = spaceId.substring(0, spaceId.indexOf("/"));
+      ExoContainer exoContainer = ExoContainerContext.getCurrentContainer();
+      IdentityManager identityM = (IdentityManager) exoContainer.getComponentInstanceOfType(IdentityManager.class);
+      ActivityManager activityM = (ActivityManager) exoContainer.getComponentInstanceOfType(ActivityManager.class);
+      SpaceService spaceService  = (SpaceService)exoContainer.getComponentInstanceOfType(SpaceService.class);
+      Space space = spaceService.getSpaceById(spaceId);
+      Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME,space.getPrettyName(), false);
+      Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, question.getAuthor(), false);
       ExoSocialActivity activity = new ExoSocialActivityImpl();
       activity.setUserId(userIdentity.getId());
       activity.setTitle(msg);
@@ -213,12 +215,13 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       params.put(LINK_KEY, question.getLink());
       params.put(LANGUAGE_KEY, question.getLanguage());
       activity.setTemplateParams(params);
-      
-      activityM.saveActivity(spaceIdentity, activity);
+
+      activityM.saveActivityNoReturn(spaceIdentity, activity);
     } catch (ClassNotFoundException e) {
       if (LOG.isDebugEnabled())
         LOG.debug("Please check the integrated project does the social deploy? " + e.getMessage());
     } catch (Exception e) {
+       e.printStackTrace();
       LOG.error("Can not record Activity for space when add new questin " + e.getMessage());
     }
 
@@ -228,7 +231,7 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
   public void saveAnswer(String questionId, Answer[] answers, boolean isNew) {
     try {
       Class.forName("org.exoplatform.social.core.manager.IdentityManager");
-      FAQService faqS = (FAQService) PortalContainer.getInstance()
+      FAQService faqS = (FAQService) ExoContainerContext.getCurrentContainer()
                                                     .getComponentInstanceOfType(FAQService.class);
       Question q = faqS.getQuestionById(questionId);
       
