@@ -99,6 +99,10 @@ body,html {
 	float: right;
 }
 
+.UIWikiPortlet .UIWikiEmptyAjaxBlock {
+  height: 0px;
+}
+
 /*===========================*/
 .box {
 	border: 1px solid #DDDDDD;
@@ -268,6 +272,7 @@ span.Excerpt p {
 .UIWikiPortlet .UIWikiPageControlArea {
 	margin: 10px 0px;
 	border-bottom: 1px solid #C7C7C7;
+ 
 }
 
 .UIWikiPortlet .WikiLayout {
@@ -350,8 +355,9 @@ span.Excerpt p {
 }
 
 /* wiki homepage */
-.UIWikiPageArea {
+.UIWikiPortlet .UIWikiPageArea {
 	padding: 0 15px;
+	overflow: hidden;  
 }
 
 .UIWikiPageContentArea table {
@@ -1539,4 +1545,35 @@ span.Excerpt p {
 
 .UIWikiPageVersionsCompare .ChangedForm .Mar0 {
 	margin: 0px;
+}
+
+.UIWikiPagePermissionForm .UIFormGrid {
+	width: 100%;
+	border-collapse: collapse;
+	border: 1px solid #d7d7d7;
+}
+
+.UIWikiPagePermissionForm .UIFormGrid th {
+	background: url('background/TitBarBG.png') repeat-x left top;
+	color: #636363;
+	text-align: left;
+	line-height: 27px;
+	padding-left: 12px;
+	border: none;
+	border-right: 1px solid #FFFFFF;
+}
+
+.UIWikiPagePermissionForm .UIFormGrid td {
+	text-align: left;
+	padding: 5px 8px 2px 12px;
+	border-right: 1px solid #FFFFFF;
+	border-top: 1px solid #FFFFFF;
+}
+
+.UIWikiPagePermissionForm .UIFormGrid .EvenRow {
+	background: #F2F2F2;
+}
+
+.UIWikiPagePermissionForm .UIFormGrid .OddRow {
+	background: #F9F9F9;
 }

@@ -103,9 +103,7 @@ WikiLayout.prototype.setHeightRightContent = function() {
     pageArea.style.height = "auto";
     var h = eXo.wiki.WikiLayout.layoutContainer.offsetHeight - (bottomArea.offsetHeight + 18);
     var x = pageArea.offsetHeight;
-    if (h >= x) {
-      pageArea.style.height = h + "px";
-    }
+    pageArea.style.height = ((h < x)?x:h) + "px";
   }
 };
 
