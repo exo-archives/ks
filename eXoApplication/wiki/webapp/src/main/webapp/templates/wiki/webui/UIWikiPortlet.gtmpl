@@ -14,9 +14,9 @@
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
   jsmanager.importJavascript('eXo.wiki.UIWikiPortlet', '/wiki/javascript/') ;
   jsmanager.importJavascript('eXo.wiki.UIWikiAjaxRequest', '/wiki/javascript/') ;
+  jsmanager.addJavascript("eXo.wiki.WikiLayout.init('" + uicomponent.id + "') ;") ; 
   jsmanager.addJavascript("eXo.wiki.UIWikiAjaxRequest.init('" + uicomponent.WIKI_PORTLET_ACTION_PREFIX + "', '" + uicomponent.VIEW_PAGE_ACTION + "');");  
   jsmanager.addJavascript("eXo.wiki.UIWikiPortlet.init('"+uicomponent.id+ "', '" + changeModeLinkId + "');");
-  jsmanager.addJavascript("eXo.wiki.WikiLayout.init('" + uicomponent.id + "') ;") ; 
 %>
 <script type="text/javascript"> 
   if(!eXo.env.rest){

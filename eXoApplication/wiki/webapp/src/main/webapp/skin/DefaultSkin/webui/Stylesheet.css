@@ -26,7 +26,7 @@
 
 @import url('UIPageToolbar/Stylesheet.css');
 
-body,html {
+body .wiki-body, html .wiki-body {
 	overflow: hidden;
 }
 

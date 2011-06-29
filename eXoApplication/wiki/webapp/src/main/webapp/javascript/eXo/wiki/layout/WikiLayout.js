@@ -26,6 +26,7 @@ function WikiLayout() {
   this.posX = 0;
   this.posY = 0;
   this.portletId = 'UIWikiPortlet';
+  this.wikiBodyClass = 'wiki-body';
 };
 
 window.onresize = function() {
@@ -34,6 +35,15 @@ window.onresize = function() {
 
 WikiLayout.prototype.init = function(prtId) {
   try{
+    try {
+      var myBody = document.getElementsByTagName("body")[0];;
+      var className = String(myBody.className+'');
+      className = (className.length > 0)?(className + ' ' + this.wikiBodyClass):this.wikiBodyClass;
+      window.console.info(className);
+      myBody.className = className;
+      var myHtml = document.getElementsByTagName("html")[0];
+      myHtml.className = this.wikiBodyClass;
+    }catch(e){};
     if(prtId.length > 0) this.portletId = prtId;
     var isIE = (eXo.core.Browser.getBrowserType() == "ie") ? true : false;
     var idPortal = (isIE) ? 'UIWorkingWorkspace' : 'UIPortalApplication';
@@ -47,9 +57,7 @@ WikiLayout.prototype.init = function(prtId) {
     this.rightArea = DOMUtil.findNextElementByTagName(this.spliter, "div");
     this.spliter.onmousedown = eXo.wiki.WikiLayout.exeRowSplit;
     eXo.wiki.WikiLayout.processeWithHeight();
-  }catch(e){
-  
-  };
+  }catch(e){};
 };
 
 WikiLayout.prototype.processeWithHeight = function() {
