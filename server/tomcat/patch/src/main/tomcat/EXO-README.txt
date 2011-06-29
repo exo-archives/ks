@@ -142,10 +142,22 @@ All those accounts have the default password "gtn".
 ==================== 
 - Version 2.2.0
 
+
+Release Notes - eXo Knowledge - Version ks-2.2.0-GA
+
 ** Bug
     * [KS-2268] - Search question by language is incorrect
     * [KS-2362] - IE7: Error when upload avatar in special case
+    * [KS-2456] - Problem with loading form when click select user icon in Permission tab of New topic 
+    * [KS-2457] - Still can Add related unapproved question for answer in case unapproved question is not allowed to be viewed
+    * [KS-2468] - [Forum] Sort topic by Attachment count is unexact in special case 
+    * [KS-2470] - [Post reply] is still visible although this topic is closed  in special case
     * [KS-2473] - need to show alert message when save censor in case censor field is empty
+    * [KS-2474] - Check last button of page index in forum and topic
+    * [KS-2479] - Display wrong when change order value in add new category
+    * [KS-2505] - Show duplicate default data in Forum. See file attach
+    * [KS-2506] - Moderator can not move question to a category althoug it have add question right
+    * [KS-2533] - Quick search don't run when hit [Enter] key in search field
     * [KS-2575] - Normal user don't see topic after topic is rated by other users
     * [KS-2582] - Displaying content of [FAQ] page is empty after delete category
     * [KS-2584] - Using the eXo OrganizationService on GateIn... 
@@ -184,7 +196,6 @@ All those accounts have the default password "gtn".
     * [KS-2813] - Show code error in UI when view category that moved to another position
     * [KS-2823] - Watches form is pushed to bottom when upload avater has size about 400kb
     * [KS-2826] - Error with buttons in Submit Question form
-    * [KS-2830] - [Forum] Bad UI if username is too long
     * [KS-2833] - [wiki] Text is outside the boundary
     * [KS-2837] - [wiki] Lost typed data after close help panel
     * [KS-2843] - Error UI in navigation bar. Detail see file attach
@@ -219,6 +230,7 @@ All those accounts have the default password "gtn".
     * [KS-2940] - Little error in UIRightPopupMenuContainer 
     * [KS-2944] - [wiki] Missing space name in breadcrumb
     * [KS-2948] - Lose upload icon and can not upload file
+    * [KS-2983] - [IE7] Little error with [Censored keywords] item in Administration menu
     * [KS-2987] - [Forum] Censor, approve , active do not work when no check any topic
     * [KS-2988] - [wiki] Couldn't link to other page by WYSIWYG editor
     * [KS-2991] - [IE7] Can not add/edit a page
@@ -239,7 +251,6 @@ All those accounts have the default password "gtn".
     * [KS-3050] - [Wiki] IE7 ui error in contextual menu and forms
     * [KS-3054] - [wiki]Macro browser is broken
     * [KS-3064] - Don't use UIApplicationLifecycle for all WebUI components
-    * [KS-3069] - KS - IE7: Don't show avatar of user after upload successfull
     * [KS-3070] - [wiki] table format is broken after switch from WYSIWYG editor to markup editor
     * [KS-3088] - [IE7] Wiki - Add page - The page is broken
     * [KS-3089] - [IE7] Wiki - fail to save a child page
@@ -259,7 +270,6 @@ All those accounts have the default password "gtn".
     * [KS-3144] - IE7: Error UI and lose [Watch], [Bookmark], [RSS] icon in main action bar of category
     * [KS-3151] - Mini calendar is not translated in French somewhere
     * [KS-3152] -   Values of Language field in Add new question form are not translated in French
-    * [KS-3158] - Text in French exceeds border.
     * [KS-3161] - [Wiki] Markup area have border when close help panel
     * [KS-3164] - Error when vote in poll with multi choice
     * [KS-3168] - Forum "Private Message" posts are visible in the global activity stream
@@ -281,6 +291,7 @@ All those accounts have the default password "gtn".
     * [KS-3215] - [Wiki] Bad UI when select 1 macro
     * [KS-3218] - Forum Bookmarks - the page does not react after deleting a bookmark and closing the popup
     * [KS-3219] - [wiki] Headers are incorrect in TOC macro
+    * [KS-3220] - [Wiki] Bad UI in Template form
     * [KS-3222] - [wiki] Scroll WYSIWYG editor when Enter pressed
     * [KS-3223] - [wiki] Content is displayed as attachment in form select attachment
     * [KS-3225] - [wiki] Bug when switch to WYSIWYG editor in case the page contains TOC macros
@@ -306,11 +317,43 @@ All those accounts have the default password "gtn".
     * [KS-3286] - RSS is not hidden at the second time
     * [KS-3306] - Bad presentation in the "Preferences" screen when the language is French
     * [KS-3307] - Confusing UI in Preference/MySuscription screen - not working
-    * [KS-3310] - [wiki] Wrong encoding when upload a file with accent
     * [KS-3312] - [wiki] Change the title of the root page not refreshed in the wiki explorer
     * [KS-3316] - [wiki] Unknow error when modifying the title of the page with inline editing
+    * [KS-3321] - [social-integration] Wiki added pages aren't correctly populated in Social
     * [KS-3343] - Show js message when do any action on KS-forum
+    * [KS-3344] - [Wiki] The table is not displayed after insert
     * [KS-3354] - [Forum] NullPointerException when save attachments
+    * [KS-3356] - [Wiki] IE7: Jump to Wiki Home page when click on revision link of other page
+    * [KS-3357] - [Wiki] Cannot search template to create new page
+    * [KS-3363] - [Wiki] Content is disappeared when put TOC macro at the begining of page
+    * [KS-3365] - [Wiki] The title of template is shown "null" when preview
+    * [KS-3370] - CLONE - First/last name should be displayed in vote rather than user name
+    * [KS-3376] - [Answer] Show time of last update in question is incorrect
+    * [KS-3377] - [KS-Forum] Show exception in console when lock forum after move this forum
+    * [KS-3379] - CLONE - [KS][UI] Problem with style overloading in question comment
+    * [KS-3380] - [KS-Forum] Don't switch status from Unwatch -> Watch after Admin remove email watch in watches list
+    * [KS-3398] - [Wiki-IE7] Show all page's content when only select Edit last paragraph in page
+    * [KS-3399] - Don't show some portlet ( banner, breadcumbs) in specical case
+    * [KS-3400] - Put [Approve] field is incorrect place in Advanced search form
+    * [KS-3403] - [wiki] Link in quick search doesn't work
+    * [KS-3404] - [Wiki] Can't save page with title "Untitled"
+    * [KS-3405] - SMOKE_PLF_INT_04 Question in subcategory of a space is not displayed
+    * [KS-3407] -  Popup Resizing problem
+    * [KS-3410] - [Answer] IE7: Bad UI in Comment form 
+    * [KS-3411] - [Forum] IE7: Error in BanIPs form
+    * [KS-3414] - [FAQ] IE7: Error when edit FQA portlet
+    * [KS-3415] - [Wiki] IE7: Error when insert macro
+    * [KS-3416] - Poll portlet preference modifications are not taken into account in other user sessions
+    * [KS-3420] - Add packages in the lib of exo.ks.extension.ear
+    * [KS-3421] - [wiki] Error when upload image in new page
+    * [KS-3422] - [wiki] Can't view image from another page
+    * [KS-3429] - [Wiki] Show content of Wiki Home page after save new page
+    * [KS-3435] - [wiki] Revision area display incorect when change page
+    * [KS-3436] - [wiki] Unknow error when view change a page has 1 revision
+    * [KS-3438] - Unknown error when open Manage Question form
+    * [KS-3439] - RepositoryException when selecting a page in the search box
+    * [KS-3443] - [Answer] Display message when edit category
+    * [KS-3455] - [wiki] Advanced search does not work 
 
 ** Feedback
     * [KS-2571] - Make sure all wiki formats have style
@@ -358,7 +401,32 @@ All those accounts have the default password "gtn".
     * [KS-3311] - [wiki] Preview must show the title of the Page
     * [KS-3314] - [wiki] Menu is not consistent 
     * [KS-3317] - [wiki] Search textfields are not consistent in all the wiki
+    * [KS-3382] - [wiki] Breadcrumb hide the wrong part of the wiki tree
+    * [KS-3383] - [wiki] Scroll Management improvements
+    * [KS-3385] - [wiki] Select Menu must be consistent in all the wiki
+    * [KS-3391] - [wiki] Use same style for table in all the wiki
+    * [KS-3392] - [wiki] Change title of the "History Page" by "Page History"
+    * [KS-3395] - [wiki] "Revision" link should display content exactly as the "attachment" link
+    * [KS-3396] - [wiki] Move the Delete action into the "More" menu
+    * [KS-3431] - Navigation API - new GateIn Implementation
 
+** New Feature
+    * [KS-515] - Email Address Picker
+    * [KS-1673] - Hilight post with URL
+    * [KS-1921] - Revamp question list view
+    * [KS-2128] - Initialize from export plugin
+    * [KS-2310] - Social Contact provider
+    * [KS-2740] - Wiki - Search Context Menu
+    * [KS-2848] - [wiki] implement "compare with current version" action on view version form
+    * [KS-2886] - [wiki] Page Tree panel
+    * [KS-2899] - More Confluence macros
+    * [KS-2935] - [wiki] Edit Paragraph
+    * [KS-2936] - [wiki] Watch Page
+    * [KS-2939] - [wiki] Minor Edit
+    * [KS-2964] - [wiki] Page Info
+    * [KS-2965] - [wiki] Page Templates
+    * [KS-2967] - [wiki] Social Integration
+    * [KS-3055] - [wiki] Wiki Permissions
 
 - Version 2.2.0-Beta02
 
