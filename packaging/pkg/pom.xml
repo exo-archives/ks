@@ -357,11 +357,6 @@
       <version>${org.quartz-scheduler.version}</version>
     </dependency>
     <dependency>
-      <groupId>rome</groupId>
-      <artifactId>rome</artifactId>
-      <version>${rome.version}</version>
-    </dependency>
-    <dependency>
       <groupId>picocontainer</groupId>
       <artifactId>picocontainer</artifactId>
       <version>${picocontainer.version}</version>
@@ -524,11 +519,6 @@
       <groupId>org.jboss</groupId>
       <artifactId>jboss-common-core</artifactId>
       <version>${org.jboss.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.nekohtml</groupId>
-      <artifactId>nekohtml</artifactId>
-      <version>${net.sourceforge.nekohtml.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>

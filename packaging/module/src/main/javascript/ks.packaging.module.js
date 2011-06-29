@@ -19,11 +19,6 @@ function getModule(params) {
     addDependency(new Project("org.mortbay.jetty", "cometd-bayeux", "jar", "${org.mortbay.jetty.cometd-bayeux.version}")).
     addDependency(new Project("org.mortbay.jetty", "jetty-util", "jar", "${org.mortbay.jetty.jetty-util.version}")).
     addDependency(new Project("org.mortbay.jetty", "cometd-api", "jar", "${org.mortbay.jetty.cometd-api.version}")).
-    addDependency(new Project("org.apache.poi", "poi-ooxml", "jar", "3.6")).
-    addDependency(new Project("org.apache.poi", "poi-ooxml-schemas", "jar", "3.6")).
-    addDependency(new Project("org.apache.poi", "poi", "jar", "3.6")).
-    addDependency(new Project("org.apache.poi", "poi-scratchpad", "jar", "3.6")).
-    addDependency(new Project("org.apache.xmlbeans", "xmlbeans", "jar", "2.3.0")).
     addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.comet.service", "jar", cometVersion));
   module.comet.cometd.deployName = "cometd";
   
@@ -45,8 +40,6 @@ function getModule(params) {
   // FAQ
   module.eXoApplication.faq =
     new Project("org.exoplatform.ks", "exo.ks.eXoApplication.faq.webapp", "war", module.version).
-    addDependency(new Project("rome", "rome", "jar", "0.9")).
-    addDependency(new Project("jdom", "jdom", "jar", "1.0")).
     addDependency(new Project("org.exoplatform.ks", "exo.ks.eXoApplication.faq.service", "jar",  module.version));
   module.eXoApplication.faq.deployName = "faq";
 
