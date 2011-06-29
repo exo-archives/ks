@@ -5,50 +5,48 @@
 %>
 <div class="UIWikiPageEditForm">
 <% uiform.begin();%>
-<div class="ClearFix">
-<%
-   uiform.renderChild(uiform.TITLE_CONTROL);
-   uiform.renderChild(uiform.PAGE_TOOLBAR);
-%>
-</div>
-<div class="UIWikiPageContainer ClearFix">
-<% uiform.renderChild(uiform.FIELD_TEMPLATEDESCTIPTION);  %>
+  <div class="ClearFix">
 
-<% uiform.renderChild(uiform.HELP_PANEL);%>
+  <%
+    uiform.renderChild(uiform.TITLE_CONTROL);
+    uiform.renderChild(uiform.PAGE_TOOLBAR);
+  %>
+  </div>
+  <div class="UIWikiPageContainer ClearFix">
+  <%
+    uiform.renderChild(uiform.FIELD_TEMPLATEDESCTIPTION);
+    uiform.renderChild(uiform.HELP_PANEL);
+    textAreaInput = uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT)
+    textAreaInput.setRows(25);
+    if(uicomponent.isSidePanelRendered() && uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT).isRendered()){
+      textAreaInput.setColumns(92);
+  %>
+    <div class="UIColsLeftsEditForm">
+      <div class="UIWikiPageContentInputContainer UIWikiPageContentMarginRight">
+        <% uiform.renderField(uiform.FIELD_CONTENT); %>
+      </div>
+    </div>
+  <%} else if(uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT).isRendered()) {
+      textAreaInput.setColumns(128);
+  %>
+    <div class="UIWikiPageContentInputContainer">
+      <% uiform.renderField(uiform.FIELD_CONTENT); %>
+    </div>
+  <%} %>
+  <% uiform.renderChild(uiform.RICHTEXT_AREA);%>
+    <div class="SyntaxType">
+      <span class="SyntaxTypeTitle"><%= _ctx.appRes("UIWikiPageEditForm.label.SyntaxTypeTitle"); %></span>
+      <% uiform.renderField(uiform.FIELD_SYNTAX); %>
+    </div>
+    <div class="CommentInput">
+  <% if(uiform.getChildById(uiform.FIELD_COMMENT).isRendered()) { %>
+      <span class="CommentTitle"><%= _ctx.appRes("UIWikiPageEditForm.label.CommentTitle"); %></span>
+  <%
+      uiform.renderField(uiform.FIELD_COMMENT);
+  %>
+  <% } %>
+    </div>
 
-<% textAreaInput = uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT)
-   textAreaInput.setRows(25);
-%>
-<% if(uicomponent.isSidePanelRendered() && uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT).isRendered()){
-     textAreaInput.setColumns(92);
-%>
-  <div class="UIColsLeftsEditForm">
-   <div class="UIWikiPageContentInputContainer UIWikiPageContentMarginRight">
-     <% uiform.renderField(uiform.FIELD_CONTENT); %>
-   </div>
-<% } else if(uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT).isRendered()) {
-     textAreaInput.setColumns(128);
-%>
-   <div class="UIWikiPageContentInputContainer">
-     <% uiform.renderField(uiform.FIELD_CONTENT); %>
-   </div>
-<% } %>
-   <% uiform.renderChild(uiform.RICHTEXT_AREA);%>
-   <div class="SyntaxType">
-     <span class="SyntaxTypeTitle"><%= _ctx.appRes("UIWikiPageEditForm.label.SyntaxTypeTitle"); %> </span>
-     <% uiform.renderField(uiform.FIELD_SYNTAX); %>
-   </div>
-   <div class="CommentInput">
-     <% if(uiform.getChildById(uiform.FIELD_COMMENT).isRendered()) { %>
-        <span class="CommentTitle"><%= _ctx.appRes("UIWikiPageEditForm.label.CommentTitle"); %></span>
-       <%
-         uiform.renderField(uiform.FIELD_COMMENT);
-       %>
-     <% } %>
-   </div>
- </div>
-<% if(uiform.getChildById(uiform.HELP_PANEL).isRendered()) { %>
-<% } %>
-</div>
+  </div>
 <% uiform.end();%>
 </div>

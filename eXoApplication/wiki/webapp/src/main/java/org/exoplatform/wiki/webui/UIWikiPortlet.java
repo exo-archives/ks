@@ -94,10 +94,10 @@ public class UIWikiPortlet extends UIPortletApplication {
   public UIWikiPortlet() throws Exception {
     super();
     try {
+      addChild(UIWikiEmptyAjaxBlock.class, null, null);
       addChild(UIWikiPortletPreferences.class, null, null);
       addChild(UIWikiUpperArea.class, null, null);
       addChild(UIWikiMiddleArea.class, null, null);
-      addChild(UIWikiEmptyAjaxBlock.class, null, null);
       addChild(UIWikiMaskWorkspace.class, null, "UIWikiMaskWorkspace");
       UIPopupContainer uiPopupContainer = addChild(UIPopupContainer.class, null, "UIWikiPopupContainer" + PopupLevel.L1);
       uiPopupContainer.getChild(UIPopupWindow.class).setId("UIWikiPopupWindow" + PopupLevel.L1);

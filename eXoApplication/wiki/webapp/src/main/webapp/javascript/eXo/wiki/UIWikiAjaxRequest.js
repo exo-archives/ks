@@ -89,10 +89,12 @@ UIWikiAjaxRequest.prototype.checkAnchor = function() {
         queryParams += '&';
         queryParams += splits[index];
       }
-      var ajaxGetLink = action.getAttributeNode('onclick').value.replace('&ajaxRequest=true', queryParams + '&ajaxRequest=true');
-      action.onclick = function() {
-        eval(ajaxGetLink);
-      };
+      if (action) {
+        var ajaxGetLink = action.getAttributeNode('onclick').value.replace('&ajaxRequest=true', queryParams + '&ajaxRequest=true');
+        action.onclick = function() {
+          eval(ajaxGetLink);
+        };
+      }
     } else if (!this.urlHasActionParameters()) {
       action = document.getElementById(this.actionPrefix + this.defaultAction);
     }

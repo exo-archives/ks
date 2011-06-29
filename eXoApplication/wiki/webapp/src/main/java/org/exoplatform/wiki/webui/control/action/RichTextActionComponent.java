@@ -31,6 +31,7 @@ import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.webui.UIWikiBottomArea;
 import org.exoplatform.wiki.webui.UIWikiPageContainer;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
+import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.UIWikiSidePanelArea;
 import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
@@ -104,6 +105,7 @@ public class RichTextActionComponent extends AbstractFormActionComponent {
         bottomArea.setRendered(false);
       }
       super.processEvent(event);
+      event.getRequestContext().addUIComponentToUpdateByAjax(pageCotainer.getAncestorOfType(UIWikiPortlet.class));
     }
   }
   

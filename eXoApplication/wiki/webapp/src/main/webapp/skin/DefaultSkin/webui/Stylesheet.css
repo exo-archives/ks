@@ -290,6 +290,7 @@ span.Excerpt p {
 	overflow: auto;
 	padding: 0px;
 	position: absolute;
+	min-height: 250px;
 }
 
 .UIWikiPortlet .UIRightContainerArea {
@@ -299,6 +300,7 @@ span.Excerpt p {
 	overflow: auto;
 	padding: 0px;
 	position: absolute;
+	min-height: 250px;
 }
 
 .UIWikiPortlet .Spliter {
