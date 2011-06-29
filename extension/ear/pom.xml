@@ -86,6 +86,16 @@
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwt.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-servlet</artifactId>
+      <version>${gwt.version}</version>
+    </dependency>
     <!-- HACK : cometd packaging should be provided by platform -->
     <!--dependency>
       <groupId>org.exoplatform.commons</groupId>
@@ -252,6 +262,21 @@
               <groupId>javax.jcr</groupId>
               <artifactId>jcr</artifactId>
               <excluded>true</excluded>
+            </jarModule>
+            <jarModule>
+              <groupId>com.google.gwt</groupId>
+              <artifactId>gwt-user</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <jarModule>
+              <groupId>com.google.gwt</groupId>
+              <artifactId>gwt-servlet</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <jarModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.ext.social-integration</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>
           </modules>
         </configuration>
