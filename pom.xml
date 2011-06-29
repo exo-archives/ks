@@ -79,7 +79,6 @@
     
     <selenium-java-client-driver.version>1.0-beta-1</selenium-java-client-driver.version>
      
-    <org.apache.pdfbox.fontbox.version>1.4.0</org.apache.pdfbox.fontbox.version>
     
 	<c3p0.version>0.9.1.2</c3p0.version>
   <bouncycastle.version>136</bouncycastle.version>

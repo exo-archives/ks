@@ -158,11 +158,7 @@
       <artifactId>ecs</artifactId>
       <version>${ecs.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.pdfbox</groupId>
-      <artifactId>fontbox</artifactId>
-      <version>${org.apache.pdfbox.fontbox.version}</version>
-    </dependency>
+     
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-core-rendering-macro-toc</artifactId>
