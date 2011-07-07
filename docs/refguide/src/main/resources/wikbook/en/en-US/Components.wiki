@@ -1,4 +1,4 @@
-h1. Components of eXo Knowledge {anchor:id=KSref.DeveloperReference.FAQConfiguration}
+h1. Components of eXo Knowledge {anchor:id=KSref.Components}
 
 || Key || Data type || Description ||
 | *org.exoplatform.ks.common. jcr.KSDataLocation* | org.exoplatform.ks.common. jcr.KSDataLocation | Hold the JCR storage location for eXo Knowledge data. |

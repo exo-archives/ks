@@ -1,4 +1,4 @@
-h1. Overview {anchor:id=KSref.DefaultUserProfile.Configuration}
+h1. Overview {anchor:id=KSref.Applications.Gadgets.Overview}
 eXo Platform provides a gadget which enables users to see a poll. The Poll Gadget is developed on the combination of Gagget by GateIn and Polls Service. The Poll Gadget allows users to apply functions of Polls, such as viewing and voting Polls. 
 
 || Gadget name || War name || Description ||
