@@ -28,6 +28,7 @@
 %>
 <div class="UIWikiPageVersionsList UIWikiAttachmentArea">
  <% uiform.begin(); %>
+  <div class="HistoryLabel"><%= _ctx.appRes("UIWikiPageVersionsList.label.HistoryLabel"); %></div>
 	<div class="UIAction">
 		<table class="ActionContainer">
 			<tbody>
