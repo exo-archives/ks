@@ -32,7 +32,7 @@ import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 @ComponentConfig(
   template = "app:/templates/wiki/webui/control/AddExtensionContainer.gtmpl"
 )
-public class AddExtensionContainer extends UIExtensionContainer {
+public class AddExtensionContainer extends UIWikiExtensionContainer {
   
   public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.control.AddExtensionContainer";
   

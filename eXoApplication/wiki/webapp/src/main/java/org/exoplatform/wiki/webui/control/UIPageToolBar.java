@@ -29,7 +29,7 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
   lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/control/UIPageToolBar.gtmpl"
 )
-public class UIPageToolBar extends UIExtensionContainer {
+public class UIPageToolBar extends UIWikiExtensionContainer {
 
   public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.control.UIPageToolBar";
   
