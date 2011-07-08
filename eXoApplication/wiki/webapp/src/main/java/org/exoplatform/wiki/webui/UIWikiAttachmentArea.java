@@ -120,19 +120,12 @@ public class UIWikiAttachmentArea extends UIWikiForm {
       try {
         if (uploadResource != null) {
           String fileName = uploadResource.getFileName();
-          if (fileName != null) {
-            NameValidator.validate(fileName);
+          if (fileName != null) {            
+            NameValidator.validateFileName(fileName);
           }
         }
       } catch (IllegalNameException ex) {
-        String msg = ex.getMessage();
-        ApplicationMessage appMsg = null;
-        if (msg != null) {
-          Object[] arg = { msg };
-          appMsg = new ApplicationMessage("AttachmentNameValidator.msg.Invalid-char",
-                                          arg,
-                                          ApplicationMessage.WARNING);
-        }
+        ApplicationMessage appMsg = new ApplicationMessage("AttachmentNameValidator.msg.Invalid-char", null, ApplicationMessage.WARNING);
         uiApp.addMessage(appMsg);
         event.getRequestContext().setProcessRender(true);
       }

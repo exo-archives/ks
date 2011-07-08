@@ -322,10 +322,6 @@ UIUpload.prototype.upload = function(clickEle, id) {
   }
   
   infoUploaded.innerHTML = temp ;
-  if(!this.validate(temp)){
-    alert('Does not accept the following characters in the name of an attachment : @ / \\ | ^ # ; [ ] { } < > * \' \" + ');
-    return;
-  }
 
   var progressBarFrame = DOMUtil.findFirstDescendantByClass(container, "div", "ProgressBarFrame") ;
   progressBarFrame.style.display = "block" ;  

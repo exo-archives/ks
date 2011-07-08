@@ -51,4 +51,20 @@ public class NameValidator {
       }
     }     
   }  
+  
+  public static void validateFileName(String s) throws Exception {
+    if (s == null || s.trim().length() == 0) {
+      throw new IllegalNameException();
+    }
+    for (int i = 0; i < s.length(); i++) {
+      char c = s.charAt(i);
+      if (Character.isLetterOrDigit(c) || Character.isSpaceChar(c) || c == '_' || c == '-' || c == '(' || c == ')'
+        || c == '.' || c == ',') {
+        continue;
+      } else {
+        throw new IllegalNameException();
+      }
+    }
+  }
+  
 }
