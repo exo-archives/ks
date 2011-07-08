@@ -40,10 +40,10 @@ import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriBuilderException;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
@@ -51,6 +51,7 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.io.FilenameUtils;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.commons.utils.MimeTypeResolver;
+import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
@@ -66,6 +67,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
+import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.Relations;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -83,12 +85,12 @@ import org.exoplatform.wiki.service.rest.model.PageSummary;
 import org.exoplatform.wiki.service.rest.model.Pages;
 import org.exoplatform.wiki.service.rest.model.Space;
 import org.exoplatform.wiki.service.rest.model.Spaces;
-import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.TitleSearchResult;
+import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.tree.JsonNodeData;
 import org.exoplatform.wiki.tree.TreeNode;
-import org.exoplatform.wiki.tree.WikiTreeNode;
 import org.exoplatform.wiki.tree.TreeNode.TREETYPE;
+import org.exoplatform.wiki.tree.WikiTreeNode;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.context.Execution;
@@ -706,4 +708,64 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
     attachment.getLinks().add(pageLink);
   }
   
+  @GET
+  @Path("/help/{syntaxId}")
+  @Produces(MediaType.TEXT_HTML)
+  /**
+   * Return the help syntax page.
+   * The syntax id have to replaced all special characters: 
+   *  Character '/' have to replace to "SLASH"
+   *  Character '.' have to replace to "DOT"
+   *
+   * Sample:
+   * "confluence/1.0" will be replaced to "confluenceSLASH1DOT0"
+   *  
+   * @param syntaxId The id of syntax to show in help page
+   * @return The response that contains help page
+   */
+  public Response getHelpSyntaxPage(@PathParam("syntaxId") String syntaxId) {
+    CacheControl cacheControl = new CacheControl();
+    
+    syntaxId = syntaxId.replace(Utils.SLASH, "/").replace(Utils.DOT, ".");
+    try {
+      PageImpl page = wikiService.getHelpSyntaxPage(syntaxId);
+      Page fullHelpPage = (Page) page.getChildPages().values().iterator().next();
+      
+      // Get help page body
+      ExoContainer container = ExoContainerContext.getCurrentContainer();
+      RenderingService renderingService = (RenderingService) container.getComponentInstanceOfType(RenderingService.class);
+      String body = renderingService.render(fullHelpPage.getContent().getText(), fullHelpPage.getSyntax(), Syntax.XHTML_1_0.toIdString(), false);
+      
+      // Create javascript to load css
+      StringBuilder script = new StringBuilder("<script type=\"text/javascript\">")
+      .append("var local = String(window.location);")
+      .append("var i = local.indexOf('/', local.indexOf('//') + 2);")
+      .append("local = (i <= 0) ? local : local.substring(0, i);")
+      .append("local = local + '/wiki/skin/DefaultSkin/webui/Stylesheet.css';")
+      .append("document.write('<link rel=\"stylesheet\" type=\"text/css\" href=\"' + local + '\">');")
+      .append("</script>");
+      
+      // Create help html page
+      StringBuilder htmlOutput = new StringBuilder();
+      htmlOutput.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">")
+      .append("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\" dir=\"ltr\">")
+      .append("<head id=\"head\">")
+      .append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>")
+      .append(script)
+      .append("</head>")
+      .append("<body>")
+      .append("<div class=\"UIWikiPageContentArea\">")
+      .append(body)
+      .append("</div>")
+      .append("</body>")
+      .append("</html>");
+      
+      return Response.ok(htmlOutput.toString(), MediaType.TEXT_HTML).cacheControl(cacheControl).build();
+    } catch (Exception e) {
+      if (log.isWarnEnabled()) {
+        log.warn("An exception happens when getHelpSyntaxPage", e);
+      }
+      return Response.status(HTTPStatus.INTERNAL_ERROR).cacheControl(cc).build();
+    }
+  }
 }
