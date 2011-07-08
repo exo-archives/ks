@@ -628,6 +628,17 @@ public class UIForumPortlet extends UIPortletApplication {
     ResourceBundle res = context.getApplicationResourceBundle();
     if (path.equals(Utils.FORUM_SERVICE)) {
       rederForumHome();
+    } else if (path.indexOf(ForumUtils.FIELD_SEARCHFORUM_LABEL) >= 0) {
+      updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL);
+      UISearchForm searchForm = getChild(UISearchForm.class);
+      searchForm.setUserProfile(getUserProfile());
+      searchForm.setSelectType(path.replaceFirst(ForumUtils.FIELD_SEARCHFORUM_LABEL, ""));
+      searchForm.setPath(ForumUtils.EMPTY_STR);
+      path = ForumUtils.FIELD_EXOFORUM_LABEL;
+    } else if (path.lastIndexOf(Utils.TAG) >= 0) {
+      updateIsRendered(ForumUtils.TAG);
+      getChild(UIForumLinks.class).setValueOption(ForumUtils.EMPTY_STR);
+      getChild(UITopicsTag.class).setIdTag(path);
     } else if (path.lastIndexOf(Utils.TOPIC) >= 0) {
       boolean isReply = false, isQuote = false;
       if (path.indexOf("/true") > 0) {
@@ -637,13 +648,16 @@ public class UIForumPortlet extends UIPortletApplication {
         isReply = true;
         path = path.replaceFirst("/false", ForumUtils.EMPTY_STR);
       }
+      if(path.indexOf(Utils.CATEGORY) > 0) {
+        path = path.substring(path.indexOf(Utils.CATEGORY));
+      }
       String[] id = path.split(ForumUtils.SLASH);
       String postId = "top";
       int page = 0;
       if (path.indexOf(Utils.POST) > 0) {
         postId = id[id.length - 1];
         path = path.substring(0, path.lastIndexOf(ForumUtils.SLASH));
-        id = new String[] { path };
+        id = path.split(ForumUtils.SLASH);
       } else if (id.length > 1) {
         try {
           page = Integer.parseInt(id[id.length - 1]);
@@ -651,7 +665,7 @@ public class UIForumPortlet extends UIPortletApplication {
         }
         if (page > 0) {
           path = path.replace(ForumUtils.SLASH + id[id.length - 1], ForumUtils.EMPTY_STR);
-          id = new String[] { path };
+          id = path.split(ForumUtils.SLASH);
         } else
           page = 0;
       }
@@ -681,7 +695,7 @@ public class UIForumPortlet extends UIPortletApplication {
             uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId());
             this.getChild(UIForumLinks.class).setValueOption((id[0] + ForumUtils.SLASH + id[1] + " "));
             uiTopicDetail.setIdPostView(postId);
-            uiTopicDetail.setLastPostId(postId);
+            uiTopicDetail.setLastPostId((postId.equals("top")?"":postId));
             if (isReply || isQuote) {
               if (uiTopicDetail.getCanPost()) {
                 uiTopicDetail.setIdPostView("top");
@@ -732,12 +746,12 @@ public class UIForumPortlet extends UIPortletApplication {
         path = Utils.FORUM_SERVICE;
       }
     } else if ((path.lastIndexOf(Utils.FORUM) == 0 && path.lastIndexOf(Utils.CATEGORY) < 0) || (path.lastIndexOf(Utils.FORUM) > 0)) {
-      UICategoryContainer categoryContainer = this.getChild(UICategoryContainer.class);
       try {
         Forum forum;
         String cateId = null;
         int page = 0;
-        if (path.indexOf(ForumUtils.SLASH) > 0) {
+        if (path.indexOf(ForumUtils.SLASH) >= 0) {
+          path = path.substring(path.indexOf(Utils.CATEGORY));
           String[] arr = path.split(ForumUtils.SLASH);
           try {
             page = Integer.parseInt(arr[arr.length - 1]);
@@ -797,8 +811,7 @@ public class UIForumPortlet extends UIPortletApplication {
       rederForumHome();
       path = Utils.FORUM_SERVICE;
     }
-    UIBreadcumbs uiBreadcumbs = getChild(UIBreadcumbs.class);
-    uiBreadcumbs.setUpdataPath(path);
+    getChild(UIBreadcumbs.class).setUpdataPath(path);
     getChild(UIForumLinks.class).setValueOption(path);
   }
 

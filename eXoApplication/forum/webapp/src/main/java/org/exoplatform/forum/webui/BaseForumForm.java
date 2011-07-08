@@ -67,6 +67,9 @@ public class BaseForumForm extends BaseUIForm {
   }
 
   public UserProfile getUserProfile() throws Exception {
+    if (this.userProfile == null) {
+      setUserProfile(null);
+    }
     return userProfile;
   }
 

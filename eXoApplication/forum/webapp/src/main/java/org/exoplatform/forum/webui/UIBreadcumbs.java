@@ -104,15 +104,22 @@ public class UIBreadcumbs extends UIContainer {
     setRenderForumLink(path);
     if (!ForumUtils.isEmpty(path) && !path.equals(FORUM_SERVICE)) {
       String temp[] = path.split(ForumUtils.SLASH);
-      path_.clear();
-      breadcumbs_.clear();
-      path_.add(FORUM_SERVICE);
-      tooltipLink = FORUM_SERVICE;
-      breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL);
-      if (path.equals(ForumUtils.FIELD_EXOFORUM_LABEL)) {
+      if (path.indexOf(ForumUtils.FIELD_EXOFORUM_LABEL) >= 0) {
+        if(!ForumUtils.FIELD_EXOFORUM_LABEL.equals(path)) {
+          path_.clear();
+          breadcumbs_.clear();
+          path_.add(FORUM_SERVICE);
+          tooltipLink = FORUM_SERVICE;
+          breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL);
+        }
         breadcumbs_.add(ForumUtils.FIELD_SEARCHFORUM_LABEL);
         path_.add(ForumUtils.SLASH + ForumUtils.FIELD_EXOFORUM_LABEL);
       } else {
+        path_.clear();
+        breadcumbs_.clear();
+        path_.add(FORUM_SERVICE);
+        tooltipLink = FORUM_SERVICE;
+        breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL);
         String tempPath = ForumUtils.EMPTY_STR;
         int i = 0;
         try {
@@ -195,6 +202,16 @@ public class UIBreadcumbs extends UIContainer {
 
   private boolean isLink() {
     return this.isLink;
+  }
+
+  public String getLastPath() {
+    if (this.path_.size() > 0) {
+      String str = path_.get(this.path_.size() - 1);
+      return ((ForumUtils.SLASH + ForumUtils.FIELD_EXOFORUM_LABEL).equals(str)) ? 
+                                                            Utils.FORUM_SERVICE : str;
+    } else{
+      return Utils.FORUM_SERVICE;
+    }
   }
 
   private String getPath(int index) {

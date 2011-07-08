@@ -174,14 +174,15 @@ public class ForumPageList extends JCRPageList {
 
   @SuppressWarnings("unchecked")
   protected void populateCurrentPageSearch(int page, List list, boolean isWatch, boolean isSearchUser) throws Exception {
-    long pageSize = getPageSize();
-    long position = 0;
+    int pageSize = getPageSize();
+    int position = 0;
     if (page == 1)
       position = 0;
     else {
       position = (page - 1) * pageSize;
     }
-    pageSize *= page;
+    int endIndex = pageSize * page;
+    endIndex = (endIndex < list.size()) ? endIndex : list.size() - 1;
     if (!isSearchUser) {
       if (!isWatch)
         currentListPage_ = new ArrayList<ForumSearch>();
@@ -191,9 +192,14 @@ public class ForumPageList extends JCRPageList {
       currentListPage_ = new CopyOnWriteArrayList();
       list = listValue_;
     }
-    for (int i = (int) position; i < pageSize && i < list.size(); i++) {
-      currentListPage_.add(list.get(i));
+    if (endIndex > position) {
+      currentListPage_.addAll(list.subList(position, endIndex));
     }
+    /*
+     * for (int i = (int) position; i < pageSize && i < list.size(); i++) { 
+     *   currentListPage_.add(list.get(i)); 
+     * }
+     */
   }
 
   private NodeIterator setQuery(boolean isQuery, String value) throws Exception {
