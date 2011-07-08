@@ -4,10 +4,20 @@ eXo.require("eXo.core.EventManager");
 function UITreeExplorer() {};
 
 UITreeExplorer.prototype.init = function( componentid, initParam , isFullRender ) {
+  
   var me = eXo.wiki.UITreeExplorer;
   var component = document.getElementById(componentid);
+  if (component == null) {
+    var editForm = document.getElementById('UIWikiPageEditForm');
+    var ifm = eXo.core.DOMUtil.findFirstDescendantByClass(editForm,
+        'iframe', 'gwt-RichTextArea');
+    // Store current iframe element
+    me.innerDoc = ifm.contentDocument || ifm.contentWindow.document;
+
+    component = me.innerDoc.getElementById(componentid);
+  }
   var initURL = eXo.core.DOMUtil.findFirstDescendantByClass(component, "input", "InitURL");
-  var initNode =  eXo.core.DOMUtil.findFirstDescendantByClass(component,"div","NodeGroup");
+  var initNode = eXo.core.DOMUtil.findFirstDescendantByClass(component, "div", "NodeGroup");
   initParam = me.cleanParam(initParam);
   me.render(initParam, initNode, isFullRender);
 };
@@ -113,12 +123,19 @@ UITreeExplorer.prototype.renderTreeNodes = function(parentNode, responseText) {
   var me = eXo.wiki.UITreeExplorer;
   var dataList = JSON.parse(responseText);
   var resultLength = dataList.jsonList.length;
-  var childBlock = "<div class=\"NodeGroup\">";
-  for ( var i = 0; i < resultLength; i++) {
-    childBlock += me.buildNode(dataList.jsonList[i]);
+
+  var childBlock = document.createElement("div");
+  if (me.innerDoc) {
+    childBlock = me.innerDoc.createElement("div");
+    me.innerDoc = null;
   }
-  childBlock += "</div>";
-  parentNode.innerHTML += childBlock;
+  childBlock.className = "NodeGroup";
+  var str = "";
+  for ( var i = 0; i < resultLength; i++) {
+    str += me.buildNode(dataList.jsonList[i]);
+  }
+  childBlock.innerHTML = str;
+  parentNode.appendChild(childBlock);
 }
 
 UITreeExplorer.prototype.buildHierachyNode = function(data){

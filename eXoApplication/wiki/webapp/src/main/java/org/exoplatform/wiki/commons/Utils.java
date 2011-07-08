@@ -43,6 +43,7 @@ import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.AccessControlList;
+import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityConstants;
@@ -261,6 +262,7 @@ public class Utils {
     WikiContext wikiContext = new WikiContext();
     wikiContext.setPortalURL(portalURL);
     wikiContext.setTreeRestURI(treeRestURL);
+    wikiContext.setPageTreeId(IdGenerator.generate());
     wikiContext.setRestURI(getCurrentRestURL());
     wikiContext.setRedirectURI(wikiPortlet.getRedirectURL());
     wikiContext.setPortletURI(pageNodeSelected);

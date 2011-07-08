@@ -149,7 +149,7 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
                                                             false));
   }
   
-  public void testPageTreeMacro() throws Exception {
+  public void testRenderPageTreeMacro() throws Exception {
 
     WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
                                                                .getComponentInstanceOfType(WikiService.class);
@@ -167,13 +167,31 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
     WikiContext wikiContext = (WikiContext) ec.getContext().getProperty(WikiContext.WIKICONTEXT);
     wikiContext.setPageId("rootPage");
     ec.getContext().setProperty(WikiContext.WIKICONTEXT, wikiContext);
- 
-    String xwikiExpectedHtml = "<div class=\"UITreeExplorer\" id =\"PageTree123\">  <div>   <input class=\"ChildrenURL\" type=\"hidden\" value=\"/wiki/tree/children/\" />   <a class=\"SelectNode\" style=\"display:none\" href=\"http://localhost:8080/portal/classic/\" /></a><div class=\"NodeGroup\">  <script> eXo.wiki.UITreeExplorer.init(\"PageTree123\",\"?path=portal/classic/rootPage&excerpt=false&depth=\",false ); </script></div>  </div></div>" ;    
-    assertEquals(xwikiExpectedHtml, renderingService.render("{{pagetree /}}",
-                                                            Syntax.XWIKI_2_0.toIdString(),
-                                                            Syntax.XHTML_1_0.toIdString(),
-                                                            false));
+    StringBuilder xwikiExpectedHtml = new StringBuilder();
+    xwikiExpectedHtml.append("<div class=\"UITreeExplorer\" id =\"PageTree123\">")
+                     .append("  <div>")
+                     .append("    <input class=\"ChildrenURL\" type=\"hidden\" value=\"/wiki/tree/children/\" />")
+                     .append("    <a class=\"SelectNode\" style=\"display:none\" href=\"http://localhost:8080/portal/classic/\" ></a>")
+                     .append("    <div class=\"NodeGroup\">")
+                     .append("      <script type=\"text/javascript\">")
+                     .append("        function initTree(){eXo.wiki.UITreeExplorer.init(\"PageTree123\",\"?path=portal/classic/rootPage&excerpt=false&depth=\",false );}")
+                     .append("        var isInIFrame = (window.location != window.parent.location) ? true : false;")
+                     .append("        if (isInIFrame) {")
+                     .append("          if (window.attachEvent) {window.attachEvent('onload', initTree);}")
+                     .append("          else if (window.addEventListener) {window.addEventListener('load', initTree, false);}")
+                     .append("            else {document.addEventListener('load', initTree, false);}")
+                     .append("        }")
+                     .append("        else { eXo.core.Browser.addOnLoadCallback(\"initPageTree123\",initTree);}")
+                     .append("      </script>")
+                     .append("    </div>")
+                     .append("  </div>")
+                     .append("</div>");
+    assertEquals(xwikiExpectedHtml.toString(), renderingService.render("{{pagetree /}}",
+                                                                       Syntax.XWIKI_2_0.toIdString(),
+                                                                       Syntax.XHTML_1_0.toIdString(),
+                                                                       false));
   }
+  
   public void testExcerptMacro() throws Exception {    
     String expectedHtml = "<div style=\"display: block\" class=\"ExcerptClass\"><div class=\"box tipmessage\">Test excerpt</div></div>";
     assertEquals(expectedHtml, renderingService.render("{{excerpt}}{{tip}}Test excerpt{{/tip}}{{/excerpt}}",
