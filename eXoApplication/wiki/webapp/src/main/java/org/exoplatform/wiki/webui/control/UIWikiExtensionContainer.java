@@ -38,12 +38,12 @@ public abstract class UIWikiExtensionContainer extends UIExtensionContainer {
   protected int extensionSize;
 
   @Override
-  public void processRender(WebuiRequestContext context) throws Exception {
-    if (checkModificationExtension(context)) {
+  public void processRender(WebuiRequestContext context) throws Exception {    
+    Map<String, Object> extContext = new HashMap<String, Object>();
+    UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
+    extContext.put(UIWikiPortlet.class.getName(), wikiPortlet);
+    if (checkModificationContext(extContext)) {
       UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
-      Map<String, Object> extContext = new HashMap<String, Object>();
-      UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
-      extContext.put(UIWikiPortlet.class.getName(), wikiPortlet);
       List<UIExtension> extensions = manager.getUIExtensions(getExtensionType());
       extensionSize = 0;
       if (extensions != null && extensions.size() > 0) {
@@ -55,6 +55,7 @@ public abstract class UIWikiExtensionContainer extends UIExtensionContainer {
         }
       }
     }
+
     if (this.getChildren().size() > 0) {
       super.processRender(context);
     }

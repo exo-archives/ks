@@ -16,10 +16,8 @@
  */
 package org.exoplatform.wiki.webui.core;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.PortletRequest;
+import java.util.Map;
 
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIContainer;
 
 /**
@@ -28,14 +26,13 @@ import org.exoplatform.webui.core.UIContainer;
  *          hieult@exoplatform.com
  * Jul 8, 2011  
  */
-public class UIExtensionContainer extends UIContainer {
+public class UIExtensionContainer extends UIContainer {  
   
-  private boolean initExtension = true;
-  
-  protected boolean checkModificationExtension(WebuiRequestContext context) throws Exception {
-    PortletRequest request = context.getRequest();
-    if (initExtension || request instanceof ActionRequest) {
-      initExtension = false;
+  private Map<String, Object> extContext = null;
+
+  protected boolean checkModificationContext(Map<String, Object> extContext2) throws Exception {
+    if (extContext == null && !extContext2.equals(extContext)) {
+      extContext = extContext2;
       return true;
     }
     return false;
