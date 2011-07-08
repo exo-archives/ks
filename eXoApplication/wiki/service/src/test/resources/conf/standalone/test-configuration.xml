@@ -173,6 +173,11 @@
           <name>cms.configuration</name>
           <description>configuration for the cms path</description>
           <object type="org.exoplatform.services.jcr.ext.hierarchy.impl.HierarchyConfig">
+            <field name="workspaces">
+              <collection type="java.util.ArrayList">
+                <value><string>knowledge</string></value> 
+              </collection>
+            </field>
             <field  name="jcrPaths">
               <collection type="java.util.ArrayList">
                 <value>
