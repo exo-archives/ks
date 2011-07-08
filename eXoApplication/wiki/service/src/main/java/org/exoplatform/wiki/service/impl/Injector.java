@@ -30,6 +30,7 @@ import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.WatchedMixin;
+import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.utils.Utils;
 
@@ -58,6 +59,9 @@ public class Injector implements LifeCycleListener, StateChangeListener {
       ((PageImpl) o).setMOWService(mowService);
       ((PageImpl) o).setWikiService(wService);
     }
+    if(o instanceof WikiContainer<?>) {
+      ((WikiContainer<?>) o).setwService(wService);
+    }
     if (o instanceof NTFrozenNode) {
       ((NTFrozenNode) o).setMOWService(mowService);
     }
@@ -69,6 +73,9 @@ public class Injector implements LifeCycleListener, StateChangeListener {
       ((PageImpl) o).setMOWService(mowService);
       ((PageImpl) o).setWikiService(wService);
     }
+    if(o instanceof WikiContainer<?>) {
+      ((WikiContainer<?>) o).setwService(wService);
+    }
     if (o instanceof NTFrozenNode) {
       ((NTFrozenNode) o).setMOWService(mowService);
     }
@@ -79,6 +86,9 @@ public class Injector implements LifeCycleListener, StateChangeListener {
     if (o instanceof PageImpl) {
       ((PageImpl) o).setMOWService(mowService);
       ((PageImpl) o).setWikiService(wService);
+    }
+    if(o instanceof WikiContainer<?>) {
+      ((WikiContainer<?>) o).setwService(wService);
     }
     if (o instanceof NTFrozenNode) {
       ((NTFrozenNode) o).setMOWService(mowService);

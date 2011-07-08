@@ -20,6 +20,7 @@ import org.chromattic.api.annotations.Create;
 import org.chromattic.api.annotations.MappedBy;
 import org.chromattic.api.annotations.OneToOne;
 import org.chromattic.api.annotations.Owner;
+import org.chromattic.api.annotations.Path;
 import org.chromattic.api.annotations.PrimaryType;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 
@@ -37,6 +38,9 @@ public abstract class Preferences {
   @MappedBy(WikiNodeType.Definition.PREFERENCES_SYNTAX)
   protected abstract PreferencesSyntax getPreferencesSyntaxByChromattic();
   protected abstract void setPreferencesSyntaxByChromattic(PreferencesSyntax preferencesSyntax);
+  
+  @Path
+  public abstract String getPath();
   
   @Create
   protected abstract PreferencesSyntax createPreferencesSyntax();

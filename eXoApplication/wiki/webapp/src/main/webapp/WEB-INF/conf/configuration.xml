@@ -616,4 +616,25 @@
     </component-plugin>
   </external-component-plugins>
   
+  <external-component-plugins>
+    <target-component>org.exoplatform.wiki.service.WikiService</target-component>
+    <component-plugin>
+      <name>Template page initializer</name>
+      <set-method>addWikiTemplatePagePlugin</set-method>
+      <type>org.exoplatform.wiki.template.plugin.WikiTemplatePagePlugin</type>
+      <description>XML Deployment Plugin</description>
+      <init-params>
+        <object-param>
+          <name>Wiki template data</name>
+          <description>Deployment Descriptor</description>
+          <object type="org.exoplatform.services.deployment.DeploymentDescriptor">
+            <field name="sourcePath">
+              <string>war:/conf/data/template.xml</string>
+            </field>
+          </object>
+        </object-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
+  
 </configuration>

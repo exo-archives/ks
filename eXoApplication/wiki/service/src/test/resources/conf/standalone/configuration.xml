@@ -23,7 +23,7 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
-  <import>jar:/conf/standalone/test-configuration.xml</import>
-  <import>jar:/conf/standalone/organization-configuration.xml</import>
   <import>jar:/conf/standalone/jcr-configuration.xml</import>
+  <import>jar:/conf/standalone/organization-configuration.xml</import>
+  <import>jar:/conf/standalone/test-configuration.xml</import>
 </configuration>

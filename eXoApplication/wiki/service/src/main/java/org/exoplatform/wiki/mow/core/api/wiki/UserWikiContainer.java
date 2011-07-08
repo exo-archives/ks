@@ -71,6 +71,9 @@ public abstract class UserWikiContainer extends WikiContainer<UserWiki> {
     UserWiki uwiki = session.findByNode(UserWiki.class, wikiNode);
     uwiki.setOwner(wikiOwner);
     uwiki.setUserWikis(this);
+    uwiki.getPreferences();
+    session.save();
+    uwiki.setWikiService(getwService());
     return uwiki;
   }
 }

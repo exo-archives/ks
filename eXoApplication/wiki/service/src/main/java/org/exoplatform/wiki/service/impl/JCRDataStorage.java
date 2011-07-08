@@ -20,6 +20,14 @@ import org.chromattic.api.ChromatticSession;
 import org.chromattic.common.IO;
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.container.configuration.ConfigurationManager;
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.container.xml.ObjectParameter;
+import org.exoplatform.services.deployment.DeploymentDescriptor;
+import org.exoplatform.services.deployment.DeploymentDescriptor.Target;
+import org.exoplatform.services.deployment.plugins.XMLDeploymentPlugin;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
@@ -30,14 +38,21 @@ import org.exoplatform.wiki.service.DataStorage;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.service.search.TemplateSearchData;
 import org.exoplatform.wiki.service.search.TemplateSearchResult;
-import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.TitleSearchResult;
+import org.exoplatform.wiki.service.search.WikiSearchData;
+import org.exoplatform.wiki.template.plugin.WikiTemplatePagePlugin;
 import org.exoplatform.wiki.utils.Utils;
 
 public class JCRDataStorage implements DataStorage{
   private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
   
   private static final int searchSize = 10;
+  
+  private WikiTemplatePagePlugin templatePlugin; 
+  
+  public void setTemplatePagePlugin(WikiTemplatePagePlugin plugin) {
+    this.templatePlugin = plugin;
+  }
   
   public PageList<SearchResult> search(ChromatticSession session, WikiSearchData data) throws Exception {
     List<SearchResult> resultList = new ArrayList<SearchResult>();
@@ -60,6 +75,39 @@ public class JCRDataStorage implements DataStorage{
       if (!isContains(resultList, tempResult)) {
         resultList.add(tempResult);
       }
+    }
+  }
+  
+  @SuppressWarnings("unchecked")
+  public void initDefaultTemplatePage(ChromatticSession session, ConfigurationManager configurationManager,
+                                      RepositoryService repositoryService, String path) {
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    try {
+      if (templatePlugin != null) {
+        InitParams initParams;
+        ObjectParameter objectParameter;
+        DeploymentDescriptor deploymentDescriptor;
+        Target target = new Target();
+        target.setRepository(repositoryService.getCurrentRepository().getConfiguration().getName());
+        target.setWorkspace(session.getJCRSession().getWorkspace().getName());
+        target.setNodePath(path);
+        initParams = templatePlugin.getInitParams();
+        Iterator<ObjectParameter> iterator = initParams.getObjectParamIterator();
+        while (iterator.hasNext()) {
+          objectParameter = iterator.next();
+          deploymentDescriptor = (DeploymentDescriptor) objectParameter.getObject();
+          deploymentDescriptor.setCleanupPublication(false);
+          deploymentDescriptor.setTarget(target);
+          objectParameter.setObject(deploymentDescriptor);
+          initParams.addParameter(objectParameter);
+        }
+        XMLDeploymentPlugin deploymentPlugin = new XMLDeploymentPlugin(initParams, configurationManager, repositoryService);
+        deploymentPlugin.deploy(sessionProvider);
+      }
+    } catch (Exception e) {
+      log.info("Failed to init default template page because: " + e.getCause());
+    } finally {
+      sessionProvider.close();
     }
   }
   
