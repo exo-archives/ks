@@ -519,8 +519,11 @@ public class Utils {
   }
 
   public static Page makeSimplePage(Node pageNode) throws ValueFormatException, PathNotFoundException, RepositoryException {
-    String title = pageNode.getProperty(Definition.TITLE).getString();
     String name = pageNode.getProperty("exo:name").getString();
+    String title = name;
+    if (pageNode.hasProperty(Definition.TITLE)) {
+      title = pageNode.getProperty(Definition.TITLE).getString();
+    }
     String owner = pageNode.getProperty(Definition.OWNER).getString();
     SimplePageImpl page = new SimplePageImpl(name, title, owner);
     if (pageNode.hasProperty(Definition.CREATED_DATE)) 
