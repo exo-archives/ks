@@ -1,5 +1,6 @@
 <%
 	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.TimeConvertUtils ;
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.service.UserProfile ;
@@ -345,7 +346,8 @@
 										newPost = "New";									
 									}
 									postDate.setTime(topic.getLastPostDate().getTime() - setTime);
-									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
+									//String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);	
+									String lastPostDate = TimeConvertUtils.convertDateTimeResourceBundle(postDate, (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()))					
 									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 101);
 									int att = topic.getNumberAttachment() ;
