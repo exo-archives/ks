@@ -109,38 +109,31 @@ UIUpload.prototype.createUploadEntryForFF = function(idoc, uploadId, isAutoUploa
   idoc.body.innerHTML= this.getUploadContent(uploadId, uploadAction, isAutoUpload);
 }
 
-UIUpload.prototype.getUploadContent = function(uploadId, uploadAction, isAutoUpload){
+UIUpload.prototype.getUploadContent = function(uploadId, uploadAction, isAutoUpload) {
+  var container = parent.document.getElementById(uploadId);
+  var uploadIframe = eXo.core.DOMUtil.findDescendantById(container, uploadId + "UploadIframe");
+  var uploadText = uploadIframe.title;
+  
   var uploadHTML = "";  
   uploadHTML += "  <form id='"+uploadId+"' class='UIUploadForm' style='margin: 0px; padding: 0px' action='"+uploadAction+"' enctype='multipart/form-data' method='post'>";
   uploadHTML += "    <div class='BrowseDiv'>";
-  uploadHTML += "      <input type='file' name='file' id='file' class='FileHidden' value='' onchange='eXo.wiki.UIUpload.upload(this, "+uploadId+")' />";
-  uploadHTML += "      <a class='BrowseLink' href='javascript:eXo.wiki.UIUpload.showChooseFileWindow(" + uploadId + ")'>Upload</a>";
+  uploadHTML += "      <a class='BrowseLink'>";
+  uploadHTML += "        <input type='file' name='file' size='1' id='file' class='FileHidden' value='' onchange='eXo.wiki.UIUpload.upload(this, " + uploadId + ")'/>";
+  uploadHTML += "      " + uploadText + "</a>";
   uploadHTML += "    </div>";
   uploadHTML += "  </form>";
   return uploadHTML;
 }
 
-UIUpload.prototype.showChooseFileWindow = function(id) {
-  var DOMUtil = eXo.core.DOMUtil;  
-  var container = parent.document.getElementById(id);  
-  var uploadFrame = parent.document.getElementById(id+"uploadFrame");
-  var form = uploadFrame.contentWindow.document.getElementById(id);
-
-  var file = DOMUtil.findDescendantById(form, "file");
-  
-  if(file.value != null) {
-    file.click();
-  }
-};
-
 UIUpload.prototype.getStyleSheetContent = function(){
   var styleText = "";
   styleText += ".UIUploadForm {position: relative; } ";
-  styleText += ".FileHidden {visibility: hidden;} ";
+  styleText += ".FileHidden { cursor: pointer; opacity: 0; overflow: hidden; position: absolute; height: 15px; top: 0px; left: 0px; width: 100%; -moz-opacity:0 ; filter:alpha(opacity: 0); z-index: 1;} ";
   styleText += ".BrowseDiv {padding: 10px 0px 10px 0px;} ";
-  styleText += ".BrowseLink {font-family: Arial, Helvetica, sans-serif; float: left; width: 15px; text-align: left; font-size: 12px; color: #165FB3; text-decoration: none; padding: 0px 0px 0px 20px;"
-  styleText +=  "    background: url('/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/AttachFileIcon.gif') no-repeat left top;)}";
-  styleText += ".BrowseLink:hover {cursor: pointer; text-decoration: underline;}";
+  styleText += ".BrowseLink { cursor: pointer; position: relative; font-family: Arial, Helvetica, sans-serif; text-align: left; font-size: 12px; color: #165FB3; ";
+  styleText += "     text-decoration: none; padding: 0px 0px 0px 20px;";
+  styleText += "     background: url('/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/AttachFileIcon.gif') no-repeat left top;)}";
+  styleText += ".UIUploadForm a:hover {cursor: pointer; text-decoration: underline;}";
   return styleText;
 }
 
