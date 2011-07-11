@@ -11,7 +11,6 @@
 	UserProfile userProfile = uiform.getUserProfile() ;
 	String userName = userProfileViewer.getUserId() ;
 	CommonContact contact = uiform.getContact(userName) ;
-	String avatarUrl = "";
 	String location = "" ;
 	String fullName = "";
 	boolean isCity = false;
@@ -64,12 +63,10 @@
 						<td class="MemberContainer">
 							<div class="MemberContent">
 							<%	
-								boolean isDisplayAvatar = userProfileViewer.getIsDisplayAvatar(); 
 								String userTitle = userProfileViewer.getUserTitle();
-								if(isDisplayAvatar) {
-									avatarUrl = uiform.getAvatarUrl() ;
+								if(userProfileViewer.getIsDisplayAvatar()) {
 								%>
-								<img id="ImgAvatar" src="$avatarUrl" class="Img" alt="" width="70px" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
+								<img src="<%=uiform.getAvatarUrl()%>" class="ImgAvatar ImgAvatarBorder" alt=""/>
 								<% } %>
 								<div class="Rank">$userTitle</div>
 								<div class="InfoMember">

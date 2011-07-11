@@ -40,7 +40,7 @@
 													if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 												%>				
 													<div class="AvatarContainer">
-														<div class="ImageAvatar"><img width="63" class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="Avatar"/></div>
+														<img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="Avatar"/>
 													</div>
 												<%}%>
 												<!-- ========================================= view author's infor ================================ -->
@@ -303,7 +303,7 @@
 																				if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 																				%>				
 																				<div class="AvatarContainer" style="margin-top:0px;">
-																					<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(answer.getResponseBy())%>" width="63px" alt="Avatar"/></div>
+																					<img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(answer.getResponseBy())%>" alt="Avatar"/>
 																				</div>
 																				<%}%>
 																				<div class="AuthorInfor" style="text-align:center">
@@ -386,7 +386,7 @@
 																					if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 																					%>				
 																					<div class="AvatarContainer" style="margin-top:0px;">
-																						<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(comment.getCommentBy())%>" width="63" alt="Avatar"/></div>
+																						<img class="FAQAvatar ImgAvatarBorder" src="<%=uicomponent.getAvatarUrl(comment.getCommentBy())%>" alt="Avatar"/>
 																					</div>
 																					<%}%>
 																					<div class="AuthorInfor" style="text-align:center">

@@ -16,14 +16,17 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
+import org.exoplatform.ks.common.image.ResizeImageService;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
@@ -55,6 +58,8 @@ public class UIAttachmentForm extends BaseUIForm implements UIPopupComponent {
   private int                 numberUpload   = 5;
 
   private static final String FILE_UPLOAD    = "FileUpload";
+
+  final private static int    fixWidthImage  = 200;
 
   private boolean             isChangeAvatar = false;
 
@@ -98,11 +103,26 @@ public class UIAttachmentForm extends BaseUIForm implements UIPopupComponent {
         if (uploadResource == null) {
           continue;
         }
+        String fileName = uploadResource.getFileName();
+        if (FAQUtils.isFieldEmpty(fileName)) {
+          continue;
+        }
+        InputStream stream = uploadInput.getUploadDataAsStream();
+        if (attachMentForm.isChangeAvatar) {
+          if (uploadResource.getMimeType().indexOf("image") < 0) {
+            attachMentForm.warning("UIAttachmentForm.msg.fileIsNotImage");
+            uploadService.removeUploadResource(uploadInput.getUploadId());
+            return;
+          }
+          ResizeImageService resizeImgService = (ResizeImageService) ExoContainerContext.getCurrentContainer()
+                                                                     .getComponentInstanceOfType(ResizeImageService.class);
+          stream = resizeImgService.resizeImageByWidth(fileName, stream, fixWidthImage);
+        }
 
         if (uploadResource != null && uploadResource.getUploadedSize() > 0) {
           FileAttachment fileAttachment = new FileAttachment();
           fileAttachment.setName(uploadResource.getFileName());
-          fileAttachment.setInputStream(uploadInput.getUploadDataAsStream());
+          fileAttachment.setInputStream(stream);
           fileAttachment.setMimeType(uploadResource.getMimeType());
           fileSize = (long) uploadResource.getUploadedSize();
           fileAttachment.setSize(fileSize);

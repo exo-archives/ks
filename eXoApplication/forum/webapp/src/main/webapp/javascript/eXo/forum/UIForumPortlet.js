@@ -558,22 +558,6 @@ UIForumPortlet.prototype.setShowInfo = function(elm) {
 //	}
 //};
 
-UIForumPortlet.prototype.onloadReSizeAvatar = function(idElm) {
-	setTimeout("eXo.forum.UIForumPortlet.reSizeAvatar('"+idElm+"')", 1000);
-};
-
-UIForumPortlet.prototype.reSizeAvatar = function(idElm) {
-	var imgElm = document.getElementById(idElm);
-	if(imgElm){
-		imgElm.style.width = "auto" ;
-		if(imgElm.offsetWidth > 130){  
-			imgElm.style.width = "130px" ;
-		}
-		if(imgElm.offsetHeight > 150){  
-			imgElm.style.height = "150px" ;
-		}
-	}
-};
 
 UIForumPortlet.prototype.controlWorkSpace = function() {
 	var slidebar = document.getElementById('ControlWorkspaceSlidebar');
@@ -620,10 +604,12 @@ UIForumPortlet.prototype.setSizeImages = function(delta, classParant) {
 	    if(max_width > 600) max = 600;
 	    var images_ =  imageContentContainer.getElementsByTagName("img");
 	    for(var i=0; i<images_.length; i++){
+	      var className = String(images_[i].className);
+	      if (className.indexOf("ImgAvatar") >= 0 || className.indexOf("AttachImage") >= 0) {
+	        continue;
+	      }
 	    	var img =  new Image();
 	      img.src = images_[i].src;
-	      if(images_[i].className === "ImgAvatar") continue ;
-	      if(images_[i].className === "AttachImage") continue ;
 			  if(img.width > max) {
 					images_[i].style.width= max + "px" ;
 					images_[i].style.height = "auto" ;
