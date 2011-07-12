@@ -7,8 +7,10 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
@@ -21,13 +23,6 @@ import org.chromattic.common.IO;
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.configuration.ConfigurationManager;
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ObjectParameter;
-import org.exoplatform.services.deployment.DeploymentDescriptor;
-import org.exoplatform.services.deployment.DeploymentDescriptor.Target;
-import org.exoplatform.services.deployment.plugins.XMLDeploymentPlugin;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
@@ -78,36 +73,26 @@ public class JCRDataStorage implements DataStorage{
     }
   }
   
-  @SuppressWarnings("unchecked")
-  public void initDefaultTemplatePage(ChromatticSession session, ConfigurationManager configurationManager,
-                                      RepositoryService repositoryService, String path) {
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
-    try {
-      if (templatePlugin != null) {
-        InitParams initParams;
-        ObjectParameter objectParameter;
-        DeploymentDescriptor deploymentDescriptor;
-        Target target = new Target();
-        target.setRepository(repositoryService.getCurrentRepository().getConfiguration().getName());
-        target.setWorkspace(session.getJCRSession().getWorkspace().getName());
-        target.setNodePath(path);
-        initParams = templatePlugin.getInitParams();
-        Iterator<ObjectParameter> iterator = initParams.getObjectParamIterator();
+  public void initDefaultTemplatePage(ChromatticSession crmSession, ConfigurationManager configurationManager, String path) {
+    if (templatePlugin != null) {
+      try {
+        Iterator<String> iterator = templatePlugin.getSourcePaths().iterator();
+        Session session = crmSession.getJCRSession();
+        InputStream is = null;
         while (iterator.hasNext()) {
-          objectParameter = iterator.next();
-          deploymentDescriptor = (DeploymentDescriptor) objectParameter.getObject();
-          deploymentDescriptor.setCleanupPublication(false);
-          deploymentDescriptor.setTarget(target);
-          objectParameter.setObject(deploymentDescriptor);
-          initParams.addParameter(objectParameter);
+          try {
+            is = configurationManager.getInputStream(iterator.next());
+            session.importXML(path, is, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING);
+          } finally {
+            if (is != null) {
+              is.close();
+            }
+          }
         }
-        XMLDeploymentPlugin deploymentPlugin = new XMLDeploymentPlugin(initParams, configurationManager, repositoryService);
-        deploymentPlugin.deploy(sessionProvider);
+        session.save();
+      } catch (Exception e) {
+        log.info("Failed to init default template page because: " + e.getCause());
       }
-    } catch (Exception e) {
-      log.info("Failed to init default template page because: " + e.getCause());
-    } finally {
-      sessionProvider.close();
     }
   }
   

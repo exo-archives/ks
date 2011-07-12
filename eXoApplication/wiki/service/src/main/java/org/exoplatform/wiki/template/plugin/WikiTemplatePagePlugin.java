@@ -16,8 +16,12 @@
  */
 package org.exoplatform.wiki.template.plugin;
 
-import org.exoplatform.container.component.BaseComponentPlugin;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.container.xml.ValuesParam;
+import org.exoplatform.ks.common.conf.ManagedPlugin;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 
@@ -29,14 +33,18 @@ import org.exoplatform.management.annotations.ManagedDescription;
  */
 @Managed
 @ManagedDescription("Plugin that allows to initialize default data for the template page")
-public class WikiTemplatePagePlugin extends BaseComponentPlugin {
-  InitParams params;
+public class WikiTemplatePagePlugin extends ManagedPlugin {
+  List<String> sourcePaths = new ArrayList<String>();
 
+  @SuppressWarnings("unchecked")
   public WikiTemplatePagePlugin(InitParams params) throws Exception {
-    this.params = params;
+    ValuesParam vlsParam = params.getValuesParam("sourcePaths") ;
+    sourcePaths.addAll(vlsParam.getValues());
   }
 
-  public InitParams getInitParams() {
-    return this.params;
+  @Managed
+  @ManagedDescription("get all source path import default data template.")
+  public List<String> getSourcePaths() {
+    return this.sourcePaths;
   }
 }

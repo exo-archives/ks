@@ -28,8 +28,6 @@ import org.exoplatform.container.xml.ValuesParam;
 import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.config.model.PortalConfig;
-import org.exoplatform.services.deployment.plugins.XMLDeploymentPlugin;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -95,8 +93,6 @@ public class WikiServiceImpl implements WikiService, Startable {
 
   private NodeHierarchyCreator  nodeCreator;
 
-  private RepositoryService     repositoryService;
-
   private JCRDataStorage        jcrDataStorage;
 
   private Iterator<ValuesParam> syntaxHelpParams;
@@ -112,12 +108,10 @@ public class WikiServiceImpl implements WikiService, Startable {
   public WikiServiceImpl(ConfigurationManager configManager,
                          NodeHierarchyCreator creator,
                          JCRDataStorage jcrDataStorage,
-                         InitParams initParams,
-                         RepositoryService repositoryService) {
+                         InitParams initParams) {
     this.configManager = configManager;
     this.nodeCreator = creator;
     this.jcrDataStorage = jcrDataStorage;
-    this.repositoryService = repositoryService;
     if (initParams != null) {
       syntaxHelpParams = initParams.getValuesParamIterator();
       preferencesParams = initParams.getPropertiesParam(PREFERENCES);
@@ -128,7 +122,7 @@ public class WikiServiceImpl implements WikiService, Startable {
     Model model = getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     ChromatticSession session = wStore.getSession();
-    jcrDataStorage.initDefaultTemplatePage(session, configManager, repositoryService, path);
+    jcrDataStorage.initDefaultTemplatePage(session, configManager, path);
   }
 
   public Page createPage(String wikiType, String wikiOwner, String title, String parentId) throws Exception {
