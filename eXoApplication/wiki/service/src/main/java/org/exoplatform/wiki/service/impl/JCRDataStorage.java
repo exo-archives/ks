@@ -81,15 +81,20 @@ public class JCRDataStorage implements DataStorage{
         InputStream is = null;
         while (iterator.hasNext()) {
           try {
-            is = configurationManager.getInputStream(iterator.next());
-            session.importXML(path, is, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING);
+            String sourcePath = iterator.next();
+            is = configurationManager.getInputStream(sourcePath);
+            int type = ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW;
+            if(((Node)session.getItem(path)).hasNode(WikiNodeType.WIKI_TEMPLATE_CONTAINER)) {
+              type = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
+            }
+            session.importXML(path, is, type);
+            session.save();
           } finally {
             if (is != null) {
               is.close();
             }
           }
         }
-        session.save();
       } catch (Exception e) {
         log.info("Failed to init default template page because: " + e.getCause());
       }
