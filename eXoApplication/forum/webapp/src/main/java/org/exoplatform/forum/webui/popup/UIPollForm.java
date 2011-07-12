@@ -25,6 +25,7 @@ import java.util.Map;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.info.UIForumPollPortlet;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
@@ -134,7 +135,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
     } catch (NullPointerException e) {
       format = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), null).getShortDateFormat();
     }
-    return ForumUtils.getFormatDate(format, date);
+    return TimeConvertUtils.getFormatDate(format, date);
   }
 
   @SuppressWarnings("unchecked")

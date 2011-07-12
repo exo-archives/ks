@@ -31,6 +31,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -448,7 +449,7 @@ public class UIForumPortlet extends UIPortletApplication {
       } catch (Exception e) {
       }
     }
-    userProfile.setLastTimeAccessTopic(topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis());
+    userProfile.setLastTimeAccessTopic(topicId, TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
   }
 
   public void updateAccessForum(String forumId) throws Exception {
@@ -459,7 +460,7 @@ public class UIForumPortlet extends UIPortletApplication {
       } catch (Exception e) {
       }
     }
-    userProfile.setLastTimeAccessForum(forumId, ForumUtils.getInstanceTempCalendar().getTimeInMillis());
+    userProfile.setLastTimeAccessForum(forumId, TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
   }
 
   public void updateUserProfileInfo() throws Exception {
@@ -732,7 +733,7 @@ public class UIForumPortlet extends UIPortletApplication {
             }
             if (!UserHelper.isAnonim()) {
               this.forumService.updateTopicAccess(UserHelper.getCurrentUser(), topic.getId());
-              this.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis());
+              this.getUserProfile().setLastTimeAccessTopic(topic.getId(), TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
             }
           } else {
             uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[] { topic.getTopicName(), res.getString("UIForumPortlet.label.topic").toLowerCase() }, ApplicationMessage.WARNING));
@@ -820,7 +821,7 @@ public class UIForumPortlet extends UIPortletApplication {
       UIForumPortlet forumPortlet = event.getSource();
       ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
       if (params.getTopicId() != null) {
-        forumPortlet.userProfile.setLastTimeAccessTopic(params.getTopicId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis());
+        forumPortlet.userProfile.setLastTimeAccessTopic(params.getTopicId(), TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
         UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
         topicDetail.setIdPostView("lastpost");
       }

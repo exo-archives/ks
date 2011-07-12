@@ -25,6 +25,7 @@ import javax.jcr.PathNotFoundException;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.Post;
@@ -469,8 +470,8 @@ public class UITopicForm extends BaseForumForm implements UISelector {
         postNew.setOwner(userName);
         postNew.setName(topicTitle);
         if (ForumUtils.isEmpty(uiForm.topicId)) {
-          postNew.setCreatedDate(ForumUtils.getInstanceTempCalendar().getTime());
-          postNew.setModifiedDate(ForumUtils.getInstanceTempCalendar().getTime());
+          postNew.setCreatedDate(TimeConvertUtils.getInstanceTempCalendar().getTime());
+          postNew.setModifiedDate(TimeConvertUtils.getInstanceTempCalendar().getTime());
         } else {
           postNew.setCreatedDate(uiForm.topic.getCreatedDate());
           postNew.setModifiedDate(uiForm.topic.getModifiedDate());

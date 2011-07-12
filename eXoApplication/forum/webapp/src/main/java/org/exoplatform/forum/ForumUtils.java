@@ -22,14 +22,10 @@ package org.exoplatform.forum;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -132,32 +128,6 @@ public class ForumUtils {
     String selectedNode = Util.getUIPortal().getSelectedUserNode().getURI();
     String portalName = portalContext.getPortalOwner();
     return buildForumLink(url, selectedNode, portalName, type, id);
-  }
-
-  public static String getFormatDate(String format, Date myDate) {
-    /*
-     * h,hh,H, m, mm, d, dd, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
-     */
-    if (myDate == null)
-      return EMPTY_STR;
-    if (!isEmpty(format)) {
-      if (format.indexOf("DDDD") >= 0)
-        format = format.replaceAll("DDDD", "EEEE");
-      if (format.indexOf("DDD") >= 0)
-        format = format.replaceAll("DDD", "EEE");
-    }
-    PortalRequestContext portalContext = Util.getPortalRequestContext();
-    Locale locale = new Locale(portalContext.getLocale().getLanguage(), portalContext.getLocale().getCountry());
-    Format formatter = new SimpleDateFormat(format, locale);
-    return formatter.format(myDate);
-  }
-
-  public static Calendar getInstanceTempCalendar() {
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setLenient(false);
-    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
-    return calendar;
   }
 
   public static boolean isValidEmailAddresses(String addressList) throws Exception {

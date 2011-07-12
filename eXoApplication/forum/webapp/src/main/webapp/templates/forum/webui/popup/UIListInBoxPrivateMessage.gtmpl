@@ -1,5 +1,5 @@
 <%
-	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.TimeConvertUtils;
 	import org.exoplatform.forum.service.ForumPrivateMessage;
 	import org.exoplatform.forum.webui.UIForumPageIterator;
 	import org.exoplatform.forum.service.UserProfile;
@@ -41,7 +41,7 @@
 					if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
 					String fromUser = mail.getFrom();
 					fromDate.setTime(mail.getReceivedDate().getTime() - setTime);
-					String strFromDate = ForumUtils.getFormatDate(formatDate, fromDate);
+					String strFromDate = TimeConvertUtils.getFormatDate(formatDate, fromDate);
 		%>
 			<tr class="$classCssInbox">
 				<td class="text"><a href="<%=uicomponent.event("ViewMessage",mailId)%>">$nameMail</a></td>

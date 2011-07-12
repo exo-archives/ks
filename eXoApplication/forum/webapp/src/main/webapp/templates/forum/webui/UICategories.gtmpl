@@ -6,6 +6,7 @@
 	import org.exoplatform.forum.service.ForumServiceUtils ;
 	import org.exoplatform.forum.service.Utils ;
 	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.TimeConvertUtils;
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.webui.UIForumListSearch;
@@ -157,7 +158,7 @@
 											topicNewPostTitle = topicNewPost.getTopicName();
 											lastPostBy = topicNewPost.getLastPostBy();
 											date.setTime(topicNewPost.getLastPostDate().getTime()- setTime);
-											dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),date);
+											dateTime = TimeConvertUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),date);
 											long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
 											if((int)((toDay-createdDate)/86400000) <= dayForumNewPost){
 												classIconForum = "ForumNewPostIcon";

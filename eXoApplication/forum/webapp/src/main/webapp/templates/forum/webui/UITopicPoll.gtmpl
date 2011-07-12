@@ -2,7 +2,8 @@
   import org.exoplatform.ks.common.UserHelper; 
   import org.exoplatform.poll.service.Poll ;
   import org.exoplatform.forum.ForumUtils ;
-  import org.exoplatform.forum.service.UserProfile 
+  import org.exoplatform.forum.TimeConvertUtils ;
+  import org.exoplatform.forum.service.UserProfile ; 
   import java.util.GregorianCalendar;
 %>
   <% 
@@ -23,7 +24,7 @@
       Date today = new Date() ;
       timeOut = timeOut*86400000 ;
       dateOut.setTime(poll.getModifiedDate().getTime() + timeOut);
-      timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),dateOut) + " GMT+0";
+      timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + TimeConvertUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),dateOut) + " GMT+0";
       if(dateOut.getTime() < today.getTime()) {
         timeOutDate = _ctx.appRes("UITopicPoll.label.PollClosed");
         isAgain = false ;
