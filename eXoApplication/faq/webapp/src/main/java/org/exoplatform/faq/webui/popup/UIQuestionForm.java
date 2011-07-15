@@ -328,7 +328,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     return this.categoryId_ ; 
   }
   public void setCategoryId(String categoryId) throws Exception {
-    this.categoryId_ = categoryId ;
+		this.categoryId_ = (FAQUtils.isFieldEmpty(categoryId)) ? org.exoplatform.faq.service.Utils.CATEGORY_HOME : categoryId;
     questionId_ = null ;
     defaultLanguage_ = FAQUtils.getDefaultLanguage() ;
     lastLanguage_ = defaultLanguage_;

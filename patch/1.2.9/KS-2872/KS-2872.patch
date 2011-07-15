@@ -1,0 +1,92 @@
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(revision 71418)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(working copy)
+@@ -1891,6 +1891,7 @@
+ 	}*/
+ 	
+ 	public long getMaxindexCategory(String parentId) throws Exception {
++		parentId = (parentId == null || parentId.trim().length() <= 0)? Utils.CATEGORY_HOME:parentId;
+ 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+ 		long max = 0 ;
+ 		try {
+@@ -3427,6 +3428,7 @@
+ 	}
+ 	
+ 	public boolean isCategoryExist(String name, String path) {
++		path = (path == null || path.trim().length() <= 0)? Utils.CATEGORY_HOME:path;
+ 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+ 		try{
+ 			Node category = getFAQServiceHome(sProvider).getNode(path) ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionForm.java	(revision 71418)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionForm.java	(working copy)
+@@ -328,7 +328,7 @@
+     return this.categoryId_ ; 
+   }
+   public void setCategoryId(String categoryId) throws Exception {
+-    this.categoryId_ = categoryId ;
++		this.categoryId_ = (FAQUtils.isFieldEmpty(categoryId)) ? org.exoplatform.faq.service.Utils.CATEGORY_HOME : categoryId;
+     questionId_ = null ;
+     defaultLanguage_ = FAQUtils.getDefaultLanguage() ;
+     lastLanguage_ = defaultLanguage_;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICategoryForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICategoryForm.java	(revision 71418)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICategoryForm.java	(working copy)
+@@ -24,6 +24,7 @@
+ import org.exoplatform.container.PortalContainer;
+ import org.exoplatform.faq.service.Category;
+ import org.exoplatform.faq.service.FAQService;
++import org.exoplatform.faq.service.Utils;
+ import org.exoplatform.faq.webui.FAQUtils;
+ import org.exoplatform.faq.webui.UIAnswersPortlet;
+ import org.exoplatform.faq.webui.UICategories;
+@@ -104,8 +105,10 @@
+     UIFormInputWithActions inputset = new UIFormInputWithActions("UIAddCategoryForm") ;
+     inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class)) ;
+     UIFormStringInput index = new UIFormStringInput(FIELD_INDEX_INPUT, FIELD_INDEX_INPUT, null) ;
+-    maxIndex = faqService_.getMaxindexCategory(parentId_) + 1;
+-    if(isAddNew)index.setValue(String.valueOf(maxIndex));
++    if(isAddNew){
++    	maxIndex = faqService_.getMaxindexCategory(parentId_) + 1;
++    	index.setValue(String.valueOf(maxIndex));
++    }
+     inputset.addUIFormInput(index) ;
+     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_USERPRIVATE_INPUT, FIELD_USERPRIVATE_INPUT, null)) ;
+     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null)) ;
+@@ -151,7 +154,9 @@
+ 	public void deActivate() throws Exception {}
+ 
+ 	public String getParentId() { return parentId_; }
+-	public void setParentId(String s) { parentId_ = s ; }
++	public void setParentId(String s) { 
++		parentId_ = (FAQUtils.isFieldEmpty(s)) ? Utils.CATEGORY_HOME : s; 
++	}
+ 
+ 	public void updateSelect(String selectField, String value) throws Exception {
+ 		try{
+@@ -258,7 +263,8 @@
+ 	        return ;
+         }
+       }
+-      if(index > maxIndex) index = maxIndex;
++			maxIndex = (maxIndex == 1) ? (faqService_.getMaxindexCategory(uiCategory.parentId_) + 1) : maxIndex;
++			index = (index > maxIndex) ? maxIndex : index;
+       String description = uiCategory.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue() ;
+      
+       String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java	(revision 71415)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuestions.java	(working copy)
+@@ -669,7 +669,7 @@
+ 					UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,540) ;
+ 					uiPopupContainer.setId("EditCategoryForm") ;
+ 					UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
+-					//uiCategoryForm.setParentId(categoryId);
++					uiCategoryForm.setParentId((category.getPath().indexOf("/")>0)?category.getPath().replace("/"+category.getId(), ""):"");
+ 					uiCategoryForm.updateAddNew(false);					
+ 					uiCategoryForm.setCategoryValue(category, true) ;
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

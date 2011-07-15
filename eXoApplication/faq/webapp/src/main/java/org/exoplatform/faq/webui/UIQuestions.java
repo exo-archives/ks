@@ -669,7 +669,7 @@ public class UIQuestions extends UIContainer {
 					UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,540) ;
 					uiPopupContainer.setId("EditCategoryForm") ;
 					UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
-					//uiCategoryForm.setParentId(categoryId);
+					uiCategoryForm.setParentId((category.getPath().indexOf("/")>0)?category.getPath().replace("/"+category.getId(), ""):"");
 					uiCategoryForm.updateAddNew(false);					
 					uiCategoryForm.setCategoryValue(category, true) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

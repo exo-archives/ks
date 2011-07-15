@@ -24,6 +24,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UICategories;
@@ -104,8 +105,10 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     UIFormInputWithActions inputset = new UIFormInputWithActions("UIAddCategoryForm") ;
     inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class)) ;
     UIFormStringInput index = new UIFormStringInput(FIELD_INDEX_INPUT, FIELD_INDEX_INPUT, null) ;
-    maxIndex = faqService_.getMaxindexCategory(parentId_) + 1;
-    if(isAddNew)index.setValue(String.valueOf(maxIndex));
+    if(isAddNew){
+    	maxIndex = faqService_.getMaxindexCategory(parentId_) + 1;
+    	index.setValue(String.valueOf(maxIndex));
+    }
     inputset.addUIFormInput(index) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_USERPRIVATE_INPUT, FIELD_USERPRIVATE_INPUT, null)) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null)) ;
@@ -151,7 +154,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	public void deActivate() throws Exception {}
 
 	public String getParentId() { return parentId_; }
-	public void setParentId(String s) { parentId_ = s ; }
+	public void setParentId(String s) { 
+		parentId_ = (FAQUtils.isFieldEmpty(s)) ? Utils.CATEGORY_HOME : s; 
+	}
 
 	public void updateSelect(String selectField, String value) throws Exception {
 		try{
@@ -258,7 +263,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	        return ;
         }
       }
-      if(index > maxIndex) index = maxIndex;
+			maxIndex = (maxIndex == 1) ? (faqService_.getMaxindexCategory(uiCategory.parentId_) + 1) : maxIndex;
+			index = (index > maxIndex) ? maxIndex : index;
       String description = uiCategory.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue() ;
      
       String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;

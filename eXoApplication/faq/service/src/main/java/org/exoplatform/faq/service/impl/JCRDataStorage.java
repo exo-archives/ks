@@ -1891,6 +1891,7 @@ public class JCRDataStorage {
 	}*/
 	
 	public long getMaxindexCategory(String parentId) throws Exception {
+		parentId = (parentId == null || parentId.trim().length() <= 0)? Utils.CATEGORY_HOME:parentId;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		long max = 0 ;
 		try {
@@ -3427,6 +3428,7 @@ public class JCRDataStorage {
 	}
 	
 	public boolean isCategoryExist(String name, String path) {
+		path = (path == null || path.trim().length() <= 0)? Utils.CATEGORY_HOME:path;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node category = getFAQServiceHome(sProvider).getNode(path) ;
