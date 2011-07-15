@@ -25,6 +25,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Category;
@@ -269,13 +270,14 @@ public class UIBreadcumbs extends UIContainer {
 	private boolean checkCanView(Category cate, Forum forum, Topic topic) throws Exception {
 		String[] viewer = cate.getUserPrivate();
 		if(userProfile == null) setIsUseAjax();
-		String userId = userProfile.getUserId();
+		String userId = userProfile.getUserId();		
 		if(userProfile.getUserRole() == 0) return true;
 		if(isArrayNotNull(viewer)) {
-			if(!isInArray(viewer, userId)) {
-				return false;
-			}
-		}
+      if(!ForumServiceUtils.hasPermission(viewer, userId)) {
+        return false;
+      }
+    }
+		
 		if(forum != null){
 			if(isArrayNotNull(forum.getModerators()) && isInArray(forum.getModerators(), userId)) {
 				return true;
