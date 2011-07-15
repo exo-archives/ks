@@ -493,7 +493,10 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	      		questionForm.mapLanguage.get(language).setState(QuestionLanguage.DELETE) ;
 	      	}
 	      }
-	       
+	      
+	      questionDetail = FAQUtils.convertTextForContent(questionDetail);
+	      questionContent = FAQUtils.convertTextForTitle(questionContent);
+
 	      if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) { //Add new question
 	        question_ = new Question() ;
 	        question_.setCategoryId(questionForm.getCategoryId()) ;

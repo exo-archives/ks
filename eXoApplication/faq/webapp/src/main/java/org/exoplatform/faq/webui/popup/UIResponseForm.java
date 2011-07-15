@@ -348,6 +348,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 			UIResponseForm responseForm = event.getSource();
 			String language = responseForm.questionLanguages_.getValue();
 			String responseQuestionContent = responseForm.inputResponseQuestion_.getValue();
+			responseQuestionContent = FAQUtils.convertTextForContent(responseQuestionContent);
 			Answer answer;
 			if (ValidatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
 				if (responseForm.mapAnswers.containsKey(language)) {

@@ -82,11 +82,12 @@ public class UIQuickSearch  extends UIForm {
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			String text = formStringInput.getValue() ;
 			if(text != null && text.trim().length() > 0) {
-				if(FAQUtils.CheckSpecial(text)) { 
+				/*if(FAQUtils.CheckSpecial(text)) { 
 					uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 					return ;
-				}
+				}*/
+			  text = FAQUtils.convertTextForSearch(text);
 				FAQService faqService = FAQUtils.getFAQService() ;
 				List<ObjectSearchResult> list = null ;
 				FAQEventQuery eventQuery = new FAQEventQuery();

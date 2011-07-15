@@ -200,6 +200,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.comment-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
       }
+      comment = FAQUtils.convertTextForContent(comment);
 			try{								
 				//Create link by Vu Duy Tu.
 	      String link = FAQUtils.getLink(commentForm.getLink(), commentForm.getId(), "UICommentForm", "Cancel", "ViewQuestion", "OBJECTID");

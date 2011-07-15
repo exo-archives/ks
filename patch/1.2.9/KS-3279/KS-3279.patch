@@ -1,0 +1,250 @@
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(revision 71393)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(working copy)
+@@ -52,6 +52,7 @@
+ import javax.jcr.query.QueryManager;
+ import javax.jcr.query.QueryResult;
+ 
++import org.apache.commons.lang.StringUtils;
+ import org.apache.commons.logging.Log;
+ import org.exoplatform.container.ExoContainer;
+ import org.exoplatform.container.ExoContainerContext;
+@@ -542,9 +543,10 @@
+ 				message.setMimeType(MIMETYPE_TEXTHTML) ;
+ 				message.setFrom(question.getAuthor() + emailDefault);
+ 				message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
+-				message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getDetail())
+-																													 .replaceAll("&questionResponse_", question.getAnswers()[0].getResponses())
+-																													 .replaceAll("&questionLink_", question.getLink()));
++        String body = StringUtils.replace(faqSetting.getEmailSettingContent(), "&questionContent_", question.getDetail());
++        body = StringUtils.replace(body, "&questionResponse_", question.getAnswers()[0].getResponses());
++        body = StringUtils.replace(body, "&questionLink_", question.getLink());
++        message.setBody(body);
+ 				sendEmailNotification(emailsList, message) ;
+ 			}
+ 		} catch(Exception e) {
+@@ -591,19 +593,20 @@
+ 				message.setFrom(question.getAuthor() + emailDefault);
+ 				message.setMimeType(MIMETYPE_TEXTHTML);
+ 				message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
++				String body = faqSetting.getEmailSettingContent();
+ 				if (isNew) {
+-					message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString()).replaceAll("&questionContent_", question.getDetail())
+-							.replaceAll("&questionLink_", question.getLink()));
++					body = StringUtils.replace(body, "&questionContent_", question.getDetail());
++					body = StringUtils.replace(body, "&categoryName_", reader.string("exo:name", ""));
+ 				} else {
+-					String contentMail = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion());
++					body = StringUtils.replace(body, "&questionContent_", question.getQuestion());
+ 					if (question.getAnswers().length > 0) {
+-						contentMail = contentMail.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
++						body = StringUtils.replace(body, "&questionResponse_", question.getAnswers()[0].getResponses());
+ 					} else {
+-						contentMail = contentMail.replaceAll("&questionResponse_", "");
++						body = StringUtils.replace(body, "&questionResponse_", "");
+ 					}
+-					contentMail = contentMail.replaceAll("&questionLink_", question.getLink());
+-					message.setBody(contentMail);
+ 				}
++				body = StringUtils.replace(body, "&questionLink_", question.getLink());
++				message.setBody(body);
+ 				sendEmailNotification(emailsList, message);
+ 			}
+ 		} catch (Exception e) {
+@@ -1815,10 +1818,10 @@
+ 		if(questionNode.hasProperty("exo:name")){
+ 			questionDetail = questionDetail + "<br/> <span style=\"font-weight:normal\"> " + questionNode.getProperty("exo:name").getString() + "</span>";
+ 		}
+-		contentMail = contentMail.replace("&questionContent_", questionDetail).
+-															replace("&categoryName_", categoryName).
+-															replace("&questionLink_", link);
+-		message.setBody(contentMail);
++		contentMail = StringUtils.replace(contentMail, "&questionContent_", questionDetail);
++    contentMail = StringUtils.replace(contentMail, "&categoryName_", categoryName);
++    contentMail = StringUtils.replace(contentMail, "&questionLink_", link);
++    message.setBody(contentMail);
+ 		sendEmailNotification(Arrays.asList(new String[]{questionNode.getProperty("exo:email").getString()}), message) ;
+ 	}
+ 	
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuickSearch.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuickSearch.java	(revision 71393)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UIQuickSearch.java	(working copy)
+@@ -82,11 +82,12 @@
+ 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+ 			String text = formStringInput.getValue() ;
+ 			if(text != null && text.trim().length() > 0) {
+-				if(FAQUtils.CheckSpecial(text)) { 
++				/*if(FAQUtils.CheckSpecial(text)) { 
+ 					uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+ 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 					return ;
+-				}
++				}*/
++			  text = FAQUtils.convertTextForSearch(text);
+ 				FAQService faqService = FAQUtils.getFAQService() ;
+ 				List<ObjectSearchResult> list = null ;
+ 				FAQEventQuery eventQuery = new FAQEventQuery();
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICommentForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICommentForm.java	(revision 71393)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICommentForm.java	(working copy)
+@@ -200,6 +200,7 @@
+ 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.comment-id-deleted", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+       }
++      comment = FAQUtils.convertTextForContent(comment);
+ 			try{								
+ 				//Create link by Vu Duy Tu.
+ 	      String link = FAQUtils.getLink(commentForm.getLink(), commentForm.getId(), "UICommentForm", "Cancel", "ViewQuestion", "OBJECTID");
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionForm.java	(revision 71393)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIQuestionForm.java	(working copy)
+@@ -493,7 +493,10 @@
+ 	      		questionForm.mapLanguage.get(language).setState(QuestionLanguage.DELETE) ;
+ 	      	}
+ 	      }
+-	       
++	      
++	      questionDetail = FAQUtils.convertTextForContent(questionDetail);
++	      questionContent = FAQUtils.convertTextForTitle(questionContent);
++
+ 	      if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) { //Add new question
+ 	        question_ = new Question() ;
+ 	        question_.setCategoryId(questionForm.getCategoryId()) ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICategoryForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICategoryForm.java	(revision 71393)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UICategoryForm.java	(working copy)
+@@ -220,15 +220,17 @@
+ 			UICategoryForm uiCategory = event.getSource() ;
+ 			UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
+       String name = uiCategory.getUIStringInput(FIELD_NAME_INPUT).getValue() ;
+-      if(name.indexOf("<") >=0)  name = name.replace("<", "&lt;") ;
++      /*if(name.indexOf("<") >=0)  name = name.replace("<", "&lt;") ;
+       if(name.indexOf(">") >=0) name = name.replace(">", "&gt;") ;
+       
+       if(name.indexOf("'") >=0 ){
+       	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-invalid", null, ApplicationMessage.WARNING)) ;
+     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+     		return ;
+-      }
++      }*/
+       
++      name = FAQUtils.convertTextForTitle(name);
++      
+       if(uiCategory.isAddNew_) {
+       	if(faqService_.isCategoryExist(name, uiCategory.parentId_)) {
+         	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-exist", null, ApplicationMessage.WARNING)) ;
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAdvancedSearchForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAdvancedSearchForm.java	(revision 71393)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIAdvancedSearchForm.java	(working copy)
+@@ -320,15 +320,20 @@
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 				return ;
+ 			}
+-			if(FAQUtils.CheckSpecial(text) || FAQUtils.CheckSpecial(categoryName) || FAQUtils.CheckSpecial(moderator) ||
++			/*if(FAQUtils.CheckSpecial(text) || FAQUtils.CheckSpecial(categoryName) || FAQUtils.CheckSpecial(moderator) ||
+ 					FAQUtils.CheckSpecial(author) || FAQUtils.CheckSpecial(emailAddress) ||
+ 					FAQUtils.CheckSpecial(question) || FAQUtils.CheckSpecial(response) || 
+ 					FAQUtils.CheckSpecial(nameAttachment)) { 
+ 				uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+ 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+ 				return ;
+-			}
++			}*/
+ 			
++			 text = FAQUtils.convertTextForSearch(text);
++			 categoryName = FAQUtils.convertTextForSearch(categoryName);
++			 question = FAQUtils.convertTextForSearch(question);
++			 response = FAQUtils.convertTextForContent(response);
++			
+ 			/**
+ 			 * Create query string from data inputed
+ 			 */
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIResponseForm.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIResponseForm.java	(revision 71393)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/popup/UIResponseForm.java	(working copy)
+@@ -348,6 +348,7 @@
+ 			UIResponseForm responseForm = event.getSource();
+ 			String language = responseForm.questionLanguages_.getValue();
+ 			String responseQuestionContent = responseForm.inputResponseQuestion_.getValue();
++			responseQuestionContent = FAQUtils.convertTextForContent(responseQuestionContent);
+ 			Answer answer;
+ 			if (ValidatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
+ 				if (responseForm.mapAnswers.containsKey(language)) {
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/FAQUtils.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/FAQUtils.java	(revision 71393)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/FAQUtils.java	(working copy)
+@@ -609,5 +609,65 @@
+ 		}
+ 		return limitMB ;
+ 	}
+-	
++		
++	public static String convertTextForSearch(String s) {
++		String charIgnore = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
++		if (!isFieldEmpty(s)) {
++			int i = 0;
++			while (charIgnore.indexOf(s.charAt(i) + "") > 0) {
++				++i;
++				if (i == s.length()) {
++					charIgnore = "";
++					break;
++				}
++			}
++		}
++		if (!isFieldEmpty(charIgnore)) charIgnore = "!#:?=.,+;~`_";
++		return convertSpecialCharToASCII(s, charIgnore, true);
++	}
++
++	public static String convertTextForTitle(String s) {
++		String charIgnore = "!#:?=.,()+;~`_";
++		return convertSpecialCharToASCII(s, charIgnore, true);
++	}
++
++	public static String convertTextForContent(String s) {
++		String charIgnore = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
++		return convertSpecialCharToASCII(s, charIgnore, false);
++	}
++
++	public static String convertSpecialCharToASCII(String s, String charIgnore, boolean isTitle) {
++		if (isFieldEmpty(s)) {
++			return "";
++		}
++		int i = 0;
++		int[] charCodes = new int[] { 48, 32, 65, 57, 97, 90, 127, 122, 39 };// '0', ' ', 'A', '9', 'a', 'Z', '~', 'z', '\''
++		String apos = "&apos;", str1 = "&#", str2 = ";";
++		StringBuilder builder = new StringBuilder();
++		while (i < s.length()) {
++			char c = s.charAt(i);
++			if (charIgnore.indexOf(String.valueOf(c)) >= 0) {
++				builder.append(c);
++			} else {
++				int t = s.codePointAt(i);
++				if (t == charCodes[8]) {
++					builder.append(apos);
++				} else if (t < charCodes[0] && t > charCodes[1] || t < charCodes[2] && t > charCodes[3] || t < charCodes[4] && t > charCodes[5] || t < charCodes[6] && t > charCodes[7]) {
++					if (isTitle && (t == 60 || t == 62)) {
++						if (t == 60) {
++							builder.append("&lt;");
++						} else if (t == 62) {
++							builder.append("&gt;");
++						}
++					} else {
++						builder.append(str1).append(t).append(str2);
++					}
++				} else {
++					builder.append(c);
++				}
++			}
++			++i;
++		}
++		return builder.toString();
++	}
+ }

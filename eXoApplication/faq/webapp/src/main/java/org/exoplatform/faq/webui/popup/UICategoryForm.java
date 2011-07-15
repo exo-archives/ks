@@ -220,14 +220,16 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			UICategoryForm uiCategory = event.getSource() ;
 			UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
       String name = uiCategory.getUIStringInput(FIELD_NAME_INPUT).getValue() ;
-      if(name.indexOf("<") >=0)  name = name.replace("<", "&lt;") ;
+      /*if(name.indexOf("<") >=0)  name = name.replace("<", "&lt;") ;
       if(name.indexOf(">") >=0) name = name.replace(">", "&gt;") ;
       
       if(name.indexOf("'") >=0 ){
       	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-invalid", null, ApplicationMessage.WARNING)) ;
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;
-      }
+      }*/
+      
+      name = FAQUtils.convertTextForTitle(name);
       
       if(uiCategory.isAddNew_) {
       	if(faqService_.isCategoryExist(name, uiCategory.parentId_)) {

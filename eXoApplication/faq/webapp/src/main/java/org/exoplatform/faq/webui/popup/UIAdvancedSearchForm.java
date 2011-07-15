@@ -320,14 +320,19 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
-			if(FAQUtils.CheckSpecial(text) || FAQUtils.CheckSpecial(categoryName) || FAQUtils.CheckSpecial(moderator) ||
+			/*if(FAQUtils.CheckSpecial(text) || FAQUtils.CheckSpecial(categoryName) || FAQUtils.CheckSpecial(moderator) ||
 					FAQUtils.CheckSpecial(author) || FAQUtils.CheckSpecial(emailAddress) ||
 					FAQUtils.CheckSpecial(question) || FAQUtils.CheckSpecial(response) || 
 					FAQUtils.CheckSpecial(nameAttachment)) { 
 				uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
-			}
+			}*/
+			
+			 text = FAQUtils.convertTextForSearch(text);
+			 categoryName = FAQUtils.convertTextForSearch(categoryName);
+			 question = FAQUtils.convertTextForSearch(question);
+			 response = FAQUtils.convertTextForContent(response);
 			
 			/**
 			 * Create query string from data inputed
