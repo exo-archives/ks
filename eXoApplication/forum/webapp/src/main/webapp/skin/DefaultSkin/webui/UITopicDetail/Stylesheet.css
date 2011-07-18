@@ -359,9 +359,8 @@
 	width: 98px;
 	overflow: hidden; 
 	padding : 1px 0px 4px 0px;
-}
-
-.UITopicDetail .SearchTagName {
+	top: 24px;
+	left: 6px;
 	*top: 28px;
 	*left: 9px;
 }

@@ -109,15 +109,15 @@ public class UICategory extends BaseForumForm {
     setActions(new String[] { "EditCategory", "ExportCategory", "ImportForum", "DeleteCategory", "WatchOption", "AddForum", "EditForum", "SetLocked", "SetUnLock", "SetOpen", "SetClose", "MoveForum", "RemoveForum" });
   }
 
-  public UserProfile getUserProfile() throws Exception {
+  public void initForm() throws Exception {
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
     useAjax = forumPortlet.isUseAjax();
     dayForumNewPost = forumPortlet.getDayForumNewPost();
-    userProfile = forumPortlet.getUserProfile();
-    listWatches = forumPortlet.getWatchingByCurrentUser();
     linkUserInfo = forumPortlet.getPortletLink();
-    return this.userProfile;
+    setListWatches();
   }
+  
+  
 
   private String getActionViewInfoUser(String linkType, String userName) {
     String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
@@ -173,6 +173,9 @@ public class UICategory extends BaseForumForm {
         log.debug("Failed to get category", e);
       }
       this.isEditCategory = false;
+    }
+    if(category != null) {
+      initForm();
     }
     return category;
   }

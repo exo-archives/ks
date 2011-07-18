@@ -70,18 +70,19 @@ public class BaseForumForm extends BaseUIForm {
     if (this.userProfile == null) {
       setUserProfile(null);
     }
-    return userProfile;
+    return this.userProfile;
   }
 
   public void setUserProfile(UserProfile userProfile) throws Exception {
-    this.userProfile = userProfile;
-    if (this.userProfile == null) {
+    if (userProfile == null) {
       this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+    } else {
+      this.userProfile = userProfile;
     }
   }
 
-  public void setListWatches(List<Watch> listWatches) {
-    this.listWatches = listWatches;
+  protected void setListWatches() throws Exception {
+    listWatches = getForumService().getWatchByUser(getUserProfile().getUserId());
   }
 
   protected boolean isWatching(String path) throws Exception {
@@ -143,9 +144,7 @@ public class BaseForumForm extends BaseUIForm {
     try {
       values.add(userProfile.getEmail());
       getForumService().addWatch(1, path, values, userProfile.getUserId());
-      UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
-      forumPortlet.updateWatching();
-      this.listWatches = forumPortlet.getWatchingByCurrentUser();
+      setListWatches();
       info("UIAddWatchingForm.msg.successfully");
       return true;
     } catch (Exception e) {
@@ -157,9 +156,7 @@ public class BaseForumForm extends BaseUIForm {
   protected boolean unWatch(String path, UserProfile userProfile) {
     try {
       getForumService().removeWatch(1, path, userProfile.getUserId() + ForumUtils.SLASH + getEmailWatching(path));
-      UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
-      forumPortlet.updateWatching();
-      this.listWatches = forumPortlet.getWatchingByCurrentUser();
+      setListWatches();
       info("UIAddWatchingForm.msg.UnWatchSuccessfully");
       return true;
     } catch (Exception e) {

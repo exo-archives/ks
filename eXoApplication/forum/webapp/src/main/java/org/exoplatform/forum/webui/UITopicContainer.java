@@ -205,7 +205,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + ForumUtils.SLASH + forumId));
     forumPortlet.updateAccessForum(forumId);
     this.userProfile = forumPortlet.getUserProfile();
-    listWatches = forumPortlet.getWatchingByCurrentUser();
     cleanCheckedList();
     setForum(true);
     linkUserInfo = forumPortlet.getPortletLink();
@@ -270,7 +269,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     enableIPLogging = forumPortlet.isEnableIPLogging();
     forumPortlet.updateAccessForum(forumId);
     this.userProfile = forumPortlet.getUserProfile();
-    listWatches = forumPortlet.getWatchingByCurrentUser();
     if (!isBreadcumbs) {
       forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + ForumUtils.SLASH + forumId));
     }
@@ -375,6 +373,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   }
 
   private void initPage() throws Exception {
+    setListWatches();
     objectId = forumId;
     if (userProfile == null)
       userProfile = new UserProfile();

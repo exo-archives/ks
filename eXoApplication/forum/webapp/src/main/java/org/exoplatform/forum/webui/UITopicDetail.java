@@ -303,7 +303,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     cleanCheckedList();
     forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topicId));
     this.isUseAjax = forumPortlet.isUseAjax();
-    listWatches = forumPortlet.getWatchingByCurrentUser();
     this.topic = getForumService().getTopic(categoryId, forumId, topicId, userName);
     getForumService().setViewCountTopic((categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topicId), userName);
     setRenderInfoPorlet();
@@ -328,7 +327,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topicId));
     this.isUseAjax = forumPortlet.isUseAjax();
     userProfile = forumPortlet.getUserProfile();
-    listWatches = forumPortlet.getWatchingByCurrentUser();
     userName = userProfile.getUserId();
     setRenderInfoPorlet();
   }
@@ -570,6 +568,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   }
 
   public void initPage() throws Exception {
+    setListWatches();
     objectId = topicId;
     isDoubleClickQuickReply = false;
     isGetSv = true;
@@ -1578,7 +1577,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   static public class WatchOptionActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-      Topic topic = topicDetail.topic;
+      topicDetail.isEditTopic = true;
+      Topic topic = topicDetail.getTopic();
       UIWatchToolsForm watchToolsForm = openPopup(forumPortlet, UIWatchToolsForm.class, 500, 365);
       watchToolsForm.setPath(topic.getPath());
       watchToolsForm.setEmails(topic.getEmailNotification());

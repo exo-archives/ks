@@ -175,18 +175,14 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
           ++j;
         }
         uiForm.setEmails(strings);
-        forumPortlet.updateWatching();
-        List<Watch> listWatches = forumPortlet.getWatchingByCurrentUser();
         if (uiForm.getIsTopic()) {
           UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
-          topicDetail.setListWatches(listWatches);
           topicDetail.setIsEditTopic(true);
           uiForm.isTopic = false;
           event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
         } else if (path.indexOf(Utils.CATEGORY) < path.lastIndexOf(Utils.FORUM)) {
           UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
           topicContainer.setIdUpdate(true);
-          topicContainer.setListWatches(listWatches);
           event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer);
         } else {
           UICategory uicategory = forumPortlet.findFirstComponentOfType(UICategory.class);

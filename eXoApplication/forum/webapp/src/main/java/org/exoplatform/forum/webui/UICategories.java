@@ -136,7 +136,6 @@ public class UICategories extends UIContainer {
     } else if (collapCategories == null) {
       collapCategories = new ArrayList<String>();
     }
-    listWatches = forumPortlet.getWatchingByCurrentUser();
     linkUserInfo = forumPortlet.getPortletLink();
     return this.userProfile;
   }
@@ -145,6 +144,10 @@ public class UICategories extends UIContainer {
   private String getActionViewInfoUser(String linkType, String userName) {
     String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
     return link;
+  }
+
+  public void setListWatches() throws Exception {
+    listWatches = forumService.getWatchByUser(getUserProfile().getUserId());
   }
 
   @SuppressWarnings("unused")
@@ -233,6 +236,7 @@ public class UICategories extends UIContainer {
     } catch (Exception e) {
       categoryList = new ArrayList<Category>();
     }
+    setListWatches();
     return categoryList;
   }
 
@@ -538,8 +542,6 @@ public class UICategories extends UIContainer {
         List<String> values = new ArrayList<String>();
         values.add(uiContainer.forumService.getUserInformations(uiContainer.userProfile).getEmail());
         uiContainer.forumService.addWatch(1, path, values, userName);
-        UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.updateWatching();
         UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class);
         uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", new String[]{}, ApplicationMessage.INFO));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
@@ -558,8 +560,6 @@ public class UICategories extends UIContainer {
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
       try {
         uiContainer.forumService.removeWatch(1, path, uiContainer.userProfile.getUserId() + ForumUtils.SLASH + uiContainer.getEmailWatching(path));
-        UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.updateWatching();
         Object[] args = {};
         UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class);
         uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO));
