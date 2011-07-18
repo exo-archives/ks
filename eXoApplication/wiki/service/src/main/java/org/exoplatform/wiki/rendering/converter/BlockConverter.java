@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.rendering.refiner;
+package org.exoplatform.wiki.rendering.converter;
 
 import org.xwiki.component.annotation.ComponentRole;
 import org.xwiki.rendering.block.XDOM;

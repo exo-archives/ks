@@ -27,7 +27,7 @@ import java.util.Map;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.rendering.RenderingService;
-import org.exoplatform.wiki.rendering.refiner.BlockConverter;
+import org.exoplatform.wiki.rendering.converter.BlockConverter;
 import org.picocontainer.Startable;
 import org.w3c.dom.Document;
 import org.xwiki.component.embed.EmbeddableComponentManager;

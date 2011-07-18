@@ -47,7 +47,7 @@ public class DivParameters {
   /**
    * @param style content of the style sheet to set
    */
-  @PropertyDescription("style sheet content (text-align: left;color: red;)")
+  @PropertyDescription("Style sheet content (text-align: left;color: red;)")
   public void setStyle(String style) {
     this.style = style;
   }

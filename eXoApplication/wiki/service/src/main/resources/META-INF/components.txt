@@ -31,5 +31,5 @@ org.exoplatform.wiki.rendering.macro.section.column.ColumnMacro
 org.exoplatform.wiki.rendering.macro.section.SectionMacro
 org.exoplatform.wiki.rendering.macro.span.SpanMacro
 org.exoplatform.wiki.rendering.macro.div.DivMacro
-org.exoplatform.wiki.rendering.refiner.BlockConverter
-org.exoplatform.wiki.rendering.refiner.ConfluenceBlockConverter
+org.exoplatform.wiki.rendering.converter.BlockConverter
+org.exoplatform.wiki.rendering.converter.ConfluenceBlockConverter

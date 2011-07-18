@@ -208,6 +208,34 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
                                                        false));
   }
   
+  public void testRenderDivMacro() throws Exception {
+    String expectedHtml = "<p style=\"text-align:left;color:red\">example div macro</p>";
+    String outputConfluence = renderingService.render("{div:style=\"text-align:left;color:red\"}example div macro{div}",
+                                                      Syntax.CONFLUENCE_1_0.toIdString(),
+                                                      Syntax.XHTML_1_0.toIdString(),
+                                                      false);
+    assertEquals(expectedHtml, outputConfluence);
+    String outputXwiki = renderingService.render("{{div style=\"text-align:left;color:red\"}}example div macro{{/div}}",
+                                                 Syntax.XWIKI_2_0.toIdString(),
+                                                 Syntax.XHTML_1_0.toIdString(),
+                                                 false);
+    assertEquals(expectedHtml, outputXwiki);
+  }
+
+  public void testRenderSpanMacro() throws Exception {
+    String expectedHtml = "<span style=\"font:12pt;color:red\">example span macro</span>";
+    String outputConfluence = renderingService.render("{span:style=\"font:12pt;color:red\"}example span macro{span}",
+                                                      Syntax.CONFLUENCE_1_0.toIdString(),
+                                                      Syntax.XHTML_1_0.toIdString(),
+                                                      false);
+    assertEquals(expectedHtml, outputConfluence);
+    String outputXwiki = renderingService.render("{{span style=\"font:12pt;color:red\"}}example span macro{{/span}}",
+                                                 Syntax.XWIKI_2_0.toIdString(),
+                                                 Syntax.XHTML_1_0.toIdString(),
+                                                 false);
+    assertEquals(expectedHtml, outputXwiki);
+  }
+  
   private void setupDefaultWikiContext() throws ComponentLookupException, ComponentRepositoryException {
     Execution ec = renderingService.getExecution();
     ec.setContext(new ExecutionContext());

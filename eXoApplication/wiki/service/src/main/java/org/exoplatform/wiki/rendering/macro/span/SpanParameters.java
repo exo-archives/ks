@@ -47,7 +47,7 @@ public class SpanParameters {
   /**
    * @param style content of the style sheet to set
    */
-  @PropertyDescription("style sheet content (text-align: left;color: red;)")
+  @PropertyDescription("Style sheet content(font:12pt Arial;color: red;)")
   public void setStyle(String style) {
     this.style = style;
   }
