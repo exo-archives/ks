@@ -27,6 +27,7 @@ import java.util.Map;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.rendering.RenderingService;
+import org.exoplatform.wiki.rendering.refiner.BlockConverter;
 import org.picocontainer.Startable;
 import org.w3c.dom.Document;
 import org.xwiki.component.embed.EmbeddableComponentManager;
@@ -84,7 +85,18 @@ public class RenderingServiceImpl implements RenderingService, Startable {
     XDOM xdom = parse(markup, sourceSyntax);
     Syntax sSyntax = (sourceSyntax == null) ? Syntax.XWIKI_2_0 : getSyntax(sourceSyntax);
     Syntax tSyntax = (targetSyntax == null) ? Syntax.XHTML_1_0 : getSyntax(targetSyntax);
-
+    
+    
+    try {
+      BlockConverter refiner = componentManager.lookup(BlockConverter.class, sSyntax.toIdString());
+      refiner.convert(xdom);
+    } catch (ComponentLookupException e) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(String.format("Syntax %s doesn't have any refiner", sSyntax));
+      }
+    } catch (ConversionException e) {
+      throw new ConversionException("Failed to refine input source", e);
+    }
     if (supportSectionEdit) {
       List<HeaderBlock> filteredHeaders = getFilteredHeaders(xdom);
       int sectionIndex = 1;
@@ -326,5 +338,4 @@ public class RenderingServiceImpl implements RenderingService, Startable {
   public void setCssURL(String cssURL) {
     this.cssURL = cssURL;
   }
-
 }

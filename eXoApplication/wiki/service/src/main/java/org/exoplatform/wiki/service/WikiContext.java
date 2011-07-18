@@ -18,6 +18,8 @@ package org.exoplatform.wiki.service;
 
 import java.io.Serializable;
 
+import org.xwiki.rendering.syntax.Syntax;
+
 /**
  * Created by The eXo Platform SAS
  * Author : viet.nguyen
@@ -51,6 +53,8 @@ public class WikiContext extends WikiPageParams implements Cloneable, Serializab
   private String             redirectURI;
   
   private String             pageTreeId;
+  
+  private String             syntax           = Syntax.XWIKI_2_0.toIdString();
   
   private String             restURI;
 
@@ -116,6 +120,14 @@ public class WikiContext extends WikiPageParams implements Cloneable, Serializab
     this.restURI = restURI;
   }
 
+  public String getSyntax() {
+    return syntax;
+  }
+
+  public void setSyntax(String syntax) {
+    this.syntax = syntax;
+  }
+
   @Override
   public WikiContext clone() throws CloneNotSupportedException {
 
@@ -132,6 +144,7 @@ public class WikiContext extends WikiPageParams implements Cloneable, Serializab
     obj.setRestURI(this.getRestURI());
     obj.setTreeRestURI(this.getTreeRestURI());
     obj.setType(this.getType());
+    obj.setSyntax(this.getSyntax());
     return obj;
   }
   
