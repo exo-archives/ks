@@ -57,6 +57,9 @@ import org.exoplatform.wiki.service.diff.DiffService;
 import org.xwiki.rendering.syntax.Syntax;
 
 public class Utils {
+  public static final String SLASH = "SLASH";
+  
+  public static final String DOT = "DOT";
   
   private static final Log      log_               = ExoLogger.getLogger(Utils.class);
   
