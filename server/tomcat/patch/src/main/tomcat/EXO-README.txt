@@ -141,10 +141,6 @@ All those accounts have the default password "gtn".
 6 Detailed Changelog
 ==================== 
 - Version 2.2.0
-
-
-Release Notes - eXo Knowledge - Version ks-2.2.0-GA
-
 ** Bug
     * [KS-2268] - Search question by language is incorrect
     * [KS-2362] - IE7: Error when upload avatar in special case
@@ -321,7 +317,6 @@ Release Notes - eXo Knowledge - Version ks-2.2.0-GA
     * [KS-3316] - [wiki] Unknow error when modifying the title of the page with inline editing
     * [KS-3321] - [social-integration] Wiki added pages aren't correctly populated in Social
     * [KS-3343] - Show js message when do any action on KS-forum
-    * [KS-3344] - [Wiki] The table is not displayed after insert
     * [KS-3354] - [Forum] NullPointerException when save attachments
     * [KS-3356] - [Wiki] IE7: Jump to Wiki Home page when click on revision link of other page
     * [KS-3357] - [Wiki] Cannot search template to create new page
@@ -331,7 +326,6 @@ Release Notes - eXo Knowledge - Version ks-2.2.0-GA
     * [KS-3376] - [Answer] Show time of last update in question is incorrect
     * [KS-3377] - [KS-Forum] Show exception in console when lock forum after move this forum
     * [KS-3379] - CLONE - [KS][UI] Problem with style overloading in question comment
-    * [KS-3380] - [KS-Forum] Don't switch status from Unwatch -> Watch after Admin remove email watch in watches list
     * [KS-3398] - [Wiki-IE7] Show all page's content when only select Edit last paragraph in page
     * [KS-3399] - Don't show some portlet ( banner, breadcumbs) in specical case
     * [KS-3400] - Put [Approve] field is incorrect place in Advanced search form
@@ -354,6 +348,7 @@ Release Notes - eXo Knowledge - Version ks-2.2.0-GA
     * [KS-3439] - RepositoryException when selecting a page in the search box
     * [KS-3443] - [Answer] Display message when edit category
     * [KS-3455] - [wiki] Advanced search does not work 
+    * [KS-3534] - [Forum] Don't expand and show sub-groups when select role/group in Permission tab
 
 ** Feedback
     * [KS-2571] - Make sure all wiki formats have style
@@ -427,6 +422,7 @@ Release Notes - eXo Knowledge - Version ks-2.2.0-GA
     * [KS-2965] - [wiki] Page Templates
     * [KS-2967] - [wiki] Social Integration
     * [KS-3055] - [wiki] Wiki Permissions
+
 
 - Version 2.2.0-Beta02
 
