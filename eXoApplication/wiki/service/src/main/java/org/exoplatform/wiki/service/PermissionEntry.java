@@ -23,19 +23,28 @@ package org.exoplatform.wiki.service;
  * Jan 4, 2011  
  */
 public class PermissionEntry {
-
   private String id;
+  
+  private String fullName;
 
   private IDType idType;
 
   private Permission[] permissions;
-
+  
   public String getId() {
     return id;
   }
 
   public void setId(String id) {
     this.id = id;
+  }
+  
+  public String getFullName() {
+    return fullName;
+  }
+  
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
   }
 
   public IDType getIdType() {
@@ -53,5 +62,4 @@ public class PermissionEntry {
   public void setPermissions(Permission[] permissions) {
     this.permissions = permissions;
   }
-
 }

@@ -65,11 +65,11 @@ import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.listener.PageWikiListener;
-import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.service.search.TemplateSearchData;
 import org.exoplatform.wiki.service.search.TemplateSearchResult;
 import org.exoplatform.wiki.service.search.TitleSearchResult;
+import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.utils.Utils;
 import org.picocontainer.Startable;
 import org.xwiki.rendering.syntax.Syntax;
@@ -365,11 +365,11 @@ public class WikiServiceImpl implements WikiService, Startable {
       String id = perm.substring(perm.indexOf(":") + 1);
 
       PermissionEntry entry = new PermissionEntry();
-      if (IDType.USER.equals(idType)) {
+      if (IDType.USER.toString().equals(idType)) {
         entry.setIdType(IDType.USER);
-      } else if (IDType.GROUP.equals(idType)) {
+      } else if (IDType.GROUP.toString().equals(idType)) {
         entry.setIdType(IDType.GROUP);
-      } else if (IDType.MEMBERSHIP.equals(idType)) {
+      } else if (IDType.MEMBERSHIP.toString().equals(idType)) {
         entry.setIdType(IDType.MEMBERSHIP);
       }
       entry.setId(id);
@@ -420,6 +420,7 @@ public class WikiServiceImpl implements WikiService, Startable {
           if (i < pers.length - 1) {
             actions.append(",");
           }
+          
           if (perm.getPermissionType().equals(PermissionType.VIEWPAGE)) {
             permlist.add(org.exoplatform.services.jcr.access.PermissionType.READ);
           } else if (perm.getPermissionType().equals(PermissionType.EDITPAGE)) {

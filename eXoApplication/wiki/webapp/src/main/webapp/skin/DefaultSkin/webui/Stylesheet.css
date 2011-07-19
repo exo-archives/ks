@@ -241,6 +241,10 @@ span.Excerpt p {
 	padding: 10px 0 10px 0;
 }
 
+table.UIFormGrid div.Id {
+  margin-left: 5px;
+}
+
 .UIWikiPermissionOwner table.UIFormGrid {
 	margin-bottom: 0px;
 }

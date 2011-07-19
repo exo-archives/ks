@@ -4,11 +4,15 @@
   
   PermissionEntry permissionEntry = uicomponent.getPermissionEntry();
   String id = permissionEntry.getId();
+  String fullName = uicomponent.getEntryFullName();
   Permission[] permissions = permissionEntry.getPermissions();
   def uiPermissionForm = uicomponent.getParent().getParent();
   def deleteLink = uiPermissionForm.event(uiPermissionForm.DELETE_ENTRY, id);
 %>
-<td><div title="managers in Administrators" class="Text"><%= id %></div><div title="manager:/platform/administrators" class="Text"><%= id %></div></td>
+<td>
+  <div title="$fullName">$fullName</div>
+  <div title="$id" class="Id">($id)</div>
+</td>
 <%
   for(permission in permissions){
     checkboxField = uicomponent.getChildById(permission.getPermissionType().toString() + id) ;
