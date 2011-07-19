@@ -4,6 +4,11 @@
   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
   <component>
+    <key>org.exoplatform.services.jdbc.DataSourceProvider</key>
+    <type>org.exoplatform.services.jdbc.impl.DataSourceProviderImpl</type>
+  </component>
+
+  <component>
       <type>org.exoplatform.services.rest.impl.RequestHandlerImpl</type>
    </component>
    <component>
