@@ -77,6 +77,10 @@ div, table, tr, td, img, form {
 	width: 44px;
 }
 
+.UIWorkingWorkspace .UIToolbarContainer .UIStarToolBarPortlet .UITab {
+	background: none;
+}
+
 .UIToolbarContainer .UserInfoPortletTDContainer {
 	margin-right: 55px;
 }
@@ -86,11 +90,6 @@ div, table, tr, td, img, form {
 	background: #eeeeee;
 	width: 100%;
 }
-
-.UIToolbarContainer .UIStarToolBarPortlet .UIHorizontalTabs .UITab{
-	background: none;
-}
-
 
 .UIToolbarContainer .ToolbarContainer a{
 	background: none;
