@@ -478,9 +478,20 @@ span.Excerpt p {
 	margin-top: 8px;
 }
 
-.UIWikiPageVersionsList .HistoryLabel {
+.UIWikiPageVersionsList {
+  padding-bottom: 30px;
+}
+
+.UIWikiHistorySpaceArea .UIWikiPageVersionsList .HistoryLabel {
 	font-size: 24px;
 	font-weight: bold;
+}
+
+.UIWikiBottomArea .UIWikiPageVersionsList .HistoryLabel {
+  color: #636363;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 4px 0;
 }
 
 .UIWikiPageContentArea .Tit {
@@ -1474,7 +1485,7 @@ span.Excerpt p {
 }
 
 .UIWikiPageVersionsList .UIFormGrid {
-	margin-top: 18px;
+	margin-top: 1px;
 }
 
 .UIWikiAdvanceSearchForm .Button {

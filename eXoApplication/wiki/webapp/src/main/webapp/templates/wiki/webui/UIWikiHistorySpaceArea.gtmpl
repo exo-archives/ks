@@ -1,9 +1,7 @@
 <div id="$uicomponent.id" class="UIWikiHistorySpaceArea">
 <%
- if(uicomponent.isShowVersion()) {
+ if(!uicomponent.isShowVersion()) {
 %>
-  <h1 class="HistoryLabel"><%= _ctx.appRes("UIWikiPageVersionsList.label.HistoryLabel"); %></h1>
-<%} else { %>
   <h1 class="HistoryLabel"><%= _ctx.appRes("UIWikiPageVersionsList.label.CompareLabel"); %></h1>
 <%
   }
