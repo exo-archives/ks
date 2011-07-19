@@ -38,17 +38,14 @@ import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
-import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.api.WikiNodeType.Definition;
+import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.mow.core.api.ModelImpl;
 import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
-import org.exoplatform.wiki.mow.core.api.wiki.GroupWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
-import org.exoplatform.wiki.mow.core.api.wiki.PortalWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.SimplePageImpl;
-import org.exoplatform.wiki.mow.core.api.wiki.UserWiki;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiContainer;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
 import org.exoplatform.wiki.rendering.RenderingService;
@@ -519,8 +516,11 @@ public class Utils {
   }
 
   public static Page makeSimplePage(Node pageNode) throws ValueFormatException, PathNotFoundException, RepositoryException {
-    String title = pageNode.getProperty(Definition.TITLE).getString();
     String name = pageNode.getProperty("exo:name").getString();
+    String title = name;
+    if (pageNode.hasProperty(Definition.TITLE)) {
+      title = pageNode.getProperty(Definition.TITLE).getString();
+    }
     String owner = pageNode.getProperty(Definition.OWNER).getString();
     SimplePageImpl page = new SimplePageImpl(name, title, owner);
     if (pageNode.hasProperty(Definition.CREATED_DATE)) 
