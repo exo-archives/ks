@@ -28,7 +28,7 @@ public interface UISelectComponent {
   final public static String TYPE_USER = "0".intern() ;
   final public static String TYPE_MEMBERSHIP = "1".intern() ;
   final public static String TYPE_GROUP = "2".intern() ;
-  final public static String TREE_GROUP_ID = "KSBreadcumbGroupSelector";
-  final public static String BREADCUMB_GROUP_ID = "UIKSTreeGroupSelector";
+  final public static String TREE_GROUP_ID = "UITreeGroupSelector";
+  final public static String BREADCUMB_GROUP_ID = "BreadcumbGroupSelector";
   public void setComponent(UIComponent uicomponent, String[] initParams) ;
 }

@@ -348,7 +348,6 @@ All those accounts have the default password "gtn".
     * [KS-3439] - RepositoryException when selecting a page in the search box
     * [KS-3443] - [Answer] Display message when edit category
     * [KS-3455] - [wiki] Advanced search does not work 
-    * [KS-3534] - [Forum] Don't expand and show sub-groups when select role/group in Permission tab
 
 ** Feedback
     * [KS-2571] - Make sure all wiki formats have style
@@ -405,6 +404,9 @@ All those accounts have the default password "gtn".
     * [KS-3396] - [wiki] Move the Delete action into the "More" menu
     * [KS-3431] - Navigation API - new GateIn Implementation
 
+
+
+
 ** New Feature
     * [KS-515] - Email Address Picker
     * [KS-1673] - Hilight post with URL
@@ -422,7 +424,6 @@ All those accounts have the default password "gtn".
     * [KS-2965] - [wiki] Page Templates
     * [KS-2967] - [wiki] Social Integration
     * [KS-3055] - [wiki] Wiki Permissions
-
 
 - Version 2.2.0-Beta02
 
