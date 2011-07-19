@@ -187,7 +187,7 @@
       <init-params>
         <properties-param>
           <name>namespaces</name>
-          <property name="wiki" value="http://purl.org/wiki/elements/1.1/"/>
+          <property name="wiki" value="http://exoplatform.org/wiki/1.0/"/>
         </properties-param>
       </init-params>
     </component-plugin>
