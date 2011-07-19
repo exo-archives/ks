@@ -78,8 +78,6 @@ UIUpload.prototype.createUploadEntry = function(uploadId, isAutoUpload) {
   idoc.open();
   idoc.write(uploadHTML);
   idoc.close(); 
-  
-  this.stylingUploadEntry(uploadId);
 };
 
 UIUpload.prototype.createUploadEntryForFF = function(idoc, uploadId, isAutoUpload){
@@ -109,67 +107,35 @@ UIUpload.prototype.createUploadEntryForFF = function(idoc, uploadId, isAutoUploa
   idoc.head.appendChild(style);
   
   idoc.body.innerHTML= this.getUploadContent(uploadId, uploadAction, isAutoUpload);
-  this.stylingUploadEntry(uploadId);
 }
 
-UIUpload.prototype.getUploadContent = function(uploadId, uploadAction, isAutoUpload){
+UIUpload.prototype.getUploadContent = function(uploadId, uploadAction, isAutoUpload) {
+  var container = parent.document.getElementById(uploadId);
+  var uploadIframe = eXo.core.DOMUtil.findDescendantById(container, uploadId + "UploadIframe");
+  var uploadText = uploadIframe.title;
+  
   var uploadHTML = "";  
   uploadHTML += "  <form id='"+uploadId+"' class='UIUploadForm' style='margin: 0px; padding: 0px' action='"+uploadAction+"' enctype='multipart/form-data' method='post'>";
-  if(isAutoUpload){
-    uploadHTML += "    <input type='file' name='file' id='file' value='' onchange='eXo.wiki.UIUpload.upload(this, "+uploadId+")' onkeypress='return false;' />";
-  }else{
-    uploadHTML += "    <input type='file' name='file' id='file' value='' onkeypress='return false;' />";
-    uploadHTML += "    <img class='UploadButton' onclick='eXo.wiki.UIUpload.upload(this, "+uploadId+")' alt='' src='/eXoResources/skin/sharedImages/Blank.gif'/>";   
-  }
+  uploadHTML += "    <div class='BrowseDiv'>";
+  uploadHTML += "      <a class='BrowseLink'>";
+  uploadHTML += "        <input type='file' name='file' size='1' id='file' class='FileHidden' value='' onchange='eXo.wiki.UIUpload.upload(this, " + uploadId + ")'/>";
+  uploadHTML += "      " + uploadText + "</a>";
+  uploadHTML += "    </div>";
   uploadHTML += "  </form>";
   return uploadHTML;
 }
 
 UIUpload.prototype.getStyleSheetContent = function(){
   var styleText = "";
-  styleText += ".UploadButton {width: 20px; height: 25px; cursor: pointer; vertical-align: bottom;";
-  styleText += " background: url('/wiki/skin/DefaultSkin/webui/background/UploadBtn.gif') no-repeat 3px 0; } ";
   styleText += ".UIUploadForm {position: relative; } ";
-  styleText += ".FileHidden {position: relative; width: 250px; text-align: right; -moz-opacity:0 ; filter:alpha(opacity: 0); opacity: 0; z-index: 2; } ";
-  styleText += ".StylingFileUpload {position: absolute; width: 250px; top: 0px; left: 0px; z-index: 1; } ";
-  styleText += ".FileName {width: 160px; background: #F8F8F8; border: 1px solid #DCDCDC; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; color: #B7B7B7; padding: 3px 0 3px 6px; } ";
-  styleText += ".BrowseButton {float: right; width: 66px; text-align: center; font-size: 12px; color: #464646; background: url('/wiki/skin/DefaultSkin/webui/background/Button.gif') repeat-x  left top; border: 1px solid #ACACAC; border-radius: 12px 12px 12px 12px; padding: 4px 5px; }";
-  styleText += ".ClearRight {clear: right; }";
+  styleText += ".FileHidden { cursor: pointer; opacity: 0; overflow: hidden; position: absolute; height: 15px; top: 0px; left: 0px; width: 100%; -moz-opacity:0 ; filter:alpha(opacity: 0); z-index: 1;} ";
+  styleText += ".BrowseDiv {padding: 10px 0px 10px 0px;} ";
+  styleText += ".BrowseLink { cursor: pointer; position: relative; font-family: Arial, Helvetica, sans-serif; text-align: left; font-size: 12px; color: #165FB3; ";
+  styleText += "     text-decoration: none; padding: 0px 0px 0px 20px;";
+  styleText += "     background: url('/wiki/skin/DefaultSkin/webui/UIWikiSearchBox/icons/16x16/AttachFileIcon.gif') no-repeat left top;)}";
+  styleText += ".UIUploadForm a:hover {cursor: pointer; text-decoration: underline;}";
   return styleText;
 }
-
-UIUpload.prototype.stylingUploadEntry = function(uploadId){
-  var DOMUtil = eXo.core.DOMUtil;
-  var container = document.getElementById(uploadId);
-  var uploadFrame = document.getElementById(uploadId+"uploadFrame");
-  var form = uploadFrame.contentWindow.document.getElementById(uploadId);
-  var file  = DOMUtil.findDescendantById(form, "file");
-     
-  var fdocument = uploadFrame.contentWindow.document;
-  var stylingFileUpload = fdocument.createElement('div');
-  stylingFileUpload.className = 'StylingFileUpload';
-  //
-  var browseButton = fdocument.createElement('div');
-  browseButton.className = 'BrowseButton';
-  browseButton.innerHTML = 'Upload';
-  stylingFileUpload.appendChild(browseButton);
-  //
-  var fileName = fdocument.createElement('input');
-  fileName.className = 'FileName';
-  stylingFileUpload.appendChild(fileName);
-  //
-  var clearRight = fdocument.createElement('div');
-  clearRight.className = 'ClearRight';
-  stylingFileUpload.appendChild(clearRight);
-  
-  file.className = 'FileHidden';
-  var clone = stylingFileUpload.cloneNode(true);
-  file.parentNode.appendChild(clone);
-  file.relatedElement = clone.getElementsByTagName('input')[0];
-  file.onmouseout = function () {
-    this.relatedElement.value = this.value;
-  }
-};
 
 /**
  * Refresh progress bar to update state of upload progress
