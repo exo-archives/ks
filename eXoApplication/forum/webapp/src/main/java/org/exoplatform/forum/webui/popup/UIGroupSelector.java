@@ -20,24 +20,30 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.commons.utils.ListAccess;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.UISelectComponent;
 import org.exoplatform.ks.common.webui.UISelector;
 import org.exoplatform.services.organization.Group;
+import org.exoplatform.services.organization.GroupHandler;
+import org.exoplatform.services.organization.MembershipType;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIBreadcumbs;
 import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.UITree;
+import org.exoplatform.webui.core.UIBreadcumbs.LocalPath;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.organization.UIGroupMembershipSelector;
+import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SARL
@@ -56,28 +62,58 @@ import org.exoplatform.webui.organization.UIGroupMembershipSelector;
       }  
   ),
   @ComponentConfig(
-      type = UITree.class, id = "UITreeGroupSelector",
+      type = UITree.class, id = "UIKSTreeGroupSelector",
       template = "system:/groovy/webui/core/UITree.gtmpl",
       events = @EventConfig(listeners = UITree.ChangeNodeActionListener.class)
   ),
   @ComponentConfig(
-      type = UIBreadcumbs.class, id = "BreadcumbGroupSelector",
+      type = UIBreadcumbs.class, id = "KSBreadcumbGroupSelector",
       template = "system:/groovy/webui/core/UIBreadcumbs.gtmpl",
       events = @EventConfig(listeners = UIBreadcumbs.SelectPathActionListener.class)
   )
 })
-public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopupComponent, UISelectComponent {
+@SuppressWarnings("unchecked")
+public class UIGroupSelector extends UIContainer implements UIPopupComponent, UISelectComponent {
 
   private UIComponent uiComponent;
 
   private String      type_           = null;
 
-  @SuppressWarnings("unchecked")
   private List        selectedGroup_;
 
   private String      returnFieldName = null;
 
+  private Group        selectGroup_;
+
+  private List<String> listMemberhip;
+
   public UIGroupSelector() throws Exception {
+    UIBreadcumbs uiBreadcumbs = addChild(UIBreadcumbs.class, "KSBreadcumbGroupSelector", "KSBreadcumbGroupSelector");
+    UITree tree = addChild(UITree.class, "UIKSTreeGroupSelector", "KSTreeGroupSelector");
+    tree.setIcon("GroupAdminIcon");
+    tree.setSelectedIcon("PortalIcon");
+    tree.setBeanIdField("id");
+    tree.setBeanLabelField("label");
+    uiBreadcumbs.setBreadcumbsStyle("UIExplorerHistoryPath");
+  }
+  
+  public void processRender(WebuiRequestContext context) throws Exception {
+    UITree tree = getChild(UITree.class);
+    if (tree != null && tree.getSibbling() == null) {
+      Collection<?> sibblingsGroup = UserHelper.getOrganizationService().getGroupHandler().findGroups(null);
+      tree.setSibbling((List) sibblingsGroup);
+    }
+
+    Collection<?> collection = UserHelper.getOrganizationService().getMembershipTypeHandler().findMembershipTypes();
+    listMemberhip = new ArrayList<String>(5);
+    for (Object obj : collection) {
+      listMemberhip.add(((MembershipType) obj).getName());
+    }
+    if (!listMemberhip.contains("*")) {
+      listMemberhip.add("*");
+    }
+
+    super.processRender(context);
   }
 
   public UIComponent getReturnComponent() {
@@ -102,13 +138,8 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
     }
   }
 
-  @SuppressWarnings( { "unchecked", "cast" })
   public List getChildGroup() throws Exception {
-    List children = new ArrayList();
-    OrganizationService service = getApplicationComponent(OrganizationService.class);
-    for (Object child : service.getGroupHandler().findGroups(this.getCurrentGroup())) {
-      children.add((Group) child);
-    }
+    List children = UserHelper.findGroups(getCurrentGroup());
     return children;
   }
 
@@ -124,29 +155,24 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
     return TYPE_MEMBERSHIP.equals(type_);
   }
 
-  @SuppressWarnings( { "unchecked", "cast" })
+  public Group getCurrentGroup() {
+    return selectGroup_;
+  }
+  
   public List<String> getList() throws Exception {
     List<String> children = new ArrayList<String>();
-    OrganizationService service = getApplicationComponent(OrganizationService.class);
     if (TYPE_USER.equals(type_)) {
-      PageList<User> userPageList = service.getUserHandler().findUsersByGroup(this.getCurrentGroup().getId());
-      List<User> userList = new ArrayList<User>();
-      for (int i = 1; i <= userPageList.getAvailablePage(); i++) {
-        userList.clear();
-        userList.addAll(userPageList.getPage(i));
-        for (User user : userList) {
-          children.add(user.getUserName());
-        }
+      ListAccess<User> userPageList = UserHelper.getOrganizationService().getUserHandler().findUsersByGroupId(this.getCurrentGroup().getId());
+      User[] user = userPageList.load(0, userPageList.getSize()-1);
+      for (int i = 1; i <= userPageList.getSize(); i++) {
+        children.add(user[i].getUserName()); 
       }
-      /*
-       * for(Object child : userPageList.getAll()){ String userName = ((User)child).getUserName() ; children.add(userName) ; }
-       */
     } else if (TYPE_MEMBERSHIP.equals(type_)) {
       for (String child : getListMemberhip()) {
         children.add(child);
       }
     } else if (TYPE_GROUP.equals(type_)) {
-      Collection groups = service.getGroupHandler().findGroups(this.getCurrentGroup());
+      Collection groups = UserHelper.findGroups(getCurrentGroup());
       for (Object child : groups) {
         children.add(((Group) child).getGroupName());
       }
@@ -154,7 +180,6 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
     return children;
   }
 
-  @SuppressWarnings("unchecked")
   public void setSelectedGroups(List groups) {
     if (groups != null) {
       selectedGroup_ = groups;
@@ -163,20 +188,50 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
   }
 
   public void changeGroup(String groupId) throws Exception {
-    super.changeGroup(groupId);
+    GroupHandler groupHandler = UserHelper.getOrganizationService().getGroupHandler();
+    UIBreadcumbs uiBreadcumb = getChild(UIBreadcumbs.class);
+    uiBreadcumb.setPath(getPath(null, groupId));
+
+    UITree tree = getChild(UITree.class);
+    Collection<?> sibblingGroup;
+
+    if (groupId == null) {
+      sibblingGroup = groupHandler.findGroups(null);
+      tree.setSibbling((List) sibblingGroup);
+      tree.setChildren(null);
+      tree.setSelected(null);
+      selectGroup_ = null;
+      return;
+    }
+
+    selectGroup_ = groupHandler.findGroupById(groupId);
+    String parentGroupId = null;
+    if (selectGroup_ != null) {
+      parentGroupId = selectGroup_.getParentId();
+    }
+    Group parentGroup = null;
+    if (parentGroupId != null) {
+      parentGroup = groupHandler.findGroupById(parentGroupId);
+    }
+
+    Collection childrenGroup = groupHandler.findGroups(selectGroup_);
+    sibblingGroup = groupHandler.findGroups(parentGroup);
+
+    tree.setSibbling((List) sibblingGroup);
+    tree.setChildren((List) childrenGroup);
+    tree.setSelected(selectGroup_);
+    tree.setParentSelected(parentGroup);
+
     if (selectedGroup_ != null) {
-      UITree tree = getChild(UITree.class);
       tree.setSibbling(selectedGroup_);
       tree.setChildren(null);
     }
   }
 
   public void activate() throws Exception {
-
   }
 
   public void deActivate() throws Exception {
-
   }
 
   public void setType(String type) {
@@ -185,6 +240,34 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
 
   public String getType() {
     return type_;
+  }
+  
+  private List<LocalPath> getPath(List<LocalPath> list, String id) throws Exception {
+    if (list == null) {
+      list = new ArrayList<LocalPath>(5);
+    }
+    if (id == null) {
+      return list;
+    }
+    Group group = UserHelper.getOrganizationService().getGroupHandler().findGroupById(id);
+    if (group == null) {
+      return list;
+    }
+    list.add(0, new LocalPath(group.getId(), group.getGroupName()));
+    getPath(list, group.getParentId());
+    return list;
+  }
+
+  public List<String> getListMemberhip() {
+    return listMemberhip;
+  }
+
+  public String event(String name, String beanId) throws Exception {
+    UIForm uiForm = getAncestorOfType(UIForm.class);
+    if (uiForm != null) {
+      return uiForm.event(name, getId(), beanId);
+    }
+    return super.event(name, beanId);
   }
 
   static public class SelectMembershipActionListener extends EventListener<UIGroupSelector> {
