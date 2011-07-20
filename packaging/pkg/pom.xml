@@ -337,6 +337,11 @@
       <version>${javax.ws.rs.jsr311-api.version}</version>
     </dependency>
     <dependency>
+      <groupId>javax.resource</groupId>
+      <artifactId>connector-api</artifactId>
+      <version>${javax.resource.connector-api.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
       <version>${org.slf4j.version}</version>
