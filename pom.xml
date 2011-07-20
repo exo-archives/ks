@@ -60,6 +60,7 @@
     <javax.xml.stream.stax-api.version>1.0</javax.xml.stream.stax-api.version>
     <javax.ws.rs.jsr311-api.version>1.0</javax.ws.rs.jsr311-api.version>
     <javax.jcr.api.version>1.0</javax.jcr.api.version>
+    <javax.resource.connector-api.version>1.5</javax.resource.connector-api.version>
     <org.jibx.jibx-run.version>1.2.1</org.jibx.jibx-run.version>
     <javax.activation.activation.version>1.1</javax.activation.activation.version>
     <org.slf4j.version>1.5.8</org.slf4j.version>
