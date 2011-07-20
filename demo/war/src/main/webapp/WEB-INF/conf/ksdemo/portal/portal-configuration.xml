@@ -32,6 +32,9 @@
 						<field name="templateLocation">
 							<string>war:/conf/ksdemo/portal</string>
 						</field>
+						<field name="importMode">
+							<string>merge</string>
+						</field>
 					</object>
 				</object-param>
         
