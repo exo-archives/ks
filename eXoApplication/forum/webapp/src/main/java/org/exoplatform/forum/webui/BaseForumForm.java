@@ -43,7 +43,7 @@ public class BaseForumForm extends BaseUIForm {
 
   private ForumService forumService;
 
-  public UserProfile   userProfile = new UserProfile();
+  public UserProfile   userProfile = null;
 
   public List<Watch>   listWatches = new ArrayList<Watch>();
 
