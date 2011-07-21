@@ -52,6 +52,7 @@ import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.mow.api.Page;
@@ -251,6 +252,7 @@ public class Utils {
  
   public static WikiContext createWikiContext(UIWikiPortlet wikiPortlet) throws Exception {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
+    UIFormSelectBox syntaxBox = wikiPortlet.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
     UIPortal uiPortal = Util.getUIPortal();
     String requestURL = portalRequestContext.getRequest().getRequestURL().toString();
     String portalURI = portalRequestContext.getPortalURI();
@@ -269,6 +271,7 @@ public class Utils {
     WikiPageParams params = Utils.getCurrentWikiPageParams();
     wikiContext.setType(params.getType());
     wikiContext.setOwner(params.getOwner());
+    wikiContext.setSyntax(syntaxBox.getValue());
     if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
       String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
       wikiContext.setPageId(sessionId);

@@ -136,6 +136,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
                                      @FormParam("html") String data) {
     EnvironmentContext env = EnvironmentContext.getCurrent();
     WikiContext wikiContext = new WikiContext();
+    String currentSyntax = Syntax.XWIKI_2_0.toIdString();
     HttpServletRequest request = (HttpServletRequest) env.get(HttpServletRequest.class);
     try {
       if (data == null) {
@@ -145,6 +146,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       }
       if (wikiContextKey != null && wikiContextKey.length() > 0) {
         wikiContext = (WikiContext) request.getSession().getAttribute(wikiContextKey);
+        currentSyntax = wikiContext.getSyntax();
       }
       Execution ec = ((RenderingServiceImpl) renderingService).getExecution();
       if (ec.getContext() == null) {
@@ -158,12 +160,13 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
       byte[] b = new byte[is.available()];
       is.read(b);
       is.close();
+     
       data = renderingService.render(data,
                                      Syntax.XHTML_1_0.toIdString(),
-                                     Syntax.XWIKI_2_0.toIdString(),
+                                     currentSyntax,
                                      false);
       data = renderingService.render(data,
-                                     Syntax.XWIKI_2_0.toIdString(),
+                                     currentSyntax,
                                      Syntax.ANNOTATED_XHTML_1_0.toIdString(),
                                      false);
       data = new String(b).replace("$content", data);

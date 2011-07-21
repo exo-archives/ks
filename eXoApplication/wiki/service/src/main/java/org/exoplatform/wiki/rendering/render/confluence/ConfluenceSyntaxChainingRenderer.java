@@ -272,6 +272,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
       print("{{");
       break;
     }
+
   }
 
   /**
@@ -305,6 +306,18 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
       print("}}");
       break;
     }
+
+    StringBuffer parametersStr = new StringBuffer();
+    for (Map.Entry<String, String> entry : parameters.entrySet()) {
+      String value = entry.getValue();
+      String key = entry.getKey();
+
+      if (key != null && value != null) {
+        if ("style".equals(key))
+          parametersStr.append("{span}");
+      }
+    }
+    print(parametersStr.toString());
     if (!parameters.isEmpty()) {
       this.previousFormatParameters = parameters;
     }
@@ -329,7 +342,17 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
   @Override
   public void endParagraph(Map<String, String> parameters) {
     this.previousFormatParameters = null;
+    StringBuffer parametersStr = new StringBuffer();
+    for (Map.Entry<String, String> entry : parameters.entrySet()) {
+      String value = entry.getValue();
+      String key = entry.getKey();
 
+      if (key != null && value != null) {
+        if ("style".equals(key))
+          parametersStr.append("{div}");
+      }
+    }
+    print(parametersStr.toString());
     // Ensure that any not printed characters are flushed.
     // TODO: Fix this better by introducing a state listener to handle escapes
     getConfluencePrinter().flush();
@@ -800,25 +823,17 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
       String key = entry.getKey();
 
       if (key != null && value != null) {
-        // Escape quotes in value to not break parameter value syntax
-        value = value.replaceAll("[~\"]", "~$0");
-        // Escape ending custom parameters syntax
-        value = value.replace("%)", "~%)");
-        parametersStr.append(' ').append(key).append('=').append('\"').append(value).append('\"');
+        if ("style".equals(key))
+          if (!newLine) {
+            parametersStr.append("{span:").append("style=\"").append(value).append("\"}");
+          }
+          else {
+            parametersStr.append("{div:").append("style=\"").append(value).append("\"}");
+          }
       }
     }
+    print(parametersStr.toString());
 
-    if (parametersStr.length() > 0) {
-      StringBuffer buffer = new StringBuffer("(%");
-      buffer.append(parametersStr);
-      buffer.append(" %)");
-
-      if (newLine) {
-        buffer.append("\n");
-      }
-
-      print(buffer.toString());
-    }
   }
 
   private void printDelayed(String text) {
@@ -831,8 +846,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
 
   private void print(String text, boolean isDelayed) {
     // Handle empty formatting parameters.
-    if (this.previousFormatParameters != null) {
-      getPrinter().print("(%%)");
+    if (this.previousFormatParameters != null) {      
       this.previousFormatParameters = null;
     }
 

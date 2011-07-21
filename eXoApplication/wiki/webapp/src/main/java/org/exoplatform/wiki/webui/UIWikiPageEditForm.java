@@ -31,10 +31,14 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.Preferences;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
+import org.exoplatform.wiki.rendering.RenderingService;
+import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
+import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.control.UIPageToolBar;
 import org.exoplatform.wiki.webui.core.UISyntaxSelectBoxFactory;
 import org.exoplatform.wiki.webui.core.UIWikiForm;
+import org.xwiki.context.Execution;
 
 /**
  * Created by The eXo Platform SAS
@@ -129,6 +133,13 @@ public class UIWikiPageEditForm extends UIWikiForm {
   public static class SelectSyntaxActionListener extends EventListener<UIWikiPageEditForm> {
     @Override
     public void execute(Event<UIWikiPageEditForm> event) throws Exception {
+      UIFormSelectBox selectBox = event.getSource().getChildById(FIELD_SYNTAX);
+      RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
+      Execution ec = ((RenderingServiceImpl) renderingService).getExecution();
+      if (ec.getContext() != null) {
+        WikiContext wikiContext = (WikiContext) ec.getContext().getProperty(WikiContext.WIKICONTEXT);
+        wikiContext.setSyntax(selectBox.getValue());
+      }
       event.getRequestContext().addUIComponentToUpdateByAjax(event.getSource());
     }
   }
