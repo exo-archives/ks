@@ -36,7 +36,7 @@ import org.exoplatform.wiki.webui.control.filter.AdminSpacePermissionFilter;
   lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/control/BrowseExtensionContainer.gtmpl"
 )
-public class BrowseExtensionContainer extends UIExtensionContainer {
+public class BrowseExtensionContainer extends UIWikiExtensionContainer {
   
   public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.control.BrowseExtensionContainer";
   

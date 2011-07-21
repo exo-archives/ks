@@ -25,13 +25,13 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
-import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.ext.UIExtension;
 import org.exoplatform.webui.ext.UIExtensionManager;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.core.UIExtensionContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -46,7 +46,7 @@ import org.exoplatform.wiki.webui.UIWikiPortlet;
     @EventConfig(listeners = UIWikiSettingContainer.ActiveItemActionListener.class)   
   }
 )
-public class UIWikiSettingContainer extends UIContainer implements UIPopupComponent {
+public class UIWikiSettingContainer extends UIExtensionContainer implements UIPopupComponent {
   
   private String             activeItem;
 
@@ -60,22 +60,23 @@ public class UIWikiSettingContainer extends UIContainer implements UIPopupCompon
   }
 
   @Override
-  public void processRender(WebuiRequestContext context) throws Exception {
-
-    UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
+  public void processRender(WebuiRequestContext context) throws Exception {   
     Map<String, Object> extContext = new HashMap<String, Object>();
     UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
     extContext.put(UIWikiPortlet.class.getName(), wikiPortlet);
-    List<UIExtension> extensions = manager.getUIExtensions(EXTENSION_TYPE);
-    if (!items.isEmpty()) {
-      items.clear();
-    }
-    if (extensions != null) {
-      for (int i = 0; i < extensions.size(); i++) {
-        UIComponent component = manager.addUIExtension(extensions.get(i), extContext, this);
-        items.add(component.getId());
-        if (activeItem == null && i == 0) {
-          activeItem = component.getId();
+    if (checkModificationContext(extContext)) {
+      UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
+      List<UIExtension> extensions = manager.getUIExtensions(EXTENSION_TYPE);
+      if (!items.isEmpty()) {
+        items.clear();
+      }
+      if (extensions != null) {
+        for (int i = 0; i < extensions.size(); i++) {
+          UIComponent component = manager.addUIExtension(extensions.get(i), extContext, this);
+          items.add(component.getId());
+          if (activeItem == null && i == 0) {
+            activeItem = component.getId();
+          }
         }
       }
     }

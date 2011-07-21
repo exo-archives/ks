@@ -39,7 +39,7 @@ import org.exoplatform.wiki.webui.UIWikiBreadCrumb;
 @ComponentConfig(
   template = "app:/templates/wiki/webui/control/UIRelatedPagesContainer.gtmpl"
 )
-public class UIRelatedPagesContainer extends UIExtensionContainer {
+public class UIRelatedPagesContainer extends UIWikiExtensionContainer {
   
   private static final Log log                     = ExoLogger.getLogger(UIRelatedPagesContainer.class);
   

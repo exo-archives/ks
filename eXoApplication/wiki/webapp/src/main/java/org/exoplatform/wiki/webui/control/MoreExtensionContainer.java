@@ -35,7 +35,7 @@ import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
   lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/control/MoreExtensionContainer.gtmpl"
 )
-public class MoreExtensionContainer extends UIExtensionContainer {
+public class MoreExtensionContainer extends UIWikiExtensionContainer {
   
   public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.control.MoreExtensionContainer";
   

@@ -28,7 +28,7 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 @ComponentConfig(
   lifecycle = UIContainerLifecycle.class  
 )
-public class UIWikiToolBar extends UIExtensionContainer {
+public class UIWikiToolBar extends UIWikiExtensionContainer {
   
   public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.control.UIWikiToolBar";
 
