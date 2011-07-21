@@ -119,14 +119,14 @@ public class PropertyReader {
     }
   }
 
-  private String[] valuesToArray(Value[] Val) throws Exception {
+  static public String[] valuesToArray(Value[] Val) throws Exception {
     if (Val.length < 1)
       return new String[] {};
     List<String> list = valuesToList(Val);
     return list.toArray(new String[list.size()]);
   }
 
-  private List<String> valuesToList(Value[] values) throws Exception {
+  static public List<String> valuesToList(Value[] values) throws Exception {
     List<String> list = new ArrayList<String>();
     if (values.length < 1)
       return list;

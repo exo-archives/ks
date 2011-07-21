@@ -540,15 +540,21 @@ public class FAQServiceImpl implements FAQService, Startable {
 
   public Node saveQuestion(Question question, boolean isAddNew, FAQSetting faqSetting) throws Exception {
     Node questionNode = jcrData_.saveQuestion(question, isAddNew, faqSetting);
-    for (QuestionLanguage lang : question.getMultiLanguages()) {
-      if (lang.getState().equals(QuestionLanguage.ADD_NEW) || lang.getState().equals(QuestionLanguage.EDIT)) {
-        MultiLanguages.addLanguage(questionNode, lang);
-      } else if (lang.getState().equals(QuestionLanguage.DELETE)) {
-        MultiLanguages.removeLanguage(questionNode, lang);
+    SessionProvider provider = SessionProvider.createSystemProvider();
+    try {
+      questionNode = (Node)locator.getSessionManager().getSession(provider).getItem(questionNode.getPath());
+      for (QuestionLanguage lang : question.getMultiLanguages()) {
+        if (lang.getState().equals(QuestionLanguage.ADD_NEW) || lang.getState().equals(QuestionLanguage.EDIT)) {
+          MultiLanguages.addLanguage(questionNode, lang);
+        } else if (lang.getState().equals(QuestionLanguage.DELETE)) {
+          MultiLanguages.removeLanguage(questionNode, lang);
+        }
       }
-    }
-    for (AnswerEventListener ae : listeners_) {
-      ae.saveQuestion(question, isAddNew);
+      for (AnswerEventListener ae : listeners_) {
+        ae.saveQuestion(question, isAddNew);
+      }
+    } finally {
+      provider.close();
     }
     return questionNode;
   }

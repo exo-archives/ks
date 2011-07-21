@@ -17,14 +17,11 @@
 package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-
-import javax.jcr.Value;
 
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 
@@ -49,10 +46,6 @@ public class Utils {
 
   final public static String LANGUAGE_HOME        = "languages".intern();
 
-  final public static String EXO_FAQQUESTIONHOME  = "exo:faqQuestionHome".intern();
-
-  final public static String EXO_FAQCATEGORYHOME  = "exo:faqCategoryHome".intern();
-
   final public static String ALL                  = "All".intern();
 
   public static final String CATE_SPACE_ID_PREFIX = "CategorySpace".intern();
@@ -60,22 +53,6 @@ public class Utils {
   final public static String UI_FAQ_VIEWER        = "UIFAQViewer".intern();
 
   final public static String DELETED              = ":deleted".intern();
-
-  /**
-   *  This method convert string to string[] split with comma
-   * @param str
-   * @return string[] 
-   * @throws Exception
-   */
-  public static String[] splitForFAQ(String str) throws Exception {
-    if (str != null && str.length() > 0) {
-      if (str.contains(","))
-        return str.trim().split(",");
-      else
-        return str.trim().split(";");
-    } else
-      return new String[] {};
-  }
 
   /**
    * This method sort list category is date ascending
@@ -129,50 +106,6 @@ public class Utils {
     }
   }
 
-  /**
-   * Transforms a jcr Value array into a string array . 
-   * Calls {@link Value#getString()} on each item.
-   * @see javax.jcr.Value
-   * @param values array of values to transform
-   * @return string array for the Value array
-   * @throws Exception
-   */
-
-  public static String[] valuesToArray(Value[] Val) throws Exception {
-    if (Val.length < 1)
-      return new String[] {};
-    List<String> list = new ArrayList<String>();
-    String s;
-    for (int i = 0; i < Val.length; ++i) {
-      s = Val[i].getString();
-      if (s != null && s.trim().length() > 0)
-        list.add(s);
-    }
-    return list.toArray(new String[list.size()]);
-  }
-
-  /**
-   * Transforms a jcr Value array into a string list . 
-   * Calls {@link Value#getString()} on each item.
-   * @see javax.jcr.Value
-   * @param values array of values to transform
-   * @return string list for the Value array
-   * @throws Exception
-   */
-
-  public static List<String> valuesToList(Value[] values) throws Exception {
-    List<String> list = new ArrayList<String>();
-    if (values.length < 1)
-      return list;
-    String s;
-    for (int i = 0; i < values.length; ++i) {
-      s = values[i].getString();
-      if (s != null && s.trim().length() > 0)
-        list.add(s);
-    }
-    return list;
-  }
-
   static public boolean hasPermission(List<String> listPlugin, List<String> listOfUser) {
     List<String> tem = new ArrayList<String>();
     for (String str : listOfUser) {
@@ -185,12 +118,10 @@ public class Utils {
           return true;
       }
     }
-
     for (String s : listPlugin) {
       if (tem.contains(s))
         return true;
     }
-
     return false;
   }
 
@@ -200,34 +131,6 @@ public class Utils {
       String name2 = ((Watch) o2).getUser();
       return name1.compareToIgnoreCase(name2);
     }
-  }
-
-  static public String getStandardId(String s) {
-    int i = 0;
-    StringBuilder builder = new StringBuilder();
-    while (i < s.length()) {
-      int t = s.codePointAt(i);
-      if (t > 48 && t < 122) {
-        builder.append(s.charAt(i));
-      } else {
-        builder.append("id");
-      }
-      ++i;
-    }
-    return builder.toString();
-  }
-
-  static public String[] compareStr(String arr1[], String arr2[]) throws Exception {
-    List<String> list = new ArrayList<String>();
-    list.addAll(Arrays.asList(arr1));
-    if (list.isEmpty() || list.get(0).equals(" "))
-      return new String[] { " " };
-    for (int i = 0; i < arr2.length; i++) {
-      if (!list.contains(arr2[i])) {
-        list.add(arr2[i]);
-      }
-    }
-    return list.toArray(new String[] {});
   }
 
   public static long getTimeOfLastActivity(String info) {

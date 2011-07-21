@@ -59,6 +59,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserLoginLogEntry;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.management.annotations.ManagedBy;
@@ -948,7 +949,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     if (!onlineUserList_.contains(userId)) {
       onlineUserList_.add(userId);
     }
-    UserLoginLogEntry loginEntry = new UserLoginLogEntry(userId, onlineUserList_.size(), storage.getGreenwichMeanTime());
+    UserLoginLogEntry loginEntry = new UserLoginLogEntry(userId, onlineUserList_.size(), Utils.getGreenwichMeanTime());
     queue.add(loginEntry);
   }
 

@@ -172,8 +172,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       for (int i = 0; i < rulesPlugins_.size(); ++i) {
         List<String> list = new ArrayList<String>();
         list.addAll(rulesPlugins_.get(i).getRules(this.ADMIN_));
-        if (cateHomeNode.hasProperty("exo:moderators"))
-          list.addAll(Utils.valuesToList(cateHomeNode.getProperty("exo:moderators").getValues()));
+        list.addAll(new PropertyReader(cateHomeNode).list(EXO_MODERATORS, new ArrayList<String>()));
         if (list.contains(userName))
           return true;
         if (Utils.hasPermission(list, UserHelper.getAllGroupAndMembershipOfUser(userName)))
@@ -479,53 +478,14 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return false;
   }
 
-  /**
-   * @deprecated use {@link JCRDataStorage#sendNotifyWatcher(Question question, FAQSetting faqSetting, boolean isNew)}
-   */
-  @SuppressWarnings("unused")
-  @Deprecated
-  private void sendNotifyForQuestionWatcher(Question question, FAQSetting faqSetting) {
-    List<String> emailsList = new ArrayList<String>();
-    emailsList.add(question.getEmail());
-    try {
-      Node cate = getCategoryNodeById(question.getCategoryId());
-      if (cate.isNodeType("exo:faqWatching")) {
-        for (String email : org.exoplatform.ks.common.Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues())) {
-          emailsList.add(email);
-        }
-      }
-      if (question.getEmailsWatch() != null) {
-        for (String email : question.getEmailsWatch()) {
-          emailsList.add(email);
-        }
-      }
-      if (emailsList != null && emailsList.size() > 0) {
-        Message message = new Message();
-        message.setMimeType(MIMETYPE_TEXTHTML);
-        message.setFrom(question.getAuthor());
-        message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
-        String body = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getDetail()).replaceAll("&questionLink_", question.getLink());
-        if (question.getAnswers() != null && question.getAnswers().length > 0) {
-          body = body.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
-        } else {
-          body = body.replaceAll("&questionResponse_", "");
-        }
-        message.setBody(body);
-        sendEmailNotification(emailsList, message);
-      }
-    } catch (Exception e) {
-      log.error("Failed to send a notify for question watcher: ", e);
-    }
-  }
-
-  private void sendNotifyWatcher(Question question, FAQSetting faqSetting, boolean isNew) {
+  private void sendNotifyWatcher(SessionProvider sProvider, Question question, FAQSetting faqSetting, boolean isNew) {
     // Send notification when add new question in watching category
     List<String> emails = new ArrayList<String>();
     List<String> users = new ArrayList<String>();
     List<String> emailsList = new ArrayList<String>();
     emailsList.add(question.getEmail());
     try {
-      Node cate = getCategoryNodeById(question.getCategoryId());
+      Node cate = getCategoryNodeById(sProvider, question.getCategoryId());
       PropertyReader reader = new PropertyReader(cate);
       // watch in category parent
       emails.addAll(reader.list("exo:emailWatching", new ArrayList<String>()));
@@ -701,25 +661,16 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   private Answer getAnswerByNode(Node answerNode) throws Exception {
     Answer answer = new Answer();
     answer.setId(answerNode.getName());
-    if (answerNode.hasProperty("exo:responses"))
-      answer.setResponses((answerNode.getProperty("exo:responses").getValue().getString()));
-    if (answerNode.hasProperty("exo:responseBy"))
-      answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString()));
-
-    if (answerNode.hasProperty("exo:fullName"))
-      answer.setFullName((answerNode.getProperty("exo:fullName").getValue().getString()));
-    if (answerNode.hasProperty("exo:dateResponse"))
-      answer.setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime()));
-    if (answerNode.hasProperty("exo:usersVoteAnswer"))
-      answer.setUsersVoteAnswer(Utils.valuesToArray(answerNode.getProperty("exo:usersVoteAnswer").getValues()));
-    if (answerNode.hasProperty("exo:MarkVotes"))
-      answer.setMarkVotes(answerNode.getProperty("exo:MarkVotes").getValue().getLong());
-    if (answerNode.hasProperty("exo:approveResponses"))
-      answer.setApprovedAnswers(answerNode.getProperty("exo:approveResponses").getValue().getBoolean());
-    if (answerNode.hasProperty("exo:activateResponses"))
-      answer.setActivateAnswers(answerNode.getProperty("exo:activateResponses").getValue().getBoolean());
-    if (answerNode.hasProperty("exo:postId"))
-      answer.setPostId(answerNode.getProperty("exo:postId").getString());
+    PropertyReader reader = new PropertyReader(answerNode);
+    answer.setResponses(reader.string(EXO_RESPONSES, ""));
+    answer.setResponseBy(reader.string(EXO_RESPONSE_BY, ""));
+    answer.setFullName(reader.string(EXO_FULL_NAME, ""));
+    answer.setDateResponse((answerNode.getProperty(EXO_DATE_RESPONSE).getValue().getDate().getTime()));
+    answer.setUsersVoteAnswer(reader.strings(EXO_USERS_VOTE_ANSWER, new String[] {}));
+    answer.setMarkVotes(reader.l(EXO_MARK_VOTE, 0));
+    answer.setApprovedAnswers(reader.bool(EXO_APPROVE_RESPONSES, true));
+    answer.setActivateAnswers(reader.bool(EXO_ACTIVATE_RESPONSES, true));
+    answer.setPostId(reader.string(EXO_POST_ID, ""));
     String path = answerNode.getPath();
     answer.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
     return answer;
@@ -776,10 +727,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       if (!quesNode.isNodeType("mix:faqi18n")) {
         quesNode.addMixin("mix:faqi18n");
       }
-      // String lastActivityInfo = null;
-      // if (quesNode.hasProperty("exo:lastActivity"))
-      // lastActivityInfo = quesNode.getProperty("exo:lastActivity").getString();
-      // long timeOfLastActivity = Utils.getTimeOfLastActivity(lastActivityInfo);
       Node answerHome;
       String qId = quesNode.getName();
       String categoryId = quesNode.getProperty("exo:categoryId").getString();
@@ -802,16 +749,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           }
         }
         saveAnswer(answer, answerHome, qId, categoryId);
-        // if (answer.getApprovedAnswers() || answer.getActivateAnswers()) {
-        // long answerTime = answer.getDateResponse().getTime();
-        // if (answerTime > timeOfLastActivity) {
-        // timeOfLastActivity = answerTime;
-        // lastActivityInfo = answer.getResponseBy() + "-" + timeOfLastActivity;
-        // }
-        // }
       }
-      // if (lastActivityInfo != null)
-      // quesNode.setProperty("exo:lastActivity", lastActivityInfo);
       quesNode.save();
     } catch (Exception e) {
       log.error("Failed to save answer: ", e);
@@ -873,12 +811,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       if (!quesNode.isNodeType("mix:faqi18n")) {
         quesNode.addMixin("mix:faqi18n");
       }
-
-      // String lastActInfo = null;
-      // if (quesNode.hasProperty("exo:lastActivity"))
-      // lastActInfo = quesNode.getProperty("exo:lastActivity").getString();
-      // long timeOfLastAct = Utils.getTimeOfLastActivity(lastActInfo);
-
       Node commentHome = null;
       try {
         commentHome = quesNode.getNode(Utils.COMMENT_HOME);
@@ -904,14 +836,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       commentNode.setProperty("exo:categoryId", quesNode.getProperty("exo:categoryId").getString());
       commentNode.setProperty("exo:questionId", quesNode.getName());
       commentNode.setProperty("exo:commentLanguage", quesNode.getProperty("exo:language").getString());
-
-      // long commentTime = comment.getDateComment().getTime();
-      // if (commentTime > timeOfLastAct) {
-      // timeOfLastAct = commentTime;
-      // lastActInfo = comment.getCommentBy() + "-" + timeOfLastAct;
-      // quesNode.setProperty("exo:lastActivity", lastActInfo);
-      // }
-
       if (commentNode.isNew())
         quesNode.getSession().save();
       else
@@ -941,7 +865,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       if (isNew) {
         answerNode = answerHome.addNode(answer.getId(), "exo:answer");
         java.util.Calendar calendar = GregorianCalendar.getInstance();
-        // calendar.setTime(answer.getDateResponse());
         answerNode.setProperty("exo:dateResponses", calendar);
         answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers());
         answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers());
@@ -962,13 +885,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       sProvider.close();
     }
   }
-
-  /*
-   * public void saveCommentQuestionLang(String questionId, Comment comment, String language, boolean isNew) throws Exception{ SessionProvider sProvider = SessionProvider.createSystemProvider() ; try { Node quesNode = getFAQServiceHome(sProvider).getNode(questionId); Node commentHome = null; try{ commentHome = quesNode.getNode(Utils.COMMENT_HOME); } catch (PathNotFoundException e){ commentHome =
-   * quesNode.addNode(Utils.COMMENT_HOME, "exo:commentHome"); } Node commentNode; if(isNew){ commentNode = commentHome.addNode(comment.getId(), "exo:comment"); java.util.Calendar calendar = GregorianCalendar.getInstance(); //calendar.setTime(comment.getDateComment()); commentNode.setProperty("exo:dateComment", calendar); } else { commentNode = commentHome.getNode(comment.getId()); }
-   * commentNode.setProperty("exo:comments", comment.getComments()) ; commentNode.setProperty("exo:commentBy", comment.getCommentBy()) ; commentNode.setProperty("exo:fullName", comment.getFullName()); commentNode.setProperty("exo:categoryId", quesNode.getProperty("exo:categoryId").getString()); commentNode.setProperty("exo:questionId", quesNode.getName()); if(commentNode.isNew())
-   * quesNode.getSession().save(); else quesNode.save(); }catch (Exception e) { }finally { sProvider.close() ;} }
-   */
 
   /*
    * (non-Javadoc)
@@ -1139,7 +1055,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     question.setId(questionNode.getName());
     String catePath = questionNode.getParent().getParent().getPath();
     question.setCategoryId(catePath.substring(catePath.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
-    sendNotifyWatcher(question, faqSetting, isNew);
+    sendNotifyWatcher(sProvider, question, faqSetting, isNew);
   }
 
   /*
@@ -1223,48 +1139,28 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   private Question getQuestion(Node questionNode) throws Exception {
     Question question = new Question();
+    PropertyReader reader = new PropertyReader(questionNode);
     question.setId(questionNode.getName());
-    if (questionNode.hasProperty("exo:language"))
-      question.setLanguage(questionNode.getProperty("exo:language").getString());
-    if (questionNode.hasProperty("exo:name"))
-      question.setDetail(questionNode.getProperty("exo:name").getString());
-    if (questionNode.hasProperty("exo:author"))
-      question.setAuthor(questionNode.getProperty("exo:author").getString());
-    if (questionNode.hasProperty("exo:email"))
-      question.setEmail(questionNode.getProperty("exo:email").getString());
-    if (questionNode.hasProperty("exo:title"))
-      question.setQuestion(questionNode.getProperty("exo:title").getString());
-    if (questionNode.hasProperty("exo:createdDate"))
-      question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime());
-    if (questionNode.hasProperty("exo:categoryId"))
-      question.setCategoryId(questionNode.getProperty("exo:categoryId").getString());
-    /*
-     * String catePath = questionNode.getParent().getParent().getPath() ; question.setCategoryId(catePath.substring(catePath.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
-     */
-    if (questionNode.hasProperty("exo:isActivated"))
-      question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean());
-    if (questionNode.hasProperty("exo:isApproved"))
-      question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean());
-    if (questionNode.hasProperty("exo:relatives"))
-      question.setRelations(Utils.valuesToArray(questionNode.getProperty("exo:relatives").getValues()));
-    if (questionNode.hasProperty("exo:nameAttachs"))
-      question.setNameAttachs(Utils.valuesToArray(questionNode.getProperty("exo:nameAttachs").getValues()));
-    if (questionNode.hasProperty("exo:usersVote"))
-      question.setUsersVote(Utils.valuesToArray(questionNode.getProperty("exo:usersVote").getValues()));
-    if (questionNode.hasProperty("exo:markVote"))
-      question.setMarkVote(questionNode.getProperty("exo:markVote").getValue().getDouble());
-    if (questionNode.hasProperty("exo:emailWatching"))
-      question.setEmailsWatch(Utils.valuesToArray(questionNode.getProperty("exo:emailWatching").getValues()));
-    if (questionNode.hasProperty("exo:userWatching"))
-      question.setUsersWatch(Utils.valuesToArray(questionNode.getProperty("exo:userWatching").getValues()));
-    if (questionNode.hasProperty("exo:topicIdDiscuss"))
-      question.setTopicIdDiscuss(questionNode.getProperty("exo:topicIdDiscuss").getString());
-    if (questionNode.hasProperty("exo:link"))
-      question.setLink(questionNode.getProperty("exo:link").getString());
-    if (questionNode.hasProperty("exo:lastActivity"))
-      question.setLastActivity(questionNode.getProperty("exo:lastActivity").getString());
-    if (questionNode.hasProperty("exo:numberOfPublicAnswers"))
-      question.setNumberOfPublicAnswers(questionNode.getProperty("exo:numberOfPublicAnswers").getLong());
+    question.setLanguage(reader.string(EXO_LANGUAGE, ""));
+    question.setDetail(reader.string(EXO_NAME, ""));
+    question.setAuthor(reader.string(EXO_AUTHOR, ""));
+    question.setEmail(reader.string(EXO_EMAIL, ""));
+    question.setQuestion(reader.string(EXO_TITLE, ""));
+    question.setCreatedDate(reader.date(EXO_CREATED_DATE));
+    question.setCategoryId(reader.string(EXO_CATEGORY_ID, ""));
+    question.setActivated(reader.bool(EXO_IS_ACTIVATED, true));
+    question.setApproved(reader.bool(EXO_IS_APPROVED, true));
+    question.setRelations(reader.strings(EXO_RELATIVES, new String[] {}));
+    question.setNameAttachs(reader.strings(EXO_NAME_ATTACHS, new String[] {}));
+    question.setUsersVote(reader.strings(EXO_USERS_VOTE, new String[] {}));
+    question.setMarkVote(reader.d(EXO_MARK_VOTE));
+    question.setEmailsWatch(reader.strings(EXO_EMAIL_WATCHING, new String[] {}));
+    question.setUsersWatch(reader.strings(EXO_USER_WATCHING, new String[] {}));
+    question.setTopicIdDiscuss(reader.string(EXO_TOPIC_ID_DISCUSS, ""));
+    question.setLink(reader.string(EXO_LINK, ""));
+    question.setLastActivity(reader.string(EXO_LAST_ACTIVITY, ""));
+    question.setNumberOfPublicAnswers(reader.l(EXO_NUMBER_OF_PUBLIC_ANSWERS, 0));
+
     String path = questionNode.getPath();
     question.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
 
@@ -1276,18 +1172,18 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     String workspace = questionNode.getSession().getWorkspace().getName();
     while (nodeIterator.hasNext()) {
       node = nodeIterator.nextNode();
-      if (node.isNodeType("exo:faqAttachment")) {
+      if (node.isNodeType(EXO_FAQ_ATTACHMENT)) {
         attachment = new FileAttachment();
-        nodeFile = node.getNode("jcr:content");
+        nodeFile = node.getNode(JCR_CONTENT);
         attachment.setId(node.getPath());
-        attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+        attachment.setMimeType(nodeFile.getProperty(JCR_MIME_TYPE).getString());
         attachment.setNodeName(node.getName());
-        attachment.setName(nodeFile.getProperty("exo:fileName").getValue().getString());
+        attachment.setName(nodeFile.getProperty(EXO_FILE_NAME).getValue().getString());
         attachment.setWorkspace(workspace);
         attachment.setPath("/" + workspace + node.getPath());
         try {
-          if (nodeFile.hasProperty("jcr:data"))
-            attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+          if (nodeFile.hasProperty(JCR_DATA))
+            attachment.setSize(nodeFile.getProperty(JCR_DATA).getStream().available());
           else
             attachment.setSize(0);
         } catch (Exception e) {
@@ -1342,11 +1238,12 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
       boolean isAudience = false;
+      List<String> audiences;
       while (iter.hasNext()) {
         if (usermemberships.size() > 0) {
           Node cat = iter.nextNode();
           try {
-            String[] audiences = Utils.valuesToArray(cat.getProperty("exo:userPrivate").getValues());
+            audiences = new PropertyReader(cat).list("exo:userPrivate", new ArrayList<String>());
             isAudience = false;
             for (String id : usermemberships) {
               for (String audien : audiences) {
@@ -1517,7 +1414,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       }
       categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);
       QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
-      // if(categoryId == null || categoryId.trim().length() < 1) categoryId = "null";
       String userId = faqSetting.getCurrentUser();
       StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryNode.getPath()).append("/").append(Utils.QUESTION_HOME).append("/element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).append("') and (@exo:isActivated='true')");
       if (!faqSetting.isCanEdit()) {
@@ -1719,7 +1615,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           updateDatas(questionNode, catId, true);
           updateDatas(questionNode, catId, false);
           questionNode.save();
-          // send email notify to author question. by Duy Tu
           try {
             sendNotifyMoveQuestion(destCateNode, questionNode, catId, questionLink, faqSetting);
           } catch (Exception e) {
@@ -1766,8 +1661,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   private Set<String> calculateMoveEmail(Node node) throws Exception {
     Set<String> set = new HashSet<String>();
     while (!node.getName().equals(Utils.CATEGORY_HOME)) {
-      if (node.isNodeType("exo:faqWatching")) {
-        set.addAll(Utils.valuesToList(node.getProperty("exo:emailWatching").getValues()));
+      if (node.isNodeType(EXO_FAQ_WATCHING)) {
+        set.addAll(new PropertyReader(node).list(EXO_EMAIL_WATCHING, new ArrayList<String>()));
       }
       node = node.getParent();
     }
@@ -2003,27 +1898,18 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     if (categoryNode == null)
       return null;
     Category category = new Category();
+    PropertyReader reader = new PropertyReader(categoryNode);
     category.setId(categoryNode.getName());
-    if (categoryNode.hasProperty("exo:name"))
-      category.setName(categoryNode.getProperty("exo:name").getString());
-    if (categoryNode.hasProperty("exo:description"))
-      category.setDescription(categoryNode.getProperty("exo:description").getString());
-    if (categoryNode.hasProperty("exo:createdDate"))
-      category.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime());
-    if (categoryNode.hasProperty("exo:moderators"))
-      category.setModerators(Utils.valuesToArray(categoryNode.getProperty("exo:moderators").getValues()));
-    if (categoryNode.hasProperty("exo:userPrivate"))
-      category.setUserPrivate(Utils.valuesToArray(categoryNode.getProperty("exo:userPrivate").getValues()));
-    if (categoryNode.hasProperty("exo:isModerateQuestions"))
-      category.setModerateQuestions(categoryNode.getProperty("exo:isModerateQuestions").getBoolean());
-    if (categoryNode.hasProperty("exo:isModerateAnswers"))
-      category.setModerateAnswers(categoryNode.getProperty("exo:isModerateAnswers").getBoolean());
-    if (categoryNode.hasProperty("exo:viewAuthorInfor"))
-      category.setViewAuthorInfor(categoryNode.getProperty("exo:viewAuthorInfor").getBoolean());
-    if (categoryNode.hasProperty("exo:index"))
-      category.setIndex(categoryNode.getProperty("exo:index").getLong());
-    if (categoryNode.hasProperty("exo:isView"))
-      category.setView(categoryNode.getProperty("exo:isView").getBoolean());
+    category.setName(reader.string(EXO_NAME, ""));
+    category.setDescription(reader.string(EXO_DESCRIPTION, ""));
+    category.setCreatedDate(reader.date(EXO_CREATED_DATE));
+    category.setModerators(reader.strings(EXO_MODERATORS, new String[] {}));
+    category.setUserPrivate(reader.strings(EXO_USER_PRIVATE, new String[] {}));
+    category.setModerateQuestions(reader.bool(EXO_IS_MODERATE_QUESTIONS));
+    category.setModerateAnswers(reader.bool(EXO_IS_MODERATE_ANSWERS));
+    category.setViewAuthorInfor(reader.bool(EXO_VIEW_AUTHOR_INFOR));
+    category.setIndex(reader.l(EXO_INDEX, 1));
+    category.setView(reader.bool(EXO_IS_VIEW, true));
     String path = categoryNode.getPath();
     category.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
     return category;
@@ -2385,19 +2271,18 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     List<Watch> listWatches = new ArrayList<Watch>();
     try {
       Node category = getFAQServiceHome(sProvider).getNode(categoryId);
-      String[] userWatch = null;
-      String[] emails = null;
-      if (category.hasProperty("exo:emailWatching"))
-        emails = Utils.valuesToArray(category.getProperty("exo:emailWatching").getValues());
-      if (category.hasProperty("exo:userWatching"))
-        userWatch = Utils.valuesToArray(category.getProperty("exo:userWatching").getValues());
-      if (userWatch != null && userWatch.length > 0) {
-        Watch watch;
-        for (int i = 0; i < userWatch.length; i++) {
-          watch = new Watch();
-          watch.setEmails(emails[i]);
-          watch.setUser(userWatch[i]);
-          listWatches.add(watch);
+      if (category.isNodeType("exo:faqWatching")) {
+        PropertyReader reader = new PropertyReader(category);
+        String[] userWatch = reader.strings("exo:emailWatching");
+        String[] emails = reader.strings("exo:userWatching");
+        if (userWatch != null && userWatch.length > 0) {
+          Watch watch;
+          for (int i = 0; i < userWatch.length; i++) {
+            watch = new Watch();
+            watch.setEmails(emails[i]);
+            watch.setUser(userWatch[i]);
+            listWatches.add(watch);
+          }
         }
       }
       return listWatches;
@@ -2470,14 +2355,11 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     List<Watch> listWatches = new ArrayList<Watch>();
     try {
-      Node category = getFAQServiceHome(sProvider).getNode(questionId);
-      if (category.isNodeType("exo:faqWatching")) {
-        String[] userWatch = null;
-        String[] emails = null;
-        if (category.hasProperty("exo:emailWatching"))
-          emails = Utils.valuesToArray(category.getProperty("exo:emailWatching").getValues());
-        if (category.hasProperty("exo:userWatching"))
-          userWatch = Utils.valuesToArray(category.getProperty("exo:userWatching").getValues());
+      Node quetionNode = getFAQServiceHome(sProvider).getNode(questionId);
+      if (quetionNode.isNodeType(EXO_FAQ_WATCHING)) {
+        PropertyReader reader = new PropertyReader(quetionNode);
+        String[] userWatch = reader.strings(EXO_EMAIL_WATCHING);
+        String[] emails = reader.strings(EXO_USER_WATCHING);
         if (userWatch != null && userWatch.length > 0) {
           Watch watch;
           for (int i = 0; i < userWatch.length; i++) {
@@ -2849,13 +2731,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           }
         }
 
-        // System.out.println("eventQuery.isQuestionLevelSearch() ==>" + eventQuery.isQuestionLevelSearch() + " - " + listQuestion.size());
-        // System.out.println("eventQuery.isAnswerCommentLevelSearch() ==>" + eventQuery.isAnswerCommentLevelSearch() + " - " + listAnswerandComment.size());
-        // System.out.println("eventQuery.isLanguageLevelSearch() ==>" + eventQuery.isLanguageLevelSearch() + " - " + listLanguage.size());
-        // if(eventQuery.isQuestionLevelSearch() && listQuestion.isEmpty()) return results ;
-        // if(eventQuery.isAnswerCommentLevelSearch() && listAnswerandComment.isEmpty()) return results ;
-        // if(eventQuery.isLanguageLevelSearch() && listLanguage.isEmpty()) return results ;
-
         boolean isInitiated = false;
         if (eventQuery.isQuestionLevelSearch()) {
           // directly return because there is only one this type of search
@@ -3005,10 +2880,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
                 }
               }
             }
-            // nodePath = nodePath.substring(0, nodePath.indexOf("/Category") + 41);
-            // nodeObj = (Node) session.getItem(nodePath);
           }
-          // System.out.println("node path >>" + nodeObj.getPath());
           if (!searchMap.containsKey(nodeObj.getName()) && isResult) {
             searchMap.put(nodeObj.getName(), getResultObj(nodeObj));
           }
@@ -3046,7 +2918,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       } else {
         objectResult.setIcon("QuestionSearch");
         String nodePath = node.getPath();
-        // if(nodePath.indexOf("/Question") > 0 && nodePath.lastIndexOf("/") > nodePath.indexOf("/Question")){
         nodePath = nodePath.substring(0, nodePath.indexOf("/Question") + 41);
         Node questionNode = (Node) node.getSession().getItem(nodePath);
         objectResult.setName(questionNode.getProperty("exo:title").getString());
@@ -3060,13 +2931,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
     return objectResult;
   }
-
-  /*
-   * public List<Question> searchQuestionWithNameAttach(FAQEventQuery eventQuery) throws Exception { SessionProvider sProvider = SessionProvider.createSystemProvider() ; List<Question> questionList = new ArrayList<Question>() ; Map<String, Question> newMap = new HashMap<String, Question>(); try { Node faqServiceHome = getFAQServiceHome(sProvider) ; QueryManager qm =
-   * faqServiceHome.getSession().getWorkspace().getQueryManager() ; String path = eventQuery.getPath() ; if(path == null || path.length() <= 0) { path = faqServiceHome.getPath() ; } eventQuery.setPath(path) ; String type = eventQuery.getType() ; String queryString = eventQuery.getQuery() ; Query query = qm.createQuery(queryString, Query.XPATH) ; QueryResult result = query.execute() ; NodeIterator
-   * iter = result.getNodes() ; while (iter.hasNext()) { try { if(type.equals("faqAttachment")) { Node nodeObj = (Node) iter.nextNode(); nodeObj = (Node) nodeObj.getParent() ; Question question = getQuestion(nodeObj) ; newMap.put(question.getId(), question); } }catch (Exception e) {} } catch (Exception e) { } questionList.addAll(Arrays.asList(newMap.values().toArray(new Question[]{}))); return
-   * questionList ; }
-   */
 
   /*
    * (non-Javadoc)
@@ -3121,10 +2985,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   }
 
   private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
-    /*
-     * Calendar cal = new GregorianCalendar(); PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000); String name = String.valueOf(cal.getTime().getTime()) ; JobInfo info = new JobInfo(name, "KnowledgeSuite-faq", Class.forName("org.exoplatform.faq.service.notify.NotifyJob")); ExoContainer container = ExoContainerContext.getCurrentContainer(); JobSchedulerService schedulerService
-     * = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class); messagesInfoMap_.put(name, new NotifyInfo(addresses, message)) ; schedulerService.addPeriodJob(info, periodInfo);
-     */
     pendingMessagesQueue.add(new NotifyInfo(addresses, message));
   }
 
@@ -3547,10 +3407,10 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       Node node = getFAQServiceHome(sProvider).getNode(path);
-      if (node.isNodeType("exo:faqQuestion")) {
-        return Utils.valuesToArray(node.getParent().getParent().getProperty("exo:moderators").getValues());
-      } else if (node.isNodeType("exo:faqCategory")) {
-        return Utils.valuesToArray(node.getProperty("exo:moderators").getValues());
+      if (node.isNodeType(EXO_FAQ_QUESTION)) {
+        return new PropertyReader(node.getParent().getParent()).strings(EXO_MODERATORS, new String[] {});
+      } else if (node.isNodeType(EXO_FAQ_CATEGORY)) {
+        return new PropertyReader(node).strings(EXO_MODERATORS, new String[] {});
       }
     } catch (Exception e) {
       log.error("Failed to get moderators of path: " + path, e);

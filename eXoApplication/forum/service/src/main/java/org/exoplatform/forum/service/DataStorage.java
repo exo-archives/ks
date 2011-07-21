@@ -243,8 +243,6 @@ public interface DataStorage {
 
   void saveForumStatistic(ForumStatistic forumStatistic) throws Exception;
 
-  Calendar getGreenwichMeanTime();
-
   Object getObjectNameByPath(String path) throws Exception;
 
   Object getObjectNameById(String id, String type) throws Exception;
