@@ -128,41 +128,11 @@ public class Utils {
     return new String[] { "blue", "DarkGoldenRod", "green", "yellow", "BlueViolet", "orange", "darkBlue", "IndianRed", "DarkCyan", "lawnGreen" };
   }
 
-  public static String unCodeHTML(String s) {
-    if (s != null && s.trim().length() > 0) {
-      s = s.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#39", "'");
-    } else
-      s = "";
-    return s;
-  }
-
-  public static String enCodeHTML(String s) {
-    StringBuffer buffer = new StringBuffer();
-    if (s != null) {
-      s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
-      s = s.replaceFirst("(<br/>)*", "");
-      s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
-      for (int j = 0; j < s.trim().length(); j++) {
-        char c = s.charAt(j);
-        if ((int) c == 60) {
-          buffer.append("&lt;");
-        } else if ((int) c == 62) {
-          buffer.append("&gt;");
-        } else if (c == '\'') {
-          buffer.append("&#39");
-        } else {
-          buffer.append(c);
-        }
-      }
-    }
-    return buffer.toString();
-  }
-
   public static String getExpire(long timeOut, Date modifiDate, String[] dateUnit) {
     if (timeOut == 0)
       return dateUnit[0];
     else {
-      Calendar calendar = getGreenwichMeanTime();
+      Calendar calendar = org.exoplatform.ks.common.Utils.getGreenwichMeanTime();
       long timeEnd = (timeOut < 1000) ? (modifiDate.getTime() + timeOut * 86400000) : timeOut;
       long l = timeEnd - calendar.getTimeInMillis();
       if (l < 0)
@@ -179,13 +149,5 @@ public class Utils {
       }
       return m + " " + dateUnit[4];
     }
-  }
-
-  public static Calendar getGreenwichMeanTime() {
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setLenient(false);
-    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
-    return calendar;
   }
 }

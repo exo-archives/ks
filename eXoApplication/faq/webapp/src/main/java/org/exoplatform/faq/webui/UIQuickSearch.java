@@ -26,6 +26,7 @@ import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.webui.popup.ResultQuickSearch;
 import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -79,10 +80,7 @@ public class UIQuickSearch extends BaseUIForm {
       UIAnswersPortlet uiPortlet = uiQuickSearch.getAncestorOfType(UIAnswersPortlet.class);
       String text = formStringInput.getValue();
       if (text != null && text.trim().length() > 0) {
-        if (FAQUtils.checkSpecial(text)) {
-          uiQuickSearch.warning("UIAdvancedSearchForm.msg.failure");
-          return;
-        }
+        text = Utils.convertTextForSearch(text);
         FAQService faqService = FAQUtils.getFAQService();
         List<ObjectSearchResult> list = null;
         FAQEventQuery eventQuery = new FAQEventQuery();

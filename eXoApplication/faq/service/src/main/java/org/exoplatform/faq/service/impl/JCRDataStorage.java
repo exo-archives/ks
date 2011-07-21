@@ -512,24 +512,20 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       } else {
         emailsList.addAll(emails);
       }
-      if (emailsList != null && emailsList.size() > 0) {
+      if(emailsList != null && emailsList.size() > 0) {
         Message message = new Message();
+        message.setMimeType(MIMETYPE_TEXTHTML) ;
         message.setFrom(question.getAuthor());
-        message.setMimeType(MIMETYPE_TEXTHTML);
         message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
-        if (isNew) {
-          message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", reader.string("exo:name", "")).replaceAll("&questionContent_", question.getDetail()).replaceAll("&questionLink_", question.getLink()));
+        String body = StringUtils.replace(faqSetting.getEmailSettingContent(), "&questionContent_", question.getDetail());
+        body = StringUtils.replace(body, "&questionLink_", question.getLink());
+        if(question.getAnswers() != null && question.getAnswers().length > 0) {
+          body = StringUtils.replace(body, "&questionResponse_", question.getAnswers()[0].getResponses());
         } else {
-          String contentMail = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion());
-          if (question.getAnswers().length > 0) {
-            contentMail = contentMail.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
-          } else {
-            contentMail = contentMail.replaceAll("&questionResponse_", "");
-          }
-          contentMail = contentMail.replaceAll("&questionLink_", question.getLink());
-          message.setBody(contentMail);
+          body = StringUtils.replace(body, "&questionResponse_", "");
         }
-        sendEmailNotification(emailsList, message);
+        message.setBody(body);
+        sendEmailNotification(emailsList, message) ;
       }
     } catch (Exception e) {
       log.error("Failed to send a nofify for category watcher: ", e);
@@ -1631,31 +1627,32 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   }
 
-  private void sendNotifyMoveQuestion(Node destCateNode, Node questionNode, String cateId, String link, FAQSetting faqSetting) throws Exception {
+  private void sendNotifyMoveQuestion(Node destCateNode, Node questionNode,String cateId, String link, FAQSetting faqSetting) throws Exception {
     String contentMail = faqSetting.getEmailMoveQuestion();
     String categoryName = null;
     try {
       categoryName = questionNode.getParent().getParent().getProperty("exo:name").getString();
-    } catch (Exception e) {
+    } catch (Exception e){
       categoryName = "Root";
     }
     Message message = new Message();
-    message.setMimeType(MIMETYPE_TEXTHTML);
+    message.setMimeType(MIMETYPE_TEXTHTML) ;
     message.setFrom(questionNode.getProperty("exo:author").getString());
     message.setSubject(faqSetting.getEmailSettingSubject() + ": " + questionNode.getProperty("exo:title").getString());
-    if (categoryName == null || categoryName.trim().length() < 1)
-      categoryName = "Root";
+    if(categoryName == null || categoryName.trim().length() < 1) categoryName = "Root";
     String questionDetail = questionNode.getProperty("exo:title").getString();
-    if (questionNode.hasProperty("exo:name")) {
+    if(questionNode.hasProperty("exo:name")){
       questionDetail = questionDetail + "<br/> <span style=\"font-weight:normal\"> " + questionNode.getProperty("exo:name").getString() + "</span>";
     }
-    contentMail = contentMail.replace("&questionContent_", questionDetail).replace("&categoryName_", categoryName).replace("&questionLink_", link);
+    contentMail = StringUtils.replace(contentMail, "&questionContent_", questionDetail);
+    contentMail = StringUtils.replace(contentMail, "&categoryName_", categoryName);
+    contentMail = StringUtils.replace(contentMail, "&questionLink_", link);
     message.setBody(contentMail);
-    Set<String> emails = new HashSet<String>();
+    Set<String>emails = new HashSet<String>();
     emails.addAll(calculateMoveEmail(destCateNode));
     emails.addAll(calculateMoveEmail(questionNode.getParent()));
     emails.add(questionNode.getProperty("exo:email").getString());
-    sendEmailNotification(new ArrayList<String>(emails), message);
+    sendEmailNotification(new ArrayList<String>(emails), message) ;
   }
 
   private Set<String> calculateMoveEmail(Node node) throws Exception {

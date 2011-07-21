@@ -26,7 +26,6 @@ import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;

@@ -243,7 +243,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     String strSignature = this.userProfile.getSignature();
     if (ForumUtils.isEmpty(strSignature))
       strSignature = ForumUtils.EMPTY_STR;
-    signature.setValue(ForumTransformHTML.unCodeHTML(strSignature));
+    signature.setValue(strSignature);
     UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
     isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature());
 

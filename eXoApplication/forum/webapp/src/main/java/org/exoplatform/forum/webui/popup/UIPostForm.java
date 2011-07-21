@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.TimeConvertUtils;
@@ -38,15 +37,17 @@ import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -131,7 +132,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
     formWYSIWYGInput.setToolBarName("Basic");
-    formWYSIWYGInput.setFCKConfig(org.exoplatform.ks.common.Utils.getFCKConfig());
+    formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
     threadContent.addChild(postTitle);
     threadContent.addChild(editReason);
     threadContent.addChild(formWYSIWYGInput);
@@ -239,17 +240,16 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           title = post.getName();
         else
           title = getLabel(FIELD_LABEL_QUOTE) + ": " + post.getName();
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(title));
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(title);
         String value = "[QUOTE=" + post.getOwner() + "]" + message + "[/QUOTE]";
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
         getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
       } else if (isPP) {
-        String title = this.topic.getTopicName();
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + ForumTransformHTML.unCodeHTML(title));
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + this.topic.getTopicName());
         getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
       } else {// edit
         editReason.setRendered(true);
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(post.getName()));
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getName());
         if (post.getAttachments() != null && post.getAttachments().size() > 0) {
           this.attachments_ = post.getAttachments();
           this.refreshUploadFileList();
@@ -259,8 +259,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       }
     } else {
       if (!isQuote) {// reply
-        String title = this.topic.getTopicName();
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + ForumTransformHTML.unCodeHTML(title));
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + this.topic.getTopicName());
         getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
       }
     }
@@ -285,7 +284,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       if (postTitle != null && postTitle.length() <= 3) {
         k = 0;
       }
-      postTitle = ForumTransformHTML.enCodeHTMLTitle(postTitle).trim();
+      postTitle = Utils.convertTextForTitle(postTitle);
       if (t > 0 && k != 0 && !checksms.equals("null")) {
         Post post = uiForm.post_;
         post.setName(postTitle);
@@ -346,20 +345,22 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             return;
           }
 
-          editReason = ForumTransformHTML.enCodeHTMLTitle(editReason).trim();
+          editReason = Utils.convertTextForTitle(editReason);
           String userName = userProfile.getUserId();
           String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
           String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-          message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
-          message = StringUtils.replace(message, "'", "&apos;");
+//          message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
+//          message = StringUtils.replace(message, "'", "&apos;");
           message = ForumTransformHTML.fixAddBBcodeAction(message);
+          message = Utils.convertTextForContent(message);
+          
           checksms = checksms.replaceAll("&nbsp;", " ");
           t = checksms.length();
           postTitle = postTitle.trim();
           if (postTitle.trim().length() <= 0) {
             k = 0;
           }
-          postTitle = ForumTransformHTML.enCodeHTMLTitle(postTitle);
+          postTitle = Utils.convertTextForTitle(postTitle);
           Post post = uiForm.post_;
           boolean isPP = false;
           if (t > 0 && k != 0 && !checksms.equals("null")) {
@@ -417,7 +418,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             try {
               if (!ForumUtils.isEmpty(uiForm.postId)) {
                 if (uiForm.isQuote || uiForm.isMP) {
-                  post.setRemoteAddr(org.exoplatform.ks.common.Utils.getRemoteIP());
+                  post.setRemoteAddr(WebUIUtils.getRemoteIP());
                   try {
                     uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail());
                     isNew = true;
@@ -440,7 +441,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                   topicDetail.setIdPostView(uiForm.postId);
                 }
               } else {
-                post.setRemoteAddr(org.exoplatform.ks.common.Utils.getRemoteIP());
+                post.setRemoteAddr(WebUIUtils.getRemoteIP());
                 try {
                   uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail());
                   isNew = true;

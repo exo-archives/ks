@@ -33,9 +33,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -89,6 +89,8 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.forum.service.SortSettings;
+import org.exoplatform.forum.service.SortSettings.Direction;
+import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicListAccess;
@@ -96,8 +98,6 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.forum.service.SortSettings.Direction;
-import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.CategoryEventListener;
 import org.exoplatform.forum.service.conf.ForumData;
@@ -110,9 +110,9 @@ import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.SessionManager;
-import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
@@ -873,7 +873,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         catNode = categoryHome.addNode(category.getId(), EXO_FORUM_CATEGORY);
         catNode.setProperty(EXO_ID, category.getId());
         catNode.setProperty(EXO_OWNER, category.getOwner());
-        catNode.setProperty(EXO_CREATED_DATE, Utils.getGreenwichMeanTime());
+        catNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
         categoryHome.getSession().save();
         addModeratorCalculateListener(catNode);
       } else {
@@ -885,7 +885,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       catNode.setProperty(EXO_CATEGORY_ORDER, category.getCategoryOrder());
       catNode.setProperty(EXO_DESCRIPTION, category.getDescription());
       catNode.setProperty(EXO_MODIFIED_BY, category.getModifiedBy());
-      catNode.setProperty(EXO_MODIFIED_DATE, Utils.getGreenwichMeanTime());
+      catNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
       catNode.setProperty(EXO_USER_PRIVATE, category.getUserPrivate());
 
       catNode.setProperty(EXO_CREATE_TOPIC_ROLE, category.getCreateTopicRole());
@@ -1341,7 +1341,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumNode = catNode.addNode(forum.getId(), EXO_FORUM);
         forumNode.setProperty(EXO_ID, forum.getId());
         forumNode.setProperty(EXO_OWNER, forum.getOwner());
-        forumNode.setProperty(EXO_CREATED_DATE, Utils.getGreenwichMeanTime());
+        forumNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
         forumNode.setProperty(EXO_LAST_TOPIC_PATH, forum.getLastTopicPath());
         forumNode.setProperty(EXO_POST_COUNT, 0);
         forumNode.setProperty(EXO_TOPIC_COUNT, 0);
@@ -1366,7 +1366,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       forumNode.setProperty(EXO_NAME, forum.getForumName());
       forumNode.setProperty(EXO_FORUM_ORDER, forum.getForumOrder());
       forumNode.setProperty(EXO_MODIFIED_BY, forum.getModifiedBy());
-      forumNode.setProperty(EXO_MODIFIED_DATE, Utils.getGreenwichMeanTime());
+      forumNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
       forumNode.setProperty(EXO_DESCRIPTION, forum.getDescription());
 
       forumNode.setProperty(EXO_IS_AUTO_ADD_EMAIL_NOTIFY, forum.getIsAutoAddEmailNotify());
@@ -1417,7 +1417,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       id.append(catNode.getProperty(EXO_CREATED_DATE).getDate().getTimeInMillis());
       id.append(forum.getForumOrder());
       if (isNew) {
-        id.append(Utils.getGreenwichMeanTime());
+        id.append(getGreenwichMeanTime());
         PruneSetting pruneSetting = new PruneSetting();
         pruneSetting.setId(id.toString());
         pruneSetting.setForumPath(forum.getPath());
@@ -2171,7 +2171,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   private String getStringQueryResultTopicsOld(Node categoryHome, long date, String forumPatch) throws Exception {
-    Calendar newDate = Utils.getGreenwichMeanTime();
+    Calendar newDate = getGreenwichMeanTime();
     if (forumPatch == null || forumPatch.length() <= 0)
       forumPatch = categoryHome.getPath();
     newDate.setTimeInMillis(newDate.getTimeInMillis() - date * 86400000);
@@ -2356,7 +2356,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         topicNode = forumNode.addNode(topic.getId(), EXO_TOPIC);
         topicNode.setProperty(EXO_ID, topic.getId());
         topicNode.setProperty(EXO_OWNER, topic.getOwner());
-        Calendar calendar = Utils.getGreenwichMeanTime();
+        Calendar calendar = getGreenwichMeanTime();
         topic.setCreatedDate(calendar.getTime());
         topicNode.setProperty(EXO_CREATED_DATE, calendar);
         topicNode.setProperty(EXO_LAST_POST_BY, topic.getOwner());
@@ -2402,7 +2402,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       topicNode.setProperty(EXO_NAME, topic.getTopicName());
       topicNode.setProperty(EXO_MODIFIED_BY, topic.getModifiedBy());
-      topicNode.setProperty(EXO_MODIFIED_DATE, Utils.getGreenwichMeanTime());
+      topicNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
       topicNode.setProperty(EXO_DESCRIPTION, topic.getDescription());
       topicNode.setProperty(EXO_TOPIC_TYPE, topic.getTopicType());
       topicNode.setProperty(EXO_ICON, topic.getIcon());
@@ -2998,7 +2998,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node forumNode = CategoryNode.getNode(forumId);
       Node topicNode = forumNode.getNode(topicId);
       Node postNode;
-      Calendar calendar = Utils.getGreenwichMeanTime();
+      Calendar calendar = getGreenwichMeanTime();
       if (isNew) {
         postNode = topicNode.addNode(post.getId(), EXO_POST);
         postNode.setProperty(EXO_ID, post.getId());
@@ -3687,7 +3687,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         // Node Post move
         postNode = (Node) forumHomeNode.getSession().getItem(newPostPath);
         postNode.setProperty(EXO_PATH, destForumNode.getName());
-        postNode.setProperty(EXO_CREATED_DATE, Utils.getGreenwichMeanTime());
+        postNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
         if (isCreatNewTopic && i == 0) {
           postNode.setProperty(EXO_IS_FIRST_POST, true);
         } else {
@@ -4316,7 +4316,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (userProfile.getIsBanned()) {
         if (profileNode.hasProperty(EXO_BAN_UNTIL)) {
           userProfile.setBanUntil(reader.l(EXO_BAN_UNTIL));
-          if (userProfile.getBanUntil() <= Utils.getGreenwichMeanTime().getTimeInMillis()) {
+          if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
             profileNode.setProperty(EXO_IS_BANNED, false);
             profileNode.save();
             userProfile.setIsBanned(false);
@@ -4338,7 +4338,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         Node profileNode = getUserProfileHome(sProvider).getNode(userProfile.getUserId());
         if (profileNode.hasProperty(EXO_BAN_UNTIL)) {
           userProfile.setBanUntil(profileNode.getProperty(EXO_BAN_UNTIL).getLong());
-          if (userProfile.getBanUntil() <= Utils.getGreenwichMeanTime().getTimeInMillis()) {
+          if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
             profileNode.setProperty(EXO_IS_BANNED, false);
             profileNode.save();
             userProfile.setIsBanned(false);
@@ -4697,7 +4697,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       newProfileNode.setProperty(EXO_IS_AUTO_WATCH_MY_TOPICS, newUserProfile.getIsAutoWatchMyTopics());
       newProfileNode.setProperty(EXO_IS_AUTO_WATCH_TOPIC_I_POST, newUserProfile.getIsAutoWatchTopicIPost());
       newProfileNode.setProperty(EXO_MODERATE_CATEGORY, newUserProfile.getModerateCategory());
-      Calendar calendar = Utils.getGreenwichMeanTime();
+      Calendar calendar = getGreenwichMeanTime();
       if (newUserProfile.getLastLoginDate() != null)
         calendar.setTime(newUserProfile.getLastLoginDate());
       newProfileNode.setProperty(EXO_LAST_LOGIN_DATE, calendar);
@@ -4717,10 +4717,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (isBan) {
         if (newProfileNode.hasProperty(EXO_IS_BANNED)) {
           if (!newProfileNode.getProperty(EXO_IS_BANNED).getBoolean() && newUserProfile.getIsBanned()) {
-            newProfileNode.setProperty(EXO_CREATED_DATE_BAN, Utils.getGreenwichMeanTime());
+            newProfileNode.setProperty(EXO_CREATED_DATE_BAN, getGreenwichMeanTime());
           }
         } else {
-          newProfileNode.setProperty(EXO_CREATED_DATE_BAN, Utils.getGreenwichMeanTime());
+          newProfileNode.setProperty(EXO_CREATED_DATE_BAN, getGreenwichMeanTime());
         }
         newProfileNode.setProperty(EXO_IS_BANNED, newUserProfile.getIsBanned());
         newProfileNode.setProperty(EXO_BAN_UNTIL, newUserProfile.getBanUntil());
@@ -4794,7 +4794,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     if (userProfile.getIsBanned()) {
       if (userProfileNode.hasProperty(EXO_BAN_UNTIL)) {
         userProfile.setBanUntil(reader.l(EXO_BAN_UNTIL));
-        if (userProfile.getBanUntil() <= Utils.getGreenwichMeanTime().getTimeInMillis()) {
+        if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
           userProfileNode.setProperty(EXO_IS_BANNED, false);
           userProfileNode.save();
           userProfile.setIsBanned(false);
@@ -5039,7 +5039,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       messageNode.setProperty(EXO_SEND_TO, privateMessage.getSendTo());
       messageNode.setProperty(EXO_NAME, privateMessage.getName());
       messageNode.setProperty(EXO_MESSAGE, privateMessage.getMessage());
-      messageNode.setProperty(EXO_RECEIVED_DATE, Utils.getGreenwichMeanTime());
+      messageNode.setProperty(EXO_RECEIVED_DATE, getGreenwichMeanTime());
       messageNode.setProperty(EXO_IS_UNREAD, true);
       messageNode.setProperty(EXO_TYPE, Utils.RECEIVE_MESSAGE);
     }
@@ -6133,7 +6133,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       // update topic to user profile
       Iterator<Entry<String, Long>> it = topicMap.entrySet().iterator();
       String userId;
-      Calendar cal = Utils.getGreenwichMeanTime();
+      Calendar cal = getGreenwichMeanTime();
       while (it.hasNext()) {
         userId = it.next().getKey();
         if (userId.indexOf(Utils.DELETED) < 0) {
@@ -6388,7 +6388,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      log.error("Failed to send notification message", e);
+      log.error("Failed to send notification message:" +  e.getMessage());
     }
   }
 
@@ -6753,14 +6753,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       boolean isUpdated = false;
       for (String vl : values) {
         if (vl.indexOf(topicId) == 0) {
-          values.set(i, topicId + ":" + Utils.getGreenwichMeanTime().getTimeInMillis());
+          values.set(i, topicId + ":" + getGreenwichMeanTime().getTimeInMillis());
           isUpdated = true;
           break;
         }
         i++;
       }
       if (!isUpdated) {
-        values.add(topicId + ":" + Utils.getGreenwichMeanTime().getTimeInMillis());
+        values.add(topicId + ":" + getGreenwichMeanTime().getTimeInMillis());
       }
       if (values.size() == 2 && Utils.isEmpty(values.get(0)))
         values.remove(0);
@@ -6784,14 +6784,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       boolean isUpdated = false;
       for (String vl : values) {
         if (vl.indexOf(forumId) == 0) {
-          values.set(i, forumId + ":" + Utils.getGreenwichMeanTime().getTimeInMillis());
+          values.set(i, forumId + ":" + getGreenwichMeanTime().getTimeInMillis());
           isUpdated = true;
           break;
         }
         i++;
       }
       if (!isUpdated) {
-        values.add(forumId + ":" + Utils.getGreenwichMeanTime().getTimeInMillis());
+        values.add(forumId + ":" + getGreenwichMeanTime().getTimeInMillis());
       }
       if (values.size() == 2 && Utils.isEmpty(values.get(0)))
         values.remove(0);
@@ -7099,7 +7099,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       // update last run for prune setting
       Node setting = forumNode.getNode(pSetting.getId());
-      setting.setProperty(EXO_LAST_RUN_DATE, Utils.getGreenwichMeanTime());
+      setting.setProperty(EXO_LAST_RUN_DATE, getGreenwichMeanTime());
       forumNode.save();
     } catch (Exception e) {
       log.error("Failed to run prune", e);
@@ -7111,7 +7111,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private NodeIterator getIteratorPrune(SessionProvider sProvider, PruneSetting pSetting) throws Exception {
     Node forumHome = getForumHomeNode(sProvider);
     Node forumNode = (Node) forumHome.getSession().getItem(pSetting.getForumPath());
-    Calendar newDate = Utils.getGreenwichMeanTime();
+    Calendar newDate = getGreenwichMeanTime();
     newDate.setTimeInMillis(newDate.getTimeInMillis() - pSetting.getInActiveDay() * 86400000);
     QueryManager qm = forumHome.getSession().getWorkspace().getQueryManager();
     StringBuffer stringBuffer = new StringBuffer();
@@ -7478,7 +7478,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         added = true;
       }
 
-      Calendar cal = Utils.getGreenwichMeanTime();
+      Calendar cal = getGreenwichMeanTime();
       profile.setProperty(EXO_USER_ID, userName);
       profile.setProperty(EXO_LAST_LOGIN_DATE, cal);
       profile.setProperty(EXO_EMAIL, user.getEmail());
@@ -7544,7 +7544,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     SessionProvider sysProvider = SessionProvider.createSystemProvider();
     try {
       Node userProfileHome = getUserProfileHome(sysProvider);
-      userProfileHome.getNode(userId).setProperty(EXO_LAST_LOGIN_DATE, Utils.getGreenwichMeanTime());
+      userProfileHome.getNode(userId).setProperty(EXO_LAST_LOGIN_DATE, getGreenwichMeanTime());
       userProfileHome.save();
     } finally {
       sysProvider.close();
@@ -7844,5 +7844,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     workspace = dataLocator.getWorkspace();
     log.info("JCR Data Storage for forum initialized to " + dataLocator);
   }
-
+  
+  private Calendar getGreenwichMeanTime() {
+    return org.exoplatform.ks.common.Utils.getGreenwichMeanTime();
+  }
 }

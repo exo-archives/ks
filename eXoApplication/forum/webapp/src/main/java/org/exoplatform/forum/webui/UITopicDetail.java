@@ -69,6 +69,7 @@ import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -460,7 +461,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   private String getRemoteIP() throws Exception {
     if (enableIPLogging) {
-      return org.exoplatform.ks.common.Utils.getRemoteIP();
+      return WebUIUtils.getRemoteIP();
     }
     return ForumUtils.EMPTY_STR;
   }

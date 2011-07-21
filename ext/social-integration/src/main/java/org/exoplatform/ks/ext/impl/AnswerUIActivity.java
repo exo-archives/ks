@@ -13,6 +13,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.OrganizationService;
@@ -184,7 +185,7 @@ public class AnswerUIActivity extends BaseKSActivity {
         ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
         Topic topic = (Topic) forumService.getObjectNameById(topicId, org.exoplatform.forum.service.Utils.TOPIC);
         if (topic != null) {
-          String remoteAddr = org.exoplatform.ks.common.Utils.getRemoteIP();
+          String remoteAddr = WebUIUtils.getRemoteIP();
           String[] ids = topic.getPath().split("/");
           int t = ids.length;
           String linkForum = getLinkDiscuss(topicId);

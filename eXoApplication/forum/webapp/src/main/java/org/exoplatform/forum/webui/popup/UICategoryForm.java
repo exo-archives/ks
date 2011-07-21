@@ -25,15 +25,14 @@ import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIBreadcumbs;
-import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.UISelector;
@@ -210,9 +209,9 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
   public void setCategoryValue(Category category, boolean isUpdate) throws Exception {
     if (isUpdate) {
       this.categoryId = category.getId();
-      getUIStringInput(FIELD_CATEGORYTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(category.getCategoryName()));
+      getUIStringInput(FIELD_CATEGORYTITLE_INPUT).setValue(category.getCategoryName());
       getUIStringInput(FIELD_CATEGORYORDER_INPUT).setValue(Long.toString(category.getCategoryOrder()));
-      getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(ForumTransformHTML.unCodeHTML(category.getDescription()));
+      getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(category.getDescription());
       String userPrivate = ForumUtils.unSplitForForum(category.getUserPrivate());
       String moderator = ForumUtils.unSplitForForum(category.getModerators());
       String topicAble = ForumUtils.unSplitForForum(category.getCreateTopicRole());
@@ -242,13 +241,13 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_CATEGORYTITLE_INPUT), String.valueOf(maxText) });
         return;
       }
-      categoryTitle = ForumTransformHTML.enCodeHTMLTitle(categoryTitle);
+      categoryTitle = Utils.convertTextForTitle(categoryTitle);
       String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue();
       if (!ForumUtils.isEmpty(description) && description.length() > maxText) {
         warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_DESCRIPTION_INPUT), String.valueOf(maxText) });
         return;
       }
-      description = ForumTransformHTML.enCodeHTMLTitle(description);
+      description = Utils.convertTextForTitle(description);
       String categoryOrder = uiForm.getUIStringInput(FIELD_CATEGORYORDER_INPUT).getValue();
       if (ForumUtils.isEmpty(categoryOrder))
         categoryOrder = "0";
@@ -268,7 +267,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
           return;
         }
       } else {
-        moderators = new String[] { " " };
+        moderators = new String[] { "" };
       }
 
       String userPrivate = uiForm.getUIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE).getValue();
@@ -285,7 +284,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
           return;
         }
       } else {
-        userPrivates = new String[] { " " };
+        userPrivates = new String[] { "" };
       }
 
       UIFormInputWithActions catPermission = uiForm.getChildById(CATEGORY_PERMISSION_TAB);

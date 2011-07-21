@@ -141,7 +141,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
   public void setUpdatePoll(Poll poll, boolean isUpdate) throws Exception {
     if (isUpdate) {
       this.poll = poll;
-      getUIStringInput(FIELD_QUESTION_INPUT).setValue(Utils.unCodeHTML(poll.getQuestion()));
+      getUIStringInput(FIELD_QUESTION_INPUT).setValue(poll.getQuestion());
       getUIStringInput(FIELD_TIMEOUT_INPUT).setValue(String.valueOf(poll.getTimeOut()));
       getUIFormCheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).setChecked(poll.getIsAgainVote());
       UIFormCheckBoxInput multiVoteCheckInput = getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX);
@@ -166,7 +166,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
     List<String> list = new ArrayList<String>();
     if (isUpdate) {
       for (String string : this.poll.getOption()) {
-        list.add(Utils.unCodeHTML(string));
+        list.add(string);
       }
     } else {
       list.add("");
@@ -192,7 +192,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
       UIPollForm uiForm = event.getSource();
       UIFormStringInput questionInput = uiForm.getUIStringInput(FIELD_QUESTION_INPUT);
       String question = questionInput.getValue();
-      question = Utils.enCodeHTML(question);
+      question = org.exoplatform.ks.common.Utils.convertTextForTitle(question);
       String timeOutStr = uiForm.getUIStringInput(FIELD_TIMEOUT_INPUT).getValue();
       timeOutStr = Utils.removeZeroFirstNumber(timeOutStr);
       long timeOut = 0;
@@ -215,7 +215,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
             uiForm.warning("NameValidator.msg.warning-long-text", args);
             return;
           }
-          values_.add(Utils.enCodeHTML(value));
+          values_.add(question = org.exoplatform.ks.common.Utils.convertTextForTitle(value));
         }
         ++i;
       }

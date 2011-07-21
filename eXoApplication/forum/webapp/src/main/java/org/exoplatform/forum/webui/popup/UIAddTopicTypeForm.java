@@ -27,6 +27,7 @@ import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -112,6 +113,7 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
       while (typeName.indexOf("  ") >= 0) {
         typeName = StringUtils.replace(typeName, "  ", " ");
       }
+      typeName = Utils.convertTextForTitle(typeName);
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       if (!typeName.equalsIgnoreCase(topicType.getName()) && topicTypeForm.checkIsSameName(forumService, typeName)) {
         topicTypeForm.warning("UIAddTopicTypeForm.smg.SameNameType");

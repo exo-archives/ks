@@ -34,8 +34,8 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -127,7 +127,7 @@ public class UIQuickReplyForm extends UIForm {
             hasTopicMod = quickReply.topic.getIsModeratePost();
         }
         message = ForumTransformHTML.enCodeHTMLContent(message);
-        String remoteAddr = Utils.getRemoteIP();
+        String remoteAddr = WebUIUtils.getRemoteIP();
         UserProfile userProfile = forumService.getDefaultUserProfile(quickReply.userName, remoteAddr);
         // set link
         // String link = ForumSessionUtils.getBreadcumbUrl(quickReply.getLink(), quickReply.getId(), "QuickReply", quickReply.topicId).replaceFirst("private", "public");

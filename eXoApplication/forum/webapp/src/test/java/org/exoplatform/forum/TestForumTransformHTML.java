@@ -79,12 +79,6 @@ public class TestForumTransformHTML extends TestCase{
                 ForumTransformHTML.enCodeHTMLTitle("<p> test <br/> test 'test' <div>text</div></p>"));
   }
   
-  public void testUnCodeHTML() {
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.unCodeHTML(null));
-    assertEquals("<p> test <br/> test 'test' <div>text</div></p>", 
-                ForumTransformHTML.unCodeHTML("&lt;p&gt; test &lt;br/&gt; test &#39test&#39 &lt;div&gt;text&lt;/div&gt;&lt;/p&gt;"));
-  }
-  
   public void testEnCodeViewSignature() {
     assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.enCodeViewSignature(null));
     assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.enCodeViewSignature(ForumUtils.EMPTY_STR));
