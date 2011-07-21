@@ -18,6 +18,8 @@ package org.exoplatform.wiki.mow.api;
 
 import java.util.List;
 
+import org.exoplatform.wiki.mow.core.api.wiki.Preferences;
+
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
  *         Lamarque</a>
@@ -82,5 +84,8 @@ public interface Wiki {
    * @param permissions
    */
   void setWikiPermissions(List<String> permissions);
+  
+  
+  public Preferences getPreferences();
 
 }

@@ -64,6 +64,9 @@ public abstract class PortalWikiContainer extends WikiContainer<PortalWiki> {
     PortalWiki pwiki = session.findByNode(PortalWiki.class, wikiNode);
     pwiki.setOwner(wikiOwner);
     pwiki.setPortalWikis(this);
+    pwiki.getPreferences();
+    session.save();
+    pwiki.setWikiService(getwService());
     return pwiki;
   }
 

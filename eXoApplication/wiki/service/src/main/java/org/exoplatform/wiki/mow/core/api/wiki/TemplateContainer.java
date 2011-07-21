@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 
 import org.chromattic.api.annotations.Create;
 import org.chromattic.api.annotations.OneToMany;
+import org.chromattic.api.annotations.Path;
 import org.chromattic.api.annotations.PrimaryType;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 
@@ -37,6 +38,9 @@ public abstract class TemplateContainer {
 
   @Create
   public abstract Template createTemplatePage();
+  
+  @Path
+  public abstract String getPath();
 
   @OneToMany
   public abstract Map<String,Template> getTemplates();

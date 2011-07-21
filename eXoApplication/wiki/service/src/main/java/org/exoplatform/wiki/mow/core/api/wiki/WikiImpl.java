@@ -29,7 +29,7 @@ import org.chromattic.api.annotations.Property;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiType;
-
+import org.exoplatform.wiki.service.WikiService;
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
  *         Lamarque</a>
@@ -41,6 +41,22 @@ public abstract class WikiImpl implements Wiki {
   public abstract PageImpl createWikiPage();
 
   public abstract WikiType getWikiType();
+  
+  
+  private WikiService wService;
+
+  public WikiService getWikiService() {
+    return this.wService;
+  }
+
+  public void setWikiService(WikiService wService) {
+    this.wService = wService;
+  }
+
+  public void initTemplate() {
+    String path = getPreferences().getPath();
+    wService.initDefaultTemplatePage(path);
+  }
   
   public WikiHome getWikiHome() {
     WikiHome home = getHome();

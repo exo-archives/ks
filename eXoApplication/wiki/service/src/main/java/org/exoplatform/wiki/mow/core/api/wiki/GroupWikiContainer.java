@@ -63,6 +63,9 @@ public abstract class GroupWikiContainer extends WikiContainer<GroupWiki> {
     GroupWiki gwiki = session.findByNode(GroupWiki.class, wikiNode);
     gwiki.setOwner(wikiOwner);
     gwiki.setGroupWikis(this);
+    gwiki.getPreferences();
+    session.save();
+    gwiki.setWikiService(getwService());
     return gwiki;
   }
   

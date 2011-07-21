@@ -7,8 +7,10 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
@@ -20,6 +22,7 @@ import org.chromattic.api.ChromatticSession;
 import org.chromattic.common.IO;
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
@@ -30,14 +33,21 @@ import org.exoplatform.wiki.service.DataStorage;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.service.search.TemplateSearchData;
 import org.exoplatform.wiki.service.search.TemplateSearchResult;
-import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.TitleSearchResult;
+import org.exoplatform.wiki.service.search.WikiSearchData;
+import org.exoplatform.wiki.template.plugin.WikiTemplatePagePlugin;
 import org.exoplatform.wiki.utils.Utils;
 
 public class JCRDataStorage implements DataStorage{
   private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
   
   private static final int searchSize = 10;
+  
+  private WikiTemplatePagePlugin templatePlugin; 
+  
+  public void setTemplatePagePlugin(WikiTemplatePagePlugin plugin) {
+    this.templatePlugin = plugin;
+  }
   
   public PageList<SearchResult> search(ChromatticSession session, WikiSearchData data) throws Exception {
     List<SearchResult> resultList = new ArrayList<SearchResult>();
@@ -59,6 +69,34 @@ public class JCRDataStorage implements DataStorage{
       // If contains, merges with the exist
       if (!isContains(resultList, tempResult)) {
         resultList.add(tempResult);
+      }
+    }
+  }
+  
+  public void initDefaultTemplatePage(ChromatticSession crmSession, ConfigurationManager configurationManager, String path) {
+    if (templatePlugin != null) {
+      try {
+        Iterator<String> iterator = templatePlugin.getSourcePaths().iterator();
+        Session session = crmSession.getJCRSession();
+        InputStream is = null;
+        while (iterator.hasNext()) {
+          try {
+            String sourcePath = iterator.next();
+            is = configurationManager.getInputStream(sourcePath);
+            int type = ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW;
+            if(((Node)session.getItem(path)).hasNode(WikiNodeType.WIKI_TEMPLATE_CONTAINER)) {
+              type = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
+            }
+            session.importXML(path, is, type);
+            session.save();
+          } finally {
+            if (is != null) {
+              is.close();
+            }
+          }
+        }
+      } catch (Exception e) {
+        log.info("Failed to init default template page because: " + e.getCause());
       }
     }
   }

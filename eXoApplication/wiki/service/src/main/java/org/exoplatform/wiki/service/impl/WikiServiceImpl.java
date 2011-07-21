@@ -70,6 +70,7 @@ import org.exoplatform.wiki.service.search.TemplateSearchData;
 import org.exoplatform.wiki.service.search.TemplateSearchResult;
 import org.exoplatform.wiki.service.search.TitleSearchResult;
 import org.exoplatform.wiki.service.search.WikiSearchData;
+import org.exoplatform.wiki.template.plugin.WikiTemplatePagePlugin;
 import org.exoplatform.wiki.utils.Utils;
 import org.picocontainer.Startable;
 import org.xwiki.rendering.syntax.Syntax;
@@ -99,6 +100,8 @@ public class WikiServiceImpl implements WikiService, Startable {
   private PropertiesParam           preferencesParams;
   
   private List<ComponentPlugin> plugins_ = new ArrayList<ComponentPlugin>();
+  
+  private List<WikiTemplatePagePlugin> templatePagePlugins_ = new ArrayList<WikiTemplatePagePlugin>();
 
   private static final Log      log               = ExoLogger.getLogger(WikiServiceImpl.class);
 
@@ -113,6 +116,13 @@ public class WikiServiceImpl implements WikiService, Startable {
       syntaxHelpParams = initParams.getValuesParamIterator();
       preferencesParams = initParams.getPropertiesParam(PREFERENCES);
     }
+  }
+  
+  public void initDefaultTemplatePage(String path) {
+    Model model = getModel();
+    WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+    ChromatticSession session = wStore.getSession();
+    jcrDataStorage.initDefaultTemplatePage(session, configManager, path);
   }
 
   public Page createPage(String wikiType, String wikiOwner, String title, String parentId) throws Exception {
@@ -898,6 +908,13 @@ public class WikiServiceImpl implements WikiService, Startable {
   }
 
   @Override
+  public void addWikiTemplatePagePlugin(WikiTemplatePagePlugin plugin) {
+    if (plugin != null) {
+      templatePagePlugins_.add(plugin);
+    }
+  }
+
+  @Override
   public List<PageWikiListener> getPageListeners() {
     List<PageWikiListener> pageListeners = new ArrayList<PageWikiListener>();
     for (ComponentPlugin c : plugins_) {
@@ -906,6 +923,12 @@ public class WikiServiceImpl implements WikiService, Startable {
       }
     }
     return pageListeners;
+  }
+
+  public void setTemplatePagePlugin() {
+    for (WikiTemplatePagePlugin plugin : templatePagePlugins_) {
+      jcrDataStorage.setTemplatePagePlugin(plugin);
+    }
   }
 
   @Override
@@ -946,6 +969,12 @@ public class WikiServiceImpl implements WikiService, Startable {
     ChromatticManager chromatticManager = (ChromatticManager) ExoContainerContext.getCurrentContainer()
                                                                                  .getComponentInstanceOfType(ChromatticManager.class);
     RequestLifeCycle.begin(chromatticManager);
+    try {
+      log.info("Init template page plugin ...");
+      setTemplatePagePlugin();
+    } catch (Exception e) {
+      log.warn("Cannot init template page plugin ...");
+    }
     removeDraftPages();
     try {
       getWikiHome(PortalConfig.GROUP_TYPE, "sandbox");

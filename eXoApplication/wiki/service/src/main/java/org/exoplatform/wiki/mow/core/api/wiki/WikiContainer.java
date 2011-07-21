@@ -24,6 +24,7 @@ import org.chromattic.api.annotations.MappedBy;
 import org.chromattic.api.annotations.OneToMany;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
+import org.exoplatform.wiki.service.WikiService;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
@@ -32,6 +33,8 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
  */
 public abstract class WikiContainer<T extends Wiki> {
 
+  private WikiService wService;
+  
   @OneToMany(type = RelationshipType.REFERENCE)
   @MappedBy(WikiNodeType.Definition.WIKI_CONTAINER_REFERENCE)
   public abstract Collection<T> getWikis();
@@ -43,18 +46,29 @@ public abstract class WikiContainer<T extends Wiki> {
   public abstract T addWiki(String wikiOwner);
 
   @Create
-  public abstract T createWiki();
+  public abstract T createWiki();  
   
   protected String validateWikiOwner(String wikiOwner){
     return wikiOwner;
+  }
+
+  public WikiService getwService() {
+    return wService;
+  }
+
+  public void setwService(WikiService wService) {
+    this.wService = wService;
   }
 
   public T getWiki(String wikiOwner) {
     T wiki = contains(wikiOwner);
     if (wiki != null)
       return wiki;
-    else
-      return addWiki(wikiOwner);
+    else {
+      wiki = addWiki(wikiOwner);
+      ((WikiImpl)wiki).initTemplate();
+      return wiki;
+    }
   }
 
   public Collection<T> getAllWikis() {
