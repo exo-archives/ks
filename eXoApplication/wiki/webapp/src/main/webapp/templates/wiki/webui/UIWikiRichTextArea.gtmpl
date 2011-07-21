@@ -62,6 +62,13 @@
     var doc = iframe.contentWindow.document;
     doc.body.id = 'body';
     doc.body.className = 'UIWikiPortlet UIWikiPortletWysiwygCss';
+    var scripts = doc.getElementsByTagName("script");    
+    if (scripts.length == 0) {
+      var script = doc.createElement("script");
+      script.setAttribute('type','text/javascript');
+      script.text = "var eXo = parent.eXo;";
+      doc.getElementsByTagName("head")[0].appendChild(script);
+    }
     var links = doc.getElementsByTagName("link");    
     if (links.length == 0) {
       var css = doc.createElement("link");

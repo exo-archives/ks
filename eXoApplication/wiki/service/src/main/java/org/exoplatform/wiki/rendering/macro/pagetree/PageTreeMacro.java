@@ -149,9 +149,9 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
           .append(startDepth);
     treeSb.append("<div class=\"UITreeExplorer\" id =\"").append(treeID).append("\">")
           .append("  <div>")
-          .append("   <input class=\"ChildrenURL\" type=\"hidden\" value=\"").append(treeRestURI).append("\" />")   
-          .append("   <a class=\"SelectNode\" style=\"display:none\" href=\"").append(redirectURI).append("\" /></a>")
-          .append(     buildHierachyNode(treeID,initSb.toString()))
+          .append("    <input class=\"ChildrenURL\" type=\"hidden\" value=\"").append(treeRestURI).append("\" />")
+          .append("    <a class=\"SelectNode\" style=\"display:none\" href=\"").append(redirectURI).append("\" ></a>")
+          .append(buildHierachyNode(treeID, initSb.toString()))                
           .append("  </div>")
           .append("</div>");
     RawBlock testRaw = new RawBlock(treeSb.toString(), XHTML_SYNTAX);
@@ -159,10 +159,19 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
   }  
 
   public String buildHierachyNode(String treeId, String initParam) throws Exception {
-    StringBuilder sb = new StringBuilder();   
-    sb.append("<div class=\"NodeGroup\">");
-    sb.append("  <script> eXo.wiki.UITreeExplorer.init(\"" + treeId  +"\",\""+ initParam + "\",false ); </script>");
-    sb.append("</div>");
+    StringBuilder sb = new StringBuilder();
+    sb.append("    <div class=\"NodeGroup\">")
+      .append("      <script type=\"text/javascript\">")
+      .append("        function initTree(){eXo.wiki.UITreeExplorer.init(\"" + treeId + "\",\"" + initParam + "\",false );}")
+      .append("        var isInIFrame = (window.location != window.parent.location) ? true : false;")
+      .append("        if (isInIFrame) {")
+      .append("          if (window.attachEvent) {window.attachEvent('onload', initTree);}")
+      .append("          else if (window.addEventListener) {window.addEventListener('load', initTree, false);}")
+      .append("            else {document.addEventListener('load', initTree, false);}")      
+      .append("        }")
+      .append("        else { eXo.core.Browser.addOnLoadCallback(\"init" + treeId + "\",initTree);}")
+      .append("      </script>");
+    sb.append("    </div>");
     return sb.toString();
   }
  
