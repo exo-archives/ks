@@ -636,10 +636,14 @@ eXo.faq.DragDrop = {
 	getAction: function(obj,target){
 		if(eXo.core.DOMUtil.hasClass(target,"FAQTmpCategory")){
 			var preElement = eXo.core.DOMUtil.findPreviousElementByTagName(target,"div");
-			if(!preElement) preElement = eXo.core.DOMUtil.findNextElementByTagName(target,"div");
+			var top = " ";
+			if(!preElement) {
+				preElement = eXo.core.DOMUtil.findNextElementByTagName(target,"div");
+				top = "top";
+			}
 			if(obj.id == preElement.id) return false;
 			var actionLink = obj.getAttribute("actionLink");
-			actionLink = actionLink.replace("=objectId","="+obj.id +","+preElement.id);
+			actionLink = actionLink.replace("=objectId", ("="+obj.id +","+ preElement.id + "," + top) );
 		}else if(eXo.core.DOMUtil.hasClass(target,"FAQCategory")){
 			var actionLink = obj.getAttribute("actionLink");
 			actionLink = actionLink.replace("=objectId","="+obj.id +","+target.id);
