@@ -171,6 +171,10 @@
       <version>${org.xwiki.platform.version}</version>
       <exclusions>
         <exclusion>
+          <groupId>org.xwiki.platform</groupId>
+          <artifactId>xwiki-core-component-observation</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>commons-logging</groupId>
           <artifactId>commons-logging</artifactId>
         </exclusion>
@@ -181,6 +185,10 @@
       <artifactId>xwiki-core-script</artifactId>
       <version>${org.xwiki.platform.version}</version>
       <exclusions>
+        <exclusion>
+          <groupId>org.xwiki.platform</groupId>
+          <artifactId>xwiki-core-observation-api</artifactId>
+        </exclusion>
         <exclusion>
           <groupId>org.livetribe</groupId>
           <artifactId>livetribe-jsr223</artifactId>
