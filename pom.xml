@@ -85,7 +85,7 @@
   <bouncycastle.version>136</bouncycastle.version>
 	<net.oauth.version>20080621</net.oauth.version>
 	<cglib.version>2.2</cglib.version>
-	<commons-dbcp.version>1.2.1</commons-dbcp.version>
+	<commons-dbcp.version>1.2.2</commons-dbcp.version>
 	<org.exoplatform.tool.version>1.0.0</org.exoplatform.tool.version>
   <org.javassist.version>3.14.0-GA</org.javassist.version>
 	<html-parser.version>1.6</html-parser.version>
