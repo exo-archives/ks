@@ -28,6 +28,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumSubscription;
 import org.exoplatform.forum.service.JCRPageList;
@@ -188,7 +189,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     list = new ArrayList<SelectItemOption<String>>();
     String[] format = new String[] { "M-d-yyyy", "M-d-yy", "MM-dd-yy", "MM-dd-yyyy", "yyyy-MM-dd", "yy-MM-dd", "dd-MM-yyyy", "dd-MM-yy", "M/d/yyyy", "M/d/yy", "MM/dd/yy", "MM/dd/yyyy", "yyyy/MM/dd", "yy/MM/dd", "dd/MM/yyyy", "dd/MM/yy" };
     for (String frm : format) {
-      list.add(new SelectItemOption<String>((frm.toLowerCase() + " (" + ForumUtils.getFormatDate(frm, date) + ")"), frm));
+      list.add(new SelectItemOption<String>((frm.toLowerCase() + " (" + TimeConvertUtils.getFormatDate(frm, date) + ")"), frm));
     }
 
     UIFormSelectBox shortdateFormat = new UIFormSelectBox(FIELD_SHORTDATEFORMAT_SELECTBOX, FIELD_SHORTDATEFORMAT_SELECTBOX, list);
@@ -196,7 +197,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     list = new ArrayList<SelectItemOption<String>>();
     format = new String[] { "DDD, MMMM dd, yyyy", "DDDD, MMMM dd, yyyy", "DDDD, dd MMMM, yyyy", "DDD, MMM dd, yyyy", "DDDD, MMM dd, yyyy", "DDDD, dd MMM, yyyy", "MMMM dd, yyyy", "dd MMMM, yyyy", "MMM dd, yyyy", "dd MMM, yyyy" };
     for (String idFrm : format) {
-      list.add(new SelectItemOption<String>((idFrm.toLowerCase() + " (" + ForumUtils.getFormatDate(idFrm, date) + ")"), idFrm.replaceFirst(" ", "=")));
+      list.add(new SelectItemOption<String>((idFrm.toLowerCase() + " (" + TimeConvertUtils.getFormatDate(idFrm, date) + ")"), idFrm.replaceFirst(" ", "=")));
     }
 
     UIFormSelectBox longDateFormat = new UIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX, FIELD_LONGDATEFORMAT_SELECTBOX, list);

@@ -16,9 +16,16 @@
  */
 package org.exoplatform.forum;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.application.WebuiRequestContext;
 
 /**
@@ -33,8 +40,16 @@ public class TimeConvertUtils {
   private static String JUSTNOW = "JUSTNOW";
   private static String SPACE = " ";
 
+  public static Calendar getInstanceTempCalendar() {
+    Calendar calendar = GregorianCalendar.getInstance();
+    calendar.setLenient(false);
+    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
+    return calendar;
+  }
+
   public static String convertDateTime(Date dateInput) throws Exception {
-    float delta = (ForumUtils.getInstanceTempCalendar().getTimeInMillis() - dateInput.getTime());
+    float delta = (getInstanceTempCalendar().getTimeInMillis() - dateInput.getTime());
     int i = 0;
     for (i = 0; (delta >= Float.parseFloat(timeLength[i])) && i < timeLength.length - 1; i++) {
       delta = delta / Float.parseFloat(timeLength[i]);
@@ -58,8 +73,29 @@ public class TimeConvertUtils {
                                   .append(res.getString("UIForumPortlet.timeFormat."+strs[1])).toString();
       }
     } catch (Exception e) {
-      return ForumUtils.getFormatDate(format, dateInput);
+      return getFormatDate(format, dateInput);
     }
   }
   
+  public static String getFormatDate(String format, Date myDate) {
+    PortalRequestContext portalContext = Util.getPortalRequestContext();
+    Locale locale = new Locale(portalContext.getLocale().getLanguage(), portalContext.getLocale().getCountry());
+    return getFormatDateLocale(format, myDate, locale);
+  }
+
+  public static String getFormatDateLocale(String format, Date myDate, Locale locale) {
+    /*
+     * h,hh,H, m, mm, d, dd, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
+     */
+    if (myDate == null)
+      return ForumUtils.EMPTY_STR;
+    if (!ForumUtils.isEmpty(format)) {
+      if (format.indexOf("DDDD") >= 0)
+        format = format.replaceAll("DDDD", "EEEE");
+      if (format.indexOf("DDD") >= 0)
+        format = format.replaceAll("DDD", "EEE");
+    }
+    Format formatter = new SimpleDateFormat(format, locale);
+    return formatter.format(myDate);
+  }
 }

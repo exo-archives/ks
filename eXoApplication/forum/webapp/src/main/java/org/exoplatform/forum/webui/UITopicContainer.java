@@ -539,7 +539,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         categories.setIsRenderChild(true);
         List<ForumSearch> list = uiTopicContainer.getForumService().getQuickSearch(text, type.toString(), path, uiTopicContainer.getUserProfile().getUserId(), forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), null);
         UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
-        listSearchEvent.setListSearchEvent(list);
+        listSearchEvent.setListSearchEvent(list, path.substring(path.indexOf(Utils.CATEGORY)));
         forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
         formStringInput.setValue(ForumUtils.EMPTY_STR);
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

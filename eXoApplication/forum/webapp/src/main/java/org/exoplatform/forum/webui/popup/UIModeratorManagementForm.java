@@ -30,6 +30,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.JCRPageList;
@@ -199,7 +200,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
   private String getIsBanned(UserProfile userProfile) throws Exception {
     if (userProfile.getBanUntil() > 0) {
-      Calendar calendar = ForumUtils.getInstanceTempCalendar();
+      Calendar calendar = TimeConvertUtils.getInstanceTempCalendar();
       if (calendar.getTimeInMillis() >= userProfile.getBanUntil()) {
         userProfile.setIsBanned(false);
         return "false";
@@ -413,14 +414,14 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     list = new ArrayList<SelectItemOption<String>>();
     String[] format = new String[] { "M-d-yyyy", "M-d-yy", "MM-dd-yy", "MM-dd-yyyy", "yyyy-MM-dd", "yy-MM-dd", "dd-MM-yyyy", "dd-MM-yy", "M/d/yyyy", "M/d/yy", "MM/dd/yy", "MM/dd/yyyy", "yyyy/MM/dd", "yy/MM/dd", "dd/MM/yyyy", "dd/MM/yy" };
     for (String frm : format) {
-      list.add(new SelectItemOption<String>((frm.toLowerCase() + " (" + ForumUtils.getFormatDate(frm, date) + ")"), frm));
+      list.add(new SelectItemOption<String>((frm.toLowerCase() + " (" + TimeConvertUtils.getFormatDate(frm, date) + ")"), frm));
     }
     UIFormSelectBox shortdateFormat = new UIFormSelectBox(FIELD_SHORTDATEFORMAT_SELECTBOX, FIELD_SHORTDATEFORMAT_SELECTBOX, list);
     shortdateFormat.setValue(userProfile.getShortDateFormat());
     list = new ArrayList<SelectItemOption<String>>();
     format = new String[] { "DDD, MMMM dd, yyyy", "DDDD, MMMM dd, yyyy", "DDDD, dd MMMM, yyyy", "DDD, MMM dd, yyyy", "DDDD, MMM dd, yyyy", "DDDD, dd MMM, yyyy", "MMMM dd, yyyy", "dd MMMM, yyyy", "MMM dd, yyyy", "dd MMM, yyyy" };
     for (String idFrm : format) {
-      list.add(new SelectItemOption<String>((idFrm.toLowerCase() + " (" + ForumUtils.getFormatDate(idFrm, date) + ")"), idFrm.replaceFirst(" ", "=")));
+      list.add(new SelectItemOption<String>((idFrm.toLowerCase() + " (" + TimeConvertUtils.getFormatDate(idFrm, date) + ")"), idFrm.replaceFirst(" ", "=")));
     }
     UIFormSelectBox longDateFormat = new UIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX, FIELD_LONGDATEFORMAT_SELECTBOX, list);
     longDateFormat.setValue(userProfile.getLongDateFormat().replaceFirst(" ", "="));
@@ -455,12 +456,12 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     if (isBan) {
       until = userProfile.getBanUntil();
       date.setTime(until);
-      list.add(new SelectItemOption<String>("Banned until: " + ForumUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", date) + " GMT+0", ("Until_" + until)));
+      list.add(new SelectItemOption<String>("Banned until: " + TimeConvertUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", date) + " GMT+0", ("Until_" + until)));
     }
     date = getInstanceTempCalendar();
     until = date.getTime() + oneDate;
     date.setTime(until);
-    list.add(new SelectItemOption<String>("1 Day (" + ForumUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", date) + " GMT+0)", "Until_" + until));
+    list.add(new SelectItemOption<String>("1 Day (" + TimeConvertUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", date) + " GMT+0)", "Until_" + until));
     while (true) {
       if (i == 8 && dv.equals("Days"))
         i = 10;
@@ -505,7 +506,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
         date.setYear(date.getYear() + i);
         until = date.getTime();
       }
-      list.add(new SelectItemOption<String>(i + " " + dv + " (" + ForumUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", date) + " GMT+0)", ("Until_" + until)));
+      list.add(new SelectItemOption<String>(i + " " + dv + " (" + TimeConvertUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", date) + " GMT+0)", ("Until_" + until)));
       ++i;
     }
     UIFormSelectBox banUntil = new UIFormSelectBox(FIELD_BANUNTIL_SELECTBOX, FIELD_BANUNTIL_SELECTBOX, list);
@@ -521,7 +522,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     UIFormStringInput createdDateBan = new UIFormStringInput(FIELD_CREATEDDATEBAN_INPUT, FIELD_CREATEDDATEBAN_INPUT, null);
     if (isBan) {
       banReason.setValue(userProfile.getBanReason());
-      createdDateBan.setValue(ForumUtils.getFormatDate("MM/dd/yyyy, hh:mm a", userProfile.getCreatedDateBan()));
+      createdDateBan.setValue(TimeConvertUtils.getFormatDate("MM/dd/yyyy, hh:mm a", userProfile.getCreatedDateBan()));
     } else {
       banReason.setEnable(true);
     }
@@ -590,7 +591,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
   }
 
   private Date getInstanceTempCalendar() {
-    return ForumUtils.getInstanceTempCalendar().getTime();
+    return TimeConvertUtils.getInstanceTempCalendar().getTime();
   }
 
   private void setForumLinks() throws Exception {
@@ -838,7 +839,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       if (!ForumUtils.isEmpty(banReason)) {
         stringBuffer.append("Ban Reason: ").append(banReason).append(" ");
       }
-      stringBuffer.append("From Date: ").append(ForumUtils.getFormatDate("MM-dd-yyyy hh:mm a", uiForm.getInstanceTempCalendar())).append(" GMT+0 To Date: ").append(ForumUtils.getFormatDate("MM-dd-yyyy hh:mm a", date)).append(" GMT+0");
+      stringBuffer.append("From Date: ").append(TimeConvertUtils.getFormatDate("MM-dd-yyyy hh:mm a", uiForm.getInstanceTempCalendar())).append(" GMT+0 To Date: ").append(TimeConvertUtils.getFormatDate("MM-dd-yyyy hh:mm a", date)).append(" GMT+0");
       if (isBanned) {
         if (banReasonSummaries != null && banReasonSummaries.length > 0) {
           if (wasBanned) {

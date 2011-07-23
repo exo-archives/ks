@@ -17,30 +17,25 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumSearch;
-import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIViewPost;
 import org.exoplatform.ks.common.webui.UIPopupAction;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.form.UIFormSelectBox;
 
 /**
  * Created by The eXo Platform SARL
@@ -49,30 +44,67 @@ import org.exoplatform.webui.event.EventListener;
  * 14 Apr 2008, 08:22:52  
  */
 @ComponentConfig(
+    lifecycle = UIFormLifecycle.class,                   
     template = "app:/templates/forum/webui/UIForumListSearch.gtmpl",
     events = {
       @EventConfig(listeners = UIForumListSearch.OpentContentActionListener.class),
+      @EventConfig(listeners = UIForumListSearch.ChangeNumberItemActionListener.class),
       @EventConfig(listeners = UIForumListSearch.CloseActionListener.class)
     }
 )
-public class UIForumListSearch extends UIContainer {
-  private List<ForumSearch>   listEvent       = null;
+public class UIForumListSearch extends BaseForumForm {
+  private List<ForumSearch>   listEvent                    = null;
 
-  private boolean             isShowIter      = true;
+  private boolean             isShowIter                   = true;
 
-  public final String         SEARCH_ITERATOR = "forumSearchIterator";
+  public final String         SEARCH_ITERATOR              = "forumSearchIterator";
+
+  public static final String  FIELD_DISPLAY_ITEM_SELECTBOX = "DisplayItem";
+
+  public static final String  ID                           = "id";
+
+  public static final String  GO_BACK                      = "Goback";
+
+  private String              pathLastVisit                = GO_BACK + Utils.FORUM_SERVICE;
 
   private JCRPageList         pageList;
 
+  private int                 pageSize                     = 10;
+
   private UIForumPageIterator pageIterator;
+  
+  private Map<String, String> displayItemsStorage = new HashMap<String, String>();
 
   public UIForumListSearch() throws Exception {
     pageIterator = addChild(UIForumPageIterator.class, null, SEARCH_ITERATOR);
+    List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>();
+    for (int i = 10; i <= 45; i = i + 5) {
+      ls.add(new SelectItemOption<String>(String.valueOf(i), (ID + i)));
+    }
+    UIFormSelectBox displayItem = new UIFormSelectBox(FIELD_DISPLAY_ITEM_SELECTBOX, FIELD_DISPLAY_ITEM_SELECTBOX, ls);
+    displayItem.setDefaultValue(ID + 10);
+    displayItem.setOnChange("ChangeNumberItem");
+    addChild(displayItem);
   }
 
-  public void setListSearchEvent(List<ForumSearch> listEvent) {
+  public void setPathLastVisit(String pathLastVisit) {
+    this.pathLastVisit = pathLastVisit;
+  }
+
+  public String getPathLastVisit() {
+    return pathLastVisit;
+  }
+
+  public void setListSearchEvent(List<ForumSearch> listEvent, String pathLastVisit) throws Exception {
     this.listEvent = listEvent;
+    this.setPathLastVisit(GO_BACK + pathLastVisit);
     pageIterator.setSelectPage(1);
+    String userId = getUserProfile().getUserId();
+    if(displayItemsStorage.keySet().contains(userId)) {
+      String vl = displayItemsStorage.get(userId);
+      pageSize = Integer.valueOf(vl.substring(2));
+      getUIFormSelectBox(FIELD_DISPLAY_ITEM_SELECTBOX).setValue(vl) ;
+    }
   }
 
   public boolean getIsShowIter() {
@@ -81,13 +113,13 @@ public class UIForumListSearch extends UIContainer {
 
   @SuppressWarnings("unchecked")
   public List<ForumSearch> getListEvent() {
-    pageList = new ForumPageList(10, listEvent.size());
-    pageList.setPageSize(10);
+    pageList = new ForumPageList(pageSize, listEvent.size());
+    pageList.setPageSize(pageSize);
     pageIterator.updatePageList(pageList);
     isShowIter = true;
     if (pageList.getAvailablePage() <= 1)
       isShowIter = false;
-    int pageSelect = (int) pageIterator.getPageSelected();
+    int pageSelect = pageIterator.getPageSelected();
     List<ForumSearch> list = new ArrayList<ForumSearch>();
     try {
       list.addAll(pageList.getPageSearch(pageSelect, this.listEvent));
@@ -104,164 +136,31 @@ public class UIForumListSearch extends UIContainer {
     return null;
   }
 
-  private boolean canView(Category category, Forum forum, Topic topic, Post post, UserProfile userProfile) throws Exception {
-    if (userProfile.getUserRole() == 0)
-      return true;
-    boolean canView = true;
-    boolean isModerator = false;
-    if (category == null)
-      return false;
-    String[] listUsers = category.getUserPrivate();
-    // check category is private:
-    if (listUsers.length > 0 && listUsers[0].trim().length() > 0 && !ForumServiceUtils.hasPermission(listUsers, userProfile.getUserId()))
-      return false;
-
-    // check forum
-    if (forum != null) {
-      listUsers = forum.getModerators();
-      if (userProfile.getUserRole() == 1 && (listUsers.length > 0 && listUsers[0].trim().length() > 0 && ForumServiceUtils.hasPermission(listUsers, userProfile.getUserId()))) {
-        isModerator = true;
-        canView = true;
-      } else if (forum.getIsClosed())
-        return false;
-      else
-        canView = true;
-
-      // ckeck Topic:
-      if (topic != null) {
-        if (!isModerator && !topic.getIsClosed() && topic.getIsActive() && topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsWaiting()) {
-          List<String> list = new ArrayList<String>();
-          list = ForumUtils.addArrayToList(list, topic.getCanView());
-          list = ForumUtils.addArrayToList(list, forum.getViewer());
-          list = ForumUtils.addArrayToList(list, category.getViewer());
-          if (!list.isEmpty())
-            list.add(topic.getOwner());
-          if (!list.isEmpty() && !ForumServiceUtils.hasPermission(list.toArray(new String[] {}), userProfile.getUserId()))
-            canView = false;
-        } else
-          canView = false;
-      }
-    }
-
-    return canView;
-  }
-
   static public class OpentContentActionListener extends EventListener<UIForumListSearch> {
     public void execute(Event<UIForumListSearch> event) throws Exception {
       UIForumListSearch uiForm = event.getSource();
-      String objId = event.getRequestContext().getRequestParameter(OBJECTID);
-      ForumSearch forumSearch = uiForm.getForumSearch(objId);
-
-      String path = forumSearch.getPath();
-      String type = forumSearch.getType();
-      boolean isErro = false;
+      String path = event.getRequestContext().getRequestParameter(OBJECTID);
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-      UserProfile userProfile = forumPortlet.getUserProfile();
-      boolean isRead = true;
-      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-
-      String[] id = path.split(ForumUtils.SLASH);
-      String cateId = ForumUtils.EMPTY_STR, forumId = ForumUtils.EMPTY_STR, topicId = ForumUtils.EMPTY_STR, postId = ForumUtils.EMPTY_STR;
-      for (int i = 0; i < id.length; i++) {
-        if (id[i].indexOf(Utils.CATEGORY) >= 0)
-          cateId = id[i];
-        else if (id[i].indexOf(Utils.FORUM) >= 0)
-          forumId = id[i];
-        else if (id[i].indexOf(Utils.TOPIC) >= 0)
-          topicId = id[i];
-        else if (id[i].indexOf(Utils.POST) >= 0)
-          postId = id[i];
-      }
-      Category category = null;
-      Forum forum = null;
-      Topic topic = null;
-      Post post = null;
-      try {
-        category = forumService.getCategory(cateId);
-        forum = forumService.getForum(cateId, forumId);
-        topic = forumService.getTopic(cateId, forumId, topicId, userProfile.getUserId());
-        post = forumService.getPost(cateId, forumId, topicId, path);
-      } catch (Exception e) {
-      }
-      isRead = uiForm.canView(category, forum, topic, post, userProfile);
-
-      if (type.equals(Utils.CATEGORY)) {
-        String categoryId = forumSearch.getId();
-        if (category != null) {
-          if (isRead) {
-            UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-            categoryContainer.getChild(UICategory.class).update(category, null);
-            categoryContainer.updateIsRender(false);
-            forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(categoryId);
-            forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-            event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-          }
-        } else
-          isErro = true;
-      } else if (type.equals(Utils.FORUM)) {
-        if (forum != null) {
-          if (isRead) {
-            forumPortlet.updateIsRendered(ForumUtils.FORUM);
-            UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
-            uiForumContainer.setIsRenderChild(true);
-            uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-            UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class);
-            uiTopicContainer.setUpdateForum(cateId, forum, 0);
-            forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId + ForumUtils.SLASH + forumId));
-            event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-          }
-        } else
-          isErro = true;
-      } else if (type.equals(Utils.TOPIC)) {
-        if (topic != null) {
-          if (isRead) {
-            forumPortlet.updateIsRendered(ForumUtils.FORUM);
-            UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
-            UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class);
-            uiForumContainer.setIsRenderChild(false);
-            uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-            UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class);
-            uiTopicDetail.setUpdateForum(forum);
-            uiTopicDetail.initInfoTopic(cateId, forumId, topic, 0);
-            uiTopicDetail.setIdPostView("top");
-            uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(cateId, forumId, topic.getId());
-            forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(), topic.getId());
-            forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis());
-            forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId + ForumUtils.SLASH + forumId + " "));
-            event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-          }
-        } else
-          isErro = true;
+      if(path.indexOf(GO_BACK) >= 0) {
+        path = path.replace(GO_BACK, "");
       } else {
-        if (post != null) {
-          if (isRead) {
+        ForumSearch forumSearch = uiForm.getForumSearch(path);
+        if(!Utils.CATEGORY.equals(forumSearch.getType())) path = forumSearch.getPath();
+        if(Utils.POST.equals(forumSearch.getType())) {
+          Post post = uiForm.getForumService().getPost("", "", "", path);
+          if(post != null) {
             UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true);
             UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670);
             viewPost.setPostView(post);
             viewPost.setViewUserInfo(false);
             viewPost.setActionForm(new String[] { "Close", "OpenTopicLink" });
             event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-          }
-        } else
-          isErro = true;
-      }
-      if (isErro) {
-        Object[] args = {};
-        UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", args, ApplicationMessage.WARNING));
-        for (ForumSearch search : uiForm.listEvent) {
-          if (search.getId().equals(objId)) {
-            uiForm.listEvent.remove(search);
             return;
           }
         }
       }
-      if (!isRead) {
-        UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
-        String[] s = new String[] {};
-        uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING));
-        return;
-      }
+      forumPortlet.calculateRenderComponent(path, event.getRequestContext());
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
 
@@ -271,6 +170,19 @@ public class UIForumListSearch extends UIContainer {
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       forumPortlet.findFirstComponentOfType(UICategories.class).setIsRenderChild(false);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+    }
+  }
+
+  static public class ChangeNumberItemActionListener extends EventListener<UIForumListSearch> {
+    public void execute(Event<UIForumListSearch> event) throws Exception {
+      UIForumListSearch uiForm = event.getSource();
+      String vl = uiForm.getUIFormSelectBox(FIELD_DISPLAY_ITEM_SELECTBOX).getValue();
+      uiForm.pageSize = Integer.valueOf(vl.substring(2));
+      String userId = uiForm.getUserProfile().getUserId();
+      if(!userId.equals(UserProfile.USER_GUEST)) {
+        uiForm.displayItemsStorage.put(userId, vl);
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }
   }
 }

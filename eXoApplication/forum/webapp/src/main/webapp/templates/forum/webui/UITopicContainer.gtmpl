@@ -346,7 +346,6 @@
 										newPost = "New";									
 									}
 									postDate.setTime(topic.getLastPostDate().getTime() - setTime);
-									//String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);	
 									String lastPostDate = TimeConvertUtils.convertDateTimeResourceBundle(postDate, (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()))					
 									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 101);

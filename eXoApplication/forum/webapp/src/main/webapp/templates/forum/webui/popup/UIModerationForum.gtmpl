@@ -2,6 +2,7 @@
 	import org.exoplatform.forum.service.ForumSearch;
 	import org.exoplatform.forum.service.Utils ;
 	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.TimeConvertUtils;
 %>
 <div class="$uicomponent.id">
 	<% uiform.begin() %>
@@ -48,7 +49,7 @@
 														String objectTitle = object.getName();
 														String titlePost = uiform.getTitleInHTMLCode(object.getContent());
 														postDate.setTime(object.getCreatedDate().getTime() - setTime);
-														String createdDate = ForumUtils.getFormatDate(formatDate, postDate);
+														String createdDate = TimeConvertUtils.getFormatDate(formatDate, postDate);
 														titlePost = ForumUtils.getSubString(titlePost, 100);
 														String classType = "HotThreadNoNewPost";
 														if(type.equals(Utils.POST)) classType = "PostIcon";

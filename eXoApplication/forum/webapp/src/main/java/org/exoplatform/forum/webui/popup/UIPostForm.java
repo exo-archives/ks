@@ -24,6 +24,7 @@ import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
@@ -290,8 +291,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
         post.setMessage(message);
         post.setOwner(userName);
         if (ForumUtils.isEmpty(uiForm.postId)) {
-          post.setCreatedDate(ForumUtils.getInstanceTempCalendar().getTime());
-          post.setModifiedDate(ForumUtils.getInstanceTempCalendar().getTime());
+          post.setCreatedDate(TimeConvertUtils.getInstanceTempCalendar().getTime());
+          post.setModifiedDate(TimeConvertUtils.getInstanceTempCalendar().getTime());
         }
         post.setModifiedBy(userName);
         post.setRemoteAddr(ForumUtils.EMPTY_STR);
@@ -459,7 +460,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
                 }
               }
               uiForm.getForumService().updateTopicAccess(forumPortlet.getUserProfile().getUserId(), uiForm.topicId);
-              forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis());
+              forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
             } catch (Exception e) {
             }
             uiForm.isMP = uiForm.isQuote = false;

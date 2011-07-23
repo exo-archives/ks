@@ -1,5 +1,5 @@
 <% 
-	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.TimeConvertUtils;
 	import org.exoplatform.web.application.JavascriptManager;
 	JavascriptManager jsManager = _ctx.getRequestContext().getJavascriptManager();
 %>
@@ -32,7 +32,7 @@
 							String pruneId = uicomponent.getForumIdOfPrune(pruneSetting);
 							String lastRun = "&nbsp;";
 							if(pruneSetting.getLastRunDate() != null){
-								lastRun = ForumUtils.getFormatDate("dd-MM-yyyy HH:mm", pruneSetting.getLastRunDate()) + " GMT+0" ;
+								lastRun = TimeConvertUtils.getFormatDate("dd-MM-yyyy HH:mm", pruneSetting.getLastRunDate()) + " GMT+0" ;
 							}
 							if(t_%2 == 0) classCssInbox = "whileRow";
 							else classCssInbox = "OddRow";

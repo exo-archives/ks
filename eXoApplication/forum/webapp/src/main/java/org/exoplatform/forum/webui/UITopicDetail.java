@@ -35,6 +35,7 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
@@ -646,7 +647,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         userProfile.addLastPostIdReadOfTopic(topicId, IdLastPost);
         UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
         forumPortlet.getUserProfile().addLastPostIdReadOfForum(forumId, topicId + ForumUtils.SLASH + IdLastPost);
-        forumPortlet.getUserProfile().addLastPostIdReadOfTopic(topicId, IdLastPost + ForumUtils.COMMA + ForumUtils.getInstanceTempCalendar().getTimeInMillis());
+        forumPortlet.getUserProfile().addLastPostIdReadOfTopic(topicId, IdLastPost + ForumUtils.COMMA + TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
         if (!UserProfile.USER_GUEST.equals(userName))
           getForumService().saveLastPostIdRead(userName, userProfile.getLastReadPostOfForum(), userProfile.getLastReadPostOfTopic());
       }
@@ -876,7 +877,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         List<ForumSearch> list = topicDetail.getForumService().getQuickSearch(text, type.toString(), path, topicDetail.getUserProfile().getUserId(), forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), null);
 
         UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
-        listSearchEvent.setListSearchEvent(list);
+        listSearchEvent.setListSearchEvent(list, path.substring(path.indexOf(Utils.CATEGORY))+ForumUtils.SLASH+topicDetail.getPageSelect());
         forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
         formStringInput.setValue(ForumUtils.EMPTY_STR);
         topicDetail.refreshPortlet();
@@ -1502,9 +1503,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
               topicDetail.getForumService().savePost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true, messageBuilder);
               long postCount = topicDetail.getUserInfo(userName).getTotalPost() + 1;
               topicDetail.getUserInfo(userName).setTotalPost(postCount);
-              topicDetail.getUserInfo(userName).setLastPostDate(ForumUtils.getInstanceTempCalendar().getTime());
+              topicDetail.getUserInfo(userName).setLastPostDate(TimeConvertUtils.getInstanceTempCalendar().getTime());
               topicDetail.getForumService().updateTopicAccess(forumPortlet.getUserProfile().getUserId(), topic.getId());
-              forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis());
+              forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
               if (topicDetail.userProfile.getIsAutoWatchTopicIPost()) {
                 List<String> values = new ArrayList<String>();
                 values.add(topicDetail.userProfile.getEmail());

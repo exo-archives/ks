@@ -9,6 +9,7 @@
 	import org.exoplatform.ks.common.UserHelper; 
 	import org.exoplatform.services.jcr.ext.common.SessionProvider;
 	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.TimeConvertUtils;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
 	import org.exoplatform.ks.common.user.CommonContact;
@@ -407,13 +408,13 @@
 					classIconPost = "NormalTopicIcon" ;
 				String namePost = post.getName() ;
 				dateView.setTime(post.getCreatedDate().getTime() - setTime);
-				String createdDate = ForumUtils.getFormatDate(longDateFormat,dateView);
+				String createdDate = TimeConvertUtils.getFormatDate(longDateFormat,dateView);
 				String message = uicomponent.renderPost(post) ;
 				String editBy = post.getModifiedBy() ;
 				String editDate ;
 				if(!ForumUtils.isEmpty(editBy)) {
 					dateView.setTime(post.getModifiedDate().getTime() - setTime);
-					editDate = ForumUtils.getFormatDate(longDateFormat,dateView);
+					editDate = TimeConvertUtils.getFormatDate(longDateFormat,dateView);
 				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + postId.substring(15);
@@ -421,7 +422,7 @@
 				Date joinDate_ = userInfo.getJoinedDate();
 				if(joinDate_ != null) {
 					dateView.setTime(joinDate_.getTime() - setTime);
-					joinDate = ForumUtils.getFormatDate(shortDateFormat, dateView) ;
+					joinDate = TimeConvertUtils.getFormatDate(shortDateFormat, dateView) ;
 				}
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
@@ -513,7 +514,7 @@
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
 											 dateView.setTime(lastPostOfUser.getTime() - setTime);
-											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateTimeFormat,dateView) ;
+											 String lastPostDateOfUser = TimeConvertUtils.getFormatDate(shortDateTimeFormat,dateView) ;
 									%>
 									<span><%=_ctx.appRes("UITopicDetail.label.Posts");%>:$totalPost</span>
 									<span><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</span>
@@ -528,7 +529,7 @@
 										String lastLoginUser = "" ;
 									  if(lastLogin != null){
 										  dateView.setTime(lastLogin.getTime() - setTime);
-										  lastLoginUser = ForumUtils.getFormatDate(shortDateTimeFormat, dateView) ;
+										  lastLoginUser = TimeConvertUtils.getFormatDate(shortDateTimeFormat, dateView) ;
 										}
 									%>
 									<span><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>:$lastLoginUser</span>

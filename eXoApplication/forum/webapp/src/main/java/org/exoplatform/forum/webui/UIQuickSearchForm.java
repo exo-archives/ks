@@ -92,8 +92,9 @@ public class UIQuickSearchForm extends BaseUIForm {
         UICategories categories = categoryContainer.getChild(UICategories.class);
         categories.setIsRenderChild(true);
         UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class);
-        listSearchEvent.setListSearchEvent(list);
-        forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
+        UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
+        listSearchEvent.setListSearchEvent(list, breadcumbs.getLastPath());
+        breadcumbs.setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL + ForumUtils.SLASH);
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       } else {
         formStringInput.setValue(ForumUtils.EMPTY_STR);
@@ -107,7 +108,7 @@ public class UIQuickSearchForm extends BaseUIForm {
       UIQuickSearchForm uiForm = event.getSource();
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       forumPortlet.updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL);
-      forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
+      forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL + ForumUtils.SLASH);
       UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class);
       searchForm.setUserProfile(forumPortlet.getUserProfile());
       searchForm.setSelectType(Utils.CATEGORY);

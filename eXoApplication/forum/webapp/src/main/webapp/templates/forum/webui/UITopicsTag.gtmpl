@@ -4,6 +4,7 @@
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.service.Utils ;
 	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.TimeConvertUtils ;
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.webui.UITopicsTag ;
 	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
@@ -94,7 +95,7 @@
 							String topicBy = topic.getOwner();
 							String postNewBy = topic.getLastPostBy() ;
 							postDate.setTime(topic.getLastPostDate().getTime() - setTime);
-							String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
+							String lastPostDate = TimeConvertUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
 							String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
 							titlePost = ForumUtils.getSubString(titlePost, 100);
 							int att = topic.getNumberAttachment() ;
