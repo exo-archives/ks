@@ -90,7 +90,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     this.mapNumberPagePost.clear();
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
     this.userProfile = forumPortlet.getUserProfile();
-    listWatches = forumPortlet.getWatchingByCurrentUser();
     linkUserInfo = forumPortlet.getPortletLink();
     if (!userProfile.getUserId().equals(UserProfile.USER_GUEST)) {
       this.userIdAndtagId = userProfile.getUserId() + ":" + tagId;
@@ -113,7 +112,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
     this.userProfile = forumPortlet.getUserProfile();
     linkUserInfo = forumPortlet.getPortletLink();
-    listWatches = forumPortlet.getWatchingByCurrentUser();
   }
 
   public String getRSSLink(String cateId) {
@@ -183,6 +181,9 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
       } else {
         addUIFormInput(new UIFormCheckBoxInput(topic.getId(), topic.getId(), false));
       }
+    }
+    if(topics.size() > 0) {
+      setListWatches();
     }
     return topics;
   }
@@ -332,9 +333,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
           List<String> values = new ArrayList<String>();
           values.add(topicTag.userProfile.getEmail());
           topicTag.getForumService().addWatch(1, path, values, topicTag.userProfile.getUserId());
-          UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class);
-          forumPortlet.updateWatching();
-          topicTag.listWatches = forumPortlet.getWatchingByCurrentUser();
+          topicTag.setListWatches();
           info("UIAddWatchingForm.msg.successfully");
         } catch (Exception e) {
           warning("UIAddWatchingForm.msg.fall");
@@ -348,9 +347,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicsTag> event, UITopicsTag topicTag, final String path) throws Exception {
       try {
         topicTag.getForumService().removeWatch(1, path, topicTag.userProfile.getUserId() + ForumUtils.SLASH + topicTag.getEmailWatching(path));
-        UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.updateWatching();
-        topicTag.listWatches = forumPortlet.getWatchingByCurrentUser();
         info("UIAddWatchingForm.msg.UnWatchSuccessfully");
       } catch (Exception e) {
         warning("UIAddWatchingForm.msg.UnWatchfall");

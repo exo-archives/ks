@@ -40,7 +40,6 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.webui.popup.UIPostForm;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UISettingEditModeForm;
@@ -136,8 +135,6 @@ public class UIForumPortlet extends UIPortletApplication {
   private List<String> invisibleForums      = new ArrayList<String>();
 
   private List<String> invisibleCategories  = new ArrayList<String>();
-
-  private List<Watch>  listWatches          = null;
 
   public UIForumPortlet() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
@@ -430,16 +427,6 @@ public class UIForumPortlet extends UIPortletApplication {
     return this.userProfile;
   }
 
-  public void updateWatching() throws Exception {
-    listWatches = forumService.getWatchByUser(userProfile.getUserId());
-  }
-// TODO will improvement
-  public List<Watch> getWatchingByCurrentUser() throws Exception {
-//    if (listWatches == null)
-      updateWatching();
-    return listWatches;
-  }
-
   public void updateAccessTopic(String topicId) throws Exception {
     String userId = userProfile.getUserId();
     if (userId != null && userId.length() > 0) {
@@ -480,6 +467,7 @@ public class UIForumPortlet extends UIPortletApplication {
       if (userProfile.getIsBanned())
         userProfile.setUserRole((long) 3);
     } catch (Exception e) {
+      userProfile = new UserProfile();
     }
   }
 
