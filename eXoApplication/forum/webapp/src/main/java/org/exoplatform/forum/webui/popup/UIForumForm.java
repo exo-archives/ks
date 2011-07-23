@@ -35,6 +35,7 @@ import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.UISelector;
@@ -286,7 +287,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       forumId = forum.getId();
       forum = getForumService().getForum(categoryId, forumId);
       UIFormInputWithActions newForum = this.getChildById(FIELD_NEWFORUM_FORM);
-      newForum.getUIStringInput(FIELD_FORUMTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(forum.getForumName()));
+      newForum.getUIStringInput(FIELD_FORUMTITLE_INPUT).setValue(forum.getForumName());
       newForum.getUIStringInput(FIELD_FORUMORDER_INPUT).setValue(String.valueOf(forum.getForumOrder()));
       String stat = "open";
       if (forum.getIsClosed())
@@ -297,7 +298,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       else
         stat = "unlock";
       newForum.getUIFormSelectBox(FIELD_FORUMSTATUS_SELECTBOX).setValue(stat);
-      newForum.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).setDefaultValue(ForumTransformHTML.unCodeHTML(forum.getDescription()));
+      newForum.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).setDefaultValue(forum.getDescription());
 
       UIFormInputWithActions moderationOptions = this.getChildById(FIELD_MODERATOROPTION_FORM);
       boolean isAutoAddEmail = forum.getIsAutoAddEmailNotify();
@@ -387,7 +388,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
         uiForm.isDoubleClickSubmit = false;
         return;
       }
-      forumTitle = ForumTransformHTML.enCodeHTMLTitle(forumTitle);
+      forumTitle = Utils.convertTextForTitle(forumTitle);
       String forumOrder = newForumForm.getUIStringInput(FIELD_FORUMORDER_INPUT).getValue();
       if (ForumUtils.isEmpty(forumOrder))
         forumOrder = "0";
@@ -400,9 +401,8 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       String forumState = newForumForm.getUIFormSelectBox(FIELD_FORUMSTATE_SELECTBOX).getValue();
       String forumStatus = newForumForm.getUIFormSelectBox(FIELD_FORUMSTATUS_SELECTBOX).getValue();
       String description = newForumForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).getValue();
-      if (ForumUtils.isEmpty(description))
-        description = " ";
-      description = ForumTransformHTML.enCodeHTMLTitle(description);
+      
+      description = Utils.convertTextForTitle(description);
       UIFormInputWithActions moderationOptions = uiForm.getChildById(FIELD_MODERATOROPTION_FORM);
       boolean isAutoAddEmail = moderationOptions.getUIFormCheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
       String moderators = moderationOptions.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).getValue();

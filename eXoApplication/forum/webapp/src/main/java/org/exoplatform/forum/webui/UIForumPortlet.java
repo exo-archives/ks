@@ -50,6 +50,7 @@ import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.social.core.space.model.Space;
@@ -458,7 +459,7 @@ public class UIForumPortlet extends UIPortletApplication {
     }
     try {
       if (enableBanIP) {
-        userProfile = forumService.getDefaultUserProfile(userId, org.exoplatform.ks.common.Utils.getRemoteIP());
+        userProfile = forumService.getDefaultUserProfile(userId, WebUIUtils.getRemoteIP());
       } else {
         userProfile = forumService.getDefaultUserProfile(userId, null);
       }

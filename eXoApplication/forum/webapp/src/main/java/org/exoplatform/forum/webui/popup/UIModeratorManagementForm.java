@@ -372,7 +372,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     userTitle.setValue(title);
 
     UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
-    signature.setValue(ForumTransformHTML.unCodeHTML(this.userProfile.getSignature()));
+    signature.setValue(this.userProfile.getSignature());
     UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
     isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature());
 

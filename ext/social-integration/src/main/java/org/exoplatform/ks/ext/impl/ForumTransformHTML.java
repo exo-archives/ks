@@ -126,13 +126,6 @@ public class ForumTransformHTML {
     return buffer.toString();
   }
   
-  public static String unCodeHTML(String s) {
-    if(s != null && s.trim().length() > 0) {
-      s = s.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#39", "'");
-    } else s = "";
-    return s;
-  }
-  
   public static String fixAddBBcodeAction(String b) {
     int tagIndex = 0;
     int lastIndex = 0;

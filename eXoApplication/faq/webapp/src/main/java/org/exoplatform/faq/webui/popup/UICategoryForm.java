@@ -28,6 +28,7 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -242,15 +243,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
     public void execute(Event<UICategoryForm> event) throws Exception {
       UICategoryForm uiCategory = event.getSource();
       String name = uiCategory.getUIStringInput(FIELD_NAME_INPUT).getValue();
-      if (name.indexOf("<") >= 0)
-        name = name.replace("<", "&lt;");
-      if (name.indexOf(">") >= 0)
-        name = name.replace(">", "&gt;");
-
-      if (name.indexOf("'") >= 0) {
-        uiCategory.warning("UICateforyForm.sms.cate-name-invalid");
-        return;
-      }
+      name = Utils.convertTextForTitle(name);
 
       if (uiCategory.isAddNew_) {
         if (uiCategory.getFAQService().isCategoryExist(name, uiCategory.parentId_)) {

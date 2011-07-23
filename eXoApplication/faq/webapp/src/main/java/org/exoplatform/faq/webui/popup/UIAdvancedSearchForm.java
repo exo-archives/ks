@@ -27,6 +27,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.resources.LocaleConfig;
@@ -55,7 +56,6 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
         @EventConfig(listeners = UIAdvancedSearchForm.CancelActionListener.class, phase = Phase.DECODE) 
     }
 )
-@SuppressWarnings("unused")
 public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupComponent {
   final static private String FIELD_TEXT                   = "Text";
 
@@ -292,16 +292,18 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
         advancedSearch.warning("UIAdvancedSearchForm.msg.email-invalid");
         return;
       }
-      if (FAQUtils.checkSpecial(text) || FAQUtils.checkSpecial(categoryName) || FAQUtils.checkSpecial(moderator) || FAQUtils.checkSpecial(author) || FAQUtils.checkSpecial(emailAddress) || FAQUtils.checkSpecial(question) || FAQUtils.checkSpecial(response) || FAQUtils.checkSpecial(comment)) {
-        advancedSearch.warning("UIAdvancedSearchForm.msg.failure");
-        return;
-      }
+      
+      text = Utils.convertTextForSearch(text);
+      categoryName = Utils.convertTextForSearch(categoryName);
+      question = Utils.convertTextForSearch(question);
+      response = Utils.convertTextForContent(response);
+      comment = Utils.convertTextForContent(comment);
       /**
        * Create query string from data inputed
        */
       FAQEventQuery eventQuery = new FAQEventQuery();
       eventQuery.setType(type);
-      eventQuery.setText(FAQUtils.isFieldEmpty(text) ? "" : text);
+      eventQuery.setText(text);
       eventQuery.setName(categoryName);
       eventQuery.setIsModeQuestion(modeQuestion);
       eventQuery.setModerator(moderator);

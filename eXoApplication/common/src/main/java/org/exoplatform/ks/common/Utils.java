@@ -21,12 +21,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Properties;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -34,18 +35,16 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
 import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.rendering.core.SupportedSyntaxes;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.webui.form.wysiwyg.FCKEditorConfig;
 import org.quartz.JobExecutionContext;
 import org.w3c.dom.Document;
 
@@ -113,17 +112,6 @@ public class Utils {
     Transformer transformer = tFactory.newTransformer();
     transformer.transform(source, result) ;
     return file ;
-  }
-  
-  public static String getRemoteIP() {
-    String remoteAddr = "";
-    try {
-      PortalRequestContext context = Util.getPortalRequestContext();
-      remoteAddr = ((HttpServletRequest)context.getRequest()).getRemoteAddr() ;
-    } catch (Exception e) { 
-      log.error("Can not get remote IP", e);
-    }
-    return remoteAddr;
   }
   
   public static String getImageUrl(String imagePath) throws Exception {
@@ -218,12 +206,6 @@ public class Utils {
     return ExoContainerContext.getContainerByName(portalName);
   }
   
-  public static FCKEditorConfig getFCKConfig(){
-    FCKEditorConfig fckconfig = new FCKEditorConfig();
-    fckconfig.put("CustomConfigurationsPath", "/ksResources/fckconfig/fckconfig.js");
-    return fckconfig;
-  }
-  
   public static String getRSSLink(String appType, String portalName, String objectId) {
     return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + appType + "/rss/" + objectId;
   }
@@ -232,5 +214,99 @@ public class Utils {
     return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + apptype + "/rss/user/" + userId;
   }
   
+  /**
+   * Check string is null or empty 
+   * @param String s
+   * @return boolean
+   */
+  public static boolean isEmpty(String s) {
+    return (s == null || s.trim().length() <= 0) ? true : false;
+  }
+
+  /**
+   * check string array is whether empty or not
+   * @param array
+   * @return false if at least one element of array is not empty, true in the opposite case.
+   */
+  public static boolean isEmpty(String[] array) {
+    if (array != null && array.length > 0) {
+      for (String s : array) {
+        if (s != null && s.trim().length() > 0)
+          return false;
+      }
+    }
+    return true;
+  }
   
+  public static String convertTextForSearch(String s) {
+    String charIgnore = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
+    if (!isEmpty(s)) {
+      int i = 0;
+      while (charIgnore.indexOf(s.charAt(i) + "") > 0) {
+        ++i;
+        if (i == s.length()) {
+          charIgnore = "";
+          break;
+        }
+      }
+    }
+    if (!isEmpty(charIgnore)) charIgnore = "!#:?=.,+;~`_";
+    return convertSpecialCharToASCII(s, charIgnore, true);
+  }
+
+  public static String convertTextForTitle(String s) {
+    if(!isEmpty(s)) {
+      s = StringUtils.replace(s, "  ", " ").trim();
+    }
+    String charIgnore = "!#:?=.,()+;~`_";
+    return convertSpecialCharToASCII(s, charIgnore, true);
+  }
+
+  public static String convertTextForContent(String s) {
+    String charIgnore = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
+    return convertSpecialCharToASCII(s, charIgnore, false);
+  }
+
+  public static String convertSpecialCharToASCII(String s, String charIgnore, boolean isTitle) {
+    if (isEmpty(s)) {
+      return "";
+    }
+    int i = 0;
+    int[] charCodes = new int[] { 48, 32, 65, 57, 97, 90, 127, 122, 39 };// '0', ' ', 'A', '9', 'a', 'Z', '~', 'z', '\''
+    String apos = "&apos;", str1 = "&#", str2 = ";";
+    StringBuilder builder = new StringBuilder();
+    while (i < s.length()) {
+      char c = s.charAt(i);
+      if (charIgnore.indexOf(String.valueOf(c)) >= 0) {
+        builder.append(c);
+      } else {
+        int t = s.codePointAt(i);
+        if (t == charCodes[8]) {
+          builder.append(apos);
+        } else if (t < charCodes[0] && t > charCodes[1] || t < charCodes[2] && t > charCodes[3] || t < charCodes[4] && t > charCodes[5] || t < charCodes[6] && t > charCodes[7]) {
+          if (isTitle && (t == 60 || t == 62)) {
+            if (t == 60) {
+              builder.append("&lt;");
+            } else if (t == 62) {
+              builder.append("&gt;");
+            }
+          } else {
+            builder.append(str1).append(t).append(str2);
+          }
+        } else {
+          builder.append(c);
+        }
+      }
+      ++i;
+    }
+    return builder.toString();
+  }
+  
+  static public Calendar getGreenwichMeanTime() {
+    Calendar calendar = GregorianCalendar.getInstance();
+    calendar.setLenient(false);
+    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
+    return calendar;
+  }
 }

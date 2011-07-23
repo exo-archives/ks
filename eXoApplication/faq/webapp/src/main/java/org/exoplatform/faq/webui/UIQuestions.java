@@ -20,7 +20,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -62,6 +61,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.User;
@@ -1283,7 +1283,7 @@ public class UIQuestions extends UIContainer {
         link = link.replaceFirst("private", "public");
         Question question = uiForm.faqService_.getQuestionById(questionId);
         String userName = question.getAuthor();
-        String remoteAddr = org.exoplatform.ks.common.Utils.getRemoteIP();
+        String remoteAddr = WebUIUtils.getRemoteIP();
         if (UserHelper.getUserByUserId(userName) == null) {
           String temp = userName;
           String listMode[] = uiForm.faqService_.getModeratorsOf(question.getPath());

@@ -106,8 +106,8 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
       UIMergeTopicForm uiForm = event.getSource();
       String topicMergeId = uiForm.getUIFormSelectBox(DESTINATION).getValue();
       String topicMergeTitle = uiForm.getUIStringInput(TITLE).getValue();
-      topicMergeTitle = ForumTransformHTML.enCodeHTMLTitle(topicMergeTitle).trim();
       if (!ForumUtils.isEmpty(topicMergeTitle)) {
+        topicMergeTitle = org.exoplatform.ks.common.Utils.convertTextForTitle(topicMergeTitle);
         Topic topicMerge = new Topic();
         for (Topic topic : uiForm.listTopic) {
           if (topicMergeId.equals(topic.getId())) {

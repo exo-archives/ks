@@ -949,7 +949,8 @@ public class ForumServiceImpl implements ForumService, Startable {
     if (!onlineUserList_.contains(userId)) {
       onlineUserList_.add(userId);
     }
-    UserLoginLogEntry loginEntry = new UserLoginLogEntry(userId, onlineUserList_.size(), Utils.getGreenwichMeanTime());
+    UserLoginLogEntry loginEntry = new UserLoginLogEntry(userId, onlineUserList_.size(), 
+                                                         org.exoplatform.ks.common.Utils.getGreenwichMeanTime());
     queue.add(loginEntry);
   }
 

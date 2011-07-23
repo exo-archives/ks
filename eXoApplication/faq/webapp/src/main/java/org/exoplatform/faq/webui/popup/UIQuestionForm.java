@@ -42,6 +42,7 @@ import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
@@ -263,7 +264,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     }
 
     inputQuestionDetail = new UIFormWYSIWYGInput(QUESTION_DETAIL, QUESTION_DETAIL, "");
-    inputQuestionDetail.setFCKConfig(org.exoplatform.ks.common.Utils.getFCKConfig());
+    inputQuestionDetail.setFCKConfig(WebUIUtils.getFCKConfig());
     inputQuestionDetail.setToolBarName("Basic");
     if (!questionContents_.isEmpty()) {
       String input = questionContents_.get(0);
@@ -532,26 +533,22 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
           return;
         }
 
-        if (language.equals(questionForm.defaultLanguage_)) {
-          if (questionContent == null) {
-            warning("UIQuestionForm.msg.default-question-null");
-            return;
-          }
-        } else {
-          if (questionForm.mapLanguage.isEmpty() || questionForm.mapLanguage.get(questionForm.getDefaultLanguage()) == null) {
-            warning("UIQuestionForm.msg.default-question-null");
-            return;
+        if (!language.equals(questionForm.defaultLanguage_)) {
+          if(questionForm.mapLanguage.isEmpty() || questionForm.mapLanguage.get(questionForm.getDefaultLanguage()) == null) {
+            warning("UIQuestionForm.msg.default-question-null") ;
+            return ;
           }
         }
 
         String questionDetail = questionForm.inputQuestionDetail.getValue();
-        if (!ValidatorDataInput.fckContentIsNotEmpty(questionDetail))
-          questionDetail = " ";
-        if (!ValidatorDataInput.fckContentIsNotEmpty(questionContent)) {
-          if (questionForm.mapLanguage.containsKey(language)) {
-            questionForm.mapLanguage.get(language).setState(QuestionLanguage.DELETE);
+        if(!ValidatorDataInput.fckContentIsNotEmpty(questionDetail)) questionDetail = " ";
+        if(!ValidatorDataInput.fckContentIsNotEmpty(questionContent)){
+          if( questionForm.mapLanguage.containsKey(language)){
+            questionForm.mapLanguage.get(language).setState(QuestionLanguage.DELETE) ;
           }
         }
+        questionDetail = org.exoplatform.ks.common.Utils.convertTextForContent(questionDetail);
+        questionContent = org.exoplatform.ks.common.Utils.convertTextForTitle(questionContent);
 
         Question question = questionForm.getQuestion();
 

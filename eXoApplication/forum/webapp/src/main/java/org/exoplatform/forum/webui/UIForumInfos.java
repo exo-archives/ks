@@ -24,7 +24,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.ks.common.Utils;
+import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -50,7 +50,7 @@ public class UIForumInfos extends UIContainer {
 
   private String getRemoteIP() throws Exception {
     if (enableIPLogging) {
-      return Utils.getRemoteIP();
+      return WebUIUtils.getRemoteIP();
     }
     return ForumUtils.EMPTY_STR;
   }
