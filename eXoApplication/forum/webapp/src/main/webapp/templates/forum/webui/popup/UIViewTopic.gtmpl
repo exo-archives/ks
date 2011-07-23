@@ -37,13 +37,11 @@
 		String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
 		String shortDateFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 		long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-		int nb = 0;
 		Date dateView = new Date();
 		String screenName ="";
 		for(post in posts) {
 			String owner = post.getOwner() ;
 			CommonContact contact = uiform.getPersonalContact(owner) ;
-			String avatarUrl = uiform.getAvatarUrl(owner) ;
 			String location = "" ;
 			boolean isCity = false;
 			if(contact != null) {
@@ -115,12 +113,8 @@
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
-									avatarUrl = uiform.getAvatarUrl(owner) ;
-									String idAv = "avatar" + nb;
-									onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
-									 ++nb;
 								%>
-								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" onload="$onload" alt=""/>
+								<img src="<%=uiform.getAvatarUrl(owner);%>" class="ImgAvatar ImgAvatarBorder" alt=""/>
 								<% } %>
 								<div class="InfoMember">
 									<span><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</span>

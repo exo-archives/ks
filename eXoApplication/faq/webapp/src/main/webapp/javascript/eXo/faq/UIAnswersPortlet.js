@@ -490,10 +490,12 @@ UIAnswersPortlet.prototype.setSizeImages = function(delta, classParant) {
 	    if(max_width > 600) max = 600;
 	    var images_ =  widthContent.getElementsByTagName("img");
 	    for(var i=0; i<images_.length; i++){
+	      var className = String(images_[i].className);
+        if (className.indexOf("FAQAvatar") >= 0 || className.indexOf("AttachmentFile") >= 0) {
+          continue;
+        }
 	      var img =  new Image();
 	      img.src = images_[i].src;
-	      if(images_[i].className === "AttachmentFile") continue ;
-	      if(images_[i].className === "FAQAvatar") continue ;
 			  if(img.width > max) {
 					images_[i].style.width= max + "px" ;
 					images_[i].style.height = "auto" ;
@@ -515,24 +517,6 @@ UIAnswersPortlet.prototype.setSizeImages = function(delta, classParant) {
 UIAnswersPortlet.prototype.showImage = function() {
 	eXo.faq.UIAnswersPortlet.showPicture(this.src) ;
 } ;
-
-UIAnswersPortlet.prototype.reSizeAvatar = function(imgElm) {
-	if (!imgElm) return;
-	var imgObj = new Image();
-	imgObj.src = imgElm.src;
-	var height = imgObj.height;
-	var width = imgObj.width;
-	if(width > 100){  
-		imgElm.style.width = "100px" ;
-	} else if(height > 150){  
-		imgElm.style.height = "150px" ;
-	}
-	var parent = imgElm.parentNode;
-	if(parent.tagName != "SPAN" && parent.tagName != "span") {
-		parent = parent.parentNode;
-	} 
-	parent.style.display = "block";
-};
 
 UIAnswersPortlet.prototype.FAQChangeHeightToAuto = function() {
 	var object = document.getElementById("UIFAQPopupWindow");

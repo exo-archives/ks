@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.image.ResizeImageService;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
 import org.exoplatform.upload.UploadService;
@@ -55,6 +57,8 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent {
 
   final static public String FIELD_UPLOAD    = "upload";
+
+  final private static int   fixWidthImage   = 200;
 
   private boolean            isTopicForm     = true;
 
@@ -108,17 +112,30 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
         if (fileName == null || fileName.equals(ForumUtils.EMPTY_STR)) {
           continue;
         }
+        InputStream stream = input.getUploadDataAsStream();
+        if(uiForm.isChangeAvatar_){
+          if (uploadResource.getMimeType().indexOf("image") < 0) {
+            uiForm.warning("UIAttachFileForm.msg.fileIsNotImage");
+            uploadService.removeUploadResource(input.getUploadId());
+            return;
+          }
+          ResizeImageService resizeImgService = (ResizeImageService) ExoContainerContext.getCurrentContainer()
+                                                  .getComponentInstanceOfType(ResizeImageService.class);
+          stream = resizeImgService.resizeImageByWidth(fileName, stream, fixWidthImage);
+          
+        }
         try {
           attachfile = new BufferAttachment();
           attachfile.setId("ForumAttachment" + IdGenerator.generate());
           attachfile.setName(uploadResource.getFileName());
-          attachfile.setInputStream(input.getUploadDataAsStream());
+          attachfile.setInputStream(stream);
           attachfile.setMimeType(uploadResource.getMimeType());
           attachfile.setSize((long) uploadResource.getUploadedSize());
           files.add(attachfile);
         } catch (Exception e) {
           uiForm.log.error("Can not attach file, exception: ", e);
           uiForm.warning("UIAttachFileForm.msg.upload-error");
+          uploadService.removeUploadResource(input.getUploadId());
           return;
         }
         uploadService.removeUploadResource(input.getUploadId());
@@ -136,10 +153,6 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
         topicForm.refreshUploadFileList();
         event.getRequestContext().addUIComponentToUpdateByAjax(topicForm);
       } else if (uiForm.isChangeAvatar_) {
-        if (files.get(0).getMimeType().indexOf("image") < 0) {
-          uiForm.warning("UIAttachFileForm.msg.fileIsNotImage");
-          return;
-        }
         ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
         forumService.saveUserAvatar(UserHelper.getCurrentUser(), files.get(0));
         UIForumUserSettingForm settingForm = forumPortlet.findFirstComponentOfType(UIForumUserSettingForm.class);

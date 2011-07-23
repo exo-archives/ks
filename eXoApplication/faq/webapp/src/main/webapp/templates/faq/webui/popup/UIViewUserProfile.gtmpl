@@ -10,7 +10,6 @@
 	String userName = user.getUserName() ;
 	CommonContact contact = uiform.getContact(userName) ;
 	java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat(", hh:mm a");
-	String avatarUrl = "";
 	String birthDay = contact.getBirthday();
 	String location = contact.getCity() ;
 	String createdDate = "";
@@ -51,10 +50,7 @@
 					<tr>
 						<td class="UserContainer">
 							<div class="UserContent">
-								<%	
-									avatarUrl = uiform.getAvatarUrl(userName) ;
-								%>
-								<img id="ImgAvatar" src="$avatarUrl" class="Img" onload="eXo.faq.UIAnswersPortlet.reSizeAvatar(this);" alt=""/>
+								<img src="<%=uiform.getAvatarUrl(userName);%>" class="ImgAvatarBorder" width="120px" height="120px" alt=""/>
 								<div class="Rank">$fullName</div>
 								<div class="InfoUser">
 									<div><%=_ctx.appRes("UIViewUserProfile.label.JoinDate");%>: $createdDate</div>

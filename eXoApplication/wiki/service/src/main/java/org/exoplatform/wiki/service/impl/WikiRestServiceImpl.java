@@ -54,6 +54,7 @@ import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.ks.common.image.ResizeImageService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.impl.EnvironmentContext;
@@ -74,7 +75,6 @@ import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiResource;
 import org.exoplatform.wiki.service.WikiRestService;
 import org.exoplatform.wiki.service.WikiService;
-import org.exoplatform.wiki.service.image.impl.ResizeImageServiceImpl;
 import org.exoplatform.wiki.service.related.JsonRelatedData;
 import org.exoplatform.wiki.service.related.RelatedUtil;
 import org.exoplatform.wiki.service.rest.model.Attachment;
@@ -444,8 +444,8 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
                            @QueryParam("width") Integer width) {
     InputStream result = null;
     try {
-      ResizeImageServiceImpl resizeImgService = (ResizeImageServiceImpl) ExoContainerContext.getCurrentContainer()
-                                                                                    .getComponentInstanceOfType(ResizeImageServiceImpl.class);
+      ResizeImageService resizeImgService = (ResizeImageService) ExoContainerContext.getCurrentContainer()
+                                                                                    .getComponentInstanceOfType(ResizeImageService.class);
       PageImpl page = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, pageId);
       AttachmentImpl att = page.getAttachment(imageId);
       ByteArrayInputStream bis = new ByteArrayInputStream(att.getContentResource().getData());

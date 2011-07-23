@@ -38,7 +38,7 @@ WikiLayout.prototype.init = function(prtId) {
     try {
       var myBody = document.getElementsByTagName("body")[0];;
       var className = String(myBody.className+'');
-      className = (className.length > 0)?(className + ' ' + this.wikiBodyClass):this.wikiBodyClass;
+      className = (className.length > 0 && className.indexOf(this.wikiBodyClass) < 0)?(className + ' ' + this.wikiBodyClass):this.wikiBodyClass;
       window.console.info(className);
       myBody.className = className;
       var myHtml = document.getElementsByTagName("html")[0];

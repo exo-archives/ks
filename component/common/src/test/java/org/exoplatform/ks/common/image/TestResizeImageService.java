@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.service;
+package org.exoplatform.ks.common.image;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
@@ -27,7 +27,7 @@ import javax.imageio.ImageIO;
 
 import junit.framework.TestCase;
 
-import org.exoplatform.wiki.service.image.impl.ResizeImageServiceImpl;
+import org.exoplatform.ks.common.image.impl.ResizeImageServiceImpl;
 
 /**
  * Created by The eXo Platform SAS

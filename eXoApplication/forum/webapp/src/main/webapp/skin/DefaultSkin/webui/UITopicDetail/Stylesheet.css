@@ -430,9 +430,8 @@
 	margin-left: 5px;
 }
 
-.UITopicDetail .MemberContent .ImgAvatar{
+.UITopicDetail .MemberContent .ImgAvatar {
 	cursor:pointer;
-	max-width: 165px;
 }
 
 .UITopicDetail .PostViewContainer .UIPopupCategory .BloclPopupIP{

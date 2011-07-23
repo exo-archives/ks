@@ -85,11 +85,6 @@
   </component>
   
   <component>
-    <key>org.exoplatform.wiki.service.image.ResizeImageService</key>
-    <type>org.exoplatform.wiki.service.image.impl.ResizeImageServiceImpl</type>
-  </component>
-  
-  <component>
     <key>org.exoplatform.wiki.service.webdav.WebDavService</key>
     <type>org.exoplatform.wiki.service.webdav.WebDavServiceImpl</type>
     <init-params>
