@@ -243,7 +243,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
     public void execute(Event<UICategoryForm> event) throws Exception {
       UICategoryForm uiCategory = event.getSource();
       String name = uiCategory.getUIStringInput(FIELD_NAME_INPUT).getValue();
-      name = Utils.convertTextForTitle(name);
+      name = Utils.encodeSpecialCharInTitle(name);
 
       if (uiCategory.isAddNew_) {
         if (uiCategory.getFAQService().isCategoryExist(name, uiCategory.parentId_)) {

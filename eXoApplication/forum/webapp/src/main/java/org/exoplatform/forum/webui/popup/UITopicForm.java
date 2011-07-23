@@ -464,7 +464,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
       if (topicTitle.length() < 1 && topicTitle.equals("null")) {
         k = 0;
       }
-      topicTitle = org.exoplatform.ks.common.Utils.convertTextForTitle(topicTitle);
+      topicTitle = org.exoplatform.ks.common.Utils.encodeSpecialCharInTitle(topicTitle);
       if (t > 0 && k != 0 && !checksms.equals("null")) {
         String userName = UserHelper.getCurrentUser();
         Post postNew = new Post();
@@ -558,8 +558,8 @@ public class UITopicForm extends BaseForumForm implements UISelector {
               if (uiForm.forum != null)
                 hasForumMod = uiForm.forum.getIsModerateTopic();
             }
-            topicTitle = org.exoplatform.ks.common.Utils.convertTextForTitle(topicTitle);
-            editReason = org.exoplatform.ks.common.Utils.convertTextForTitle(editReason);
+            topicTitle = org.exoplatform.ks.common.Utils.encodeSpecialCharInTitle(topicTitle);
+            editReason = org.exoplatform.ks.common.Utils.encodeSpecialCharInTitle(editReason);
 
             UIForumInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
             String topicType = threadOption.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).getValue();

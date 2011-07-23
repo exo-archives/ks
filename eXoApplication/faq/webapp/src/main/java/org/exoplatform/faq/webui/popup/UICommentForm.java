@@ -167,7 +167,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
         warning("UIQuestions.msg.comment-id-deleted");
         return;
       }
-      comment = Utils.convertTextForContent(comment);
+      comment = Utils.encodeSpecialCharInContent(comment);
       try {
         // Create link by Vu Duy Tu.
         String link = FAQUtils.getLink(commentForm.getLink(), commentForm.getId(), "UICommentForm", "Cancel", "ViewQuestion", "OBJECTID");

@@ -293,11 +293,11 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
         return;
       }
       
-      text = Utils.convertTextForSearch(text);
-      categoryName = Utils.convertTextForSearch(categoryName);
-      question = Utils.convertTextForSearch(question);
-      response = Utils.convertTextForContent(response);
-      comment = Utils.convertTextForContent(comment);
+      text = Utils.encodeSpecialCharInSearchTerm(text);
+      categoryName = Utils.encodeSpecialCharInSearchTerm(categoryName);
+      question = Utils.encodeSpecialCharInSearchTerm(question);
+      response = Utils.encodeSpecialCharInContent(response);
+      comment = Utils.encodeSpecialCharInContent(comment);
       /**
        * Create query string from data inputed
        */

@@ -284,7 +284,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       if (postTitle != null && postTitle.length() <= 3) {
         k = 0;
       }
-      postTitle = Utils.convertTextForTitle(postTitle);
+      postTitle = Utils.encodeSpecialCharInTitle(postTitle);
       if (t > 0 && k != 0 && !checksms.equals("null")) {
         Post post = uiForm.post_;
         post.setName(postTitle);
@@ -345,14 +345,14 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             return;
           }
 
-          editReason = Utils.convertTextForTitle(editReason);
+          editReason = Utils.encodeSpecialCharInTitle(editReason);
           String userName = userProfile.getUserId();
           String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
           String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
 //          message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
 //          message = StringUtils.replace(message, "'", "&apos;");
           message = ForumTransformHTML.fixAddBBcodeAction(message);
-          message = Utils.convertTextForContent(message);
+          message = Utils.encodeSpecialCharInContent(message);
           
           checksms = checksms.replaceAll("&nbsp;", " ");
           t = checksms.length();
@@ -360,7 +360,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           if (postTitle.trim().length() <= 0) {
             k = 0;
           }
-          postTitle = Utils.convertTextForTitle(postTitle);
+          postTitle = Utils.encodeSpecialCharInTitle(postTitle);
           Post post = uiForm.post_;
           boolean isPP = false;
           if (t > 0 && k != 0 && !checksms.equals("null")) {

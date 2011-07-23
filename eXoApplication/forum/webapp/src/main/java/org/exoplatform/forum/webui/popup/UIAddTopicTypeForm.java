@@ -113,7 +113,7 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
       while (typeName.indexOf("  ") >= 0) {
         typeName = StringUtils.replace(typeName, "  ", " ");
       }
-      typeName = Utils.convertTextForTitle(typeName);
+      typeName = Utils.encodeSpecialCharInTitle(typeName);
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       if (!typeName.equalsIgnoreCase(topicType.getName()) && topicTypeForm.checkIsSameName(forumService, typeName)) {
         topicTypeForm.warning("UIAddTopicTypeForm.smg.SameNameType");

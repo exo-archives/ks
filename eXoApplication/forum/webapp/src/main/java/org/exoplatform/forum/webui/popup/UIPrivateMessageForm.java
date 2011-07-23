@@ -209,7 +209,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
         messageForm.warning("NameValidator.msg.warning-long-text", new String[] { messageForm.getLabel(FIELD_MAILTITLE_INPUT), String.valueOf(maxText) });
         return;
       }
-      mailTitle = Utils.convertTextForTitle(mailTitle);
+      mailTitle = Utils.encodeSpecialCharInTitle(mailTitle);
       UIFormWYSIWYGInput formWYSIWYGInput = MessageTab.getChild(UIFormWYSIWYGInput.class);
       String message = formWYSIWYGInput.getValue();
       if (!ForumUtils.isEmpty(message)) {
