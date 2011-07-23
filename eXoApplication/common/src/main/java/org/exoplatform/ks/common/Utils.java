@@ -54,9 +54,20 @@ import org.w3c.dom.Document;
  * @version $Revision$
  */
 public class Utils {
-  
   private static Log log = ExoLogger.getLogger(Utils.class);
+  
+  public static final String COMMA     = ",".intern();
 
+  public static final String SLASH     = "/".intern();
+
+  public static final String EMPTY_STR = "".intern();
+
+  public static final String COLON     = ":".intern();
+
+  public static final String SEMICOLON = ";".intern();
+
+  public static final String SPACE     = " ".intern();
+  
   static public String generateCheckSum(byte[] b) throws Exception {
     try{
       MessageDigest md = MessageDigest.getInstance("SHA1");
@@ -64,14 +75,14 @@ public class Utils {
       byte[] mdbytes = md.digest();
    
       //convert the byte to hex format
-      StringBuffer sb = new StringBuffer("");
+      StringBuffer sb = new StringBuffer(EMPTY_STR);
       for (int i = 0; i < mdbytes.length; i++) {
         sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
       }
        return sb.toString() ;
     }catch(Exception e) {
       log.warn("Can not generate checksum for exporting data") ;
-      return "" ;
+      return EMPTY_STR ;
     }
   }
   
@@ -119,30 +130,29 @@ public class Utils {
     ExoContainer container = ExoContainerContext.getCurrentContainer();
     try {
       ExoContainerContext exoContext = (ExoContainerContext)container.getComponentInstanceOfType(ExoContainerContext.class);
-      url.append("/").append(exoContext.getRestContextName());
+      url.append(SLASH).append(exoContext.getRestContextName());
     } catch (Exception e) {
       url.append("/portal");
       log.error("Can not get portal name or rest context name, exception: ",e);
     }
     RepositoryService rService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class) ;
-    url.append("/jcr/").append(rService.getCurrentRepository().getConfiguration().getName()).append(imagePath).append("/");
+    url.append("/jcr/").append(rService.getCurrentRepository().getConfiguration().getName()).append(imagePath).append(SLASH);
     return url.toString();
   }
   
   public static String convertCodeHTML(String s) {
-    if (s == null || s.length() <= 0)
-      return "";
+    if (isEmpty(s))
+      return EMPTY_STR;
     s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
-    s = s.replaceFirst("(<br/>)*", "");
+    s = s.replaceFirst("(<br/>)*", EMPTY_STR);
     s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
     try {
-      s = Utils.processBBCode(s);
+      s = processBBCode(s);
       s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)( )(https?|ftp)", "$1$3")
            .replaceAll("[^=\"|^=\'|^\'>|^\">](https?://|ftp://)([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", "<a target=\"_blank\" href=\"$1$2\">$1$2</a>");
       s = s.replaceAll("&apos;", "'");
     } catch (Exception e) {
-      log.error("Failed to convert HTML",e);
-      return "";
+      log.error("Failed to convert HTML" + e.getMessage());
     }
     return s;
   }
@@ -202,16 +212,16 @@ public class Utils {
     if(portalName == null) {
       portalName = PortalContainer.getCurrentPortalContainerName();
     }
-    if(portalName.indexOf(":") > 0) portalName = portalName.substring(0, portalName.indexOf(":"));
+    if(portalName.indexOf(COLON) > 0) portalName = portalName.substring(0, portalName.indexOf(":"));
     return ExoContainerContext.getContainerByName(portalName);
   }
   
   public static String getRSSLink(String appType, String portalName, String objectId) {
-    return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + appType + "/rss/" + objectId;
+    return SLASH + PortalContainer.getInstance().getRestContextName() + "/ks/" + appType + "/rss/" + objectId;
   }
 
   public static String getUserRSSLink(String apptype, String userId) {
-    return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + apptype + "/rss/user/" + userId;
+    return SLASH + PortalContainer.getInstance().getRestContextName() + "/ks/" + apptype + "/rss/user/" + userId;
   }
   
   /**
@@ -237,43 +247,85 @@ public class Utils {
     }
     return true;
   }
-  
-  public static String convertTextForSearch(String s) {
-    String charIgnore = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
+
+  /**
+   * Encode special character, use for input search
+   * @param String s, the string input
+   * @return String 
+   */
+  public static String encodeSpecialCharInSearchTerm(String s) {
+    /*
+     * + When all characters in param s is special characters has in charIgnore, we must encode all characters.
+     * + If all characters in param s is not special characters, we can ignore some special characters [!#:?=.,+;~`_]
+    */
+    String charIgnore = "&#<>[]/:?\"'=.,*$%()\\+@!^*-}{;`~_";
     if (!isEmpty(s)) {
       int i = 0;
-      while (charIgnore.indexOf(s.charAt(i) + "") > 0) {
+      while (charIgnore.indexOf(String.valueOf(s.charAt(i))) >= 0) {
         ++i;
         if (i == s.length()) {
-          charIgnore = "";
+          charIgnore = EMPTY_STR;
           break;
         }
       }
     }
     if (!isEmpty(charIgnore)) charIgnore = "!#:?=.,+;~`_";
-    return convertSpecialCharToASCII(s, charIgnore, true);
+    return encodeSpecialCharToHTMLnumber(s, charIgnore, true);
   }
 
-  public static String convertTextForTitle(String s) {
+  /**
+   * Encode special character, use for input title or name of the object.
+   * @param String s, the string input
+   * @return String 
+   */
+  public static String encodeSpecialCharInTitle(String s) {
+    /*
+     * remove double space 
+    */
     if(!isEmpty(s)) {
-      s = StringUtils.replace(s, "  ", " ").trim();
+      while (s.indexOf("  ") >= 0) {
+        s = StringUtils.replace(s, "  ", SPACE).trim();
+      }
     }
+    /*
+     * charIgnore: Some special characters we ignore
+    */
     String charIgnore = "!#:?=.,()+;~`_";
-    return convertSpecialCharToASCII(s, charIgnore, true);
+    return encodeSpecialCharToHTMLnumber(s, charIgnore, true);
   }
 
-  public static String convertTextForContent(String s) {
+  /**
+   * Encode special character, use for input content of object (only apply for input by FCKEditer).
+   * @param String s, the string input
+   * @return String 
+   */
+  public static String encodeSpecialCharInContent(String s) {
+    /*
+     * charIgnore: Some special characters we ignore
+    */
     String charIgnore = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
-    return convertSpecialCharToASCII(s, charIgnore, false);
+    return encodeSpecialCharToHTMLnumber(s, charIgnore, false);
   }
 
-  public static String convertSpecialCharToASCII(String s, String charIgnore, boolean isTitle) {
+  /**
+   * Encode special character to html number. Ex: '/' --> &#47; 
+   * @param String s, the string input
+   * @param String charIgnore, the string content ignore some special character can not encode.
+   * @param boolean isTitle, the boolean for check convert is title or not.
+   * @return String 
+   */
+  public static String encodeSpecialCharToHTMLnumber(String s, String charIgnore, boolean isTitle) {
     if (isEmpty(s)) {
-      return "";
+      return EMPTY_STR;
     }
     int i = 0;
+    /*
+     *  The distance code number content special character.
+     *  Ex: from ' '(32) to '0'(48): ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/'
+     *  See: http://www.ascii.cl/htmlcodes.htm
+    */
     int[] charCodes = new int[] { 48, 32, 65, 57, 97, 90, 127, 122, 39 };// '0', ' ', 'A', '9', 'a', 'Z', '~', 'z', '\''
-    String apos = "&apos;", str1 = "&#", str2 = ";";
+    String apos = "&apos;", str1 = "&#", str2 = "&lt;", str3 = "&gt;";
     StringBuilder builder = new StringBuilder();
     while (i < s.length()) {
       char c = s.charAt(i);
@@ -286,12 +338,12 @@ public class Utils {
         } else if (t < charCodes[0] && t > charCodes[1] || t < charCodes[2] && t > charCodes[3] || t < charCodes[4] && t > charCodes[5] || t < charCodes[6] && t > charCodes[7]) {
           if (isTitle && (t == 60 || t == 62)) {
             if (t == 60) {
-              builder.append("&lt;");
+              builder.append(str2);
             } else if (t == 62) {
-              builder.append("&gt;");
+              builder.append(str3);
             }
           } else {
-            builder.append(str1).append(t).append(str2);
+            builder.append(str1).append(t).append(SEMICOLON);
           }
         } else {
           builder.append(c);
@@ -301,7 +353,11 @@ public class Utils {
     }
     return builder.toString();
   }
-  
+
+  /**
+   * Get current time GMT/Zulu or UTC,(zone time is 0+GMT)
+   * @return Calendar 
+   */
   static public Calendar getGreenwichMeanTime() {
     Calendar calendar = GregorianCalendar.getInstance();
     calendar.setLenient(false);

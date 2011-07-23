@@ -547,8 +547,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
             questionForm.mapLanguage.get(language).setState(QuestionLanguage.DELETE) ;
           }
         }
-        questionDetail = org.exoplatform.ks.common.Utils.convertTextForContent(questionDetail);
-        questionContent = org.exoplatform.ks.common.Utils.convertTextForTitle(questionContent);
+        questionDetail = org.exoplatform.ks.common.Utils.encodeSpecialCharInContent(questionDetail);
+        questionContent = org.exoplatform.ks.common.Utils.encodeSpecialCharInTitle(questionContent);
 
         Question question = questionForm.getQuestion();
 

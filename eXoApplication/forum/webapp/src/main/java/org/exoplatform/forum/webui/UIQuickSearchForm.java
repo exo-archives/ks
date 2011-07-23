@@ -60,7 +60,7 @@ public class UIQuickSearchForm extends BaseUIForm {
       UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE);
       String text = formStringInput.getValue();
       if (!ForumUtils.isEmpty(text)) {
-        text = org.exoplatform.ks.common.Utils.convertTextForSearch(text);
+        text = org.exoplatform.ks.common.Utils.encodeSpecialCharInSearchTerm(text);
         ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
         UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
         UserProfile userProfile = forumPortlet.getUserProfile();

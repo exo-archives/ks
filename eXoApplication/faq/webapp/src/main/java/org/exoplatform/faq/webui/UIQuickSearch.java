@@ -80,7 +80,7 @@ public class UIQuickSearch extends BaseUIForm {
       UIAnswersPortlet uiPortlet = uiQuickSearch.getAncestorOfType(UIAnswersPortlet.class);
       String text = formStringInput.getValue();
       if (text != null && text.trim().length() > 0) {
-        text = Utils.convertTextForSearch(text);
+        text = Utils.encodeSpecialCharInSearchTerm(text);
         FAQService faqService = FAQUtils.getFAQService();
         List<ObjectSearchResult> list = null;
         FAQEventQuery eventQuery = new FAQEventQuery();
