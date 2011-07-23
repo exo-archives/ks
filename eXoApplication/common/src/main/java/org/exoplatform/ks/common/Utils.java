@@ -21,13 +21,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
 
-import javax.jcr.Value;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
@@ -62,52 +58,6 @@ public class Utils {
   
   private static Log log = ExoLogger.getLogger(Utils.class);
 
-  /**
-   * This method return value[] to list String
-   * @param values
-   * @return list string
-   * @throws Exception
-   */
-  static public List<String> ValuesToList(Value[] values) throws Exception {
-    List<String> list = new ArrayList<String>() ;
-    if(values.length < 1) return list ;
-    if(values.length == 1) {
-      list.add(values[0].getString()) ;
-      return list ;
-    }
-    for(int i = 0; i < values.length; ++i) {
-      list.add(values[i].getString() );
-    }
-    return list;
-  }
-
-  static public String getStandardId(String s) {
-    int i=0;
-    StringBuilder builder = new StringBuilder();
-    while(i < s.length()) {
-      int t = s.codePointAt(i);
-      if(t > 48 && t < 122){
-        builder.append(s.charAt(i)) ;
-      } else {
-        builder.append("id") ;
-      }
-      ++i;
-    }
-    return builder.toString();
-  }
-
-  static public String[] compareStr(String arr1[], String arr2[]) throws Exception {
-    List<String> list = new ArrayList<String>();
-    list.addAll(Arrays.asList(arr1));
-    if(list.isEmpty() || list.get(0).equals(" ")) return new String[]{" "};
-    for (int i = 0; i < arr2.length; i++) {
-      if(!list.contains(arr2[i])) {
-        list.add(arr2[i]);
-      }
-    }
-    return list.toArray(new String[]{});
-  }
-  
   static public String generateCheckSum(byte[] b) throws Exception {
     try{
       MessageDigest md = MessageDigest.getInstance("SHA1");
@@ -281,4 +231,6 @@ public class Utils {
   public static String getUserRSSLink(String apptype, String userId) {
     return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + apptype + "/rss/user/" + userId;
   }
+  
+  
 }
