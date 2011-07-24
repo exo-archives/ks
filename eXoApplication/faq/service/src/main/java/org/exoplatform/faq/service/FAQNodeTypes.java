@@ -95,7 +95,7 @@ public interface FAQNodeTypes {
 
   public static final String EXO_FAQ_R_S_S                = "exo:faqRSS";
 
-  public static final String EXO__MARK_VOTES              = "exo:MarkVotes";
+  public static final String EXO_MARK_VOTES              = "exo:MarkVotes";
 
   public static final String EXO_MODERATORS               = "exo:moderators";
 
@@ -186,5 +186,7 @@ public interface FAQNodeTypes {
   public static final String NT_RESOURCE                  = "nt:resource";
 
   public static final String AT                           = "@";
+
+  public static final String EMPTY_STR                    = "";
 
 }
