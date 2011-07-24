@@ -16,6 +16,11 @@
       </value-param>
     </init-params>
   </component>
+  
+  <component>
+    <key>org.exoplatform.ks.common.image.ResizeImageService</key>
+    <type>org.exoplatform.ks.common.image.impl.ResizeImageServiceImpl</type>
+  </component>
 
   <component>
     <key>org.exoplatform.ks.rendering.MarkupRenderingService</key>
