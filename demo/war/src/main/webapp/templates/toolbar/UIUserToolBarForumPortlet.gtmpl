@@ -10,14 +10,8 @@
 	
 	def portalURI = Util.getPortalRequestContext().getPortalURI();
 %>
-<div class="UIUserToolBarForumPortlet" id="$uicomponent.id">
-	<div class="UIHorizontalTabs">
-		<div class="TabsContainer" style="position: relative">	
-			<div class="UITab NormalToolbarTab">
-				<div class="">
-				    <a class="ForumIcon TBIcon" href="<%= portalURI + "forum" %>">Forum</a>
-				</div>
-			</div>
-		</div>
-	</div>	
-</div>
+<ul class="UIUserToolBarForumPortlet UIHorizontalTabs" id="$uicomponent.id">
+	<li class="UITab NormalToolbarTab">
+    	<a class="ForumIcon TBIcon" href="<%= portalURI + "forum" %>">Forum</a>
+	</li>
+</ul>

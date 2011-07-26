@@ -209,4 +209,3 @@ param.setTopicId(topicId);
 actionRes.setEvent(new QName("QuickReplyEvent"), param) ;;
 ....
 {code}
-
