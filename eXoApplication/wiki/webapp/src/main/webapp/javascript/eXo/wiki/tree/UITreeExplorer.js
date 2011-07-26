@@ -1,6 +1,10 @@
 
 eXo.require("eXo.core.EventManager");
 
+if(eXo.wiki.UITreeExplorer ==  null) {
+  eXo.wiki.UITreeExplorer = {};
+};
+
 function UITreeExplorer() {};
 
 UITreeExplorer.prototype.init = function( componentid, initParam , isFullRender ) {

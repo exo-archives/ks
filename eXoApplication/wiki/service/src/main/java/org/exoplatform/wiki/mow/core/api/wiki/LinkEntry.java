@@ -35,6 +35,10 @@ public abstract class LinkEntry {
   @Property(name = WikiNodeType.Definition.ALIAS)
   public abstract String getAlias();
   public abstract void setAlias(String alias);
+
+  @Property(name = WikiNodeType.Definition.TITLE)
+  public abstract String getTitle();
+  public abstract void setTitle(String title);
   
   @ManyToOne(type = RelationshipType.PATH)
   @MappedBy(WikiNodeType.Definition.NEW_LINK)

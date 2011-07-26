@@ -157,6 +157,7 @@ public class WikiServiceImpl implements WikiService, Startable {
       newEntry = linkRegistry.createLinkEntry();
       linkRegistry.getLinkEntries().put(newEntryName, newEntry);
       newEntry.setAlias(newEntryAlias);
+      newEntry.setTitle(title);
     }
     newEntry.setNewLink(newEntry);
     
@@ -289,6 +290,7 @@ public class WikiServiceImpl implements WikiService, Startable {
       linkRegistry.getLinkEntries().put(newEntryName, newEntry);
       newEntry.setAlias(newEntryAlias);
       newEntry.setNewLink(newEntry);
+      newEntry.setTitle(newTitle);
     }
     linkRegistry.getLinkEntries().get(getLinkEntryName(wikiType, wikiOwner, pageName)).setNewLink(newEntry);
     
@@ -330,6 +332,7 @@ public class WikiServiceImpl implements WikiService, Startable {
           destLinkRegistry.getLinkEntries().put(newEntryName, newEntry);
           newEntry.setAlias(newEntryAlias);
           newEntry.setNewLink(newEntry);
+          newEntry.setTitle(destPage.getTitle());
         }
         sourceLinkRegistry.getLinkEntries().get(getLinkEntryName(currentLocationParams.getType(), currentLocationParams.getOwner(), currentLocationParams.getPageId())).setNewLink(newEntry);
       }

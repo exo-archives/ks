@@ -7,87 +7,86 @@ import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.commons.Utils ;
 import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
 
-import java.util.Locale;
-import java.text.DateFormat;
-import org.exoplatform.portal.webui.util.Util;
-
-def rcontext = _ctx.getRequestContext() ;
-rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiAdvanceSearchForm', '/wiki/javascript/') ;
-rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.addIconForUnknownMimeType('"+uicomponent.id+"');");
-
-%>
-
-<%
 	PageList<SearchResult> results = uicomponent.getResults() ;	
-	Locale currentLocale = Util.getPortalRequestContext().getLocale();
-	DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, currentLocale);
-	 
-	if(results != null &&  results.getAll().size() > 0) {
-    String resultInfo = _ctx.appRes("UIWikiAdvanceSearchResult.label.ResultInfo");
-    resultInfo = resultInfo.replace("{0}", String.valueOf(results.getFrom()+1));
-    resultInfo = resultInfo.replace("{1}", results.getTo().toString());
-    resultInfo = resultInfo.replace("{2}", results.getAll().size().toString());
-    resultInfo = resultInfo.replace("{3}", "<b>" + uicomponent.getKeyword() + "</b>");
-		%>		
+	if(results != null &&	results.getAll().size() > 0) {
+		String resultInfo = _ctx.appRes("UIWikiAdvanceSearchResult.label.ResultInfo");
+		resultInfo = resultInfo.replace("{0}", String.valueOf(results.getFrom()+1));
+		resultInfo = resultInfo.replace("{1}", results.getTo().toString());
+		resultInfo = resultInfo.replace("{2}", results.getAll().size().toString());
+		resultInfo = resultInfo.replace("{3}", "<b>" + uicomponent.getKeyword() + "</b>");
+%>		
 		<div class="UIWikiAdvanceSearchResult" id="$uicomponent.id">
-			<div class="ResultInfo"><%= resultInfo %></div>
+			<div class="ResultInfo"><%=resultInfo%></div>
 			<%
 				for(SearchResult result in results.getPage(results.getCurrentPage())) {
-			    String wikiURI = uicomponent.getWikiNodeUri(result) ;
-			    def wiki= uicomponent.getWiki(result);
+					def wiki= uicomponent.getWiki(result);
+					String wikiURI = uicomponent.getWikiNodeUri(wiki) ;
 					String space = wiki.getOwner();
 					String wikiType= wiki.getType();
 					String wikiLabel = _ctx.appRes("UIWikiAdvanceSearchResult.label.Wiki");
-					def timeMsg = _ctx.appRes("UIWikiAdvanceSearchResult.label.time");
-					timeMsg = timeMsg.replace("{0}", df.format(result.getCreatedDate().getTime())).replace("{1}", df.format(result.getUpdatedDate().getTime()));
+					String timeMsg = _ctx.appRes("UIWikiAdvanceSearchResult.label.time");
+					timeMsg = timeMsg.replace("{0}", uicomponent.getDateFormat(result.getCreatedDate())).replace("{1}", uicomponent.getDateFormat(result.getUpdatedDate()));
 					wikiLabel = wikiLabel.replace("{0}", wikiType);
 					String pageURI = wikiURI + result.getPageName() ;
-					Calendar updateDate= 	result.getUpdatedDate();				
-					if(WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())) {						      	
-		      	%>		      	
-		      	<div class="BlockResultFeed">
-							<a class="page TxtTitFeed" href="$pageURI"><%=result.getTitle()%></a>
-								<% if (result.getExcerpt()!=null){ %>	      
-									<div class="TxtDetail"><%=result.getExcerpt()%></div>
-								<% } %>
+					String pageName = result.getTitle();
+					String pageOldName = uicomponent.getPageSearchName(wiki, pageName)			
+					if(WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType())) {										
+			%>						
+						<div class="BlockResultFeed">
+							<a class="page TxtTitle" href="$pageURI">
+							<% if(pageOldName.length() > 0) { %>
+								<span class="TxtTitFeed"><%=pageOldName%></span>
+								<span class="TxtMark"> is renamed to </span>
+							<% } %>
+								<span class="TxtTitFeed"><%=pageName%><span>
+							</a>
+							<% if (result.getExcerpt()!=null){ %>				
+								<div class="TxtDetail"><%=result.getExcerpt()%></div>
+							<% } %>
 							<div>
 							<strong>$wikiLabel: </strong><a class="TxtMark" href="$wikiURI">$space</a>
 							<br>
 							$timeMsg
-							</div>
 						</div>
-		      	<%	
-		      } else if (WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())){
-		      	att = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject( result.getPath(),
-                                                                                               WikiNodeType.WIKI_ATTACHMENT);		      	
-		      	String downloadlink = att.getDownloadURL();		      	
-		      	String extension = Utils.getExtension(att.getName()) ;
-		      	%>		     
-		      	<div class="BlockResultFeed">
-		      		<a class="$extension TxtTitFeed" href="$downloadlink"><span><%=att.getFullTitle()%></span></a>
-		      		<% if (result.getExcerpt()!=null){ %>	      		
+				</div>
+						<%	
+					} else if (WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())){
+						att = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject( result.getPath(),
+																																															 WikiNodeType.WIKI_ATTACHMENT);						
+						String downloadlink = att.getDownloadURL();						
+						String extension = Utils.getExtension(att.getName()) ;
+						%>				 
+						<div class="BlockResultFeed">
+							<a class="TxtTitle attach $extension" href="$downloadlink"><span><%=att.getFullTitle()%></span></a>
+							<% if (result.getExcerpt()!=null){ %>						
 							<div class="TxtDetail"><%=result.getExcerpt()%></div>
 							<% } %>
 							<div>
 							<strong>$wikiLabel: </strong><a class="TxtMark" href="$wikiURI">$space</a> > <a class="TxtMark" href="$pageURI"><%=att.getParentPage().getTitle()%></a>&nbsp;
-							<%= df.format(updateDate.getTime()); %>
+							<%=uicomponent.getDateFormat(result.getUpdatedDate()); %>
 							</div>
-						</div>    	
-		      	<%
-		      } else if (WikiNodeType.WIKI_PAGE.equals(result.getType())) {
-		        %>
-		        <div class="BlockResultFeed">
-              <a class="page TxtTitFeed" href="$pageURI"><%=result.getTitle()%></a>
-              <div>
-                <strong>$wikiLabel: </strong><a class="TxtMark" href="$wikiURI">$space</a>
-                <br/>
-                $timeMsg
-              </div>
-            </div>
-		        <%
-		      }     
-		    }
-			%>			 	
+						</div>			
+						<%
+					} else if (WikiNodeType.WIKI_PAGE.equals(result.getType())) {
+						%>
+						<div class="BlockResultFeed">
+							<a class="page TxtTitle" href="$pageURI">
+								<% if(pageOldName.length() > 0) { %>
+					<span class="TxtTitFeed"><%=pageOldName%></span>
+					<span class="TxtMark"> is renamed to </span>
+				<% } %>
+					<span class="TxtTitFeed"><%=pageName%><span>
+				</a>
+						<div>
+							<strong>$wikiLabel: </strong><a class="TxtMark" href="$wikiURI">$space</a>
+							<br/>
+							$timeMsg
+						</div>
+				</div>
+						<%
+					}		 
+				}
+			%>				 
 			<%
 				String prev = uicomponent.event("PrevPage") ;
 				String next = uicomponent.event("NextPage") ;
@@ -96,7 +95,6 @@ rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiAdvanceSearchForm.
 			
 	</div>	
 	
-	<%} else {
-		%><div class="NoSearchResult"><%= _ctx.appRes("UIWikiAdvanceSearchResult.msg.there-is-no-search-result"); %></div><%
-	}
-	%>
+	<%} else { %>
+		<div class="NoSearchResult"><%= _ctx.appRes("UIWikiAdvanceSearchResult.msg.there-is-no-search-result"); %></div>
+	<%} %>

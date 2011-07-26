@@ -710,12 +710,15 @@ table.UIFormGrid div.Id {
 	margin: 20px 0 10px;
 }
 
+.UIWikiAdvanceSearchResult .BlockResultFeed .TxtTitle {
+	line-height: 20px;
+	padding: 2px 20px;
+	text-decoration: none;
+}
+
 .UIWikiAdvanceSearchResult .BlockResultFeed .TxtTitFeed {
 	color: #ff9403;
 	font-weight: bold;
-	padding: 2px 0 2px 20px;
-	height: 16px;
-	width: 16px;
 }
 
 .UIWikiAdvanceSearchResult .BlockResultFeed .page {

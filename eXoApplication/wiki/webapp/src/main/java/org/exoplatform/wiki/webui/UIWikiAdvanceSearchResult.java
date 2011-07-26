@@ -16,6 +16,13 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.config.model.PortalConfig;
@@ -27,7 +34,10 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.LinkEntry;
+import org.exoplatform.wiki.mow.core.api.wiki.LinkRegistry;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.utils.Utils;
 import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
@@ -38,41 +48,49 @@ import org.exoplatform.wiki.webui.core.UIAdvancePageIterator;
  *          viet.nguyen@exoplatform.com
  * May 14, 2010  
  */
-@ComponentConfig(
-  lifecycle = Lifecycle.class,
-  template = "app:/templates/wiki/webui/UIWikiAdvanceSearchResult.gtmpl"  
-)
+@ComponentConfig(lifecycle = Lifecycle.class, template = "app:/templates/wiki/webui/UIWikiAdvanceSearchResult.gtmpl")
 public class UIWikiAdvanceSearchResult extends UIContainer {
+
+  private String keyword;
   
-  private String keyword ;
-  
+  LinkRegistry registry = null;
+
   public UIWikiAdvanceSearchResult() throws Exception {
     addChild(UIAdvancePageIterator.class, null, "SearchResultPageIterator");
   }
-  
+
   public void setResult(PageList<SearchResult> results) throws Exception {
     UIAdvancePageIterator pageIterator = this.getChild(UIAdvancePageIterator.class);
     pageIterator.setPageList(results);
-    pageIterator.getPageList().getPage(1);  
+    pageIterator.getPageList().getPage(1);
   }
-  
+
   public PageList<SearchResult> getResults() {
     UIAdvancePageIterator pageIterator = this.getChild(UIAdvancePageIterator.class);
-    return pageIterator.getPageList();   
-  } 
-  
-  public void setKeyword(String keyword) { this.keyword = keyword ;}
-  
-  private String getKeyword () {return keyword ;}
+    return pageIterator.getPageList();
+  }
+
+  public void setKeyword(String keyword) {
+    this.keyword = keyword;
+  }
+
+  private String getKeyword() {
+    return keyword;
+  }
+
+  private String getDateFormat(Calendar cal) throws Exception {
+    Locale currentLocale = Util.getPortalRequestContext().getLocale();
+    DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, currentLocale);
+    return df.format(cal.getTime());
+  }
   
   private Wiki getWiki(SearchResult result) throws Exception {
     Wiki searchWiki = null;
     try {
       if (WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType()) || WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())) {
-        AttachmentImpl searchContent = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(),
-                                                                                                   WikiNodeType.WIKI_ATTACHMENT);
+        AttachmentImpl searchContent = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(), WikiNodeType.WIKI_ATTACHMENT);
         searchWiki = searchContent.getParentPage().getWiki();
-      } else if(WikiNodeType.WIKI_PAGE.equals(result.getType()) || WikiNodeType.WIKI_HOME.equals(result.getType())){
+      } else if (WikiNodeType.WIKI_PAGE.equals(result.getType()) || WikiNodeType.WIKI_HOME.equals(result.getType())) {
         PageImpl page = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(result.getPath(), WikiNodeType.WIKI_PAGE);
         searchWiki = page.getWiki();
       }
@@ -80,9 +98,42 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     }
     return searchWiki;
   }
-  
-  private String getWikiNodeUri(SearchResult result) throws Exception {
-    Wiki wiki= getWiki(result);
+
+  private String getPageSearchName(Wiki wiki, String pageTitle) throws Exception {
+    if (pageTitle.indexOf(keyword) >= 0) return "";
+    if(registry == null) {
+      registry = ((WikiImpl) wiki).getLinkRegistry();
+    }
+    Map<String, LinkEntry> linkEntries = registry.getLinkEntries();
+    String titleBefore, titleAfter;
+    List<LinkEntry> linkEntrys = new ArrayList<LinkEntry>();
+    List<String> alias = new ArrayList<String>();
+    for (LinkEntry linkEntry : linkEntries.values()) {
+      if (alias.contains(linkEntry.getAlias())) continue;
+      while (true) {
+        alias.add(linkEntry.getAlias());
+        titleAfter = linkEntry.getTitle();
+        linkEntrys.add(linkEntry);
+        linkEntry = linkEntry.getNewLink();
+        titleBefore = linkEntry.getTitle();
+        if(titleBefore.equals(pageTitle) && titleAfter.equals(titleBefore)) {
+          for (LinkEntry entry : linkEntrys) {
+            if (entry.getTitle().indexOf(keyword) >= 0) {
+              return entry.getTitle();
+            }
+          }
+          break;
+        }
+        if (titleAfter.equals(titleBefore)) {
+          linkEntrys.clear();
+          break;
+        }
+      }
+    }
+    return "";
+  }
+
+  private String getWikiNodeUri(Wiki wiki) throws Exception {
     String wikiType = wiki.getType();
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     StringBuilder sb = new StringBuilder(portalRequestContext.getPortalURI());
@@ -96,5 +147,5 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
       sb.append(Utils.validateWikiOwner(wikiType, wiki.getOwner()));
     }
     return sb.toString();
-  } 
+  }
 }
