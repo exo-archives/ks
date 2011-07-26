@@ -115,8 +115,10 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
         titleAfter = linkEntry.getTitle();
         linkEntrys.add(linkEntry);
         linkEntry = linkEntry.getNewLink();
+        if(linkEntry == null) break;
         titleBefore = linkEntry.getTitle();
-        if(titleBefore.equals(pageTitle) && titleAfter.equals(titleBefore)) {
+        if(!org.exoplatform.ks.common.Utils.isEmpty(titleBefore) && 
+            titleBefore.equals(pageTitle) && titleAfter.equals(titleBefore)) {
           for (LinkEntry entry : linkEntrys) {
             if (entry.getTitle().indexOf(keyword) >= 0) {
               return entry.getTitle();
@@ -124,7 +126,7 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
           }
           break;
         }
-        if (titleAfter.equals(titleBefore)) {
+        if (org.exoplatform.ks.common.Utils.isEmpty(titleBefore) || titleAfter.equals(titleBefore)) {
           linkEntrys.clear();
           break;
         }
@@ -149,3 +151,4 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     return sb.toString();
   }
 }
+
