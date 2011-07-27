@@ -32,7 +32,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.ks.common.Utils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.WebUIUtils;
@@ -159,7 +159,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
       UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class);
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
       UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
-      if (Utils.isEmpty(comment) || !ValidatorDataInput.fckContentIsNotEmpty(comment)) {
+      if (CommonUtils.isEmpty(comment) || !ValidatorDataInput.fckContentIsNotEmpty(comment)) {
         warning("UICommentForm.msg.comment-is-null");
         return;
       }
@@ -167,7 +167,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
         warning("UIQuestions.msg.comment-id-deleted");
         return;
       }
-      comment = Utils.encodeSpecialCharInContent(comment);
+      comment = CommonUtils.encodeSpecialCharInContent(comment);
       try {
         // Create link by Vu Duy Tu.
         String link = FAQUtils.getLink(commentForm.getLink(), commentForm.getId(), "UICommentForm", "Cancel", "ViewQuestion", "OBJECTID");

@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.ForumService;
@@ -31,8 +30,8 @@ import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.UISelector;
@@ -241,13 +240,13 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_CATEGORYTITLE_INPUT), String.valueOf(maxText) });
         return;
       }
-      categoryTitle = Utils.encodeSpecialCharInTitle(categoryTitle);
+      categoryTitle = CommonUtils.encodeSpecialCharInTitle(categoryTitle);
       String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue();
       if (!ForumUtils.isEmpty(description) && description.length() > maxText) {
         warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_DESCRIPTION_INPUT), String.valueOf(maxText) });
         return;
       }
-      description = Utils.encodeSpecialCharInTitle(description);
+      description = CommonUtils.encodeSpecialCharInTitle(description);
       String categoryOrder = uiForm.getUIStringInput(FIELD_CATEGORYORDER_INPUT).getValue();
       if (ForumUtils.isEmpty(categoryOrder))
         categoryOrder = "0";

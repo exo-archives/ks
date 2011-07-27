@@ -38,6 +38,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
@@ -547,8 +548,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
             questionForm.mapLanguage.get(language).setState(QuestionLanguage.DELETE) ;
           }
         }
-        questionDetail = org.exoplatform.ks.common.Utils.encodeSpecialCharInContent(questionDetail);
-        questionContent = org.exoplatform.ks.common.Utils.encodeSpecialCharInTitle(questionContent);
+        questionDetail = CommonUtils.encodeSpecialCharInContent(questionDetail);
+        questionContent = CommonUtils.encodeSpecialCharInTitle(questionContent);
 
         Question question = questionForm.getQuestion();
 

@@ -22,7 +22,7 @@ import java.util.List;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.ks.common.Common;
 import org.exoplatform.ks.common.NotifyInfo;
-import org.exoplatform.ks.common.Utils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
@@ -48,7 +48,7 @@ public class NotifyJob implements Job {
   
   public void execute(JobExecutionContext context) throws JobExecutionException {
     try {
-      ExoContainer exoContainer = Utils.getExoContainer(context);
+      ExoContainer exoContainer = CommonUtils.getExoContainer(context);
       MailService mailService = (MailService)exoContainer.getComponentInstanceOfType(MailService.class) ;
       String name = context.getJobDetail().getName();
       Common common = new Common() ;

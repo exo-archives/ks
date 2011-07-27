@@ -53,8 +53,8 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class Utils {
-  private static Log log = ExoLogger.getLogger(Utils.class);
+public class CommonUtils {
+  private static Log log = ExoLogger.getLogger(CommonUtils.class);
   
   public static final String COMMA     = ",".intern();
 

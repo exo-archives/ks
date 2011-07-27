@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIFormMultiValueInputSet;
@@ -192,7 +193,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
       UIPollForm uiForm = event.getSource();
       UIFormStringInput questionInput = uiForm.getUIStringInput(FIELD_QUESTION_INPUT);
       String question = questionInput.getValue();
-      question = org.exoplatform.ks.common.Utils.encodeSpecialCharInTitle(question);
+      question = CommonUtils.encodeSpecialCharInTitle(question);
       String timeOutStr = uiForm.getUIStringInput(FIELD_TIMEOUT_INPUT).getValue();
       timeOutStr = Utils.removeZeroFirstNumber(timeOutStr);
       long timeOut = 0;
@@ -215,7 +216,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
             uiForm.warning("NameValidator.msg.warning-long-text", args);
             return;
           }
-          values_.add(question = org.exoplatform.ks.common.Utils.encodeSpecialCharInTitle(value));
+          values_.add(question = CommonUtils.encodeSpecialCharInTitle(value));
         }
         ++i;
       }

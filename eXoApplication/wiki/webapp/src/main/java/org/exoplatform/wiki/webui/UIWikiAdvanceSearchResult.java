@@ -24,6 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.webui.portal.UIPortal;
@@ -117,7 +118,7 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
         linkEntry = linkEntry.getNewLink();
         if(linkEntry == null) break;
         titleBefore = linkEntry.getTitle();
-        if(!org.exoplatform.ks.common.Utils.isEmpty(titleBefore) && 
+        if(!CommonUtils.isEmpty(titleBefore) && 
             titleBefore.equals(pageTitle) && titleAfter.equals(titleBefore)) {
           for (LinkEntry entry : linkEntrys) {
             if (entry.getTitle().indexOf(keyword) >= 0) {
@@ -126,7 +127,7 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
           }
           break;
         }
-        if (org.exoplatform.ks.common.Utils.isEmpty(titleBefore) || titleAfter.equals(titleBefore)) {
+        if (CommonUtils.isEmpty(titleBefore) || titleAfter.equals(titleBefore)) {
           linkEntrys.clear();
           break;
         }

@@ -37,6 +37,7 @@ import org.exoplatform.faq.webui.popup.UIImportForm;
 import org.exoplatform.faq.webui.popup.UIMoveCategoryForm;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -248,7 +249,7 @@ public class UICategories extends UIContainer {
 
   public String getRSSLink(String cateId) {
     cateId = cateId.substring(cateId.lastIndexOf("/") + 1);
-    return org.exoplatform.ks.common.Utils.getRSSLink("faq", portalName, cateId);
+    return CommonUtils.getRSSLink("faq", portalName, cateId);
   }
 
   private String getPortalName() {

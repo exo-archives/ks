@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -34,8 +33,8 @@ import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.UISelector;
@@ -388,7 +387,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
         uiForm.isDoubleClickSubmit = false;
         return;
       }
-      forumTitle = Utils.encodeSpecialCharInTitle(forumTitle);
+      forumTitle = CommonUtils.encodeSpecialCharInTitle(forumTitle);
       String forumOrder = newForumForm.getUIStringInput(FIELD_FORUMORDER_INPUT).getValue();
       if (ForumUtils.isEmpty(forumOrder))
         forumOrder = "0";
@@ -402,7 +401,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       String forumStatus = newForumForm.getUIFormSelectBox(FIELD_FORUMSTATUS_SELECTBOX).getValue();
       String description = newForumForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).getValue();
       
-      description = Utils.encodeSpecialCharInTitle(description);
+      description = CommonUtils.encodeSpecialCharInTitle(description);
       UIFormInputWithActions moderationOptions = uiForm.getChildById(FIELD_MODERATOROPTION_FORM);
       boolean isAutoAddEmail = moderationOptions.getUIFormCheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
       String moderators = moderationOptions.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).getValue();

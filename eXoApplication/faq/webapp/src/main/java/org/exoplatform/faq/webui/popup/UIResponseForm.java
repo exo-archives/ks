@@ -40,7 +40,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.ks.common.Utils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.WebUIUtils;
@@ -359,7 +359,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
       UIResponseForm responseForm = event.getSource();
       String language = responseForm.questionLanguages_.getValue();
       String responseQuestionContent = responseForm.inputResponseQuestion_.getValue();
-      responseQuestionContent = Utils.encodeSpecialCharInContent(responseQuestionContent);
+      responseQuestionContent = CommonUtils.encodeSpecialCharInContent(responseQuestionContent);
       Answer answer;
       if (ValidatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
         if (responseForm.mapAnswers.containsKey(language)) {

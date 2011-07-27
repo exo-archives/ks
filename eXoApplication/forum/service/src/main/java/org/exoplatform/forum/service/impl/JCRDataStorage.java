@@ -33,9 +33,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -89,8 +89,6 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.forum.service.SortSettings;
-import org.exoplatform.forum.service.SortSettings.Direction;
-import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicListAccess;
@@ -98,6 +96,8 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.SortSettings.Direction;
+import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.CategoryEventListener;
 import org.exoplatform.forum.service.conf.ForumData;
@@ -105,14 +105,15 @@ import org.exoplatform.forum.service.conf.ForumInitialDataPlugin;
 import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
-import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.SessionManager;
+import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
@@ -6456,7 +6457,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         /*
          * file = new File(category.getId() + ".xml"); file.deleteOnExit(); file.createNewFile(); writer = new BufferedWriter(new FileWriter(file)); writer.write(outputStream.toString());
          */
-        listFiles.add(org.exoplatform.ks.common.Utils.getXMLFile(outputStream, "eXo Knowledge Suite - Forum", "Category", date.getTime(), category.getId()));
+        listFiles.add(CommonUtils.getXMLFile(outputStream, "eXo Knowledge Suite - Forum", "Category", date.getTime(), category.getId()));
       } finally {
         outputStream.close();
         // writer.close();
@@ -6481,7 +6482,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         /*
          * file = new File(forum.getId() + ".xml"); file.deleteOnExit(); file.createNewFile(); writer = new BufferedWriter(new FileWriter(file)); writer.write(outputStream.toString());
          */
-        listFiles.add(org.exoplatform.ks.common.Utils.getXMLFile(outputStream, "eXo Knowledge Suite - Forum", "Forum", calendar.getTime(), forum.getId()));
+        listFiles.add(CommonUtils.getXMLFile(outputStream, "eXo Knowledge Suite - Forum", "Forum", calendar.getTime(), forum.getId()));
       } finally {
         outputStream.close();
         // writer.close();
@@ -6498,7 +6499,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         outputStream = new ByteArrayOutputStream();
         Calendar calendar = GregorianCalendar.getInstance();
         node.getSession().exportSystemView(node.getPath(), outputStream, false, false);
-        listFiles.add(org.exoplatform.ks.common.Utils.getXMLFile(outputStream, "eXo Knowledge Suite - Forum", type, calendar.getTime(), node.getName()));
+        listFiles.add(CommonUtils.getXMLFile(outputStream, "eXo Knowledge Suite - Forum", type, calendar.getTime(), node.getName()));
 
       } finally {
         outputStream.close();
@@ -7846,6 +7847,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
   
   private Calendar getGreenwichMeanTime() {
-    return org.exoplatform.ks.common.Utils.getGreenwichMeanTime();
+    return CommonUtils.getGreenwichMeanTime();
   }
 }

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.info.UIForumPollPortlet;
@@ -33,6 +32,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIFormMultiValueInputSet;
 import org.exoplatform.poll.service.Poll;
@@ -178,7 +178,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
       UIPollForm uiForm = event.getSource();
       UIFormStringInput questionInput = uiForm.getUIStringInput(FIELD_QUESTION_INPUT);
       String question = questionInput.getValue();
-      question = org.exoplatform.ks.common.Utils.encodeSpecialCharInTitle(question);
+      question = CommonUtils.encodeSpecialCharInTitle(question);
       String timeOutStr = uiForm.getUIStringInput(FIELD_TIMEOUT_INPUT).getValue();
       timeOutStr = ForumUtils.removeZeroFirstNumber(timeOutStr);
       long timeOut = 0;
@@ -201,7 +201,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
             uiForm.warning("NameValidator.msg.warning-long-text", args);
             return;
           }
-          values_.add(org.exoplatform.ks.common.Utils.encodeSpecialCharInTitle(value));
+          values_.add(CommonUtils.encodeSpecialCharInTitle(value));
         }
         ++i;
       }

@@ -84,6 +84,7 @@ import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.SubCategoryInfo;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.UserHelper;
@@ -3051,7 +3052,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     List<File> listFiles = new ArrayList<File>();
     Calendar date = GregorianCalendar.getInstance();
     session.exportSystemView(categoryNode.getPath(), bos, false, false);
-    listFiles.add(org.exoplatform.ks.common.Utils.getXMLFile(bos, "eXo Knowledge Suite - Answers", "Category", date.getTime(), categoryNode.getName()));
+    listFiles.add(CommonUtils.getXMLFile(bos, "eXo Knowledge Suite - Answers", "Category", date.getTime(), categoryNode.getName()));
     ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
     try {
       int byteReads;

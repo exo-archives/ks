@@ -28,6 +28,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -98,7 +99,7 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
   public String getImageUrl(String imagePath) throws Exception {
     String url = "";
     try {
-      url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
+      url = CommonUtils.getImageUrl(imagePath);
     } catch (Exception e) {
       log.debug("Image must exist: ", e);
     }

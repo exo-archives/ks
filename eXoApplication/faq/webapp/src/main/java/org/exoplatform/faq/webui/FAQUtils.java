@@ -43,7 +43,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JcrInputProperty;
-import org.exoplatform.ks.common.Utils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
@@ -481,7 +481,7 @@ public class FAQUtils {
       FAQService service = getFAQService();
       FileAttachment avatar = service.getUserAvatar(userName);
       if (avatar != null) {
-        url = Utils.getImageUrl(avatar.getPath()) + "?size=" + avatar.getSize();
+        url = CommonUtils.getImageUrl(avatar.getPath()) + "?size=" + avatar.getSize();
       }
     } catch (Exception e) {
       log.debug("Failed to get user avatar of user: " + userName, e);

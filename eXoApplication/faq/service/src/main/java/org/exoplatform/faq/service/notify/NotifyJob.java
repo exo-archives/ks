@@ -23,7 +23,7 @@ import java.util.List;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.ks.common.NotifyInfo;
-import org.exoplatform.ks.common.Utils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
@@ -39,7 +39,7 @@ public class NotifyJob implements Job {
   }
 
   public void execute(JobExecutionContext context) throws JobExecutionException {
-    ExoContainer exoContainer = Utils.getExoContainer(context);
+    ExoContainer exoContainer = CommonUtils.getExoContainer(context);
     try {
       MailService mailService = (MailService) exoContainer.getComponentInstanceOfType(MailService.class);
       FAQService faqService = (FAQService) exoContainer.getComponentInstanceOfType(FAQService.class);
@@ -50,7 +50,7 @@ public class NotifyJob implements Job {
           NotifyInfo messageInfo = iter.next();
           List<String> emailAddresses = messageInfo.getEmailAddresses();
           Message message = messageInfo.getMessage();
-          message.setFrom(Utils.makeNotificationSender(message.getFrom()));
+          message.setFrom(CommonUtils.makeNotificationSender(message.getFrom()));
           if (message != null && emailAddresses != null && emailAddresses.size() > 0) {
             List<String> sentMessages = new ArrayList<String>();
             for (String address : emailAddresses) {

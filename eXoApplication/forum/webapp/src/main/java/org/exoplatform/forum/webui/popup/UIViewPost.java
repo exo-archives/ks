@@ -35,6 +35,7 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -114,7 +115,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
   public String getImageUrl(String imagePath) throws Exception {
     String url = ForumUtils.EMPTY_STR;
     try {
-      url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
+      url = CommonUtils.getImageUrl(imagePath);
     } catch (Exception e) {
       log.warn(imagePath + " is not exist: " + e.getMessage());
     }

@@ -58,6 +58,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -238,7 +239,7 @@ public class UIQuestions extends UIContainer {
 
   public String getRSSLink() {
     String catepath = categoryId_.substring(categoryId_.lastIndexOf("/") + 1);
-    return org.exoplatform.ks.common.Utils.getRSSLink("faq", getPortalName(), catepath);
+    return CommonUtils.getRSSLink("faq", getPortalName(), catepath);
   }
 
   public String getPortalName() {
@@ -249,7 +250,7 @@ public class UIQuestions extends UIContainer {
   public String getImageUrl(String imagePath) throws Exception {
     String url = "";
     try {
-      url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
+      url = CommonUtils.getImageUrl(imagePath);
     } catch (Exception e) {
       log.debug("Failed to get url of image.", e);
     }

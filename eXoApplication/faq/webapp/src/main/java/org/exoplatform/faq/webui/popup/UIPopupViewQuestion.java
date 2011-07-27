@@ -16,20 +16,16 @@
  */
 package org.exoplatform.faq.webui.popup;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
-import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.rendering.RenderHelper;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -107,7 +103,7 @@ public class UIPopupViewQuestion extends BaseUIForm implements UIPopupComponent 
   public String getImageUrl(String imagePath) throws Exception {
     String url = "";
     try {
-      url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
+      url = CommonUtils.getImageUrl(imagePath);
     } catch (Exception e) {
       log.debug("Getting image url fail: ", e);
     }

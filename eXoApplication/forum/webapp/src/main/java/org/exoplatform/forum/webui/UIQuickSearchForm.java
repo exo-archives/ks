@@ -25,6 +25,7 @@ import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -60,7 +61,7 @@ public class UIQuickSearchForm extends BaseUIForm {
       UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE);
       String text = formStringInput.getValue();
       if (!ForumUtils.isEmpty(text)) {
-        text = org.exoplatform.ks.common.Utils.encodeSpecialCharInSearchTerm(text);
+        text = CommonUtils.encodeSpecialCharInSearchTerm(text);
         ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
         UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
         UserProfile userProfile = forumPortlet.getUserProfile();

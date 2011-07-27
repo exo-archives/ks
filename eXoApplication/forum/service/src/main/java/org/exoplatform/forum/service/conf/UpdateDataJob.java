@@ -19,7 +19,7 @@ package org.exoplatform.forum.service.conf;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.ks.common.Utils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.scheduler.JobInfo;
@@ -38,7 +38,7 @@ public class UpdateDataJob implements Job {
   public void execute(JobExecutionContext context) throws JobExecutionException {
     ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
     try {
-      ExoContainer exoContainer = Utils.getExoContainer(context);
+      ExoContainer exoContainer = CommonUtils.getExoContainer(context);
       ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
       ExoContainerContext.setCurrentContainer(exoContainer);
       String name = context.getJobDetail().getName();

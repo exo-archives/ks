@@ -24,90 +24,90 @@ import junit.framework.TestCase;
  *          tu.duy@exoplatform.com
  * Jul 22, 2011  
  */
-public class TestUtils extends TestCase {
+public class TestCommonUtils extends TestCase {
 
   public void testIsEmpty() {
     String s = null;
-    assertEquals(true, Utils.isEmpty(s));
-    s = Utils.EMPTY_STR;
-    assertEquals(true, Utils.isEmpty(s));
-    s = Utils.SPACE;
-    assertEquals(true, Utils.isEmpty(s));
+    assertEquals(true, CommonUtils.isEmpty(s));
+    s = CommonUtils.EMPTY_STR;
+    assertEquals(true, CommonUtils.isEmpty(s));
+    s = CommonUtils.SPACE;
+    assertEquals(true, CommonUtils.isEmpty(s));
     s = "abc";
-    assertEquals(false, Utils.isEmpty(s));
+    assertEquals(false, CommonUtils.isEmpty(s));
   }
 
   public void testIsArrayEmpty() {
     String []strs = null;
-    assertEquals(true, Utils.isEmpty(strs));
+    assertEquals(true, CommonUtils.isEmpty(strs));
     strs = new String[]{};
-    assertEquals(true, Utils.isEmpty(strs));
-    strs = new String[]{Utils.EMPTY_STR};
-    assertEquals(true, Utils.isEmpty(strs));
-    strs = new String[]{Utils.SPACE};
-    assertEquals(true, Utils.isEmpty(strs));
+    assertEquals(true, CommonUtils.isEmpty(strs));
+    strs = new String[]{CommonUtils.EMPTY_STR};
+    assertEquals(true, CommonUtils.isEmpty(strs));
+    strs = new String[]{CommonUtils.SPACE};
+    assertEquals(true, CommonUtils.isEmpty(strs));
     strs = new String[]{"abc"};
-    assertEquals(false, Utils.isEmpty(strs));
+    assertEquals(false, CommonUtils.isEmpty(strs));
   }
   
   public void testEncodeSpecialCharInSearchTerm() {
     //test for text null
     String s = null;
-    assertEquals("",Utils.encodeSpecialCharInSearchTerm(s));
+    assertEquals("",CommonUtils.encodeSpecialCharInSearchTerm(s));
     //test for text empty
     s = "";
-    assertEquals("",Utils.encodeSpecialCharInSearchTerm(s));
+    assertEquals("",CommonUtils.encodeSpecialCharInSearchTerm(s));
     // normal text
     s = "normal text";
-    assertEquals("normal text",Utils.encodeSpecialCharInSearchTerm(s));
+    assertEquals("normal text",CommonUtils.encodeSpecialCharInSearchTerm(s));
     // all characters is special characters.
     s = "@#$%^&*()\"/-=~`'.,";
-    assertEquals("&#64;&#35;&#36;&#37;&#94;&#38;&#42;&#40;&#41;&#34;&#47;&#45;&#61;&#126;&#96;&apos;&#46;&#44;",Utils.encodeSpecialCharInSearchTerm(s));
+    assertEquals("&#64;&#35;&#36;&#37;&#94;&#38;&#42;&#40;&#41;&#34;&#47;&#45;&#61;&#126;&#96;&apos;&#46;&#44;",CommonUtils.encodeSpecialCharInSearchTerm(s));
     // has ignore special characters.
     s = "abc !#:? =., +;";
-    assertEquals("abc !#:? =., +;",Utils.encodeSpecialCharInSearchTerm(s));
+    assertEquals("abc !#:? =., +;",CommonUtils.encodeSpecialCharInSearchTerm(s));
     // has ignore and not ignore special characters.
     s = "abc !#: ()\" ' | ] [";
-    assertEquals("abc !#: &#40;&#41;&#34; &apos; &#124; &#93; &#91;",Utils.encodeSpecialCharInSearchTerm(s));
+    assertEquals("abc !#: &#40;&#41;&#34; &apos; &#124; &#93; &#91;",CommonUtils.encodeSpecialCharInSearchTerm(s));
   }
 
   public void testEncodeSpecialCharInTitle() {
     //test for text null
     String s = null;
-    assertEquals("",Utils.encodeSpecialCharInTitle(s));
+    assertEquals("",CommonUtils.encodeSpecialCharInTitle(s));
     //test for text empty
     s = "";
-    assertEquals("",Utils.encodeSpecialCharInTitle(s));
+    assertEquals("",CommonUtils.encodeSpecialCharInTitle(s));
     // normal text
     s = "normal text";
-    assertEquals("normal text",Utils.encodeSpecialCharInTitle(s));
+    assertEquals("normal text",CommonUtils.encodeSpecialCharInTitle(s));
     // has double space .
     s = "   abc   aa s   s";
-    assertEquals("abc aa s s", Utils.encodeSpecialCharInTitle(s));
+    assertEquals("abc aa s s", CommonUtils.encodeSpecialCharInTitle(s));
     // has ignore special characters.
     s = "abc !#:?=.,()+; ddd";
-    assertEquals("abc !#:?=.,()+; ddd",Utils.encodeSpecialCharInTitle(s));
+    assertEquals("abc !#:?=.,()+; ddd",CommonUtils.encodeSpecialCharInTitle(s));
     // has ignore and not ignore special characters.
     s = "abc !# :?=.,' | ] [";
-    assertEquals("abc !# :?=.,&apos; &#124; &#93; &#91;",Utils.encodeSpecialCharInTitle(s));
+    assertEquals("abc !# :?=.,&apos; &#124; &#93; &#91;",CommonUtils.encodeSpecialCharInTitle(s));
   }
   
   public void testEncodeSpecialCharInContent() {
     //test for text null
     String s = null;
-    assertEquals("",Utils.encodeSpecialCharInContent(s));
+    assertEquals("",CommonUtils.encodeSpecialCharInContent(s));
     //test for text empty
     s = "";
-    assertEquals("",Utils.encodeSpecialCharInContent(s));
+    assertEquals("",CommonUtils.encodeSpecialCharInContent(s));
     // normal text
     s = "normal text";
-    assertEquals("normal text",Utils.encodeSpecialCharInContent(s));
+    assertEquals("normal text",CommonUtils.encodeSpecialCharInContent(s));
         // has ignore special characters.
     s = "abc &#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_ ddd";
-    assertEquals("abc &#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_ ddd",Utils.encodeSpecialCharInContent(s));
+    assertEquals("abc &#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_ ddd",CommonUtils.encodeSpecialCharInContent(s));
     // has ignore and not ignore special characters.
     s = "abc !# :?=.,' | ] [";
-    assertEquals("abc !# :?=.,&apos; &#124; ] [",Utils.encodeSpecialCharInContent(s));
+    assertEquals("abc !# :?=.,&apos; &#124; ] [",CommonUtils.encodeSpecialCharInContent(s));
   }
   
   public void testEncodeSpecialCharToHTMLnumber() {

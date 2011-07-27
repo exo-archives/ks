@@ -39,6 +39,7 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -199,7 +200,7 @@ public class UIViewTopic extends BaseForumForm implements UIPopupComponent {
   public String getImageUrl(String imagePath) throws Exception {
     String url = ForumUtils.EMPTY_STR;
     try {
-      url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
+      url = CommonUtils.getImageUrl(imagePath);
     } catch (Exception e) {
       log.warn(imagePath + " must exist: " + e.getCause());
     }

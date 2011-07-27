@@ -24,13 +24,13 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 
@@ -132,7 +132,7 @@ public class Utils {
     if (timeOut == 0)
       return dateUnit[0];
     else {
-      Calendar calendar = org.exoplatform.ks.common.Utils.getGreenwichMeanTime();
+      Calendar calendar = CommonUtils.getGreenwichMeanTime();
       long timeEnd = (timeOut < 1000) ? (modifiDate.getTime() + timeOut * 86400000) : timeOut;
       long l = timeEnd - calendar.getTimeInMillis();
       if (l < 0)

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.services.mail.Message;
 
 /**
@@ -249,7 +250,7 @@ public class MessageBuilder {
     content_ = StringUtils.replace(content_, "$CATEGORY", catName);
     content_ = StringUtils.replace(content_, "$FORUM", forumName);
     content_ = StringUtils.replace(content_, "$TOPIC", topicName);
-    message.setBody(org.exoplatform.ks.common.Utils.convertCodeHTML(content_));
+    message.setBody(CommonUtils.convertCodeHTML(content_));
     return message;
   }
 
@@ -268,7 +269,7 @@ public class MessageBuilder {
 
     content_ = StringUtils.replace(content_, "$OBJECT_PARENT_TYPE", types.get(Utils.CATEGORY));
     content_ = StringUtils.replace(content_, "$OBJECT_TYPE", types.get(Utils.FORUM));
-    message.setBody(org.exoplatform.ks.common.Utils.convertCodeHTML(content_));
+    message.setBody(CommonUtils.convertCodeHTML(content_));
     return message;
   }
 

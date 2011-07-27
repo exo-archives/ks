@@ -25,6 +25,7 @@ import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.user.ContactProvider;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -57,7 +58,7 @@ public class ForumSessionUtils {
     String url = null;
     try {
       ForumAttachment attachment = forumService.getUserAvatar(userName);
-      url = org.exoplatform.ks.common.Utils.getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
+      url = CommonUtils.getImageUrl(attachment.getPath()) + "?size=" + attachment.getSize();
     } catch (Exception e) {
       if (LOG.isDebugEnabled())
         LOG.debug(String.format("can not load avatar of [%s] as file resource", userName), e);

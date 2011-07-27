@@ -26,7 +26,6 @@ import java.util.Set;
 
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.webui.SelectItem;
 import org.exoplatform.faq.webui.SelectOption;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
@@ -37,7 +36,6 @@ import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
-import org.exoplatform.services.organization.idm.ExtGroup;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPageIterator;

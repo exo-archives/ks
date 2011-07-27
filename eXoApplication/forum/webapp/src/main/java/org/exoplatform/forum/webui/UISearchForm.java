@@ -28,6 +28,7 @@ import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -368,18 +369,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       UISearchForm uiForm = event.getSource();
       Log log = ExoLogger.getLogger(SearchActionListener.class);
       String keyValue = uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).getValue();
-      /*if (!ForumUtils.isEmpty(keyValue)) {
-        String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=|:\"'";
-        for (int i = 0; i < special.length(); i++) {
-          char c = special.charAt(i);
-          if (keyValue.indexOf(c) >= 0) {
-            UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
-            uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING));
-            return;
-          }
-        }
-      }*/
-      keyValue = org.exoplatform.ks.common.Utils.encodeSpecialCharInSearchTerm(keyValue);
+      keyValue = CommonUtils.encodeSpecialCharInSearchTerm(keyValue);
       String type = uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue();
       String topicType = uiForm.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).getValue();
 
@@ -446,13 +436,13 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       eventQuery.setValueIn(valueIn);
       eventQuery.setTopicType(topicType);
       eventQuery.setPath(uiForm.path);
-      eventQuery.setByUser(org.exoplatform.ks.common.Utils.encodeSpecialCharInSearchTerm(byUser));
+      eventQuery.setByUser(CommonUtils.encodeSpecialCharInSearchTerm(byUser));
       eventQuery.setIsLock(isLock);
       eventQuery.setIsClose(isClosed);
       eventQuery.setTopicCountMin(uiForm.checkValue(topicCountMin));
       eventQuery.setPostCountMin(uiForm.checkValue(postCountMin));
       eventQuery.setViewCountMin(uiForm.checkValue(viewCountMin));
-      eventQuery.setModerator(org.exoplatform.ks.common.Utils.encodeSpecialCharInSearchTerm(moderator));
+      eventQuery.setModerator(CommonUtils.encodeSpecialCharInSearchTerm(moderator));
       eventQuery.setFromDateCreated(fromDateCreated);
       eventQuery.setToDateCreated(toDateCreated);
       eventQuery.setFromDateCreatedLastPost(fromDateCreatedLastPost);

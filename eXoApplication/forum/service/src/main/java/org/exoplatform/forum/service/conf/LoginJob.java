@@ -19,7 +19,7 @@ package org.exoplatform.forum.service.conf;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.ks.common.Utils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.quartz.Job;
@@ -35,7 +35,7 @@ public class LoginJob implements Job {
   public void execute(JobExecutionContext context) throws JobExecutionException {
     ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
     try {
-      ExoContainer exoContainer = Utils.getExoContainer(context);
+      ExoContainer exoContainer = CommonUtils.getExoContainer(context);
       ExoContainerContext.setCurrentContainer(exoContainer);
       ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
       forumService.updateLoggedinUsers();

@@ -42,6 +42,7 @@ import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -56,8 +57,8 @@ import org.exoplatform.webui.core.UITree;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormInputInfo;
@@ -464,7 +465,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
       if (topicTitle.length() < 1 && topicTitle.equals("null")) {
         k = 0;
       }
-      topicTitle = org.exoplatform.ks.common.Utils.encodeSpecialCharInTitle(topicTitle);
+      topicTitle = CommonUtils.encodeSpecialCharInTitle(topicTitle);
       if (t > 0 && k != 0 && !checksms.equals("null")) {
         String userName = UserHelper.getCurrentUser();
         Post postNew = new Post();
@@ -558,8 +559,8 @@ public class UITopicForm extends BaseForumForm implements UISelector {
               if (uiForm.forum != null)
                 hasForumMod = uiForm.forum.getIsModerateTopic();
             }
-            topicTitle = org.exoplatform.ks.common.Utils.encodeSpecialCharInTitle(topicTitle);
-            editReason = org.exoplatform.ks.common.Utils.encodeSpecialCharInTitle(editReason);
+            topicTitle = CommonUtils.encodeSpecialCharInTitle(topicTitle);
+            editReason = CommonUtils.encodeSpecialCharInTitle(editReason);
 
             UIForumInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
             String topicType = threadOption.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).getValue();
