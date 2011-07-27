@@ -20,8 +20,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -38,8 +40,8 @@ import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
-import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.service.search.SearchResult;
+import org.exoplatform.wiki.service.search.WikiSearchData;
 import org.exoplatform.wiki.utils.Utils;
 
 /**
@@ -57,7 +59,7 @@ import org.exoplatform.wiki.utils.Utils;
 )
 
 public class UIWikiAdvanceSearchForm extends UIForm {
-  final static String TEXT        = "text".intern();
+  final static String TEXT  = "text".intern();
 
   final static String WIKIS = "wikis".intern();
   
@@ -134,16 +136,16 @@ public class UIWikiAdvanceSearchForm extends UIForm {
   
   public void processSearchAction() throws Exception {
     WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
-    String text = getUIStringInput(TEXT).getValue().trim();       
+    String text = getUIStringInput(TEXT).getValue().trim();
     String path = getChild(UIFormSelectBoxWithGroups.class).getValue();
     String wikiType = null;
     String wikiOwner = null;
-    if (!path.equals("")) {
-      String[] arrayParams = path.split("/");
+    if (!CommonUtils.isEmpty(path)) {
+      String[] arrayParams = path.split(CommonUtils.SLASH);
       if (arrayParams.length >= 1) {
         wikiType = arrayParams[0];
         if (arrayParams.length >= 2)
-          wikiOwner = arrayParams[1];
+          wikiOwner = StringUtils.replace(path, wikiType + CommonUtils.SLASH, CommonUtils.EMPTY_STR);
       }
     }
     WikiSearchData data = new WikiSearchData(text, null, null, wikiType, wikiOwner);

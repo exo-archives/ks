@@ -11,15 +11,14 @@ import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Session;
-import javax.jcr.Value;
 import javax.jcr.query.Query;
-import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import javax.jcr.query.Row;
 import javax.jcr.query.RowIterator;
 
 import org.chromattic.api.ChromatticSession;
 import org.chromattic.common.IO;
+import org.chromattic.core.api.ChromatticSessionImpl;
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.configuration.ConfigurationManager;
@@ -54,14 +53,13 @@ public class JCRDataStorage implements DataStorage{
     search(session, data, resultList, false);
     return new ObjectPageList<SearchResult>(resultList, searchSize);
   }
-  
+
   private void search(ChromatticSession session,
                       WikiSearchData data,
                       List<SearchResult> resultList,
                       boolean onlyHomePages) throws Exception {
     String statement = data.getStatement(onlyHomePages);
-    QueryManager qm = session.getJCRSession().getWorkspace().getQueryManager();
-    Query q = qm.createQuery(statement, Query.SQL);
+    Query q = ((ChromatticSessionImpl)session).getDomainSession().getSessionWrapper().createQuery(statement);
     QueryResult result = q.execute();
     RowIterator iter = result.getRows();
     while (iter.hasNext()) {
@@ -162,8 +160,7 @@ public class JCRDataStorage implements DataStorage{
   public List<SearchResult> searchRenamedPage(ChromatticSession session, WikiSearchData data) throws Exception {
     List<SearchResult> resultList = new ArrayList<SearchResult>() ;
     String statement = data.getStatementForRenamedPage() ;
-    QueryManager qm = session.getJCRSession().getWorkspace().getQueryManager();
-    Query q = qm.createQuery(statement, Query.SQL);
+    Query q = ((ChromatticSessionImpl)session).getDomainSession().getSessionWrapper().createQuery(statement);
     QueryResult result = q.execute();
     NodeIterator iter = result.getNodes() ;
     while(iter.hasNext()) {      
@@ -206,8 +203,7 @@ public class JCRDataStorage implements DataStorage{
                                  List<TitleSearchResult> resultList,
                                  boolean onlyHomePages) throws Exception {
     String statement = data.getStatementForTitle(onlyHomePages);
-    QueryManager qm = session.getJCRSession().getWorkspace().getQueryManager();
-    Query q = qm.createQuery(statement, Query.SQL);
+    Query q = ((ChromatticSessionImpl)session).getDomainSession().getSessionWrapper().createQuery(statement);
     QueryResult result = q.execute();
     RowIterator iter = result.getRows();
     while (iter.hasNext()) {
@@ -217,17 +213,6 @@ public class JCRDataStorage implements DataStorage{
         log.debug("Failed to search date by title", e);
       }
     }
-  }
-  
-  private List<String> valuesToList(Value[] values) throws Exception {
-    List<String> list = new ArrayList<String>();
-    if (values.length < 1) return list;
-    String s;
-    for (int i = 0; i < values.length; ++i) {
-      s = values[i].getString();
-      if (s != null && s.trim().length() > 0) list.add(s);
-    }
-    return list;
   }
  
   private boolean isContains(List<SearchResult> list, SearchResult result) throws Exception {
@@ -279,8 +264,7 @@ public class JCRDataStorage implements DataStorage{
 
     List<TemplateSearchResult> resultList = new ArrayList<TemplateSearchResult>();
     String statement = data.getStatement();
-    QueryManager qm = session.getJCRSession().getWorkspace().getQueryManager();
-    Query q = qm.createQuery(statement, Query.SQL);
+    Query q = ((ChromatticSessionImpl)session).getDomainSession().getSessionWrapper().createQuery(statement);
     QueryResult result = q.execute();
     RowIterator iter = result.getRows();
     while (iter.hasNext()) {
@@ -296,8 +280,7 @@ public class JCRDataStorage implements DataStorage{
     String path = row.getValue("jcr:path").getString();
     String title = (row.getValue("title") == null ? null : row.getValue("title").getString());
     
-    Template template = (Template) org.exoplatform.wiki.utils.Utils.getObject(path,
-                                                                              WikiNodeType.WIKI_PAGE);
+    Template template = (Template) Utils.getObject(path, WikiNodeType.WIKI_PAGE);
     String description = template.getDescription();
     TemplateSearchResult result = new TemplateSearchResult(template.getName(),
                                                            title,
