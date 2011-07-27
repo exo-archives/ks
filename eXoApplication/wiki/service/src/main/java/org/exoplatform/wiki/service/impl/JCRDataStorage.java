@@ -100,10 +100,10 @@ public class JCRDataStorage implements DataStorage{
   }
   
   private SearchResult getResult(Row row) throws Exception {
-    String type = row.getValue("jcr:primaryType").getString();
+    String type = row.getValue(WikiNodeType.Definition.PRIMARY_TYPE).getString();
 
-    String path = row.getValue("jcr:path").getString();
-    String title = (row.getValue("title") == null ? null : row.getValue("title").getString());
+    String path = row.getValue(WikiNodeType.Definition.PATH).getString();
+    String title = (row.getValue(WikiNodeType.Definition.TITLE) == null ? null : row.getValue(WikiNodeType.Definition.TITLE).getString());
     String excerpt = null;
     Calendar updateDate = GregorianCalendar.getInstance();
     Calendar createdDate = GregorianCalendar.getInstance();
@@ -145,8 +145,8 @@ public class JCRDataStorage implements DataStorage{
   }
   
   private TitleSearchResult getTitleSearchResult(Row row) throws Exception {
-    String type = row.getValue("jcr:primaryType").getString();
-    String path = row.getValue("jcr:path").getString();
+    String type = row.getValue(WikiNodeType.Definition.PRIMARY_TYPE).getString();
+    String path = row.getValue(WikiNodeType.Definition.PATH).getString();
     String fullTitle = (row.getValue(WikiNodeType.Definition.FILE_TYPE) == null ? row.getValue(WikiNodeType.Definition.TITLE)
                                                                                  .getString()
                                                                            : row.getValue(WikiNodeType.Definition.TITLE)
@@ -177,7 +177,7 @@ public class JCRDataStorage implements DataStorage{
     SearchResult result = new SearchResult() ;
     result.setPageName(node.getName()) ;
     String title = node.getProperty(WikiNodeType.Definition.TITLE).getString();
-    InputStream data = node.getNode(WikiNodeType.Definition.CONTENT).getNode("jcr:content").getProperty("jcr:data").getStream();
+    InputStream data = node.getNode(WikiNodeType.Definition.CONTENT).getNode(WikiNodeType.Definition.ATTACHMENT_CONTENT).getProperty(WikiNodeType.Definition.DATA).getStream();
     byte[] bytes = IO.getBytes(data);
     String content = new String(bytes, "UTF-8");
     if(content.length() > 100) content = content.substring(0, 100) + "...";
@@ -188,7 +188,7 @@ public class JCRDataStorage implements DataStorage{
   
   public InputStream getAttachmentAsStream(String path, ChromatticSession session) throws Exception {
     Node attContent = (Node)session.getJCRSession().getItem(path) ;
-    return attContent.getProperty("jcr:data").getStream() ;    
+    return attContent.getProperty(WikiNodeType.Definition.DATA).getStream() ;    
   }
   
   public List<TitleSearchResult> searchDataByTitle(ChromatticSession session, WikiSearchData data) throws Exception {
@@ -275,10 +275,10 @@ public class JCRDataStorage implements DataStorage{
   }
 
   private TemplateSearchResult getTemplateResult(Row row) throws Exception {
-    String type = row.getValue("jcr:primaryType").getString();
+    String type = row.getValue(WikiNodeType.Definition.PRIMARY_TYPE).getString();
 
-    String path = row.getValue("jcr:path").getString();
-    String title = (row.getValue("title") == null ? null : row.getValue("title").getString());
+    String path = row.getValue(WikiNodeType.Definition.PATH).getString();
+    String title = (row.getValue(WikiNodeType.Definition.TITLE) == null ? null : row.getValue(WikiNodeType.Definition.TITLE).getString());
     
     Template template = (Template) Utils.getObject(path, WikiNodeType.WIKI_PAGE);
     String description = template.getDescription();

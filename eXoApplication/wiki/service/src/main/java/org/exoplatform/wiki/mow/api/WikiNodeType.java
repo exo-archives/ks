@@ -138,7 +138,11 @@ public interface WikiNodeType {
 
     public final static String CREATED                    = "jcr:created";
 
+    public final static String PATH                       = "jcr:path";
+
     public final static String MIMETYPE                   = "jcr:mimeType";
+
+    public final static String PRIMARY_TYPE               = "jcr:primaryType";
 
     public final static String DATA                       = "jcr:data";
 
