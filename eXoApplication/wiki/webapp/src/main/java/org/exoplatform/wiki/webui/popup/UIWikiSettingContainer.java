@@ -19,7 +19,6 @@ package org.exoplatform.wiki.webui.popup;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -61,9 +60,8 @@ public class UIWikiSettingContainer extends UIExtensionContainer implements UIPo
 
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {   
-    Map<String, Object> extContext = new HashMap<String, Object>();
     UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
-    extContext.put(UIWikiPortlet.class.getName(), wikiPortlet);
+    HashMap<String, Object> extContext = wikiPortlet.getUIExtContext();
     if (checkModificationContext(extContext)) {
       UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
       List<UIExtension> extensions = manager.getUIExtensions(EXTENSION_TYPE);

@@ -88,9 +88,8 @@ import org.xwiki.rendering.syntax.Syntax;
  *          viet.nguyen@exoplatform.com
  * Apr 22, 2010  
  */
-public class Utils {
-  
-  public static final String WITH = "With";
+public class Utils {  
+ 
   public static final int DEFAULT_VALUE_UPLOAD_PORTAL = -1;
   
   public static String getCurrentRequestURL() throws Exception {
@@ -418,7 +417,7 @@ public class Utils {
   }
   
   public static WikiMode getModeFromAction(String actionParam) {
-    String[] params = actionParam.split(WITH);
+    String[] params = actionParam.split(WikiConstants.WITH);
     String name = params[0];
     if (name != null) {
       try {

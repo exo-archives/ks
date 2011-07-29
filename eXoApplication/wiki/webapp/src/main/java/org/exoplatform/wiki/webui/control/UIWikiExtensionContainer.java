@@ -18,7 +18,6 @@ package org.exoplatform.wiki.webui.control;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
@@ -38,10 +37,9 @@ public abstract class UIWikiExtensionContainer extends UIExtensionContainer {
   protected int extensionSize;
 
   @Override
-  public void processRender(WebuiRequestContext context) throws Exception {    
-    Map<String, Object> extContext = new HashMap<String, Object>();
+  public void processRender(WebuiRequestContext context) throws Exception {
     UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
-    extContext.put(UIWikiPortlet.class.getName(), wikiPortlet);
+    HashMap<String, Object> extContext = wikiPortlet.getUIExtContext();    
     if (checkModificationContext(extContext)) {
       UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
       List<UIExtension> extensions = manager.getUIExtensions(getExtensionType());

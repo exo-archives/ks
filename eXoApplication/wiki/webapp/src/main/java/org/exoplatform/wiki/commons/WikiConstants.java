@@ -14,28 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.webui.core;
-
-import java.util.HashMap;
-
-import org.exoplatform.webui.core.UIContainer;
+package org.exoplatform.wiki.commons;
 
 /**
  * Created by The eXo Platform SAS
  * Author : Lai Trung Hieu
  *          hieult@exoplatform.com
- * Jul 8, 2011  
+ * Jul 29, 2011  
  */
-public class UIExtensionContainer extends UIContainer {  
-  
-  private HashMap<String, Object> extContext = null;
+public interface WikiConstants {
 
-  protected boolean checkModificationContext(HashMap<String, Object> extContext2) throws Exception {
-    if (!extContext2.equals(extContext)) {
-      extContext = (HashMap<String, Object>) extContext2.clone();
-      return true;
-    }
-    return false;
-  }
+  public static final String WIKI_MODE          = "mode";
 
+  public static final String CURRENT_PAGE       = "page";
+
+  public static final String CURRENT_WIKI_TYPE  = "wikiType";
+
+  public static final String CURRENT_WIKI_OWNER = "wikiOwner";
+
+  public static final String IS_MARKUP          = "isMarkup";
+
+  public static final String WITH               = "With";
 }

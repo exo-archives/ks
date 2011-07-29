@@ -28,6 +28,7 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.commons.WikiConstants;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.Template;
 import org.exoplatform.wiki.webui.UIWikiMaskWorkspace;
@@ -58,8 +59,7 @@ public class UIWikiSelectTemplateForm extends UIWikiTemplateForm implements UIPo
   public static final String    ACTION_PREVIEW = "PreviewTemplate";
 
   //Note this action is change mode one
-  public static final String    ACTION_ADD     = AddPageActionComponent.ACTION
-                                                   + Utils.WITH + "Template";
+  public static final String    ACTION_ADD     = AddPageActionComponent.ACTION + WikiConstants.WITH + "Template";
 
   public static final String    ACTION_SEARCH  = "SearchTemplate";
 

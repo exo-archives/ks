@@ -20,10 +20,7 @@ import java.util.Map;
 
 import org.exoplatform.webui.ext.filter.UIExtensionAbstractFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilterType;
-import org.exoplatform.wiki.webui.UIWikiPageArea;
-import org.exoplatform.wiki.webui.UIWikiPageEditForm;
-import org.exoplatform.wiki.webui.UIWikiPortlet;
-import org.exoplatform.wiki.webui.UIWikiRichTextArea;
+import org.exoplatform.wiki.commons.WikiConstants;
 
 /**
  * Created by The eXo Platform SAS
@@ -43,11 +40,7 @@ public class IsMarkupModeFilter extends UIExtensionAbstractFilter {
   
   @Override
   public boolean accept(Map<String, Object> context) throws Exception {
-    UIWikiPortlet wikiPortlet = (UIWikiPortlet) context.get(UIWikiPortlet.class.getName());
-    UIWikiPageArea wikiPageArea = wikiPortlet.findFirstComponentOfType(UIWikiPageArea.class);
-    UIWikiPageEditForm wikiPageEditForm = wikiPageArea.findFirstComponentOfType(UIWikiPageEditForm.class);
-    UIWikiRichTextArea wikiRichTextArea = wikiPageEditForm.findFirstComponentOfType(UIWikiRichTextArea.class);
-    return !wikiRichTextArea.isRendered();
+    return Boolean.parseBoolean((String) context.get(WikiConstants.IS_MARKUP));
   }
 
   @Override

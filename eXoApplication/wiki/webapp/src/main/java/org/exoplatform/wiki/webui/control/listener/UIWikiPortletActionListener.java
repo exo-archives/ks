@@ -16,7 +16,6 @@
  */
 package org.exoplatform.wiki.webui.control.listener;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.exoplatform.webui.core.UIComponent;
@@ -34,10 +33,8 @@ public abstract class UIWikiPortletActionListener<T extends UIComponent> extends
 
   @Override
   protected Map<String, Object> createContext(Event<T> event) throws Exception {
-    Map<String, Object> context = new HashMap<String, Object>();
     UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-    context.put(UIWikiPortlet.class.getName(), wikiPortlet);
-    return context;
+    return wikiPortlet.getUIExtContext();
   }
 
   @Override

@@ -40,6 +40,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.ext.UIExtensionManager;
 import org.exoplatform.wiki.WikiPortletPreference;
 import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.commons.WikiConstants;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.resolver.PageResolver;
 import org.exoplatform.wiki.resolver.TitleResolver;
@@ -82,9 +83,9 @@ public class UIWikiPortlet extends UIPortletApplication {
   public static String          REDIRECT_ACTION            = "Redirect";
 
   public static String          WIKI_PORTLET_ACTION_PREFIX = "UIWikiPortlet_";
-  
+
   private String                redirectURL                = "";
-  
+
   public static enum PopupLevel {
     L1,
     L2
@@ -256,6 +257,20 @@ public class UIWikiPortlet extends UIPortletApplication {
     } catch (Exception e) {
       log.error("Fail to load wiki portlet's preference: ", e);
     }
+  }
+  
+  public HashMap<String, Object> getUIExtContext() throws Exception {
+    HashMap<String, Object> context = new HashMap<String, Object>();
+    WikiPageParams params = Utils.getCurrentWikiPageParams();
+    context.put(WikiConstants.WIKI_MODE, this.mode);
+    context.put(WikiConstants.CURRENT_PAGE, params.getPageId());
+    context.put(WikiConstants.CURRENT_WIKI_OWNER, params.getOwner());
+    context.put(WikiConstants.CURRENT_WIKI_TYPE, params.getType());
+    UIWikiPageArea wikiPageArea = this.findFirstComponentOfType(UIWikiPageArea.class);
+    UIWikiPageEditForm wikiPageEditForm = wikiPageArea.findFirstComponentOfType(UIWikiPageEditForm.class);
+    UIWikiRichTextArea wikiRichTextArea = wikiPageEditForm.findFirstComponentOfType(UIWikiRichTextArea.class);
+    context.put(WikiConstants.IS_MARKUP, !wikiRichTextArea.isRendered());
+    return context;
   }
  
   public static class ViewPageActionListener extends EventListener<UIWikiPortlet> {
