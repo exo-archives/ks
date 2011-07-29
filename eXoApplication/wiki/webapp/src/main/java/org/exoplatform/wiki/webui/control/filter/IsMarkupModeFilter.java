@@ -40,7 +40,7 @@ public class IsMarkupModeFilter extends UIExtensionAbstractFilter {
   
   @Override
   public boolean accept(Map<String, Object> context) throws Exception {
-    return Boolean.parseBoolean((String) context.get(WikiConstants.IS_MARKUP));
+    return (Boolean) context.get(WikiConstants.IS_MARKUP);
   }
 
   @Override
