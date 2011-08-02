@@ -118,6 +118,7 @@ import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
@@ -132,6 +133,7 @@ import org.exoplatform.services.scheduler.PeriodInfo;
 import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
+import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
 
 import com.sun.syndication.feed.synd.SyndContent;
@@ -2542,8 +2544,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       JobInfo info = new JobInfo(name, KNOWLEDGE_SUITE_FORUM_JOBS, clazz);
       ExoContainer container = ExoContainerContext.getCurrentContainer();
       JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+      RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
+      String repoName = repositoryService.getCurrentRepository().getConfiguration().getName();
+      JobDataMap jdatamap = new JobDataMap();
+      jdatamap.put(Utils.CACHE_REPO_NAME, repoName);
       infoMap.put(name, userPostMap);
-      schedulerService.addPeriodJob(info, periodInfo);
+      schedulerService.addPeriodJob(info, periodInfo, jdatamap);
     } catch (Exception e) {
       log.debug("Failed to add job for update user profile ", e);
     }
@@ -7062,8 +7068,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private void addOrRemoveSchedule(PruneSetting pSetting) throws Exception {
     Calendar cal = new GregorianCalendar();
     PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, -1, (pSetting.getPeriodTime() * 86400000)); // pSetting.getPeriodTime() return value
-    // is Day.
-    // String name = String.valueOf(cal.getTime().getTime()) ;
     Class clazz = Class.forName("org.exoplatform.forum.service.user.AutoPruneJob");
     JobInfo info = new JobInfo(pSetting.getId(), KNOWLEDGE_SUITE_FORUM_JOBS, clazz);
     ExoContainer container = ExoContainerContext.getCurrentContainer();
@@ -7072,7 +7076,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     if (pSetting.isActive()) {
       info = new JobInfo(pSetting.getId(), KNOWLEDGE_SUITE_FORUM_JOBS, clazz);
       info.setDescription(pSetting.getForumPath());
-      schedulerService.addPeriodJob(info, periodInfo);
+      RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
+      String repoName = repositoryService.getCurrentRepository().getConfiguration().getName();
+      JobDataMap jdatamap = new JobDataMap();
+      jdatamap.put(Utils.CACHE_REPO_NAME, repoName);
+      schedulerService.addPeriodJob(info, periodInfo, jdatamap);
       log.debug("\n\nActivated " + info.getJobName());
     }
   }

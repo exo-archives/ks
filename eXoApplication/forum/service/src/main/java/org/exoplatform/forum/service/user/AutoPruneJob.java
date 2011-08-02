@@ -19,7 +19,9 @@ package org.exoplatform.forum.service.user;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.quartz.Job;
@@ -39,6 +41,8 @@ public class AutoPruneJob implements Job {
       String desc = context.getJobDetail().getDescription();
       ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
       ExoContainerContext.setCurrentContainer(container);
+      RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
+      repositoryService.setCurrentRepositoryName(context.getJobDetail().getJobDataMap().getString(Utils.CACHE_REPO_NAME));
       forumService.runPrune(desc);
       if (log_.isDebugEnabled()) {
         log_.debug("\n\nAuto prune has worked on " + desc + " forum");

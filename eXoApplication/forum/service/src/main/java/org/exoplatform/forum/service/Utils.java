@@ -87,6 +87,8 @@ public class Utils {
 
   public static final String DELETED               = "_deleted".intern();
 
+  public static final String CACHE_REPO_NAME               = "repositoryName".intern();
+
   // Type Modify
   public static final int    CLOSE                 = 1;
 
