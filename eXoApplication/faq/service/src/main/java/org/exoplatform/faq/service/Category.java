@@ -32,6 +32,8 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * Jul 11, 2007  
  */
 public class Category {
+  public static final String CATEGORY_ID = "Category";
+  
   private String   id;
 
   private long     index;
@@ -60,7 +62,7 @@ public class Category {
    * Class constructor specifying id of object is created
    */
   public Category() {
-    id = "Category" + IdGenerator.generate();
+    id =  CATEGORY_ID + IdGenerator.generate();
     // userPrivate = new String[] {" "};
   }
 

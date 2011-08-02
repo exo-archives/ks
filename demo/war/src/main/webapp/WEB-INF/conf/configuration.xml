@@ -8,5 +8,5 @@
 	<!--import>war:/conf/ksdemo/web/web-inf-extension-configuration.xml</import-->
   <import>war:/conf/ksdemo/ks/services-configuration.xml</import>
   
-  <!-- import>war:/conf/ksdemo/ks/bench-configuration.xml</import -->
+  <import>war:/conf/ksdemo/ks/bench-configuration.xml</import>
 </configuration>
