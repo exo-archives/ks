@@ -18,7 +18,6 @@ package org.exoplatform.faq.bench;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +33,8 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.services.bench.DataInjector;
-import org.exoplatform.services.idgenerator.IDGeneratorService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.organization.OrganizationService;
 
 /**
  * Created by The eXo Platform SAS
@@ -60,8 +57,6 @@ public class AnswerDataInjector extends DataInjector {
 
   private int                 maxComments    = 10;
 
-  private String              fistCategoryId = Category.CATEGORY_ID + "randomId412849127491";
-
   private String              SLASH          = "/".intern();
 
   private boolean             randomize      = false;
@@ -76,7 +71,7 @@ public class AnswerDataInjector extends DataInjector {
 
   private List<String>        categoryIds    = new ArrayList<String>();
 
-  public AnswerDataInjector(FAQService faqService, IDGeneratorService uidGenerator, OrganizationService organizationService, InitParams params) {
+  public AnswerDataInjector(FAQService faqService, InitParams params) {
     this.faqService = faqService;
     initDatas();
     initParams(params);
@@ -142,12 +137,7 @@ public class AnswerDataInjector extends DataInjector {
 
   @Override
   public boolean isInitialized() {
-    try {
-      Category category = faqService.getCategoryById(KSDataLocation.Locations.FAQ_CATEGORIES_HOME + SLASH + fistCategoryId);
-      return (category != null);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    return false;
   }
 
   private int getMaxItem(int maxType) {
@@ -155,17 +145,12 @@ public class AnswerDataInjector extends DataInjector {
     return (randomize) ? (rand.nextInt(maxType) + 1) : maxType;
   }
 
-  private List<Category> findCategories(boolean isRoot) {
+  private List<Category> findCategories() {
     List<Category> categories = new ArrayList<Category>();
     int maxCat = getMaxItem(maxCategories);
     if (maxCat > 0) {
-      Category cat = newCategory("");
-      if (isRoot) {
-        cat.setId(fistCategoryId);
-        categories.add(cat);
-        maxCat = maxCat - 1;
-      }
-      String previousId = fistCategoryId;
+      Category cat;
+      String previousId = "";
       for (int i = 0; i < maxCat; i++) {
         cat = newCategory(previousId);
         categories.add(cat);
@@ -224,7 +209,7 @@ public class AnswerDataInjector extends DataInjector {
 
   private void createCategory(String parentId, Category me, int currentDepth) throws Exception {
     initDataForOneCategory(parentId, me);
-    for (Category cat : findCategories(false)) {
+    for (Category cat : findCategories()) {
       if (currentDepth - 1 > 0) {
         createCategory(parentId + SLASH + me.getId(), cat, currentDepth - 1);
       }
@@ -234,7 +219,7 @@ public class AnswerDataInjector extends DataInjector {
   @Override
   public void inject() throws Exception {
     String parentId = KSDataLocation.Locations.FAQ_CATEGORIES_HOME;
-    for (Category cat : findCategories(true)) {
+    for (Category cat : findCategories()) {
       categoryIds.add(parentId + SLASH + cat.getId());
       createCategory(parentId, cat, maxDepth);
     }
@@ -270,7 +255,7 @@ public class AnswerDataInjector extends DataInjector {
     question.setAuthor(randomUser());
     question.setCategoryId(catId);
     question.setDetail(randomParagraphs(2));
-    question.setEmail("exotest@exoplatform.com");
+    question.setEmail("exo@exoplatform.com");
     question.setLanguage("English");
     question.setLink("");
     question.setTopicIdDiscuss("");
@@ -279,7 +264,6 @@ public class AnswerDataInjector extends DataInjector {
     question.setRelations(new String[] { "" });
     question.setUsersWatch(new String[] { "" });
     question.setEmailsWatch(new String[] { "" });
-    question.setCreatedDate(new Date());
     return question;
   }
 
@@ -291,7 +275,6 @@ public class AnswerDataInjector extends DataInjector {
     answer.setMarksVoteAnswer(0.0);
     answer.setMarkVotes(0);
     answer.setResponses(randomParagraphs(3));
-    answer.setDateResponse(new Date());
     answer.setNew(true);
     return answer;
   }
@@ -304,7 +287,6 @@ public class AnswerDataInjector extends DataInjector {
     comment.setFullName(getFullName(other));
     comment.setPostId("");
     comment.setNew(true);
-    comment.setDateComment(new Date());
     return comment;
   }
 
