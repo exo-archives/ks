@@ -173,13 +173,4 @@ public class Utils {
     }
     return queryString.toString();
   }
-  
-  public static Calendar getInstanceTempCalendar() {
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setLenient(false);
-    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
-    return calendar;
-  }
-
 }

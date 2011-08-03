@@ -70,18 +70,8 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
  * Aus 01, 2007 2:48:18 PM
  */
 
-@ComponentConfig(
-    lifecycle = UIFormLifecycle.class, 
-    template = "app:/templates/faq/webui/popup/UIQuestionForm.gtmpl", 
-    events = {
-        @EventConfig(listeners = UIQuestionForm.SelectLanguageActionListener.class), 
-        @EventConfig(listeners = UIQuestionForm.DeleteLanguageActionListener.class, confirm = "UIQuestionForm.msg.DeleteQuestionInLanguage"), 
-        @EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class), 
-        @EventConfig(listeners = UIQuestionForm.SaveActionListener.class), 
-        @EventConfig(listeners = UIQuestionForm.CancelActionListener.class), 
-        @EventConfig(listeners = UIQuestionForm.RemoveAttachmentActionListener.class) 
-    }
-)
+@ComponentConfig(lifecycle = UIFormLifecycle.class, template = "app:/templates/faq/webui/popup/UIQuestionForm.gtmpl", events = { @EventConfig(listeners = UIQuestionForm.SelectLanguageActionListener.class), @EventConfig(listeners = UIQuestionForm.DeleteLanguageActionListener.class, confirm = "UIQuestionForm.msg.DeleteQuestionInLanguage"),
+    @EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class), @EventConfig(listeners = UIQuestionForm.SaveActionListener.class), @EventConfig(listeners = UIQuestionForm.CancelActionListener.class), @EventConfig(listeners = UIQuestionForm.RemoveAttachmentActionListener.class) })
 public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
   public static final String             AUTHOR               = "Author";
 
@@ -507,7 +497,6 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     public void onEvent(Event<UIQuestionForm> event, UIQuestionForm questionForm, String objectId) throws Exception {
       try {
         boolean isNew = true;
-        Date date = org.exoplatform.faq.service.Utils.getInstanceTempCalendar().getTime();
         String author = questionForm.inputAuthor.getValue();
         String emailAddress = questionForm.inputEmailAddress.getValue();
         String questionContent = questionForm.inputQuestionContent.getValue();
@@ -535,17 +524,18 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
         }
 
         if (!language.equals(questionForm.defaultLanguage_)) {
-          if(questionForm.mapLanguage.isEmpty() || questionForm.mapLanguage.get(questionForm.getDefaultLanguage()) == null) {
-            warning("UIQuestionForm.msg.default-question-null") ;
-            return ;
+          if (questionForm.mapLanguage.isEmpty() || questionForm.mapLanguage.get(questionForm.getDefaultLanguage()) == null) {
+            warning("UIQuestionForm.msg.default-question-null");
+            return;
           }
         }
 
         String questionDetail = questionForm.inputQuestionDetail.getValue();
-        if(!ValidatorDataInput.fckContentIsNotEmpty(questionDetail)) questionDetail = " ";
-        if(!ValidatorDataInput.fckContentIsNotEmpty(questionContent)){
-          if( questionForm.mapLanguage.containsKey(language)){
-            questionForm.mapLanguage.get(language).setState(QuestionLanguage.DELETE) ;
+        if (!ValidatorDataInput.fckContentIsNotEmpty(questionDetail))
+          questionDetail = " ";
+        if (!ValidatorDataInput.fckContentIsNotEmpty(questionContent)) {
+          if (questionForm.mapLanguage.containsKey(language)) {
+            questionForm.mapLanguage.get(language).setState(QuestionLanguage.DELETE);
           }
         }
         questionDetail = CommonUtils.encodeSpecialCharInContent(questionDetail);
@@ -557,7 +547,6 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
           question = new Question();
           question.setCategoryId(questionForm.getCategoryId());
           question.setRelations(new String[] {});
-          question.setCreatedDate(date);
         } else { // Edit question
           isNew = false;
         }

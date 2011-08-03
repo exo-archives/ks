@@ -534,7 +534,7 @@ public class UIQuestions extends UIContainer {
   }
 
   private String calculateTimeMessageOfLastActivity(long time) {
-    Calendar calendar = Utils.getInstanceTempCalendar();
+    Calendar calendar = CommonUtils.getGreenwichMeanTime();
     long current = calendar.getTimeInMillis();
     long interval = current - time;
     if (interval < 60 * 60 * 1000) { // if interval is less than one hour.

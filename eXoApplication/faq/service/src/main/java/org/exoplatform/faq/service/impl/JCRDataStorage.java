@@ -26,8 +26,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -300,7 +298,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         nodeContent = avatarNode.addNode(JCR_CONTENT, NT_RESOURCE);
       nodeContent.setProperty(JCR_MIME_TYPE, fileAttachment.getMimeType());
       nodeContent.setProperty(JCR_DATA, fileAttachment.getInputStream());
-      nodeContent.setProperty(JCR_LAST_MODIFIED, Calendar.getInstance().getTimeInMillis());
+      nodeContent.setProperty(JCR_LAST_MODIFIED, CommonUtils.getGreenwichMeanTime().getTimeInMillis());
       if (avatarNode.isNew())
         ksAvatarHomeNode.getSession().save();
       else
@@ -447,7 +445,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       }
       nodeContent.setProperty(JCR_MIME_TYPE, "application/x-groovy+html");
       nodeContent.setProperty(JCR_DATA, inputStream);
-      nodeContent.setProperty(JCR_LAST_MODIFIED, Calendar.getInstance().getTimeInMillis());
+      nodeContent.setProperty(JCR_LAST_MODIFIED, CommonUtils.getGreenwichMeanTime().getTimeInMillis());
       if (templateHome.isNew()) {
         templateHome.getSession().save();
       } else {
@@ -765,10 +763,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     }
     try {
       if (answerNode.isNew()) {
-        java.util.Calendar calendar = GregorianCalendar.getInstance();
-        if (answer.getDateResponse() != null)
-          calendar.setTime(answer.getDateResponse());
-        answerNode.setProperty(EXO_DATE_RESPONSE, calendar);
+        answerNode.setProperty(EXO_DATE_RESPONSE, CommonUtils.getGreenwichMeanTime());
         answerNode.setProperty(EXO_ID, answer.getId());
         answerNode.setProperty(EXO_APPROVE_RESPONSES, answer.getApprovedAnswers());
         answerNode.setProperty(EXO_ACTIVATE_RESPONSES, answer.getActivateAnswers());
@@ -814,8 +809,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       Node commentNode;
       if (isNew) {
         commentNode = commentHome.addNode(comment.getId(), EXO_COMMENT);
-        java.util.Calendar calendar = GregorianCalendar.getInstance();
-        commentNode.setProperty(EXO_DATE_COMMENT, calendar);
+        commentNode.setProperty(EXO_DATE_COMMENT, CommonUtils.getGreenwichMeanTime());
         commentNode.setProperty(EXO_ID, comment.getId());
       } else {
         commentNode = commentHome.getNode(comment.getId());
@@ -858,8 +852,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       Node answerNode;
       if (isNew) {
         answerNode = answerHome.addNode(answer.getId(), EXO_ANSWER);
-        java.util.Calendar calendar = GregorianCalendar.getInstance();
-        answerNode.setProperty("exo:dateResponses", calendar);
+        answerNode.setProperty("exo:dateResponses", CommonUtils.getGreenwichMeanTime());
         answerNode.setProperty(EXO_APPROVE_RESPONSES, answer.getApprovedAnswers());
         answerNode.setProperty(EXO_ACTIVATE_RESPONSES, answer.getActivateAnswers());
       } else {
@@ -979,7 +972,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return null;
   }
 
-  @SuppressWarnings("static-access")
   private void saveQuestion(Node questionNode, Question question, boolean isNew, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
     // boolean isMoveQuestion = false;
     questionNode.setProperty(EXO_ID, questionNode.getName());
@@ -987,11 +979,10 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     questionNode.setProperty(EXO_AUTHOR, question.getAuthor());
     questionNode.setProperty(EXO_EMAIL, question.getEmail());
     questionNode.setProperty(EXO_TITLE, question.getQuestion());
-    questionNode.setProperty(EXO_LAST_ACTIVITY, getLastActivityInfo(question.getAuthor(), Utils.getInstanceTempCalendar().getTimeInMillis()));
+    Calendar calendar = CommonUtils.getGreenwichMeanTime();
+    questionNode.setProperty(EXO_LAST_ACTIVITY, getLastActivityInfo(question.getAuthor(), calendar.getTimeInMillis()));
     if (isNew) {
-      GregorianCalendar cal = new GregorianCalendar();
-      cal.setTime(question.getCreatedDate());
-      questionNode.setProperty(EXO_CREATED_DATE, cal.getInstance());
+      questionNode.setProperty(EXO_CREATED_DATE, calendar);
       questionNode.setProperty(EXO_LANGUAGE, question.getLanguage());
     }
     String catId = question.getCategoryId();
@@ -1027,7 +1018,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           nodeContent.setProperty(EXO_CATEGORY_ID, catId);
           nodeContent.setProperty(JCR_MIME_TYPE, att.getMimeType());
           nodeContent.setProperty(JCR_DATA, att.getInputStream());
-          nodeContent.setProperty(JCR_LAST_MODIFIED, Calendar.getInstance().getTimeInMillis());
+          nodeContent.setProperty(JCR_LAST_MODIFIED, CommonUtils.getGreenwichMeanTime().getTimeInMillis());
         } catch (Exception e) {
           log.error("Failed to save question: ", e);
         }
@@ -1731,7 +1722,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
     if (category.getId() != null) {
       categoryNode.setProperty(EXO_ID, category.getId());
-      categoryNode.setProperty(EXO_CREATED_DATE, GregorianCalendar.getInstance());
+      categoryNode.setProperty(EXO_CREATED_DATE, CommonUtils.getGreenwichMeanTime());
       categoryNode.setProperty(EXO_IS_VIEW, category.isView());
     }
     categoryNode.setProperty(EXO_INDEX, category.getIndex());
@@ -3050,9 +3041,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     File file = null;
     List<File> listFiles = new ArrayList<File>();
-    Calendar date = GregorianCalendar.getInstance();
     session.exportSystemView(categoryNode.getPath(), bos, false, false);
-    listFiles.add(CommonUtils.getXMLFile(bos, "eXo Knowledge Suite - Answers", "Category", date.getTime(), categoryNode.getName()));
+    listFiles.add(CommonUtils.getXMLFile(bos, "eXo Knowledge Suite - Answers", "Category", CommonUtils.getGreenwichMeanTime().getTime(), categoryNode.getName()));
     ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
     try {
       int byteReads;
@@ -3942,7 +3932,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     SyndFeed feed = new SyndFeedImpl();
     feed.setFeedType("rss_2.0");
     feed.setTitle("ST[CDATA[" + reader.string(EXO_NAME, "Root") + "END]]");
-    feed.setPublishedDate(reader.date(EXO_CREATED_DATE, new Date()));
+    feed.setPublishedDate(reader.date(EXO_CREATED_DATE, CommonUtils.getGreenwichMeanTime().getTime()));
     feed.setLink("ST[CDATA[" + link + "END]]");
     feed.setDescription("ST[CDATA[" + desc + "END]]");
     feed.setEncoding("UTF-8");
@@ -3960,7 +3950,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     entry.setLink("ST[CDATA[" + question.string(EXO_LINK, "http://www.exoplatform.com") + "END]]");
     entry.setContributors(listContent);
     entry.setDescription(description);
-    entry.setPublishedDate(question.date(EXO_CREATED_DATE, new Date()));
+    entry.setPublishedDate(question.date(EXO_CREATED_DATE, CommonUtils.getGreenwichMeanTime().getTime()));
     entry.setAuthor("ST[CDATA[" + question.string(EXO_AUTHOR) + "END]]");
     return entry;
   }

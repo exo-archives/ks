@@ -208,7 +208,6 @@ public class AnswerDataInjector extends DataInjector {
     return comments;
   }
 
-  // getDisplayMode approved getEmailSettingSubject getEmailSettingContent
   private void initDataForOneCategory(String parentId, Category cat) throws Exception {
     faqService.saveCategory(parentId, cat, true);
     String catId = parentId + SLASH + cat.getId();
