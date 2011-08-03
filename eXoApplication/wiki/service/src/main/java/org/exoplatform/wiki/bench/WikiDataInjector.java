@@ -18,10 +18,9 @@ package org.exoplatform.wiki.bench;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.Stack;
 
 import org.chromattic.ext.ntdef.Resource;
 import org.exoplatform.container.PortalContainer;
@@ -84,7 +83,7 @@ public class WikiDataInjector extends DataInjector {
   
   private Random       rand = new Random();
   
-  private Deque<String> pagesQueue = new LinkedBlockingDeque<String>();
+  private Stack<String> pagesStack = new Stack<String>();
   
   public WikiDataInjector(WikiService wikiService,  InitParams params) {
     this.wikiService = wikiService;
@@ -133,7 +132,7 @@ public class WikiDataInjector extends DataInjector {
     String content = randomParagraphs(5);
     int maxDepth = maxDepths();
     PageImpl page = (PageImpl) wikiService.createPage(wikiType, wikiOwner, title, parent.getName());
-    pagesQueue.add(TitleResolver.getId(title, true));
+    pagesStack.add(TitleResolver.getId(title, true));
     numberOfPages++;
     page.getContent().setText(content);
     page.setPagePermission(defaultPermission);
@@ -177,11 +176,11 @@ public class WikiDataInjector extends DataInjector {
   
   @Override
   public void inject() throws Exception {
-    pagesQueue.clear();
+    pagesStack.clear();
     int pagesPerDepth = maxChildren();
     // create marked page
     PageImpl page = (PageImpl) wikiService.createPage(wikiType, wikiOwner, titleOfMarkedPage, null);
-    pagesQueue.add(TitleResolver.getId(titleOfMarkedPage, true));
+    pagesStack.add(TitleResolver.getId(titleOfMarkedPage, true));
     page.setCreatedDate(new Date());
     page.getContent().setText(randomParagraphs(5));
     page.setComment(randomWords(10));
@@ -205,8 +204,8 @@ public class WikiDataInjector extends DataInjector {
   public void reject() throws Exception {
     RequestLifeCycle.begin(PortalContainer.getInstance());
     try {
-      while (!pagesQueue.isEmpty()) {
-        String pageId = pagesQueue.pop();
+      while (!pagesStack.isEmpty()) {
+        String pageId = pagesStack.pop();
         wikiService.deletePage(wikiType, wikiOwner, pageId);
       }
     } finally {

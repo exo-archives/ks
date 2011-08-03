@@ -19,10 +19,9 @@ package org.exoplatform.forum.bench;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Deque;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.Stack;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
@@ -69,7 +68,7 @@ public class ForumDataInjector extends DataInjector {
   
   private ForumService forumService;
   
-  private Deque<String> catesQueue = new LinkedBlockingDeque<String>();
+  private Stack<String> catesStack = new Stack<String>();
   
   public ForumDataInjector(ForumService forumService, IDGeneratorService uidGenerator, OrganizationService organizationService, InitParams params) {
     this.forumService = forumService;
@@ -247,7 +246,7 @@ public class ForumDataInjector extends DataInjector {
     List<Category> categories = findCategories();
     for (Category category : categories) {
       forumService.saveCategory(category, true);
-      catesQueue.push(category.getId());
+      catesStack.push(category.getId());
       categoriesCount++;
       String categoryId = category.getId();
       List<Forum> forums = findForumsByCategory(categoryId);
@@ -308,8 +307,8 @@ public class ForumDataInjector extends DataInjector {
   
   @Override
   public void reject() throws Exception {
-    while (!catesQueue.isEmpty()) {
-      String cateId = catesQueue.pop();
+    while (!catesStack.isEmpty()) {
+      String cateId = catesStack.pop();
       forumService.removeCategory(cateId);
     }
   }
