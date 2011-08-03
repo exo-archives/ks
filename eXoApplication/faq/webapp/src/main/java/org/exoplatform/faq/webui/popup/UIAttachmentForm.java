@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
@@ -120,6 +121,12 @@ public class UIAttachmentForm extends BaseUIForm implements UIPopupComponent {
         }
 
         if (uploadResource != null && uploadResource.getUploadedSize() > 0) {
+          String fileExtenstion = StringUtils.EMPTY;
+          int indexOfDot = uploadResource.getFileName().lastIndexOf(".");
+          if (indexOfDot > -1) {
+            fileExtenstion = uploadResource.getFileName().substring(indexOfDot);
+          }
+          
           FileAttachment fileAttachment = new FileAttachment();
           fileAttachment.setName(uploadResource.getFileName());
           fileAttachment.setInputStream(stream);
@@ -127,7 +134,7 @@ public class UIAttachmentForm extends BaseUIForm implements UIPopupComponent {
           fileSize = (long) uploadResource.getUploadedSize();
           fileAttachment.setSize(fileSize);
           fileAttachment.setId("file" + IdGenerator.generate());
-          fileAttachment.setNodeName(IdGenerator.generate() + uploadResource.getFileName().substring(uploadResource.getFileName().lastIndexOf(".")));
+          fileAttachment.setNodeName(IdGenerator.generate() + fileExtenstion);
           listFileAttachment.add(fileAttachment);
         } else {
           attachMentForm.warning("UIAttachmentForm.msg.size-of-file-is-0", new String[] { uploadResource.getFileName() });
