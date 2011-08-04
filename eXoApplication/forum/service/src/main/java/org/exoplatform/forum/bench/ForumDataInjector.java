@@ -105,7 +105,6 @@ public class ForumDataInjector extends DataInjector {
     try {
       // init marker
       Category init = newCategory(null);
-      init.setId(fistCategoryId);
       result.add(init);
       Category previous = init;
 
@@ -228,12 +227,7 @@ public class ForumDataInjector extends DataInjector {
   
   @Override
   public boolean isInitialized() {
-    try {
-      Category initialized = forumService.getCategory(fistCategoryId);
-      return (initialized != null);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    return false;
   }
   
   @Override
