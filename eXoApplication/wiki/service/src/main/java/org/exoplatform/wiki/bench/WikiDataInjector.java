@@ -139,9 +139,11 @@ public class WikiDataInjector extends DataInjector {
     page.createAttachment("att" + IdGenerator.generate() + ".txt", createAttachmentResource());
     if (currentDepth < maxDepth) {
       // add children
+      int childDepth = currentDepth +1;
       int numberOfChildren = maxChildren();
       for (int i = 0; i < numberOfChildren; i++) {
-        createPage(page, currentDepth + 1);
+        log.info(String.format("%1$" + (childDepth*4) + "s Create page %2$s/%3$s in depth %4$s .......", " ", i + 1, numberOfChildren, currentDepth + 1));
+        createPage(page, childDepth);
       }
     }
   }
@@ -168,6 +170,7 @@ public class WikiDataInjector extends DataInjector {
   @Override
   public void inject() throws Exception {
     int pagesPerDepth = maxChildren();
+    numberOfPages = 0;
     // create marked page
     PageImpl page = (PageImpl) wikiService.createPage(wikiType, wikiOwner, titleOfMarkedPage, null);
     pagesStack.add(TitleResolver.getId(titleOfMarkedPage, true));
@@ -180,6 +183,7 @@ public class WikiDataInjector extends DataInjector {
     for (int i = 0; i < pagesPerDepth; i++) {
       RequestLifeCycle.begin(PortalContainer.getInstance());
       try {
+        log.info(String.format("%1$4s Create page %2$s/%3$s in depth %4$s .......", " ", i + 1, pagesPerDepth, 1));
         createPage(page, 1);
       } finally {
         RequestLifeCycle.end();
