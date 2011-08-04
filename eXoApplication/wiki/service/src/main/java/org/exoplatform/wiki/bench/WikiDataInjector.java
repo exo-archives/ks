@@ -161,22 +161,12 @@ public class WikiDataInjector extends DataInjector {
   
   @Override
   public boolean isInitialized() {
-    RequestLifeCycle.begin(PortalContainer.getInstance());
-    try {
-      Page page = wikiService.getPageById(wikiType, wikiOwner, TitleResolver.getId(titleOfMarkedPage, true));
-      if (page != null)
-        return true;
-    } catch (Exception e) {
-      if (log.isDebugEnabled()) log.debug("exception when get page", e);
-    } finally {
-      RequestLifeCycle.end();
-    }
+    // allow multi-injecting
     return false;
   }
   
   @Override
   public void inject() throws Exception {
-    pagesStack.clear();
     int pagesPerDepth = maxChildren();
     // create marked page
     PageImpl page = (PageImpl) wikiService.createPage(wikiType, wikiOwner, titleOfMarkedPage, null);
@@ -190,7 +180,7 @@ public class WikiDataInjector extends DataInjector {
     for (int i = 0; i < pagesPerDepth; i++) {
       RequestLifeCycle.begin(PortalContainer.getInstance());
       try {
-        createPage(page, 0);
+        createPage(page, 1);
       } finally {
         RequestLifeCycle.end();
       }
