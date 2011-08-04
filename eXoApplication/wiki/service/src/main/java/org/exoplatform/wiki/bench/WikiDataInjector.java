@@ -17,7 +17,6 @@
 package org.exoplatform.wiki.bench;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Stack;
@@ -32,7 +31,6 @@ import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiService;
@@ -52,9 +50,9 @@ public class WikiDataInjector extends DataInjector {
   private WikiService wikiService;
   
   /**
-   * maximum number of pages in a depth
+   * maximum number of children of a page
    */
-  private int maxPagesPerDepth = 3;
+  private int maxChildren = 3;
   
   /**
    * attachment size in KB
@@ -70,6 +68,8 @@ public class WikiDataInjector extends DataInjector {
    * setting of user is randomize or not.
    */
   private boolean randomize = false;
+  
+  private int maxTotalPages = 10000;
   
   private String wikiType;
   
@@ -92,9 +92,9 @@ public class WikiDataInjector extends DataInjector {
   
   public void initParams(InitParams params) {
     try {
-      ValueParam param = params.getValueParam("mP");
+      ValueParam param = params.getValueParam("mC");
       if (param != null)
-        maxPagesPerDepth = Integer.parseInt(param.getValue());
+        maxChildren = Integer.parseInt(param.getValue());
       param = params.getValueParam("mA");
       if (param != null)
         maxAttachmentSize = Integer.parseInt(param.getValue());
@@ -110,6 +110,9 @@ public class WikiDataInjector extends DataInjector {
       param = params.getValueParam("wt");
       if (param != null)
         wikiType = param.getValue().toLowerCase();
+      param = params.getValueParam("mP");
+      if (param != null)
+        maxTotalPages = Integer.parseInt(param.getValue());;
     } catch (Exception e) {
       throw new RuntimeException("Could not initialize", e);
     }
@@ -120,7 +123,7 @@ public class WikiDataInjector extends DataInjector {
   }
   
   private int maxChildren() {
-    return (randomize) ? (rand.nextInt(maxPagesPerDepth) + 1) : maxPagesPerDepth;
+    return (randomize) ? (rand.nextInt(maxChildren) + 1) : maxChildren;
   }
   
   private int maxAttachmentSize() {
@@ -128,12 +131,17 @@ public class WikiDataInjector extends DataInjector {
   }
   
   private void createPage(PageImpl parent, int currentDepth) throws Exception {
+    if (numberOfPages >= maxTotalPages) {
+      // break because of exceeding allowed number.
+      return;
+    }
     String title = randomWords(5) + " " + IdGenerator.generate();
     String content = randomParagraphs(5);
     int maxDepth = maxDepths();
     PageImpl page = (PageImpl) wikiService.createPage(wikiType, wikiOwner, title, parent.getName());
     pagesStack.add(TitleResolver.getId(title, true));
     numberOfPages++;
+    log.info(String.format("%1$" + (currentDepth*4) + "s Create page %2$s(th) in depth %3$s .......", " ", numberOfPages, currentDepth));
     page.getContent().setText(content);
     page.setPagePermission(defaultPermission);
     page.createAttachment("att" + IdGenerator.generate() + ".txt", createAttachmentResource());
@@ -142,7 +150,6 @@ public class WikiDataInjector extends DataInjector {
       int childDepth = currentDepth +1;
       int numberOfChildren = maxChildren();
       for (int i = 0; i < numberOfChildren; i++) {
-        log.info(String.format("%1$" + (childDepth*4) + "s Create page %2$s/%3$s in depth %4$s .......", " ", i + 1, numberOfChildren, currentDepth + 1));
         createPage(page, childDepth);
       }
     }
@@ -171,20 +178,11 @@ public class WikiDataInjector extends DataInjector {
   public void inject() throws Exception {
     int pagesPerDepth = maxChildren();
     numberOfPages = 0;
-    // create marked page
-    PageImpl page = (PageImpl) wikiService.createPage(wikiType, wikiOwner, titleOfMarkedPage, null);
-    pagesStack.add(TitleResolver.getId(titleOfMarkedPage, true));
-    page.setCreatedDate(new Date());
-    page.getContent().setText(randomParagraphs(5));
-    page.setComment(randomWords(10));
-    page.setPagePermission(defaultPermission);
-    page.createAttachment("att" + IdGenerator.generate() + ".txt", createAttachmentResource());
-
+    
     for (int i = 0; i < pagesPerDepth; i++) {
       RequestLifeCycle.begin(PortalContainer.getInstance());
       try {
-        log.info(String.format("%1$4s Create page %2$s/%3$s in depth %4$s .......", " ", i + 1, pagesPerDepth, 1));
-        createPage(page, 1);
+        createPage((PageImpl) wikiService.getPageById(wikiType, wikiOwner, null), 1);
       } finally {
         RequestLifeCycle.end();
       }
