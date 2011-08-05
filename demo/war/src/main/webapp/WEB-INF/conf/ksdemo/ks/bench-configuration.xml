@@ -83,7 +83,11 @@
       <description>inject data for Wiki</description>
       <init-params>
         <value-param>
-          <name>mP</name> <!-- maximum pages per depth -->
+          <name>mP</name> <!-- maximum number of created pages in one injecting time -->
+          <value>10</value>
+        </value-param>
+        <value-param>
+          <name>mC</name> <!-- maximum children of a page created by injection.  -->
           <value>10</value>
         </value-param>
         <value-param>
