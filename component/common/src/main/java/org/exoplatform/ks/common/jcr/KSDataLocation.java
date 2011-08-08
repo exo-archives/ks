@@ -209,6 +209,10 @@ public class KSDataLocation {
       return DEFAULT_REPOSITORY_NAME;
     }
   }
+  
+  public RepositoryService getRepositoryService() {
+    return repositoryService;
+  }
 
   public String getWorkspace() {
     return workspace;

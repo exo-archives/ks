@@ -119,6 +119,8 @@ import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
+import org.exoplatform.services.jcr.config.RepositoryEntry;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
@@ -341,15 +343,37 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return iter;
   }
 
-  public void initAutoPruneSchedules() throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider();
+  public void initAutoPruneSchedules() {
+    RepositoryService repositoryService = getDataLocation().getRepositoryService();
+    List<RepositoryEntry> entries = repositoryService.getConfig().getRepositoryConfigurations();
+    String currentRepo = null;
     try {
-      NodeIterator iter = getNodeIteratorAutoPruneSetting(sProvider, true);
-      while (iter.hasNext()) {
-        addOrRemoveSchedule(getPruneSetting(iter.nextNode()));
+      currentRepo = repositoryService.getCurrentRepository().getConfiguration().getName();
+      for (RepositoryEntry repositoryEntry : entries) {
+        repositoryService.setCurrentRepositoryName(repositoryEntry.getName());
+        SessionProvider sProvider = SessionProvider.createSystemProvider();
+        try {
+          NodeIterator iter = getNodeIteratorAutoPruneSetting(sProvider, true);
+          while (iter.hasNext()) {
+            addOrRemoveSchedule(getPruneSetting(iter.nextNode()));
+          }
+        } catch (Exception e) {
+          if (log.isDebugEnabled()) {
+            log.debug("Could not perform pruning!", e);
+          }
+        } finally {
+          sProvider.close();
+        }
       }
-    } finally {
-      sProvider.close();
+    } catch (Exception e) {
+      log.error("Repository is error!", e);
+    }
+    if (currentRepo != null) {
+      try {
+        repositoryService.setCurrentRepositoryName(currentRepo);
+      } catch (RepositoryConfigurationException e) {
+        log.error("Could not reset current repository's name", e);
+      }
     }
   }
 

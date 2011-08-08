@@ -22,62 +22,69 @@ import java.util.GregorianCalendar;
 import javax.jcr.RepositoryException;
 
 import org.exoplatform.commons.utils.ISO8601;
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.job.MultiTenancyJob;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
-public class RecountActiveUserJob implements Job {
+public class RecountActiveUserJob extends MultiTenancyJob {
   private static Log log_ = ExoLogger.getLogger("job.forum.RecountActiveUserJob");
 
-  public RecountActiveUserJob() throws Exception {
+  @Override
+  public Class<? extends MultiTenancyTask> getTask() {
+    return RecountActiveUserTask.class;
   }
 
-  public void execute(JobExecutionContext context) throws JobExecutionException {
-    ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
-    try {
-      ExoContainer exoContainer = CommonUtils.getExoContainer(context);
-      ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
-      ExoContainerContext.setCurrentContainer(exoContainer);
-      if (forumService != null) {
-        JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
-        String lastPost = jdatamap.getString("lastPost");
-        if (lastPost != null && lastPost.length() > 0) {
-          int days = Integer.parseInt(lastPost);
-          if (days > 0) {
-            long oneDay = 86400000; // milliseconds of one day
-            Calendar calendar = GregorianCalendar.getInstance();
-            long currentDay = calendar.getTimeInMillis();
-            currentDay = currentDay - (days * oneDay);
-            calendar.setTimeInMillis(currentDay);
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")[").append("@exo:lastPostDate >= xs:dateTime('").append(ISO8601.format(calendar)).append("')]");
-            forumService.evaluateActiveUsers(stringBuilder.toString());
-            if (log_.isDebugEnabled()) {
-              log_.debug("\n\n The RecoundActiveUserJob have been done");
+  public class RecountActiveUserTask extends MultiTenancyTask {
+
+    public RecountActiveUserTask(JobExecutionContext context, String repoName) {
+      super(context, repoName);
+    }
+
+    @Override
+    public void run() {
+      super.run();
+      try {
+        ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
+        if (forumService != null) {
+          JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
+          String lastPost = jdatamap.getString("lastPost");
+          if (lastPost != null && lastPost.length() > 0) {
+            int days = Integer.parseInt(lastPost);
+            if (days > 0) {
+              long oneDay = 86400000; // milliseconds of one day
+              Calendar calendar = GregorianCalendar.getInstance();
+              long currentDay = calendar.getTimeInMillis();
+              currentDay = currentDay - (days * oneDay);
+              calendar.setTimeInMillis(currentDay);
+              StringBuilder stringBuilder = new StringBuilder();
+              stringBuilder.append("//element(*,")
+                           .append(Utils.USER_PROFILES_TYPE)
+                           .append(")[")
+                           .append("@exo:lastPostDate >= xs:dateTime('")
+                           .append(ISO8601.format(calendar))
+                           .append("')]");
+              forumService.evaluateActiveUsers(stringBuilder.toString());
+              if (log_.isDebugEnabled()) {
+                log_.debug("\n\n The RecoundActiveUserJob have been done");
+              }
             }
           }
         }
+      } catch (NumberFormatException nfe) {
+        log_.debug("Value of days is not Integer number.", nfe);
+      } catch (RepositoryException e) {
+        if (log_.isDebugEnabled()) {
+          log_.debug("\n\n Job run so quick " + e.getMessage());
+        }
+      } catch (Exception e) {
+        if (log_.isDebugEnabled()) {
+          log_.debug("\n\n The have exception " + e.getMessage());
+        }
       }
-    } catch (NumberFormatException nfe) {
-      log_.debug("Value of days is not Integer number.",nfe);
-    } catch (RepositoryException e) {
-      if (log_.isDebugEnabled()) {
-        log_.debug("\n\n Job run so quick " + e.getMessage());
-      }
-    } catch (Exception e) {
-      if (log_.isDebugEnabled()) {
-        log_.debug("\n\n The have exception " + e.getMessage());
-      }
-    } finally {
-      ExoContainerContext.setCurrentContainer(oldContainer);
     }
   }
 }

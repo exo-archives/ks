@@ -16,36 +16,38 @@
  **/
 package org.exoplatform.forum.service.conf;
 
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.job.MultiTenancyJob;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
-public class LoginJob implements Job {
+public class LoginJob extends MultiTenancyJob {
   private static Log log_ = ExoLogger.getLogger(LoginJob.class);
 
-  public LoginJob() throws Exception {
+  @Override
+  public Class<? extends MultiTenancyTask> getTask() {
+    return LoginTask.class;
   }
 
-  public void execute(JobExecutionContext context) throws JobExecutionException {
-    ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
-    try {
-      ExoContainer exoContainer = CommonUtils.getExoContainer(context);
-      ExoContainerContext.setCurrentContainer(exoContainer);
-      ForumService forumService = (ForumService) exoContainer.getComponentInstanceOfType(ForumService.class);
-      forumService.updateLoggedinUsers();
-    } catch (Exception e) {
-      log_.warn("Period login job can not execute ...");
-    } finally {
-      ExoContainerContext.setCurrentContainer(oldContainer);
+  public class LoginTask extends MultiTenancyTask {
+
+    public LoginTask(JobExecutionContext context, String repoName) {
+      super(context, repoName);
     }
-    if (log_.isDebugEnabled()) {
-      log_.info("\n\nForum Statistic has been updated for logged in user by a period login job");
+
+    @Override
+    public void run() {
+      super.run();
+      try {
+        ForumService forumService = (ForumService) container.getComponentInstanceOfType(ForumService.class);
+        forumService.updateLoggedinUsers();
+      } catch (Exception e) {
+        log_.warn("Period login job can not execute ...");
+      }
+      if (log_.isDebugEnabled()) {
+        log_.info("\n\nForum Statistic has been updated for logged in user by a period login job");
+      }
     }
   }
 }
