@@ -58,7 +58,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//a[@id='UIPortalLoginFormAction']</td>
 	<td></td>
 </tr>
 <tr>
@@ -73,12 +73,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Blank page</td>
+	<td>link=BlankPage</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Blank page</td>
+	<td>link=BlankPage</td>
 	<td></td>
 </tr>
 <tr>
@@ -103,7 +103,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Save</td>
+	<td>link=save</td>
 	<td></td>
 </tr>
 <tr>
@@ -148,12 +148,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Blank page</td>
+	<td>link=BlankPage</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Blank page</td>
+	<td>link=BlankPage</td>
 	<td></td>
 </tr>
 <tr>
@@ -178,7 +178,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Save</td>
+	<td>link=save</td>
 	<td></td>
 </tr>
 <tr>
@@ -207,13 +207,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>Markup</td>
+	<td></td>
+</tr>
+<tr>
 	<td>type</td>
 	<td>Markup</td>
 	<td>this is child page</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Save</td>
+	<td>link=save</td>
 	<td></td>
 </tr>
 <tr>
@@ -237,24 +242,24 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
+	<td>waitForElementPresent</td>
 	<td>TitleInfo</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>TitleInfo</td>
 	<td>Page1_SMOKE_KS_04</td>
-</tr>
-<tr>
-	<td>waitForText</td>
-	<td>//div[@id='UIWikiPageContentArea']/p</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>//div[@id='UIWikiPageContentArea']/p</td>
+	<td>waitForTextPresent</td>
 	<td>Page1 Content</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Page1 Content</td>
+	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -263,12 +268,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Edit</td>
+	<td>link=edit</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Edit</td>
+	<td>link=edit</td>
 	<td></td>
 </tr>
 <tr>
@@ -293,28 +298,28 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Save</td>
+	<td>link=save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForText</td>
+	<td>waitForElementPresent</td>
 	<td>TitleInfo</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>TitleInfo</td>
 	<td>Page1_SMOKE_KS_04_Edited</td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>//div[@id='UIWikiPageContentArea']/p</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>//div[@id='UIWikiPageContentArea']/p</td>
+	<td>waitForTextPresent</td>
 	<td>Page1 Content Edited</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Page1 Content Edited</td>
+	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -334,22 +339,32 @@
 <tr>
 	<td>type</td>
 	<td>wikiSearchValue</td>
-	<td>Page1</td>
+	<td></td>
 </tr>
 <tr>
-	<td>keyPress</td>
+	<td>typeKeys</td>
 	<td>wikiSearchValue</td>
-	<td>\13</td>
+	<td>page1</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Seach for 'page1'</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Seach for 'page1'</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>//div[@id='UIWikiAdvanceSearchResult']/div[2]/a</td>
 	<td>Page1_SMOKE_KS_04_Edited</td>
+	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>//div[@id='UIWikiAdvanceSearchResult']/div[2]/a</td>
 	<td>Page1_SMOKE_KS_04_Edited</td>
+	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -388,12 +403,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Delete page</td>
+	<td>link=delete</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAt</td>
-	<td>link=Delete page</td>
+	<td>link=delete</td>
 	<td></td>
 </tr>
 <tr>
@@ -428,12 +443,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Delete page</td>
+	<td>link=delete</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAt</td>
-	<td>link=Delete page</td>
+	<td>link=delete</td>
 	<td></td>
 </tr>
 <tr>
@@ -463,17 +478,17 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>sub page content</td>
+	<td>this is child page</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Delete page</td>
+	<td>link=delete</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAt</td>
-	<td>link=Delete page</td>
+	<td>link=delete</td>
 	<td></td>
 </tr>
 <tr>
