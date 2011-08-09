@@ -1,0 +1,3 @@
+<div class="UIWikiPageSetting" id="$uicomponent.id">
+  <% uicomponent.renderChildren(); %>
+</div>
