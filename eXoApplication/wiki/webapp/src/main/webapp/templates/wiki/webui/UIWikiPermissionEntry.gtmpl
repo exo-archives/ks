@@ -17,7 +17,7 @@
   for(permission in permissions){
     checkboxField = uicomponent.getChildById(permission.getPermissionType().toString() + id) ;
     %>
-    <td><% uicomponent.renderChild(checkboxField); %></td>
+    <td class="center"><% uicomponent.renderChild(checkboxField); %></td>
 <%  }
 %>
 <td>

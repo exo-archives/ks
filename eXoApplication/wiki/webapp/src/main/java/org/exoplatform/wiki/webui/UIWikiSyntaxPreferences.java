@@ -34,25 +34,33 @@ import org.exoplatform.wiki.webui.core.UISyntaxSelectBoxFactory;
 public class UIWikiSyntaxPreferences extends UIFormInputSet {
   public static final String FIELD_SYNTAX = "DefaultSyntax";
 
-  public static final String FIELD_ALLOW  = "AllowChooseOthers";
+  public static final String FIELD_ALLOW = "AllowChooseOthers";
 
   public UIWikiSyntaxPreferences(String id) throws Exception {
-   setId(id);  
-   WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;   
+    setId(id);
+
+    UIFormSelectBox selectSyntax = UISyntaxSelectBoxFactory.newInstance(FIELD_SYNTAX, FIELD_SYNTAX);
+    this.addChild(selectSyntax);
+
+    UIFormCheckBoxInput<Boolean> allowSelect = new UIFormCheckBoxInput<Boolean>(FIELD_ALLOW, FIELD_ALLOW, null);
+    addUIFormInput(allowSelect);
+
+    updateData();
+  }
+
+  public void updateData() throws Exception {
+    WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
     Preferences currentPreferences = Utils.getCurrentPreferences();
     String currentDefaultSyntaxt = currentPreferences.getPreferencesSyntax().getDefaultSyntax();
     if (currentDefaultSyntaxt == null) {
       currentDefaultSyntaxt = wservice.getDefaultWikiSyntaxId();
     }
-    UIFormSelectBox selectSyntax = UISyntaxSelectBoxFactory.newInstance(FIELD_SYNTAX, FIELD_SYNTAX);    
+
+    UIFormSelectBox selectSyntax = getUIFormSelectBox(FIELD_SYNTAX);
     selectSyntax.setValue(currentDefaultSyntaxt);
-    this.addChild(selectSyntax);
-    UIFormCheckBoxInput<Boolean> allowSelect = new UIFormCheckBoxInput<Boolean>(FIELD_ALLOW,
-                                                                                FIELD_ALLOW,
-                                                                                null);
-    boolean currentAllow= currentPreferences.getPreferencesSyntax().getAllowMutipleSyntaxes();  
+
+    UIFormCheckBoxInput<Boolean> allowSelect = getUIFormCheckBoxInput(FIELD_ALLOW);
+    boolean currentAllow = currentPreferences.getPreferencesSyntax().getAllowMutipleSyntaxes();
     allowSelect.setChecked(currentAllow);
-    
-    addUIFormInput(allowSelect);
- }
+  }
 }

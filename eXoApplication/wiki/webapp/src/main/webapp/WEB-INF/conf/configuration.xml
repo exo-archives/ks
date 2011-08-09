@@ -189,7 +189,7 @@
 	           <field name="component"><string>org.exoplatform.wiki.webui.control.action.PageInfoActionComponent</string></field>
 	         </object>
         </object-param>
-         <object-param>
+        <object-param>
           <name>Browse</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
             <field name="type"><string>org.exoplatform.wiki.webui.control.UIWikiToolBar</string></field>
@@ -199,30 +199,21 @@
           </object>
         </object-param>   
         <object-param>
-          <name>Preferences</name>
+          <name>SpaceSetting</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
             <field name="type"><string>org.exoplatform.wiki.webui.control.BrowseExtensionContainer</string></field>
-            <field name="rank"><int>100</int></field>
-            <field name="name"><string>Preferences</string></field>
-            <field name="component"><string>org.exoplatform.wiki.webui.control.action.PreferencesActionComponent</string></field>
+            <field name="rank"><int>300</int></field>
+            <field name="name"><string>SpaceSetting</string></field>
+            <field name="component"><string>org.exoplatform.wiki.webui.control.action.SpaceSettingActionComponent</string></field>
           </object>
         </object-param>
         <object-param>
-          <name>WikiPermission</name>
-          <object type="org.exoplatform.webui.ext.UIExtension">
-            <field name="type"><string>org.exoplatform.wiki.webui.control.BrowseExtensionContainer</string></field>
-            <field name="rank"><int>200</int></field>
-            <field name="name"><string>WikiPermission</string></field>
-            <field name="component"><string>org.exoplatform.wiki.webui.control.action.WikiPermissionActionComponent</string></field>
-          </object>
-        </object-param>
-        <object-param>
-           <name>SyntaxSetting</name>
+           <name>PermissionSetting</name>
            <object type="org.exoplatform.webui.ext.UIExtension">
              <field name="type"><string>org.exoplatform.wiki.webui.popup.UIWikiSettingContainer</string></field>
              <field name="rank"><int>100</int></field>
-             <field name="name"><string>SyntaxSetting</string></field>
-             <field name="component"><string>org.exoplatform.wiki.webui.extension.UISyntaxSettingForm</string></field>             
+             <field name="name"><string>PermissionSetting</string></field>
+             <field name="component"><string>org.exoplatform.wiki.webui.UIWikiPermissionForm</string></field>             
            </object>
         </object-param>
         <object-param>
@@ -232,6 +223,15 @@
              <field name="rank"><int>200</int></field>
              <field name="name"><string>TemplateSetting</string></field>
              <field name="component"><string>org.exoplatform.wiki.webui.extension.UITemplateSettingForm</string></field>             
+           </object>
+        </object-param>
+        <object-param>
+           <name>SyntaxSetting</name>
+           <object type="org.exoplatform.webui.ext.UIExtension">
+             <field name="type"><string>org.exoplatform.wiki.webui.popup.UIWikiSettingContainer</string></field>
+             <field name="rank"><int>300</int></field>
+             <field name="name"><string>SyntaxSetting</string></field>
+             <field name="component"><string>org.exoplatform.wiki.webui.extension.UISyntaxSettingForm</string></field>             
            </object>
         </object-param>
         <object-param>

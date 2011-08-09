@@ -16,9 +16,12 @@
  */
 package org.exoplatform.wiki.webui.extension;
 
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIPopupContainer;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -31,7 +34,6 @@ import org.exoplatform.wiki.mow.core.api.wiki.PreferencesSyntax;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiSyntaxPreferences;
-import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 
 /**
  * Created by The eXo Platform SAS
@@ -43,16 +45,27 @@ import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 @ComponentConfig(
   lifecycle = UIFormLifecycle.class, template = "app:/templates/wiki/webui/extension/UISyntaxSettingForm.gtmpl",
   events = {
-    @EventConfig(listeners = UISyntaxSettingForm.SaveActionListener.class),
-    @EventConfig(listeners = UISyntaxSettingForm.CancelActionListener.class) 
+    @EventConfig(listeners = UISyntaxSettingForm.SaveActionListener.class)
     }
 )
 public class UISyntaxSettingForm extends UIForm {
+  private static final Log log = ExoLogger.getExoLogger(UISyntaxSettingForm.class);
 
   public static final String PREFERENCES_SYNTAX = "PreferencesSyntax";
   
   public UISyntaxSettingForm() throws Exception {
     addUIFormInput(new UIWikiSyntaxPreferences(PREFERENCES_SYNTAX));
+  }
+  
+  public void updateData() {
+    try {
+      UIWikiSyntaxPreferences uiWikiSyntaxPreferences = getChildById(PREFERENCES_SYNTAX);
+      if (uiWikiSyntaxPreferences != null) {
+        uiWikiSyntaxPreferences.updateData();
+      }
+    } catch (Exception e) {
+      log.warn("Can not update data for syntax setting form", e);
+    }
   }
   
   static public class SaveActionListener extends EventListener<UISyntaxSettingForm> {
@@ -66,17 +79,10 @@ public class UISyntaxSettingForm extends UIForm {
       preferencesSyntax.setAllowMutipleSyntaxes(allowCheckBox.isChecked());
       preferencesSyntax.setDefaultSyntax(defaultSyntaxSelect.getValue());
       wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class).reloadSyntax();
-      UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);     
-      popupContainer.deActivate();
+      
+      UIApplication uiApp = wikiPortlet.findFirstComponentOfType(UIApplication.class);
+      uiApp.addMessage(new ApplicationMessage("UISyntaxSettingForm.msg.Save-syntax-setting-success", null, ApplicationMessage.INFO));
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
     }
   }
-
-  static public class CancelActionListener extends EventListener<UISyntaxSettingForm> {
-    public void execute(Event<UISyntaxSettingForm> event) throws Exception {
-      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);
-      popupContainer.cancelPopupAction();
-    }
-  }
-  
 }

@@ -52,7 +52,7 @@ public enum WikiMode {
 
   EDITTEMPLATE,
 
-  ADDTEMPLATE
+  ADDTEMPLATE,
   
-
+  SPACESETTING
 }

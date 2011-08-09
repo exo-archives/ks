@@ -1,5 +1,12 @@
 <% 
-import java.util.List;
+  import java.util.List;
+  import org.exoplatform.web.application.JavascriptManager;
+  
+  def rcontext = _ctx.getRequestContext();
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  
+  jsmanager.importJavascript('eXo.wiki.UIWikiSettingContainer', '/wiki/javascript/') ;
+  jsmanager.addJavascript("eXo.wiki.UIWikiSettingContainer.init('" + uicomponent.id + "') ;"); 
 %>
 
 <div class="UIWikiSettingContainer" id="$uicomponent.id">
@@ -18,9 +25,14 @@ import java.util.List;
        </div>  
     <%} %>   
   </div>
+  
+  <div class="Spliter"></div>
+  
   <div class="Content">	
 		<%
 		uicomponent.renderChild(uicomponent.getActiveItem());
 		%>
-	</div>
+  </div>
+  <div style="clear: both"></div>
+
 </div>

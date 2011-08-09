@@ -31,7 +31,6 @@ import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.Template;
-import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.UIWikiBottomArea;
@@ -39,13 +38,12 @@ import org.exoplatform.wiki.webui.UIWikiPageContainer;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.UIWikiSidePanelArea;
 import org.exoplatform.wiki.webui.UIWikiTemplateDescriptionContainer;
 import org.exoplatform.wiki.webui.WikiMode;
-import org.exoplatform.wiki.webui.UIWikiPortlet.PopupLevel;
 import org.exoplatform.wiki.webui.commons.UIWikiTemplateForm;
-import org.xwiki.rendering.syntax.Syntax;
 
 
 /**
@@ -171,8 +169,6 @@ public class UITemplateSettingForm extends UIWikiTemplateForm {
       pageEditForm.getChild(UIWikiSidePanelArea.class).setRendered(true);
       pageEditForm.getAncestorOfType(UIWikiPageContainer.class).getChild(UIWikiBottomArea.class).setRendered(true);
       
-      UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);
-      popupContainer.deActivate();
       wikiPortlet.changeMode(WikiMode.ADDTEMPLATE);
     }
   }

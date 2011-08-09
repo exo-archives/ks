@@ -48,7 +48,7 @@ public class UIWikiMiddleArea extends UIWikiContainer {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE,
         WikiMode.ADDPAGE, WikiMode.ADVANCEDSEARCH, WikiMode.SHOWHISTORY, WikiMode.PAGE_NOT_FOUND,
         WikiMode.HELP, WikiMode.DELETEPAGE, WikiMode.VIEWREVISION, WikiMode.PAGEINFO,
-        WikiMode.ADDTEMPLATE, WikiMode.EDITTEMPLATE, WikiMode.COMPAREREVISION });
+        WikiMode.ADDTEMPLATE, WikiMode.EDITTEMPLATE, WikiMode.COMPAREREVISION, WikiMode.SPACESETTING });
     addChild(UIWikiNavigationContainer.class, null, null);
     addChild(UIWikiPageContainer.class, null, null);
   }

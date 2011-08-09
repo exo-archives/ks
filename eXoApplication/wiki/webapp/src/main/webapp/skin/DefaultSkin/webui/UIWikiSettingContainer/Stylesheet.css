@@ -8,7 +8,7 @@
 .UIWikiSettingContainer .SettingItems {
   float: left;
   width: 20%;
-  border: solid #CCC 1px;
+  border: none;
   padding: 5px;
 }
 
@@ -23,3 +23,9 @@
 .UIWikiSettingContainer .Content {
   margin-left: 23%;
 }
+
+.UIWikiSettingContainer div.Spliter {
+  cursor: default;
+  left: 150px;
+}
+

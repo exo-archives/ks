@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -29,8 +32,15 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.ext.UIExtension;
 import org.exoplatform.webui.ext.UIExtensionManager;
+import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.service.WikiPageParams;
+import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.webui.UIWikiPermissionForm;
+import org.exoplatform.wiki.webui.UIWikiPermissionForm.Scope;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.core.UIExtensionContainer;
+import org.exoplatform.wiki.webui.extension.UISyntaxSettingForm;
+import org.exoplatform.wiki.webui.extension.UITemplateSettingForm;
 
 /**
  * Created by The eXo Platform SAS
@@ -38,7 +48,6 @@ import org.exoplatform.wiki.webui.core.UIExtensionContainer;
  *          hieu.lai@exoplatform.com
  * 27 Jan 2011  
  */
-
 @ComponentConfig(
   template = "app:/templates/wiki/webui/popup/UIWikiSettingContainer.gtmpl",
   events = {
@@ -46,6 +55,7 @@ import org.exoplatform.wiki.webui.core.UIExtensionContainer;
   }
 )
 public class UIWikiSettingContainer extends UIExtensionContainer implements UIPopupComponent {
+  private static final Log log = ExoLogger.getExoLogger(UIWikiSettingContainer.class);
   
   private String             activeItem;
 
@@ -73,12 +83,32 @@ public class UIWikiSettingContainer extends UIExtensionContainer implements UIPo
           UIComponent component = manager.addUIExtension(extensions.get(i), extContext, this);
           items.add(component.getId());
           if (activeItem == null && i == 0) {
-            activeItem = component.getId();
+            setActiveItem(component.getId());
           }
         }
       }
     }
     super.processRender(context);
+  }
+  
+  private void checkToUpdateData() throws Exception {
+    if (activeItem == null) {
+      return;
+    }
+    UIComponent component = getChildById(activeItem);
+    if (component instanceof UIWikiPermissionForm) {
+      UIWikiPermissionForm uiWikiPermissionForm = (UIWikiPermissionForm) component;
+      uiWikiPermissionForm.setScope(Scope.WIKI);
+      WikiService wikiService = uiWikiPermissionForm.getApplicationComponent(WikiService.class);
+      WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
+      uiWikiPermissionForm.setPermission(wikiService.getWikiPermission(pageParams.getType(), pageParams.getOwner()));
+    } else if (component instanceof UITemplateSettingForm) {
+      UITemplateSettingForm uiTemplateSettingForm = (UITemplateSettingForm) component;
+      uiTemplateSettingForm.initGrid();
+    } else if (component instanceof UISyntaxSettingForm) {
+      UISyntaxSettingForm uiSyntaxSettingForm = (UISyntaxSettingForm) component;
+      uiSyntaxSettingForm.updateData();
+    }
   }
 
   public String getActiveItem() {
@@ -86,7 +116,14 @@ public class UIWikiSettingContainer extends UIExtensionContainer implements UIPo
   }
 
   public void setActiveItem(String activeItem) {
-    this.activeItem = activeItem;
+    if (CommonUtils.isEmpty(this.activeItem) || !this.activeItem.equals(activeItem)) {
+      this.activeItem = activeItem;
+      try {
+        checkToUpdateData();
+      } catch (Exception e) {
+        log.warn("Can not get permission data", e);
+      }
+    }
   }
 
   public List<String> getItems() {
@@ -98,18 +135,15 @@ public class UIWikiSettingContainer extends UIExtensionContainer implements UIPo
   }
 
   public void activate() throws Exception {
-
   }
 
   public void deActivate() throws Exception {
-
   }
   
   static public class ActiveItemActionListener extends EventListener<UIWikiSettingContainer> {
     public void execute(Event<UIWikiSettingContainer> event) throws Exception {
       UIWikiSettingContainer container = event.getSource();
       container.setActiveItem(event.getRequestContext().getRequestParameter(OBJECTID));
-      event.getRequestContext().addUIComponentToUpdateByAjax(event.getSource());
     }
   }
 }

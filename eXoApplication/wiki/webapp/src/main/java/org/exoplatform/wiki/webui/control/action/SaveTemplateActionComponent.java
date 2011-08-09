@@ -48,6 +48,7 @@ import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddTemplateModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
+import org.exoplatform.wiki.webui.extension.UITemplateSettingForm;
 
 
 /**
@@ -145,7 +146,6 @@ public class SaveTemplateActionComponent extends AbstractFormActionComponent {
                                                     null,
                                                     ApplicationMessage.WARNING));
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
-            Utils.redirect(pageParams, wikiPortlet.getWikiMode());
             return;
           }
           Template template = wikiService.createTemplatePage(title, pageParams);
@@ -164,11 +164,14 @@ public class SaveTemplateActionComponent extends AbstractFormActionComponent {
                                                 ApplicationMessage.ERROR));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
       } finally {
-        Utils.redirect(pageParams, WikiMode.VIEW);       
+        UITemplateSettingForm uiTemplateSettingForm = wikiPortlet.findFirstComponentOfType(UITemplateSettingForm.class);
+        if (uiTemplateSettingForm != null) {
+          // Update template list
+          uiTemplateSettingForm.initGrid();
+        }
+        Utils.redirect(pageParams, WikiMode.SPACESETTING);
         super.processEvent(event);
-        
       }
     }
   }
-  
 }
