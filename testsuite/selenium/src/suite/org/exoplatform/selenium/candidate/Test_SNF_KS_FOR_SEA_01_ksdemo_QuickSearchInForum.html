@@ -123,27 +123,32 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
+	<td>link=Search this category</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>link=Live demo</td>
-	<td>1,1</td>
+	<td>click</td>
+	<td>link=Search this category</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='QuickSearchForm']/div[2]/a[2]</td>
+	<td>SearchForm</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//form[@id='QuickSearchForm']/div[2]/a[2]</td>
-	<td>2,2</td>
+	<td>type</td>
+	<td>SearchForm</td>
+	<td>demo</td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>-Search In Forum-</td>
+	<td>waitForElementPresent</td>
+	<td>link=Search</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Search</td>
 	<td></td>
 </tr>
 <tr>
@@ -162,8 +167,23 @@
 	<td></td>
 </tr>
 <tr>
+	<td>click</td>
+	<td>SearchForm</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Search In Forum-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>SearchForm</td>
+	<td></td>
+</tr>
+<tr>
 	<td>type</td>
-	<td>inputValue</td>
+	<td>SearchForm</td>
 	<td>data</td>
 </tr>
 <tr>
@@ -234,11 +254,6 @@
 <tr>
 	<td>click</td>
 	<td>link=Quick reply</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[text()='Search this topic']</td>
 	<td></td>
 </tr>
 <tr>
