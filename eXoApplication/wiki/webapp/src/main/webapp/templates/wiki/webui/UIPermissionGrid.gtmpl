@@ -3,24 +3,24 @@
   
   def uiParent = uicomponent.getParent();
 %>
-<div id="$uicomponent.id">
-  <table cellspacing="0" class="UIFormGrid">
+<div id="$uicomponent.id" class="UIPermissionGrid">
+  <table cellspacing="0" class="UIGrid">
     <thead>
       <tr>
       <%
         if(Scope.WIKI.equals(uiParent.getScope())){
       %>
         <th>Owner</th>
-        <th>View Pages</th>
-        <th>Edit Pages</th>
-        <th>Admin Pages</th>
-        <th>Admin Space</th>
-        <th>Action</th>
+        <th class="center">View Pages</th>
+        <th class="center">Edit Pages</th>
+        <th class="center">Admin Pages</th>
+        <th class="center">Admin Space</th>
+        <th class="center">Action</th>
       <% } else { %>
         <th>Owner</th>
-        <th>View Pages</th>
-        <th>Edit Pages</th>
-        <th>Action</th>
+        <th class="center">View Pages</th>
+        <th class="center">Edit Pages</th>
+        <th class="center">Action</th>
       <%}%>
       </tr>
     </thead>

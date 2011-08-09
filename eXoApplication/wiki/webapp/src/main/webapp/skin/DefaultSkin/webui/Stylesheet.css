@@ -247,14 +247,15 @@ table.UIFormGrid div.Id {
 
 .UIWikiPermissionOwner table.UIFormGrid {
 	margin-bottom: 0px;
+	border:none;
 }
 
 .UIWikiPermissionOwner .UIFormGrid {
 	margin: 0px;
 }
 
-.UIWikiPermissionOwner .UIFormGrid td,.UIWikiPermissionOwner .UIFormGrid td.FieldLabel {
-	padding: 0px;
+.UIWikiPermissionOwner .UIFormGrid td.FieldLabel {
+	vertical-align:middle;
 	color: #636363;
 }
 
@@ -262,6 +263,34 @@ table.UIFormGrid div.Id {
 	border: 1px solid #d7d7d7;
 	width: 140px;
 	height: 20px;
+}
+
+.UIWikiPortlet .UIWikiSettingContainer_PermissionSetting_ .HorizontalLayout  {
+  background:none;
+  border:none;
+  padding:0;
+}
+
+.UIWikiSettingContainer_PermissionSetting_ .UIPermissionGrid .UIGrid {
+  width: 60%;
+  table-layout:auto;
+  margin:0;
+}
+.UIWikiSettingContainer_PermissionSetting_ .UIWikiPermissionOwner .UIFormGrid {
+  border:none;
+  width:34%;
+  margin:0;
+}
+
+.UIWikiPortlet .UIWikiPermissionOwner .Add {
+  width:53px;
+  height: 24px;
+  background: url("/wiki/skin/DefaultSkin/webui/background/ButtonAdd.png") no-repeat  0 0 ;
+  vertical-align:top;
+}
+
+.UIWikiPortlet .UIWikiPermissionOwner .UIFormGrid td {
+  border:none;
 }
 
 .UIWikiPortlet .UIWikiPageTitleControlForm_PageControlArea {
@@ -1512,22 +1541,23 @@ table.UIFormGrid div.Id {
 	color: #464646;
 }
 
-.UIWikiPortlet .UIWikiTemplateForm {
+.UIWikiPortlet .PopupContent .UIWikiTemplateForm {
+  
 	background: white;
 	padding: 15px;
 }
 
 .UIWikiPortlet .UIWikiTemplateForm .TemplateControl {
-	margin-bottom: 10px;
+    padding: 5px 0px 15px 0px;
+	overflow:hidden;
 }
 
 .UIWikiPortlet .UIWikiTemplateForm .TemplateControl input {
 	border: 1px solid #dbdfe6;
-	border-top: 1px solid #abadb3;
 	height: 20px;
 	color: #9a9a9a;
 	padding: 0px 4px;
-	width: 175px;
+	width: 165px;
 }
 
 .UIWikiPortlet .UIWikiTemplateForm .TemplateControl .SearchButton {
@@ -1614,3 +1644,45 @@ table.UIFormGrid div.Id {
   background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/DustBin.gif') no-repeat;
   margin: auto;
  }
+ 
+.UIWikiSettingContainer_SyntaxSetting_  .UIFormGrid .checkbox {
+  margin:0;
+}
+
+.UITemplateSettingForm {
+  width:60%;
+}
+
+.UIWikiPortlet .UITemplateSettingForm  .UIGrid a{
+  width:16px;
+  height: 16px;
+  display:inline-block;	
+  text-indent:-9999999px;
+  outline: none;
+}
+
+.UIWikiPortlet .UIWikiTemplateForm .UIGrid .EditTemplateIcon { 
+  background:url(background/EditTemplateIcon.gif) no-repeat left center;
+}
+
+.UIWikiPortlet .UIWikiTemplateForm .UIGrid .DeleteTemplateIcon {
+  background:url(background/DeleteTemplateIcon.gif) no-repeat left center;
+}
+
+.UIWikiPortlet .UIWikiSettingContainer_SyntaxSetting_ .UIFormGrid  {
+  width:36%;
+  border: none;
+  margin:0;
+  table-layout:fixed;
+}
+.UIWikiPortlet .UIWikiSettingContainer_SyntaxSetting_ .UIFormGrid  td.FieldLabel{
+  padding:4px 0;
+}
+
+.UIWikiPortlet .UIFormGrid td.FieldLabel {
+  text-align:left;	
+}
+
+.UIWikiPortlet .UIFormInputSet {
+	border-bottom:1px solid #e1e1e1;
+}

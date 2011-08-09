@@ -40,7 +40,7 @@
          	 <% }
          			if (beanActions != null && beanActions.length > 0)
          			{ %>
-         				<th><%=_ctx.appRes(uiParent.getName() + ".header.action")%></th>
+         				<th class="center"><%=_ctx.appRes(uiParent.getName() + ".header.action")%></th>
          	 <% }
          		} %>
       </tr>
@@ -116,7 +116,7 @@
                <a onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor/$beanId');" class="${action}Icon">$title</a>               
                <a onclick="$actionLink" id="$actionId/$beanId" style="display:none;">&nbsp;</a>
                <% } else { %>
-               <a onclick="$actionLink" alt="$action">$title</a>
+               <a onclick="$actionLink" alt="$action" class="${action}Icon">$title</a>
                <% } 
               } %>
             </div>

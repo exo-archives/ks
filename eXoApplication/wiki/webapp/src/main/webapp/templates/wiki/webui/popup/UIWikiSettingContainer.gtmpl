@@ -33,6 +33,4 @@
 		uicomponent.renderChild(uicomponent.getActiveItem());
 		%>
   </div>
-  <div style="clear: both"></div>
-
 </div>

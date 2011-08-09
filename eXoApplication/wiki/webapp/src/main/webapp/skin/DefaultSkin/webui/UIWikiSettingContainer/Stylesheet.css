@@ -1,31 +1,48 @@
 @import url('extension/Stylesheet.css') ;
 
 .UIWikiSettingContainer {
-  margin: 20px 10px 20px 10px;
+  padding: 10px 0px;
   display: block;  
 }
 
 .UIWikiSettingContainer .SettingItems {
   float: left;
-  width: 20%;
-  border: none;
-  padding: 5px;
+  width: 130px; 
+  padding: 0 16px;
 }
 
 .UIWikiSettingContainer .Item {
-  height: 20px;
+  padding: 4px 7px;
+}
+
+.UIWikiSettingContainer .Item a {
+  font-size: 13px;
+  color:#363636; 
+} 
+
+.UIWikiSettingContainer .Item a:hover {
+  text-decoration:none;
 }
 
 .UIWikiSettingContainer .Selected {
-  font-weight: bold;
+  color: #ffffff;
+  background-color:#808080;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+}
+
+.UIWikiSettingContainer .Selected a {
+  color:#fff;
 }
 
 .UIWikiSettingContainer .Content {
-  margin-left: 23%;
+  margin-left: 162px;
+  padding-left: 16px;
 }
 
-.UIWikiSettingContainer div.Spliter {
+.UIWikiPortlet .UIWikiSettingContainer .Spliter {
   cursor: default;
-  left: 150px;
+  left: 162px;
 }
 

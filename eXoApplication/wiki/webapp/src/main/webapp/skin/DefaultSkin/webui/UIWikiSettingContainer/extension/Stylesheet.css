@@ -1,8 +1,9 @@
 .UITemplateSettingForm .TemplateActions {
   float: right;
+  margin-top:5px;
 }
 
 .UITemplateSettingForm .TemplateActions .AddTemplate {
-	color: #4175b2;
-	font-weight: bold;
+  color: #477ca6;
+  font-size:13px;
 }
