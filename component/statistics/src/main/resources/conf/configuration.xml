@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+  xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+
+  <component>
+    <type>org.exoplatform.ks.statistics.JCRAPIAspectConfig</type>
+    <init-params>
+      <values-param>
+        <name>targetInterfaces</name>
+        <value>org.exoplatform.faq.service.FAQService</value>
+        <value>org.exoplatform.forum.service.ForumService</value>
+        <value>org.exoplatform.poll.service.PollService</value>
+        <value>org.exoplatform.wiki.service.WikiService</value>
+        <!--value>org.exoplatform.faq.service.DataStorage</value-->
+        <value>org.exoplatform.faq.service.ws.FAQWebservice</value>
+        <!--value>org.exoplatform.forum.service.DataStorage</value-->
+        <value>org.exoplatform.forum.service.ForumStatisticsService</value>
+        <value>org.exoplatform.forum.service.ws.ForumWebservice</value>
+        <value>org.exoplatform.ks.bbcode.api.BBCodeService</value>
+        <value>org.exoplatform.ks.common.jcr.KSDataLocation</value>
+        <value>org.exoplatform.ks.common.user.ContactProvider</value>
+        <value>org.exoplatform.ks.rendering.MarkupRenderingService</value>
+        <value>org.exoplatform.poll.service.DataStorage</value>
+        <value>org.exoplatform.poll.service.ws.PollWebservice</value>
+        <value>org.exoplatform.wiki.mow.core.api.MOWService</value>
+        <value>org.exoplatform.wiki.rendering.RenderingService</value>
+        <value>org.exoplatform.wiki.resolver.PageResolver</value>
+        <value>org.exoplatform.wiki.service.DataStorage</value>
+        <value>org.exoplatform.wiki.service.diff.DiffService</value>
+        <!--value>org.exoplatform.wiki.service.webdav.WebDavService</value-->
+        <value>org.exoplatform.wiki.service.WikiRestService</value>
+      </values-param>
+    </init-params>
+  </component>
+</configuration>

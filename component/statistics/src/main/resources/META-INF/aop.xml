@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aspectj>
+  <aspects>
+    <concrete-aspect name="org.exoplatform.ks.statistics.JCRAPIAspectImpl" extends="org.exoplatform.ks.statistics.JCRAPIAspect">
+      <pointcut name="JCRAPIPointcut"
+        expression="(target(org.exoplatform.faq.service.FAQService) || target(org.exoplatform.forum.service.ForumService) || 
+                     target(org.exoplatform.poll.service.PollService) || target(org.exoplatform.wiki.service.WikiService) || 
+                     target(org.exoplatform.faq.service.ws.FAQWebservice) || target(org.exoplatform.forum.service.ForumStatisticsService) || 
+                     target(org.exoplatform.forum.service.ws.ForumWebservice) || target(org.exoplatform.ks.bbcode.api.BBCodeService) || 
+                     target(org.exoplatform.ks.common.jcr.KSDataLocation) || target(org.exoplatform.ks.common.user.ContactProvider) || 
+                     target(org.exoplatform.ks.rendering.MarkupRenderingService) || target(org.exoplatform.poll.service.DataStorage) || 
+                     target(org.exoplatform.poll.service.ws.PollWebservice) || target(org.exoplatform.wiki.mow.core.api.MOWService) || 
+                     target(org.exoplatform.wiki.rendering.RenderingService) || target(org.exoplatform.wiki.resolver.PageResolver) || 
+                     target(org.exoplatform.wiki.service.DataStorage) || target(org.exoplatform.wiki.service.diff.DiffService) || 
+                     target(org.exoplatform.wiki.service.WikiRestService)
+                     ) &amp;&amp; call(public * *(..))" />
+    </concrete-aspect>
+  </aspects>
+  <weaver options="-XnoInline">
+    <include within="org.exoplatform.faq..*" />
+    <include within="org.exoplatform.forum..*" />
+    <include within="org.exoplatform.poll..*" />
+    <include within="org.exoplatform.wiki..*" />
+    <include within="org.exoplatform.ks..*" />
+    <exclude within="org.exoplatform.faq.service.impl.JCRDataStorage"/>
+    <exclude within="org.exoplatform.forum.service.impl.JCRDataStorage"/>
+    <exclude within="org.exoplatform.wiki.service.webdav.WebDavService"/>
+  </weaver>
+</aspectj>
