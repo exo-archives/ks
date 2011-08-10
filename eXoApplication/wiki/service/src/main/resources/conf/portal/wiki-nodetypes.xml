@@ -231,12 +231,12 @@
           <requiredPrimaryType>wiki:groupwikis</requiredPrimaryType>
         </requiredPrimaryTypes>
       </childNodeDefinition>
-      <childNodeDefinition name="helppages" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+      <childNodeDefinition name="helppages" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="IGNORE" protected="false" sameNameSiblings="false">
         <requiredPrimaryTypes>
           <requiredPrimaryType>wiki:page</requiredPrimaryType>
         </requiredPrimaryTypes>
       </childNodeDefinition>
-      <childNodeDefinition name="draftNewPages" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+      <childNodeDefinition name="draftNewPages" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="IGNORE" protected="false" sameNameSiblings="false">
         <requiredPrimaryTypes>
           <requiredPrimaryType>wiki:page</requiredPrimaryType>
         </requiredPrimaryTypes>
@@ -337,7 +337,7 @@
           <requiredPrimaryType>wiki:attachment</requiredPrimaryType>
         </requiredPrimaryTypes>
       </childNodeDefinition>
-      <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+      <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="IGNORE" protected="false" sameNameSiblings="false">
         <requiredPrimaryTypes>
           <requiredPrimaryType>wiki:page</requiredPrimaryType>
         </requiredPrimaryTypes>
@@ -404,7 +404,7 @@
       <supertype>nt:base</supertype>      
     </supertypes>
     <childNodeDefinitions>
-      <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
+      <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="IGNORE" protected="false" sameNameSiblings="true">
         <requiredPrimaryTypes>
           <requiredPrimaryType>wiki:page</requiredPrimaryType>
         </requiredPrimaryTypes>
