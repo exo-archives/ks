@@ -623,12 +623,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIForumPortlet']//div[@class='ExoMessageDecorator']//div[@class='ActionButton LightBlueStyle']</td>
+	<td>//div[@id='UIForumPortlet']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIForumPortlet']//div[@class='ExoMessageDecorator']//div[@class='ActionButton LightBlueStyle']</td>
+	<td>//div[@id='UIForumPortlet']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
@@ -754,6 +754,16 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Sign in</td>
 	<td></td>
 </tr>
 </tbody></table>

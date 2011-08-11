@@ -73,12 +73,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=BlankPage</td>
+	<td>//div[@id='UIWikiPageControlArea_PageToolBar_Add_']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseOver</td>
+	<td>//div[@id='UIWikiPageControlArea_PageToolBar_Add_']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Blank page</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=BlankPage</td>
+	<td>link=Blank page</td>
 	<td></td>
 </tr>
 <tr>
@@ -103,12 +113,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=save</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=save</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
@@ -243,12 +253,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=edit</td>
+	<td>link=Edit</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=edit</td>
+	<td>link=Edit</td>
 	<td></td>
 </tr>
 <tr>
@@ -273,12 +283,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=save</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=save</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
@@ -292,14 +302,14 @@
 	<td>Page1_SNF_KS_68_Edited</td>
 </tr>
 <tr>
-	<td>waitForText</td>
-	<td>//div[@id='UIWikiPageContentArea']/p</td>
-	<td>Page1 Content Edited</td>
+	<td>waitForTextPresent</td>
+	<td>Page1_SNF_KS_68_Edited</td>
+	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>//div[@id='UIWikiPageContentArea']/p</td>
-	<td>Page1 Content Edited</td>
+	<td>verifyTextPresent</td>
+	<td>Page1_SNF_KS_68_Edited</td>
+	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -373,22 +383,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=delete</td>
+	<td>link=Delete page</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=delete</td>
+	<td>link=Delete page</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td>//div[@id='UIWikiPageArea']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td>//div[@id='UIWikiPageArea']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>

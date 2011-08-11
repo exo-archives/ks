@@ -282,23 +282,18 @@
 	<td>Cate1_SNF_KS_44</td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//div[@class='DeleteIcon']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertConfirmation</td>
-	<td>Are you sure you want delete this subscription?</td>
-	<td></td>
+	<td>type</td>
+	<td>id=EmailAddress</td>
+	<td>root@localhost.vn</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Save</td>
+	<td>//div[contains(@onclick,'Save')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Save</td>
+	<td>//div[contains(@onclick,'Save')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -322,13 +317,18 @@
 	<td>Root Signature</td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>- Select Forum Settings tab</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//form/div[2]/div/div/div/div[1]/div/div/div/div/div[2]/div/div/div/div</td>
+	<td>//div[contains(text(),'Forum Settings')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form/div[2]/div/div/div/div[1]/div/div/div/div/div[2]/div/div/div/div</td>
+	<td>//div[contains(text(),'Forum Settings')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -1273,12 +1273,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[text()='Manage Category']</td>
+	<td>//div[@id='UICategoryContainer']//a[text()='Manage Category']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[text()='Manage Category']</td>
+	<td>//div[@id='UICategoryContainer']//a[text()='Manage Category']</td>
 	<td></td>
 </tr>
 <tr>
@@ -1337,8 +1337,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>- Select Forum Settings tab</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[contains(text(),'Forum Settings')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//form/div[2]/div/div/div/div[1]/div/div/div/div/div[2]/div/div/div/div</td>
+	<td>//div[contains(text(),'Forum Settings')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -1374,6 +1384,16 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Sign in</td>
 	<td></td>
 </tr>
 </tbody></table>

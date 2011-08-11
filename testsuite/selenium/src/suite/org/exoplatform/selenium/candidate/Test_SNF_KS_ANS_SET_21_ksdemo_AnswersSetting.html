@@ -347,43 +347,48 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>- Check items aren't displayed: Avatar, Rate, RSS, Comment</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>//div[@class='ActionButton LightBlueStyle']//a[text()='Comment']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementNotPresent</td>
+	<td>//div[@class='ActionButton LightBlueStyle']//a[text()='Comment']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>//img[@alt='Avatar']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementNotPresent</td>
+	<td>//img[@alt='Avatar']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>//div[@class='RatedVote']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementNotPresent</td>
+	<td>//div[@class='RatedVote']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForTextNotPresent</td>
-	<td>RSS</td>
+	<td>//div[@id='UIQuestions']//a[text()='RSS']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>RSS</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementNotPresent</td>
-	<td>//table//div[@class='Comment']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementNotPresent</td>
-	<td>//table//div[@class='Comment']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementNotPresent</td>
-	<td>//table//img[@class='FAQAvatar']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementNotPresent</td>
-	<td>//table//img[@class='FAQAvatar']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementNotPresent</td>
-	<td>//table//div[@class='RatedVote']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementNotPresent</td>
-	<td>//table//div[@class='RatedVote']</td>
+	<td>//div[@id='UIQuestions']//a[text()='RSS']</td>
 	<td></td>
 </tr>
 <tr>
@@ -632,43 +637,48 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//table//div[@class='Comment']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementPresent</td>
-	<td>//table//div[@class='Comment']</td>
+	<td>echo</td>
+	<td>- Check displaying of: Avatar, Rate, RSS, Comment</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//table//img[@class='FAQAvatar']</td>
+	<td>//div[@class='ActionButton LightBlueStyle']//a[text()='Comment']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>//table//img[@class='FAQAvatar']</td>
+	<td>//div[@class='ActionButton LightBlueStyle']//a[text()='Comment']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//table//div[@class='RatedVote']</td>
+	<td>//img[@alt='Avatar']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>//table//div[@class='RatedVote']</td>
+	<td>//img[@alt='Avatar']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>RSS</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@class='RatedVote']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>RSS</td>
+	<td>verifyElementPresent</td>
+	<td>//div[@class='RatedVote']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIQuestions']//a[text()='RSS']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='UIQuestions']//a[text()='RSS']</td>
 	<td></td>
 </tr>
 <tr>
