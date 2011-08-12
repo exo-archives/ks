@@ -1,8 +1,14 @@
 <%
 	import org.exoplatform.portal.webui.util.Util; 
-	String url = Util.getPortalRequestContext().getPortalURI();
-	String tourUrl = url + "tour";
-	String registerUri = url + "register";
+	import org.exoplatform.web.url.PortalURL;
+  import org.exoplatform.web.url.navigation.NavigationResource;
+  import org.exoplatform.portal.mop.SiteType;
+  
+  PortalURL nodeURL = nodeurl();
+  NavigationResource resource = new NavigationResource(SiteType.PORTAL, Util.getPortalRequestContext().getPortalOwner(), "tour");
+  String tourUrl = nodeURL.setResource(resource).toString();
+  NavigationResource resource = new NavigationResource(SiteType.PORTAL, Util.getPortalRequestContext().getPortalOwner(), "register");
+	String registerUri = nodeURL.setResource(resource).toString();
 	registerUri.replaceFirst("private", "public");
 %>
 

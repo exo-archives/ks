@@ -1,6 +1,12 @@
 <% 
   import org.exoplatform.portal.webui.util.Util ;
-  String registerUri = Util.getPortalRequestContext().getPortalURI() + "register";
+  import org.exoplatform.web.url.PortalURL;
+  import org.exoplatform.web.url.navigation.NavigationResource;
+  import org.exoplatform.portal.mop.SiteType;
+  
+  PortalURL nodeURL = nodeurl();
+  NavigationResource resource = new NavigationResource(SiteType.PORTAL, Util.getPortalRequestContext().getPortalOwner(), "register");
+  String registerUri = nodeURL.setResource(resource).toString();
 %>
 <div class="UIKSGuidedTour ClearFix" id="UIKSGuidedTour" style="border: 1px solid red;">
 

@@ -1,6 +1,9 @@
 <%	
 	import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.portal.webui.util.Util ;
+	import org.exoplatform.web.url.PortalURL;
+  import org.exoplatform.web.url.navigation.NavigationResource;
+  import org.exoplatform.portal.mop.SiteType;
 	
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
@@ -8,10 +11,12 @@
 	jsmanager.importJavascript('eXo.portal.UIAdminToolbar');
 	jsmanager.addCustomizedOnLoadScript('eXo.portal.UIAdminToolbar.onLoad("' + uicomponent.id + '");');
 	
-	def portalURI = Util.getPortalRequestContext().getPortalURI();
+	PortalURL nodeURL = nodeurl();
+  NavigationResource resource = new NavigationResource(SiteType.PORTAL, Util.getPortalRequestContext().getPortalOwner(), "forum");
+  String portalURI = nodeURL.setResource(resource).toString();
 %>
 <ul class="UIUserToolBarForumPortlet UIHorizontalTabs" id="$uicomponent.id">
 	<li class="UITab NormalToolbarTab">
-    	<a class="ForumIcon TBIcon" href="<%= portalURI + "forum" %>">Forum</a>
+    	<a class="ForumIcon TBIcon" href="$portalURI">Forum</a>
 	</li>
 </ul>
