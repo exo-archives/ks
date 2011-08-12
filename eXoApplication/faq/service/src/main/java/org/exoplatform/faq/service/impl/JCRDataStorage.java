@@ -1770,24 +1770,56 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     }
   }
 
-  private void resetIndex(Node category, long index) throws Exception {
-    QueryManager qm = category.getSession().getWorkspace().getQueryManager();
-    Node parent = category.getParent();
-    StringBuffer queryString = new StringBuffer(JCR_ROOT + parent.getPath());
-    queryString.append("/element(*,exo:faqCategory)order by @exo:index ascending, @exo:dateModified descending");
-    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-    QueryResult result = query.execute();
-    NodeIterator iter = result.getNodes();
-    if (iter.getSize() >= index) {
-      long i = 1;
-      Node cat;
-      while (iter.hasNext()) {
-        cat = iter.nextNode();
-        cat.setProperty(EXO_INDEX, i);
-        i++;
+  private void resetIndex(Node goingCategory, long index, long gindex) throws Exception {
+    Node parent = goingCategory.getParent();
+    Node node;
+    NodeIterator iter = getCategoriesIterator(parent);
+    if (index <= iter.getSize()) {
+      if (index < 1) {
+        goingCategory.setProperty(EXO_INDEX, 1);
       }
-      parent.save();
+      long l = 1;
+      while (iter.hasNext()) {
+        node = iter.nextNode();
+        if (index < 1) {// move up to top
+          if (node.getName().equals(goingCategory.getName()))
+            continue;
+          else {
+            l++;
+            node.setProperty(EXO_INDEX, l);
+          }
+        } else if (index > gindex) {// move down to index
+          l = node.getProperty(EXO_INDEX).getLong();
+          if (l >= gindex && l <= index) {
+            if (l == gindex) {
+              goingCategory.setProperty(EXO_INDEX, index);
+            } else {
+              node.setProperty(EXO_INDEX, l - 1);
+            }
+          }
+          if (l > index)
+            break;
+        } else {// move up to index
+          l = node.getProperty(EXO_INDEX).getLong();
+          if (l > index) {
+            if (l == gindex) {
+              goingCategory.setProperty(EXO_INDEX, index + 1);
+            } else {
+              node.setProperty(EXO_INDEX, l + 1);
+            }
+          }
+        }
+      }
+      parent.getSession().save();
+      iter = getCategoriesIterator(parent);
     }
+    long i = 1;
+    while (iter.hasNext()) {
+      node = iter.nextNode();
+      node.setProperty(EXO_INDEX, i);
+      i++;
+    }
+    parent.save();
   }
 
   /*
@@ -1807,8 +1839,17 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       } else {
         newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath());
       }
+      long index = cat.getIndex();
+      boolean isResetIndex = (isAddNew || newCategory.getProperty("exo:index").getLong() != index);
+      long size = 0;
+      if (isResetIndex) {
+        size = newCategory.getParent().getNodes().getSize();
+        cat.setIndex(size);
+      }
       saveCategory(newCategory, cat, isAddNew, sProvider);
-      resetIndex(newCategory, cat.getIndex());
+      if (isResetIndex) {
+        resetIndex(newCategory, index, size);
+      }
     } catch (Exception e) {
       log.error("Failed to save category: ", e);
     } finally {
@@ -2993,27 +3034,43 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   public void swapCategories(String cateId1, String cateId2) throws Exception {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
-      Node goingCategory = getFAQServiceHome(sProvider).getNode(cateId1);
-      Node mockCategory = getFAQServiceHome(sProvider).getNode(cateId2);
-      long index = mockCategory.getProperty(EXO_INDEX).getLong();
+      String[] strs = cateId2.split(",");
+      boolean isTop = (strs.length > 1 && strs[1].trim().length() > 0);
+      Node faqHome = getFAQServiceHome(sProvider);
+      Node goingCategory = faqHome.getNode(cateId1);
+      Node mockCategory = faqHome.getNode(strs[0].trim());
+      long index = (isTop) ? 0 : mockCategory.getProperty(EXO_INDEX).getLong();
       if (goingCategory.getParent().getPath().equals(mockCategory.getParent().getPath())) {
-        goingCategory.setProperty(EXO_INDEX, index);
-        goingCategory.save();
-        resetIndex(goingCategory, index);
+        long gindex = goingCategory.getProperty(EXO_INDEX).getLong();
+        resetIndex(goingCategory, index, gindex);
       } else {
         String id = goingCategory.getName();
         mockCategory.getSession().move(goingCategory.getPath(), mockCategory.getParent().getPath() + "/" + id);
-        mockCategory.getSession().save();
-        Node destCat = mockCategory.getParent().getNode(id);
-        destCat.setProperty(EXO_INDEX, index);
-        destCat.save();
-        resetIndex(destCat, index);
+        faqHome.getSession().save();
+        Node parent = mockCategory.getParent();
+        Node destCat = parent.getNode(id);
+        long l = 1;
+        if (!isTop) {
+          l = parent.getNodes().getSize();
+          destCat.setProperty(EXO_INDEX, l);
+          parent.save();
+        }
+        resetIndex(destCat, index, l);
       }
     } catch (Exception e) {
-      log.error("Failed to swap category", e);
+      log.error("Failed to swap categories", e);
     } finally {
       sProvider.close();
     }
+  }
+
+  private NodeIterator getCategoriesIterator(Node parentCategory) throws Exception {
+    QueryManager qm = parentCategory.getSession().getWorkspace().getQueryManager();
+    StringBuffer queryString = new StringBuffer(JCR_ROOT).append(parentCategory.getPath());
+    queryString.append("/element(*,").append(EXO_FAQ_CATEGORY).append(") order by @").append(EXO_INDEX).append(" ascending");
+    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    return result.getNodes();
   }
 
   /*

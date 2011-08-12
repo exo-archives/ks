@@ -17,10 +17,8 @@
 package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.exoplatform.ks.common.jcr.KSDataLocation;

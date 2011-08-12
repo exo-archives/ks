@@ -558,17 +558,15 @@ public class UICategories extends UIContainer {
     public void execute(Event<UICategories> event) throws Exception {
       UICategories uiCategories = event.getSource();
       String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(",");
-      UIAnswersContainer container = uiCategories.getAncestorOfType(UIAnswersContainer.class);
-      UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class);
       try {
-        uiCategories.faqService_.swapCategories(objectIds[0], objectIds[1]);
-        // uiCategories.resetListCate();
+        uiCategories.faqService_.swapCategories(objectIds[0], objectIds[1] + "," + objectIds[2]);
       } catch (Exception e) {
         log.debug("Failed to swap categories.", e);
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+        UIAnswersPortlet portlet = uiCategories.getAncestorOfType(UIAnswersPortlet.class);
+        portlet.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
+        event.getRequestContext().addUIComponentToUpdateByAjax(portlet.getUIPopupMessages());
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(container);
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiCategories.getParent());
     }
   }
 
