@@ -80,33 +80,9 @@
  				</div>
  			</div>
  		</div>
-		<div class="UIAction">
-    	<table class="ActionContainer" style="text-align:center">
-			  <tr>
-				  <td align="center">
-		    		<div onclick="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
-			  	  	<div class="ButtonLeft">
-			    	  	<div class="ButtonRight">
-			      	  	<div class="ButtonMiddle">
-				      	  	<a href="javascript:void(0);"><%=_ctx.appRes("UIAnswersPortlet.action.Close");%></a>
-			      	  	</div>
-			        	</div>
-			      	</div>
-		    		</div>
-	      	</td>
-				  <td align="center">
-		    		<div onclick="<%=uicomponent.event("EditEmail", uicomponent.ADD);%>" class="ActionButton LightBlueStyle">
-			  	  	<div class="ButtonLeft">
-			    	  	<div class="ButtonRight">
-			      	  	<div class="ButtonMiddle">
-				      	  	<a href="javascript:void(0);"><%=_ctx.appRes("UIWatchManager.title.add-watch");%></a>
-			      	  	</div>
-			        	</div>
-			      	</div>
-		    		</div>
-	      	</td>
-				</tr>
- 	  </table>
-	</div>
+		 <div class="UIAction">
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAnswersPortlet.action.Close");%></a>
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event("EditEmail", uicomponent.ADD);%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIWatchManager.title.add-watch");%></a>
+    </div>
 		<%uiform.end()%>
 </div>

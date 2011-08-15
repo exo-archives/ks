@@ -70,29 +70,15 @@ if(!uicomponent.isEditPortlet_){
 								</table>
 				 		</div>
 			 	<div class="UIAction">
-			<table class="ActionContainer" style="text-align:center">
-				<tr>
-					<td>
-				<% for(action in uicomponent.getActions()) {
+            <% for(action in uicomponent.getActions()) {
 						 if(action.indexOf("Values") > 0) continue ; 
 						 if(uicomponent.isEditPortlet_ && action.indexOf("Cancel") >= 0) continue ; 
 						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 						 String link = uicomponent.event(action) ;
 				%>
-						<div onclick="$link" class="ActionButton LightBlueStyle">
-							<div class="ButtonLeft">
-								<div class="ButtonRight">
-									<div class="ButtonMiddle">
-										<a href="javascript:void(0);">$actionLabel</a>
-									</div>
-								</div>
-							</div>
-						</div>
-					<%}%>
-					</td>
-				</tr>
-	 		</table> 
-		</div>			
+      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <%}%>
+    </div>
 	<%uiform.end()%>
 </div>
 <%
@@ -327,29 +313,15 @@ if(!uicomponent.isEditPortlet_){
 						<%}%>
 					</div>
 				</div>
-				<div class="UIAction">
-					<table class="ActionContainer" style="text-algin:center">
-						<tr>
-				 	 		<td>
-								<%for(action in uicomponent.getActions()) { 
+				 <div class="UIAction">
+        <%for(action in uicomponent.getActions()) { 
 									if(uicomponent.isEditPortlet_ && action.indexOf("Cancel") >= 0) continue ; 
 									String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
 									String link = uicomponent.event(action) ;
 								%>
-								<div onclick="$link" class="ActionButton LightBlueStyle">
-									<div class="ButtonLeft">
-										<div class="ButtonRight">
-											<div class="ButtonMiddle">
-											 <a href="javascript:void(0);">$actionLabel</a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<%}%>
-			 			</td>
-						</tr>
-					</table>
- 					</div>
+      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <%}%>
+    </div>
 				<%uiform.end()%>
 			</div>
 		</div>	

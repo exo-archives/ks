@@ -27,33 +27,9 @@ import org.exoplatform.wiki.commons.Utils ;
 	%>
 	
 	<div class="UIAction">
-    <table class="ActionContainer">
-      <tr>
-        <td>
-          <div class="ActionButton LightBlueStyle" >
-            <div class="ButtonLeft">
-              <div class="ButtonRight">
-                <div class="ButtonMiddle">
-                  <a href="<%=uicomponent.url("OK")%>"><%= _ctx.appRes("UIWikiDeletePageConfirm.action.OK"); %></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </td>
-        <td>
-          <div class="ActionButton LightBlueStyle" >
-            <div class="ButtonLeft">
-              <div class="ButtonRight">
-                <div class="ButtonMiddle">
-                  <a href="<%=uicomponent.url("Cancel")%>"><%= _ctx.appRes("UIWikiDeletePageConfirm.action.Cancel"); %></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </table>
-  </div>
+      <a href="<%=uicomponent.url("OK")%>" class="ActionButton LightBlueStyle"><%= _ctx.appRes("UIWikiDeletePageConfirm.action.OK"); %></a>
+       <a href="<%=uicomponent.url("Cancel")%>" class="ActionButton LightBlueStyle"><%= _ctx.appRes("UIWikiDeletePageConfirm.action.Cancel"); %></a>
+    </div>
   
   <!-- 
   <h2>Deleting page <span>"TestDemo"</span></h2>

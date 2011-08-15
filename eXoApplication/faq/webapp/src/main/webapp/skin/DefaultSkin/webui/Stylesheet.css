@@ -2498,4 +2498,8 @@
 	color: #3151a2;
 	text-decoration: underline;
 }
+
+.UIQuestions .FAQContent .UIAction {
+	padding:0px 0px 10px 0px; 
+}
 /******************************	END new style for Questions ***************************************/

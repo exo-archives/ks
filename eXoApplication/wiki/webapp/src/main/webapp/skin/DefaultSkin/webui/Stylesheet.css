@@ -44,6 +44,14 @@ body .wiki-body, html .wiki-body {
 	display: block;
 }
 
+.TextAlignLeft{
+	text-align: left;
+}
+
+.TextAlignRight{
+	text-align: right;
+}
+
 .UIWikiPortlet hr {
 	border-color: #CCCCCC;
 	border-style: solid;
@@ -1312,18 +1320,6 @@ table.UIFormGrid div.Id {
 	padding: 0px 0px 8px 19px;
 }
 
-.UIWikiPortlet .UIWikiMovePageForm .UIAction {
-	border-top: 1px solid #d7d7d7;
-	margin-top: 4px;
-}
-
-.UIWikiPortlet .UIWikiMovePageForm .UIAction .ActionContainer {
-	margin: 8px auto;
-}
-
-.UIWikiPortlet .UIWikiMovePageForm .UIAction .ActionButton {
-	float: left;
-}
 
 /**************For Hover Menu***********************/
 .UIWikiPortlet .MoreMenu {

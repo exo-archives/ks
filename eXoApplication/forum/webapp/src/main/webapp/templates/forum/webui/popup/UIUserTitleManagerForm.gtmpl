@@ -113,59 +113,17 @@
 		            </tr>
 	      			</tbody>
 	      		</table>
-      			<div class="UIAction"> 
-					    <table class="ActionContainer" style="text-align:center">
-							  <tr>
-								  <td align="center">
-  									<div onclick="#" class="ActionButton LightBlueStyle">
-				          	  <div class="ButtonLeft">
-				            	  <div class="ButtonRight">
-				              	  <div class="ButtonMiddle">Save</div>
-				                </div>
-				              </div>
-				            </div>
-				            <div onclick="#" class="ActionButton LightBlueStyle">
-				          	  <div class="ButtonLeft">
-				            	  <div class="ButtonRight">
-				              	  <div class="ButtonMiddle">Reset</div>
-					              </div>
-					            </div>
-					          </div>
-  								</td>
-								</tr>
- 	            </table>
-						</div>
+      			<div class="UIAction">
+              <a href="javascript:void(0);" onclick="#" class="ActionButton LightBlueStyle">Save</a>
+              <a href="javascript:void(0);" onclick="#" class="ActionButton LightBlueStyle">Reset</a>
+            </div>
 			    </div>
 			  </div>
       </div>
  		</div>
 	</div>
-	<div class="UIAction"> 
-    <table class="ActionContainer">
-		  <tr>
-			  <td align="center">
-  				<div onclick="#" class="ActionButton LightBlueStyle">
-      	  	<div class="ButtonLeft">
-        	  	<div class="ButtonRight">
-          	  	<div class="ButtonMiddle">
-          	  		<a  href="javascript:void(0);">Ok</a>
-      	  		</div>
-            	</div>
-          	</div>
-        	</div>
-        	<div onclick="#" class="ActionButton LightBlueStyle">
-      	  	<div class="ButtonLeft">
-        	  	<div class="ButtonRight">
-          	  	<div class="ButtonMiddle">
-	          	  	<a href="javascript:void(0);">
-	          	  		Close
-	          	  	</a>
-          	  	</div>
-              </div>
-            </div>
-          </div>
-  			</td>
-			</tr>
- 	  </table>
-	</div>
+	<div class="UIAction">
+      <a href="javascript:void(0);" onclick="#" class="ActionButton LightBlueStyle">Ok</a>
+      <a href="javascript:void(0);" onclick="#" class="ActionButton LightBlueStyle">Close</a>
+    </div>
 </div>

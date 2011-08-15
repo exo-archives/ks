@@ -773,31 +773,15 @@
 				<%=_ctx.appRes("UITopicDetail.label.Message");%>:
 				<%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%>
 			</div>
-			<div class="UIAction"> 
-				<table class="ActionContainer">
-					<tbody>
-						<tr>
-							<td>
-				<% for(action in uicomponent.getActions()) { 
+			<div class="UIAction">
+      <% for(action in uicomponent.getActions()) { 
 						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 						 String link = uicomponent.event(action);
 						 if(action.equals("QuickReply")) link = link + "; eXo.forum.UIForumPortlet.resetFielForm('QuickReply');" 
 				%>
-								<div onclick="$link" class="ActionButton LightBlueStyle">
-									<div class="ButtonLeft">
-										<div class="ButtonRight">
-											<div class="ButtonMiddle">
-												<a href="javascript:void(0);">$actionLabel</a>
-											</div>
-										</div>
-									</div>
-								</div>
-				<%}%>
-							</td>
-						</tr>
-					</tbody>
-				</table> 
-			</div>
+      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <%}%>
+    </div>
 		</div>
 	</div>
 					

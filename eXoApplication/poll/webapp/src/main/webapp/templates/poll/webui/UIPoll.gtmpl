@@ -99,23 +99,9 @@
                       </tr>
                     </table>
                     <div class="UIAction">
-                      <table class="ActionContainer">
-                        <tr>
-                          <td align="center">
-                            <div class="ActionButton LightBlueStyle">
-                              <div class="ButtonLeft">
-                                <div class="ButtonRight">
-                                  <div class="ButtonMiddle">
-                                    <a href="<%=uicomponent.event("Vote")%>"><%=_ctx.appRes("UIPoll.label.Votenow"); %></a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      </table>
-                    </div>
-                    
+	                  <a href="<%=uicomponent.event("Vote")%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIPoll.label.Votenow"); %></a>
+	                </div>
+
                   </div>
                 </div>
               </div>

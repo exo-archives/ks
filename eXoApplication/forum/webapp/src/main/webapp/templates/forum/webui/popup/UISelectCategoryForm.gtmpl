@@ -26,29 +26,13 @@
 			}%>	
 		 </div>
 	</div>
-	<div class="UIAction"> 
-		<table class="ActionContainer">
-			<tr>
-				<td align="center">
-			<% for(action in uicomponent.getActions()) { 
+	<div class="UIAction">
+  <% for(action in uicomponent.getActions()) { 
 				 String actionLabel = _ctx.appRes("UISelectItemForum.action." + action); 
 				 String link = uicomponent.event(action) ;
 			%>
-					<div onclick="$link" class="ActionButton LightBlueStyle">
-						<div class="ButtonLeft">
-							<div class="ButtonRight">
-								<div class="ButtonMiddle">
-									<a href="javascript:void(0);">
-										$action
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				<%}%>
-				</td>
-			</tr>
- 		</table> 
-	</div>
+      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$action</a>
+      <%}%>
+    </div>
 	<%uiform.end()%>
 </div>

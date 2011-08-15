@@ -20,58 +20,27 @@
 						</tr>
 						<tr>
 							<td colspan="3">
-								<div class="UIAction" style="max-width:120px;  float:left;"> 
-									<table class="ActionContainer">
-										<tr>
-											<td align="center">
-												<div onclick="<%=uiform.event("Run")%>" class="ActionButton LightBlueStyle">
-													<div class="ButtonLeft">
-														<div class="ButtonRight">
-													 		<div class="ButtonMiddle">
-													 			<div class="ArrowLeftIcon" style="padding-left:24px;">
-														 			<a href="javascript:void(0);"><%=_ctx.appRes("UIAutoPruneSettingForm.label.Test");%></a>
-														 		</div>
-													 		</div>
-														</div>
-													</div>
-												</div>
-											</td>
-										</tr>
-							 		</table> 
-								</div>
+								<div class="UIAction TextAlignLeft">
+				                  <span onclick="<%=clearPageEvent%>" class="ActionButton LightBlueStyle" title="<%=_ctx.appRes(uicomponent.getId()+".label.clearPage")%>">
+				                    <a href="javascript:void(0);" onclick="<%=uiform.event("Run")%>" class="ArrowLeftIcon" style="padding-left:24px;"><%=_ctx.appRes("UIAutoPruneSettingForm.label.Test");%></a>
+				                  </span>
+				                </div>
 								<div class="Lightheight">$topicsPruned <%=_ctx.appRes("UIAutoPruneSettingForm.label.topicPrun");%></div>
-								<div style="clear:left;"><span></span></div>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
-		<div class="UIAction"> 
-			<table class="ActionContainer">
-				<tr>
-					<td align="center">
-				<% for(action in uicomponent.getActions()) { 
+		<div class="UIAction">
+    <% for(action in uicomponent.getActions()) { 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 					 String onclick = "" ;
 					 if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
 				%>
-						<div onclick="$link" class="ActionButton LightBlueStyle">
-							<div class="ButtonLeft" onclick="$onclick">
-								<div class="ButtonRight">
-									<div class="ButtonMiddle">
-										<a href="javascript:void(0);">
-											$actionLabel
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-					<%}%>
-					</td>
-				</tr>
-	 		</table> 
-		</div>
+      <a href="javascript:void(0);" onclick="$onclick" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <%}%>
+    </div>
 	<%uiform.end()%>
 </div>

@@ -42,6 +42,14 @@ ul,li{
 	list-style-type: none;
 }
 
+.TextAlignLeft{
+	text-align: left;
+}
+
+.TextAlignRight{
+	text-align: right;
+}
+
 .UIWindow .UIForumPortlet {
 	margin:0px;
 	border:none;
@@ -303,7 +311,7 @@ ul,li{
 
 .UIForumPortlet .UIForumActionBar .DefaultStyle{
 	cursor:pointer;
-	line-height: 22px;
+	line-height: 21px;
 	white-space:nowrap;
 	margin: 3px 1px 1px 1px;
 	padding: 0px 4px;
@@ -661,15 +669,15 @@ ul,li{
 /* ============== UIButtonForum =====================*/
 
 .UIForumPortlet .StartTopicForum{
-  padding: 0px 6px;
-  background:url('background/buttons/UIButtonForum.gif') repeat-x top;
-  border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border: 1px solid #4d67aa;
-  -moz-box-shadow: 1px 1px 2px #B3B3B3;
-  -webkit-box-shadow: 1px 1px 2px #B3B3B3;
-  box-shadow: 1px 1px 2px #B3B3B3;
+	padding: 0px 6px;
+	background:url('background/buttons/UIButtonForum.gif') repeat-x top;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border: 1px solid #4d67aa;
+	-moz-box-shadow: 1px 1px 2px #B3B3B3;
+	-webkit-box-shadow: 1px 1px 2px #B3B3B3;
+	box-shadow: 1px 1px 2px #B3B3B3;
 }
 
 .UIForumPortlet .ForumToolbar .SearchForm  .SearchPopup {
@@ -689,17 +697,17 @@ ul,li{
 }
 
 .UIForumPortlet .BntPostReply {
- background:url('background/buttons/BntNormalStyle.gif') repeat-x top;
- padding: 0px 4px;
- border-radius: 4px;
- -moz-border-radius: 4px;
- -webkit-border-radius: 4px;
- border: 1px solid #4d67aa;
- line-height:16px;
- -moz-box-shadow: 1px 1px 2px #b3b3b3;
- -webkit-box-shadow: 1px 1px 2px #b3b3b3;
- box-shadow: 1px 1px 2px #b3b3b3;
- margin: 0px 0px 0px 3px;
+	 background:url('background/buttons/BntNormalStyle.gif') repeat-x top;
+	 padding: 0px 4px;
+	 border-radius: 4px;
+	 -moz-border-radius: 4px;
+	 -webkit-border-radius: 4px;
+	 border: 1px solid #4d67aa;
+	 line-height:16px;
+	 -moz-box-shadow: 1px 1px 2px #b3b3b3;
+	 -webkit-box-shadow: 1px 1px 2px #b3b3b3;
+	 box-shadow: 1px 1px 2px #b3b3b3;
+	 margin: 0px 0px 0px 3px;
 }
 
 .UIForumPortlet .TitleForum{

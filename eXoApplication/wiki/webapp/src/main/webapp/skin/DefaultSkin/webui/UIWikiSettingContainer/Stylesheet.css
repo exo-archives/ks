@@ -37,12 +37,21 @@
 }
 
 .UIWikiSettingContainer .Content {
-  margin-left: 162px;
-  padding-left: 16px;
+  margin-left: 23%;
 }
 
 .UIWikiPortlet .UIWikiSettingContainer .Spliter {
   cursor: default;
   left: 162px;
+}
+
+}
+ 
+ .UIWikiSettingContainer .UIForm .UIFormGrid td {
+   border: none;
+}
+ 
+ .UIWikiSettingContainer .UIForm .UIFormGrid {
+   border: none;
 }
 

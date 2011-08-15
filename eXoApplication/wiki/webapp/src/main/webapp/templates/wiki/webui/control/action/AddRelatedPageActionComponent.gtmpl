@@ -1,17 +1,4 @@
+
 <div class="UIAction">
-  <table class="ActionContainer">
-    <tr>
-      <td>
-        <div onclick="<%= uicomponent.event(uicomponent.ACTION) %>" class="ActionButton LightBlueStyle" onmouseover="this.style.color = '#058ee6'" onmouseout="this.style.color='black'">
-          <div class="ButtonLeft">
-            <div class="ButtonRight">
-              <div class="ButtonMiddle">
-                <a href="javascript:void(0);"><%= _ctx.appRes("UIWikiPageInfo.label.add-relation") %></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </td>
-    </tr>
-  </table>
-</div>
+      <a href="javascript:void(0);" onclick="<%= uicomponent.event(uicomponent.ACTION) %>" class="ActionButton LightBlueStyle"><%= _ctx.appRes("UIWikiPageInfo.label.add-relation") %></a>
+    </div>

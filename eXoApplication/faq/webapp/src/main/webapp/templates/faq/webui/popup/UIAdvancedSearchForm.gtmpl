@@ -35,28 +35,14 @@
 				</table>
 			</div>
 		</div>
-		<div class="UIAction"> 
-			<table class="ActionContainer" style="text-align:center">
-				<tr>
-					<td>
-				<% for(action in uicomponent.getActions()) { 
+		<div class="UIAction">
+      <% for(action in uicomponent.getActions()) { 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 					 String classN = (action.equals("Search")) ? "ActionSearch" : "";
 				%>
-						<div class="ActionButton LightBlueStyle">
-							<div class="ButtonLeft">
-								<div class="ButtonRight">
-									<div class="ButtonMiddle">
-										<a class="$classN" href="$link">$actionLabel</a>
-									</div>
-								</div>
-							</div>
-						</div>
-					<%}%>
-					</td>
-				</tr>
-	 		</table> 
-		</div>
+      <a href="$link" class="$classN ActionButton LightBlueStyle">$actionLabel</a>
+      <%}%>
+    </div>
 	<%uiform.end()%>
 </div>

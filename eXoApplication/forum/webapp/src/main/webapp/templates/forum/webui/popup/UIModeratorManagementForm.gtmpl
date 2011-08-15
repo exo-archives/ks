@@ -152,28 +152,14 @@
 												</div>
 										<% display = "none"; %>
 									<% } %>
-										<div class="UIAction"> 
-											<table class="ActionContainer" style="text-align:center">
-												<tr>
-										<% for(action in uiform.getActions()) { 
+										<div class="UIAction">
+                  <% for(action in uiform.getActions()) { 
 												 if(action.equals("Cancel") || action.equals("Save")) {
 										%>
-													<td align="center">
-														<div onclick="<%=uicomponent.event(action);%>" class="ActionButton LightBlueStyle">
-															<div class="ButtonLeft">
-																<div class="ButtonRight">
-																	<div class="ButtonMiddle">
-																		<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + action);%></a>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</td>
-										<% 	 } 
+                    <a href="javascript:void(0);" onclick="<%=uicomponent.event(action);%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action." + action);%></a>
+                    <% 	 } 
 											 }%>
-												</tr>
-									 		</table> 
-										</div>
+                  </div>
 									</div>
 								</div>
 							</div>
@@ -184,22 +170,8 @@
 			</div>
 		<% } %>
 	</div>
-	<div class="UIAction"> 
-		<table class="ActionContainer">
-			<tr>
-				<td align="center">
-					<div onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
-						<div class="ButtonLeft">
-							<div class="ButtonRight">
-								<div class="ButtonMiddle">
-									<a href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</td>
-			</tr>
- 		</table> 
-	</div>
+	 <div class="UIAction">
+      <a href="javascript:void(0);"  onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+    </div>
 	<%uiform.end()%>
 </div>

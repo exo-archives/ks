@@ -70,23 +70,10 @@
 		<div><span></span></div>
 	</div>
 
-	<div class="UIAction"> 
-		<table class="ActionContainer">
-			<tr>
-				<td align="center">
-					<div onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
-						<div class="ButtonLeft">
-							<div class="ButtonRight">
-								<div class="ButtonMiddle">
-									<a href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</td>
-			</tr>
- 		</table> 
-	</div>
+	<div class="UIAction">
+  
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+    </div>
 
 <%uiform.end()%>
 </div>

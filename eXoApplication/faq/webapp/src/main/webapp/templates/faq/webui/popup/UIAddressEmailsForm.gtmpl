@@ -70,36 +70,10 @@ import org.exoplatform.services.organization.User;
     </div>
 
   </div>
-  
-  <div class="UIAction"> 
-    <table class="ActionContainer" style="text-align:center">
-      <tr>
-        <td> 
-      
-         <div onclick="<%=uicomponent.event("Add")%>" class="ActionButton LightBlueStyle">
-            <div class="ButtonLeft">
-              <div class="ButtonRight">
-                <div class="ButtonMiddle">
-                	<a href="javascript:void(0);"><%=_ctx.appRes("UIAddressEmailsForm.label.add-address") %></a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
-
-            <div class="ButtonLeft">
-              <div class="ButtonRight">
-                <div class="ButtonMiddle">
-                	<a href="javascript:void(0);"><%=_ctx.appRes("UIAddressEmailsForm.label.cancel") %></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </table>
-  </div>  
-  
+  <div class="UIAction">
+	<a href="javascript:void(0);" onclick="<%=uicomponent.event("Add")%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddressEmailsForm.label.add-address") %></a>
+	<a href="javascript:void(0);" onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddressEmailsForm.label.cancel") %></a>
+</div>
  </div>
 <% uiform.end() %>
 </div>

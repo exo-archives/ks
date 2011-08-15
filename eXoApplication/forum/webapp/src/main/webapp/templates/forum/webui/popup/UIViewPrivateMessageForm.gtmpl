@@ -23,25 +23,9 @@
 			</div>
 		</div>
  	</div>
-	<div class="UIAction"> 
-		<table class="ActionContainer">
-			<tr>
-				<td align="center">
-					<div style="width:100px; margin:auto;">
-						<div onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
-							<div class="ButtonLeft">
-								<div class="ButtonRight">
-									<div class="ButtonMiddle">
-										<a href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</td>
-			</tr>
- 		</table> 
-	</div>
+	 <div class="UIAction">
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+    </div>
 <%
 	def rcontext = _ctx.getRequestContext() ;
 	rcontext.getJavascriptManager().addJavascript("eXo.forum.UIForumPortlet.reSizeImagesInMessageForm();");

@@ -745,43 +745,17 @@
 																				<%
 																				if(uicomponent.currentUser_ != null){
 																				%>
-																					<div class="UIAction DisablePrint" style="padding:2px;"> 
-																						<table class="ActionContainer">
-																							<tr>
-																								<td>
-																									<%
-																										if(question.isApproved() || uicomponent.canEditQuestion){
-																									%>
-																										<div class="ActionButton LightBlueStyle">
-																											<div class="ButtonLeft">
-																												<div class="ButtonRight">
-																													<div class="ButtonMiddle ButtonMiddleIcon">
-																														<div class="ResponseQuestion" style="padding-left:20px;">
-																															<a href="<%=uicomponent.event("ResponseQuestion", question.getPath());%>"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
-																														</div>
-																													</div>
-																												</div>
-																											</div>
-																										</div>
-																									<%}
-																										if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved()) || uicomponent.canEditQuestion){
-																									%>
-																										<div	class="ActionButton LightBlueStyle">
-																											<div class="ButtonLeft">
-																												<div class="ButtonRight">
-																													<div class="ButtonMiddle ButtonMiddleIcon">
-																														<div class="Comment" style="padding-left:20px;">
-																															<a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>"><%=_ctx.appRes("UIQuestions.action.AddCommentQuestion")%></a>
-																														</div>
-																													</div>
-																												</div>
-																											</div>
-																										</div>
-																									<%}%>
-																									</td>
-																								</tr>
-																							</table> 
-																						</div>
+																					<div class="UIAction DisablePrint">
+												                                        <%
+																						if(question.isApproved() || uicomponent.canEditQuestion){
+																							%>
+												                                          <a href="<%=uicomponent.event("ResponseQuestion", question.getPath());%>" class="ActionButton LightBlueStyle ResponseQuestion"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
+												                                          <%}
+																						if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved()) || uicomponent.canEditQuestion){
+																						%>
+												                                          <a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>" class="ActionButton LightBlueStyle Comment"><%=_ctx.appRes("UIQuestions.action.AddCommentQuestion")%></a>
+												                                          <%}%>
+												                                        </div>
 																					<%}%>
 																			</div>
 																		</div>
@@ -1240,33 +1214,12 @@
 		%>
 		
 			<!-- -------------------------------------- Print function ------------------------------- -->
-			<div id="PrintAction" style="display:none;" align="center">
-				<div class="UIAction" style="padding:0px 0px 10px 0px; width:150px; margin:auto;">			
-					<div style="float:right">			
-						<div class="PrintAction">
-							<div onclick="javascript:window.print();" class="ActionButton LightBlueStyle">
-								<div class="ButtonLeft">
-									<div class="ButtonRight">
-										<div class="ButtonMiddle">
-											<a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.Print")%></a>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div onclick="javascript:eXo.faq.UIAnswersPortlet.closePrint();" class="ActionButton LightBlueStyle">
-								<div class="ButtonLeft">
-									<div class="ButtonRight">
-										<div class="ButtonMiddle">
-											<a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.ClosePrintQuestion")%></a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-				</div>	
-				<div style="clear:right;"><span></span></div>
-				</div>
-			</div>	
+			
+	        <div id="PrintAction" class="UIAction TextAlignRight" >
+	          <a href="javascript:void(0);" onclick="javascript:eXo.faq.UIAnswersPortlet.closePrint();" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIQuestions.action.ClosePrintQuestion")%></a>
+	          <a href="javascript:void(0);" onclick="javascript:window.print();" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIQuestions.action.Print")%></a>
+	        </div>
+			
 		</div>
 		<%
 			if(uicomponent.getQuestionView() != null && uicomponent.getQuestionView().trim().length() > 0) {

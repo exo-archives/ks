@@ -22,34 +22,13 @@
  	  uiform.renderChild(uiform.LOCATION_CONTAINER);
  %> 
   <div class="ClearBoth"></div>
- <div class="UIAction ClearFix"> 
-	<table class="ActionContainer">
-		<tr>
-			<td>
-				<% 			
+ <div class="UIAction">
+  <% 			
  				String closeLink=  uiform.event("Close");
 				%>
-					<div onclick="eXo.wiki.UIForm.submitPageEvent('$uiform.id','$uiform.MOVE','&objectId=$uiform.MOVE')" class="ActionButton LightBlueStyle" onmouseover="this.style.color = '#058ee6'" onmouseout="this.style.color='black'">
-						<div class="ButtonLeft">
-							<div class="ButtonRight">
-								<div class="ButtonMiddle">
-									<a href="javascript:void(0);"><%=_ctx.appRes("UIWikiMovePageForm.action.Move")%></a>
-								</div>
-							</div>
-						</div>
-					 </div>
-					<div onclick="$closeLink" class="ActionButton LightBlueStyle" onmouseover="this.style.color = '#058ee6'" onmouseout="this.style.color='black'">
-						<div class="ButtonLeft">
-							<div class="ButtonRight">
-								<div class="ButtonMiddle">
-									<a href="javascript:void(0);"><%=_ctx.appRes("UIWikiMovePageForm.action.Cancel")%></a>
-								</div>
-							</div>
-						</div>
-					 </div>				
-			</td>
-		</tr>	
-	</table>
-</div> 
+      <a href="javascript:void(0);" onclick="eXo.wiki.UIForm.submitPageEvent('$uiform.id','$uiform.MOVE','&objectId=$uiform.MOVE')"  class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIWikiMovePageForm.action.Move")%></a>
+      
+       <a href="javascript:void(0);" onclick="$closeLink"  class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIWikiMovePageForm.action.Cancel")%></a>
+    </div>
 <% uiform.end(); %>
 </div>

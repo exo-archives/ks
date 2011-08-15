@@ -27,7 +27,7 @@ UIWikiPageVersionsList.prototype.init = function(formId) {
   me.selectedCheckbox = new Array();
   var versionListForm = document.getElementById(formId);
   var inputs = DOMUtil.findDescendantsByTagName(versionListForm,"input");
-  var compareButton = DOMUtil.findFirstDescendantByClass(versionListForm,"div","RefreshModeTarget");
+  var compareButton = DOMUtil.findFirstDescendantByClass(versionListForm,"a","RefreshModeTarget");
   compareButton.onclick = function(evt){
     if (me.selectedCheckbox.length == 2) {
       eXo.wiki.UIWikiAjaxRequest.makeNewHash("#CompareRevision");

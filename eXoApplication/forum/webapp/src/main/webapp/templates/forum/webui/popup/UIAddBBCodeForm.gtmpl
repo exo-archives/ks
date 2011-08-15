@@ -65,23 +65,9 @@
 								</div>
 							</td>
 							<td class="FieldComponent">
-								<div class="UIAction"> 
-									<table class="ActionContainer">
-										<tr>
-											<td align="center">
-												<div class="ActionButton LightBlueStyle">
-													<div class="ButtonLeft">
-														<div class="ButtonRight">
-															<div class="ButtonMiddle">
-																<a href="$actionPriview"><%=_ctx.appRes("UIAddBBCodeForm.action.Preview");%></a>
-															</div>
-														</div>
-													</div>
-												</div>
-											</td>
-										</tr>
-							 		</table> 
-								</div>
+								<div class="UIAction">
+				                  <a href="$actionPriview" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddBBCodeForm.action.Preview");%></a>
+				                </div>
 							</td>
 						</tr>
 						<tr>
@@ -109,23 +95,9 @@
 						</tr>
 						<tr>
 							<td>
-								<div class="UIAction"> 
-									<table class="ActionContainer">
-										<tr>
-											<td>
-												<div onclick="link" class="ActionButton LightBlueStyle">
-													<div class="ButtonLeft">
-														<div class="ButtonRight">
-															<div class="ButtonMiddle">
-																<a href="<%=uicomponent.event("Apply");%>"><%=_ctx.appRes("UIAddBBCodeForm.action.Apply");%></a>
-															</div>
-														</div>
-													</div>
-												</div>
-											</td>
-										</tr>
-							 		</table> 
-								</div>
+								<div class="UIAction">
+				                  <a href="<%=uicomponent.event("Apply");%>" onclick="link" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddBBCodeForm.action.Apply");%></a>
+				                </div>
 							</td>
 						</tr>
 						<tr>
@@ -136,23 +108,9 @@
 						</tr>
 						<tr>
 							<td>
-								<div class="UIAction"> 
-									<table class="ActionContainer">
-										<tr>
-											<td >
-												<div class="ActionButton LightBlueStyle">
-													<div class="ButtonLeft">
-														<div class="ButtonRight">
-															<div class="ButtonMiddle">
-																<a href="$actionPriview"><%=_ctx.appRes("UIAddBBCodeForm.action.Back");%></a>
-															</div>
-														</div>
-													</div>
-												</div>
-											</td>
-										</tr>
-							 		</table> 
-								</div>
+								<div class="UIAction">
+                  <a href="$actionPriview" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddBBCodeForm.action.Back");%></a>
+                </div>
 							</td>
 						</tr>
 						<% } %>
@@ -169,30 +127,16 @@
 				<% } %>
 
 		</div>
-		<div class="UIAction"> 
-			<table class="ActionContainer">
-				<tr>
-					<td align="center">
-				<% for(action in uicomponent.getActions()) { 
+		<div class="UIAction">
+    <% for(action in uicomponent.getActions()) { 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 					 String onclick = "" ;
 					 if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
 				%>
-						<div onclick="$link" class="ActionButton LightBlueStyle">
-							<div class="ButtonLeft" onclick="$onclick">
-								<div class="ButtonRight">
-									<div class="ButtonMiddle">
-										<a href="javascript:void(0);">$actionLabel</a>
-									</div>
-								</div>
-							</div>
-						</div>
-					<%}%>
-					</td>
-				</tr>
-	 		</table> 
-		</div>
+      <a href="javascript:void(0);" onclick="$onclick" class="ActionButton LightBlueStyle">$actionLabel</a>
+      <%}%>
+    </div>
 	<%uiform.end()%>
 <%
 	import org.exoplatform.web.application.JavascriptManager;
