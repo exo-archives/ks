@@ -17,9 +17,7 @@
 package org.exoplatform.wiki.webui.control.action;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
@@ -35,6 +33,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.service.WikiContext;
+import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
@@ -83,55 +82,45 @@ public class AddPageActionComponent extends AbstractEventActionComponent {
   public static class AddPageActionListener extends AddContainerActionListener<AddPageActionComponent> {
     @Override
     protected void processEvent(Event<AddPageActionComponent> event) throws Exception {
+      WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
-      Map<String, Object> uiExtensionContext = new HashMap<String, Object>();
-      uiExtensionContext.put(UIWikiPortlet.class.getName(), wikiPortlet);
-      processAddPageAction(uiExtensionContext);
+      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+      ResourceBundle res = context.getApplicationResourceBundle();
+      WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
+      String pageTitle = pageParams.getParameter(WikiContext.PAGETITLE);
+      UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
+      UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class).getUIStringInput();
+      UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
+      UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
+      UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
+      titleInput.setValue(res.getString("UIWikiPageTitleControlArea.label.Untitled"));
+
+      titleInput.setEditable(true);
+      markupInput.setValue("");
+      commentInput.setRendered(false);
+      WikiService wikiService = wikiPortlet.getApplicationComponent(WikiService.class);
+      String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
+      wikiService.createDraftNewPage(sessionId);
+
+      String currentDefaultSyntaxt = Utils.getCurrentPreferences().getPreferencesSyntax().getDefaultSyntax();
+      if (currentDefaultSyntaxt == null) {
+        currentDefaultSyntaxt = wservice.getDefaultWikiSyntaxId();
+      }
+
+      syntaxTypeSelectBox.setValue(currentDefaultSyntaxt);
+      syntaxTypeSelectBox.setEnable(Utils.getCurrentPreferences().getPreferencesSyntax().getAllowMutipleSyntaxes());
+      if (pageTitle != null && pageTitle.length() > 0) {
+        titleInput.setValue(pageTitle);
+        titleInput.setEditable(false);
+      }
+
+      UIWikiRichTextArea wikiRichTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);
+      if (wikiRichTextArea.isRendered()) {
+        Utils.feedDataForWYSIWYGEditor(pageEditForm, null);
+      }
+
+      wikiPortlet.changeMode(WikiMode.ADDPAGE);
       super.processEvent(event);
     }
   }
-
-  public static void processAddPageAction(Map<String, Object> uiExtensionContext) throws Exception {
-    WikiService wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
-    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-    ResourceBundle res = context.getApplicationResourceBundle() ;  
-    
-    UIWikiPortlet wikiPortlet = (UIWikiPortlet) uiExtensionContext.get(UIWikiPortlet.class.getName());    
-    String pageTitle = (String) uiExtensionContext.get(WikiContext.PAGETITLE);
-    UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
-    UIFormStringInput titleInput = pageEditForm.getChild(UIWikiPageTitleControlArea.class)
-                                               .getUIStringInput();
-    UIFormTextAreaInput markupInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_CONTENT);
-    UIFormStringInput commentInput = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_COMMENT);
-    UIFormSelectBox syntaxTypeSelectBox = pageEditForm.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);    
-    titleInput.setValue(res.getString("UIWikiPageTitleControlArea.label.Untitled"));
-    
-    titleInput.setEditable(true);
-    markupInput.setValue("");
-    commentInput.setRendered(false);
-    WikiService wikiService = wikiPortlet.getApplicationComponent(WikiService.class);
-    String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
-    wikiService.createDraftNewPage(sessionId);
-    
-    String currentDefaultSyntaxt = Utils.getCurrentPreferences().getPreferencesSyntax().getDefaultSyntax();
-    if (currentDefaultSyntaxt == null) {
-      currentDefaultSyntaxt = wservice.getDefaultWikiSyntaxId();
-    }
-    
-    syntaxTypeSelectBox.setValue(currentDefaultSyntaxt);
-    syntaxTypeSelectBox.setEnable(Utils.getCurrentPreferences().getPreferencesSyntax().getAllowMutipleSyntaxes());
-    if (pageTitle != null && pageTitle.length() > 0) {
-      titleInput.setValue(pageTitle);
-      titleInput.setEditable(false);
-    }
-
-    UIWikiRichTextArea wikiRichTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);
-    if (wikiRichTextArea.isRendered()) {
-      Utils.feedDataForWYSIWYGEditor(pageEditForm,null);
-    }
-
-    wikiPortlet.changeMode(WikiMode.ADDPAGE);
-  }
-
-  
 }

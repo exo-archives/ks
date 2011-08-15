@@ -17,7 +17,6 @@
 package org.exoplatform.wiki.webui;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
@@ -30,6 +29,7 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPopupWindow;
@@ -37,7 +37,6 @@ import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.ext.UIExtensionManager;
 import org.exoplatform.wiki.WikiPortletPreference;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.commons.WikiConstants;
@@ -47,7 +46,6 @@ import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.tree.utils.TreeUtils;
-import org.exoplatform.wiki.webui.control.AddExtensionContainer;
 import org.exoplatform.wiki.webui.control.action.AddPageActionComponent;
 
 /**
@@ -148,15 +146,12 @@ public class UIWikiPortlet extends UIPortletApplication {
       }
       WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
       if (WikiContext.ADDPAGE.equalsIgnoreCase(pageParams.getParameter(WikiContext.ACTION))) {
-        UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
-        Map<String, Object> uiExtensionContext = new HashMap<String, Object>();
-        uiExtensionContext.put(UIWikiPortlet.class.getName(), this);
-        uiExtensionContext.put(WikiContext.PAGETITLE,
-                               pageParams.getParameter(WikiContext.PAGETITLE));
-        if (manager.accept(AddExtensionContainer.EXTENSION_TYPE,
-                           WikiContext.ADDPAGE,
-                           uiExtensionContext)) {
-          AddPageActionComponent.processAddPageAction(uiExtensionContext);
+        AddPageActionComponent addPageComponent = this.findFirstComponentOfType(AddPageActionComponent.class);
+        if (addPageComponent != null) {
+          Event<UIComponent> xEvent = addPageComponent.createEvent(AddPageActionComponent.ACTION, Event.Phase.PROCESS, context);
+          if (xEvent != null) {
+            xEvent.broadcast();
+          }
         }
       }
       try {
