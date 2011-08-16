@@ -38,6 +38,12 @@ public interface DataStorage {
 
   void addRolePlugin(ComponentPlugin plugin) throws Exception;
 
+  /**
+   * 
+   * @param userName userName
+   * @return true if userName has admin role. The current user is implied if userName is null.
+   * @throws Exception
+   */
   boolean isAdminRole(String userName) throws Exception;
 
   List<String> getAllFAQAdmin() throws Exception;
@@ -198,6 +204,13 @@ public interface DataStorage {
 
   boolean isViewAuthorInfo(String id) throws Exception;
 
+  /**
+   * 
+   * @param categoryId id of category
+   * @param user username
+   * @return true if user is moderator of the category. The current user is implied if user is null.
+   * @throws Exception
+   */
   boolean isCategoryModerator(String categoryId, String user) throws Exception;
 
   boolean isCategoryExist(String name, String path);

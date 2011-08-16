@@ -175,11 +175,12 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
     if (language.length() <= 0)
       language = question.getLanguage();
     String email = "";
-    String name = "";
-    String userName = FAQUtils.getCurrentUser();
-    if (!FAQUtils.isFieldEmpty(userName)) {
-      name = FAQUtils.getFullName(userName);
-      email = FAQUtils.getEmailUser(userName);
+    User currentUser = FAQUtils.getCurrentUserObject();
+    String name = currentUser.getFullName();
+    if (!FAQUtils.isFieldEmpty(name)) {
+      email = currentUser.getEmail();
+    } else {
+      name = "";
     }
     languageIsResponsed = question.getLanguage();
     QuestionLanguage questionLanguage = new QuestionLanguage();

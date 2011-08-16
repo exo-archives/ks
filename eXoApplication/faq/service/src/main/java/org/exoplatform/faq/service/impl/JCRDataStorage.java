@@ -96,6 +96,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.security.ConversationState;
 
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
@@ -160,11 +161,11 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#isAdminRole(java.lang.String)
-   */
   public boolean isAdminRole(String userName) throws Exception {
+    String name = userName;
+    if (name == null) {
+      name = ConversationState.getCurrent().getIdentity().getUserId();
+    }
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
       Node cateHomeNode = getCategoryHome(sProvider, null);
@@ -172,7 +173,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         List<String> list = new ArrayList<String>();
         list.addAll(rulesPlugins_.get(i).getRules(this.ADMIN_));
         list.addAll(new PropertyReader(cateHomeNode).list(EXO_MODERATORS, new ArrayList<String>()));
-        if (list.contains(userName))
+        if (list.contains(name))
           return true;
         if (Utils.hasPermission(list, UserHelper.getAllGroupAndMembershipOfUser(userName)))
           return true;
@@ -3333,10 +3334,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return false;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#isCategoryModerator(java.lang.String, java.lang.String)
-   */
   public boolean isCategoryModerator(String categoryId, String user) throws Exception {
     SessionProvider sProvider = SessionProvider.createSystemProvider();
     boolean isCalMod = false;

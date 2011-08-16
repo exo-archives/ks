@@ -105,7 +105,7 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
     FAQUtils.getPorletPreference(faqSetting_);
     if (currentUser != null && currentUser.trim().length() > 0) {
       if (faqSetting_.getIsAdmin() == null || faqSetting_.getIsAdmin().trim().length() < 1) {
-        if (getFAQService().isAdminRole(currentUser))
+        if (getFAQService().isAdminRole(null))
           faqSetting_.setIsAdmin("TRUE");
         else
           faqSetting_.setIsAdmin("FALSE");
@@ -330,7 +330,7 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 
       String userName = FAQUtils.getCurrentUser();
       eventQuery.setUserId(userName);
-      eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(userName));
+      eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(null));
       eventQuery.setAdmin(Boolean.parseBoolean(advancedSearch.faqSetting_.getIsAdmin()));
 
       UIPopupContainer popupContainer = advancedSearch.getAncestorOfType(UIPopupContainer.class);

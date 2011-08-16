@@ -503,7 +503,7 @@ public interface FAQService extends FAQServiceLegacy {
   /**
    * Check permission of user
    * @param userName  id or user name of user who is checked permission
-   * @return  return <code>true</code> if user is addmin and <code>false</code> if opposite
+   * @return  return <code>true</code> if user is admin. The current user is implied if userName is null.
    * @throws Exception
    */
   public boolean isAdminRole(String userName) throws Exception;
@@ -785,7 +785,7 @@ public interface FAQService extends FAQServiceLegacy {
    * Check user is moderator or not
    * @param categoryId id of category
    * @param user username
-   * @return user is moderator or not 
+   * @return user is moderator or not. The current user is implied if user is null.
    * @throws Exception
    */
   public boolean isCategoryModerator(String categoryId, String user) throws Exception;

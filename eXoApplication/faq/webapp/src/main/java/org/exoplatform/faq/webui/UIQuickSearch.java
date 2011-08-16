@@ -62,7 +62,7 @@ public class UIQuickSearch extends BaseUIForm {
     FAQUtils.getPorletPreference(faqSetting_);
     if (currentUser != null && currentUser.trim().length() > 0) {
       if (faqSetting_.getIsAdmin() == null || faqSetting_.getIsAdmin().trim().length() < 1) {
-        if (faqService_.isAdminRole(currentUser))
+        if (faqService_.isAdminRole(null))
           faqSetting_.setIsAdmin("TRUE");
         else
           faqSetting_.setIsAdmin("FALSE");
@@ -85,7 +85,7 @@ public class UIQuickSearch extends BaseUIForm {
         List<ObjectSearchResult> list = null;
         FAQEventQuery eventQuery = new FAQEventQuery();
         eventQuery.setAdmin(uiQuickSearch.faqSetting_.isAdmin());
-        eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser()));
+        eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(null));
         eventQuery.setUserId(FAQUtils.getCurrentUser());
         eventQuery.setText(text);
         eventQuery.setType("categoryAndQuestion");

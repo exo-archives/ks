@@ -17,7 +17,6 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -58,9 +57,9 @@ import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormInputWithActions;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 /**
@@ -301,7 +300,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       if (faqSetting_.isAdmin() || isMode) {
         isMode = true;
       } else
-        isMode = getFAQService().isCategoryModerator(categoryId_, FAQUtils.getCurrentUser());
+        isMode = getFAQService().isCategoryModerator(categoryId_, null);
     } catch (Exception e) {
       log.debug("Failed to get isModerator.", e);
     }

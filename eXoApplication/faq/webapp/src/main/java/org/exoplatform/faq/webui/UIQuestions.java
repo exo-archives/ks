@@ -376,7 +376,7 @@ public class UIQuestions extends UIContainer {
   }
 
   private void setIsModerators() throws Exception {
-    canEditQuestion = (faqSetting_.isAdmin() || faqService_.isCategoryModerator(categoryId_, currentUser_)) ? true : false;
+    canEditQuestion = (faqSetting_.isAdmin() || faqService_.isCategoryModerator(categoryId_, null)) ? true : false;
   }
 
   public String getVoteScore(Question question) {
@@ -586,7 +586,7 @@ public class UIQuestions extends UIContainer {
       UICategoryForm category = uiPopupContainer.addChild(UICategoryForm.class, null, null);
       if (!FAQUtils.isFieldEmpty(categoryId)) {
         try {
-          if (question.faqSetting_.isAdmin() || question.faqService_.isCategoryModerator(categoryId, FAQUtils.getCurrentUser())) {
+          if (question.faqSetting_.isAdmin() || question.faqService_.isCategoryModerator(categoryId, null)) {
             uiPopupAction.activate(uiPopupContainer, 580, 500);
             uiPopupContainer.setId("SubCategoryForm");
             category.setParentId(categoryId);
@@ -628,11 +628,12 @@ public class UIQuestions extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null);
       String email = "";
-      String name = "";
-      String userName = FAQUtils.getCurrentUser();
-      if (!FAQUtils.isFieldEmpty(userName)) {
-        name = userName;
-        email = FAQUtils.getEmailUser(userName);
+      User currentUser = FAQUtils.getCurrentUserObject();
+      String name = currentUser.getUserName();
+      if (!FAQUtils.isFieldEmpty(name)) {
+        email = currentUser.getEmail();
+      } else {
+        name = "";
       }
       questionForm.setFAQSetting(questions.faqSetting_);
       questionForm.setAuthor(name);

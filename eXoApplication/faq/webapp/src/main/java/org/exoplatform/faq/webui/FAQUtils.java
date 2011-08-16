@@ -54,6 +54,8 @@ import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserProfile;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.web.CacheUserProfileFilter;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.core.UIComponent;
@@ -225,6 +227,11 @@ public class FAQUtils {
     return Util.getPortalRequestContext().getRemoteUser();
   }
 
+  static public User getCurrentUserObject() throws Exception {
+    ConversationState state = ConversationState.getCurrent();
+    return (User) state.getAttribute(CacheUserProfileFilter.USER_PROFILE);
+  }
+  
   static public String getEmailUser(String userName) throws Exception {
     OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
     User user = organizationService.getUserHandler().findUserByName(userName);
