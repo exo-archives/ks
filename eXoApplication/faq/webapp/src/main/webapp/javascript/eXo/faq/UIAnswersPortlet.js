@@ -85,7 +85,7 @@ UIAnswersPortlet.prototype.checkAction = function() {
 
 UIAnswersPortlet.prototype.checkCustomView = function(isNotSpace, hileTitle, showTitle){
 	var cookie = eXo.core.Browser.getCookie("FAQCustomView");
-	cookie = ((cookie == '' && isNotSpace == 'true') || cookie == 'block') ? '':'none';
+	cookie = (cookie == "none" || cookie == "" && isNotSpace == "false")? "none":"";
 	document.getElementById('FAQViewCategoriesColumn').style.display = cookie;
 	var buttomView = document.getElementById('FAQCustomView');
 	var title = document.getElementById('FAQTitlePanels');
@@ -94,7 +94,9 @@ UIAnswersPortlet.prototype.checkCustomView = function(isNotSpace, hileTitle, sho
 		title.title = showTitle;
 	} else {
 		title.title = hileTitle;
+		cookie = "block"
 	}
+	eXo.core.Browser.setCookie("FAQCustomView", cookie, 1);
 };
 
 UIAnswersPortlet.prototype.changeCustomView = function(change, hileTitle, showTitle){
@@ -106,7 +108,7 @@ UIAnswersPortlet.prototype.changeCustomView = function(change, hileTitle, showTi
 		columnCategories.style.display = "none";
 		eXo.core.DOMUtil.addClass(buttomView,"FAQCustomViewRight");
 		title.title = showTitle;
-		cookie = "node";
+		cookie = "none";
 	}else{
 		columnCategories.style.display = "";
 		eXo.core.DOMUtil.replaceClass(buttomView,"FAQCustomViewRight","");
