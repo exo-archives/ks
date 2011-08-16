@@ -111,19 +111,4 @@
 	color: #a8acab;
 }
 
-.UIPageBody .BLPagebody {
-	background: none;
-	height:0px;
-	padding-left:0px;
-}
-.UIPageBody .BRPagebody {
-	background: none;
-	height:16px;
-	padding-right:6px;
-}
-.UIPageBody .BMPagebody {
-	background: none;
-	height:16px;
-}
-
 

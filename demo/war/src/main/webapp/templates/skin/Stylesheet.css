@@ -114,13 +114,12 @@ div, table, tr, td, img, form {
 	display:none;
 }
 
-
-.UIPageBody .VIEW-PAGEBODY .UIPage{
-	padding: 0px;
+.UIWorkingWorkspace .UIPageBody .VIEW-PAGEBODY {
+	padding: 0 !important;
 }
 
 .UIPageBody .VIEW-PAGEBODY .UIPage .UIComponentBlock {
-	background:none;
+	background: #eeeeee !important;
 }
 
 .UIToolbarContainer .MenuItemContainer{
