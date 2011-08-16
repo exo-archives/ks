@@ -33,9 +33,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -89,6 +89,8 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.forum.service.SortSettings;
+import org.exoplatform.forum.service.SortSettings.Direction;
+import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicListAccess;
@@ -96,8 +98,6 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.forum.service.SortSettings.Direction;
-import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.CategoryEventListener;
 import org.exoplatform.forum.service.conf.ForumData;
@@ -111,9 +111,9 @@ import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.SessionManager;
-import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
@@ -2098,6 +2098,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     topicNew.setIsApproved(reader.bool(EXO_IS_APPROVED));
     topicNew.setIsActive(reader.bool(EXO_IS_ACTIVE));
     topicNew.setIsPoll(reader.bool(EXO_IS_POLL));
+    topicNew.setCanView(reader.strings(EXO_CAN_VIEW, new String[] {}));
     return topicNew;
   }
 
@@ -2442,15 +2443,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       topicNode.setProperty(EXO_IS_STICKY, topic.getIsSticky());
       topicNode.setProperty(EXO_IS_WAITING, topic.getIsWaiting());
       topicNode.setProperty(EXO_IS_ACTIVE, topic.getIsActive());
-      String[] strs = topic.getCanView();
-      boolean isGetLastTopic = false;
-      if (strs == null || strs.length == 0)
-        strs = new String[] { "" };
-      topicNode.setProperty(EXO_CAN_VIEW, strs);
-      strs = topic.getCanPost();
-      if (strs == null || strs.length == 0)
-        strs = new String[] { "" };
-      topicNode.setProperty(EXO_CAN_POST, strs);
+      boolean isGetLastTopic = setTopicPemission(topicNode, EXO_CAN_VIEW, topic.getCanView(), isNew);
+      String[] cPost = topic.getCanPost();
+      if (Utils.isEmpty(cPost)) {
+        cPost = new String[] { "" };
+      }
+      topicNode.setProperty(EXO_CAN_POST, cPost);
       topicNode.setProperty(EXO_USER_VOTE_RATING, topic.getUserVoteRating());
       topicNode.setProperty(EXO_VOTE_RATING, topic.getVoteRating());
       topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, topic.getNumberAttachment());
@@ -2510,6 +2508,21 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     } finally {
       sProvider.close();
     }
+  }
+  
+  private boolean setTopicPemission(Node topicNode, String property, String[] values, boolean isNew) throws Exception {
+    if (Utils.isEmpty(values)) {
+      values = new String[] { "" };
+    }
+    boolean ret = false;
+    if (!isNew) {
+      String[] cView = new PropertyReader(topicNode).strings(property, new String[] { "" });
+      if (Utils.arraysHaveDifferentContent(cView, values)) {
+        ret = true;
+      }
+    }
+    topicNode.setProperty(property, values);
+    return ret;
   }
 
   private Map<String, Long> getDeletePostByUser(Node node) throws Exception {

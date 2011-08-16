@@ -293,14 +293,7 @@ public class UICategories extends UIContainer {
       String topicId = topicPath;
       if (topicId.indexOf(ForumUtils.SLASH) >= 0)
         topicId = topicId.substring(topicPath.lastIndexOf(ForumUtils.SLASH) + 1);
-      topic = maptopicLast.get(topicId);
-      if (topic == null) {
-        try {
-          topic = forumService.getTopicSummary(topicPath);
-        } catch (Exception e) {
-          log.warn(e);
-        }
-      }
+      topic = forumService.getTopicSummary(topicPath);
       if (topic != null) {
         if (getAncestorOfType(UIForumPortlet.class).checkCanView(cate, forum, topic))
           maptopicLast.put(topic.getId(), topic);
