@@ -36,7 +36,6 @@ import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.WebUIUtils;
-import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -236,9 +235,9 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
         String language = "";
         if (!commentForm.languageSelected.equals(commentForm.question_.getLanguage()))
           language = commentForm.languageSelected;
-        User currentUser = FAQUtils.getCurrentUserObject();
-        commentForm.comment.setCommentBy(currentUser.getUserName());
-        commentForm.comment.setFullName(currentUser.getFullName());
+        String currentUser = FAQUtils.getCurrentUser() ;
+        commentForm.comment.setCommentBy(currentUser);
+        commentForm.comment.setFullName(FAQUtils.getFullName(null)) ;
         commentForm.getFAQService().saveComment(commentForm.question_.getPath(), commentForm.comment, language);
         if (!commentForm.languageSelected.equals(commentForm.question_.getLanguage())) {
           try {

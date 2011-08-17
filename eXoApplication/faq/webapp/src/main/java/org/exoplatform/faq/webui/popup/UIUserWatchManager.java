@@ -94,7 +94,7 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
     super("UIUswerWatchManager");
     addChild(UIAnswersPageIterator.class, null, LIST_QUESTIONS_WATCHED);
     addChild(UIAnswersPageIterator.class, null, LIST_CATES_WATCHED);
-    emailAddress = FAQUtils.getCurrentUserObject().getEmail();
+    emailAddress = FAQUtils.getEmailUser(null);
     this.setActions(new String[] { "Cancel" });
   }
 

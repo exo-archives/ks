@@ -628,12 +628,11 @@ public class UIQuestions extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null);
       String email = "";
-      User currentUser = FAQUtils.getCurrentUserObject();
-      String name = currentUser.getUserName();
-      if (!FAQUtils.isFieldEmpty(name)) {
-        email = currentUser.getEmail();
-      } else {
-        name = "";
+      String name = "";
+      String userName = FAQUtils.getCurrentUser();
+      if (!FAQUtils.isFieldEmpty(userName)) {
+        name = userName;
+        email = FAQUtils.getEmailUser(null);
       }
       questionForm.setFAQSetting(questions.faqSetting_);
       questionForm.setAuthor(name);

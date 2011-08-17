@@ -44,7 +44,6 @@ import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.WebUIUtils;
-import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -369,9 +368,9 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
           answer.setNew(true);
         } else {
           answer = new Answer();
-          User currentUser = FAQUtils.getCurrentUserObject();
-          answer.setResponseBy(currentUser.getUserName());
-          answer.setFullName(currentUser.getFullName());
+          String currentUser = FAQUtils.getCurrentUser() ;
+          answer.setResponseBy(currentUser);
+          answer.setFullName(FAQUtils.getFullName(null)) ;
           answer.setNew(true);
           answer.setResponses(responseQuestionContent);
           answer.setLanguage(language);

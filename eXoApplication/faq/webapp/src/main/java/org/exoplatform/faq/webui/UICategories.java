@@ -451,10 +451,9 @@ public class UICategories extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null);
       String email = "";
-      User currentUser = FAQUtils.getCurrentUserObject();
-      String name = currentUser.getUserName();
+      String name = FAQUtils.getCurrentUser() ;
       if (!FAQUtils.isFieldEmpty(name)) {
-        email = currentUser.getEmail();
+        email = FAQUtils.getEmailUser(null) ;
       } else {
         name = "";
       }
@@ -507,9 +506,9 @@ public class UICategories extends UIContainer {
       UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class);
       try {
         Watch watch = new Watch();
-        User currentUser = FAQUtils.getCurrentUserObject();
-        watch.setUser(currentUser.getUserName());
-        watch.setEmails(currentUser.getEmail());
+        String userName = FAQUtils.getCurrentUser();
+        watch.setUser(userName);
+        watch.setEmails(FAQUtils.getEmailUser(null));
         uiCategories.faqService_.addWatchCategory(categoryId, watch);
         uiApplication.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null, ApplicationMessage.INFO));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());

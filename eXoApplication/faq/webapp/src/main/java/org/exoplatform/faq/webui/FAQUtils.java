@@ -232,14 +232,31 @@ public class FAQUtils {
     return (User) state.getAttribute(CacheUserProfileFilter.USER_PROFILE);
   }
   
+  /**
+   * @param userName
+   * @return email of the user. The current user is implied if userName is null.
+   * @throws Exception
+   */
   static public String getEmailUser(String userName) throws Exception {
-    OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-    User user = organizationService.getUserHandler().findUserByName(userName);
-    String email = user.getEmail();
-    return email;
+    if (userName == null) {
+      return getCurrentUserObject().getEmail();
+    } else {
+      OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+      User user = organizationService.getUserHandler().findUserByName(userName);
+      String email = user.getEmail();
+      return email;
+    }
   }
 
+  /**
+   * @param userName
+   * @return Full name of user. The current user is implied if userName is null.
+   * @throws Exception
+   */
   static public String getFullName(String userName) throws Exception {
+    if (userName == null) {
+      return getCurrentUserObject().getFullName();
+    }
     try {
       OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
       User user = organizationService.getUserHandler().findUserByName(userName);
