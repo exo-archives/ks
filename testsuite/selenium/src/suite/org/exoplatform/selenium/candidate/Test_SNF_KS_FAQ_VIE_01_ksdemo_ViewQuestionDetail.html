@@ -148,12 +148,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='UIAction DisablePrint']/table/tbody/tr/td/div/div/div/div/div</td>
+	<td>//div[@id='AnswersViewContent']//a[text()='Answer']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='UIAction DisablePrint']/table[@class='ActionContainer']/tbody/tr/td/div/div/div/div/div/a</td>
+	<td>//div[@id='AnswersViewContent']//a[text()='Answer']</td>
 	<td></td>
 </tr>
 <tr>
@@ -238,12 +238,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div[1]/div/div/div/a</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div[1]/div/div/div/a</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
@@ -267,8 +267,23 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Sign in</td>
 	<td></td>
 </tr>
 </tbody></table>
