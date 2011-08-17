@@ -91,7 +91,7 @@ div, table, tr, td, img, form {
 	width: 100%;
 }
 
-.UIToolbarContainer .ToolbarContainer a{
+.UIWorkingWorkspace .UIToolbarContainer .ToolbarContainer a {
 	background: none;
 	color: #FFD400;
 	display: block;
@@ -137,7 +137,7 @@ div, table, tr, td, img, form {
 }
 
 .UIToolbarContainer .MenuItem {
-	background:none repeat scroll 0 0 #30385c;
+	background-color: #30385c;
 	border-bottom:medium none;
 	border-top:1px solid #414760;
 	height:28px;
@@ -179,7 +179,7 @@ div, table, tr, td, img, form {
 	background:url("home/DefaultSkin/background/SiteIcon.gif") no-repeat 10px;
 }
 
-.UIToolbarContainer .MenuItem .DefaultPageIcon {
+.UIToolbarContainer .ToolbarContainer .UITab .MenuItemContainer .MenuItem a.DefaultPageIcon {
 	background:url("home/DefaultSkin/background/DefaultIcon.png") no-repeat 10px;
 }
 
