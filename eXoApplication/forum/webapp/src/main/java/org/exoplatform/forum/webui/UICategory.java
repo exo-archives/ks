@@ -242,17 +242,10 @@ public class UICategory extends BaseForumForm {
   }
 
   private Topic getLastTopic(Category cate, Forum forum) throws Exception {
-
     Topic topic = null;
     String topicPath = forum.getLastTopicPath();
     if (!ForumUtils.isEmpty(topicPath)) {
-
-      try {
-        topic = getForumService().getTopicSummary(topicPath);
-      } catch (Exception e) {
-        topic = null;
-        log.warn(e);
-      }
+      topic = getForumService().getTopicSummary(topicPath);
       if (topic != null) {
         String topicId = topic.getId();
         if (getAncestorOfType(UIForumPortlet.class).checkCanView(cate, forum, topic)) {
@@ -264,7 +257,6 @@ public class UICategory extends BaseForumForm {
           return null;
         }
       }
-
     }
     return topic;
   }
