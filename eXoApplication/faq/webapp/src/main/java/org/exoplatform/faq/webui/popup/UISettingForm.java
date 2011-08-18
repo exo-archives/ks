@@ -137,11 +137,8 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent	{
 	}
 	
 	private void setListCate() throws Exception {
-		String userName = FAQUtils.getCurrentUser();
 		List<String>userPrivates = null;
-		if(userName != null){
-			userPrivates = UserHelper.getAllGroupAndMembershipOfUser(userName);
-		}
+		userPrivates = UserHelper.getAllGroupAndMembershipOfUser(null);
 		this.listCate.addAll(FAQUtils.getFAQService().listingCategoryTree()) ;
 
 	}

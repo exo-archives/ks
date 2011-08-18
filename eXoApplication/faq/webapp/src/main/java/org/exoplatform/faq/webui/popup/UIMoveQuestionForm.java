@@ -105,7 +105,7 @@ public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
 			UIAnswersPortlet portlet = moveQuestionForm.getAncestorOfType(UIAnswersPortlet.class) ;
       UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
 			try{
-				if(!moveQuestionForm.faqSetting_.isAdmin() && !faqService_.isCategoryModerator(cateId, FAQUtils.getCurrentUser())){
+				if(!moveQuestionForm.faqSetting_.isAdmin() && !faqService_.isCategoryModerator(cateId, null)){
 					warning("UIQuestions.msg.can-not-move-question") ;
 					return;
 				}

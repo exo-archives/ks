@@ -336,7 +336,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 						answer.setDateResponse(new Date());
 						String currentUser = FAQUtils.getCurrentUser() ;
 						answer.setResponseBy(currentUser);
-						answer.setFullName(FAQUtils.getFullName(currentUser)) ;
+						answer.setFullName(FAQUtils.getFullName(null)) ;
 						answer.setNew(true);
 						answer.setResponses(responseQuestionContent);
 						answer.setLanguage(language) ;

@@ -143,14 +143,14 @@ public class UICategories extends UIContainer{
 		this.font_weight = new String[]{"bold", "none", "none"};
 	}
 	
-	private void setIsModerators(String currentUser_) throws Exception{
+	private void setIsModerators() throws Exception{
 		categoryMod.clear() ;
 		isModerator = false;
 		if(faqSetting_.isAdmin()) isModerator = true;
-		if(!isModerator) isModerator = faqService_.isCategoryModerator(categoryId_, currentUser_);
+		if(!isModerator) isModerator = faqService_.isCategoryModerator(categoryId_, null);
 		if(!isModerator) {
 			for(Category cat : listCate) {
-				categoryMod.put(cat.getId(), faqService_.isCategoryModerator(cat.getPath(), currentUser_)) ;
+				categoryMod.put(cat.getId(), faqService_.isCategoryModerator(cat.getPath(), null)) ;
 			}
 		}		
 	}
@@ -165,7 +165,7 @@ public class UICategories extends UIContainer{
 		if(categoryMod.containsKey(categoryId)){
 			return categoryMod.get(categoryId) ;
 		} else {
-			boolean isMod = faqService_.isCategoryModerator(path, currentUser);
+			boolean isMod = faqService_.isCategoryModerator(path, null);
 			categoryMod.put(categoryId, isMod);
 			return isMod;
 		}
@@ -183,24 +183,23 @@ public class UICategories extends UIContainer{
 		return faqService_.hasWatch(categoryPath) ;
 	}
 	
-	private void checkAndSetListCategory(String userName, String categoryId) throws Exception {
+	private void checkAndSetListCategory(String categoryId) throws Exception {
 		listCate = new ArrayList<Category>();
 		if(faqSetting_.isAdmin()) {
 			listCate.addAll(faqService_.getSubCategories(categoryId, faqSetting_, true, null));
 		}else {
 			listCate.addAll(faqService_.getSubCategories(categoryId, faqSetting_, false, 
-					UserHelper.getAllGroupAndMembershipOfUser(userName)));
+					UserHelper.getAllGroupAndMembershipOfUser(null)));
 		}
 	}
 	
 	private void setListCate() throws Exception {
 		if(!isSwap){
-			String userName = FAQUtils.getCurrentUser();
 			try {
-				checkAndSetListCategory(userName, categoryId_);
+				checkAndSetListCategory(categoryId_);
 	  	} catch (PathNotFoundException e) {
 	  		setPathCategory(parentCateID_);
-	  		checkAndSetListCategory(userName, categoryId_);
+	  		checkAndSetListCategory(categoryId_);
 	  	} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -213,7 +212,7 @@ public class UICategories extends UIContainer{
 			if(currentCategoryName == null || currentCategoryName.trim().length() < 1) currentCategoryName = FAQUtils.getResourceBundle("UIBreadcumbs.label." + Utils.CATEGORY_HOME);
 			UIBreadcumbs breadcumbs = this.getAncestorOfType(UIAnswersContainer.class).getChild(UIBreadcumbs.class);
 			String[] listId = breadcumbs.getPath(breadcumbs.getBreadcumbs().size() - 1).split("/");
-			setIsModerators(userName);
+			setIsModerators();
 		}
 		isSwap = false;
 	}
@@ -230,9 +229,8 @@ public class UICategories extends UIContainer{
 	
 	public void resetListCate() throws Exception{
 		isSwap = true;
-		String userName = FAQUtils.getCurrentUser();
-    checkAndSetListCategory(userName, parentCateID_);		
-		setIsModerators(userName);
+    checkAndSetListCategory(parentCateID_);		
+		setIsModerators();
 	}
 	
 	private String[] getActionCategory(String cateId){
@@ -463,7 +461,7 @@ public class UICategories extends UIContainer{
 			String email = "" ;
 			String name = FAQUtils.getCurrentUser() ;
 			if(!FAQUtils.isFieldEmpty(name)){
-				email = FAQUtils.getEmailUser(name) ;
+			  email = FAQUtils.getEmailUser(null) ;
 			} else {
 				name = "";
 			}
@@ -518,7 +516,7 @@ public class UICategories extends UIContainer{
 				Watch watch = new Watch();
 				String userName = FAQUtils.getCurrentUser();
 				watch.setUser(userName);
-				watch.setEmails(FAQUtils.getEmailUser(userName));
+				watch.setEmails(FAQUtils.getEmailUser(null));
 				uiCategories.faqService_.addWatchCategory(categoryId, watch);
 				uiApplication.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null, ApplicationMessage.INFO)) ;
 			} catch (Exception e) {
@@ -681,9 +679,8 @@ public class UICategories extends UIContainer{
 				Category category = uiCategories.faqService_.getCategoryById(destCategoryId);
 				List<String> usersOfNewCateParent = new ArrayList<String>();
 				usersOfNewCateParent.addAll(Arrays.asList(category.getModerators())) ;
-				String user = FAQUtils.getCurrentUser() ;
-				if(uiCategories.faqSetting_.isAdmin() || (uiCategories.faqService_.isCategoryModerator(categoryId, user) && 
-						uiCategories.faqService_.isCategoryModerator(destCategoryId, user))){
+				if(uiCategories.faqSetting_.isAdmin() || (uiCategories.faqService_.isCategoryModerator(categoryId, null) && 
+						uiCategories.faqService_.isCategoryModerator(destCategoryId, null))){
 					uiCategories.faqService_.moveCategory(categoryId, destCategoryId) ;					
 				}else{
 					UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;

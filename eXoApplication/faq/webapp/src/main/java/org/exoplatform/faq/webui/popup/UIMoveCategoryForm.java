@@ -96,7 +96,7 @@ public class UIMoveCategoryForm extends BaseUIForm	implements UIPopupComponent{
 			String categoryId = moveCategory.getCategoryID() ;
 			try {
 				boolean canMove = moveCategory.faqSetting_.isAdmin();
-				if(!canMove) canMove = faqService_.isCategoryModerator(destCategoryId, FAQUtils.getCurrentUser()) ;
+				if(!canMove) canMove = faqService_.isCategoryModerator(destCategoryId, null) ;
 				if(canMove){
 					faqService_.moveCategory(categoryId, destCategoryId) ;
 				}else {

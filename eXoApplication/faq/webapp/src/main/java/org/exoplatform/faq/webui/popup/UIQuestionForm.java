@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.jcr.Node;
-
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
@@ -38,7 +36,6 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.ks.common.UserHelper;
@@ -48,7 +45,6 @@ import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -60,9 +56,9 @@ import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormInputWithActions;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 
@@ -263,7 +259,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
   	try {
   		if(faqSetting_.isAdmin() || isMode) {
   			isMode = true;
-  		} else isMode =getFAQService().isCategoryModerator(categoryId_, FAQUtils.getCurrentUser());
+  		} else isMode =getFAQService().isCategoryModerator(categoryId_, null);
     } catch (Exception e) {e.printStackTrace();}
     return isMode;
 	}

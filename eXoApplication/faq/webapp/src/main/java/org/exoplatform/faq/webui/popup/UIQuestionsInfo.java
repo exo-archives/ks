@@ -182,10 +182,9 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
   public void setListQuestion() throws Exception {
     listQuestion_.clear() ;
     listQuestionNotYetAnswered_.clear() ;
-    String user = FAQUtils.getCurrentUser() ;
     pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
     pageQuesNotAnswerIterator = this.getChildById(LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
-    List<String>userPrivates = UserHelper.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
+    List<String>userPrivates = UserHelper.getAllGroupAndMembershipOfUser(null);
     if(faqSetting_.isAdmin()) {
     	if(this.cateId_.equals(Utils.ALL)){
     		this.pageList = getFAQService().getAllQuestions() ;

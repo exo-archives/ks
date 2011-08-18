@@ -16,8 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,15 +60,11 @@ import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.web.application.URLBuilder;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -342,7 +336,7 @@ public class UIQuestions extends UIContainer {
 	}
 	
 	private void setIsModerators() throws Exception{
-		if(faqSetting_.isAdmin() || faqService_.isCategoryModerator(categoryId_, currentUser_)) canEditQuestion = true ;
+		if(faqSetting_.isAdmin() || faqService_.isCategoryModerator(categoryId_, null)) canEditQuestion = true ;
 		else canEditQuestion = false ;
 	}
 	
@@ -538,7 +532,7 @@ public class UIQuestions extends UIContainer {
 			UICategoryForm category = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 			if(!FAQUtils.isFieldEmpty(categoryId)) {
 				try {
-					if(question.faqSetting_.isAdmin() || question.faqService_.isCategoryModerator(categoryId, FAQUtils.getCurrentUser())) {
+					if(question.faqSetting_.isAdmin() || question.faqService_.isCategoryModerator(categoryId, null)) {
 						uiPopupAction.activate(uiPopupContainer, 580, 500) ;
 						uiPopupContainer.setId("SubCategoryForm") ;
 						category.setParentId(categoryId) ;
@@ -584,7 +578,7 @@ public class UIQuestions extends UIContainer {
 			String userName = FAQUtils.getCurrentUser() ;
 			if(!FAQUtils.isFieldEmpty(userName)){
 				name = userName;
-				email = FAQUtils.getEmailUser(userName) ;
+				email = FAQUtils.getEmailUser(null) ;
 			}
 			questionForm.setFAQSetting(questions.faqSetting_) ;
 			questionForm.setAuthor(name) ;
