@@ -58,7 +58,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//a[@id='UIPortalLoginFormAction']</td>
 	<td></td>
 </tr>
 <tr>
@@ -83,6 +83,16 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiSettingContainer']//a[text()='Syntax']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIWikiSettingContainer']//a[text()='Syntax']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>DefaultSyntax</td>
 	<td></td>
 </tr>
@@ -103,17 +113,37 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIWikiSettingContainer_SyntaxSetting_']/div[3]/table/tbody/tr/td/div[1]/div/div/div</td>
+	<td>//div[@id='UIWikiSettingContainer']//a[text()='Save']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIWikiSettingContainer_SyntaxSetting_']/div[3]/table/tbody/tr/td/div[1]/div/div/div</td>
+	<td>//div[@id='UIWikiSettingContainer']//a[text()='Save']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
 	<td>- Verify the default syntax</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Wiki Home</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Wiki Home</td>
 	<td></td>
 </tr>
 <tr>
@@ -227,8 +257,28 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>echo</td>
 	<td>- Verify the reset</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Wiki Home</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Wiki Home</td>
 	<td></td>
 </tr>
 <tr>
@@ -268,7 +318,392 @@
 </tr>
 <tr>
 	<td>echo</td>
+	<td>- Check Permission</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Space Settings</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Space Settings</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiSettingContainer']//a[text()='Permission']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIWikiSettingContainer']//a[text()='Permission']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Remove &quot;Edit Pages&quot; right for Owner &quot;any&quot;</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIPermissionGrid']//input[@name='EDITPAGEany']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>uncheck</td>
+	<td>//div[@id='UIPermissionGrid']//input[@name='EDITPAGEany']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Add account demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPermissionOwner']//img[@title='Select User']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIWikiPermissionOwner']//img[@title='Select User']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//input[@name='demo']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>check</td>
+	<td>//input[@name='demo']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiUserPermissionPopupSelector']//a[text()='Add']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIWikiUserPermissionPopupSelector']//a[text()='Add']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Save Permission</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPermissionOwner']//img[@title='Add Entry']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIWikiPermissionOwner']//img[@title='Add Entry']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Add new permission</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIPermissionGrid']//input[@name='EDITPAGEdemo']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>check</td>
+	<td>//div[@id='UIPermissionGrid']//input[@name='EDITPAGEdemo']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Remove permission</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//img[contains(@onclick,'&amp;objectId=demo')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//img[contains(@onclick,'&amp;objectId=demo')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Add Template</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Template</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Template</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Add more</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Add more</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//input[@id='TitleInput']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//input[@id='TitleInput']</td>
+	<td>New template</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//input[@id='Description']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//input[@id='Description']</td>
+	<td>Description of New template</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIWikiPageEditForm']//textarea[@id='Markup']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//form[@id='UIWikiPageEditForm']//textarea[@id='Markup']</td>
+	<td>This is content of template</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Save template</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPageEditForm_PageToolBar']//a[contains(text(),'Save template')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIWikiPageEditForm_PageToolBar']//a[contains(text(),'Save template')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIWikiPortlet']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Add new page using template</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPageControlArea_PageToolBar_Add_']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseOver</td>
+	<td>//div[@id='UIWikiPageControlArea_PageToolBar_Add_']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPageControlArea_PageToolBar_Add_']//a[@title='From template...']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='UIWikiPageControlArea_PageToolBar_Add_']//a[@title='From template...']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//a[@onclick=&quot;eXo.wiki.UIWikiAjaxRequest.makeNewHash('#AddPageWithTemplate/New_template');&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[@onclick=&quot;eXo.wiki.UIWikiAjaxRequest.makeNewHash('#AddPageWithTemplate/New_template');&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>New template</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>New template</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Delete data: page</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPageControlArea_PageToolBar_More_']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseOver</td>
+	<td>//div[@id='UIWikiPageControlArea_PageToolBar_More_']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Delete page</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Delete page</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIWikiPageArea']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIWikiPageArea']//a[text()='OK']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Delete data: template</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Space Settings</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Space Settings</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Template</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Template</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//a[contains(@onclick,'DeleteTemplate','&amp;subComponentId=UIWikiSettingContainer_TemplateSetting_&amp;objectId=New_template')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//a[contains(@onclick,'DeleteTemplate','&amp;subComponentId=UIWikiSettingContainer_TemplateSetting_&amp;objectId=New_template')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure you want to delete this template?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
 	<td>- Sign out &amp; finish</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -278,6 +713,11 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
+	<td>Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
 	<td>Sign in</td>
 	<td></td>
 </tr>

@@ -58,7 +58,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//a[@id='UIPortalLoginFormAction']</td>
 	<td></td>
 </tr>
 <tr>
@@ -222,13 +222,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[2]/div[2]/div/div/div/a[@title='Page2_SNF_KS_63']</td>
+	<td>waitForTextPresent</td>
+	<td>Page2_SNF_KS_63</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>//div[2]/div[2]/div/div/div/a[@title='Page2_SNF_KS_63']</td>
+	<td>verifyTextPresent</td>
+	<td>Page2_SNF_KS_63</td>
 	<td></td>
 </tr>
 <tr>
@@ -268,12 +268,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td>//div[@id='UIWikiPageArea']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td>//div[@id='UIWikiPageArea']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
@@ -313,12 +313,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td>//div[@id='UIWikiPageArea']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td>//div[@id='UIWikiPageArea']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
@@ -339,6 +339,21 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- End -</td>
 	<td></td>
 </tr>
 </tbody></table>

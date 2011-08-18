@@ -53,7 +53,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div/a</td>
+	<td>//a[@id='UIPortalLoginFormAction']</td>
 	<td></td>
 </tr>
 <tr>
@@ -108,22 +108,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>demo</td>
+	<td>//input[@name='demo']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>demo</td>
+	<td>//input[@name='demo']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIUserSelector']/div[2]/div[2]/table/tbody/tr/td/a[1]/div/div/div</td>
+	<td>//form[@id='UIUserSelector']//a[text()=&quot;Add&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIUserSelector']/div[2]/div[2]/table/tbody/tr/td/a[1]/div/div/div</td>
+	<td>//form[@id='UIUserSelector']//a[text()=&quot;Add&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -332,8 +332,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>//div[@id='SetWidthContent']/div/div/table/tbody/tr/td[3]/a/div[@class='UnApprovedQuestion']</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersContainer']/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='AnswersContainer']/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -378,7 +383,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div/a</td>
+	<td>//a[@id='UIPortalLoginFormAction']</td>
 	<td></td>
 </tr>
 <tr>
@@ -388,12 +393,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[6]/div/a/span</td>
+	<td>link=Smoke_02_Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[6]/div/a/span</td>
+	<td>link=Smoke_02_Category</td>
 	<td></td>
 </tr>
 <tr>
@@ -414,6 +419,16 @@
 <tr>
 	<td>verifyTextNotPresent</td>
 	<td>Answer for Smoke_02</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersContainer']/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='AnswersContainer']/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -458,7 +473,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div/a</td>
+	<td>//a[@id='UIPortalLoginFormAction']</td>
 	<td></td>
 </tr>
 <tr>
@@ -468,12 +483,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[6]/div/a/span</td>
+	<td>link=Smoke_02_Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[6]/div/a/span</td>
+	<td>link=Smoke_02_Category</td>
 	<td></td>
 </tr>
 <tr>

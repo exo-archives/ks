@@ -48,7 +48,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td>//a[@id='UIPortalLoginFormAction']</td>
 	<td></td>
 </tr>
 <tr>
@@ -133,12 +133,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td>//div[@id='AddNewForumForm']//a[text()='Save']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td>//div[@id='AddNewForumForm']//a[text()='Save']</td>
 	<td></td>
 </tr>
 <tr>
@@ -428,12 +428,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//span[@class='Text StickyIcon']</td>
+	<td>//div[@id='UITopicContent']//span[text()='Sticky:']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>//span[@class='Text StickyIcon']</td>
+	<td>//div[@id='UITopicContent']//span[text()='Sticky:']</td>
 	<td></td>
 </tr>
 <tr>
@@ -482,13 +482,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementNotPresent</td>
-	<td>//span[@class='Text StickyIcon']</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UITopicContent']//span[text()='Sticky:']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementNotPresent</td>
-	<td>//span[@class='Text StickyIcon']</td>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='UITopicContent']//span[text()='Sticky:']</td>
 	<td></td>
 </tr>
 <tr>
@@ -568,12 +568,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UISplitTopicForm']/div[3]/table//div[1]/div/div/div</td>
+	<td>//div[@id='SplitTopicForm']//a[text()='Save']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UISplitTopicForm']/div[3]/table//div[1]/div/div/div</td>
+	<td>//div[@id='SplitTopicForm']//a[text()='Save']</td>
 	<td></td>
 </tr>
 <tr>
@@ -623,12 +623,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIForumPortlet']//div[@class='ExoMessageDecorator']//div[@class='ActionButton LightBlueStyle']</td>
+	<td>//div[@id='UIForumPortlet']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIForumPortlet']//div[@class='ExoMessageDecorator']//div[@class='ActionButton LightBlueStyle']</td>
+	<td>//div[@id='UIForumPortlet']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
@@ -688,12 +688,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIWatchToolsForm']/div[3]/table//a</td>
+	<td>//div[@id='WatchToolsForm']//a[text()='Close']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIWatchToolsForm']/div[3]/table//a</td>
+	<td>//div[@id='WatchToolsForm']//a[text()='Close']</td>
 	<td></td>
 </tr>
 <tr>
@@ -754,6 +754,16 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Sign in</td>
 	<td></td>
 </tr>
 </tbody></table>
