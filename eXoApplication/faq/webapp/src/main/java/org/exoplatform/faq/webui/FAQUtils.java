@@ -44,6 +44,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
@@ -224,12 +225,20 @@ public class FAQUtils {
    */
 
   static public String getCurrentUser() throws Exception {
-    return Util.getPortalRequestContext().getRemoteUser();
+    return UserHelper.getCurrentUser();
   }
 
   static public User getCurrentUserObject() throws Exception {
-    ConversationState state = ConversationState.getCurrent();
-    return (User) state.getAttribute(CacheUserProfileFilter.USER_PROFILE);
+    try {
+      ConversationState state = ConversationState.getCurrent();
+      User user = (User) state.getAttribute(CacheUserProfileFilter.USER_PROFILE);
+      if (user == null) {
+        user = UserHelper.getOrganizationService().getUserHandler().findUserByName(getCurrentUser());
+      }
+      return user;
+    } catch (Exception e) {
+      return null;
+    }
   }
   
   /**
@@ -533,12 +542,10 @@ public class FAQUtils {
     return "";
   }
   
-  public static String getLink(String link, String componentId, String componentIdhasAction, String action, String actionRep, String objectId) {
+  public static String getLinkAction(String link) {
     PortalRequestContext portalContext = Util.getPortalRequestContext();
     String url = portalContext.getRequest().getRequestURL().toString();
-    url = url.substring(0, url.indexOf("/", 8));
-    link = link.replaceFirst(componentId, componentIdhasAction).replaceFirst(action, actionRep).replaceFirst("OBJECTID", objectId).replaceAll("amp;", "");
-    link = url + link;
+    link = url.substring(0, url.indexOf("/", 8)) + link.replaceAll("amp;", "");
     return link;
   }
 

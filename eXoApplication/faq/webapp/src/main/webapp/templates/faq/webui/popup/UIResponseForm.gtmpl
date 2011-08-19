@@ -4,6 +4,7 @@
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript('eXo.faq.UIAnswersPortlet.setSelectboxOnchange("'+ uicomponent.id +'");');
+	uicomponent.setLink();
 %>
 <div class="UIResponse $uicomponent.id">
 	<% uiform.begin() %>
@@ -25,8 +26,6 @@
 							<td class="FieldComponent" style="width:85%; white-space:normal;"><%=uicomponent.render(uicomponent.questionDetail)%></td>
 						</tr>
 					<% 
-					String url = uicomponent.url("AddRelation", "OBJECTID") ;
-					uicomponent.setLink(url);
 					for(field in uiform.getChildren()) { 
 						if(field.isRendered()) {
 					%>

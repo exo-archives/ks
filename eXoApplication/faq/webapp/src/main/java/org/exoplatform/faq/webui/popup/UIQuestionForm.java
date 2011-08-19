@@ -122,6 +122,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private String                         questionId_          = null;
 
+  private String                         questionId           = null;
+
   private String                         defaultLanguage_     = "";
 
   private String                         lastLanguage_        = "";
@@ -160,10 +162,6 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
   public String getLink() {
     return link_;
-  }
-
-  public void setLink(String link) {
-    this.link_ = link;
   }
 
   public void setFAQSetting(FAQSetting faqSetting) {
@@ -359,6 +357,20 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
   public String getQuestionId() {
     return questionId_;
   }
+  
+  @SuppressWarnings("unused")
+  private String setQuestionLink() {
+    try {
+      questionId = (FAQUtils.isFieldEmpty(questionId_)) ? new Question().getId() : questionId_;
+      StringBuilder qsId = new StringBuilder().append(categoryId_).append("/").append(org.exoplatform.faq.service.Utils.QUESTION_HOME).append("/").append(questionId);
+      UIAnswersPortlet portlet = getAncestorOfType(UIAnswersPortlet.class);
+      UIQuestions questions = portlet.findFirstComponentOfType(UIQuestions.class);
+      link_ = FAQUtils.getLinkAction(questions.url("ViewQuestion", qsId.toString()));
+    } catch (Exception e) {
+      log.warn("Can not set link for question.");
+    }
+    return "";
+  }
 
   public void setDefaultLanguage(String defaultLanguage) {
     this.defaultLanguage_ = defaultLanguage;
@@ -544,6 +556,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
         if (questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) { // Add new question
           question = new Question();
+          question.setId(questionForm.questionId);
           question.setCategoryId(questionForm.getCategoryId());
           question.setRelations(new String[] {});
         } else { // Edit question
@@ -591,9 +604,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
         UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
         // Create link by Vu Duy Tu.
         if (isNew) {
-          StringBuilder qsId = new StringBuilder().append(question.getCategoryId()).append("/").append(org.exoplatform.faq.service.Utils.QUESTION_HOME).append("/").append(question.getId());
-          String link = FAQUtils.getLink(questionForm.getLink(), questionForm.getId(), "UIQuestions", "Attachment", "ViewQuestion", qsId.toString()).replace("private", "public");
-          question.setLink(link);
+          question.setLink(questionForm.getLink());
         }
 
         // For discuss in forum

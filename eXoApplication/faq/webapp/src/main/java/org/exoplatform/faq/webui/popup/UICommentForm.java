@@ -135,12 +135,14 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
     }
   }
 
-  public void setLink(String link) {
-    this.link_ = link;
-  }
-
-  public String getLink() {
-    return link_;
+  public void setLink() throws Exception {
+    try {
+      UIAnswersPortlet portlet = getAncestorOfType(UIAnswersPortlet.class);
+      UIQuestions questions = portlet.findFirstComponentOfType(UIQuestions.class);
+      link_ = FAQUtils.getLinkAction(questions.url("ViewQuestion", question_.getPath()));
+    } catch (Exception e) {
+      log.warn("Can not set link for question.");
+    }
   }
 
   static public class CancelActionListener extends EventListener<UICommentForm> {
@@ -170,9 +172,9 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
       comment = CommonUtils.encodeSpecialCharInContent(comment);
       try {
         // Create link by Vu Duy Tu.
-        String link = FAQUtils.getLink(commentForm.getLink(), commentForm.getId(), "UICommentForm", "Cancel", "ViewQuestion", "OBJECTID");
-        link = link.replaceFirst("OBJECTID", commentForm.question_.getId()).replace("private", "public");
-        commentForm.question_.setLink(link);
+        if(FAQUtils.isFieldEmpty(commentForm.question_.getLink())) {
+          commentForm.question_.setLink(commentForm.link_);
+        }
         if (commentForm.comment != null) {
           commentForm.comment.setNew(false);
         } else {
@@ -197,7 +199,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
               post.setIcon("ViewIcon");
               post.setName("Re: " + commentForm.question_.getQuestion());
               post.setMessage(comment);
-              post.setLink(linkForum);
+              post.setLink(linkForum+"/"+postId);
               post.setIsApproved(!topic.getIsModeratePost());
               post.setRemoteAddr(remoteAddr);
               try {
@@ -217,7 +219,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
                   post.setIcon("ViewIcon");
                   post.setName("Re: " + commentForm.question_.getQuestion());
                   commentForm.comment.setPostId(post.getId());
-                  post.setLink(linkForum);
+                  post.setLink(linkForum+"/"+postId);
                   post.setRemoteAddr(remoteAddr);
                 } else {
                   post.setModifiedBy(commentForm.currentUser_);

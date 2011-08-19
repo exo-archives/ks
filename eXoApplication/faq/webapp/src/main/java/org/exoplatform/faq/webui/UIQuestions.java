@@ -147,8 +147,6 @@ public class UIQuestions extends UIContainer {
 
   private String                        currentUser_          = "";
 
-  private String                        link_                 = "";
-
   private FAQService                    faqService_           = null;
 
   private Map<String, QuestionLanguage> languageMap           = new HashMap<String, QuestionLanguage>();
@@ -190,6 +188,8 @@ public class UIQuestions extends UIContainer {
   public UIAnswersPageIterator          pageIterator          = null;
 
   public long                           pageSelect            = 0;
+  
+  private Map<String, String>           viewerLink            = new HashMap<String, String>();
 
   public UIQuestions() throws Exception {
     backPath_ = null;
@@ -511,16 +511,19 @@ public class UIQuestions extends UIContainer {
     return "";
   }
 
-  private String getLink() {
-    return link_;
+  private String getLink(String questionId) {
+    if(viewerLink.containsKey(questionId)) {
+      return FAQUtils.getLinkAction(viewerLink.get(questionId));
+    }
+    return "";
   }
 
   private String getBackPath() {
     return this.backPath_;
   }
 
-  private void setLink(String link) {
-    this.link_ = link;
+  private void setLink(String questionId, String link) {
+    viewerLink.put(questionId, link);
   }
 
   public String render(Object obj) throws RenderingException {
@@ -1208,8 +1211,7 @@ public class UIQuestions extends UIContainer {
         // Create link by Vu Duy Tu.
         String link = "";
         if (isSendLink) {
-          link = uiQuestions.getLink();
-          link = FAQUtils.getLink(link, uiQuestions.getId(), uiQuestions.getId(), "Setting", "ViewQuestion", questionId).replaceFirst("private", "public");
+          link = uiQuestions.getLink(questionId);
         }
         sendMailForm.setLink(link);
         if (!questionId.equals(uiQuestions.viewingQuestionId_) || FAQUtils.isFieldEmpty(uiQuestions.language_))

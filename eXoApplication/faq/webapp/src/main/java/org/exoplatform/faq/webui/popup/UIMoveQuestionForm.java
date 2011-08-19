@@ -32,6 +32,8 @@ import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletURLBuilder;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -53,12 +55,11 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIMoveQuestionForm.CancelActionListener.class) 
     }
 )
+@SuppressWarnings("unused")
 public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
   private String            questionId_      = "";
 
   private String            homeCategoryName = "";
-
-  private String            link;
 
   private String            categoryId_;
 
@@ -67,6 +68,8 @@ public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
   private List<Cate>        listCate         = new ArrayList<Cate>();
 
   private static FAQService faqService_      = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+  
+  private PortletURLBuilder urlBuilder =  null;
 
   public UIMoveQuestionForm() throws Exception {
     homeCategoryName = faqService_.getCategoryNameOf(Utils.CATEGORY_HOME);
@@ -90,9 +93,12 @@ public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
     return this.listCate;
   }
 
-  @SuppressWarnings("unused")
-  private void setLink(String url) {
-    this.link = url;
+  private void setURLBuilder() {
+    try {
+      urlBuilder = (PortletURLBuilder) WebuiRequestContext.getCurrentInstance().getURLBuilder();
+    } catch (Exception e) {
+      log.warn("Can't set url builder ...");
+    }
   }
 
   public void setQuestionId(String questionId) throws Exception {
@@ -135,12 +141,17 @@ public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
             return;
           }
           question.setCategoryId(cateId);
-
-          String questionId = question.getId();
-          questionId = questionId.substring(questionId.lastIndexOf("/") + 1);
-          questionId = cateId + "/" + Utils.QUESTION_HOME + "/" + questionId;
-          String link = FAQUtils.getLink(moveQuestionForm.link, moveQuestionForm.getId(), "UIQuestions", "Cancel", "ViewQuestion", questionId);
-          // question.setLink(link);
+          StringBuffer questionId = new StringBuffer(cateId);
+          questionId.append("/").append(Utils.QUESTION_HOME).append("/")
+                    .append((question.getId().indexOf("/") >= 0) ? question.getId().substring(questionId.lastIndexOf("/") + 1) : question.getId());
+          String link = "";
+          try {
+            link = moveQuestionForm.urlBuilder.createURL(questions, "ViewQuestion", null, questionId.toString(), null);
+            link = FAQUtils.getLinkAction(link);
+            moveQuestionForm.urlBuilder = null;
+          } catch (Exception e) {
+            moveQuestionForm.log.warn("Can't set new link for open question...");
+          }
           FAQUtils.getEmailSetting(moveQuestionForm.faqSetting_, false, false);
           FAQUtils.getEmailMoveQuestion(moveQuestionForm.faqSetting_);
           // faqService_.saveQuestion(question, false, moveQuestionForm.faqSetting_) ;

@@ -19,8 +19,6 @@
 	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.checkCustomView('" + uicomponent.isNotInSpace() + "', '" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
 	jsmanager.addCustomizedOnLoadScript('eXo.faq.UIAnswersPortlet.loadActionScroll();');
 	jsmanager.addJavascript('eXo.faq.UIAnswersPortlet.updateContainersHeight();') ;
-	String url = uicomponent.url("Setting", "OBJECTID");
-	uicomponent.setLink(url);
 	String cateId = uicomponent.getCategoryId();
 	uicomponent.setIsModerators(); //reset permission
 	boolean canEditQuestion = uicomponent.getCanEditQuestion();
@@ -213,6 +211,7 @@
 				
 				for(question in listQuestion) {
 					String qId = question.getPath();
+					uicomponent.setLink(qId, uicomponent.url("ViewQuestion", qId));
 					linkQuestion=uicomponent.event("OpenQuestion", qId);
 					String questionIcon = "" ;
 					String colorViewQuestion = "";

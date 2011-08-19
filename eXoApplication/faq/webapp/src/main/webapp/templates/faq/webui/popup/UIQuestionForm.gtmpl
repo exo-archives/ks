@@ -1,6 +1,7 @@
 <%
 	import org.exoplatform.faq.webui.FAQUtils;
 	uicomponent.setLanguages();
+	uicomponent.setQuestionLink();
 %>
 <div class="UIQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
@@ -9,8 +10,6 @@
 				<table class="UIFormGrid" style="width:95%">
 					<tbody>
 					<% 
-					String url = uicomponent.url("Attachment", "OBJECTID") ;
-					uicomponent.setLink(url);
 					for(field in uiform.getChildren()) { 
 						if(field.getName().equals(uicomponent.ATTACHMENTS) || 
 								field.getName().equals(uicomponent.IS_APPROVED) || 

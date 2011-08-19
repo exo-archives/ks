@@ -1,13 +1,12 @@
+<%
+	uicomponent.setLink();
+%>
 <div class="UIResponse $uicomponent.id">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout" style="*width:92%;">
 			<div class="UIFormInput">
 				<table width="100%">
 					<tbody>
-						<%
-						String url = uicomponent.url("Cancel", "OBJECTID") ;
-						uicomponent.setLink(url);
-						%>
 						<tr>
 							<td style="white-space:nowrap;" align="right">
 							<div style="padding-right:10px;line-height:24px;*line-height:20px"><%=_ctx.appRes("UICommentForm.title.Author")%>: </div>
