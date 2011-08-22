@@ -97,8 +97,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>Matching entries and categories</td>
+	<td>waitForElementPresent</td>
+	<td>//div[text()='Matching Entries and Categories']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[text()='Matching Entries and Categories']</td>
 	<td></td>
 </tr>
 <tr>
@@ -108,16 +113,16 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='ResultQuickSearch']/div[3]/table/tbody/tr/td/div/div/div/div</td>
+	<td>//form[@id='ResultQuickSearch']//a[text()='Close']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='ResultQuickSearch']/div[3]/table/tbody/tr/td/div/div/div/div</td>
+	<td>//form[@id='ResultQuickSearch']//a[text()='Close']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>

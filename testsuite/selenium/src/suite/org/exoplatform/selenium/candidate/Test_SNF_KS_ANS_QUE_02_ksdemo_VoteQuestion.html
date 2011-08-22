@@ -68,12 +68,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Submit question</td>
+	<td>//div[@id='UIQuestions']//a[text()='Submit Question']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Submit question</td>
+	<td>//div[@id='UIQuestions']//a[text()='Submit Question']</td>
 	<td></td>
 </tr>
 <tr>
@@ -197,8 +197,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertConfirmation</td>
-	<td>Are you sure you want remove your rate?</td>
+	<td>verifyConfirmation</td>
+	<td>Are you sure to remove your ratings?</td>
 	<td></td>
 </tr>
 <tr>
@@ -363,22 +363,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title='Delete']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title='Delete']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>

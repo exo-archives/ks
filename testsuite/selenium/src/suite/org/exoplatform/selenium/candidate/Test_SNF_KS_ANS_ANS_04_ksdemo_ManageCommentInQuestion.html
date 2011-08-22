@@ -73,12 +73,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Add category</td>
+	<td>//div[@id='FAQCategroManager']//a[text()='Add Category']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAt</td>
-	<td>link=Add category</td>
+	<td>//div[@id='FAQCategroManager']//a[text()='Add Category']</td>
 	<td></td>
 </tr>
 <tr>
@@ -128,12 +128,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Submit question</td>
+	<td>//div[@id='UIQuestions']//a[text()='Submit Question']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Submit question</td>
+	<td>//div[@id='UIQuestions']//a[text()='Submit Question']</td>
 	<td></td>
 </tr>
 <tr>
@@ -217,13 +217,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>- Comment a question</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='Comment']/a</td>
+	<td>//a[text()='Answer']/following::a[text()='Comment']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='Comment']/a</td>
+	<td>//a[text()='Answer']/following::a[text()='Comment']</td>
 	<td></td>
 </tr>
 <tr>
@@ -278,12 +283,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='Comment']/a</td>
+	<td>//a[text()='Answer']/following::a[text()='Comment']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='Comment']/a</td>
+	<td>//a[text()='Answer']/following::a[text()='Comment']</td>
 	<td></td>
 </tr>
 <tr>
@@ -353,12 +358,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Edit comment&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title='Edit Comment']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Edit comment&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title='Edit Comment']</td>
 	<td></td>
 </tr>
 <tr>
@@ -428,12 +433,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Edit comment&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title='Edit Comment']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Edit comment&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title='Edit Comment']</td>
 	<td></td>
 </tr>
 <tr>
@@ -518,17 +523,17 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Delete comment&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete Comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Delete comment&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete Comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>assertConfirmation</td>
-	<td>Are you sure you want to delete this comment ?</td>
+	<td>verifyConfirmation</td>
+	<td>Are you sure to delete this comment?</td>
 	<td></td>
 </tr>
 <tr>
@@ -558,17 +563,17 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Delete comment&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete Comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Delete comment&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Delete Comment&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>assertConfirmation</td>
-	<td>Are you sure you want to delete this comment ?</td>
+	<td>verifyConfirmation</td>
+	<td>Are you sure to delete this comment?</td>
 	<td></td>
 </tr>
 <tr>
@@ -583,7 +588,7 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Comment Question for Promote Test-</td>
+	<td>- Comment question for promote</td>
 	<td></td>
 </tr>
 <tr>
@@ -598,12 +603,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='Comment']/a</td>
+	<td>//a[text()='Answer']/following::a[text()='Comment']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='Comment']/a</td>
+	<td>//a[text()='Answer']/following::a[text()='Comment']</td>
 	<td></td>
 </tr>
 <tr>
@@ -658,12 +663,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='Comment']/a</td>
+	<td>//a[text()='Answer']/following::a[text()='Comment']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='Comment']/a</td>
+	<td>//a[text()='Answer']/following::a[text()='Comment']</td>
 	<td></td>
 </tr>
 <tr>
@@ -733,12 +738,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Promote as answer&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Promote As Answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Promote as answer&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Promote As Answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -768,12 +773,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Promote as answer&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Promote As Answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']//div[@class='ResponseItemContainer']//a[@title=&quot;Promote as answer&quot;]</td>
+	<td>//div[@id='AnswersViewContent']//a[@title=&quot;Promote As Answer&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -793,22 +798,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title='Delete']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title='Delete']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
@@ -838,17 +843,17 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='FAQCategroManager']/div/div/div/div/div[3]//a[@class='IconItem DeleteCategory']</td>
+	<td>//div[@id='FAQCategroManager']//a[text()='Delete']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@id='FAQCategroManager']/div/div/div/div/div[3]//a[@class='IconItem DeleteCategory']</td>
+	<td>click</td>
+	<td>//div[@id='FAQCategroManager']//a[text()='Delete']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>assertConfirmation</td>
-	<td>Are you sure you want to delete this category ?</td>
+	<td>verifyConfirmation</td>
+	<td>Are you sure to delete this category?</td>
 	<td></td>
 </tr>
 <tr>
@@ -859,6 +864,11 @@
 <tr>
 	<td>verifyTextNotPresent</td>
 	<td>SNF_KS_16</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
