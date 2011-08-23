@@ -174,16 +174,21 @@
 <tr>
 	<td>storeEval</td>
 	<td>${totals}-1</td>
-	<td>totals</td>
+	<td>total1</td>
+</tr>
+<tr>
+	<td>storeEval</td>
+	<td>${totals}-1</td>
+	<td>total2</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIFAQPopupCategories${totals}']//a[text()='Edit']</td>
+	<td>//div[@id='UIFAQPopupCategories${total1}']//a[text()='Edit']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAt</td>
-	<td>//div[@id='UIFAQPopupCategories${totals}']//a[text()='Edit']</td>
+	<td>//div[@id='UIFAQPopupCategories${total1}']//a[text()='Edit']</td>
 	<td>1,1</td>
 </tr>
 <tr>
@@ -239,17 +244,17 @@
 <tr>
 	<td>contextMenu</td>
 	<td>//a[@title=&quot;SNF_KS_01 Update&quot;]</td>
-	<td>contextmenu</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIFAQPopupCategories2']/div/div/div/div/div[7]//a[@class='IconItem MoveCategory']</td>
+	<td>//div[@id='UIFAQPopupCategories${total2}']//a[text()='Move']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>mouseDown</td>
-	<td>//div[@id='UIFAQPopupCategories2']/div/div/div/div/div[7]//a[@class='IconItem MoveCategory']</td>
-	<td></td>
+	<td>clickAt</td>
+	<td>//div[@id='UIFAQPopupCategories${total2}']//a[text()='Move']</td>
+	<td>1,1</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
