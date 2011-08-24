@@ -124,7 +124,6 @@ public class AnswerDataInjector extends DataInjector {
     }
   }
 
-  @Override
   public void initParams(InitParams initParams) {
     try {
       maxCategories = getParam(initParams, "mCt", maxCategories);
@@ -136,11 +135,6 @@ public class AnswerDataInjector extends DataInjector {
     } catch (Exception e) {
       throw new RuntimeException("Could not initialize ", e);
     }
-  }
-
-  @Override
-  public boolean isInitialized() {
-    return false;
   }
 
   private int getMaxItem(int maxType) {
@@ -244,7 +238,7 @@ public class AnswerDataInjector extends DataInjector {
   }
 
   @Override
-  public void inject() throws Exception {
+  public void inject(HashMap<String, String> queryParams) throws Exception {
     String parentId = KSDataLocation.Locations.FAQ_CATEGORIES_HOME;
     infoIject = new int[] { 0, 0, 0, 0 };
     log.info("Start inject data for answer ....");
@@ -281,7 +275,7 @@ public class AnswerDataInjector extends DataInjector {
   }
 
   @Override
-  public void reject() throws Exception {
+  public void reject(HashMap<String, String> queryParams) throws Exception {
     log.info("Start remove data injected....");
     removeData();
   }
@@ -377,5 +371,10 @@ public class AnswerDataInjector extends DataInjector {
     } catch (Exception e) {
       return "No Name";
     }
+  }
+
+  @Override
+  public Object execute(HashMap<String, String> arg0) throws Exception {
+    return new Object();
   }
 }
