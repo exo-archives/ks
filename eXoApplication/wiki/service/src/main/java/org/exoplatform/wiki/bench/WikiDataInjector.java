@@ -16,16 +16,14 @@
  */
 package org.exoplatform.wiki.bench;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.Random;
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.chromattic.ext.ntdef.Resource;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.bench.DataInjector;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -45,115 +43,9 @@ import org.exoplatform.wiki.service.WikiService;
  */
 public class WikiDataInjector extends DataInjector {
   
-  private static Log         log             = ExoLogger.getLogger(WikiDataInjector.class);
-  
-  private WikiService wikiService;
-  
-  /**
-   * maximum number of children of a page
-   */
-  private int maxChildren = 3;
-  
-  /**
-   * attachment size in KB
-   */
-  private int maxAttachmentSize = 1; // kb
-  
-  /**
-   * maximum depths
-   */
-  private int maxDepths = 2;
-  
-  /**
-   * setting of user is randomize or not.
-   */
-  private boolean randomize = false;
-  
-  private int maxTotalPages = 10000;
-  
-  private String wikiType;
-  
-  private String wikiOwner;
-  
-  private String titleOfMarkedPage = "markedpage123456789";
-  
-  private int numberOfPages;
-  
-  private Resource attachment;
-  
-  private Random       rand = new Random();
-  
-  private Stack<String> pagesStack = new Stack<String>();
-  
-  public WikiDataInjector(WikiService wikiService,  InitParams params) {
-    this.wikiService = wikiService;
-    initParams(params);
-  }
-  
-  public void initParams(InitParams params) {
-    try {
-      ValueParam param = params.getValueParam("mC");
-      if (param != null)
-        maxChildren = Integer.parseInt(param.getValue());
-      param = params.getValueParam("mA");
-      if (param != null)
-        maxAttachmentSize = Integer.parseInt(param.getValue());
-      param = params.getValueParam("mD");
-      if (param != null) 
-        maxDepths = Integer.parseInt(param.getValue());
-      param = params.getValueParam("rand");
-      if (param != null)
-        randomize = Boolean.parseBoolean(param.getValue());
-      param = params.getValueParam("wo");
-      if (param != null)
-        wikiOwner = param.getValue();
-      param = params.getValueParam("wt");
-      if (param != null)
-        wikiType = param.getValue().toLowerCase();
-      param = params.getValueParam("mP");
-      if (param != null)
-        maxTotalPages = Integer.parseInt(param.getValue());;
-    } catch (Exception e) {
-      throw new RuntimeException("Could not initialize", e);
-    }
-  }
-
-  private int maxDepths() {
-    return (randomize) ? (rand.nextInt(maxDepths) + 1) : maxDepths;
-  }
-  
-  private int maxChildren() {
-    return (randomize) ? (rand.nextInt(maxChildren) + 1) : maxChildren;
-  }
-  
-  private int maxAttachmentSize() {
-    return (randomize) ? (rand.nextInt(maxAttachmentSize) + 1) : maxAttachmentSize;
-  }
-  
-  private void createPage(PageImpl parent, int currentDepth) throws Exception {
-    if (numberOfPages >= maxTotalPages) {
-      // break because of exceeding allowed number.
-      return;
-    }
-    String title = randomWords(5) + " " + IdGenerator.generate();
-    String content = randomParagraphs(5);
-    int maxDepth = maxDepths();
-    PageImpl page = (PageImpl) wikiService.createPage(wikiType, wikiOwner, title, parent.getName());
-    pagesStack.add(TitleResolver.getId(title, true));
-    numberOfPages++;
-    log.info(String.format("%1$" + (currentDepth*4) + "s Create page %2$s(th) in depth %3$s .......", " ", numberOfPages, currentDepth));
-    page.getContent().setText(content);
-    page.setPagePermission(defaultPermission);
-    page.createAttachment("att" + IdGenerator.generate() + ".txt", createAttachmentResource());
-    if (currentDepth < maxDepth) {
-      // add children
-      int childDepth = currentDepth +1;
-      int numberOfChildren = maxChildren();
-      for (int i = 0; i < numberOfChildren; i++) {
-        createPage(page, childDepth);
-      }
-    }
-  }
+  enum CONSTANTS {
+    TYPE, QUANTITIES, PREFIXES, ATT_SIZE, WIKI_TYPE, WIKI_OWNER, MAX_PAGES, NUM_PAGES, DATA, PERM, GROUP, MEMBERSHIP, USER
+  };
   
   private static HashMap<String, String[]> defaultPermission = new HashMap<String, String[]>();
   static {
@@ -161,103 +53,244 @@ public class WikiDataInjector extends DataInjector {
     defaultPermission.put("any", permissions);
   }
   
-  private Resource createAttachmentResource() {
-    if (attachment == null) {
-      attachment = Resource.createPlainText(createTextResource(maxAttachmentSize()));
-    }
-    return attachment;
+  public static final String             ARRAY_SPLIT   = ",";
+  
+  private static Log         log             = ExoLogger.getLogger(WikiDataInjector.class);
+  
+  private WikiService wikiService;
+
+  public WikiDataInjector(WikiService wikiService,  InitParams params) {
+    this.wikiService = wikiService;
   }
   
-  @Override
-  public boolean isInitialized() {
-    // allow multi-injecting
-    return false;
-  }
-  
-  @Override
-  public void inject() throws Exception {
-    int pagesPerDepth = maxChildren();
-    numberOfPages = 0;
-    
-    for (int i = 0; i < pagesPerDepth; i++) {
-      RequestLifeCycle.begin(PortalContainer.getInstance());
-      try {
-        createPage((PageImpl) wikiService.getPageById(wikiType, wikiOwner, null), 1);
-      } finally {
-        RequestLifeCycle.end();
+  private List<Integer> readQuantities(HashMap<String, String> queryParams) {
+    String quantitiesString = queryParams.get("q");
+    List<Integer> quantities = new LinkedList<Integer>();
+    for (String s : quantitiesString.split(ARRAY_SPLIT)) {
+      if (!s.isEmpty()) {
+        int quantity = Integer.parseInt(s.trim());
+        quantities.add(quantity);
       }
     }
+    return quantities;
+  }
+  
+  private List<String> readPrefixes(HashMap<String, String> queryParams) {
+    String prefixesString = queryParams.get("pre");
+    List<String> prefixes = new LinkedList<String>();
+    for (String s : prefixesString.split(ARRAY_SPLIT)) {
+      if (!s.isEmpty()) {
+        prefixes.add(s);
+      }
+    }
+    return prefixes;
+  }
+  
+  private String readWikiOwner(HashMap<String, String> queryParams) {
+    return queryParams.get("wo");
+  }
+  
+  private String readWikiType(HashMap<String, String> queryParams) {
+    return queryParams.get("wt");
+  }
 
-    if (log.isInfoEnabled())
-      log.info(String.format("%s pages have been created", numberOfPages));
+  private int readMaxAttachmentIfExist(HashMap<String, String> queryParams) {
+    String value = queryParams.get("maxAtt");
+    if (value != null)
+      return Integer.parseInt(value);
+    else return 0;
+  }
+  
+  private int readMaxPagesIfExist(HashMap<String, String> queryParams) {
+    String value = queryParams.get("mP");
+    if (value != null)
+      return Integer.parseInt(value);
+    else return 0;
+  }
+  
+  private List<String> readGroupsIfExist(HashMap<String, String> queryParams) {
+    List<String> groups = new LinkedList<String>();
+    String value = queryParams.get("groups");
+    if (value != null) {
+      String[] groupsString = value.split(ARRAY_SPLIT);
+      for (String s : groupsString) {
+        if (s.length() > 0)
+          groups.add(s.trim());
+      }
+    }
+    return groups;
+  }
+  
+  private List<String> readUsersIfExist(HashMap<String, String> queryParams) {
+    List<String> users = new LinkedList<String>();
+    String value = queryParams.get("users");
+    if (value != null) {
+      String[] groupsString = value.split(ARRAY_SPLIT);
+      for (String s : groupsString) {
+        if (s.length() > 0)
+          users.add(s.trim());
+      }
+    }
+    return users;    
+  }
+  
+  private boolean readRecursive(HashMap<String, String> queryParams) {
+    boolean recursive = false;
+    String value = queryParams.get("rcs");
+    if (value != null) {
+      recursive = Boolean.parseBoolean(value);
+    }
+    return recursive;
+  }
+  
+  private List<String> readMembershipIfExist(HashMap<String, String> queryParams) {
+    List<String> memberships = new LinkedList<String>();
+    
+    String value = queryParams.get("memship");
+    if (value != null) {
+      String[] memshipsString = value.split(ARRAY_SPLIT);
+      for (String s : memshipsString) {
+        if (s.length() > 0)
+          memberships.add(s.trim());
+      }
+    }
+    return memberships;
+  }
+  
+  private List<String> readPermission(HashMap<String, String> queryParams) {
+    String permString = queryParams.get("perm");
+    List<String> permissions = new LinkedList<String>();
+    boolean flag = Boolean.parseBoolean(permString.substring(0, 1));
+    if (flag) // check read permission
+      permissions.add(PermissionType.READ);
+    
+    flag = Boolean.parseBoolean(permString.substring(0, 1));
+    if (flag) { // check edit permission
+      permissions.add(PermissionType.ADD_NODE);
+      permissions.add(PermissionType.SET_PROPERTY);
+      permissions.add(PermissionType.REMOVE);
+    }
+    return permissions;
+  }
+  
+   
+  private String makeTitle(String prefix, String fatherTitle, int order) {
+    return prefix + " " + fatherTitle + " " + order;
+  }
+  
+  private PageImpl createPage(PageImpl father, String title, String wikiOwner, String wikiType, int attSize) throws Exception {
+    PageImpl page = (PageImpl) wikiService.createPage(wikiType, wikiOwner, title, father.getName());
+    page.getContent().setText(randomParagraphs(10));
+    page.setPagePermission(defaultPermission);
+    if (attSize > 0) {
+      page.createAttachment("att" + IdGenerator.generate() + ".txt",
+                            Resource.createPlainText(createTextResource(attSize)));
+    }
+    return page;
+  }
+  
+  private void generatePages(List<Integer> quantities,
+                             List<String> prefixes,
+                             int depth,
+                             int attSize,
+                             int totalPages,
+                             String wikiOwner,
+                             String wikiType, PageImpl father) throws Exception {
+    int numOfPages = quantities.get(depth).intValue();
+    String prefix = prefixes.get(depth);
+    for (int i = 0; i < numOfPages; i++) {
+      String title = makeTitle(prefix, father.getTitle(), i + 1);
+      String pageId = TitleResolver.getId(title, true);
+      PageImpl page = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, pageId);
+      
+      if (page == null) {
+        page = createPage(father, title, wikiOwner, wikiType, attSize);
+      }
+      log.info(String.format("%1$" + ((depth + 1)*4) + "s Process page: %2$s in depth %3$s .......", " ", page.getTitle(), depth + 1));
+      if (depth < quantities.size() - 1) {
+        generatePages(quantities, prefixes, depth + 1, attSize, totalPages, wikiOwner, wikiType, page);
+      }
+    }
+  }
+  
+  private void injectData(HashMap<String, String> queryParams) throws Exception {
+    List<Integer> quantities = readQuantities(queryParams);
+    List<String> prefixes = readPrefixes(queryParams);
+    int attSize = readMaxAttachmentIfExist(queryParams);
+    int totalPages = readMaxPagesIfExist(queryParams);
+    String wikiOwner = readWikiOwner(queryParams);
+    String wikiType = readWikiType(queryParams);
+
+    RequestLifeCycle.begin(PortalContainer.getInstance());
+    try {
+      generatePages(quantities, prefixes, 0, attSize, totalPages, wikiOwner, wikiType, (PageImpl) wikiService.getPageById(wikiType, wikiOwner, null));
+    } finally {
+      RequestLifeCycle.end();
+    }
+    
+    log.info("Injecting data has been done successfully!");
+  }
+  
+  private void grantPermission(HashMap<String, String> queryParams) {
+    List<Integer> quantities = readQuantities(queryParams);
+    List<String> prefixes = readPrefixes(queryParams);
+    String wikiOwner = readWikiOwner(queryParams);
+    String wikiType = readWikiType(queryParams);
+    List<String> perms = readPermission(queryParams);
+    String[] permsArr = perms.toArray(new String[perms.size()]);
+    RequestLifeCycle.begin(PortalContainer.getInstance());
+    try {
+      
+    } finally {
+      RequestLifeCycle.end();
+    }
+    
+  }
+  
+  @Override
+  public void inject(HashMap<String, String> queryParams) throws Exception {
+    String type = queryParams.get(CONSTANTS.TYPE.toString());
+    if (CONSTANTS.DATA.toString().equalsIgnoreCase(type)) {
+      injectData(queryParams);
+    } else if (CONSTANTS.PERM.toString().equalsIgnoreCase(type)) {
+      grantPermission(queryParams);
+    }
   }
 
   @Override
-  public void reject() throws Exception {
+  public void reject(HashMap<String, String> params) throws Exception {
+    String wikiOwner = readWikiOwner(params);
+    String wikiType = readWikiType(params);
+    List<Integer> quantities = readQuantities(params);
+    List<String> prefixes = readPrefixes(params);
+    int numOfPages = quantities.get(0);
+    String prefix = prefixes.get(0);
     RequestLifeCycle.begin(PortalContainer.getInstance());
+    PageImpl wikiHome = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, null);
     try {
-      while (!pagesStack.isEmpty()) {
-        String pageId = pagesStack.pop();
-        wikiService.deletePage(wikiType, wikiOwner, pageId);
+      for (int i = 0; i < numOfPages; i++) {
+        String title = makeTitle(prefix, wikiHome.getTitle(), i + 1);
+        String pageId = TitleResolver.getId(title, true);
+        if (wikiService.getPageById(wikiType, wikiOwner, pageId) != null) {
+          if (log.isInfoEnabled()) 
+            log.info(String.format("    Delete page: %1$s and its children ...", title));
+          wikiService.deletePage(wikiType, wikiOwner, pageId);
+        }
       }
     } finally {
       RequestLifeCycle.end();
     }
+    log.info("Rejecting data has been done successfully!");
   }
 
   @Override
   public Log getLog() {
     return log;
   }
-  
-  class TimeCounter {
-    
-    private long elapse = 0;
-    
-    private BigDecimal counter = new BigDecimal(0);
-    
-    private long startTime = 0;
-    
-    private boolean isStarted = false;
-    
-    public void start() {
-      if (isStarted) 
-        throw new IllegalStateException("The counter has been started!");
-      isStarted = true;
-      startTime = System.currentTimeMillis();
-      counter = new BigDecimal(0);
-    }
-    
-    public void pause() {
-      if (!isStarted) 
-        throw new IllegalStateException("The counter has not been started yet!");
-      isStarted = false;
-      long current = System.currentTimeMillis();
-      counter.add(new BigDecimal(current - startTime));
-    }
-    
-    public void resume() {
-      if (isStarted) 
-        throw new IllegalStateException("The counter has been started!");
-      isStarted = true;
-      startTime = System.currentTimeMillis();
-    }
-    
-    public void stop() {
-      if (!isStarted) 
-        throw new IllegalStateException("The counter has not been started yet!");
-      isStarted = false;
-      long current = System.currentTimeMillis();
-      counter.add(new BigDecimal(current - startTime));
-      elapse = counter.longValue();
-      counter = new BigDecimal(0);
-      startTime = 0;
-    }
-    
-    public long elapse() {
-      return elapse;
-    }
-    
+
+  @Override
+  public Object execute(HashMap<String, String> params) throws Exception {
+    return new Object();
   }
 
 }
