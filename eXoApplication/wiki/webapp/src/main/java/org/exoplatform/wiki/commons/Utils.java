@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Map.Entry;
 
 import javax.portlet.PortletPreferences;
@@ -259,7 +260,7 @@ public class Utils {
     String portalURL = domainURL + portalURI;
     String pageNodeSelected = uiPortal.getSelectedUserNode().getURI();
     String treeRestURL = getCurrentRestURL().concat("/wiki/tree/children/");
-
+    
     WikiContext wikiContext = new WikiContext();
     wikiContext.setPortalURL(portalURL);
     wikiContext.setTreeRestURI(treeRestURL);
@@ -271,6 +272,7 @@ public class Utils {
     wikiContext.setType(params.getType());
     wikiContext.setOwner(params.getOwner());
     wikiContext.setSyntax(syntaxBox.getValue());
+    wikiContext.setResourceBundle(wikiPortlet.getResourceBundle());
     if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
       String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
       wikiContext.setPageId(sessionId);

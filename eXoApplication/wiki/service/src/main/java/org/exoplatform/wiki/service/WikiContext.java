@@ -17,6 +17,7 @@
 package org.exoplatform.wiki.service;
 
 import java.io.Serializable;
+import java.util.ResourceBundle;
 
 import org.xwiki.rendering.syntax.Syntax;
 
@@ -57,6 +58,8 @@ public class WikiContext extends WikiPageParams implements Cloneable, Serializab
   private String             syntax           = Syntax.XWIKI_2_0.toIdString();
   
   private String             restURI;
+  
+  private ResourceBundle resourceBundle;
 
   public String getPageTitle() {
     return pageTitle;
@@ -127,10 +130,17 @@ public class WikiContext extends WikiPageParams implements Cloneable, Serializab
   public void setSyntax(String syntax) {
     this.syntax = syntax;
   }
+  
+  public ResourceBundle getResourceBundle() {
+    return resourceBundle;
+  }
+
+  public void setResourceBundle(ResourceBundle resourceBundle) {
+    this.resourceBundle = resourceBundle;
+  }
 
   @Override
   public WikiContext clone() throws CloneNotSupportedException {
-
     WikiContext obj = new WikiContext();
     obj.setAttachmentName(this.getAttachmentName());
     obj.setOwner(this.getOwner());
@@ -145,6 +155,7 @@ public class WikiContext extends WikiPageParams implements Cloneable, Serializab
     obj.setTreeRestURI(this.getTreeRestURI());
     obj.setType(this.getType());
     obj.setSyntax(this.getSyntax());
+    obj.setResourceBundle(this.getResourceBundle());
     return obj;
   }
   

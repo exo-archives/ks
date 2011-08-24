@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
@@ -27,6 +28,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
+import org.exoplatform.wiki.rendering.impl.WarningGroupBlock;
 import org.exoplatform.wiki.rendering.macro.MacroUtils;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -83,6 +85,8 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
   
   private boolean excerpt;
   
+  private ResourceBundle resourceBundle;
+  
   public ChildrenMacro() {
     super("Chilren", DESCRIPTION, ChildrenMacroParameters.class);
     setDefaultCategory(DEFAULT_CATEGORY_NAVIGATION);
@@ -92,11 +96,39 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
   public List<Block> execute(ChildrenMacroParameters parameters,
                              String content,
                              MacroTransformationContext context) throws MacroExecutionException {
+    
     boolean descendant = parameters.isDescendant();
     excerpt = parameters.isExcerpt();
     String documentName = parameters.getParent();
     String childrenNum = parameters.getChildrenNum();
     String depth = parameters.getDepth();
+    
+    // Check childrenNum parameter
+    try {
+      if (!StringUtils.isEmpty(childrenNum) && Integer.valueOf(childrenNum) < 1) {
+        ResourceBundle res = getResourceBundle();
+        Block warningGroupBlock = new WarningGroupBlock(res.getString("ChildrenMacro.msg.children-number-can-not-be-smaller-than-one"), componentManager, context);
+        return Collections.singletonList(warningGroupBlock);
+      }
+    } catch (NumberFormatException e) {
+      ResourceBundle res = getResourceBundle();
+      Block warningGroupBlock = new WarningGroupBlock(res.getString("ChildrenMacro.msg.children-number-must-be-a-number"), componentManager, context);
+      return Collections.singletonList(warningGroupBlock);
+    }
+    
+    // Check depth parameter
+    try {
+      if (!StringUtils.isEmpty(depth) && Integer.valueOf(depth) < 1) {
+        ResourceBundle res = getResourceBundle();
+        Block warningGroupBlock = new WarningGroupBlock(res.getString("ChildrenMacro.msg.depth-can-not-be-smaller-than-one"), componentManager, context);
+        return Collections.singletonList(warningGroupBlock);
+      }
+    } catch (NumberFormatException e) {
+      ResourceBundle res = getResourceBundle();
+      Block warningGroupBlock = new WarningGroupBlock(res.getString("ChildrenMacro.msg.depth-must-be-a-number"), componentManager, context);
+      return Collections.singletonList(warningGroupBlock);
+    }
+    
     model = (DefaultWikiModel) getWikiModel(context);
     WikiPageParams params = model.getWikiMarkupContext(documentName,ResourceType.DOCUMENT);
     if (StringUtils.EMPTY.equals(documentName)) {
@@ -187,4 +219,22 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     }
   }
   
+  private WikiContext getWikiContext() {
+    ExecutionContext ec = execution.getContext();
+    if (ec != null) {
+      WikiContext wikiContext = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
+      return wikiContext;
+    }
+    return null;
+  }
+  
+  private ResourceBundle getResourceBundle() {
+    if (resourceBundle == null) {
+      WikiContext wikiContext = getWikiContext();
+      if (wikiContext != null) {
+        resourceBundle = wikiContext.getResourceBundle();
+      }
+    }
+    return resourceBundle;
+  }
 }

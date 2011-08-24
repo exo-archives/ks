@@ -146,6 +146,14 @@ body .wiki-body, html .wiki-body {
 	color: #D5A13D;
 }
 
+.WikiWarningMessage {
+  padding: 8px 28px;
+  text-align: justify;
+  background: #F5F5F5 none no-repeat scroll 6px 8px;
+  background-image: url("background/error.gif");
+  color: #D5A13D;
+}
+
 .errormessage {
 	background-image: url("background/error.gif");
 	color: #E14726;

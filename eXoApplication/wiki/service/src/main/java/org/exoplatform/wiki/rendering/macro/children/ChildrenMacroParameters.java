@@ -18,7 +18,6 @@ package org.exoplatform.wiki.rendering.macro.children;
 
 import org.apache.commons.lang.StringUtils;
 import org.xwiki.properties.annotation.PropertyDescription;
-import org.xwiki.rendering.macro.parameter.ParameterValueTooLowException;
 
 /**
  * Created by The eXo Platform SAS
@@ -122,10 +121,7 @@ public class ChildrenMacroParameters {
    * @throws ParameterValueTooLowException the provided value is too low, it needs to be >= 1.
    */
   @PropertyDescription("The number of children. If not specified, no limit is applied")
-  public void setChildrenNum(String childrenNum) throws ParameterValueTooLowException {
-    if (Integer.valueOf(childrenNum) < 1) {
-      throw new ParameterValueTooLowException(1);
-    }
+  public void setChildrenNum(String childrenNum) {
     this.childrenNum = childrenNum;
   }
 
@@ -141,10 +137,7 @@ public class ChildrenMacroParameters {
    * @throws ParameterValueTooLowException the provided value is too low, it needs to be >= 1.
    */
   @PropertyDescription("Depth of children. If not specified, no limit is applied")
-  public void setDepth(String depth) throws ParameterValueTooLowException {
-    if (Integer.valueOf(depth) <1) {
-      throw new ParameterValueTooLowException(1);
-    }
+  public void setDepth(String depth) {
     this.depth = depth;
   }  
 

@@ -17,6 +17,7 @@
 package org.exoplatform.wiki.webui;
 
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
@@ -83,6 +84,8 @@ public class UIWikiPortlet extends UIPortletApplication {
   public static String          WIKI_PORTLET_ACTION_PREFIX = "UIWikiPortlet_";
 
   private String                redirectURL                = "";
+  
+  private ResourceBundle resourceBundle;
 
   public static enum PopupLevel {
     L1,
@@ -114,6 +117,14 @@ public class UIWikiPortlet extends UIPortletApplication {
 
   public void setPortletPreferences(WikiPortletPreference portletPreferences) {
     this.portletPreferences = portletPreferences;
+  }
+  
+  public ResourceBundle getResourceBundle() {
+    if (resourceBundle == null) {
+      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+      resourceBundle = context.getApplicationResourceBundle();
+    }
+    return resourceBundle;
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {

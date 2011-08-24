@@ -19,11 +19,13 @@ package org.exoplatform.wiki.rendering.macro.pagetree;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
+import org.exoplatform.wiki.rendering.impl.WarningGroupBlock;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.tree.TreeNode;
@@ -74,6 +76,8 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
   
   private boolean excerpt;
   
+  private ResourceBundle resourceBundle;
+  
   public PageTreeMacro() {
     super("Page Tree", DESCRIPTION, PageTreeMacroParameters.class);
     setDefaultCategory(DEFAULT_CATEGORY_NAVIGATION);
@@ -86,6 +90,20 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
     String documentName = parameters.getRoot();
     String startDepth = parameters.getStartDepth();
     excerpt = parameters.isExcerpt();
+    
+    // Check depth parameter
+    try {
+      if (!StringUtils.isEmpty(startDepth) && Integer.valueOf(startDepth) < 1) {
+        ResourceBundle res = getResourceBundle();
+        Block warningGroupBlock = new WarningGroupBlock(res.getString("PageTreeMacro.msg.start-depth-can-not-be-smaller-than-one"), componentManager, context);
+        return Collections.singletonList(warningGroupBlock);
+      }
+    } catch (NumberFormatException e) {
+      ResourceBundle res = getResourceBundle();
+      Block warningGroupBlock = new WarningGroupBlock(res.getString("PageTreeMacro.msg.start-depth-must-be-a-number"), componentManager, context);
+      return Collections.singletonList(warningGroupBlock);
+    }
+    
     model = (DefaultWikiModel) getWikiModel(context);
     WikiPageParams params = model.getWikiMarkupContext(documentName,ResourceType.DOCUMENT);
     if (StringUtils.EMPTY.equals(documentName)) {
@@ -184,4 +202,13 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
     return null;
   }
   
+  private ResourceBundle getResourceBundle() {
+    if (resourceBundle == null) {
+      WikiContext wikiContext = getWikiContext();
+      if (wikiContext != null) {
+        resourceBundle = wikiContext.getResourceBundle();
+      }
+    }
+    return resourceBundle;
+  }
 }
