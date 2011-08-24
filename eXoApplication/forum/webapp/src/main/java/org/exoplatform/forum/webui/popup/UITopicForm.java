@@ -156,8 +156,6 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 
   private String                topicId;
 
-  private String                link                             = ForumUtils.EMPTY_STR;
-
   private Forum                 forum;
 
   private boolean               isMod                            = false;
@@ -276,14 +274,6 @@ public class UITopicForm extends BaseForumForm implements UISelector {
     actions.add(ad);
     UIForumInputWithActions threadOption = this.getChildById(FIELD_THREADOPTION_TAB);
     threadOption.setActionField(FIELD_TOPICTYPE_SELECTBOX, actions);
-  }
-
-  public String getLink() {
-    return link;
-  }
-
-  public void setLink(String link) {
-    this.link = link;
   }
 
   public void setIsDetail(boolean isDetail) {

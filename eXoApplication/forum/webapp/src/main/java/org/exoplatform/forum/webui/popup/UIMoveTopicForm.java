@@ -67,17 +67,7 @@ public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
 
   private boolean        isAdmin     = false;
 
-  private String         link        = ForumUtils.EMPTY_STR;
-
   private String         pathTopic   = ForumUtils.EMPTY_STR;
-
-  public String getLink() {
-    return link;
-  }
-
-  public void setLink(String link) {
-    this.link = link;
-  }
 
   public boolean isAdmin() {
     return isAdmin;

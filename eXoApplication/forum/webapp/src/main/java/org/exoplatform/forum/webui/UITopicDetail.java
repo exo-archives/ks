@@ -151,8 +151,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   private String                     topicId                 = ForumUtils.EMPTY_STR;
 
-  private String                     link                    = ForumUtils.EMPTY_STR;
-
   private Forum                      forum;
 
   private Topic                      topic                   = new Topic();
@@ -268,14 +266,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   public boolean isOnline(String userId) throws Exception {
     return getForumService().isOnline(userId);
-  }
-
-  public String getLink() {
-    return link;
-  }
-
-  public void setLink(String link) {
-    this.link = link;
   }
 
   private int getPagePostRemember(String topicId) {

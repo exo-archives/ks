@@ -72,8 +72,6 @@ public class UIQuickReplyForm extends UIForm {
 
   private String             userName;
 
-  private String             links                  = ForumUtils.EMPTY_STR;
-
   private Topic              topic;
 
   private boolean            isModerator            = false;
@@ -82,10 +80,6 @@ public class UIQuickReplyForm extends UIForm {
 
   public UIQuickReplyForm() {
     addUIFormInput(new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null));
-  }
-
-  private String getLink() {
-    return links;
   }
 
   public void setInitForm(String categoryId, String forumId, String topicId, boolean isModerator) throws Exception {

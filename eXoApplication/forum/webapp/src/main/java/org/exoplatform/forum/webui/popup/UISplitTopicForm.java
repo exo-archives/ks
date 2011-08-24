@@ -59,8 +59,6 @@ import org.exoplatform.webui.form.UIFormStringInput;
 public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UIPopupComponent {
   private Topic              topic                   = new Topic();
 
-  private String             link;
-
   private boolean            isRender                = true;
 
   private boolean            isSetPage               = true;
@@ -76,14 +74,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
   }
 
   public void deActivate() throws Exception {
-  }
-
-  public String getLink() {
-    return link;
-  }
-
-  public void setLink(String link) {
-    this.link = link;
   }
 
   public boolean getIdRender() {

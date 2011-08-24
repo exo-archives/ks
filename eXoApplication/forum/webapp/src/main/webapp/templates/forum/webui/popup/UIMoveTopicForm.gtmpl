@@ -9,9 +9,7 @@
 	<div class="TitleMoveThreads"><%=_ctx.appRes("UISelectItemForum.label.ChooseDestinationForum")%>:</div>
 	<div class="UITree ScrollArea">
 		<div class="TreeContainer ParentNode">
-		<% 
-			String url = uicomponent.url("Cancel","pathId");
-		 	uicomponent.setLink(url);
+		<%
 											 
 			List categories = uicomponent.getCategories(); 
 			for(category in categories) {

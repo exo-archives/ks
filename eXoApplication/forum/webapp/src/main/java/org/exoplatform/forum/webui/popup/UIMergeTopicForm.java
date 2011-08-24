@@ -60,8 +60,6 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
 
   private List<Topic>         listTopic;
 
-  private String              link;
-
   public UIMergeTopicForm() throws Exception {
   }
 
@@ -80,14 +78,6 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
     }
     addUIFormInput(destination);
     addUIFormInput(titleThread);
-  }
-
-  public String getLink() {
-    return link;
-  }
-
-  public void setLink(String link) {
-    this.link = link;
   }
 
   public void updateTopics(List<Topic> topics) {
@@ -121,8 +111,7 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
           String temp[] = destTopicPath.split(ForumUtils.SLASH);
           String categoryId = temp[temp.length - 3];
           String forumId = temp[temp.length - 2];
-          ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-          String link = uiForm.getLink();
+          ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);          
           WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
           ResourceBundle res = context.getApplicationResourceBundle();
           String emailContent = res.getString("UINotificationForm.label.EmailToAuthorMoved");
@@ -133,7 +122,7 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
               }
               try {
                 // set link
-                link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");
+                String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");
                 forumService.mergeTopic(categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topic.getId(), destTopicPath, emailContent, link);
               } catch (Exception e) {
                 isMerge = false;

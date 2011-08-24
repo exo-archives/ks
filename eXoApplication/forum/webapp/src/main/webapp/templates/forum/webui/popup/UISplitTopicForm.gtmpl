@@ -9,8 +9,6 @@
 	List posts = uicomponent.getListPost();
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-	String url = uicomponent.url("Cancel","pathId");
- 	uicomponent.setLink(url);
 %>
 <div class="UISplitTopicForm" style="padding:10px;">
 	<% uiform.begin() %>

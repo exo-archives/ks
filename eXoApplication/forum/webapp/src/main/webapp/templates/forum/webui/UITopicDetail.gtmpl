@@ -79,8 +79,6 @@
 		  isShowMenu = false;
 		  isNull = true;
 		}
-		String urlTopic = uicomponent.url("ViewThreadByUser", "pathId");
-		uicomponent.setLink(urlTopic);
 		isNotLogin = uicomponent.isNotLogin() ;
 		if(isNotLogin){
 			linkGest = ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId()+"/false").replaceFirst("/public/", "/private/");

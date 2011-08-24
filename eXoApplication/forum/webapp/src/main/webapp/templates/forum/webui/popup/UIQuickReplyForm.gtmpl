@@ -23,7 +23,7 @@
 									<div class=""><%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%></div>
 								</div>
 								<div class="ActionContent">
-							<%	uicomponent.links =  uicomponent.url("QuickReply", "pathId");
+							<%
 								for(action in uicomponent.getActions()) { 
 									 String actionLabel = _ctx.appRes("UITopicDetail.action." + action); 
 									 String link = uicomponent.event(action) ;

@@ -116,8 +116,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 
   private boolean               isMP                   = false;
 
-  private String                link                   = ForumUtils.EMPTY_STR;
-
   private boolean               isDoubleClickSubmit    = false;
 
   public UIPostForm() throws Exception {
@@ -148,14 +146,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     addUIFormInput(threadContent);
     addUIFormInput(inputIconSelector);
     this.setActions(new String[] { "PreviewPost", "SubmitPost", "Cancel" });
-  }
-
-  public String getLink() {
-    return link;
-  }
-
-  public void setLink(String link) {
-    this.link = link;
   }
 
   @SuppressWarnings("unused")

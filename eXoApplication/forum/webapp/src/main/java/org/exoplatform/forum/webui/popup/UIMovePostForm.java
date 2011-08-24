@@ -68,8 +68,6 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
 
   private List<Category> categories;
 
-  private String         link;
-
   private String         pathPost = ForumUtils.EMPTY_STR;
 
   public UIMovePostForm() throws Exception {
@@ -79,14 +77,6 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
   }
 
   public void deActivate() throws Exception {
-  }
-
-  public String getLink() {
-    return link;
-  }
-
-  public void setLink(String link) {
-    this.link = link;
   }
 
   @SuppressWarnings("unused")
