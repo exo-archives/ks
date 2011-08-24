@@ -63,12 +63,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='FAQCategroManager']//a[text()='Add Category']</td>
+	<td>link=Add Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='FAQCategroManager']//a[text()='Add Category']</td>
+	<td>link=Add Category</td>
 	<td></td>
 </tr>
 <tr>
@@ -168,7 +168,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIBreadcumbs']/div/div/div/div[1]/a</td>
+	<td>//div[@id='UIBreadcumbs']//a[@title='Home']</td>
 	<td></td>
 </tr>
 <tr>
@@ -237,8 +237,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIForumUserSettingForm']//div[contains(text(),'Forum Settings')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//form/div[2]/div/div/div/div[1]/div/div/div/div/div[2]/div/div/div/div</td>
+	<td>//form[@id='UIForumUserSettingForm']//div[contains(text(),'Forum Settings')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -263,12 +268,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form/div[2]/div/div/div/div[1]/div/div/div/div/div[3]/div/div/div/div</td>
+	<td>//form[@id='UIForumUserSettingForm']//div[contains(text(),'My Subscriptions')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form/div[2]/div/div/div/div[1]/div/div/div/div/div[3]/div/div/div/div</td>
+	<td>//form[@id='UIForumUserSettingForm']//div[contains(text(),'My Subscriptions')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -288,12 +293,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[contains(@onclick,'Save')]</td>
+	<td>//form[@id='UIForumUserSettingForm']//a[contains(text(),'Save')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[contains(@onclick,'Save')]</td>
+	<td>//form[@id='UIForumUserSettingForm']//a[contains(text(),'Save')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -363,23 +368,23 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form/div[2]/div/div/div/div[1]/div/div/div/div/div[3]/div/div/div/div</td>
+	<td>//form[@id='UIForumUserSettingForm']//div[contains(text(),'My Subscriptions')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form/div[2]/div/div/div/div[1]/div/div/div/div/div[3]/div/div/div/div</td>
+	<td>//form[@id='UIForumUserSettingForm']//div[contains(text(),'My Subscriptions')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementNotPresent</td>
-	<td>//div[@class='DeleteIcon']</td>
+	<td>//div[contains(@onclick,'DeleteEmailWatch')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementNotPresent</td>
-	<td>//div[@class='DeleteIcon']</td>
-	<td>Cate1_SNF_KS_44</td>
+	<td>//div[contains(@onclick,'DeleteEmailWatch')]</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -508,12 +513,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIBreadcumbs']/div/div/div/div[1]/a[1]</td>
+	<td>//div[@id='UIBreadcumbs']//a[@title='Home']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIBreadcumbs']/div/div/div/div[1]/a[1]</td>
+	<td>//div[@id='UIBreadcumbs']//a[@title='Home']</td>
 	<td></td>
 </tr>
 <tr>
@@ -1088,7 +1093,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Quick reply</td>
+	<td>link=Quick Reply</td>
 	<td></td>
 </tr>
 <tr>
@@ -1113,7 +1118,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Quick reply</td>
+	<td>link=Quick Reply</td>
 	<td></td>
 </tr>
 <tr>
@@ -1138,7 +1143,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Quick reply</td>
+	<td>link=Quick Reply</td>
 	<td></td>
 </tr>
 <tr>
@@ -1163,7 +1168,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Quick reply</td>
+	<td>link=Quick Reply</td>
 	<td></td>
 </tr>
 <tr>
@@ -1188,7 +1193,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Quick reply</td>
+	<td>link=Quick Reply</td>
 	<td></td>
 </tr>
 <tr>
@@ -1213,7 +1218,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Quick reply</td>
+	<td>link=Quick Reply</td>
 	<td></td>
 </tr>
 <tr>
@@ -1248,12 +1253,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIBreadcumbs']/div/div/div/div[1]/a[1]</td>
+	<td>//div[@id='UIBreadcumbs']//a[@title='Home']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIBreadcumbs']/div/div/div/div[1]/a[1]</td>
+	<td>//div[@id='UIBreadcumbs']//a[@title='Home']</td>
 	<td></td>
 </tr>
 <tr>

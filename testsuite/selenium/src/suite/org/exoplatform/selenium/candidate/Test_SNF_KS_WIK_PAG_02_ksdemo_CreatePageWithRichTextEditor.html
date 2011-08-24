@@ -98,12 +98,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Rich text</td>
+	<td>link=Rich Text</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Rich text</td>
+	<td>link=Rich Text</td>
 	<td></td>
 </tr>
 <tr>
@@ -113,12 +113,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[text()='Link']</td>
+	<td>//td[@id='gwt-uid-16']//div[text()='Link']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[text()='Link']</td>
+	<td>//td[@id='gwt-uid-16']//div[text()='Link']</td>
 	<td></td>
 </tr>
 <tr>
@@ -128,12 +128,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[text()='Web Page...']</td>
+	<td>//td[@id='gwt-uid-10']/div[text()='Web Page...']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[text()='Web Page...']</td>
+	<td>//td[@id='gwt-uid-10']/div[text()='Web Page...']</td>
 	<td></td>
 </tr>
 <tr>
@@ -164,7 +164,7 @@
 <tr>
 	<td>type</td>
 	<td>//input[@title='Type the label of the created link.']</td>
-	<td>Google </td>
+	<td>Google</td>
 </tr>
 <tr>
 	<td>echo</td>
@@ -183,7 +183,7 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-- Press Creat Link button</td>
+	<td>-- Press Create Link button</td>
 	<td></td>
 </tr>
 <tr>
@@ -203,16 +203,21 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//a[@title='Save']</td>
+	<td>//div[@id='UIWikiPageEditForm_PageToolBar']//a[@title='Save']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAt</td>
-	<td>//a[@title='Save']</td>
+	<td>//div[@id='UIWikiPageEditForm_PageToolBar']//a[@title='Save']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
+	<td>link=Page1_SNF_KS_58</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
 	<td>link=Page1_SNF_KS_58</td>
 	<td></td>
 </tr>
@@ -233,12 +238,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Rich text</td>
+	<td>link=Rich Text</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Rich text</td>
+	<td>link=Rich Text</td>
 	<td></td>
 </tr>
 <tr>
@@ -272,6 +277,11 @@
 	<td>4</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[2]/div/div[2]/input</td>
+	<td>3</td>
+</tr>
+<tr>
 	<td>type</td>
 	<td>//div[2]/div/div[2]/input</td>
 	<td>3</td>
@@ -282,8 +292,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//button[text()='Insert Table']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//button[@type='button']</td>
+	<td>//button[text()='Insert Table']</td>
 	<td></td>
 </tr>
 <tr>
@@ -333,52 +348,67 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Rich text</td>
+	<td>link=Rich Text</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Rich text</td>
+	<td>link=Rich Text</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[contains(@id,'UIWikiRichTextArea_TextArea_container')]/div[@class='xRichTextEditor']//td[4]/div</td>
+	<td>//td[@id='gwt-uid-26']//div[text()='Macro']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[contains(@id,'UIWikiRichTextArea_TextArea_container')]/div[@class='xRichTextEditor']//td[4]/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@class='gwt-MenuBarPopup']//table//table//td</td>
+	<td>//td[@id='gwt-uid-26']//div[text()='Macro']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[1]/select</td>
+	<td>//td[@id='gwt-uid-25']//div[text()='Insert Macro...']</td>
 	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//td[@id='gwt-uid-25']//div[text()='Insert Macro...']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//select[@title='Select a macro category']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//select[@title='Select a macro category']</td>
+	<td>1,1</td>
 </tr>
 <tr>
 	<td>select</td>
-	<td>//div[1]/select</td>
+	<td>//select[@title='Select a macro category']</td>
 	<td>label=Formatting</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[3]/div/div[4]/div</td>
+	<td>//div[text()='Div']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[3]/div/div[4]/div</td>
+	<td>//div[text()='Div']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//button[text()='Select']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//button[@type='button']</td>
+	<td>//button[text()='Select']</td>
 	<td></td>
 </tr>
 <tr>
@@ -393,12 +423,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//button[2]</td>
+	<td>//button[text()='Insert Macro']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//button[2]</td>
+	<td>//button[text()='Insert Macro']</td>
 	<td></td>
 </tr>
 <tr>
@@ -433,12 +463,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIWikiPageContentArea']/div[2]/table/tbody/tr[1]/td[1]</td>
+	<td>//div[@id='UIWikiPageContentArea']//td[text()='TopLeft']</td>
 	<td>TopLeft</td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>//div[@id='UIWikiPageContentArea']/div[2]/table/tbody/tr[1]/td[1]</td>
+	<td>//div[@id='UIWikiPageContentArea']//td[text()='TopLeft']</td>
 	<td>TopLeft</td>
 </tr>
 <tr>
@@ -483,12 +513,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td>//div[@id='UIWikiPageArea']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//div[@id='UIWikiPageArea']/div/div[2]/table/tbody/tr/td[1]/div/div/div/div/a</td>
+	<td>//div[@id='UIWikiPageArea']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
