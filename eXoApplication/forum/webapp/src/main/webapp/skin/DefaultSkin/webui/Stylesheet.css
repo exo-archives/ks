@@ -444,7 +444,12 @@
 	z-index:5;
 	position:absolute ;
 	visibility:visible;
-	background:url('background/Point1x1.png') no-repeat top center ;	
+	background:url('background/Point1x1.png') no-repeat top center ;
+	user-select:none;
+	-moz-user-select:none;
+	-khtml-user-select:none;
+	-webkit-user-select:none;
+	-o-user-select:none;
 }
 
 .UIForumPortlet .ContentAction .UIPopupCategory {
