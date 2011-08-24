@@ -9,7 +9,6 @@
   String tourUrl = nodeURL.setResource(resource).toString();
   NavigationResource resource = new NavigationResource(SiteType.PORTAL, Util.getPortalRequestContext().getPortalOwner(), "register");
 	String registerUri = nodeURL.setResource(resource).toString();
-	registerUri.replaceFirst("private", "public");
 %>
 
 <div class="SideBar">

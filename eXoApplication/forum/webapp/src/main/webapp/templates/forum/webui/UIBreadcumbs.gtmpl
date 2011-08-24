@@ -69,12 +69,6 @@
 				  <%String toolTip = uicomponent.getToolTip();
 				    if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) && !toolTip.equals("tag")){
 					    toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
-					    
-					  if(uicomponent.checkLinkPrivate(id)){
-					  	link = link.replaceFirst("public", "private");
-					  } else {
-					  	link = link.replaceFirst("private", "public");
-					  }
 				  %>
 					<div class="ForumSeparatorLine" style="float:right;">
 						<div class="ShareLink">

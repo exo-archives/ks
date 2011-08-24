@@ -89,7 +89,7 @@ ForumSendNotification.prototype.getContentHTML = function(message){
 	if(message.type=='PrivatePost'){
 		type = this.post;
 		link = String(this.GoDirectly).replace('TYPE', type);
-		link = link.replace(' LINK', '<a style="color:#204AA0" href="'+ String(message.id).replace('public', 'private') +'">') +	'</a>';
+		link = link.replace(' LINK', '<a style="color:#204AA0" href="'+ String(message.id) +'">') +	'</a>';
 	} else {
 		link = String(this.GoDirectly).replace('TYPE', type);
 		var alink = document.getElementById('privateMessageLink');

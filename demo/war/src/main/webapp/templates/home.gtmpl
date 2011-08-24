@@ -3,7 +3,7 @@
 	
   def prContext = _ctx.getRequestContext().getParentAppRequestContext();
   String portalRequestContext = Util.getPortalRequestContext().getRequestContextPath();
-  String autoLoginLink = portalRequestContext + "/" + "login?username=root&amp;password=gtn&amp;initialURI=" + portalRequestContext + "/private/classic";
+  String autoLoginLink = portalRequestContext + "/" + "login?username=root&amp;password=gtn&amp;initialURI=" + portalRequestContext + "/classic";
 %>
 <div class="UIKsHomepage" id="$uicomponent.id">
 

@@ -36,7 +36,7 @@ import org.exoplatform.services.security.MembershipEntry;
  * @author Vu Duy Tu
  * 
  */
-@Path("private/ks/poll")
+@Path("ks/poll")
 public class PollWebservice implements ResourceContainer {
   private static final Log   log      = ExoLogger.getLogger(PollWebservice.class);
 

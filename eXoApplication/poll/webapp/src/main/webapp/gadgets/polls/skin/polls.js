@@ -10,7 +10,7 @@ function createRequestUrl(){
 	var pollId = prefs.getString("pollId");
 	var restURL = "/portal/rest";
 	if (top.location.href.indexOf("ksdemo") != -1) restURL = "/ksdemo/rest-ksdemo" 
-	var url = restURL + "/private/ks/poll/viewpoll/"; 
+	var url = restURL + "/ks/poll/viewpoll/"; 
 	if(pollId) {
 		pollId = new String(pollId);
 		url = url + pollId.trim() ;
