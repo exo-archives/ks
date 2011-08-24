@@ -1214,10 +1214,7 @@
 		
 			<!-- -------------------------------------- Print function ------------------------------- -->
 			
-	        <div id="PrintAction" class="UIAction TextAlignRight" >
-	          <a href="javascript:void(0);" onclick="javascript:eXo.faq.UIAnswersPortlet.closePrint();" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIQuestions.action.ClosePrintQuestion")%></a>
-	          <a href="javascript:void(0);" onclick="javascript:window.print();" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIQuestions.action.Print")%></a>
-	        </div>
+	        <div id="PrintAction" print="<%=_ctx.appRes("UIQuestions.action.Print")%>" cancel="<%=_ctx.appRes("UIQuestions.action.ClosePrintQuestion")%>"></div>
 			
 		</div>
 		<%

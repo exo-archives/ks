@@ -271,13 +271,26 @@ UIAnswersPortlet.prototype.printPreview = function(obj) {
 	var dummyPortlet = document.createElement("div") ;
 	var FAQContainer = document.createElement("div") ;
 	var FAQContent = document.createElement("div") ;
-	var printAction = document.createElement("div") ;
+	var printActions = document.createElement("div") ;
+	printActions.className = "UIAction";
+	printActions.style.display = "block" ;
 	var printActionInApp = document.getElementById("PrintAction") ;
-	printAction.innerHTML = printActionInApp.innerHTML;
+
+	var cancelAction = document.createElement("a") ;
+	cancelAction.innerHTML = printActionInApp.getAttribute("cancel");
+	cancelAction.className = "ActionButton LightBlueStyle";
+	cancelAction.href = "javascript:void(0);";
+	var printAction = document.createElement("a") ;
+	printAction.href = "javascript:void(0);";
+	printAction.innerHTML = printActionInApp.getAttribute("print");
+	printAction.className = "ActionButton LightBlueStyle";
+
+	printActions.appendChild(cancelAction);
+	printActions.appendChild(printAction);
+
 	dummyPortlet.className = "UIAnswersPortlet UIPrintPreview" ;
 	FAQContainer.className = "AnswersContainer" ;
 	FAQContent.className = "FAQContent" ;
-	printAction.style.display = "block" ;
 	var isIE = document.all?true:false;
 	if(!isIE){
 		var cssContent = document.createElement("div") ;
@@ -287,7 +300,7 @@ UIAnswersPortlet.prototype.printPreview = function(obj) {
 	}
 	FAQContent.appendChild(printArea) ;
 	FAQContainer.appendChild(FAQContent) ;
-	FAQContainer.appendChild(printAction) ;
+	FAQContainer.appendChild(printActions) ;
 	dummyPortlet.appendChild(FAQContainer) ;
 	if(isIE) {
 		var displayElms = DOMUtil.getElemementsByClass(dummyPortlet, "DisablePrint");
@@ -297,13 +310,18 @@ UIAnswersPortlet.prototype.printPreview = function(obj) {
 		}
 	}
 	dummyPortlet = this.removeLink(dummyPortlet);
-	//dummyPortlet.style.position ="absolute";
 	dummyPortlet.style.width ="98.5%";
-	dummyPortlet.style.zIndex = 1;
 	document.body.insertBefore(this.removeLink(dummyPortlet),uiPortalApplication) ;
 	uiPortalApplication.style.display = "none";
 	window.scroll(0,0) ;
 	
+	cancelAction.onclick = function (){
+		eXo.faq.UIAnswersPortlet.closePrint();
+	};
+	printAction.onclick = function () {
+		window.print();
+	};
+
 	this.viewImage = false;
 };
 
