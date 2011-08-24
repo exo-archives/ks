@@ -1440,7 +1440,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       topicCreatedByUser.setUserId(userId);
     }
   }
-
+  private String getTitle(String title, WebuiRequestContext context) {
+    String strRe = context.getApplicationResourceBundle().getString("UIPostForm.label.ReUser")+": ";
+    if (title.indexOf(strRe) == 0) {
+      title = title.replaceAll(strRe, ForumUtils.EMPTY_STR);
+    }
+    return strRe + title;
+  }
+  
   static public class QuickReplyActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       if (topicDetail.isDoubleClickQuickReply)
@@ -1480,7 +1487,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
             String userName = topicDetail.userProfile.getUserId();
             Topic topic = topicDetail.topic;
             Post post = new Post();
-            post.setName(topicDetail.getLabel("Re") + topic.getTopicName());
+            post.setName(topicDetail.getTitle(topic.getTopicName(), event.getRequestContext()));
             post.setMessage(message);
             post.setOwner(userName);
             post.setRemoteAddr(topicDetail.getRemoteIP());
@@ -1547,7 +1554,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         String userName = topicDetail.userProfile.getUserId();
         Topic topic = topicDetail.topic;
         Post post = new Post();
-        post.setName(topicDetail.getLabel("Re") + topic.getTopicName());
+        post.setName(topicDetail.getTitle(topic.getTopicName(), event.getRequestContext()));
         post.setMessage(message);
         post.setOwner(userName);
         post.setRemoteAddr(ForumUtils.EMPTY_STR);

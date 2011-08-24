@@ -504,9 +504,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
         if (forumPortlet.checkForumHasAddTopic(uiForm.categoryId, uiForm.forumId)) {
           int t = 0, k = 1;
           UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
-          UIFormStringInput stringInputTitle = threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT);
-          String topicTitle = " " + stringInputTitle.getValue();
-          topicTitle = topicTitle.trim();
+          String topicTitle = (" " + threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).getValue()).trim();
           int maxText = ForumUtils.MAXTITLE;
           if (topicTitle.length() > maxText) {
             String[] args = { uiForm.getLabel(FIELD_TOPICTITLE_INPUT), String.valueOf(maxText) };

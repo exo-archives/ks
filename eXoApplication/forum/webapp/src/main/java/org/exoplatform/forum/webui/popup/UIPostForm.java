@@ -94,6 +94,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 
   public static final String    FIELD_THREADICON_TAB   = "IconAndSmiley";
 
+  public static String          STR_RE                 = "";
+
   private int                   tabId                  = 0;
 
   private List<ForumAttachment> attachments_           = new ArrayList<ForumAttachment>();
@@ -225,17 +227,12 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     if (!ForumUtils.isEmpty(this.postId) && post != null) {
       String message = post.getMessage();
       if (isQuote) {// quote
-        String title = ForumUtils.EMPTY_STR;
-        if (post.getName().indexOf(": ") > 0)
-          title = post.getName();
-        else
-          title = getLabel(FIELD_LABEL_QUOTE) + ": " + post.getName();
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(title);
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getTitle(post.getName()));
         String value = "[QUOTE=" + post.getOwner() + "]" + message + "[/QUOTE]";
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
         getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
       } else if (isPP) {
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + this.topic.getTopicName());
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getTitle(topic.getTopicName()));
         getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
       } else {// edit
         editReason.setRendered(true);
@@ -249,10 +246,20 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       }
     } else {
       if (!isQuote) {// reply
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + this.topic.getTopicName());
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getTitle(topic.getTopicName()));
         getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
       }
     }
+  }
+
+  private String getTitle(String title) {
+    if (ForumUtils.isEmpty(STR_RE)) {
+      STR_RE = getLabel(FIELD_LABEL_QUOTE) + ": ";
+    }
+    if (title.indexOf(STR_RE) == 0) {
+      title = title.replaceAll(STR_RE, ForumUtils.EMPTY_STR);
+    }
+    return STR_RE + title;
   }
 
   public void activate() throws Exception {
@@ -321,7 +328,12 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
         if (forumPortlet.checkForumHasAddPost(uiForm.categoryId, uiForm.forumId, uiForm.topicId)) {
           UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
           int t = 0, k = 1;
-          String postTitle = " " + threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
+          String postTitle = (" " + threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue()).trim();
+          boolean isAddRe = false;
+          if (postTitle.indexOf(uiForm.getTitle("")) == 0) {
+            postTitle = postTitle.replaceAll(STR_RE, ForumUtils.EMPTY_STR).trim();
+            isAddRe = true;
+          }
           int maxText = ForumUtils.MAXTITLE;
           if (postTitle.length() > maxText) {
             warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT), String.valueOf(maxText) });
@@ -339,15 +351,12 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           String userName = userProfile.getUserId();
           String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
           String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-//          message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
-//          message = StringUtils.replace(message, "'", "&apos;");
           message = ForumTransformHTML.fixAddBBcodeAction(message);
           message = CommonUtils.encodeSpecialCharInContent(message);
           
           checksms = checksms.replaceAll("&nbsp;", " ");
           t = checksms.length();
-          postTitle = postTitle.trim();
-          if (postTitle.trim().length() <= 0) {
+          if (postTitle.length() <= 0) {
             k = 0;
           }
           postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
@@ -384,7 +393,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             //
             if (uiForm.isQuote || uiForm.isMP)
               post = new Post();
-            post.setName(postTitle);
+            post.setName((isAddRe) ? uiForm.getTitle(postTitle) : postTitle);
             post.setMessage(message);
             post.setOwner(userName);
             post.setCreatedDate(new Date());
