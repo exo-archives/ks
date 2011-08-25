@@ -41,6 +41,10 @@
 	width: 16px;
 }
 
+.UIWikiPortlet .UIWikiBreadCrumb .BreadcumbsInfoBar span{
+	float:left;
+}
+
 .UIWikiPortlet .BreadcumPopup{
 	position: absolute;
 	display: none;
