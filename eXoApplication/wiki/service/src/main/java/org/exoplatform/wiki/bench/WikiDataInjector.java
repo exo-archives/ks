@@ -17,6 +17,7 @@
 package org.exoplatform.wiki.bench;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,15 +44,18 @@ import org.exoplatform.wiki.service.WikiService;
  */
 public class WikiDataInjector extends DataInjector {
   
-  enum CONSTANTS {
-    TYPE, QUANTITIES, PREFIXES, ATT_SIZE, WIKI_TYPE, WIKI_OWNER, MAX_PAGES, NUM_PAGES, DATA, PERM, GROUP, MEMBERSHIP, USER
+  public enum CONSTANTS {
+    TYPE("type"), DATA("data"), PERM("perm");
+    private final String name;
+
+    CONSTANTS(String name) {
+      this.name = name;
+    }
+    
+    public String getName() {
+      return name;
+    }
   };
-  
-  private static HashMap<String, String[]> defaultPermission = new HashMap<String, String[]>();
-  static {
-    String[] permissions = new String[] {PermissionType.READ, PermissionType.ADD_NODE, PermissionType.REMOVE, PermissionType.SET_PROPERTY};
-    defaultPermission.put("any", permissions);
-  }
   
   public static final String             ARRAY_SPLIT   = ",";
   
@@ -61,6 +65,17 @@ public class WikiDataInjector extends DataInjector {
 
   public WikiDataInjector(WikiService wikiService,  InitParams params) {
     this.wikiService = wikiService;
+  }
+  
+  private void printInputParameters(HashMap<String, String> params) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("PARAMS: \n");
+    Iterator<String> keys = params.keySet().iterator();
+    while (keys.hasNext()) {
+      String key = keys.next();
+      sb.append(String.format("%1$10s    :    %2$10s \n", key, params.get(key)));
+    }
+    log.info(sb.toString());
   }
   
   private List<Integer> readQuantities(HashMap<String, String> queryParams) {
@@ -160,11 +175,11 @@ public class WikiDataInjector extends DataInjector {
   private List<String> readPermission(HashMap<String, String> queryParams) {
     String permString = queryParams.get("perm");
     List<String> permissions = new LinkedList<String>();
-    boolean flag = Boolean.parseBoolean(permString.substring(0, 1));
+    boolean flag = Integer.parseInt(permString.substring(0, 1)) > 0;
     if (flag) // check read permission
       permissions.add(PermissionType.READ);
     
-    flag = Boolean.parseBoolean(permString.substring(0, 1));
+    flag = Integer.parseInt(permString.substring(1, 2)) > 0;
     if (flag) { // check edit permission
       permissions.add(PermissionType.ADD_NODE);
       permissions.add(PermissionType.SET_PROPERTY);
@@ -194,7 +209,6 @@ public class WikiDataInjector extends DataInjector {
   private PageImpl createPage(PageImpl father, String title, String wikiOwner, String wikiType, int attSize) throws Exception {
     PageImpl page = (PageImpl) wikiService.createPage(wikiType, wikiOwner, title, father.getName());
     page.getContent().setText(randomParagraphs(10));
-    page.setPagePermission(defaultPermission);
     if (attSize > 0) {
       page.createAttachment("att" + IdGenerator.generate() + ".txt",
                             Resource.createPlainText(createTextResource(attSize)));
@@ -214,11 +228,13 @@ public class WikiDataInjector extends DataInjector {
     for (int i = 0; i < numOfPages; i++) {
       String title = makeTitle(prefix, father.getTitle(), i + 1);
       String pageId = TitleResolver.getId(title, true);
-      PageImpl page = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, pageId);
-      
-      if (page == null) {
+      PageImpl page;
+      if (wikiService.isExisting(wikiType, wikiOwner, pageId)) {
+        page = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, pageId);
+      } else {
         page = createPage(father, title, wikiOwner, wikiType, attSize);
       }
+      if (page == null) return;
       log.info(String.format("%1$" + ((depth + 1)*4) + "s Process page: %2$s in depth %3$s .......", " ", page.getTitle(), depth + 1));
       if (depth < quantities.size() - 1) {
         generatePages(quantities, prefixes, depth + 1, attSize, totalPages, wikiOwner, wikiType, page);
@@ -227,6 +243,7 @@ public class WikiDataInjector extends DataInjector {
   }
   
   private void injectData(HashMap<String, String> queryParams) throws Exception {
+    log.info("Start to inject data ............... ");
     List<Integer> quantities = readQuantities(queryParams);
     List<String> prefixes = readPrefixes(queryParams);
     int attSize = readMaxAttachmentIfExist(queryParams);
@@ -253,45 +270,68 @@ public class WikiDataInjector extends DataInjector {
       PageImpl page = (PageImpl) wikiService.getPageById(wikiType, wikiOwner, pageId);
       if (page != null) {
         if (isRecursive || depth == (quantities.size() - 1)) {
+          log.info(String.format("Grant permissions %1$s for page: %2$s .........", permissionsToString(permissions), page.getTitle()));
           page.setPagePermission(permissions);
         }
       }
       if (depth < quantities.size() - 1) {
-        grantPermission(quantities, prefixes, depth + 1, father, wikiOwner, wikiType, permissions, isRecursive);
+        grantPermission(quantities, prefixes, depth + 1, page, wikiOwner, wikiType, permissions, isRecursive);
       }
     }
   }
   
+  private String permissionsToString(HashMap<String, String[]> permission) {
+    StringBuilder sb = new StringBuilder();
+    Iterator<String> itr = permission.keySet().iterator();
+    sb.append("(");
+    while (itr.hasNext()) {
+      String key = itr.next();
+      String[] value = permission.get(key);
+      sb.append("[" + key + ":");
+      for (String s : value) {
+        sb.append(s).append(",");
+      }
+      sb.delete(sb.length() - 1, sb.length());
+      sb.append("],");
+    }
+    if (sb.length() > 1) sb.delete(sb.length() - 1, sb.length());
+    sb.append(")");
+    return sb.toString();
+  }
   
-  private void grantPermission(HashMap<String, String> queryParams) {
+  private void grantPermission(HashMap<String, String> queryParams) throws Exception {
+    log.info("Start to grant permissions ............... ");
     List<Integer> quantities = readQuantities(queryParams);
     List<String> prefixes = readPrefixes(queryParams);
     String wikiOwner = readWikiOwner(queryParams);
     String wikiType = readWikiType(queryParams);
     HashMap<String, String[]> permissions = readPermissions(queryParams);
-    
+    boolean isRecursive = readRecursive(queryParams);
     
     RequestLifeCycle.begin(PortalContainer.getInstance());
     try {
-      
+      grantPermission(quantities, prefixes, 0, (PageImpl) wikiService.getPageById(wikiType, wikiOwner, null), wikiOwner, wikiType, permissions, isRecursive);
     } finally {
       RequestLifeCycle.end();
     }
-    
+    log.info("Permissions have been granted successfully!");
   }
   
   @Override
   public void inject(HashMap<String, String> queryParams) throws Exception {
-    String type = queryParams.get(CONSTANTS.TYPE.toString());
-    if (CONSTANTS.DATA.toString().equalsIgnoreCase(type)) {
+    printInputParameters(queryParams);
+    String type = queryParams.get(CONSTANTS.TYPE.getName());
+    if (CONSTANTS.DATA.getName().equalsIgnoreCase(type)) {
       injectData(queryParams);
-    } else if (CONSTANTS.PERM.toString().equalsIgnoreCase(type)) {
+    } else if (CONSTANTS.PERM.getName().equalsIgnoreCase(type)) {
       grantPermission(queryParams);
     }
   }
 
   @Override
   public void reject(HashMap<String, String> params) throws Exception {
+    log.info("Start to reject data ............. ");
+    printInputParameters(params);
     String wikiOwner = readWikiOwner(params);
     String wikiType = readWikiType(params);
     List<Integer> quantities = readQuantities(params);
