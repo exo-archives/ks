@@ -48,32 +48,6 @@
       <set-method>addInjector</set-method>
       <type>org.exoplatform.faq.bench.AnswerDataInjector</type>
       <description>inject data for Answer</description>
-      <init-params>
-        <value-param>
-          <name>mCt</name> <!-- maximum number of categories -->
-          <value>3</value>
-        </value-param>
-        <value-param>
-          <name>mDt</name> <!-- maximum depth of categories tree -->
-          <value>3</value>
-        </value-param>
-        <value-param>
-          <name>mQs</name> <!-- maximum number of questions -->
-          <value>3</value>
-        </value-param>
-        <value-param>
-          <name>mAs</name> <!-- maximum number of answers -->
-          <value>5</value>
-        </value-param>
-        <value-param>
-          <name>mCm</name> <!-- maximum number of comments -->
-          <value>5</value>
-        </value-param>
-        <value-param>
-          <name>rand</name> <!-- randomize or not -->
-          <value>true</value>
-        </value-param> 
-      </init-params>
     </component-plugin>
     
     <component-plugin>

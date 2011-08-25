@@ -27,7 +27,7 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * Jan 16, 2009, 10:19:51 AM
  */
 public class Comment {
-
+  public static final String COMMENT_ID = "Comment".intern();
   /** The id. */
   private String  id;
 
@@ -51,7 +51,7 @@ public class Comment {
    * Instantiates a new comment.
    */
   public Comment() {
-    id = "Comment" + IdGenerator.generate();
+    id = COMMENT_ID + IdGenerator.generate();
   }
 
   /**

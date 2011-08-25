@@ -30,7 +30,7 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  */
 
 public class Question {
-
+  public static final String   QUESTION_ID             = "Question".intern();
   /** The id. */
   private String               id;
 
@@ -114,7 +114,7 @@ public class Question {
    * Class constructor specifying id of object is created.
    */
   public Question() {
-    id = "Question" + IdGenerator.generate();
+    id = QUESTION_ID + IdGenerator.generate();
     relations = new String[] {};
     multiLanguages = new QuestionLanguage[] {};
   }

@@ -27,7 +27,7 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * Jan 16, 2009, 9:25:29 AM
  */
 public class Answer {
-
+  public static final String ANSWER_ID    = "Answer".intern();
   /** The id. */
   private String   id;
 
@@ -69,7 +69,7 @@ public class Answer {
    * Instantiates a new answer.
    */
   public Answer() {
-    id = "Answer" + IdGenerator.generate();
+    id = ANSWER_ID + IdGenerator.generate();
   }
 
   public Answer(String currentAnswer, boolean isApprovetedAnswer) {

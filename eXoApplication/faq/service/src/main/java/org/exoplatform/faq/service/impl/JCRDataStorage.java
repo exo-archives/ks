@@ -1841,7 +1841,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath());
       }
       long index = cat.getIndex();
-      boolean isResetIndex = (isAddNew || newCategory.getProperty("exo:index").getLong() != index);
+      boolean isResetIndex = (isAddNew || new PropertyReader(newCategory).l(EXO_INDEX) != index);
       long size = 0;
       if (isResetIndex) {
         size = newCategory.getParent().getNodes().getSize();
