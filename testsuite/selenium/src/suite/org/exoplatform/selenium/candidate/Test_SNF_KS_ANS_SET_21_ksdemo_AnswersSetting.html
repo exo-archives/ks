@@ -102,13 +102,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Submit question</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIQuestions']//a[text()='Submit Question']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Submit question</td>
+	<td>//div[@id='UIQuestions']//a[text()='Submit Question']</td>
 	<td></td>
 </tr>
 <tr>
@@ -128,13 +128,13 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td>//form[@id=&quot;UIQuestionForm&quot;]//a[text()='Save']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAt</td>
-	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
-	<td></td>
+	<td>//form[@id=&quot;UIQuestionForm&quot;]//a[text()='Save']</td>
+	<td>1,1</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -173,12 +173,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIPage']/div/div/div/div/div/div/div</td>
+	<td>//div[@id='UIPage']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseOver</td>
-	<td>//div[@id='UIPage']/div/div/div/div/div/div/div</td>
+	<td>//div[@id='UIPage']</td>
 	<td></td>
 </tr>
 <tr>
@@ -463,12 +463,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIPage']/div/div/div/div/div/div/div</td>
+	<td>//div[@id='UIPage']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseOver</td>
-	<td>//div[@id='UIPage']/div/div/div/div/div/div/div</td>
+	<td>//div[@id='UIPage']</td>
 	<td></td>
 </tr>
 <tr>
@@ -513,12 +513,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='FAQPortletSetting']/div[3]/table/tbody/tr/td/div/div/div/div</td>
+	<td>//form[@id='FAQPortletSetting']//a[text()='Save']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='FAQPortletSetting']/div[3]/table/tbody/tr/td/div/div/div/div</td>
+	<td>//form[@id='FAQPortletSetting']//a[text()='Save']</td>
 	<td></td>
 </tr>
 <tr>
@@ -643,12 +643,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='ActionButton LightBlueStyle']//a[text()='Comment']</td>
+	<td>//a[text()='Answer']/following::a[text()='Comment']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>//div[@class='ActionButton LightBlueStyle']//a[text()='Comment']</td>
+	<td>//a[text()='Answer']/following::a[text()='Comment']</td>
 	<td></td>
 </tr>
 <tr>
@@ -748,22 +748,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title='Delete']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@class='DecoratorMC']//table[@class='DisablePrint']//td[4]/a</td>
+	<td>//div[@id='AnswersViewContent']//a[@title='Delete']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>

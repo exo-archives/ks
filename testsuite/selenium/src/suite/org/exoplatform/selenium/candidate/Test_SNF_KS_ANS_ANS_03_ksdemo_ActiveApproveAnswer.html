@@ -62,13 +62,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Submit question</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIQuestions']//a[text()='Submit Question']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Submit question</td>
+	<td>//div[@id='UIQuestions']//a[text()='Submit Question']</td>
 	<td></td>
 </tr>
 <tr>
@@ -193,12 +193,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIPage']/div/div/div/div/div/div/div</td>
+	<td>//div[@id='UIPage']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseOver</td>
-	<td>//div[@id='UIPage']/div/div/div/div/div/div/div</td>
+	<td>//div[@id='UIPage']</td>
 	<td></td>
 </tr>
 <tr>
@@ -222,8 +222,13 @@
 	<td>label=Approved</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='FAQPortletSetting']//a[text()='Save']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//form[@id='FAQPortletSetting']/div[3]/table/tbody/tr/td/div/div/div/div</td>
+	<td>//form[@id='FAQPortletSetting']//a[text()='Save']</td>
 	<td></td>
 </tr>
 <tr>
@@ -893,17 +898,17 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='AnswersViewContent']/div/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[4]/a/div[@class='Delete']</td>
+	<td>//div[@id='AnswersViewContent']//a[@title='Delete']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div/div/div/div[@class='ButtonMiddle']</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div/div/div/div[@class='ButtonMiddle']</td>
+	<td>//form[@id='UIDeleteQuestion']//a[text()='OK']</td>
 	<td></td>
 </tr>
 <tr>
@@ -933,12 +938,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIPage']/div/div/div/div/div/div/div</td>
+	<td>//div[@id='UIPage']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>mouseOver</td>
-	<td>//div[@id='UIPage']/div/div/div/div/div/div/div</td>
+	<td>//div[@id='UIPage']</td>
 	<td></td>
 </tr>
 <tr>
@@ -962,13 +967,13 @@
 	<td>label=All</td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//form[@id='FAQPortletSetting']/div[3]/table/tbody/tr/td/div/div/div/div</td>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='FAQPortletSetting']//a[text()='Save']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>UIAnswersPortlet</td>
+	<td>click</td>
+	<td>//form[@id='FAQPortletSetting']//a[text()='Save']</td>
 	<td></td>
 </tr>
 <tr>
