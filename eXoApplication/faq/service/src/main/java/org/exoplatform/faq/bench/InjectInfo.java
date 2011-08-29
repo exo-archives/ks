@@ -18,6 +18,7 @@ package org.exoplatform.faq.bench;
 
 import java.util.HashMap;
 
+import org.exoplatform.faq.bench.AnswerDataInjector.CONSTANTS;
 import org.exoplatform.faq.service.Category;
 
 /**
@@ -45,6 +46,8 @@ public class InjectInfo {
 
   private int                txtCp         = 0;
 
+  private String             type          = "";
+
   private String             preCategories = "";
 
   private String             preQuestions  = "";
@@ -68,6 +71,14 @@ public class InjectInfo {
     this.queryParams = queryParams;
     this.rootCategory = category;
     setQueryParams(queryParams);
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
   public int getCategories() {
@@ -189,14 +200,16 @@ public class InjectInfo {
     if (mods == null || mods.length <= 0 || mods[0].trim().length() == 0) {
       mods = new String[] { "root" };
     }
-    if (perCanEdit.length > 0 || !perCanEdit[0].equals(AnswerDataInjector.CONSTANTS.ANY.getName())) {
+    if (CONSTANTS.PERM.getName().equalsIgnoreCase(type) && perCanEdit.length > 0 && 
+        !perCanEdit[0].equals(AnswerDataInjector.CONSTANTS.ANY.getName())) {
       this.perCanEdit = new String[perCanEdit.length + 1];
       this.perCanEdit[0] = mods[0];
       System.arraycopy(perCanEdit, 0, this.perCanEdit, 1, perCanEdit.length);
     } else {
       this.perCanEdit = mods;
     }
-    if (perCanView.length > 0 || !perCanView[0].equals(AnswerDataInjector.CONSTANTS.ANY.getName())) {
+    if (CONSTANTS.PERM.getName().equalsIgnoreCase(type) && perCanView.length > 0 && 
+        !perCanView[0].equals(AnswerDataInjector.CONSTANTS.ANY.getName())) {
       this.perCanView = new String[perCanView.length + 1];
       this.perCanView[0] = mods[0];
       System.arraycopy(perCanView, 0, this.perCanView, 1, perCanView.length);
@@ -217,6 +230,7 @@ public class InjectInfo {
     preQuestions = getParam(prefixes, 1);
     preAnswers = getParam(prefixes, 2);
     preComments = getParam(prefixes, 3);
+    type = queryParams.get(AnswerDataInjector.CONSTANTS.TYPE.getName());
     this.maxAtt = getParam(queryParams, AnswerDataInjector.CONSTANTS.ATT.getName(), 0);
     if (maxAtt > 0) {
       this.attCp = getParam(queryParams, AnswerDataInjector.CONSTANTS.ATTCP.getName(), 100);
