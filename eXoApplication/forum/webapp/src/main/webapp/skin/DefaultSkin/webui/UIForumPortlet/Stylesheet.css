@@ -418,6 +418,15 @@
   display: inline-block;
 }
 
+
+.UIForumPortlet .LeftBBCodeHelpPopup {
+	z-index: 100;
+}
+
+.UIForumPortlet .RightBBCodeHelpPopup {
+	z-index: 100;
+}
+
 .UIForumPortlet .LeftBBCodeHelpPopup .LeftBBCodeHelp {
 	background: url('background/TopLeft28x49.png') no-repeat top left;
 	left: 0px;

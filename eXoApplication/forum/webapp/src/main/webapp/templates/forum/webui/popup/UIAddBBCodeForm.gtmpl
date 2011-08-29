@@ -130,8 +130,7 @@
 		<div class="UIAction">
     <% for(action in uicomponent.getActions()) { 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = uicomponent.event(action) ;
-					 String onclick = "" ;
+					 String onclick = uicomponent.event(action) ;
 					 if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
 				%>
       <a href="javascript:void(0);" onclick="$onclick" class="ActionButton LightBlueStyle">$actionLabel</a>

@@ -98,7 +98,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     addUIFormInput(description);
     addUIFormInput(example);
     addUIFormInput(isOption);
-    this.setActions(new String[] { "Save", "Cancel" });
+    this.setActions(new String[] { "Save", "ResetField", "Cancel" });
   }
 
   public void activate() throws Exception {
