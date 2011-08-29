@@ -285,8 +285,8 @@ UIAnswersPortlet.prototype.printPreview = function(obj) {
 	printAction.innerHTML = printActionInApp.getAttribute("print");
 	printAction.className = "ActionButton LightBlueStyle";
 
-	printActions.appendChild(cancelAction);
 	printActions.appendChild(printAction);
+	printActions.appendChild(cancelAction);
 
 	dummyPortlet.className = "UIAnswersPortlet UIPrintPreview" ;
 	FAQContainer.className = "AnswersContainer" ;
