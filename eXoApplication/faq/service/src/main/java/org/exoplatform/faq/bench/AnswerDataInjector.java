@@ -16,22 +16,24 @@
  */
 package org.exoplatform.faq.bench;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.services.bench.DataInjector;
+import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -46,35 +48,7 @@ public class AnswerDataInjector extends DataInjector {
 
   private Map<String, String> fullNameData  = new HashMap<String, String>();
 
-  private int                 maxCategories = 3;
-
-  private int                 maxDepth      = 3;
-
-  private int                 maxQuestions  = 4;
-
-  private int                 maxAnswers    = 10;
-
-  private int                 maxComments   = 10;
-
-  private String              preCategories = "";
-
-  private String              preQuestions  = "";
-
-  private String              preAnswers    = "";
-
-  private String              preComments   = "";
-
-  private String[]            perCanView    = new String[] { "" };
-
-  private String[]            perCanEdit    = new String[] { "root" };
-  
   private int[]               infoIject     = new int[] { 0, 0, 0, 0 };
-
-  private String              SLASH         = "/".intern();
-
-  private boolean             randomize     = false;
-
-  private Random              rand;
 
   private Category            categoryRoot  = null;
 
@@ -83,20 +57,32 @@ public class AnswerDataInjector extends DataInjector {
   private FAQSetting          faqSetting    = new FAQSetting();
 
   private List<String>        categoryIds   = new ArrayList<String>();
+  
+  private int t = 1;
 
+  public static final String SLASH         = "/".intern();
   public static final String  ARRAY_SPLIT   = ",";
 
   enum CONSTANTS {
-    TYPE, PERM, DATA
+    TYPE("type"), DATA("data"), PERM("perm"), Q("q"), PRE("pre"), ANY("any"),
+    EDIT("edit"), VIEW("view"), ATT("att"), ATTCP("attCp"), TXTCP("txtCp");
+    private final String name;
+
+    CONSTANTS(String name) {
+      this.name = name;
+    }
+    
+    public String getName() {
+      return name;
+    }
   };
-  
+
   public AnswerDataInjector(FAQService faqService) {
     this.faqService = faqService;
     initDatas();
   }
 
   private void initDatas() {
-    rand = new Random();
     faqSetting.setDisplayMode("");
     faqSetting.setEmailSettingSubject("eXo Answers Notification");
     faqSetting.setEmailSettingContent("<p>We have a new question or answer by injector datas in category " +
@@ -124,69 +110,13 @@ public class AnswerDataInjector extends DataInjector {
     }
   }
 
-  private int getParam(String[] param, int index, int df) throws Exception {
-    try {
-      return Integer.parseInt(param[index].trim());
-    } catch (Exception e) {
-      return df;
+  private void printInfoOfInject(HashMap<String, String> queryParams) throws Exception {
+    log.info("PARAMS of inject: ");
+    for (String key : queryParams.keySet()) {
+      log.info(String.format(" %s : %s", key, queryParams.get(key)));
     }
-  }
-
-  private String getParam(String[] param, int index) throws Exception {
-    try {
-      return param[index].trim();
-    } catch (Exception e) {
-      return randomWords(4);
-    }
-  }
-
-  private String[] getValues(HashMap<String, String> queryParams, String key) throws Exception {
-    try {
-      return queryParams.get(key).split(ARRAY_SPLIT);
-    } catch (Exception e) {
-      return new String[]{};
-    }
-  }
-
-  private void readQuantities(HashMap<String, String> queryParams) throws Exception {
-    String[] quantities = getValues(queryParams, "q");
-    maxCategories = getParam(quantities, 0, maxCategories);
-    maxDepth = getParam(quantities, 1, maxDepth);
-    maxQuestions = getParam(quantities, 2, maxQuestions);
-    maxAnswers = getParam(quantities, 3, maxAnswers);
-    maxComments = getParam(quantities, 4, maxComments);
   }
   
-  private void readPrefixes(HashMap<String, String> queryParams) throws Exception {
-    String[] prefixes = getValues(queryParams, "pre") ;
-    preCategories = getParam(prefixes, 0);
-    preQuestions  = getParam(prefixes, 1);
-    preAnswers    = getParam(prefixes, 2);
-    preComments   = getParam(prefixes, 3);
-  }
-
-  private void readPermissions(HashMap<String, String> queryParams) throws Exception {
-    String[] perCanEdit = getValues(queryParams, "edit");
-    String[] perCanView = getValues(queryParams, "view");
-    String[] mods = getCategoryRoot(false).getModerators();
-    if (mods == null || mods.length <= 0 || mods[0].trim().length() == 0) {
-      mods = new String[] { "root" };
-    }
-    if (perCanEdit.length > 0 || !perCanEdit[0].equals("any")) {
-      this.perCanEdit = new String[perCanEdit.length + 1];
-      this.perCanEdit[0] = mods[0];
-      System.arraycopy(perCanEdit, 0, this.perCanEdit, 1, perCanEdit.length);
-    } else {
-      this.perCanEdit = mods;
-    }
-    if (perCanView.length > 0 || !perCanView[0].equals("any")) {
-      this.perCanView = new String[perCanView.length + 1];
-      this.perCanView[0] = mods[0];
-      System.arraycopy(perCanView, 0, this.perCanView, 1, perCanView.length);
-    } else {
-      this.perCanView = new String[] { "" };
-    }
-  }
   
   private String makeName(String prefix, int leve, int order) {
     return prefix + "_" + leve + "_" + order;
@@ -196,61 +126,54 @@ public class AnswerDataInjector extends DataInjector {
     return type + prefix + leve + order;
   }
 
-  private int getMaxItem(int maxType) {
-    return (randomize) ? (rand.nextInt(maxType) + 1) : maxType;
-  }
 
-  private List<Category> findCategories(int leve) {
+  private List<Category> findCategories(int leve, InjectInfo info) {
     List<Category> categories = new ArrayList<Category>();
-    int maxCat = getMaxItem(maxCategories);
-    if (maxCat > 0) {
+    if (info.getCategories() > 0) {
       Category cat;
       String catName = "", catId = "";
-      for (int i = 0; i < maxCat; i++) {
-        catId = makeId(preCategories, Category.CATEGORY_ID, leve, i + 1);
-        catName = makeName(preCategories, leve, i + 1);
-        cat = newCategory(catId, catName, i + 1);
+      for (int i = 0; i < info.getCategories(); i++) {
+        catId = makeId(info.getPreCategories(), Category.CATEGORY_ID, leve, i + 1);
+        catName = makeName(info.getPreCategories(), leve, i + 1);
+        cat = newCategory(catId, catName, i + 1, info);
         categories.add(cat);
       }
     }
     return categories;
   }
 
-  private List<Question> findQuestion(String catId, int leve) {
+  private List<Question> findQuestion(String catId, int leve, InjectInfo info) {
     List<Question> questions = new ArrayList<Question>();
-    int maxQs = getMaxItem(maxQuestions);
-    if (maxQs > 0) {
+    if (info.getQuestions() > 0) {
       String queName = "", queId = "";
-      for (int i = 0; i < maxQs; i++) {
-        queId = makeId(preQuestions, Question.QUESTION_ID, leve, i + 1);
-        queName = makeName(preQuestions, leve, i + 1);
-        questions.add(newQuestion(catId, queId, queName));
+      for (int i = 0; i < info.getQuestions(); i++) {
+        queId = makeId(info.getPreQuestions(), Question.QUESTION_ID, leve, i + 1);
+        queName = makeName(info.getPreQuestions(), leve, i + 1);
+        questions.add(newQuestion(catId, queId, queName, info));
       }
     }
     return questions;
   }
 
-  private List<Answer> findAnswers() {
-    int maxAs = getMaxItem(maxAnswers);
+  private List<Answer> findAnswers(InjectInfo info) {
     List<Answer> answers = new ArrayList<Answer>();
-    if (maxAs > 0) {
+    if (info.getAnswers() > 0) {
       String asId = "";
-      for (int i = 0; i < maxAs; i++) {
-        asId = makeId(preAnswers, Answer.ANSWER_ID, 1, i);
-        answers.add(newAnswer(asId));
+      for (int i = 0; i < info.getAnswers(); i++) {
+        asId = makeId(info.getPreAnswers(), Answer.ANSWER_ID, 1, i);
+        answers.add(newAnswer(asId, info));
       }
     }
     return answers;
   }
 
-  private List<Comment> findComments() {
+  private List<Comment> findComments(InjectInfo info) {
     List<Comment> comments = new ArrayList<Comment>();
-    int maxCm = getMaxItem(maxComments);
-    if (maxCm > 0) {
+    if (info.getComments() > 0) {
       String cmId = "";
-      for (int i = 0; i < maxCm; i++) {
-        cmId = makeId(preComments, Answer.ANSWER_ID, 1, i);
-        comments.add(newComment(cmId));
+      for (int i = 0; i < info.getComments(); i++) {
+        cmId = makeId(info.getPreComments(), Answer.ANSWER_ID, 1, i);
+        comments.add(newComment(cmId, info));
       }
     }
     return comments;
@@ -264,12 +187,12 @@ public class AnswerDataInjector extends DataInjector {
     return s;
   }
   
-  private void initDataForOneCategory(String parentId, Category cat, int currentDepth, int index, int size) throws Exception {
+  private void initDataForOneCategory(String parentId, Category cat, int currentDepth, int index, int size, InjectInfo info) throws Exception {
     String catId = parentId + SLASH + cat.getId();
     boolean isExist = faqService.isExisting(catId);
     String questionId, stt = "Update";
     String s = getTabs(currentDepth);
-    List<Question> questions = findQuestion(catId, currentDepth);
+    List<Question> questions = findQuestion(catId, currentDepth, info);
     int index_ = 0, size_ = questions.size(), as = 0, cm = 0;
     if (!isExist) {
       stt = "Add new";
@@ -288,7 +211,7 @@ public class AnswerDataInjector extends DataInjector {
         infoIject[1] += 1;
         stt = "Add new";
       }
-      List<Answer> answers = findAnswers();
+      List<Answer> answers = findAnswers(info);
       for (Answer answer : answers) {
         isExist = faqService.isExisting(questionId + SLASH + Utils.ANSWER_HOME + SLASH + answer.getId());
         if (!isExist) {
@@ -297,7 +220,7 @@ public class AnswerDataInjector extends DataInjector {
           as += 1;
         }
       }
-      List<Comment> comments = findComments();
+      List<Comment> comments = findComments(info);
       for (Comment comment : comments) {
         isExist = faqService.isExisting(questionId + SLASH + Utils.COMMENT_HOME + SLASH + comment.getId());
         if (!isExist) {
@@ -311,30 +234,28 @@ public class AnswerDataInjector extends DataInjector {
     }
   }
 
-  private void createCategory(String parentId, Category me, int currentDepth,int index, int size) throws Exception {
-    initDataForOneCategory(parentId, me, currentDepth, index, size);
-    List<Category> cats = findCategories(currentDepth+1);
+  private void createCategory(String parentId, Category me, int currentDepth,int index, int size, InjectInfo info) throws Exception {
+    initDataForOneCategory(parentId, me, currentDepth, index, size, info);
+    List<Category> cats = findCategories(currentDepth+1, info);
     int index_ = 1, size_ = cats.size();
     for (Category cat : cats) {
-      if (currentDepth + 1 < maxDepth) {
-        createCategory(parentId + SLASH + me.getId(), cat, currentDepth + 1, index_, size_);
+      if (currentDepth + 1 < info.getDepth()) {
+        createCategory(parentId + SLASH + me.getId(), cat, currentDepth + 1, index_, size_, info);
         index_++;
       }
     }
   }
 
-  private void injectData(HashMap<String, String> queryParams) throws Exception {
-    readQuantities(queryParams);
-    readPrefixes(queryParams);
+  private void injectData(InjectInfo info) throws Exception {
     String parentId = KSDataLocation.Locations.FAQ_CATEGORIES_HOME;
     infoIject = new int[] { 0, 0, 0, 0 };
     log.info("Start inject data for answer ....");
     long time = System.currentTimeMillis();
-    List<Category> cats = findCategories(0);
+    List<Category> cats = findCategories(0, info);
     int size = cats.size(), index = 1;
     for (Category cat : cats) {
       categoryIds.add(parentId + SLASH + cat.getId());
-      createCategory(parentId, cat, 0, index, size);
+      createCategory(parentId, cat, 0, index, size, info);
       index++;
     }
     time = System.currentTimeMillis() - time;
@@ -345,21 +266,14 @@ public class AnswerDataInjector extends DataInjector {
   
   @Override
   public void inject(HashMap<String, String> queryParams) throws Exception {
+    t += 1;
+    printInfoOfInject(queryParams);
+    InjectInfo info = new InjectInfo(queryParams, categoryRoot);
     String type = queryParams.get(CONSTANTS.TYPE.toString().toLowerCase());
-    boolean runInject = false;
-    if (CONSTANTS.DATA.toString().equalsIgnoreCase(type)) {
-      this.perCanEdit = getCategoryRoot(false).getModerators();
-      if (this.perCanEdit == null || this.perCanEdit.length <= 0 || this.perCanEdit[0].trim().length() == 0) {
-        this.perCanEdit = new String[] { "root" };
-      }
-      runInject = true;
-    } else if (CONSTANTS.PERM.toString().equalsIgnoreCase(type)) {
-      readPermissions(queryParams);
-      runInject = true;
-    }
-    if (runInject) {
+    if (CONSTANTS.DATA.getName().equalsIgnoreCase(type) || 
+        CONSTANTS.PERM.toString().equalsIgnoreCase(type)) {
       log.info(String.format("Injecting by type: %s ...", type));
-      injectData(queryParams);
+      injectData(info);
     } else {
       log.info(String.format("Do not support type %s for injector...", type));
     }
@@ -417,24 +331,24 @@ public class AnswerDataInjector extends DataInjector {
     return new ArrayList<String>(Arrays.asList(strs));
   }
 
-  private Category newCategory(String catId, String catName, int order) {
+  private Category newCategory(String catId, String catName, int order, InjectInfo info) {
     Category category = new Category();
     category.setId(catId);
     category.setName(catName);
     category.setDescription(randomWords(20));
     category.setIndex(order);
-    category.setModerators(perCanEdit);
-    category.setUserPrivate(perCanView);
+    category.setModerators(info.getPerCanEdit());
+    category.setUserPrivate(info.getPerCanView());
     return category;
   }
 
-  private Question newQuestion(String catId, String id, String name) {
+  private Question newQuestion(String catId, String id, String name, InjectInfo info) {
     Question question = new Question();
     question.setId(id);
     question.setQuestion(name);
     question.setAuthor(randomUser());
     question.setCategoryId(catId);
-    question.setDetail(randomParagraphs(2));
+    question.setDetail(getStringResource(info));
     question.setEmail("exo@exoplatform.com");
     question.setLanguage("English");
     question.setLink("");
@@ -443,10 +357,17 @@ public class AnswerDataInjector extends DataInjector {
     question.setRelations(new String[] { "" });
     question.setUsersWatch(new String[] { "" });
     question.setEmailsWatch(new String[] { "" });
+    if (info.getMaxAtt() > 0) {
+      try {
+        question.setAttachMent(getFileAttachment(info));
+      } catch (Exception e) {
+        log.warn("Failed to set attachment in question.");
+      }
+    }
     return question;
   }
 
-  private Answer newAnswer(String id) {
+  private Answer newAnswer(String id, InjectInfo info) {
     String other = randomUser();
     Answer answer = new Answer(other, true);
     answer.setId(id);
@@ -454,17 +375,17 @@ public class AnswerDataInjector extends DataInjector {
     answer.setLanguage("English");
     answer.setMarksVoteAnswer(0.0);
     answer.setMarkVotes(0);
-    answer.setResponses(randomParagraphs(3));
+    answer.setResponses(getStringResource(info));
     answer.setNew(true);
     return answer;
   }
 
-  private Comment newComment(String id) {
+  private Comment newComment(String id, InjectInfo info) {
     String other = randomUser();
     Comment comment = new Comment();
     comment.setId(id);
     comment.setCommentBy(other);
-    comment.setComments(randomParagraphs(3));
+    comment.setComments(getStringResource(info));
     comment.setFullName(getFullName(other));
     comment.setPostId("");
     comment.setNew(true);
@@ -482,5 +403,29 @@ public class AnswerDataInjector extends DataInjector {
   @Override
   public Object execute(HashMap<String, String> arg0) throws Exception {
     return new Object();
+  }
+  
+  private String getStringResource(InjectInfo info) {
+    if(info.getTxtCp() > 0) {
+      return createTextResource(info.getTxtCp());
+    }
+    return randomParagraphs(3);
+  }
+
+  private List<FileAttachment> getFileAttachment(InjectInfo info) throws Exception {
+    List<FileAttachment> listAttachments = new ArrayList<FileAttachment>();
+    String rs = createTextResource(info.getAttCp());
+    FileAttachment fileAttachment = new FileAttachment();
+    fileAttachment.setName("");
+    fileAttachment.setInputStream(new ByteArrayInputStream(rs.getBytes("UTF-8")));
+    fileAttachment.setMimeType("");
+    long fileSize = (long) info.getAttCp()*1024;
+    fileAttachment.setSize(fileSize);
+    for (int i = 0; i < info.getMaxAtt(); i++) {
+      fileAttachment.setNodeName(IdGenerator.generate() + ".txt");
+      fileAttachment.setId("file" + IdGenerator.generate());
+      listAttachments.add(fileAttachment);
+    }
+    return listAttachments;
   }
 }
