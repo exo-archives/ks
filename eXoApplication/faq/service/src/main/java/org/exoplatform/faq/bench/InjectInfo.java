@@ -64,9 +64,10 @@ public class InjectInfo {
   public InjectInfo() {
   }
 
-  public InjectInfo(HashMap<String, String> queryParams, Category category) {
+  public InjectInfo(HashMap<String, String> queryParams, Category category) throws Exception {
     this.queryParams = queryParams;
     this.rootCategory = category;
+    setQueryParams(queryParams);
   }
 
   public int getCategories() {

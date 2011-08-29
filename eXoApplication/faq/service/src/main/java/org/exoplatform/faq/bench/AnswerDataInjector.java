@@ -58,8 +58,6 @@ public class AnswerDataInjector extends DataInjector {
 
   private List<String>        categoryIds   = new ArrayList<String>();
   
-  private int t = 1;
-
   public static final String SLASH         = "/".intern();
   public static final String  ARRAY_SPLIT   = ",";
 
@@ -112,9 +110,11 @@ public class AnswerDataInjector extends DataInjector {
 
   private void printInfoOfInject(HashMap<String, String> queryParams) throws Exception {
     log.info("PARAMS of inject: ");
+    StringBuilder sb = new StringBuilder();
     for (String key : queryParams.keySet()) {
-      log.info(String.format(" %s : %s", key, queryParams.get(key)));
+      sb.append(String.format(" %s : %s", key, queryParams.get(key))).append("\nINFO: ");
     }
+    log.info(sb.toString());
   }
   
   
@@ -266,7 +266,6 @@ public class AnswerDataInjector extends DataInjector {
   
   @Override
   public void inject(HashMap<String, String> queryParams) throws Exception {
-    t += 1;
     printInfoOfInject(queryParams);
     InjectInfo info = new InjectInfo(queryParams, categoryRoot);
     String type = queryParams.get(CONSTANTS.TYPE.toString().toLowerCase());
