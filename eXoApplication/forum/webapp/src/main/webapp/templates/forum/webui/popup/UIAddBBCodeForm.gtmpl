@@ -96,7 +96,7 @@
 						<tr>
 							<td>
 								<div class="UIAction">
-				                  <a href="<%=uicomponent.event("Apply");%>" onclick="link" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddBBCodeForm.action.Apply");%></a>
+				                  <a href="<%=uicomponent.event("Apply");%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes("UIAddBBCodeForm.action.Apply");%></a>
 				                </div>
 							</td>
 						</tr>
