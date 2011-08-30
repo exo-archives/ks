@@ -83,22 +83,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIViewer']/div/span[2]/a[@class='ActionLink']</td>
+	<td>//div[@id='UIViewer']//a[@title='Technical FAQ']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIViewer']/div/span[2]/a[@class='ActionLink']</td>
+	<td>//div[@id='UIViewer']//a[@title='Technical FAQ']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//img[@alt='categories']</td>
+	<td>//div[@id='UIViewer']//img[@alt='categories']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//img[@alt='categories']</td>
+	<td>//div[@id='UIViewer']//img[@alt='categories']</td>
 	<td></td>
 </tr>
 <tr>
@@ -248,12 +248,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
@@ -293,12 +293,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
@@ -698,33 +698,33 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIBreadcumbs']/div/table/tbody/tr/td/div//div[2]</td>
+	<td>//div[@id='UIBreadcumbs']//a[contains(text(),'Parent_SNF_KS_54')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIBreadcumbs']/div/table/tbody/tr/td/div//a[2]</td>
+	<td>//div[@id='UIBreadcumbs']//a[contains(text(),'Parent_SNF_KS_54')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>xpath=//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>xpath=//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>link=Category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='FAQCategroManager']/div/div/div/div/div[3]</td>
+	<td>//div[@id='FAQCategroManager']//a[text()='Delete']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAt</td>
-	<td>//div[@id='FAQCategroManager']/div/div/div/div/div[3]</td>
-	<td></td>
+	<td>//div[@id='FAQCategroManager']//a[text()='Delete']</td>
+	<td>1,1</td>
 </tr>
 <tr>
 	<td>waitForElementNotPresent</td>
@@ -752,23 +752,23 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>FAQCategory does not exist. Click here to go back to Home. </td>
+	<td>waitForTextNotPresent</td>
+	<td>FAQCategory does not exist. Click here to go back to Home.</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>FAQCategory does not exist. Click here to go back to Home. </td>
+	<td>verifyTextNotPresent</td>
+	<td>FAQCategory does not exist. Click here to go back to Home.</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIViewer']/a</td>
+	<td>//div[@id='UIFAQPortlet']//a[contains(text(),'Category does not exist. Click here to go back to Home.')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='UIViewer']/a</td>
+	<td>//div[@id='UIFAQPortlet']//a[contains(text(),'Category does not exist. Click here to go back to Home.')]</td>
 	<td></td>
 </tr>
 <tr>
