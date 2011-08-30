@@ -17,7 +17,7 @@
 }
 
 .UIWikiPageControlArea .UIPageToolBar .DeletePage {
-	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -302px;
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -450px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .EditPage {
@@ -25,23 +25,27 @@
 }
 
 .UIWikiPageControlArea .UIPageToolBar .AddPage {
-	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -44px;
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -480px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MovePage {
-	background:url("background/MovePage.gif") no-repeat 5px center;	
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -419px;	
 }
 
 .UIWikiPageControlArea .UIPageToolBar .WatchPage {
-	background:url("background/watch_off.png") no-repeat 5px center;	
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -360px;	
 }
 
 .UIWikiPageControlArea .UIPageToolBar .UnWatchPage {
-	background: url("background/watch_on.png") no-repeat 5px center;	
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -360px;	
 }
 
 .UIWikiPageControlArea .UIPageToolBar .PageInfo {
-  background: url("/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/MiscIcons/Info.png") no-repeat 5px center;
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -389px;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .AddPageFromTemplate{
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -515px;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .AddExtensionContainer.MoreLink {
@@ -55,18 +59,17 @@
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .HoverMenu .Icon {
-	background: none;
 	float: none;
 	height: 14px;
 	display: block;
-	padding: 6px 8px 8px 15px;
+	padding: 6px 8px 8px 25px;
 	border-bottom: 1px solid #d7d7d7;
 	color: #555;
 	font-size: 12px;
 }
 
 .UIWikiPortlet .UIWikiPageControlArea .UIPageToolBar .HoverMenu .Icon:hover {
-	background: #fff;
+	background-color: #fff;
 }
 
 .UIWikiPageControlArea .UIPageToolBar .MoreLink {
@@ -103,33 +106,27 @@
 }
 
 .UIWikiPageEditForm .UIPageToolBar .Delete {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -72px
-    ;
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -72px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .RichText {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
-    -235px;
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -235px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .Help {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
-    -212px;
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -212px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .PreviewPage {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
-    -188px;
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -188px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .SavePage {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
-    -142px;
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -142px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .SaveTemplate {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left
-    -142px;
+  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -142px;
 }
 
 .UIWikiPageEditForm .UIPageToolBar .MinorEdit {
@@ -138,4 +135,8 @@
 
 .UIWikiPageEditForm .UIPageToolBar .MoreLink {
   display:none;
+}
+
+.UIWikiPageControlArea .UIPageToolBar .PagePermission {
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -333px;
 }
