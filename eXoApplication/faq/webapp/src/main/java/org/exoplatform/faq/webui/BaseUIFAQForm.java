@@ -18,7 +18,6 @@ package org.exoplatform.faq.webui;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.webui.viewer.UIFAQPortlet;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.core.UIComponent;
 
@@ -53,13 +52,13 @@ public class BaseUIFAQForm extends BaseUIForm {
   }
 
   protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width, int height) throws Exception {
-    UIFAQPortlet faqPortlet = getAncestorOfType(UIFAQPortlet.class);
-    return openPopup(faqPortlet, componentType, popupId, width, height);
+    UIAnswersPortlet uiPortlet = getAncestorOfType(UIAnswersPortlet.class);
+    return openPopup(uiPortlet, componentType, popupId, width, height);
   }
 
   protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
-    UIFAQPortlet faqPortlet = getAncestorOfType(UIFAQPortlet.class);
-    return openPopup(faqPortlet, componentType, width, height);
+    UIAnswersPortlet uiPortlet = getAncestorOfType(UIAnswersPortlet.class);
+    return openPopup(uiPortlet, componentType, width, height);
   }
 
   protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {

@@ -27,7 +27,7 @@ import org.exoplatform.faq.webui.popup.ResultQuickSearch;
 import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
 import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -49,7 +49,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
         @EventConfig(listeners = UIQuickSearch.AdvancedSearchActionListener.class) 
     }
 )
-public class UIQuickSearch extends BaseUIForm {
+public class UIQuickSearch extends BaseUIFAQForm {
   final static private String FIELD_SEARCHVALUE = "inputValue";
 
   private FAQSetting          faqSetting_       = new FAQSetting();
@@ -73,11 +73,9 @@ public class UIQuickSearch extends BaseUIForm {
     }
   }
 
-  static public class SearchActionListener extends EventListener<UIQuickSearch> {
-    public void execute(Event<UIQuickSearch> event) throws Exception {
-      UIQuickSearch uiQuickSearch = event.getSource();
+  static public class SearchActionListener extends BaseEventListener<UIQuickSearch> {
+    public void onEvent(Event<UIQuickSearch> event, UIQuickSearch uiQuickSearch, String objectId) throws Exception {
       UIFormStringInput formStringInput = uiQuickSearch.getUIStringInput(FIELD_SEARCHVALUE);
-      UIAnswersPortlet uiPortlet = uiQuickSearch.getAncestorOfType(UIAnswersPortlet.class);
       String text = formStringInput.getValue();
       if (text != null && text.trim().length() > 0) {
         text = CommonUtils.encodeSpecialCharInSearchTerm(text);
@@ -96,7 +94,7 @@ public class UIQuickSearch extends BaseUIForm {
           uiQuickSearch.warning("UIQuickSearch.msg.failure");
           return;
         }
-        ResultQuickSearch result = uiQuickSearch.openPopup(uiPortlet, ResultQuickSearch.class, "UIResultQuickSearchs", 750, 0);
+        ResultQuickSearch result = uiQuickSearch.openPopup(ResultQuickSearch.class, "UIResultQuickSearchs", 750, 0);
         result.setSearchResults(list);
       } else {
         uiQuickSearch.warning("UIQuickSeach.msg.no-text-to-search");
@@ -105,11 +103,9 @@ public class UIQuickSearch extends BaseUIForm {
     }
   }
 
-  static public class AdvancedSearchActionListener extends EventListener<UIQuickSearch> {
-    public void execute(Event<UIQuickSearch> event) throws Exception {
-      UIQuickSearch uiForm = event.getSource();
-      UIAnswersPortlet uiPortlet = uiForm.getAncestorOfType(UIAnswersPortlet.class);
-      UIAdvancedSearchForm uiAdvancedSearchForm = uiForm.openPopup(uiPortlet, UIAdvancedSearchForm.class, "AdvanceSearchForm", 650, 0);
+  static public class AdvancedSearchActionListener extends BaseEventListener<UIQuickSearch> {
+    public void onEvent(Event<UIQuickSearch> event, UIQuickSearch uiForm, String objectId) throws Exception {
+      UIAdvancedSearchForm uiAdvancedSearchForm = uiForm.openPopup(UIAdvancedSearchForm.class, "AdvanceSearchForm", 650, 0);
       uiAdvancedSearchForm.setIsSearch(false, false);
     }
   }

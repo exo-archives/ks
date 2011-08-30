@@ -19,7 +19,8 @@
 	String [] categoryAction;
 	
 %>
-<div id="$uicomponent.id" style="padding:0px 5px 2px 5px; line-height:28px;">
+<div style="padding:0px 5px 2px 5px; line-height:28px;">
+<%uiform.begin()%>
 	<div>
 		<div class="AnswerToolbar">
 	  	<div class="LeftBar">
@@ -123,6 +124,9 @@
 																	continue;
 																if(category.getPath().equals(uicomponent.categoryId_) && (viewAction.equals("DeleteCategory") || viewAction.equals("MoveCategory")))
 																	linkView = uicomponent.event(viewAction, category.getPath()+"/true") ;
+																if(viewAction.equals("DeleteCategory")) {
+																	linkView = "javaScript:if(confirm('" + _ctx.appRes("UIQuestions.msg.confirm-delete-category") + "')) {" + linkView.replace("javascript:", "") + "}";
+																}
 														%>
 																<div class="MenuItem">
 																	<a class="IconItem $viewAction" href="javascript:void(0) ;" onmousedown="$linkView">$itemLabelView</a>
@@ -152,21 +156,6 @@
 			</div>
 			</div>
 		</div>
-	<!--
-	<div>
-		<div class="AnswerToolbar">
-	  	<div class="LeftBar">
-	  		<div class="RightBar">
-	  			<div class="CenterBar" style="padding-left:10px;">
-						<b>Tags</b>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="AnswersContainer" style="height:auto; padding-left:5px; margin-bottom:5px; _width:182px;">
-			All Tags
-		</div>
 	</div>
-	-->
-	</div>
+<%uiform.end()%>
 </div>
