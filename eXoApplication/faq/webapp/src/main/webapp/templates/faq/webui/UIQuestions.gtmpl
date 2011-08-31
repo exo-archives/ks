@@ -786,15 +786,6 @@
 																long fileSize = fileAttachment.getSize();
 																if(fileSize > 0){
 																	String size = uicomponent.convertSize(fileSize);
-																	String dataPath = "" ;
-																	String fileStream = "" ;
-																	try{
-																		dataPath = fileAttachment.getDataPath();
-																		fileStream = fileAttachment.getInputStream();
-																	} catch(Exception e) {
-																		dataPath = "null" ;
-																		fileStream = "null" ;
-																	}
 																	String fileType = fileAttachment.getMimeType();
 																	String fileWorkSpace = fileAttachment.getWorkspace();
 																	ValidatorDataInput validate = new ValidatorDataInput();

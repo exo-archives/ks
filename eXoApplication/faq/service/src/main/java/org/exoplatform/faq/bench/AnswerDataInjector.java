@@ -17,6 +17,7 @@
 package org.exoplatform.faq.bench;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -210,6 +211,15 @@ public class AnswerDataInjector extends DataInjector {
         faqService.saveQuestion(question, true, faqSetting);
         infoIject[1] += 1;
         stt = "Add new";
+      } else {
+        try {
+          if(info.getMaxAtt() > faqService.getQuestionById(questionId).getAttachMent().size()){
+            question.setPath(questionId);
+            faqService.saveQuestion(question, false, faqSetting);
+          }
+        } catch (Exception e) {
+          log.info("Failed to get attachments.");
+        }
       }
       List<Answer> answers = findAnswers(info);
       for (Answer answer : answers) {
@@ -414,16 +424,15 @@ public class AnswerDataInjector extends DataInjector {
   private List<FileAttachment> getFileAttachment(InjectInfo info) throws Exception {
     List<FileAttachment> listAttachments = new ArrayList<FileAttachment>();
     String rs = createTextResource(info.getAttCp());
-    FileAttachment fileAttachment = new FileAttachment();
-    fileAttachment.setName("");
-    fileAttachment.setInputStream(new ByteArrayInputStream(rs.getBytes("UTF-8")));
-    fileAttachment.setMimeType("");
-    long fileSize = (long) info.getAttCp()*1024;
-    fileAttachment.setSize(fileSize);
     for (int i = 0; i < info.getMaxAtt(); i++) {
-      fileAttachment.setNodeName(IdGenerator.generate() + ".txt");
-      fileAttachment.setId("file" + IdGenerator.generate());
+      InputStream stream = new ByteArrayInputStream(rs.getBytes("UTF-8"));
+      FileAttachment fileAttachment = new FileAttachment();
+      fileAttachment.setInputStream(stream);
+      fileAttachment.setMimeType("text/plain");
+      fileAttachment.setName("Attch_" + (i + 1) + ".txt");
+      fileAttachment.setNodeName("Attch" + (i + 1) + ".txt");
       listAttachments.add(fileAttachment);
+      stream.close();
     }
     return listAttachments;
   }
