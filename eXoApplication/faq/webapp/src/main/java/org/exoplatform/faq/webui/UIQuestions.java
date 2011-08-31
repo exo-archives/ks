@@ -1283,7 +1283,6 @@ public class UIQuestions extends UIContainer {
         String topicId = topic.getId();
         uiForm.discussId = topicId;
         String link = FAQUtils.getLinkDiscuss(topicId);
-        link = link.replaceFirst("private", "public");
         Question question = uiForm.faqService_.getQuestionById(questionId);
         String userName = question.getAuthor();
         String remoteAddr = WebUIUtils.getRemoteIP();

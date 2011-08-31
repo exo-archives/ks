@@ -1,7 +1,6 @@
 <%	
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumSessionUtils;
-	import org.exoplatform.portal.webui.util.Util;
 	uicomponent.setIsUseAjax();
 %>
 <div class="UIBreadcumbs" id="$uicomponent.id">
@@ -11,21 +10,13 @@
 				<div class="BreadcumbsInfoBar">
 				<% int t = 0 ;
 					String link = "";
-					String selectedNode = Util.getUIPortal().getSelectedUserNode().getURI();
-					String portalName = "/" + Util.getUIPortal().getName() ;
 					String checkPath = ""; 
 					String id = "", linkHome="";
 					for(namePath in uicomponent.getBreadcumbs()) {
 					  checkPath = namePath;
-					  oncl = "";
 					  id = uicomponent.getPath(t);
 					  id = id.substring(id.lastIndexOf("/")+1);
-						link = ForumUtils.createdForumLink(uicomponent.getType(id),id) ;
-						if(link.indexOf(portalName) > 0) {
-							if(link.indexOf(portalName + "/" + selectedNode) < 0){
-								link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-							}									
-						}		
+						link = ForumUtils.createdForumLink(uicomponent.getType(id), id, uicomponent.checkLinkPrivate(id)) ;
 						String event = uicomponent.event("ChangePath", uicomponent.getPath(t)) ;
 						if(namePath.equals(ForumUtils.FIELD_EXOFORUM_LABEL)) {
 							namePath = _ctx.appRes("UIBreadcumbs.label.eXoForum");

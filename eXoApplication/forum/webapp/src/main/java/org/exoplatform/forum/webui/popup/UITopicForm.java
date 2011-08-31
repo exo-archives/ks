@@ -582,7 +582,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
             }
             // set link
             Topic topicNew = uiForm.topic;
-            String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNew.getId()).replaceFirst("private", "public");
+            String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNew.getId(), false);
             //
             String userName = userProfile.getUserId();
             topicNew.setOwner(userName);

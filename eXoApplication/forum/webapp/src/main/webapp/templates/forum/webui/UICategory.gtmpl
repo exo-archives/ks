@@ -228,9 +228,7 @@
 								if(topicNewPost.getIsClosed()) {
 									if(isAdmin || ForumUtils.isStringInList(forumModerators, userLogin)) {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
-										//urlLastPost = uicomponent.url("OpenLastTopicLink", topicId) ;
-										//urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink", "");
-										urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId);
+										urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
 									} else {
 										openLinkLastPost = "javascript:void(0)";
 										titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
@@ -239,18 +237,14 @@
 									if(forum.getIsModerateTopic()) {
 										if(topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin){
 											openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
-											//urlLastPost = uicomponent.url("OpenLastTopicLink", topicId) ;
-											//urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink", "");
-											urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId);
+											urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
 										} else {
 											openLinkLastPost = "javascript:void(0)";
 											titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
 										}
 									} else {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
-										//urlLastPost = uicomponent.url("OpenLastTopicLink", (topicId)) ;
-										//urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink", "");
-											urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId);
+										urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
 									}
 								}
 								titleTopic = titleTopic.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
@@ -281,9 +275,7 @@
 								lineHeight = "line-height:28px;";
 							}
 							String link = uicomponent.event("OpenForumLink", forumId);
-							//String url = uicomponent.url("OpenForumLink", forumId);
-							//url = ForumSessionUtils.getBreadcumbUrl(url, uicomponent.id, "OpenForumLink", "");
-							String url = ForumUtils.createdForumLink(ForumUtils.FORUM, forumId);
+							String url = ForumUtils.createdForumLink(ForumUtils.FORUM, forumId, false);
 					%>
 								<tr class="$classRow" oncontextmenu="return false;">
 									<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>

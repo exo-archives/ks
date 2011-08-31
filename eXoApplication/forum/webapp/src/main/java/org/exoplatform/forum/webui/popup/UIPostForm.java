@@ -389,7 +389,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               return;
             }
             // set link
-            String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, uiForm.topicId).replaceFirst("private", "public");
+            String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, uiForm.topicId, false);
             //
             if (uiForm.isQuote || uiForm.isMP)
               post = new Post();

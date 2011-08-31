@@ -124,8 +124,7 @@ public class UIQuickReplyForm extends UIForm {
         String remoteAddr = WebUIUtils.getRemoteIP();
         UserProfile userProfile = forumService.getDefaultUserProfile(quickReply.userName, remoteAddr);
         // set link
-        // String link = ForumSessionUtils.getBreadcumbUrl(quickReply.getLink(), quickReply.getId(), "QuickReply", quickReply.topicId).replaceFirst("private", "public");
-        String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, quickReply.topicId).replaceFirst("private", "public");
+        String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, quickReply.topicId, false);
         //
         Topic topic = quickReply.topic;
         Post post = new Post();

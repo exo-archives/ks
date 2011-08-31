@@ -1482,7 +1482,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
             message = ForumTransformHTML.enCodeHTMLContent(message);
 
             // set link
-            String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicDetail.topicId).replaceFirst("private", "public");
+            String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicDetail.topicId, false);
             //
             String userName = topicDetail.userProfile.getUserId();
             Topic topic = topicDetail.topic;

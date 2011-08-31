@@ -234,7 +234,11 @@ public class UIBreadcumbs extends UIContainer {
   }
 
   private String getType(String id) {
-    return (id.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : ((id.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : ((id.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : ((id.indexOf(Utils.TOPIC) >= 0) ? ForumUtils.TOPIC : (ForumUtils.EMPTY_STR))));
+    return (id.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : 
+            ((id.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : 
+              ((id.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : 
+                ((id.indexOf(Utils.TOPIC) >= 0) ? ForumUtils.TOPIC : 
+                  (ForumUtils.EMPTY_STR))));
   }
 
   private boolean checkLinkPrivate(String id) throws Exception {
@@ -271,6 +275,7 @@ public class UIBreadcumbs extends UIContainer {
           isPrivate = true;
         }
       } catch (Exception e) {
+        log.error("\nThe " + id + " must exist: " + e.getMessage(), e);
       }
     } else if (id.indexOf(Utils.FORUM) == 0) {
       try {
@@ -286,6 +291,7 @@ public class UIBreadcumbs extends UIContainer {
           }
         }
       } catch (Exception e) {
+        log.error("\nThe " + id + " must exist: " + e.getMessage(), e);
       }
     }
     return isPrivate;

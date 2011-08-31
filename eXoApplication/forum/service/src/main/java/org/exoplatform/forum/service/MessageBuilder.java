@@ -35,6 +35,8 @@ import org.exoplatform.services.mail.Message;
 public class MessageBuilder {
   public final static String  CONTEN_EMAIL = Utils.DEFAULT_EMAIL_CONTENT;
 
+  public final static String  SLASH        = "/".intern();
+
   private String              id;
 
   private String              owner;
@@ -58,6 +60,8 @@ public class MessageBuilder {
   private String              topicName;
 
   private String              link;
+
+  private String              privateLink;
 
   private String              dateFormat;
 
@@ -222,7 +226,19 @@ public class MessageBuilder {
     types.put(Utils.POST, post);
   }
 
+  public void setPrivateLink() {
+    try {
+      String host = link.substring(0, link.indexOf(SLASH, 8));
+      link = link.replace(host, "");
+      String ptContainer = link.substring(1, link.indexOf(SLASH, 2));
+      privateLink = new StringBuilder(host).append(SLASH).append(ptContainer).append(SLASH).append("login?&initialURI=").append(link).append(SLASH).append(id).toString();
+    } catch (Exception e) {
+      privateLink = "";
+    }
+  }
+
   public Message getContentEmail() {
+    setPrivateLink();
     Message message = new Message();
     message.setMimeType(ForumNodeTypes.TEXT_HTML);
     message.setFrom(owner);
@@ -243,9 +259,9 @@ public class MessageBuilder {
     formatter = new SimpleDateFormat(dateFormat);
     content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
     content_ = StringUtils.replace(content_, "$POSTER", owner);
-    content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", link + "/" + id);
-    content_ = StringUtils.replace(content_, "$VIEWPOST_PRIVATE_LINK", link.replace("public", "private") + "/" + id);
-    content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", link.replace("public", "private") + "/" + id + "/true");
+    content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", link + SLASH + id);
+    content_ = StringUtils.replace(content_, "$VIEWPOST_PRIVATE_LINK", privateLink);
+    content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", privateLink + "/true");
 
     content_ = StringUtils.replace(content_, "$CATEGORY", catName);
     content_ = StringUtils.replace(content_, "$FORUM", forumName);
@@ -255,6 +271,7 @@ public class MessageBuilder {
   }
 
   public Message getContentEmailMoved() {
+    setPrivateLink();
     Message message = new Message();
     message.setMimeType(ForumNodeTypes.TEXT_HTML);
     message.setFrom(owner);
@@ -264,8 +281,8 @@ public class MessageBuilder {
     content_ = StringUtils.replace(content_, "$OBJECT_PARENT_NAME", addType);
     content_ = StringUtils.replace(content_, "$POSTER", owner);
     content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", link);
-    content_ = StringUtils.replace(content_, "$VIEWPOST_PRIVATE_LINK", link.replace("public", "private"));
-    content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", link.replace("public", "private") + "/true");
+    content_ = StringUtils.replace(content_, "$VIEWPOST_PRIVATE_LINK", privateLink);
+    content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", privateLink + "/true");
 
     content_ = StringUtils.replace(content_, "$OBJECT_PARENT_TYPE", types.get(Utils.CATEGORY));
     content_ = StringUtils.replace(content_, "$OBJECT_TYPE", types.get(Utils.FORUM));

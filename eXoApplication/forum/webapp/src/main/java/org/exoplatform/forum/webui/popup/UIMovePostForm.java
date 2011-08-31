@@ -165,7 +165,7 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
         try {
           String[] temp = topicPath.split(ForumUtils.SLASH);
           // set link
-          String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");
+          String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId", false);
           //
           WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
           ResourceBundle res = context.getApplicationResourceBundle();

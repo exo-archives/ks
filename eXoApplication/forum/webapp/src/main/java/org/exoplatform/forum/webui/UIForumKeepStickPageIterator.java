@@ -85,8 +85,12 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
   }
 
   public String getURLGopage(String number) throws Exception {
-    String type = (objectId.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : ((objectId.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : ((objectId.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : ((objectId.indexOf(Utils.TOPIC) >= 0) ? ForumUtils.TOPIC : (ForumUtils.EMPTY_STR))));
-    String link = ForumUtils.createdForumLink(type, objectId + ForumUtils.SLASH + number);
+    String type = (objectId.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : 
+                  ((objectId.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : 
+                    ((objectId.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : 
+                      ((objectId.indexOf(Utils.TOPIC) >= 0) ? ForumUtils.TOPIC : 
+                        (ForumUtils.EMPTY_STR))));
+    String link = ForumUtils.createdForumLink(type, objectId + ForumUtils.SLASH + number, false);
     return link;
   }
 

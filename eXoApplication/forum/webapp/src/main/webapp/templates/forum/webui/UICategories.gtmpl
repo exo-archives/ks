@@ -52,9 +52,7 @@
 							actionBookmark = uicomponent.event("ShareLink","category//" + categoryId);
 						}
 						actionBookmark += ";" + uicomponent.getRSSLink(categoryId) + "," + uicomponent.event("RSS", categoryId).replace("javascript:","") ;
-						//url = uicomponent.url("OpenCategory", categoryId);
-						//url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenCategory", "");
-						url = ForumUtils.createdForumLink(ForumUtils.CATEGORY, categoryId);
+						url = ForumUtils.createdForumLink(ForumUtils.CATEGORY, categoryId, false);
 						String titleCollap = _ctx.appRes("UIForumPortlet.label.Collapse");
 						String classCssCollap = "CollapseButton";
 						String actionCollap = uicomponent.event("CollapCategory", categoryId+",true");
@@ -177,7 +175,7 @@
 											if(topicNewPost.getIsClosed()) {
 												if(isAdmin || ForumUtils.isStringInList(forumModerators, userLogin)) {
 													openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
-													urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId());
+													urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId(), false);
 												} else {
 													titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
 												}
@@ -185,13 +183,13 @@
 												if(forum.getIsModerateTopic()) {
 													if(isAdmin || topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin)){
 														openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
-														urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId());
+														urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId(), false);
 													} else {
 														titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
 													}
 												} else {
 													openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
-													urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId());
+													urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId(), false);
 												}
 											}
 											titleTopic = titleTopic.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
@@ -219,7 +217,7 @@
 										if(ForumUtils.isEmpty(forumDescription)) {
 											lineHeight = "line-height:28px;";
 										}
-										url = ForumUtils.createdForumLink(ForumUtils.FORUM, forumId);
+										url = ForumUtils.createdForumLink(ForumUtils.FORUM, forumId, false);
 								%>
 										<tr class="$classRow" oncontextmenu="return false;">
 											<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>

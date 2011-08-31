@@ -114,8 +114,7 @@
 										iconTopicStatus = hot+"Thread"+newPost+"ClosePost" ;
 									}
 									String titleTopicStatus = _ctx.appRes("UITopicContainer.label." + iconTopicStatus);
-									//linkOpen = ForumSessionUtils.getBreadcumbUrl(uicomponent.url("OpenTopic", topicId), uicomponent.id, "OpenTopic", "" );
-									linkOpen = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId);
+									linkOpen = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId, false);
 							%>
 								<tr class="$classRow">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
