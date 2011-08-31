@@ -63,7 +63,9 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
   public void setResult(PageList<SearchResult> results) throws Exception {
     UIAdvancePageIterator pageIterator = this.getChild(UIAdvancePageIterator.class);
     pageIterator.setPageList(results);
-    pageIterator.getPageList().getPage(1);
+    if(pageIterator.getPageList() != null){
+      pageIterator.getPageList().getPage(1);
+    }
   }
 
   public PageList<SearchResult> getResults() {
