@@ -2238,7 +2238,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       Node faqHome = getFAQServiceHome(sProvider);
       Map<String, String> watchs = new HashMap<String, String>();
       Node watchingNode = faqHome.getNode(id);
-      ;
       if (watchingNode.isNodeType(EXO_FAQ_WATCHING)) {
         Value[] emails = watchingNode.getProperty(EXO_EMAIL_WATCHING).getValues();
         Value[] users = watchingNode.getProperty(EXO_USER_WATCHING).getValues();
@@ -2297,8 +2296,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       Node category = getFAQServiceHome(sProvider).getNode(categoryId);
       if (category.isNodeType(EXO_FAQ_WATCHING)) {
         PropertyReader reader = new PropertyReader(category);
-        String[] userWatch = reader.strings(EXO_EMAIL_WATCHING);
-        String[] emails = reader.strings(EXO_USER_WATCHING);
+        String[] userWatch = reader.strings(EXO_USER_WATCHING);
+        String[] emails = reader.strings(EXO_EMAIL_WATCHING);
         if (userWatch != null && userWatch.length > 0) {
           Watch watch;
           for (int i = 0; i < userWatch.length; i++) {
