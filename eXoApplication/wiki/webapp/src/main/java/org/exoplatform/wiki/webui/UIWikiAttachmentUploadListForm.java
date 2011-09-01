@@ -45,12 +45,12 @@ import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
  */
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
-    template = "app:/templates/wiki/webui/UIAttachmentUploadListForm.gtmpl",
+    template = "app:/templates/wiki/webui/UIWikiAttachmentUploadListForm.gtmpl",
     events = {
-      @EventConfig(listeners = UIAttachmentUploadListForm.RemoveAttachmentActionListener.class, phase = Phase.DECODE)
+      @EventConfig(listeners = UIWikiAttachmentUploadListForm.RemoveAttachmentActionListener.class, phase = Phase.DECODE)
     }
 )
-public class UIAttachmentUploadListForm extends UIForm {
+public class UIWikiAttachmentUploadListForm extends UIForm {
   private static final Log log = ExoLogger.getLogger("org.exoplatform.wiki.webui.control.UIAttachmentUploadContainer");
   
   public static final String DOWNLOAD_ACTION = "DownloadAttachment";
@@ -90,12 +90,12 @@ public class UIAttachmentUploadListForm extends UIForm {
     }
   }
   
-  public static class RemoveAttachmentActionListener extends EventListener<UIAttachmentUploadListForm> {
-    public void execute(Event<UIAttachmentUploadListForm> event) throws Exception {
+  public static class RemoveAttachmentActionListener extends EventListener<UIWikiAttachmentUploadListForm> {
+    public void execute(Event<UIWikiAttachmentUploadListForm> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       UIWikiPageContentArea contentArea = wikiPortlet.findFirstComponentOfType(UIWikiPageContentArea.class);
       UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);
-      UIAttachmentUploadListForm uiForm = event.getSource();
+      UIWikiAttachmentUploadListForm uiForm = event.getSource();
       Page page = uiForm.getCurrentWikiPage();
       String attFileId = URLDecoder.decode(event.getRequestContext().getRequestParameter(OBJECTID), "UTF-8");
       ((PageImpl) page).removeAttachment(attFileId);      

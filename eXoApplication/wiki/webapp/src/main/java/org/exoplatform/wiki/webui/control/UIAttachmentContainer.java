@@ -19,7 +19,7 @@ package org.exoplatform.wiki.webui.control;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
-import org.exoplatform.wiki.webui.UIAttachmentUploadListForm;
+import org.exoplatform.wiki.webui.UIWikiAttachmentUploadListForm;
 
 /**
  * Created by The eXo Platform SAS
@@ -32,7 +32,7 @@ public class UIAttachmentContainer extends UIWikiExtensionContainer {
   public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.control.UIAttachmentContainer";
   
   public UIAttachmentContainer() throws Exception {
-    addChild(UIAttachmentUploadListForm.class, null, null);
+    addChild(UIWikiAttachmentUploadListForm.class, null, null);
   }
   
   @Override

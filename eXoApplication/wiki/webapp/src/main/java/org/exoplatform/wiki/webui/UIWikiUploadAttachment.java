@@ -114,8 +114,8 @@ public class UIWikiUploadAttachment extends UIWikiForm {
       if (uploadResource != null) {
         long fileSize = ((long) uploadResource.getUploadedSize());
         if (SIZE_LIMIT > 0 && fileSize >= SIZE_LIMIT * 1024 * 1024) {
-          uiApp.addMessage(new ApplicationMessage("UIWikiUploadAttachment.msg.attachment-exceed-10M",
-                                                  null,
+          uiApp.addMessage(new ApplicationMessage("UIWikiUploadAttachment.msg.attachment-exceed",
+                                                  new String[] {String.valueOf(SIZE_LIMIT)},
                                                   ApplicationMessage.WARNING));
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
           resetUploadInput(event);
