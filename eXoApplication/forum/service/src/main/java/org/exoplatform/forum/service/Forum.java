@@ -31,7 +31,7 @@ public class Forum {
 
   private String       path;
 
-  private int          forumOrder;
+  private int          forumOrder           = 0;
 
   private Date         createdDate;
 

@@ -56,6 +56,15 @@
   <component>
       <key>org.exoplatform.services.organization.OrganizationService</key>
      <type>org.exoplatform.commons.testing.mock.SimpleMockOrganizationService</type>
+  </component>
+  
+  <component>
+      <key>org.exoplatform.services.jcr.ext.distribution.DataDistributionManager</key>
+      <type>org.exoplatform.services.jcr.ext.distribution.impl.DataDistributionManagerImpl</type>     
+  </component>
+  <component>
+    <key>org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator</key>
+    <type>org.exoplatform.services.jcr.ext.hierarchy.impl.NodeHierarchyCreatorImpl</type>
   </component>  
   
   
@@ -1347,5 +1356,6 @@
   
   
   <!-- remove-configuration>org.exoplatform.services.scheduler.JobSchedulerService</remove-configuration-->    
-  <remove-configuration>org.exoplatform.services.transaction.ExoTransactionService</remove-configuration>  
+  <remove-configuration>org.exoplatform.services.transaction.ExoTransactionService</remove-configuration>
+  <remove-configuration>org.exoplatform.services.deployment.ContentInitializerService</remove-configuration>
 </configuration>

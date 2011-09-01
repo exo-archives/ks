@@ -16,24 +16,26 @@
  */
 package org.exoplatform.forum.bench;
 
+import java.io.ByteArrayInputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
-import java.util.Stack;
 
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
+import javax.jcr.NodeIterator;
+
+import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.services.bench.DataInjector;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -49,53 +51,19 @@ import org.exoplatform.services.log.Log;
  */
 public class ForumDataInjector extends DataInjector {
 
-  private static Log   log            = ExoLogger.getLogger(ForumDataInjector.class);
+  private static Log         log         = ExoLogger.getLogger(ForumDataInjector.class);
 
-
-  private Random       rand;
-
-  private int          maxCategories  = 10;
-
-  private int          maxForums      = 5;
-
-  private int          maxTopics      = 20;
-
-  private int          maxPosts       = 20;
-
-  private String       fistCategoryId = Utils.CATEGORY + "randomId412849127491";
-
-  private boolean      randomize      = false;
+  private static final String ARRAY_SPLIT = ",";
   
-  private ForumService forumService;
+  private static final String UNDER_SCORE = "_";
+
+  private ForumService       forumService;
   
-  private Stack<String> catesStack = new Stack<String>();
-  
-  public ForumDataInjector(InitParams params, ForumService forumService) {
+  private KSDataLocation     dataLocation; 
+
+  public ForumDataInjector(ForumService forumService, KSDataLocation dataLocation) {
     this.forumService = forumService;
-    initRandomizers();
-    initParams(params);
-  }
-
-  public void initParams(InitParams initParams) {
-    try {
-      ValueParam param = initParams.getValueParam("mC");
-      if (param != null)
-        maxCategories = Integer.parseInt(param.getValue());
-      param = initParams.getValueParam("mF");
-      if (param != null)
-        maxForums = Integer.parseInt(param.getValue());
-      param = initParams.getValueParam("mT");
-      if (param != null) 
-        maxTopics = Integer.parseInt(param.getValue());
-      param = initParams.getValueParam("mP");
-      if (param != null)
-        maxPosts = Integer.parseInt(param.getValue());
-      param = initParams.getValueParam("rand");
-      if (param != null)
-        randomize = Boolean.parseBoolean(param.getValue());
-    } catch (Exception e) {
-      throw new RuntimeException("Could not initialize ", e);
-    }
+    this.dataLocation = dataLocation;
   }
   
   @Override
@@ -105,125 +73,206 @@ public class ForumDataInjector extends DataInjector {
   
   @Override
   public void inject(HashMap<String, String> queryParams) throws Exception {
-    long topicsCount = 0;
+    String type = queryParams.get("type");
+    if ("data".equals(type)) {
+      log.info("Injecting data ...");
+      injectData(queryParams);
+    } else if ("perm".equals(type)) {
+      log.info("Injecting permissions ...");
+      injectPermission(queryParams);
+    } else {
+      log.info(String.format("Do not support type %s for injector...", type));
+    }
+  }
+  
+  
+  public void injectData(HashMap<String, String> queryParams) throws Exception {
+    long categoriesCount = 0;
     long forumsCount = 0;
+    long topicsCount = 0;
     long postCount = 0;
     long categoriesWeight = 0;
-    List<Category> categories = findCategories();
-    long categoriesCount = 0;
-
+    List<Integer> itemsQu = readQuantities(queryParams);
+    List<String> itemsPre = readPrefixes(queryParams);    
+    if (itemsPre.size() == 0 || itemsQu.size() == 0) {
+      throw new RuntimeException("The size of parametes is zero");
+    }
+    // itemsQu = getTotalItemQu(itemsPre, itemsQu);
+    List<Category> categories = generatesCategories(itemsPre.get(0), itemsQu.get(0));
     for (Category category : categories) {
-      forumService.saveCategory(category, true);
-      catesStack.push(category.getId());
-      categoriesCount++;
+      if (forumService.getCategory(category.getId()) == null) {
+        forumService.saveCategory(category, true);
+        categoriesCount++;
+      }
       String categoryId = category.getId();
-      List<Forum> forums = findForumsByCategory(categoryId);
-      log.info("Category " + categoriesCount + "/" + categories.size() + " with " + forums.size() + " forums");
       long forumsWeight = 0;
-      forumsCount += forums.size();
       int forumNum = 0;
-      for (Forum forum : forums) {
-        forumService.saveForum(categoryId, forum, true);
+      if (itemsQu.size() > 1) {
+        List<Forum> forums = generateForums(itemsPre.get(1), itemsQu.get(1));
+        log.info("Category " + categoriesCount + "/" + categories.size() + " with " + forums.size() + " forums");
+        for (Forum forum : forums) {
+          if (forumService.getForum(categoryId, forum.getId()) == null) {
+            forumService.saveForum(categoryId, forum, true);
+            forumsCount++;
+          }
+          String forumId = forum.getId();
+          long topicsWeight = 0;
+          int topicNum = 0;
+          if (itemsQu.size() > 2) {
 
-        String forumId = forum.getId();
-        long topicsWeight = 0;
+            List<Topic> topics = generateTopics(itemsPre.get(2), itemsQu.get(2));
+            log.info("\tForum " + (++forumNum) + "/" + forums.size() + " with " + topics.size() + " topics");
+            for (Topic topic : topics) {
+              if (forumService.getTopic(categoryId, forumId, topic.getId(), "root") == null) {
+                forumService.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
+                // log.info("Created topic " + topic.getTopicName());
+                topicsCount++;
+              }
+              String topicId = topic.getId();
+              long postsWeight = 0;
+              long t1 = System.currentTimeMillis();
+              if (itemsQu.size() > 3) {
+                List<Post> posts = generatePosts(itemsPre.get(3), itemsQu.get(3));
+                // log.info("Initializing new topic with "+ posts.size()+
+                // " posts");
 
-        List<Topic> topics = findTopicsByForum(forum);
-        log.info("\tForum " + (++forumNum) + "/" + forums.size() + " with " + topics.size() + " topics");
-        int topicNum = 0;
-        for (Topic topic : topics) {
-          forumService.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
-          // log.info("Created topic " + topic.getTopicName());
+                for (Post post : posts) {
+                  if (forumService.getPost(categoryId, forumId, topicId, post.getId()) == null) {
+                    forumService.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
+                    long messageWeight = post.getMessage().length() * 2; // in
+                    postCount++;
+                    postsWeight += messageWeight;                   
+                  }
+                  if (itemsQu.size() > 4) {
+                    int attSize = Integer.parseInt(queryParams.get("attSize"));
+                    List<ForumAttachment> atts = generateAttachments(itemsPre.get(4), itemsQu.get(4), attSize);
+                    post.setAttachments(atts);
+                    forumService.savePost(categoryId, forumId, topicId, post, false, new MessageBuilder());
+                  }
+                }
+                double elapsed = (System.currentTimeMillis() - t1);
+                double rate = ((postsWeight / 1024) / (elapsed / 1000));
+                String srate = MessageFormat.format("({0,number,#.#} KB/s)", rate);
+                log.info("\t\tTopic " + (++topicNum) + "/" + topics.size() + "\t" + posts.size() + " posts in " + elapsed + "ms "
+                    + srate);
 
-          String topicId = topic.getId();
-          List<Post> posts = fingPostsByTopic(topic);
-          // log.info("Initializing new topic with "+ posts.size()+ " posts");
-          postCount += posts.size();
-          long postsWeight = 0;
-          long t1 = System.currentTimeMillis();
-          for (Post post : posts) {
-            forumService.savePost(categoryId, forumId, topicId, post, true, new MessageBuilder());
-            long messageWeight = post.getMessage().length() * 2; // in bytes
-            postsWeight += messageWeight;
+                topicsWeight += postsWeight;
+              }
+            } // end topics loop
+
+            log.info("\t\t " + topics.size() + " topics " + MessageFormat.format("({0,number,#.#} KB)", (topicsWeight / 1024))
+                + " total posts=" + postCount);
+            forumsWeight += topicsWeight;
 
           }
-          double elapsed = (System.currentTimeMillis() - t1);
-          double rate = ((postsWeight / 1024) / (elapsed / 1000));
-          String srate = MessageFormat.format("({0,number,#.#} K/s)", rate);
-          log.info("\t\tTopic " + (++topicNum) + "/" + topics.size() + "\t" + posts.size() + " posts in " + elapsed + "ms " + srate);
-
-          topicsWeight += postsWeight;
-
-        } // end topics loop
-
-        log.info("\t\t " + topics.size() + " topics " + MessageFormat.format("({0,number,#.#} K)", (topicsWeight / 1024)) + " total posts=" + postCount);
-        forumsWeight += topicsWeight;
-        topicsCount += topics.size();
-
+        }
+        log.info("\t" + forums.size() + " forums " + MessageFormat.format("({0,number,#.#} K)", (forumsWeight / 1024))
+            + " total posts=" + postCount);
+        categoriesWeight += forumsWeight;
       }
-      log.info("\t" + forums.size() + " forums " + MessageFormat.format("({0,number,#.#} K)", (forumsWeight / 1024)) + " total posts=" + postCount);
-      categoriesWeight += forumsWeight;
-
     }
-    log.info("INITIALIZED : categories=" + categories.size() + " / forums=" + forumsCount + " / topics=" + topicsCount + " / posts=" + postCount + MessageFormat.format(" ({0,number,#.#} K)", (categoriesWeight / 1024)));
-    // save history
-    try {
-      Category category = forumService.getCategory(fistCategoryId);
-      category.setDescription(catesStack.toString());
-      forumService.saveCategory(category, false);
-    } catch (Exception e) {
-    }
+    log.info("INITIALIZED : categories=" + categories.size() + " / forums=" + forumsCount + " / topics=" + topicsCount
+        + " / posts=" + postCount + MessageFormat.format(" ({0,number,#.#} KB)", (categoriesWeight / 1024)));
+  }
+  
+  public void injectPermission(HashMap<String, String> queryParams) throws Exception {
+    
   }
 
   @Override
   public void reject(HashMap<String, String> queryParams) throws Exception {
-    if (catesStack.isEmpty()) {
-      initHistoryInject();
+    List<String> prefixes = readPrefixes(queryParams);
+    List<String> itemIds = search(prefixes.get(prefixes.size() - 1));
+    switch (prefixes.size()) {
+    case 5:
+      for (int i = 0; i < itemIds.size(); i++) {
+        String[] ids = itemIds.get(i).split("/");
+        int l = ids.length;
+        Post post = forumService.getPost(ids[l - 6], ids[l - 5], ids[l - 4], ids[l - 3]);
+        List<ForumAttachment> atts = post.getAttachments();
+        List<ForumAttachment> toRemoveAtts = new ArrayList<ForumAttachment>();
+        for (ForumAttachment att : atts) {
+          if (att.getId().equals(ids[l - 2]))
+            toRemoveAtts.add(att);
+        }
+        for (ForumAttachment att : toRemoveAtts) {
+          atts.remove(att);
+        }
+        post.setAttachments(atts);
+        forumService.savePost(ids[l - 6], ids[l - 5], ids[l - 4], post, false, new MessageBuilder());
+      }
+      break;
+    case 4:
+      for (int i = 0; i < itemIds.size(); i++) {
+        String[] ids = itemIds.get(i).split("/");
+        int l = ids.length;
+        forumService.removePost(ids[l - 4], ids[l - 3], ids[l - 2], ids[l - 1]);
+      }
+      break;
+    case 3:
+      for (int i = 0; i < itemIds.size(); i++) {
+        String[] ids = itemIds.get(i).split("/");
+        int l = ids.length;
+        forumService.removeTopic(ids[l - 3], ids[l - 2], ids[l - 1]);
+      }
+      break;
+    case 2:
+      for (int i = 0; i < itemIds.size(); i++) {
+        String[] ids = itemIds.get(i).split("/");
+        int l = ids.length;
+        forumService.removeForum(ids[l - 2], ids[l - 1]);
+      }
+      break;
+    case 1:
+      for (int i = 0; i < itemIds.size(); i++) {
+        String[] ids = itemIds.get(i).split("/");
+        int l = ids.length;
+        forumService.removeCategory(ids[l - 1]);
+      }
+      break;
+    default:
+      break;
     }
-    log.info(String.format("Remove %s categories in forum..... ", catesStack.size()));
-    while (!catesStack.isEmpty()) {
-      String cateId = catesStack.pop();
-      forumService.removeCategory(cateId);
+  }
+  
+  private List<Integer> readQuantities(HashMap<String, String> queryParams) {
+    String quantitiesString = queryParams.get("q");
+    List<Integer> quantities = new LinkedList<Integer>();
+    for (String s : quantitiesString.split(ARRAY_SPLIT)) {
+      if (s.length() > 0) {
+        int quantity = Integer.parseInt(s.trim());
+        quantities.add(quantity);
+      }
     }
+    return quantities;
   }
-
-  private void initHistoryInject() {
-    try {
-      Category category = forumService.getCategory(fistCategoryId);
-      catesStack.addAll(convertStringToList(category.getDescription()));
-    } catch (Exception e) {
-      log.info("Failed to get history inject....");
+  
+  private List<String> readPrefixes(HashMap<String, String> queryParams) {
+    String prefixesString = queryParams.get("pre");
+    List<String> prefixes = new LinkedList<String>();
+    for (String s : prefixesString.split(ARRAY_SPLIT)) {
+      if (s.length() > 0) {
+        prefixes.add(s);
+      }
     }
+    return prefixes;
   }
 
-  public List<String> convertStringToList(String s) {
-    s = s.replace("[", "").replace("]", "");
-    s = s.trim().replaceAll("(,\\s*)", ",").replaceAll("(\\s*,)", ",");
-    String[] strs = s.split(",");
-    return new ArrayList<String>(Arrays.asList(strs));
-  }
-
-  private void initRandomizers() {
-    rand = new Random();
-  }
-
-  public List<Category> findCategories() {
+  private List<Category> generatesCategories(String prefix, int cateQu) {
     List<Category> result = new ArrayList<Category>();
     try {
-      int maxCat = getMaxItem(maxCategories);
-      Category previous = forumService.getCategory(fistCategoryId);
-      if (previous == null) {
-        previous = newCategory(null);
-        maxCat = maxCat - 1;
-        previous.setId(fistCategoryId);
-        result.add(previous);
-      } else {
-        catesStack.clear();
-        catesStack.addAll(convertStringToList(previous.getDescription()));
-      }
-      for (int i = 0; i < maxCat; i++) {
-        previous = newCategory(previous);
-        result.add(previous);
+      for (int i = 0; i < cateQu; i++) {
+        Category category = new Category();
+        String id = generateId(prefix, Utils.CATEGORY, i);
+        category.setId(id);
+        category.setCategoryName(id);
+        category.setCategoryOrder(i);
+        category.setCreatedDate(new Date());
+        category.setDescription(randomWords(10));
+        category.setModifiedBy(randomUser());
+        category.setModifiedDate(new Date());
+        category.setOwner(randomUser());
+        result.add(category);
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -231,57 +280,38 @@ public class ForumDataInjector extends DataInjector {
     return result;
   }
 
-  private Forum newForum(Forum previous) {
-    if (previous == null) {
-      previous = new Forum();
-    }
-    Forum forum = new Forum();
-    forum.setCreatedDate(new Date());
-    forum.setDescription(randomWords(10));
-    forum.setForumName(randomWords(5));
-    forum.setForumOrder(previous.getForumOrder() + 1);
-    forum.setOwner(randomUser());
-    return forum;
-  }
-
-  private Category newCategory(Category previous) {
-    Category category = new Category();
-    if (previous == null) {
-      previous = new Category();
-    }
-    category.setCategoryName(randomWords(10));
-    category.setCategoryOrder(previous.getCategoryOrder() + 1);
-    category.setCreatedDate(new Date());
-    category.setDescription(randomWords(10));
-    category.setModifiedBy(randomUser());
-    category.setModifiedDate(new Date());
-    category.setOwner(randomUser());
-    return category;
-  }
-
-  public List<Forum> findForumsByCategory(String categoryId) {
-
+  private List<Forum> generateForums(String prefix, int forumQu) {
     List<Forum> result = new ArrayList<Forum>();
     try {
-      Forum previous = null;
-      int forumCount = getMaxItem(maxForums);
-      for (int i = 0; i < forumCount; i++) {
-        Forum forum = newForum(previous);
+      for (int i = 0; i < forumQu; i++) {
+        Forum forum = new Forum();
+        String id = generateId(prefix, Utils.FORUM, i);
+        forum.setId(id);
+        forum.setForumName(id);
+        forum.setCreatedDate(new Date());
+        forum.setDescription(randomWords(10));        
+        forum.setForumOrder(i);
+        forum.setOwner(randomUser());
         result.add(forum);
       }
+      return result;
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    return result;
   }
 
-  public List<Topic> findTopicsByForum(Forum forum) {
+  private List<Topic> generateTopics(String prefix, int topicQu) {
     List<Topic> result = new ArrayList<Topic>();
     try {
-      Topic previous = null;
-      int topicCount = getMaxItem(maxTopics);
-      for (int i = 0; i < topicCount; i++) {
-        Topic topic = newTopic(previous);
+      for (int i = 0; i < topicQu; i++) {
+        Topic topic = new Topic();
+        String id = generateId(prefix, Utils.TOPIC,i);
+        topic.setId(id);
+        topic.setTopicName(id);
+        topic.setCreatedDate(new Date());
+        topic.setDescription(randomWords(10));
+        topic.setOwner(randomUser());       
+        topic.setIcon(ForumDataRandom.getClassIcon());
         result.add(topic);
       }
       return result;
@@ -290,49 +320,102 @@ public class ForumDataInjector extends DataInjector {
     }
   }
 
-  private int getMaxItem(int type) {
-    return (randomize) ? (rand.nextInt(type) + 1) : type;
-  }
-
-  private Topic newTopic(Topic previous) {
-    if (previous == null) {
-      previous = new Topic();
-    }
-    Topic topic = new Topic();
-    topic.setCreatedDate(new Date());
-    topic.setDescription(randomWords(10));
-    topic.setOwner(randomUser());
-    topic.setTopicName(randomWords(5));
-    topic.setIcon(ForumDataRandom.getClassIcon());
-    return topic;
-  }
-
-  public List<Post> fingPostsByTopic(Topic topic) {
+  private List<Post> generatePosts(String prefix, int postQu) {
     List<Post> result = new ArrayList<Post>();
-    try {
-      Post previous = null;
-      int postCount = getMaxItem(maxPosts);
-      for (int i = 0; i < postCount; i++) {
-        Post post = newPost(previous);
-        result.add(post);
-      }
-      return result;
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
+    for (int i = 0; i < postQu; i++) {
 
-  private Post newPost(Post previous) {
-    if (previous == null) {
-      previous = new Post();
+      Post post = new Post();
+      String id = generateId(prefix, Utils.POST, i);
+      post.setId(id);
+      post.setName(id);
+      String content = randomParagraphs(5);
+      post.setMessage(content);
+      post.setOwner(randomUser());
+      post.setIcon(ForumDataRandom.getClassIcon());
+      result.add(post);
     }
-    Post post = new Post();
-    post.setName(randomWords(10));
-    String content = randomParagraphs(5);
-    post.setMessage(content);
-    post.setOwner(randomUser());
-    post.setIcon(ForumDataRandom.getClassIcon());
-    return post;
+    return result;
+  }
+  
+  private String generateId(String prefix, String entity, int order) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(entity).append(UNDER_SCORE).append(prefix).append(UNDER_SCORE);
+    for (int i = 0; i < 16; i++) {
+      sb.append(order);
+    }
+    return sb.toString();
+  }
+  
+  private List<String> search(String prefix) {
+    return search(prefix, dataLocation.getForumCategoriesLocation());
+  }
+  
+  private List<String> search(String prefix, String jcrPath) {
+    StringBuffer sb = new StringBuffer();
+    List<String> result = new ArrayList<String>();
+    if (jcrPath.startsWith("/"))
+      jcrPath = jcrPath.substring(1);
+    prefix = new StringBuilder().append("%").append(UNDER_SCORE).append(prefix).append(UNDER_SCORE).append("%").toString();
+    sb.append(jcrPath)
+      .append("//element(*, nt:base)[jcr:like(exo:name,'")
+      .append(prefix)
+      .append("') or jcr:like(exo:fileName,'")
+      .append(prefix)
+      .append("')]");
+    try {
+      NodeIterator iter = forumService.search(sb.toString());
+      while (iter.hasNext()) {
+        result.add(iter.nextNode().getPath().toString());
+      }
+    } catch (Exception e) {
+      log.debug("Failure when search for prefix", e);
+    }
+    return result;
+  }
+  
+//  private List<Integer> getTotalItemQu(List<String> preQu, List<Integer> itemQu) {
+//    List<Integer> result = new ArrayList<Integer>();
+//    List<String> addedCats = new ArrayList<String>();
+//    List<String> addedFors = new ArrayList<String>();
+//    List<String> addedTops = new ArrayList<String>();
+//    List<String> addedPoss = new ArrayList<String>();
+//    addedCats = search(preQu.get(0));
+//    if (addedCats.size() > 0) {
+//      addedFors = search(preQu.get(1), addedCats.get(0));
+//      if (addedFors.size() > 0) {
+//        addedTops = search(preQu.get(2), addedFors.get(0));
+//
+//        if (addedTops.size() > 0) {
+//          addedPoss = search(preQu.get(3), addedTops.get(0));
+//        }
+//      }
+//    }
+//    result.add(calculateItemQu(addedCats.size(), itemQu.get(0)));
+//    result.add(calculateItemQu(addedFors.size(), itemQu.get(1)));
+//    result.add(calculateItemQu(addedTops.size(), itemQu.get(2)));
+//    result.add(calculateItemQu(addedPoss.size(), itemQu.get(3)));
+//    return result;
+//  }
+  
+//  private int calculateItemQu(int existing, int input) {
+//    return (existing == input) ? existing : existing + input;
+//  }
+
+  private List<ForumAttachment> generateAttachments(String prefix, int quantity, int capacity) throws Exception {
+    List<ForumAttachment> listAttachments = new ArrayList<ForumAttachment>();
+    String rs = createTextResource(capacity);    
+    for (int i = 0; i < quantity; i++) {
+      String attId = generateId(prefix, Utils.ATTACHMENT, i);
+      BufferAttachment att = new BufferAttachment();
+      att.setId(attId);
+      att.setName(attId);
+      att.setInputStream(new ByteArrayInputStream(rs.getBytes("UTF-8")));
+      att.setMimeType("text/plain");
+      long fileSize = (long) capacity * 1024;
+      att.setSize(fileSize);
+      listAttachments.add(att);
+    }
+    return listAttachments;
   }
 
   @Override

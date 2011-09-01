@@ -30,7 +30,7 @@ public class Category {
 
   private String   path;
 
-  private long     categoryOrder;
+  private long     categoryOrder = 0;
 
   private Date     createdDate;
 

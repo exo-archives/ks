@@ -64,6 +64,8 @@ public class Utils {
   public final static String TOPIC                 = "topic".intern();
 
   public final static String POST                  = "post".intern();
+  
+  public final static String ATTACHMENT            = "attachment";
 
   public final static String POLL                  = "poll".intern();
 

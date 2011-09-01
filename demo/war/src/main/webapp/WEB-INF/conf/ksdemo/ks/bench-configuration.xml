@@ -19,28 +19,6 @@
       <set-method>addInjector</set-method>
       <type>org.exoplatform.forum.bench.ForumDataInjector</type>
       <description>inject data for Forum</description>
-      <init-params>
-        <value-param>
-          <name>mC</name> <!-- maximum number of categories -->
-          <value>10</value>
-        </value-param>
-        <value-param>
-          <name>mF</name> <!-- maximum number of forums -->
-          <value>3</value>
-        </value-param>
-        <value-param>
-          <name>mT</name> <!-- maximum number of topics -->
-          <value>20</value>
-        </value-param>
-        <value-param>
-          <name>mP</name> <!-- maximum number of posts -->
-          <value>20</value>
-        </value-param>
-        <value-param>
-          <name>rand</name> <!-- randomize or not -->
-          <value>true</value>
-        </value-param> 
-      </init-params>
     </component-plugin>
     
     <component-plugin>
@@ -55,36 +33,6 @@
       <set-method>addInjector</set-method>
       <type>org.exoplatform.wiki.bench.WikiDataInjector</type>
       <description>inject data for Wiki</description>
-      <init-params>
-        <value-param>
-          <name>mP</name> <!-- maximum number of created pages in one injecting time -->
-          <value>10</value>
-        </value-param>
-        <value-param>
-          <name>mC</name> <!-- maximum children of a page created by injection.  -->
-          <value>10</value>
-        </value-param>
-        <value-param>
-          <name>mA</name> <!-- maximum size of an attachment -->
-          <value>100</value>
-        </value-param>
-        <value-param>
-          <name>mD</name> <!-- maximum depth of pages tree -->
-          <value>2</value>
-        </value-param>
-        <value-param>
-          <name>rand</name> <!-- randomize or not -->
-          <value>true</value>
-        </value-param>
-        <value-param>
-          <name>wo</name> <!-- wiki owner -->
-          <value>classic</value>
-        </value-param>
-        <value-param>
-          <name>wt</name> <!-- wiki type -->
-          <value>portal</value>
-        </value-param>
-      </init-params>
     </component-plugin>    
   </external-component-plugins>
 </configuration>
