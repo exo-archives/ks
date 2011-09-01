@@ -30,6 +30,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.webui.control.UIAttachmentContainer;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
@@ -76,7 +77,7 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
     @Override
     public void execute(Event<UIWikiPageInfoArea> event) throws Exception {
       UIWikiBottomArea wikiBottomArea = event.getSource().getAncestorOfType(UIWikiBottomArea.class);
-      UIWikiAttachmentArea attachform = wikiBottomArea.findFirstComponentOfType(UIWikiAttachmentArea.class);
+      UIAttachmentContainer attachform = wikiBottomArea.findFirstComponentOfType(UIAttachmentContainer.class);
       if (attachform.isRendered()) {
         attachform.setRendered(false);
       } else {
@@ -98,7 +99,7 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
       if (pageVersions.isRendered()) {
         pageVersions.setRendered(false);
       } else {
-        UIWikiAttachmentArea attachform = bottomArea.getChild(UIWikiAttachmentArea.class);
+        UIAttachmentContainer attachform = bottomArea.getChild(UIAttachmentContainer.class);
         if (attachform.isRendered()) {
           attachform.setRendered(false);
         }

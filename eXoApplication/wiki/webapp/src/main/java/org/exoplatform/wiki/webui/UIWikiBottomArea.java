@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
+import org.exoplatform.wiki.webui.control.UIAttachmentContainer;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
 /**
@@ -37,7 +38,7 @@ public class UIWikiBottomArea extends UIWikiContainer {
     
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE, WikiMode.ADDPAGE });    
     addChild(UIWikiPageInfoArea.class, null, null);
-    addChild(UIWikiAttachmentArea.class, null, null).setRendered(false);
+    addChild(UIAttachmentContainer.class, null, null).setRendered(false);
     addChild(UIWikiPageVersionsList.class, null, "UIWikiPageVersionsList2").setRendered(false);
   }
   

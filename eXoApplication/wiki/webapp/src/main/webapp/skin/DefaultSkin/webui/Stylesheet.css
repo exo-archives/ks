@@ -503,10 +503,6 @@ table.UIFormGrid div.Id {
 	text-decoration: none;
 }
 
-.UIWikiAttachmentArea .UIFormGrid td a {
-	color: #4175b2;
-}
-
 .UIWikiPageContentArea .Breadcum .BCBT {
 	background: url("background/Button.gif") repeat-x;
 	padding: 3px 16px;
@@ -1042,23 +1038,27 @@ table.UIFormGrid div.Id {
 }
 
 /* File Attachment */
-.UIWikiAttachmentArea .UIAction .ActionContainer {
+.UIAttachmentUploadListForm .UIFormGrid td a {
+	color: #4175b2;
+}
+
+.UIAttachmentUploadListForm .UIAction .ActionContainer {
 	margin: 0px;
 }
 
-.UIWikiAttachmentArea .UIAction td {
+.UIAttachmentUploadListForm .UIAction td {
 	padding: 0px;
 	border: none;
 	text-align: center;
 }
 
-.UIWikiAttachmentArea .UIFormGrid {
+.UIAttachmentUploadListForm .UIFormGrid {
 	width: 100%;
 	border-collapse: collapse;
 	border: 1px solid #d7d7d7;
 }
 
-.UIWikiAttachmentArea .UIFormGrid th {
+.UIAttachmentUploadListForm .UIFormGrid th {
 	background: url('background/TitBarBG.png') repeat-x left top;
 	color: #636363;
 	text-align: left;
@@ -1068,33 +1068,33 @@ table.UIFormGrid div.Id {
 	border-right: 1px solid #FFFFFF;
 }
 
-.UIWikiAttachmentArea .UIFormGrid td {
+.UIAttachmentUploadListForm .UIFormGrid td {
 	text-align: left;
 	padding: 5px 8px 2px 12px;
 	border-right: 1px solid #FFFFFF;
 	border-top: 1px solid #FFFFFF;
 }
 
-.UIWikiAttachmentArea .UIFormGrid .EvenRow {
+.UIAttachmentUploadListForm .UIFormGrid .EvenRow {
 	background: #F2F2F2;
 }
 
-.UIWikiAttachmentArea .UIFormGrid .OddRow {
+.UIAttachmentUploadListForm .UIFormGrid .OddRow {
 	background: #F9F9F9;
 }
 
-.UIWikiAttachmentArea .AttachmentTit {
+.UIAttachmentUploadListForm .AttachmentTit {
 	color: #636363;
 	font-size: 14px;
 	font-weight: bold;
 	padding: 4px 0;
 }
 
-.UIWikiAttachmentArea .UIFormGrid .Tit {
+.UIAttachmentUploadListForm .UIFormGrid .Tit {
 	color: #165fb3;
 }
 
-.UIWikiAttachmentArea .UIFormGrid .RemoveFile {
+.UIAttachmentUploadListForm .UIFormGrid .RemoveFile {
 	margin-left: 47px;
 }
 

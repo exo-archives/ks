@@ -26,7 +26,7 @@
   String compareActionId = UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + compareAction;
   String compareActionLink = uicomponent.event(compareAction);
 %>
-<div class="UIWikiPageVersionsList UIWikiAttachmentArea">
+<div class="UIWikiPageVersionsList UIAttachmentUploadContainer">
  <% uiform.begin(); %>
   <div class="HistoryLabel"><%= _ctx.appRes("UIWikiPageVersionsList.label.HistoryLabel"); %></div>
 	<div class="UIAction TextAlignLeft" >

@@ -1,0 +1,5 @@
+<div class="UIWikiUploadAttachment">
+  <% uiform.begin(); %>
+    <% uiform.renderChild(uiform.FIELD_UPLOAD)%>
+  <% uiform.end();%>
+</div>

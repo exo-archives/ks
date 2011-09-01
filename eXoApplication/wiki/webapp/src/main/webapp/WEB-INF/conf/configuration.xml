@@ -252,6 +252,15 @@
              <field name="component"><string>org.exoplatform.wiki.webui.control.action.AddRelatedPageActionComponent</string></field>             
            </object>
         </object-param>
+        <object-param>
+           <name>UploadAttachment</name>
+           <object type="org.exoplatform.webui.ext.UIExtension">
+             <field name="type"><string>org.exoplatform.wiki.webui.control.UIAttachmentContainer</string></field>
+             <field name="rank"><int>100</int></field>
+             <field name="name"><string>UploadAttachment</string></field>
+             <field name="component"><string>org.exoplatform.wiki.webui.UIWikiUploadAttachment</string></field>             
+           </object>
+        </object-param>
       </init-params>
     </component-plugin>
   </external-component-plugins>
