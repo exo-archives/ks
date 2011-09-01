@@ -139,10 +139,10 @@ public class UIWikiUploadAttachment extends UIWikiForm {
           AttachmentImpl att = ((PageImpl) page).createAttachment(attachfile.getName(), attachfile);
 
           att.setTitle(uploadResource.getFileName());
-          if (uploadResource.getFileName().indexOf(".") > 0) {
+          if (uploadResource.getFileName().lastIndexOf(".") > 0) {
             att.setTitle(uploadResource.getFileName().substring(0,
                                                                 uploadResource.getFileName()
-                                                                              .indexOf(".")));
+                                                                              .lastIndexOf(".")));
 
             att.setCreator(event.getRequestContext().getRemoteUser());
             org.exoplatform.wiki.utils.Utils.reparePermissions(att);
