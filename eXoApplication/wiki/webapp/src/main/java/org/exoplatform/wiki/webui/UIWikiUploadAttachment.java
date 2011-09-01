@@ -132,6 +132,7 @@ public class UIWikiUploadAttachment extends UIWikiForm {
         attachfile.setName(uploadResource.getFileName());
         attachfile.setResourceId(uploadResource.getUploadId());
       }
+      
       if (attachfile != null) {
         try {          
           Page page = wikiAttachmentArea.getCurrentWikiPage();
@@ -146,7 +147,7 @@ public class UIWikiUploadAttachment extends UIWikiForm {
             att.setCreator(event.getRequestContext().getRemoteUser());
             org.exoplatform.wiki.utils.Utils.reparePermissions(att);
           }
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
           uiApp.addMessage(new ApplicationMessage("UIApplication.msg.unknown-error",
                                                   null,
                                                   ApplicationMessage.ERROR));
@@ -155,7 +156,6 @@ public class UIWikiUploadAttachment extends UIWikiForm {
           resetUploadInput(event);        
         }
       }      
-        
     }
 
     private void resetUploadInput(Event<UIWikiUploadAttachment> event) {
