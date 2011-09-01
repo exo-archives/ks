@@ -750,7 +750,7 @@
 																							%>
 												                                          <a href="<%=uicomponent.event("ResponseQuestion", question.getPath());%>" class="ActionButton LightBlueStyle ResponseQuestion"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
 												                                          <%}
-																						if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved()) || uicomponent.canEditQuestion){
+																						if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved())){
 																						%>
 												                                          <a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>" class="ActionButton LightBlueStyle Comment"><%=_ctx.appRes("UIQuestions.action.AddCommentQuestion")%></a>
 												                                          <%}%>
