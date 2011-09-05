@@ -26,6 +26,7 @@ import java.util.List;
 
 import javax.jcr.NodeIterator;
 
+import org.apache.commons.collections.ListUtils;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -59,7 +60,11 @@ public class ForumDataInjector extends DataInjector {
 
   private ForumService       forumService;
   
-  private KSDataLocation     dataLocation; 
+  private KSDataLocation     dataLocation;
+  
+  private enum ENTITY{
+    CATEGORY, FORUM, TOPIC, POST, ATTACHMENT
+  }
 
   public ForumDataInjector(ForumService forumService, KSDataLocation dataLocation) {
     this.forumService = forumService;
@@ -175,16 +180,53 @@ public class ForumDataInjector extends DataInjector {
         + " / posts=" + postCount + MessageFormat.format(" ({0,number,#.#} KB)", (categoriesWeight / 1024)));
   }
   
+  @SuppressWarnings("unchecked")
   public void injectPermission(HashMap<String, String> queryParams) throws Exception {
-    
+    List<String> prefixes = readPrefixes(queryParams);
+    if (prefixes.size() == 3) {
+      boolean isCanView = false;
+      boolean isCanPost = false;
+      String permString = queryParams.get("perm");
+      List<String> member = readUsersIfExist(queryParams);
+      List<String> groups = readGroupsIfExist(queryParams);
+      List<String> memberships = readMembershipIfExist(queryParams);
+      List<String> mergeMembers = ListUtils.union(ListUtils.union(member, groups), memberships);
+      String[] memberArray = new String[mergeMembers.size()];
+      for (int i = 0; i < mergeMembers.size(); i++) {
+        memberArray[i] = mergeMembers.get(i);
+      }
+      List<String> itemIds = search(prefixes.get(2), ENTITY.TOPIC);
+      if (Integer.parseInt(permString.substring(0, 1)) > 0) {
+        isCanView = true;
+      }
+      if (Integer.parseInt(permString.substring(1, 2)) > 0) {
+        isCanPost = true;
+      }
+      for (int i = 0; i < itemIds.size(); i++) {
+        String[] ids = itemIds.get(i).split("/");
+        int l = ids.length;
+        Topic topic = forumService.getTopic(ids[l - 3], ids[l - 2], ids[l - 1], "root");
+        if (isCanView) {
+          topic.setCanView(memberArray);
+        }
+        if (isCanPost) {
+          topic.setCanPost(memberArray);
+        }
+        forumService.saveTopic(ids[l - 3], ids[l - 2], topic, false, false, new MessageBuilder());
+      }
+    } else {
+      throw new IllegalArgumentException("Prefix item is not a topic prefix. It should be [category_prefix],[forum_prefix],[topic_prefix]");
+    }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void reject(HashMap<String, String> queryParams) throws Exception {
     List<String> prefixes = readPrefixes(queryParams);
-    List<String> itemIds = search(prefixes.get(prefixes.size() - 1));
+    List<String> itemIds = new ArrayList<String>();
     switch (prefixes.size()) {
     case 5:
+      itemIds = search(prefixes.get(prefixes.size()-1), ENTITY.ATTACHMENT);
       for (int i = 0; i < itemIds.size(); i++) {
         String[] ids = itemIds.get(i).split("/");
         int l = ids.length;
@@ -195,14 +237,13 @@ public class ForumDataInjector extends DataInjector {
           if (att.getId().equals(ids[l - 2]))
             toRemoveAtts.add(att);
         }
-        for (ForumAttachment att : toRemoveAtts) {
-          atts.remove(att);
-        }
+        atts = ListUtils.subtract(atts, toRemoveAtts);
         post.setAttachments(atts);
         forumService.savePost(ids[l - 6], ids[l - 5], ids[l - 4], post, false, new MessageBuilder());
       }
       break;
     case 4:
+      itemIds = search(prefixes.get(prefixes.size()-1), ENTITY.POST);
       for (int i = 0; i < itemIds.size(); i++) {
         String[] ids = itemIds.get(i).split("/");
         int l = ids.length;
@@ -210,6 +251,7 @@ public class ForumDataInjector extends DataInjector {
       }
       break;
     case 3:
+      itemIds = search(prefixes.get(prefixes.size()-1), ENTITY.TOPIC);
       for (int i = 0; i < itemIds.size(); i++) {
         String[] ids = itemIds.get(i).split("/");
         int l = ids.length;
@@ -217,6 +259,7 @@ public class ForumDataInjector extends DataInjector {
       }
       break;
     case 2:
+      itemIds = search(prefixes.get(prefixes.size()-1), ENTITY.FORUM);
       for (int i = 0; i < itemIds.size(); i++) {
         String[] ids = itemIds.get(i).split("/");
         int l = ids.length;
@@ -224,6 +267,7 @@ public class ForumDataInjector extends DataInjector {
       }
       break;
     case 1:
+      itemIds = search(prefixes.get(prefixes.size()-1), ENTITY.CATEGORY);
       for (int i = 0; i < itemIds.size(); i++) {
         String[] ids = itemIds.get(i).split("/");
         int l = ids.length;
@@ -310,7 +354,10 @@ public class ForumDataInjector extends DataInjector {
         topic.setTopicName(id);
         topic.setCreatedDate(new Date());
         topic.setDescription(randomWords(10));
-        topic.setOwner(randomUser());       
+        topic.setOwner("root");
+        String[] users = {"root"};
+        topic.setCanPost(users);
+        topic.setCanView(users);
         topic.setIcon(ForumDataRandom.getClassIcon());
         result.add(topic);
       }
@@ -346,18 +393,34 @@ public class ForumDataInjector extends DataInjector {
     return sb.toString();
   }
   
-  private List<String> search(String prefix) {
-    return search(prefix, dataLocation.getForumCategoriesLocation());
-  }
-  
-  private List<String> search(String prefix, String jcrPath) {
+  private List<String> search(String prefix, ENTITY entity) {
     StringBuffer sb = new StringBuffer();
+    String nodeType = "nt:base";
     List<String> result = new ArrayList<String>();
-    if (jcrPath.startsWith("/"))
-      jcrPath = jcrPath.substring(1);
+    switch (entity) {
+    case CATEGORY:
+      nodeType = "exo:forumCategory";
+      break;
+    case FORUM:
+      nodeType = "exo:forum";
+      break;
+    case TOPIC:
+      nodeType = "exo:topic";
+      break;
+    case POST:
+      nodeType = "exo:post";
+      break;
+    case ATTACHMENT:
+      nodeType = "exo:forumResource";
+      break;
+    default:
+      break;
+    }   
     prefix = new StringBuilder().append("%").append(UNDER_SCORE).append(prefix).append(UNDER_SCORE).append("%").toString();
-    sb.append(jcrPath)
-      .append("//element(*, nt:base)[jcr:like(exo:name,'")
+    sb.append(dataLocation.getForumCategoriesLocation())
+      .append("//element(*,")
+      .append(nodeType)
+      .append(")[jcr:like(exo:name,'")
       .append(prefix)
       .append("') or jcr:like(exo:fileName,'")
       .append(prefix)
