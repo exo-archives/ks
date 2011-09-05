@@ -386,7 +386,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
       } else {
         popupWindow.setWindowSize(550, 380);
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow);
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }
   }
 
