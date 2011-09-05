@@ -107,17 +107,7 @@ public class AnswerDataInjector extends DataInjector {
     } catch (Exception e) {
       return null;
     }
-  }
-
-  private void printInfoOfInject(HashMap<String, String> queryParams) throws Exception {
-    log.info("PARAMS of inject: ");
-    StringBuilder sb = new StringBuilder();
-    for (String key : queryParams.keySet()) {
-      sb.append(String.format(" %s : %s", key, queryParams.get(key))).append("\nINFO: ");
-    }
-    log.info(sb.toString());
-  }
-  
+  }  
   
   private String makeName(String prefix, int leve, int order) {
     return prefix + "_" + leve + "_" + order;
@@ -276,7 +266,6 @@ public class AnswerDataInjector extends DataInjector {
   
   @Override
   public void inject(HashMap<String, String> queryParams) throws Exception {
-    printInfoOfInject(queryParams);
     InjectInfo info = new InjectInfo(queryParams, getCategoryRoot(false));
     String type = info.getType();
     if (CONSTANTS.DATA.getName().equalsIgnoreCase(type) || 
