@@ -22,29 +22,15 @@
 
 <gatein-resources
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_0 http://www.gatein.org/xml/ns/gatein_resources_1_0"
-    xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_0">
+    xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_2 http://www.gatein.org/xml/ns/gatein_resources_1_2"
+    xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2">
 
   <portlet-skin>
     <application-name>forum</application-name>
     <portlet-name>ForumPortlet</portlet-name>
     <skin-name>Default</skin-name>
     <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
+    <css-priority>1</css-priority>
   </portlet-skin>
- 
-  <!-- javascript>
-    <param>
-      <js-module>eXo.forum.UIForumPortlet</js-module>
-      <js-path>/javascript/eXo/forum/UIForumPortlet.js</js-path>
-    </param>
-  </javascript>  
-  
-  <javascript>
-    <param>
-      <js-module>eXo.forum.UIForumPortlet</js-module>
-      <js-path>/javascript/eXo/forum/webservice/SearchTagName.js</js-path>
-    </param>
-  </javascript-->   
-
 </gatein-resources>
 

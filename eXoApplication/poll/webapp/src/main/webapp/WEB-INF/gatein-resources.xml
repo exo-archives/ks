@@ -22,22 +22,14 @@
 
 <gatein-resources
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_0 http://www.gatein.org/xml/ns/gatein_resources_1_0"
-    xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_0">
+    xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_2 http://www.gatein.org/xml/ns/gatein_resources_1_2"
+    xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2">
 
   <portlet-skin>
     <application-name>poll</application-name>
     <portlet-name>PollPortlet</portlet-name>
     <skin-name>Default</skin-name>
     <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
+    <css-priority>1</css-priority>
   </portlet-skin>
- 
-  <!--javascript>
-    <param>
-      <js-module>eXo.poll.UIPollPortlet</js-module>
-      <js-path>/javascript/eXo/poll/UIPollPortlet.js</js-path>
-    </param>
-  </javascript-->   
-
 </gatein-resources>
-
