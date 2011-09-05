@@ -67,17 +67,6 @@ public class WikiDataInjector extends DataInjector {
     this.wikiService = wikiService;
   }
   
-  private void printInputParameters(HashMap<String, String> params) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("PARAMS: \n");
-    Iterator<String> keys = params.keySet().iterator();
-    while (keys.hasNext()) {
-      String key = keys.next();
-      sb.append(String.format("%1$10s    :    %2$10s \n", key, params.get(key)));
-    }
-    log.info(sb.toString());
-  }
-  
   private List<Integer> readQuantities(HashMap<String, String> queryParams) {
     String quantitiesString = queryParams.get("q");
     List<Integer> quantities = new LinkedList<Integer>();
@@ -279,7 +268,6 @@ public class WikiDataInjector extends DataInjector {
   
   @Override
   public void inject(HashMap<String, String> queryParams) throws Exception {
-    printInputParameters(queryParams);
     String type = queryParams.get(CONSTANTS.TYPE.getName());
     if (CONSTANTS.DATA.getName().equalsIgnoreCase(type)) {
       injectData(queryParams);
@@ -291,7 +279,6 @@ public class WikiDataInjector extends DataInjector {
   @Override
   public void reject(HashMap<String, String> params) throws Exception {
     log.info("Start to reject data ............. ");
-    printInputParameters(params);
     String wikiOwner = readWikiOwner(params);
     String wikiType = readWikiType(params);
     List<Integer> quantities = readQuantities(params);
