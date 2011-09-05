@@ -123,32 +123,6 @@ public class WikiDataInjector extends DataInjector {
     else return 0;
   }
   
-  private List<String> readGroupsIfExist(HashMap<String, String> queryParams) {
-    List<String> groups = new LinkedList<String>();
-    String value = queryParams.get("groups");
-    if (value != null) {
-      String[] groupsString = value.split(ARRAY_SPLIT);
-      for (String s : groupsString) {
-        if (s.length() > 0)
-          groups.add(s.trim());
-      }
-    }
-    return groups;
-  }
-  
-  private List<String> readUsersIfExist(HashMap<String, String> queryParams) {
-    List<String> users = new LinkedList<String>();
-    String value = queryParams.get("users");
-    if (value != null) {
-      String[] groupsString = value.split(ARRAY_SPLIT);
-      for (String s : groupsString) {
-        if (s.length() > 0)
-          users.add(s.trim());
-      }
-    }
-    return users;    
-  }
-  
   private boolean readRecursive(HashMap<String, String> queryParams) {
     boolean recursive = false;
     String value = queryParams.get("rcs");
@@ -156,20 +130,6 @@ public class WikiDataInjector extends DataInjector {
       recursive = Boolean.parseBoolean(value);
     }
     return recursive;
-  }
-  
-  private List<String> readMembershipIfExist(HashMap<String, String> queryParams) {
-    List<String> memberships = new LinkedList<String>();
-    
-    String value = queryParams.get("memship");
-    if (value != null) {
-      String[] memshipsString = value.split(ARRAY_SPLIT);
-      for (String s : memshipsString) {
-        if (s.length() > 0)
-          memberships.add(s.trim());
-      }
-    }
-    return memberships;
   }
   
   private List<String> readPermission(HashMap<String, String> queryParams) {
