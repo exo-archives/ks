@@ -670,9 +670,15 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 		} else {
 			var actions = action.split(";");
 			itemmenuBookMark.href= actions[0] ;
+			if(actions[1].toLowerCase().indexOf("unwatch") >= 0){
+				if(actions[1].indexOf("unwatch,") >= 0) {
+					actions[1] = actions[1].replace('unwatch,', '');
+				}
+				itemmenuWatching.innerHTML = labelWatchings[1];
+			}	else {
+				itemmenuWatching.innerHTML = labelWatchings[0];
+			}
 			itemmenuWatching.href= actions[1] ;
-			if(actions[1].indexOf("UnWatch") >= 0) itemmenuWatching.innerHTML = labelWatchings[1];
-			else itemmenuWatching.innerHTML = labelWatchings[0];
 			if(itemmenuRSS){
 				if(actions.length == 3) {
 					var link = actions[2].substring(0, actions[2].indexOf(','));

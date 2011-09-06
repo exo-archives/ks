@@ -44,7 +44,7 @@
 						String title = category.getCategoryName();
 						if(uicomponent.userProfile.getUserRole() < 3){
 							if(uicomponent.isWatching(category.getPath())){
-								actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId) + ";" + uicomponent.event("UnWatch", categoryId);
+								actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId) + ";unwatch," +uicomponent.event("UnWatch", categoryId);
 							} else {
 								actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId) + ";" + uicomponent.event("AddWatching", categoryId);
 							}
@@ -205,7 +205,7 @@
 										String ids = categoryId + "/" + forumId;
 										if(uicomponent.userProfile.getUserRole() < 3){
 											if(uicomponent.isWatching(forum.getPath())){
-												actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("UnWatch",ids);
+												actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";unwatch," + uicomponent.event("UnWatch",ids);
 											} else {
 												actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("AddWatching",ids);
 											}
@@ -248,7 +248,7 @@
 											<%if(topicNewPost != null) {
 												if(uicomponent.userProfile.getUserRole() < 3){
 													if(uicomponent.isWatching(forum.getPath()+"/"+topicNewPost.getId())){
-														actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";" + uicomponent.event("UnWatch",topicPath) + ";" + uicomponent.getRSSLink(topicNewPost.getId()) + "," + uicomponent.event("RSS", topicNewPost.getId()).replace("javascript:","");
+														actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";unwatch," + uicomponent.event("UnWatch",topicPath) + ";" + uicomponent.getRSSLink(topicNewPost.getId()) + "," + uicomponent.event("RSS", topicNewPost.getId()).replace("javascript:","");
 													} else {
 														actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";" + uicomponent.event("AddWatching",topicPath) + ";" + uicomponent.getRSSLink(topicNewPost.getId()) + "," + uicomponent.event("RSS", topicNewPost.getId()).replace("javascript:","");
 													}
