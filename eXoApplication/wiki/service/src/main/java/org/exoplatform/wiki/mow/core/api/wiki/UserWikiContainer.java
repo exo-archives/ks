@@ -26,7 +26,7 @@ import org.chromattic.api.annotations.MappedBy;
 import org.chromattic.api.annotations.OneToOne;
 import org.chromattic.api.annotations.PrimaryType;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.WikiStoreImpl;
@@ -53,7 +53,7 @@ public abstract class UserWikiContainer extends WikiContainer<UserWiki> {
     ChromatticSession session = getMultiWiki().getSession();
     Node wikiNode = null;
     try {      
-      Node tempNode = nodeHierachyCreator.getUserApplicationNode(SessionProvider.createSystemProvider(),
+      Node tempNode = nodeHierachyCreator.getUserApplicationNode(CommonUtils.createSystemProvider(),
                                                                  wikiOwner);      
       Node userDataNode = (Node) session.getJCRSession().getItem(tempNode.getPath());        
       try {
