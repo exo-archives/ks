@@ -47,7 +47,7 @@ public class UIBreadcumbs extends UIContainer {
 
   public static final String  FIELD_FAQHOME_BREADCUMBS = "faqHome";
 
-  private static final String QUICK_SEARCH             = "QuickSearch";
+  private static final String QUICK_SEARCH             = "QuickSearchForm";
 
   public UIBreadcumbs() throws Exception {
     addChild(UIQuickSearch.class, null, QUICK_SEARCH);
