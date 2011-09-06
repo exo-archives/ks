@@ -57,6 +57,8 @@ public class ForumDataInjector extends DataInjector {
   private static final String ARRAY_SPLIT = ",";
   
   private static final String UNDER_SCORE = "_";
+  
+  private static final String SIXTEEN_CHARACTERS = "asdfghjklzxcvbnm";
 
   private ForumService       forumService;
   
@@ -386,10 +388,13 @@ public class ForumDataInjector extends DataInjector {
   
   private String generateId(String prefix, String entity, int order) {
     StringBuilder sb = new StringBuilder();
-    sb.append(entity).append(UNDER_SCORE).append(prefix).append(UNDER_SCORE);
-    for (int i = 0; i < 16; i++) {
-      sb.append(order);
-    }
+    sb.append(entity)
+      .append(UNDER_SCORE)
+      .append(prefix)
+      .append(UNDER_SCORE)
+      .append(SIXTEEN_CHARACTERS)
+      .append(UNDER_SCORE)
+      .append(order);
     return sb.toString();
   }
   
