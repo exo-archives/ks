@@ -59,6 +59,7 @@ public class UIAnswersPortlet extends UIPortletApplication {
    */
   private UIFormInputInfo changeModeMessage;
 
+  private PortletMode     portletMode;
   public UIAnswersPortlet() throws Exception {
     changeModeMessage = new UIFormInputInfo("UIMessageEditMode", "UIMessageEditMode", "");
     changeModeMessage.setRendered(false);
@@ -92,7 +93,8 @@ public class UIAnswersPortlet extends UIPortletApplication {
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
     PortletRequestContext portletReqContext = (PortletRequestContext) context;
-    if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+    portletMode = portletReqContext.getApplicationMode();
+    if (portletMode == PortletMode.VIEW) {
       changeModeMessage.setRendered(false);
       isFirstTime = true;
       if (getChild(UIAnswersContainer.class) == null) {
@@ -102,7 +104,7 @@ public class UIAnswersPortlet extends UIPortletApplication {
         addChild(UIAnswersContainer.class, null, null);
       }
       renderPortletById();
-    } else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+    } else if (portletMode == PortletMode.EDIT) {
       try {
         changeModeMessage.setValue(context.getApplicationResourceBundle().getString("UIAnswersPortlet.label.deny-access-edit-mode"));
         if (isFirstTime) {
@@ -149,11 +151,11 @@ public class UIAnswersPortlet extends UIPortletApplication {
   }
 
   public void renderPopupMessages() throws Exception {
-    UIPopupMessages popupMess = getUIPopupMessages();
-    if (popupMess == null)
-      return;
-    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-    popupMess.processRender(context);
+    if(portletMode == PortletMode.VIEW) {
+      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+      UIPopupMessages messages = getUIPopupMessages();
+      if(messages != null) messages.processRender(context);
+    }
   }
 
   public void cancelAction() throws Exception {

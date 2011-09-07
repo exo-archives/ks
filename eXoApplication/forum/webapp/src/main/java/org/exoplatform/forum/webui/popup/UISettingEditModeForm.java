@@ -119,8 +119,6 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
     addUIFormInput(Scoped);
     addUIFormInput(EnabledPanel);
     addUIFormInput(ForumPreference);
-
-    setActions(new String[] { "Save" });
   }
 
   public void setInitComponent() throws Exception {
@@ -268,7 +266,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
       editModeForm.portletPreference.setShowRules((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISRULES_CHECKBOX).getValue());
       editModeForm.portletPreference.setShowStatistics((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX).getValue());
       editModeForm.portletPreference.setShowModerators((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISMODERATOR_CHECKBOX).getValue());
-      UIApplication uiApp = editModeForm.getAncestorOfType(UIApplication.class);
+      UIForumPortlet forumPortlet = editModeForm.getAncestorOfType(UIForumPortlet.class);
 
       UIForumInputWithActions ForumPreference = editModeForm.getChildById(FIELD_FORUM_PREFERENCE_TAB);
       editModeForm.portletPreference.setUseAjax((Boolean) ForumPreference.getUIFormCheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX).getValue());
@@ -280,14 +278,12 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
         editModeForm.portletPreference.setInvisibleCategories(listCategoryinv);
         editModeForm.portletPreference.setInvisibleForums(listforuminv);
         ForumUtils.savePortletPreference(editModeForm.portletPreference);
-        ((UIForumPortlet) editModeForm.getParent()).loadPreferences();
-        Object[] args = { ForumUtils.EMPTY_STR };
-        uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-successfully", args, ApplicationMessage.INFO));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        forumPortlet.loadPreferences();
+        forumPortlet.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-successfully", null, ApplicationMessage.INFO));
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       } catch (Exception e) {
-        Object[] args = { ForumUtils.EMPTY_STR };
-        uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-fail", args, ApplicationMessage.INFO));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        forumPortlet.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-fail", null, ApplicationMessage.WARNING));
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
     }
   }

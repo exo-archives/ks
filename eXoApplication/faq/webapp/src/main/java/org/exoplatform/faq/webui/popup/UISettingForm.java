@@ -35,6 +35,7 @@ import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.WebUIUtils;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -381,7 +382,8 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
           if (!settingForm.idForumName.isEmpty() && !FAQUtils.isFieldEmpty(value)) {
             faqSetting.setIdNameCategoryForum(settingForm.idForumName.get(0) + ";" + settingForm.idForumName.get(1));
           } else {
-            settingForm.warning("UISettingForm.msg.pathCategory-empty");
+            uiPortlet.addMessage(new ApplicationMessage("UISettingForm.msg.pathCategory-empty", null, ApplicationMessage.WARNING));
+            event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet);
             return;
           }
         } else {
@@ -390,7 +392,8 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
         faqSetting.setIsDiscussForum(isDiscus);
         faqSetting.setEmailMoveQuestion(emailMoveQuestion);
         FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion.replaceAll("&amp;", "&"), defaultEditQuestion.replaceAll("&amp;", "&"));
-        settingForm.info("UISettingForm.msg.update-successful");
+        uiPortlet.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO));
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet);
       } else {
         faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue()));
         faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue()));

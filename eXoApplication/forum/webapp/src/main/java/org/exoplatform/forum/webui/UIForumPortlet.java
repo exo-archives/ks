@@ -57,7 +57,6 @@ import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletApplication;
@@ -138,6 +137,7 @@ public class UIForumPortlet extends UIPortletApplication {
 
   private List<String> invisibleCategories  = new ArrayList<String>();
 
+  private PortletMode portletMode;
   public UIForumPortlet() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     addChild(UIBreadcumbs.class, null, null);
@@ -158,7 +158,8 @@ public class UIForumPortlet extends UIPortletApplication {
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
     PortletRequestContext portletReqContext = (PortletRequestContext) context;
-    if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+    portletMode = portletReqContext.getApplicationMode();
+    if (portletMode == PortletMode.VIEW) {
       if (getChild(UIBreadcumbs.class) == null) {
         if (getChild(UISettingEditModeForm.class) != null)
           removeChild(UISettingEditModeForm.class);
@@ -172,7 +173,7 @@ public class UIForumPortlet extends UIPortletApplication {
         updateIsRendered(ForumUtils.CATEGORIES);
         categoryContainer.updateIsRender(true);
       }
-    } else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+    } else if (portletMode == PortletMode.EDIT) {
       if (getChild(UISettingEditModeForm.class) == null) {
         UISettingEditModeForm editModeForm = addChild(UISettingEditModeForm.class, null, null);
         editModeForm.setUserProfile(getUserProfile());
@@ -409,15 +410,15 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public void renderPopupMessages() throws Exception {
-    UIPopupMessages popupMess = getUIPopupMessages();
-    if (popupMess == null)
-      return;
-    WebuiRequestContext context = RequestContext.getCurrentInstance();
-    popupMess.processRender(context);
+    if(portletMode == PortletMode.VIEW) {
+      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+      UIPopupMessages messages = getUIPopupMessages();
+      if(messages != null) messages.processRender(context);
+    }
   }
 
   public void cancelAction() throws Exception {
-    WebuiRequestContext context = RequestContext.getCurrentInstance();
+    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
     UIPopupAction popupAction = getChild(UIPopupAction.class);
     popupAction.deActivate();
     context.addUIComponentToUpdateByAjax(popupAction);

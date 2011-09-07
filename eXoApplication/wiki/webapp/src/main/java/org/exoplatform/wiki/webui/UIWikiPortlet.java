@@ -88,6 +88,8 @@ public class UIWikiPortlet extends UIPortletApplication {
   
   private ResourceBundle resourceBundle;
 
+  private PortletMode portletMode;
+  
   public static enum PopupLevel {
     L1,
     L2
@@ -132,7 +134,8 @@ public class UIWikiPortlet extends UIPortletApplication {
     PortletRequestContext portletReqContext = (PortletRequestContext) context;
     redirectURL = this.url(this.REDIRECT_ACTION);
     loadPreferences();
-    if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+    portletMode = portletReqContext.getApplicationMode();
+    if (portletMode == PortletMode.VIEW) {
       if (mode.equals(WikiMode.PORTLETPREFERENCES)) {        
         changeMode(WikiMode.VIEW);
       }
@@ -184,7 +187,7 @@ public class UIWikiPortlet extends UIPortletApplication {
       if (getWikiMode() == WikiMode.HELP) {
         changeMode(previousMode);
       }
-    } else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+    } else if (portletMode == PortletMode.EDIT) {
       changeMode(WikiMode.PORTLETPREFERENCES);
       super.processRender(app, context);
     } else {
@@ -248,13 +251,13 @@ public class UIWikiPortlet extends UIPortletApplication {
   }
   
   public void renderPopupMessages() throws Exception {
-    UIPopupMessages popupMess = getUIPopupMessages();
-    if (popupMess == null)
-      return;
-    WebuiRequestContext context = RequestContext.getCurrentInstance();
-    popupMess.processRender(context);
+    if(portletMode == PortletMode.VIEW) {
+      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+      UIPopupMessages messages = getUIPopupMessages();
+      if(messages != null) messages.processRender(context);
+    }
   }
-  
+
   private void loadPreferences() {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
