@@ -273,17 +273,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIRatingForm']/div[2]/div/div[1]/div/div[5]</td>
+	<td>//form[@id='UIRatingForm']//div[@title='Excellent']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIRatingForm']/div[2]/div/div[1]/div/div[5]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>exact:eXo Knowledge An Extended Service of eXo Platform 3.0 <br /> Community Members: Download eXo Knowledge Documentation <br /> <br /> Enterprise or Production Use? Try eXo Platform 3 <br /> <br /> <br /> <br /> <br /> Contact<br /> <br /> Resource Center<br /> <br /> <br /> Support<br /> <br /> Training<br /> <br /> <br /> Blog<br /> <br /> Website<br /> <br /> <br /> <br /> New to eXo Knowledge?<br /> Watch the Getting Started Guide, or start exploring some of the key features:<br /> <br /> Forum Unlimited catgories and forums Permissions, preview, quick reply Private messages, bookmarks, watches... Advanced moderation : lock, close, approve... Administration : move, ban, prune,... <br /> Answers Categorize questions Multiple answers, comments Rates, votes Moderation RSS and Email watch <br /> FAQ Publish selected categories Customizable presentation template <br /> <br /> Start using eXo Knowledge, login as Root</td>
+	<td>//form[@id='UIRatingForm']//div[@title='Excellent']</td>
 	<td></td>
 </tr>
 <tr>
@@ -333,12 +328,12 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>According to our records Root Root has already rated this topic.</td>
+	<td>Root Root has already rated this topic. </td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>According to our records Root Root has already rated this topic.</td>
+	<td>Root Root has already rated this topic. </td>
 	<td></td>
 </tr>
 <tr>
@@ -452,8 +447,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIRatingForm']//div[@title='Average']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//form/div[2]/div/div[1]/div/div[3]</td>
+	<td>//form[@id='UIRatingForm']//div[@title='Average']</td>
 	<td></td>
 </tr>
 <tr>
@@ -563,7 +563,7 @@
 </tr>
 <tr>
 	<td>assertConfirmation</td>
-	<td>Are you sure you want to delete this category?</td>
+	<td>Are you sure to delete this category?</td>
 	<td></td>
 </tr>
 <tr>

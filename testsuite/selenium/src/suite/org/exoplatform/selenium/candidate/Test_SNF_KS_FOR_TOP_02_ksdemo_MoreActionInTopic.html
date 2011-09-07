@@ -482,12 +482,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
+	<td>waitForElementNotPresent</td>
 	<td>//div[@id='UITopicContent']//span[text()='Sticky:']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
+	<td>verifyElementNotPresent</td>
 	<td>//div[@id='UITopicContent']//span[text()='Sticky:']</td>
 	<td></td>
 </tr>
@@ -518,7 +518,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Quick reply</td>
+	<td>link=Quick Reply</td>
 	<td></td>
 </tr>
 <tr>
@@ -547,13 +547,23 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@class='UISplitTopicForm']</td>
+	<td>verifyTextPresent</td>
+	<td>Split from :</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//form[@id='UISplitTopicForm']//input[@class='checkbox']</td>
+	<td>verifyTextPresent</td>
+	<td>Top1_SNF_KS_29</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>- Select checkbox</td>
+	<td></td>
+</tr>
+<tr>
+	<td>check</td>
+	<td>//td[text()='Re: Top1_SNF_KS_29']/following-sibling::td/div/input</td>
 	<td></td>
 </tr>
 <tr>
@@ -622,6 +632,16 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForTextPresent</td>
+	<td>You are now watching this item. </td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>You are now watching this item. </td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>//div[@id='UIForumPortlet']//a[text()='OK']</td>
 	<td></td>
@@ -678,12 +698,12 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>no emails</td>
+	<td>No Emails</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>no emails</td>
+	<td>No Emails</td>
 	<td></td>
 </tr>
 <tr>
@@ -733,7 +753,7 @@
 </tr>
 <tr>
 	<td>assertConfirmation</td>
-	<td>Are you sure you want to delete this category?</td>
+	<td>Are you sure to delete this category?</td>
 	<td></td>
 </tr>
 <tr>

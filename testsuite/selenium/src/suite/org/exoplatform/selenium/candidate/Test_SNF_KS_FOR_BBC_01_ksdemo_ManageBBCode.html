@@ -148,12 +148,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIBBCodeManagerForm']/div[3]/table/tbody/tr[25]/td[4]/div/div[1]/div</td>
+	<td>//td[text()='BBCDesc']/following-sibling::td/div/div[contains(@onclick,'EditBBCode')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIBBCodeManagerForm']/div[3]/table/tbody/tr[25]/td[4]/div/div[1]/div</td>
+	<td>//td[text()='BBCDesc']/following-sibling::td/div/div[contains(@onclick,'EditBBCode')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -198,17 +198,17 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//tr[25]/td[4]/div/div[2]/div</td>
+	<td>//td[text()='Description added']/following-sibling::td/div/div[contains(@onclick,'DeleteBBCode')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//tr[25]/td[4]/div/div[2]/div</td>
+	<td>//td[text()='Description added']/following-sibling::td/div/div[contains(@onclick,'DeleteBBCode')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertConfirmation</td>
-	<td>Are you sure you want delete this BBCode?</td>
+	<td>Are you sure to delete this BBCode?</td>
 	<td></td>
 </tr>
 <tr>
