@@ -1,5 +1,4 @@
 <%
-	import org.exoplatform.faq.webui.viewer.UIViewer;
 	import org.exoplatform.web.application.JavascriptManager;
 	
 	def rcontext = _ctx.getRequestContext();
@@ -8,14 +7,13 @@
 	jsmanager.importJavascript('eXo.ks.MaskLayerControl', '/ksResources/javascript/');
 	jsmanager.importJavascript('eXo.faq.UIAnswersPortlet','/faq/javascript/');
 %>
-<link id="faq_FAQPortlet" rel="stylesheet" type="text/css" href= "/faq/skin/DefaultSkin/webui/Stylesheet-lt.css" />
-<div id="$uicomponent.id" class="UIFAQPortlet">
+<div id="$uicomponent.id" class="UIAnswersPortlet UIFAQPortlet">
 	<%
 		List children = uicomponent.getChildren() ;
-    for(component in children) {
-      if(component.isRendered()){
+		for(component in children) {
+			if(component.isRendered()){
 				uicomponent.renderChild(component.getClass()) ; 
-      }
-    }
+			}
+		}
 	%>
 </div>

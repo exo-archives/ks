@@ -25,7 +25,9 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.viewer.UIFAQPortlet;
 import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -170,11 +172,16 @@ public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent {
       if (uiform.id_ == 1) {
         UIFormInputWithActions withActions = uiform.getChildById(EDIT_TEMPLATE_TAB);
         String textAre = withActions.getUIFormTextAreaInput(FIELD_TEMPLATE_TEXTARE).getValue();
+        UIFAQPortlet uiPortlet = uiform.getParent();
         if (FAQUtils.isFieldEmpty(textAre)) {
-          uiform.warning("UIViewerSettingForm.msg.ContentTemplateEmpty");
+          uiPortlet.addMessage(new ApplicationMessage("UIViewerSettingForm.msg.ContentTemplateEmpty", null, ApplicationMessage.WARNING));
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet);
           return;
         } else {
           uiform.faqService_.saveTemplate(textAre);
+          //Your template  have been saved. 
+          uiPortlet.addMessage(new ApplicationMessage("UIViewerSettingForm.msg.SaveTemplateOK", null, ApplicationMessage.WARNING));
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet);
         }
         uiform.setTemplateEdit();
       } else {

@@ -2110,74 +2110,6 @@
 	display: block;
 }
 
-
-
-
-/*********************FAQ Viewer Portlet***************************/
-.UIViewerSettingForm {
-	padding: 6px;
-	margin: 4px;
-	border: 1px solid #d7d7d7;
-	background: white;
-}
-
-.UIViewerSettingForm .CategoryIcon {
-	background: url('background/CategoryIcon.png') no-repeat right center;
-	float: left;
-	height: 20px;
-	margin: 0px;
-	width: 40px;
-	padding-top: 2px;
-}
-
-.UIViewerSettingForm .CategoryIcon .checkbox {
-	height: 16px;
-}
-
-.UIViewerSettingForm .LabelNameCategory {
-	float: left;
-	padding-left: 4px;
-	line-height: 18px;
-}
-
-.UIViewerSettingForm .TextAreContent {
-	width: 100%;
-	margin: auto;
-}
-
-.UIViewerSettingForm .ViewQuestionsAtMove {
-	 margin:5px 0px ;
-	 padding:10px 0px;
-	 border: 3px double #b7b7b7;
-}
-
-.UIViewerSettingForm .TabContentContainer {
-	 border: 1px solid white;
-	 border-top: none;
-}
-
-.UIViewerSettingForm .UIAction {
-	 background: #F7F7F7;
-	 padding: 6px 0px 10px 0px;
-}
-
-.UIViewerSettingForm .UITabPane .UITabContentContainer .UITabContent {
-	 border: none;
-	 height: auto;
-}
-
-.UIViewerSettingForm #FAQRootChildren {
-	 padding-left:30px; 
-	 margin:10px 0px;
-}
-
-.UIViewerSettingForm #ContentTemplate {
-	width: 99.5%;
-	height: 650px;
-	margin: auto;
-}
-
-
 /*******************************************UI Page Interrator***************************/
 
 .UIAnswersPortlet .UIInsertAddress .UIPageIterator {		
@@ -2499,3 +2431,72 @@
 	padding:0px 0px 10px 0px; 
 }
 /******************************	END new style for Questions ***************************************/
+
+/*********************FAQ Viewer Portlet***************************/
+
+.UIAnswersPortlet .UIViewerSettingForm .HorizontalLayout {
+	margin: 0px;
+}
+
+.UIFAQPortlet .UIViewerSettingForm {
+	padding: 6px;
+	margin: 4px;
+	border: 1px solid #d7d7d7;
+	background: white;
+}
+
+.UIViewerSettingForm .CategoryIcon {
+	background: url('background/CategoryIcon.png') no-repeat right center;
+	float: left;
+	height: 20px;
+	margin: 0px;
+	width: 40px;
+	padding-top: 2px;
+}
+
+.UIViewerSettingForm .CategoryIcon .checkbox {
+	height: 16px;
+}
+
+.UIViewerSettingForm .LabelNameCategory {
+	float: left;
+	padding-left: 4px;
+	line-height: 18px;
+}
+
+.UIViewerSettingForm .TextAreContent {
+	width: 100%;
+	margin: auto;
+}
+
+.UIViewerSettingForm .ViewQuestionsAtMove {
+	 margin:5px 0px ;
+	 padding:10px 0px;
+	 border: 3px double #b7b7b7;
+}
+
+.UIViewerSettingForm .TabContentContainer {
+	 border: 1px solid white;
+	 border-top: none;
+}
+
+.UIViewerSettingForm .UIAction {
+	 background: #F7F7F7;
+	 padding: 6px 0px 10px 0px;
+}
+
+.UIViewerSettingForm .UITabPane .UITabContentContainer .UITabContent {
+	 border: none;
+	 height: auto;
+}
+
+.UIViewerSettingForm #FAQRootChildren {
+	 padding-left:30px; 
+	 margin:10px 0px;
+}
+
+.UIViewerSettingForm #ContentTemplate {
+	width: 99.5%;
+	height: 650px;
+	margin: auto;
+}
