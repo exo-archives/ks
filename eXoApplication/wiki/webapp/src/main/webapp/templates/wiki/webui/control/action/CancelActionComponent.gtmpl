@@ -10,7 +10,7 @@
  %>
 <div id="$uicomponent.id">
    <a href="$cancelLink" onclick="return eXo.wiki.UIWikiPageEditForm.cancel('$uicomponent.id','$titleMessage','$exitMessage', 'Delete Icon','$okLabel','$cancelLabel');" 
-    class="Delete Icon" title="<%=_ctx.appRes("UIPageToolBar.action.Cancel");%>">
-      <%=_ctx.appRes("UIPageToolBar.action.Cancel");%>    
+    class="Delete Icon" title="<%=_ctx.appRes("UISubmitToolBar.action.Cancel");%>">
+      <%=_ctx.appRes("UISubmitToolBar.action.Cancel");%>    
    </a>
  </div>

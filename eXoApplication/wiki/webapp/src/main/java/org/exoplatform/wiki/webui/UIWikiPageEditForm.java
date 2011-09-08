@@ -35,7 +35,8 @@ import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiService;
-import org.exoplatform.wiki.webui.control.UIPageToolBar;
+import org.exoplatform.wiki.webui.control.UISubmitToolBar;
+import org.exoplatform.wiki.webui.control.UIEditorTabs;
 import org.exoplatform.wiki.webui.core.UISyntaxSelectBoxFactory;
 import org.exoplatform.wiki.webui.core.UIWikiForm;
 import org.xwiki.context.Execution;
@@ -56,14 +57,24 @@ import org.xwiki.context.Execution;
 )
 public class UIWikiPageEditForm extends UIWikiForm {
 
-  public static final String UNTITLED      = "Untitled";
-  public static final String FIELD_CONTENT = "Markup";
-  public static final String FIELD_COMMENT = "Comment";
-  public static final String FIELD_SYNTAX  = "SyntaxType";
-  public static final String TITLE_CONTROL = "UIWikiPageTitleControlForm_PageEditForm";
-  public static final String PAGE_TOOLBAR  = "UIWikiPageEditForm_PageToolBar";
-  public static final String HELP_PANEL    = "UIWikiSidePanelArea";
-  public static final String RICHTEXT_AREA = "UIWikiRichTextArea";
+  public static final String UNTITLED                  = "Untitled";
+
+  public static final String FIELD_CONTENT             = "Markup";
+
+  public static final String FIELD_COMMENT             = "Comment";
+
+  public static final String FIELD_SYNTAX              = "SyntaxType";
+
+  public static final String TITLE_CONTROL             = "UIWikiPageTitleControlForm_PageEditForm";
+
+  public static final String EDITOR_TABS               = "UIEditorTabs";
+
+  public static final String SUBMIT_TOOLBAR            = "UISubmitToolBar";
+
+  public static final String HELP_PANEL                = "UIWikiSidePanelArea";
+
+  public static final String RICHTEXT_AREA             = "UIWikiRichTextArea";
+
   public static final String FIELD_TEMPLATEDESCTIPTION = "UIWikiTemplateDescriptionContainer";
   
   private boolean            isTemplate        = false;
@@ -79,7 +90,8 @@ public class UIWikiPageEditForm extends UIWikiForm {
         WikiMode.EDITTEMPLATE, WikiMode.ADDTEMPLATE });
     addChild(UIWikiPageTitleControlArea.class, null, TITLE_CONTROL).toInputMode();
     addChild(UIWikiTemplateDescriptionContainer.class, null, FIELD_TEMPLATEDESCTIPTION);
-    addChild(UIPageToolBar.class, null, PAGE_TOOLBAR);
+    addChild(UIEditorTabs.class, null, EDITOR_TABS);
+    addChild(UISubmitToolBar.class, null, SUBMIT_TOOLBAR);
     addChild(UIWikiSidePanelArea.class, null, HELP_PANEL);
     addChild(UIWikiRichTextArea.class, null, RICHTEXT_AREA).setRendered(false);
     UIFormTextAreaInput markupInput = new UIFormTextAreaInput(FIELD_CONTENT, FIELD_CONTENT, "");

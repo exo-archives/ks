@@ -12,8 +12,8 @@
   String pageTitleInputId= uicomponent.getPageTitleInputId();
 %>
 <div id="$uicomponent.id">
-  <a href="$link" onclick="return eXo.wiki.UIWikiSavePage.confirm('$uicomponent.id', $isNewMode, '$pageTitleInputId', '$untitledMessage','$titleMessage',  '$addMessage',  'SavePage Icon',  '$confirmLabel','$cancelLabel');" class="SavePage Icon" title="<%=_ctx.appRes("UIPageToolBar.action.SavePage");%>">
-    <%=_ctx.appRes("UIPageToolBar.action.SavePage");%>
+  <a href="$link" onclick="return eXo.wiki.UIWikiSavePage.confirm('$uicomponent.id', $isNewMode, '$pageTitleInputId', '$untitledMessage','$titleMessage',  '$addMessage',  'SavePage Icon',  '$confirmLabel','$cancelLabel');" class="SavePage Icon" title="<%=_ctx.appRes("UISubmitToolBar.action.SavePage");%>">
+    <%=_ctx.appRes("UISubmitToolBar.action.SavePage");%>
     </a>
   </a>
 </div>

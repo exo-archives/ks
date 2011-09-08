@@ -12,6 +12,7 @@
   margin-bottom: 20px;
   margin-top: 4px;
   width: 99.9%;
+  clear: both;
 }
 
 .UIWikiRichTextEditor .xToolbar div.clearfloats {

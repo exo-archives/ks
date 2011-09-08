@@ -26,6 +26,10 @@
 
 @import url('UIPageToolbar/Stylesheet.css');
 
+@import url('UISubmitToolBar/Stylesheet.css');
+
+@import url('UIEditorTabs/Stylesheet.css');
+
 body .wiki-body, html .wiki-body {
 	overflow: hidden;
 }

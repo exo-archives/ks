@@ -38,6 +38,7 @@ import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
+import org.exoplatform.wiki.webui.control.listener.UIEditorTabsActionListener;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 import org.exoplatform.wiki.webui.popup.UIWikiPagePreview;
 import org.xwiki.rendering.syntax.Syntax;
@@ -80,7 +81,7 @@ public class PreviewPageActionComponent extends AbstractFormActionComponent {
     return false;
   }
   
-  public static class PreviewPageActionListener extends UIPageToolBarActionListener<PreviewPageActionComponent> {
+  public static class PreviewPageActionListener extends UIEditorTabsActionListener<PreviewPageActionComponent> {
     @Override
     protected void processEvent(Event<PreviewPageActionComponent> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);

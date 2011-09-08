@@ -81,6 +81,11 @@
   background-color: #ececec;
 }
 
+.UIWikiPageControlArea .UIPageToolBar .PagePermission {
+	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -333px;
+}
+
+
 /**************For edit form***********************/
 
 .UIWikiPageEditForm .UIPageToolBar{
@@ -89,7 +94,7 @@
 	width: 465px;
 }
 
-.UIWikiPageEditForm .UIPageToolBar .Icon {
+.UIWikiPageEditForm .Icon {
   float: right;
   margin: 0;
   padding: 6px 8px 6px 25px;
@@ -97,46 +102,10 @@
   color: black;
 }
 
-.UIWikiPageEditForm .UIPageToolBar .Icon:hover {
+.UIWikiPageEditForm .Icon:hover {
   background-color: #ececec;
   border-radius: 3px 3px 3px 3px;
   -moz-border-radius: 3px 3px 3px 3px;
   -webkit-border-radius: 3px 3px 3px 3px;
   text-decoration: none;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .Delete {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -72px;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .RichText {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -235px;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .Help {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -212px;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .PreviewPage {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -188px;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .SavePage {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -142px;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .SaveTemplate {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -142px;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .MinorEdit {
-  background: url("/wiki/skin/DefaultSkin/webui/background/quote_icon.gif") no-repeat 3px center;
-}
-
-.UIWikiPageEditForm .UIPageToolBar .MoreLink {
-  display:none;
-}
-
-.UIWikiPageControlArea .UIPageToolBar .PagePermission {
-	background:url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -333px;
 }

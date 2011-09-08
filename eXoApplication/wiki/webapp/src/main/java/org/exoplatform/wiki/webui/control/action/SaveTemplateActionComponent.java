@@ -47,7 +47,7 @@ import org.exoplatform.wiki.webui.UIWikiTemplateDescriptionContainer;
 import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddTemplateModeFilter;
-import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
+import org.exoplatform.wiki.webui.control.listener.UISubmitToolBarActionListener;
 import org.exoplatform.wiki.webui.extension.UITemplateSettingForm;
 
 
@@ -93,7 +93,7 @@ public class SaveTemplateActionComponent extends AbstractFormActionComponent {
 
   public static class SaveTemplateActionListener
                                                 extends
-                                                UIPageToolBarActionListener<SaveTemplateActionComponent> {
+                                                UISubmitToolBarActionListener<SaveTemplateActionComponent> {
     @Override
     protected void processEvent(Event<SaveTemplateActionComponent> event) throws Exception {
       WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);

@@ -31,6 +31,7 @@ import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
 import org.exoplatform.wiki.webui.control.filter.IsEditModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
+import org.exoplatform.wiki.webui.control.listener.UISubmitToolBarActionListener;
 
 /**
  * Created by The eXo Platform SAS
@@ -70,7 +71,7 @@ public class MinorEditActionComponent extends AbstractFormActionComponent {
     return true;
   }
   
-  public static class MinorEditActionListener extends UIPageToolBarActionListener<MinorEditActionComponent> {
+  public static class MinorEditActionListener extends UISubmitToolBarActionListener<MinorEditActionComponent> {
     @Override
     protected void processEvent(Event<MinorEditActionComponent> event) throws Exception {
       WebuiRequestContext context = event.getRequestContext();

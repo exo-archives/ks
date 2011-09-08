@@ -27,9 +27,11 @@ import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiSidePanelArea;
+import org.exoplatform.wiki.webui.control.UIEditorTabs;
 import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.filter.IsMarkupModeFilter;
+import org.exoplatform.wiki.webui.control.listener.UIEditorTabsActionListener;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 
 /**
@@ -70,7 +72,7 @@ public class HelpActionComponent extends AbstractFormActionComponent {
     return false;
   }  
   
-  public static class HelpActionListener extends UIPageToolBarActionListener<HelpActionComponent> {
+  public static class HelpActionListener extends UIEditorTabsActionListener<HelpActionComponent> {
     @Override
     protected void processEvent(Event<HelpActionComponent> event) throws Exception {
       UIWikiPageEditForm wikiPageEditForm = event.getSource().getAncestorOfType(UIWikiPageEditForm.class);

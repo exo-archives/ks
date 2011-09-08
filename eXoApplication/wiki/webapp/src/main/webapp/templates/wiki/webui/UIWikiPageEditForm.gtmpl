@@ -9,12 +9,12 @@
 
   <%
     uiform.renderChild(uiform.TITLE_CONTROL);
-    uiform.renderChild(uiform.PAGE_TOOLBAR);
   %>
   </div>
   <div class="UIWikiPageContainer ClearFix">
   <%
     uiform.renderChild(uiform.FIELD_TEMPLATEDESCTIPTION);
+    uiform.renderChild(uiform.EDITOR_TABS);
     uiform.renderChild(uiform.HELP_PANEL);
     textAreaInput = uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT)
     textAreaInput.setRows(25);
@@ -42,10 +42,11 @@
   <% if(uiform.getChildById(uiform.FIELD_COMMENT).isRendered()) { %>
       <span class="CommentTitle"><%= _ctx.appRes("UIWikiPageEditForm.label.CommentTitle"); %></span>
   <%
-      uiform.renderField(uiform.FIELD_COMMENT);
+      uiform.renderField(uiform.FIELD_COMMENT);     
   %>
   <% } %>
     </div>
+  <%  uiform.renderChild(uiform.SUBMIT_TOOLBAR); %>  
 
   </div>
 <% uiform.end();%>

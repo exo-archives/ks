@@ -20,13 +20,16 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.commons.WikiConstants;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.webui.UIWikiBottomArea;
 import org.exoplatform.wiki.webui.UIWikiPageContainer;
@@ -34,10 +37,9 @@ import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.UIWikiSidePanelArea;
-import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddPageModeFilter;
-import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
+import org.exoplatform.wiki.webui.control.listener.UIEditorTabsActionListener;
 import org.xwiki.rendering.syntax.Syntax;
 
 /**
@@ -47,14 +49,20 @@ import org.xwiki.rendering.syntax.Syntax;
  * May 31, 2010  
  */
 @ComponentConfig(
-  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",               
+  template = "app:/templates/wiki/webui/control/action/RichTextActionComponent.gtmpl",               
   events = {
     @EventConfig(listeners = RichTextActionComponent.RichTextActionListener.class, phase = Phase.DECODE)
   }
 )
-public class RichTextActionComponent extends AbstractFormActionComponent {
+public class RichTextActionComponent extends UIComponent {
   
-  public static final String                   ACTION  = "RichText";
+  public static final String                   ACTION           = "RichText";
+
+  public static final String                   RICHTEXT_LABEL   = "RichText";
+
+  public static final String                   SOURCETEXT_LABEL = "SourceEditor";
+
+  protected String                             label            = RICHTEXT_LABEL;
 
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] {
       new IsEditAddModeFilter(), new IsEditAddPageModeFilter() });
@@ -62,37 +70,36 @@ public class RichTextActionComponent extends AbstractFormActionComponent {
   @UIExtensionFilters
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
-  }  
-
-  @Override
-  public String getActionName() {
-    return ACTION;
-  }
-
-  @Override
-  public boolean isAnchor() {
-    return false;
-  }
-
-  @Override
-  public boolean isSubmit() {
-    return false;
   }
   
-  public static class RichTextActionListener extends UIPageToolBarActionListener<RichTextActionComponent> {
+  @Override
+  public void processRender(WebuiRequestContext context) throws Exception {
+    UIWikiPortlet portlet = this.getAncestorOfType(UIWikiPortlet.class);
+    String isMarkupMode = portlet.getUIExtContext().get(WikiConstants.IS_MARKUP).toString();
+    if (isMarkupMode != null) {
+      if (Boolean.valueOf(isMarkupMode)) {
+        label = RICHTEXT_LABEL;
+      } else {
+        label = SOURCETEXT_LABEL;
+      }
+    }
+    super.processRender(context);
+  }
+
+  public static class RichTextActionListener extends UIEditorTabsActionListener<RichTextActionComponent> {
     @Override
     protected void processEvent(Event<RichTextActionComponent> event) throws Exception {
-      UIWikiPageEditForm wikiPageEditForm = event.getSource()
-                                                 .getAncestorOfType(UIWikiPageEditForm.class);
+      RichTextActionComponent component = event.getSource();
+      UIWikiPageEditForm wikiPageEditForm = component.getAncestorOfType(UIWikiPageEditForm.class);
       UIWikiPageContainer pageCotainer = wikiPageEditForm.getAncestorOfType(UIWikiPageContainer.class);
       UIWikiBottomArea bottomArea = pageCotainer.getChild(UIWikiBottomArea.class);
       UIWikiRichTextArea wikiRichTextArea = wikiPageEditForm.getChild(UIWikiRichTextArea.class);
       UIWikiSidePanelArea wikiSidePanelArea = wikiPageEditForm.getChild(UIWikiSidePanelArea.class);
-      boolean isRichTextRendered = wikiRichTextArea.isRendered();
-      wikiRichTextArea.setRendered(!isRichTextRendered);
-      wikiPageEditForm.getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT).setRendered(isRichTextRendered);
+      boolean isSourceTextRendered = wikiRichTextArea.isRendered();
+      wikiRichTextArea.setRendered(!isSourceTextRendered);
+      wikiPageEditForm.getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT).setRendered(isSourceTextRendered);
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
-      if (isRichTextRendered) {
+      if (isSourceTextRendered) {
         String htmlContent = wikiRichTextArea.getUIFormTextAreaInput().getValue();
         String markupSyntax = wikiPageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
         String markupContent = renderingService.render(htmlContent, Syntax.XHTML_1_0.toIdString(), markupSyntax, false);

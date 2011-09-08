@@ -279,7 +279,7 @@ public class UIWikiPortlet extends UIPortletApplication {
     UIWikiPageArea wikiPageArea = this.findFirstComponentOfType(UIWikiPageArea.class);
     UIWikiPageEditForm wikiPageEditForm = wikiPageArea.findFirstComponentOfType(UIWikiPageEditForm.class);
     UIWikiRichTextArea wikiRichTextArea = wikiPageEditForm.findFirstComponentOfType(UIWikiRichTextArea.class);
-    context.put(WikiConstants.IS_MARKUP, !wikiRichTextArea.isRendered());
+    context.put(WikiConstants.IS_MARKUP, Boolean.valueOf(!wikiRichTextArea.isRendered()));
     return context;
   }
  

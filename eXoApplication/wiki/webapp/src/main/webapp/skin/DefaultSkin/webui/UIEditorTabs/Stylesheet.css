@@ -1,0 +1,16 @@
+.UIWikiPageEditForm .UIEditorTabs {
+	float: left;
+	height: auto;
+}
+
+.UIWikiPageEditForm .UIEditorTabs .RichText {
+	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -235px;
+}
+
+.UIWikiPageEditForm .UIEditorTabs .Help {
+	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -212px;
+}
+
+.UIWikiPageEditForm .UIEditorTabs .PreviewPage {
+	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -188px;
+}

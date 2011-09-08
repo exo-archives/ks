@@ -57,6 +57,7 @@ import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddPageModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
+import org.exoplatform.wiki.webui.control.listener.UISubmitToolBarActionListener;
 import org.xwiki.rendering.syntax.Syntax;
 
 /**
@@ -98,7 +99,7 @@ public class SavePageActionComponent extends UIComponent {
   }  
   
   public static class SavePageActionListener extends
-                                            UIPageToolBarActionListener<SavePageActionComponent> {
+                                            UISubmitToolBarActionListener<SavePageActionComponent> {
     @Override
     protected void processEvent(Event<SavePageActionComponent> event) throws Exception {
       WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
