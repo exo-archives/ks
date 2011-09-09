@@ -38,33 +38,37 @@ public class TestForumUtils extends TestCase {
   public void testBuildForumLink() throws Exception {
 
     // basic case
-    String actual = ForumUtils.buildLink("http://hostname/portal/classic/forum?param=value&param2=value2", "portal", "forum", "classic", ForumUtils.TOPIC, "1234", false);
+    String actual = ForumUtils.buildLink("http://hostname/portal/classic/", "portal", "forum", ForumUtils.TOPIC, "1234", false);
     assertEquals("http://hostname/portal/classic/forum/topic/1234", actual);
     
     // case where url is private
-    actual = ForumUtils.buildLink("http://hostname/portal/classic/forum?param=value&param2=value2", "portal", "forum", "classic", ForumUtils.TOPIC, "1234", true);
+    actual = ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", ForumUtils.TOPIC, "1234", true);
     assertEquals("http://hostname/portal/login?&initialURI=/portal/classic/forum/topic/1234", actual);
-    actual = ForumUtils.buildLink("http://hostname/portal/classic/forum?param=value&param2=value2", "portal", "forum", "classic", null, null, true) ;
-    assertEquals("http://hostname/portal/login?&initialURI=/portal/classic/forum", actual);
+    actual = ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", null, null, true) ;
+    assertEquals("http://hostname/portal/login?&initialURI=/portal/classic/forum/", actual);
 
     // case where url does not current nav
-    assertEquals("http://hostname/portal/classic/forum/topic/1234", ForumUtils.buildLink("http://hostname/portal/classic/foo?param=value&param2=value2", "portal", "forum", "classic", ForumUtils.TOPIC, "1234", false));
+    assertEquals("http://hostname/portal/classic/forum/topic/1234", ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", ForumUtils.TOPIC, "1234", false));
     // case where url does not match current portal
-    assertNotSame("http://hostname/portal/foo/forum/topic/1234", ForumUtils.buildLink("http://hostname/portal/foo/forum?param=value&param2=value2", "portal", "forum", "classic", ForumUtils.TOPIC, "1234", false));
+    assertNotSame("http://hostname/portal/foo/forum/topic/1234", ForumUtils.buildLink("http://hostname/portal/foo/forum/","portal", "forum", ForumUtils.TOPIC, "1234", false));
     
     // case where url does not match current portal nor current nav
-    assertNotSame("http/topic/1234", ForumUtils.buildLink("http://hostname/portal/foo/bar?param=value&param2=value2", "portal", "forum", "classic", ForumUtils.TOPIC, "1234", false));
+    assertNotSame("http/topic/1234", ForumUtils.buildLink("http://hostname/portal/foo/bar/","portal", "forum", ForumUtils.TOPIC, "1234", false));
     
     // cases when type or id are empty
-    assertEquals("http://hostname/portal/classic/forum", ForumUtils.buildLink("http://hostname/portal/classic/forum?param=value&param2=value2", "portal", "forum", "classic", null, null, false));
-    assertEquals("http://hostname/portal/classic/forum", ForumUtils.buildLink("http://hostname/portal/classic/forum?param=value&param2=value2", "portal", "forum", "classic", ForumUtils.EMPTY_STR, null, false));
-    assertEquals("http://hostname/portal/classic/forum", ForumUtils.buildLink("http://hostname/portal/classic/forum?param=value&param2=value2", "portal", "forum", "classic", null, ForumUtils.EMPTY_STR, false));
-    assertEquals("http://hostname/portal/classic/forum", ForumUtils.buildLink("http://hostname/portal/classic/forum?param=value&param2=value2", "portal", "forum", "classic", ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, false));
-    assertEquals("http://hostname/portal/classic/forum", ForumUtils.buildLink("http://hostname/portal/classic/forum?param=value&param2=value2", "portal", "forum", "classic", ForumUtils.EMPTY_STR, "1234", false));
-    assertEquals("http://hostname/portal/classic/forum", ForumUtils.buildLink("http://hostname/portal/classic/forum?param=value&param2=value2", "portal", "forum", "classic", "topic", ForumUtils.EMPTY_STR, false));
+    assertEquals("http://hostname/portal/classic/forum/", ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", null, null, false));
+    assertEquals("http://hostname/portal/classic/forum/", ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", ForumUtils.EMPTY_STR, null, false));
+    assertEquals("http://hostname/portal/classic/forum/", ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", null, ForumUtils.EMPTY_STR, false));
+    assertEquals("http://hostname/portal/classic/forum/", ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, false));
+    assertEquals("http://hostname/portal/classic/forum/", ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", ForumUtils.EMPTY_STR, "1234", false));
+    assertEquals("http://hostname/portal/classic/forum/", ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", "topic", ForumUtils.EMPTY_STR, false));
     
     // case for explicit no-id
-    assertEquals("http://hostname/portal/classic/forum/category", ForumUtils.buildLink("http://hostname/portal/classic/forum?param=value&param2=value2", "portal", "forum", "classic", "category", Utils.FORUM_SERVICE, false));
+    assertEquals("http://hostname/portal/classic/forum/category", ForumUtils.buildLink("http://hostname/portal/classic/","portal", "forum", "category", Utils.FORUM_SERVICE, false));
+    
+    //case for forum's link in space
+    actual = ForumUtils.buildLink("http://hostname/portal/groups/:spaces:test/test/","portal", "forum", ForumUtils.TOPIC, "1234", true);
+    assertEquals("http://hostname/portal/login?&initialURI=/portal/groups/:spaces:test/test/forum/topic/1234", actual);
   }
 
   public void testGetFormatDate() {

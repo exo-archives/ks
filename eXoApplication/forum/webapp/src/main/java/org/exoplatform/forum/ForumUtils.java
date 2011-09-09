@@ -37,7 +37,6 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumService;
@@ -45,7 +44,7 @@ import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -105,7 +104,7 @@ public class ForumUtils {
   public static final long   MAXMESSAGE              = 10000;
 
   private static String buildForumLink(String url, String type, String id) throws Exception {
-    StringBuilder link = new StringBuilder().append(url);
+    StringBuilder link = new StringBuilder(url);
     if (!isEmpty(type) && !isEmpty(id)) {
       if (link.lastIndexOf(SLASH) == (link.length() - 1))
         link.append(type);
@@ -117,33 +116,29 @@ public class ForumUtils {
     return link.toString();
   }
 
-  public static String createdForumLink(String type, String id, boolean isPrivate) throws Exception {
-    PortalRequestContext portalContext = Util.getPortalRequestContext();
-    String url = portalContext.getRequest().getRequestURL().toString();
-    String selectedNode = Util.getUIPortal().getSelectedUserNode().getURI();
-    String portalName = portalContext.getPortalOwner();
+  public static String createdForumLink(String type, String id, boolean isPrivate) throws Exception {    
+    String portalURI =  Util.getPortalRequestContext().getPortalURI();
+    UIPortal uiPortal = Util.getUIPortal();
+    String pageNodeSelected = uiPortal.getSelectedUserNode().getURI();
     String containerName = ((ExoContainerContext) ExoContainerContext.getCurrentContainer()
-                            .getComponentInstanceOfType(ExoContainerContext.class)).getPortalContainerName();
-    return buildLink(url, containerName, selectedNode, portalName, type, id, isPrivate);
+        .getComponentInstanceOfType(ExoContainerContext.class)).getPortalContainerName();
+    return buildLink(portalURI, containerName , pageNodeSelected, type, id, isPrivate);
   }
 
-  public static String buildLink(String url, String containerName, String selectedNode,
-                                 String portalName, String type, String id, boolean isPrivate) throws Exception {
-    if (url.indexOf(portalName) > 0) {
-      if (url.indexOf(portalName + SLASH + selectedNode) < 0) {
-        url = url.replaceFirst(portalName, portalName + SLASH + selectedNode);
-      }
-    }
-    selectedNode = portalName + SLASH + selectedNode;
-    url = url.substring(0, url.lastIndexOf(selectedNode) + selectedNode.length());
+  public static String buildLink(String portalURI, String containerName, String selectedNode, String type, String id, boolean isPrivate) throws Exception {
+    StringBuilder sb = new StringBuilder();
+    portalURI = portalURI.concat(selectedNode).concat(SLASH);
     if (!isPrivate) {
-      return buildForumLink(url, type, id);
+      sb.append(buildForumLink(portalURI, type, id));
     } else {
-      String host = url.substring(0, url.indexOf(SLASH, 8));
-      url = url.replace(host, "");
-      return new StringBuilder(host).append(SLASH).append(containerName).append(SLASH)
-                                    .append("login?&initialURI=").append(buildForumLink(url, type, id)).toString();
+      sb.append(portalURI.substring(0, portalURI.indexOf(containerName)))
+        .append(containerName)
+        .append(SLASH)
+        .append("login?&initialURI=")
+        .append(buildForumLink(portalURI.substring(portalURI.indexOf(containerName) - 1), type, id))
+        .toString();
     }
+    return sb.toString();
   }
 
   public static boolean isValidEmailAddresses(String addressList) throws Exception {
