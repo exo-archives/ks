@@ -25,6 +25,7 @@ import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.webui.BaseEventListener;
@@ -52,8 +53,7 @@ import org.exoplatform.webui.event.Event.Phase;
       @EventConfig(listeners = UIShowBookMarkForm.CancelActionListener.class, phase=Phase.DECODE)
     }
 )
-public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent {
-  ForumService         forumService;
+public class UIShowBookMarkForm extends BaseForumForm implements UIPopupComponent {
 
   public final String  BOOKMARK_ITERATOR = "BookmarkPageIterator";
 
@@ -64,7 +64,6 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent {
   private List<String> bookMarks         = new ArrayList<String>();
 
   public UIShowBookMarkForm() throws Exception {
-    forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     pageIterator = addChild(UIForumPageIterator.class, null, BOOKMARK_ITERATOR);
   }
 
@@ -74,13 +73,17 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent {
   public void deActivate() throws Exception {
   }
 
-  @SuppressWarnings( { "unused", "unchecked" })
-  private List<String> getBookMark() throws Exception {
+  private void updateBookMark() {
     try {
-      bookMarks = forumService.getBookmarks(this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId());
+      bookMarks = getForumService().getBookmarks(getUserProfile().getUserId());
     } catch (Exception e) {
       log.error("Getting book mark fail: ", e);
     }
+  }
+  
+  @SuppressWarnings( { "unused", "unchecked" })
+  private List<String> getBookMark() throws Exception {
+    updateBookMark();
     pageList = new ForumPageList(6, bookMarks.size());
     pageList.setPageSize(6);
     pageIterator = this.getChild(UIForumPageIterator.class);
@@ -121,11 +124,17 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent {
 
   static public class DeleteLinkActionListener extends BaseEventListener<UIShowBookMarkForm> {
     public void onEvent(Event<UIShowBookMarkForm> event, UIShowBookMarkForm bookmarkForm, String path) throws Exception {
-      UIShowBookMarkForm bookMark = event.getSource();
-      UIForumPortlet forumPortlet = bookMark.getAncestorOfType(UIForumPortlet.class);
-      bookMark.forumService.saveUserBookmark(forumPortlet.getUserProfile().getUserId(), path, false);
-      forumPortlet.updateUserProfileInfo();
-      event.getRequestContext().addUIComponentToUpdateByAjax(bookMark.getParent().getParent());
+      bookmarkForm.updateBookMark();
+      for (String str : bookmarkForm.bookMarks) {
+        if (!ForumUtils.isEmpty(path) && str.indexOf(path) >= 0) {
+          bookmarkForm.getForumService().saveUserBookmark(bookmarkForm.getUserProfile().getUserId(), str, false);
+          bookmarkForm.getAncestorOfType(UIForumPortlet.class).updateUserProfileInfo();
+          event.getRequestContext().addUIComponentToUpdateByAjax(bookmarkForm.getParent().getParent());
+          return;
+        }
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(bookmarkForm.getParent().getParent());
+      bookmarkForm.warning("UIShowBookMarkForm.sms.BookmarkRemoved");
     }
   }
 

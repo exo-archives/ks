@@ -46,7 +46,7 @@
 							<a class="ActionLink" actions="<%=uiform.event("OpenLink",linkPath);%>;" href="$linkBm">$linkName</a>
 						</td>
 						<td>
-							<div onclick="<%=uiform.event("DeleteLink",links);%>" style="cursor:pointer; margin:0 auto; width:18px;">
+							<div onclick="<%=uiform.event("DeleteLink", linkPath);%>" style="cursor:pointer; margin:0 auto; width:18px;">
 								<div class="DeleteIcon"><span></span></div>
 							</div>
 						</td>
