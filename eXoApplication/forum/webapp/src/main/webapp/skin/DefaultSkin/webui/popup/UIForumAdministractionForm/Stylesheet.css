@@ -77,6 +77,14 @@
 	overflow-x: hidden;
 }
 
+.UIAutoPruneForm .BBCodeContainer {
+	height: auto;
+}
+
+.UITopicTypeManagerForm .BBCodeContainer {
+	height: auto;
+}
+
 .UIBBCodeManagerForm .BBCodeContainer .UIGrid{
 	*width: 97%;
 }

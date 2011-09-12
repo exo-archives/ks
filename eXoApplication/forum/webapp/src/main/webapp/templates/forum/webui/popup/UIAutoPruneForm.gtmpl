@@ -3,7 +3,7 @@
 	import org.exoplatform.web.application.JavascriptManager;
 	JavascriptManager jsManager = _ctx.getRequestContext().getJavascriptManager();
 %>
-<div class="UIAutoPruneForm UIBBCodeManagerForm">
+<div class="UIBBCodeManagerForm UIAutoPruneForm">
 	<% uiform.begin() %>
 	<div class="AutoPruneContainer"  id="AutoPruneContainer">
 		<div style="padding:0px 16px 0px 1px;">

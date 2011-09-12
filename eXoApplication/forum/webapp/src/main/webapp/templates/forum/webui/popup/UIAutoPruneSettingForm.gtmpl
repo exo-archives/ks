@@ -21,7 +21,7 @@
 						<tr>
 							<td colspan="3">
 								<div class="UIAction TextAlignLeft">
-				                  <span onclick="<%=clearPageEvent%>" class="ActionButton LightBlueStyle" title="<%=_ctx.appRes(uicomponent.getId()+".label.clearPage")%>">
+				                  <span class="ActionButton LightBlueStyle">
 				                    <a href="javascript:void(0);" onclick="<%=uiform.event("Run")%>" class="ArrowLeftIcon" style="padding-left:24px;"><%=_ctx.appRes("UIAutoPruneSettingForm.label.Test");%></a>
 				                  </span>
 				                </div>
@@ -34,12 +34,11 @@
 		</div>
 		<div class="UIAction">
     <% for(action in uicomponent.getActions()) { 
-					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = uicomponent.event(action) ;
-					 String onclick = "" ;
-					 if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
-				%>
-      <a href="javascript:void(0);" onclick="$onclick" class="ActionButton LightBlueStyle">$actionLabel</a>
+		 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+		 String onclick = "onclick=\""+uicomponent.event(action) + "\"";
+		 if(action.indexOf("ResetField") >= 0) onclick="onclick=\"eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')\"";
+	%>
+      <a href="javascript:void(0);" $onclick class="ActionButton LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
 	<%uiform.end()%>

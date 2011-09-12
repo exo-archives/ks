@@ -920,6 +920,11 @@ UIForumPortlet.prototype.setAutoScrollTable = function(idroot, idParent, idChild
 			rootEl.style.margin = "auto";
 		}
 	}
+	if(grid.offsetHeight > 260){
+		tableContent.style.height = "260px";
+	} else {
+		tableContent.style.height = "auto";
+	}
 };
 
 UIForumPortlet.prototype.initContextMenu = function(id){

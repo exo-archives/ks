@@ -2,7 +2,7 @@
 	import org.exoplatform.web.application.JavascriptManager;
 	def jsManager = _ctx.getRequestContext().getJavascriptManager() 
 %>
-<div class="UITopicTypeManagerForm UIBBCodeManagerForm">
+<div class="UIBBCodeManagerForm UITopicTypeManagerForm">
 	<% uiform.begin() %>
 	<div class="AutoPruneContainer" id="TopicTypeManagerForm">
 		<div style="padding:0px 16px 0px 1px;">
@@ -50,10 +50,9 @@
 	<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TopicTypeManagerForm', 'TableContent','UIGrid');") ; %>
 		<div class="UIAction">
   <% for(action in uicomponent.getActions()) { 
-						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-						 String link = uicomponent.event(action) ;
-					%>
-      <a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+		 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+  %>
+      <a href="javascript:void(0);" onclick="<%=uicomponent.event(action);%>" class="ActionButton LightBlueStyle">$actionLabel</a>
       <%}%>
     </div>
 	</div>
