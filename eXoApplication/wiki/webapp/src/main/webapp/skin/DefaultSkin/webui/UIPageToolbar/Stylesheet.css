@@ -96,16 +96,19 @@
 
 .UIWikiPageEditForm .Icon {
   float: right;
-  margin: 0;
-  padding: 6px 8px 6px 25px;
-  text-transform: capitalize;
-  color: black;
+  	padding: 0px 10px 0px 30px;
+	margin: 0px;
+	text-transform:capitalize;
+	color: black;
+	line-height: 22px;
 }
 
-.UIWikiPageEditForm .Icon:hover {
-  background-color: #ececec;
-  border-radius: 3px 3px 3px 3px;
-  -moz-border-radius: 3px 3px 3px 3px;
-  -webkit-border-radius: 3px 3px 3px 3px;
+.UIWikiPageEditForm .UIEditorTabs .Icon:hover {
   text-decoration: none;
+	border: 1px solid #666666;
+}
+
+.UIWikiPageEditForm .UISubmitToolBar .Icon:hover {
+  text-decoration: none;
+	border: 1px solid #666666;
 }

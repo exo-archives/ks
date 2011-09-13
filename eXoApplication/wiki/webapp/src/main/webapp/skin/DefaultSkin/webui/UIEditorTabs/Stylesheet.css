@@ -1,16 +1,38 @@
 .UIWikiPageEditForm .UIEditorTabs {
+	background: url("/wiki/skin/DefaultSkin/webui/background/BgButton.gif") repeat-x left bottom;
 	float: left;
 	height: auto;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	border-radius: 15px;
+	margin-bottom: 10px;
 }
 
 .UIWikiPageEditForm .UIEditorTabs .RichText {
-	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -235px;
+	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 4px -236px;
+	-moz-border-radius: 15px 0px 0px 15px;
+	-webkit-border-radius: 15px 0px 0px 15px;
+	border-radius: 15px 0px 0px 15px;
+	border: 1px solid #acacac;
+	border-right: 1px solid #fff;
 }
 
 .UIWikiPageEditForm .UIEditorTabs .Help {
-	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -212px;
+	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 4px -213px;
+	border: 1px solid #acacac;
 }
 
 .UIWikiPageEditForm .UIEditorTabs .PreviewPage {
-	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -188px;
+	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 3px -189px;
+	-moz-border-radius: 0px 15px 15px 0px;
+	-webkit-border-radius: 0px 15px 15px 0px;
+	border-radius: 0px 15px 15px 0px;
+	border: 1px solid #acacac;
+	border-left: 1px solid #fff;
+}
+
+.UIWikiPageEditForm .UIEditorTabs a:last-child {
+	-moz-border-radius: 15px 0px 0px 15px;
+	-webkit-border-radius: 15px 0px 0px 15px;
+	border-radius: 15px 0px 0px 15px;
 }

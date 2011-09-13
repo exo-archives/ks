@@ -1379,8 +1379,7 @@ table.UIFormGrid div.Id {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	margin-top: 8px;
-	width: 40%;
-	float: left;
+	width: 50%;
 }
 
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm #TitleInput {
@@ -1392,7 +1391,7 @@ table.UIFormGrid div.Id {
 	font-size: 18px;
 	color: #b7b7b7;
 	padding: 6px 0 6px 6px;
-	width: 98%;
+	width: 97%;
 }
 
 .UIWikiPageEditForm .UIForm .UIWikiPageContentInputContainer textarea {
@@ -1419,7 +1418,6 @@ table.UIFormGrid div.Id {
 	-webkit-border-radius: 5px;
 	margin: 0px 0px 13px;
 	width: 30%;
-	float: left;
 	padding: 7px 0px 7px 5px;
 }
 

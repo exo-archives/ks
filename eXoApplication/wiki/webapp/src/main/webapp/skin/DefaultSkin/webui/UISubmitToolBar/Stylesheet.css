@@ -1,15 +1,23 @@
+
+.UIWikiPageEditForm .UISubmitToolBar .ActionButton {
+	float: left;
+}
+
 .UIWikiPageEditForm .UISubmitToolBar .Delete {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -72px;
+	background: none;
+	border: none;
+	color: #1a5db3;
+}
+
+.UIWikiPageEditForm .UISubmitToolBar .Delete:hover {
+	border: none;
+	text-decoration: underline;
 }
 
 .UIWikiPageEditForm .UISubmitToolBar .SavePage {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -142px;
+	margin-right: 10px;
 }
 
 .UIWikiPageEditForm .UISubmitToolBar .SaveTemplate {
   background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -142px;
-}
-
-.UIWikiPageEditForm .UISubmitToolBar .MinorEdit {
-  background: url("/wiki/skin/DefaultSkin/webui/background/quote_icon.gif") no-repeat 3px center;
 }
