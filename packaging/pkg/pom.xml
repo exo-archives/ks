@@ -872,6 +872,12 @@
       <version>${org.bouncycastle.version}</version>
       <type>jar</type>
     </dependency>
+	<dependency>
+      <groupId>caja</groupId>
+      <artifactId>json_simple</artifactId>
+      <version>${caja.version}</version>
+      <type>jar</type>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
