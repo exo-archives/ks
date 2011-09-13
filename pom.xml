@@ -84,7 +84,7 @@
      
     
 	<c3p0.version>0.9.1.2</c3p0.version>
-  <bouncycastle.version>136</bouncycastle.version>
+  <org.bouncycastle.version>1.45</org.bouncycastle.version>
 	<net.oauth.version>20080621</net.oauth.version>
 	<cglib.version>2.2</cglib.version>
 	<commons-dbcp.version>1.2.2</commons-dbcp.version>

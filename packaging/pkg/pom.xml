@@ -861,15 +861,15 @@
       <type>jar</type>
     </dependency><!-- 2.9.1-->
     <dependency>
-      <groupId>bouncycastle</groupId>
-      <artifactId>bcmail-jdk14</artifactId>
-      <version>${bouncycastle.version}</version>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcmail-jdk15</artifactId>
+      <version>${org.bouncycastle.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>bouncycastle</groupId>
-      <artifactId>bcprov-jdk14</artifactId>
-      <version>${bouncycastle.version}</version>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15</artifactId>
+      <version>${org.bouncycastle.version}</version>
       <type>jar</type>
     </dependency>
   </dependencies>
