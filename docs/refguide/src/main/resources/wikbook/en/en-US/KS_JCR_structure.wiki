@@ -8,7 +8,7 @@ Forum is a JCR-based application. The Forum data are saved in eXo-JCR under the 
 !Forum_JCR_Structure.png!
 
 h2. Forum System {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumSystem}
-The Forum System node is created from the note type exo:forumSystem. That is defined as a child node of Forum Service and can store nodes with these following note types: exo:banIP, exo:forumUserProfile, exo:statistic, exo:administration under the Forum System.
+The Forum System node is created from the node type exo:forumSystem. That is defined as a child node of Forum Service and can store nodes with these following node types: exo:banIP, exo:forumUserProfile, exo:statistic, exo:administration under the Forum System.
 The Forum System node is stored in {{/exo:applications/ForumService/ForumSystem}}.
 
 h3. User Profile and User Profile Home {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumSystem.UserProfileAndUserProfileHome}
@@ -34,20 +34,20 @@ The User Profile node is stored under ForumSystem node: {{/exo:applications/Foru
 | exo:moderateForums | String | true| The list of forum ids that user is the moderator. |
 | exo:moderateCategory | String | true| The list of category ids that user is the moderator. |
 | exo:readTopic | String | true| The list of topics that user has read. |
-| exo:readForum | String | true| The read of forums that user has read. |
-| exo:lastReadPostOfTopic | String | true| The list of last read posts id in a topic that user has read. |
-| exo:lastReadPostOfForum | String | true| The list of last read posts id in a forum that user has read. |
+| exo:readForum | String | true| The list of forums that user has read. |
+| exo:lastReadPostOfTopic | String | true| The list of the last read posts id in a topic that user has read. |
+| exo:lastReadPostOfForum | String | true| The list of the last read posts id in a forum that user has read. |
 | exo:isAutoWatchMyTopics | Boolean | false| Enable/disable the auto-watch the topics created by user. Topics created by a user will be watched automatically if the value is set to "true". |
 | exo:isAutoWatchTopicIPost | Boolean | false| Enable/disable the auto-watch posts submitted by user. Topics posted by an user will be watched automatically if the value is set to "true". |
 | exo:bookmark | String | true| The list of topics/posts bookmarked by user. |
 | exo:lastLoginDate | Date | false| The date of the last login. |
 | exo:joinedDate | Date | false| The date when user joined forum. |
 | exo:lastPostDate | Date | false| The date of the last post. |
-| exo:isDisplaySignature | Boolean | false | Users' signature will be displayed at the end of their post if the value is set to "true". |
+| exo:isDisplaySignature | Boolean | false | User's signature will be displayed at the end of their post if the value is set to "true". |
 | exo:isDisplayAvatar | Boolean | false | User's avatar is displayed if the value is set to "true". |
 | exo:newMessage | Long | false | The number of new messages. |
 | exo:timeZone | Double | false | The time zone configured by user. |
-| exo:timeFormat | String | false | The time format configured by user 12h/24h. |
+| exo:timeFormat | String | false | The time format configured by user: 12h or 24h format. |
 | exo:shortDateformat | String | false | The format of short date configured by user. Example: 'dd/MM/yyyy'. |
 | exo:longDateformat | String | false | The format of long date configured by user. Example: 'dd mmm, yyyy'. |
 | exo:maxPost | Long | false | The number of the maximum posts displayed per page. |
@@ -55,11 +55,11 @@ The User Profile node is stored under ForumSystem node: {{/exo:applications/Foru
 | exo:isShowForumJump | Boolean | false | Display/hide the forum jump drop-down list. This jump list will be shown if the value is set to "true". |
 | exo:collapCategories | String | true | The list of categories collapsed by user. |
 | exo:isBanned | Boolean | false| The user's condition. User is currently banned if the value is set to "true". |
-| exo:banUntil | Long | false | The time when the ban period will expire. |
+| exo:banUntil | Long | false | The time when the ban period expires. |
 | exo:banReason | String | false | The description for the reason that user was banned. |
 | exo:banCounter | String | false | The number of bans that user has committed. |
 | exo:banReasonSummary | String | true| The list of ban reason summaries when a user is banned for more than one time. |
-| exo:createdDateBan | Date | false | The date when the ban period is started. |
+| exo:createdDateBan | Date | false | The date when the ban period starts. |
 
 - The child node type exo:privateMessage has the following properties:
 
@@ -70,7 +70,7 @@ The User Profile node is stored under ForumSystem node: {{/exo:applications/Foru
 | exo:message | String | false | The message contents. |
 | exo:type | String | false | The private message type: sent messages or received messages. |
 | exo:receivedDate | Date | false | The date when the private message was received. |
-| exo:isUnread | Boolean | false | The private message read status: read/unread. |
+| exo:isUnread | Boolean | false | The status of private message: read/unread. |
 
 - The child node type exo:forumSubscription has the following properties:
 
@@ -118,9 +118,9 @@ h2. Forum Data {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumData}
 The Forum Data node is created from the node type exo:forumData. The data nodes like category, forum, topic, post, tag, BBcode and topic type will be stored under the Forum Data node:{{/exo:applications/ForumService/ForumData}}.
 
 h3. Category and Category home {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumData.CategoryAndCategoryHome}
-The Category node is used to store all categories of forum, this node is a child node of the Forum Data node and only Category note type can be added to the Category Home. The node type of the Category Home node is exo:categoryHome
+The Category node is used to store all categories of forum, this node is a child node of the Forum Data node and only Category node type can be added to the Category Home. The node type of the Category Home node is exo:categoryHome
 is stored in {{/exo:applications/ForumService/ForumData/CategoryHome}}.
-The Category node has the node type exo:forumCategory which is a child node of the CategoryHome node. This note type is defined to allow adding child nodes as exo:forum and exo:forumRSS.
+The Category node has the node type exo:forumCategory which is a child node of the CategoryHome node. This node type is defined to allow adding child nodes as exo:forum and exo:forumRSS.
 
 - The node type exo:forumCategory has the following properties:
 
@@ -172,6 +172,15 @@ The Forum node is stored in {{/exo:applications/ForumService/ForumData/CategoryH
 | exo:moderators | String | true | The list of user ids who are the moderators of forum. |
 | exo:tempModerators | String | true | The list of user ids who are the temporary moderators. |
 | exo:banIPs | String | true | The list of banned IP addresses. |
+
+- The child node pruneSetting has the following perperties:
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:id | String | False | The forum id. |
+| exo:inActiveDay | Long | False | The number of days/weeks/months that the topics in forum have not been active.  |
+| exo:periodTime | Long | False | The number of days/weeks/months that the prune job will be executed to check for the old topics and deactivate them. |
+| exo:isActive | Boolean | False | The current status of the prune job. If the value is set to "True", the prune job will be run.|
+| exo:lastRunDate | Date | False | The date that prune job runs for the last time. |
 
 
 h3. Topic {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumData.Topic}
@@ -270,7 +279,7 @@ The Tag node is stored in {{/exo:applications/ForumService/ForumData/TagHome/%ta
 
 
 h3. BBCode and BBCode home {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumData.BBCodeAndBBCodeHome}
-The BBCode note is used to define what BBCode will be used in the forum. The node type of the BBCode node is exo:forumBBCode.
+The BBCode node is used to define what BBCode will be used in the forum. The node type of the BBCode node is exo:forumBBCode.
 The BBCode node is stored in {{/exo:applications/ForumService/ForumData/forumBBCode/%BBCode_tag%}} and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
@@ -306,10 +315,10 @@ The Category node is created from the exo:faqCategory node type and defined to a
 
 h3. Sub-category {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.SubCategory}
 The system will automatically create the Category Home node under the FAQ application node at the first time the user launches application. All users-created categories are the sub-categories of Category Home.
-The home of the Category node is automatically created in: {{/exo:applications/faqApp/categories}}.
+The home of the Category node is automatically created in {{/exo:applications/faqApp/categories}}.
 
-In fact, Sub-category is also a category. FAQ has defined a mixin note type called mix:faqSubCategory to allow adding a node having the same type with category to an existing category. 
-When a category is created, this mixin note type will be mixed to that category. 
+In fact, Sub-category is also a category. FAQ has defined a mixin node type called mix:faqSubCategory to allow adding a node having the same type with category to an existing category. 
+When a category is created, this mixin node type will be mixed to that category. 
 
 The node type exo:faqCategory has the following properties:
 
@@ -318,7 +327,7 @@ The node type exo:faqCategory has the following properties:
 | exo:name | String | false | The name of the sub-category. |
 | exo:userPrivate | String | true | The list of user ids that are restricted from the category. |
 | exo:description | String | false | The description of the sub-category. |
-| exo:isModerateQuestions | Boolean | false | The question post moderation status. All questions posted in the sub-category will have wait for moderation if the vcalue is "true". |
+| exo:isModerateQuestions | Boolean | false | The question post moderation status. All questions posted in the sub-category will have wait for moderation if the value is set to "true". |
 | exo:isModerateAnswers | Boolean | false | The answer post moderation status. All answers posted in the sub-category will have to wait for moderation if the value is set to "true". |
 | exo:isView | Boolean | false | The category is shown/hidden. The category will be shown if the value is set to "true". |
 | exo:viewAuthorInfor | Boolean | false | The category enables user to view the information of questions poster if the value is set to "true'. |
@@ -327,14 +336,17 @@ The node type exo:faqCategory has the following properties:
 | exo:index | Long | false | The index number of the category. |
 
 h3. RSS {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.RSS}
-Each category has a RSS child node that stores a RSS feed representing all questions in this category as the binary data type. 
+Each category has a RSS child node that stores a RSS feed representing all questions in this category as the binary data type.
 The RSS node is stored in {{/exo:applications/faqApp/categories/ks.rss}} and its node type is exo:faqRSS.
+
+|| Properties name || Required type || Multiple || Description ||
+| exo:content | Binary | false | The content of the RSS. |
 
 h3. Question and Question Home {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.QuestionAndQuestionHome}
 The Question Home node is created from the exo:faqQuestionHome node type that is defined as a child node of category. This node cantains all question nodes that created in side a category. Only the Question node type exo:faqQuestion can be added to the question Home. 
 The Question Home node is created as a child node of Categories {{/exo:applications/faqApp/categories/questions}}.
 
-Question node is created from exo:faqQuestion note type under the Question Home node. The Answers, Comments and Attachments node are defined as child nodes of the Question node.
+Question node is created from exo:faqQuestion node type under the Question Home node. The Answers, Comments and Attachments node are defined as child nodes of the Question node.
 The Question node is created under the Question Home: {{/exo:applications/faqApp/categories/questions/%Question-id%}}.
 
 - The exo:faqQuestion node type has the following properties:
@@ -365,7 +377,7 @@ The Question node is created under the Question Home: {{/exo:applications/faqApp
 
 h3. Multilanguages {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.Multilanguages}
 A question can support multilanguages, all other languages are stored as a child node of the question and can be add to the question via a mixin node type called mix:faqi18n.
-After the mixin node type mix:faqi18n is added to the question, the node type exo:questionLanguageHome can be added to the question node and this note type will contain all languages node with the note type exo:faqLanguage.
+After the mixin node type mix:faqi18n is added to the question, the node type exo:questionLanguageHome can be added to the question node and this node type will contain all languages node with the node type exo:faqLanguage.
 All display properties of the question are defined in the node type exo:faqLanguage.
 
 - The node type exo:faqLanguage has the following properties:
@@ -378,13 +390,14 @@ All display properties of the question are defined in the node type exo:faqLangu
 | exo:categoryId | String | false | The id of the category. |
 
 h3. Answer, Comment and Attachment {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.AnswersCommentAndAttachment}
-The Answer, Comment and Attachment node is defined as the child nodes of the Question node. Attachment node is defined as a nt:file note type and stored right under the Question node. 
+The Answer, Comment and Attachment node is defined as the child nodes of the Question node. Attachment node is defined as a nt:file node type and stored right under the Question node. 
 Answers and comments node are stored under the Answer home and the Comment home node.
 
 - The Answer node is stored in {{/exo:applications/faqApp/categories/questions/%Question-id%/faqAnswerHome/%Answer-id%}} and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
 | exo:id | String | false | The id of the answer. |
+| exo:answerPath | String | false | The path to the answer. |
 | exo:questionId | String | false | The id of the question. |
 | exo:categoryId | String | false | The id of the category containing the question. |
 | exo:responses | String | false | The content of the answer. |
@@ -413,8 +426,9 @@ Answers and comments node are stored under the Answer home and the Comment home 
 
 - The Attachment node is stored in {{/exo:applications/faqApp/categories/questions/%Question-id%/faqAttachment}} and its node type has the following properties:
 
-|| Properties name || Required type || Multiple || Possible values || Description ||
+|| Properties name || Required type || Multiple || Description ||
 | exo:fileName | String | false | The name of the attachment file. |
+
 
 h3. FAQ setting {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.FAQSetting}
 This FAQ Setting node stores the user settings data, such as how answer is ordered (in alphabetical order or by created date), the order type (descending or ascending) or the user's selection to sort questions by popularity. Each user has a dedicated settings data to select the display preferences in FAQ . The default setting will be used if the users has never changed and saved their setting. 
@@ -429,7 +443,7 @@ This FAQ Setting node stores the user settings data, such as how answer is order
 h3. Template for FAQ {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.TemplateFAQ}
 This node stores the template for FAQ portlet. The user can edit this template online in FAQ to change the layout, skins, and more.
 
-- The template is stored in an nt:file note type under the Template Home node.
+- The template is stored in an nt:file node type under the Template Home node.
 {{/exo:applications/faqApp/templateHome/nt:file}}.
 
 h1. Poll JCR structure {anchor:id=KSref.JCRStructure.PollJCRStructure}
@@ -439,7 +453,7 @@ The Poll data are saved in eXo-JCR under the eXoPolls data directory. The whole 
 !Polls_JCR_Structure.png!
 
 The Poll node is used to store the default data in a poll. The node type of the Poll node is exo:poll.
-The Poll node is stored under eXoPolls node {{/exo:applications/eXoPolls/%PortalName%/Polls/Poll-id%}} and its node type (exo:poll) has the following properties:
+The Poll node is stored under eXoPolls node {{/exo:applications/eXoPolls/%PortalName%/Polls/Poll-id%}} and its node type (exo:polls) has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
 | exo:id | String | false | The poll id. |
@@ -550,6 +564,10 @@ The "LinkRegistry" node stores the entries to keep track of renaming or moving p
 
 h3. Trash
 The "Trash" node stores deleted pages.
+
+h3. Template Container
+
+The "Template Container" node 
 
 
 h2. Wiki metadata
