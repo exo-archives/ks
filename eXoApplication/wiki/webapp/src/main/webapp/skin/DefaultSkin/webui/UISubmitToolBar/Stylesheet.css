@@ -17,7 +17,3 @@
 .UIWikiPageEditForm .UISubmitToolBar .SavePage {
 	margin-right: 10px;
 }
-
-.UIWikiPageEditForm .UISubmitToolBar .SaveTemplate {
-  background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat left -142px;
-}
