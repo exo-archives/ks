@@ -133,7 +133,7 @@ public class UIForumActionBar extends UIContainer {
       popupAction.activate(popupContainer, 800, 480);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
       if (RELOAD.equals(event.getRequestContext().getRequestParameter(OBJECTID))) {
-        forumPortlet.updateUserProfileInfo();
+        forumPortlet.removeCacheUserProfile();
         uiActionBar.getUserProfile();
         event.getRequestContext().addUIComponentToUpdateByAjax(uiActionBar);
       }

@@ -91,7 +91,7 @@ public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
     this.topics = topics;
     try {
       this.pathTopic = topics.get(0).getPath();
-      this.topics.get(0).setEditReason(userProfile.getUserId());
+      this.topics.get(0).setEditReason(getUserProfile().getUserId());
     } catch (Exception e) {
     }
     this.isFormTopic = isFormTopic;
@@ -101,7 +101,7 @@ public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
   private void setCategories() throws Exception {
     this.categories = new ArrayList<Category>();
     for (Category category : getForumService().getCategories()) {
-      if (this.userProfile.getUserRole() == 1) {
+      if (getUserProfile().getUserRole() == 1) {
         String[] list = category.getUserPrivate();
         if (list != null && list.length > 0 && !list[0].equals(" ")) {
           if (!ForumUtils.isStringInStrings(list, this.userProfile.getUserId())) {
@@ -134,7 +134,7 @@ public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
         if (pathTopic.indexOf(categoryId) >= 0)
           continue;
       }
-      if (this.userProfile.getUserRole() == 1) {
+      if (getUserProfile().getUserRole() == 1) {
         if (forum.getModerators().length > 0 && !ForumUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId()) || forum.getModerators().length <= 0) {
           if (forum.getIsClosed() || forum.getIsLock())
             continue;
@@ -162,7 +162,7 @@ public class UIMoveTopicForm extends BaseForumForm implements UIPopupComponent {
           //
           uiForm.getForumService().moveTopic(uiForm.topics, forumPath, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
           UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-          forumPortlet.updateUserProfileInfo();
+          forumPortlet.removeCacheUserProfile();
           forumPortlet.cancelAction();
           if (uiForm.isFormTopic) {
             UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);

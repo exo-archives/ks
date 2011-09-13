@@ -1111,7 +1111,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       try {
         UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
         UIMoveTopicForm moveTopicForm = popupAction.createUIComponent(UIMoveTopicForm.class, null, null);
-        moveTopicForm.setUserProfile(topicDetail.userProfile);
         List<Topic> topics = new ArrayList<Topic>();
         topics.add(topicDetail.topic);
         topicDetail.isEditTopic = true;
@@ -1178,7 +1177,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           UISplitTopicForm splitTopicForm = topicDetail.openPopup(UISplitTopicForm.class, 700, 400);
           splitTopicForm.setPageListPost(pageList);
           splitTopicForm.setTopic(topicDetail.topic);
-          splitTopicForm.setUserProfile(topicDetail.userProfile);
         } else {
           warning("UITopicContainer.sms.NotSplit");
         }
@@ -1237,7 +1235,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
         event.getRequestContext().addUIComponentToUpdateByAjax(uiForumContainer);
         event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs);
-        forumPortlet.updateUserProfileInfo();
+        forumPortlet.removeCacheUserProfile();
       } catch (Exception e) {
         warning("UIForumPortlet.msg.topicEmpty");
         topicDetail.refreshPortlet();
@@ -1266,7 +1264,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       }
       if (posts.size() > 0) {
         UIMovePostForm movePostForm = topicDetail.openPopup(UIMovePostForm.class, 400, 430);
-        movePostForm.setUserProfile(topicDetail.userProfile);
         movePostForm.updatePost(topicDetail.topicId, posts);
       } else {
         throwWarning("UITopicDetail.msg.notCheckPost");
@@ -1400,7 +1397,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       } catch (Exception e) {
         topicDetail.log.warn("Failed to get User info: " + e.getMessage(), e);
       }
-      viewUserProfile.setUserProfile(topicDetail.userProfile);
       CommonContact contact = null;
       if (topicDetail.mapContact.containsKey(userId)) {
         contact = topicDetail.mapContact.get(userId);
@@ -1632,8 +1628,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(topic.getId());
         String userName = topicDetail.userProfile.getUserId();
         topicDetail.getForumService().saveUserBookmark(userName, buffer.toString(), true);
-        UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.updateUserProfileInfo();
       } catch (Exception e) {
         warning("UIForumPortlet.msg.topicEmpty");
         topicDetail.refreshPortlet();

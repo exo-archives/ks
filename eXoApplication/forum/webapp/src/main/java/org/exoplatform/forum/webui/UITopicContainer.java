@@ -118,8 +118,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   private String                 categoryId        = ForumUtils.EMPTY_STR;
 
-  private String                 linkUserInfo      = ForumUtils.EMPTY_STR;
-
   private Forum                  forum;
 
   private List<Topic>            topicList;
@@ -209,7 +207,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     this.userProfile = forumPortlet.getUserProfile();
     cleanCheckedList();
     setForum(true);
-    linkUserInfo = forumPortlet.getPortletLink();
   }
 
   public boolean getIsAutoPrune() throws Exception {
@@ -276,12 +273,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     }
     cleanCheckedList();
     setForum(true);
-    linkUserInfo = forumPortlet.getPortletLink();
   }
 
   private String getActionViewInfoUser(String linkType, String userName) {
-    String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
-    return link;
+    return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
   public boolean getCanAddNewThread() {
@@ -1080,7 +1075,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       }
       if (topics.size() > 0) {
         UIMoveTopicForm moveTopicForm = uiTopicContainer.openPopup(UIMoveTopicForm.class, 400, 420);
-        moveTopicForm.setUserProfile(uiTopicContainer.userProfile);
         moveTopicForm.updateTopic(uiTopicContainer.forumId, topics, false);
       }
       if (topics.size() == 0) {
@@ -1143,7 +1137,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       } else if (topics.size() == 0) {
         warning("UITopicContainer.sms.notCheckMove");
       }
-      forumPortlet.updateUserProfileInfo();
+      forumPortlet.removeCacheUserProfile();
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
@@ -1195,20 +1189,15 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   static public class AddBookMarkActionListener extends BaseEventListener<UITopicContainer> {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String topicId) throws Exception {
       if (!ForumUtils.isEmpty(topicId)) {
-        try {
-          StringBuffer buffer = new StringBuffer();
-          if (topicId.equals("forum")) {
-            buffer.append("ForumNormalIcon//").append(uiTopicContainer.forum.getForumName()).append("//").append(uiTopicContainer.forumId);
-          } else {
-            Topic topic = uiTopicContainer.getTopic(topicId);
-            buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(topicId);
-          }
-          String userName = uiTopicContainer.userProfile.getUserId();
-          uiTopicContainer.getForumService().saveUserBookmark(userName, buffer.toString(), true);
-          UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class);
-          forumPortlet.updateUserProfileInfo();
-        } catch (Exception e) {
+        StringBuffer buffer = new StringBuffer();
+        if (topicId.equals("forum")) {
+          buffer.append("ForumNormalIcon//").append(uiTopicContainer.forum.getForumName()).append("//").append(uiTopicContainer.forumId);
+        } else {
+          Topic topic = uiTopicContainer.getTopic(topicId);
+          buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(topicId);
         }
+        String userName = uiTopicContainer.userProfile.getUserId();
+        uiTopicContainer.getForumService().saveUserBookmark(userName, buffer.toString(), true);
       }
     }
   }

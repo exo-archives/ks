@@ -47,8 +47,6 @@ public class UIForumModerator extends UIContainer {
 
   private long         role         = 3;
 
-  private String       linkUserInfo = ForumUtils.EMPTY_STR;
-
   public UIForumModerator() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }
@@ -69,13 +67,11 @@ public class UIForumModerator extends UIContainer {
 
   public void setModeratorsForum(List<String> moderators) throws Exception {
     this.moderators = moderators;
-    this.linkUserInfo = this.getAncestorOfType(UIForumPortlet.class).getPortletLink();
   }
 
   @SuppressWarnings("unused")
   private String getActionViewInfoUser(String linkType, String userName) {
-    String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
-    return link;
+    return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
   @SuppressWarnings("unused")

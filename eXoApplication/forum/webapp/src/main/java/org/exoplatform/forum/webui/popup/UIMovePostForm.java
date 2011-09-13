@@ -97,7 +97,7 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
   private void setCategories() throws Exception {
     this.categories = new ArrayList<Category>();
     for (Category category : this.getForumService().getCategories()) {
-      if (this.userProfile.getUserRole() == 1) {
+      if (getUserProfile().getUserRole() == 1) {
         String[] list = category.getUserPrivate();
         if (list != null && list.length > 0 && !list[0].equals(" ")) {
           if (!ForumUtils.isStringInStrings(list, this.userProfile.getUserId())) {
@@ -126,7 +126,7 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
   private List<Forum> getForums(String categoryId) throws Exception {
     List<Forum> forums = new ArrayList<Forum>();
     for (Forum forum : this.getForumService().getForums(categoryId, ForumUtils.EMPTY_STR)) {
-      if (this.userProfile.getUserRole() == 1) {
+      if (getUserProfile().getUserRole() == 1) {
         String[] moderators = forum.getModerators();
         if (!ForumServiceUtils.hasPermission(moderators, this.userProfile.getUserId())) {
           continue;
@@ -146,7 +146,7 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
         if (pathPost.indexOf(categoryId) >= 0 && pathPost.indexOf(forumId) > 0)
           continue;
       }
-      if (this.userProfile.getUserRole() == 1) {
+      if (getUserProfile().getUserRole() == 1) {
         if (!isMode) {
           if (!topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || topic.getIsClosed() || topic.getIsLock() || topic.getIsWaiting())
             continue;

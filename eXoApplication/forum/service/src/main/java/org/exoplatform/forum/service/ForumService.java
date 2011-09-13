@@ -1429,4 +1429,11 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception the exception
    */
   public void addListenerPlugin(ForumEventListener listener) throws Exception;
+  
+  /**
+   * remove user-profile of user login cache in service
+   * 
+   * @param userName 
+   */
+  public void removeCacheUserProfile(String userName);
 }

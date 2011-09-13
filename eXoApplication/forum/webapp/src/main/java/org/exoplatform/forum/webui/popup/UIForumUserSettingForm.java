@@ -322,7 +322,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 
     inputUserWatchManger.addChild(formStringInput);
 
-    formStringInput = new UIFormStringInput(EMAIL_ADD, UserHelper.getEmailUser(this.userProfile.getUserId()));
+    formStringInput = new UIFormStringInput(EMAIL_ADD, userProfile.getEmail());
     formStringInput.setValue(UserHelper.getEmailUser(this.userProfile.getUserId()));
     inputUserWatchManger.addChild(formStringInput);
 
@@ -469,15 +469,10 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       } catch (Exception e) {
         uiForm.log.error("Can not save forum subscription, exception: ", e);
       }
-      forumPortlet.updateUserProfileInfo();
-      userProfile = forumPortlet.getUserProfile();
       forumPortlet.setRenderForumLink();
       UICategoryContainer categoryContainer = forumPortlet.findFirstComponentOfType(UICategoryContainer.class);
       if (categoryContainer.isRendered())
         categoryContainer.renderJump();
-      forumPortlet.findFirstComponentOfType(UITopicDetail.class).setUserProfile(userProfile);
-      forumPortlet.findFirstComponentOfType(UITopicContainer.class).setUserProfile(userProfile);
-      forumPortlet.findFirstComponentOfType(UITopicsTag.class).setUserProfile(userProfile);
       forumPortlet.cancelAction();
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }

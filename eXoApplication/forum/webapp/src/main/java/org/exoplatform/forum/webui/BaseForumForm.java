@@ -16,6 +16,7 @@
  */
 package org.exoplatform.forum.webui;
 
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +58,21 @@ public class BaseForumForm extends BaseUIForm {
     }
     return forumService;
   }
+  @Override
+  public void processRender(WebuiRequestContext context) throws Exception {
+    getAncestorOfType(UIForumPortlet.class).updateCurrentUserProfile();
+    if (getTemplate() != null)
+    {
+       super.processRender(context);
+       return;
+    }
+    Writer writer = context.getWriter();
+    writer.append("<div class='UIForm ").append(getId()).append("'>");
+    begin();
+    renderChildren(context);
+    end();
+    writer.append("</div>");
+  }
 
   /**
    * Set forum service (used by unit tests)
@@ -67,18 +83,8 @@ public class BaseForumForm extends BaseUIForm {
   }
 
   public UserProfile getUserProfile() throws Exception {
-    if (this.userProfile == null) {
-      setUserProfile(null);
-    }
-    return this.userProfile;
-  }
-
-  public void setUserProfile(UserProfile userProfile) throws Exception {
-    if (userProfile == null) {
-      this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-    } else {
-      this.userProfile = userProfile;
-    }
+    userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
+    return userProfile;
   }
 
   protected void setListWatches() throws Exception {

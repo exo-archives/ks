@@ -668,7 +668,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
       UIViewUserProfile viewUserProfile = openPopup(popupContainer, UIViewUserProfile.class, 670, 0);
       viewUserProfile.setUserProfileViewer(uiForm.getUserProfile(userId));
-      viewUserProfile.setUserProfile(uiForm.getAncestorOfType(UIForumPortlet.class).getUserProfile());
       viewUserProfile.setContact(null);
     }
   }
@@ -884,13 +883,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
         uiForm.getForumService().saveUserProfile(userProfile, true, true);
       } catch (Exception e) {
         uiForm.log.trace("\nSave user profile fail: " + e.getMessage() + "\n" + e.getCause());
-      }
-      if (userProfile.getUserId().equals(UserHelper.getCurrentUser())) {
-        forumPortlet.updateUserProfileInfo();
-        userProfile = forumPortlet.getUserProfile();
-        forumPortlet.findFirstComponentOfType(UITopicDetail.class).setUserProfile(userProfile);
-        forumPortlet.findFirstComponentOfType(UITopicContainer.class).setUserProfile(userProfile);
-        forumPortlet.findFirstComponentOfType(UITopicsTag.class).setUserProfile(userProfile);
       }
       uiForm.isEdit = false;
       if (ForumUtils.isEmpty(uiForm.keyWord)) {

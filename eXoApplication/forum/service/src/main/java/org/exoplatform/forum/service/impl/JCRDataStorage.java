@@ -4178,60 +4178,62 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     if (userName == null || userName.length() <= 0)
       return userProfile;
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-    Node profileNode = getUserProfileHome(sProvider).getNode(userName);
-    PropertyReader reader = new PropertyReader(profileNode);
-    userProfile.setUserId(userName);
-    if (isAdminRole(userName)) {
-      userProfile.setUserRole((long) 0);
-    } else {
-      userProfile.setUserRole(reader.l(EXO_USER_ROLE, 2));
-    }
-    userProfile.setModerateForums(reader.strings(EXO_MODERATE_FORUMS, new String[] {}));
-    userProfile.setModerateCategory(reader.strings(EXO_MODERATE_CATEGORY, new String[] {}));
-    userProfile.setScreenName(getScreenName(userName, profileNode));
-    userProfile.setNewMessage(reader.l(EXO_NEW_MESSAGE));
-    userProfile.setTimeZone(reader.d(EXO_TIME_ZONE));
-    userProfile.setShortDateFormat(reader.string(EXO_SHORT_DATEFORMAT,
-                                                 userProfile.getShortDateFormat()));
-    userProfile.setLongDateFormat(reader.string(EXO_LONG_DATEFORMAT,
-                                                userProfile.getLongDateFormat()));
-    userProfile.setTimeFormat(reader.string(EXO_TIME_FORMAT, userProfile.getTimeFormat()));
-    userProfile.setMaxPostInPage(reader.l(EXO_MAX_POST, 10));
-    userProfile.setMaxTopicInPage(reader.l(EXO_MAX_TOPIC, 10));
-    userProfile.setIsShowForumJump(reader.bool(EXO_IS_SHOW_FORUM_JUMP));
-    userProfile.setIsAutoWatchMyTopics(reader.bool(EXO_IS_AUTO_WATCH_MY_TOPICS));
-    userProfile.setIsAutoWatchTopicIPost(reader.bool(EXO_IS_AUTO_WATCH_TOPIC_I_POST));
-    userProfile.setLastReadPostOfForum(reader.strings(EXO_LAST_READ_POST_OF_FORUM, new String[] {}));
-    userProfile.setLastReadPostOfTopic(reader.strings(EXO_LAST_READ_POST_OF_TOPIC, new String[] {}));
-    userProfile.setIsBanned(reader.bool(EXO_IS_BANNED));
-    userProfile.setCollapCategories(reader.strings(EXO_COLLAP_CATEGORIES, new String[] {}));
-    userProfile.setEmail(reader.string(EXO_EMAIL, ""));
-    List<String> values = reader.list(EXO_READ_TOPIC, new ArrayList<String>());
-    String s = ":";
-    for (String str : values) {
-      if (str.indexOf(s) > 0) {
-        String[] array = str.split(s);
-        userProfile.setLastTimeAccessTopic(array[0], Long.parseLong(array[1]));
+    try {
+      Node profileNode = getUserProfileHome(sProvider).getNode(userName);
+      PropertyReader reader = new PropertyReader(profileNode);
+      userProfile.setUserId(userName);
+      if (isAdminRole(userName)) {
+        userProfile.setUserRole((long) 0);
+      } else {
+        userProfile.setUserRole(reader.l(EXO_USER_ROLE, 2));
       }
-    }
-    values = reader.list(EXO_READ_FORUM, new ArrayList<String>());
-    for (String str : values) {
-      if (str.indexOf(s) > 0) {
-        String[] array = str.split(s);
-        userProfile.setLastTimeAccessForum(array[0], Long.parseLong(array[1]));
-      }
-    }
-    if (userProfile.getIsBanned()) {
-      if (profileNode.hasProperty(EXO_BAN_UNTIL)) {
-        userProfile.setBanUntil(reader.l(EXO_BAN_UNTIL));
-        if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
-          profileNode.setProperty(EXO_IS_BANNED, false);
-          profileNode.save();
-          userProfile.setIsBanned(false);
+      userProfile.setModerateForums(reader.strings(EXO_MODERATE_FORUMS, new String[] {}));
+      userProfile.setModerateCategory(reader.strings(EXO_MODERATE_CATEGORY, new String[] {}));
+      userProfile.setScreenName(getScreenName(userName, profileNode));
+      userProfile.setNewMessage(reader.l(EXO_NEW_MESSAGE));
+      userProfile.setTimeZone(reader.d(EXO_TIME_ZONE));
+      userProfile.setShortDateFormat(reader.string(EXO_SHORT_DATEFORMAT, userProfile.getShortDateFormat()));
+      userProfile.setLongDateFormat(reader.string(EXO_LONG_DATEFORMAT, userProfile.getLongDateFormat()));
+      userProfile.setTimeFormat(reader.string(EXO_TIME_FORMAT, userProfile.getTimeFormat()));
+      userProfile.setMaxPostInPage(reader.l(EXO_MAX_POST, 10));
+      userProfile.setMaxTopicInPage(reader.l(EXO_MAX_TOPIC, 10));
+      userProfile.setIsShowForumJump(reader.bool(EXO_IS_SHOW_FORUM_JUMP));
+      userProfile.setIsAutoWatchMyTopics(reader.bool(EXO_IS_AUTO_WATCH_MY_TOPICS));
+      userProfile.setIsAutoWatchTopicIPost(reader.bool(EXO_IS_AUTO_WATCH_TOPIC_I_POST));
+      userProfile.setLastReadPostOfForum(reader.strings(EXO_LAST_READ_POST_OF_FORUM, new String[] {}));
+      userProfile.setLastReadPostOfTopic(reader.strings(EXO_LAST_READ_POST_OF_TOPIC, new String[] {}));
+      userProfile.setIsBanned(reader.bool(EXO_IS_BANNED));
+      userProfile.setCollapCategories(reader.strings(EXO_COLLAP_CATEGORIES, new String[] {}));
+      userProfile.setEmail(reader.string(EXO_EMAIL, ""));
+      List<String> values = reader.list(EXO_READ_TOPIC, new ArrayList<String>());
+      String s = ":";
+      for (String str : values) {
+        if (str.indexOf(s) > 0) {
+          String[] array = str.split(s);
+          userProfile.setLastTimeAccessTopic(array[0], Long.parseLong(array[1]));
         }
       }
-    } else if (ip != null) {
-      userProfile.setIsBanned(isBanIp(ip));
+      values = reader.list(EXO_READ_FORUM, new ArrayList<String>());
+      for (String str : values) {
+        if (str.indexOf(s) > 0) {
+          String[] array = str.split(s);
+          userProfile.setLastTimeAccessForum(array[0], Long.parseLong(array[1]));
+        }
+      }
+      if (userProfile.getIsBanned()) {
+        if (profileNode.hasProperty(EXO_BAN_UNTIL)) {
+          userProfile.setBanUntil(reader.l(EXO_BAN_UNTIL));
+          if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
+            profileNode.setProperty(EXO_IS_BANNED, false);
+            profileNode.save();
+            userProfile.setIsBanned(false);
+          }
+        }
+      } else if (ip != null) {
+        userProfile.setIsBanned(isBanIp(ip));
+      }
+    } catch (Exception e) {
+      log.debug("Failed to get default userprofile of user: " + userName, e);
     }
     return userProfile;
   }
@@ -4279,7 +4281,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return (userTemp.contains(Utils.DELETED)) ? "<s>" + ((userName.contains(Utils.DELETED)) ? userName.substring(0, userName.indexOf(Utils.DELETED)) : userName) + "</s>" : userName;
   }
 
-  private boolean isBanIp(String ip) throws Exception {
+  public boolean isBanIp(String ip) throws Exception {
     return (getBanList().contains(ip)) ? true : false;
   }
 
@@ -7484,7 +7486,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node profile = profileHome.getNode(userId);
       Session session = profileHome.getSession();
       profile.setProperty(EXO_USER_ROLE, UserProfile.USER_DELETED);
-      profile.setProperty(EXO_USER_TITLE, "User deleted");
+      profile.setProperty(EXO_USER_TITLE, UserProfile.USER_REMOVED);
       profile.setProperty(EXO_MODERATE_CATEGORY, new String[] {});
       profile.setProperty(EXO_MODERATE_FORUMS, new String[] {});
       profile.save();

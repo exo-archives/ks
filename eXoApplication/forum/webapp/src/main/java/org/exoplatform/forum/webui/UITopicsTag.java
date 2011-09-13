@@ -76,8 +76,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 
   private String            userIdAndtagId;
 
-  private String            linkUserInfo      = ForumUtils.EMPTY_STR;
-
   private List<Topic>       topics            = new ArrayList<Topic>();
 
   private Map<String, Long> mapNumberPagePost = new HashMap<String, Long>();
@@ -91,7 +89,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     this.mapNumberPagePost.clear();
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
     this.userProfile = forumPortlet.getUserProfile();
-    linkUserInfo = forumPortlet.getPortletLink();
     if (!userProfile.getUserId().equals(UserProfile.USER_GUEST)) {
       this.userIdAndtagId = userProfile.getUserId() + ":" + tagId;
     } else
@@ -100,8 +97,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 
   @SuppressWarnings("unused")
   private String getActionViewInfoUser(String linkType, String userName) {
-    String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
-    return link;
+    return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
   public void setTag(Tag tag, String userIdAndtagId) throws Exception {
@@ -112,7 +108,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     this.userIdAndtagId = userIdAndtagId;
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
     this.userProfile = forumPortlet.getUserProfile();
-    linkUserInfo = forumPortlet.getPortletLink();
   }
 
   public String getRSSLink(String cateId) {
@@ -310,8 +305,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
         buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(path);
         String userName = topicTag.userProfile.getUserId();
         topicTag.getForumService().saveUserBookmark(userName, buffer.toString(), true);
-        UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.updateUserProfileInfo();
       }
     }
   }

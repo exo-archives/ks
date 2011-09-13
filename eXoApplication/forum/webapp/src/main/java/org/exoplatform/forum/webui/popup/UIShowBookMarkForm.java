@@ -128,7 +128,6 @@ public class UIShowBookMarkForm extends BaseForumForm implements UIPopupComponen
       for (String str : bookmarkForm.bookMarks) {
         if (!ForumUtils.isEmpty(path) && str.indexOf(path) >= 0) {
           bookmarkForm.getForumService().saveUserBookmark(bookmarkForm.getUserProfile().getUserId(), str, false);
-          bookmarkForm.getAncestorOfType(UIForumPortlet.class).updateUserProfileInfo();
           event.getRequestContext().addUIComponentToUpdateByAjax(bookmarkForm.getParent().getParent());
           return;
         }

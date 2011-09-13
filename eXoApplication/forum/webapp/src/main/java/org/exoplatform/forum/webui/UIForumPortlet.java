@@ -131,8 +131,6 @@ public class UIForumPortlet extends UIPortletApplication {
 
   private int          dayForumNewPost      = 0;
 
-  private String       linkUserInfo         = ForumUtils.EMPTY_STR;
-
   private List<String> invisibleForums      = new ArrayList<String>();
 
   private List<String> invisibleCategories  = new ArrayList<String>();
@@ -173,6 +171,7 @@ public class UIForumPortlet extends UIPortletApplication {
         updateIsRendered(ForumUtils.CATEGORIES);
         categoryContainer.updateIsRender(true);
       }
+      updateCurrentUserProfile();
     } else if (portletMode == PortletMode.EDIT) {
       if (getChild(UISettingEditModeForm.class) == null) {
         UISettingEditModeForm editModeForm = addChild(UISettingEditModeForm.class, null, null);
@@ -290,10 +289,8 @@ public class UIForumPortlet extends UIPortletApplication {
   }
   
   public void setRenderForumLink() throws Exception {
-    if (userProfile == null)
-      updateUserProfileInfo();
     if (isShowForumJump) {
-      isJumpRendered = this.userProfile.getIsShowForumJump();
+      isJumpRendered = getUserProfile().getIsShowForumJump();
     } else {
       isJumpRendered = false;
     }
@@ -423,11 +420,32 @@ public class UIForumPortlet extends UIPortletApplication {
     popupAction.deActivate();
     context.addUIComponentToUpdateByAjax(popupAction);
   }
+  
+  public void updateCurrentUserProfile() {
+    try {
+      String userId = UserHelper.getCurrentUser();
+      if (enableBanIP) {
+        userProfile = forumService.getDefaultUserProfile(userId, WebUIUtils.getRemoteIP());
+      } else {
+        userProfile = forumService.getDefaultUserProfile(userId, null);
+      }
+      if (!ForumUtils.isEmpty(userId))
+        userProfile.setEmail(UserHelper.getUserByUserId(userId).getEmail());
+      if (userProfile.getIsBanned())
+        userProfile.setUserRole((long) 3);
+    } catch (Exception e) {
+      userProfile = new UserProfile();
+    }
+    if(UserProfile.USER_DELETED == userProfile.getUserRole()) {
+      getChild(UIForumActionBar.class).setRendered(false);
+    }
+  }
 
   public UserProfile getUserProfile() throws Exception {
-    if (this.userProfile == null)
-      updateUserProfileInfo();
-    return this.userProfile;
+    if (userProfile == null) {
+      updateCurrentUserProfile();
+    }
+    return userProfile;
   }
 
   public void updateAccessTopic(String topicId) throws Exception {
@@ -452,36 +470,17 @@ public class UIForumPortlet extends UIPortletApplication {
     userProfile.setLastTimeAccessForum(forumId, TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
   }
 
-  public void updateUserProfileInfo() throws Exception {
-    String userId = ForumUtils.EMPTY_STR;
-    try {
-      userId = UserHelper.getCurrentUser();
-    } catch (Exception e) {
-      log.error("user is unknown: " + e.getCause());
-    }
-    try {
-      if (enableBanIP) {
-        userProfile = forumService.getDefaultUserProfile(userId, WebUIUtils.getRemoteIP());
-      } else {
-        userProfile = forumService.getDefaultUserProfile(userId, null);
-      }
-      if (!ForumUtils.isEmpty(userId))
-        userProfile.setEmail(UserHelper.getUserByUserId(userId).getEmail());
-      if (userProfile.getIsBanned())
-        userProfile.setUserRole((long) 3);
-    } catch (Exception e) {
-      userProfile = new UserProfile();
-    }
+  public void removeCacheUserProfile() {
+    forumService.removeCacheUserProfile(userProfile.getUserId());
   }
 
-  public String getPortletLink() {
-    if (ForumUtils.isEmpty(linkUserInfo))
-      try {
-        linkUserInfo = this.event("ViewPublicUserInfo", "userName");
-      } catch (Exception e) {
-        log.debug("Failed to set link to view info user.", e);
-      }
-    return linkUserInfo;
+  public String getPortletLink(String actionName, String userName) {
+    try {
+      return event(actionName, userName);
+    } catch (Exception e) {
+      log.debug("Failed to set link to view info user.", e);
+      return null;
+    }
   }
 
   private CommonContact getPersonalContact(String userId) throws Exception {
@@ -520,9 +519,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
   
   public boolean checkForumHasAddTopic(String categoryId, String forumId) throws Exception {
-    if (userProfile == null)
-      updateUserProfileInfo();
-    if (userProfile.getUserRole() == 0) return true;
+    if (getUserProfile().getUserRole() == 0) return true;
     try {
       Forum forum = (Forum) forumService.getObjectNameById(forumId, Utils.FORUM);
       if (forum.getIsClosed() || forum.getIsLock())
@@ -547,9 +544,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
   
   public boolean checkForumHasAddPost(String categoryId, String forumId, String topicId) throws Exception {
-    if (userProfile == null)
-      updateUserProfileInfo();
-    if (userProfile.getUserRole() == 0) return true;
+    if (getUserProfile().getUserRole() == 0) return true;
     try {
       Topic topic = (Topic) forumService.getObjectNameById(topicId, Utils.TOPIC);
       if (topic.getIsClosed() || topic.getIsLock())
@@ -579,9 +574,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public boolean checkCanView(Category cate, Forum forum, Topic topic) throws Exception {
-    if (userProfile == null)
-      updateUserProfileInfo();
-    String userId = userProfile.getUserId();
+    String userId = getUserProfile().getUserId();
     if (userProfile.getUserRole() == 0)
       return true;
     List<String> userBound = UserHelper.getAllGroupAndMembershipOfUser(userId);
@@ -848,7 +841,6 @@ public class UIForumPortlet extends UIPortletApplication {
       } catch (Exception e) {
         log.error("Fail to set user profile: \n", e);
       }
-      viewUserProfile.setUserProfile(forumPortlet.userProfile);
       CommonContact contact = forumPortlet.getPersonalContact(userId.trim());
       viewUserProfile.setContact(contact);
       popupAction.activate(viewUserProfile, 670, 400, true);

@@ -101,8 +101,6 @@ public class UICategory extends BaseForumForm {
 
   private Map<String, Topic> MaptopicLast    = new HashMap<String, Topic>();
 
-  private String             linkUserInfo    = ForumUtils.EMPTY_STR;
-
   static public boolean      isUnWatch       = false;
 
   public UICategory() throws Exception {
@@ -114,15 +112,13 @@ public class UICategory extends BaseForumForm {
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
     useAjax = forumPortlet.isUseAjax();
     dayForumNewPost = forumPortlet.getDayForumNewPost();
-    linkUserInfo = forumPortlet.getPortletLink();
     setListWatches();
   }
   
   
 
   private String getActionViewInfoUser(String linkType, String userName) {
-    String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
-    return link;
+    return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
   public String getRSSLink(String cateId) {
@@ -504,7 +500,7 @@ public class UICategory extends BaseForumForm {
       UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
       if (topic == null) {
         warning("UIForumPortlet.msg.topicEmpty");
-        forumPortlet.updateUserProfileInfo();
+        forumPortlet.removeCacheUserProfile();
       } else {
         topic = uiCategory.getForumService().getTopicUpdate(topic, true);
         path = topic.getPath();
@@ -517,7 +513,7 @@ public class UICategory extends BaseForumForm {
           }
           id = path.trim().split(ForumUtils.SLASH);
           forum = uiCategory.getForumService().getForum(id[0], id[1]);
-          forumPortlet.updateUserProfileInfo();
+          forumPortlet.removeCacheUserProfile();
         } else {
           forum = uiCategory.getForum(id[1]);
         }
@@ -619,12 +615,7 @@ public class UICategory extends BaseForumForm {
           path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topicId;
         }
         String userName = uiCategory.userProfile.getUserId();
-        try {
-          uiCategory.getForumService().saveUserBookmark(userName, path, true);
-        } catch (Exception e) {
-        }
-        UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.updateUserProfileInfo();
+        uiCategory.getForumService().saveUserBookmark(userName, path, true);
       }
     }
   }

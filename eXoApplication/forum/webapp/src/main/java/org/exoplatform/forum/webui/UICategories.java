@@ -93,8 +93,6 @@ public class UICategories extends UIContainer {
 
   private List<Watch>              listWatches       = new ArrayList<Watch>();
 
-  private String                   linkUserInfo      = ForumUtils.EMPTY_STR;
-
   private Log                      log               = ExoLogger.getLogger(this.getClass());
 
   public UICategories() throws Exception {
@@ -137,14 +135,12 @@ public class UICategories extends UIContainer {
     } else if (collapCategories == null) {
       collapCategories = new ArrayList<String>();
     }
-    linkUserInfo = forumPortlet.getPortletLink();
     return this.userProfile;
   }
 
   @SuppressWarnings("unused")
   private String getActionViewInfoUser(String linkType, String userName) {
-    String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
-    return link;
+    return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
   public void setListWatches() throws Exception {
@@ -331,7 +327,6 @@ public class UICategories extends UIContainer {
       String userName = uiContainer.userProfile.getUserId();
       if (!userName.equals(UserProfile.USER_GUEST)) {
         uiContainer.forumService.saveCollapsedCategories(userName, id[0], Boolean.parseBoolean(id[1]));
-        uiContainer.getAncestorOfType(UIForumPortlet.class).updateUserProfileInfo();
       }
       if (uiContainer.collapCategories.contains(id[0])) {
         uiContainer.collapCategories.remove(id[0]);
@@ -440,7 +435,8 @@ public class UICategories extends UIContainer {
         UIApplication uiApp = categories.getAncestorOfType(UIApplication.class);
         uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING));
         context.addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
-        forumPortlet.updateUserProfileInfo();
+        categories.forumService.removeCacheUserProfile(categories.userProfile.getUserId());
+        forumPortlet.removeCacheUserProfile();
       } else {
         topic = categories.forumService.getTopicUpdate(topic, true);
         path = topic.getPath();
@@ -453,7 +449,7 @@ public class UICategories extends UIContainer {
           }
           id = path.trim().split(ForumUtils.SLASH);
           forum = categories.forumService.getForum(id[0], id[1]);
-          forumPortlet.updateUserProfileInfo();
+          forumPortlet.removeCacheUserProfile();
         } else {
           forum = categories.getForumById(id[0], id[1]);
         }
@@ -510,8 +506,6 @@ public class UICategories extends UIContainer {
           path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topic.getId();
         }
         uiContainer.forumService.saveUserBookmark(userName, path, true);
-        UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class);
-        forumPortlet.updateUserProfileInfo();
       }
     }
   }

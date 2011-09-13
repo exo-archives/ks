@@ -51,10 +51,6 @@ public class UICategoryInfo extends UIContainer {
 
   private UserProfile  userProfile;
 
-  private String       linkUserInfo = ForumUtils.EMPTY_STR;
-
-  // private long mostUserOnline_ = 0;
-
   public UICategoryInfo() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }
@@ -68,20 +64,13 @@ public class UICategoryInfo extends UIContainer {
   }
 
   private UserProfile getUserProfile() throws Exception {
-    try {
-      UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
-      userProfile = forumPortlet.getUserProfile();
-      linkUserInfo = forumPortlet.getPortletLink();
-    } catch (Exception e) {
-      String userId = UserHelper.getCurrentUser();
-      userProfile = forumService.getDefaultUserProfile(userId, ForumUtils.EMPTY_STR);
-    }
+    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+    userProfile = forumPortlet.getUserProfile();
     return userProfile;
   }
 
   private String getActionViewInfoUser(String linkType, String userName) {
-    String link = linkUserInfo.replace("ViewPublicUserInfo", linkType).replace("userName", userName);
-    return link;
+    return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
   private String getMostUsersOnline(String s, String at) throws Exception {

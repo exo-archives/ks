@@ -137,7 +137,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
           }
           Topic topic = new Topic();
           Post post = uiForm.getForumService().getPost(ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, postPaths.get(0));
-          String owner = uiForm.userProfile.getUserId();
+          String owner = uiForm.getUserProfile().getUserId();
           String topicId = post.getId().replaceFirst(Utils.POST, Utils.TOPIC);
           topic.setId(topicId);
           topic.setTopicName(newTopicTitle);

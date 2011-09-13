@@ -288,6 +288,8 @@ public interface DataStorage {
   List<String> getBookmarks(String userName) throws Exception;
 
   List<String> getBanList() throws Exception;
+  
+  boolean isBanIp(String ip) throws Exception;
 
   boolean addBanIP(String ip) throws Exception;
 

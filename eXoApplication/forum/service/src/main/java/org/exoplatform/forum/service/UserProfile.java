@@ -34,6 +34,8 @@ public class UserProfile {
 
   public static final String  USER_GUEST             = "user_gest_uoom";
 
+  public static final String  USER_REMOVED           = "User deleted";
+
   private String              userId;
 
   private String              screenName;
