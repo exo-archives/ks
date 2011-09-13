@@ -1,0 +1,3 @@
+<div id="$uicomponent.id" class="UIAction UISubmitToolBar ClearFix" >
+	<% uicomponent.renderChildren(); %>
+</div>

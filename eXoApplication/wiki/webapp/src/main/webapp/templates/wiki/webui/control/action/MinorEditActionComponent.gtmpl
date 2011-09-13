@@ -1,0 +1,8 @@
+<%
+import org.exoplatform.wiki.commons.Utils;
+%>
+<%
+  String link = Utils.createFormActionLink(uicomponent, uicomponent.ACTION, uicomponent.ACTION);   
+  String labelName = _ctx.appRes(uicomponent.getParent().getName() +".action." +"MinorEdit");
+ %>
+<a onclick="$link" class="MinorEdit ActionButton LightBlueStyle" title="$labelName">$labelName</a>

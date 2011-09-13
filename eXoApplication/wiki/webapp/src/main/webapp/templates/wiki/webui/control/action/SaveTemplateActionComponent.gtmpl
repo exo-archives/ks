@@ -10,8 +10,8 @@
   boolean isNewMode = uicomponent.isNewMode();
   String pageTitleInputId= uicomponent.getPageTitleInputId();
 %>
-<a id="$uicomponent.id" href="$link" onclick="return eXo.wiki.UIWikiSavePage.confirm('$uicomponent.id', $isNewMode, '$pageTitleInputId', '$untitledMessage','$titleMessage',  '$addMessage',  'SavePage Icon',  '$confirmLabel','$cancelLabel');" class="SavePage ActionButton LightBlueStyle" title="<%=_ctx.appRes("UISubmitToolBar.action.SavePage");%>">
-    <%=_ctx.appRes("UISubmitToolBar.action.SavePage");%>
+<a id="$uicomponent.id" href="$link" onclick="return eXo.wiki.UIWikiSavePage.confirm('$uicomponent.id', $isNewMode, '$pageTitleInputId', '$untitledMessage','$titleMessage',  '$addMessage',  'SavePage Icon',  '$confirmLabel','$cancelLabel');" class="SaveTemplate ActionButton LightBlueStyle" title="<%=_ctx.appRes("UISubmitToolBar.action.SaveTemplate");%>">
+    <%=_ctx.appRes("UISubmitToolBar.action.SaveTemplate");%>
     </a>
 </a>
 

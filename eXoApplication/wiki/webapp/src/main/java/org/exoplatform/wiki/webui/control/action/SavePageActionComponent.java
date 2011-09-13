@@ -56,7 +56,6 @@ import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.WikiMode;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddPageModeFilter;
-import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 import org.exoplatform.wiki.webui.control.listener.UISubmitToolBarActionListener;
 import org.xwiki.rendering.syntax.Syntax;
 
@@ -217,14 +216,13 @@ public class SavePageActionComponent extends UIComponent {
                                                 pageParams.getOwner(),
                                                 title,
                                                 page.getName());
-          pageParams.setPageId(page.getName());
+          pageParams.setPageId(newPageId);
           ((PageImpl) page).setURL(Utils.getURLFromParams(pageParams));
           subPage.getContent().setText(markup);
           subPage.setSyntax(syntaxId);
           ((PageImpl) subPage).getAttachments().addAll(attachs);
           ((PageImpl) subPage).checkin();
-          ((PageImpl) subPage).checkout();
-          pageParams.setPageId(newPageId);
+          ((PageImpl) subPage).checkout();         
           ((PageImpl) draftPage).remove();
           return;
         }

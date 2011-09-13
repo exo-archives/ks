@@ -27,6 +27,7 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
@@ -58,12 +59,12 @@ import org.exoplatform.wiki.webui.extension.UITemplateSettingForm;
  * 9 Feb 2011  
  */
 @ComponentConfig(
-  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",                   
+  template = "app:/templates/wiki/webui/control/action/SaveTemplateActionComponent.gtmpl",                   
   events = {
     @EventConfig(listeners = SaveTemplateActionComponent.SaveTemplateActionListener.class, phase = Phase.DECODE)
   }
 )
-public class SaveTemplateActionComponent extends AbstractFormActionComponent {
+public class SaveTemplateActionComponent extends UIComponent {
 
   public static final String                   ACTION   = "SaveTemplate";
   
@@ -75,20 +76,17 @@ public class SaveTemplateActionComponent extends AbstractFormActionComponent {
   public List<UIExtensionFilter> getFilters() {
     return FILTERS;
   }
+  
+  private boolean isNewMode() {
+    return (WikiMode.ADDPAGE.equals(getAncestorOfType(UIWikiPortlet.class).getWikiMode()));
+  }  
 
-  @Override
-  public String getActionName() {
-    return ACTION;
+  private String getActionLink() throws Exception {
+    return Utils.createFormActionLink(this, ACTION, ACTION);
   }
   
-  @Override
-  public boolean isAnchor() {
-    return false;
-  }
-
-  @Override
-  public boolean isSubmit() {
-    return true;
+  private String getPageTitleInputId() {
+    return UIWikiPageTitleControlArea.FIELD_TITLEINPUT;
   }
 
   public static class SaveTemplateActionListener

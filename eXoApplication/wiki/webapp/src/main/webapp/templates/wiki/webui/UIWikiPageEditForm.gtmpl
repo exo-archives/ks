@@ -5,16 +5,21 @@
 %>
 <div class="UIWikiPageEditForm">
 <% uiform.begin();%>
-  <div class="ClearFix">
 
   <%
     uiform.renderChild(uiform.TITLE_CONTROL);
   %>
+  <%
+   uiform.renderChild(uiform.FIELD_TEMPLATEDESCTIPTION);  
+  %>
+  <div class="ClearFix">
+  <%
+   uiform.renderChild(uiform.EDITOR_TABS);
+  %>
   </div>
   <div class="UIWikiPageContainer ClearFix">
   <%
-    uiform.renderChild(uiform.FIELD_TEMPLATEDESCTIPTION);
-    uiform.renderChild(uiform.EDITOR_TABS);
+   
     uiform.renderChild(uiform.HELP_PANEL);
     textAreaInput = uiform.getUIFormTextAreaInput(uiform.FIELD_CONTENT)
     textAreaInput.setRows(25);
@@ -46,8 +51,9 @@
   %>
   <% } %>
     </div>
-  <%  uiform.renderChild(uiform.SUBMIT_TOOLBAR); %>  
+ 
 
   </div>
+  <%  uiform.renderChild(uiform.SUBMIT_TOOLBAR); %>
 <% uiform.end();%>
 </div>

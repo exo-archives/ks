@@ -17,7 +17,7 @@
 package org.exoplatform.wiki.webui.control;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
+import org.exoplatform.webui.core.lifecycle.Lifecycle;
 
 
 /**
@@ -27,7 +27,8 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
  * Sep 6, 2011  
  */
 @ComponentConfig(
-    lifecycle = UIContainerLifecycle.class  
+    lifecycle = Lifecycle.class,
+    template = "app:/templates/wiki/webui/control/UISubmitToolBar.gtmpl"
 )
 public class UISubmitToolBar extends UIWikiExtensionContainer {
 

@@ -31,9 +31,7 @@ UIConfirmBox.prototype.render = function(uicomponentId, titleMessage, message,
     submitClass, submitLabel, cancelLabel) {
   
   var me = eXo.wiki.UIConfirmBox;
-  var uicomponent = document.getElementById(uicomponentId);
-  var submitAction = eXo.core.DOMUtil.findFirstDescendantByClass(uicomponent,
-      "a", submitClass);
+  var submitAction = document.getElementById(uicomponentId);
   
   me.confirmBox = document.createElement('div');
   eXo.core.DOMUtil.addClass(me.confirmBox, 'ConfirmBox');
@@ -66,9 +64,7 @@ UIConfirmBox.prototype.render = function(uicomponentId, titleMessage, message,
     me.createInput(container, null, cancelLabel);
   }
   me.confirmBox.appendChild(container);
-  uicomponent.appendChild(me.confirmBox);
-
-  eXo.core.DOMUtil.findFirstDescendantByClass(uicomponent, "div", "ConfirmBox");
+  submitAction.appendChild(me.confirmBox);
   this.maskLayer = eXo.core.UIMaskLayer.createMask("UIPortalApplication",
       me.confirmBox, 30);
   return false;

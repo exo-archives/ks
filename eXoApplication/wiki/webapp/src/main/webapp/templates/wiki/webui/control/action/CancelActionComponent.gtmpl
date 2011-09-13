@@ -8,9 +8,7 @@
   rcontext.getJavascriptManager().importJavascript("eXo.wiki.UIConfirmBox", "/wiki/javascript/") ;
   rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIConfirmBox.init();");
  %>
-<div id="$uicomponent.id">
-   <a href="$cancelLink" onclick="return eXo.wiki.UIWikiPageEditForm.cancel('$uicomponent.id','$titleMessage','$exitMessage', 'Delete Icon','$okLabel','$cancelLabel');" 
-    class="Delete Icon" title="<%=_ctx.appRes("UISubmitToolBar.action.Cancel");%>">
+<a id="$uicomponent.id" href="$cancelLink" onclick="return eXo.wiki.UIWikiPageEditForm.cancel('$uicomponent.id','$titleMessage','$exitMessage', 'Delete Icon','$okLabel','$cancelLabel');" 
+    class="Delete ActionButton LightBlueStyle" title="<%=_ctx.appRes("UISubmitToolBar.action.Cancel");%>">
       <%=_ctx.appRes("UISubmitToolBar.action.Cancel");%>    
-   </a>
- </div>
+</a>

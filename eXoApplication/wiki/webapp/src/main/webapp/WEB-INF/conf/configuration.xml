@@ -85,7 +85,7 @@
           <name>SavePage</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
             <field name="type"><string>org.exoplatform.wiki.webui.control.UISubmitToolBar</string></field>
-            <field name="rank"><int>500</int></field>
+            <field name="rank"><int>200</int></field>
             <field name="name"><string>SavePage</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.SavePageActionComponent</string></field>
           </object>
@@ -94,7 +94,7 @@
           <name>SaveTemplate</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
             <field name="type"><string>org.exoplatform.wiki.webui.control.UISubmitToolBar</string></field>
-            <field name="rank"><int>480</int></field>
+            <field name="rank"><int>200</int></field>
             <field name="name"><string>SaveTemplate</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.SaveTemplateActionComponent</string></field>
           </object>
@@ -103,7 +103,7 @@
           <name>MinorEdit</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
             <field name="type"><string>org.exoplatform.wiki.webui.control.UISubmitToolBar</string></field>
-            <field name="rank"><int>450</int></field>
+            <field name="rank"><int>300</int></field>
             <field name="name"><string>MinorEdit</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.MinorEditActionComponent</string></field>
           </object>
@@ -112,7 +112,7 @@
           <name>Cancel</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
             <field name="type"><string>org.exoplatform.wiki.webui.control.UISubmitToolBar</string></field>
-            <field name="rank"><int>100</int></field>
+            <field name="rank"><int>400</int></field>
             <field name="name"><string>Cancel</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.CancelActionComponent</string></field>
           </object>
