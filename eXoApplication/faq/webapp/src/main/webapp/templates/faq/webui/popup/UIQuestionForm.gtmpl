@@ -29,7 +29,7 @@
 							
 						<%} else if(field.getName().equals( uicomponent.ALL_LANGUAGES)){
 							if(!uicomponent.isRenderSelectLang) continue;
-								String link = uiform.event("DeleteLanguage", uicomponent.id,"delete question");
+								String link = uiform.event(uicomponent.DELETE_LANGUAGE_ACTION, uicomponent.id,"delete question");
 						%>
 								<tr>
 									<td class="FieldLabel" style="width:100px; text-align:right"><%=uicomponent.getLabel(field.getName()) %> :</td>

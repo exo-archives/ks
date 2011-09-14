@@ -69,28 +69,35 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
  * Aus 01, 2007 2:48:18 PM
  */
 
-@ComponentConfig(lifecycle = UIFormLifecycle.class, template = "app:/templates/faq/webui/popup/UIQuestionForm.gtmpl", events = { @EventConfig(listeners = UIQuestionForm.SelectLanguageActionListener.class), @EventConfig(listeners = UIQuestionForm.DeleteLanguageActionListener.class, confirm = "UIQuestionForm.msg.DeleteQuestionInLanguage"),
-    @EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class), @EventConfig(listeners = UIQuestionForm.SaveActionListener.class), @EventConfig(listeners = UIQuestionForm.CancelActionListener.class), @EventConfig(listeners = UIQuestionForm.RemoveAttachmentActionListener.class) })
+@ComponentConfig(lifecycle = UIFormLifecycle.class, template = "app:/templates/faq/webui/popup/UIQuestionForm.gtmpl", events = {
+    @EventConfig(listeners = UIQuestionForm.SelectLanguageActionListener.class),
+    @EventConfig(listeners = UIQuestionForm.DeleteLanguageActionListener.class, confirm = "UIQuestionForm.msg.DeleteQuestionInLanguage"),
+    @EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class),
+    @EventConfig(listeners = UIQuestionForm.SaveActionListener.class),
+    @EventConfig(listeners = UIQuestionForm.CancelActionListener.class),
+    @EventConfig(listeners = UIQuestionForm.RemoveAttachmentActionListener.class) })
 public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
-  public static final String             AUTHOR               = "Author";
+  public static final String             AUTHOR                 = "Author";
 
-  public static final String             EMAIL_ADDRESS        = "EmailAddress";
+  public static final String             EMAIL_ADDRESS          = "EmailAddress";
 
-  public static final String             QUESTION_CONTENT     = "QuestionTitle";
+  public static final String             QUESTION_CONTENT       = "QuestionTitle";
 
-  public static final String             ALL_LANGUAGES        = "AllLanguages";
+  public static final String             ALL_LANGUAGES          = "AllLanguages";
 
-  public static final String             QUESTION_DETAIL      = "Question";
+  public static final String             QUESTION_DETAIL        = "Question";
 
-  public static final String             ATTACHMENTS          = "Attachment";
+  public static final String             ATTACHMENTS            = "Attachment";
 
-  public static final String             FILE_ATTACHMENTS     = "FileAttach";
+  public static final String             FILE_ATTACHMENTS       = "FileAttach";
 
-  public static final String             REMOVE_FILE_ATTACH   = "RemoveFile";
+  public static final String             REMOVE_FILE_ATTACH     = "RemoveFile";
 
-  public static final String             IS_APPROVED          = "IsApproved";
+  public static final String             IS_APPROVED            = "IsApproved";
 
-  public static final String             IS_ACTIVATED         = "IsActivated";
+  public static final String             IS_ACTIVATED           = "IsActivated";
+
+  public static final String             DELETE_LANGUAGE_ACTION = "DeleteLanguage";
 
   private UIFormStringInput              inputAuthor          = null;
 
@@ -153,7 +160,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
   private boolean                        isRenderSelectLang   = false;
 
   private FAQSetting                     faqSetting_;
-
+  
   public void activate() throws Exception {
   }
 
