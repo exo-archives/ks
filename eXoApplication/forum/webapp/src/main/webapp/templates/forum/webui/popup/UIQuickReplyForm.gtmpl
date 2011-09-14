@@ -1,42 +1,27 @@
 <div class="UITopicDetail">
 <% uiform.begin() %>
 	<div class="UIAction"> 
-		<table class="ActionContainer">
-			<tbody>
-				<tr>
-					<td>
-						<div class="ForumCategory ForumQuickReply">
-							<div class="ForumToolbar">
-								<div class="LeftBar">
-									<div class="RightBar">
-										<div class="CenterBar">
-											<div class="Title"><%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%></div>
-											<div class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
-											<div style="clear:both;"><span></span></div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="ContentContainer">
-								<div class="ForumList">
-									<div class=""><%= _ctx.appRes("UITopicDetail.label.Message");%>:</div>
-									<div class=""><%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%></div>
-								</div>
-								<div class="ActionContent">
-							<%
-								for(action in uicomponent.getActions()) { 
-									 String actionLabel = _ctx.appRes("UITopicDetail.action." + action); 
-									 String link = uicomponent.event(action) ;
-							%>
-									<a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
-							<%}%>
-								</div>
-							</div>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-	 	</table> 
+		<div class="ForumCategory ForumQuickReply">
+			<div class="ForumToolbar ClearFix">
+				<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+				<h6 class="Title"><%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%></h6>
+			</div>
+			<div class="ContentContainer">
+				<div class="ForumList">
+					<div class=""><%= _ctx.appRes("UITopicDetail.label.Message");%>:</div>
+					<div class=""><%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%></div>
+				</div>
+				<div class="ActionContent">
+			<%
+				for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes("UITopicDetail.action." + action); 
+					 String link = uicomponent.event(action) ;
+			%>
+					<a href="javascript:void(0);" onclick="$link" class="ActionButton LightBlueStyle">$actionLabel</a>
+			<%}%>
+				</div>
+			</div>
+		</div>
 	</div>
 <%uiform.end()%>
 </div>

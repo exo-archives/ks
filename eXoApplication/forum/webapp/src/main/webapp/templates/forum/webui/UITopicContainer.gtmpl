@@ -95,7 +95,7 @@
 				
 							<h6 class="Title"><%=_ctx.appRes("UITopicContainer.label.TopicInForum");%> <strong title="$forumName">$subForumName</strong></h6>
 						<% if(isShowMenu && canEdit) { %>	
-							<div class="ContentAction DefaultStyle" onclick="eXo.forum.UIForumPortlet.checkActionTopic(this, event);">
+							<div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.forum.UIForumPortlet.checkActionTopic(this, event);">
 
 								<div class="StatusIcon ModerationIcon">
 									<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Moderation");%></a>
@@ -148,9 +148,8 @@
 								
 								<% /*End Popup Menu*/ %>
 								</div>
-							<span style="display: block;" class="ForumSeparatorLine"></span>
 						<% } %>
-							<div class="ContentAction DefaultStyle SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
+							<div class="ContentAction DefaultStyle ForumSeparatorLine SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
 
 								<div class="StatusIcon SearchIcon">
 									<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%></a>
@@ -174,8 +173,7 @@
 							
 							</div>
 						<% if(isShowMenu && canEdit) { %>	
-							<span style="display: block;" class="ForumSeparatorLine"></span>
-							<div class="ContentAction DefaultStyle" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" >
+							<div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" >
 
 								<div class="StatusIcon ToolIcon">
 									<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.ForumTools");%></a>
@@ -230,20 +228,20 @@
 								<% /*End Popup Menu*/ %>
 							</div>
 						<% } %>	
-							<div class="ButtonHeadBar DefaultStyle">
+							<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine">
 								
 										<a class="StatusIcon AddRSS ForumRSSFeed" href="javascript:window.open('<%=uicomponent.getRSSLink(forum.getId())%>'); <%=uicomponent.event("RSS", forum.getId()).replace("javascript:","")%>;">&nbsp;<%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
 								
 							</div>
 						<%if(uicomponent.userProfile.getUserRole() < 3){%>
-							<div class="ButtonHeadBar DefaultStyle" >
+							<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine" >
 
 								
 										<a class="StatusIcon AddLinkToBookIcon" href="<%=uicomponent.event("AddBookMark","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 								
 
 							</div>
-							<div class="ButtonHeadBar DefaultStyle" >
+							<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine" >
 
 									<% if(uicomponent.isWatching(forum.getPath())) {%>
 										<a class="StatusIcon AddWatchingIcon" href="<%=uicomponent.event("UnWatch","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>

@@ -33,7 +33,7 @@
 						} else isAdm = false;
 				%>
 
-					<div class="DefaultStyle ControlButton ForumBar" id="$action" >
+					<div class="DefaultStyle ControlButton SeparatorLineForum" id="$action" >
 						<%if(isAdm){%>
 						<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">	
 						<%}%>
@@ -71,7 +71,6 @@
 						</div>	
 						<%}%>
 					</div>
-					<div class="SeparatorLineForum ControlButton" id="${action}Sp"><span></span></div>
 				<% }%>
 				<div class="ScrollButtons" style="width:35px;">
 					<div title="Previous">

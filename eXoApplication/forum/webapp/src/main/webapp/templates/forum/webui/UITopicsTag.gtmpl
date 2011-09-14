@@ -33,10 +33,9 @@
 	</div>
 	<div class="ForumContainer" id="divChecked" checked="<%=uicomponent.getTotalChecked()%>">
 		<div class="ForumToolbar ForumActionToolbar ClearFix">
-			<h6 class="Title"><%=_ctx.appRes("UITopicsTag.label.TagName");%>:<strong>$tagName_</strong></h6>
 			<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+			<h6 class="Title"><%=_ctx.appRes("UITopicsTag.label.TagName");%>:<strong>$tagName_</strong></h6>
 			<% if(isShowMenu){ %>
-			<span class="ForumSeparatorLine"></span>
 			<div class="ToolbarActionsTag DefaultStyle" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
 				<a class="StatusIcon ToolIcon"><%=_ctx.appRes("UITopicsTag.label.ManageTag");%></a>
 				<% /*Begin Popup Menu*/ %>

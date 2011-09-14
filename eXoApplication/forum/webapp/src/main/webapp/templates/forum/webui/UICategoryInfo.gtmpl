@@ -18,16 +18,9 @@
 	String userView;
 %>
 <div id="$uicomponent.id" class="ForumInfos UICategoryInfo">
-	<div class="ForumToolbar">
-		<div class="LeftBar">
-			<div class="RightBar">
-				<div class="CenterBar">
-					<div class="Title"><%=_ctx.appRes("UICategoryInfo.label.What")%></div>
-					<div class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
-					<div style="clear:both;"><span></span></div>
-				</div>
-			</div>
-		</div>
+	<div class="ForumToolbar ClearFix">
+		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+		<h6 class="Title"><%=_ctx.appRes("UICategoryInfo.label.What")%></h6>
 	</div>
 	<div class="ContentContainer">
 		<div class="ForumStatsList">

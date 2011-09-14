@@ -1,7 +1,3 @@
-.UITopicDetail .ButtomAndPageListContainer {
-	margin: 3px 0px 1px 0px;
-}
-
 .UITopicDetail .PostReplyIcon {
 	background: url('icons/16x16/PostReplyIcon.gif') no-repeat left 2px;
 }
@@ -29,10 +25,6 @@
 /********************************* PostsInThreadContainer ************************************/
 .UITopicDetail .PostsInThreadContainer {
 	margin: 0px;
-}
-
-.UITopicDetail .ToolbarActionsContainer {
-	padding-right: 10px;
 }
 
 .UITopicDetail .ForumToolbar .SearchIcon {
@@ -454,10 +446,6 @@
 	padding: 0px;
 }
 
-.UITopicDetail .UIPopupCategory{
-	position: relative;
-}
-
 .UITopicDetail .ContentContainer .MemberContent .InfoMember span{
 	display: block;
 }
@@ -479,20 +467,10 @@
 	color:blue;
 }
 
-.UIForumPortlet .UITopicDetail .PostsInThreadContainer .ContentAction .UIPopupCategory{
-	left: -5px;
-}
-
 .UIForumPortlet .UITopicDetail .ContentAction .UIPopupCategory .SearchPopup{
 	padding: 5px;
 }
 
 .UIForumPortlet .UITopicDetail .FootPost .ActionButton{
 	float: right;
-}
-
-.UITopicDetail .ForumQuickReply .TitleQuickReply{
-	margin: 0px;
-	padding: 0px 0px 0px 10px;
-	line-height: 25px;
 }

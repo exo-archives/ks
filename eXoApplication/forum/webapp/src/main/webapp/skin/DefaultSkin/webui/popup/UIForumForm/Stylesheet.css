@@ -1,16 +1,5 @@
 .UIForumForm {
 	padding: 10px;
-	background: #f7f7f7;
-}
-
-.UIForumPortlet .AddNewForumForm{
-	height: 100%;
-	background-color: #f7f7f7;
-}
-
-.UIForumForm .AddForumInCategpry .HorizontalLayout {
-	border: none;
-	padding: 5px;
 }
 
 .UIForumForm .HorizontalLayout .newForum {

@@ -9,21 +9,15 @@
 	<div class="ContentContainer">
 		<div class="UITopicList">
 			<div class="ForumToolbar">
-				<div class="LeftBar">
-					<div class="RightBar">
-						<div class="CenterBar">
-							<table cellspacing="0" cellpadding="0" border="0">
-								<thead>
-									<th style="width:250px;" align="left"><a href="<%=uicomponent.event("OpentContent", uicomponent.getPathLastVisit());%>" class="TextBar">Go back to the last visited page</a></th>
-									<th><div class="TitleBar"><%=_ctx.appRes("UIForumListSearch.label.SearchResult");%></div></th>
-									<th style="width:250px;">
-										<div class="TextBar FR">Items per page: <%uicomponent.renderChild(uicomponent.FIELD_DISPLAY_ITEM_SELECTBOX)%></div>
-									</th>
-								</thead>
-							</table>
-						</div>
-					</div>
-				</div>
+				<table cellspacing="0" cellpadding="0" border="0">
+					<thead>
+						<th style="width:250px;" align="left"><a href="<%=uicomponent.event("OpentContent", uicomponent.getPathLastVisit());%>" class="TextBar">Go back to the last visited page</a></th>
+						<th><div class="TitleBar"><%=_ctx.appRes("UIForumListSearch.label.SearchResult");%></div></th>
+						<th style="width:250px;">
+							<div class="TextBar FR">Items per page: <%uicomponent.renderChild(uicomponent.FIELD_DISPLAY_ITEM_SELECTBOX)%></div>
+						</th>
+					</thead>
+				</table>
 			</div>
 			<div class="SearchResult">
 				<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">

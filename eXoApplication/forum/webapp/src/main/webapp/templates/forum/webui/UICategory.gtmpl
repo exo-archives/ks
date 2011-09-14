@@ -42,11 +42,10 @@
 <%uiform.begin()%>
   <div style="display:none;" id="divChecked" checked="0"><span></span></div>
 	<div class="ForumToolbar ForumActionToolbar ClearFix">
-			<div class="Title"><%=category.getCategoryName()%> : <span title="$description">$subDescription</span></div>
-			<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+		<h6 class="Title"><%=category.getCategoryName()%> : <span title="$description">$subDescription</span></h6>
 		<% if(isShowMenu){ %>
-			<div class="ForumSeparatorLine"><span></span></div>
-			<div class="ContentAction ToolbarActionsContainer DefaultStyle" onclick="eXo.forum.UIForumPortlet.checkAction(this, event, 6);" >
+			<div class="ContentAction ToolbarActionsContainer DefaultStyle ForumSeparatorLine" onclick="eXo.forum.UIForumPortlet.checkAction(this, event, 6);" >
 				<div class="ManageCategoryButton StatusIcon">
 					<a class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.manageCategory");%></a>
 				</div>
@@ -88,7 +87,7 @@
 				
 			</div>
 			<% } %>
-			<div class="ContentAction SearchForm DefaultStyle" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>"  style="float:right;">
+			<div class="ContentAction SearchForm DefaultStyle ForumSeparatorLine" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>"  style="float:right;">
 
 				<div class="SearchIcon StatusIcon">
 					<a class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.SearchThisCategory");%></a>
@@ -111,18 +110,18 @@
 					<% /*End Popup Menu*/ %>
 				
 			</div>
-			<div class="ButtonHeadBar DefaultStyle" >
+			<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine" >
 
 				<a style="padding-left:16px;line-height:20px; display:block;" class="AddRSS ForumRSSFeed StatusIcon " href="javascript:window.open('<%=uicomponent.getRSSLink(categoryId)%>'); <%=uicomponent.event("RSS", categoryId).replace("javascript:","")%>;">&nbsp;RSS</a>
 
 			</div>
 		<%if(uicomponent.userProfile.getUserRole() < 3){%>
-			<div class="ButtonHeadBar DefaultStyle" >
+			<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine" >
 
 				<a class="AddLinkToBookIcon" style="padding-left:16px;" href="<%=uicomponent.event("AddBookMark","category//"+categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 
 			</div>
-			<div class="ButtonHeadBar DefaultStyle">
+			<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine">
 
 				<% if(uicomponent.isWatching(category.getPath())) {%>
 					<a class="AddWatchingIcon" style="padding-left:16px;" href="<%=uicomponent.event("UnWatch",categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>

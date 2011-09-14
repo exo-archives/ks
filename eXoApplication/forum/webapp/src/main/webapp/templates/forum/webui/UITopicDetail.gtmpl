@@ -149,7 +149,7 @@
 	<div class="PostsInThreadContainer ImageContentContainer">
 		<div class="ForumToolbar ForumActionToolbar ToolbarActionsContainer ClearFix">
 						<% if(isShowMenu && canEdit) { %>	
-							<div class="ContentAction DefaultStyle" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+							<div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
 										<div class="StatusIcon ModerationIcon">
 											<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.Moderation");%></a>
 										</div>
@@ -198,8 +198,7 @@
 								<% /*End Popup Menu*/ %>
 							</div>
 							<% } %>
-							<span class="ForumSeparatorLine"></span>
-							<div class="ContentAction DefaultStyle SearchForm" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=ForumUtils.SEARCHFORM_ID%>').focus();">
+							<div class="ContentAction DefaultStyle ForumSeparatorLine SearchForm" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=ForumUtils.SEARCHFORM_ID%>').focus();">
 								<div class="StatusIcon SearchIcon">
 									<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.SearchThisThread");%></a>
 								</div>
@@ -219,8 +218,7 @@
 								<% /*End Popup Menu*/ %>
 							</div>
 						<% if((canEdit && isShowMenu) || isUserCreatedTopic) { %>	
-							<span class="ForumSeparatorLine"></span>
-							<div class="ContentAction DefaultStyle" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">								
+							<div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">								
 									<div class="StatusIcon ToolIcon">
 										<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.ThreadTools");%></a>
 									</div>
@@ -327,9 +325,8 @@
 							</div>
 						<% } %>	
 						<%if(!isClosed && userProfile.getUserRole() != 3 && !isBanned) {%>
-							<span class="ForumSeparatorLine"></span>
-							<div class="ButtonHeadBar">
-								<div class="SearchForm DefaultStyle" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=uicomponent.FIELD_ADD_TAG%>').focus();">
+							<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine">
+								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=uicomponent.FIELD_ADD_TAG%>').focus();">
 											<a id="ButtonSearch" class="StatusIcon TagIcon" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.Tag");%></a>
 									<% /*Begin Popup Menu*/ %>
 											<div id="AddTagId" class="UIPopupCategory" style="display:none;">
@@ -350,19 +347,19 @@
 									<% /*End Popup Menu*/ %>
 								</div>
 							</div>
-							<div class="ButtonHeadBar DefaultStyle"  onclick="<%=uicomponent.event("RatingTopic")%>">
+							<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine"  onclick="<%=uicomponent.event("RatingTopic")%>">
 								<a class="StatusIcon VoteIcon" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.VoteThread");%></a>
 							</div>
 						<%}%>
 						
-							<div class="ButtonHeadBar DefaultStyle">
+							<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine">
 								<a class="AddRSS ForumRSSFeed StatusIcon" href="javascript:window.open('<%=uicomponent.getRSSLink(topic.getId())%>'); <%=uicomponent.event("RSS", topic.getId()).replace("javascript:","")%>;">&nbsp;RSS</a>
 							</div>
 						<%if(uicomponent.userProfile.getUserRole() < 3){%>
-							<div class="ButtonHeadBar DefaultStyle">
+							<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine">
 								<a class="AddLinkToBookIcon StatusIcon" href="<%=uicomponent.event("AddBookMark")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 							</div>
-							<div class="ButtonHeadBar DefaultStyle">
+							<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine">
 										<% if(uicomponent.isWatching(topic.getPath())){ %>
 											<a class="AddWatchingIcon StatusIcon" href="<%=uicomponent.event("UnWatch")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
 										<% } else { %>
@@ -762,10 +759,10 @@
 <% if(isCanReply && uicomponent.isShowQuickReply()){ %>
 
 	<div class="ForumCategory ForumQuickReply">
-		<h6 class="TitleQuickReply ForumToolbar ForumActionToolbar">
+		<div class="ForumToolbar ForumActionToolbar ClearFix">
 			<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
-			<%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%>
-		</h6>
+			<h6 class="Title"><%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%></h6>
+		</div>
 		<div class="ContentContainer">
 			<div class="ForumList" id="QuickReply">
 				<%=_ctx.appRes("UITopicDetail.label.Message");%>:

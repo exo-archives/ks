@@ -29,10 +29,10 @@
 	}
 %>
 <div id="$uicomponent.id" class="UIPostRules ForumCategory">
-	<h6 class="TitleForum ForumActionToolbar ForumToolbar">
+	<div class="ForumToolbar ForumActionToolbar ClearFix">
 		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
-		<%=_ctx.appRes("UIPostRules.label.PostRules")%>
-	</h6>
+		<h6 class="Title"><%=_ctx.appRes("UIPostRules.label.PostRules")%></h6>
+	</div>		
 	<ul class="ContentContainer TxtRules">
 		<li>$you <strong>$canCreatThread</strong> <%=_ctx.appRes("UIPostRules.label.postNewThread") ;%></li>
 		<li>$you <strong>$canPost</strong> <%=_ctx.appRes("UIPostRules.label.postReplies") ;%></li>

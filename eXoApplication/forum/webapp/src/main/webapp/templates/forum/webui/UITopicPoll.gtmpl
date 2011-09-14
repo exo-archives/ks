@@ -35,12 +35,13 @@
                 
 
 <div class="UITopicPoll">
-  <div class="ForumToolbar ForumActionToolbar TitleForum ClearFix">
+	<div class="ForumToolbar ForumActionToolbar TitleForum ClearFix">
+		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
 		<h6 class="Lable Question">
 			<%=_ctx.appRes("UITopicPoll.label.Poll"); %>:
 			${question}
 		</h6>
-		<span class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"></span>
+		
 	<% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>  
 		<span class="ForumSeparatorLine"></span>
 		<div class="ContentAction DefaultStyle" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" >

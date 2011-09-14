@@ -60,8 +60,10 @@
 }
 
 .UIPollPortlet .UITopicPoll .ForumToolbar .ForumSeparatorLine {
+	line-height: 25px;
 	float: right;
-	margin: 4px 4px 0px 4px;
+	margin: 0 10px 0 0;
+    padding: 0 10px 0 0;
 }
 
 .UIPollPortlet .UITopicPoll .TopicPollContainer {
@@ -159,10 +161,6 @@
 	border: none;
 	width: 100%;
 	height: auto ;
-}
-
-.UIPollPortlet .ViewPollForm .UIAction {
-	padding: 0px;
 }
 
 .UIPollPortlet .UITopicPoll .UITabPane .UITabContentContainer .UITabContent{

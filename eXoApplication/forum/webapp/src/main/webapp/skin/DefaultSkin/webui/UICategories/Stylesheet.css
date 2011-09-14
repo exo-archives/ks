@@ -6,19 +6,11 @@
 	padding: 0px 10px;
 }
 
+.UICategories .UIForumWorkingWorkspace .UIForumCategory {
+	margin: 0 0 7px 0;
+}
+
 /**************************** UICategories ForumToolBar *********************************/
-
-.UIForumCategory .ForumToolbar {
-	margin: 5px 0px 0px 0px;
-}
-
-.UIForumCategory .ForumToolbar a {
-	color: black;
-}
-
-.UIForumCategory .ForumToolbar a:hover {
-	color: #126ca5;
-}
 
 .UIForumCategory .ForumToolbar .ToolbarActionsContainer {
 	float: right;
@@ -41,17 +33,7 @@
 	height: auto;
 } 
 
-.UIForumCategory .ForumToolbar .ForumSeparatorLine {
-	float: right;
-	width: 2px; height: 19px;
-	margin: 0px 5px 0px 5px;
-}
-
 .UIForumCategory .ForumToolbar .DownArrow1Icon {
 	background-position:right center;
 	padding-right:16px;
-}
-
-.UIForumPortlet .UICategory .ContentContainer .UIGrid th{
-	line-height: 17px;
 }
