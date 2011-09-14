@@ -82,7 +82,7 @@
  		</div>
  	
 		 <div class="UIAction">
-	      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close")%> class="ActionButton LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></a>
+	      <a href="javascript:void(0);" onclick="<%=uicomponent.event("Close")%>" class="ActionButton LightBlueStyle"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></a>
 	    </div>
 		<%uiform.end()%>
 </div>

@@ -107,6 +107,10 @@ public class UIQuickSearch extends BaseUIFAQForm {
     public void onEvent(Event<UIQuickSearch> event, UIQuickSearch uiForm, String objectId) throws Exception {
       UIAdvancedSearchForm uiAdvancedSearchForm = uiForm.openPopup(UIAdvancedSearchForm.class, "AdvanceSearchForm", 650, 0);
       uiAdvancedSearchForm.setIsSearch(false, false);
+      String text = uiForm.getUIStringInput(FIELD_SEARCHVALUE).getValue();
+      if (!FAQUtils.isFieldEmpty(text)) {
+        uiAdvancedSearchForm.setText(text);
+      }
     }
   }
 }
