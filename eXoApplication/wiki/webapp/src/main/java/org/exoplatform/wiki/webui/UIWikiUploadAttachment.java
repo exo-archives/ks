@@ -64,7 +64,7 @@ public class UIWikiUploadAttachment extends UIWikiForm {
   public UIWikiUploadAttachment() throws Exception {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW,WikiMode.EDITPAGE,WikiMode.ADDPAGE});   
     SIZE_LIMIT = Utils.getLimitUploadSize();
-    UIWikiFormUploadInput uiInput = new UIWikiFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
+    UIWikiFormUploadInput uiInput = new UIWikiFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD, SIZE_LIMIT);
     uiInput.setAutoUpload(true);    
     addUIFormInput(uiInput);
   }
@@ -163,7 +163,7 @@ public class UIWikiUploadAttachment extends UIWikiForm {
       UIWikiUploadAttachment wikiAttachmentArea = event.getSource();
       UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);
       wikiAttachmentArea.removeChildById(FIELD_UPLOAD);
-      UIWikiFormUploadInput uiInput = new UIWikiFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD);
+      UIWikiFormUploadInput uiInput = new UIWikiFormUploadInput(FIELD_UPLOAD, FIELD_UPLOAD, SIZE_LIMIT);
       uiInput.setAutoUpload(true);
       wikiAttachmentArea.addChild(uiInput);
       event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea); 
