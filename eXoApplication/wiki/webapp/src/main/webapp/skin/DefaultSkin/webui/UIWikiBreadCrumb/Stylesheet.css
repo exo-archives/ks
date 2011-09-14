@@ -7,7 +7,9 @@
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea {
   margin: 0px;
   padding: 5px 8px 0;
-  border: 1px solid #e1e1e1;
+  border-color:#e1e1e1;
+  border-style:none none solid;
+  border-width:medium medium 1px;
 }
 
 .UIWikiPortlet .UIWikiUpperArea .UIWikiApplicationControlArea .UIWikiBreadCrumb {
