@@ -89,7 +89,7 @@ public class TestForumTransformHTML extends TestCase{
     assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.enCodeViewSignature(null));
     assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.enCodeViewSignature(ForumUtils.EMPTY_STR));
     String s =   "Abc\txyz \nHelo everybody <div>xxx</div> BBB.\nStar is 'Ngoi Sao'";
-    assertEquals("Abc&nbsp; &nbsp; xyz <br/>Helo everybody &lt;div&gt;xxx&lt;/div&gt; BBB.<br/>Star is &apos;Ngoi Sao&apos;", 
+    assertEquals("Abc&nbsp; &nbsp; xyz <br/>Helo everybody &lt;div&gt;xxx&lt;/div&gt; BBB.<br/>Star is &#39;Ngoi Sao&#39;", 
                  ForumTransformHTML.enCodeHTMLContent(s));
   }
 

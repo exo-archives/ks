@@ -327,7 +327,7 @@ public class CommonUtils {
      *  See: http://www.ascii.cl/htmlcodes.htm
     */
     int[] charCodes = new int[] { 48, 32, 65, 57, 97, 90, 127, 122, 39 };// '0', ' ', 'A', '9', 'a', 'Z', '~', 'z', '\''
-    String apos = "&apos;", str1 = "&#", str2 = "&lt;", str3 = "&gt;";
+    String apos = "&#39;", str1 = "&#", str2 = "&lt;", str3 = "&gt;";
     StringBuilder builder = new StringBuilder();
     while (i < s.length()) {
       char c = s.charAt(i);

@@ -141,8 +141,8 @@ public class ForumTransformHTML {
         buffer.append("&lt;");
       } else if ((int) c == 62) {
         buffer.append("&gt;");
-      } else if (c == '\'') {
-        buffer.append("&apos;");
+      } else if (c == 39) {
+        buffer.append("&#39;");
       } else if (c == '&') {
         buffer.append("&#x26;");
       } else {
