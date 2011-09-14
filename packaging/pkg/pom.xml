@@ -859,19 +859,7 @@
       <artifactId>xercesImpl</artifactId>
       <version>${xerces.version}</version>
       <type>jar</type>
-    </dependency><!-- 2.9.1-->
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcmail-jdk15</artifactId>
-      <version>${org.bouncycastle.version}</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcprov-jdk15</artifactId>
-      <version>${org.bouncycastle.version}</version>
-      <type>jar</type>
-    </dependency>
+    </dependency><!-- 2.9.1-->    
 	<dependency>
       <groupId>caja</groupId>
       <artifactId>json_simple</artifactId>
