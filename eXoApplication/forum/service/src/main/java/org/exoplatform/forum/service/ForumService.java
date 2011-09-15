@@ -1435,5 +1435,5 @@ public interface ForumService extends ForumServiceLegacy {
    * 
    * @param userName 
    */
-  public void removeCacheUserProfile(String userName);
+//  public void removeCacheUserProfile(String userName);
 }

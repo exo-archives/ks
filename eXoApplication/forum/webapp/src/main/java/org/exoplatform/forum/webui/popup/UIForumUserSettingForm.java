@@ -323,7 +323,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     inputUserWatchManger.addChild(formStringInput);
 
     formStringInput = new UIFormStringInput(EMAIL_ADD, userProfile.getEmail());
-    formStringInput.setValue(UserHelper.getEmailUser(this.userProfile.getUserId()));
+    formStringInput.setValue(userProfile.getEmail());
     inputUserWatchManger.addChild(formStringInput);
 
     addUIFormInput(inputSetProfile);

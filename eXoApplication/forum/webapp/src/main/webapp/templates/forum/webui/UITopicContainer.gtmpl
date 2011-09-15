@@ -42,7 +42,7 @@
 	boolean isShowMenu = true;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	boolean canEdit = uicomponent.isModerator;
-	if(!canEdit && (userProfile.getIsBanned() || userProfile.getUserRole() == 3)) {
+	if(!canEdit && (userProfile.getIsBanned() || userProfile.getUserRole() == 3 || userProfile.getUserRole() == 4)) {
 		isShowMenu = false ;
 	}
 	boolean isLock = forum.getIsLock() ;
@@ -619,17 +619,16 @@
 	</div>
 	<div class="ButtomAndPageListContainer ClearFix">
 		<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
-			<div class="LockActionForum UIActionForum FL">
+			<div class="LockActionForum StartTopicForum FL">
 		<% } else { %>
 			<div class="StartTopicForum FL">
 		<% } %>
 			<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
-				<div class="IconButton LockIcon" title="Forum is Closed for Posting"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
+				<div class="IconButton LockIcon"  title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
 			<% } else { %>
-				
-				<a href="<%=uicomponent.event("AddTopic")%>" class="IconButton AddTheradIcon LabelIcon">
+				<a class="IconButton AddTheradIcon" style="display:block;" href="<%=uicomponent.event("AddTopic")%>">
 					<%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
-				</a>								
+				</a>
 			<% } %>
 		</div>
 		<% if(uicomponent.maxPage > 1) { %>

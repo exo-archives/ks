@@ -280,14 +280,14 @@ public class UITopicForm extends BaseForumForm implements UISelector {
     this.isDetail = isDetail;
   }
 
-  public void setTopicIds(String categoryId, String forumId, Forum forum, long userRole) throws Exception {
+  public void setTopicIds(String categoryId, String forumId, Forum forum) throws Exception {
     this.categoryId = categoryId;
     this.forumId = forumId;
     this.topic = new Topic();
     this.forum = forum;
     UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
     threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(false);
-    if (userRole == 0) {
+    if (getUserProfile().getUserRole() == 0) {
       addActionAddTopicType();
     }
     setShowInfo();
@@ -499,7 +499,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
         return;
       uiForm.isDoubleClickSubmit = true;
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
-      UserProfile userProfile = forumPortlet.getUserProfile();
+      UserProfile userProfile = uiForm.getUserProfile();
       try {
         if (forumPortlet.checkForumHasAddTopic(uiForm.categoryId, uiForm.forumId)) {
           int t = 0, k = 1;

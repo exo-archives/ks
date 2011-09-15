@@ -95,52 +95,54 @@ import org.mortbay.cometd.continuation.EXoContinuationBayeux;
 public class UIForumPortlet extends UIPortletApplication {
   private ForumService forumService;
 
-  private boolean      isCategoryRendered   = true;
+  private boolean      isCategoryRendered  = true;
 
-  private boolean      isForumRendered      = false;
+  private boolean      isForumRendered     = false;
 
-  private boolean      isTagRendered        = false;
+  private boolean      isTagRendered       = false;
 
-  private boolean      isSearchRendered     = false;
+  private boolean      isSearchRendered    = false;
 
-  private boolean      isJumpRendered       = false;
+  private boolean      isJumpRendered      = false;
 
-  private boolean      isShowForumJump      = false;
+  private boolean      isShowForumJump     = false;
 
-  private boolean      isShowPoll           = false;
+  private boolean      isShowPoll          = false;
 
-  private boolean      isShowModerators     = false;
+  private boolean      isShowModerators    = false;
 
-  private boolean      isShowRules          = false;
+  private boolean      isShowRules         = false;
 
-  private boolean      isShowIconsLegend    = false;
+  private boolean      isShowIconsLegend   = false;
 
-  private boolean      isShowStatistics     = false;
+  private boolean      isShowStatistics    = false;
 
-  private boolean      isShowQuickReply     = false;
+  private boolean      isShowQuickReply    = false;
 
-  private UserProfile  userProfile          = null;
+  private UserProfile  userProfile         = null;
 
-  private boolean      enableIPLogging      = false;
+  private boolean      enableIPLogging     = false;
 
-  private boolean      isShowForumActionBar = false;
+  private boolean      prefForumActionBar  = false;
 
-  private boolean      enableBanIP          = false;
+  private boolean      isRenderActionBar   = false;
 
-  private boolean      useAjax              = true;
+  private boolean      enableBanIP         = false;
 
-  private int          dayForumNewPost      = 0;
+  private boolean      useAjax             = true;
 
-  private List<String> invisibleForums      = new ArrayList<String>();
+  private int          dayForumNewPost     = 0;
 
-  private List<String> invisibleCategories  = new ArrayList<String>();
+  private List<String> invisibleForums     = new ArrayList<String>();
+
+  private List<String> invisibleCategories = new ArrayList<String>();
 
   private PortletMode portletMode;
   public UIForumPortlet() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     addChild(UIBreadcumbs.class, null, null);
-    boolean isRenderBar = !UserHelper.isAnonim();
-    addChild(UIForumActionBar.class, null, null).setRendered(isRenderBar);
+    isRenderActionBar = !UserHelper.isAnonim();
+    addChild(UIForumActionBar.class, null, null).setRendered(isRenderActionBar);
     addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered);
     addChild(UIForumContainer.class, null, null).setRendered(isForumRendered);
     addChild(UITopicsTag.class, null, null).setRendered(isTagRendered);
@@ -158,11 +160,12 @@ public class UIForumPortlet extends UIPortletApplication {
     PortletRequestContext portletReqContext = (PortletRequestContext) context;
     portletMode = portletReqContext.getApplicationMode();
     if (portletMode == PortletMode.VIEW) {
+      isRenderActionBar = !UserHelper.isAnonim();
       if (getChild(UIBreadcumbs.class) == null) {
         if (getChild(UISettingEditModeForm.class) != null)
           removeChild(UISettingEditModeForm.class);
         addChild(UIBreadcumbs.class, null, null);
-        addChild(UIForumActionBar.class, null, null).setRendered(!UserHelper.isAnonim());
+        addChild(UIForumActionBar.class, null, null).setRendered(isRenderActionBar);
         UICategoryContainer categoryContainer = addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered);
         addChild(UIForumContainer.class, null, null).setRendered(isForumRendered);
         addChild(UITopicsTag.class, null, null).setRendered(isTagRendered);
@@ -262,11 +265,12 @@ public class UIForumPortlet extends UIPortletApplication {
       isCategoryRendered = false;
       isSearchRendered = true;
     }
-    if (!isShowForumActionBar) {
+    if (!prefForumActionBar) {
       if (!isCategoryRendered || isSearchRendered) {
-        getChild(UIForumActionBar.class).setRendered(false);
+        isRenderActionBar = false;
       }
     }
+    getChild(UIForumActionBar.class).setRendered(isRenderActionBar);
     setRenderForumLink();
     getChild(UIForumContainer.class).setRendered(isForumRendered);
     getChild(UITopicsTag.class).setRendered(isTagRendered);
@@ -321,7 +325,7 @@ public class UIForumPortlet extends UIPortletApplication {
     invisibleCategories.clear();
     invisibleForums.clear();
     try {
-      isShowForumActionBar = Boolean.parseBoolean(portletPref.getValue("showForumActionBar", ForumUtils.EMPTY_STR));
+      prefForumActionBar = Boolean.parseBoolean(portletPref.getValue("showForumActionBar", ForumUtils.EMPTY_STR));
       dayForumNewPost = Integer.parseInt(portletPref.getValue("forumNewPost", ForumUtils.EMPTY_STR));
       useAjax = Boolean.parseBoolean(portletPref.getValue("useAjax", ForumUtils.EMPTY_STR));
       enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ForumUtils.EMPTY_STR));
@@ -371,7 +375,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public boolean isShowForumActionBar() {
-    return isShowForumActionBar;
+    return prefForumActionBar;
   }
 
   public boolean isShowPoll() {
@@ -436,8 +440,9 @@ public class UIForumPortlet extends UIPortletApplication {
     } catch (Exception e) {
       userProfile = new UserProfile();
     }
-    if(UserProfile.USER_DELETED == userProfile.getUserRole()) {
-      getChild(UIForumActionBar.class).setRendered(false);
+    if(UserProfile.USER_DELETED == userProfile.getUserRole() ||
+       UserProfile.GUEST == userProfile.getUserRole() ) {
+      isRenderActionBar = false;
     }
   }
 
@@ -471,7 +476,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public void removeCacheUserProfile() {
-    forumService.removeCacheUserProfile(userProfile.getUserId());
+//    forumService.removeCacheUserProfile(userProfile.getUserId());
   }
 
   public String getPortletLink(String actionName, String userName) {
@@ -839,7 +844,8 @@ public class UIForumPortlet extends UIPortletApplication {
         UserProfile selectProfile = forumPortlet.forumService.getUserInformations(forumPortlet.forumService.getQuickProfile(userId.trim()));
         viewUserProfile.setUserProfileViewer(selectProfile);
       } catch (Exception e) {
-        log.error("Fail to set user profile: \n", e);
+        log.debug("Fail to set user profile.", e);
+        throw new MessageException(new ApplicationMessage("UITopicDetail.msg.userIsDeleted", new String[] { userId }, ApplicationMessage.WARNING));
       }
       CommonContact contact = forumPortlet.getPersonalContact(userId.trim());
       viewUserProfile.setContact(contact);
@@ -851,13 +857,19 @@ public class UIForumPortlet extends UIPortletApplication {
   static public class PrivateMessageActionListener extends EventListener<UIForumPortlet> {
     public void execute(Event<UIForumPortlet> event) throws Exception {
       UIForumPortlet forumPortlet = event.getSource();
-      ;
       if (forumPortlet.userProfile.getIsBanned()) {
         String[] args = new String[] {};
         throw new MessageException(new ApplicationMessage("UITopicDetail.msg.userIsBannedCanNotSendMail", args, ApplicationMessage.WARNING));
       }
       String userId = event.getRequestContext().getRequestParameter(OBJECTID);
       int t = userId.indexOf(Utils.DELETED);
+      if (t < 0) {
+        try {
+          forumPortlet.forumService.getQuickProfile(userId.trim());
+        } catch (Exception e) {
+          t = 1;
+        }
+      }
       if (t > 0) {
         String[] args = new String[] { userId.substring(0, t) };
         throw new MessageException(new ApplicationMessage("UITopicDetail.msg.userIsDeleted", args, ApplicationMessage.WARNING));

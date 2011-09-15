@@ -470,12 +470,14 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
     storage.moveTopic(topics, destForumPath, mailContent, link);
+    cacheUserProfile.clear();
   }
 
   /**
    * {@inheritDoc}
    */
   public Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception {
+    cacheUserProfile.clear();
     return storage.removeTopic(categoryId, forumId, topicId);
   }
 
@@ -558,6 +560,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
     storage.movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
+    cacheUserProfile.clear();
   }
 
   /**
@@ -565,12 +568,14 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {
     storage.mergeTopic(srcTopicPath, destTopicPath, mailContent, link);
+    cacheUserProfile.clear();
   }
 
   /**
    * {@inheritDoc}
    */
   public Post removePost(String categoryId, String forumId, String topicId, String postId) throws Exception {
+    cacheUserProfile.clear();
     return storage.removePost(categoryId, forumId, topicId, postId);
   }
 
@@ -728,6 +733,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
     storage.saveLastPostIdRead(userId, lastReadPostOfForum, lastReadPostOfTopic);
+    removeCacheUserProfile(userId);
   }
 
   /**

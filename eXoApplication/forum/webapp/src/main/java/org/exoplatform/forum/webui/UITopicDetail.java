@@ -979,7 +979,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
       try {
         UITopicForm topicForm = openPopup(forumPortlet, UITopicForm.class, "UIEditTopicContainer", 900, 545);
-        topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum, topicDetail.userProfile.getUserRole());
+        topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum);
         topicForm.setUpdateTopic(topicDetail.getTopic(), true);
         topicForm.setMod(topicDetail.isMod);
         topicForm.setIsDetail(true);
