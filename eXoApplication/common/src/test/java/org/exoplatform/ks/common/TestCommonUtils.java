@@ -62,13 +62,13 @@ public class TestCommonUtils extends TestCase {
     assertEquals("normal text",CommonUtils.encodeSpecialCharInSearchTerm(s));
     // all characters is special characters.
     s = "@#$%^&*()\"/-=~`'.,";
-    assertEquals("&#64;&#35;&#36;&#37;&#94;&#38;&#42;&#40;&#41;&#34;&#47;&#45;&#61;&#126;&#96;&apos;&#46;&#44;",CommonUtils.encodeSpecialCharInSearchTerm(s));
+    assertEquals("&#64;&#35;&#36;&#37;&#94;&#38;&#42;&#40;&#41;&#34;&#47;&#45;&#61;&#126;&#96;&#39;&#46;&#44;",CommonUtils.encodeSpecialCharInSearchTerm(s));
     // has ignore special characters.
     s = "abc !#:? =., +;";
     assertEquals("abc !#:? =., +;",CommonUtils.encodeSpecialCharInSearchTerm(s));
     // has ignore and not ignore special characters.
     s = "abc !#: ()\" ' | ] [";
-    assertEquals("abc !#: &#40;&#41;&#34; &apos; &#124; &#93; &#91;",CommonUtils.encodeSpecialCharInSearchTerm(s));
+    assertEquals("abc !#: &#40;&#41;&#34; &#39; &#124; &#93; &#91;",CommonUtils.encodeSpecialCharInSearchTerm(s));
   }
 
   public void testEncodeSpecialCharInTitle() {
@@ -89,7 +89,7 @@ public class TestCommonUtils extends TestCase {
     assertEquals("abc !#:?=.,()+; ddd",CommonUtils.encodeSpecialCharInTitle(s));
     // has ignore and not ignore special characters.
     s = "abc !# :?=.,' | ] [";
-    assertEquals("abc !# :?=.,&apos; &#124; &#93; &#91;",CommonUtils.encodeSpecialCharInTitle(s));
+    assertEquals("abc !# :?=.,&#39; &#124; &#93; &#91;",CommonUtils.encodeSpecialCharInTitle(s));
   }
   
   public void testEncodeSpecialCharInContent() {
@@ -107,7 +107,7 @@ public class TestCommonUtils extends TestCase {
     assertEquals("abc &#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_ ddd",CommonUtils.encodeSpecialCharInContent(s));
     // has ignore and not ignore special characters.
     s = "abc !# :?=.,' | ] [";
-    assertEquals("abc !# :?=.,&apos; &#124; ] [",CommonUtils.encodeSpecialCharInContent(s));
+    assertEquals("abc !# :?=.,&#39; &#124; ] [",CommonUtils.encodeSpecialCharInContent(s));
   }
   
   public void testEncodeSpecialCharToHTMLnumber() {
