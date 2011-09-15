@@ -444,6 +444,7 @@ public class UIForumPortlet extends UIPortletApplication {
        UserProfile.GUEST == userProfile.getUserRole() ) {
       isRenderActionBar = false;
     }
+    getChild(UIForumActionBar.class).setRendered(isRenderActionBar);
   }
 
   public UserProfile getUserProfile() throws Exception {
@@ -717,7 +718,7 @@ public class UIForumPortlet extends UIPortletApplication {
               }
             }
             if (!UserHelper.isAnonim()) {
-              this.forumService.updateTopicAccess(UserHelper.getCurrentUser(), topic.getId());
+              this.forumService.updateTopicAccess(userProfile.getUserId(), topic.getId());
               this.getUserProfile().setLastTimeAccessTopic(topic.getId(), TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
             }
           } else {

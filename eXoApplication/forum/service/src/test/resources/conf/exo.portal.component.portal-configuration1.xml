@@ -110,11 +110,6 @@
     </init-params>
   </component>
 
-  <component>
-    <key>org.exoplatform.portal.config.UserPortalConfigService</key>
-    <type>org.exoplatform.portal.config.UserPortalConfigService</type>
-  </component>
-
   <external-component-plugins>
  		<target-component>org.exoplatform.services.jcr.RepositoryService</target-component>
  		<component-plugin>

@@ -18,6 +18,7 @@ import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
 
 import org.apache.commons.io.FileUtils;
+import org.exoplatform.forum.service.CacheUserProfile;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -88,10 +89,17 @@ public class TestForumService extends ForumServiceTestCase {
     userProfile = forumService_.getUserInfo(userName);
     assertNotNull("Get info UserProfile is null", userProfile);
 
-    // get Default
+    // get Default and storage this profile in ExoCache
     userProfile = forumService_.getDefaultUserProfile(userName, "");
     assertNotNull("Get default UserProfile is null", userProfile);
-
+    
+    // test cache user profile, get this profile is not null
+    assertNotNull("Get default UserProfile is null", CacheUserProfile.getFromCache(userName));
+    // remove this profile in ExoCache by update this profile
+    forumService_.saveUserSettingProfile(userProfile);
+    // get by ExoCache is null 
+    assertNull("Get default UserProfile is null", CacheUserProfile.getFromCache(userName));
+    
     // getUserInformations
     userProfile = forumService_.getUserInformations(userProfile);
     assertNotNull("Get informations UserProfile is null", userProfile);

@@ -112,8 +112,10 @@ public class UIBreadcumbs extends UIContainer {
           tooltipLink = FORUM_SERVICE;
           breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL);
         }
-        breadcumbs_.add(ForumUtils.FIELD_SEARCHFORUM_LABEL);
-        path_.add(ForumUtils.SLASH + ForumUtils.FIELD_EXOFORUM_LABEL);
+        if(!breadcumbs_.contains(ForumUtils.FIELD_SEARCHFORUM_LABEL)){
+          breadcumbs_.add(ForumUtils.FIELD_SEARCHFORUM_LABEL);
+          path_.add(ForumUtils.SLASH + ForumUtils.FIELD_EXOFORUM_LABEL);
+        }
       } else {
         path_.clear();
         breadcumbs_.clear();
