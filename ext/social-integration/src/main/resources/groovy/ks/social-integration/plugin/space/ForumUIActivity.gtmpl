@@ -138,7 +138,7 @@
   }
 %>
 
-<div class="UIActivity">
+<div class="UIActivity ForumActivity">
   <script type="text/javascript">
     function initUIActivity${activity.id}() {
       new eXo.social.webui.UIActivity($params);
@@ -153,23 +153,17 @@
       <span class="BorderBottom"></span>
     </a>
     <div class="ContentBox" id="ContextBox${activity.id}">
-      <h5 class="TitleContent ClearFix">
-          <a class="Text" title="$ownerName" href="$ownerUri">$ownerName</a>
-      <% if (activityDeletable) {%>
-        <span onclick="<%= uicomponent.event("DeleteActivity", uicomponent.getId(), ""); %>" class="CloseContentBoxNormal" id="DeleteActivityButton${activity.id}"></span>
-      <%}%>
-      </h5>
-      <p class="Content">
+      <div class="TitleBlock TextBold">
       	<%
-      		String herf = "<a href=\"{0}\">{1}</a>";
+      		String herf = "<a class='TextBold' href=\"{0}\">{1}</a>";
      			activityContentTitle = uicomponent.getActivityContentTitle(_ctx, herf) ;
      		%>
        	$activityContentTitle<br>
-       	<div class="CommentBox">
-       		$activity.body
+	  </div>
+       	<div class="CommentBox QuoterBox">
+       		<p class="QuoterClose">$activity.body</p>
        </div>
-      </p>
-      <div class="DefaultActivityIcon">
+      <div class="ForumActivityIcon ActivityIcon">
         <span class="DateTime">$activityPostedTime *</span>
       <% def toggleDisplayCommentAction = uicomponent.event('ToggleDisplayCommentForm', null, false);
          def commentLink = "";
@@ -177,7 +171,7 @@
      <% if (activityCommentAndLikable) { %>
         <a class="$commentLink" onclick="$toggleDisplayCommentAction" id="CommentLink${activity.id}" href="#comment">
           $labelComment
-        </a> |
+        </a>  <a>|</a>
       <% if (uicomponent.isLiked()) { %>
         <a onclick="$unlikeActivityAction" id="UnLikeLink${activity.id}" href="#unlike">
           $labelUnlike
@@ -185,15 +179,15 @@
       <% } else { %>
         <a onclick="$likeActivityAction" id="LikeLink${activity.id}" href="#like">
           $labelLike
-        </a> |
+        </a> <a>|</a>
       <% }%>
      <% }%>
 				<a href="${uicomponent.getReplyLink()}" id="ReplyLink${activity.id}">
 					<%= _ctx.appRes("ForumUIActivity.label.reply")%>
-				</a> |
+				</a> <a>|</a>
 				<a href="${uicomponent.getViewLink()}" id="View${activity.id}">
 				  <%= _ctx.appRes("ForumUIActivity.label.view") %>
-				</a> |
+				</a> 
       </div>
     <% if (identityLikesNum > 0 || uicomponent.isLiked()) {%>
       <div class="ListPeopleLikeBG $listPeopleBGClass">

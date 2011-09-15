@@ -138,7 +138,7 @@
   }
 %>
 
-<div class="UIActivity">
+<div class="UIActivity AnswerActivity">
   <script type="text/javascript">
     function initUIActivity${activity.id}() {
       new eXo.social.webui.UIActivity($params);
@@ -153,19 +153,19 @@
       <span class="BorderBottom"></span>
     </a>
     <div class="ContentBox" id="ContextBox${activity.id}">
-      <h5 class="TitleContent ClearFix">
-          <a class="Text" title="$ownerName" href="$ownerUri">$ownerName</a>
-      <% if (activityDeletable) {%>
-        <span onclick="<%= uicomponent.event("DeleteActivity", uicomponent.getId(), ""); %>" class="CloseContentBoxNormal" id="DeleteActivityButton${activity.id}"></span>
-      <%}%>
-      </h5>
-      <p class="Content">
-       ${uicomponent.getTitle(_ctx)}<br>
-       <div class="CommentBox">
+      <div class="TitleBlock TextBold">
+       ${uicomponent.getTitle(_ctx)}<br>	  
+      </div>
+       <div class="BoxGray">
        	$activity.body
-       </div>
-      </p>
-      <div class="DefaultActivityIcon">
+       </div>	  
+	  <!-- update condition following by question or answer-->
+	  <%
+	  def isQuestion = false ;
+	  def icon = "AnswerActivityIcon";
+	  if(isQuestion) {icon="AskedActivityIcon"};
+	  %>	  
+      <div class="ActivityIcon  $icon">
         <span class="DateTime">$activityPostedTime *</span>
       <% def toggleDisplayCommentAction = uicomponent.event('ToggleDisplayCommentForm', null, false);
          def commentLink = "";

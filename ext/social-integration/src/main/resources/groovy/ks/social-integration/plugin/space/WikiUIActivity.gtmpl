@@ -1,4 +1,4 @@
-<%
+  <%
 /*
 <!--
 
@@ -137,7 +137,7 @@
   }
 %>
 
-<div class="UIActivity">
+<div class="UIActivity WikiActivity">
   <script type="text/javascript">
     function initUIActivity${activity.id}() {
       new eXo.social.webui.UIActivity($params);
@@ -151,23 +151,20 @@
       <span class="BorderTop"></span>
       <span class="BorderBottom"></span>
     </a>
-    <div class="ContentBox" id="ContextBox${activity.id}">
-      <h5 class="TitleContent ClearFix">
-          <a class="Text" title="$ownerName" href="$ownerUri">$ownerName</a>
-      <% if (activityDeletable) {%>
-        <span onclick="<%= uicomponent.event("DeleteActivity", uicomponent.getId(), ""); %>" class="CloseContentBoxNormal" id="DeleteActivityButton${activity.id}"></span>
-      <%}%>
-      </h5>
-      <p class="Content">
-        <%
-          def activityAuthor = "<a title='" + ownerName + "' href='" + ownerUri + "'>" + ownerName + "</a>";
-          def pageName = "<a href='" + uicomponent.getPageURL() + "'>" + uicomponent.getPageName() + "</a>";
+    <div class="ContentBox " id="ContextBox${activity.id}">
+      <div class="TitleBlock TextBold">
+		<%
+          def activityAuthor = "<a  title='" + ownerName + "' href='" + ownerUri + "'>" + ownerName + "</a>";
+          def pageName = "<a  href='" + uicomponent.getPageURL() + "'>" + uicomponent.getPageName() + "</a>";
           def pageMsg = uicomponent.getActivityMessage(_ctx);
           pageMsg = pageMsg.replace("{0}", activityAuthor).replace("{1}", pageName);
         %>
         $pageMsg
-      </p>
-      <div class="DefaultActivityIcon">
+	</div>
+	  <div class="BoxGray">
+        wiki content
+      </div>
+      <div class="WikiActivityIcon ActivityIcon">
         <span class="DateTime">$activityPostedTime *</span>
       <% def toggleDisplayCommentAction = uicomponent.event('ToggleDisplayCommentForm', null, false);
          def commentLink = "";
