@@ -23,7 +23,7 @@
 }
 
 .UIWikiPageEditForm .UIEditorTabs .SourceEditor {
-	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 4px -213px;
+	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 5px -25px;
 	border: 1px solid #acacac;
 }
 
