@@ -235,6 +235,7 @@ public class ForumPageList extends JCRPageList {
     postNew.setLink(reader.string(ForumNodeTypes.EXO_LINK));
     postNew.setIsApproved(reader.bool(ForumNodeTypes.EXO_IS_APPROVED));
     postNew.setIsHidden(reader.bool(ForumNodeTypes.EXO_IS_HIDDEN));
+    postNew.setIsWaiting(reader.bool(ForumNodeTypes.EXO_IS_WAITING));
     postNew.setIsActiveByTopic(reader.bool(ForumNodeTypes.EXO_IS_ACTIVE_BY_TOPIC));
     postNew.setUserPrivate(reader.strings(ForumNodeTypes.EXO_USER_PRIVATE));
     postNew.setNumberAttach(reader.l(ForumNodeTypes.EXO_NUMBER_ATTACH));

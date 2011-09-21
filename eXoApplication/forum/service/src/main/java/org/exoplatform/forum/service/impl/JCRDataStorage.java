@@ -33,9 +33,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -89,8 +89,6 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.forum.service.SortSettings;
-import org.exoplatform.forum.service.SortSettings.Direction;
-import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicListAccess;
@@ -98,6 +96,8 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.SortSettings.Direction;
+import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.CategoryEventListener;
 import org.exoplatform.forum.service.conf.ForumData;
@@ -111,9 +111,9 @@ import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
-import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.SessionManager;
+import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
@@ -2733,7 +2733,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         Calendar cal = postNode.getProperty(EXO_CREATED_DATE).getDate();
         StringBuilder builder = new StringBuilder();
         builder.append(JCR_ROOT).append(postNode.getParent().getPath()).append("/element(*,exo:post)");
-        StringBuilder strBd = Utils.getPathQuery(isApproved, isHidden, userLogin);
+        StringBuilder strBd = Utils.getPathQuery(isApproved, isHidden, isHidden, userLogin);
         if (strBd.length() > 0)
           builder.append(strBd.toString().replace("]", "")).append(" and ");
         else
@@ -2765,9 +2765,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node topicNode = getCategoryHome(sProvider).getNode(topicPath);
-      StringBuffer stringBuffer = new StringBuffer();
-      stringBuffer.append(JCR_ROOT).append(topicNode.getPath()).append("//element(*,exo:post)");
-      stringBuffer.append(Utils.getPathQuery(null, "", EXO_USER_PRI).toString().replaceAll(']' + "", "")).append(" and exo:isFirstPost='false'] order by @exo:createdDate ascending");
+      StringBuffer stringBuffer = new StringBuffer(JCR_ROOT)
+      .append(topicNode.getPath()).append("//element(*,").append(EXO_POST).append(")[")
+      .append(Utils.getQueryByProperty("", EXO_USER_PRIVATE, EXO_USER_PRI))
+      .append(Utils.getQueryByProperty("and", EXO_IS_FIRST_POST, "false"))
+      .append("] order by @exo:createdDate ascending");
       QueryManager qm = topicNode.getSession().getWorkspace().getQueryManager();
       Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
       QueryResult result = query.execute();
@@ -2783,11 +2785,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node topicNode = getCategoryHome(sProvider).getNode(categoryId + "/" + forumId + "/" + topicId);
-      StringBuffer stringBuffer = new StringBuffer();
-      stringBuffer.append(JCR_ROOT).append(topicNode.getPath()).append("//element(*,exo:post)");
-      stringBuffer.append(Utils.getPathQuery(isApproved, isHidden, userLogin));
-      stringBuffer.append(" order by @exo:createdDate ascending");
-      JCRPageList pagelist = new ForumPageList(null, 10, stringBuffer.toString(), true);
+      StringBuilder strBuilder = new StringBuilder(JCR_ROOT)
+        .append(topicNode.getPath()).append("//element(*,").append(EXO_POST).append(")");
+      String isWaiting = strQuery.equals("true") || strQuery.equals("false") ? strQuery : "";
+      StringBuilder qr = Utils.getPathQuery(isApproved, isHidden, isWaiting, userLogin);
+      if (!Utils.isEmpty(strQuery) && Utils.isEmpty(isWaiting)) {
+        if(Utils.isEmpty(qr.toString())) {
+          qr.append("[(").append(strQuery).append("])");
+        } else {
+          qr.insert(qr.lastIndexOf("]"), " and (" + strQuery + ")");
+        }
+      }
+      strBuilder.append(qr).append(" order by @exo:createdDate ascending");
+      JCRPageList pagelist = new ForumPageList(null, 10, strBuilder.toString(), true);
       return pagelist;
     } catch (PathNotFoundException e) {
       return null;
@@ -2801,8 +2811,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       strBuilder.append(categoryId).append("/").append(forumId).append("/").append(topicId);
       Node topicNode = getCategoryHome(sProvider).getNode(strBuilder.toString());
       strBuilder = new StringBuilder();
-      strBuilder.append(JCR_ROOT).append(topicNode.getPath()).append("//element(*,exo:post)");
-      strBuilder.append(Utils.getPathQuery(isApproved, isHidden, userLogin));
+      strBuilder.append(JCR_ROOT).append(topicNode.getPath()).append("//element(*,").append(EXO_POST).append(")");
+      strBuilder.append(Utils.getPathQuery(isApproved, isHidden, isHidden, userLogin));
       QueryManager qm = topicNode.getSession().getWorkspace().getQueryManager();
       Query query = qm.createQuery(strBuilder.toString(), Query.XPATH);
       QueryResult result = query.execute();
@@ -2819,7 +2829,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node categoryHome = getCategoryHome(sProvider);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       StringBuffer pathQuery = new StringBuffer();
-      pathQuery.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,exo:post)[@exo:isFirstPost='false' and @exo:owner='").append(userName);
+      pathQuery.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,").append(EXO_POST).append(")[@exo:isFirstPost='false' and @exo:owner='").append(userName);
       if (isMod)
         pathQuery.append("' and ((@exo:userPrivate='").append(userId).append("') or (@exo:userPrivate='exoUserPri'))]");
       else
@@ -2902,6 +2912,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     postNew.setLink(reader.string(EXO_LINK));
     postNew.setIsApproved(reader.bool(EXO_IS_APPROVED));
     postNew.setIsHidden(reader.bool(EXO_IS_HIDDEN));
+    postNew.setIsWaiting(reader.bool(EXO_IS_WAITING));
     postNew.setIsActiveByTopic(reader.bool(EXO_IS_ACTIVE_BY_TOPIC));
     postNew.setUserPrivate(reader.strings(EXO_USER_PRIVATE));
     postNew.setNumberAttach(reader.l(EXO_NUMBER_ATTACH));
@@ -2996,6 +3007,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       postNode.setProperty(EXO_ICON, post.getIcon());
       postNode.setProperty(EXO_IS_APPROVED, post.getIsApproved());
       postNode.setProperty(EXO_IS_HIDDEN, post.getIsHidden());
+      postNode.setProperty(EXO_IS_WAITING, post.getIsWaiting());
       long numberAttach = 0;
       List<String> listFileName = new ArrayList<String>();
       List<ForumAttachment> attachments = post.getAttachments();
@@ -3109,7 +3121,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
               topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
             }
-            if ((!post.getIsApproved() || post.getIsHidden()) && post.getUserPrivate().length != 2)
+            if ((!post.getIsApproved() || post.getIsHidden() || post.getIsWaiting()) && post.getUserPrivate().length != 2)
               sendAlertJob = true;
           } else {
             postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, false);
@@ -3120,7 +3132,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           sendAlertJob = false; // initDefaulDate
         }
       } else {
-        if ((!post.getIsApproved() || post.getIsHidden()) && post.getUserPrivate().length != 2)
+        if ((!post.getIsApproved() || post.getIsHidden() || post.getIsWaiting()) && post.getUserPrivate().length != 2)
           sendAlertJob = true;
         long temp = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong() - postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
         topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, (temp + numberAttach));
@@ -3270,7 +3282,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           messageBuilder.setCatName(forumNode.getProperty(EXO_NAME).getString());
           messageBuilder.setTopicName(node.getProperty(EXO_NAME).getString());
           boolean isSend = false;
-          if (post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
+          if (post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden() && !post.getIsWaiting()) {
             isSend = true;
             List<String> listCanViewInTopic = new ArrayList<String>();
             if (node.hasProperty(EXO_CAN_VIEW))
@@ -3425,6 +3437,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node forumHomeNode = getForumHomeNode(sProvider);
+      Set<String> userIdsp = new HashSet<String>();
       for (Post post : posts) {
         try {
           boolean isGetLastPost = false;
@@ -3439,19 +3452,37 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           long topicPostCount = topicNode.getProperty(EXO_POST_COUNT).getLong();
           long newNumberAttach = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong();
           long forumPostCount = forumNode.getProperty(EXO_POST_COUNT).getLong();
-          List<String> userIdsp = new ArrayList<String>();
           try {
             if (forumNode.hasProperty(EXO_MODERATORS)) {
               userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
             }
-            userIdsp.addAll(getAllAdministrator(sProvider));
-          } catch (Exception e) {
-          }
+          } catch (Exception e) {}
           switch (type) {
           case Utils.APPROVE: {
             postNode.setProperty(EXO_IS_APPROVED, true);
             post.setIsApproved(true);
             sendNotification(topicNode, null, post, new MessageBuilder(), false);
+            break;
+          }
+          case Utils.WAITING: {
+            if (post.getIsWaiting()) {
+              postNode.setProperty(EXO_IS_WAITING, true);
+              Node postLastNode = getLastDatePost(forumHomeNode, topicNode, postNode);
+              if (postLastNode != null) {
+                topicNode.setProperty(EXO_LAST_POST_DATE, postLastNode.getProperty(EXO_CREATED_DATE).getDate());
+                topicNode.setProperty(EXO_LAST_POST_BY, postLastNode.getProperty(EXO_OWNER).getString());
+                isGetLastPost = true;
+              }
+              newNumberAttach = newNumberAttach - postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
+              if (newNumberAttach < 0)
+                newNumberAttach = 0;
+              topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, newNumberAttach);
+              topicNode.setProperty(EXO_POST_COUNT, topicPostCount - 1);
+              forumNode.setProperty(EXO_POST_COUNT, forumPostCount - 1);
+            } else {
+              postNode.setProperty(EXO_IS_WAITING, false);
+              sendNotification(topicNode, null, post, new MessageBuilder(), false);
+            }
             break;
           }
           case Utils.HIDDEN: {
@@ -3478,7 +3509,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           default:
             break;
           }
-          if (!post.getIsHidden() && post.getIsApproved()) {
+          if (!post.getIsHidden() && post.getIsApproved() && !post.getIsWaiting()) {
             if (postDate.getTimeInMillis() > lastPostDate.getTimeInMillis()) {
               topicNode.setProperty(EXO_LAST_POST_DATE, postDate);
               topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
@@ -3497,11 +3528,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           if (isGetLastPost) {
             queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")));
           }
-          getTotalJobWatting(sProvider, userIdsp);
+          userIdsp.addAll(getAllAdministrator(sProvider));
+          getTotalJobWatting(sProvider, new ArrayList<String>(userIdsp));
         } catch (PathNotFoundException e) {
           log.error("Failed to modify post" + post.getName(), e);
         }
       }
+      
     } catch (Exception e) {
       log.error("Failed to modify posts", e);
     }
@@ -3545,7 +3578,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       postNode.remove();
       // update information: setPostCount, lastpost for Topic
-      if (!post.getIsHidden() && post.getIsApproved() && (post.getUserPrivate() == null || post.getUserPrivate().length == 1)) {
+      if (!post.getIsHidden() && post.getIsApproved() && !post.getIsWaiting() && (post.getUserPrivate() == null || post.getUserPrivate().length == 1)) {
         long topicPostCount = topicNode.getProperty(EXO_POST_COUNT).getLong() - 1;
         topicNode.setProperty(EXO_POST_COUNT, topicPostCount);
         long newNumberAttachs = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong();
@@ -5532,7 +5565,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
                 if (isAdd) {
                   // check by post
                   Post post = getPost(nodeObj);
-                  if (!post.getIsActiveByTopic() || !post.getIsApproved() || post.getIsHidden())
+                  if (!post.getIsActiveByTopic() || !post.getIsApproved() || post.getIsHidden() || post.getIsWaiting())
                     isAdd = false;
                 }
               }
@@ -6044,26 +6077,26 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node categoryHome = getCategoryHome(sProvider);
       String string = categoryHome.getPath();
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      String pathQuery = "";
-      StringBuffer buffer = new StringBuffer();
+      StringBuilder builder = new StringBuilder();
       int l = paths.length;
       if (l > 0) {
-        buffer.append(" and (");
+        builder.append(" and (");
         for (int i = 0; i < l; i++) {
           if (i > 0)
-            buffer.append(" or ");
+            builder.append(" or ");
           String str = getPath(("/" + Utils.FORUM), paths[i]);
-          buffer.append("@exo:path='").append(str).append("'");
+          builder.append("@exo:path='").append(str).append("'");
         }
-        buffer.append(")");
+        builder.append(")");
       }
-      StringBuffer stringBuffer = new StringBuffer();
       Query query;
       NodeIterator iter;
       QueryResult result;
-      stringBuffer.append(JCR_ROOT).append(string).append("//element(*,exo:topic)").append("[(@exo:isApproved='false' or @exo:isWaiting='true')").append(buffer).append("] order by @exo:modifiedDate descending");
-      pathQuery = stringBuffer.toString();
-      query = qm.createQuery(pathQuery, Query.XPATH);
+      StringBuilder stringBuilder = new StringBuilder(JCR_ROOT).append(string).append("//element(*,").append(EXO_TOPIC).append(")")
+                                  .append("[(@").append(EXO_IS_APPROVED).append("='false' or @")
+                                  .append(EXO_IS_WAITING).append("='true')").append(builder).append("] order by @exo:modifiedDate descending");
+      
+      query = qm.createQuery(stringBuilder.toString(), Query.XPATH);
       result = query.execute();
       iter = result.getNodes();
       ForumSearch forumSearch;
@@ -6078,10 +6111,12 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumSearch.setCreatedDate(node.getProperty(EXO_CREATED_DATE).getDate().getTime());
         list.add(forumSearch);
       }
-      stringBuffer = new StringBuffer();
-      stringBuffer.append(JCR_ROOT).append(string).append("//element(*,exo:post)").append("[(@exo:isApproved='false' or @exo:isHidden='true')").append(buffer).append("] order by @exo:modifiedDate descending");
-      pathQuery = stringBuffer.toString();
-      query = qm.createQuery(pathQuery, Query.XPATH);
+      
+      stringBuilder = new StringBuilder(JCR_ROOT).append(string).append("//element(*,").append(EXO_POST).append(")")
+                    .append("[(@").append(EXO_IS_APPROVED).append("='false' or @").append(EXO_IS_HIDDEN)
+                    .append("='true' or @").append(EXO_IS_WAITING).append("='true')").append(builder).append("] order by @exo:modifiedDate descending");
+      
+      query = qm.createQuery(stringBuilder.toString(), Query.XPATH);
       result = query.execute();
       iter = result.getNodes();
       while (iter.hasNext()) {
@@ -6134,9 +6169,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         Node categoryHome = session.getRootNode().getNode(dataLocator.getForumCategoriesLocation());
         String string = categoryHome.getPath();
         QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-        StringBuffer stringBuffer = new StringBuffer();
-        String pathQuery = "";
-        stringBuffer.append(JCR_ROOT).append(string).append("//element(*,exo:topic)");
         StringBuffer buffer = new StringBuffer();
         if (t > 0) {
           String[] paths = Utils.valuesToArray(newProfileNode.getProperty(EXO_MODERATE_FORUMS).getValues());
@@ -6152,16 +6184,20 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             buffer.append(")");
           }
         }
-        pathQuery = stringBuffer.append("[(@exo:isApproved='false' or @exo:isWaiting='true')").append(buffer).append("]").toString();
-        Query query = qm.createQuery(pathQuery, Query.XPATH);
+        StringBuffer stringBuffer = new StringBuffer(JCR_ROOT).append(string).append("//element(*,").append(EXO_TOPIC).append(")")
+                                        .append("[(@").append(EXO_IS_APPROVED).append("='false' or @")
+                                        .append(EXO_IS_WAITING).append("='true')").append(buffer).append("]");
+        
+        Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
         QueryResult result = query.execute();
         NodeIterator iter = result.getNodes();
         totalJob = (int) iter.getSize();
 
-        stringBuffer = new StringBuffer();
-        stringBuffer.append(JCR_ROOT).append(string).append("//element(*,exo:post)");
-        pathQuery = stringBuffer.append("[(@exo:isApproved='false' or @exo:isHidden='true')").append(buffer).append("]").toString();
-        query = qm.createQuery(pathQuery, Query.XPATH);
+        stringBuffer = new StringBuffer(JCR_ROOT).append(string).append("//element(*,").append(EXO_POST).append(")")
+                        .append("[(@").append(EXO_IS_APPROVED).append("='false' or @").append(EXO_IS_HIDDEN)
+                        .append("='true' or @").append(EXO_IS_WAITING).append("='true')").append(buffer).append("]");
+        
+        query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
         result = query.execute();
         iter = result.getNodes();
         totalJob = totalJob + (int) iter.getSize();
@@ -7080,8 +7116,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node forumNode = topicNode.getParent();
       Node categoryNode = forumNode.getParent();
-      boolean categoryHasRestrictedAudience = (hasProperty(categoryNode, "exo:viewer"));
-      boolean forumHasRestrictedAudience = (hasProperty(forumNode, "exo:viewer"));
+      boolean categoryHasRestrictedAudience = (hasProperty(categoryNode, EXO_VIEWER));
+      boolean forumHasRestrictedAudience = (hasProperty(forumNode, EXO_VIEWER));
       String topicName = topicNode.getName();
       if (categoryHasRestrictedAudience || forumHasRestrictedAudience) {
         log.debug("Post" + topicName + " was not added to feed because category or forum has restricted audience");
@@ -7089,7 +7125,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       // update posts in topic
       QueryManager qm = topicNode.getSession().getWorkspace().getQueryManager();
-      StringBuffer stringBuffer = new StringBuffer().append(JCR_ROOT).append(topicNode.getPath()).append("//element(*,exo:post)").append(Utils.getPathQuery("true", "false", " ")).append(" order by @exo:createdDate ascending");
+      StringBuffer stringBuffer = new StringBuffer(JCR_ROOT)
+         .append(topicNode.getPath()).append("//element(*,").append(EXO_POST).append(")")
+         .append(Utils.getPathQuery("true", "false", "false", EXO_USER_PRI))
+         .append(" order by @exo:createdDate ascending");
       Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
@@ -7113,11 +7152,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     Node topicNode = postNode.getParent();
     String postName = postNode.getName();
     PropertyReader post = new PropertyReader(postNode);
-    PropertyReader topic = new PropertyReader(topicNode);
-    // boolean isFirstPost = post.bool("exo:isFirstPost");
-    boolean notApproved = !post.bool("exo:isApproved");
-    boolean isPrivatePost = hasProperty(topicNode, "exo:userPrivate") && !"exoUserPri".equals(topic.strings("exo:userPrivate")[0]);
-    boolean topicHasLimitedViewers = hasProperty(topicNode, "exo:canView");
+    boolean notApproved = !post.bool(EXO_IS_APPROVED);
+    boolean isPrivatePost = !post.list(EXO_USER_PRIVATE, new ArrayList<String>()).contains(EXO_USER_PRI);
+    boolean topicHasLimitedViewers = hasProperty(topicNode, EXO_CAN_VIEW);
 
     if ((notApproved) || isPrivatePost || topicHasLimitedViewers) {
       log.debug("Post" + postName + " was not added to feed because it is private or topic has restricted audience or it is waiting for approval");
@@ -7126,8 +7163,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
     Node forumNode = topicNode.getParent();
     Node categoryNode = forumNode.getParent();
-    boolean categoryHasRestrictedAudience = (hasProperty(categoryNode, "exo:viewer"));
-    boolean forumHasRestrictedAudience = (hasProperty(forumNode, "exo:viewer"));
+    boolean categoryHasRestrictedAudience = (hasProperty(categoryNode, EXO_VIEWER));
+    boolean forumHasRestrictedAudience = (hasProperty(forumNode, EXO_VIEWER));
 
     if (categoryHasRestrictedAudience || forumHasRestrictedAudience) {
       log.debug("Post" + postName + " was not added to feed because category or forum has restricted audience");
@@ -7439,7 +7476,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       StringBuffer stringBuffer = new StringBuffer();
       stringBuffer.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,").append(EXO_POST).append(")[(");
       if (!isAdmin) stringBuffer.append("(@").append(EXO_IS_APPROVED).append("='true') and (@").append(EXO_IS_HIDDEN).append("='false') and (@")
-                                .append(EXO_IS_ACTIVE_BY_TOPIC).append("='true') and ");
+                                .append(EXO_IS_WAITING).append("='false') and (@").append(EXO_IS_ACTIVE_BY_TOPIC).append("='true') and ");
       stringBuffer.append("(@").append(EXO_USER_PRIVATE).append("='exoUserPri' or @").append(EXO_USER_PRIVATE).append("='").append(userName)
                   .append("'))]").append(" order by @").append(EXO_CREATED_DATE).append(" descending");
       
@@ -7465,8 +7502,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       StringBuffer stringBuffer = new StringBuffer();
       stringBuffer.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,").append(EXO_POST)
                   .append(") [((@").append(EXO_IS_APPROVED).append("='true') and (@").append(EXO_IS_HIDDEN).append("='false') and (@")
-                  .append(EXO_IS_ACTIVE_BY_TOPIC).append("='true') and (@").append(EXO_USER_PRIVATE).append("='exoUserPri'))] order by @")
-                  .append(EXO_CREATED_DATE).append(" descending");
+                  .append(EXO_IS_WAITING).append("='false') and (@").append(EXO_IS_ACTIVE_BY_TOPIC).append("='true') and (@")
+                  .append(EXO_USER_PRIVATE).append("='exoUserPri'))] order by @").append(EXO_CREATED_DATE).append(" descending");
       Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
       // get posts
       if(query instanceof QueryImpl){

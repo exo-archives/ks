@@ -145,7 +145,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
         // if the topic is not active or waiting or closed or restricts users, return null
         return null;
       }
-      if (post != null && (post.getUserPrivate().length == TYPE_PRIVATE || post.getIsHidden() || !post.getIsActiveByTopic() || !post.getIsApproved())) {
+      if (post != null && (post.getUserPrivate().length == TYPE_PRIVATE ||  post.getIsWaiting() || post.getIsHidden() || !post.getIsActiveByTopic() || !post.getIsApproved())) {
         // check permission of the post
         // if the post is private or hidden by censored words or not active by topic or waiting for approving, return null.
         return null;

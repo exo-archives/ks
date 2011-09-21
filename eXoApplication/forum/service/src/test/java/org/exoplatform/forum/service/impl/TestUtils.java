@@ -265,37 +265,121 @@ public class TestUtils extends TestCase {
     assertContains(actual, "foo", "bar", "zed"); // should contain all elements
   }
 
+  public void testGetQueryByProperty() throws Exception {
+    String actual = Utils.getQueryByProperty("", "", "").toString();
+    String expected = "";
+    assertEquals(expected, actual);
+    
+    actual = Utils.getQueryByProperty("and", "", "").toString();
+    expected = "";
+    assertEquals(expected, actual);
+
+    actual = Utils.getQueryByProperty("", "exo:test", "").toString();
+    expected = "";
+    assertEquals(expected, actual);
+
+    actual = Utils.getQueryByProperty("", "", "the value").toString();
+    expected = "";
+    assertEquals(expected, actual);
+
+    actual = Utils.getQueryByProperty("", "exo:test", "the value").toString();
+    expected = "(@exo:test='the value')";
+    assertEquals(expected, actual);
+    
+    actual = Utils.getQueryByProperty("and", "", "the value").toString();
+    expected = "";
+    assertEquals(expected, actual);
+
+    actual = Utils.getQueryByProperty("and", "exo:test", "").toString();
+    expected = "";
+    assertEquals(expected, actual);
+
+    actual = Utils.getQueryByProperty("and", "exo:test", "the value").toString();
+    expected = " and (@exo:test='the value')";
+    assertEquals(expected, actual);
+
+    actual = Utils.getQueryByProperty("or", "exo:test", "the value").toString();
+    expected = " or (@exo:test='the value')";
+    assertEquals(expected, actual);
+  }
+  
+  public void testInsertBuilder() throws Exception {
+    StringBuilder qr = Utils.getPathQuery("true", "", "", "");
+    String strQuery = "exo:test='test value'";
+    if(Utils.isEmpty(qr.toString())) {
+      qr.append("[").append(strQuery).append("]");
+    } else {
+      qr.insert(qr.lastIndexOf("]"), " and (" + strQuery + ")");
+    }
+    assertEquals("[(@exo:isApproved='true') and (exo:test='test value')]", qr.toString());
+    qr = new StringBuilder();
+    if(Utils.isEmpty(qr.toString())) {
+      qr.append("[(").append(strQuery).append(")]");
+    } else {
+      qr.insert(qr.lastIndexOf("]"), " and (" + strQuery + ")");
+    }
+    assertEquals("[(exo:test='test value')]", qr.toString());
+  }
+  
   public void testGetPathQuery() throws Exception {
     // test for value is empty and true or false.
-    String actual = Utils.getPathQuery("", "", "").toString();
+    String actual = Utils.getPathQuery("", "", "", "").toString();
     String expected = "";
     assertEquals(expected, actual.trim());
-    actual = Utils.getPathQuery("true", "", "").toString();
+    actual = Utils.getPathQuery("true", "", "", "").toString();
     expected = "[(@exo:isApproved='true')]";
     assertEquals(expected, actual);
 
-    actual = Utils.getPathQuery("", "true", "").toString();
-    expected = "[@exo:isHidden='true']";
+    actual = Utils.getPathQuery("", "true", "", "").toString();
+    expected = "[(@exo:isHidden='true')]";
     assertEquals(expected, actual);
 
-    actual = Utils.getPathQuery("", "", "User").toString();
+    actual = Utils.getPathQuery("", "", "true", "").toString();
+    expected = "[(@exo:isWaiting='true')]";
+    assertEquals(expected, actual);
+
+    actual = Utils.getPathQuery("", "", "", "User").toString();
     expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri'))]";
     assertEquals(expected, actual);
 
-    actual = Utils.getPathQuery("", "true", "User").toString();
+    actual = Utils.getPathQuery("", "", "true", "User").toString();
+    expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isWaiting='true')]";
+    assertEquals(expected, actual);
+
+    actual = Utils.getPathQuery("", "true", "", "User").toString();
     expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isHidden='true')]";
     assertEquals(expected, actual);
 
-    actual = Utils.getPathQuery("true", "", "User").toString();
+    actual = Utils.getPathQuery("true", "", "", "User").toString();
     expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isApproved='true')]";
     assertEquals(expected, actual);
 
-    actual = Utils.getPathQuery("true", "true", "").toString();
-    expected = "[(@exo:isApproved='true')]";
+    actual = Utils.getPathQuery("true", "true", "", "").toString();
+    expected = "[(@exo:isApproved='true') and (@exo:isHidden='true')]";
     assertEquals(expected, actual);
 
-    actual = Utils.getPathQuery("true", "true", "User").toString();
-    expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isApproved='true')]";
+    actual = Utils.getPathQuery("true", "", "true", "").toString();
+    expected = "[(@exo:isApproved='true') and (@exo:isWaiting='true')]";
+    assertEquals(expected, actual);
+
+    actual = Utils.getPathQuery("true", "true", "true", "").toString();
+    expected = "[(@exo:isApproved='true') and (@exo:isHidden='true') and (@exo:isWaiting='true')]";
+    assertEquals(expected, actual);
+
+    actual = Utils.getPathQuery("true", "true", "", "User").toString();
+    expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isApproved='true') and (@exo:isHidden='true')]";
+    assertEquals(expected, actual);
+
+    actual = Utils.getPathQuery("true", "", "true", "User").toString();
+    expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isApproved='true') and (@exo:isWaiting='true')]";
+    assertEquals(expected, actual);
+    
+    actual = Utils.getPathQuery("", "true", "true", "User").toString();
+    expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isHidden='true') and (@exo:isWaiting='true')]";
+    assertEquals(expected, actual);
+    
+    actual = Utils.getPathQuery("true", "true", "true", "User").toString();
+    expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isApproved='true') and (@exo:isHidden='true') and (@exo:isWaiting='true')]";
     assertEquals(expected, actual);
   }
 

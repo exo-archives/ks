@@ -398,19 +398,12 @@ ul,li{
 	white-space:nowrap;
 	cursor:auto;
 	-moz-opacity:0.5;
+	color:black;
 }
 
 .UIForumPortlet .DisableMenuItem:hover {
-	color: gray;
+	color:gray;
 	cursor:auto;
-}
-
-.UIForumPortlet .UIRightClickPopupMenu .DisableMenuItem .ItemIcon:hover {
-	color: gray;
-}
-
-.UIForumPortlet .UIRightClickPopupMenu .DisableMenuItem .ItemIcon:hover {
-	color: gray;
 }
 
 .UIForumPortlet .UIForm .UIFormGrid td.FieldComponent  {

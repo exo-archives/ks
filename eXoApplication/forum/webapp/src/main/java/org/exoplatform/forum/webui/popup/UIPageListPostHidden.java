@@ -87,7 +87,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 
   @SuppressWarnings( { "unchecked", "unused" })
   private List<Post> getPosts() throws Exception {
-    pageList = forumService.getPosts(this.categoryId, this.forumId, this.topicId, ForumUtils.EMPTY_STR, "true", ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR);
+    pageList = forumService.getPosts(this.categoryId, this.forumId, this.topicId, ForumUtils.EMPTY_STR, "true", "true", ForumUtils.EMPTY_STR);
     pageList.setPageSize(6);
     maxPage = pageList.getAvailablePage();
     listPost = pageList.getPage(pageSelect);

@@ -279,6 +279,10 @@
 	background: url('icons/HiddenPostIcon.gif') no-repeat left center;
 }
 
+.UIForumPortlet .SetCensorPostIcon {
+	background: url('icons/CensorPostIcon.gif') no-repeat left center;
+}
+
 .UIForumPortlet .MovethisForumIcon {
 	background: url('icons/MovethisForumIcon.gif') no-repeat left center;
 }

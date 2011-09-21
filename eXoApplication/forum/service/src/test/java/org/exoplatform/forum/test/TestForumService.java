@@ -631,6 +631,7 @@ public class TestForumService extends ForumServiceTestCase {
     post.setIsApproved(true);
     post.setIsActiveByTopic(true);
     post.setIsHidden(false);
+    post.setIsWaiting(false);
     return post;
   }
 

@@ -133,7 +133,7 @@ public class UIQuickReplyForm extends UIForm {
         post.setOwner(quickReply.userName);
         post.setRemoteAddr(remoteAddr);
         post.setIcon(topic.getIcon());
-        post.setIsHidden(isOffend);
+        post.setIsWaiting(isOffend);
         post.setIsApproved(!hasTopicMod);
         post.setLink(link);
         try {

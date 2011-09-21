@@ -118,6 +118,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
       @EventConfig(listeners = UITopicDetail.MergePostActionListener.class ), //Post Menu 
       @EventConfig(listeners = UITopicDetail.MovePostActionListener.class ),  
       @EventConfig(listeners = UITopicDetail.SetApprovePostActionListener.class ),  
+      @EventConfig(listeners = UITopicDetail.SetCensorPostActionListener.class ),  
       @EventConfig(listeners = UITopicDetail.SetHiddenPostActionListener.class ),  
       @EventConfig(listeners = UITopicDetail.SetUnHiddenPostActionListener.class ),  
 //      @EventConfig(listeners = UITopicDetail.SetUnApproveAttachmentActionListener.class ),  
@@ -185,7 +186,13 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   private String                     lastPoistIdSave         = ForumUtils.EMPTY_STR;
 
-  private String                     lastPostId              = ForumUtils.EMPTY_STR, isApprove = ForumUtils.EMPTY_STR, isHidden = ForumUtils.EMPTY_STR;
+  private String                     isHidden                = ForumUtils.EMPTY_STR;
+
+  private String                     isApprove               = ForumUtils.EMPTY_STR;
+
+  private String                     isWaiting               = ForumUtils.EMPTY_STR;
+
+  private String                     lastPostId              = ForumUtils.EMPTY_STR;
 
   private List<String>               listContactsGotten      = new ArrayList<String>();
 
@@ -568,14 +575,17 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     try {
       isApprove = ForumUtils.EMPTY_STR;
       isHidden = ForumUtils.EMPTY_STR;
-      if (!isMod)
+      isWaiting = ForumUtils.EMPTY_STR;
+      if (!isMod){
         isHidden = "false";
+        isWaiting = "false";
+      }
       if (this.forum.getIsModeratePost() || this.topic.getIsModeratePost()) {
         isModeratePost = true;
         if (!isMod && !(this.topic.getOwner().equals(userName)))
           isApprove = "true";
       }
-      pageList = getForumService().getPosts(this.categoryId, this.forumId, topicId, isApprove, isHidden, ForumUtils.EMPTY_STR, userName);
+      pageList = getForumService().getPosts(this.categoryId, this.forumId, topicId, isApprove, isHidden, isWaiting, userName);
       int maxPost = this.userProfile.getMaxPostInPage().intValue();
       if (maxPost <= 0)
         maxPost = 10;
@@ -1280,8 +1290,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         posts.add(topicDetail.getPost(postId));
       }
       if (posts.isEmpty()) {
-        UIPageListPostUnApprove postUnApprove = topicDetail.openPopup(UIPageListPostUnApprove.class, 500, 360);
-        postUnApprove.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId);
+        UIPageListPostUnApprove postUnApprove = topicDetail.openPopup(UIPageListPostUnApprove.class, "PageListPostUnApprove", 500, 360);
+        postUnApprove.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, true);
       } else {
         int count = 0;
         while (count < posts.size()) {
@@ -1295,6 +1305,38 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         if (posts.size() > 0) {
           try {
             topicDetail.getForumService().modifyPost(posts, Utils.APPROVE);
+          } catch (Exception e) {
+            topicDetail.log.warn("Failed to modify: " + e.getMessage(), e);
+          }
+          refresh();
+        }
+      }
+    }
+  }
+  
+  static public class SetCensorPostActionListener extends BaseEventListener<UITopicDetail> {
+    public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
+      List<String> postIds = topicDetail.getIdSelected();
+      List<Post> posts = new ArrayList<Post>();
+      for (String postId : postIds) {
+        posts.add(topicDetail.getPost(postId));
+      }
+      if (posts.isEmpty()) {
+        UIPageListPostUnApprove postUnApprove = topicDetail.openPopup(UIPageListPostUnApprove.class, "PageListPostCensor", 500, 360);
+        postUnApprove.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, false);
+      } else {
+        int count = 0;
+        while (count < posts.size()) {
+          if (posts.get(count).getIsWaiting()) {
+            posts.get(count).setIsWaiting(false);
+            count++;
+          } else {
+            posts.remove(count);
+          }
+        }
+        if (posts.size() > 0) {
+          try {
+            topicDetail.getForumService().modifyPost(posts, Utils.WAITING);
           } catch (Exception e) {
             topicDetail.log.warn("Failed to modify: " + e.getMessage(), e);
           }
@@ -1448,8 +1490,16 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
       if (topicDetail.isDoubleClickQuickReply)
         return;
-      topicDetail.isDoubleClickQuickReply = true;
+      topicDetail.isEditTopic = true;
+      Topic topic = topicDetail.getTopic();
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
+      if(topic == null) {
+        warning("UIPostForm.msg.isParentDelete", ForumUtils.EMPTY_STR);
+        forumPortlet.rederForumHome();
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+        return;
+      }
+      topicDetail.isDoubleClickQuickReply = true;
       try {
         UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA);
         String message = ForumUtils.EMPTY_STR;
@@ -1481,14 +1531,13 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
             String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicDetail.topicId, false);
             //
             String userName = topicDetail.userProfile.getUserId();
-            Topic topic = topicDetail.topic;
             Post post = new Post();
             post.setName(topicDetail.getTitle(topic.getTopicName(), event.getRequestContext()));
             post.setMessage(message);
             post.setOwner(userName);
             post.setRemoteAddr(topicDetail.getRemoteIP());
             post.setIcon(topic.getIcon());
-            post.setIsHidden(isOffend);
+            post.setIsWaiting(isOffend);
             post.setIsApproved(!hasTopicMod);
             post.setLink(link);
             MessageBuilder messageBuilder = ForumUtils.getDefaultMail();

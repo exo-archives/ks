@@ -157,7 +157,7 @@
 								<div class="UIPopupCategory" style="display:none;">
 											<ul class="UIRightClickPopupMenu" style="display:block">
 													<%
-													String[] actionMenuPost = ["MovePost", "SetApprovePost", "SetHiddenPost", "SetUnHiddenPost", "DeletePost"];
+													String[] actionMenuPost = ["MovePost", "SetApprovePost", "SetCensorPost", "SetHiddenPost", "SetUnHiddenPost", "DeletePost"];
 													String link = new String() ;
 													String classIcon = new String() ;
 													String itemLabel = new String() ;
@@ -169,9 +169,10 @@
 														if(action.equals("SetApprovePost")){
 															if(!topic.getIsModeratePost()) {
 																isView = false ;
+																continue;
 															}
 														}
-														if(posts.size() <= 1 && uicomponent.pageSelect <= 1)isView = false ;
+														if(posts.size() <= 1 && uicomponent.pageSelect <= 1) isView = false ;
 														if(isView) {
 															if(action.equals("DeletePost")){
 														%>
@@ -421,13 +422,18 @@
 				}
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
+				if(post.getUserPrivate().length > 1){
+					alert = alert + _ctx.appRes("UITopicDetail.label.PostPrivate");
+					isAnd = true;
+				}
 				if(post.getIsHidden()) {
+					if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPostHidden");
 					alert = alert + _ctx.appRes("UITopicDetail.label.PostHidden");
 					isAnd = true;
 				}
-				if(post.getUserPrivate().length > 1){
-					if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPrivate");
-					else alert = alert + _ctx.appRes("UITopicDetail.label.PostPrivate");
+				if(post.getIsWaiting()) {
+					if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndCensor");
+					alert = alert + _ctx.appRes("UITopicDetail.label.Censor");
 					isAnd = true;
 				}
 				if(isModeratePost) {

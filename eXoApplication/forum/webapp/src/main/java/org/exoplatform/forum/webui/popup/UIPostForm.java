@@ -400,7 +400,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
             post.setIcon(uiIconSelector.getSelectedIcon());
             post.setAttachments(uiForm.getAttachFileList());
-            post.setIsHidden(isOffend);
+            post.setIsWaiting(isOffend);
             post.setLink(link);
             String[] userPrivate = new String[] { "exoUserPri" };
             if (uiForm.isMP) {
