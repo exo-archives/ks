@@ -146,7 +146,6 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
       } catch (ItemExistsException ie) {
         importForm.warning("UIImportForm.msg.ObjectIsExist");
       } catch (Exception ise) {
-        ise.printStackTrace();
         importForm.warning("UIImportForm.msg.filetype-error");
         return;
       }
