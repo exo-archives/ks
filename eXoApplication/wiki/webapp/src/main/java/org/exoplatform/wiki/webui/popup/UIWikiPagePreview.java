@@ -26,6 +26,7 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.rendering.RenderingService;
+import org.exoplatform.wiki.webui.UIWikiContentDisplay;
 import org.exoplatform.wiki.webui.UIWikiMaskWorkspace;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.xwiki.rendering.syntax.Syntax;
@@ -47,21 +48,26 @@ public class UIWikiPagePreview extends UIContainer {
 
   final static public String[] ACTIONS = { "Close" };
   
-  private String pageTitle;
+  public static final String PREVIEW_DISPLAY = "UIPreviewContentDisplay";
   
-  private String htmlOutput;
+  public UIWikiPagePreview() throws Exception {
+    this.addChild(UIWikiContentDisplay.class, null, PREVIEW_DISPLAY);
+  }
+
+  private String pageTitle;
 
   public String[] getActions() {
     return ACTIONS;
   }
 
   public void renderWikiMarkup(String markup, String syntaxId) throws Exception {
+    UIWikiContentDisplay contentDisplay = this.getChildById(PREVIEW_DISPLAY);
     if (Syntax.XHTML_1_0.toIdString().equals(syntaxId)) {
-      this.htmlOutput = markup;
+      contentDisplay.setHtmlOutput(markup);
     } else {
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
       Utils.setUpWikiContext(this.getAncestorOfType(UIWikiPortlet.class));
-      this.htmlOutput = renderingService.render(markup, syntaxId, Syntax.XHTML_1_0.toIdString(), false);
+      contentDisplay.setHtmlOutput(renderingService.render(markup, syntaxId, Syntax.XHTML_1_0.toIdString(), false));
     }
   }
   

@@ -7,7 +7,4 @@
 %>
 <div class="UIWikiPageContentArea" id="$uicomponent.id">
 	<% uicomponent.renderChildren(); %>
-	<div class="WikiContent">
-	 ${uicomponent.htmlOutput}
-	</div>
 </div>

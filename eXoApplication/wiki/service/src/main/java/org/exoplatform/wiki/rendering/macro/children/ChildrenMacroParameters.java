@@ -17,7 +17,9 @@
 package org.exoplatform.wiki.rendering.macro.children;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.wiki.rendering.macro.MacroUtils;
 import org.xwiki.properties.annotation.PropertyDescription;
+import org.xwiki.rendering.macro.MacroExecutionException;
 
 /**
  * Created by The eXo Platform SAS
@@ -118,10 +120,11 @@ public class ChildrenMacroParameters {
 
   /**
    * @param childrenNum number of children to set
-   * @throws ParameterValueTooLowException the provided value is too low, it needs to be >= 1.
+   * @throws MacroExecutionException if parameter is not empty and not a number
    */
   @PropertyDescription("The number of children. If not specified, no limit is applied")
-  public void setChildrenNum(String childrenNum) {
+  public void setChildrenNum(String childrenNum) throws MacroExecutionException {
+    MacroUtils.validateNumberParam(childrenNum);
     this.childrenNum = childrenNum;
   }
 
@@ -133,11 +136,12 @@ public class ChildrenMacroParameters {
   }
 
   /**
-   * @param depth depth of children to set
-   * @throws ParameterValueTooLowException the provided value is too low, it needs to be >= 1.
+   * @param depth depth of children to set   
+   * @throws MacroExecutionException if parameter is not empty and not a number
    */
   @PropertyDescription("Depth of children. If not specified, no limit is applied")
-  public void setDepth(String depth) {
+  public void setDepth(String depth) throws MacroExecutionException {
+    MacroUtils.validateNumberParam(depth);
     this.depth = depth;
   }  
 

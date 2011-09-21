@@ -1,0 +1,9 @@
+<%
+  def rcontext = _ctx.getRequestContext() ;  
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPortlet.makeRenderingErrorsExpandable('"+uicomponent.id+ "');");
+%>
+<div class="UIWikiContentDisplay" id="$uicomponent.id">	
+	<div class="WikiContent">
+	 ${uicomponent.htmlOutput}
+	</div>
+</div>

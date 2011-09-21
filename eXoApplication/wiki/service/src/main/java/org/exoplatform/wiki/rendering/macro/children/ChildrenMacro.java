@@ -28,7 +28,6 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
-import org.exoplatform.wiki.rendering.impl.WarningGroupBlock;
 import org.exoplatform.wiki.rendering.macro.MacroUtils;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -102,32 +101,6 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     String documentName = parameters.getParent();
     String childrenNum = parameters.getChildrenNum();
     String depth = parameters.getDepth();
-    
-    // Check childrenNum parameter
-    try {
-      if (!StringUtils.isEmpty(childrenNum) && Integer.valueOf(childrenNum) < 1) {
-        ResourceBundle res = getResourceBundle();
-        Block warningGroupBlock = new WarningGroupBlock(res.getString("ChildrenMacro.msg.children-number-can-not-be-smaller-than-one"), componentManager, context);
-        return Collections.singletonList(warningGroupBlock);
-      }
-    } catch (NumberFormatException e) {
-      ResourceBundle res = getResourceBundle();
-      Block warningGroupBlock = new WarningGroupBlock(res.getString("ChildrenMacro.msg.children-number-must-be-a-number"), componentManager, context);
-      return Collections.singletonList(warningGroupBlock);
-    }
-    
-    // Check depth parameter
-    try {
-      if (!StringUtils.isEmpty(depth) && Integer.valueOf(depth) < 1) {
-        ResourceBundle res = getResourceBundle();
-        Block warningGroupBlock = new WarningGroupBlock(res.getString("ChildrenMacro.msg.depth-can-not-be-smaller-than-one"), componentManager, context);
-        return Collections.singletonList(warningGroupBlock);
-      }
-    } catch (NumberFormatException e) {
-      ResourceBundle res = getResourceBundle();
-      Block warningGroupBlock = new WarningGroupBlock(res.getString("ChildrenMacro.msg.depth-must-be-a-number"), componentManager, context);
-      return Collections.singletonList(warningGroupBlock);
-    }
     
     model = (DefaultWikiModel) getWikiModel(context);
     WikiPageParams params = model.getWikiMarkupContext(documentName,ResourceType.DOCUMENT);
@@ -226,15 +199,5 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
       return wikiContext;
     }
     return null;
-  }
-  
-  private ResourceBundle getResourceBundle() {
-    if (resourceBundle == null) {
-      WikiContext wikiContext = getWikiContext();
-      if (wikiContext != null) {
-        resourceBundle = wikiContext.getResourceBundle();
-      }
-    }
-    return resourceBundle;
   }
 }

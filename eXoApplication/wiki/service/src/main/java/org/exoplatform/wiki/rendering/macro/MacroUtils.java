@@ -32,6 +32,8 @@ import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.block.ParagraphBlock;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.macro.MacroExecutionException;
+import org.xwiki.rendering.macro.parameter.MacroParameterException;
+import org.xwiki.rendering.macro.parameter.ParameterValueTooLowException;
 import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.syntax.Syntax;
@@ -88,6 +90,18 @@ public class MacroUtils {
                                                        params.getPageId());
 
     return getExcerpts(page.getContent().getText(), page.getSyntax());
+  }
+  
+  public static void validateNumberParam(String param) throws MacroExecutionException {
+    if (param.length() > 0) {
+      try {
+        if (Integer.valueOf(param) < 0) {
+          throw new MacroExecutionException("The value is too low. The lowest allowed value is 0");
+        }
+      } catch (NumberFormatException e) {
+        throw new MacroParameterException("Parameter is not a number");
+      }
+    }
   }
 
   private static String getExcerpts(String markup, String sourceSyntax) throws Exception {

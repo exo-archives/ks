@@ -45,22 +45,15 @@ import org.xwiki.rendering.syntax.Syntax;
   template = "app:/templates/wiki/webui/UIWikiPageContentArea.gtmpl"
 )
 public class UIWikiPageContentArea extends UIWikiContainer {
-
-  private String htmlOutput;
+  
+  public static final String VIEW_DISPLAY = "UIViewContentDisplay";
   
   public UIWikiPageContentArea() throws Exception{
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.HELP, WikiMode.VIEWREVISION });
     this.addChild(UIWikiPageControlArea.class, null, null);
     this.addChild(UIWikiVersionSelect.class, null, null);
-  }  
-  
-  public String getHtmlOutput() {
-    return htmlOutput;
+    this.addChild(UIWikiContentDisplay.class, null, VIEW_DISPLAY);
   }
-
-  public void setHtmlOutput(String output) {
-    this.htmlOutput = output;
-  }  
   
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
@@ -68,11 +61,13 @@ public class UIWikiPageContentArea extends UIWikiContainer {
     super.processRender(context);
   }
 
-  public void renderVersion() throws Exception {
+  private void renderVersion() throws Exception {
     String currentVersionName= this.getChild(UIWikiVersionSelect.class).getVersionName();
     UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
     WikiMode currentMode= wikiPortlet.getWikiMode();
     RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
+    UIWikiContentDisplay contentDisplay = this.getChildById(VIEW_DISPLAY);
+    
     PageImpl wikipage = (PageImpl) Utils.getCurrentWikiPage();
     
     //Setup wiki context
@@ -80,22 +75,28 @@ public class UIWikiPageContentArea extends UIWikiContainer {
     try{
     // Render current content
     if (currentMode.equals(WikiMode.VIEW)) {
-      this.htmlOutput = renderingService.render(wikipage.getContent().getText(), wikipage.getSyntax(), Syntax.XHTML_1_0.toIdString(), wikipage.hasPermission(PermissionType.EDITPAGE));
+        contentDisplay.setHtmlOutput(renderingService.render(wikipage.getContent().getText(),
+                                                             wikipage.getSyntax(),
+                                                             Syntax.XHTML_1_0.toIdString(),
+                                                             wikipage.hasPermission(PermissionType.EDITPAGE)));
     }
     if (currentMode.equals(WikiMode.HELP)) {
-      this.htmlOutput = renderingService.render(wikipage.getContent().getText(), wikipage.getSyntax(), Syntax.XHTML_1_0.toIdString(), false);
+        contentDisplay.setHtmlOutput(renderingService.render(wikipage.getContent().getText(),
+                                                             wikipage.getSyntax(),
+                                                             Syntax.XHTML_1_0.toIdString(),
+                                                             false));
     }
     // Render select version content
-    if (currentMode.equals(WikiMode.VIEWREVISION) && currentVersionName != null) {
-      NTVersion version = wikipage.getVersionableMixin().getVersionHistory().getVersion(currentVersionName);
-      NTFrozenNode frozenNode = version.getNTFrozenNode();
-      AttachmentImpl content = (AttachmentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT));
-      String pageContent = content.getText();
-      String pageSyntax = wikipage.getSyntax();
-      this.htmlOutput = renderingService.render(pageContent, pageSyntax, Syntax.XHTML_1_0.toIdString(), false);
-    }
+      if (currentMode.equals(WikiMode.VIEWREVISION) && currentVersionName != null) {
+        NTVersion version = wikipage.getVersionableMixin().getVersionHistory().getVersion(currentVersionName);
+        NTFrozenNode frozenNode = version.getNTFrozenNode();
+        AttachmentImpl content = (AttachmentImpl) (frozenNode.getChildren().get(WikiNodeType.Definition.CONTENT));
+        String pageContent = content.getText();
+        String pageSyntax = wikipage.getSyntax();
+        contentDisplay.setHtmlOutput(renderingService.render(pageContent, pageSyntax, Syntax.XHTML_1_0.toIdString(), false));
+      }
     }catch(ConversionException e){
-      this.htmlOutput = "Bad syntax in content! Cannot generate HTML content!";
+      contentDisplay.setHtmlOutput("Bad syntax in content! Cannot generate HTML content!");
     }
     Utils.removeWikiContext();
     

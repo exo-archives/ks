@@ -24,7 +24,6 @@ import javax.portlet.PortletPreferences;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -176,7 +175,8 @@ public class UIWikiPortlet extends UIPortletApplication {
                                                                                              .setValue(page.getTitle());      
       } catch (Exception e) {
         context.setAttribute("wikiPage", null);
-        findFirstComponentOfType(UIWikiPageContentArea.class).setHtmlOutput(null);
+        UIWikiContentDisplay contentDisplay = findFirstComponentOfType(UIWikiPageContentArea.class).getChildById(UIWikiPageContentArea.VIEW_DISPLAY);
+        contentDisplay.setHtmlOutput(("Exceptions occur when rendering content!"));
         if (log.isWarnEnabled()) {
           log.warn("An exception happens when resolving URL: " + requestURL, e);
         }

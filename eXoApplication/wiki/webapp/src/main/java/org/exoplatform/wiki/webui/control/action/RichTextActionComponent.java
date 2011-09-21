@@ -19,6 +19,7 @@ package org.exoplatform.wiki.webui.control.action;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -101,6 +102,7 @@ public class RichTextActionComponent extends UIComponent {
       RenderingService renderingService = (RenderingService) PortalContainer.getComponent(RenderingService.class);
       if (isSourceTextRendered) {
         String htmlContent = wikiRichTextArea.getUIFormTextAreaInput().getValue();
+        htmlContent = htmlContent == null ? StringUtils.EMPTY : htmlContent;
         String markupSyntax = wikiPageEditForm.getUIFormSelectBox(UIWikiPageEditForm.FIELD_SYNTAX).getValue();
         String markupContent = renderingService.render(htmlContent, Syntax.XHTML_1_0.toIdString(), markupSyntax, false);
         wikiPageEditForm.getUIFormTextAreaInput(UIWikiPageEditForm.FIELD_CONTENT).setValue(markupContent);        

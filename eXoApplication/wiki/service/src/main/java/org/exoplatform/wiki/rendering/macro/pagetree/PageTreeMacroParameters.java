@@ -17,7 +17,9 @@
 package org.exoplatform.wiki.rendering.macro.pagetree;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.wiki.rendering.macro.MacroUtils;
 import org.xwiki.properties.annotation.PropertyDescription;
+import org.xwiki.rendering.macro.MacroExecutionException;
 
 /**
  * Created by The eXo Platform SAS
@@ -66,11 +68,11 @@ public class PageTreeMacroParameters {
 
   /**
    * @param depth depth of children to set
-   * @throws ParameterValueTooLowException the provided value is too low, it
-   *           needs to be >= 1.
+   * @throws MacroExecutionException if parameter is not empty and not a number
    */
   @PropertyDescription("Start depth of children. If not specified, no limit is applied")
-  public void setStartDepth(String depth) {
+  public void setStartDepth(String depth) throws MacroExecutionException {
+    MacroUtils.validateNumberParam(depth);
     this.startDepth = depth;
   }
 

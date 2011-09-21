@@ -574,8 +574,10 @@ Object.extend(XWiki, {
     if (typeof this.isInitialized == "undefined" || this.isInitialized == false) {
       this.isInitialized = true;
       document.fire("xwiki:dom:loading");
-
-      this.makeRenderingErrorsExpandable();
+      
+      // Replace by UIWikiPortlet@makeRenderingErrorsExpandable for ajax actions
+      //this.makeRenderingErrorsExpandable();
+      
       this.fixLinksTargetAttribute();
       this.insertSectionEditLinks();
       this.insertCreatePageFromTemplateModalBoxes();

@@ -204,6 +204,29 @@ body .wiki-body, html .wiki-body {
 	font-family: courier, courier new, monospace;
 }
 
+.xwikirenderingerror {
+  background: #EFEFEF url("background/error.gif") no-repeat 8px 50%;
+  border: 1px dotted #D6E1E7;
+  color: #e14726;
+  display: block;
+  padding: 2px 28px;
+}
+
+.xwikirenderingerrordescription {
+  border: 1px dotted #D6E1E7;
+  border-width: 0 1px 1px;
+  clear: both;
+  display: block;
+  font-size: 90%;
+  margin: 0 0 4px;
+  overflow: auto;
+  padding: 4px 28px;
+}
+
+.hidden{
+	display: none;
+}
+
 span.Excerpt p {
 	display: inline;
 	color: #555555;
