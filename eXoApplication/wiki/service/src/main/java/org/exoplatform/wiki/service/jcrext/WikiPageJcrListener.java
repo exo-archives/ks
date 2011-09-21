@@ -27,14 +27,14 @@ import org.exoplatform.services.ext.action.InvocationContext;
 import org.exoplatform.services.jcr.observation.ExtendedEvent;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
-import org.exoplatform.wiki.mow.api.WikiNodeType.Definition;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.listener.PageWikiListener;
 import org.exoplatform.wiki.utils.Utils;
 
 /**
- * A Jcr listener for listening when a wiki page is added. <br>
+ * A Jcr listener for listening when a wiki page is added or modified. <br>
  * It's implemented to execute
  * {@link PageWikiListener#postAddPage(String, String, String)} of listeners
  * registered to {@link WikiService} by users. It's installed by following
@@ -47,11 +47,11 @@ import org.exoplatform.wiki.utils.Utils;
  * <external-component-plugins>
  *   <target-component>org.exoplatform.services.jcr.impl.ext.action.SessionActionCatalog</target-component>
  *   <component-plugin>
- *     <name>Add Page Listeners</name>
+ *     <name>Page Listeners</name>
  *     <set-method>addPlugin</set-method>
  *     <type>org.exoplatform.services.jcr.impl.ext.action.AddActionsPlugin</type>
  *    <description>add actions plugin</description>
- *   <init-params>
+ *       <init-params>
  *         <object-param>
  *           <name>actions</name>
  *           <object type="org.exoplatform.services.jcr.impl.ext.action.AddActionsPlugin$ActionsConfig">
@@ -61,7 +61,7 @@ import org.exoplatform.wiki.utils.Utils;
  *                   <object type="org.exoplatform.services.jcr.impl.ext.action.ActionConfiguration">
  *                     <field  name="eventTypes"><string>addNode</string></field>
  *                     <field  name="nodeTypes"><string>wiki:attachment</string></field>
- *                     <field  name="actionClassName"><string>org.exoplatform.wiki.service.jcrext.AddWikiPageJcrListener</string></field>
+ *                     <field  name="actionClassName"><string>org.exoplatform.wiki.service.jcrext.WikiPageJcrListener</string></field>
  *                   </object>
  *                 </value>
  *               </collection>
@@ -82,39 +82,28 @@ import org.exoplatform.wiki.utils.Utils;
  * @Author <a href="mailto:quanglt@exoplatform.com">Le Thanh Quang</a> Apr 25,
  *         2011
  */
-public class AddWikiPageJcrListener implements Action {
+public class WikiPageJcrListener implements Action {
 
-  private static final Log      log               = ExoLogger.getLogger(AddWikiPageJcrListener.class);
+  private static final Log      log               = ExoLogger.getLogger(WikiPageJcrListener.class);
   
   @Override
   public boolean execute(Context context) throws Exception {
-    if (context.get("executedListeners") != null) return false;
-    Object currentItemObj = context.get(InvocationContext.CURRENT_ITEM);
-    Object eventObj = context.get(InvocationContext.EVENT);
+    Object currentItemObj = context.get(InvocationContext.CURRENT_ITEM);    
     ExoContainer container = (ExoContainer) context.get(InvocationContext.EXO_CONTAINER);
-    
-    if (!(currentItemObj instanceof Node) || Integer.parseInt(eventObj.toString()) != ExtendedEvent.NODE_ADDED) {
-      throw new IllegalStateException("The listener is not configured properly!");
-    }
-    
-    Node currentNode = (Node) currentItemObj;
-    
-    if (!WikiNodeType.Definition.CONTENT.equals(currentNode.getName())) {
-      // filter events that is not content node.
-      return false;
-    }
-    Node pageNode = currentNode.getParent(); // expect wiki node is parent of content node.
-    
+    WikiService wikiService = (WikiService) container.getComponentInstanceOfType(WikiService.class);
+
+    Node pageNode = (Node) currentItemObj;
+    Page page = Utils.makeSimplePage(pageNode);
+
     if (pageNode.isNodeType(WikiNodeType.WIKI_HELP_PAGE) || pageNode.isNodeType(WikiNodeType.WIKI_TEMPLATE)) {
       // filter events on help or template page.
-      return false;
+      return CONTINUE_PROCESSING;
     }
-    
-    if (log.isDebugEnabled()) {
-      log.debug(String.format("Executing listener [%s] on item [%s] for adding new page event!", toString(), currentNode.getPath()));
+
+    if (pageNode.getVersionHistory().getAllVersions().getSize() < 2) {
+      // Page has not been checked in
+      return CONTINUE_PROCESSING;
     }
-    
-    WikiService wikiService = (WikiService) container.getComponentInstanceOfType(WikiService.class);
     String pageJcrPath = pageNode.getPath();
     String wikiType, owner, pageId;
     try {
@@ -125,21 +114,34 @@ public class AddWikiPageJcrListener implements Action {
       if (log.isWarnEnabled()) {
         log.warn(String.format("can not get wikiType and owner from [%s]", pageJcrPath), ie);
       }
-      return false;
+      return CONTINUE_PROCESSING;
     }
-    
     List<PageWikiListener> listeners = wikiService.getPageListeners();
-    for (PageWikiListener l : listeners) {
-      try {
-        l.postAddPage(wikiType, owner, pageId, Utils.makeSimplePage(pageNode));
-      } catch (Exception e) {
-        if (log.isWarnEnabled()) {
-          log.warn(String.format("executing listener [%s] on [%s] failed", l.toString(), currentNode.getPath()), e);
+    if (pageNode.getVersionHistory().getAllVersions().getSize() == 2) {
+      if (log.isDebugEnabled()) {
+        log.debug(String.format("Executing listener [%s] on item [%s] for adding new page event!", toString(), pageNode.getPath()));
+      }
+      for (PageWikiListener l : listeners) {
+        try {
+          l.postAddPage(wikiType, owner, pageId, page);
+        } catch (Exception e) {
+          if (log.isWarnEnabled()) {
+            log.warn(String.format("executing listener [%s] on [%s] failed", l.toString(), pageNode.getPath()), e);
+          }
+        }
+      }
+    } else {
+      for (PageWikiListener l : listeners) {
+        try {
+          l.postUpdatePage(wikiType, owner, pageId, page);
+        } catch (Exception e) {
+          if (log.isWarnEnabled()) {
+            log.warn(String.format("executing listener [%s] on [%s] failed", l.toString(), pageNode.getPath()), e);
+          }
         }
       }
     }
-    context.put("executedListeners", true);
-    return false;
+    return CONTINUE_PROCESSING;
   }
   
 }

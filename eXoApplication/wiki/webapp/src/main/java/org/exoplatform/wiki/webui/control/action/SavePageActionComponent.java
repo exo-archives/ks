@@ -217,7 +217,7 @@ public class SavePageActionComponent extends UIComponent {
                                                 title,
                                                 page.getName());
           pageParams.setPageId(newPageId);
-          ((PageImpl) page).setURL(Utils.getURLFromParams(pageParams));
+          ((PageImpl) subPage).setURL(Utils.getURLFromParams(pageParams));
           subPage.getContent().setText(markup);
           subPage.setSyntax(syntaxId);
           ((PageImpl) subPage).getAttachments().addAll(attachs);
