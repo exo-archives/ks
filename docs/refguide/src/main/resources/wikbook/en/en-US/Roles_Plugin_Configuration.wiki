@@ -51,7 +51,7 @@ In which:
 | *role* | {{string}} | {{ADMIN}} | The name of role. |
 | *rules* | {{string}} | {{root}} | The rules of role. |
 
-* When the _role-configuration.xml_ file is executed, the administration role (with {{ADMIN}} value) will be checked and assigned to a matrix of users/groups/memberships defined inside "value" tags as below:
+* When the _role-configuration.xml_ file is executed, the administration role (with {{ADMIN}} value) will be checked and assigned to a matrix of _users/groups/memberships_ defined inside the "value" tags as below:
 
 {code:xml}
 <value>...</value>
@@ -71,7 +71,7 @@ For example:
 
 In the example above, the default administrators of Forum include _root_, _john_, users in _/platform/administrators_ group and users who have _member/validator_ memberships in the VIP group. 
 
-When _root_, _john_ or any users who belong to the _/platform/administrators_ group or users who have _member/validator_ memberships in the VIP group sign in the Forum, he or she will be identified as the default administrator of Forum. 
+When being _root_, the users who belong to the _/platform/administrators_ group or who have _member/validator_ memberships in the VIP group and sign in the Forum, they will be identified as the default administrator of Forum. 
 
 To add or remove the default administrator of the Forum, simply edit the _roles-configuration.xml_ file, add or remove the relevant "value" tags.
 

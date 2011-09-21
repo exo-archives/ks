@@ -15,7 +15,7 @@ h1. Overview {anchor:id=KSref.ForumPortlet.Overview}
 {code}	
 
 h1. Portlet.xml {anchor:id=KSref.FoumPortlet.ForumPortletxml}
-* See the portlet.xml file in the project following this path: forum/WEB-INF/portlet.xml.
+* See the _portlet.xml_ file in the project following this path: _forum/WEB-INF/portlet.xml_.
 	
 h1. Preferences {anchor:id=KSref.ForumPortlet.ForumPortletPreferences}
 
@@ -35,7 +35,6 @@ h1. Preferences {anchor:id=KSref.ForumPortlet.ForumPortletPreferences}
 | *isShowQuickReply* | {{true}}, {{false}} | {{true}} | Specify if the quick reply panel is shown or not. |
 | *isShowRules* | {{true}}, {{false}} | {{true}} | Specify if the forum rules panel is shown or not. |
 | *isShowStatistics* | {{true}}, {{false}} | {{true}} | Specify if the statistics panel is shown or not. |
-
 
 h1. Events {anchor:id=KSref.ForumPortlet.Event}
 
@@ -57,7 +56,7 @@ To receive ForumLinkEvent, you must use the _ForumParameter_ class with two prop
 | *isRenderForumLink* | {{boolean}} | true/false | If the value is set to true or false, the Forum link is rendered or not respectively. |
 | *path* | {{string}} | The absolute path of the class node (including types: category, forum, topic) defined by JCR. | Set data for the UIForumLinkPortlet.|
 
-* *Example:*
+For example:
 
 {code:java}
 PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();

@@ -31,14 +31,14 @@ The default data in the _.zip_ file is initialized as follows:
 {code}
 
 * In which,
-|| Name || Set-Method | Type || Description ||
-| *technical-faq* | addInitialDataPlugin | org.exoplatform.faq.service. InitialDataPlugin | Initialize the data plug-in. |
+|| Name || Set-Method || Type || Description ||
+| *technical-faq* | addInitialDataPlugin | org.exoplatform.faq.service. InitialDataPlugin | Initialize the data plugin. |
 
 * Init-param
-|| Name || Possible value | Default value || Description ||
+|| Name || Possible value || Default value || Description ||
 | *location* | {{string}} | war:/data/ Technical-FAQ.zip | The location where the Answers export format file is stored. |
 
-If the default data is in the ~~xml~~ format:
+If the default data is in the _XML_ format:
 
 {code:xml}
 <value>war:/data/Technical-FAQ.xml</value>
@@ -46,7 +46,7 @@ If the default data is in the ~~xml~~ format:
 
 By default, the default Answers data can only import if the importing categories do not exist in database.
 
-To initialize default data in multiple files, it is required to declare them in multiple plug-ins.
+To initialize default data in multiple files, it is required to declare them in multiple plugins.
 
 {code:xml}
 <component-plugin>

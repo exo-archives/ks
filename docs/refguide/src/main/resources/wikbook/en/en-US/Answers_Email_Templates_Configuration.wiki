@@ -11,7 +11,7 @@ The Mail templates use a specific syntax, enabling you to create a customized em
 
 !EmailTemplate.png!
 
-Parameters are used in templates consist of:
+Parameters which are used in templates consist of:
 
 || Parameter || Description ||
 | *&categoryName_* | Load the name of Category. |

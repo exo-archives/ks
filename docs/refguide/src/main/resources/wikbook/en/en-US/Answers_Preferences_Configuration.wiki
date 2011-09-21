@@ -5,7 +5,7 @@ h1. Overview {anchor:id=KSref.AnswerPortlet.Overview}
 
 h1. Portlet.xml {anchor:id=KSref.AnswerPortlet.AnswerPortletxml}
 
-* See the portlet.xml file in the project following this path: /webapps/faq/WEB-INF/portlet.xml
+* See the _portlet.xml_ file in the project following this path: _/webapps/faq/WEB-INF/portlet.xml_.
 
 h1. Portlet Preferences {anchor:id=KSref.AnswerPortlet.AnswerPortletPreferences}
 

@@ -6,7 +6,7 @@ eXo Platform provides a gadget which enables users to see a poll. The Poll Gadge
 
 h1. Preferences {anchor:id=KSref.GadgetPoll.GadgetPollPreferences}
 
-|| Preference name || Description || 
+|| Preference name || Description ||
 | *pollId* | The Id of Polls which is displayed in the Polls gadget. |
 
 h1. Links to used REST services {anchor:id=KSref.GadgetPoll.LinkToUsedRESTServices}

@@ -1,25 +1,25 @@
-Data injector is used to create data for performance benchmark. This part will describe which data injector are implemented in KS and how to use them.	
+Data injector is used to create data for the performance benchmark. This part will describe which data injectors are implemented in eXo Knowledge and how to use them.	
 
 h1. Technical details {anchor:id=KSref.Configuration.Data_Injector_Service.Technical_details}
 
-In eXo Knowledge, data injectorsare implemented as plug-ins attached to the "org.exoplatform.services.ben This service is normally registered to the portal container as a general component.ch.DataInjectorService" service and handled via RESTful requests.
+In eXo Knowledge, data injectors are implemented as plugins attached to the org.exoplatform.services.bench.DataInjectorService service. This service is normally registered to the portal container as a general component and handled via RESTful requests.
 
 To use this service, add the following dependency to the Classpath of the server:
 
-{code:language=xml}
+{code:xml}
 <dependency>
-      <groupId>org.exoplatform.commons</groupId>
-      <artifactId>exo.platform.commons.component</artifactId>
-      <version>${org.exoplatform.commons.version}</version>
-      <scope>provided</scope>
-    </dependency>
+  <groupId>org.exoplatform.commons</groupId>
+  <artifactId>exo.platform.commons.component</artifactId>
+  <version>${org.exoplatform.commons.version}</version>
+  <scope>provided</scope>
+</dependency>
 {code}
 
-When you want to inject data for a specified product, you will have to implement a class which extends "org.exoplatform.services.bench.DataInjector" and register it to DataInjectorService as plug-in. 
+When you want to inject data for a specified product, you will have to implement a class which extends _org.exoplatform.services.bench.DataInjector_ and register it to _DataInjectorService_ as a plugin. 
 
 In which, methods need to be installed are:
 
-{code}
+{code:java}
 public abstract class DataInjector extends BaseComponentPlugin {
  
   /**
@@ -57,13 +57,13 @@ h1. Configuration {anchor:id=KSref.Configuration.Data_Injectior_Service.Configur
 
 To activate _DataInjectorService_, you must register this component to a portal container by the following configuration:
 
-{code:language=xml}
+{code:xml}
 <component>
-    <type>org.exoplatform.services.bench.DataInjectorService</type>
+  <type>org.exoplatform.services.bench.DataInjectorService</type>
 </component>
 {code}
 
-In eXo Knowledge, there are three plug-ins attached to the _DataInjectorService_ component:
+In eXo Knowledge, there are three plugins attached to the _DataInjectorService_ component:
 * ForumDataInjector
 * WikiDataInjector
 * AnswerDataInjector
@@ -73,15 +73,15 @@ h2. ForumDataInjector {anchor:id=KSref.Configuration.Data_Injectior_Service.Conf
 
 The Forum Data injector is configured to register to DataInjectorService by the following code:
 
-{code:language=xml}
+{code:xml}
 <external-component-plug-ins>
-    <target-component>org.exoplatform.services.bench.DataInjectorService</target-component>
-    <component-plug-in>
-      <name>ForumDataInjector</name>
-      <set-method>addInjector</set-method>
-      <type>org.exoplatform.forum.bench.ForumDataInjector</type>
-      <description>inject data for Forum</description>
-    </component-plug-in>
+  <target-component>org.exoplatform.services.bench.DataInjectorService</target-component>
+  <component-plug-in>
+    <name>ForumDataInjector</name>
+    <set-method>addInjector</set-method>
+    <type>org.exoplatform.forum.bench.ForumDataInjector</type>
+    <description>inject data for Forum</description>
+  </component-plug-in>
 </external-component-plug-ins>
 {code}
 
@@ -104,14 +104,14 @@ The query parameters description:
 h2. Wiki Data injector  {anchor:id=KSref.Configuration.Data_Injectior_Service.Wiki_data_injectior}
 The Data injector for Wiki is configured as follow:
 
-{code:language=xml}
+{code:xml}
 <external-component-plug-ins>
-<target-component>org.exoplatform.services.bench.DataInjectorService</target-component>
+  <target-component>org.exoplatform.services.bench.DataInjectorService</target-component>
   <component-plug-in>
-	<name>WikiDataInjector</name>
-	<set-method>addInjector</set-method>
-	<type>org.exoplatform.wiki.bench.WikiDataInjector</type>
-	<description>inject data for Wiki</description>
+    <name>WikiDataInjector</name>
+    <set-method>addInjector</set-method>
+    <type>org.exoplatform.wiki.bench.WikiDataInjector</type>
+    <description>inject data for Wiki</description>
   </component-plug-in>
 </external-component-plug-ins>
 {code}
@@ -132,7 +132,6 @@ In which, parameters mean:
 | wt | String | Wiki type. The value can be: 'portal', 'user', 'group'.|
 | maxAtt | Number | The size of attachment in created pages. the value is evaluated in KByte. If the value is 0 or not set, no attachment is created. |
 | mP | Number | The maximum pages in each injection. The number of created pages must not exceed this value. |
-
 
 To grant permision, the request link is in the following format:
 
@@ -157,25 +156,27 @@ You can use these parameters to set up permissions for pages:
 
 h2. AnswerDataInjector {anchor:id=KSref.Configuration.Data_Injectior_Service.Answer_data_injectior}
 
-The following configuration is used for Answer Data injector:
+The following configuration is used for the Answer Data injector:
 
-{code:language=xml}
+{code:xml}
 <external-component-plug-ins>
   <target-component>org.exoplatform.services.bench.DataInjectorService</target-component>
-    <component-plug-in>
-      <name>AnswerDataInjector</name>
-      <set-method>addInjector</set-method>
-      <type>org.exoplatform.faq.bench.AnswerDataInjector</type>
-      <description>inject data for Answer</description>
-    </component-plug-in>
-  </external-component-plug-ins>
+  <component-plug-in>
+    <name>AnswerDataInjector</name>
+    <set-method>addInjector</set-method>
+    <type>org.exoplatform.faq.bench.AnswerDataInjector</type>
+    <description>inject data for Answer</description>
+  </component-plug-in>
+</external-component-plug-ins>
 {code}
 
 * To inject data, the request link is in the following format:
 
+{code}
 http://[rest path]/bench/inject/AnswerDataInjector/?type=data&q=2,3,4,5,6&pre=cate,ques,answ,comm&att=2&attCp=100&&txtCp=100
+{code}
 
-To inject data, the request link is in the following format:
+In which:
 
 || Param || Value || Description ||
 | type | [data | perm] | Type of injector. It can be data or perm means injecting data or permission respectively. |
@@ -217,7 +218,7 @@ In which:
 In the other way, such settings have been declared in "ksdemo.war/WEB-INF/conf/ksdemo/ks/bench-configuration.xml", therefore, to save time and effort, you can import it to "ksdemo.war/WEB-INF/conf/configuration.xml" and then modify it rather than create new one.
 {note}
 
-h1. How to use {anchor:id=KSref.Configuration.Data_Injectior_Service.How_to_use}
+h1. How to use? {anchor:id=KSref.Configuration.Data_Injectior_Service.How_to_use}
 
 You can use RESTful service to request to inject or reject data. The format of request link is:
 
@@ -225,7 +226,7 @@ You can use RESTful service to request to inject or reject data. The format of r
 http://{domain}/{rest}/bench/{inject|reject}/{plug-inName}?[params]
 {code}
 
-For example, after registering WikiDataInjector plug-in as above, you can request injection as follows: http://localhost:8080/rest-ksdemo/bench/inject/WikiDataInjector?mP=10&mA=100&mD=1&rand=false&wo=classic&wt=portal with 10 childrens of each page created, 100 kb each attachment, 1 depth level for wiki portal classic.
+For example, after registering the WikiDataInjector plug-in as above, you can request injection as follows: http://localhost:8080/rest-ksdemo/bench/inject/WikiDataInjector?mP=10&mA=100&mD=1&rand=false&wo=classic&wt=portal with 10 childrens of each page created, 100 kb each attachment, 1 depth level for wiki portal classic.
 
 To reject such created data, request this link: http://localhost:8080/rest-ksdemo/bench/reject/WikiDataInjector.
 
