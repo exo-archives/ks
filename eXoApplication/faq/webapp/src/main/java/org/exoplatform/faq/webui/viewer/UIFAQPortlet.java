@@ -46,24 +46,14 @@ public class UIFAQPortlet extends UIPortletApplication {
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
     PortletRequestContext portletReqContext = (PortletRequestContext) context;
     if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+      removeChild(UIFAQSettingForm.class);
       if (getChild(UIViewer.class) == null) {
-        if (getChild(UIFAQSettingForm.class) != null) {
-          removeChild(UIFAQSettingForm.class);
-        }
-        if (getChild(UIViewer.class) == null) {
-          addChild(UIViewer.class, null, null);
-        }
+        addChild(UIViewer.class, null, null).setRendered(true);
       }
     } else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
-      try {
-        if (getChild(UIViewer.class) != null) {
-          removeChild(UIViewer.class);
-        }
-        if (getChild(UIFAQSettingForm.class) == null) {
-          addChild(UIFAQSettingForm.class, null, null);
-        }
-      } catch (Exception e) {
-        log.error("Child must exist:", e);
+      removeChild(UIViewer.class);
+      if (getChild(UIFAQSettingForm.class) == null) {
+        addChild(UIFAQSettingForm.class, null, null);
       }
     }
     super.processRender(app, context);

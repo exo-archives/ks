@@ -45,13 +45,13 @@
  												 	<td class="text" style="text-align:left"><a href="$categoryLink" title="$title">$name</a></td>
  												 	<td class="text" style="text-align:center">$date</td>
  													<td style="text-align:center">
- 														<div onclick="$categoryLink"><div class="CheckIcon" style="margin:0px auto;"></div></div>
+ 														<div onclick="$categoryLink"><div class="FAQViewIcon" style="margin:0px auto;"></div></div>
  													</td>	
  													<% } else { %>
  													<td class="text" style="text-align:left"><a href="$linkQuestion" title="$title">$name</a></td>
  												 	<td class="text" style="text-align:center">$date</td>
  													<td style="text-align:center">
- 														<div onclick="$linkQuestion"><div class="CheckIcon" style="margin:0px auto;"></div></div>
+ 														<div onclick="$linkQuestion"><div class="FAQViewIcon" style="margin:0px auto;"></div></div>
  													</td>
  													<% } %>
  											</tr>

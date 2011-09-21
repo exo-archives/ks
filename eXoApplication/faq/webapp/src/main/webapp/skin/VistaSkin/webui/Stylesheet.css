@@ -1522,6 +1522,12 @@
 	width:16px;
 }
 
+.UIAnswersPortlet .FAQViewIcon {
+	background: url('background/FAQYey.gif') no-repeat left;
+	height:16px;
+	width:16px;
+}
+
 .UIAnswersPortlet .TrueIcon {
 	background:transparent url(background/FAQPortlet.gif) no-repeat scroll left -797px;
 	line-height:16px;
