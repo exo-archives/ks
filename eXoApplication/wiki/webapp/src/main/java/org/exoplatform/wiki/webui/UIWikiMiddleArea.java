@@ -51,13 +51,19 @@ public class UIWikiMiddleArea extends UIWikiContainer {
         WikiMode.ADDTEMPLATE, WikiMode.EDITTEMPLATE, WikiMode.COMPAREREVISION, WikiMode.SPACESETTING });
     addChild(UIWikiNavigationContainer.class, null, null);
     addChild(UIWikiPageContainer.class, null, null);
+    addChild(UIWikiPageSettingContainer.class, null, null);
   }
   
-  private boolean isNavigationRender() {
+  protected boolean isNavigationRender() {
     WikiPortletPreference preferences = this.getAncestorOfType(UIWikiPortlet.class).getPortletPreferences();
     UIWikiNavigationContainer navigation = getChild(UIWikiNavigationContainer.class);
     return (navigation.getAccept_Modes().contains(navigation.getCurrentMode())
         && navigation.isRendered() && preferences.isShowNavigationTree());
+  }
+  
+  protected boolean isPageSettingContainerRender() {
+    UIWikiPageSettingContainer settingContainer = getChild(UIWikiPageSettingContainer.class);
+    return (settingContainer.getAccept_Modes().contains(settingContainer.getCurrentMode()) && settingContainer.isRendered());
   }
 
   public static class ShowHideActionListener extends EventListener<UIWikiMiddleArea> {
