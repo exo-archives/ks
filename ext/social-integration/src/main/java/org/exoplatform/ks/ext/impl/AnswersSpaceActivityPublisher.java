@@ -219,10 +219,9 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       activityM.saveActivityNoReturn(spaceIdentity, activity);
     } catch (ClassNotFoundException e) {
       if (LOG.isDebugEnabled())
-        LOG.debug("Please check the integrated project does the social deploy? " + e.getMessage());
+        LOG.debug("Please check the integrated project does the social deploy? ", e);
     } catch (Exception e) {
-       e.printStackTrace();
-      LOG.error("Can not record Activity for space when add new questin " + e.getMessage());
+      LOG.error("Can not record Activity for space when add new questin ", e);
     }
 
   }

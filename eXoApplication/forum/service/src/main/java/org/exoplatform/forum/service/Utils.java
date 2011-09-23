@@ -425,7 +425,7 @@ public class Utils implements ForumNodeTypes {
       strBuilder.append("(").append(str);
       typeAdd = "or";
     }
-    if (typeAdd == "or") {
+    if ("or".equals(typeAdd)) {
       strBuilder.append(getQueryByProperty(typeAdd, EXO_USER_PRIVATE, EXO_USER_PRI)).append(")");
       typeAdd = "and";
     }
