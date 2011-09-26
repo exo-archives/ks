@@ -1412,7 +1412,6 @@ table.UIFormGrid div.Id {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	font-size: 18px;
-	color: #b7b7b7;
 	padding: 6px 0 6px 6px;
 	width: 97%;
 }
@@ -1423,7 +1422,6 @@ table.UIFormGrid div.Id {
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	color: #b7b7b7;
 	height: auto;
 	padding: 6px;
 	*padding: 6px 0px 6px 6px;
@@ -1464,7 +1462,6 @@ table.UIFormGrid div.Id {
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	color: #b7b7b7;
 	padding: 6px;
 	font-size: 14px;
 }
