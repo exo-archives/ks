@@ -51,7 +51,7 @@
                 </artifactItem>
               </artifactItems>
               <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-              <excludes>**/GATEIN-README.txt,**/Release_notes.txt,**/conf/jaas.conf,**/Catalina/localhost/rest-ksdemo.xml,**/Catalina/localhost/ksdemo.xml,**/Catalina/localhost/rest.xml</excludes>
+              <excludes>**/GATEIN-README.txt,**/Release_notes.txt,**/conf/jaas.conf,**/Catalina/localhost/rest-ksdemo.xml,**/Catalina/localhost/ksdemo.xml,**/Catalina/localhost/rest.xml, **/gatein/conf/configuration.properties, **/webapps/ROOT/index.html, **/webapps/ROOT/index.jsp</excludes>
               <includes>**</includes>
             </configuration>
           </execution>
