@@ -225,8 +225,7 @@ public class UIForumPortlet extends UIPortletApplication {
     context.addUIComponentToUpdateByAjax(this);
   }
 
-  private String getForumIdOfSpace() {
-
+  public String getForumIdOfSpace() {
     try {
       PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
       PortletPreferences pref = pcontext.getRequest().getPreferences();
