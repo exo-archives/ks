@@ -362,7 +362,7 @@ table.UIFormGrid div.Id {
 	top: 0px;
 	left: 0px;
 	z-index: 1;
-	width: 300px;
+	width: 265px;
 	overflow: auto;
 	padding: 0px;
 	position: absolute;
@@ -371,7 +371,7 @@ table.UIFormGrid div.Id {
 
 .UIWikiPortlet .UIRightContainerArea {
 	top: 0px;
-	left: 301px;
+	left: 266px;
 	z-index: 1;
 	overflow: auto;
 	padding: 0px;
@@ -382,7 +382,7 @@ table.UIFormGrid div.Id {
 .UIWikiPortlet .Spliter {
 	position: absolute;
 	top: 0px;
-	left: 300px;
+	left: 265px;
 	z-index: 1;
 	background: #e1e1e1;
 	width: 1px;
