@@ -57,8 +57,8 @@ WikiLayout.prototype.init = function(prtId) {
     this.leftArea = DOMUtil.findPreviousElementByTagName(this.spliter, "div");
     this.rightArea = DOMUtil.findNextElementByTagName(this.spliter, "div");
     
-    var leftWidth = eXo.wiki.WikiLayout.getCookie("leftWidth");
-    if ((leftWidth != null) && (leftWidth != "") & (leftWidth > 0)) {
+    var leftWidth = eXo.core.Browser.getCookie("leftWidth");
+    if ((leftWidth != null) && (leftWidth != "") && (leftWidth * 1 > 0)) {
       this.spliter.style.left = leftWidth + 'px';
       this.leftArea.style.width = leftWidth + 'px';
       this.rightArea.style.left = (leftWidth + this.spliter.offsetWidth) +'px';
@@ -162,27 +162,8 @@ WikiLayout.prototype.adjustWidth = function(evt) {
   WikiLayout.setCookie("leftWidth", leftWidth, 365);
 };
 
-WikiLayout.prototype.setCookie = function(name, value, exdays) {
-  var exdate = new Date();
-  exdate.setDate(exdate.getDate() + exdays);
-  value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
-  document.cookie = name + "=" + value;
-}
-
-WikiLayout.prototype.getCookie = function(name) {
-  var i, x, y, ARRcookies = document.cookie.split(";");
-  for (i = 0; i < ARRcookies.length; i++) {
-    x = ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-    y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
-    x = x.replace(/^\s+|\s+$/g,"");
-    if (x == name) {
-      return unescape(y);
-    }
-  }
-}
-
 WikiLayout.prototype.clear = function() {
-  eXo.wiki.WikiLayout.setCookie("leftWidth", eXo.wiki.WikiLayout.leftArea.offsetWidth, 365);
+  eXo.core.Browser.setCookie("leftWidth", eXo.wiki.WikiLayout.leftArea.offsetWidth, 1);
   document.onmousemove = null;
 };
 
