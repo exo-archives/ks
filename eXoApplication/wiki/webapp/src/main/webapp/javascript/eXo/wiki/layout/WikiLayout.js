@@ -158,8 +158,6 @@ WikiLayout.prototype.adjustWidth = function(evt) {
   WikiLayout.rightArea.style.width = rightWidth + "px";
   WikiLayout.rightArea.style.left = (leftWidth + WikiLayout.spliter.offsetWidth) + "px";
   WikiLayout.spliter.style.left = leftWidth + "px";
-  
-  WikiLayout.setCookie("leftWidth", leftWidth, 365);
 };
 
 WikiLayout.prototype.clear = function() {
