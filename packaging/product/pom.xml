@@ -13,6 +13,14 @@
     <exobuild.name>portal</exobuild.name>
     <exobuild.type>product</exobuild.type>
   </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>exo.platform.commons.resources</artifactId>
+      <version>${org.exoplatform.commons.version}</version>
+       <type>war</type>
+    </dependency>
+  </dependencies>
   <!-- Attach .js to the pom -->
   <build>
     <plugins>

@@ -49,6 +49,8 @@ import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.UISelector;
 import org.exoplatform.ks.common.webui.UIUserSelect;
 import org.exoplatform.ks.common.webui.WebUIUtils;
+import org.exoplatform.webui.ckeditor.CKEditorConfig;
+import org.exoplatform.webui.ckeditor.UIFormCKEditorInput;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -206,10 +208,13 @@ public class UITopicForm extends BaseForumForm implements UISelector {
     UIFormCheckBoxInput sticky = new UIFormCheckBoxInput<Boolean>(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, false);
     UIFormTextAreaInput canView = new UIFormTextAreaInput(FIELD_CANVIEW_INPUT, FIELD_CANVIEW_INPUT, null);
     UIFormTextAreaInput canPost = new UIFormTextAreaInput(FIELD_CANPOST_INPUT, FIELD_CANPOST_INPUT, null);
-    UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
+    UIFormCKEditorInput formWYSIWYGInput = new UIFormCKEditorInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
     formWYSIWYGInput.addValidator(MandatoryValidator.class);
-    formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
-    formWYSIWYGInput.setToolBarName("Basic");
+    CKEditorConfig config = new CKEditorConfig();
+    config.addConfigValue("toolbar", "Basic");
+    formWYSIWYGInput.setEditorConfig(config);
+//    formWYSIWYGInput.setFCKConfig(WebUIUtils.getFCKConfig());
+//    formWYSIWYGInput.setToolBarName("Basic");
     UIFormInputIconSelector uiIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB);
     uiIconSelector.setSelectedIcon("IconsView");
 
