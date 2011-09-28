@@ -10,33 +10,27 @@
 	String userName = user.getUserName() ;
 	CommonContact contact = uiform.getContact(userName) ;
 	java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat(", hh:mm a");
-	String birthDay = contact.getBirthday();
-	String location = contact.getCity() ;
-	String createdDate = "";
-	String fullName = userName;
-	String firstName = "";
-	String lastName = "";
-	String email = "";
-	String gender = contact.getGender();
-	String jobTitle = contact.getJob();
-	String workPhone = contact.getPhone();
-	String mobile = contact.getMobile();
-	String siteOfUser = contact.getWebSite();
-	//Date birthDayDate =	null;
-	boolean isCity = false;
-	if(contact != null) {
-		//birthDayDate = contact.getBirthday() ;
-		if(contact.getCity() != null && contact.getCity().trim().length() > 0) {isCity = true; location = contact.getCity();}
-		if(contact.getCountry() != null && contact.getCountry().trim().length() > 0) {
-			if(isCity) location = location + ", ";
-			location = location + contact.getCountry() ;
-		}
+  String      createdDate  = FAQUtils.getLongDateFormat(user.getCreatedDate());
+  String      fullName     = contact.getFullName();
+  String      birthDay     = contact.getBirthday();
+  String      location     = contact.getCity();
+  String      firstName    = contact.getFirstName();
+  String      lastName     = contact.getLastName();
+  String      email        = contact.getEmailAddress();
+  String      gender       = contact.getGender();
+  String      jobTitle     = contact.getJob();
+  String      workPhone    = contact.getWorkPhone();
+  String      homePhone    = contact.getHomePhone();
+  String      siteOfUser   = contact.getWebSite();
+  boolean     isCity       = false;
+	if(!FAQUtils.isFieldEmpty(contact.getCity())) {isCity = true; location = contact.getCity();}
+	if(!FAQUtils.isFieldEmpty(contact.getCountry())) {
+		if(isCity) location = location + ", ";
+		location = location + contact.getCountry() ;
 	}
-	if(user != null){ 
-		createdDate = FAQUtils.getLongDateFormat(user.getCreatedDate());
-		fullName = user.getFullName();
+	if(FAQUtils.isFieldEmpty(fullName)){
+	  fullName = firstName + " " + lastName;
 	}
-	if(fullName == null || fullName.length() <=0) fullName = userName;
 %>
 	<div class="ViewUserProfileContainer">
 		<div class="TitleBar">
@@ -62,18 +56,19 @@
 							<table class="TablePost" cellspacing="0" border="0" cellpadding="0">
 								<tbody>
 								<% 
-									if(user != null){
-										userName = user.getUserName();
-										firstName = user.getFirstName();
-										lastName	= user.getLastName() ;
-										email		 = "<a target=\"_blank\" href=\"mailto:"+user.getEmail()+"\">"+user.getEmail()+"</a>" ;
+									if(!FAQUtils.isFieldEmpty(email)) {
+									  email = "<a target=\"_blank\" href=\"mailto:"+email+"\">"+email+"</a>" ;
 									}
-									if(!FAQUtils.isFieldEmpty(siteOfUser)) {
-										siteOfUser = "<a target=\"_blank\" href=\""+siteOfUser+"\">"+siteOfUser+"</a>";
-									}
+									if (!FAQUtils.isFieldEmpty(siteOfUser)) {
+                    String []websites = FAQUtils.splitForFAQ(siteOfUser) ;
+                    siteOfUser = "";
+                    for (int i = 0; i < websites.length; ++i) {
+                      siteOfUser += "<a target=\"_blank\" href=\"" + websites[i] +"\">"+ websites[i] +"</a> " ;
+                    }
+                  }
 									String []labels = uiform.getLabelProfile();	
 									String []contents = [userName, firstName, lastName, birthDay, gender, email,
-										jobTitle, location, workPhone, mobile, siteOfUser]; 
+										jobTitle, location, workPhone, homePhone, siteOfUser]; 
 									int i = 0 ;
 									for(label in labels) {
 										String content = "";

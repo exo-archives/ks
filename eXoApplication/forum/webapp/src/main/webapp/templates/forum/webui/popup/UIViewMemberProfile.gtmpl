@@ -10,39 +10,36 @@
 <%	
 	UserProfile userProfileViewer = uiform.getUserProfileViewer() ;
 	UserProfile userProfile = uiform.getUserProfile() ;
+	String shortDateFormat = userProfile.getShortDateFormat() ;
+	shortDateFormat += ", " + userProfile.getTimeFormat();
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	
 	String userName = userProfileViewer.getUserId() ;
+	long totalPost = userProfileViewer.getTotalPost();
+	
 	CommonContact contact = uiform.getContact(userName) ;
+	fullName = uiform.getScreenName(userName);
 	String location = "" ;
 	String fullName = "";
 	boolean isCity = false;
 	String birthDay = contact.getBirthday() ;
-	if(birthDay == null)birthDay = "";
-	if(contact != null) {
-		if(contact.getCity() != null && contact.getCity().trim().length() > 0) {isCity = true; location = contact.getCity();}
-		if(contact.getCountry() != null && contact.getCountry().trim().length() > 0) {
-			if(isCity)location = location + ", ";
-			location = location + contact.getCountry() ;
-		}
+	if(!ForumUtils.isEmpty(contact.getCity())) {isCity = true; location = contact.getCity();}
+	if(!ForumUtils.isEmpty(contact.getCountry())) {
+		if(isCity)location = location + ", ";
+		location = location + contact.getCountry() ;
 	}
-	String shortDateFormat = userProfile.getShortDateFormat() ;
-	
-	fullName = uiform.getScreenName(userName);
-	if(fullName == null || fullName.length() == 0 || fullName.equals(userName)) {
+	if(ForumUtils.isEmpty(fullName) || fullName.equals(userName)) {
 		String str = contact.getFirstName();
-		if(str != null && str.length() > 0) fullName = str;
+		if(!ForumUtils.isEmpty(str)) fullName = str;
 		str = contact.getLastName(); 
-		if(str != null && str.length() > 0) fullName = fullName + " " + str ;
+		if(!ForumUtils.isEmpty(str)) fullName = fullName + " " + str ;
 	}
 	Date dateView = new Date();
-	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String createdDate = "";
 	if(userProfileViewer.getJoinedDate() != null){
 		dateView.setTime(userProfileViewer.getJoinedDate().getTime() - setTime);
 		createdDate = TimeConvertUtils.getFormatDate(shortDateFormat, dateView) ;
 	}
-	
-	long totalPost = userProfileViewer.getTotalPost();
-	shortDateFormat = shortDateFormat +	", " + userProfile.getTimeFormat();
 	String userSmile = "OfflineIcon";
 	String titleSmile = "Offline" ;
 	if(uicomponent.isOnline(userName)) {
@@ -101,24 +98,24 @@
 								<tbody>
 								<% 
 									String email; 
-									String website ;
+									String website = "" ;
 									if (contact.getEmailAddress() != null) {
 									  email = contact.getEmailAddress() ;
-									  email		 = "<a target=\"_blank\" href=\"mailto:"+ email +"\">"+ email +"</a>" ;
+									  email = "<a target=\"_blank\" href=\"mailto:"+ email +"\">"+ email +"</a>" ;
 									}
-									if(contact.getWebSite() != null) {
-									  website = contact.getWebSite() ;
-									  website = "<a target=\"_blank\" href=\""+website+"\">"+website+"</a>";
-									}
-									
+									if (contact.getWebSite() != null) {
+                    String []websites = ForumUtils.splitForForum(contact.getWebSite()) ;
+                    for (int i = 0; i < websites.length; ++i) {
+                      website += "<a target=\"_blank\" href=\"" + websites[i] +"\">"+ websites[i] +"</a> " ;
+                    }
+                  }
 									String []labels = uiform.getLabelProfile();	
 									String []contents = [userName, contact.getFirstName() , contact.getLastName(), birthDay, contact.getGender(), email,
-										contact.getJob(), location, contact.getPhone(), contact.getMobile(), website]; 
+										contact.getJob(), location, contact.getHomePhone(), contact.getWorkPhone(), website]; 
 									int i = 0 ;
 									for(label in labels) {
 										String content = contents[i];
 										if(content == null) content = "";
-										label = _ctx.appRes(uicomponent.getName() + ".label." + label) ;
 										i++ ;
 								%>
 									<tr>

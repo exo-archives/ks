@@ -488,14 +488,6 @@ public class UIForumPortlet extends UIPortletApplication {
     }
   }
 
-  private CommonContact getPersonalContact(String userId) throws Exception {
-    CommonContact contact = ForumSessionUtils.getPersonalContact(userId);
-    if (contact == null) {
-      contact = new CommonContact();
-    }
-    return contact;
-  }
-
   protected String getCometdContextName() {
     String cometdContextName = "cometd";
     try {
@@ -847,8 +839,6 @@ public class UIForumPortlet extends UIPortletApplication {
         log.debug("Fail to set user profile.", e);
         throw new MessageException(new ApplicationMessage("UITopicDetail.msg.userIsDeleted", new String[] { userId }, ApplicationMessage.WARNING));
       }
-      CommonContact contact = forumPortlet.getPersonalContact(userId.trim());
-      viewUserProfile.setContact(contact);
       popupAction.activate(viewUserProfile, 670, 400, true);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }

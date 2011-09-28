@@ -72,17 +72,19 @@ import org.exoplatform.webui.form.UIFormUploadInput;
  * Apr 14, 2008, 2:56:30 PM
  */
 public class FAQUtils {
-  public static String DISPLAYAPPROVED  = "approved";
+  public static String       DISPLAYAPPROVED             = "approved";
 
-  public static String DISPLAYBOTH      = "both";
+  public static String       DISPLAYBOTH                 = "both";
 
-  public static String UPLOAD_FILE_SIZE   = "uploadFileSizeLimitMB";
+  public static String       UPLOAD_FILE_SIZE            = "uploadFileSizeLimitMB";
 
-  public static String UPLOAD_AVATAR_SIZE = "uploadAvatarSizeLimitMB";
+  public static String       UPLOAD_AVATAR_SIZE          = "uploadAvatarSizeLimitMB";
 
-  public static final int DEFAULT_VALUE_UPLOAD_PORTAL = -1;
+  public static final String COMMA                       = ",".intern();
 
-  static private Log   log              = ExoLogger.getLogger(FAQUtils.class);
+  public static final int    DEFAULT_VALUE_UPLOAD_PORTAL = -1;
+
+  static private Log         log                         = ExoLogger.getLogger(FAQUtils.class);
 
   public static FAQService getFAQService() throws Exception {
     return (FAQService) PortalContainer.getComponent(FAQService.class);
@@ -172,57 +174,21 @@ public class FAQUtils {
     }
   }
 
-  public static void setCommonContactInfor(String userId, CommonContact contact, FAQService faqService, DownloadService dservice) throws Exception {
-    OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-    UserProfile profile = organizationService.getUserProfileHandler().findUserProfileByName(userId);
-    if (profile.getAttribute("user.bdate") != null)
-      contact.setBirthday(profile.getAttribute("user.bdate"));
-    if (profile.getAttribute("user.gender") != null)
-      contact.setGender(profile.getAttribute("user.gender"));
-    if (profile.getAttribute("user.jobtitle") != null)
-      contact.setJob(profile.getAttribute("user.jobtitle"));
-
-    if (profile.getAttribute("user.business-info.online.email") != null)
-      contact.setEmailAddress(profile.getAttribute("user.business-info.online.email"));
-    if (profile.getAttribute("user.business-info.postal.city") != null)
-      contact.setCity(profile.getAttribute("user.business-info.postal.city"));
-    if (profile.getAttribute("user.business-info.postal.country") != null)
-      contact.setCountry(profile.getAttribute("user.business-info.postal.country"));
-    if (profile.getAttribute("user.business-info.telecom.mobile.number") != null)
-      contact.setMobile(profile.getAttribute("user.business-info.telecom.mobile.number"));
-    if (profile.getAttribute("user.business-info.telecom.telephone.number") != null)
-      contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
-    if (profile.getAttribute("user.home-info.online.uri") != null)
-      contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
-    String urlAvt = getUserAvatar(userId);
-    if (urlAvt.indexOf(org.exoplatform.faq.service.Utils.DEFAULT_AVATAR_URL) >= 0 && profile.getAttribute("user.other-info.avatar.url") != null) {
-      contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
+  public static String[] splitForFAQ(String str) throws Exception {
+    if (!isFieldEmpty(str)) {
+      String[] strs = new String[] { str };
+      if (str.contains(",")) {
+        str = str.trim().replaceAll("(,\\s*)", COMMA).replaceAll("(\\s*,)", COMMA);
+        strs = str.trim().split(",");
+      } else if (str.contains(";")) {
+        str = str.trim().replaceAll("(;\\s*)", ";").replaceAll("(\\s*;)", ";");
+        strs = str.split(";");
+      }
+      return strs;
     } else {
-      contact.setAvatarUrl(urlAvt);
+      return new String[] {};
     }
   }
-
-  public static String[] splitForFAQ(String str) throws Exception {
-    if (str != null && str.length() > 0) {
-      String[] temp;
-      if (str.contains(","))
-        temp = str.trim().split(",");
-      else if (str.contains(";"))
-        temp = str.split(";");
-      else
-        return new String[] { str };
-      List<String> ids = new ArrayList<String>();
-      for (String id : temp) {
-        ids.add(id.trim());
-      }
-      return ids.toArray(new String[ids.size()]);
-    } else
-      return new String[] {};
-  }
-
-  /*
-   * public static SessionProvider getSystemProvider() { return SessionProviderFactory.createSystemProvider(); }
-   */
 
   static public String getCurrentUser() throws Exception {
     return UserHelper.getCurrentUser();

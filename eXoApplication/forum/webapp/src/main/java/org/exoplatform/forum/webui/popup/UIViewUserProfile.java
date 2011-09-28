@@ -48,20 +48,8 @@ import org.exoplatform.webui.event.Event.Phase;
 public class UIViewUserProfile extends BaseForumForm implements UIPopupComponent {
   private UserProfile   userProfileViewer;
 
-  private CommonContact contact      = null;
-
-  private boolean       isGetContact = true;
-
   public CommonContact getContact(String userId) throws Exception {
-    if (contact == null || isGetContact) {
-      contact = getPersonalContact(userId);
-    }
-    return contact;
-  }
-
-  public void setContact(CommonContact contact) {
-    isGetContact = false;
-    this.contact = contact;
+    return ForumSessionUtils.getPersonalContact(userId);
   }
 
   public UIViewUserProfile() {
@@ -83,20 +71,13 @@ public class UIViewUserProfile extends BaseForumForm implements UIPopupComponent
     return this.userProfileViewer;
   }
 
-  private CommonContact getPersonalContact(String userId) throws Exception {
-    CommonContact contact = ForumSessionUtils.getPersonalContact(userId);
-    if (contact == null) {
-      contact = new CommonContact();
-    }
-    return contact;
-  }
-
   private String getAvatarUrl() throws Exception {
     return ForumSessionUtils.getUserAvatarURL(userProfileViewer.getUserId(), getForumService());
   }
 
   private String[] getLabelProfile() {
-    return new String[] { "userName", "firstName", "lastName", "birthDay", "gender", "email", "jobTitle", "location", "workPhone", "mobilePhone", "website" };
+    return new String[] { getLabel("userName"), getLabel("firstName"), getLabel("lastName"), getLabel("birthDay"), getLabel("gender"), 
+        getLabel("email"), getLabel("jobTitle"), getLabel("location"), getLabel("homePhone"), getLabel("workPhone"), getLabel("website")};
   }
 
   public void activate() throws Exception {

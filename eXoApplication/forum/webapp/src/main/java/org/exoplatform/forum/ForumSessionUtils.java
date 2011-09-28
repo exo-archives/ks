@@ -65,7 +65,7 @@ public class ForumSessionUtils {
     }
     if (url == null || url.trim().length() < 1) {
       CommonContact contact = getPersonalContact(userName);
-      if (contact != null && contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0) {
+      if (!ForumUtils.isEmpty(contact.getAvatarUrl())) {
         url = contact.getAvatarUrl();
       }
       url = (url == null || url.trim().length() < 1) ? DEFAULT_AVATAR : url;

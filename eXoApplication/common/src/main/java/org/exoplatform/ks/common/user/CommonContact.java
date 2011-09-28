@@ -32,11 +32,12 @@ public class CommonContact {
   private String birthday = "";
   private String gender = "";
   private String job = "";
-  private String phone = "";
-  private String mobile = "";
+  private String workPhone = "";
+  private String homePhone = "";
   private String webSite = "";
   private String firstName = "";
   private String lastName = "";
+  private String fullName = "";
 
 
   public CommonContact() {
@@ -85,17 +86,17 @@ public class CommonContact {
   public void setJob(String job) {
     this.job = job;
   }
-  public String getPhone() {
-    return phone;
+  public String getWorkPhone() {
+    return workPhone;
   }
-  public void setPhone(String phone) {
-    this.phone = phone;
+  public void setWorkPhone(String phone) {
+    this.workPhone = phone;
   }
-  public String getMobile() {
-    return mobile;
+  public String getHomePhone() {
+    return homePhone;
   }
-  public void setMobile(String mobile) {
-    this.mobile = mobile;
+  public void setHomePhone(String mobile) {
+    this.homePhone = mobile;
   }
   public String getWebSite() {
     return webSite;
@@ -120,5 +121,11 @@ public class CommonContact {
     return lastName;
   }
 
+  public String getFullName() {
+    return fullName;
+  }
 
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
 }

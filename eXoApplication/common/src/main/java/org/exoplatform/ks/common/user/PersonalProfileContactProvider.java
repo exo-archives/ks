@@ -55,8 +55,8 @@ public class PersonalProfileContactProvider implements ContactProvider {
         contact.setEmailAddress(profile.getAttribute("user.home-info.online.email"));
         contact.setCity(profile.getAttribute("user.home-info.postal.city"));
         contact.setCountry(profile.getAttribute("user.home-info.postal.country"));        
-        contact.setMobile(profile.getAttribute("user.home-info.telecom.mobile.number"));
-        contact.setPhone(profile.getAttribute("user.home-info.telecom.telephone.number"));
+        contact.setHomePhone(profile.getAttribute("user.home-info.telecom.mobile.number"));
+        contact.setWorkPhone(profile.getAttribute("user.home-info.telecom.telephone.number"));
         contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
         
       } catch (Exception e) {

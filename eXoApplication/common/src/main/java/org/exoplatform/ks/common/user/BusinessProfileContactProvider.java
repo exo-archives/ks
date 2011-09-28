@@ -57,8 +57,8 @@ public class BusinessProfileContactProvider implements ContactProvider {
         contact.setEmailAddress(profile.getAttribute("user.business-info.online.email"));
         contact.setCity(profile.getAttribute("user.business-info.postal.city"));
         contact.setCountry(profile.getAttribute("user.business-info.postal.country"));        
-        contact.setMobile(profile.getAttribute("user.business-info.telecom.mobile.number"));
-        contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
+        contact.setHomePhone(profile.getAttribute("user.business-info.telecom.mobile.number"));
+        contact.setWorkPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
         contact.setWebSite(profile.getAttribute("user.business-info.online.uri"));
         
       } catch (Exception e) {

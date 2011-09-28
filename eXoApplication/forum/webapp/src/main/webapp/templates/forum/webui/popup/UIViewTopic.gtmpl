@@ -42,7 +42,7 @@
 		String screenName ="";
 		for(post in posts) {
 			String owner = post.getOwner() ;
-			CommonContact contact = uiform.getPersonalContact(owner) ;
+			CommonContact contact = ForumSessionUtils.getPersonalContact(owner) ;
 			String location = "" ;
 			boolean isCity = false;
 			if(contact != null) {

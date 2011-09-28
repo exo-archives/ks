@@ -1439,11 +1439,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       } catch (Exception e) {
         topicDetail.log.warn("Failed to get User info: " + e.getMessage(), e);
       }
-      CommonContact contact = null;
-      if (topicDetail.mapContact.containsKey(userId)) {
-        contact = topicDetail.mapContact.get(userId);
-      }
-      viewUserProfile.setContact(contact);
     }
   }
 

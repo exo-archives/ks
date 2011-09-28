@@ -952,7 +952,7 @@ public class UIQuestions extends UIContainer {
         UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
         UIViewUserProfile viewUserProfile = popupContainer.addChild(UIViewUserProfile.class, null, null);
         popupContainer.setId("ViewUserProfile");
-        viewUserProfile.setUser(user, question.faqService_);
+        viewUserProfile.setUser(user);
         popupAction.activate(popupContainer, 680, 350);
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
       } else {

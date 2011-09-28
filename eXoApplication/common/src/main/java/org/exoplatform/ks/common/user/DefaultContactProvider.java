@@ -66,8 +66,8 @@ public class DefaultContactProvider implements ContactProvider {
           contact.setCountry(profile.getAttribute("user.home-info.postal.country"));
           contact.setGender(profile.getAttribute("user.gender"));
           contact.setJob(profile.getAttribute("user.jobtitle"));
-          contact.setMobile(profile.getAttribute("user.home-info.telecom.mobile.number"));
-          contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
+          contact.setHomePhone(profile.getAttribute("user.home-info.telecom.telephone.number"));
+          contact.setWorkPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
           contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
         }
       } catch (Exception e) {

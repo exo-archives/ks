@@ -668,7 +668,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
       UIViewUserProfile viewUserProfile = openPopup(popupContainer, UIViewUserProfile.class, 670, 0);
       viewUserProfile.setUserProfileViewer(uiForm.getUserProfile(userId));
-      viewUserProfile.setContact(null);
     }
   }
 

@@ -188,15 +188,6 @@ public class UIViewTopic extends BaseForumForm implements UIPopupComponent {
     return profile;
   }
 
-  @SuppressWarnings("unused")
-  private CommonContact getPersonalContact(String userId) throws Exception {
-    CommonContact contact = ForumSessionUtils.getPersonalContact(userId);
-    if (contact == null) {
-      contact = new CommonContact();
-    }
-    return contact;
-  }
-
   public String getImageUrl(String imagePath) throws Exception {
     String url = ForumUtils.EMPTY_STR;
     try {

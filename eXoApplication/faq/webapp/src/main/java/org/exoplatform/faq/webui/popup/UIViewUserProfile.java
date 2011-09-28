@@ -16,17 +16,12 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
-import java.util.ResourceBundle;
-
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
-import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.user.ContactProvider;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.services.organization.User;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -50,31 +45,9 @@ import org.exoplatform.webui.form.UIForm;
     }
 )
 public class UIViewUserProfile extends UIForm implements UIPopupComponent {
-  private CommonContact contact      = null;
-
-  private FAQService    faqService_  = null;
-
-  String[]              lableProfile = null;
-
-  public User           user_;
+  public User user_;
 
   public UIViewUserProfile() throws Exception {
-    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-    ResourceBundle res = context.getApplicationResourceBundle();
-    lableProfile = new String[] { res.getString("UIViewUserProfile.label.userName"), res.getString("UIViewUserProfile.label.firstName"), res.getString("UIViewUserProfile.label.lastName"), res.getString("UIViewUserProfile.label.birthDay"), res.getString("UIViewUserProfile.label.gender"), res.getString("UIViewUserProfile.label.email"), res.getString("UIViewUserProfile.label.jobTitle"),
-        res.getString("UIViewUserProfile.label.location"), res.getString("UIViewUserProfile.label.workPhone"), res.getString("UIViewUserProfile.label.mobilePhone"), res.getString("UIViewUserProfile.label.website") };
-    this.setActions(new String[] { "Close" });
-  }
-
-  public CommonContact getContact(String userId) {
-    if (contact == null) {
-      contact = new CommonContact();
-      try {
-        FAQUtils.setCommonContactInfor(userId, contact, faqService_, getApplicationComponent(DownloadService.class));
-      } catch (Exception e) {
-      }
-    }
-    return contact;
   }
 
   @SuppressWarnings("unused")
@@ -82,9 +55,8 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
     return FAQUtils.getUserAvatar(userId);
   }
 
-  public void setUser(User userName, FAQService faqService) {
+  public void setUser(User userName) {
     this.user_ = userName;
-    this.faqService_ = faqService;
   }
 
   public User getUser() throws Exception {
@@ -92,11 +64,12 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
   }
 
   @SuppressWarnings("unused")
-  private String[] getLabelProfile() {
-    return this.lableProfile;
+  private String[] getLabelProfile() throws Exception {
+    return new String[] { getLabel("userName"), getLabel("firstName"), getLabel("lastName"), getLabel("birthDay"), getLabel("gender"), 
+        getLabel("email"), getLabel("jobTitle"), getLabel("location"), getLabel("homePhone"), getLabel("workPhone"), getLabel("website")};
   }
 
-  public CommonContact getPersonalContact1(String userId) {
+  public CommonContact getContact(String userId) {
     try {
       ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class);
       return provider.getCommonContact(userId);
