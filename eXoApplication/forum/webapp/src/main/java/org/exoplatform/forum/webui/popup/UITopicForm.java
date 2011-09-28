@@ -84,7 +84,7 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
             template = "app:/templates/forum/webui/popup/UITopicForm.gtmpl",
             events = {
               @EventConfig(listeners = UITopicForm.PreviewThreadActionListener.class), 
-              @EventConfig(listeners = UITopicForm.SubmitThreadActionListener.class), 
+              @EventConfig(listeners = UITopicForm.SubmitThreadActionListener.class,phase = Phase.DECODE), 
               @EventConfig(listeners = UITopicForm.AttachmentActionListener.class,phase = Phase.DECODE), 
               @EventConfig(listeners = UITopicForm.RemoveAttachmentActionListener.class,phase = Phase.DECODE), 
               @EventConfig(listeners = UITopicForm.CancelActionListener.class,phase = Phase.DECODE),
@@ -450,19 +450,17 @@ public class UITopicForm extends BaseForumForm implements UISelector {
     public void onEvent(Event<UITopicForm> event, UITopicForm uiForm, final String objectId) throws Exception {
       int t = 0, k = 1;
       UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
-      UIFormStringInput stringInputTitle = threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT);
-      String topicTitle = "  " + stringInputTitle.getValue();
-      topicTitle = topicTitle.trim();
+      String topicTitle = (" " + threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).getValue()).trim();
       String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
       String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
       checksms = checksms.replaceAll("&nbsp;", " ");
       t = checksms.trim().length();
-      if (topicTitle.length() < 1 && topicTitle.equals("null")) {
+      if (topicTitle.length() <= 0 || topicTitle.equals("null")) {
         k = 0;
       }
-      topicTitle = CommonUtils.encodeSpecialCharInTitle(topicTitle);
       if (t > 0 && k != 0 && !checksms.equals("null")) {
-        String userName = UserHelper.getCurrentUser();
+        String userName = uiForm.getUserProfile().getUserId();
+        topicTitle = CommonUtils.encodeSpecialCharInTitle(topicTitle);
         Post postNew = new Post();
         postNew.setOwner(userName);
         postNew.setName(topicTitle);
@@ -484,16 +482,17 @@ public class UITopicForm extends BaseForumForm implements UISelector {
         viewPost.setPostView(postNew);
         viewPost.setActionForm(new String[] { "Close" });
       } else {
-        String[] args = { ForumUtils.EMPTY_STR };
+        String[] args = new String[] {  uiForm.getLabel(FIELD_MESSAGECONTENT) };
         if (k == 0) {
           args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) };
-          if (t == 0)
-            args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) + ", " + uiForm.getLabel(FIELD_MESSAGECONTENT) };
-          warning("NameValidator.msg.ShortText", args);
-        } else if (t == 0) {
-          args = new String[] { uiForm.getLabel(FIELD_MESSAGECONTENT) };
+          if (t <= 0)
+            args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) + " " + 
+                                  uiForm.getLabel("and") + " " + uiForm.getLabel(FIELD_MESSAGECONTENT) };
+          warning("NameValidator.msg.ShortMessage", args);
+        } else if (t <= 0) {
           warning("NameValidator.msg.ShortMessage", args);
         }
+        return;
       }
     }
   }
@@ -525,15 +524,15 @@ public class UITopicForm extends BaseForumForm implements UISelector {
             return;
           }
           String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-          message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
           String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-          message = StringUtils.replace(message, "'", "&apos;");
           checksms = checksms.replaceAll("&nbsp;", " ");
           t = checksms.trim().length();
-          if (topicTitle.length() <= 0 && topicTitle.equals("null")) {
+          if (topicTitle.length() <= 0 || topicTitle.equals("null")) {
             k = 0;
           }
           if (t > 0 && k != 0 && !checksms.equals("null")) {
+            message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
+            message = StringUtils.replace(message, "'", "&#39;");
             boolean isOffend = false;
             boolean hasForumMod = false;
             if (!uiForm.isMod()) {
@@ -698,16 +697,19 @@ public class UITopicForm extends BaseForumForm implements UISelector {
             }
             event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
           } else {
+            String[] args = new String[] {  uiForm.getLabel(FIELD_MESSAGECONTENT) };
             if (k == 0) {
-              String[] args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) };
+              args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) };
               if (t <= 0)
-                args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) + " and " + uiForm.getLabel(FIELD_MESSAGECONTENT) };
-              warning("NameValidator.msg.ShortText", args);
+                args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) + " " + 
+                                      uiForm.getLabel("and") + " " + uiForm.getLabel(FIELD_MESSAGECONTENT) };
               uiForm.isDoubleClickSubmit = false;
+              warning("NameValidator.msg.ShortMessage", args);
             } else if (t <= 0) {
-              warning("NameValidator.msg.ShortMessage", new String[] { "Message" });
               uiForm.isDoubleClickSubmit = false;
+              warning("NameValidator.msg.ShortMessage", args);
             }
+            return;
           }
         } else {
           forumPortlet.cancelAction();
