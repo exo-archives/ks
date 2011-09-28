@@ -409,13 +409,16 @@
 	display: block;
 }
 
+.UITopicDetail .ButtonHeadBar .UIPopupCategory {
+  width: 0.1px;	
+}
+
 .UITopicDetail .ButtonHeadBar .UIPopupCategory .BlockAddTag{
 	padding:5px 0px;
 	min-width:155px;
 	display:block; 
 	left:-103px;
-	top: 20px;
-	*top: 0px;
+	top: 1px;
 }
 
 .UITopicDetail .ButtonHeadBar .UIPopupCategory .BlockAddTag input{
