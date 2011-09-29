@@ -312,9 +312,9 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
         questionManagerForm.isViewResponseQuestion = false;
         questionManagerForm.isEditQuestion = true;
       } catch (Exception e) {
-        UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class);
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));        
         for (int i = 0; i < questionsInfo.listQuestion_.size(); i++) {
           if (questionsInfo.listQuestion_.get(i).getId().equals(quesId)) {
             questionsInfo.listQuestion_.remove(i);

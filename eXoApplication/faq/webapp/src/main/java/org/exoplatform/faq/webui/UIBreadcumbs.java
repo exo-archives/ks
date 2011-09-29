@@ -116,10 +116,10 @@ public class UIBreadcumbs extends UIContainer {
         uiQuestions.setCategoryId(paths);
         uiQuestions.updateCurrentQuestionList();
       } catch (Exception e) {
-        FAQUtils.findCateExist(FAQUtils.getFAQService(), uiQuestions.getAncestorOfType(UIAnswersContainer.class));
-        UIApplication uiApplication = uiBreadcums.getAncestorOfType(UIApplication.class);
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+        FAQUtils.findCateExist(FAQUtils.getFAQService(), uiQuestions.getAncestorOfType(UIAnswersContainer.class));        
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));        
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet);
     }

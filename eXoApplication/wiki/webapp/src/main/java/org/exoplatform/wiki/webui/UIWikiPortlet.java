@@ -31,7 +31,6 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupContainer;
-import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
@@ -248,14 +247,6 @@ public class UIWikiPortlet extends UIPortletApplication {
   
   public void changeEditMode(EditMode newEditMode) {
     editmode = newEditMode;
-  }
-  
-  public void renderPopupMessages() throws Exception {
-    if(portletMode == PortletMode.VIEW) {
-      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-      UIPopupMessages messages = getUIPopupMessages();
-      if(messages != null) messages.processRender(context);
-    }
   }
 
   private void loadPreferences() {

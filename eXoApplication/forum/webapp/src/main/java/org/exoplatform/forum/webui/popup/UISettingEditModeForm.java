@@ -279,10 +279,10 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
         editModeForm.portletPreference.setInvisibleForums(listforuminv);
         ForumUtils.savePortletPreference(editModeForm.portletPreference);
         forumPortlet.loadPreferences();
-        forumPortlet.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-successfully", null, ApplicationMessage.INFO));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.save-successfully", null, ApplicationMessage.INFO));
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       } catch (Exception e) {
-        forumPortlet.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-fail", null, ApplicationMessage.WARNING));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.save-fail", null, ApplicationMessage.WARNING));
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
     }

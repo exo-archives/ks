@@ -174,13 +174,19 @@ public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent {
         String textAre = withActions.getUIFormTextAreaInput(FIELD_TEMPLATE_TEXTARE).getValue();
         UIFAQPortlet uiPortlet = uiform.getParent();
         if (FAQUtils.isFieldEmpty(textAre)) {
-          uiPortlet.addMessage(new ApplicationMessage("UIViewerSettingForm.msg.ContentTemplateEmpty", null, ApplicationMessage.WARNING));
+          event.getRequestContext()
+               .getUIApplication()
+               .addMessage(new ApplicationMessage("UIViewerSettingForm.msg.ContentTemplateEmpty",
+                                                  null,
+                                                  ApplicationMessage.WARNING));
           event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet);
           return;
         } else {
           uiform.faqService_.saveTemplate(textAre);
           //Your template  have been saved. 
-          uiPortlet.addMessage(new ApplicationMessage("UIViewerSettingForm.msg.SaveTemplateOK", null, ApplicationMessage.WARNING));
+          event.getRequestContext()
+               .getUIApplication()
+               .addMessage(new ApplicationMessage("UIViewerSettingForm.msg.SaveTemplateOK", null, ApplicationMessage.WARNING));
           event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet);
         }
         uiform.setTemplateEdit();

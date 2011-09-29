@@ -25,7 +25,6 @@ import org.exoplatform.upload.UploadResource;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -87,7 +86,6 @@ public class UIWikiUploadAttachment extends UIWikiForm {
     @Override
     public void execute(Event<UIWikiUploadAttachment> event) throws Exception {                 
       UIWikiUploadAttachment wikiAttachmentArea = event.getSource();
-      UIApplication uiApp = wikiAttachmentArea.getAncestorOfType(UIApplication.class);
       UIWikiFormUploadInput input = (UIWikiFormUploadInput) wikiAttachmentArea.getUIInput(FIELD_UPLOAD);
       UploadResource uploadResource = input.getUploadResource();
       
@@ -99,12 +97,12 @@ public class UIWikiUploadAttachment extends UIWikiForm {
           }
         }
       } catch (IllegalNameException ex) {
-        ApplicationMessage appMsg = new ApplicationMessage("AttachmentNameValidator.msg.Invalid-char", null, ApplicationMessage.WARNING);
-        uiApp.addMessage(appMsg);
+        event.getRequestContext()
+             .getUIApplication()
+             .addMessage(new ApplicationMessage("AttachmentNameValidator.msg.Invalid-char", null, ApplicationMessage.WARNING));        
         event.getRequestContext().setProcessRender(true);
       }
-      if (event.getRequestContext().getProcessRender()) {
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+      if (event.getRequestContext().getProcessRender()) {        
         resetUploadInput(event);
         return;
       }
@@ -114,10 +112,11 @@ public class UIWikiUploadAttachment extends UIWikiForm {
       if (uploadResource != null) {
         long fileSize = ((long) uploadResource.getUploadedSize());
         if (SIZE_LIMIT > 0 && fileSize >= SIZE_LIMIT * 1024 * 1024) {
-          uiApp.addMessage(new ApplicationMessage("UIWikiUploadAttachment.msg.attachment-exceed",
-                                                  new String[] {String.valueOf(SIZE_LIMIT)},
+          event.getRequestContext()
+               .getUIApplication()
+               .addMessage(new ApplicationMessage("UIWikiUploadAttachment.msg.attachment-exceed",
+                                                  new String[] { String.valueOf(SIZE_LIMIT) },
                                                   ApplicationMessage.WARNING));
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
           resetUploadInput(event);
           return;
         }
@@ -148,10 +147,9 @@ public class UIWikiUploadAttachment extends UIWikiForm {
             org.exoplatform.wiki.utils.Utils.reparePermissions(att);
           }
         } catch (Exception e) {
-          uiApp.addMessage(new ApplicationMessage("UIApplication.msg.unknown-error",
-                                                  null,
-                                                  ApplicationMessage.ERROR));
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+          event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIApplication.msg.unknown-error",
+                                                                                         null,
+                                                                                         ApplicationMessage.ERROR));     
         } finally {
           resetUploadInput(event);        
         }

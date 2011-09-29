@@ -20,5 +20,4 @@
       }
     }
 	%>
-	<%uicomponent.renderPopupMessages();%>
 </div>

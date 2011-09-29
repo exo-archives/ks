@@ -214,10 +214,10 @@ public class UIForumActionBar extends UIContainer {
         popupContainer.setId("AddNewForumForm");
         popupAction.activate(popupContainer, 650, 480);
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-      } else {
-        UIApplication uiApp = uiActionBar.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIForumActionBar.msg.notCategory", null, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+      } else {        
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumActionBar.msg.notCategory",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));        
         return;
       }
     }

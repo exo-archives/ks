@@ -55,14 +55,6 @@ public class UIForumPollPortlet extends UIPortletApplication {
     super.processRender(app, context);
   }
 
-  public void renderPopupMessages() throws Exception {
-    UIPopupMessages popupMess = getUIPopupMessages();
-    if (popupMess == null)
-      return;
-    WebuiRequestContext context = RequestContext.getCurrentInstance();
-    popupMess.processRender(context);
-  }
-
   public void cancelAction() throws Exception {
     WebuiRequestContext context = RequestContext.getCurrentInstance();
     UIPopupAction popupAction = getChild(UIPopupAction.class);

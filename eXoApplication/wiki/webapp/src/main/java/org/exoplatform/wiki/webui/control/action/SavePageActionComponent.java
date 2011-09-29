@@ -28,7 +28,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
@@ -104,7 +103,6 @@ public class SavePageActionComponent extends UIComponent {
       WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
-      UIApplication uiApp = event.getSource().getAncestorOfType(UIApplication.class);
       UIWikiPageTitleControlArea pageTitleControlForm = wikiPortlet.findComponentById(UIWikiPageControlArea.TITLE_CONTROL);
       UIWikiPageEditForm pageEditForm = wikiPortlet.findFirstComponentOfType(UIWikiPageEditForm.class);
       UIWikiRichTextArea wikiRichTextArea = pageEditForm.getChild(UIWikiRichTextArea.class);
@@ -129,11 +127,10 @@ public class SavePageActionComponent extends UIComponent {
                                           arg,
                                           ApplicationMessage.WARNING);
         }
-        uiApp.addMessage(appMsg);
+        event.getRequestContext().getUIApplication().addMessage(appMsg);
         event.getRequestContext().setProcessRender(true);
       }
       if (event.getRequestContext().getProcessRender()) {
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
         Utils.redirect(pageParams, wikiPortlet.getWikiMode());
         return;
       }
@@ -161,10 +158,11 @@ public class SavePageActionComponent extends UIComponent {
       } else if (wikiService.isExisting(pageParams.getType(), pageParams.getOwner(), newPageId)) {
         // if new page title is duplicated with existed page's.
         if (log.isDebugEnabled()) log.debug("The title '" + title + "' is already existing!");
-        uiApp.addMessage(new ApplicationMessage("SavePageAction.msg.warning-page-title-already-exist",
+        event.getRequestContext()
+             .getUIApplication()
+             .addMessage(new ApplicationMessage("SavePageAction.msg.warning-page-title-already-exist",
                                                 null,
                                                 ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
         Utils.redirect(pageParams, wikiPortlet.getWikiMode());
         return;
       }
@@ -228,10 +226,9 @@ public class SavePageActionComponent extends UIComponent {
         }
       } catch (Exception e) {
         log.error("An exception happens when saving the page with title:" + title, e);
-        uiApp.addMessage(new ApplicationMessage("UIPageToolBar.msg.Exception",
-                                                null,
-                                                ApplicationMessage.ERROR));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIPageToolBar.msg.Exception",
+                                                                                       null,
+                                                                                       ApplicationMessage.ERROR));
       } finally {
         wikiPortlet.changeMode(WikiMode.VIEW);
         Utils.redirect(pageParams, WikiMode.VIEW);

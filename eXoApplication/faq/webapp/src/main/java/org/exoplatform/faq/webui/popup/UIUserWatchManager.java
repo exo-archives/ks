@@ -38,7 +38,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -210,10 +209,10 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
       UIAnswersPortlet uiPortlet = watchManager.getAncestorOfType(UIAnswersPortlet.class);
       UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class);
-      if (!faqService_.isExisting(categoryId)) {
-        UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class);
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+      if (!faqService_.isExisting(categoryId)) {        
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));        
         uiQuestions.setDefaultLanguage();
         UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
         popupAction.deActivate();
@@ -238,10 +237,10 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
       UIUserWatchManager watchManager = event.getSource();
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
       UIAnswersPortlet uiPortlet = watchManager.getAncestorOfType(UIAnswersPortlet.class);
-      if (!faqService_.isExisting(categoryId)) {
-        UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class);
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+      if (!faqService_.isExisting(categoryId)) {        
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));        
         UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
         popupAction.deActivate();
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);

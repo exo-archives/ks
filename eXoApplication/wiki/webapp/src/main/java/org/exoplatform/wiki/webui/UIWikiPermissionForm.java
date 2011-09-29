@@ -28,19 +28,18 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.organization.UIGroupMembershipSelector;
 import org.exoplatform.webui.organization.account.UIGroupSelector;
 import org.exoplatform.webui.organization.account.UIUserSelector;
@@ -242,7 +241,6 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     @Override
     public void execute(Event<UIWikiPermissionForm> event) throws Exception {
       UIWikiPermissionForm uiWikiPermissionForm = event.getSource();
-      UIApplication uiApp = uiWikiPermissionForm.getAncestorOfType(UIApplication.class);
       uiWikiPermissionForm.processPostAction();
       Scope scope = uiWikiPermissionForm.getScope();
       UIFormInputWithActions inputWithActions = uiWikiPermissionForm.getChild(UIFormInputWithActions.class);
@@ -300,8 +298,9 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
         uiFormStringInput.setValue("");
         if (sb.length() > 0) {
           String[] msgArg = { sb.toString() };
-          uiApp.addMessage(new ApplicationMessage("UIWikiPermissionForm.msg.NonExistID", msgArg, ApplicationMessage.WARNING));
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+          event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIWikiPermissionForm.msg.NonExistID",
+                                                                                         msgArg,
+                                                                                         ApplicationMessage.WARNING));          
         }
       }
       uiWikiPermissionForm.setPermission(uiWikiPermissionForm.permissionEntries);
@@ -478,11 +477,13 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       if (Scope.WIKI.equals(scope)) {
         WikiService wikiService = uiWikiPermissionForm.getApplicationComponent(WikiService.class);
         WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
-        wikiService.setWikiPermission(pageParams.getType(), pageParams.getOwner(), uiWikiPermissionForm.permissionEntries);
+        wikiService.setWikiPermission(pageParams.getType(), pageParams.getOwner(), uiWikiPermissionForm.permissionEntries);        
+        event.getRequestContext()
+             .getUIApplication()
+             .addMessage(new ApplicationMessage("UIWikiPermissionForm.msg.Save-permission-setting-success",
+                                                null,
+                                                ApplicationMessage.INFO));
         
-        UIApplication uiApp = uiWikiPermissionForm.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIWikiPermissionForm.msg.Save-permission-setting-success", null, ApplicationMessage.INFO));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
       } else if (Scope.PAGE.equals(scope)) {
         PageImpl page = (PageImpl) Utils.getCurrentWikiPage();
         HashMap<String, String[]> permissionMap = uiWikiPermissionForm.convertToPermissionMap(uiWikiPermissionForm.permissionEntries);

@@ -41,7 +41,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -146,20 +145,20 @@ public class UIQuickReplyForm extends UIForm {
             forumService.addWatch(1, path, values, quickReply.userName);
           }
         } catch (PathNotFoundException e) {
-          String[] args = new String[] {};
-          throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING));
+          throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", null, ApplicationMessage.WARNING));
         }
         textAreaInput.setValue(ForumUtils.EMPTY_STR);
         if (isOffend || hasTopicMod) {
           Object[] args = { ForumUtils.EMPTY_STR };
-          UIApplication uiApp = quickReply.getAncestorOfType(UIApplication.class);
           if (isOffend)
-            uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING));
+            event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("MessagePost.msg.isOffend",
+                                                                                           args,
+                                                                                           ApplicationMessage.WARNING));
           else {
-            args = new Object[] {};
-            uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isModerate", args, ApplicationMessage.WARNING));
+            event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("MessagePost.msg.isModerate",
+                                                                                           null,
+                                                                                           ApplicationMessage.WARNING));
           }
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
         } else {
           try {
             ActionResponse actionRes = event.getRequestContext().getResponse();

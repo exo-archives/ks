@@ -40,7 +40,6 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -354,11 +353,10 @@ public class UICategories extends UIContainer {
         categoryContainer.updateIsRender(false);
         forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId);
         uiContainer.maptopicLast.clear();
-      } catch (Exception e) {
-        Object[] args = { ForumUtils.EMPTY_STR };
-        UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted", args, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+      } catch (Exception e) {        
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted",
+                                                                                       new String[] { ForumUtils.EMPTY_STR },
+                                                                                       ApplicationMessage.WARNING));       
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
@@ -374,7 +372,9 @@ public class UICategories extends UIContainer {
       if(forum == null){
         categories.AllForum.clear();
         categories.mapListForum.clear();
-        ((UIApplication) forumPortlet).addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", new String[] {}, ApplicationMessage.WARNING));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));
       } else {
         forumPortlet.updateIsRendered(ForumUtils.FORUM);
         UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class);
@@ -398,10 +398,9 @@ public class UICategories extends UIContainer {
       Topic topic = categories.forumService.getTopicSummary(id[0]+ForumUtils.SLASH+id[1]+ForumUtils.SLASH+id[2]);
       UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class);
       if (topic == null) {
-        Object[] args = { ForumUtils.EMPTY_STR };
-        UIApplication uiApp = categories.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING));
-        context.addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        context.getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty",
+                                                                     new String[] { ForumUtils.EMPTY_STR },
+                                                                     ApplicationMessage.WARNING));        
       } else {
         topic = categories.forumService.getTopicUpdate(topic, true);
         forumPortlet.updateIsRendered(ForumUtils.FORUM);
@@ -431,10 +430,9 @@ public class UICategories extends UIContainer {
       Topic topic = categories.forumService.getTopicSummary(id[0]+ForumUtils.SLASH+id[1]+ForumUtils.SLASH+id[2]);
       UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class);
       if (topic == null) {
-        Object[] args = { ForumUtils.EMPTY_STR };
-        UIApplication uiApp = categories.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING));
-        context.addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        context.getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty",
+                                                                     new String[] { ForumUtils.EMPTY_STR },
+                                                                     ApplicationMessage.WARNING));        
         forumPortlet.removeCacheUserProfile();
       } else {
         topic = categories.forumService.getTopicUpdate(topic, true);
@@ -475,7 +473,8 @@ public class UICategories extends UIContainer {
         } else {
           categories.userProfile.addLastPostIdReadOfForum(forum.getId(), ForumUtils.EMPTY_STR);
           categories.forumService.saveLastPostIdRead(categories.userProfile.getUserId(), categories.userProfile.getLastReadPostOfForum(), categories.userProfile.getLastReadPostOfTopic());
-          ((UIApplication) forumPortlet).addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", new String[] { "this", "topic" }, ApplicationMessage.WARNING));
+          context.getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", new String[] {
+              "this", "topic" }, ApplicationMessage.WARNING));
           context.addUIComponentToUpdateByAjax(categories);
         }
       }
@@ -529,13 +528,14 @@ public class UICategories extends UIContainer {
         List<String> values = new ArrayList<String>();
         values.add(uiContainer.forumService.getUserInformations(uiContainer.userProfile).getEmail());
         uiContainer.forumService.addWatch(1, path, values, userName);
-        UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", new String[]{}, ApplicationMessage.INFO));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully",
+                                                                                       null,
+                                                                                       ApplicationMessage.INFO));
       } catch (Exception e) {
-        UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", new String[]{}, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer);
     }
@@ -546,16 +546,14 @@ public class UICategories extends UIContainer {
       UICategories uiContainer = event.getSource();
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
       try {
-        uiContainer.forumService.removeWatch(1, path, uiContainer.userProfile.getUserId() + ForumUtils.SLASH + uiContainer.getEmailWatching(path));
-        Object[] args = {};
-        UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        uiContainer.forumService.removeWatch(1, path, uiContainer.userProfile.getUserId() + ForumUtils.SLASH + uiContainer.getEmailWatching(path));     
+        event.getRequestContext()
+             .getUIApplication()
+             .addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", null, ApplicationMessage.INFO));        
       } catch (Exception e) {
-        Object[] args = {};
-        UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));       
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer);
     }

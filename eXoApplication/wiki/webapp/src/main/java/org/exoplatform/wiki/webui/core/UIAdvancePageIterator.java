@@ -21,10 +21,8 @@ import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -149,7 +147,6 @@ public class UIAdvancePageIterator extends UIForm {
     @Override
     public void execute(Event<UIAdvancePageIterator> event) throws Exception {
       UIAdvancePageIterator pageIterator = event.getSource();
-      UIApplication uiApp = pageIterator.getAncestorOfType(UIApplication.class) ;
       UIFormStringInput stringInput = pageIterator.getUIStringInput(UIAdvancePageIterator.GOTOPPAGE) ;
       String numberPage = "" ;
       numberPage = stringInput.getValue() ;
@@ -161,10 +158,11 @@ public class UIAdvancePageIterator extends UIForm {
         try {
           page = Integer.parseInt(numberPage.trim());
           if (page < 0) {
-            uiApp.addMessage(new ApplicationMessage("NameValidator.msg.Invalid-number",
+            event.getRequestContext()
+                 .getUIApplication()
+                 .addMessage(new ApplicationMessage("NameValidator.msg.Invalid-number",
                                                     new String[] { pageIterator.getLabel(pageIterator.GOPAGE) },
                                                     ApplicationMessage.WARNING));
-            ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
           } else {
             if (page == 0) {
               page = 1;
@@ -174,10 +172,11 @@ public class UIAdvancePageIterator extends UIForm {
             pageIterator.getPageList().getPage(page);
           }
         } catch (NumberFormatException e) {
-          uiApp.addMessage(new ApplicationMessage("NameValidator.msg.Invalid-number",
+          event.getRequestContext()
+               .getUIApplication()
+               .addMessage(new ApplicationMessage("NameValidator.msg.Invalid-number",
                                                   new String[] { pageIterator.getLabel(pageIterator.GOPAGE) },
-                                                  ApplicationMessage.WARNING));
-          ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+                                                  ApplicationMessage.WARNING));          
         }
       }
       if (page > 0 && page <= maxPage && page != presentPage) {

@@ -55,7 +55,6 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -970,10 +969,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   static public class SetUnLockTopicActionListener extends BaseEventListener<UITopicContainer> {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
       try {
-        if (uiTopicContainer.getForum().getIsLock()) {
-          UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class);
-          uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.ForumIsLocked", new Object[] {}, ApplicationMessage.WARNING));
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        if (uiTopicContainer.getForum().getIsLock()) {         
+          event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UITopicContainer.sms.ForumIsLocked",
+                                                                                         new Object[] {},
+                                                                                         ApplicationMessage.WARNING));          
           return;
         }
       } catch (Exception e) {

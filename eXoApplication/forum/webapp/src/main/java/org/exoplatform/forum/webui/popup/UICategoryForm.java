@@ -369,9 +369,9 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         forumLinks.setValueOption(cat.getId());
       } catch (Exception e) {
         Object[] args = { ForumUtils.EMPTY_STR };
-        UIApplication uiApp = (UIApplication) forumPortlet;
-        uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted", args, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted",
+                                                                                       args,
+                                                                                       ApplicationMessage.WARNING));
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }

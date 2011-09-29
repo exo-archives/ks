@@ -70,12 +70,6 @@ public class TestBaseUIForm extends AbstractUIComponentTestCase<BaseUIForm> {
     setResourceBundleEntry("SampleForm.label.Key", "whatever");
     assertEquals(component.getLabel("Key"), component.i18n("SampleForm.label.Key"));
   }
-  
-  
-  public void testWarning() {
-    component.warning("Message");
-    assertApplicationMessage("Message");
-  }
 
   @Override
   protected BaseUIForm createComponent() {

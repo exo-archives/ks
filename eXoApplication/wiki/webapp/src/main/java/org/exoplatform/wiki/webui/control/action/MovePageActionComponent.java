@@ -86,10 +86,9 @@ public class MovePageActionComponent extends AbstractEventActionComponent {
       UIWikiPortlet uiWikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       WikiPageParams params = Utils.getCurrentWikiPageParams();     
       if (Utils.getCurrentWikiPage().getName().equals(WikiNodeType.Definition.WIKI_HOME_NAME)) {
-        uiWikiPortlet.addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.can-not-move-wikihome",
-                                                        null,
-                                                        ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPortlet.getUIPopupMessages());        
+        event.getRequestContext()
+             .getUIApplication()
+             .addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.can-not-move-wikihome", null, ApplicationMessage.WARNING));                
         return;
       }
       UIPopupContainer uiPopupContainer = uiWikiPortlet.getPopupContainer(PopupLevel.L1);

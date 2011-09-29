@@ -42,7 +42,6 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
@@ -413,17 +412,19 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       Calendar fromDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST), FROMDATECREATEDLASTPOST);
       Calendar toDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
       try {
-        if (fromDateCreated.getTimeInMillis() >= toDateCreated.getTimeInMillis()) {
-          UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
-          uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", new String[] {}, ApplicationMessage.WARNING));
+        if (fromDateCreated.getTimeInMillis() >= toDateCreated.getTimeInMillis()) {          
+          event.getRequestContext()
+               .getUIApplication()
+               .addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", null, ApplicationMessage.WARNING));
           return;
         }
       } catch (Exception e) {
       }
       try {
-        if (type.equals(Utils.TOPIC) && (fromDateCreatedLastPost.getTimeInMillis() > toDateCreatedLastPost.getTimeInMillis())) {
-          UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
-          uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", new String[] { "last post" }, ApplicationMessage.WARNING));
+        if (type.equals(Utils.TOPIC) && (fromDateCreatedLastPost.getTimeInMillis() > toDateCreatedLastPost.getTimeInMillis())) {          
+          event.getRequestContext()
+               .getUIApplication()
+               .addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", null, ApplicationMessage.WARNING));
           return;
         }
       } catch (Exception e) {
@@ -455,8 +456,9 @@ public class UISearchForm extends BaseForumForm implements UISelector {
         eventQuery.getPathQuery(new ArrayList<String>(forumPortlet.getInvisibleForums()));
       }
       if (eventQuery.getIsEmpty()) {
-        UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erro-empty-search", null, ApplicationMessage.WARNING));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("NameValidator.msg.erro-empty-search",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));
         return;
       }
       eventQuery.setRemain(remain);
@@ -465,8 +467,9 @@ public class UISearchForm extends BaseForumForm implements UISelector {
         list = uiForm.getForumService().getAdvancedSearch(eventQuery, forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()));
       } catch (Exception e) {
         log.warn("\nGetting advance search fail:\n " + e.getCause());
-        UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));
         return;
       }
 

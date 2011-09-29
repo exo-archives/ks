@@ -204,8 +204,9 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
       UIViewPost uiForm = event.getSource();
       Post post = uiForm.post;
       if (post == null) {
-        UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));
         return;
       }
       String path = post.getPath();

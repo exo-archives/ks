@@ -14,7 +14,6 @@
 				}
 			}
 		%>
-		<%uicomponent.renderPopupMessages();%>
 	</div>
 </div>
 <% } else { %>

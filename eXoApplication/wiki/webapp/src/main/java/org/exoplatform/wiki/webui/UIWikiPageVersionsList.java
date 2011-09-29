@@ -94,10 +94,11 @@ public class UIWikiPageVersionsList extends UIWikiForm {
         }
       }
       if (checkedVersions.size() != 2) {
-        wikiPortlet.addMessage(new ApplicationMessage("UIWikiPageVersionsList.msg.checkGroup-required",
+        event.getRequestContext()
+             .getUIApplication()
+             .addMessage(new ApplicationMessage("UIWikiPageVersionsList.msg.checkGroup-required",
                                                 null,
-                                                ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(wikiPortlet.getUIPopupMessages());
+                                                ApplicationMessage.WARNING));   
         return;
       } else {
         this.setVersionToCompare(new ArrayList<NTVersion>(uiForm.versionsList));

@@ -75,14 +75,6 @@ public class UIPollPortlet extends UIPortletApplication {
     super.processRender(app, context);
   }
 
-  public void renderPopupMessages() throws Exception {
-    if(portletMode == PortletMode.VIEW) {
-      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-      UIPopupMessages messages = getUIPopupMessages();
-      if(messages != null) messages.processRender(context);
-    }
-  }
-
   public boolean isAdmin() {
     return isAdmin;
   }

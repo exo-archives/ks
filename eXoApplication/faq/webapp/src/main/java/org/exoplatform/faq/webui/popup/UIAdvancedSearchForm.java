@@ -340,9 +340,9 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
       try {
         result.setSearchResults(advancedSearch.getFAQService().getSearchResults(eventQuery));
       } catch (javax.jcr.query.InvalidQueryException e) {
-        UIApplication uiApp = advancedSearch.getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.erro-empty-search", null, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        event.getRequestContext()
+             .getUIApplication()
+             .addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.erro-empty-search", null, ApplicationMessage.WARNING));        
         return;
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);

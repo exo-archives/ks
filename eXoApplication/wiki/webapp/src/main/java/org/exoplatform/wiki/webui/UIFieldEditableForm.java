@@ -23,7 +23,6 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -154,9 +153,8 @@ public class UIFieldEditableForm extends UIForm {
           appMsg = new ApplicationMessage("WikiPageNameValidator.msg.Invalid-char",
                                           arg,
                                           ApplicationMessage.WARNING);
-        }
-        UIApplication uiApp = event.getSource().getAncestorOfType(UIApplication.class);
-        uiApp.addMessage(appMsg);
+        }        
+        event.getRequestContext().getUIApplication().addMessage(appMsg);
         Utils.redirect(Utils.getCurrentWikiPageParams(), WikiMode.VIEW);
         return;
       }

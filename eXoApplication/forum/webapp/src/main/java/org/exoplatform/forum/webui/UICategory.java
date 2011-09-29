@@ -41,7 +41,6 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -484,9 +483,9 @@ public class UICategory extends BaseForumForm {
         forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId + ForumUtils.SLASH + id[0] + " "));
       } else {
         Object[] args = { ForumUtils.EMPTY_STR };
-        UIApplication uiApp = (UIApplication)forumPortlet;
-        uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages());
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty",
+                                                                                       args,
+                                                                                       ApplicationMessage.WARNING));        
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
@@ -539,8 +538,9 @@ public class UICategory extends BaseForumForm {
         } else {
           uiCategory.userProfile.addLastPostIdReadOfForum(forum.getId(), ForumUtils.EMPTY_STR);
           uiCategory.getForumService().saveLastPostIdRead(uiCategory.userProfile.getUserId(), uiCategory.userProfile.getLastReadPostOfForum(), uiCategory.userProfile.getLastReadPostOfTopic());
-          ((UIApplication) forumPortlet).addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", new String[] { "this", "topic" }, ApplicationMessage.WARNING));
-          context.addUIComponentToUpdateByAjax(uiCategory);
+          context.getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission",
+                                                                       null,
+                                                                       ApplicationMessage.WARNING));          
         }
       }
       context.addUIComponentToUpdateByAjax(forumPortlet);

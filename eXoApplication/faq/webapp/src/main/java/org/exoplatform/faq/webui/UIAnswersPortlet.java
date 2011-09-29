@@ -150,14 +150,6 @@ public class UIAnswersPortlet extends UIPortletApplication {
     }
   }
 
-  public void renderPopupMessages() throws Exception {
-    if(portletMode == PortletMode.VIEW) {
-      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-      UIPopupMessages messages = getUIPopupMessages();
-      if(messages != null) messages.processRender(context);
-    }
-  }
-
   public void cancelAction() throws Exception {
     WebuiRequestContext context = RequestContext.getCurrentInstance();
     UIPopupAction popupAction = getChild(UIPopupAction.class);

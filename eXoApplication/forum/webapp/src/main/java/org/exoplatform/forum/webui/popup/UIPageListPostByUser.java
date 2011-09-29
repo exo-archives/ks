@@ -46,7 +46,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -148,9 +147,10 @@ public class UIPageListPostByUser extends UIContainer {
       UIPageListPostByUser uiForm = event.getSource();
       String postId = event.getRequestContext().getRequestParameter(OBJECTID);
       Post post = uiForm.getPostById(postId);
-      UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
       if (post == null) {
-        uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));
         return;
       }
       boolean isRead = true;
@@ -173,8 +173,9 @@ public class UIPageListPostByUser extends UIContainer {
         viewPost.setActionForm(new String[] { "Close", "OpenTopicLink" });
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
       } else {
-        String[] s = new String[] {};
-        uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));
         return;
       }
     }
@@ -185,9 +186,10 @@ public class UIPageListPostByUser extends UIContainer {
       UIPageListPostByUser uiForm = event.getSource();
       String postId = event.getRequestContext().getRequestParameter(OBJECTID);
       Post post = uiForm.getPostById(postId);
-      UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
       if (post == null) {
-        uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));
         return;
       }
       boolean isRead = true;
@@ -218,7 +220,9 @@ public class UIPageListPostByUser extends UIContainer {
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       } else {
         String[] s = new String[] {};
-        uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission",
+                                                                                       s,
+                                                                                       ApplicationMessage.WARNING));
         return;
       }
     }

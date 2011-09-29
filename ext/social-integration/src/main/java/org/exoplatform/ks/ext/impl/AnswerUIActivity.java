@@ -28,7 +28,6 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.lifecycle.WebuiBindingContext;
 import org.exoplatform.webui.event.Event;
@@ -162,13 +161,13 @@ public class AnswerUIActivity extends BaseKSActivity {
     public void execute(Event<AnswerUIActivity> event) throws Exception {
       AnswerUIActivity uiActivity = event.getSource();
       // uiActivity.refresh();
-      WebuiRequestContext context = event.getRequestContext();
-      UIApplication application = (UIApplication) uiActivity.getAncestorOfType(UIApplication.class);
+      WebuiRequestContext context = event.getRequestContext();      
       UIFormTextAreaInput uiFormComment = uiActivity.getChild(UIFormTextAreaInput.class);
       String message = uiFormComment.getValue();
       if (message == null || message.trim().length() == 0) {
-        application.addMessage(new ApplicationMessage("AnswerUIActivity.msg.content-empty", null, ApplicationMessage.WARNING));
-        context.addUIComponentToUpdateByAjax(application.getUIPopupMessages());
+        context.getUIApplication().addMessage(new ApplicationMessage("AnswerUIActivity.msg.content-empty",
+                                                                     null,
+                                                                     ApplicationMessage.WARNING));        
         return;
       }
       FAQService faqService = (FAQService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FAQService.class);

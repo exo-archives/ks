@@ -26,7 +26,6 @@ import org.exoplatform.web.application.Parameter;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
@@ -111,11 +110,9 @@ public class RemoveRelatedPageActionComponent extends UIComponent {
       } catch (Exception e) {
         if (log.isWarnEnabled())
           log.warn(String.format("can not remove related page [%s]", pageId), e);
-        UIApplication application = uicomponent.getAncestorOfType(UIApplication.class);
-        application.addMessage(new ApplicationMessage("can not remove this page",
-                                                      null,
-                                                      ApplicationMessage.WARNING));
-        requestContext.addUIComponentToUpdateByAjax(application);
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("can not remove this page",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));
 
       }
       requestContext.addUIComponentToUpdateByAjax(uicomponent);

@@ -162,7 +162,9 @@ public class UIPageListTopicByUser extends UIContainer {
       topic = uiForm.forumService.getTopicUpdate(topic, false);
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       if (topic == null) {
-        forumPortlet.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));
         return;
       }
       
@@ -178,12 +180,16 @@ public class UIPageListTopicByUser extends UIContainer {
           forum = uiForm.forumService.getForum(categoryId, forumId);
           isRead = forumPortlet.checkCanView(category, forum, topic);
         } catch (Exception e) {
-          forumPortlet.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING));
+          event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found",
+                                                                                         null,
+                                                                                         ApplicationMessage.WARNING));
           return;
         }
       }
       if(!isRead) {
-        forumPortlet.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", new String[] {}, ApplicationMessage.WARNING));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission",
+                                                                                       new String[] {},
+                                                                                       ApplicationMessage.WARNING));
           return;
       }
 

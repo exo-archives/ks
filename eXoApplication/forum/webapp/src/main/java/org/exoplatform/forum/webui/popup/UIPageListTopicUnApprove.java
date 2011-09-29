@@ -127,9 +127,10 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
       String topicId = event.getRequestContext().getRequestParameter(OBJECTID);
       Topic topic = uiForm.getTopic(topicId);
       topic = uiForm.getForumService().getTopicUpdate(topic, false);
-      UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class);
       if (topic == null) {
-        uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found",
+                                                                                       null,
+                                                                                       ApplicationMessage.WARNING));
         return;
       }
       UIPopupContainer popupContainer = uiForm.getChild(UIPopupContainer.class);

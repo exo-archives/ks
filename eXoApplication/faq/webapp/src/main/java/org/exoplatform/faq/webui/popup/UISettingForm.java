@@ -382,7 +382,9 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
           if (!settingForm.idForumName.isEmpty() && !FAQUtils.isFieldEmpty(value)) {
             faqSetting.setIdNameCategoryForum(settingForm.idForumName.get(0) + ";" + settingForm.idForumName.get(1));
           } else {
-            uiPortlet.addMessage(new ApplicationMessage("UISettingForm.msg.pathCategory-empty", null, ApplicationMessage.WARNING));
+            event.getRequestContext()
+                 .getUIApplication()
+                 .addMessage(new ApplicationMessage("UISettingForm.msg.pathCategory-empty", null, ApplicationMessage.WARNING));
             event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet);
             return;
           }
@@ -392,7 +394,9 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
         faqSetting.setIsDiscussForum(isDiscus);
         faqSetting.setEmailMoveQuestion(emailMoveQuestion);
         FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion.replaceAll("&amp;", "&"), defaultEditQuestion.replaceAll("&amp;", "&"));
-        uiPortlet.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UISettingForm.msg.update-successful",
+                                                                                       null,
+                                                                                       ApplicationMessage.INFO));
         event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet);
       } else {
         faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue()));

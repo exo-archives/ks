@@ -33,7 +33,6 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
@@ -128,16 +127,15 @@ public class WatchPageActionComponent extends UIComponent {
                                              MoreContainerActionListener<WatchPageActionComponent> {
     @Override
     protected void processEvent(Event<WatchPageActionComponent> event) throws Exception {
-      UIApplication uiApp = event.getSource().getAncestorOfType(UIApplication.class);
       boolean isWatched = event.getSource().detectWatched(true);
       if (isWatched) {
-        uiApp.addMessage(new ApplicationMessage("WatchPageAction.msg.Stop-watching",
-                                                null,
-                                                ApplicationMessage.INFO));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("WatchPageAction.msg.Stop-watching",
+                                                                                       null,
+                                                                                       ApplicationMessage.INFO));
       } else {
-        uiApp.addMessage(new ApplicationMessage("WatchPageAction.msg.Start-watching",
-                                                null,
-                                                ApplicationMessage.INFO));
+        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("WatchPageAction.msg.Start-watching",
+                                                                                       null,
+                                                                                       ApplicationMessage.INFO));
       }
       super.processEvent(event);
     }

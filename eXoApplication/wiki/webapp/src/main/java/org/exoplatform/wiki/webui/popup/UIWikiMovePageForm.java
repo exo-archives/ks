@@ -101,8 +101,11 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
       WikiPageParams newLocationParams = newLocation.getPageParam();
       
       if (newLocationParams==null) {
-        uiWikiPortlet.addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.new-location-can-not-be-empty", null, ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPortlet.getUIPopupMessages()) ;
+        event.getRequestContext()
+             .getUIApplication()
+             .addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.new-location-can-not-be-empty",
+                                                null,
+                                                ApplicationMessage.WARNING));
         org.exoplatform.wiki.commons.Utils.redirect(currentLocationParams, uiWikiPortlet.getWikiMode());
         return;
       }
@@ -114,10 +117,11 @@ public class UIWikiMovePageForm extends UIForm implements UIPopupComponent {
                                                            newLocationParams.getOwner(),
                                                            currentLocationParams.getPageId());
       if (existPage != null && !existPage.equals(movepage)) {
-        uiWikiPortlet.addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.same-name-in-new-location-space",
-                                                        null,
-                                                        ApplicationMessage.WARNING));
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPortlet.getUIPopupMessages());
+        event.getRequestContext()
+             .getUIApplication()
+             .addMessage(new ApplicationMessage("UIWikiMovePageForm.msg.same-name-in-new-location-space",
+                                                null,
+                                                ApplicationMessage.WARNING));
         org.exoplatform.wiki.commons.Utils.redirect(currentLocationParams, uiWikiPortlet.getWikiMode());
         return;
       }      
