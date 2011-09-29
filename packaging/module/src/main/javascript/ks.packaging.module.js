@@ -116,6 +116,7 @@ function getModule(params) {
   // demo portal
   module.demo.portal =
     new Project("org.exoplatform.ks", "exo.ks.demo.webapp", "war", module.version).
+    addDependency(new Project("org.exoplatform.ks", "exo.ks.component.injector", "jar", module.version)).
     addDependency(new Project("org.exoplatform.ks", "exo.ks.demo.config", "jar", module.version));
   module.demo.portal.deployName = "ksdemo";  
 	

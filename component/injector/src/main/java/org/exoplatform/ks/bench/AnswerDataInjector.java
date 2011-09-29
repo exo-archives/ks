@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.faq.bench;
+package org.exoplatform.ks.bench;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -34,7 +34,6 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.services.bench.DataInjector;
-import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 

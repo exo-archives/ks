@@ -14,5 +14,6 @@
     <module>rendering</module>
     <module>bbcode</module>
     <module>statistics</module>
+    <module>injector</module>
   </modules>
 </project>

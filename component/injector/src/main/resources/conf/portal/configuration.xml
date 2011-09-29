@@ -17,21 +17,21 @@
     <component-plugin>
       <name>ForumDataInjector</name>
       <set-method>addInjector</set-method>
-      <type>org.exoplatform.forum.bench.ForumDataInjector</type>
+      <type>org.exoplatform.ks.bench.ForumDataInjector</type>
       <description>inject data for Forum</description>
     </component-plugin>
     
     <component-plugin>
       <name>AnswerDataInjector</name>
       <set-method>addInjector</set-method>
-      <type>org.exoplatform.faq.bench.AnswerDataInjector</type>
+      <type>org.exoplatform.ks.bench.AnswerDataInjector</type>
       <description>inject data for Answer</description>
     </component-plugin>
     
     <component-plugin>
       <name>WikiDataInjector</name>
       <set-method>addInjector</set-method>
-      <type>org.exoplatform.wiki.bench.WikiDataInjector</type>
+      <type>org.exoplatform.ks.bench.WikiDataInjector</type>
       <description>inject data for Wiki</description>
     </component-plugin>    
   </external-component-plugins>

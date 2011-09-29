@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.faq.bench;
+package org.exoplatform.ks.bench;
 
 import java.util.HashMap;
 
-import org.exoplatform.faq.bench.AnswerDataInjector.CONSTANTS;
+import org.exoplatform.ks.bench.AnswerDataInjector.CONSTANTS;
 import org.exoplatform.faq.service.Category;
 
 /**
