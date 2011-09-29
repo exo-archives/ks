@@ -1,4 +1,4 @@
-  <%
+<%
 /*
 <!--
 
@@ -33,6 +33,7 @@
   def activity = uicomponent.getActivity();
   def activityDeletable = uicomponent.isActivityDeletable();
   def activityCommentAndLikable = uicomponent.isActivityCommentAndLikable();
+  def streamOwner = activity.getStreamOwner();
 %>
 
 <% if (activity) { //process if not null
@@ -124,7 +125,7 @@
 
   def ownerIdentity = uicomponent.ownerIdentity;
   if (uicomponent.isUserActivity()) {
-    ownerUri = ownerIdentity.profile.url;
+    ownerUri = LinkProvider.getUserProfileUri(ownerIdentity.getRemoteId());
     ownerAvatar = ownerIdentity.profile.avatarUrl;
     ownerName = ownerIdentity.profile.fullName;
     if (!ownerAvatar) ownerAvatar= LinkProvider.PROFILE_DEFAULT_AVATAR_URL;
@@ -137,7 +138,7 @@
   }
 %>
 
-<div class="UIActivity WikiActivity">
+<div class="UIActivity">
   <script type="text/javascript">
     function initUIActivity${activity.id}() {
       new eXo.social.webui.UIActivity($params);
@@ -151,20 +152,20 @@
       <span class="BorderTop"></span>
       <span class="BorderBottom"></span>
     </a>
-    <div class="ContentBox " id="ContextBox${activity.id}">
+    <div class="ContentBox" id="ContextBox${activity.id}">
       <div class="TitleBlock TextBold">
-		<%
+        <%
           def activityAuthor = "<a  title='" + ownerName + "' href='" + ownerUri + "'>" + ownerName + "</a>";
           def pageName = "<a  href='" + uicomponent.getPageURL() + "'>" + uicomponent.getPageName() + "</a>";
           def pageMsg = uicomponent.getActivityMessage(_ctx);
           pageMsg = pageMsg.replace("{0}", activityAuthor).replace("{1}", pageName);
         %>
         $pageMsg
-	</div>
-	  <div class="BoxGray">
+      </div>
+        <div class="BoxGray">
         wiki content
       </div>
-      <div class="WikiActivityIcon ActivityIcon">
+      <div class="DefaultActivityIcon">
         <span class="DateTime">$activityPostedTime *</span>
       <% def toggleDisplayCommentAction = uicomponent.event('ToggleDisplayCommentForm', null, false);
          def commentLink = "";
@@ -196,7 +197,7 @@
             displayedIdentityLikes.each({
               def id = Utils.getIdentityManager().getIdentity(it);
               personLikeFullName = id.profile.fullName;
-              personLikeProfileUri = id.profile.url;
+              personLikeProfileUri = LinkProvider.getUserProfileUri(id.getRemoteId());
               personLikeAvatarImageSource = id.profile.avatarUrl;
               if (!personLikeAvatarImageSource) personLikeAvatarImageSource = LinkProvider.PROFILE_DEFAULT_AVATAR_URL;
               %>
@@ -209,14 +210,14 @@
           </div>
       </div>
     <%}%>
-
+    
    <div id="CommentBlockBound${activity.id}">
-
+    
       <% if (uicomponent.commentListToggleable()) {
       def showAllCommentsAction = uicomponent.event("SetCommentListStatus", "all");
       def hideAllCommentsAction = uicomponent.event("SetCommentListStatus", "none");
       %>
-
+      
       <div class="CommentListInfo">
             <% if (commentListStatus.getStatus().equals("latest") || commentListStatus.getStatus().equals("none")) { %>
               <a onclick="$showAllCommentsAction" href="#show-all-comments">
@@ -243,7 +244,7 @@
 
       def id = Utils.getIdentityManager().getIdentity(it.userId);
       commenterFullName = id.profile.fullName;
-      commenterProfileUri = id.profile.url;
+      commenterProfileUri = LinkProvider.getUserProfileUri(id.getRemoteId());
       commentMessage = it.title;
       commentPostedTime = uicomponent.getPostedTimeString(_ctx, it.postedTime);
     %>
@@ -267,7 +268,7 @@
 
     <%
       def currentCommenterIdentity = Utils.getOwnerIdentity();
-      def currentCommenterUri = currentCommenterIdentity.profile.url;
+      def currentCommenterUri = LinkProvider.getUserProfileUri(currentCommenterIdentity.getRemoteId());
       def currentCommenterAvatar = currentCommenterIdentity.profile.avatarUrl;
       def currentCommenterName = currentCommenterIdentity.profile.fullName;
       if (!currentCommenterAvatar) currentCommenterAvatar= LinkProvider.PROFILE_DEFAULT_AVATAR_URL;
