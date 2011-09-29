@@ -213,7 +213,7 @@ public class UIForumPortlet extends UIPortletApplication {
       return;
 
     if (url.equals(old)) {
-      if (getForumIdOfSpace() != null)
+      if (!ForumUtils.isEmpty(getForumIdOfSpace()))
         url = getForumIdOfSpace();
       else
         return;
@@ -291,7 +291,11 @@ public class UIForumPortlet extends UIPortletApplication {
   
   public void setRenderForumLink() throws Exception {
     if (isShowForumJump) {
-      isJumpRendered = getUserProfile().getIsShowForumJump();
+      if(!ForumUtils.isEmpty(getForumIdOfSpace())) {
+        isJumpRendered = false;
+      } else {
+        isJumpRendered = getUserProfile().getIsShowForumJump();
+      }
     } else {
       isJumpRendered = false;
     }
