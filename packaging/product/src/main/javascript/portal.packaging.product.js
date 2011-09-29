@@ -35,11 +35,6 @@ function getProduct(version) {
   portal.fck = new Project("org.exoplatform.commons", "exo.platform.commons.fck", "war", "${org.exoplatform.commons.version}");
   portal.fck.deployName = "fck";
   product.addDependencies(portal.fck);
-
-  //Resources commons
-  portal.CmResources = new Project("org.exoplatform.commons", "exo.platform.commons.resources", "war", "${org.exoplatform.commons.version}");
-  portal.CmResources.deployName = "CommonsResources";
-  product.addDependencies(portal.CmResources);
   
   //cometd (requried for KS)
   product.addDependencies(ks.comet.cometd);

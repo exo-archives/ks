@@ -13,12 +13,6 @@
     <exobuild.name>ks</exobuild.name>
     <exobuild.type>module</exobuild.type>
   </properties>
-  <dependencies>
-    <dependency>
-        <groupId>org.exoplatform.commons</groupId>
-        <artifactId>exo.platform.commons.webui</artifactId>
-    </dependency>
-  </dependencies>
   <build>
     <plugins>
       <plugin>
