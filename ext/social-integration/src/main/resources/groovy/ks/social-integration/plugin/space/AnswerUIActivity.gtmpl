@@ -27,13 +27,14 @@
   import org.exoplatform.social.core.space.model.Space;
   import org.exoplatform.social.webui.Utils;
   import org.exoplatform.social.core.service.LinkProvider;
-	import org.exoplatform.ks.ext.impl.AnswersSpaceActivityPublisher;
+  import org.exoplatform.ks.ext.impl.AnswersSpaceActivityPublisher;
 
   def pcontext = Util.getPortalRequestContext();
   def labelActivityHasBeenDeleted = _ctx.appRes("UIActivity.label.Activity_Has_Been_Deleted");
   def activity = uicomponent.getActivity();
   def activityDeletable = uicomponent.isActivityDeletable();
   def activityCommentAndLikable = uicomponent.isActivityCommentAndLikable();
+  def streamOwner = activity.getStreamOwner();
 %>
 
 <% if (activity) { //process if not null
@@ -125,7 +126,7 @@
 
   def ownerIdentity = uicomponent.ownerIdentity;
   if (uicomponent.isUserActivity()) {
-    ownerUri = ownerIdentity.profile.url;
+    ownerUri = LinkProvider.getUserProfileUri(ownerIdentity.getRemoteId());
     ownerAvatar = ownerIdentity.profile.avatarUrl;
     ownerName = ownerIdentity.profile.fullName;
     if (!ownerAvatar) ownerAvatar= LinkProvider.PROFILE_DEFAULT_AVATAR_URL;
@@ -138,7 +139,7 @@
   }
 %>
 
-<div class="UIActivity AnswerActivity">
+<div class="UIActivity">
   <script type="text/javascript">
     function initUIActivity${activity.id}() {
       new eXo.social.webui.UIActivity($params);
@@ -154,18 +155,18 @@
     </a>
     <div class="ContentBox" id="ContextBox${activity.id}">
       <div class="TitleBlock TextBold">
-       ${uicomponent.getTitle(_ctx)}<br>	  
-      </div>
-       <div class="BoxGray">
-       	$activity.body
-       </div>	  
-	  <!-- update condition following by question or answer-->
-	  <%
-	  def isQuestion = false ;
-	  def icon = "AnswerActivityIcon";
-	  if(isQuestion) {icon="AskedActivityIcon"};
-	  %>	  
-      <div class="ActivityIcon  $icon">
+        ${uicomponent.getTitle(_ctx)}<br>    
+       </div>
+        <div class="BoxGray">
+           $activity.body
+          </div>   
+       <!-- update condition following by question or answer-->
+       <%
+       def isQuestion = false ;
+       def icon = "AnswerActivityIcon";
+       if(isQuestion) {icon="AskedActivityIcon"};
+       %>
+      <div class="DefaultActivityIcon $icon">
         <span class="DateTime">$activityPostedTime *</span>
       <% def toggleDisplayCommentAction = uicomponent.event('ToggleDisplayCommentForm', null, false);
          def commentLink = "";
@@ -181,17 +182,19 @@
       <% } else { %>
         <a onclick="$likeActivityAction" id="LikeLink${activity.id}" href="#like">
           $labelLike
-        </a> |
+        </a>
       <% }%>
      <% }%>
-			<% if (uicomponent.isQuestionActivity()) { %>
-				<a onclick="void();" id="AnswerLink${activity.id}" href="<%= uicomponent.getActivityParamValue(AnswersSpaceActivityPublisher.LINK_KEY) + "&answer-now=true"; %>">
-				  <%= _ctx.appRes("AnswerUIActivity.label.button.answer") %>
-				</a> |
-			<% } %>
-		  <a onclick="void();" id="ViewLink${activity.id}" href="<%= uicomponent.getActivityParamValue(AnswersSpaceActivityPublisher.LINK_KEY) %>">
-		    <%= _ctx.appRes("AnswerUIActivity.label.button.view") %>
-		  </a>
+     <% if (uicomponent.isQuestionActivity()) { %>
+       &nbsp;|&nbsp;
+       <a onclick="void();" id="AnswerLink${activity.id}" href="<%= uicomponent.getActivityParamValue(AnswersSpaceActivityPublisher.LINK_KEY) + "&answer-now=true"; %>">
+         <%= _ctx.appRes("AnswerUIActivity.label.button.answer") %>
+       </a>
+     <% } %>
+       &nbsp;|&nbsp;
+       <a onclick="void();" id="ViewLink${activity.id}" href="<%= uicomponent.getActivityParamValue(AnswersSpaceActivityPublisher.LINK_KEY) %>">
+         <%= _ctx.appRes("AnswerUIActivity.label.button.view") %>
+       </a>
       </div>
     <% if (identityLikesNum > 0 || uicomponent.isLiked()) {%>
       <div class="ListPeopleLikeBG $listPeopleBGClass">
@@ -205,7 +208,7 @@
             displayedIdentityLikes.each({
               def id = Utils.getIdentityManager().getIdentity(it);
               personLikeFullName = id.profile.fullName;
-              personLikeProfileUri = id.profile.url;
+              personLikeProfileUri = LinkProvider.getUserProfileUri(id.getRemoteId());
               personLikeAvatarImageSource = id.profile.avatarUrl;
               if (!personLikeAvatarImageSource) personLikeAvatarImageSource = LinkProvider.PROFILE_DEFAULT_AVATAR_URL;
               %>
@@ -218,14 +221,14 @@
           </div>
       </div>
     <%}%>
-
+    
    <div id="CommentBlockBound${activity.id}">
-
+    
       <% if (uicomponent.commentListToggleable()) {
       def showAllCommentsAction = uicomponent.event("SetCommentListStatus", "all");
       def hideAllCommentsAction = uicomponent.event("SetCommentListStatus", "none");
       %>
-
+      
       <div class="CommentListInfo">
             <% if (commentListStatus.getStatus().equals("latest") || commentListStatus.getStatus().equals("none")) { %>
               <a onclick="$showAllCommentsAction" href="#show-all-comments">
@@ -252,7 +255,7 @@
 
       def id = Utils.getIdentityManager().getIdentity(it.userId);
       commenterFullName = id.profile.fullName;
-      commenterProfileUri = id.profile.url;
+      commenterProfileUri = LinkProvider.getUserProfileUri(id.getRemoteId());
       commentMessage = it.title;
       commentPostedTime = uicomponent.getPostedTimeString(_ctx, it.postedTime);
     %>
@@ -276,7 +279,7 @@
 
     <%
       def currentCommenterIdentity = Utils.getOwnerIdentity();
-      def currentCommenterUri = currentCommenterIdentity.profile.url;
+      def currentCommenterUri = LinkProvider.getUserProfileUri(currentCommenterIdentity.getRemoteId());
       def currentCommenterAvatar = currentCommenterIdentity.profile.avatarUrl;
       def currentCommenterName = currentCommenterIdentity.profile.fullName;
       if (!currentCommenterAvatar) currentCommenterAvatar= LinkProvider.PROFILE_DEFAULT_AVATAR_URL;
@@ -298,4 +301,3 @@
 <% } else { %> <!-- activity deleted -->
 <div class="UIActivity Deleted">$labelActivityHasBeenDeleted</div>
 <% }%>
-

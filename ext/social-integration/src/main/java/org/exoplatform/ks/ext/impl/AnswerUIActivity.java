@@ -1,6 +1,5 @@
 package org.exoplatform.ks.ext.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +22,7 @@ import org.exoplatform.social.core.activity.model.ExoSocialActivityImpl;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
+import org.exoplatform.social.core.storage.ActivityStorageException;
 import org.exoplatform.social.webui.activity.BaseUIActivity;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -31,7 +31,6 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.lifecycle.WebuiBindingContext;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 
 @ComponentConfig (
@@ -42,18 +41,38 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
         @EventConfig(listeners = BaseUIActivity.ToggleDisplayCommentFormActionListener.class),
         @EventConfig(listeners = BaseUIActivity.LikeActivityActionListener.class),
         @EventConfig(listeners = BaseUIActivity.SetCommentListStatusActionListener.class),
-        @EventConfig(listeners = BaseUIActivity.PostCommentActionListener.class),
         @EventConfig(listeners = BaseUIActivity.DeleteActivityActionListener.class, confirm = "UIActivity.msg.Are_You_Sure_To_Delete_This_Activity"),
         @EventConfig(listeners = BaseUIActivity.DeleteCommentActionListener.class, confirm = "UIActivity.msg.Are_You_Sure_To_Delete_This_Comment"),
-        @EventConfig(listeners = AnswerUIActivity.CommentQuestionActionListener.class)
+        @EventConfig(listeners = AnswerUIActivity.PostCommentActionListener.class)
     }
 )
 public class AnswerUIActivity extends BaseKSActivity {
 
-  public AnswerUIActivity() {
-  }
+  public AnswerUIActivity() {}
   
-  private List<ExoSocialActivity> questionComments_;
+  @Override
+  protected void refresh() throws ActivityStorageException {
+    super.refresh();
+    // try to access "comments" field of BaseUIActivity  
+    if (isQuestionActivity()) {
+      List<ExoSocialActivity> comments = getAllComments();
+      FAQService faqService = (FAQService) ExoContainerContext.getCurrentContainer()
+                                                              .getComponentInstanceOfType(FAQService.class);
+      try {
+        Comment[] commentObjs = faqService.getComments(getActivityParamValue(AnswersSpaceActivityPublisher.QUESTION_ID_KEY));
+        for (Comment comment : commentObjs) {
+          ExoSocialActivity act = toActivity(comment);
+          if (act != null)
+            comments.add(act);
+        }
+      } catch (Exception e) {
+        if (log.isWarnEnabled()) {
+          log.warn(String.format("Failed to get comments of question: %s", getActivityParamValue(AnswersSpaceActivityPublisher.QUESTION_ID_KEY)), e);
+        }
+      }
+    }
+  }
+
 
   private ExoSocialActivity toActivity(Comment comment) {
     ExoSocialActivity activity = null;
@@ -70,36 +89,6 @@ public class AnswerUIActivity extends BaseKSActivity {
     return activity;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.exoplatform.social.webui.activity.BaseUIActivity#getComments()
-   */
-  @Override
-  public List<ExoSocialActivity> getComments() {
-    if (isQuestionActivity()) {
-      if (questionComments_ == null)
-        questionComments_ = new ArrayList<ExoSocialActivity>();
-      if (questionComments_.isEmpty()) {
-        FAQService faqService = (FAQService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FAQService.class);
-        try {
-          Comment[] comments = faqService.getComments(getActivityParamValue(AnswersSpaceActivityPublisher.QUESTION_ID_KEY));
-          for (Comment comment : comments) {
-            ExoSocialActivity act = toActivity(comment);
-            if (act != null)
-              questionComments_.add(act);
-          }
-        } catch (Exception e) {
-          if (log.isWarnEnabled()) {
-            log.warn(String.format("Failed to get comments of question: %s",getActivityParamValue(AnswersSpaceActivityPublisher.QUESTION_ID_KEY)), e);
-          }
-        }
-      }
-
-      return questionComments_;
-    } else {
-      return super.getComments();
-    }
-  }
 
   @SuppressWarnings("unused")
   private String getTitle(WebuiBindingContext _ctx) throws Exception {
@@ -119,6 +108,8 @@ public class AnswerUIActivity extends BaseKSActivity {
     return title;
   }
 
+  
+  
   public boolean isQuestionActivity() {
     String value = getActivityParamValue(AnswersSpaceActivityPublisher.ACTIVITY_TYPE_KEY);
     if (value.indexOf(AnswersSpaceActivityPublisher.QUESTION) >= 0) {
@@ -155,12 +146,15 @@ public class AnswerUIActivity extends BaseKSActivity {
     return link;
   }
 
-  public static class CommentQuestionActionListener extends EventListener<AnswerUIActivity> {
+  public static class PostCommentActionListener extends BaseUIActivity.PostCommentActionListener {
 
     @Override
-    public void execute(Event<AnswerUIActivity> event) throws Exception {
-      AnswerUIActivity uiActivity = event.getSource();
-      // uiActivity.refresh();
+    public void execute(Event event) throws Exception {
+      AnswerUIActivity uiActivity = (AnswerUIActivity) event.getSource();
+      if (!uiActivity.isQuestionActivity()) {
+        super.execute(event);
+        return;
+      }
       WebuiRequestContext context = event.getRequestContext();      
       UIFormTextAreaInput uiFormComment = uiActivity.getChild(UIFormTextAreaInput.class);
       String message = uiFormComment.getValue();
@@ -227,7 +221,7 @@ public class AnswerUIActivity extends BaseKSActivity {
       // cache question's comment
       ExoSocialActivity act = uiActivity.toActivity(comment);
       if (act != null)
-        uiActivity.questionComments_.add(act);
+        uiActivity.getAllComments().add(act);
       uiFormComment.reset();
       uiActivity.setCommentFormFocused(true);
       context.addUIComponentToUpdateByAjax(uiActivity);

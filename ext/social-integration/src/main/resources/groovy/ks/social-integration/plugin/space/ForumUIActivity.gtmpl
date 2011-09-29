@@ -27,13 +27,14 @@
   import org.exoplatform.social.core.space.model.Space;
   import org.exoplatform.social.webui.Utils;
   import org.exoplatform.social.core.service.LinkProvider;
-	import org.exoplatform.ks.ext.impl.ForumSpaceActivityPublisher;
+  import org.exoplatform.ks.ext.impl.ForumSpaceActivityPublisher;
 
   def pcontext = Util.getPortalRequestContext();
   def labelActivityHasBeenDeleted = _ctx.appRes("UIActivity.label.Activity_Has_Been_Deleted");
   def activity = uicomponent.getActivity();
   def activityDeletable = uicomponent.isActivityDeletable();
   def activityCommentAndLikable = uicomponent.isActivityCommentAndLikable();
+  def streamOwner = activity.getStreamOwner();
 %>
 
 <% if (activity) { //process if not null
@@ -125,7 +126,7 @@
 
   def ownerIdentity = uicomponent.ownerIdentity;
   if (uicomponent.isUserActivity()) {
-    ownerUri = ownerIdentity.profile.url;
+    ownerUri = LinkProvider.getUserProfileUri(ownerIdentity.getRemoteId());
     ownerAvatar = ownerIdentity.profile.avatarUrl;
     ownerName = ownerIdentity.profile.fullName;
     if (!ownerAvatar) ownerAvatar= LinkProvider.PROFILE_DEFAULT_AVATAR_URL;
@@ -138,7 +139,7 @@
   }
 %>
 
-<div class="UIActivity ForumActivity">
+<div class="UIActivity">
   <script type="text/javascript">
     function initUIActivity${activity.id}() {
       new eXo.social.webui.UIActivity($params);
@@ -153,17 +154,17 @@
       <span class="BorderBottom"></span>
     </a>
     <div class="ContentBox" id="ContextBox${activity.id}">
-      <div class="TitleBlock TextBold">
-      	<%
-      		String herf = "<a class='TextBold' href=\"{0}\">{1}</a>";
-     			activityContentTitle = uicomponent.getActivityContentTitle(_ctx, herf) ;
-     		%>
-       	$activityContentTitle<br>
-	  </div>
-       	<div class="CommentBox QuoterBox">
-       		<p class="QuoterClose">$activity.body</p>
-       </div>
-      <div class="ForumActivityIcon ActivityIcon">
+    <div class="TitleBlock TextBold">
+      <%
+        def href = "<a class='TextBold' href=\"{0}\">{1}</a>";
+        def activityContentTitle = uicomponent.getActivityContentTitle(_ctx, href);
+      %>
+      $activityContentTitle<br>
+    </div>
+    <div class="CommentBox QuoterBox">
+      <p class="QuoterClose">$activity.body</p>
+   </div>
+      <div class="ForumActivityIcon DefaultActivityIcon">
         <span class="DateTime">$activityPostedTime *</span>
       <% def toggleDisplayCommentAction = uicomponent.event('ToggleDisplayCommentForm', null, false);
          def commentLink = "";
@@ -171,7 +172,7 @@
      <% if (activityCommentAndLikable) { %>
         <a class="$commentLink" onclick="$toggleDisplayCommentAction" id="CommentLink${activity.id}" href="#comment">
           $labelComment
-        </a>  <a>|</a>
+        </a> |
       <% if (uicomponent.isLiked()) { %>
         <a onclick="$unlikeActivityAction" id="UnLikeLink${activity.id}" href="#unlike">
           $labelUnlike
@@ -179,21 +180,23 @@
       <% } else { %>
         <a onclick="$likeActivityAction" id="LikeLink${activity.id}" href="#like">
           $labelLike
-        </a> <a>|</a>
+        </a>
       <% }%>
      <% }%>
-				<a href="${uicomponent.getReplyLink()}" id="ReplyLink${activity.id}">
-					<%= _ctx.appRes("ForumUIActivity.label.reply")%>
-				</a> <a>|</a>
-				<a href="${uicomponent.getViewLink()}" id="View${activity.id}">
-				  <%= _ctx.appRes("ForumUIActivity.label.view") %>
-				</a> 
+     &nbsp;|&nbsp;
+     <a href="${uicomponent.getReplyLink()}" id="ReplyLink${activity.id}">
+       <%= _ctx.appRes("ForumUIActivity.label.reply")%>
+     </a>
+     &nbsp;|&nbsp;
+     <a href="${uicomponent.getViewLink()}" id="View${activity.id}">
+       <%= _ctx.appRes("ForumUIActivity.label.view") %>
+     </a>
       </div>
     <% if (identityLikesNum > 0 || uicomponent.isLiked()) {%>
       <div class="ListPeopleLikeBG $listPeopleBGClass">
           <div class="ListPeopleContent">
           <% if (!labelLikes) labelLikes = ""; %>
-			      $labelLikes
+            $labelLikes
 
             <% if (identityLikesNum > 0) {%>
             <div class="$listPeopleLikeBlockClass">
@@ -201,7 +204,7 @@
             displayedIdentityLikes.each({
               def id = Utils.getIdentityManager().getIdentity(it);
               personLikeFullName = id.profile.fullName;
-              personLikeProfileUri = id.profile.url;
+              personLikeProfileUri = LinkProvider.getUserProfileUri(id.getRemoteId());
               personLikeAvatarImageSource = id.profile.avatarUrl;
               if (!personLikeAvatarImageSource) personLikeAvatarImageSource = LinkProvider.PROFILE_DEFAULT_AVATAR_URL;
               %>
@@ -214,14 +217,14 @@
           </div>
       </div>
     <%}%>
-
+    
    <div id="CommentBlockBound${activity.id}">
-
+    
       <% if (uicomponent.commentListToggleable()) {
       def showAllCommentsAction = uicomponent.event("SetCommentListStatus", "all");
       def hideAllCommentsAction = uicomponent.event("SetCommentListStatus", "none");
       %>
-
+      
       <div class="CommentListInfo">
             <% if (commentListStatus.getStatus().equals("latest") || commentListStatus.getStatus().equals("none")) { %>
               <a onclick="$showAllCommentsAction" href="#show-all-comments">
@@ -248,7 +251,7 @@
 
       def id = Utils.getIdentityManager().getIdentity(it.userId);
       commenterFullName = id.profile.fullName;
-      commenterProfileUri = id.profile.url;
+      commenterProfileUri = LinkProvider.getUserProfileUri(id.getRemoteId());
       commentMessage = it.title;
       commentPostedTime = uicomponent.getPostedTimeString(_ctx, it.postedTime);
     %>
@@ -256,7 +259,7 @@
         <div class="ContentBox">
             <h5><a href="$commenterProfileUri">$commenterFullName</a></h5>
             <p class="ContentBlock">
-            	$commentMessage
+              $commentMessage
             </p>
           <div class="DateTime">
             $commentPostedTime
@@ -272,7 +275,7 @@
 
     <%
       def currentCommenterIdentity = Utils.getOwnerIdentity();
-      def currentCommenterUri = currentCommenterIdentity.profile.url;
+      def currentCommenterUri = LinkProvider.getUserProfileUri(currentCommenterIdentity.getRemoteId());
       def currentCommenterAvatar = currentCommenterIdentity.profile.avatarUrl;
       def currentCommenterName = currentCommenterIdentity.profile.fullName;
       if (!currentCommenterAvatar) currentCommenterAvatar= LinkProvider.PROFILE_DEFAULT_AVATAR_URL;
