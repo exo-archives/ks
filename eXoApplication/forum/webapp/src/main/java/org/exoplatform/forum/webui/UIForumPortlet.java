@@ -29,7 +29,6 @@ import javax.xml.namespace.QName;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.info.ForumParameter;
@@ -48,7 +47,6 @@ import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.WebUIUtils;
@@ -443,7 +441,10 @@ public class UIForumPortlet extends UIPortletApplication {
        UserProfile.GUEST == userProfile.getUserRole() ) {
       isRenderActionBar = false;
     }
-    getChild(UIForumActionBar.class).setRendered(isRenderActionBar);
+    UIForumActionBar actionBar = getChild(UIForumActionBar.class);
+    if (actionBar != null) {
+      actionBar.setRendered(isRenderActionBar);
+    }
   }
 
   public UserProfile getUserProfile() throws Exception {
