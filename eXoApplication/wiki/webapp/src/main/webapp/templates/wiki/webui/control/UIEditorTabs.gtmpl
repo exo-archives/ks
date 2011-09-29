@@ -1,5 +1,3 @@
 <div id="$uicomponent.id" class="UIEditorTabs" >
-	<!--[if IE]> <div style="width:245px;"> <![endif]-->
 	<% uicomponent.renderChildren(); %>
-	<!--[if IE]> </div> <![endif]-->
 </div>
