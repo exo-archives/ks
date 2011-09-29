@@ -22,8 +22,10 @@ import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.social.core.space.SpaceListenerPlugin;
 import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.impl.SpaceServiceImpl;
@@ -59,37 +61,52 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
     } catch (Exception e) {
       // do nothing here. It means that initparam is not configured.
     }
-    
+
     if (!portletName.equals(event.getSource())) {
       /*
-       * this function is called only if Forum Portlet is added to Social Space.
+       * this function is called only if Forum Portlet is added to Social Space. 
        * Hence, if the application added to space do not have the name as configured, we will be out now.
        */
       return;
     }
-    Space space = event.getSpace();
-    Category category = new Category();
-    category.setId(Utils.CATEGORY + space.getId());
-    category.setCategoryName(SpaceUtils.SPACE_GROUP.split("/")[1]);
-    category.setOwner(SpaceServiceImpl.MANAGER +":"+ space.getGroupId());
-    category.setUserPrivate(new String[] {space.getGroupId()});
-    category.setDescription("");
-
-    Forum forum = new Forum();
-    forum.setOwner(SpaceServiceImpl.MANAGER +":"+ space.getGroupId());
-    forum.setId(Utils.FORUM_SPACE_ID_PREFIX + space.getId());
-    forum.setForumName(space.getPrettyName());
-    forum.setDescription(space.getDescription());
-    //TODO hard text manager should check with portal team
-    forum.setModerators(new String[]{SpaceServiceImpl.MANAGER +":"+ space.getGroupId()});
     ForumService fServie = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+    Space space = event.getSpace();
+    String parentGrId = "";
     try {
-      if(fServie.getCategory(category.getId()) == null) fServie.saveCategory(category, true);
+      OrganizationService service = (OrganizationService) PortalContainer.getInstance().getComponentInstanceOfType(OrganizationService.class);
+      parentGrId = service.getGroupHandler().findGroupById(space.getGroupId()).getParentId();
 
-      if(fServie.getForum(category.getId(), forum.getId()) == null) fServie.saveForum(category.getId(), forum, true); 
+      String categorySpId = Utils.CATEGORY + parentGrId.replaceAll(CommonUtils.SLASH, CommonUtils.EMPTY_STR);
+      Category category = fServie.getCategory(categorySpId);
+      if (category == null) {
+        category = new Category(categorySpId);
+        category.setCategoryName(SpaceUtils.SPACE_GROUP.replace(CommonUtils.SLASH, CommonUtils.EMPTY_STR));
+        if (!CommonUtils.isEmpty(space.getCreator())) {
+          category.setOwner(space.getCreator());
+        } else {
+          category.setOwner("");
+        }
+        category.setUserPrivate(new String[] { parentGrId });
+        category.setDescription("");
+        fServie.saveCategory(category, true);
+      }
 
-    }catch (Exception e) {
-      log.debug(e.getMessage());
+      Forum forum = new Forum();
+      forum.setOwner(space.getCreator());
+      forum.setId(Utils.FORUM_SPACE_ID_PREFIX + space.getId());
+      forum.setForumName(space.getPrettyName());
+      forum.setDescription(space.getDescription());
+      // TODO hard text manager should check with portal team
+      forum.setModerators(new String[] { SpaceServiceImpl.MANAGER + ":" + space.getGroupId() });
+      String []roles = new String [] {space.getGroupId()};
+      forum.setCreateTopicRole(roles);
+      forum.setPoster(roles);
+      forum.setViewer(roles);
+      if (fServie.getForum(categorySpId, forum.getId()) == null){
+        fServie.saveForum(categorySpId, forum, true);
+      }
+    } catch (Exception e) {
+      log.debug("Failed to add forum space. " + e.getMessage());
     }
   }
 
