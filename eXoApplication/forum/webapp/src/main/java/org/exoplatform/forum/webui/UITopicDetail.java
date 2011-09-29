@@ -1116,17 +1116,13 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   static public class SetMoveTopicActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
       try {
-        UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
-        UIMoveTopicForm moveTopicForm = popupAction.createUIComponent(UIMoveTopicForm.class, null, null);
         List<Topic> topics = new ArrayList<Topic>();
         topics.add(topicDetail.topic);
         topicDetail.isEditTopic = true;
+        UIMoveTopicForm moveTopicForm = topicDetail.openPopup(UIMoveTopicForm.class, 400, 420);
         moveTopicForm.updateTopic(topicDetail.forumId, topics, true);
-        popupAction.activate(moveTopicForm, 400, 420);
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
       } catch (Exception e) {
         warning("UIForumPortlet.msg.topicEmpty");
         topicDetail.refreshPortlet();
