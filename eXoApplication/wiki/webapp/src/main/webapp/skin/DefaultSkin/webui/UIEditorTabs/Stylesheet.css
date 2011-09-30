@@ -1,43 +1,30 @@
 .UIWikiPageEditForm .UIEditorTabs {
-	background: url("/wiki/skin/DefaultSkin/webui/background/BgButton.gif") repeat-x left bottom;
 	float: left;
 	height: auto;
-	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;
-	border-radius: 15px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 	margin-bottom: 10px;
+	border: 1px solid #d6d6d6;
+	padding: 6px 0px;
 }
 
 .UIWikiPageEditForm .UIEditorTabs .RichText {
-	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 4px -236px;
-	-moz-border-radius: 15px 0px 0px 15px;
-	-webkit-border-radius: 15px 0px 0px 15px;
-	border-radius: 15px 0px 0px 15px;
-	border: 1px solid #acacac;
-	border-right: 1px solid #fff;
+	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 4px -239px;
+	border-right: 1px solid #d6d6d6;
 }
 
 .UIWikiPageEditForm .UIEditorTabs .Help {
-	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 4px -213px;
-	border: 1px solid #acacac;
+	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 4px -215px;
+	border-right: 1px solid #d6d6d6;
 }
 
 .UIWikiPageEditForm .UIEditorTabs .SourceEditor {
-	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 5px -25px;
-	border: 1px solid #acacac;
+	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 5px -27px;
+	border-right: 1px solid #d6d6d6;
 }
 
 .UIWikiPageEditForm .UIEditorTabs .PreviewPage {
-	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 3px -189px;
-	-moz-border-radius: 0px 15px 15px 0px;
-	-webkit-border-radius: 0px 15px 15px 0px;
-	border-radius: 0px 15px 15px 0px;
-	border: 1px solid #acacac;
-	border-left: 1px solid #fff;
+	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 3px -192px;
 }
 
-.UIWikiPageEditForm .UIEditorTabs a:last-child {
-	-moz-border-radius: 15px 0px 0px 15px;
-	-webkit-border-radius: 15px 0px 0px 15px;
-	border-radius: 15px 0px 0px 15px;
-}

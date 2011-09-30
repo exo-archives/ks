@@ -100,15 +100,15 @@
 	margin: 0px;
 	text-transform:capitalize;
 	color: black;
-	line-height: 22px;
+	line-height: 18px;
 }
 
 .UIWikiPageEditForm .UIEditorTabs .Icon:hover {
   text-decoration: none;
-	border: 1px solid #666666;
+  color: #4283c7;
 }
 
 .UIWikiPageEditForm .UISubmitToolBar .Icon:hover {
   text-decoration: none;
-	border: 1px solid #666666;
+  color: #4283c7;
 }
