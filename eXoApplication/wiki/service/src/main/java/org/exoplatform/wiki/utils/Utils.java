@@ -15,6 +15,7 @@ import javax.jcr.ValueFormatException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
@@ -519,12 +520,15 @@ public class Utils {
   }
 
   public static Page makeSimplePage(Node pageNode) throws ValueFormatException, PathNotFoundException, RepositoryException {
-    String name = pageNode.getProperty("exo:name").getString();
+    String name = pageNode.getName();
     String title = name;
     if (pageNode.hasProperty(Definition.TITLE)) {
       title = pageNode.getProperty(Definition.TITLE).getString();
     }
-    String owner = pageNode.getProperty(Definition.OWNER).getString();
+    String owner = StringUtils.EMPTY;
+    if (pageNode.hasProperty(Definition.OWNER)) {
+      owner = pageNode.getProperty(Definition.OWNER).getString();
+    }
     SimplePageImpl page = new SimplePageImpl(name, title, owner);
     if (pageNode.hasProperty(Definition.CREATED_DATE)) 
       page = page.createDate(pageNode.getProperty(Definition.CREATED_DATE).getDate().getTime());
