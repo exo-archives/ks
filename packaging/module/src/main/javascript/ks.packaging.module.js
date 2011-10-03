@@ -11,25 +11,27 @@ function getModule(params) {
   module.relativeSRCRepo = "ks";
   module.name = "ks";
   
-  var cometVersion = "${org.exoplatform.commons.version}";
-  var webuiExtVersion = "${org.exoplatform.commons.version}";
+  var commonsVersion = "${org.exoplatform.commons.version}";
+
   module.comet = {};
   module.comet.cometd =
-    new Project("org.exoplatform.commons", "exo.platform.commons.comet.webapp", "war", cometVersion).
+    new Project("org.exoplatform.commons", "exo.platform.commons.comet.webapp", "war", commonsVersion).
     addDependency(new Project("org.mortbay.jetty", "cometd-bayeux", "jar", "${org.mortbay.jetty.cometd-bayeux.version}")).
     addDependency(new Project("org.mortbay.jetty", "jetty-util", "jar", "${org.mortbay.jetty.jetty-util.version}")).
     addDependency(new Project("org.mortbay.jetty", "cometd-api", "jar", "${org.mortbay.jetty.cometd-api.version}")).
-    addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.comet.service", "jar", cometVersion));
+    addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.comet.service", "jar", commonsVersion));
   module.comet.cometd.deployName = "cometd";
   
-  module.webuiExt = new Project("org.exoplatform.commons", "exo.platform.commons.webui.ext", "jar", webuiExtVersion);
+  module.webuiExt = new Project("org.exoplatform.commons", "exo.platform.commons.webui.ext", "jar", commonsVersion);
+
   
   // KS
 
   // KS components
   module.component = {};
   module.component.common = new Project("org.exoplatform.ks", "exo.ks.component.common", "jar", module.version).
-                            addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.component", "jar", "${org.exoplatform.commons.version}"));
+                            addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.component", "jar", commonsVersion)).
+                            addDependency(new Project("org.exoplatform.commons", "exo.platform.commons.webui", "jar", commonsVersion));
   module.component.rendering = new Project("org.exoplatform.ks", "exo.ks.component.rendering", "jar", module.version);
   module.component.bbcode = new Project("org.exoplatform.ks", "exo.ks.component.bbcode", "jar", module.version);
 
