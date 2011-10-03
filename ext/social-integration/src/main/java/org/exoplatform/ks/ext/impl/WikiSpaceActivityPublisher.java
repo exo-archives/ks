@@ -3,6 +3,7 @@ package org.exoplatform.ks.ext.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.portal.config.model.PortalConfig;
@@ -19,8 +20,9 @@ import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.social.core.storage.SpaceStorageException;
 import org.exoplatform.wiki.mow.api.Page;
-import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.service.listener.PageWikiListener;
+import org.xwiki.rendering.syntax.Syntax;
 
 public class WikiSpaceActivityPublisher extends PageWikiListener {
 
@@ -41,6 +43,10 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
   public static final String PAGE_TITLE_KEY    = "page_name".intern();
 
   public static final String URL_KEY           = "page_url".intern();
+  
+  public static final String PAGE_EXCERPT      = "page_exceprt".intern();
+
+  private static final int   EXCERPT_LENGTH    = 140;
 
   private static Log         LOG               = ExoLogger.getExoLogger(WikiSpaceActivityPublisher.class);
 
@@ -63,8 +69,8 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
       // this listener is only for group wiki page.
       return;
     }
-    WikiService wikiService = (WikiService) PortalContainer.getInstance().getComponentInstanceOfType(WikiService.class);
-
+    RenderingService renderingService = (RenderingService) PortalContainer.getInstance()
+                                                                          .getComponentInstanceOfType(RenderingService.class);
     String groupId = "/" + wikiOwner;
     SpaceService spaceService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
     Space space = null;
@@ -96,6 +102,15 @@ public class WikiSpaceActivityPublisher extends PageWikiListener {
     templateParams.put(PAGE_TYPE_KEY, wikiType);
     templateParams.put(PAGE_TITLE_KEY, page.getTitle());
     templateParams.put(URL_KEY, page.getURL());
+    
+    String excerpt = StringUtils.EMPTY;
+    if (ADD_PAGE_TYPE.equals(addType)) {
+      excerpt = renderingService.render(page.getContent().getText(), page.getSyntax(), Syntax.PLAIN_1_0.toIdString(), false);
+    } else {
+      excerpt = page.getComment();
+    }
+    excerpt = (excerpt.length() > EXCERPT_LENGTH) ? excerpt.substring(0, EXCERPT_LENGTH) + "..." : excerpt;
+    templateParams.put(PAGE_EXCERPT, excerpt);
     activity.setTemplateParams(templateParams);
     activityM.saveActivity(spaceIdentity, activity);
   }

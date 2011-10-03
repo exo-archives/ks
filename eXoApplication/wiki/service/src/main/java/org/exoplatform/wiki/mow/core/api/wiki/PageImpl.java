@@ -35,6 +35,7 @@ import org.chromattic.api.ChromatticSession;
 import org.chromattic.api.DuplicateNameException;
 import org.chromattic.api.RelationshipType;
 import org.chromattic.api.annotations.Create;
+import org.chromattic.api.annotations.DefaultValue;
 import org.chromattic.api.annotations.Destroy;
 import org.chromattic.api.annotations.ManyToOne;
 import org.chromattic.api.annotations.MappedBy;
@@ -156,6 +157,7 @@ public abstract class PageImpl extends NTFolder implements Page {
   public abstract void setSyntax(String syntax);
   
   @Property(name = WikiNodeType.Definition.COMMENT)
+  @DefaultValue({""})
   public abstract String getComment();
   public abstract void setComment(String comment);
   

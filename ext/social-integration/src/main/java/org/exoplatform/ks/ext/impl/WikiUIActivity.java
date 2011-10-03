@@ -29,5 +29,9 @@ public class WikiUIActivity extends BaseKSActivity {
   String getPageURL() {
     return getActivityParamValue(WikiSpaceActivityPublisher.URL_KEY);
   }
+  
+  String getPageExcerpt(){
+    return getActivityParamValue(WikiSpaceActivityPublisher.PAGE_EXCERPT);
+  }
 
 }

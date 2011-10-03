@@ -24,11 +24,12 @@ import org.apache.commons.chain.Context;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.services.command.action.Action;
 import org.exoplatform.services.ext.action.InvocationContext;
-import org.exoplatform.services.jcr.observation.ExtendedEvent;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
+import org.exoplatform.wiki.mow.core.api.MOWService;
+import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.service.listener.PageWikiListener;
 import org.exoplatform.wiki.utils.Utils;
@@ -91,9 +92,10 @@ public class WikiPageJcrListener implements Action {
     Object currentItemObj = context.get(InvocationContext.CURRENT_ITEM);    
     ExoContainer container = (ExoContainer) context.get(InvocationContext.EXO_CONTAINER);
     WikiService wikiService = (WikiService) container.getComponentInstanceOfType(WikiService.class);
+    MOWService mowService = (MOWService) container.getComponentInstanceOfType(MOWService.class);
 
     Node pageNode = (Node) currentItemObj;
-    Page page = Utils.makeSimplePage(pageNode);
+    Page page = mowService.getSession().findByNode(PageImpl.class, pageNode);
 
     if (pageNode.isNodeType(WikiNodeType.WIKI_HELP_PAGE) || pageNode.isNodeType(WikiNodeType.WIKI_TEMPLATE)) {
       // filter events on help or template page.

@@ -27,6 +27,7 @@
   import org.exoplatform.social.core.space.model.Space;
   import org.exoplatform.social.webui.Utils;
   import org.exoplatform.social.core.service.LinkProvider;
+  import org.apache.commons.lang.StringUtils;
 
   def pcontext = Util.getPortalRequestContext();
   def labelActivityHasBeenDeleted = _ctx.appRes("UIActivity.label.Activity_Has_Been_Deleted");
@@ -162,9 +163,11 @@
         %>
         $pageMsg
       </div>
+      <% if (!StringUtils.EMPTY.equals(uicomponent.getPageExcerpt())) { %>
         <div class="BoxGray">
-        wiki content
-      </div>
+          <%=uicomponent.getPageExcerpt()%>
+        </div>
+      <% } %>
       <div class="DefaultActivityIcon">
         <span class="DateTime">$activityPostedTime *</span>
       <% def toggleDisplayCommentAction = uicomponent.event('ToggleDisplayCommentForm', null, false);
