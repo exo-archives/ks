@@ -30,7 +30,6 @@ import javax.xml.namespace.QName;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -46,6 +45,7 @@ import org.exoplatform.forum.webui.popup.UISettingEditModeForm;
 import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -456,7 +456,7 @@ public class UIForumPortlet extends UIPortletApplication {
       } catch (Exception e) {
       }
     }
-    userProfile.setLastTimeAccessTopic(topicId, TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
+    userProfile.setLastTimeAccessTopic(topicId, CommonUtils.getGreenwichMeanTime().getTimeInMillis());
   }
 
   public void updateAccessForum(String forumId) throws Exception {
@@ -467,7 +467,7 @@ public class UIForumPortlet extends UIPortletApplication {
       } catch (Exception e) {
       }
     }
-    userProfile.setLastTimeAccessForum(forumId, TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
+    userProfile.setLastTimeAccessForum(forumId, CommonUtils.getGreenwichMeanTime().getTimeInMillis());
   }
 
   public void removeCacheUserProfile() {
@@ -703,7 +703,7 @@ public class UIForumPortlet extends UIPortletApplication {
             }
             if (!UserHelper.isAnonim()) {
               this.forumService.updateTopicAccess(userProfile.getUserId(), topic.getId());
-              this.getUserProfile().setLastTimeAccessTopic(topic.getId(), TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
+              this.getUserProfile().setLastTimeAccessTopic(topic.getId(), CommonUtils.getGreenwichMeanTime().getTimeInMillis());
             }
           } else {
             context.getUIApplication().addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[] { topic.getTopicName(), res.getString("UIForumPortlet.label.topic").toLowerCase() }, ApplicationMessage.WARNING));
@@ -800,7 +800,7 @@ public class UIForumPortlet extends UIPortletApplication {
       UIForumPortlet forumPortlet = event.getSource();
       ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
       if (params.getTopicId() != null) {
-        forumPortlet.userProfile.setLastTimeAccessTopic(params.getTopicId(), TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
+        forumPortlet.userProfile.setLastTimeAccessTopic(params.getTopicId(), CommonUtils.getGreenwichMeanTime().getTimeInMillis());
         UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
         topicDetail.setIdPostView("lastpost");
       }

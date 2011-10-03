@@ -25,7 +25,7 @@ import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -79,7 +79,7 @@ public class UICategoryInfo extends UIContainer {
     try {
       String[] strs = s.split(ForumUtils.COMMA);
       long l = Long.parseLong(strs[1].replace("at", ForumUtils.EMPTY_STR).trim());
-      Calendar calendar = TimeConvertUtils.getInstanceTempCalendar();
+      Calendar calendar = CommonUtils.getGreenwichMeanTime();
       double timeZone = userProfile.getTimeZone();
       if (userProfile.getUserId().equals(UserProfile.USER_GUEST))
         timeZone = 0;

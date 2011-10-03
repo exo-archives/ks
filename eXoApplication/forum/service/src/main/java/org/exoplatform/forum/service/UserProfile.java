@@ -147,7 +147,7 @@ public class UserProfile {
     Date dateHost = new Date();
     timeZone = (double) dateHost.getTimezoneOffset() / 60;
     shortDateformat = "MM/dd/yyyy";
-    longDateformat = "DDD,MMM dd,yyyy";
+    longDateformat = "EEE,MMM dd,yyyy";
     timeFormat = "hh:mm a";
   }
 

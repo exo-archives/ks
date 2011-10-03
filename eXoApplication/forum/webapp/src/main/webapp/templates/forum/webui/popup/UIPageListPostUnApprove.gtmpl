@@ -45,7 +45,7 @@
 									String message = uicomponent.getTitleInHTMLCode(post.getMessage()) ;
 									String iconPost = post.getIcon() ;
 									postDate.setTime(post.getCreatedDate().getTime() - setTime) ;
-									String createdDate = TimeConvertUtils.getFormatDate(formatDate,postDate) ;
+									String createdDate = TimeConvertUtils.convertXTimeAgo(postDate, formatDate) ;
 							%>
 								<tr class="$classRow">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconPost"><span></span></div></td>

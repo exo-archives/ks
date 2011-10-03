@@ -43,7 +43,7 @@
 									String topicBy = topic.getOwner();
 									String isActive = "" + topic.getIsActive();
 									postDate.setTime(topic.getCreatedDate().getTime() - setTime);
-									String lastPostDate = TimeConvertUtils.getFormatDate(formatDate, postDate);
+									String lastPostDate = TimeConvertUtils.convertXTimeAgo(postDate, formatDate);
 									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 									String postCount = String.valueOf(topic.getPostCount());

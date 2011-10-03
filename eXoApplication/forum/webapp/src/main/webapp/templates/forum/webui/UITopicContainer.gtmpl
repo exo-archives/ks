@@ -344,7 +344,7 @@
 										newPost = "New";									
 									}
 									postDate.setTime(topic.getLastPostDate().getTime() - setTime);
-									String lastPostDate = TimeConvertUtils.convertDateTimeResourceBundle(postDate, (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()))					
+									String lastPostDate = TimeConvertUtils.convertXTimeAgo(postDate, (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()))					
 									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 101);
 									int att = topic.getNumberAttachment() ;
@@ -420,7 +420,7 @@
 												<%}%>
 												
 												<div id="UIPopupCategory${rCNB}" style="display:none;">
-														<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu"><span></span></ul>
+														<ul action="$actionBookmark" class="ClickPopupContent UIRightClickPopupMenu" style="display:block;"><span></span></ul>
 												</div>
 											
 											

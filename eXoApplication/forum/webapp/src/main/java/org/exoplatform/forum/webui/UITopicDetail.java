@@ -35,7 +35,6 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
@@ -69,7 +68,6 @@ import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -648,7 +646,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         userProfile.addLastPostIdReadOfTopic(topicId, IdLastPost);
         UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
         forumPortlet.getUserProfile().addLastPostIdReadOfForum(forumId, topicId + ForumUtils.SLASH + IdLastPost);
-        forumPortlet.getUserProfile().addLastPostIdReadOfTopic(topicId, IdLastPost + ForumUtils.COMMA + TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
+        forumPortlet.getUserProfile().addLastPostIdReadOfTopic(topicId, IdLastPost + ForumUtils.COMMA + CommonUtils.getGreenwichMeanTime().getTimeInMillis());
         if (!UserProfile.USER_GUEST.equals(userName))
           getForumService().saveLastPostIdRead(userName, userProfile.getLastReadPostOfForum(), userProfile.getLastReadPostOfTopic());
       }
@@ -1537,9 +1535,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
               topicDetail.getForumService().savePost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true, messageBuilder);
               long postCount = topicDetail.getUserInfo(userName).getTotalPost() + 1;
               topicDetail.getUserInfo(userName).setTotalPost(postCount);
-              topicDetail.getUserInfo(userName).setLastPostDate(TimeConvertUtils.getInstanceTempCalendar().getTime());
+              topicDetail.getUserInfo(userName).setLastPostDate(CommonUtils.getGreenwichMeanTime().getTime());
               topicDetail.getForumService().updateTopicAccess(forumPortlet.getUserProfile().getUserId(), topic.getId());
-              forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), TimeConvertUtils.getInstanceTempCalendar().getTimeInMillis());
+              forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), CommonUtils.getGreenwichMeanTime().getTimeInMillis());
               if (topicDetail.userProfile.getIsAutoWatchTopicIPost()) {
                 List<String> values = new ArrayList<String>();
                 values.add(topicDetail.userProfile.getEmail());

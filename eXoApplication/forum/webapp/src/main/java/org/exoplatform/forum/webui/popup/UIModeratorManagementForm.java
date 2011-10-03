@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,10 +40,7 @@ import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.forum.webui.UITopicContainer;
-import org.exoplatform.forum.webui.UITopicDetail;
-import org.exoplatform.forum.webui.UITopicsTag;
-import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.organization.OrganizationService;
@@ -200,7 +196,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
   private String getIsBanned(UserProfile userProfile) throws Exception {
     if (userProfile.getBanUntil() > 0) {
-      Calendar calendar = TimeConvertUtils.getInstanceTempCalendar();
+      Calendar calendar = CommonUtils.getGreenwichMeanTime();
       if (calendar.getTimeInMillis() >= userProfile.getBanUntil()) {
         userProfile.setIsBanned(false);
         return "false";
@@ -419,7 +415,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     UIFormSelectBox shortdateFormat = new UIFormSelectBox(FIELD_SHORTDATEFORMAT_SELECTBOX, FIELD_SHORTDATEFORMAT_SELECTBOX, list);
     shortdateFormat.setValue(userProfile.getShortDateFormat());
     list = new ArrayList<SelectItemOption<String>>();
-    format = new String[] { "DDD, MMMM dd, yyyy", "DDDD, MMMM dd, yyyy", "DDDD, dd MMMM, yyyy", "DDD, MMM dd, yyyy", "DDDD, MMM dd, yyyy", "DDDD, dd MMM, yyyy", "MMMM dd, yyyy", "dd MMMM, yyyy", "MMM dd, yyyy", "dd MMM, yyyy" };
+    format = new String[] { "EEE, MMMM dd, yyyy", "EEEE, MMMM dd, yyyy", "EEEE, dd MMMM, yyyy", "EEE, MMM dd, yyyy", "EEEE, MMM dd, yyyy", "EEEE, dd MMM, yyyy", "MMMM dd, yyyy", "dd MMMM, yyyy", "MMM dd, yyyy", "dd MMM, yyyy" };
     for (String idFrm : format) {
       list.add(new SelectItemOption<String>((idFrm.toLowerCase() + " (" + TimeConvertUtils.getFormatDate(idFrm, date) + ")"), idFrm.replaceFirst(" ", "=")));
     }
@@ -450,19 +446,19 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     boolean isBan = userProfile.getIsBanned();
     isBanned.setChecked(isBan);
     list = new ArrayList<SelectItemOption<String>>();
-    String dv = "Days";
-    int i = 2;
-    long oneDate = 86400000, until;
+    String dv = "Day";
+    int i = 1;
+    long oneDate = 86400000, until = 0;
+    Calendar cal = CommonUtils.getGreenwichMeanTime();
     if (isBan) {
       until = userProfile.getBanUntil();
-      date.setTime(until);
-      list.add(new SelectItemOption<String>("Banned until: " + TimeConvertUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", date) + " GMT+0", ("Until_" + until)));
+      cal.setTimeInMillis(until);
+      list.add(new SelectItemOption<String>(getLabel("Banned until: ") + TimeConvertUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", cal.getTime()) + " GMT+0", ("Until_" + until)));
     }
-    date = getInstanceTempCalendar();
-    until = date.getTime() + oneDate;
-    date.setTime(until);
-    list.add(new SelectItemOption<String>("1 Day (" + TimeConvertUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", date) + " GMT+0)", "Until_" + until));
     while (true) {
+      if (i == 2 && dv.equals("Day")) {
+        dv = "Days";
+      }
       if (i == 8 && dv.equals("Days"))
         i = 10;
       if (i == 11) {
@@ -486,27 +482,32 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       if (i == 3 && dv.equals("Years")) {
         break;
       }
-      if (dv.equals("Days")) {
-        date = getInstanceTempCalendar();
-        until = date.getTime() + i * oneDate;
-        date.setTime(until);
+      if (dv.equals("Days") || dv.equals("Day")) {
+        cal = CommonUtils.getGreenwichMeanTime();
+        until = cal.getTimeInMillis() + i * oneDate;
+        cal.setTimeInMillis(until);
       }
       if (dv.equals("Weeks")) {
-        date = getInstanceTempCalendar();
-        until = date.getTime() + i * oneDate * 7;
-        date.setTime(until);
+        cal = CommonUtils.getGreenwichMeanTime();
+        until = cal.getTimeInMillis() + i * oneDate * 7;
+        cal.setTimeInMillis(until);
       }
       if (dv.equals("Month") || dv.equals("Months")) {
-        date = getInstanceTempCalendar();
-        date.setMonth(date.getMonth() + i);
-        until = date.getTime();
+        cal = CommonUtils.getGreenwichMeanTime();
+        int t = cal.get(Calendar.MONTH) + i;
+        if (t >= 12) {
+          cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
+          t -= 12;
+        }
+        cal.set(Calendar.MONTH, t);
+        until = cal.getTimeInMillis();
       }
       if (dv.equals("Years") || dv.equals("Year")) {
-        date = getInstanceTempCalendar();
-        date.setYear(date.getYear() + i);
-        until = date.getTime();
+        cal = CommonUtils.getGreenwichMeanTime();
+        cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + i);
+        until = cal.getTimeInMillis();
       }
-      list.add(new SelectItemOption<String>(i + " " + dv + " (" + TimeConvertUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", date) + " GMT+0)", ("Until_" + until)));
+      list.add(new SelectItemOption<String>(i + " " + getLabel(dv) + " (" + TimeConvertUtils.getFormatDate(userProfile.getShortDateFormat() + " hh:mm a", cal.getTime()) + " GMT+0)", ("Until_" + until)));
       ++i;
     }
     UIFormSelectBox banUntil = new UIFormSelectBox(FIELD_BANUNTIL_SELECTBOX, FIELD_BANUNTIL_SELECTBOX, list);
@@ -581,17 +582,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     listPostByUser.setUserName(this.userProfile.getUserId());
   }
 
-  @SuppressWarnings("static-access")
   private Date getNewDate(double timeZoneOld) {
-    Calendar calendar = GregorianCalendar.getInstance();
-    if (calendar.ZONE_OFFSET == 0) {
-      calendar.setTimeInMillis(calendar.getTimeInMillis() + (long) (timeZoneOld * 3600000));
-    }
+    Calendar calendar = CommonUtils.getGreenwichMeanTime();
+    calendar.setTimeInMillis(calendar.getTimeInMillis() + (long) (timeZoneOld * 3600000));
     return calendar.getTime();
-  }
-
-  private Date getInstanceTempCalendar() {
-    return TimeConvertUtils.getInstanceTempCalendar().getTime();
   }
 
   private void setForumLinks() throws Exception {
@@ -830,14 +824,14 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       }
       String banReason = inputSetBan.getUIFormTextAreaInput(FIELD_BANREASON_TEXTAREA).getValue();
       String[] banReasonSummaries = userProfile.getBanReasonSummary();
-      Date date = uiForm.getInstanceTempCalendar();
+      Date date = CommonUtils.getGreenwichMeanTime().getTime();
       int banCounter = userProfile.getBanCounter();
       date.setTime(banUntil);
       StringBuffer stringBuffer = new StringBuffer();
       if (!ForumUtils.isEmpty(banReason)) {
         stringBuffer.append("Ban Reason: ").append(banReason).append(" ");
       }
-      stringBuffer.append("From Date: ").append(TimeConvertUtils.getFormatDate("MM-dd-yyyy hh:mm a", uiForm.getInstanceTempCalendar())).append(" GMT+0 To Date: ").append(TimeConvertUtils.getFormatDate("MM-dd-yyyy hh:mm a", date)).append(" GMT+0");
+      stringBuffer.append("From Date: ").append(TimeConvertUtils.getFormatDate("MM-dd-yyyy hh:mm a", CommonUtils.getGreenwichMeanTime().getTime())).append(" GMT+0 To Date: ").append(TimeConvertUtils.getFormatDate("MM-dd-yyyy hh:mm a", date)).append(" GMT+0");
       if (isBanned) {
         if (banReasonSummaries != null && banReasonSummaries.length > 0) {
           if (wasBanned) {

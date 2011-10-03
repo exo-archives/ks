@@ -44,7 +44,7 @@
 					String fromUser = mail.getSendTo();
 					fromUser = ForumUtils.getCalculateListEmail(fromUser);
 					fromDate.setTime(mail.getReceivedDate().getTime() - setTime);
-					String strFromDate = TimeConvertUtils.getFormatDate(formatDate,fromDate);
+					String strFromDate = TimeConvertUtils.convertXTimeAgo(fromDate, formatDate);
 		%>
 			<tr class="$classCssSend">
 				<td class="text"><a href="<%=uicomponent.event("ViewMessage", mailId)%>">$nameMail</a></td>

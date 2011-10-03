@@ -60,7 +60,7 @@
 				classIconPost = "NormalTopicIcon" ;
 			String namePost = post.getName() ;
 			dateView.setTime(post.getCreatedDate().getTime() - setTime);
-			String createdDate = TimeConvertUtils.getFormatDate(longDateFormat,dateView);
+			String createdDate = TimeConvertUtils.convertXTimeAgo(dateView, longDateFormat);
 			//String message = uicomponent.getReplaceByBBCode(post.getMessage()) ;
 			String message = uicomponent.renderPost(post) ;
 			
@@ -68,13 +68,13 @@
 			String editDate ;
 			if(!ForumUtils.isEmpty(editBy)) {
 				dateView.setTime(post.getModifiedDate().getTime() - setTime);
-				editDate = TimeConvertUtils.getFormatDate(longDateFormat,dateView);
+				editDate = TimeConvertUtils.convertXTimeAgo(dateView, longDateFormat);
 			}
 			
 			String idMessage = "Id" + post.getId().substring(15);
 			Date joinedDate =  userInfo.getJoinedDate();
 			String joinDate = "";
-			if(joinedDate != null) joinDate = TimeConvertUtils.getFormatDate(shortDateFormat, joinedDate) ;
+			if(joinedDate != null) joinDate = TimeConvertUtils.convertXTimeAgo(joinedDate, shortDateFormat) ;
 			String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 			boolean isAnd = false ;
 			if(post.getIsHidden()) {
@@ -122,7 +122,7 @@
 									<% long totalPost = userInfo.getTotalPost();
 										if(totalPost > 0) {
 											 dateView.setTime(userInfo.getLastPostDate().getTime() - setTime);
-											 String lastPostDateOfUser = TimeConvertUtils.getFormatDate(shortDateFormat,dateView) ;
+											 String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(dateView, shortDateFormat) ;
 									%>
 									<span><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</span>
 									<span><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</span>
@@ -134,7 +134,7 @@
 									<span><%=_ctx.appRes("UITopicDetail.label.Location");%>: $location</span>
 									<%}
 										dateView.setTime(userInfo.getLastLoginDate().getTime() - setTime);
-										String lastLoginUser = TimeConvertUtils.getFormatDate(shortDateFormat, dateView) ;
+										String lastLoginUser = TimeConvertUtils.convertXTimeAgo(dateView, shortDateFormat) ;
 									%>
 									<span><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</span>
 								</div>

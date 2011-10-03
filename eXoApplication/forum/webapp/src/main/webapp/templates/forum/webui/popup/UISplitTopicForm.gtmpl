@@ -53,7 +53,7 @@
 				for(post in posts) {
 				 	String postId = post.getCreatedDate().getTime()+"/"+post.getId();
 					postDate.setTime(post.getCreatedDate().getTime() - setTime);
-					String createdDate = TimeConvertUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
+					String createdDate = TimeConvertUtils.convertXTimeAgo(postDate, (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()));
 					String classIconPost = post.getIcon() ;
 					if(classIconPost.length() <= 0) 
 						classIconPost = "NormalTopicIcon" ;

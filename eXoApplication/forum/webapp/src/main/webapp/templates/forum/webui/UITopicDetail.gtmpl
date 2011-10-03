@@ -404,13 +404,13 @@
 					classIconPost = "NormalTopicIcon" ;
 				String namePost = post.getName() ;
 				dateView.setTime(post.getCreatedDate().getTime() - setTime);
-				String createdDate = TimeConvertUtils.getFormatDate(longDateFormat,dateView);
+				String createdDate = TimeConvertUtils.convertXTimeAgo(dateView, longDateFormat);
 				String message = uicomponent.renderPost(post) ;
 				String editBy = post.getModifiedBy() ;
 				String editDate ;
 				if(!ForumUtils.isEmpty(editBy)) {
 					dateView.setTime(post.getModifiedDate().getTime() - setTime);
-					editDate = TimeConvertUtils.getFormatDate(longDateFormat,dateView);
+					editDate = TimeConvertUtils.convertXTimeAgo(dateView, longDateFormat);
 				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + postId.substring(15);
@@ -418,7 +418,7 @@
 				Date joinDate_ = userInfo.getJoinedDate();
 				if(joinDate_ != null) {
 					dateView.setTime(joinDate_.getTime() - setTime);
-					joinDate = TimeConvertUtils.getFormatDate(shortDateFormat, dateView) ;
+					joinDate = TimeConvertUtils.convertXTimeAgo(dateView, shortDateFormat) ;
 				}
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
@@ -510,30 +510,30 @@
 								</div>
 								<% } %>
 								<div class="InfoMember">
-									<span><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>:$joinDate</span>
+									<span><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</span>
 									<% long totalPost = userInfo.getTotalPost();
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
 											 dateView.setTime(lastPostOfUser.getTime() - setTime);
-											 String lastPostDateOfUser = TimeConvertUtils.getFormatDate(shortDateTimeFormat,dateView) ;
+											 String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(dateView, shortDateTimeFormat) ;
 									%>
-									<span><%=_ctx.appRes("UITopicDetail.label.Posts");%>:$totalPost</span>
+									<span><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</span>
 									<span><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</span>
 									<% } else {%>
 									<span><strong>$viewScreenName</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></span>
 									<% } 
 									 if(!ForumUtils.isEmpty(location)) {
 									%>
-									<span><%=_ctx.appRes("UITopicDetail.label.Location");%>:$location</span>
+									<span><%=_ctx.appRes("UITopicDetail.label.Location");%>: $location</span>
 									<%} 
 									  Date lastLogin = userInfo.getLastLoginDate();
 										String lastLoginUser = "" ;
 									  if(lastLogin != null){
 										  dateView.setTime(lastLogin.getTime() - setTime);
-										  lastLoginUser = TimeConvertUtils.getFormatDate(shortDateTimeFormat, dateView) ;
+										  lastLoginUser = TimeConvertUtils.convertXTimeAgo(dateView, shortDateTimeFormat) ;
 										}
 									%>
-									<span><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>:$lastLoginUser</span>
+									<span><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</span>
 								</div>
 							</div>
 						</td>
@@ -592,11 +592,11 @@
 								<%   }
 								   }
 								%>
-									<div class="PostTime FR"><%=_ctx.appRes(uiformId + ".label.Posted");%>:$createdDate </div>
+									<div class="PostTime FR"><%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </div>
 								<% } else { %>
 								<div class="FL PostViewTitleOtherAcc">
 									<div class="PostViewIcon $classIconPost FL">$namePost $alert</div>
-									<div class="PostTime FR"><%=_ctx.appRes("UITopicDetail.label.Posted");%>:$createdDate</div>
+									<div class="PostTime FR"><%=_ctx.appRes("UITopicDetail.label.Posted");%>: $createdDate</div>
 								</div>
 								<% } %>
 							</div>

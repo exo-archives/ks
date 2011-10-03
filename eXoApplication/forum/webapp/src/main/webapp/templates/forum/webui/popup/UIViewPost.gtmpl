@@ -19,7 +19,7 @@
 	long timeZone = (long)(userProfile.getTimeZone()*3600000) ;
 	Date dateView = new Date();
 	dateView.setTime(post.getCreatedDate().getTime() - timeZone);
-	String postCreatedDate = TimeConvertUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()), dateView);	
+	String postCreatedDate = TimeConvertUtils.convertXTimeAgo(dateView, (userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()));	
 	List attachments = post.getAttachments() ;
 %>
 <div class="UIViewPost" id="SizeImage">

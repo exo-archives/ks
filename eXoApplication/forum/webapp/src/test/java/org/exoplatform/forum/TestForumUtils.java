@@ -71,10 +71,6 @@ public class TestForumUtils extends TestCase {
     assertEquals("http://hostname/portal/login?&initialURI=/portal/groups/:spaces:test/test/forum/topic/1234", actual);
   }
 
-  public void testGetFormatDate() {
-    //fail("Not yet implemented");
-  }
-
   public void testIsValidEmailAddresses() throws Exception {
     String emails = ForumUtils.EMPTY_STR;
     // email is empty

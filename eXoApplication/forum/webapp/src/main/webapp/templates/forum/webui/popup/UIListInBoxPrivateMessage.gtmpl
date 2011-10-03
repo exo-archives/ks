@@ -41,7 +41,7 @@
 					if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
 					String fromUser = mail.getFrom();
 					fromDate.setTime(mail.getReceivedDate().getTime() - setTime);
-					String strFromDate = TimeConvertUtils.getFormatDate(formatDate, fromDate);
+					String strFromDate = TimeConvertUtils.convertXTimeAgo(fromDate, formatDate);
 		%>
 			<tr class="$classCssInbox">
 				<td class="text"><a href="<%=uicomponent.event("ViewMessage",mailId)%>">$nameMail</a></td>

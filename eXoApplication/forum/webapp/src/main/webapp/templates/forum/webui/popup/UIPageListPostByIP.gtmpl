@@ -58,7 +58,7 @@
 										String titlePost = ForumUtils.getSubString(message, 100);
 										String iconPost = post.getIcon() ;
 										postDate.setTime(post.getCreatedDate().getTime() - setTime) ;
-										String createdDate = TimeConvertUtils.getFormatDate(formatDate,postDate) ;
+										String createdDate = TimeConvertUtils.convertXTimeAgo(postDate, formatDate) ;
 										String path = post.getPath();
 										String topicId = path.substring(path.indexOf(Utils.TOPIC), path.lastIndexOf("/"));
 								%>
