@@ -78,7 +78,7 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.quartz-scheduler</groupId>
+      <groupId>quartz</groupId>
       <artifactId>quartz</artifactId>
       <scope>provided</scope>
     </dependency>
