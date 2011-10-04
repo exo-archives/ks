@@ -5,6 +5,7 @@
 
 .UIWikiPageEditForm .UIEditUpper  .UISubmitToolBar {
 	float: right;
+	padding-top: 17px;
 }
 
 .UIWikiPageEditForm .UISubmitToolBar .Delete {
