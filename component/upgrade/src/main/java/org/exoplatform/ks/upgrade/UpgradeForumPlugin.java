@@ -38,7 +38,6 @@ import org.exoplatform.services.jcr.core.nodetype.ExtendedNodeTypeManager;
 import org.exoplatform.services.jcr.core.nodetype.NodeTypeDataManager;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -50,13 +49,13 @@ import org.exoplatform.services.log.Log;
  */
 public class UpgradeForumPlugin extends UpgradeProductPlugin {
 
-  private static final Log     log              = ExoLogger.getLogger(UpgradeForumPlugin.class);
+  private static final Log    log              = ExoLogger.getLogger(UpgradeForumPlugin.class);
 
-  private static final String  NEW_DOAMIN_FORUM = "new.domain.forum";
+  private static final String NEW_DOAMIN_FORUM = "new.domain.forum";
 
-  private String               newDomain        = "";
+  private String              newDomain        = "";
 
-  private KSDataLocation       dataLocation;
+  private KSDataLocation      dataLocation;
 
   public UpgradeForumPlugin(InitParams initParams) {
     super(initParams);
@@ -76,7 +75,8 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
       Node forumHome = getForumHomeNode(sProvider);
       // register new nodeTypes
       log.info("\n\nRegister new nodeTypes...\n");
-      registerNodeTypes();
+      registerNodeTypes("jar:/conf/portal/forum-nodetypes.xml");
+      registerNodeTypes("jar:/conf/portal/forum-migrate-nodetypes.xml");
       log.info("\n\nMigration forum data....\n");
       migrationForumData(forumHome);
       log.info("\n\nMigration space....\n");
@@ -94,16 +94,17 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
     log.info("The size of list post migration: " + pIter.getSize());
     while (pIter.hasNext()) {
       Node pNode = pIter.nextNode();
+      pNode.addMixin("exo:forumMigrate");
       pNode.setProperty(Utils.EXO_IS_WAITING, new PropertyReader(pNode).bool(Utils.EXO_IS_WAITING, false));
-   // set new link for this post.
-      if(!Utils.isEmpty(newDomain)) {
+      // set new link for this post.
+      if (!Utils.isEmpty(newDomain)) {
         pNode.setProperty(Utils.EXO_LINK, calculateURL(new PropertyReader(pNode).string(Utils.EXO_LINK, "")));
       }
       pNode.save();
     }
-    
+
     // set new link for topics.
-    if(!Utils.isEmpty(newDomain)) {
+    if (!Utils.isEmpty(newDomain)) {
       NodeIterator tIter = getNodeIterator(forumHome, Utils.EXO_POST, new StringBuilder(""));
       log.info("The size of list topic migration: " + pIter.getSize());
       while (tIter.hasNext()) {
@@ -115,12 +116,12 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
   }
 
   private String calculateURL(String oldUrl) {
-    if(!Utils.isEmpty(oldUrl)) {
+    if (!Utils.isEmpty(oldUrl)) {
       oldUrl = newDomain + oldUrl.substring(oldUrl.indexOf("/", 8));
     }
     return oldUrl;
   }
-  
+
   private void migrationSpaceOfPLF(SessionProvider sProvider, Node forumHome) throws Exception {
     NodeIterator cIter = getOldAllNodeCateSpace(forumHome);
     log.info("Number spaces migration: " + cIter.getSize());
@@ -180,7 +181,6 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
   private NodeIterator getNodeIterator(Node node, String nodeType, StringBuilder strQuery) throws Exception {
     QueryManager qm = node.getSession().getWorkspace().getQueryManager();
     StringBuilder pathQuery = new StringBuilder(Utils.JCR_ROOT).append(node.getPath()).append("//element(*,").append(nodeType).append(")").append(strQuery).append(" order by @").append(Utils.EXO_CREATED_DATE).append(" descending");
-    System.out.println("=============> " + pathQuery.toString());
     Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
     QueryResult result = query.execute();
     return result.getNodes();
@@ -193,19 +193,18 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
     return getSession(sessionProvider).getRootNode().getNode(nodePath);
   }
 
-  private void registerNodeTypes() throws Exception {
+  private void registerNodeTypes(String nodeTypeFilesName) throws Exception {
     ConfigurationManager configurationService = (ConfigurationManager) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ConfigurationManager.class);
-    String nodeTypeFilesName = "jar:/conf/portal/forum-nodetypes.xml";
     InputStream inXml = configurationService.getInputStream(nodeTypeFilesName);
     ExtendedNodeTypeManager ntManager = dataLocation.getRepositoryService().getDefaultRepository().getNodeTypeManager();
-    log.info("Trying register node types from xml-file " + nodeTypeFilesName);
+    log.info("\nTrying register node types from xml-file " + nodeTypeFilesName);
     ntManager.registerNodeTypes(inXml, ExtendedNodeTypeManager.IGNORE_IF_EXISTS, NodeTypeDataManager.TEXT_XML);
-    log.info("Node types were registered from xml-file " + nodeTypeFilesName);
+    log.info("\nNode types were registered from xml-file " + nodeTypeFilesName);
   }
 
   public boolean shouldProceedToUpgrade(String newVersion, String previousVersion) {
-//    boolean doUpgrade = VersionComparator.isSame("0", previousVersion) && ((VersionComparator.isSame("2.2.3-SNAPSHOT", newVersion)) || (VersionComparator.isSame("2.2.3", newVersion)));
-//    return doUpgrade;
+    // boolean doUpgrade = VersionComparator.isSame("0", previousVersion) && ((VersionComparator.isSame("2.2.3-SNAPSHOT", newVersion)) || (VersionComparator.isSame("2.2.3", newVersion)));
+    // return doUpgrade;
     return true;
   }
 
