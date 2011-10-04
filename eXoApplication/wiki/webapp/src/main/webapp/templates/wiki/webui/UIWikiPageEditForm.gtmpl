@@ -49,13 +49,13 @@
   <% if(uiform.getChildById(uiform.FIELD_COMMENT).isRendered()) { %>
       <span class="CommentTitle"><%= _ctx.appRes("UIWikiPageEditForm.label.CommentTitle"); %></span>
   <%
-      uiform.renderField(uiform.FIELD_COMMENT);     
+      uiform.renderField(uiform.FIELD_COMMENT);      
+      uiform.renderChild(uiform.SUBMIT_TOOLBAR_BOTTOM);
   %>
   <% } %>
     </div>
  
 
   </div>
-  <%  uiform.renderChild(uiform.SUBMIT_TOOLBAR_BOTTOM); %>
 <% uiform.end();%>
 </div>
