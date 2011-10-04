@@ -619,16 +619,16 @@ table.UIFormGrid div.Id {
 	margin: 15px;
 }
 
-.UIWikiPortlet .UIWikiPageContentArea ul {
-	padding-left: 30px;
+.UIWikiPortlet .WikiContent ul {
+	margin: 10px 18px;
+	padding: 0px;
 }
 
-.UIWikiPortlet .UIWikiPageContentArea ul li {
-	list-style-type: disc;
-	background: none;
+.UIWikiPortlet .WikiContent ul li {
+	list-style: disc;
 }
 
-.UIWikiPortlet .UIWikiPageContentArea ul li a {
+.UIWikiPortlet .WikiContent ul li a {
 	text-decoration: none;
 }
 
@@ -1613,10 +1613,6 @@ table.UIFormGrid div.Id {
 
 .UIWikiPagePreview .UIWikiPortlet {
 	font-size: 9pt;
-}
-
-.UIWikiPagePreview .UIWikiPortlet ul {
-	margin: 18px;
 }
 
 .UIWikiPageVersionsCompare .ChangedForm .Mar0 {
