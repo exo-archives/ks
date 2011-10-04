@@ -11,17 +11,14 @@
 
 .UIWikiPageEditForm .UIEditorTabs .RichText {
 	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 4px -239px;
-	border-right: 1px solid #d6d6d6;
 }
 
 .UIWikiPageEditForm .UIEditorTabs .Help {
 	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 4px -215px;
-	border-right: 1px solid #d6d6d6;
 }
 
 .UIWikiPageEditForm .UIEditorTabs .SourceEditor {
 	background: url("/wiki/skin/DefaultSkin/webui/background/UIPageToolBarIcon.png") no-repeat 5px -27px;
-	border-right: 1px solid #d6d6d6;
 }
 
 .UIWikiPageEditForm .UIEditorTabs .PreviewPage {

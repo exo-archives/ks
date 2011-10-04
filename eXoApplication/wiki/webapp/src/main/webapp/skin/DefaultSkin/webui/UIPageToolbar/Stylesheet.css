@@ -95,7 +95,8 @@
 }
 
 .UIWikiPageEditForm .Icon {
-  float: right;
+	border-left: 1px solid #d6d6d6;
+	float: left;
   	padding: 0px 10px 0px 30px;
 	margin: 0px;
 	text-transform:capitalize;
