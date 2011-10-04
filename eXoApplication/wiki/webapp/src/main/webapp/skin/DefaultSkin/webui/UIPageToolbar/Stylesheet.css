@@ -104,6 +104,10 @@
 	line-height: 18px;
 }
 
+.UIWikiPageEditForm .Icon:first-child {
+	border-left: none;
+}
+
 .UIWikiPageEditForm .UIEditorTabs .Icon:hover {
   text-decoration: none;
   color: #4283c7;
