@@ -121,7 +121,7 @@
           <name>PreviewPage</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
             <field name="type"><string>org.exoplatform.wiki.webui.control.UIEditorTabs</string></field>
-            <field name="rank"><int>200</int></field>
+            <field name="rank"><int>300</int></field>
             <field name="name"><string>PreviewPage</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.PreviewPageActionComponent</string></field>
           </object>
@@ -130,7 +130,7 @@
           <name>Help</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
             <field name="type"><string>org.exoplatform.wiki.webui.control.UIEditorTabs</string></field>
-            <field name="rank"><int>300</int></field>
+            <field name="rank"><int>400</int></field>
             <field name="name"><string>Help</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.HelpActionComponent</string></field>
           </object>
@@ -139,7 +139,7 @@
           <name>RichText</name>
           <object type="org.exoplatform.webui.ext.UIExtension">
             <field name="type"><string>org.exoplatform.wiki.webui.control.UIEditorTabs</string></field>
-            <field name="rank"><int>400</int></field>
+            <field name="rank"><int>200</int></field>
             <field name="name"><string>RichText</string></field>
             <field name="component"><string>org.exoplatform.wiki.webui.control.action.RichTextActionComponent</string></field>
           </object>
