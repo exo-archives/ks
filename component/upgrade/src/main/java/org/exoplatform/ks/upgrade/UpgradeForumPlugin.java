@@ -94,7 +94,9 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
     log.info("The size of list post migration: " + pIter.getSize());
     while (pIter.hasNext()) {
       Node pNode = pIter.nextNode();
-      pNode.addMixin("exo:forumMigrate");
+      if(!pNode.hasProperty(Utils.EXO_IS_WAITING)){
+        pNode.addMixin("exo:forumMigrate");
+      }
       pNode.setProperty(Utils.EXO_IS_WAITING, new PropertyReader(pNode).bool(Utils.EXO_IS_WAITING, false));
       // set new link for this post.
       if (!Utils.isEmpty(newDomain)) {
