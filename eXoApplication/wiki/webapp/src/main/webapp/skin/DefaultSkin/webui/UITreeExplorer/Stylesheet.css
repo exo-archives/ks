@@ -109,6 +109,12 @@
   background: url('DefaultSkin/background/PageNode.gif') no-repeat left 3px; /* orientation=lt */
 }
 
-.UITreeExplorer .Hover {
-  background-color: #f5f5f5;
+.UITreeExplorer .Hover a {
+  font-weight: bold;
+  color: #0053a7;
+}
+
+.UITreeExplorer .NodeLabel a:hover {
+  color: #0053a7;
+  cursor: pointer;
 }
