@@ -27,9 +27,17 @@ import java.util.Date;
  */
 public class TimeConvertUtils extends org.exoplatform.webui.utils.TimeConvertUtils {
 
-  public static String convertXTimeAgo(Date myDate, String format) {
-    if (!ForumUtils.isEmpty(format)) format = format.replaceAll("D", "E");
-    return convertXTimeAgo(myDate, format, MONTH);
+  public static String convertXTimeAgo(Date myDate, String format, long zoneTime) {
+    if (!ForumUtils.isEmpty(format))
+      format = format.replaceAll("D", "E");
+    long day = 24 * 60 * 60 * 1000;
+    if ((getGreenwichMeanTime().getTimeInMillis() - myDate.getTime()) < (31l * day)) {
+      return convertXTimeAgo(myDate, format, MONTH);
+    } else {
+      Date date = new Date();
+      date.setTime(myDate.getTime() - zoneTime);
+      return getFormatDate(date, format);
+    }
   }
 
   public static String getFormatDate(String format, Date myDate) {

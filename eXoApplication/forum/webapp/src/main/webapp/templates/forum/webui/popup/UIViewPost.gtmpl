@@ -17,9 +17,7 @@
 	String classIcon = post.getIcon() ;
 	UserProfile userProfile = uicomponent.getUserProfile();
 	long timeZone = (long)(userProfile.getTimeZone()*3600000) ;
-	Date dateView = new Date();
-	dateView.setTime(post.getCreatedDate().getTime() - timeZone);
-	String postCreatedDate = TimeConvertUtils.convertXTimeAgo(dateView, (userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()));	
+	String postCreatedDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), (userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()), timeZone);	
 	List attachments = post.getAttachments() ;
 %>
 <div class="UIViewPost" id="SizeImage">

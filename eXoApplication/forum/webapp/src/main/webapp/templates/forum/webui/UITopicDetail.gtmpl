@@ -382,7 +382,6 @@
 			String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
 			String shortDateTimeFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 			String shortDateFormat = userProfile.getShortDateFormat() ;
-			Date dateView = new Date();
 			for(post in posts) {
 			  String postId = post.getId();
 				String owner = post.getOwner() ;
@@ -403,22 +402,19 @@
 				if(ForumUtils.isEmpty(classIconPost)) 
 					classIconPost = "NormalTopicIcon" ;
 				String namePost = post.getName() ;
-				dateView.setTime(post.getCreatedDate().getTime() - setTime);
-				String createdDate = TimeConvertUtils.convertXTimeAgo(dateView, longDateFormat);
+				String createdDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), longDateFormat, setTime);
 				String message = uicomponent.renderPost(post) ;
 				String editBy = post.getModifiedBy() ;
 				String editDate ;
 				if(!ForumUtils.isEmpty(editBy)) {
-					dateView.setTime(post.getModifiedDate().getTime() - setTime);
-					editDate = TimeConvertUtils.convertXTimeAgo(dateView, longDateFormat);
+					editDate = TimeConvertUtils.convertXTimeAgo(post.getModifiedDate(), longDateFormat, setTime);
 				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + postId.substring(15);
 				String joinDate = "";
 				Date joinDate_ = userInfo.getJoinedDate();
 				if(joinDate_ != null) {
-					dateView.setTime(joinDate_.getTime() - setTime);
-					joinDate = TimeConvertUtils.convertXTimeAgo(dateView, shortDateFormat) ;
+					joinDate = TimeConvertUtils.convertXTimeAgo(joinDate_.getTime(), shortDateFormat, setTime) ;
 				}
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
@@ -514,8 +510,7 @@
 									<% long totalPost = userInfo.getTotalPost();
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
-											 dateView.setTime(lastPostOfUser.getTime() - setTime);
-											 String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(dateView, shortDateTimeFormat) ;
+											 String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(lastPostOfUser.getTime(), shortDateTimeFormat, setTime) ;
 									%>
 									<span><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</span>
 									<span><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</span>
@@ -529,8 +524,7 @@
 									  Date lastLogin = userInfo.getLastLoginDate();
 										String lastLoginUser = "" ;
 									  if(lastLogin != null){
-										  dateView.setTime(lastLogin.getTime() - setTime);
-										  lastLoginUser = TimeConvertUtils.convertXTimeAgo(dateView, shortDateTimeFormat) ;
+										  lastLoginUser = TimeConvertUtils.convertXTimeAgo(lastLogin.getTime(), shortDateTimeFormat, setTime) ;
 										}
 									%>
 									<span><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</span>

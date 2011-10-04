@@ -102,8 +102,7 @@
 										title = "TitleBold";
 										newPost = "New";									
 									}
-									postDate.setTime(topic.getLastPostDate().getTime() - setTime);
-									String lastPostDate = TimeConvertUtils.convertXTimeAgo(postDate, (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()));
+									String lastPostDate = TimeConvertUtils.convertXTimeAgo(topic.getLastPostDate(), (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()), setTime);
 									String hot = ""; 
 									if(topic.getPostCount() > 30) hot = "Hot"; 
 									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;

@@ -36,7 +36,6 @@
 								List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
 							  if(checkeds == null) checkeds = new ArrayList<String>();
 								int i = 0;
-								Date postDate = new Date();
 								for(post in posts){
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
@@ -44,8 +43,7 @@
 									String postTitle = post.getName() ;
 									String message = uicomponent.getTitleInHTMLCode(post.getMessage()) ;
 									String iconPost = post.getIcon() ;
-									postDate.setTime(post.getCreatedDate().getTime() - setTime) ;
-									String createdDate = TimeConvertUtils.convertXTimeAgo(postDate, formatDate) ;
+									String createdDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), formatDate, setTime) ;
 							%>
 								<tr class="$classRow">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconPost"><span></span></div></td>

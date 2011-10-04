@@ -54,7 +54,6 @@
 							if(!posts.isEmpty()) {
 								String classRow = "whileRow";
 								int i = 0;
-								Date postDate = new Date();
 								for(post in posts){
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
@@ -62,8 +61,7 @@
 									String message = uicomponent.getTitleInHTMLCode(post.getMessage()) ;
 									String titlePost = ForumUtils.getSubString(message, 100);
 									String iconPost = post.getIcon() ;
-									postDate.setTime(post.getCreatedDate().getTime() - setTime) ;
-									String createdDate = TimeConvertUtils.convertXTimeAgo(postDate, formatDate) ;
+									String createdDate = TimeConvertUtils.convertXTimeAgo(post.getCreatedDate(), formatDate, setTime) ;
 									String remoteAddr = post.getRemoteAddr();
 									if(ForumUtils.isEmpty(remoteAddr)) remoteAddr = "";
 							%>

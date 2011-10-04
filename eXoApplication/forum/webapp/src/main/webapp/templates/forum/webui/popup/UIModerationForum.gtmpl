@@ -40,7 +40,6 @@
 													int j = 0;
 													String formatDate = uiform.userProfile.getShortDateFormat() + " " + uiform.userProfile.getTimeFormat() ;
 													long setTime = (long)(uiform.userProfile.getTimeZone()*3600000) ;
-													Date postDate = new Date();
 													for(object in objects){
 														if(j%2 == 0) classRow = "whileRow";
 														else classRow = "OddRow";
@@ -48,8 +47,7 @@
 														String type = object.getType();
 														String objectTitle = object.getName();
 														String titlePost = uiform.getTitleInHTMLCode(object.getContent());
-														postDate.setTime(object.getCreatedDate().getTime() - setTime);
-														String createdDate = TimeConvertUtils.convertXTimeAgo(postDate, formatDate);
+														String createdDate = TimeConvertUtils.convertXTimeAgo(object.getCreatedDate(), formatDate, setTime);
 														titlePost = ForumUtils.getSubString(titlePost, 100);
 														String classType = "HotThreadNoNewPost";
 														if(type.equals(Utils.POST)) classType = "PostIcon";

@@ -151,8 +151,7 @@
 												topicNewPostIcon = "NormalTopicIcon" ;
 											topicNewPostTitle = topicNewPost.getTopicName();
 											lastPostBy = topicNewPost.getLastPostBy();
-											date.setTime(topicNewPost.getLastPostDate().getTime()- setTime);
-											dateTime = TimeConvertUtils.convertXTimeAgo(date, (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()));
+											dateTime = TimeConvertUtils.convertXTimeAgo(topicNewPost.getLastPostDate(), (userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()), setTime);
 											long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
 											if((int)((toDay-createdDate)/86400000) <= dayForumNewPost){
 												classIconForum = "ForumNewPostIcon";

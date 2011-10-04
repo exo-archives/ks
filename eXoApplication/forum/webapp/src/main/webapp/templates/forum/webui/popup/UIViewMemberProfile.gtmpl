@@ -34,11 +34,9 @@
 		str = contact.getLastName(); 
 		if(!ForumUtils.isEmpty(str)) fullName = fullName + " " + str ;
 	}
-	Date dateView = new Date();
 	String createdDate = "";
 	if(userProfileViewer.getJoinedDate() != null){
-		dateView.setTime(userProfileViewer.getJoinedDate().getTime() - setTime);
-		createdDate = TimeConvertUtils.convertXTimeAgo(dateView, shortDateFormat) ;
+		createdDate = TimeConvertUtils.convertXTimeAgo(userProfileViewer.getJoinedDate(), shortDateFormat, setTime) ;
 	}
 	String userSmile = "OfflineIcon";
 	String titleSmile = "Offline" ;
@@ -72,8 +70,7 @@
 									<%if(totalPost > 0) {
 											String lastPostDateOfUser = "" ;
 											if(userProfileViewer.getLastPostDate() != null){
-												dateView.setTime(userProfileViewer.getLastPostDate().getTime() - setTime);
-												lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(dateView, shortDateFormat) ;
+												lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(userProfileViewer.getLastPostDate(), shortDateFormat, setTime) ;
 											}
 									%>
 									<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</div>
@@ -83,8 +80,7 @@
 									<% } 
 											String lastLoginUser = "" ;
 											if(userProfileViewer.getLastLoginDate() != null){
-												dateView.setTime(userProfileViewer.getLastLoginDate().getTime() - setTime);
-												lastLoginUser = TimeConvertUtils.convertXTimeAgo(dateView, shortDateFormat) ;
+												lastLoginUser = TimeConvertUtils.convertXTimeAgo(userProfileViewer.getLastLoginDate(), shortDateFormat, setTime) ;
 											}
 										if(!ForumUtils.isEmpty(lastLoginUser)) {
 									%>

@@ -33,7 +33,6 @@
 				String classCssSend = "EvenRow";
 				i = 0;
 				long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-				Date fromDate = new Date();
 				for(mail in sendmails) {
 					if(i%2 == 0) classCssSend = "EvenRow";
 					else classCssSend = "OddRow";
@@ -43,8 +42,7 @@
 					if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
 					String fromUser = mail.getSendTo();
 					fromUser = ForumUtils.getCalculateListEmail(fromUser);
-					fromDate.setTime(mail.getReceivedDate().getTime() - setTime);
-					String strFromDate = TimeConvertUtils.convertXTimeAgo(fromDate, formatDate);
+					String strFromDate = TimeConvertUtils.convertXTimeAgo(mail.getReceivedDate(), formatDate, setTime);
 		%>
 			<tr class="$classCssSend">
 				<td class="text"><a href="<%=uicomponent.event("ViewMessage", mailId)%>">$nameMail</a></td>

@@ -52,6 +52,7 @@ import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -128,6 +129,8 @@ public class UIForumPortlet extends UIPortletApplication {
   private boolean      useAjax             = true;
 
   private int          dayForumNewPost     = 0;
+  
+  private String       categorySpId        = "";
 
   private List<String> invisibleForums     = new ArrayList<String>();
 
@@ -217,8 +220,10 @@ public class UIForumPortlet extends UIPortletApplication {
         return;
     }
 
-    calculateRenderComponent(url, context);
-    context.addUIComponentToUpdateByAjax(this);
+    if (!ForumUtils.isEmpty(url)) {
+      calculateRenderComponent(url, context);
+      context.addUIComponentToUpdateByAjax(this);
+    }
   }
 
   public String getForumIdOfSpace() {
@@ -230,6 +235,12 @@ public class UIForumPortlet extends UIPortletApplication {
         SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
         Space space = sService.getSpaceByUrl(url);
         String forumId = Utils.FORUM_SPACE_ID_PREFIX + space.getId();
+        try {
+          OrganizationService service = (OrganizationService) PortalContainer.getInstance().getComponentInstanceOfType(OrganizationService.class);
+          String parentGrId = service.getGroupHandler().findGroupById(space.getGroupId()).getParentId();
+          categorySpId = Utils.CATEGORY + parentGrId.replaceAll(CommonUtils.SLASH, CommonUtils.EMPTY_STR);
+        } catch (Exception e) {
+        }
         return forumId;
       }
       return null;
@@ -718,7 +729,7 @@ public class UIForumPortlet extends UIPortletApplication {
       }
     } else if ((path.lastIndexOf(Utils.FORUM) == 0 && path.lastIndexOf(Utils.CATEGORY) < 0) || (path.lastIndexOf(Utils.FORUM) > 0)) {
       try {
-        Forum forum;
+        Forum forum = null;
         String cateId = null;
         int page = 0;
         if (path.indexOf(ForumUtils.SLASH) >= 0) {
@@ -734,8 +745,12 @@ public class UIForumPortlet extends UIPortletApplication {
           } else {
             forum = (Forum) this.forumService.getObjectNameById(arr[0], Utils.FORUM);
           }
-        } else {
+        }
+        if (forum == null) {
           forum = (Forum) this.forumService.getObjectNameById(path, Utils.FORUM);
+          if (forum == null && path.equals(getForumIdOfSpace())) {
+            forum = forumService.getForum(this.categorySpId, path);
+          }
         }
         path = forum.getPath();
         if (cateId == null) {
