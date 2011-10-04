@@ -632,6 +632,15 @@ table.UIFormGrid div.Id {
 	text-decoration: none;
 }
 
+.UIWikiPortlet .WikiContent ol {
+	margin: 10px 18px;
+	padding: 0px;
+}
+
+.UIWikiPortlet .WikiContent ol li {
+	list-style: decimal;
+}
+
 #UIMoveTree .Hover {
 	background-color: #FFFFFF;
 }
