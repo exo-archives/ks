@@ -36,7 +36,7 @@ window.onresize = function() {
 WikiLayout.prototype.init = function(prtId) {
   try{
     try {
-      var myBody = document.getElementsByTagName("body")[0];;
+      var myBody = document.getElementsByTagName("body")[0];
       var className = String(myBody.className+'');
       className = (className.length > 0 && className.indexOf(this.wikiBodyClass) < 0)?(className + ' ' + this.wikiBodyClass):this.wikiBodyClass;      
       myBody.className = className;
@@ -54,17 +54,20 @@ WikiLayout.prototype.init = function(prtId) {
     var wikiLayout = DOMUtil.findFirstDescendantByClass(portlet, "div", "UIWikiMiddleArea");
     this.layoutContainer = DOMUtil.findFirstDescendantByClass(wikiLayout, "div", "WikiLayout");
     this.spliter = DOMUtil.findFirstDescendantByClass(this.layoutContainer, "div", "Spliter");
-    this.leftArea = DOMUtil.findPreviousElementByTagName(this.spliter, "div");
-    this.rightArea = DOMUtil.findNextElementByTagName(this.spliter, "div");
+    this.verticalLine = DOMUtil.findFirstDescendantByClass(this.layoutContainer, "div", "VerticalLine");
     
-    var leftWidth = eXo.core.Browser.getCookie("leftWidth");
-    if ((leftWidth != null) && (leftWidth != "") && (leftWidth * 1 > 0)) {
-      this.spliter.style.left = leftWidth + 'px';
-      this.leftArea.style.width = leftWidth + 'px';
-      this.rightArea.style.left = (leftWidth + this.spliter.offsetWidth) +'px';
+    if (this.spliter) {
+      this.leftArea = DOMUtil.findPreviousElementByTagName(this.spliter, "div");
+      this.rightArea = DOMUtil.findNextElementByTagName(this.spliter, "div");
+
+      var leftWidth = eXo.core.Browser.getCookie("leftWidth");
+      if ((leftWidth != null) && (leftWidth != "") && (leftWidth * 1 > 0)) {
+        this.spliter.style.left = leftWidth + 'px';
+        this.leftArea.style.width = leftWidth + 'px';
+        this.rightArea.style.left = (leftWidth + this.spliter.offsetWidth) +'px';
+      }
+      this.spliter.onmousedown = eXo.wiki.WikiLayout.exeRowSplit;
     }
-    
-    this.spliter.onmousedown = eXo.wiki.WikiLayout.exeRowSplit;
     eXo.wiki.WikiLayout.processeWithHeight();
   }catch(e){};
 };
@@ -88,8 +91,10 @@ WikiLayout.prototype.setWithLayOut = function() {
     lWith = WikiLayout.leftArea.offsetWidth + WikiLayout.spliter.offsetWidth;
   }
   
-  WikiLayout.rightArea.style.width = (maxWith - lWith) + 'px';
-  WikiLayout.rightArea.style.left = lWith + 'px';
+  if (WikiLayout.rightArea) {
+    WikiLayout.rightArea.style.width = (maxWith - lWith) + 'px';
+    WikiLayout.rightArea.style.left = lWith + 'px';
+  }
 };
 
 WikiLayout.prototype.setHeightLayOut = function() {
@@ -105,11 +110,18 @@ WikiLayout.prototype.setHeightLayOut = function() {
     hdef = hdef - 2;
     layout.style.height = (hct + "px");
   }
+  
   if (WikiLayout.leftArea && WikiLayout.spliter) {
     WikiLayout.leftArea.style.height = hct + "px";
     WikiLayout.spliter.style.height = hct + "px";
+  } else if (WikiLayout.verticalLine) {
+    WikiLayout.verticalLine.style.height = hct + "px";
   }
-  WikiLayout.rightArea.style.height = hct + "px";
+
+  if (WikiLayout.rightArea) {
+    WikiLayout.rightArea.style.height = hct + "px";
+  }
+  
   WikiLayout.setHeightRightContent();
 };
 

@@ -390,6 +390,16 @@ table.UIFormGrid div.Id {
 	padding: 0px;
 }
 
+.UIWikiPortlet .VerticalLine {
+	position: absolute;
+	top: 0px;
+	left: 265px;
+	z-index: 1;
+	background: #e1e1e1;
+	width: 1px;
+	padding: 0px;
+}
+
 .UIWikiPortlet .UIWikiMiddleArea .UIWikiNavigationContainer {
 	padding: 8px 2px 0 2px;
 	visibility: '';
