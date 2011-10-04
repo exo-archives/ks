@@ -69,7 +69,9 @@ public class UIWikiPageEditForm extends UIWikiForm {
 
   public static final String EDITOR_TABS               = "UIEditorTabs";
 
-  public static final String SUBMIT_TOOLBAR            = "UISubmitToolBar";
+  public static final String SUBMIT_TOOLBAR_UPPER      = "UISubmitToolBarUpper";
+
+  public static final String SUBMIT_TOOLBAR_BOTTOM     = "UISubmitToolBarBottom";
 
   public static final String HELP_PANEL                = "UIWikiSidePanelArea";
 
@@ -89,9 +91,10 @@ public class UIWikiPageEditForm extends UIWikiForm {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.EDITPAGE, WikiMode.ADDPAGE,
         WikiMode.EDITTEMPLATE, WikiMode.ADDTEMPLATE });
     addChild(UIWikiPageTitleControlArea.class, null, TITLE_CONTROL).toInputMode();
+    addChild(UISubmitToolBar.class, null, SUBMIT_TOOLBAR_UPPER);
     addChild(UIWikiTemplateDescriptionContainer.class, null, FIELD_TEMPLATEDESCTIPTION);
     addChild(UIEditorTabs.class, null, EDITOR_TABS);
-    addChild(UISubmitToolBar.class, null, SUBMIT_TOOLBAR);
+    addChild(UISubmitToolBar.class, null, SUBMIT_TOOLBAR_BOTTOM);
     addChild(UIWikiSidePanelArea.class, null, HELP_PANEL);
     addChild(UIWikiRichTextArea.class, null, RICHTEXT_AREA).setRendered(false);
     UIFormTextAreaInput markupInput = new UIFormTextAreaInput(FIELD_CONTENT, FIELD_CONTENT, "");

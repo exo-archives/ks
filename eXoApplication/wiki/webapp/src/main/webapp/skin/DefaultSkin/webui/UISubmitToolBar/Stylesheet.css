@@ -3,6 +3,10 @@
 	float: left;
 }
 
+.UIWikiPageEditForm .UIEditUpper  .UISubmitToolBar {
+	float: right;
+}
+
 .UIWikiPageEditForm .UISubmitToolBar .Delete {
 	background: none;
 	border: none;

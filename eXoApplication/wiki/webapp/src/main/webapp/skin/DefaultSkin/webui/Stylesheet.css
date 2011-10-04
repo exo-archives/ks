@@ -1421,6 +1421,7 @@ table.UIFormGrid div.Id {
 	-webkit-border-radius: 5px;
 	margin-top: 8px;
 	width: 50%;
+	float:left;
 }
 
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm #TitleInput {

@@ -5,10 +5,12 @@
 %>
 <div class="UIWikiPageEditForm">
 <% uiform.begin();%>
-
-  <%
-    uiform.renderChild(uiform.TITLE_CONTROL);
-  %>
+  <div class="UIEditUpper ClearFix">
+    <%
+      uiform.renderChild(uiform.TITLE_CONTROL);
+      uiform.renderChild(uiform.SUBMIT_TOOLBAR_UPPER);
+    %>
+  </div>
   <%
    uiform.renderChild(uiform.FIELD_TEMPLATEDESCTIPTION);  
   %>
@@ -54,6 +56,6 @@
  
 
   </div>
-  <%  uiform.renderChild(uiform.SUBMIT_TOOLBAR); %>
+  <%  uiform.renderChild(uiform.SUBMIT_TOOLBAR_BOTTOM); %>
 <% uiform.end();%>
 </div>
