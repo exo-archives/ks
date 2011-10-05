@@ -101,11 +101,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.ks</groupId>
-      <artifactId>exo.ks.component.common</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-core-model</artifactId>
       <version>${org.xwiki.platform.version}</version>

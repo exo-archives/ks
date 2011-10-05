@@ -19,24 +19,14 @@ package org.exoplatform.wiki.rendering.macro;
 import java.io.StringReader;
 import java.util.List;
 
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
-import org.exoplatform.wiki.rendering.RenderingService;
-import org.exoplatform.wiki.rendering.macro.excerpt.ExcerptMacro;
-import org.exoplatform.wiki.service.WikiPageParams;
-import org.exoplatform.wiki.service.WikiService;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
-import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.block.ParagraphBlock;
-import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.parameter.MacroParameterException;
-import org.xwiki.rendering.macro.parameter.ParameterValueTooLowException;
 import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.Parser;
-import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.rendering.util.ParserUtils;
 
@@ -82,16 +72,6 @@ public class MacroUtils {
     }
   }
   
-  public static String getExcerpts(WikiPageParams params) throws Exception {
-    WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
-                                                               .getComponentInstanceOfType(WikiService.class);
-    PageImpl page = (PageImpl) wikiService.getPageById(params.getType(),
-                                                       params.getOwner(),
-                                                       params.getPageId());
-
-    return getExcerpts(page.getContent().getText(), page.getSyntax());
-  }
-  
   public static void validateNumberParam(String param) throws MacroExecutionException {
     if (param.length() > 0) {
       try {
@@ -103,29 +83,6 @@ public class MacroUtils {
       }
     }
   }
-
-  private static String getExcerpts(String markup, String sourceSyntax) throws Exception {
-    RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer()
-                                                                              .getComponentInstanceOfType(RenderingService.class);
-    StringBuilder sb = new StringBuilder();
-    if (markup != null) {
-      XDOM xdom = renderingService.parse(markup, sourceSyntax);
-      List<MacroBlock> mBlocks = xdom.getChildrenByType(MacroBlock.class, true);
-      for (MacroBlock block : mBlocks) {
-
-        if (block.getId().equals(ExcerptMacro.MACRO_ID)) {
-          sb.append("<span class=\"Excerpt\">");
-          sb.append(renderingService.render(" (" + block.getContent() + ")",
-                                            sourceSyntax,
-                                            Syntax.XHTML_1_0.toIdString(),
-                                            false));
-          sb.append("</span>");
-        }
-      }
-    }
-    return sb.toString();
-  }
-
 
   /**
    * Get the parser for the current syntax.

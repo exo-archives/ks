@@ -28,7 +28,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
-import org.exoplatform.wiki.rendering.macro.MacroUtils;
+import org.exoplatform.wiki.rendering.macro.ExcerptUtils;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
@@ -151,7 +151,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     LinkBlock linkBlock = new LinkBlock(content, link, true);
     blocks.add(linkBlock);
     if (excerpt) {
-      String excerpts = MacroUtils.getExcerpts(params);
+      String excerpts = ExcerptUtils.getExcerpts(params);
       if (!StringUtils.EMPTY.equals(excerpts)) {
         blocks.add(new RawBlock(excerpts, Syntax.XHTML_1_0));
       }

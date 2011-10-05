@@ -528,6 +528,31 @@
             </field>
           </object>
         </object-param>
+        
+        <object-param>
+          <name>WIKI</name>
+          <description></description>
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+            <field name="tagName">
+              <string>WIKI</string>
+            </field>
+            <field name="replacement">
+              <string>You can not define this bbcode tag. It is defined by the developer.</string>
+            </field>
+            <field name="description">
+              <string>The [wiki] tag allows you to input wiki markup. Following syntaxes are supported: Confluence, XWiki, Creole, MediaWiki.</string>
+            </field>
+            <field name="example">
+              <string>[wiki=confluence]Makes text *strong*[/wiki]</string>
+            </field>
+            <field name="isOption">
+              <string>true</string>
+            </field>
+            <field name="isActive">
+              <string>true</string>
+            </field>
+          </object>
+        </object-param>
 
         <object-param>
           <name>QUOTE</name>

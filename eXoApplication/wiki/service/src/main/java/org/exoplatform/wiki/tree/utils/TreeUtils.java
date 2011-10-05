@@ -27,7 +27,7 @@ import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.WikiHome;
-import org.exoplatform.wiki.rendering.macro.MacroUtils;
+import org.exoplatform.wiki.rendering.macro.ExcerptUtils;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.tree.JsonNodeData;
@@ -112,7 +112,7 @@ public class TreeUtils {
       }
       if (showExcerpt != null && showExcerpt) {
         WikiPageParams params = getPageParamsFromPath(child.getPath());
-        excerpt = MacroUtils.getExcerpts(params);
+        excerpt = ExcerptUtils.getExcerpts(params);
       }
       children.add(new JsonNodeData(child, isLastNode, isSelectable, currentPath, excerpt, context));
       counter++;

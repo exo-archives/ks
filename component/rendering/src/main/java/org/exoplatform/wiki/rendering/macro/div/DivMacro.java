@@ -22,16 +22,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.ecs.rtf.Paragraph;
 import org.exoplatform.wiki.rendering.macro.MacroUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
-import org.xwiki.rendering.block.FormatBlock;
-import org.xwiki.rendering.block.GroupBlock;
 import org.xwiki.rendering.block.ParagraphBlock;
-import org.xwiki.rendering.listener.Format;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
