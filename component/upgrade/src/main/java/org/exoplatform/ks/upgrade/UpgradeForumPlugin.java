@@ -17,6 +17,7 @@
 package org.exoplatform.ks.upgrade;
 
 import java.io.InputStream;
+import java.util.Properties;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -36,7 +37,6 @@ import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.services.jcr.core.nodetype.ExtendedNodeTypeManager;
 import org.exoplatform.services.jcr.core.nodetype.NodeTypeDataManager;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -61,60 +61,70 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
     super(initParams);
     ExoContainer container = ExoContainerContext.getCurrentContainer();
     this.dataLocation = ((KSDataLocation) container.getComponentInstance(KSDataLocation.class));
-    if (initParams.containsKey(NEW_DOAMIN_FORUM)) {
-      newDomain = initParams.getValueParam(NEW_DOAMIN_FORUM).getValue();
-    }
+    getNewDomain();
   }
 
   public void processUpgrade(String oldVersion, String newVersion) {
     // Upgrade from KS 2.1.x to 2.2.3
     log.info("\n\n\n\n -----------> processUpgrade Forum Migration......\n\n\n");
-    SessionProvider sProvider = createSystemProvider();
-    log.info("==========> wp: " + dataLocation.getWorkspace());
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
-      Node forumHome = getForumHomeNode(sProvider);
       // register new nodeTypes
       log.info("\n\nRegister new nodeTypes...\n");
-      registerNodeTypes("jar:/conf/portal/forum-nodetypes.xml");
-      registerNodeTypes("jar:/conf/portal/forum-migrate-nodetypes.xml");
+      registerNodeTypes("jar:/conf/portal/forum-nodetypes.xml", ExtendedNodeTypeManager.IGNORE_IF_EXISTS);
+      registerNodeTypes("jar:/conf/portal/forum-migrate-nodetypes.xml", ExtendedNodeTypeManager.REPLACE_IF_EXISTS);
       log.info("\n\nMigration forum data....\n");
-      migrationForumData(forumHome);
+      migrationForumData(sProvider);
       log.info("\n\nMigration space....\n");
-      migrationSpaceOfPLF(sProvider, forumHome);
+      migrationSpaceOfPLF(sProvider);
     } catch (Exception e) {
       log.warn("[UpgradeForumPlugin] Exception when migrate data from 2.1.x to 2.2.3 for Forum.", e);
+    } finally {
+      sProvider.close();
     }
     log.info("\n\n\n\n -----------> The end Forum Migration......\n\n\n");
   }
 
-  private void migrationForumData(Node forumHome) throws Exception {
+  private void getNewDomain() {
+    log.info("\nGet new domain for migration forum datas...");
+    try {
+      Properties props = new Properties(System.getProperties());
+      newDomain = props.getProperty(NEW_DOAMIN_FORUM);
+      log.info("\nnewDomain: " + newDomain);
+    } catch (Exception e) {
+      log.warn("Failed to get new domain in system configation. ", e);
+    }
+  }
+  
+  private void migrationForumData(SessionProvider sProvider) throws Exception {
+    Node forumHome = getForumHomeNode(sProvider);
     // Migration 2.1.x to 2.2.3
     // properties new: exo:isWatting in nodetype: exo:post
-    NodeIterator pIter = getNodeIterator(forumHome, Utils.EXO_POST, new StringBuilder(""));
-    log.info("The size of list post migration: " + pIter.getSize());
+    NodeIterator pIter = getNodeIterator(sProvider, forumHome, Utils.EXO_POST, new StringBuilder(""));
+    log.info("\nThe size of list post migration: " + pIter.getSize());
     while (pIter.hasNext()) {
       Node pNode = pIter.nextNode();
-      if(!pNode.hasProperty(Utils.EXO_IS_WAITING)){
+      try {
+        pNode.getProperty(Utils.EXO_IS_WAITING);
+      } catch (Exception e) {
         pNode.addMixin("exo:forumMigrate");
+        pNode.setProperty(Utils.EXO_IS_WAITING, false);
       }
-      pNode.setProperty(Utils.EXO_IS_WAITING, new PropertyReader(pNode).bool(Utils.EXO_IS_WAITING, false));
       // set new link for this post.
       if (!Utils.isEmpty(newDomain)) {
         pNode.setProperty(Utils.EXO_LINK, calculateURL(new PropertyReader(pNode).string(Utils.EXO_LINK, "")));
       }
-      pNode.save();
     }
-
     // set new link for topics.
     if (!Utils.isEmpty(newDomain)) {
-      NodeIterator tIter = getNodeIterator(forumHome, Utils.EXO_POST, new StringBuilder(""));
+      NodeIterator tIter = getNodeIterator(sProvider, forumHome, Utils.EXO_TOPIC, new StringBuilder(""));
       log.info("The size of list topic migration: " + pIter.getSize());
       while (tIter.hasNext()) {
         Node tNode = tIter.nextNode();
         tNode.setProperty(Utils.EXO_LINK, calculateURL(new PropertyReader(tNode).string(Utils.EXO_LINK, "")));
-        tNode.save();
       }
     }
+    forumHome.getSession().save();
   }
 
   private String calculateURL(String oldUrl) {
@@ -124,14 +134,16 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
     return oldUrl;
   }
 
-  private void migrationSpaceOfPLF(SessionProvider sProvider, Node forumHome) throws Exception {
-    NodeIterator cIter = getOldAllNodeCateSpace(forumHome);
-    log.info("Number spaces migration: " + cIter.getSize());
+  private void migrationSpaceOfPLF(SessionProvider sProvider) throws Exception {
+    Node forumHome = getForumHomeNode(sProvider);
+    NodeIterator cIter = getOldAllNodeCateSpace(sProvider, forumHome);
+    log.info("\nNumber spaces migration: " + cIter.getSize());
     if (cIter.getSize() > 0) {
       NodeIterator fIter;
       String[] permission;
       PropertyReader reader;
       String newSpPath = null;
+      Node newSpNode = null;
       Session session = forumHome.getSession();
       while (cIter.hasNext()) {
         Node cNode = cIter.nextNode();
@@ -140,20 +152,24 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
         log.info("Migration category : " + cNode.getName());
         fIter = cNode.getNodes();
         while (fIter.hasNext()) {
-          Node fNode = cIter.nextNode();
-          if (fNode.isNodeType(Utils.EXO_FORUM)) {
+          Node fNode = fIter.nextNode();
+          if (newSpPath == null) {
+            newSpNode = getCatNSPNode(sProvider);
+            newSpPath = newSpNode.getPath();
+            log.info("Path of category Spaces: " + newSpPath);
+          }
+          if (fNode.isNodeType(Utils.EXO_FORUM) && !newSpNode.hasNode(fNode.getName())) {
             fNode.setProperty(Utils.EXO_POSTER, permission);
             fNode.setProperty(Utils.EXO_CREATE_TOPIC_ROLE, permission);
             fNode.setProperty(Utils.EXO_VIEWER, permission);
             fNode.save();
-            if (newSpPath == null) {
-              newSpPath = getCatNSPNode(sProvider).getPath();
-              log.info("Path of category Spaces: " + newSpPath);
-            }
-            log.info(String.format("move forum %s in to category Spaces", fNode.getName()));
             session.move(fNode.getPath(), newSpPath + "/" + fNode.getName());
+            session.save();
+            log.info(String.format("Move forum %s in to category Spaces", fNode.getName()));
           }
         }
+        log.info(String.format("Remove old category space: %s ", cNode.getName()));
+        cNode.remove();
         session.save();
       }
     }
@@ -175,12 +191,12 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
     return newSpNode;
   }
 
-  private NodeIterator getOldAllNodeCateSpace(Node forumHome) throws Exception {
+  private NodeIterator getOldAllNodeCateSpace(SessionProvider sProvider, Node forumHome) throws Exception {
     StringBuilder strQuery = new StringBuilder("[(@").append(Utils.EXO_NAME).append("='spaces') and (jcr:contains(@").append(Utils.EXO_USER_PRIVATE).append(", 'spaces'))]");
-    return getNodeIterator(forumHome, Utils.EXO_FORUM_CATEGORY, strQuery);
+    return getNodeIterator(sProvider, forumHome, Utils.EXO_FORUM_CATEGORY, strQuery);
   }
 
-  private NodeIterator getNodeIterator(Node node, String nodeType, StringBuilder strQuery) throws Exception {
+  private NodeIterator getNodeIterator(SessionProvider sProvider, Node node, String nodeType, StringBuilder strQuery) throws Exception {
     QueryManager qm = node.getSession().getWorkspace().getQueryManager();
     StringBuilder pathQuery = new StringBuilder(Utils.JCR_ROOT).append(node.getPath()).append("//element(*,").append(nodeType).append(")").append(strQuery).append(" order by @").append(Utils.EXO_CREATED_DATE).append(" descending");
     Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
@@ -195,12 +211,12 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
     return getSession(sessionProvider).getRootNode().getNode(nodePath);
   }
 
-  private void registerNodeTypes(String nodeTypeFilesName) throws Exception {
+  private void registerNodeTypes(String nodeTypeFilesName, int alreadyExistsBehaviour) throws Exception {
     ConfigurationManager configurationService = (ConfigurationManager) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ConfigurationManager.class);
-    InputStream inXml = configurationService.getInputStream(nodeTypeFilesName);
+    InputStream isXml = configurationService.getInputStream(nodeTypeFilesName);
     ExtendedNodeTypeManager ntManager = dataLocation.getRepositoryService().getDefaultRepository().getNodeTypeManager();
     log.info("\nTrying register node types from xml-file " + nodeTypeFilesName);
-    ntManager.registerNodeTypes(inXml, ExtendedNodeTypeManager.IGNORE_IF_EXISTS, NodeTypeDataManager.TEXT_XML);
+    ntManager.registerNodeTypes(isXml, alreadyExistsBehaviour, NodeTypeDataManager.TEXT_XML);
     log.info("\nNode types were registered from xml-file " + nodeTypeFilesName);
   }
 
@@ -213,11 +229,6 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
   @SuppressWarnings("deprecation")
   private Session getSession(SessionProvider sProvider) throws Exception {
     return dataLocation.getSessionManager().getSession(sProvider);
-  }
-
-  private SessionProvider createSystemProvider() {
-    SessionProviderService sessionProviderService = (SessionProviderService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(SessionProviderService.class);
-    return sessionProviderService.getSystemSessionProvider(null);
   }
 
 }

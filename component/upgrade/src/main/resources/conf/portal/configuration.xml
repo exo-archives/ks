@@ -16,11 +16,6 @@
           <description>The groupId of the product</description>
           <value>org.exoplatform.ks</value>
         </value-param>
-        <value-param>
-          <name>new.domain.forum</name>
-          <description>The new domain go to forum portlet.</description>
-          <value>http://int.exoplatform.org</value>
-        </value-param>
       </init-params>
     </component-plugin>
   </external-component-plugins>
