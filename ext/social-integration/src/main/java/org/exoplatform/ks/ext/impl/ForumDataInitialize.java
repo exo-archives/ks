@@ -93,8 +93,8 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
 
       Forum forum = new Forum();
       forum.setOwner(space.getCreator());
-      forum.setId(Utils.FORUM_SPACE_ID_PREFIX + space.getId());
-      forum.setForumName(space.getPrettyName());
+      forum.setId(Utils.FORUM_SPACE_ID_PREFIX + space.getPrettyName());
+      forum.setForumName(space.getDisplayName());
       forum.setDescription(space.getDescription());
       // TODO hard text manager should check with portal team
       forum.setModerators(new String[] { SpaceServiceImpl.MANAGER + ":" + space.getGroupId() });
