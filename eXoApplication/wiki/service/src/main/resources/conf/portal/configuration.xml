@@ -215,7 +215,7 @@
           <name>workspace-name</name>
           <value>knowledge</value>
         </value-param>
-        <value-param profiles="all,default">
+        <value-param profiles="all,default,minimal">
           <name>workspace-name</name>
           <value>collaboration</value>
         </value-param>
