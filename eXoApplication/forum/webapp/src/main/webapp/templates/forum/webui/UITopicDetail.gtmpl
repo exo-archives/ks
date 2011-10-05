@@ -414,7 +414,7 @@
 				String joinDate = "";
 				Date joinDate_ = userInfo.getJoinedDate();
 				if(joinDate_ != null) {
-					joinDate = TimeConvertUtils.convertXTimeAgo(joinDate_.getTime(), shortDateFormat, setTime) ;
+					joinDate = TimeConvertUtils.convertXTimeAgo(joinDate_, shortDateFormat, setTime) ;
 				}
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
@@ -510,7 +510,7 @@
 									<% long totalPost = userInfo.getTotalPost();
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
-											 String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(lastPostOfUser.getTime(), shortDateTimeFormat, setTime) ;
+											 String lastPostDateOfUser = TimeConvertUtils.convertXTimeAgo(lastPostOfUser, shortDateTimeFormat, setTime) ;
 									%>
 									<span><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</span>
 									<span><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</span>
@@ -524,7 +524,7 @@
 									  Date lastLogin = userInfo.getLastLoginDate();
 										String lastLoginUser = "" ;
 									  if(lastLogin != null){
-										  lastLoginUser = TimeConvertUtils.convertXTimeAgo(lastLogin.getTime(), shortDateTimeFormat, setTime) ;
+										  lastLoginUser = TimeConvertUtils.convertXTimeAgo(lastLogin, shortDateTimeFormat, setTime) ;
 										}
 									%>
 									<span><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</span>
