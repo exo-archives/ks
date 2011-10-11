@@ -482,7 +482,11 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
   public void removeCacheUserProfile() {
-//    forumService.removeCacheUserProfile(userProfile.getUserId());
+    try {
+      forumService.removeCacheUserProfile(userProfile.getUserId());
+    } catch (Exception e) {
+      log.debug("Failed to remove cache userprofile with user: " + userProfile.getUserId());
+    }
   }
 
   public String getPortletLink(String actionName, String userName) {

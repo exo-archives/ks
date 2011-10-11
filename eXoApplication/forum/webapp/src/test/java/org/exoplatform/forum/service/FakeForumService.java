@@ -766,9 +766,9 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
-//  @Override
-//  public void removeCacheUserProfile(String userName) {
-//    
-//  }
+  @Override
+  public void removeCacheUserProfile(String userName) throws Exception {
+    
+  }
 
 }

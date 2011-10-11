@@ -33,6 +33,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.webui.popup.UIModeratorManagementForm.GetAllUserActionListener;
 import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -332,6 +333,7 @@ public class UICategories extends UIContainer {
       } else {
         uiContainer.collapCategories.add(id[0]);
       }
+      uiContainer.getAncestorOfType(UIForumPortlet.class).removeCacheUserProfile();
       event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer);
     }
   }

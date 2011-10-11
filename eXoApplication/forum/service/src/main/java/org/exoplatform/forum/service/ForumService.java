@@ -1434,6 +1434,7 @@ public interface ForumService extends ForumServiceLegacy {
    * remove user-profile of user login cache in service
    * 
    * @param userName 
+   * @throws Exception 
    */
-//  public void removeCacheUserProfile(String userName);
+  public void removeCacheUserProfile(String userName) throws Exception;
 }

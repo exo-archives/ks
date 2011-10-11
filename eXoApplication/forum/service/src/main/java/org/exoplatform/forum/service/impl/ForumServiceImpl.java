@@ -731,7 +731,6 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
     storage.saveLastPostIdRead(userId, lastReadPostOfForum, lastReadPostOfTopic);
-    removeCacheUserProfile(userId);
   }
 
   /**
@@ -747,7 +746,6 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void saveCollapsedCategories(String userName, String categoryId, boolean isAdd) throws Exception {
     storage.saveCollapsedCategories(userName, categoryId, isAdd);
-    removeCacheUserProfile(userName);
   }
 
   /**
@@ -1156,7 +1154,6 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void saveUserSettingProfile(UserProfile userProfile) throws Exception {
     storage.saveUserSettingProfile(userProfile);
-    removeCacheUserProfile(userProfile.getUserId());
   }
 
   /**
