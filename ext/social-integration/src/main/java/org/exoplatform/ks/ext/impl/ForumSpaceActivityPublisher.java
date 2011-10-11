@@ -94,8 +94,8 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
     ActivityManager activityM = (ActivityManager) exoContainer.getComponentInstanceOfType(ActivityManager.class);
     SpaceService spaceS = (SpaceService) exoContainer.getComponentInstanceOfType(SpaceService.class);
     Identity userIdentity = identityM.getOrCreateIdentity(OrganizationIdentityProvider.NAME, post.getOwner(), false);
-    String spaceId = forumId.split(Utils.FORUM_SPACE_ID_PREFIX)[1];
-    Space space = spaceS.getSpaceById(spaceId);
+    String prettyname = forumId.replaceFirst(Utils.FORUM_SPACE_ID_PREFIX, "");
+    Space space = spaceS.getSpaceByPrettyName(prettyname);
     Identity spaceIdentity = identityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getPrettyName(), false);
     ExoSocialActivity activity = new ExoSocialActivityImpl();
     String body = ForumTransformHTML.getTitleInHTMLCode(post.getMessage(), new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));

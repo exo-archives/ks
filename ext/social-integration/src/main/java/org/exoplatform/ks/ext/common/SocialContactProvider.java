@@ -28,6 +28,7 @@ import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.model.Profile;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.IdentityManager;
+import org.exoplatform.social.core.service.LinkProvider;
 
 /**
  * Created by The eXo Platform SAS
@@ -98,8 +99,8 @@ public class SocialContactProvider implements ContactProvider {
           } catch (Exception e) {
           }
         }
-      } else if (profile.contains(Profile.URL)) {
-        contact.setWebSite(profile.getUrl());
+      } else {
+        contact.setWebSite(LinkProvider.getProfileUri(userId));
       }
     } catch (Exception e) {
       OrganizationService orgService = (OrganizationService) PortalContainer.getInstance().getComponentInstanceOfType(OrganizationService.class);

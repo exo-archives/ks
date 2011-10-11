@@ -16,6 +16,10 @@
  */
 package org.exoplatform.ks.ext.impl;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.Category;
@@ -86,8 +90,9 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
         } else {
           category.setOwner("");
         }
-        category.setUserPrivate(new String[] { parentGrId });
-        category.setDescription("");
+        category.setCategoryOrder(100l);
+        category.setUserPrivate(new String[]{""});
+        category.setDescription("The category sotorage all forums of spaces.");
         fServie.saveCategory(category, true);
       }
 
@@ -104,6 +109,10 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
       forum.setViewer(roles);
       if (fServie.getForum(categorySpId, forum.getId()) == null){
         fServie.saveForum(categorySpId, forum, true);
+        Set<String> prs = new HashSet<String>(Arrays.asList(category.getUserPrivate()));
+        prs.add(space.getGroupId());
+        category.setUserPrivate(prs.toArray(new String[prs.size()]));
+        fServie.saveCategory(category, false);
       }
     } catch (Exception e) {
       log.debug("Failed to add forum space. " + e.getMessage());
