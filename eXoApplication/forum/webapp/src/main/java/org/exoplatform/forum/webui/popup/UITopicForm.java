@@ -58,12 +58,12 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 import org.exoplatform.webui.organization.account.UIUserSelector;
@@ -169,7 +169,6 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 
   private boolean               isDoubleClickSubmit              = false;
 
-  @SuppressWarnings("unchecked")
   public UITopicForm() throws Exception {
     if (getId() == null)
       setId("UITopicForm");
@@ -200,9 +199,9 @@ public class UITopicForm extends BaseForumForm implements UISelector {
     UIFormSelectBox topicType = new UIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX, FIELD_TOPICTYPE_SELECTBOX, ls);
     topicType.setDefaultValue(TopicType.DEFAULT_ID);
 
-    UIFormCheckBoxInput moderatePost = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, false);
-    UIFormCheckBoxInput checkWhenAddPost = new UIFormCheckBoxInput<Boolean>(FIELD_NOTIFYWHENADDPOST_CHECKBOX, FIELD_NOTIFYWHENADDPOST_CHECKBOX, false);
-    UIFormCheckBoxInput sticky = new UIFormCheckBoxInput<Boolean>(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, false);
+    UICheckBoxInput moderatePost = new UICheckBoxInput(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, false);
+    UICheckBoxInput checkWhenAddPost = new UICheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX, FIELD_NOTIFYWHENADDPOST_CHECKBOX, false);
+    UICheckBoxInput sticky = new UICheckBoxInput(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, false);
     UIFormTextAreaInput canView = new UIFormTextAreaInput(FIELD_CANVIEW_INPUT, FIELD_CANVIEW_INPUT, null);
     UIFormTextAreaInput canPost = new UIFormTextAreaInput(FIELD_CANPOST_INPUT, FIELD_CANPOST_INPUT, null);
     UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, ForumUtils.EMPTY_STR);
@@ -299,7 +298,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
     if (!ForumUtils.isArrayEmpty(canV)) {
       info = getLabel("CanViewParentInfo");
     } else {
-      canV = getForumService().getPermissionTopicByCategory(categoryId, "viewer");
+      canV = getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_VIEWER);
       if (!ForumUtils.isArrayEmpty(canV)) {
         info = getLabel("CanViewParentInfo");
       }
@@ -310,7 +309,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
     if (!ForumUtils.isArrayEmpty(canV)) {
       info = getLabel("CanPostParentInfo");
     } else {
-      canV = getForumService().getPermissionTopicByCategory(categoryId, "poster");
+      canV = getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_POSTER);
       if (!ForumUtils.isArrayEmpty(canV)) {
         info = getLabel("CanPostParentInfo");
       }
@@ -419,13 +418,12 @@ public class UITopicForm extends BaseForumForm implements UISelector {
       else
         stat = "unlock";
       threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).setValue(stat);
-      threadOption.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).setChecked(this.topic.getIsModeratePost());
+      threadOption.getUICheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).setChecked(this.topic.getIsModeratePost());
       if (this.topic.getIsNotifyWhenAddPost() != null && this.topic.getIsNotifyWhenAddPost().trim().length() > 0) {
-        threadOption.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).setChecked(true);
+        threadOption.getUICheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).setChecked(true);
       }
-
       threadOption.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setValue(this.topic.getTopicType());
-      threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).setChecked(this.topic.getIsSticky());
+      threadOption.getUICheckBoxInput(FIELD_STICKY_CHECKBOX).setChecked(this.topic.getIsSticky());
 
       UIForumInputWithActions threadPermission = this.getChildById(FIELD_THREADPERMISSION_TAB);
       threadPermission.getUIFormTextAreaInput(FIELD_CANVIEW_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanView()));
@@ -554,9 +552,9 @@ public class UITopicForm extends BaseForumForm implements UISelector {
               topicType = " ";
             String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
             String topicStatus = threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).getValue();
-            Boolean moderatePost = (Boolean) threadOption.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
-            Boolean whenNewPost = (Boolean) threadOption.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
-            Boolean sticky = (Boolean) threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
+            Boolean moderatePost = (Boolean) threadOption.getUICheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
+            Boolean whenNewPost = (Boolean) threadOption.getUICheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
+            Boolean sticky = (Boolean) threadOption.getUICheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
             UIForumInputWithActions threadPermission = uiForm.getChildById(FIELD_THREADPERMISSION_TAB);
             String canPost = threadPermission.getUIFormTextAreaInput(FIELD_CANPOST_INPUT).getValue();
             String canView = threadPermission.getUIFormTextAreaInput(FIELD_CANVIEW_INPUT).getValue();

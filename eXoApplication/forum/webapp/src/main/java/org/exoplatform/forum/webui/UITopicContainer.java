@@ -62,8 +62,10 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 
 /**
- * Created by The eXo Platform SARL Author : Hung Nguyen
- * hung.nguyen@exoplatform.com Aus 01, 2007 2:48:18 PM
+ * Created by The eXo Platform SARL 
+ * Author : Duy Tu
+ *          tuvd@exoplatform.com 
+ * Aus 01, 2007 2:48:18 PM
  */
 
 @ComponentConfig(
@@ -326,7 +328,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         isEmpty = true;
 
       if (isEmpty || !canAddNewThread) {
-        strings = getForumService().getPermissionTopicByCategory(categoryId, "createTopicRole");
+        strings = getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_CREATE_TOPIC_ROLE);
         if (!ForumUtils.isArrayEmpty(strings)) {
           canAddNewThread = ForumServiceUtils.hasPermission(strings, userId);
         }
@@ -348,10 +350,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   }
 
   private void setCssClassForSorting(String path, String orderOption) {
-    String[] properties = new String[] { "name", "lastPostDate", "voteRating", "postCount", "viewCount" };
+    String[] properties = new String[] { Utils.EXO_NAME, Utils.EXO_LAST_POST_DATE, Utils.EXO_VOTE_RATING, Utils.EXO_POST_COUNT, Utils.EXO_VIEW_COUNT };
     for (int i = 0; i < properties.length; i++) {
       if (properties[i].equals(path)) {
-        if (orderOption.equals("ascending")) {
+        if (orderOption.equals(Utils.ASCENDING.trim())) {
           cssClassMap.put(properties[i], "UpArrow1Icon");
         } else {
           cssClassMap.put(properties[i], "DownArrow1Icon");
@@ -369,45 +371,46 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   private void initPage() throws Exception {
     setListWatches();
     objectId = forumId;
-    if (getUserProfile() == null)
+    if (getUserProfile() == null) {
       userProfile = new UserProfile();
+    }
     StringBuffer strQuery = new StringBuffer();
     String userId = userProfile.getUserId();
-    if (isReload)
+    if (isReload) {
       setForum(false);
-    else
+    } else {
       isReload = true;
+    }
     if (!isModerator) {
-      strQuery.append("@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (not(@exo:canView) or @exo:canView='' or @exo:canView=' '").append(" or @exo:owner='").append(userId).append("'");
+      strQuery.append("@").append(Utils.EXO_IS_WAITING).append("='false' and @").append(Utils.EXO_IS_ACTIVE).append("='true' and @")
+              .append(Utils.EXO_IS_CLOSED).append("='false' and (not(@").append(Utils.EXO_CAN_VIEW).append(") or @").append(Utils.EXO_CAN_VIEW)
+              .append("='' or @").append(Utils.EXO_CAN_VIEW).append("=' ' or @").append(Utils.EXO_OWNER).append("='").append(userId).append("'");
       for (String string : UserHelper.getAllGroupAndMembershipOfUser(userId)) {
-        strQuery.append(" or @exo:canView='" + string + "'");
+        strQuery.append(" or @").append(Utils.EXO_CAN_VIEW).append("='").append(string).append("'");
       }
       strQuery.append(")");
 
       if (this.forum.getIsModerateTopic()) {
         if (!ForumUtils.isEmpty(strQuery.toString()))
           strQuery.append(" and ");
-        strQuery.append("@exo:isApproved='true'");
+        strQuery.append("@").append(Utils.EXO_IS_APPROVED).append("='true'");
       }
 
       List<String> listUser = new ArrayList<String>();
 
       listUser = ForumUtils.addArrayToList(listUser, forum.getViewer());
-      listUser = ForumUtils.addArrayToList(listUser, getForumService().getPermissionTopicByCategory(categoryId, "viewer"));
+      listUser = ForumUtils.addArrayToList(listUser, getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_VIEWER));
 
       if (!listUser.isEmpty() && !ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userId)) {
-        strQuery.append(" and (@exo:owner='").append(userId).append("' or topicPermission");
+        strQuery.append(" and (@").append(Utils.EXO_OWNER).append("='").append(userId).append("' or topicPermission");
       }
     }
 
-    // this.pageList = getForumService().getPageTopic(categoryId, forumId, strQuery.toString(), strOrderBy);
-
     int maxTopic = userProfile.getMaxTopicInPage().intValue();
-    if (maxTopic <= 0)
+    if (maxTopic <= 0) {
       maxTopic = 10;
-
+    }
     this.pageList = getForumService().getTopicList(categoryId, forumId, strQuery.toString(), strOrderBy, maxTopic);
-
   }
 
   private String getRemoteIP() throws Exception {
@@ -450,8 +453,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
         if (getUIFormCheckBoxInput(topic.getId()) != null) {
           getUIFormCheckBoxInput(topic.getId()).setChecked(false);
         } else {
-          UIFormCheckBoxInput<Boolean> checkItem = new UIFormCheckBoxInput<Boolean>(topic.getId(), topic.getId(), false);
-          addChild(checkItem);
+          addChild(new UIFormCheckBoxInput<Boolean>(topic.getId(), topic.getId(), false));
         }
       }
     } catch (Exception e) {
@@ -1173,10 +1175,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String path) throws Exception {
       String orderOption = null;
       uiTopicContainer.strOrderBy = ForumUtils.getOrderBy(uiTopicContainer.strOrderBy, path);
-      if(uiTopicContainer.strOrderBy.indexOf("ascending") > 0) {
-        orderOption = "ascending";
+      if(uiTopicContainer.strOrderBy.indexOf(Utils.ASCENDING.trim()) > 0) {
+        orderOption = Utils.ASCENDING.trim();
       } else {
-        orderOption = "descending";
+        orderOption = Utils.DESCENDING.trim();
       }
       uiTopicContainer.setCssClassForSorting(path, orderOption);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);

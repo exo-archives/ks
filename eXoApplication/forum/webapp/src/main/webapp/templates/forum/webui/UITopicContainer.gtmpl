@@ -263,34 +263,34 @@
 								<th style="width:40px;">&nbsp;</th>
 								<th style="width:40px;">&nbsp;</th>
 								<th>
-									<div class="<%=uicomponent.getCssClassForSorting("name");%>" onclick="<%=uicomponent.event("SetOrderBy","name");%>">
+									<div class="<%=uicomponent.getCssClassForSorting("name");%>" onclick="<%=uicomponent.event("SetOrderBy", Utils.EXO_NAME);%>">
 										<%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%>
 									</div>
 								</th>
 								<th style="width:40px;"><span class="AttachmentIcon" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"></span></th>
 								<th style="width:96px;">
-									<div class="<%=uicomponent.getCssClassForSorting("voteRating");%>" onclick="<%=uicomponent.event("SetOrderBy","voteRating");%>">
+									<div class="<%=uicomponent.getCssClassForSorting("voteRating");%>" onclick="<%=uicomponent.event("SetOrderBy", Utils.EXO_VOTE_RATING);%>">
 									  <div class="THFixHidden" style="width: 80px;">
 									   <%=_ctx.appRes("UITopicContainer.label.Rating");%>
 									  </div>
 									</div>
 								</th>
 								<th style="width:130px;">
-									<div class="<%=uicomponent.getCssClassForSorting("lastPostDate");%>" onclick="<%=uicomponent.event("SetOrderBy","lastPostDate");%>">
+									<div class="<%=uicomponent.getCssClassForSorting("lastPostDate");%>" onclick="<%=uicomponent.event("SetOrderBy", Utils.EXO_LAST_POST_DATE);%>">
 									  <div class="THFixHidden" style="width: 114px;">
 									   <%=_ctx.appRes("UITopicContainer.label.LastPosts");%>
 									  </div>
 									</div>
 								</th>
 								<th style="width:80px;">
-									<div class="<%=uicomponent.getCssClassForSorting("postCount");%>" onclick="<%=uicomponent.event("SetOrderBy","postCount");%>">
+									<div class="<%=uicomponent.getCssClassForSorting("postCount");%>" onclick="<%=uicomponent.event("SetOrderBy", Utils.EXO_POST_COUNT);%>">
 									  <div class="THFixHidden" style="width: 64px;">
 									   <%=_ctx.appRes("UITopicContainer.label.Replies");%>
 									  </div>
 									</div>
 								</th>
 								<th style="width:60px;">
-									<div class="<%=uicomponent.getCssClassForSorting("viewCount");%>" onclick="<%=uicomponent.event("SetOrderBy","viewCount");%>">
+									<div class="<%=uicomponent.getCssClassForSorting("viewCount");%>" onclick="<%=uicomponent.event("SetOrderBy", Utils.EXO_VIEW_COUNT);%>">
 									  <div class="THFixHidden" style="width: 44px;">
 									   <%=_ctx.appRes("UITopicContainer.label.Views");%>
 									  </div>

@@ -24,6 +24,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.ks.common.webui.WebUIUtils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -84,7 +85,7 @@ public class UIForumInfos extends UIContainer {
               isEmpty = true;
             if (isEmpty || isLock) {
               ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-              listUser = forumService.getPermissionTopicByCategory(forum.getCategoryId(), "createTopicRole");
+              listUser = forumService.getPermissionTopicByCategory(forum.getCategoryId(), Utils.EXO_CREATE_TOPIC_ROLE);
               if (!ForumUtils.isArrayEmpty(listUser)) {
                 isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId());
               }

@@ -410,7 +410,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         canCreateTopic = ForumServiceUtils.hasPermission(strings, userName);
       }
       if (isEmpty || !canCreateTopic) {
-        strings = getForumService().getPermissionTopicByCategory(categoryId, "createTopicRole");
+        strings = getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_CREATE_TOPIC_ROLE);
         if (!ForumUtils.isArrayEmpty(strings)) {
           canCreateTopic = ForumServiceUtils.hasPermission(strings, userName);
         }
@@ -518,7 +518,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
     listUser = ForumUtils.addArrayToList(listUser, topic.getCanView());
     listUser = ForumUtils.addArrayToList(listUser, forum.getViewer());
-    listUser = ForumUtils.addArrayToList(listUser, getForumService().getPermissionTopicByCategory(categoryId, "viewer"));
+    listUser = ForumUtils.addArrayToList(listUser, getForumService().getPermissionTopicByCategory(categoryId, Utils.EXO_VIEWER));
     if (listUser.size() > 0) {
       listUser.add(topic.getOwner());
       return ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userName);

@@ -829,7 +829,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
   public String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception {
     String[] canCreated = new String[] { " " };
-    type = "exo:" + type;
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node cateNode = getCategoryHome(sProvider).getNode(categoryId);
@@ -1817,7 +1816,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       TopicListAccess topicListAccess = new TopicListAccess(sessionManager, topicQuery);
       return new LazyPageList<Topic>(topicListAccess, pageSize);
     } catch (Exception e) {
-      log.error("Failed to retrieve topic list for forum " + forumId, e);
+      log.debug("Failed to retrieve topic list for forum " + forumId, e);
       return null;
     }
   }
@@ -1825,8 +1824,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   //
   private String buildXpath(SessionProvider sProvider, Node forumNode) throws Exception {
     QueryManager qm = getCategoryHome(sProvider).getSession().getWorkspace().getQueryManager();
-    String queryString = JCR_ROOT + forumNode.getPath() + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (not(@exo:canView) or @exo:canView='' or @exo:canView=' ')]";
-    Query query = qm.createQuery(queryString, Query.XPATH);
+    StringBuilder qrBuilder = new StringBuilder(JCR_ROOT);
+    qrBuilder.append(forumNode.getPath()).append("//element(*,").append(EXO_TOPIC).append(")[@").append(EXO_IS_WAITING).append("='false' and @")
+           .append(EXO_IS_ACTIVE).append("='true' and @").append(EXO_IS_CLOSED).append("='false' and (not(@").append(EXO_CAN_VIEW).append(") or @")
+           .append(EXO_CAN_VIEW).append("='' or @").append(EXO_CAN_VIEW).append("=' ')]");
+    Query query = qm.createQuery(qrBuilder.toString(), Query.XPATH);
     QueryResult result = query.execute();
     NodeIterator iter = result.getNodes();
     StringBuilder builder = new StringBuilder();
@@ -1835,7 +1837,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node node = iter.nextNode();
       if (isOr)
         builder.append(" and ");
-      builder.append("@exo:id!='").append(node.getName()).append("'");
+      builder.append("@").append(EXO_ID).append("!='").append(node.getName()).append("'");
       isOr = true;
     }
     return builder.toString();
@@ -1848,7 +1850,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
 
     StringBuffer stringBuffer = new StringBuffer();
 
-    stringBuffer.append(JCR_ROOT).append(forumPath).append("//element(*,exo:topic)");
+    stringBuffer.append(JCR_ROOT).append(forumPath).append("//element(*,").append(EXO_TOPIC).append(")");
     if (strQuery != null && strQuery.length() > 0) {
       // @exo:isClosed,
       // @exo:isWaiting ,
@@ -1856,20 +1858,20 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       // @exo:isActive
       stringBuffer.append("[").append(strQuery).append("]");
     }
-    stringBuffer.append(" order by @exo:isSticky descending");
+    stringBuffer.append(" order by @").append(EXO_IS_STICKY).append(DESCENDING);
     if (strOrderBy == null || Utils.isEmpty(strOrderBy)) {
       if (orderBy != null) {
-        stringBuffer.append(", @exo:").append(orderBy).append(" ").append(orderType);
+        stringBuffer.append(", @exo:").append(orderBy.toString()).append(" ").append(orderType);
         if (!orderBy.equals(SortField.LASTPOST)) {
-          stringBuffer.append(", @exo:lastPostDate descending");
+          stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
         }
       } else {
-        stringBuffer.append(", @exo:lastPostDate descending");
+        stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
       }
     } else {
-      stringBuffer.append(", @exo:").append(strOrderBy);
-      if (strOrderBy.indexOf("lastPostDate") < 0) {
-        stringBuffer.append(", @exo:lastPostDate descending");
+      stringBuffer.append(", @").append(strOrderBy);
+      if (strOrderBy.indexOf(SortField.LASTPOST.toString()) < 0) {
+        stringBuffer.append(", @").append(EXO_LAST_POST_DATE).append(DESCENDING);
       }
     }
     String pathQuery = stringBuffer.toString();
