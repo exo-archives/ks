@@ -1726,5 +1726,17 @@ table.UIFormGrid div.Id {
 }
 
 .UIWikiPortlet .UIFormInputSet {
-	border-bottom:1px solid #e1e1e1;
+  border-bottom:1px solid #e1e1e1;
+}
+
+.UIWikiPortlet .UIWikiPageVersionsList .DisableButton {
+  color:gray;
+  opacity:0.5;
+  filter:alpha(opacity=50);
+  cursor:default;
+}
+
+.UIWikiPortlet .UIWikiPageVersionsList .DisableButton:HOVER {
+  color:gray;
+  cursor:default;
 }

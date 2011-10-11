@@ -30,7 +30,7 @@
  <% uiform.begin(); %>
   <div class="HistoryLabel"><%= _ctx.appRes("UIWikiPageVersionsList.label.HistoryLabel"); %></div>
 	<div class="UIAction TextAlignLeft" >
-    <a href="javascript:void(0);" msg='<%=_ctx.appRes("UIWikiPageVersionsList.msg.checkGroup-required");%>' class="ActionButton LightBlueStyle RefreshModeTarget"><%= _ctx.appRes("UIWikiPageVersionsList.label.CompareSelected"); %></a>
+    <a href="javascript:void(0);" class="ActionButton LightBlueStyle RefreshModeTarget"><%= _ctx.appRes("UIWikiPageVersionsList.label.CompareSelected"); %></a>
     <a onclick="$compareActionLink" id="$compareActionId" style="display:none;"></a> 
   </div>
     <table cellspacing="0" borderspacing="0" class="UIFormGrid">

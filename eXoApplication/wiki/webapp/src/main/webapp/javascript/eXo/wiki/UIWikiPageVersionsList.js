@@ -18,7 +18,6 @@
  */
 
 function UIWikiPageVersionsList(){
- 
 };
 
 UIWikiPageVersionsList.prototype.init = function(formId) {
@@ -27,30 +26,31 @@ UIWikiPageVersionsList.prototype.init = function(formId) {
   me.selectedCheckbox = new Array();
   var versionListForm = document.getElementById(formId);
   var inputs = DOMUtil.findDescendantsByTagName(versionListForm,"input");
-  var compareButton = DOMUtil.findFirstDescendantByClass(versionListForm,"a","RefreshModeTarget");
-  compareButton.onclick = function(evt){
+  this.compareButton = DOMUtil.findFirstDescendantByClass(versionListForm,"a","RefreshModeTarget");
+  this.compareButton.onclick = function(evt){
     if (me.selectedCheckbox.length == 2) {
       eXo.wiki.UIWikiAjaxRequest.makeNewHash("#CompareRevision");
-    }
-    else {
-      alert(compareButton.getAttribute("msg"));
     }
   };
   
   var ln = inputs.length;
+  var countCheckBox = 0;
   for ( var i = 0; i < ln; i++) {
     var input = inputs[i];
     if (input.type == "checkbox") {
       input.checked=false;
       eXo.core.Browser.eventListener(input, 'click', me.onCheck);
+      countCheckBox++;
     }
   }
+  this.compareButton.className = "ActionButton LightBlueStyle DisableButton RefreshModeTarget";
 };
 
 UIWikiPageVersionsList.prototype.onCheck = function(evt) {
   var me = eXo.wiki.UIWikiPageVersionsList;
   var evt = evt || window.event;
   var target = evt.target || evt.srcElement;
+  
   if (target.checked == true) {
     me.selectedCheckbox.push(target);
     if (me.selectedCheckbox.length > 2) {
@@ -59,6 +59,12 @@ UIWikiPageVersionsList.prototype.onCheck = function(evt) {
     }
   } else {
     me.selectedCheckbox.remove(target);
+  }
+  
+  if (me.selectedCheckbox.length == 2) {
+    eXo.wiki.UIWikiPageVersionsList.compareButton.className = "ActionButton LightBlueStyle RefreshModeTarget";
+  } else {
+    eXo.wiki.UIWikiPageVersionsList.compareButton.className = "ActionButton LightBlueStyle DisableButton RefreshModeTarget";
   }
 };
 
