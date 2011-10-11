@@ -75,12 +75,12 @@ public class UIWikiVersionSelect extends UIWikiContainer {
     this.versionName = versionName;
   }
   
-  private boolean isHasPreviousVersion() {
+  protected boolean isHasPreviousVersion() {
     int version = Integer.valueOf(versionName);
     return (version > 1) ? true : false;
   }
   
-  private boolean isHasNextVersion() throws Exception {
+  protected boolean isHasNextVersion() throws Exception {
     PageImpl wikipage = (PageImpl) Utils.getCurrentWikiPage();
     int versionTotals = wikipage.getVersionableMixin().getVersionHistory().getChildren().size() - 1;
     int version = Integer.valueOf(versionName);
