@@ -1169,15 +1169,21 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       String path = categoryNode.getPath();
       Map<String, Long> userPostMap = getDeletePostByUser(categoryNode);
       Category category = getCategory(categoryNode);
+      Set<String> users = new HashSet<String>();
+      PropertyReader reader;
       try {
-        categoryNode.setProperty(EXO_TEMP_MODERATORS, PropertyReader.valuesToArray(categoryNode.getProperty(EXO_MODERATORS).getValues()));
-        categoryNode.setProperty(EXO_MODERATORS, new String[] { " " });
+        reader = new PropertyReader(categoryNode);
+        users.addAll(reader.list(EXO_MODERATORS, new ArrayList<String>()));
+        categoryNode.setProperty(EXO_TEMP_MODERATORS, reader.strings(EXO_MODERATORS, new String[] { "" }));
+        categoryNode.setProperty(EXO_MODERATORS, new String[] { "" });
         NodeIterator iter = categoryNode.getNodes();
         while (iter.hasNext()) {
           Node node = iter.nextNode();
           if (node.isNodeType(EXO_FORUM)) {
-            node.setProperty(EXO_TEMP_MODERATORS, PropertyReader.valuesToArray(node.getProperty(EXO_MODERATORS).getValues()));
-            node.setProperty(EXO_MODERATORS, new String[] { " " });
+            reader = new PropertyReader(node);
+            users.addAll(reader.list(EXO_MODERATORS, new ArrayList<String>()));
+            node.setProperty(EXO_TEMP_MODERATORS, reader.strings(EXO_MODERATORS, new String[] { "" }));
+            node.setProperty(EXO_MODERATORS, new String[] { "" });
           }
         }
         categoryNode.save();
@@ -1187,6 +1193,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       categoryHome.save();
       addUpdateUserProfileJob(userPostMap);
       unRegisterListenerForCategory(sProvider, path);
+      getTotalJobWatting(sProvider, users);
       return category;
     } catch (Exception e) {
       log.error("failed to remove category " + categoryId);
@@ -1666,7 +1673,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node forumNode = catNode.getNode(forumId);
       Map<String, Long> userPostMap = getDeletePostByUser(forumNode);
       forum = getForum(forumNode);
-      forumNode.setProperty(EXO_TEMP_MODERATORS, PropertyReader.valuesToArray(forumNode.getProperty(EXO_MODERATORS).getValues()));
+      forumNode.setProperty(EXO_TEMP_MODERATORS, forum.getModerators());
       forumNode.setProperty(EXO_MODERATORS, new String[] { " " });
       forumNode.save();
       forumNode.remove();
@@ -1676,6 +1683,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         addUpdateUserProfileJob(userPostMap);
       } catch (Exception e) {
       }
+      getTotalJobWatting(sProvider, new HashSet<String>(Arrays.asList(forum.getModerators())));
     } catch (Exception e) {
       return null;
     }
@@ -2197,7 +2205,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node forumHomeNode = getForumHomeNode(sProvider);
-      List<String> userIdsp = new ArrayList<String>();
       long topicCount = 0;
       long postCount = 0;
       Node forumNode = null;
@@ -2206,12 +2213,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumNode = (Node) forumHomeNode.getSession().getItem(topicPath).getParent();
         topicCount = forumNode.getProperty(EXO_TOPIC_COUNT).getLong();
         postCount = forumNode.getProperty(EXO_POST_COUNT).getLong();
-        if (forumNode.hasProperty(EXO_MODERATORS)) {
-          userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
-        }
-        userIdsp.addAll(getAllAdministrator(sProvider));
       } catch (PathNotFoundException e) {
       }
+      Set<String> userIdsp = new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>()));
       for (Topic topic : topics) {
         try {
           String topicPath = topic.getPath();
@@ -2379,12 +2383,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumNode.save();
       }
       if (topic.getIsWaiting() || !topic.getIsApproved()) {
-        List<String> userIdsp = new ArrayList<String>();
-        if (forumNode.hasProperty(EXO_MODERATORS)) {
-          userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
-        }
-        userIdsp.addAll(getAllAdministrator(sProvider));
-        getTotalJobWatting(sProvider, userIdsp);
+        getTotalJobWatting(sProvider, new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>())));
         isGetLastTopic = true;
       }
       if (!isNew && (isGetLastTopic || topic.getIsActive() || topic.getIsClosed())) {
@@ -2515,24 +2514,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node forumNode = getCategoryHome(sProvider).getNode(categoryId + "/" + forumId);
       Topic topic = getTopic(categoryId, forumId, topicId, UserProfile.USER_GUEST);
       Node topicNode = forumNode.getNode(topicId);
-
+      PropertyReader readerFor = new PropertyReader(forumNode);
       Map<String, Long> userPostMap = getDeletePostByUser(topicNode);
       if (topic.getIsApproved() && !topic.getIsWaiting()) {
         // update TopicCount for Forum
-        forumNode.setProperty(EXO_TOPIC_COUNT, forumNode.getProperty(EXO_TOPIC_COUNT).getLong() - 1);
+        forumNode.setProperty(EXO_TOPIC_COUNT, readerFor.l(EXO_TOPIC_COUNT) - 1);
         // update PostCount for Forum
-        long newPostCount = forumNode.getProperty(EXO_POST_COUNT).getLong() - (topic.getPostCount() + 1);
+        long newPostCount = readerFor.l(EXO_POST_COUNT) - (topic.getPostCount() + 1);
         forumNode.setProperty(EXO_POST_COUNT, newPostCount);
       }
       topicNode.remove();
       forumNode.save();
       if (!topic.getIsActive() || !topic.getIsApproved() || topic.getIsWaiting()) {
-        List<String> userIdsp = new ArrayList<String>();
-        if (forumNode.hasProperty(EXO_MODERATORS)) {
-          userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
-        }
-        userIdsp.addAll(getAllAdministrator(sProvider));
-        getTotalJobWatting(sProvider, userIdsp);
+        getTotalJobWatting(sProvider, new HashSet<String>(readerFor.list(EXO_MODERATORS, new ArrayList<String>())));
       }
       try {
         queryLastTopic(sProvider, forumNode.getPath());
@@ -3147,12 +3141,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         sendNotification(topicNode, null, post, messageBuilder, true);
       }
       if (sendAlertJob) {
-        List<String> userIdsp = new ArrayList<String>();
-        if (forumNode.hasProperty(EXO_MODERATORS)) {
-          userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
-        }
-        userIdsp.addAll(getAllAdministrator(sProvider));
-        getTotalJobWatting(sProvider, userIdsp);
+        getTotalJobWatting(sProvider, new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>())));
       }
       // send notification message to user's private post.
       if (post.getUserPrivate().length > 1) {
@@ -3437,7 +3426,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node forumHomeNode = getForumHomeNode(sProvider);
-      Set<String> userIdsp = new HashSet<String>();
       for (Post post : posts) {
         try {
           boolean isGetLastPost = false;
@@ -3452,11 +3440,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           long topicPostCount = topicNode.getProperty(EXO_POST_COUNT).getLong();
           long newNumberAttach = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong();
           long forumPostCount = forumNode.getProperty(EXO_POST_COUNT).getLong();
-          try {
-            if (forumNode.hasProperty(EXO_MODERATORS)) {
-              userIdsp.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
-            }
-          } catch (Exception e) {}
           switch (type) {
           case Utils.APPROVE: {
             postNode.setProperty(EXO_IS_APPROVED, true);
@@ -3528,8 +3511,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           if (isGetLastPost) {
             queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")));
           }
-          userIdsp.addAll(getAllAdministrator(sProvider));
-          getTotalJobWatting(sProvider, new ArrayList<String>(userIdsp));
+          getTotalJobWatting(sProvider, new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>())));
         } catch (PathNotFoundException e) {
           log.error("Failed to modify post" + post.getName(), e);
         }
@@ -3608,12 +3590,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumNode.setProperty(EXO_POST_COUNT, forumPostCount);
         forumNode.save();
       } else if (post.getUserPrivate() == null || post.getUserPrivate().length == 1) {
-        List<String> list = new ArrayList<String>();
-        if (forumNode.hasProperty(EXO_MODERATORS)) {
-          list.addAll(Utils.valuesToList(forumNode.getProperty(EXO_MODERATORS).getValues()));
-        }
-        list.addAll(getAllAdministrator(sProvider));
-        getTotalJobWatting(sProvider, list);
+        getTotalJobWatting(sProvider, new HashSet<String>(new PropertyReader(forumNode).list(EXO_MODERATORS, new ArrayList<String>())));
       }
       return post;
     } catch (Exception e) {
@@ -3741,7 +3718,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
 
-      List<String> userIdsp = new ArrayList<String>();
+      Set<String> userIdsp = new HashSet<String>();
       if (destModeratePost && srcModeratePost) {
         if (srcForumNode.hasProperty(EXO_MODERATORS)) {
           userIdsp.addAll(Utils.valuesToList(srcForumNode.getProperty(EXO_MODERATORS).getValues()));
@@ -3753,7 +3730,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         if (srcForumNode.hasProperty(EXO_MODERATORS)) {
           userIdsp.addAll(Utils.valuesToList(srcForumNode.getProperty(EXO_MODERATORS).getValues()));
         }
-        userIdsp.addAll(getAllAdministrator(sProvider));
       } else if (!srcModeratePost && destModeratePost) {
         if (unAproved && destForumNode.hasProperty(EXO_MODERATORS)) {
           userIdsp.addAll(Utils.valuesToList(destForumNode.getProperty(EXO_MODERATORS).getValues()));
@@ -6210,16 +6186,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return totalJob;
   }
 
-  private void getTotalJobWatting(SessionProvider sProvider, List<String> userIds) {
+  private void getTotalJobWatting(SessionProvider sProvider, Set<String> userIds) {
     try {
       JsonGeneratorImpl generatorImpl = new JsonGeneratorImpl();
       Category cat = new Category();
-      List<String> list = new ArrayList<String>();
       ContinuationService continuation = getContinuationService();
+      userIds.addAll(getAllAdministrator(sProvider));
       for (String userId : userIds) {
-        if (Utils.isEmpty(userId) || list.contains(userId))
-          continue;
-        list.add(userId);
+        if (Utils.isEmpty(userId)) continue;
         int job = getTotalJobWaitingForModerator(getForumHomeNode(sProvider).getSession(), userId);
         if (job >= 0) {
           cat.setCategoryName(String.valueOf(job));
