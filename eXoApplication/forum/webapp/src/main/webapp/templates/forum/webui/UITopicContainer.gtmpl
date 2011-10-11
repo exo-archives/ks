@@ -430,14 +430,14 @@
 													if(t <= 5) { 
 														number = String.valueOf(t) ;
 												%>
-												<a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" class="ActionLink PopupMenu" href="$url">$number</a>
+												<a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" class="ActionLink PopupMenu" href="${url+"/" + number}">$number</a>
 												<% }
 												t = t + 1 ;
 												}
 												if(max_page> 5) { 
 													number = String.valueOf(max_page) ;
 												%>
-												... <a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"  class="ActionLink PopupMenu" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )
+												... <a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"  class="ActionLink PopupMenu" href="${url+"/" + number}"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )
 												<%} else {%>
 												)
 												<%} 
