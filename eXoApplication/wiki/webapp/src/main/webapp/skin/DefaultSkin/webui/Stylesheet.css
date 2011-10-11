@@ -315,14 +315,14 @@ table.UIFormGrid div.Id {
 }
 
 .UIWikiSettingContainer_PermissionSetting_ .UIPermissionGrid .UIGrid {
-  width: 60%;
-  table-layout:auto;
-  margin:0;
+  width: 80%;
+  table-layout: auto;
+  margin: 0px;
 }
 .UIWikiSettingContainer_PermissionSetting_ .UIWikiPermissionOwner .UIFormGrid {
-  border:none;
-  width:34%;
-  margin:0;
+  border: none;
+  width: 80%;
+  margin: 0px;
 }
 
 .UIWikiPortlet .UIWikiPermissionOwner .Add {
@@ -391,13 +391,10 @@ table.UIFormGrid div.Id {
 }
 
 .UIWikiPortlet .VerticalLine {
-	position: absolute;
-	top: 0px;
-	left: 265px;
-	z-index: 1;
 	background: #e1e1e1;
 	width: 1px;
 	padding: 0px;
+	float: left;
 }
 
 .UIWikiPortlet .UIWikiMiddleArea .UIWikiNavigationContainer {
