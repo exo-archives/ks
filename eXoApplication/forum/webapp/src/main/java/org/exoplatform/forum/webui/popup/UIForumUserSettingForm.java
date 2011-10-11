@@ -467,7 +467,6 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
         uiForm.log.error("Can not save forum subscription, exception: ", e);
       }
       forumPortlet.setRenderForumLink();
-      forumPortlet.removeCacheUserProfile();
       UICategoryContainer categoryContainer = forumPortlet.findFirstComponentOfType(UICategoryContainer.class);
       if (categoryContainer.isRendered())
         categoryContainer.renderJump();

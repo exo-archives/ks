@@ -1154,6 +1154,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void saveUserSettingProfile(UserProfile userProfile) throws Exception {
     storage.saveUserSettingProfile(userProfile);
+    removeCacheUserProfile(userProfile.getUserId());
   }
 
   /**
