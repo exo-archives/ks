@@ -5161,7 +5161,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         object = post;
       }
     } catch (Exception e) {
-      log.error("Can not get " + type + " by Id: " + id, e);
+      log.debug("Can not get " + type + " by Id: " + id, e);
     }
     return object;
   }
@@ -5171,15 +5171,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node categoryHome = getCategoryHome(sProvider);
       if (type.equals(Utils.CATEGORY))
         return categoryHome.getNode(id);
-
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer stringBuffer = new StringBuffer();
-      stringBuffer.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,exo:").append(type).append(")[exo:id='").append(id).append("']");
+      StringBuffer stringBuffer = new StringBuffer(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,exo:").append(type)
+                  .append(")[(@").append(EXO_ID).append("='").append(id).append("') or (fn:name()='").append(id).append("')]");
       Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
       QueryResult result = query.execute();
-      return result.getNodes().nextNode();
+      NodeIterator iter = result.getNodes();
+      if (iter.getSize() > 0) return iter.nextNode();
     } catch (Exception e) {
-      log.error("Can not get Node by Id: " + id, e);
+      log.debug("Can not get Node by Id: " + id, e);
     }
     return null;
   }
