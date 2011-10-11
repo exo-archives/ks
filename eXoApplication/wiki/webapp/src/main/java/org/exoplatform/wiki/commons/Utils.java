@@ -366,6 +366,8 @@ public class Utils {
       return "AddTemplate";
     case EDITTEMPLATE:
       return "EditTemplate";
+    case SPACESETTING:
+      return "SpaceSetting";
     default:
       return "";
     }
