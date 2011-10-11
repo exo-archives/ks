@@ -16,6 +16,7 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
@@ -102,6 +103,7 @@ public class UIWikiUploadAttachment extends UIWikiForm {
              .addMessage(new ApplicationMessage("AttachmentNameValidator.msg.Invalid-char", null, ApplicationMessage.WARNING));        
         event.getRequestContext().setProcessRender(true);
       }
+      
       if (event.getRequestContext().getProcessRender()) {        
         resetUploadInput(event);
         return;
@@ -120,13 +122,22 @@ public class UIWikiUploadAttachment extends UIWikiForm {
           resetUploadInput(event);
           return;
         }
-        InputStream is = input.getUploadDataAsStream();
-        if (is != null) {
-          imageBytes = new byte[is.available()];
-          is.read(imageBytes);
-        } else {
-          imageBytes = null;
+        
+        InputStream is = null;
+        
+        try {
+          is = input.getUploadDataAsStream();
+          if ((is == null) || (is.available() == 0)) {
+            throw new FileNotFoundException();
+          }
+        } catch (FileNotFoundException ex) {
+          event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIWikiUploadAttachment.msg.file-not-exist", null, ApplicationMessage.ERROR));
+          resetUploadInput(event);
+          return;
         }
+        
+        imageBytes = new byte[is.available()];
+        is.read(imageBytes);
         attachfile = new WikiResource(uploadResource.getMimeType(), "UTF-8", imageBytes);
         attachfile.setName(uploadResource.getFileName());
         attachfile.setResourceId(uploadResource.getUploadId());
@@ -149,7 +160,7 @@ public class UIWikiUploadAttachment extends UIWikiForm {
         } catch (Exception e) {
           event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIApplication.msg.unknown-error",
                                                                                          null,
-                                                                                         ApplicationMessage.ERROR));     
+                                                                                         ApplicationMessage.ERROR));
         } finally {
           resetUploadInput(event);        
         }
