@@ -183,7 +183,6 @@ public class ForumPageList extends JCRPageList {
       position = (page - 1) * pageSize;
     }
     int endIndex = pageSize * page;
-    endIndex = (endIndex < list.size()) ? endIndex : list.size();
     if (!isSearchUser) {
       if (!isWatch)
         currentListPage_ = new ArrayList<ForumSearch>();
@@ -193,6 +192,7 @@ public class ForumPageList extends JCRPageList {
       currentListPage_ = new CopyOnWriteArrayList();
       list = listValue_;
     }
+    endIndex = (endIndex < list.size()) ? endIndex : list.size();
     if (endIndex > position) {
       currentListPage_.addAll(list.subList(position, endIndex));
     }

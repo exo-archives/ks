@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
@@ -619,26 +620,30 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       Query q;
       q = new Query();
       q.setUserName(keyword);
-      for (Object obj : service.getUserHandler().findUsers(q).getAll()) {
-        mapObject.put(((User) obj).getUserName(), obj);
+      ListAccess<User> listAcess = service.getUserHandler().findUsersByQuery(q);
+      for (User user : listAcess.load(0, listAcess.getSize())) {
+        mapObject.put(user.getUserName(), user);
       }
 
       q = new Query();
       q.setLastName(keyword);
-      for (Object obj : service.getUserHandler().findUsers(q).getAll()) {
-        mapObject.put(((User) obj).getUserName(), obj);
+      listAcess = service.getUserHandler().findUsersByQuery(q);
+      for (User user : listAcess.load(0, listAcess.getSize())) {
+        mapObject.put(user.getUserName(), user);
       }
 
       q = new Query();
       q.setFirstName(keyword);
-      for (Object obj : service.getUserHandler().findUsers(q).getAll()) {
-        mapObject.put(((User) obj).getUserName(), obj);
+      listAcess = service.getUserHandler().findUsersByQuery(q);
+      for (User user : listAcess.load(0, listAcess.getSize())) {
+        mapObject.put(user.getUserName(), user);
       }
 
       q = new Query();
       q.setEmail(keyword);
-      for (Object obj : service.getUserHandler().findUsers(q).getAll()) {
-        mapObject.put(((User) obj).getUserName(), obj);
+      listAcess = service.getUserHandler().findUsersByQuery(q);
+      for (User user : listAcess.load(0, listAcess.getSize())) {
+        mapObject.put(user.getUserName(), user);
       }
 
       for (Object object : this.getForumService().searchUserProfile(keyword).getAll()) {
