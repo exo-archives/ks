@@ -13,6 +13,11 @@ function getModule(params) {
   
   var commonsVersion = "${org.exoplatform.commons.version}";
 
+  module.commons = {};
+  module.commons.extension = 
+    new Project("org.exoplatform.commons", "exo.platform.commons.extension.webapp", "war", commonsVersion);
+  module.commons.extension.deployName = "commons-extension";
+  
   module.comet = {};
   module.comet.cometd =
     new Project("org.exoplatform.commons", "exo.platform.commons.comet.webapp", "war", commonsVersion).

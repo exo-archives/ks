@@ -62,9 +62,6 @@
                   No wsrp in beta02 <value> <string>wsrp-producer</string> </value>
                 -->
                 <value>
-                  <string>cometd-ksdemo</string>
-                </value>
-                <value>
                   <string>ksResources</string>
                 </value>
                 <value>
@@ -84,6 +81,9 @@
                 </value>
                 <value>
                   <string>ksdemo</string>
+                </value>
+                <value>
+                  <string>cometd-ksdemo</string>
                 </value>
                 <value>
                   <string>fck</string>

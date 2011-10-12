@@ -52,6 +52,7 @@ function getProduct(version) {
   product.addDependencies(ks.eXoApplication.poll);
   product.addDependencies(ks.web.ksResources);  
   product.addDependencies(ks.extension.webapp);
+  product.addDependencies(ks.commons.extension);
 
   // KS demo
   product.addDependencies(ks.demo.portal);

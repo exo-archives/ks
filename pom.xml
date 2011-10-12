@@ -31,8 +31,7 @@
     <org.exoplatform.core.version>2.4.1-GA</org.exoplatform.core.version>
     <org.exoplatform.ws.version>2.2.1-GA</org.exoplatform.ws.version>
     <org.exoplatform.jcr.version>1.14.1-GA</org.exoplatform.jcr.version>
-    <org.exoplatform.portal.version>3.2.0-PLF-SNAPSHOT</org.exoplatform.portal.version>    
-    <gatein.wci.version>2.0.2-GA</gatein.wci.version>
+    <org.exoplatform.portal.version>3.2.0-PLF-SNAPSHOT</org.exoplatform.portal.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <org.exoplatform.exopackage.version>1.1.4</org.exoplatform.exopackage.version>
     <org.chromattic.version>1.1.0</org.chromattic.version>
@@ -51,7 +50,7 @@
 	<org.hibernate.version>3.3.2.GA</org.hibernate.version>
 	<commons-collections.version>3.2.1</commons-collections.version>	
 	<org.jboss.version>2.2.9.GA</org.jboss.version>	
-    <org.gatein.shindig.version>1.0-r790473-Patch05</org.gatein.shindig.version>
+    <org.gatein.shindig.version>2.0.2-Beta03</org.gatein.shindig.version>
     <commons-chain.version>1.2</commons-chain.version>
     <commons-logging.version>1.0.4</commons-logging.version>
     <commons-httpclient.version>3.0</commons-httpclient.version>
