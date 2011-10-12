@@ -147,8 +147,12 @@ var Class = (function() {
 })();
 (function() {
 
-  var _toString = Object.prototype.toString;
-
+  var _toString = Object.prototype.toString,
+                  NATIVE_JSON_STRINGIFY_SUPPORT = window.JSON &&
+                    typeof JSON.stringify === 'function' &&
+                    JSON.stringify(0) === '0' &&
+                    typeof JSON.stringify(Prototype.K) === 'undefined';
+  
   function extend(destination, source) {
     for (var property in source)
       destination[property] = source[property];
@@ -193,6 +197,10 @@ var Class = (function() {
     return $H(object).toQueryString();
   }
 
+  function stringify(object) {
+    return JSON.stringify(object);
+  }
+  
   function toHTML(object) {
     return object && object.toHTML ? object.toHTML() : String.interpret(object);
   }
@@ -247,7 +255,7 @@ var Class = (function() {
   extend(Object, {
     extend:        extend,
     inspect:       inspect,
-    toJSON:        toJSON,
+    toJSON:        NATIVE_JSON_STRINGIFY_SUPPORT ? stringify : toJSON,
     toQueryString: toQueryString,
     toHTML:        toHTML,
     keys:          keys,
@@ -1094,8 +1102,8 @@ Array.from = $A;
     clone:     clone,
     toArray:   clone,
     size:      size,
-    inspect:   inspect,
-    toJSON:    toJSON
+    inspect:   inspect
+    // remove "toJSON: toJSON" to fix KS-3751
   });
 
   var CONCAT_ARGUMENTS_BUGGY = (function() {
