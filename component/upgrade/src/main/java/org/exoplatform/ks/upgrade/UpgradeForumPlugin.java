@@ -18,13 +18,10 @@ package org.exoplatform.ks.upgrade;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -63,6 +60,8 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
   private static final Log    log              = ExoLogger.getLogger(UpgradeForumPlugin.class);
 
   private static final String NEW_DOAMIN_FORUM = "new.domain.forum";
+
+  private static final String GROUP_SPACE_ID   = "/spaces";
 
   private String              newDomain        = "";
 
@@ -146,7 +145,7 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
       if (!Utils.isEmpty(link) && link.indexOf(newDomain) < 0) {
         link = new StringBuilder(newDomain).append(link.substring(link.indexOf("/", 8))).toString();
         node.setProperty(Utils.EXO_LINK, link);
-        log.info(String.format("Migration node %s property:  ,exo:link=%s", node.getName(), link));
+        log.info(String.format("Migration node %s property: exo:link=%s", node.getName(), link));
       }
     } catch (Exception e) {
       log.warn(String.format("Can not migration node %s with property exo:link", node.getName()));
@@ -167,8 +166,11 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
       log.info("\nPath of category Spaces: " + newSpPath);
       Session session = forumHome.getSession();
       List<String> groups = getAllGroupOfSpaces();
-      log.info("\nGet all groups of spaces: " + groups.toString());
-      Set<String> permissions = new HashSet<String>();
+      List<String> lastGroupIds = new ArrayList<String>();
+      for (String string : groups) {
+        lastGroupIds.add(string.replaceFirst(GROUP_SPACE_ID+"/", ""));
+      }
+      log.info("\nGet all groups of spaces: " + lastGroupIds.toString());
       while (cIter.hasNext()) {
         Node cNode = cIter.nextNode();
         reader = new PropertyReader(cNode);
@@ -183,11 +185,12 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
             if (fNode.isNodeType(Utils.EXO_FORUM)) {
               fName = getGroupId(permission);
               log.info("\n Forum migration has group: " + fName);
-              if (groups.contains(fName)) {
+              if (lastGroupIds.contains(fName)) {
                 fNode.setProperty(Utils.EXO_POSTER, permission);
                 fNode.setProperty(Utils.EXO_CREATE_TOPIC_ROLE, permission);
                 fNode.setProperty(Utils.EXO_VIEWER, permission);
                 fNode.save();
+                fName = Utils.FORUM_SPACE_ID_PREFIX + fName;
               } else {
                 fNode.setProperty(Utils.EXO_FORUM_ORDER, 100);
                 fNode.save();
@@ -197,7 +200,6 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
                 session.move(fNode.getPath(), newSpPath + "/" + fName);
                 session.save();
                 log.info(String.format("Move forum %s in to category Spaces with new node name %s", nodeName, fName));
-                permissions.addAll(Arrays.asList(permission));
               } else {
                 moveTopicsToForumSpace(session, fNode, newSpPath + "/" + fName);
                 log.info(String.format("Move all topics from %s in to forum category spaces %s", nodeName, fName));
@@ -211,7 +213,7 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
         cNode.remove();
         session.save();
       }
-      newSpNode.setProperty(Utils.EXO_USER_PRIVATE, permissions.toArray(new String[permissions.size()]));
+      newSpNode.setProperty(Utils.EXO_USER_PRIVATE, groups.toArray(new String[groups.size()]));
       forumHome.save();
     }
   }
@@ -331,7 +333,7 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
       PortalContainer container = PortalContainer.getInstance();
       OrganizationService organizationService = (OrganizationService) container.getComponentInstanceOfType(OrganizationService.class);
       ((ComponentRequestLifecycle)organizationService).startRequest(container);
-      Group group = organizationService.getGroupHandler().findGroupById("/spaces");
+      Group group = organizationService.getGroupHandler().findGroupById(GROUP_SPACE_ID);
       if (group != null) {
         Collection<Group> groups = organizationService.getGroupHandler().findGroups(group);
         for (Group gr : groups) {
