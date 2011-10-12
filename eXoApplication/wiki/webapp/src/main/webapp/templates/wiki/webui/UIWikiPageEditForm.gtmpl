@@ -50,9 +50,10 @@
       <span class="CommentTitle"><%= _ctx.appRes("UIWikiPageEditForm.label.CommentTitle"); %></span>
   <%
       uiform.renderField(uiform.FIELD_COMMENT);      
-      uiform.renderChild(uiform.SUBMIT_TOOLBAR_BOTTOM);
   %>
-  <% } %>
+  <% }
+    uiform.renderChild(uiform.SUBMIT_TOOLBAR_BOTTOM);  
+   %>
     </div>
  
 
