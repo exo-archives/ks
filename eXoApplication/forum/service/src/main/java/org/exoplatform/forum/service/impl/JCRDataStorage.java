@@ -6193,14 +6193,16 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       JsonGeneratorImpl generatorImpl = new JsonGeneratorImpl();
       Category cat = new Category();
       ContinuationService continuation = getContinuationService();
-      userIds.addAll(getAllAdministrator(sProvider));
-      for (String userId : userIds) {
-        if (Utils.isEmpty(userId)) continue;
-        int job = getTotalJobWaitingForModerator(getForumHomeNode(sProvider).getSession(), userId);
-        if (job >= 0) {
-          cat.setCategoryName(String.valueOf(job));
-          JsonValue json = generatorImpl.createJsonObject(cat);
-          continuation.sendMessage(userId, "/eXo/Application/Forum/messages", json, cat.toString());
+      if (continuation != null) {
+        userIds.addAll(getAllAdministrator(sProvider));
+        for (String userId : userIds) {
+          if (Utils.isEmpty(userId)) continue;
+          int job = getTotalJobWaitingForModerator(getForumHomeNode(sProvider).getSession(), userId);
+          if (job >= 0) {
+            cat.setCategoryName(String.valueOf(job));
+            JsonValue json = generatorImpl.createJsonObject(cat);
+            continuation.sendMessage(userId, "/eXo/Application/Forum/messages", json, cat.toString());
+          }
         }
       }
     } catch (Exception e) {
@@ -6432,7 +6434,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     ByteArrayInputStream is = new ByteArrayInputStream(bdata);
     Document doc = docBuilder.parse(is);
     doc.getDocumentElement().normalize();
-    String typeNodeExport = doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0).getTextContent();
+    String typeNodeExport = ((org.w3c.dom.Node) doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0)).getTextContent();
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<String> patchNodeImport = new ArrayList<String>();
     try {
