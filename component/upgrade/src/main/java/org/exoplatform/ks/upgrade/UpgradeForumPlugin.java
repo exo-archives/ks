@@ -134,9 +134,7 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
         saveLink(tIter.nextNode());
       }
     }
-    System.out.println("\n start save data.....");
     forumHome.getSession().save();
-    System.out.println("\n Save data post OK.\n");
   }
 
   private void saveLink(Node node) throws Exception {
