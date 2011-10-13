@@ -42,6 +42,7 @@ function getProduct(version) {
   product.addDependencies(ks.webuiExt);
    
   // KS extension
+  product.addDependencies(ks.eXoApplication.upgrade);
   product.addDependencies(ks.component.common);
   product.addDependencies(ks.component.rendering);
   product.addDependencies(ks.component.bbcode);

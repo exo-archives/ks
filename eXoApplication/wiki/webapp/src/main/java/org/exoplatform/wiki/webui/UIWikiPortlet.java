@@ -296,7 +296,7 @@ public class UIWikiPortlet extends UIPortletApplication {
       String mode = event.getRequestContext().getRequestParameter("mode");
       String currentModeName = (mode.equals("")) ? WikiMode.VIEW.toString() : mode;
       WikiMode currentMode = Utils.getModeFromAction(currentModeName);
-      if (!currentMode.equals(wikiPortlet.mode)) {
+      if (!wikiPortlet.mode.equals(currentMode)) {
         if (currentMode == null)
           currentMode = WikiMode.VIEW;
         event.getSource().changeMode(currentMode);

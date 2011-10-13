@@ -160,6 +160,16 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.commons</groupId>
+      <artifactId>exo.platform.commons.component.upgrade</artifactId>
+      <version>${org.exoplatform.commons.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>exo.platform.commons.component.product</artifactId>
+      <version>${org.exoplatform.commons.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
       <artifactId>exo.platform.commons.comet.service</artifactId>
       <version>${org.exoplatform.commons.version}</version>
     </dependency>
@@ -736,6 +746,12 @@
       <groupId>ecs</groupId>
       <artifactId>ecs</artifactId>
       <version>${ecs.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.component.upgrade</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
