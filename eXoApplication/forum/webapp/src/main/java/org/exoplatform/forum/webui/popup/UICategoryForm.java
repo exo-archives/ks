@@ -20,10 +20,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategory;
@@ -36,7 +35,6 @@ import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.UISelector;
 import org.exoplatform.ks.common.webui.UIUserSelect;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -315,8 +313,21 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
       String[] setPostable = ForumUtils.splitForForum(postable);
       String[] setViewer = ForumUtils.splitForForum(viewer);
 
-      String userName = UserHelper.getCurrentUser();
+      String userName = uiForm.getUserProfile().getUserId();
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+      boolean isNew = true;
       Category cat = new Category();
+      if (!ForumUtils.isEmpty(uiForm.categoryId)) {
+        cat = uiForm.getForumService().getCategory(uiForm.categoryId);
+        if(cat == null) {
+          warning("UIForumPortlet.msg.catagory-deleted");
+          forumPortlet.cancelAction();
+          forumPortlet.rederForumHome();
+          event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+          return;
+        }
+        isNew = false;
+      }
       cat.setOwner(userName);
       cat.setCategoryName(categoryTitle.trim());
       cat.setCategoryOrder(Long.parseLong(categoryOrder));
@@ -330,33 +341,18 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
       cat.setPoster(setPostable);
       cat.setViewer(setViewer);
 
-      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
-      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
       try {
-        if (!ForumUtils.isEmpty(uiForm.categoryId)) {
-          cat.setId(uiForm.categoryId);
-          forumService.saveCategory(cat, false);
-        } else {
-          forumService.saveCategory(cat, true);
-          List<String> invisibleCategories = forumPortlet.getInvisibleCategories();
-          if (!invisibleCategories.isEmpty()) {
-            List<String> invisibleForums = forumPortlet.getInvisibleForums();
-            invisibleCategories.add(cat.getId());
-            String listForumId = invisibleForums.toString().replace('[' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replace(']' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replaceAll(" ", ForumUtils.EMPTY_STR);
-            String listCategoryId = invisibleCategories.toString().replace('[' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replace(']' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replaceAll(" ", ForumUtils.EMPTY_STR);
-            ForumUtils.savePortletPreference(listCategoryId, listForumId);
-            forumPortlet.loadPreferences();
-          }
+        uiForm.getForumService().saveCategory(cat, isNew);
+        List<String> invisibleCategories = forumPortlet.getInvisibleCategories();
+        if (!invisibleCategories.isEmpty()) {
+          List<String> invisibleForums = forumPortlet.getInvisibleForums();
+          invisibleCategories.add(cat.getId());
+          String listForumId = UICategoryForm.listToString(invisibleForums);
+          String listCategoryId = UICategoryForm.listToString(invisibleCategories);
+          ForumUtils.savePortletPreference(listCategoryId, listForumId);
+          forumPortlet.loadPreferences();
         }
-      } catch (Exception e) {
-        warning("UIForumPortlet.msg.catagory-deleted");
-        forumPortlet.rederForumHome();
-      }
-      forumPortlet.cancelAction();
-      uiForm.isDoubleClickSubmit = true;
-
-      try {
         UICategory uiCategory = categoryContainer.getChild(UICategory.class);
         uiCategory.setIsEditForum(true);
         uiCategory.updateByBreadcumbs(cat.getId());
@@ -367,15 +363,21 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         forumLinks.setUpdateForumLinks();
         forumLinks.setValueOption(cat.getId());
       } catch (Exception e) {
-        Object[] args = { ForumUtils.EMPTY_STR };
-        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted",
-                                                                                       args,
-                                                                                       ApplicationMessage.WARNING));
+        warning("UIForumPortlet.msg.catagory-deleted");
+        forumPortlet.rederForumHome();
       }
+      forumPortlet.cancelAction();
+      uiForm.isDoubleClickSubmit = true;
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }
 
+  static public String listToString(List<String> list) {
+    if (list == null) return ForumUtils.EMPTY_STR;
+    String s = list.toString().substring(1);
+    return s.substring(0, s.length() - 1).replaceAll(Utils.SPACE, ForumUtils.EMPTY_STR);
+  }
+  
   static public class SelectTabActionListener extends BaseEventListener<UICategoryForm> {
     public void onEvent(Event<UICategoryForm> event, UICategoryForm uiForm, String id) throws Exception {
       uiForm.id = Integer.parseInt(id);
