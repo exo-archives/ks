@@ -83,6 +83,9 @@
                   <string>ksdemo</string>
                 </value>
                 <value>
+                  <string>commons-extension</string>
+                </value>
+                <value>
                   <string>cometd-ksdemo</string>
                 </value>
                 <value>

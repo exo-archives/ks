@@ -309,12 +309,6 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>${commons-lang.version}</version>
-      <scope>provided</scope>
-    </dependency>
     
     <dependency>
       <groupId>javax.validation</groupId>
