@@ -692,11 +692,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
       PropertyReader reader = new PropertyReader(forumAdminNode);
-      return new SortSettings(reader.string(EXO_FORUM_SORT_BY), reader.string(EXO_FORUM_SORT_BY_TYPE));
-    } catch (PathNotFoundException e) {
-      return new SortSettings(SortField.ORDER, Direction.ASC);
+      return new SortSettings(reader.string(EXO_FORUM_SORT_BY, SortField.ORDER.name()),
+                              reader.string(EXO_FORUM_SORT_BY_TYPE, Direction.ASC.name()));
     } catch (Exception e) {
-      log.warn("Could not log forum sort order in forum administration node: " + e.getMessage());
+      Node forumAdminNode = getAdminHome(sProvider).addNode(Utils.FORUMADMINISTRATION, EXO_ADMINISTRATION);
+      forumAdminNode.getSession().save();
     }
     return new SortSettings(SortField.ORDER, Direction.ASC);
   }
@@ -706,11 +706,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
       PropertyReader reader = new PropertyReader(forumAdminNode);
-      return new SortSettings(reader.string(EXO_TOPIC_SORT_BY), reader.string(EXO_TOPIC_SORT_BY_TYPE));
-    } catch (PathNotFoundException e) {
-      return new SortSettings(SortField.LASTPOST, Direction.DESC);
+      return new SortSettings(reader.string(EXO_TOPIC_SORT_BY, SortField.LASTPOST.name()), 
+                              reader.string(EXO_TOPIC_SORT_BY_TYPE, Direction.DESC.name()));
     } catch (Exception e) {
-      log.warn("Could not log topic sort order in forum administration node: " + e.getMessage());
+      Node forumAdminNode = getAdminHome(sProvider).addNode(Utils.FORUMADMINISTRATION, EXO_ADMINISTRATION);
+      forumAdminNode.getSession().save();
     }
     return new SortSettings(SortField.LASTPOST, Direction.DESC);
   }
