@@ -1469,8 +1469,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   }
   private String getTitle(String title, WebuiRequestContext context) {
     String strRe = context.getApplicationResourceBundle().getString("UIPostForm.label.ReUser")+": ";
-    if (title.indexOf(strRe) == 0) {
-      title = title.replaceAll(strRe, ForumUtils.EMPTY_STR);
+    while (title.indexOf(strRe.trim()) == 0) {
+      title = title.replaceFirst(strRe.trim(), ForumUtils.EMPTY_STR).trim();
     }
     return strRe + title;
   }

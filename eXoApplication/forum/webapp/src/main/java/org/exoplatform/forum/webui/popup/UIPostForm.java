@@ -255,8 +255,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     if (ForumUtils.isEmpty(STR_RE)) {
       STR_RE = getLabel(FIELD_LABEL_QUOTE) + ": ";
     }
-    if (title.indexOf(STR_RE) == 0) {
-      title = title.replaceAll(STR_RE, ForumUtils.EMPTY_STR);
+    while (title.indexOf(STR_RE.trim()) == 0) {
+      title = title.replaceFirst(STR_RE.trim(), ForumUtils.EMPTY_STR).trim();
     }
     return STR_RE + title;
   }
@@ -329,8 +329,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           int t = 0, k = 1;
           String postTitle = (" " + threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue()).trim();
           boolean isAddRe = false;
-          if (postTitle.indexOf(uiForm.getTitle("")) == 0) {
-            postTitle = postTitle.replaceAll(STR_RE, ForumUtils.EMPTY_STR).trim();
+          while (postTitle.indexOf(uiForm.getTitle("").trim()) == 0) {
+            postTitle = postTitle.replaceFirst(STR_RE.trim(), ForumUtils.EMPTY_STR).trim();
             isAddRe = true;
           }
           int maxText = ForumUtils.MAXTITLE;
