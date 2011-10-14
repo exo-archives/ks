@@ -6,7 +6,11 @@ import java.util.List;
 
 import org.exoplatform.commons.utils.ISO8601;
 
-public class ForumEventQuery {
+public class ForumEventQuery implements ForumNodeTypes {
+  public static final String VALUE_IN_ENTIRE = "entire";
+
+  public static final String VALUE_IN_TITLE  = "title";
+
   long             userPermission = 0;
 
   List<String>     listOfUser     = null;
@@ -212,16 +216,20 @@ public class ForumEventQuery {
   public String getPathQuery(List<String> listIds) {
     isAnd = false;
     isEmpty = true;
+    String nodeType = (Utils.CATEGORY.equals(type)) ? EXO_FORUM_CATEGORY :
+                      (Utils.FORUM.equals(type)) ? EXO_FORUM :
+                      (Utils.TOPIC.equals(type)) ? EXO_TOPIC : EXO_POST;
+
     StringBuffer queryString = new StringBuffer();
     if (path != null && path.length() > 0)
-      queryString.append("/jcr:root").append(path).append("//element(*,exo:").append(type).append(")");
+      queryString.append(JCR_ROOT).append(path).append("//element(*,").append(nodeType).append(")");
     else
-      queryString.append("//element(*,exo:").append(type).append(")");
+      queryString.append("//element(*,").append(nodeType).append(")");
     StringBuffer stringBuffer = new StringBuffer();
     stringBuffer.append("[");
     if (keyValue != null && keyValue.length() > 0) {
-      if (valueIn.equals("title")) {
-        stringBuffer.append("(jcr:contains(@exo:name, '").append(keyValue).append("'))");
+      if (VALUE_IN_TITLE.equals(valueIn)) {
+        stringBuffer.append("(jcr:contains(@").append(EXO_NAME).append(", '").append(keyValue).append("'))");
       } else {
         stringBuffer.append("(jcr:contains(., '").append(keyValue).append("'))");
       }
@@ -229,130 +237,148 @@ public class ForumEventQuery {
     }
 
     if (byUser != null && byUser.length() > 0) {
-      String temp = setArrays(byUser, "owner");
+      String temp = setArrays(byUser, EXO_OWNER);
       if (temp != null && temp.length() > 0) {
         stringBuffer.append(temp);
       }
     }
-    if (type.equals("topic")) {
+    if (type.equals(Utils.TOPIC)) {
       if (topicType != null && topicType.length() > 0 && !topicType.equals("all")) {
         if (isAnd)
           stringBuffer.append(" and ");
-        stringBuffer.append("(@exo:topicType='").append(topicType).append("')");
+        stringBuffer.append("(@").append(EXO_TOPIC_TYPE).append("='").append(topicType).append("')");
         isAnd = true;
       }
     }
-    if (isAnd)
+    if (isAnd){
       isEmpty = false;
-    if (isClosed != null && isClosed.length() > 0) {
-      if (userPermission == 1) {
-        if (type.equals("forum")) {
-          if (isAnd)
-            stringBuffer.append(" and ");
-          if (isClosed.equals("all")) {
-            stringBuffer.append("(@exo:isClosed='false'");
-            for (String str : listOfUser) {
-              stringBuffer.append(" or @exo:moderators='").append(str).append("'");
+    }
+    if(type.equals(Utils.FORUM) || type.equals(Utils.TOPIC)) {
+      if (isClosed != null && isClosed.length() > 0) {
+        if (userPermission == 1) {
+          if (type.equals(Utils.FORUM)) {
+            if (isAnd)
+              stringBuffer.append(" and ");
+            if (isClosed.equals("all")) {
+              stringBuffer.append("(@").append(EXO_IS_CLOSED).append("='false'");
+              for (String str : listOfUser) {
+                stringBuffer.append(" or @").append(EXO_MODERATORS).append("='").append(str).append("'");
+              }
+              stringBuffer.append(")");
+            } else if (isClosed.equals("false")) {
+              stringBuffer.append("(@").append(EXO_IS_CLOSED).append("='").append(isClosed).append("')");
+              isEmpty = false;
+            } else if (isClosed.equals("true")) {
+              stringBuffer.append("(@").append(EXO_IS_CLOSED).append("='").append(isClosed).append("' and (@")
+                                       .append(EXO_MODERATORS).append("='").append(listOfUser.get(0)).append("'");
+              for (String str : listOfUser) {
+                stringBuffer.append(" or @").append(EXO_MODERATORS).append("='").append(str).append("'");
+              }
+              stringBuffer.append("))");
+              isEmpty = false;
             }
-            stringBuffer.append(")");
-          } else if (isClosed.equals("false")) {
-            stringBuffer.append("(@exo:isClosed='").append(isClosed).append("')");
-            isEmpty = false;
-          } else if (isClosed.equals("true")) {
-            stringBuffer.append("(@exo:isClosed='").append(isClosed).append("' and (@exo:moderators='").append(listOfUser.get(0)).append("'");
-            for (String str : listOfUser) {
-              stringBuffer.append(" or @exo:moderators='").append(str).append("'");
+            isAnd = true;
+          } else {
+            if (!isClosed.equals("all")) {
+              if (isAnd)
+                stringBuffer.append(" and ");
+              stringBuffer.append("(@").append(EXO_IS_CLOSED).append("='").append(isClosed).append("')");
+              isAnd = true;
+              isEmpty = false;
             }
-            stringBuffer.append("))");
-            isEmpty = false;
           }
-          isAnd = true;
         } else {
           if (!isClosed.equals("all")) {
             if (isAnd)
               stringBuffer.append(" and ");
-            stringBuffer.append("(@exo:isClosed='").append(isClosed).append("')");
+            stringBuffer.append("(@").append(EXO_IS_CLOSED).append("='").append(isClosed).append("')");
             isAnd = true;
             isEmpty = false;
           }
         }
-      } else {
-        if (!isClosed.equals("all")) {
+      }
+      if (isLock != null && isLock.length() > 0) {
+        if (!isLock.equals("all")) {
           if (isAnd)
             stringBuffer.append(" and ");
-          stringBuffer.append("(@exo:isClosed='").append(isClosed).append("')");
+          stringBuffer.append("(@").append(EXO_IS_LOCK).append("='").append(isLock).append("')");
           isAnd = true;
           isEmpty = false;
         }
       }
     }
-    if (isLock != null && isLock.length() > 0) {
-      if (!isLock.equals("all")) {
-        if (isAnd)
-          stringBuffer.append(" and ");
-        stringBuffer.append("(@exo:isLock='").append(isLock).append("')");
-        isAnd = true;
-        isEmpty = false;
-      }
-    }
+
     if (remain != null && remain.length() > 0) {
       if (isAnd)
         stringBuffer.append(" and ");
       stringBuffer.append("(").append(remain).append(")");
       isAnd = true;
     }
-    if (moderator != null && moderator.length() > 0) {
-      String temp = setArrays(moderator, "moderators");
+    
+    if (moderator != null && moderator.length() > 0 && (Utils.FORUM.equals(type) || Utils.CATEGORY.equals(type))) {
+      String temp = setArrays(moderator, EXO_MODERATORS);
       if (temp != null && temp.length() > 0) {
         stringBuffer.append(temp);
         isEmpty = false;
       }
     }
-    String temp = setValueMin(topicCountMin, "topicCount");
-    if (temp != null && temp.length() > 0) {
-      stringBuffer.append(temp);
+    
+    String temp;
+    if(Utils.FORUM.equals(type) || Utils.TOPIC.equals(type)) {
+      temp = setValueMin(topicCountMin, EXO_TOPIC_COUNT);
+      if (temp != null && temp.length() > 0) {
+        stringBuffer.append(temp);
+      }
+      temp = setValueMin(postCountMin, EXO_POST_COUNT);
+      if (temp != null && temp.length() > 0) {
+        stringBuffer.append(temp);
+      }
+      if(Utils.TOPIC.equals(type)) {
+        temp = setValueMin(viewCountMin, EXO_VIEW_COUNT);
+        if (temp != null && temp.length() > 0) {
+          stringBuffer.append(temp);
+        }
+        temp = setDateFromTo(fromDateCreatedLastPost, toDateCreatedLastPost, EXO_LAST_POST_DATE);
+        if (temp != null && temp.length() > 0) {
+          stringBuffer.append(temp);
+        }
+      }
     }
-    temp = setValueMin(postCountMin, "postCount");
-    if (temp != null && temp.length() > 0) {
-      stringBuffer.append(temp);
-    }
-    temp = setValueMin(viewCountMin, "viewCount");
-    if (temp != null && temp.length() > 0) {
-      stringBuffer.append(temp);
-    }
-    temp = setDateFromTo(fromDateCreated, toDateCreated, "createdDate");
-    if (temp != null && temp.length() > 0) {
-      stringBuffer.append(temp);
-    }
-    temp = setDateFromTo(fromDateCreatedLastPost, toDateCreatedLastPost, "lastPostDate");
+
+    temp = setDateFromTo(fromDateCreated, toDateCreated, EXO_CREATED_DATE);
     if (temp != null && temp.length() > 0) {
       stringBuffer.append(temp);
     }
     // add to search for user and moderator:
-    if (type.equals("topic") && userPermission > 1) {
-      if (isAnd)
+    if (type.equals(Utils.TOPIC) && userPermission > 1) {
+      if (isAnd) {
         stringBuffer.append(" and ");
-      stringBuffer.append("(@exo:isApproved='true' and @exo:isActive='true' and @exo:isWaiting='false' and @exo:isActiveByForum='true')");
-
+      }
+      stringBuffer.append("(@").append(EXO_IS_APPROVED).append("='true' and @").append(EXO_IS_ACTIVE).append("='true' and @")
+                  .append(EXO_IS_WAITING).append("='false' and @").append(EXO_IS_ACTIVE_BY_FORUM).append("='true')");
       List<String> tempL = new ArrayList<String>();
       tempL.addAll(listOfUser);
       tempL.add(" ");
-      String s = Utils.propertyMatchAny("@exo:canView", tempL);
+      String s = Utils.propertyMatchAny("@"+EXO_CAN_VIEW, tempL);
       if (s != null && s.length() > 0) {
-        if (isAnd)
+        if (isAnd) {
           stringBuffer.append(" and ");
+        }
         stringBuffer.append(s);
       }
-    } else if (type.equals("post")) {
+    } 
+    
+    if (type.equals(Utils.POST)) {
       if (isAnd)
         stringBuffer.append(" and ");
-      stringBuffer.append("(@exo:userPrivate='exoUserPri'");
+      stringBuffer.append("(@").append(EXO_USER_PRIVATE).append("='").append(EXO_USER_PRI).append("'");
       for (String currentUser : listOfUser) {
-        stringBuffer.append(" or @exo:userPrivate='").append(currentUser).append("'");
+        stringBuffer.append(" or @").append(EXO_USER_PRIVATE).append("='").append(currentUser).append("'");
       }
-      stringBuffer.append(") and (@exo:isFirstPost='false')");
+      stringBuffer.append(") and (@").append(EXO_IS_FIRST_POST).append("='false')");
       if (userPermission > 1) {
-        stringBuffer.append(" and (@exo:isApproved='true' and @exo:isActiveByTopic='true' and @exo:isHidden='false')");
+        stringBuffer.append(" and (@").append(EXO_IS_APPROVED).append("='true' and @").append(EXO_IS_ACTIVE_BY_TOPIC)
+                    .append("='true' and @").append(EXO_IS_HIDDEN).append("='false')");
       }
     }
 
@@ -363,11 +389,11 @@ public class ForumEventQuery {
       if (type.equals(Utils.CATEGORY) || type.equals(Utils.FORUM))
         searchBy = "fn:name()";
       else
-        searchBy = "@exo:path";
+        searchBy = "@" + EXO_PATH;
       for (int i = 0; i < size; i++) {
         if (i > 0)
           stringBuffer.append(" or ");
-        stringBuffer.append(searchBy).append(" = '").append(listIds.get(i)).append("'");
+        stringBuffer.append(searchBy).append("='").append(listIds.get(i)).append("'");
       }
       stringBuffer.append(")");
     }
@@ -390,12 +416,12 @@ public class ForumEventQuery {
         if (string.length() > 0) {
           if (i > 0)
             builder.append(" or ");
-          builder.append("(@exo:").append(property).append("='").append(string).append("')");
+          builder.append("(@").append(property).append("='").append(string).append("')");
           ++i;
         }
       }
     } else if (values.trim().length() > 0) {
-      builder.append("@exo:").append(property).append("='").append(values).append("'");
+      builder.append("@").append(property).append("='").append(values).append("'");
     }
     if (builder.length() > 0) {
       if (isAnd)
@@ -411,7 +437,7 @@ public class ForumEventQuery {
     if (Integer.parseInt(min) > 0) {
       if (isAnd)
         queryString.append(" and ");
-      queryString.append("(@exo:").append(property).append(">=").append(min).append(")");
+      queryString.append("(@").append(property).append(">=").append(min).append(")");
       isAnd = true;
       isEmpty = false;
     }
@@ -423,20 +449,20 @@ public class ForumEventQuery {
     if (fromDate != null && toDate != null) {
       if (isAnd)
         queryString.append(" and ");
-      queryString.append("((@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')) and ");
-      queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))) ");
+      queryString.append("((@").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')) and ");
+      queryString.append("(@").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))) ");
       isAnd = true;
       isEmpty = false;
     } else if (fromDate != null) {
       if (isAnd)
         queryString.append(" and ");
-      queryString.append("(@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))");
+      queryString.append("(@").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))");
       isAnd = true;
       isEmpty = false;
     } else if (toDate != null) {
       if (isAnd)
         queryString.append(" and ");
-      queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))");
+      queryString.append("(@").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))");
       isAnd = true;
       isEmpty = false;
     }

@@ -1626,8 +1626,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL);
       UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class);
       searchForm.setUserProfile(forumPortlet.getUserProfile());
-      searchForm.setSelectType(Utils.POST);
       searchForm.setPath(topicDetail.topic.getPath());
+      searchForm.setSelectType(Utils.POST);
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
     }
   }

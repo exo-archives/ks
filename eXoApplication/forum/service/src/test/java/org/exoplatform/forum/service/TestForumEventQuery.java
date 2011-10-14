@@ -87,7 +87,7 @@ public class TestForumEventQuery extends TestCase {
 
     // set category Scoping
     categoryIds.addAll(Arrays.asList(new String[] { "CategoryId1", "CategoryId2", "CategoryId3" }));
-    predicate += " and (fn:name() = 'CategoryId1' or fn:name() = 'CategoryId2' or fn:name() = 'CategoryId3')";
+    predicate += " and (fn:name()='CategoryId1' or fn:name()='CategoryId2' or fn:name()='CategoryId3')";
     assertEquals(selector + predicate + "]", eventQuery.getPathQuery(categoryIds));
 
   }
@@ -182,7 +182,7 @@ public class TestForumEventQuery extends TestCase {
 
     // set category Scoping
     categoryIds.addAll(Arrays.asList(new String[] { "CategoryId1", "CategoryId2", "CategoryId3" }));
-    predicate += " and (fn:name() = 'CategoryId1' or fn:name() = 'CategoryId2' or fn:name() = 'CategoryId3')";
+    predicate += " and (fn:name()='CategoryId1' or fn:name()='CategoryId2' or fn:name()='CategoryId3')";
     assertEquals(selector + predicate + "]", eventQuery.getPathQuery(categoryIds));
   }
 
@@ -268,7 +268,7 @@ public class TestForumEventQuery extends TestCase {
 
     // set category Scoping
     categoryIds.addAll(Arrays.asList(new String[] { "CategoryId1", "CategoryId2", "CategoryId3" }));
-    predicate += " and (@exo:path = 'CategoryId1' or @exo:path = 'CategoryId2' or @exo:path = 'CategoryId3')";
+    predicate += " and (@exo:path='CategoryId1' or @exo:path='CategoryId2' or @exo:path='CategoryId3')";
     assertEquals(selector + predicate + "]", eventQuery.getPathQuery(categoryIds));
   }
 
@@ -319,7 +319,7 @@ public class TestForumEventQuery extends TestCase {
     assertEquals(selector + predicate + postPrivate + "]", eventQuery.getPathQuery(categoryIds));
     // set category Scoping
     categoryIds.addAll(Arrays.asList(new String[] { "CategoryId1", "CategoryId2", "CategoryId3" }));
-    predicate += postPrivate + " and (@exo:path = 'CategoryId1' or @exo:path = 'CategoryId2' or @exo:path = 'CategoryId3')";
+    predicate += postPrivate + " and (@exo:path='CategoryId1' or @exo:path='CategoryId2' or @exo:path='CategoryId3')";
     assertEquals(selector + predicate + "]", eventQuery.getPathQuery(categoryIds));
   }
 }

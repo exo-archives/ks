@@ -619,8 +619,8 @@ public class UIForumPortlet extends UIPortletApplication {
       updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL);
       UISearchForm searchForm = getChild(UISearchForm.class);
       searchForm.setUserProfile(getUserProfile());
-      searchForm.setSelectType(path.replaceFirst(ForumUtils.FIELD_SEARCHFORUM_LABEL, ""));
       searchForm.setPath(ForumUtils.EMPTY_STR);
+      searchForm.setSelectType(path.replaceFirst(ForumUtils.FIELD_SEARCHFORUM_LABEL, ""));
       path = ForumUtils.FIELD_EXOFORUM_LABEL;
     } else if (path.lastIndexOf(Utils.TAG) >= 0) {
       updateIsRendered(ForumUtils.TAG);

@@ -49,11 +49,10 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
-import org.exoplatform.webui.form.UIFormInput;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 /**
  * Created by The eXo Platform SARL
@@ -152,19 +151,17 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     UIFormSelectBox topicType = new UIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX, FIELD_TOPICTYPE_SELECTBOX, null);
     UIFormRadioBoxInput boxInput = new UIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX, FIELD_SCOPE_RADIOBOX, null);
 
-    UIFormCheckBoxInput<Boolean> isLock = new UIFormCheckBoxInput<Boolean>(FIELD_ISLOCK_CHECKBOX, FIELD_ISLOCK_CHECKBOX, false);
-    UIFormCheckBoxInput<Boolean> isUnLock = new UIFormCheckBoxInput<Boolean>(FIELD_ISUNLOCK_CHECKBOX, FIELD_ISUNLOCK_CHECKBOX, false);
-    UIFormCheckBoxInput<Boolean> isClosed = new UIFormCheckBoxInput<Boolean>(FIELD_ISCLOSED_CHECKBOX, FIELD_ISCLOSED_CHECKBOX, false);
-    UIFormCheckBoxInput<Boolean> isOpent = new UIFormCheckBoxInput<Boolean>(FIELD_ISOPEN_CHECKBOX, FIELD_ISOPEN_CHECKBOX, false);
+    UICheckBoxInput isLock = new UICheckBoxInput(FIELD_ISLOCK_CHECKBOX, FIELD_ISLOCK_CHECKBOX, false);
+    UICheckBoxInput isUnLock = new UICheckBoxInput(FIELD_ISUNLOCK_CHECKBOX, FIELD_ISUNLOCK_CHECKBOX, false);
+    UICheckBoxInput isClosed = new UICheckBoxInput(FIELD_ISCLOSED_CHECKBOX, FIELD_ISCLOSED_CHECKBOX, false);
+    UICheckBoxInput isOpent = new UICheckBoxInput(FIELD_ISOPEN_CHECKBOX, FIELD_ISOPEN_CHECKBOX, false);
     UIFormDateTimePicker FromDateCreated = new UIFormDateTimePicker(FROMDATECREATED, FROMDATECREATED, null, false);
     UIFormDateTimePicker ToDateCreated = new UIFormDateTimePicker(TODATECREATED, TODATECREATED, null, false);
     UIFormDateTimePicker FromDateCreatedLastPost = new UIFormDateTimePicker(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false);
     UIFormDateTimePicker ToDateCreatedLastPost = new UIFormDateTimePicker(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false);
 
     UISliderControl topicCountMin = new UISliderControl(FIELD_TOPICCOUNTMIN_SLIDER, FIELD_TOPICCOUNTMIN_SLIDER, "0");// Sliders
-
     UISliderControl postCountMin = new UISliderControl(FIELD_POSTCOUNTMIN_SLIDER, FIELD_POSTCOUNTMIN_SLIDER, "0");
-
     UISliderControl viewCountMin = new UISliderControl(FIELD_VIEWCOUNTMIN_SLIDER, FIELD_VIEWCOUNTMIN_SLIDER, "0");
 
     UIFormStringInput moderator = new UIFormStringInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null);
@@ -204,10 +201,10 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(optionsType(0));
 
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
-    list.add(new SelectItemOption<String>(getLabel("Full"), "entire"));
-    list.add(new SelectItemOption<String>(getLabel("Titles"), "title"));
+    list.add(new SelectItemOption<String>(getLabel("Full"), ForumEventQuery.VALUE_IN_ENTIRE));
+    list.add(new SelectItemOption<String>(getLabel("Titles"), ForumEventQuery.VALUE_IN_TITLE));
     UIFormRadioBoxInput boxInput = this.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setOptions(list);
-    boxInput.setValue("entire");
+    boxInput.setValue(ForumEventQuery.VALUE_IN_ENTIRE);
 
     list = new ArrayList<SelectItemOption<String>>();
     list.add(new SelectItemOption<String>(getLabel("All"), "all"));
@@ -264,7 +261,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
   }
   
   private void setOptionsType(int type) {
-    getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(optionsType(0));
+    getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setOptions(optionsType(type));
   }
 
   private void setTopicType() throws Exception {
@@ -363,7 +360,6 @@ public class UISearchForm extends BaseForumForm implements UISelector {
   }
 
   static public class SearchActionListener extends EventListener<UISearchForm> {
-    @SuppressWarnings("unchecked")
     public void execute(Event<UISearchForm> event) throws Exception {
       UISearchForm uiForm = event.getSource();
       Log log = ExoLogger.getLogger(SearchActionListener.class);
@@ -374,20 +370,20 @@ public class UISearchForm extends BaseForumForm implements UISelector {
 
       String valueIn = uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).getValue();
       if (valueIn == null || valueIn.length() == 0)
-        valueIn = "entire";
+        valueIn = ForumEventQuery.VALUE_IN_ENTIRE;
       String byUser = uiForm.getUIStringInput(FIELD_SEARCHUSER_INPUT).getValue();
 
       String isLock = "all";
-      boolean isL = (Boolean) uiForm.getUIFormCheckBoxInput(FIELD_ISLOCK_CHECKBOX).getValue();
-      boolean isUL = (Boolean) uiForm.getUIFormCheckBoxInput(FIELD_ISUNLOCK_CHECKBOX).getValue();
+      boolean isL = (Boolean) uiForm.getUICheckBoxInput(FIELD_ISLOCK_CHECKBOX).getValue();
+      boolean isUL = (Boolean) uiForm.getUICheckBoxInput(FIELD_ISUNLOCK_CHECKBOX).getValue();
       if (isL && !isUL)
         isLock = "true";
       if (!isL && isUL)
         isLock = "false";
       String isClosed = "all";
       String remain = ForumUtils.EMPTY_STR;
-      boolean isCl = (Boolean) uiForm.getUIFormCheckBoxInput(FIELD_ISCLOSED_CHECKBOX).getValue();
-      boolean isOp = (Boolean) uiForm.getUIFormCheckBoxInput(FIELD_ISOPEN_CHECKBOX).getValue();
+      boolean isCl = (Boolean) uiForm.getUICheckBoxInput(FIELD_ISCLOSED_CHECKBOX).getValue();
+      boolean isOp = (Boolean) uiForm.getUICheckBoxInput(FIELD_ISOPEN_CHECKBOX).getValue();
       if (uiForm.getIsMod()) {
         if (isCl && !isOp)
           isClosed = "true";
@@ -402,9 +398,9 @@ public class UISearchForm extends BaseForumForm implements UISelector {
         } else if (type.equals(Utils.POST))
           remain = "@exo:isActiveByTopic='true'";
       }
-      String topicCountMin = (String) ((UIFormInput) uiForm.getUIInput(FIELD_TOPICCOUNTMIN_SLIDER)).getValue();
-      String postCountMin = (String) ((UIFormInput) uiForm.getUIInput(FIELD_POSTCOUNTMIN_SLIDER)).getValue();
-      String viewCountMin = (String) ((UIFormInput) uiForm.getUIInput(FIELD_VIEWCOUNTMIN_SLIDER)).getValue();
+      String topicCountMin = uiForm.getUISliderControl(FIELD_TOPICCOUNTMIN_SLIDER).getValue();
+      String postCountMin = uiForm.getUISliderControl(FIELD_POSTCOUNTMIN_SLIDER).getValue();
+      String viewCountMin = uiForm.getUISliderControl(FIELD_VIEWCOUNTMIN_SLIDER).getValue();
 
       String moderator = uiForm.getUIStringInput(FIELD_MODERATOR_INPUT).getValue();
       Calendar fromDateCreated = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(FROMDATECREATED), FROMDATECREATED);
@@ -413,22 +409,14 @@ public class UISearchForm extends BaseForumForm implements UISelector {
       Calendar toDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
       try {
         if (fromDateCreated.getTimeInMillis() >= toDateCreated.getTimeInMillis()) {          
-          event.getRequestContext()
-               .getUIApplication()
-               .addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", null, ApplicationMessage.WARNING));
+          uiForm.warning("UISearchForm.msg.erro-from-less-then-to");
           return;
         }
-      } catch (Exception e) {
-      }
-      try {
-        if (type.equals(Utils.TOPIC) && (fromDateCreatedLastPost.getTimeInMillis() > toDateCreatedLastPost.getTimeInMillis())) {          
-          event.getRequestContext()
-               .getUIApplication()
-               .addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", null, ApplicationMessage.WARNING));
+        if (type.equals(Utils.TOPIC) && (fromDateCreatedLastPost.getTimeInMillis() > toDateCreatedLastPost.getTimeInMillis())) {    
+          uiForm.warning("UISearchForm.msg.erro-from-less-then-to");
           return;
         }
-      } catch (Exception e) {
-      }
+      } catch (Exception e) {}
       ForumEventQuery eventQuery = new ForumEventQuery();
       eventQuery.setListOfUser(UserHelper.getAllGroupAndMembershipOfUser(uiForm.userProfile.getUserId()));
       eventQuery.setUserPermission(uiForm.userProfile.getUserRole());
@@ -456,9 +444,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
         eventQuery.getPathQuery(new ArrayList<String>(forumPortlet.getInvisibleForums()));
       }
       if (eventQuery.getIsEmpty()) {
-        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("NameValidator.msg.erro-empty-search",
-                                                                                       null,
-                                                                                       ApplicationMessage.WARNING));
+        uiForm.warning("NameValidator.msg.erro-empty-search");
         return;
       }
       eventQuery.setRemain(remain);
@@ -467,9 +453,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
         list = uiForm.getForumService().getAdvancedSearch(eventQuery, forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()));
       } catch (Exception e) {
         log.warn("\nGetting advance search fail:\n " + e.getCause());
-        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure",
-                                                                                       null,
-                                                                                       ApplicationMessage.WARNING));
+        uiForm.warning("UIQuickSearchForm.msg.failure");
         return;
       }
 
@@ -489,25 +473,24 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     public void execute(Event<UISearchForm> event) throws Exception {
       UISearchForm uiForm = event.getSource();
       String type = uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue();
-      uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setValue("entire");
+      uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setValue(ForumEventQuery.VALUE_IN_ENTIRE);
       uiForm.setSelectType(type);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }
   }
 
   static public class ResetFieldActionListener extends EventListener<UISearchForm> {
-    @SuppressWarnings("unchecked")
     public void execute(Event<UISearchForm> event) throws Exception {
       UISearchForm uiForm = event.getSource();
       uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(Utils.CATEGORY);
       uiForm.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setValue("all");
-      uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setValue("entire");
+      uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setValue(ForumEventQuery.VALUE_IN_ENTIRE);
       uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST).setValue(ForumUtils.EMPTY_STR);
       uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST).setValue(ForumUtils.EMPTY_STR);
-      uiForm.getUIFormCheckBoxInput(FIELD_ISLOCK_CHECKBOX).setValue(false);
-      uiForm.getUIFormCheckBoxInput(FIELD_ISUNLOCK_CHECKBOX).setValue(false);
-      uiForm.getUIFormCheckBoxInput(FIELD_ISCLOSED_CHECKBOX).setValue(false);
-      uiForm.getUIFormCheckBoxInput(FIELD_ISOPEN_CHECKBOX).setValue(false);
+      uiForm.getUICheckBoxInput(FIELD_ISLOCK_CHECKBOX).setValue(false);
+      uiForm.getUICheckBoxInput(FIELD_ISUNLOCK_CHECKBOX).setValue(false);
+      uiForm.getUICheckBoxInput(FIELD_ISCLOSED_CHECKBOX).setValue(false);
+      uiForm.getUICheckBoxInput(FIELD_ISOPEN_CHECKBOX).setValue(false);
       uiForm.getUIStringInput(FIELD_MODERATOR_INPUT).setValue(ForumUtils.EMPTY_STR);
       uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).setValue(ForumUtils.EMPTY_STR);
       uiForm.getUIFormDateTimePicker(FROMDATECREATED).setValue(ForumUtils.EMPTY_STR);

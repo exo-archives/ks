@@ -82,6 +82,10 @@ public class BaseForumForm extends BaseUIForm {
     this.forumService = forumService;
   }
 
+  public UISliderControl getUISliderControl(String name) {
+     return findComponentById(name);
+  }
+  
   public UserProfile getUserProfile() throws Exception {
     userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
     return userProfile;
