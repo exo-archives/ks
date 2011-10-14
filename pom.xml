@@ -41,7 +41,8 @@
 	      
 	<!-- eXo extended service -->
 	<org.exoplatform.social.version>1.2.4-SNAPSHOT</org.exoplatform.social.version>
-	
+	<org.exoplatform.integ.version>1.0.2-SNAPSHOT</org.exoplatform.integ.version>
+
     <!-- 3rd parties -->
   <org.aspectj.version>1.6.10</org.aspectj.version>
   <ehcache.version>1.6.0</ehcache.version>
@@ -448,7 +449,6 @@
     <module>eXoApplication</module>
     <module>extension</module>
     <module>demo</module>
-    <module>ext</module>
     <module>docs</module>
     <module>testsuite</module>
     <module>server/tomcat/patch</module>

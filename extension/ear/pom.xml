@@ -21,9 +21,9 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.ks</groupId>
-      <artifactId>exo.ks.ext.social-integration</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.exoplatform.integration</groupId>
+      <artifactId>integ-ks-social</artifactId>
+      <version>${org.exoplatform.integ.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
@@ -240,11 +240,7 @@
               <artifactId>gwt-servlet</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>
-            <jarModule>
-              <groupId>org.exoplatform.ks</groupId>
-              <artifactId>exo.ks.ext.social-integration</artifactId>
-              <includeInApplicationXml>true</includeInApplicationXml>
-            </jarModule>
+             
           </modules>
         </configuration>
       </plugin>
