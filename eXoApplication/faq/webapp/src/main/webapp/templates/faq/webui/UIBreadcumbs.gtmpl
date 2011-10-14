@@ -63,7 +63,7 @@
 						  <% } %>
 						 </div>
 				  </td>
-				  <td>
+				  <td style="width:310px;">
 						<div class="SearchForm">
 							<%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
 						</div>
