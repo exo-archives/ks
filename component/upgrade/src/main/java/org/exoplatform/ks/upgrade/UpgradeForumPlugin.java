@@ -32,6 +32,7 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.commons.upgrade.UpgradeProductPlugin;
+import org.exoplatform.commons.version.util.VersionComparator;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
@@ -314,9 +315,8 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
   }
 
   public boolean shouldProceedToUpgrade(String newVersion, String previousVersion) {
-    // boolean doUpgrade = VersionComparator.isSame("0", previousVersion) && ((VersionComparator.isSame("2.2.3-SNAPSHOT", newVersion)) || (VersionComparator.isSame("2.2.3", newVersion)));
-    // return doUpgrade;
-    return true;
+     boolean doUpgrade = VersionComparator.isSame("0", previousVersion) && ((VersionComparator.isSame("2.2.4-SNAPSHOT", newVersion)) || (VersionComparator.isSame("2.2.4", newVersion)));
+     return doUpgrade;
   }
 
   @SuppressWarnings("deprecation")
