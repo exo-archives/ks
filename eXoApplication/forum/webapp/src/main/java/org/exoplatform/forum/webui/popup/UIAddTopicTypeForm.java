@@ -81,7 +81,7 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
   public void setTopicType(TopicType topicType) {
     this.topicType = topicType;
     this.isEdit = true;
-    getUIStringInput(FIELD_TOPICTYPENAME_INPUT).setValue(topicType.getName());
+    getUIStringInput(FIELD_TOPICTYPENAME_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(topicType.getName()));
     ((UIFormInputIconSelector) getChild(UIFormInputIconSelector.class)).setSelectedIcon(topicType.getIcon());
   }
 

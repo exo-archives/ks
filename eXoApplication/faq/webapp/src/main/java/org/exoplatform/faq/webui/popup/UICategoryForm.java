@@ -45,11 +45,11 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.organization.account.UIUserSelector;
 
@@ -131,9 +131,9 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
     inputset.addUIFormInput(index);
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_USERPRIVATE_INPUT, FIELD_USERPRIVATE_INPUT, null));
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null));
-    inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEQUESTIONS_CHECKBOX, FIELD_MODERATEQUESTIONS_CHECKBOX, false));
-    inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(VIEW_AUTHOR_INFOR, VIEW_AUTHOR_INFOR, false));
-    inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(FIELD_MODERATE_ANSWERS_CHECKBOX, FIELD_MODERATE_ANSWERS_CHECKBOX, false));
+    inputset.addUIFormInput(new UICheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX, FIELD_MODERATEQUESTIONS_CHECKBOX, false));
+    inputset.addUIFormInput(new UICheckBoxInput(VIEW_AUTHOR_INFOR, VIEW_AUTHOR_INFOR, false));
+    inputset.addUIFormInput(new UICheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX, FIELD_MODERATE_ANSWERS_CHECKBOX, false));
     UIFormTextAreaInput moderator = new UIFormTextAreaInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null);
     if (isAddNew)
       moderator.setValue(FAQUtils.getCurrentUser());
@@ -195,7 +195,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       currentCategory_ = cat;
       oldName_ = cat.getName();
       if (oldName_ != null && oldName_.trim().length() > 0)
-        getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_);
+        getUIStringInput(FIELD_NAME_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(oldName_));
       else
         getUIStringInput(FIELD_NAME_INPUT).setValue("Root");
       String userPrivate = null;
@@ -210,9 +210,9 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       getUIFormTextAreaInput(FIELD_USERPRIVATE_INPUT).setDefaultValue(userPrivate);
       getUIStringInput(FIELD_INDEX_INPUT).setValue(String.valueOf(cat.getIndex()));
       getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(cat.getDescription());
-      getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).setChecked(cat.isModerateQuestions());
-      getUIFormCheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).setChecked(cat.isModerateAnswers());
-      getUIFormCheckBoxInput(VIEW_AUTHOR_INFOR).setChecked(cat.isViewAuthorInfor());
+      getUICheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).setChecked(cat.isModerateQuestions());
+      getUICheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).setChecked(cat.isModerateAnswers());
+      getUICheckBoxInput(VIEW_AUTHOR_INFOR).setChecked(cat.isViewAuthorInfor());
       StringBuilder moderator = new StringBuilder();
       if (cat.getModerators() != null && cat.getModerators().length > 0)
         for (String str : cat.getModerators()) {
@@ -304,14 +304,12 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
         return;
       }
 
-      Boolean moderatequestion = inputset.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked();
-      Boolean moderateAnswer = inputset.getUIFormCheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).isChecked();
-      boolean viewAuthorInfor = inputset.getUIFormCheckBoxInput(VIEW_AUTHOR_INFOR).isChecked();
+      Boolean moderatequestion = uiCategory.getUICheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked();
+      Boolean moderateAnswer = uiCategory.getUICheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).isChecked();
+      boolean viewAuthorInfor = uiCategory.getUICheckBoxInput(VIEW_AUTHOR_INFOR).isChecked();
       String[] users = FAQUtils.splitForFAQ(moderator);
 
       
-      // UIQuestions questions = answerPortlet.findFirstComponentOfType(UIQuestions.class) ;
-      // SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       Category cat;
       if (uiCategory.isAddNew_) {
         cat = new Category();

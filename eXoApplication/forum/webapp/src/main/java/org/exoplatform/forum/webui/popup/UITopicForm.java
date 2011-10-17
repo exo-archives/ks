@@ -405,7 +405,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
       this.topic = getForumService().getTopic(categoryId, forumId, topicId, ForumUtils.EMPTY_STR);
       UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
       threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true);
-      threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(this.topic.getTopicName());
+      threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(topic.getTopicName()));
       threadContent.getChild(UIFormWYSIWYGInput.class).setValue(this.topic.getDescription());
 
       UIForumInputWithActions threadOption = this.getChildById(FIELD_THREADOPTION_TAB);

@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ks.common;
 
+import java.util.Arrays;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 /**
@@ -115,6 +118,21 @@ public class TestCommonUtils extends TestCase {
      * when test successful encodeSpecialCharInSearchTerm(), encodeSpecialCharInTitle() and
      * encodeSpecialCharInContent, this function encodeSpecialCharToHTMLnumber tested.
     */
+  }
+  
+  
+  public void testDecodeSpecialCharToHTMLnumber() throws Exception {
+    String input = null;
+    assertEquals(null, CommonUtils.decodeSpecialCharToHTMLnumber(input));
+    input = "";
+    assertEquals(input, CommonUtils.decodeSpecialCharToHTMLnumber(input));
+    input = "Normal text abc";
+    assertEquals(input, CommonUtils.decodeSpecialCharToHTMLnumber(input));
+    input = "Text ...&gt;&#64;&#35;&#36;&#37;&#94;&#38;&#42;&#40;&#41;&#34;&#47;&#45;&#61;&#126;&#96;&#39;&#46;&#44;&lt; too";
+    assertEquals("Text ...<@#$%^&*()\"/-=~`'.,> too", CommonUtils.decodeSpecialCharToHTMLnumber(input));
+    // ignore case
+    List<String> ig = Arrays.asList(new String[]{"&gt;", "&lt;", "&#46;"});
+    assertEquals("Text ...&gt;@#$%^&*()\"/-=~`'&#46;,&lt; too", CommonUtils.decodeSpecialCharToHTMLnumber(input, ig));
   }
   
   

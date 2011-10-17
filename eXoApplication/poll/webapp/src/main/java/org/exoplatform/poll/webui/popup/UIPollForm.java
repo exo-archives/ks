@@ -140,7 +140,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
   public void setUpdatePoll(Poll poll, boolean isUpdate) throws Exception {
     if (isUpdate) {
       this.poll = poll;
-      getUIStringInput(FIELD_QUESTION_INPUT).setValue(poll.getQuestion());
+      getUIStringInput(FIELD_QUESTION_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(poll.getQuestion()));
       getUIStringInput(FIELD_TIMEOUT_INPUT).setValue(String.valueOf(poll.getTimeOut()));
       getUICheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).setChecked(poll.getIsAgainVote());
       UICheckBoxInput multiVoteCheckInput = getUICheckBoxInput(FIELD_MULTIVOTE_CHECKBOX);
@@ -165,7 +165,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
     List<String> list = new ArrayList<String>();
     if (isUpdate) {
       for (String string : this.poll.getOption()) {
-        list.add(string);
+        list.add(CommonUtils.decodeSpecialCharToHTMLnumber(string));
       }
     } else {
       list.add("");

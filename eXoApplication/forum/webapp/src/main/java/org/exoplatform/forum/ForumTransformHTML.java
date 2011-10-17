@@ -82,15 +82,16 @@ public class ForumTransformHTML {
   }
 
   public static String getTitleInHTMLCode(String s, List<String> bbcs) {
-    if (s == null || s.trim().length() == 0)
+    if (ForumUtils.isEmpty(s)){
       return ForumUtils.EMPTY_STR;
-    if (s.length() > 500)
+    }
+    if(s.length() > 500) {
       s = s.substring(0, 500);
-    s = s.replaceAll("&nbsp;&nbsp;", "&nbsp;").replaceAll("&nbsp; ", "&nbsp;").replaceAll(" &nbsp;", "&nbsp;").replaceAll("<br/>", " ");
-    s = StringUtils.replace(s, "  ", " ");
+    }
+    s = s.replaceAll("&nbsp;", " ").replaceAll("<br/>", " ").replaceAll("( \\s*)", " ");
     s = cleanHtmlCode(s, bbcs);
     s = removeCharterStrange(s);
-    return s;
+    return s.trim();
   }
 
   public static String removeCharterStrange(String s) {

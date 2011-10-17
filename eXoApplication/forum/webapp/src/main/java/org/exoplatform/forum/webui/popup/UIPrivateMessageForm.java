@@ -272,7 +272,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     UIFormWYSIWYGInput message = MessageTab.getChild(UIFormWYSIWYGInput.class);
     String content = privateMessage.getMessage();
     String label = this.getLabel(FIELD_REPLY_LABEL);
-    String title = privateMessage.getName();
+    String title = CommonUtils.decodeSpecialCharToHTMLnumber(privateMessage.getName());
     if (isReply) {
       UIFormTextAreaInput areaInput = this.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA);
       areaInput.setValue(privateMessage.getFrom());

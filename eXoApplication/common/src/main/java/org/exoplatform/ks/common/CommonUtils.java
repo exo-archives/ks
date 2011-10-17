@@ -21,9 +21,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.internet.AddressException;
@@ -58,17 +62,29 @@ import org.w3c.dom.Document;
 public class CommonUtils {
   private static Log log = ExoLogger.getLogger(CommonUtils.class);
   
-  public static final String COMMA     = ",".intern();
+  public static final String         COMMA      = ",".intern();
 
-  public static final String SLASH     = "/".intern();
+  public static final String         SLASH      = "/".intern();
 
-  public static final String EMPTY_STR = "".intern();
+  public static final String         EMPTY_STR  = "".intern();
 
-  public static final String COLON     = ":".intern();
+  public static final String         COLON      = ":".intern();
 
-  public static final String SEMICOLON = ";".intern();
+  public static final String         SEMICOLON  = ";".intern();
 
-  public static final String SPACE     = " ".intern();
+  public static final String         SPACE      = " ".intern();
+
+  private static List<String>        tokens     = new ArrayList<String>();
+
+  private static Map<String, String> charcodes  = new HashMap<String, String>();
+  /*
+   *  The distance code number content special character.
+   *  Ex: from ' '(32) to '0'(48): ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/'
+   *  See: http://www.ascii.cl/htmlcodes.htm
+  */
+  private static int[] CHAR_CODES = new int[] { 48, 32, 65, 57, 97, 90, 127, 122, 39 };// '0', ' ', 'A', '9', 'a', 'Z', '~', 'z', '\''
+  
+  private static String AMP_NUMBER = "&#", LESS_THAN = "&lt;", GREATER_THAN = "&gt;";
   
   static public String generateCheckSum(byte[] b) throws Exception {
     try{
@@ -321,13 +337,6 @@ public class CommonUtils {
       return EMPTY_STR;
     }
     int i = 0;
-    /*
-     *  The distance code number content special character.
-     *  Ex: from ' '(32) to '0'(48): ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/'
-     *  See: http://www.ascii.cl/htmlcodes.htm
-    */
-    int[] charCodes = new int[] { 48, 32, 65, 57, 97, 90, 127, 122, 39 };// '0', ' ', 'A', '9', 'a', 'Z', '~', 'z', '\''
-    String apos = "&#39;", str1 = "&#", str2 = "&lt;", str3 = "&gt;";
     StringBuilder builder = new StringBuilder();
     while (i < s.length()) {
       char c = s.charAt(i);
@@ -335,17 +344,16 @@ public class CommonUtils {
         builder.append(c);
       } else {
         int t = s.codePointAt(i);
-        if (t == charCodes[8]) {
-          builder.append(apos);
-        } else if (t < charCodes[0] && t > charCodes[1] || t < charCodes[2] && t > charCodes[3] || t < charCodes[4] && t > charCodes[5] || t < charCodes[6] && t > charCodes[7]) {
+        if (t < CHAR_CODES[0] && t > CHAR_CODES[1] || t < CHAR_CODES[2] && t > CHAR_CODES[3] ||
+            t < CHAR_CODES[4] && t > CHAR_CODES[5] || t < CHAR_CODES[6] && t > CHAR_CODES[7]) {
           if (isTitle && (t == 60 || t == 62)) {
             if (t == 60) {
-              builder.append(str2);
+              builder.append(LESS_THAN);
             } else if (t == 62) {
-              builder.append(str3);
+              builder.append(GREATER_THAN);
             }
           } else {
-            builder.append(str1).append(t).append(SEMICOLON);
+            builder.append(AMP_NUMBER).append(t).append(SEMICOLON);
           }
         } else {
           builder.append(c);
@@ -356,6 +364,48 @@ public class CommonUtils {
     return builder.toString();
   }
 
+  public static String decodeSpecialCharToHTMLnumber(String s, List<String> lIgnore) {
+    if (isEmpty(s)){
+      return s;
+    }
+    getValueTokens();
+    for (String token : tokens) {
+      if (lIgnore.contains(token)){
+        continue;
+      }
+      while (s.indexOf(token) >= 0) {
+        s = StringUtils.replace(s, token, charcodes.get(token));
+      }
+    }
+    return s;
+  }
+  
+  private static void getValueTokens() {
+    if(tokens.size() <= 0) {
+      String token;
+      for (int t = Character.MIN_CODE_POINT; t < Character.MAX_CODE_POINT; t++) {
+        if (t < CHAR_CODES[0] && t > CHAR_CODES[1] || t < CHAR_CODES[2] && t > CHAR_CODES[3] || 
+            t < CHAR_CODES[4] && t > CHAR_CODES[5] || t < CHAR_CODES[6] && t > CHAR_CODES[7]) {
+          if (t == 60) {
+            tokens.add(LESS_THAN);
+            charcodes.put(LESS_THAN, ">");
+          } else if (t == 62) {
+            tokens.add(GREATER_THAN);
+            charcodes.put(GREATER_THAN, "<");
+          } else {
+            token = new StringBuilder(AMP_NUMBER).append(t).append(SEMICOLON).toString();
+            tokens.add(token);
+            charcodes.put(token, String.valueOf(Character.toChars(t)[0]));
+          }
+        }
+      }
+    }
+  }
+
+  public static String decodeSpecialCharToHTMLnumber(String s) {
+    return decodeSpecialCharToHTMLnumber(s, new ArrayList<String>());
+  }
+  
   /**
    * Get current time GMT/Zulu or UTC,(zone time is 0+GMT)
    * @return Calendar 

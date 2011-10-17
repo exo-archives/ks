@@ -226,16 +226,16 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     if (!ForumUtils.isEmpty(this.postId) && post != null) {
       String message = post.getMessage();
       if (isQuote) {// quote
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getTitle(post.getName()));
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(post.getName())));
         String value = "[QUOTE=" + post.getOwner() + "]" + message + "[/QUOTE]";
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
         getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
       } else if (isPP) {
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getTitle(topic.getTopicName()));
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
         getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
       } else {// edit
         editReason.setRendered(true);
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getName());
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(post.getName()));
         if (post.getAttachments() != null && post.getAttachments().size() > 0) {
           this.attachments_ = post.getAttachments();
           this.refreshUploadFileList();

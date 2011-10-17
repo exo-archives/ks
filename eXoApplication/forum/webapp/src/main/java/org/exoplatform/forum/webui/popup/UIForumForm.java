@@ -52,12 +52,12 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 import org.exoplatform.webui.organization.account.UIUserSelector;
@@ -200,7 +200,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
     forumStatus.setDefaultValue("unlock");
     UIFormTextAreaInput description = new UIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA, FIELD_DESCRIPTION_TEXTAREA, null);
 
-    UIFormCheckBoxInput<Boolean> checkWhenAddTopic = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATETHREAD_CHECKBOX, FIELD_MODERATETHREAD_CHECKBOX, false);
+    UICheckBoxInput checkWhenAddTopic = new UICheckBoxInput(FIELD_MODERATETHREAD_CHECKBOX, FIELD_MODERATETHREAD_CHECKBOX, false);
     UIFormTextAreaInput notifyWhenAddPost = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE, FIELD_NOTIFYWHENADDPOST_MULTIVALUE, null);
     UIFormTextAreaInput notifyWhenAddTopic = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, null);
 
@@ -209,7 +209,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
     UIFormTextAreaInput postable = new UIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE, FIELD_POSTABLE_MULTIVALUE, null);
     UIFormTextAreaInput topicable = new UIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE, FIELD_TOPICABLE_MULTIVALUE, null);
 
-    UIFormCheckBoxInput<Boolean> autoAddEmailNotify = new UIFormCheckBoxInput<Boolean>(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX, FIELD_AUTOADDEMAILNOTIFY_CHECKBOX, true);
+    UICheckBoxInput autoAddEmailNotify = new UICheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX, FIELD_AUTOADDEMAILNOTIFY_CHECKBOX, true);
     autoAddEmailNotify.setValue(true);
     autoAddEmailNotify.setOnChange("OnChangeAutoEmail");
     addUIFormInput(selictCategoryId);
@@ -279,14 +279,13 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
     return false;
   }
 
-  @SuppressWarnings("unchecked")
   public void setForumValue(Forum forum, boolean isUpdate) throws Exception {
     this.isUpdate = isUpdate;
     if (isUpdate) {
       forumId = forum.getId();
       forum = getForumService().getForum(categoryId, forumId);
       UIFormInputWithActions newForum = this.getChildById(FIELD_NEWFORUM_FORM);
-      newForum.getUIStringInput(FIELD_FORUMTITLE_INPUT).setValue(forum.getForumName());
+      newForum.getUIStringInput(FIELD_FORUMTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(forum.getForumName()));
       newForum.getUIStringInput(FIELD_FORUMORDER_INPUT).setValue(String.valueOf(forum.getForumOrder()));
       String stat = "open";
       if (forum.getIsClosed())
@@ -297,11 +296,12 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       else
         stat = "unlock";
       newForum.getUIFormSelectBox(FIELD_FORUMSTATUS_SELECTBOX).setValue(stat);
-      newForum.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).setDefaultValue(forum.getDescription());
+      newForum.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA)
+              .setDefaultValue(CommonUtils.decodeSpecialCharToHTMLnumber(forum.getDescription()));
 
       UIFormInputWithActions moderationOptions = this.getChildById(FIELD_MODERATOROPTION_FORM);
       boolean isAutoAddEmail = forum.getIsAutoAddEmailNotify();
-      UIFormCheckBoxInput<Boolean> boxInput = moderationOptions.getUIFormCheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX);
+      UICheckBoxInput boxInput = getUICheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX);
       boxInput.setChecked(isAutoAddEmail);
       boxInput.setEditable(!isMode);
 
@@ -313,7 +313,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       UIFormTextAreaInput notifyWhenAddTopic = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE);
       notifyWhenAddPost.setValue(ForumUtils.unSplitForForum(forum.getNotifyWhenAddPost()));
       notifyWhenAddTopic.setValue(ForumUtils.unSplitForForum(forum.getNotifyWhenAddTopic()));
-      moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATETHREAD_CHECKBOX).setChecked(forum.getIsModerateTopic());
+      getUICheckBoxInput(FIELD_MODERATETHREAD_CHECKBOX).setChecked(forum.getIsModerateTopic());
 
       UIFormInputWithActions forumPermission = this.getChildById(FIELD_FORUMPERMISSION_FORM);
       forumPermission.getUIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getViewer()));
@@ -356,7 +356,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       fieldInput.setValue(ForumUtils.updateMultiValues(value, values));
       if (selectField.equals(FIELD_MODERATOR_MULTIVALUE)) {
         UIFormInputWithActions moderationOptions = this.getChildById(FIELD_MODERATOROPTION_FORM);
-        boolean isAutoAddEmail = moderationOptions.getUIFormCheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
+        boolean isAutoAddEmail = getUICheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
         if (isAutoAddEmail) {
           this.setDefaultEmail(moderationOptions);
         }
@@ -403,7 +403,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       
       description = CommonUtils.encodeSpecialCharInTitle(description);
       UIFormInputWithActions moderationOptions = uiForm.getChildById(FIELD_MODERATOROPTION_FORM);
-      boolean isAutoAddEmail = moderationOptions.getUIFormCheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
+      boolean isAutoAddEmail = uiForm.getUICheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
       String moderators = moderationOptions.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).getValue();
       // set email
       if (isAutoAddEmail && uiForm.isAddValue) {
@@ -419,7 +419,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       }
       String[] notifyWhenAddTopic = ForumUtils.splitForForum(notifyWhenAddTopics);
       String[] notifyWhenAddPost = ForumUtils.splitForForum(notifyWhenAddPosts);
-      Boolean ModerateTopic = (Boolean) moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATETHREAD_CHECKBOX).getValue();
+      boolean ModerateTopic = uiForm.getUICheckBoxInput(FIELD_MODERATETHREAD_CHECKBOX).getValue();
 
       UIFormInputWithActions forumPermission = uiForm.getChildById(FIELD_FORUMPERMISSION_FORM);
       String topicable = forumPermission.getUIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE).getValue();
@@ -594,7 +594,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
     public void execute(Event<UIForumForm> event) throws Exception {
       UIForumForm forumForm = event.getSource();
       UIFormInputWithActions moderationOptions = forumForm.getChildById(FIELD_MODERATOROPTION_FORM);
-      boolean isCheck = moderationOptions.getUIFormCheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
+      boolean isCheck = forumForm.getUICheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
       if (isCheck) {
         forumForm.setDefaultEmail(moderationOptions);
       } else
@@ -711,7 +711,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
         }
         textArea.setValue(values);
         if (field.equals(FIELD_MODERATOR_MULTIVALUE)) {
-          boolean isAutoAddEmail = withActions.getUIFormCheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
+          boolean isAutoAddEmail = getUICheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).isChecked();
           if (isAutoAddEmail) {
             this.setDefaultEmail(withActions);
           }

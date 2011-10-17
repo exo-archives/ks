@@ -55,8 +55,8 @@ public class TestForumTransformHTML extends TestCase{
     assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.getTitleInHTMLCode(ForumUtils.EMPTY_STR, bbcs));
     assertEquals("1 3", ForumTransformHTML.getTitleInHTMLCode("1  3", bbcs));
 
-    String title = "title [b]title[/b] <b>title</b>&nbsp;&nbsp; title<br/>title " + new String(Character.toChars(20)) + "title\t\ntitle";
-    assertEquals("title title title&nbsp;title title title title", ForumTransformHTML.getTitleInHTMLCode(title, bbcs));
+    String title = " title [b]title[/b] <b>title</b>&nbsp;&nbsp; title<br/>title      title    title " + new String(Character.toChars(20)) + "title\t\ntitle";
+    assertEquals("title title title title title title title title title", ForumTransformHTML.getTitleInHTMLCode(title, bbcs));
   }
   
   public void testRemoveCharterStrange() {

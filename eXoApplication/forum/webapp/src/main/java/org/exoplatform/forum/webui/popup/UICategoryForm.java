@@ -205,9 +205,9 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
   public void setCategoryValue(Category category, boolean isUpdate) throws Exception {
     if (isUpdate) {
       this.categoryId = category.getId();
-      getUIStringInput(FIELD_CATEGORYTITLE_INPUT).setValue(category.getCategoryName());
+      getUIStringInput(FIELD_CATEGORYTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(category.getCategoryName()));
       getUIStringInput(FIELD_CATEGORYORDER_INPUT).setValue(Long.toString(category.getCategoryOrder()));
-      getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(category.getDescription());
+      getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(CommonUtils.decodeSpecialCharToHTMLnumber(category.getDescription()));
       String userPrivate = ForumUtils.unSplitForForum(category.getUserPrivate());
       String moderator = ForumUtils.unSplitForForum(category.getModerators());
       String topicAble = ForumUtils.unSplitForForum(category.getCreateTopicRole());

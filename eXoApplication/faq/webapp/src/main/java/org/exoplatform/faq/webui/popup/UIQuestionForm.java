@@ -54,12 +54,12 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 /**
@@ -109,9 +109,9 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private UIFormSelectBox                selectLanguage       = null;
 
-  private UIFormCheckBoxInput<Boolean>   inputIsApproved      = null;
+  private UICheckBoxInput   inputIsApproved      = null;
 
-  private UIFormCheckBoxInput<Boolean>   inputIsActivated     = null;
+  private UICheckBoxInput   inputIsActivated     = null;
 
   private UIFormInputWithActions         inputAttachcment     = null;
 
@@ -157,6 +157,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private Locale                         currentLocale        = null;
 
+  @SuppressWarnings("unused")
   private boolean                        isRenderSelectLang   = false;
 
   private FAQSetting                     faqSetting_;
@@ -248,8 +249,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       selectLanguage.setSelectedValues(new String[] { defaultLanguage_ });
     }
     selectLanguage.setOnChange("SelectLanguage");
-    inputIsApproved = new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false);
-    inputIsActivated = new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false);
+    inputIsApproved = new UICheckBoxInput(IS_APPROVED, IS_APPROVED, false);
+    inputIsActivated = new UICheckBoxInput(IS_ACTIVATED, IS_ACTIVATED, false);
     inputAttachcment = new UIFormInputWithActions(ATTACHMENTS);
     inputAttachcment.addUIFormInput(new UIFormInputInfo(FILE_ATTACHMENTS, FILE_ATTACHMENTS, null));
     try {
@@ -345,7 +346,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       authorQ.setValue(question_.getAuthor());
       UIFormStringInput emailQ = this.getChildById(EMAIL_ADDRESS);
       emailQ.setValue(question_.getEmail());
-      inputQuestionContent.setValue(question.getQuestion());
+      inputQuestionContent.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(question_.getQuestion()));
       inputQuestionDetail.setValue(question_.getDetail());
     } catch (Exception e) {
       log.error("Set question is fall, exception: " + e.getMessage());
@@ -572,15 +573,15 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
         if (questionForm.isModerate) {
           if (questionForm.isAddCheckBox) {
-            question.setApproved(questionForm.getUIFormCheckBoxInput(IS_APPROVED).isChecked());
-            question.setActivated(questionForm.getUIFormCheckBoxInput(IS_ACTIVATED).isChecked());
+            question.setApproved(questionForm.getUICheckBoxInput(IS_APPROVED).isChecked());
+            question.setActivated(questionForm.getUICheckBoxInput(IS_ACTIVATED).isChecked());
           } else if (isNew) {
             question.setApproved(false);
           }
         } else {
           if (questionForm.isAddCheckBox) {
-            question.setApproved(questionForm.getUIFormCheckBoxInput(IS_APPROVED).isChecked());
-            question.setActivated(questionForm.getUIFormCheckBoxInput(IS_ACTIVATED).isChecked());
+            question.setApproved(questionForm.getUICheckBoxInput(IS_APPROVED).isChecked());
+            question.setActivated(questionForm.getUICheckBoxInput(IS_ACTIVATED).isChecked());
           } else if (isNew) {
             question.setApproved(true);
           }
