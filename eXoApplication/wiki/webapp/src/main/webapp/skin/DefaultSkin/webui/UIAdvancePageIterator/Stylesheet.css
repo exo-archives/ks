@@ -118,9 +118,10 @@
 .UIAdvancePageIterator .GotoPageIcon .UIPopupCategory {
   left:-30px;
   position:absolute;
-  top:2px;
+  top:-10px;
   width:120px;
   z-index:1010;
+  border:none;
 }
 
 .UIAdvancePageIterator .UIRightClickPopupMenu {
