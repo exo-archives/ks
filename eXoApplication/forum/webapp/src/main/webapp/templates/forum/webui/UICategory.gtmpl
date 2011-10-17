@@ -112,7 +112,7 @@
 			</div>
 			<div class="ButtonHeadBar DefaultStyle ForumSeparatorLine" >
 
-				<a style="padding-left:16px;line-height:20px; display:block;" class="AddRSS ForumRSSFeed StatusIcon " href="javascript:window.open('<%=uicomponent.getRSSLink(categoryId)%>'); <%=uicomponent.event("RSS", categoryId).replace("javascript:","")%>;">&nbsp;RSS</a>
+				<a style="padding-left:16px; display:block;" class="AddRSS ForumRSSFeed StatusIcon " href="javascript:window.open('<%=uicomponent.getRSSLink(categoryId)%>'); <%=uicomponent.event("RSS", categoryId).replace("javascript:","")%>;">&nbsp;RSS</a>
 
 			</div>
 		<%if(uicomponent.userProfile.getUserRole() < 3){%>

@@ -100,7 +100,7 @@
 						pending = _ctx.appRes("UIBreadcumbs.label.Pending");
 						String style = (total > 0)?"text-decoration:blink;":"";
 				%>
-					<div class="SeparatorLineForum RightLine">
+					<div class="RightLine" style="padding-left:5px;">
 						<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>">$pending:(<span style="font-weight:bold; $style">$total</span>)</a>
 					</div>
 				<%}%>
@@ -116,7 +116,7 @@
 					%>
 					<div id="lengthStr" style="display:none; float:right;">$lengths</div>
 					<script type="text/javascript">
-						function setWitdh(){ var l = (document.getElementById('lengthStr').innerHTML)*1+1; document.getElementById('tdWidth').style.width = ((l*6.8)+65) + "px"; document.getElementById('divWidth').style.width = ((l*6.8)+65) + "px";}
+						function setWitdh(){ var l = (document.getElementById('lengthStr').innerHTML)*1+1; document.getElementById('tdWidth').style.width = ((l*7.2)+65) + "px"; document.getElementById('divWidth').style.width = ((l*7.2)+65) + "px";}
 						setWitdh();
 					</script>
 				<% } %>

@@ -85,6 +85,7 @@
 		}	
 	}
 	String idLastPost = uicomponent.getIdPostView() ;
+	String forumSeparatorLine = UserHelper.isAnonim() ? "" : "ForumSeparatorLine";
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>
@@ -149,7 +150,7 @@
 	<div class="PostsInThreadContainer ImageContentContainer">
 		<div class="ForumToolbar ForumActionToolbar ToolbarActionsContainer ClearFix">
 						<% if(isShowMenu && canEdit) { %>	
-							<div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+							<div class="ContentAction DefaultStyle" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
 										<div class="StatusIcon ModerationIcon">
 											<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.Moderation");%></a>
 										</div>
@@ -199,7 +200,7 @@
 								<% /*End Popup Menu*/ %>
 							</div>
 							<% } %>
-							<div class="ContentAction DefaultStyle ForumSeparatorLine SearchForm" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=ForumUtils.SEARCHFORM_ID%>').focus();">
+							<div class="ContentAction DefaultStyle $forumSeparatorLine SearchForm" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=ForumUtils.SEARCHFORM_ID%>').focus();">
 								<div class="StatusIcon SearchIcon">
 									<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.SearchThisThread");%></a>
 								</div>

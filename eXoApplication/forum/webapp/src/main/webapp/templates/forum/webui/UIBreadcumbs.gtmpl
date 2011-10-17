@@ -61,7 +61,7 @@
 				    if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) && !toolTip.equals("tag")){
 					    toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
 				  %>
-					<div class="ForumSeparatorLine" style="float:right;">
+					<div class="ForumSeparatorLine" style="float:right; padding-top:2px;">
 						<div class="ShareLink">
 							<a class="PermLink" onclick="window.open('$link'); return false;" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a>
 						</div>

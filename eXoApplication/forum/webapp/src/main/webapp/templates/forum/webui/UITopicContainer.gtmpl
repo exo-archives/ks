@@ -8,6 +8,7 @@
 	import org.exoplatform.forum.webui.UICategory ;
 	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
 	import org.exoplatform.forum.webui.UITopicContainer ;	
+	import org.exoplatform.ks.common.UserHelper; 
 	import org.exoplatform.web.application.JavascriptManager;
 	
 	def rcontext = _ctx.getRequestContext() ;
@@ -19,6 +20,7 @@
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('top');") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.submitSearch('SearchInForum');") ;
 	Forum forum = uicomponent.getForum() ;
+	String forumSeparatorLine = UserHelper.isAnonim() ? "" : "ForumSeparatorLine";
 	if(forum != null)  {
 	uicomponent.initPage() ;
 	}
@@ -95,7 +97,7 @@
 				
 							<h6 class="Title"><%=_ctx.appRes("UITopicContainer.label.TopicInForum");%> <strong title="$forumName">$subForumName</strong></h6>
 						<% if(isShowMenu && canEdit) { %>	
-							<div class="ContentAction DefaultStyle ForumSeparatorLine" onclick="eXo.forum.UIForumPortlet.checkActionTopic(this, event);">
+							<div class="ContentAction DefaultStyle" onclick="eXo.forum.UIForumPortlet.checkActionTopic(this, event);">
 
 								<div class="StatusIcon ModerationIcon">
 									<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Moderation");%></a>
@@ -149,7 +151,7 @@
 								<% /*End Popup Menu*/ %>
 								</div>
 						<% } %>
-							<div class="ContentAction DefaultStyle ForumSeparatorLine SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
+							<div class="ContentAction DefaultStyle $forumSeparatorLine SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>" >
 
 								<div class="StatusIcon SearchIcon">
 									<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%></a>
