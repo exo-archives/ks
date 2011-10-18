@@ -460,7 +460,9 @@
 									<div class="ContentAction MemberName" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
 										<h5 class="Name State $userSmile" title="${screenName}'s $titleSmile">$viewScreenName</h5>
 										<div class="UIPopupCategory" style="display:none;">
-												<ul class="UIRightClickPopupMenu" style="display:block;">
+											<div class="UIRightClickPopupMenu" style="display:block;">
+												<div class="Arrow"><span></span></div>
+												<ul>
 														<%
 															String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 															for(viewAction in menuViewInfos) {
@@ -476,6 +478,7 @@
 															}
 														%>
 												</ul>
+											</div>
 											</div>
 									</div>
 										
