@@ -3,7 +3,7 @@
   rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiPortlet.makeRenderingErrorsExpandable('"+uicomponent.id+ "');");
 %>
 <div class="UIWikiContentDisplay" id="$uicomponent.id">	
-	<div class="WikiContent">
+	<div class="WikiContent" style="autoflow:true;">
 	 ${uicomponent.htmlOutput}
 	</div>
 </div>
