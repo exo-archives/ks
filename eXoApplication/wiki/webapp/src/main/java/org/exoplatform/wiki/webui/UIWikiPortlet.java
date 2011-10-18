@@ -152,11 +152,6 @@ public class UIWikiPortlet extends UIPortletApplication {
           changeMode(WikiMode.VIEW);
         }
       }
-      Page helpPage = Utils.isRenderFullHelpPage();
-      if (helpPage != null) {
-        changeMode(WikiMode.HELP);
-        page = helpPage;
-      }
       WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
       if (WikiContext.ADDPAGE.equalsIgnoreCase(pageParams.getParameter(WikiContext.ACTION))) {
         AddPageActionComponent addPageComponent = this.findFirstComponentOfType(AddPageActionComponent.class);

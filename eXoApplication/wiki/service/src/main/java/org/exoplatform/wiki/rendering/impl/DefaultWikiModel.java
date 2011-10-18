@@ -27,6 +27,7 @@ import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.rendering.converter.ObjectReferenceConverter;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -34,6 +35,7 @@ import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.Requirement;
+import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.context.Execution;
 import org.xwiki.context.ExecutionContext;
@@ -86,7 +88,7 @@ public class DefaultWikiModel implements WikiModel {
       StringBuilder sb = new StringBuilder(viewURL);
       String pageTitle = wikiMarkupContext.getPageTitle();
       String wikiType = wikiMarkupContext.getType();
-      String wiki = wikiMarkupContext.getOwner();     
+      String wiki = wikiMarkupContext.getOwner();
       sb.append("?")
         .append(WikiContext.ACTION)
         .append("=")
@@ -206,6 +208,19 @@ public class DefaultWikiModel implements WikiModel {
       DocumentReferenceResolver<String> stringDocumentReferenceResolver = componentManager.lookup(DocumentReferenceResolver.class);
       AttachmentReferenceResolver<String> stringAttachmentReferenceResolver = componentManager.lookup(AttachmentReferenceResolver.class);
       ObjectReferenceResolver<String> stringObjectReferenceResolver = componentManager.lookup(ObjectReferenceResolver.class);
+      ExecutionContext ec = execution.getContext();
+      WikiContext wikiContext = null;
+      if (ec != null) {
+        wikiContext = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
+      }
+      try {
+        ObjectReferenceConverter converter = componentManager.lookup(ObjectReferenceConverter.class, wikiContext.getSyntax());
+        objectName = converter.convert(objectName);
+      } catch (ComponentLookupException e) {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug(String.format("Syntax %s doesn't have any object reference converter", wikiContext.getSyntax()));
+        }
+      }      
       boolean isConfluenceSyntax = (objectName.indexOf('^') > 0) ? true : false;
       EntityReference entityReference = null;
       if (ResourceType.DOCUMENT.equals(type)) {
@@ -214,11 +229,7 @@ public class DefaultWikiModel implements WikiModel {
         entityReference = (isConfluenceSyntax) ? stringObjectReferenceResolver.resolve(objectName)
                                               : stringAttachmentReferenceResolver.resolve(objectName);
       }
-      ExecutionContext ec = execution.getContext();
-      WikiContext wikiContext = null;
-      if (ec != null) {
-        wikiContext = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
-      }
+      
       if (entityReference != null) {
         wikiMarkupContext.setType(entityReference.extractReference(EntityType.WIKI).getName());
         wikiMarkupContext.setOwner(entityReference.extractReference(EntityType.SPACE).getName());

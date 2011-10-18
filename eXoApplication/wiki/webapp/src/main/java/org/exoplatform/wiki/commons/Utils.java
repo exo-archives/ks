@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -117,10 +118,6 @@ public class Utils {
 
   public static Page getCurrentWikiPage() throws Exception {
     String requestURL = Utils.getCurrentRequestURL();
-    Page helpPage = isRenderFullHelpPage();
-    if (helpPage != null) {
-      return helpPage;
-    }
     PageResolver pageResolver = (PageResolver) PortalContainer.getComponent(PageResolver.class);
     Page page = pageResolver.resolve(requestURL, Util.getUIPortal().getSelectedUserNode());
     return page;
@@ -224,22 +221,6 @@ public class Utils {
     sessionManager.addSessionContext(session.getId(), Utils.createWikiContext(wikiPortlet));
   }
 
-  public static Page isRenderFullHelpPage() throws Exception {
-    WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
-    String helpaction = pageParams.getParameter(WikiContext.ACTION);
-    String syntaxId = pageParams.getParameter("page");
-    if (helpaction!=null&&syntaxId != null&&helpaction.equals("help")  ) {
-      WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
-      PageImpl syntaxPage = wservice.getHelpSyntaxPage(syntaxId.replace("SLASH", "/").replace("DOT", "."));
-      if (syntaxPage!=null)
-      {
-      PageImpl fullHelpPage= (PageImpl) syntaxPage.getChildPages().values().iterator().next();
-      return fullHelpPage;
-      }      
-    }
-    return null;
-  }
-
   public static String getCurrentWikiPagePath() throws Exception {
     return TreeUtils.getPathFromPageParams(getCurrentWikiPageParams());
   }
@@ -252,6 +233,9 @@ public class Utils {
   public static WikiContext createWikiContext(UIWikiPortlet wikiPortlet) throws Exception {
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     UIFormSelectBox syntaxBox = wikiPortlet.findComponentById(UIWikiPageEditForm.FIELD_SYNTAX);
+    WikiMode currentMode = wikiPortlet.getWikiMode();
+    List<WikiMode> editModes = Arrays.asList(new WikiMode[] { WikiMode.EDITPAGE, WikiMode.ADDPAGE, WikiMode.EDITTEMPLATE,
+        WikiMode.ADDTEMPLATE });
     UIPortal uiPortal = Util.getUIPortal();
     String requestURL = portalRequestContext.getRequest().getRequestURL().toString();
     String portalURI = portalRequestContext.getPortalURI();
@@ -267,10 +251,16 @@ public class Utils {
     wikiContext.setRestURI(getCurrentRestURL());
     wikiContext.setRedirectURI(wikiPortlet.getRedirectURL());
     wikiContext.setPortletURI(pageNodeSelected);
-    WikiPageParams params = Utils.getCurrentWikiPageParams();
+    WikiPageParams params = Utils.getCurrentWikiPageParams();    
     wikiContext.setType(params.getType());
     wikiContext.setOwner(params.getOwner());
-    wikiContext.setSyntax(syntaxBox.getValue());
+    if (editModes.contains(currentMode)) {
+      wikiContext.setSyntax(syntaxBox.getValue());
+    } else {
+      WikiService service = (WikiService) PortalContainer.getComponent(WikiService.class);
+      Page currentPage = service.getPageById(params.getType(), params.getOwner(), params.getPageId());
+      wikiContext.setSyntax(currentPage.getSyntax());
+    }
     if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
       String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
       wikiContext.setPageId(sessionId);
