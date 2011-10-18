@@ -261,7 +261,7 @@ public class CommonUtils {
    * @return boolean
    */
   public static boolean isEmpty(String s) {
-    return StringUtils.isEmpty(s.trim());
+    return (s == null || s.trim().length() <= 0) ? true : false;
   }
 
   /**
