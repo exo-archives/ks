@@ -23,6 +23,7 @@
 	padding-left: 22px;
 	margin: 0px;
 	width: auto; height: auto;
+	display: block;
 }
 
 .UIForumContainer .ForumToolbar .ContentAction {

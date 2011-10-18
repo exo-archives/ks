@@ -156,6 +156,7 @@ ul,li{
 	padding:0px 3px 0px 20px;
 	cursor:pointer;
 	line-height: 22px;
+	display: block;
 }
 
 .UIForumPortlet .LockActionForum .NormalStyle .IconButton {
