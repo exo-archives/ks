@@ -245,7 +245,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       }
     } else {
       if (!isQuote) {// reply
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getTitle(topic.getTopicName()));
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(getTitle(topic.getTopicName())));
         getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
       }
     }
