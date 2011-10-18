@@ -84,7 +84,7 @@
 }
 
 .UITopicDetail .MemberContainer {
-	background: #eeedf7;
+	background: #f2f2f2;
 	border: 1px solid white;
 	width: 192px;
 }
@@ -173,7 +173,7 @@
 }
 
 .UITopicDetail .PostViewContainer .BackgroundHeader {
-	background-color: #d0e4fe;
+	background-color: #bdddff;
 }
 
 .UITopicDetail .PostViewContainer .PostViewIcon {
