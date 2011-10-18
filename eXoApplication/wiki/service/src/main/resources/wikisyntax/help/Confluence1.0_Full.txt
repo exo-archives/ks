@@ -1,6 +1,8 @@
-h2. Headings 
+{toc}
 
- To create a heading, type *hn.* and one space preceding the heading title (where n is a heading number 1-6). Use the below table for more information about headings in Confluence. 
+h1. Headings 
+
+To create a heading, type *hn.* and one space preceding the heading title (where n is a heading number 1-6). Use the below table for more information about headings in Confluence. 
 {table}
 {thead}
 {th}Notation{th}
@@ -33,7 +35,7 @@ h2. Headings
 {table}
 
 
-h2. Text Effects 
+h1. Text Effects 
 
 Text Effects allow you to change the formatting of one word or several words. To add special effects to text, type the appropriate symbols (as show below) directly preceding and following the word or words. 
 {table}
@@ -79,7 +81,7 @@ Text Effects allow you to change the formatting of one word or several words. To
 {table-row}
 {table}
 
-h2. Text Breaks 
+h1. Text Breaks 
 
 Text breaks allow you to create breaks between words or between paragraphs. To insert hyphens and dashes properly, insert one space before and after the symbols shown below. 
 {table}
@@ -101,11 +103,11 @@ Text breaks allow you to create breaks between words or between paragraphs. To i
 {table-row}
 {table}
 
-h2. Lists 
+h1. Lists 
 
 Lists allow you to present information as a series of ordered items, which are easier to read than prose. Lists cannot be formatted inside Confluence tables. 
 
-h5. Bulleted Lists 
+h2. Bulleted Lists 
 
 To create bulleted lists, type one asterisk and one space preceding each item. Type additional asterisks (\**, **\*) for deeper indentations. 
 {table}
@@ -129,7 +131,7 @@ To create bulleted lists, type one asterisk and one space preceding each item. T
 {table-row}
 {table}
 
-h5. Numbered Lists 
+h2. Numbered Lists 
 
 To create numbered lists, type one pound symbol and one space preceding each item. Type additional pound symbols (##, ###) for deeper indentations. 
 {table}
@@ -153,7 +155,7 @@ To create numbered lists, type one pound symbol and one space preceding each ite
 {table-row}
 {table}
 
-h5. Combined Bulleted and Numbered Lists 
+h2. Combined Bulleted and Numbered Lists 
 
 To create combined bulleted and numbered lists, type one pound symbol, one asterisk (which can be reversed), and one space preceding each item. 
 {table}
@@ -206,13 +208,13 @@ To create combined bulleted and numbered lists, type one pound symbol, one aster
 {table-row}
 {table}
 
-h2. Tables
+h1. Tables
 
 
 You can use Confluence wiki markup or the Rich Text editor to create tables. Below are some guidelines on using wiki markup to create tables.
 Confluence allows you to create two types of tables.
 
-h3. Table Type 1
+h2. Table Type 1
 
 Allows you to create a simple table with an optional header row. You cannot set the width of the columns in this table.
 Use double bars for a table heading row.
@@ -240,7 +242,7 @@ You can also use a vertical header.
 ||heading 2|col B1|col B2|col B3|
 
 
-h3. Table Type 2
+h2. Table Type 2
 
 This method allows you to specify the width of the columns in the table.
 
@@ -270,7 +272,7 @@ Text for this column goes here. This is the larger column with a width of 70%.
 {section}
 (i) For more details please see the Column Macro and the Section Macro.
 
-h3. Table Type 3
+h2. Table Type 3
 
 This method allow using wiki syntax in cells of table. For example, allow multi line in a cell
 
@@ -320,11 +322,33 @@ This method allow using wiki syntax in cells of table. For example, allow multi 
 {table-row}
 {table}
 
-h2. Macros
+h1. Links
+
+||Feature||Syntax||Result
+|Link to a page in the current wiki|{{{[Wiki Home]}}}|[Wiki Home]
+|Link with a label|{{{[label|Wiki Home]}}}|[label|Wiki Home]
+|Link to a page with the wiki name specified|{{{[Wiki Home|classic:Wiki Home]}}}|[Wiki Home|classic:Wiki Home]
+|Link to a page in a wiki with wiki type specified|{{{[Wiki Home|portal.classic:Wiki Home]}}}|[Wiki Home|portal.classic:Wiki Home]
+|Link to a URL directly in the text|{{{This is a URL: http://www.atlassian.com/software/confluence/}}}|This is a URL: http://www.atlassian.com/software/confluence/
+|Link to a URL|{{{[http://www.atlassian.com/software/confluence/]}}}|[http://www.atlassian.com/software/confluence/]
+|Link to a URL with a label|{{{[Confluence|http://www.atlassian.com/software/confluence/]}}}|[Confluence|http://www.atlassian.com/software/confluence/]
+|Link to an email|{{{[email|mailto:john@smith.net]}}}|[email|mailto:john@smith.net]
+|Image Link|{{{[!img.png!|classic:Wiki Home]}}}|[!img.png!|classic:Wiki Home]
+|Link to attachment|{{{[text|^img.png]}}}|[text|^img.png]
+
+h1. Images
+
+||Feature||Syntax||Result
+|Image from attachment in current page|{{{!img.png!}}}|!img.png!
+|Image from attachment in another document|{{{!classic:Wiki Home^img.png!}}}|!classic:Wiki Home^img.png!
+|Image with parameters|{{{!img.png|height=25 width=25!}}}|!img.png|height=25 width=25!
+|Images located at URL|{{{!http://some/url/img.png!}}}|!http://some/url/img.png!
+
+h1. Macros
 {table}
 {thead}
 {th}Feature{th}
-{th}XWiki Syntax 2.0{th}
+{th}Syntax{th}
 {th}Result{th}
 {thead}
 {table-row}
@@ -432,6 +456,26 @@ Box Content
 {table-cell}
 {table-cell}
 {panel:title="Panel Title"} Panel Content {panel}
+{table-cell}
+{table-row}
+{table-row}
+{table-cell}Anchor Macro{table-cell}
+{table-cell}{{{
+{anchor:name="anchor_name"}{anchor}
+}}}
+{table-cell}
+{table-cell}
+{anchor:name="anchor_name"}{anchor}
+{table-cell}
+{table-row}
+{table-row}
+{table-cell}Float Macro{table-cell}
+{table-cell}{{{
+{float:side="right"}Content to float{float}
+}}}
+{table-cell}
+{table-cell}
+{float:side="right"}Content to float{float}
 {table-cell}
 {table-row}
 {table-row}

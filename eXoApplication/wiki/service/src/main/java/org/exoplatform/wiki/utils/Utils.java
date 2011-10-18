@@ -207,6 +207,9 @@ public class Utils {
   }
   
   public static String getDocumentURL(WikiContext wikiContext) {
+    if (wikiContext.getPortalURL() == null && wikiContext.getPortletURI() == null) {
+      return wikiContext.getPageId();
+    }
     StringBuilder sb = new StringBuilder();
     sb.append(wikiContext.getPortalURL());
     sb.append(wikiContext.getPortletURI());
