@@ -128,11 +128,15 @@ public class TestCommonUtils extends TestCase {
     assertEquals(input, CommonUtils.decodeSpecialCharToHTMLnumber(input));
     input = "Normal text abc";
     assertEquals(input, CommonUtils.decodeSpecialCharToHTMLnumber(input));
-    input = "Text ...&gt;&#64;&#35;&#36;&#37;&#94;&#38;&#42;&#40;&#41;&#34;&#47;&#45;&#61;&#126;&#96;&#39;&#46;&#44;&lt; too";
+    input = "Text ...&#60;&#64;&#35;&#36;&#37;&#94;&#38;&#42;&#40;&#41;&#34;&#47;&#45;&#61;&#126;&#96;&#39;&#46;&#44;&#62; too";
     assertEquals("Text ...<@#$%^&*()\"/-=~`'.,> too", CommonUtils.decodeSpecialCharToHTMLnumber(input));
+    //content extend token
+    input = "Text ...&gt;div class=&quot;&amp;XZY&quot;&lt;Test&gt;&#47;div&lt;&#40;&#41;&#34;&#47;&#45;&#61;&#126;&#96;&#39;&#46;&#44;&#60;b&#62;too&#60;&#47;b&#62;";
+    assertEquals("Text ...<div class=\"&XZY\">Test</div>()\"/-=~`'.,<b>too</b>", CommonUtils.decodeSpecialCharToHTMLnumber(input));
+    
     // ignore case
     List<String> ig = Arrays.asList(new String[]{"&gt;", "&lt;", "&#46;"});
-    assertEquals("Text ...&gt;@#$%^&*()\"/-=~`'&#46;,&lt; too", CommonUtils.decodeSpecialCharToHTMLnumber(input, ig));
+    assertEquals("Text ...&gt;div class=\"&XZY\"&lt;Test&gt;/div&lt;()\"/-=~`'&#46;,<b>too</b>", CommonUtils.decodeSpecialCharToHTMLnumber(input, ig));
   }
   
   

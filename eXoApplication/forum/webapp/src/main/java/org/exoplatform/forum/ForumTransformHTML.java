@@ -145,7 +145,7 @@ public class ForumTransformHTML {
       } else if (c == 39) {
         buffer.append("&#39;");
       } else if (c == '&') {
-        buffer.append("&#x26;");
+        buffer.append("&amp;");
       } else {
         buffer.append(c);
       }

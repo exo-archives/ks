@@ -62,17 +62,31 @@ import org.w3c.dom.Document;
 public class CommonUtils {
   private static Log log = ExoLogger.getLogger(CommonUtils.class);
   
-  public static final String         COMMA      = ",".intern();
+  public static final String         COMMA        = ",".intern();
 
-  public static final String         SLASH      = "/".intern();
+  public static final String         SLASH        = "/".intern();
 
-  public static final String         EMPTY_STR  = "".intern();
+  public static final String         EMPTY_STR    = "".intern();
 
-  public static final String         COLON      = ":".intern();
+  public static final String         COLON        = ":".intern();
 
-  public static final String         SEMICOLON  = ";".intern();
+  public static final String         SEMICOLON    = ";".intern();
 
-  public static final String         SPACE      = " ".intern();
+  public static final String         SPACE        = " ".intern();
+
+  public static final String         AMP_NUMBER   = "&#".intern();
+
+  public static final String         LESS_THAN    = "&lt;".intern();
+
+  public static final String         GREATER_THAN = "&gt;".intern();
+
+  public static final String         QUOT         = "&quot;".intern();
+
+  public static final String         AMP_SPACE    = "&nbsp;".intern();
+
+  public static final String         AMP_HEX      = "&#x26;".intern();
+
+  public static final String         AMP          = "&amp;".intern();
 
   private static List<String>        tokens     = new ArrayList<String>();
 
@@ -84,7 +98,6 @@ public class CommonUtils {
   */
   private static int[] CHAR_CODES = new int[] { 48, 32, 65, 57, 97, 90, 127, 122, 39 };// '0', ' ', 'A', '9', 'a', 'Z', '~', 'z', '\''
   
-  private static String AMP_NUMBER = "&#", LESS_THAN = "&lt;", GREATER_THAN = "&gt;";
   
   static public String generateCheckSum(byte[] b) throws Exception {
     try{
@@ -383,22 +396,28 @@ public class CommonUtils {
   private static void getValueTokens() {
     if(tokens.size() <= 0) {
       String token;
+      // Tokens by HTML(Decimal) code.
       for (int t = Character.MIN_CODE_POINT; t < Character.MAX_CODE_POINT; t++) {
         if (t < CHAR_CODES[0] && t > CHAR_CODES[1] || t < CHAR_CODES[2] && t > CHAR_CODES[3] || 
             t < CHAR_CODES[4] && t > CHAR_CODES[5] || t < CHAR_CODES[6] && t > CHAR_CODES[7]) {
-          if (t == 60) {
-            tokens.add(LESS_THAN);
-            charcodes.put(LESS_THAN, ">");
-          } else if (t == 62) {
-            tokens.add(GREATER_THAN);
-            charcodes.put(GREATER_THAN, "<");
-          } else {
-            token = new StringBuilder(AMP_NUMBER).append(t).append(SEMICOLON).toString();
-            tokens.add(token);
-            charcodes.put(token, String.valueOf(Character.toChars(t)[0]));
-          }
+          token = new StringBuilder(AMP_NUMBER).append(t).append(SEMICOLON).toString();
+          tokens.add(token);
+          charcodes.put(token, String.valueOf(Character.toChars(t)[0]));
         }
       }
+      // Tokens by Entity code.
+      tokens.add(LESS_THAN);
+      charcodes.put(LESS_THAN, ">");
+      tokens.add(GREATER_THAN);
+      charcodes.put(GREATER_THAN, "<");
+      tokens.add(QUOT);
+      charcodes.put(QUOT, "\"");
+      tokens.add(AMP_SPACE);
+      charcodes.put(AMP_SPACE, SPACE);
+      tokens.add(AMP_HEX);
+      charcodes.put(AMP_HEX, "&");
+      tokens.add(AMP);
+      charcodes.put(AMP, "&");
     }
   }
 
