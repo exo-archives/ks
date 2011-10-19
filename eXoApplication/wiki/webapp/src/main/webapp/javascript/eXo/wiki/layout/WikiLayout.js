@@ -68,7 +68,8 @@ WikiLayout.prototype.init = function(prtId) {
       }
       this.spliter.onmousedown = eXo.wiki.WikiLayout.exeRowSplit;
     }
-    eXo.wiki.WikiLayout.processeWithHeight();
+    setWithLayOut();
+    setHeightLayOut();
   }catch(e){};
 };
 
