@@ -962,8 +962,11 @@ public class UIQuestions extends UIContainer {
         viewUserProfile.setUser(user);
         popupAction.activate(popupContainer, 680, 350);
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
-      } else {        
-        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.user-is-not-exist", new Object[] { userId }, ApplicationMessage.WARNING));        
+      } else {
+        event.getRequestContext().getUIApplication()
+             .addMessage(new ApplicationMessage("UIQuestions.msg.user-is-not-exist", 
+             new String[] {(userId.contains(Utils.DELETED)) ? userId.substring(0, userId.indexOf(Utils.DELETED)): userId},
+             ApplicationMessage.WARNING));        
         return;
       }
     }

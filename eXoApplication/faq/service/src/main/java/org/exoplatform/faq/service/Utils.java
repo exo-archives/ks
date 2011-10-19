@@ -52,6 +52,8 @@ public class Utils {
 
   final public static String DELETED              = ":deleted".intern();
 
+  final public static String HYPHEN               = "-".intern();
+
   /**
    * This method sort list category is date ascending
    * @author Administrator
@@ -134,9 +136,10 @@ public class Utils {
   public static long getTimeOfLastActivity(String info) {
     if (info == null || info.length() == 0)
       return -1;
-    int dashIndex = info.lastIndexOf("-");
-    if (dashIndex < 0)
+    int dashIndex = info.lastIndexOf(HYPHEN);
+    if (dashIndex < 0) {
       return -1;
+    }
     try {
       return Long.parseLong(info.substring(dashIndex + 1));
     } catch (NumberFormatException nfe) {
@@ -147,9 +150,10 @@ public class Utils {
   public static String getAuthorOfLastActivity(String info) {
     if (info == null || info.length() == 0)
       return null;
-    int dashIndex = info.lastIndexOf("-");
-    if (dashIndex < 0)
+    int dashIndex = info.lastIndexOf(HYPHEN);
+    if (dashIndex < 0) {
       return null;
+    }
     return info.substring(0, dashIndex);
   }
 

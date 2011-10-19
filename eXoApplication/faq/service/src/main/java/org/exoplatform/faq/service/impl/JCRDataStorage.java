@@ -3006,8 +3006,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       }
       if (isZip) { // Import from zipfile
         ZipInputStream zipStream = new ZipInputStream(inputStream);
-        ZipEntry entry;
-        while ((entry = zipStream.getNextEntry()) != null) {
+        while (zipStream.getNextEntry() != null) {
           ByteArrayOutputStream out = new ByteArrayOutputStream();
           int available = -1;
           byte[] data = new byte[2048];
@@ -3417,7 +3416,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         Property prop = (Property) item;
         if (prop.getName().equalsIgnoreCase(EXO_ACTIVATE_RESPONSES) || prop.getName().equalsIgnoreCase(EXO_APPROVE_RESPONSES)) {
           // if activate or approve property has been changed.
-          boolean value = prop.getBoolean();
           Node answerNode = prop.getParent();
           boolean isActivated = false, isApproved = false;
           if (answerNode.hasProperty(EXO_ACTIVATE_RESPONSES))
@@ -3460,7 +3458,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           long commentTime = node.getProperty(EXO_DATE_COMMENT).getDate().getTimeInMillis();
           if (commentTime > timeOfLastActivity) {
             String author = node.getProperty(EXO_COMMENT_BY).getString();
-            quesNode.setProperty(EXO_LAST_ACTIVITY, author + "-" + String.valueOf(commentTime));
+            quesNode.setProperty(EXO_LAST_ACTIVITY, getLastActivityInfo(author, commentTime));
             quesNode.save();
           }
         }
@@ -3524,11 +3522,11 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       }
     }
     if (lastTime > 0) {
-      quesNode.setProperty(EXO_LAST_ACTIVITY, author + "-" + String.valueOf(lastTime));
-      quesNode.save();
+      quesNode.setProperty(EXO_LAST_ACTIVITY, getLastActivityInfo(author, lastTime));
     } else {
-      quesNode.setProperty(EXO_LAST_ACTIVITY, (String) null);
+      quesNode.setProperty(EXO_LAST_ACTIVITY, EMPTY_STR);
     }
+    quesNode.save();
   }
 
   private List<SubCategoryInfo> getSubCategoryInfo(Node category, List<String> categoryIdScoped) throws Exception {
@@ -3630,41 +3628,45 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
       Node item;
-      String newUserName = userName + Utils.DELETED + (new Random(100));
+      String newUserName = userName + Utils.DELETED + (new Random().nextInt(1000));
+      PropertyReader reader;
       while (iter.hasNext()) {
         item = iter.nextNode();
+        reader = new PropertyReader(item);
         for (int i = 0; i < strs.length; i++) {
-          if (i < 3 && item.hasProperty(strs[i]) && item.getProperty(strs[i]).getString().equals(userName)) {
+          if (i < 3 && reader.string(strs[i], "").equals(userName)) {
             item.setProperty(strs[i], newUserName);
-          } else if (item.hasProperty(strs[i])) {
-            List<String> list = new PropertyReader(item).list(strs[i], new ArrayList<String>());
-            int t = list.indexOf(userName);
-            if (t > 0 && strs[i].equals(EXO_USER_WATCHING)) {
-              List<String> list2 = new PropertyReader(item).list(EXO_EMAIL_WATCHING, new ArrayList<String>());
-              list2.remove(t);
-              item.setProperty(EXO_EMAIL_WATCHING, list2.toArray(new String[list2.size()]));
+          } else {
+            List<String> list = reader.list(strs[i], new ArrayList<String>());
+            if (list.size() > 0 && list.contains(userName)) {
+              list.remove(userName);
+              item.setProperty(strs[i], list.toArray(new String[list.size()]));
             }
           }
         }
       }
       session.save();
       // LastActivity
-      queryString = new StringBuilder(JCR_ROOT).append("/").append(dataLocator.getFaqCategoriesLocation()).append("//element(*,exo:faqQuestion)[(jcr:contains(@").append(EXO_LAST_ACTIVITY).append(", '").append(userName).append("'))]");
+      queryString = new StringBuilder(JCR_ROOT).append("/").append(dataLocator.getFaqCategoriesLocation())
+                                               .append("//element(*,").append(EXO_FAQ_QUESTION).append(")[(jcr:contains(@")
+                                               .append(EXO_LAST_ACTIVITY).append(", '").append(userName).append(Utils.HYPHEN).append("*'))]");
       query = qm.createQuery(queryString.toString(), Query.XPATH);
       iter = query.execute().getNodes();
       Question question = new Question();
+      String info;
       while (iter.hasNext()) {
         item = iter.nextNode();
-        if (item.hasProperty(EXO_LAST_ACTIVITY)) {
-          question.setLastActivity(item.getProperty(EXO_LAST_ACTIVITY).getString());
+        info = new PropertyReader(item).string(EXO_LAST_ACTIVITY);
+        if (!CommonUtils.isEmpty(info)) {
+          question.setLastActivity(info);
           if (userName.equals(question.getAuthorOfLastActivity())) {
-            item.setProperty(EXO_LAST_ACTIVITY, newUserName + "-" + question.getTimeOfLastActivity());
+            item.setProperty(EXO_LAST_ACTIVITY, getLastActivityInfo(newUserName, question.getTimeOfLastActivity()));
           }
         }
       }
       session.save();
     } catch (Exception e) {
-      log.error("Failed to create answer RSS ", e);
+      log.debug("Failed to calculate delete user: " + userName, e);
     }
   }
 
@@ -3856,6 +3858,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   }
 
   private String getLastActivityInfo(String author, long answerTime) {
-    return author + "-" + String.valueOf(answerTime);
+    return new StringBuilder(author).append(Utils.HYPHEN).append(answerTime).toString();
   }
 }
