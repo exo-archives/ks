@@ -527,6 +527,7 @@ public class UIForumPortlet extends UIPortletApplication {
   
   public boolean checkForumHasAddTopic(String categoryId, String forumId) throws Exception {
     if (getUserProfile().getUserRole() == 0) return true;
+    if (getUserProfile().getUserId().contains(UserProfile.USER_GUEST)) return false;
     try {
       Forum forum = (Forum) forumService.getObjectNameById(forumId, Utils.FORUM);
       if (forum.getIsClosed() || forum.getIsLock())
@@ -552,6 +553,7 @@ public class UIForumPortlet extends UIPortletApplication {
   
   public boolean checkForumHasAddPost(String categoryId, String forumId, String topicId) throws Exception {
     if (getUserProfile().getUserRole() == 0) return true;
+    if (getUserProfile().getUserId().contains(UserProfile.USER_GUEST)) return false;
     try {
       Topic topic = (Topic) forumService.getObjectNameById(topicId, Utils.TOPIC);
       if (topic.getIsClosed() || topic.getIsLock())

@@ -493,6 +493,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           }
         } else {
           forumPortlet.cancelAction();
+          forumPortlet.removeCacheUserProfile();
           UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
           topicDetail.initInfoTopic(uiForm.categoryId, uiForm.forumId, uiForm.topic, 0);
           uiForm.warning("UIPostForm.msg.no-permission");

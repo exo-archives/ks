@@ -705,6 +705,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
           }
         } else {
           forumPortlet.cancelAction();
+          forumPortlet.removeCacheUserProfile();
           UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
           topicContainer.setUpdateForum(uiForm.categoryId, uiForm.forum, 0);
           warning("UITopicForm.msg.no-permission");

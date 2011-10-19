@@ -1564,6 +1564,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
             topicDetail.topic = null;
             topicDetail.getTopic();
             topicDetail.setRenderInfoPorlet();
+            forumPortlet.removeCacheUserProfile();
             warning("UIPostForm.msg.no-permission");
           }
           refresh();
