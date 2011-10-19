@@ -1,14 +1,13 @@
 @import url('extension/Stylesheet.css') ;
 
 .UIWikiSettingContainer {
-  padding: 10px 0px;
   display: block;  
 }
 
 .UIWikiSettingContainer .SettingItems {
   float: left;
   width: 130px; 
-  padding: 0 16px;
+  padding: 10px 16px;
 }
 
 .UIWikiSettingContainer .Item {
@@ -38,13 +37,12 @@
 
 .UIWikiSettingContainer .Content {
   margin-left: 180px;
+  padding: 10px 0px; 
 }
 
 .UIWikiPortlet .UIWikiSettingContainer .Spliter {
   cursor: default;
   left: 162px;
-}
-
 }
  
  .UIWikiSettingContainer .UIForm .UIFormGrid td {
