@@ -304,7 +304,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
         }
       }
       uiWikiPermissionForm.setPermission(uiWikiPermissionForm.permissionEntries);
-      uiWikiPermissionForm.checkToUpdateByAjax(event.getRequestContext(), uiWikiPermissionForm);
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
     }
 
     private boolean isExistId(String identityId, IDType idType, OrganizationService service) throws Exception {
@@ -338,12 +338,6 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       return true;
     }
   }
-  
-  private void checkToUpdateByAjax(WebuiRequestContext requestContext, UIComponent forUpateComponent) {
-    if (Scope.PAGE.equals(scope)) {
-      requestContext.addUIComponentToUpdateByAjax(forUpateComponent);
-    }
-  }
 
   static public class DeleteEntryActionListener extends EventListener<UIWikiPermissionForm> {
     @Override
@@ -357,7 +351,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
         }
       }
       uiWikiPermissionForm.setPermission(uiWikiPermissionForm.permissionEntries);
-      uiWikiPermissionForm.checkToUpdateByAjax(event.getRequestContext(), uiWikiPermissionForm);
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
     }
   }
 
@@ -373,8 +367,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       uiUserSelector.setShowSearchGroup(false);
       uiPopup.setUIComponent(uiUserSelector);
       uiPopup.setShow(true);
-      
-      uiWikiPermissionForm.checkToUpdateByAjax(event.getRequestContext(), uiWikiPermissionForm.getAncestorOfType(UIPopupContainer.class));
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm.getParent());
     }
   }
 
@@ -389,7 +382,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       UIFormStringInput uiFormStringInput = inputWithActions.getChild(UIFormStringInput.class);
       uiFormStringInput.setValue(values);
       closePopupAction(uiPopup, event.getRequestContext());
-      uiWikiPermissionForm.checkToUpdateByAjax(event.getRequestContext(), uiWikiPermissionForm);
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
     }
   }
 
@@ -402,7 +395,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       UIGroupSelector uiGroupSelector = uiWikiPermissionForm.createUIComponent(UIGroupSelector.class, null, null);
       uiPopup.setUIComponent(uiGroupSelector);
       uiPopup.setShow(true);
-      uiWikiPermissionForm.checkToUpdateByAjax(event.getRequestContext(), uiWikiPermissionForm);
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
     }
   }
 
@@ -428,7 +421,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       UIGroupMembershipSelector uiGroupMembershipSelector = uiWikiPermissionForm.createUIComponent(UIGroupMembershipSelector.class, null, null);
       uiPopup.setUIComponent(uiGroupMembershipSelector);
       uiPopup.setShow(true);
-      uiWikiPermissionForm.checkToUpdateByAjax(event.getRequestContext(), uiWikiPermissionForm);
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm);
     }
   }
 
@@ -444,7 +437,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       uiFormStringInput.setValue(membershipId + ":" + currentGroup);
       UIPopupWindow uiPopup = uiWikiPermissionForm.getChildById(PERMISSION_POPUP_SELECTOR);
       closePopupAction(uiPopup, event.getRequestContext());
-      uiWikiPermissionForm.checkToUpdateByAjax(event.getRequestContext(), uiWikiPermissionForm.getParent());
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm.getParent());
     }
   }
 
