@@ -259,7 +259,9 @@ public class Utils {
     } else {
       WikiService service = (WikiService) PortalContainer.getComponent(WikiService.class);
       Page currentPage = service.getPageById(params.getType(), params.getOwner(), params.getPageId());
-      wikiContext.setSyntax(currentPage.getSyntax());
+      if (currentPage != null) {
+        wikiContext.setSyntax(currentPage.getSyntax());
+      }
     }
     if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
       String sessionId = Util.getPortalRequestContext().getRequest().getSession(false).getId();
