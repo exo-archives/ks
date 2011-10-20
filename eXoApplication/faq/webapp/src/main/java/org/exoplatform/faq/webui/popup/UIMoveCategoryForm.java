@@ -114,7 +114,12 @@ public class UIMoveCategoryForm extends BaseUIForm implements UIPopupComponent {
         if (!canMove)
           canMove = faqService_.isCategoryModerator(destCategoryId, null);
         if (canMove) {
-          faqService_.moveCategory(categoryId, destCategoryId);
+          if (!faqService_.isCategoryExist(faqService_.getCategoryNameOf(categoryId), destCategoryId)) {
+            faqService_.moveCategory(categoryId, destCategoryId);
+          } else {
+            warning("UIQuestions.msg.can-not-move-category-same-name");
+            return;
+          }
         } else {
           warning("UIQuestions.msg.can-not-move-category");
           return;

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.faq.service.Answer;
@@ -366,7 +367,7 @@ public class TestFAQService extends FAQServiceTestCase {
     List<String> catIds = new ArrayList<String>();
     catIds.add(Utils.CATEGORY_HOME);
     for (int i = 1; i <= 5; i++) {
-      cat = createCategory("Category " + i, i);
+      cat = createCategory("Category " + (new Random().nextInt(100) + " " + i), i);
       catIds.add(Utils.CATEGORY_HOME + "/" + cat.getId());
       faqService_.saveCategory(Utils.CATEGORY_HOME, cat, true);
     }

@@ -2910,21 +2910,28 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         long gindex = goingCategory.getProperty(EXO_INDEX).getLong();
         resetIndex(goingCategory, index, gindex);
       } else {
-        String id = goingCategory.getName();
-        mockCategory.getSession().move(goingCategory.getPath(), mockCategory.getParent().getPath() + "/" + id);
-        faqHome.getSession().save();
         Node parent = mockCategory.getParent();
-        Node destCat = parent.getNode(id);
-        long l = 1;
-        if (!isTop) {
-          l = parent.getNodes().getSize();
-          destCat.setProperty(EXO_INDEX, l);
-          parent.save();
+        String asPath = parent.getPath().replaceFirst(dataLocator.getFaqHomeLocation(), EMPTY_STR).replaceFirst("//", EMPTY_STR);
+        if (!isCategoryExist(sProvider, new PropertyReader(goingCategory).string(EXO_NAME, EMPTY_STR), asPath)) {
+          String id = goingCategory.getName();
+          mockCategory.getSession().move(goingCategory.getPath(), parent.getPath() + "/" + id);
+          faqHome.getSession().save();
+          Node destCat = parent.getNode(id);
+          long l = 1;
+          if (!isTop) {
+            l = parent.getNodes().getSize();
+            destCat.setProperty(EXO_INDEX, l);
+            parent.save();
+          }
+          resetIndex(destCat, index, l);
+        } else {
+          throw new RuntimeException();
         }
-        resetIndex(destCat, index, l);
       }
+    } catch (RuntimeException e) {
+      throw e;
     } catch (Exception e) {
-      log.error("Failed to swap categories", e);
+      log.debug("Failed to swap categories.", e);
     }
   }
 
@@ -3202,19 +3209,22 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
    * @see org.exoplatform.faq.service.impl.DataStorage#isCategoryExist(java.lang.String, java.lang.String)
    */
   public boolean isCategoryExist(String name, String path) {
-    if (path == null || path.trim().length() <= 0)
-      return false;
     SessionProvider sProvider = CommonUtils.createSystemProvider();
+    return isCategoryExist(sProvider, name, path);
+  }
+
+  private boolean isCategoryExist(SessionProvider sProvider, String name, String path) {
+    if (CommonUtils.isEmpty(path)) {
+      path = Utils.CATEGORY_HOME;
+    }
     try {
-      Node category = getFAQServiceHome(sProvider).getNode(path);
-      NodeIterator iter = category.getNodes();
+      NodeIterator iter = getFAQServiceHome(sProvider).getNode(path).getNodes();
       while (iter.hasNext()) {
-        Node cat = iter.nextNode();
-        try {
-          if (name.equals(cat.getProperty(EXO_NAME).getString()))
+        Node catNode = iter.nextNode();
+        if (catNode.isNodeType(EXO_FAQ_CATEGORY)) {
+          if (new PropertyReader(catNode).string(EXO_NAME, EMPTY_STR).equalsIgnoreCase(name)) {
             return true;
-        } catch (Exception e) {
-          log.debug("Failed to check exist category by name", e);
+          }
         }
       }
     } catch (Exception e) {
@@ -3297,9 +3307,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node node = getFAQServiceHome(sProvider).getNode(categoryPath);
-      if (node.hasProperty(EXO_NAME))
-        return node.getProperty(EXO_NAME).getString();
-      return node.getName();
+      return new PropertyReader(node).string(EXO_NAME, node.getName());
     } catch (Exception e) {
       log.error("Failed to get category name of path: " + categoryPath, e);
     }

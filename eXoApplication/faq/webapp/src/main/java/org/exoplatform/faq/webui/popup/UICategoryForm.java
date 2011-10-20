@@ -18,9 +18,11 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -111,10 +113,10 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
   private boolean             isAddNew_                        = true;
 
   private String              oldName_                         = "";
+  
+  private long                oldIndex_                        = 0l;
 
-  private Category            currentCategory_;
-
-  private long                maxIndex                         = 1;
+  private Category            currentCategory_                 = new Category();
 
   public UICategoryForm() throws Exception {
     setActions(new String[] { "Save", "Cancel" });
@@ -125,9 +127,9 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
     UIFormInputWithActions inputset = new UIFormInputWithActions(CATEGORY_DETAIL_TAB);
     inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class));
     UIFormStringInput index = new UIFormStringInput(FIELD_INDEX_INPUT, FIELD_INDEX_INPUT, null);
-    maxIndex = getFAQService().getMaxindexCategory(parentId_) + 1;
-    if (isAddNew)
-      index.setValue(String.valueOf(maxIndex));
+    if (isAddNew) {
+      index.setValue(String.valueOf(getFAQService().getMaxindexCategory(parentId_) + 1));
+    }
     inputset.addUIFormInput(index);
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_USERPRIVATE_INPUT, FIELD_USERPRIVATE_INPUT, null));
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null));
@@ -135,8 +137,9 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
     inputset.addUIFormInput(new UICheckBoxInput(VIEW_AUTHOR_INFOR, VIEW_AUTHOR_INFOR, false));
     inputset.addUIFormInput(new UICheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX, FIELD_MODERATE_ANSWERS_CHECKBOX, false));
     UIFormTextAreaInput moderator = new UIFormTextAreaInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null);
-    if (isAddNew)
+    if (isAddNew) {
       moderator.setValue(FAQUtils.getCurrentUser());
+    }
     moderator.addValidator(MandatoryValidator.class);
     inputset.addUIFormInput(moderator);
     List<ActionData> actionData;
@@ -149,10 +152,11 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       for (String string : strings) {
         ad = new ActionData();
         ad.setActionName(string);
-        if (j == 0)
+        if (j == 0) {
           ad.setActionListener("AddValuesUser");
-        else
+        } else {
           ad.setActionListener("SelectPermission");
+        }
         ad.setActionType(ActionData.TYPE_ICON);
         ad.setCssIconClass(string + "Icon");
         ad.setActionParameter(files[i] + "," + String.valueOf(j));
@@ -183,8 +187,9 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
     String oldValue = fieldInput.getValue();
     if (oldValue != null && oldValue.trim().length() > 0) {
       oldValue = oldValue + "," + value;
-    } else
+    } else {
       oldValue = value;
+    }
     fieldInput.setValue(oldValue);
   }
 
@@ -194,91 +199,64 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       categoryId_ = cat.getPath();
       currentCategory_ = cat;
       oldName_ = cat.getName();
-      if (oldName_ != null && oldName_.trim().length() > 0)
+      oldIndex_ = cat.getIndex();
+      if (oldName_ != null && oldName_.trim().length() > 0) {
         getUIStringInput(FIELD_NAME_INPUT).setValue(CommonUtils.decodeSpecialCharToHTMLnumber(oldName_));
-      else
+      } else {
         getUIStringInput(FIELD_NAME_INPUT).setValue("Root");
-      String userPrivate = null;
-      if (cat.getUserPrivate() != null) {
-        for (String str : cat.getUserPrivate()) {
-          if (userPrivate != null)
-            userPrivate = userPrivate + ", " + str;
-          else
-            userPrivate = str;
-        }
       }
+      String userPrivate = (!CommonUtils.isEmpty(cat.getUserPrivate())) ? StringUtils.join(cat.getUserPrivate(), CommonUtils.COMMA) : 
+                            CommonUtils.EMPTY_STR;
       getUIFormTextAreaInput(FIELD_USERPRIVATE_INPUT).setDefaultValue(userPrivate);
       getUIStringInput(FIELD_INDEX_INPUT).setValue(String.valueOf(cat.getIndex()));
       getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(cat.getDescription());
       getUICheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).setChecked(cat.isModerateQuestions());
       getUICheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).setChecked(cat.isModerateAnswers());
       getUICheckBoxInput(VIEW_AUTHOR_INFOR).setChecked(cat.isViewAuthorInfor());
-      StringBuilder moderator = new StringBuilder();
-      if (cat.getModerators() != null && cat.getModerators().length > 0)
-        for (String str : cat.getModerators()) {
-          if (moderator.length() > 0)
-            moderator.append(",");
-          moderator.append(str);
-        }
-      if (moderator.length() > 0)
-        getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).setValue(moderator.toString());
-      else
-        getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).setValue(FAQUtils.getCurrentUser());
+      String moderator = (!CommonUtils.isEmpty(cat.getModerators())) ? StringUtils.join(cat.getModerators(), CommonUtils.COMMA) : 
+                          FAQUtils.getCurrentUser();
+      getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).setValue(moderator);
     }
-  }
-
-  public String cutColonCaret(String name) {
-    StringBuffer string = new StringBuffer();
-    char c;
-    for (int i = 0; i < name.length(); i++) {
-      c = name.charAt(i);
-      if (c == 58 || c == 47)
-        continue;
-      string.append(c);
-    }
-    return string.toString();
   }
 
   static public class SaveActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
       UICategoryForm uiCategory = event.getSource();
       String name = uiCategory.getUIStringInput(FIELD_NAME_INPUT).getValue();
-      name = CommonUtils.encodeSpecialCharInTitle(name);
-
-      if (uiCategory.isAddNew_) {
-        if (uiCategory.getFAQService().isCategoryExist(name, uiCategory.parentId_)) {
-          uiCategory.warning("UICateforyForm.sms.cate-name-exist");
-          return;
-        }
-      } else {
-        if (!name.equals(uiCategory.oldName_) && uiCategory.getFAQService().isCategoryExist(name, uiCategory.parentId_)) {
-          uiCategory.warning("UICateforyForm.sms.cate-name-exist");
-          return;
-        }
+      name = CommonUtils.encodeSpecialCharInTitle(name).replaceAll("( \\s*)", CommonUtils.SPACE).trim();
+      if ((uiCategory.isAddNew_ || !name.equals(uiCategory.oldName_)) && 
+          uiCategory.getFAQService().isCategoryExist(name, uiCategory.parentId_)) {
+        uiCategory.warning("UICateforyForm.sms.cate-name-exist");
+        return;
       }
       UIFormInputWithActions inputset = uiCategory.getChildById(CATEGORY_DETAIL_TAB);
       long index = 1;
       String strIndex = inputset.getUIStringInput(FIELD_INDEX_INPUT).getValue();
       UIAnswersPortlet answerPortlet = uiCategory.getAncestorOfType(UIAnswersPortlet.class);
-      if (strIndex != null && strIndex.trim().length() > 0) {
+      long indexLimited = uiCategory.getFAQService().getMaxindexCategory(uiCategory.parentId_);
+      if (!CommonUtils.isEmpty(strIndex)) {
         try {
           index = Long.parseLong(strIndex);
         } catch (Exception e) {
           uiCategory.warning("NameValidator.msg.erro-large-number", new String[] { uiCategory.getLabel(FIELD_INDEX_INPUT) });
           return;
         }
-        long indexLimited = uiCategory.getFAQService().getMaxindexCategory(uiCategory.parentId_);
-        if (uiCategory.isAddNew_) indexLimited += 1;
         if (index > indexLimited) {
-          uiCategory.warning("UICateforyForm.msg.over-index-number");
-          return;
+          if (uiCategory.isAddNew_) {
+            index = indexLimited + 1;
+          } else {
+            if (index == uiCategory.oldIndex_) {
+              index = indexLimited;
+            } else {
+              uiCategory.warning("UICateforyForm.msg.over-index-number");
+              return;
+            }
+          }
         }
-        
+      } else {
+        index = indexLimited + 1;
       }
-      if (index > uiCategory.maxIndex)
-        index = uiCategory.maxIndex;
       String description = inputset.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue();
-
       String moderator = inputset.getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).getValue();
       if (moderator == null || moderator.trim().length() <= 0) {
         uiCategory.warning("UICategoryForm.msg.moderator-required");
@@ -291,33 +269,23 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
         uiCategory.warning("UICateforyForm.sms.user-not-found", new String[] { uiCategory.getLabel(FIELD_USERPRIVATE_INPUT), erroUser });
         return;
       }
-      String[] userPrivates = new String[] { "" };
-      if (userPrivate != null && userPrivate.trim().length() > 0) {
+      String[] userPrivates = new String[] { CommonUtils.EMPTY_STR };
+      if (!CommonUtils.isEmpty(userPrivate)) {
         userPrivates = FAQUtils.splitForFAQ(userPrivate);
       }
-      /*
-       * moderator = uiCategory.removeSpaceInString(moderator) ; moderator = uiCategory.filterItemInString(moderator) ;
-       */
       erroUser = UserHelper.checkValueUser(moderator);
       if (!FAQUtils.isFieldEmpty(erroUser)) {
         uiCategory.warning("UICateforyForm.sms.user-not-found", new String[] { uiCategory.getLabel(FIELD_MODERATOR_INPUT), erroUser });
         return;
       }
 
-      Boolean moderatequestion = uiCategory.getUICheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked();
-      Boolean moderateAnswer = uiCategory.getUICheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).isChecked();
+      boolean moderatequestion = uiCategory.getUICheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked();
+      boolean moderateAnswer = uiCategory.getUICheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).isChecked();
       boolean viewAuthorInfor = uiCategory.getUICheckBoxInput(VIEW_AUTHOR_INFOR).isChecked();
       String[] users = FAQUtils.splitForFAQ(moderator);
 
-      
-      Category cat;
-      if (uiCategory.isAddNew_) {
-        cat = new Category();
-        cat.setCreatedDate(new Date());
-      } else {
-        cat = uiCategory.currentCategory_;
-      }
-      cat.setName(name.trim());
+      Category cat = uiCategory.currentCategory_;
+      cat.setName(name);
       cat.setUserPrivate(userPrivates);
       cat.setDescription(description);
       cat.setModerateQuestions(moderatequestion);
@@ -336,14 +304,13 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       }
 
       answerPortlet.cancelAction();
-      // questions.setQuestions() ; //?
       event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet);
     }
   }
 
   static public class SelectPermissionActionListener extends BaseEventListener<UICategoryForm> {
     public void onEvent(Event<UICategoryForm> event, UICategoryForm categoryForm, String permType) throws Exception {
-      String types[] = permType.split(",");
+      String types[] = permType.split(CommonUtils.COMMA);
       UIPopupContainer popupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class);
       UIUserSelect uiUserSelect = popupContainer.findFirstComponentOfType(UIUserSelect.class);
       if (uiUserSelect != null) {
@@ -400,13 +367,9 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
   private String getUserSelect(String vls, String values) throws Exception {
     try {
       if (!FAQUtils.isFieldEmpty(vls)) {
-        values = values + "," + vls;
-        List<String> list = new ArrayList<String>();
-        for (String string : Arrays.asList(values.split(","))) {
-          if (!list.contains(string) && string.trim().length() > 0)
-            list.add(string);
-        }
-        values = list.toString().replace('[' + "", "").replace(']' + "", "").replaceAll(", ", ",");
+        values = values.trim(); vls = vls.trim();
+        Set<String> set = new HashSet<String>(Arrays.asList((values + CommonUtils.COMMA + vls).split(CommonUtils.COMMA)));
+        return StringUtils.join(set, CommonUtils.COMMA).replaceAll("(,,*)", CommonUtils.COMMA);
       }
     } catch (Exception e) {
       log.error("Fail to get user selector: ", e);

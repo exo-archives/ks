@@ -153,17 +153,6 @@ public class FAQUtils {
     }
   }
 
-  public static boolean checkSpecial(String text) {
-    if (!isFieldEmpty(text)) {
-      String[] specialString = { "?", "[", "(", "|", ")", "*", "\\", "+", "}", "{", "^", "$", "#", "%", ":", "&", ">", "<", "'", "\"", "`", "!", "~", "]", "/" };
-      for (int i = 0; i < specialString.length; i++) {
-        if (text.indexOf(specialString[i]) >= 0)
-          return true;
-      }
-    }
-    return false;
-  }
-
   public static InternetAddress[] getInternetAddress(String addressList) throws Exception {
     if (isFieldEmpty(addressList))
       return new InternetAddress[1];
@@ -177,17 +166,16 @@ public class FAQUtils {
   public static String[] splitForFAQ(String str) throws Exception {
     if (!isFieldEmpty(str)) {
       String[] strs = new String[] { str };
-      if (str.contains(",")) {
-        str = str.trim().replaceAll("(,\\s*)", COMMA).replaceAll("(\\s*,)", COMMA);
+      if (str.contains(COMMA)) {
+        str = str.trim().replaceAll("(,\\s*)", COMMA).replaceAll("(\\s*,)", COMMA).replaceAll("(,,*)", COMMA);
         strs = str.trim().split(",");
       } else if (str.contains(";")) {
-        str = str.trim().replaceAll("(;\\s*)", ";").replaceAll("(\\s*;)", ";");
+        str = str.trim().replaceAll("(;\\s*)", ";").replaceAll("(\\s*;)", ";").replaceAll("(;;*)", ";");
         strs = str.split(";");
       }
       return strs;
-    } else {
-      return new String[] {};
     }
+    return new String[] {};
   }
 
   static public String getCurrentUser() throws Exception {

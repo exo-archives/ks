@@ -193,7 +193,7 @@ public class UIQuestions extends UIContainer {
 
   public UIQuestions() throws Exception {
     backPath_ = null;
-    this.categoryId_ = null;
+    this.categoryId_ = Utils.CATEGORY_HOME;
     currentUser_ = FAQUtils.getCurrentUser();
     addChild(UIAnswersPageIterator.class, null, OBJECT_ITERATOR);
     if (faqService_ == null)
@@ -709,6 +709,7 @@ public class UIQuestions extends UIContainer {
           UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class, 540);
           uiPopupContainer.setId("EditCategoryForm");
           UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null);
+          uiCategoryForm.setParentId(category.getPath().replaceFirst(CommonUtils.SLASH + category.getId(), CommonUtils.EMPTY_STR));
           uiCategoryForm.updateAddNew(false);
           uiCategoryForm.setCategoryValue(category, true);
           event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);

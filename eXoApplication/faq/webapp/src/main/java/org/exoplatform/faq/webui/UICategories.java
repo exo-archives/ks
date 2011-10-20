@@ -47,7 +47,6 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -541,11 +540,12 @@ public class UICategories extends BaseUIFAQForm {
       String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(",");
       try {
         uiCategories.getFAQService().swapCategories(objectIds[0], objectIds[1] + "," + objectIds[2]);
+      } catch (RuntimeException e) {
+        uiCategories.warning("UIQuestions.msg.can-not-move-category-same-name");
+        return;
       } catch (Exception e) {
-        log.debug("Failed to swap categories.", e);        
-        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted",
-                                                                                       null,
-                                                                                       ApplicationMessage.WARNING));
+        log.debug("Failed to swap categories.", e);
+        uiCategories.warning("UIQuestions.msg.category-id-deleted");
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiCategories.getParent());
     }
@@ -616,31 +616,27 @@ public class UICategories extends BaseUIFAQForm {
   static public class MoveCategoryIntoActionListener extends EventListener<UICategories> {
     public void execute(Event<UICategories> event) throws Exception {
       UICategories uiCategories = event.getSource();
-      String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(",");
+      String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(CommonUtils.COMMA);
       String categoryId = objectIds[0];
       String destCategoryId = objectIds[1];
       try {
-        Category category = uiCategories.getFAQService().getCategoryById(destCategoryId);
-        List<String> usersOfNewCateParent = new ArrayList<String>();
-        usersOfNewCateParent.addAll(Arrays.asList(category.getModerators()));
-        if (uiCategories.faqSetting_.isAdmin() || (uiCategories.getFAQService().isCategoryModerator(categoryId, null) && uiCategories.getFAQService().isCategoryModerator(destCategoryId, null))) {
-          uiCategories.getFAQService().moveCategory(categoryId, destCategoryId);
+        if (uiCategories.faqSetting_.isAdmin() || ((uiCategories.getFAQService().isCategoryModerator(categoryId, null) && 
+            uiCategories.getFAQService().isCategoryModerator(destCategoryId, null)))) {
+          if (!uiCategories.getFAQService().isCategoryExist(uiCategories.getFAQService().getCategoryNameOf(categoryId), destCategoryId)) {
+            uiCategories.getFAQService().moveCategory(categoryId, destCategoryId);
+          } else {
+            uiCategories.warning("UIQuestions.msg.can-not-move-category-same-name");
+          }
         } else {
-          event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category",
-                                                                                         new Object[] { category.getName() },
-                                                                                         ApplicationMessage.WARNING));          
-          // return;
+          uiCategories.warning("UIQuestions.msg.can-not-move-category");
         }
-      } catch (ItemExistsException e) {        
-        event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.already-in-destination",
-                                                                                       null,
-                                                                                       ApplicationMessage.WARNING));        
+      } catch (ItemExistsException e) {
+        uiCategories.warning("UIQuestions.msg.already-in-destination");
       } catch (Exception e) {
         uiCategories.showMessageQuestionDeleted(event.getRequestContext());
         return;
       }
-      // questions.setListObject() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiCategories.getAncestorOfType(UIAnswersContainer.class));
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiCategories.getParent());
     }
   }
 }
