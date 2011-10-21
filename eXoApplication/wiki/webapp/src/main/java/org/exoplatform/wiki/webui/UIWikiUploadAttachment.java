@@ -131,7 +131,9 @@ public class UIWikiUploadAttachment extends UIWikiForm {
             throw new FileNotFoundException();
           }
         } catch (FileNotFoundException ex) {
-          event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIWikiUploadAttachment.msg.file-not-exist", null, ApplicationMessage.ERROR));
+          event.getRequestContext()
+               .getUIApplication()
+               .addMessage(new ApplicationMessage("UIWikiUploadAttachment.msg.file-not-exist", null, ApplicationMessage.WARNING));
           resetUploadInput(event);
           return;
         }
