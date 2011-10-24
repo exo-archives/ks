@@ -228,12 +228,12 @@ public class MessageBuilder {
 
   public void setPrivateLink() {
     try {
-      String host = link.substring(0, link.indexOf(SLASH, 8));
-      link = link.replace(host, "");
+      String host = this.link.substring(0, this.link.indexOf(SLASH, 8));
+      String link = this.link.replace(host, "");
       String ptContainer = link.substring(1, link.indexOf(SLASH, 2));
       privateLink = new StringBuilder(host).append(SLASH).append(ptContainer).append(SLASH).append("login?&initialURI=").append(link).append(SLASH).append(id).toString();
     } catch (Exception e) {
-      privateLink = "";
+      privateLink = link;
     }
   }
 

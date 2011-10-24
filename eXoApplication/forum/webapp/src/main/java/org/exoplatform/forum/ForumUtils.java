@@ -35,6 +35,7 @@ import java.util.Set;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
@@ -44,7 +45,7 @@ import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.portal.webui.portal.UIPortal;
+import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -117,12 +118,13 @@ public class ForumUtils {
   }
 
   public static String createdForumLink(String type, String id, boolean isPrivate) throws Exception {    
-    String portalURI =  Util.getPortalRequestContext().getPortalURI();
-    UIPortal uiPortal = Util.getUIPortal();
-    String pageNodeSelected = uiPortal.getSelectedUserNode().getURI();
     String containerName = ((ExoContainerContext) ExoContainerContext.getCurrentContainer()
-        .getComponentInstanceOfType(ExoContainerContext.class)).getPortalContainerName();
-    return buildLink(portalURI, containerName , pageNodeSelected, type, id, isPrivate);
+                           .getComponentInstanceOfType(ExoContainerContext.class)).getPortalContainerName();
+    String pageNodeSelected = Util.getUIPortal().getSelectedUserNode().getURI();
+    PortalRequestContext portalContext = Util.getPortalRequestContext();
+    String fullUrl = ((HttpServletRequest) portalContext.getRequest()).getRequestURL().toString();
+    String host = fullUrl.substring(0, fullUrl.indexOf(containerName) -1);
+    return buildLink((host + portalContext.getPortalURI()), containerName , pageNodeSelected, type, id, isPrivate);
   }
 
   public static String buildLink(String portalURI, String containerName, String selectedNode, String type, String id, boolean isPrivate) throws Exception {
@@ -131,11 +133,13 @@ public class ForumUtils {
     if (!isPrivate) {
       sb.append(buildForumLink(portalURI, type, id));
     } else {
-      sb.append(portalURI.substring(0, portalURI.indexOf(containerName)))
+      String host = portalURI.substring(0, portalURI.indexOf(containerName) -1);
+      sb.append(host)
+        .append(SLASH)
         .append(containerName)
         .append(SLASH)
         .append("login?&initialURI=")
-        .append(buildForumLink(portalURI.substring(portalURI.indexOf(containerName) - 1), type, id))
+        .append(buildForumLink(portalURI.replaceFirst(host, EMPTY_STR), type, id))
         .toString();
     }
     return sb.toString();
