@@ -32,12 +32,14 @@ function UIWikiSearchBox() {
   this.wikiNodeURI = null;
 };
 
-UIWikiSearchBox.prototype.init = function(inputId, searchLabel, restURL,
-    wikiNodeURI) {
-  this.restURL = restURL;
+UIWikiSearchBox.prototype.init = function(componentId, searchInputName, searchLabel, wikiNodeURI) {
   this.wikiNodeURI = wikiNodeURI;
-  this.input = document.getElementById(inputId);
+  var uiComponent = document.getElementById(componentId);
+  var restInput = uiComponent["restURL"];
+  this.input = uiComponent[searchInputName];
   this.input.setAttribute('autocomplete', 'off');
+  
+  this.restURL = restInput.value;
   this.input.onkeyup = function(evt) {
     evt = window.event || evt;
     eXo.wiki.UIWikiSearchBox.pressHandler(evt, this);

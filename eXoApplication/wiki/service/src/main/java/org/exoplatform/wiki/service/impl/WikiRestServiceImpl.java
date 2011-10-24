@@ -418,11 +418,13 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
   }
   
   @GET
-  @Path("contextsearch/{keyword}")
+  @Path("contextsearch/")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response searchData(@PathParam("keyword") String keyword) throws Exception {
+  public Response searchData(@QueryParam("keyword") String keyword,
+                             @QueryParam("wikiType") String wikiType,
+                             @QueryParam("wikiOwner") String wikiOwner) throws Exception {
     try {
-      WikiSearchData data = new WikiSearchData(null, keyword.toLowerCase(), null, null, null);
+      WikiSearchData data = new WikiSearchData(null, keyword.toLowerCase(), null, wikiType, wikiOwner);
       List<TitleSearchResult> result = wikiService.searchDataByTitle(data);
       return Response.ok(new BeanToJsons(result), MediaType.APPLICATION_JSON)
                      .cacheControl(cc)

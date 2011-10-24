@@ -82,7 +82,7 @@ public class WikiSearchData extends SearchData {
     statement.append("SELECT title, jcr:primaryType, path, excerpt(.) ")
              .append("FROM nt:base ")
              .append("WHERE ");
-    statement.append(getContentCdt(onlyHomePages));
+    statement.append(getContentCdt());
     return statement.toString();
   }
 
@@ -138,13 +138,10 @@ public class WikiSearchData extends SearchData {
     return constraint.toString();
   }
   
-  private String getContentCdt(boolean onlyHomePages) {
+  private String getContentCdt() {
     StringBuilder clause = new StringBuilder();
     boolean isAnd = false;
     String queryPath = this.jcrQueryPath;
-    if (onlyHomePages) {
-      queryPath = queryPath.substring(0, queryPath.length() - 3) + "'";
-    }
     clause.append(queryPath);
     isAnd = true;
     if (text != null && text.length() > 0) {

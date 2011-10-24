@@ -29,6 +29,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.Template;
 import org.exoplatform.wiki.service.DataStorage;
+import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.search.SearchResult;
 import org.exoplatform.wiki.service.search.TemplateSearchData;
 import org.exoplatform.wiki.service.search.TemplateSearchResult;
@@ -50,25 +51,18 @@ public class JCRDataStorage implements DataStorage{
   
   public PageList<SearchResult> search(ChromatticSession session, WikiSearchData data) throws Exception {
     List<SearchResult> resultList = new ArrayList<SearchResult>();
-    search(session, data, resultList, false);
-    return new ObjectPageList<SearchResult>(resultList, searchSize);
-  }
-
-  private void search(ChromatticSession session,
-                      WikiSearchData data,
-                      List<SearchResult> resultList,
-                      boolean onlyHomePages) throws Exception {
-    String statement = data.getStatement(onlyHomePages);
-    Query q = ((ChromatticSessionImpl)session).getDomainSession().getSessionWrapper().createQuery(statement);
+    String statement = data.getStatement(false);
+    Query q = ((ChromatticSessionImpl) session).getDomainSession().getSessionWrapper().createQuery(statement);
     QueryResult result = q.execute();
     RowIterator iter = result.getRows();
     while (iter.hasNext()) {
       SearchResult tempResult = getResult(iter.nextRow());
       // If contains, merges with the exist
-      if (!isContains(resultList, tempResult)) {
+      if (tempResult != null && !isContains(resultList, tempResult)) {
         resultList.add(tempResult);
       }
     }
+    return new ObjectPageList<SearchResult>(resultList, searchSize);
   }
   
   public void initDefaultTemplatePage(ChromatticSession crmSession, ConfigurationManager configurationManager, String path) {
@@ -107,39 +101,38 @@ public class JCRDataStorage implements DataStorage{
     String excerpt = null;
     Calendar updateDate = GregorianCalendar.getInstance();
     Calendar createdDate = GregorianCalendar.getInstance();
+    PageImpl page = null;
     if (WikiNodeType.WIKI_ATTACHMENT_CONTENT.equals(type)) {
       // Transform to Attachment result
       type = WikiNodeType.WIKI_ATTACHMENT.toString();
       excerpt = row.getValue("rep:excerpt(.)").getString();
       path = path.substring(0, path.lastIndexOf("/"));
       if(!path.endsWith(WikiNodeType.Definition.CONTENT)){
-      AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(path,
-                                                                                             WikiNodeType.WIKI_ATTACHMENT);
-      updateDate = searchAtt.getUpdatedDate();
-      PageImpl page = searchAtt.getParentPage();
-      createdDate.setTime(page.getCreatedDate());
-      title = page.getTitle();
+        AttachmentImpl searchAtt = (AttachmentImpl) Utils.getObject(path, WikiNodeType.WIKI_ATTACHMENT);
+        updateDate = searchAtt.getUpdatedDate();
+        page = searchAtt.getParentPage();
+        createdDate.setTime(page.getCreatedDate());
+        title = page.getTitle();
       } else {
         String pagePath = path.substring(0, path.lastIndexOf("/" + WikiNodeType.Definition.CONTENT));
         type = WikiNodeType.WIKI_PAGE_CONTENT.toString();
-
-        PageImpl page = (PageImpl) org.exoplatform.wiki.utils.Utils.getObject(pagePath,
-                                                                              WikiNodeType.WIKI_PAGE);
+        page = (PageImpl) Utils.getObject(pagePath, WikiNodeType.WIKI_PAGE);
         title = page.getTitle();
         updateDate.setTime(page.getUpdatedDate());
         createdDate.setTime(page.getCreatedDate());
       }
     } else if (WikiNodeType.WIKI_ATTACHMENT.equals(type)) {
-      AttachmentImpl searchAtt = (AttachmentImpl) org.exoplatform.wiki.utils.Utils.getObject(path,
-                                                                                             WikiNodeType.WIKI_ATTACHMENT);
+      AttachmentImpl searchAtt = (AttachmentImpl) Utils.getObject(path, WikiNodeType.WIKI_ATTACHMENT);
       updateDate = searchAtt.getUpdatedDate();
-      PageImpl page = searchAtt.getParentPage();
+      page = searchAtt.getParentPage();
       createdDate.setTime(page.getCreatedDate());
     } else if (WikiNodeType.WIKI_PAGE.equals(type)) {
-      PageImpl page = (PageImpl) Utils.getObject(path, type);
+      page = (PageImpl) Utils.getObject(path, type);
       updateDate.setTime(page.getUpdatedDate());
       createdDate.setTime(page.getCreatedDate());
     }
+    if (page == null || !page.hasPermission(PermissionType.VIEWPAGE))
+      return null;
     SearchResult result = new SearchResult(excerpt, title, path, type, updateDate, createdDate);
     return result;
   }
@@ -147,12 +140,18 @@ public class JCRDataStorage implements DataStorage{
   private TitleSearchResult getTitleSearchResult(Row row) throws Exception {
     String type = row.getValue(WikiNodeType.Definition.PRIMARY_TYPE).getString();
     String path = row.getValue(WikiNodeType.Definition.PATH).getString();
-    String fullTitle = (row.getValue(WikiNodeType.Definition.FILE_TYPE) == null ? row.getValue(WikiNodeType.Definition.TITLE)
-                                                                                 .getString()
-                                                                           : row.getValue(WikiNodeType.Definition.TITLE)
-                                                                                .getString()
-                                                                                .concat(row.getValue(WikiNodeType.Definition.FILE_TYPE)
-                                                                                           .getString()));
+    String fullTitle = row.getValue(WikiNodeType.Definition.TITLE).getString();
+    boolean isFile = row.getValue(WikiNodeType.Definition.FILE_TYPE) != null;
+    PageImpl page = null;
+    if (!isFile){
+      page = (PageImpl) Utils.getObject(path, WikiNodeType.WIKI_PAGE);      
+    } else {
+      fullTitle = fullTitle.concat(row.getValue(WikiNodeType.Definition.FILE_TYPE).getString());
+      AttachmentImpl searchAtt = (AttachmentImpl) Utils.getObject(path, WikiNodeType.WIKI_ATTACHMENT);
+      page = searchAtt.getParentPage();
+    }
+    if (page == null || !page.hasPermission(PermissionType.VIEWPAGE))
+      return null;
     TitleSearchResult result = new TitleSearchResult(fullTitle, path, type);
     return result;
   }
@@ -208,7 +207,10 @@ public class JCRDataStorage implements DataStorage{
     RowIterator iter = result.getRows();
     while (iter.hasNext()) {
       try {
-        resultList.add(getTitleSearchResult(iter.nextRow()));
+        TitleSearchResult iterResult = getTitleSearchResult(iter.nextRow());
+        if (iterResult != null) {
+          resultList.add(iterResult);
+        }
       } catch (Exception e) {
         log.debug("Failed to search date by title", e);
       }

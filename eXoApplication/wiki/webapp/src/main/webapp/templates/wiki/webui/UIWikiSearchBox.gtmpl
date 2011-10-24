@@ -4,17 +4,17 @@ import org.exoplatform.wiki.commons.Utils;
 
 <%
   def rcontext = _ctx.getRequestContext() ;
-  String inputId = uicomponent.FIELD_SEARCHVALUE;
   String searchLabel=_ctx.appRes("UIWikiSearchBox.label.Search");
   String wikiNodeURI = Utils.getCurrentWikiNodeUri();
-  String restUrl= uicomponent.getRestUrl();
+  String restUrl= uicomponent.getContextSearchURL();
   rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiSearchBox', '/wiki/javascript/') ;
-  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiSearchBox.init(\"" + inputId +"\",\""+searchLabel +"\",\""+restUrl + "\",\""+ wikiNodeURI +"\");");
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiSearchBox.init('" + uicomponent.id +"','"+ uicomponent.FIELD_SEARCHVALUE +"','" +searchLabel + "','"+ wikiNodeURI +"');");
 %>
 <div class="UIWikiSearchBox">
   <% uiform.begin() %>
     <div class="SearchForm">
       <a class="AdvancedSearch" title="<%=_ctx.appRes("UIWikiPortlet.label.Advanced-Search")%>" onclick="<%=uicomponent.event("AdvancedSearch");%>"></a>
+      <input name="restURL" type="hidden" value="$restUrl" />
       <div class="Input">
 		<div class="SearchIcon">
         <%

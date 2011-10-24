@@ -24,6 +24,7 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.wiki.service.WikiPageParams;
 
 /**
  * Created by The eXo Platform SAS
@@ -40,18 +41,44 @@ import org.exoplatform.webui.form.UIFormStringInput;
 )
 public class UIWikiSearchBox extends UIForm {
 
-  final static  private String FIELD_SEARCHVALUE = "wikiSearchValue" ;
+  private static final String FIELD_SEARCHVALUE = "wikiSearchValue";
+
+  private static final String KEYWORD           = "keyword";
+
+  private static final String WIKITYPE          = "wikiType";
+
+  private static final String WIKIOWNER         = "wikiOwner";
+  
+  protected String              wikiOwner;
+
+  protected String              wikiType;
   
   public UIWikiSearchBox() {
     addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null)) ;
   }
   
-  public String getRestUrl() {
+  protected String getContextSearchURL() throws Exception {
     StringBuilder sb = new StringBuilder();
-    sb.append("/").append(PortalContainer.getCurrentPortalContainerName()).append("/");
-    sb.append(PortalContainer.getCurrentRestContextName()).append("/wiki/contextsearch/");
+    WikiPageParams currentParams = org.exoplatform.wiki.commons.Utils.getCurrentWikiPageParams();
+    String wikiType = currentParams.getType();
+    String wikiOwner = currentParams.getOwner();
+    sb.append("/")
+      .append(PortalContainer.getCurrentPortalContainerName())
+      .append("/")
+      .append(PortalContainer.getCurrentRestContextName())
+      .append("/wiki/contextsearch?")
+      .append(WIKITYPE)
+      .append("=")
+      .append(wikiType)
+      .append("&")
+      .append(WIKIOWNER)
+      .append("=")
+      .append(wikiOwner)
+      .append("&")
+      .append(KEYWORD)
+      .append("=");
     return sb.toString();
-  }  
+  }
   
   public static class AdvancedSearchActionListener extends EventListener<UIWikiSearchBox> {
     @Override
@@ -66,7 +93,8 @@ public class UIWikiSearchBox extends UIForm {
       if (!wikiPortlet.getWikiMode().equals(WikiMode.ADVANCEDSEARCH)) {
         wikiPortlet.changeMode(WikiMode.ADVANCEDSEARCH);
       }
-    }
-    
+      event.getRequestContext().addUIComponentToUpdateByAjax(wikiPortlet.findFirstComponentOfType(UIWikiUpperArea.class));
+      event.getRequestContext().addUIComponentToUpdateByAjax(wikiPortlet.findFirstComponentOfType(UIWikiPageContainer.class));
+    }    
   }
 }

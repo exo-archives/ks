@@ -28,7 +28,6 @@ import org.exoplatform.container.xml.ValuesParam;
 import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.config.model.PortalConfig;
-import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -77,21 +76,11 @@ import org.xwiki.rendering.syntax.Syntax;
 
 public class WikiServiceImpl implements WikiService, Startable {
 
-  final static private String   USERS_PATH        = "usersPath";
+  final static private String          PREFERENCES          = "preferences";
 
-  final static private String   GROUPS_PATH       = "groupsPath";
-
-  final static private String   USER_APPLICATION  = "userApplicationData";
-
-  final static private String   GROUP_APPLICATION = "groupApplicationData";
-
-  final static private String   PREFERENCES       = "preferences";
-  
-  final static private String   DEFAULT_SYNTAX       = "defaultSyntax";
+  final static private String          DEFAULT_SYNTAX       = "defaultSyntax";
 
   private ConfigurationManager  configManager;
-
-  private NodeHierarchyCreator  nodeCreator;
 
   private JCRDataStorage        jcrDataStorage;
 
@@ -106,11 +95,9 @@ public class WikiServiceImpl implements WikiService, Startable {
   private static final Log      log               = ExoLogger.getLogger(WikiServiceImpl.class);
 
   public WikiServiceImpl(ConfigurationManager configManager,
-                         NodeHierarchyCreator creator,
                          JCRDataStorage jcrDataStorage,
                          InitParams initParams) {
     this.configManager = configManager;
-    this.nodeCreator = creator;
     this.jcrDataStorage = jcrDataStorage;
     if (initParams != null) {
       syntaxHelpParams = initParams.getValuesParamIterator();
@@ -129,7 +116,6 @@ public class WikiServiceImpl implements WikiService, Startable {
     String pageId = TitleResolver.getId(title, false);
     if(isExisting(wikiType, wikiOwner, pageId)) throw new Exception();
     Model model = getModel();
-    WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     WikiImpl wiki = (WikiImpl) getWiki(wikiType, wikiOwner, model);
     PageImpl page = wiki.createWikiPage();
     PageImpl parentPage = null;

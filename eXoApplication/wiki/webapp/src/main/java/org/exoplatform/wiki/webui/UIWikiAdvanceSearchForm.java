@@ -136,7 +136,8 @@ public class UIWikiAdvanceSearchForm extends UIForm {
   
   public void processSearchAction() throws Exception {
     WikiService wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
-    String text = getUIStringInput(TEXT).getValue().trim();
+    String text = getUIStringInput(TEXT).getValue();
+    text = (text == null) ? StringUtils.EMPTY : text.trim();
     String path = getChild(UIFormSelectBoxWithGroups.class).getValue();
     String wikiType = null;
     String wikiOwner = null;
@@ -166,6 +167,7 @@ public class UIWikiAdvanceSearchForm extends UIForm {
     public void execute(Event<UIWikiAdvanceSearchForm> event) throws Exception {
       UIWikiAdvanceSearchForm uiSearch = event.getSource() ;
       uiSearch.processSearchAction();
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiSearch.getAncestorOfType(UIWikiSearchSpaceArea.class));
     }
   }  
 
