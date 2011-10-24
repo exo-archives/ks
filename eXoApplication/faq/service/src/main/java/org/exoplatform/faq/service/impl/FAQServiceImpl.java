@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
@@ -1044,6 +1045,10 @@ public class FAQServiceImpl implements FAQService, Startable {
 
   public List<String> getQuestionContents(List<String> paths) throws Exception {
     return jcrData_.getQuestionContents(paths);
+  }
+  
+  public Map<String, String> getRelationQuestion(List<String> paths) throws Exception{
+    return jcrData_.getRelationQuestion(paths);
   }
 
   public Node getQuestionNodeById(String path) throws Exception {

@@ -19,6 +19,7 @@ package org.exoplatform.faq.service;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 
@@ -741,6 +742,14 @@ public interface FAQService extends FAQServiceLegacy {
    */
   public String getCategoryPathOf(String id) throws Exception;
 
+  /**
+   * Get titles of questions active
+   * @param paths  path of questions
+   * @return list titles of questions 
+   * @throws Exception
+   */
+  public Map<String, String> getRelationQuestion(List<String> paths) throws Exception;
+  
   /**
    * Get titles of questions
    * @param paths  path of questions

@@ -861,26 +861,32 @@
 											<!-- ======================================= view relation question ========================================= -->
 											<%
 												List questionRelation = question.getRelations();
-												if(!questionRelation.isEmpty()) {
-													String linkRelaQues = "" ;
-													String relationContent = "" ;
-											%>
-												<div class="RelationContent">
-													<div style="font-weight:bold; font-size:13px; margin:5px 0px 3px;"><%=_ctx.appRes("UIQuestions.label.RelatedQuestion")%>:</div>
-											<%
-													for(String relationId :questionRelation) {
-														relationContent = uicomponent.getQuestionRelationById(relationId).replaceAll("<p>", "").replaceAll("</p>", "");
-														linkRelaQues = uicomponent.event("ViewQuestion", relationId + "/language=" + uicomponent.language_+"/relation");
-														if(relationContent != null && relationContent.trim().length() > 0) {
-											%>
-															<div style="padding:0px 0px 5px 10px;">
-																<a href="$linkRelaQues" style="text-decoration:yes; color:#1555B5;"> - $relationContent</a><br/>
-															</div>
-											<% 		}
-													}
-											%>
-													</div>
+                        if(!questionRelation.isEmpty()){
+                          Map<String, String> mapQuestionRelation = uicomponent.getQuestionRelation(questionRelation);
+  												if(mapQuestionRelation.size() > 0) {
+  													String linkRelaQues = "" ;
+  													String relationContent = "" ;
+                            String relationId = "";
+  											%>
+  												<div class="RelationContent">
+  													<div style="font-weight:bold; font-size:13px; margin:5px 0px 3px;"><%=_ctx.appRes("UIQuestions.label.RelatedQuestion")%>:</div>
+  											<%
+                            for (Map.Entry<String, String> entry : mapQuestionRelation.entrySet()) {
+                              relationId = entry.getKey();
+  														relationContent = entry.getValue().replaceAll("<p>", "").replaceAll("</p>", "");
+  														linkRelaQues = uicomponent.event("ViewQuestion", relationId + "/language=" + uicomponent.language_+"/relation");
+  														if(relationContent != null && relationContent.trim().length() > 0) {
+  											%>
+  															<div style="padding:0px 0px 5px 10px;">
+  																<a href="$linkRelaQues" style="text-decoration:yes; color:#1555B5;"> - $relationContent</a><br/>
+  															</div>
+  											<% 		}
+  													}
+  											%>
+  													</div>
+  											<%}%>
 											<%}%>
+                    
 											
 											<!-- ===================================== Question's answers ==================================================== -->
 											<div class="ResponseContainer">

@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -3238,16 +3239,39 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
    * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionContents(java.util.List)
    */
   public List<String> getQuestionContents(List<String> paths) throws Exception {
+    PropertyReader reader = null;
     List<String> contents = new ArrayList<String>();
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     for (String path : paths) {
       try {
-        contents.add(getQuestionNodeById(sProvider, path).getProperty(EXO_TITLE).getString());
+        reader = new PropertyReader(getQuestionNodeById(sProvider, path));
+        contents.add(reader.string(EXO_TITLE));
       } catch (Exception e) {
       }
     }
     return contents;
   }
+  
+  /*
+   * (non-Javadoc)
+   * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionContents(java.util.List)
+   */
+  public Map<String, String> getRelationQuestion(List<String> paths) throws Exception {
+    Map<String, String> mReturn = new LinkedHashMap<String, String>();
+    PropertyReader reader = null;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
+    for (String path : paths) {
+      try {
+        reader = new PropertyReader(getQuestionNodeById(sProvider, path));
+        if(reader.bool(EXO_IS_ACTIVATED) && reader.bool(EXO_IS_APPROVED)){
+          mReturn.put(path, reader.string(EXO_TITLE));
+        }
+      } catch (Exception e) {
+      }
+    }
+    return mReturn;
+  }
+  
 
   // will be remove
   /*

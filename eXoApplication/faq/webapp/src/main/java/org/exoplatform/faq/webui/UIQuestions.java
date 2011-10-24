@@ -497,18 +497,15 @@ public class UIQuestions extends UIContainer {
       log.debug("Failed to update map language by viewing question", e);
     }
   }
-
-  private String getQuestionRelationById(String questionId) {
+  
+  private Map<String, String> getQuestionRelation(List<String> questionIdLst) {
+    Map<String, String> mapReturn = new LinkedHashMap<String, String>();
     try {
-      List<String> ids = new ArrayList<String>();
-      ids.add(questionId);
-      ids = faqService_.getQuestionContents(ids);
-      if (ids != null && ids.size() > 0)
-        return ids.get(0);
+      mapReturn = faqService_.getRelationQuestion(questionIdLst);
     } catch (Exception e) {
-      log.debug("Failed to get question relation by id: " + questionId, e);
+      log.debug("Failed to get question relation", e);
     }
-    return "";
+    return mapReturn;
   }
 
   private String getLink(String questionId) {
