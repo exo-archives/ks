@@ -51,6 +51,8 @@ public class MessageBuilder {
 
   private String              addType;
 
+  private String              addName;
+
   private String              message;
 
   private String              catName;
@@ -140,6 +142,14 @@ public class MessageBuilder {
 
   public void setAddType(String addType) {
     this.addType = addType;
+  }
+
+  public String getAddName() {
+    return addName;
+  }
+  
+  public void setAddName(String addName) {
+    this.addName = addName;
   }
 
   public String getMessage() {
@@ -253,6 +263,7 @@ public class MessageBuilder {
     String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);
     content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", types.get(watchType));
     content_ = StringUtils.replace(content_, "$ADD_TYPE", types.get(addType));
+    content_ = StringUtils.replace(content_, "$ADD_NAME", addName);
     content_ = StringUtils.replace(content_, "$POST_CONTENT", this.message);
     Format formatter = new SimpleDateFormat(timeFormat);
     content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate) + " " + zoneTime);

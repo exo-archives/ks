@@ -3251,6 +3251,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             }
             messageBuilder.setId(topic.getId().replaceFirst(Utils.TOPIC, Utils.POST));
             messageBuilder.setAddType(Utils.TOPIC);
+            messageBuilder.setAddName(topic.getTopicName());
             messageBuilder.setMessage(topic.getDescription());
             messageBuilder.setCreatedDate(topic.getCreatedDate());
             messageBuilder.setOwner(owner);
@@ -3382,6 +3383,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           messageBuilder.setOwner(fullName);
           messageBuilder.setId(post.getId());
           messageBuilder.setAddType(Utils.POST);
+          messageBuilder.setAddName(post.getName());
           messageBuilder.setMessage(post.getMessage());
           messageBuilder.setCreatedDate(post.getCreatedDate());
           messageBuilder.setLink(post.getLink());
