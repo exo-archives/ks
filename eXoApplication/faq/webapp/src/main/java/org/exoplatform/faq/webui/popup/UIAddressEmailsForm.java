@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.faq.webui.SelectItem;
@@ -121,36 +122,41 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 
   private void searchUserProfileByKey(String keyWord) throws Exception {
     try {
-      Set<User> users = new HashSet<User>();
+      Map<String, Object> mapObject = new HashMap<String, Object>();
       OrganizationService service = this.getApplicationComponent(OrganizationService.class);
       keyWord = "*" + keyWord + "*";
       Query q;
       // search by user name
       q = new Query();
       q.setUserName(keyWord);
-      for (Object obj : service.getUserHandler().findUsers(q).getAll()) {
-        users.add((User) obj);
+      ListAccess<User> listAcess = service.getUserHandler().findUsersByQuery(q);
+      for (User user : listAcess.load(0, listAcess.getSize())) {
+        mapObject.put(user.getUserName(), user);
       }
+      
       // search by last name
-      q = new Query();
-      q.setLastName(keyWord);
-      for (Object obj : service.getUserHandler().findUsers(q).getAll()) {
-        users.add((User) obj);
+      listAcess = service.getUserHandler().findUsersByQuery(q);
+      for (User user : listAcess.load(0, listAcess.getSize())) {
+        mapObject.put(user.getUserName(), user);
       }
+      
       // search by firstname
       q = new Query();
       q.setFirstName(keyWord);
-      for (Object obj : service.getUserHandler().findUsers(q).getAll()) {
-        users.add((User) obj);
+      listAcess = service.getUserHandler().findUsersByQuery(q);
+      for (User user : listAcess.load(0, listAcess.getSize())) {
+        mapObject.put(user.getUserName(), user);
       }
+      
       // search by email
       q = new Query();
       q.setEmail(keyWord);
-      for (Object obj : service.getUserHandler().findUsers(q).getAll()) {
-        users.add((User) obj);
+      listAcess = service.getUserHandler().findUsersByQuery(q);
+      for (User user : listAcess.load(0, listAcess.getSize())) {
+        mapObject.put(user.getUserName(), user);
       }
 
-      ObjectPageList<User> objPageList = new ObjectPageList<User>((new ArrayList<User>(users)), 10);
+      ObjectPageList<User> objPageList = new ObjectPageList(Arrays.asList(mapObject.values().toArray()), 10);
       uiPageList_.setPageList(objPageList);
     } catch (Exception e) {
       log.error("Can not search user by key, exception: " + e.getMessage());
