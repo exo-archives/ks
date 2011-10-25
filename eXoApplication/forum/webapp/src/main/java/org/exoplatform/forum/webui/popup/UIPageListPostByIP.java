@@ -208,11 +208,11 @@ public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponen
   static public class CancelActionListener extends EventListener<UIPageListPostByIP> {
     public void execute(Event<UIPageListPostByIP> event) throws Exception {
       UIPageListPostByIP listPostByIP = event.getSource();
-      listPostByIP.cancelChildPopupAction();
       UIBanIPForumManagerForm form = listPostByIP.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIBanIPForumManagerForm.class);
       if (form != null) {
         event.getRequestContext().addUIComponentToUpdateByAjax(form);
       }
+      listPostByIP.cancelChildPopupAction();
     }
   }
 
