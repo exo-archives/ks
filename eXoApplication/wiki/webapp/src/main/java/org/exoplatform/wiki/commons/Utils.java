@@ -325,7 +325,8 @@ public class Utils {
                                           String action,
                                           String beanId) throws Exception {
     WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-    UIForm form = uiComponent.getAncestorOfType(UIForm.class);
+    boolean isForm = UIForm.class.isInstance(uiComponent);
+    UIForm form = isForm ? (UIForm) uiComponent : uiComponent.getAncestorOfType(UIForm.class);
     if (form != null) {
       String formId = form.getId();
       if (context instanceof PortletRequestContext) {
@@ -335,9 +336,11 @@ public class Utils {
 
       b.append("javascript:eXo.wiki.UIForm.submitPageEvent('").append(formId).append("','");
       b.append(action).append("','");
-      b.append("&amp;").append(UIForm.SUBCOMPONENT_ID).append("=").append(uiComponent.getId());
-      if (beanId != null) {
-        b.append("&amp;").append(UIComponent.OBJECTID).append("=").append(beanId);
+      if (!isForm) {
+        b.append("&amp;").append(UIForm.SUBCOMPONENT_ID).append("=").append(uiComponent.getId());
+        if (beanId != null) {
+          b.append("&amp;").append(UIComponent.OBJECTID).append("=").append(beanId);
+        }
       }
       b.append("')");
       return b.toString();

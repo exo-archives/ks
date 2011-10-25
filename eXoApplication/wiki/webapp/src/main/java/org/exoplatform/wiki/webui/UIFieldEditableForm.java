@@ -68,6 +68,11 @@ public class UIFieldEditableForm extends UIForm {
   }
     
   @Override
+  public String url(String name) throws Exception {
+    return Utils.createFormActionLink(this, name, null);
+  }
+  
+  @Override
   public void processRender(WebuiRequestContext context) throws Exception {
 
     UIComponent titleComponent = this.getParent().findComponentById(EditableFieldId);
