@@ -26,7 +26,9 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
+import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.ks.common.CommonUtils;
@@ -300,6 +302,8 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
         if (uiCategory.categoryId_.equals(categories.getCategoryPath())) {
           UIQuestions questions = answerPortlet.findFirstComponentOfType(UIQuestions.class);
           questions.viewAuthorInfor = uiCategory.getFAQService().isViewAuthorInfo(uiCategory.categoryId_);
+          UIBreadcumbs breadcumbs = answerPortlet.getChild(UIAnswersContainer.class).getChild(UIBreadcumbs.class);
+          breadcumbs.setUpdataPath(uiCategory.categoryId_);
         }
       }
 
