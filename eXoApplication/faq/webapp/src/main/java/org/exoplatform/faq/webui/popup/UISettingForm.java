@@ -518,13 +518,8 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
     public void execute(Event<UISettingForm> event) throws Exception {
       UISettingForm settingForm = event.getSource();
       UIAnswersPortlet uiPortlet = settingForm.getAncestorOfType(UIAnswersPortlet.class);
-      UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class);
-      uiQuestions.setDefaultLanguage();
-      UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class);
-      uiPopupAction.deActivate();
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions);
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet.findFirstComponentOfType(UIAnswersContainer.class));
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction);
+      uiPortlet.cancelAction();
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet.getChild(UIAnswersContainer.class));
     }
   }
 }
