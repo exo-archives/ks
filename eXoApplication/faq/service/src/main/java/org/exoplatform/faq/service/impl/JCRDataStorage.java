@@ -3252,9 +3252,11 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return contents;
   }
   
-  /*
-   * (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionContents(java.util.List)
+  /**
+   * Get a map which contains id as questionID and value as question's title
+   * @param paths
+   * @return a map which has key: questionID and value: question title
+   * @throws Exception
    */
   public Map<String, String> getRelationQuestion(List<String> paths) throws Exception {
     Map<String, String> mReturn = new LinkedHashMap<String, String>();
@@ -3267,6 +3269,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           mReturn.put(path, reader.string(EXO_TITLE));
         }
       } catch (Exception e) {
+        log.error("getRelationQuestion fails, exception:", e);
       }
     }
     return mReturn;

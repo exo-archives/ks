@@ -873,7 +873,7 @@
   											<%
                             for (Map.Entry<String, String> entry : mapQuestionRelation.entrySet()) {
                               relationId = entry.getKey();
-  														relationContent = entry.getValue().replaceAll("<p>", "").replaceAll("</p>", "");
+  														relationContent = entry.getValue();
   														linkRelaQues = uicomponent.event("ViewQuestion", relationId + "/language=" + uicomponent.language_+"/relation");
   														if(relationContent != null && relationContent.trim().length() > 0) {
   											%>
