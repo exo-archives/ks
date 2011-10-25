@@ -271,7 +271,7 @@
 															 		} 
 															 		if(!isView){ 
 													 		%>
-																		<li class="ItemIcon $classIcon DisableMenuItem">
+																		<li class="ItemIcon $classIcon DisableMenuItem" style="display:none;">
 																			<a href="javaScript:void(0)">$itemLabel</a>
 																		</li>
 													 		<% } else { %>
