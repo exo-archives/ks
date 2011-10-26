@@ -25,6 +25,7 @@
 
 .UIWikiApplicationControlArea .UIWikiToolBar .BrowseActionComponent {
   position:relative;
+  z-index: 1
 }
 
 .UIWikiPortlet .UIWikiApplicationControlArea .UIWikiToolBar .HoverMenu .Icon {
