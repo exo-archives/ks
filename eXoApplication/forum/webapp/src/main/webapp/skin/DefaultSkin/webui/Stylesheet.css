@@ -98,10 +98,16 @@ ul,li{
 }
 
 .UIForumPortlet .UIRightClickPopupMenu {
-    background: #F6F6F6;
-	border: 1px solid #d3d3d3;
-	-moz-box-shadow: 1px 1px white inset, -1px -1px white inset, 2px 2px 2px #d5d5d5;
-	-wedkit-box-shadow: 1px 1px white inset, -1px -1px white inset, 2px 2px 2px #d5d5d5;
+	display: none;
+	background: #ffffff;
+	border: 1px solid #c6c6c6;
+	-moz-box-shadow: 1px 3px 5px #e6e6e6;
+	-webkit-box-shadow: 1px 3px 5px #e6e6e6;
+	box-shadow: 1px 3px 5px #e6e6e6;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	padding: 5px;
 }
 
 .UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
@@ -127,6 +133,9 @@ ul,li{
 	background-color: #DEE4F2;
 }
 
+.UIForumPortlet .UIRightClickPopupMenu .ItemIcon a:hover {
+	color: #F7941D;
+}
 
 
 /**************************** UIActionForum *********************************/

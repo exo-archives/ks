@@ -479,11 +479,6 @@
 	width: 100%;
 }
 
-.UITopicDetail .ContentAction .UIPopupCategory ul {
-	list-style: none;
-	padding: 0px;
-}
-
 .UITopicDetail .ContentContainer .MemberContent .InfoMember span{
 	display: block;
 }
