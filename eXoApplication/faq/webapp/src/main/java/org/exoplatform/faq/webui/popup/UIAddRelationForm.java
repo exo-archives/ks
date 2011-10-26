@@ -120,17 +120,17 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
     }
     listQuestion.addAll(getFAQService().getQuickQuestionsByListCatetory(listIds, false));
     UIFormCheckBoxInput<Boolean> checkQuestion;
-
     for (Question question : listQuestion) {
-      if (!question.isApproved()) { continue ; }
+      if (!question.isApproved() || !question.isActivated()) { continue ; }
       mapQuestion_.get(question.getCategoryId()).add(question);
       if (quesIdsSelect.contains(question.getId())) {
         checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), true).setChecked(true);
       } else {
         checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), false);
       }
-      if (question.getPath().equals(questionId_))
+      if (question.getPath().equals(questionId_)){
         checkQuestion.setEnable(false);
+      }
       addChild(checkQuestion);
     }
   }
@@ -161,7 +161,8 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
       List<String> listQuestionPath = new ArrayList<String>();
       List<String> listQuestionId = new ArrayList<String>();
       for (Question question : addRelationForm.listQuestion) {
-        if (addRelationForm.getUIFormCheckBoxInput(question.getId()).isChecked()) {
+        UIFormCheckBoxInput chkRelated = addRelationForm.getUIFormCheckBoxInput(question.getId());
+        if (chkRelated != null &&  chkRelated.isChecked()) {
           listQuestionPath.add(question.getPath());
           listQuestionId.add(question.getId());
         }

@@ -135,6 +135,8 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private RenderHelper renderHelper = new RenderHelper();
 
+  private Object Question;
+
   public String getLink() {
     return link_;
   }
@@ -253,17 +255,15 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
       return questionDetail;
   }
 
-  @SuppressWarnings("unused")
-  private String getLanguageIsResponse() {
-    return this.currentLanguage;
-  }
-
   private void setListRelation() throws Exception {
     String[] relations = question_.getRelations();
-    this.setListIdQuesRela(Arrays.asList(relations));
     if (relations != null && relations.length > 0)
       for (String relation : relations) {
-        listRelationQuestion.add(getFAQService().getQuestionById(relation).getQuestion());
+        Question ques = getFAQService().getQuestionById(relation);
+        if(ques != null && ques.isActivated() && ques.isApproved()){
+          listQuestIdRela.add(relation);
+          listRelationQuestion.add(ques.getQuestion());
+        }
       }
   }
 
@@ -426,8 +426,9 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
         }
         responseForm.getFAQService().saveAnswer(question.getPath(), answers);
         responseForm.getFAQService().updateQuestionRelatives(question.getPath(), responseForm.listQuestIdRela.toArray(new String[responseForm.listQuestIdRela.size()]));
-        if (!responseForm.isModerator && !responseForm.isAnswerApproved)
+        if (!responseForm.isModerator && !responseForm.isAnswerApproved){
           responseForm.info("UIResponseForm.msg.pending-for-moderation");
+        }
       } catch (PathNotFoundException e) {
         responseForm.log.error("Can not save Question, this question is deleted, exception: " + e.getMessage());
         responseForm.warning("UIQuestions.msg.question-id-deleted");

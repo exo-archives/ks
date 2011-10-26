@@ -1461,6 +1461,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     question.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
     question.setQuestion(reader.string(EXO_TITLE, EMPTY_STR));
     question.setApproved(reader.bool(EXO_IS_APPROVED));
+    question.setActivated(reader.bool(EXO_IS_ACTIVATED));
     return question;
   }
 
