@@ -6,6 +6,7 @@
   String wikiType = wikiPageParams.getType();
   String wikiOwner = wikiPageParams.getOwner();
   String pageId = wikiPageParams.getPageId();
+  String selectedSyntax = uicomponent.getSelectedSyntax();
 %>
 <div class="UIWikiRichTextEditor">
   <% uicomponent.renderChild(uicomponent.RICHTEXT_AREA_INPUT); %>
@@ -20,7 +21,7 @@
     eXo.wiki.WysiwygEditor = new WysiwygEditor({
       hookId: 'UIWikiRichTextArea_TextArea',
       inputURL: '$restUrlToViewCurrentPage',
-      syntax: 'xwiki/2.0',
+      syntax: '$selectedSyntax',
       wiki: '$wikiType',
       space: '$wikiOwner',
       page: '$pageId',

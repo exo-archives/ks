@@ -24,3 +24,5 @@ org.exoplatform.wiki.rendering.converter.BlockConverter
 org.exoplatform.wiki.rendering.converter.ConfluenceBlockConverter
 org.exoplatform.wiki.rendering.converter.ObjectReferenceConverter
 org.exoplatform.wiki.rendering.converter.ConfluenceObjectReferenceConverter
+org.exoplatform.wiki.rendering.filter.MacroFilter
+org.exoplatform.wiki.rendering.filter.ConfluenceMacroFilter

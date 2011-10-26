@@ -25,7 +25,10 @@ import java.util.Map;
 
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.wiki.rendering.filter.MacroFilter;
 import org.xwiki.component.annotation.Requirement;
+import org.xwiki.component.manager.ComponentLookupException;
+import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.gwt.wysiwyg.client.plugin.macro.MacroDescriptor;
 import org.xwiki.gwt.wysiwyg.client.plugin.macro.MacroService;
 import org.xwiki.gwt.wysiwyg.client.plugin.macro.ParameterDescriptor;
@@ -65,6 +68,12 @@ public class WikiMacroService implements MacroService {
    */
   @Requirement
   private MacroCategoryManager      categoryManager;
+  
+  /**
+   * The component manager used to macro filter
+   */
+  @Requirement
+  private ComponentManager componentManager;
 
   /**
    * The component used to translate macro descriptors into the execution
@@ -189,9 +198,20 @@ public class WikiMacroService implements MacroService {
               && !"th".equals(macroId.getId()) && !"table-row".equals(macroId.getId())
               && !"table-cell".equals(macroId.getId()) && !"section".equals(macroId.getId())
               && !"column".equals(macroId.getId())) {
-            MacroDescriptor descriptor = getUntranslatedMacroDescriptor(macroId.getId(), syntaxId);
-            descriptor.setCategory(category);
-            descriptors.add(macroDescriptorTranslator.translate(descriptor));
+            boolean isSupported = true;
+            try {
+              MacroFilter macroFilter = componentManager.lookup(MacroFilter.class, syntaxId);
+              isSupported = macroFilter.isSupport(macroId.getId());
+            } catch (ComponentLookupException e) {
+              if (log.isDebugEnabled()) {
+                log.debug(String.format("Syntax %s doesn't have any macro filter", syntaxId));
+              }
+            }
+            if (isSupported) {
+              MacroDescriptor descriptor = getUntranslatedMacroDescriptor(macroId.getId(), syntaxId);
+              descriptor.setCategory(category);
+              descriptors.add(macroDescriptorTranslator.translate(descriptor));
+            }
           }
         }
       }
