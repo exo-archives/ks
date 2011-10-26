@@ -26,6 +26,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
+import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
@@ -177,6 +178,7 @@ public class DefaultWikiService implements WikiService {
                                                      null,
                                                      wikiContext.getType(),
                                                      wikiContext.getOwner());
+      data.setNodeType(WikiNodeType.WIKI_PAGE);
       PageList<SearchResult> results = wservice.search(data);
       List<DocumentReference> documentReferences = prepareDocumentReferenceList(results);
       return getWikiPages(documentReferences);

@@ -562,6 +562,24 @@ public class WikiServiceImpl implements WikiService, Startable {
     try {
       WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
       PageList<SearchResult> result = jcrDataStorage.search(wStore.getSession(), data);
+      
+      if ((data.getTitle() != null) && (data.getWikiType() != null) && (data.getWikiOwner() != null)) {
+        PageImpl homePage = getWikiHome(data.getWikiType(), data.getWikiOwner());
+        if (data.getTitle().equals("") || homePage.getTitle().contains(data.getTitle())) {
+          Calendar wikiHomeCreateDate = Calendar.getInstance();
+          wikiHomeCreateDate.setTime(homePage.getCreatedDate());
+          
+          Calendar wikiHomeUpdateDate = Calendar.getInstance();
+          wikiHomeUpdateDate.setTime(homePage.getUpdatedDate());
+          
+          SearchResult wikiHomeResult = new SearchResult(null, homePage.getTitle(), homePage.getPath(), WikiNodeType.WIKI_HOME.toString(), wikiHomeUpdateDate, wikiHomeCreateDate);
+          wikiHomeResult.setPageName(homePage.getName());          
+          List<SearchResult> tempSearchResult = result.getAll();
+          tempSearchResult.add(wikiHomeResult);
+          result = new ObjectPageList<SearchResult>(tempSearchResult, result.getPageSize());
+        }
+      }
+      
       return result;
     } catch (Exception e) {
       log.error("Can't search", e);

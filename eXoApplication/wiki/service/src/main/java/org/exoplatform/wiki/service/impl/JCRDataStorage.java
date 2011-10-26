@@ -51,7 +51,7 @@ public class JCRDataStorage implements DataStorage{
   
   public PageList<SearchResult> search(ChromatticSession session, WikiSearchData data) throws Exception {
     List<SearchResult> resultList = new ArrayList<SearchResult>();
-    String statement = data.getStatement(false);
+    String statement = data.getStatement();
     Query q = ((ChromatticSessionImpl) session).getDomainSession().getSessionWrapper().createQuery(statement);
     QueryResult result = q.execute();
     RowIterator iter = result.getRows();

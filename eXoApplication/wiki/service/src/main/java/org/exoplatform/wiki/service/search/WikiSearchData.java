@@ -15,6 +15,8 @@ public class WikiSearchData extends SearchData {
 
   private String pagePath = "";
   
+  private String nodeType = null;
+  
   public WikiSearchData(String text,
                            String title,
                            String content,
@@ -35,7 +37,11 @@ public class WikiSearchData extends SearchData {
                            String wikiType,
                            String wikiOwner) {
     this(text, title, content, wikiType, wikiOwner, null);
-  }  
+  }
+  
+  public void setNodeType(String nodeType) {
+    this.nodeType = nodeType;
+  }
 
   public void createJcrQueryPath() {
 
@@ -77,11 +83,16 @@ public class WikiSearchData extends SearchData {
     return statement.toString();
   }
 
-  public String getStatement(boolean onlyHomePages) {
+  public String getStatement() {
     StringBuilder statement = new StringBuilder();
-    statement.append("SELECT title, jcr:primaryType, path, excerpt(.) ")
-             .append("FROM nt:base ")
-             .append("WHERE ");
+    statement.append("SELECT title, jcr:primaryType, path, excerpt(.) ");
+    
+    if (nodeType == null) {
+      statement.append("FROM nt:base ");
+    } else {
+      statement.append("FROM " + nodeType + " ");
+    }
+    statement.append("WHERE ");
     statement.append(getContentCdt());
     return statement.toString();
   }
@@ -140,29 +151,22 @@ public class WikiSearchData extends SearchData {
   
   private String getContentCdt() {
     StringBuilder clause = new StringBuilder();
-    boolean isAnd = false;
     String queryPath = this.jcrQueryPath;
     clause.append(queryPath);
-    isAnd = true;
+    
     if (text != null && text.length() > 0) {
-      if (isAnd)
-        clause.append(" AND ");
+      clause.append(" AND ");
       clause.append(" CONTAINS(*, '").append(text).append("')");
-      isAnd = true;
     } else {
       if (title != null && title.length() > 0) {
-        if (isAnd)
-          clause.append(" AND ");
+        clause.append(" AND ");
         clause.append(" CONTAINS(title, '").append(title).append("') ");
-        isAnd = true;
       }
       if (content != null && content.length() > 0) {
-        if (isAnd)
-          clause.append(" AND ");
+        clause.append(" AND ");
         clause.append(" CONTAINS(*, '").append(content).append("') ");
       }
     }
     return clause.toString();
   }
-
 }
