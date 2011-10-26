@@ -100,6 +100,8 @@ public interface WikiService {
   public InputStream getAttachmentAsStream(String path) throws Exception;
 
   public PageImpl getHelpSyntaxPage(String syntaxId) throws Exception;
+  
+  public Page getMetaDataPage(MetaDataPage metaPage) throws Exception;
 
   public Map<String, Template> getTemplates(WikiPageParams params) throws Exception;
 

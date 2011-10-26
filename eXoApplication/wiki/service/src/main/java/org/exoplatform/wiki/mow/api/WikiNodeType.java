@@ -157,6 +157,8 @@ public interface WikiNodeType {
     public final static String HELP_PAGES                 = "helppages";
 
     public final static String DRAFT_NEW_PAGES            = "draftNewPages";
+    
+    public final static String EMOTION_ICONS_PAGE         = "EmotionIconsPage";
 
     public final static String ALLOW_MULTIPLE_SYNTAXES    = "allowMutipleSyntaxes";
 

@@ -1,3 +1,4 @@
+org.exoplatform.wiki.rendering.impl.DefaultConfigurationSource
 org.exoplatform.wiki.rendering.render.confluence.ConfluenceResourceReferenceSerializer
 org.exoplatform.wiki.rendering.render.confluence.ConfluenceSyntaxRenderer
 org.exoplatform.wiki.rendering.render.confluence.ConfluenceSyntaxBlockRenderer

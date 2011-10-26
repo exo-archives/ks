@@ -28,6 +28,8 @@ import org.exoplatform.container.xml.ValuesParam;
 import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.services.deployment.plugins.XMLDeploymentPlugin;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -58,6 +60,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.WikiImpl;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.BreadcrumbData;
 import org.exoplatform.wiki.service.IDType;
+import org.exoplatform.wiki.service.MetaDataPage;
 import org.exoplatform.wiki.service.Permission;
 import org.exoplatform.wiki.service.PermissionEntry;
 import org.exoplatform.wiki.service.PermissionType;
@@ -678,6 +681,15 @@ public class WikiServiceImpl implements WikiService, Startable {
     return null;
   }
   
+  public Page getMetaDataPage(MetaDataPage metaPage) throws Exception {
+    if (MetaDataPage.EMOTION_ICONS_PAGE.equals(metaPage)) {
+      Model model = getModel();
+      WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+      return wStore.getEmotionIconsPage();
+    }
+    return null;
+  }
+  
   public String getDefaultWikiSyntaxId() {
     if (preferencesParams != null) {
       return preferencesParams.getProperty(DEFAULT_SYNTAX);
@@ -854,6 +866,34 @@ public class WikiServiceImpl implements WikiService, Startable {
     bufferReader.close();
     return syntaxPage;
   }
+  
+  private void addEmotionIcons() {
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    try {
+      Model model = getModel();
+      WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+      if (wStore.getEmotionIconsPage() == null) {
+        model.save();
+        XMLDeploymentPlugin emotionIconsPlugin = getEmotionIconsPlugin();
+        if (emotionIconsPlugin != null) {
+          emotionIconsPlugin.deploy(sessionProvider);
+        }
+      }
+    } catch (Exception e) {
+      log.warn("Cannot init emotion icons...", e);
+    } finally {
+      sessionProvider.close();
+    }
+  }
+
+  private XMLDeploymentPlugin getEmotionIconsPlugin() {
+    for (ComponentPlugin c : plugins_) {
+      if (c instanceof XMLDeploymentPlugin) {
+        return (XMLDeploymentPlugin) c;
+      }
+    }
+    return null;
+  }
 
   private String getLinkEntryName(String wikiType, String wikiOwner, String pageId) {
     if (PortalConfig.GROUP_TYPE.equals(wikiType)) {
@@ -971,8 +1011,6 @@ public class WikiServiceImpl implements WikiService, Startable {
   
   @Override
   public void start() {
-    if (log.isInfoEnabled())
-      log.info("removing draft page container ...");
     ChromatticManager chromatticManager = (ChromatticManager) ExoContainerContext.getCurrentContainer()
                                                                                  .getComponentInstanceOfType(ChromatticManager.class);
     RequestLifeCycle.begin(chromatticManager);
@@ -982,6 +1020,7 @@ public class WikiServiceImpl implements WikiService, Startable {
     } catch (Exception e) {
       log.warn("Cannot init template page plugin ...");
     }
+    addEmotionIcons();
     removeDraftPages();
     try {
       getWikiHome(PortalConfig.GROUP_TYPE, "sandbox");

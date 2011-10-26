@@ -392,6 +392,27 @@ yellow" %)Title 2|Word 1|Word 2
 |Image with parameters|{{{[[image:img.png||width="25" height="25"]]}}}|[[image:img.png||height="25" width="25"]]
 |Images located at URL|{{{image:http://some/url/img.png}}}|[[image:img.png]]
 
+= Icon/Emoticon Support =
+
+|=Notation|=Image
+|{{{:)}}}| :)
+|{{{:(}}}| :(
+|{{{:P}}}| :P
+|{{{:D}}}| :D
+|{{{;)}}}| ;)
+|{{{(y)}}}| (y)
+|{{{(n)}}}| (n)
+|{{{(i)}}}| (i)
+|{{{(/)}}}| (/)
+|{{{(x)}}}| (x)
+|{{{(!)}}}| (!)
+|{{{(+)}}}| (+)
+|{{{(-)}}}| (-)
+|{{{(?)}}}| (?)
+|{{{(on)}}}| (on)
+|{{{(off)}}}| (off)
+|{{{(*)}}}| (*)
+
 = Verbatim =
 
 Allow to enter content that will not be formatted (in other words the wiki syntax will not be taken into account).

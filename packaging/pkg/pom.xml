@@ -708,6 +708,11 @@
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-core-rendering-transformation-icon</artifactId>
+      <version>${org.xwiki.platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-core-rendering-macro-box</artifactId>
       <version>${org.xwiki.platform.version}</version>
     </dependency>

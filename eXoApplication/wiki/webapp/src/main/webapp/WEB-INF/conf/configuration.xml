@@ -615,7 +615,7 @@
                 <field name="workspace">
                   <string>knowledge</string>
                 </field>
-                <field name="workspace" profiles="all,default">
+                <field name="workspace" profiles="all,default,minimal">
                   <string>collaboration</string>
                 </field>
                 <field name="nodePath">
@@ -637,6 +637,42 @@
   
   <external-component-plugins>
     <target-component>org.exoplatform.wiki.service.WikiService</target-component>
+    <component-plugin>
+      <name>Emotion icons initializer</name>
+      <set-method>addComponentPlugin</set-method>
+      <type>org.exoplatform.services.deployment.plugins.XMLDeploymentPlugin</type>
+      <description>XML Deployment Plugin</description>
+      <init-params>
+        <object-param>
+          <name>Wiki emotion icons</name>
+          <description>Deployment Descriptor</description>
+          <object type="org.exoplatform.services.deployment.DeploymentDescriptor">
+            <field name="target">
+              <object type="org.exoplatform.services.deployment.DeploymentDescriptor$Target">
+                <field name="repository">
+                  <string>repository</string>
+                </field>
+                <field name="workspace">
+                  <string>knowledge</string>
+                </field>
+                <field name="workspace" profiles="all,default,minimal">
+                  <string>collaboration</string>
+                </field>
+                <field name="nodePath">
+                  <string>/exo:applications/eXoWiki/wikimetadata</string>
+                </field>
+              </object>
+            </field>
+            <field name="sourcePath">
+              <string>war:/conf/data/icons.xml</string>
+            </field>
+            <field name="cleanupPublication">
+              <boolean>false</boolean>
+            </field>
+          </object>
+        </object-param>
+      </init-params>
+    </component-plugin>
     <component-plugin>
       <name>Template page initializer</name>
       <set-method>addWikiTemplatePagePlugin</set-method>

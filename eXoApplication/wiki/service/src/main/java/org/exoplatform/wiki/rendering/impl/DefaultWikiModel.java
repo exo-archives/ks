@@ -29,6 +29,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.converter.ObjectReferenceConverter;
 import org.exoplatform.wiki.resolver.TitleResolver;
+import org.exoplatform.wiki.service.MetaDataPage;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
@@ -68,8 +69,6 @@ public class DefaultWikiModel implements WikiModel {
   private static final String DEFAULT_SPACE = "Main";
   
   private static final String DEFAULT_PAGE = "WebHome";
-      
-  private static final String DEFAULT_ATTACHMENT = "filename";
   
   private static final String PORTAL = "portal";
   
@@ -128,14 +127,19 @@ public class DefaultWikiModel implements WikiModel {
     String imageName = imageReference.getReference();
     StringBuilder sb = new StringBuilder();
     try {
-      WikiContext wikiMarkupContext = getWikiMarkupContext(imageName, ResourceType.ATTACHMENT);
+      ResourceType resourceType = ResourceType.ICON.equals(imageReference.getType()) ? ResourceType.ICON : ResourceType.ATTACHMENT;
+      WikiContext wikiMarkupContext = getWikiMarkupContext(imageName, resourceType);
       String portalContainerName = PortalContainer.getCurrentPortalContainerName();
       String portalURL = wikiMarkupContext.getPortalURL();
       String domainURL = portalURL.substring(0, portalURL.indexOf(portalContainerName) - 1);
       sb.append(domainURL).append(Utils.getDefaultRepositoryWebDavUri());
       PageImpl page = null;
       WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(WikiService.class);
-      page = (PageImpl) wikiService.getExsitedOrNewDraftPageById(wikiMarkupContext.getType(),wikiMarkupContext.getOwner(),wikiMarkupContext.getPageId());
+      if (ResourceType.ATTACHMENT.equals(resourceType)) {
+        page = (PageImpl) wikiService.getExsitedOrNewDraftPageById(wikiMarkupContext.getType(), wikiMarkupContext.getOwner(), wikiMarkupContext.getPageId());
+      } else {
+        page = (PageImpl) wikiService.getMetaDataPage(MetaDataPage.EMOTION_ICONS_PAGE);
+      }
       if (page != null) {
         sb.append(page.getWorkspace());
         sb.append(page.getPath());
@@ -231,7 +235,7 @@ public class DefaultWikiModel implements WikiModel {
       EntityReference entityReference = null;
       if (ResourceType.DOCUMENT.equals(type)) {
         entityReference = stringDocumentReferenceResolver.resolve(objectName);
-      } else if (ResourceType.ATTACHMENT.equals(type)) {
+      } else if (ResourceType.ATTACHMENT.equals(type) || ResourceType.ICON.equals(type)) {
         entityReference = (isConfluenceSyntax) ? stringObjectReferenceResolver.resolve(objectName)
                                               : stringAttachmentReferenceResolver.resolve(objectName);
       }
@@ -246,6 +250,9 @@ public class DefaultWikiModel implements WikiModel {
                                                                   : entityReference.extractReference(EntityType.ATTACHMENT);
         if (attachmentReference != null) {
           wikiMarkupContext.setAttachmentName(attachmentReference.getName());
+        }
+        if (ResourceType.ICON.equals(type)) {
+          wikiMarkupContext.setAttachmentName(wikiMarkupContext.getAttachmentName() + ".gif");
         }
 
         if (wikiContext != null) {

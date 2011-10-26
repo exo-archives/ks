@@ -111,6 +111,11 @@ public abstract class WikiStoreImpl implements WikiStore {
   
   @OneToOne
   @Owner
+  @MappedBy(WikiNodeType.Definition.EMOTION_ICONS_PAGE)
+  public abstract PageImpl getEmotionIconsPage();
+  
+  @OneToOne
+  @Owner
   @MappedBy(WikiNodeType.Definition.PORTAL_WIKI_CONTAINER_NAME)
   protected abstract PortalWikiContainer getPortalWikiContainerByChromattic();
 
