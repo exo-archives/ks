@@ -19,13 +19,14 @@ package org.exoplatform.forum.service;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.jcr.Node;
 
-import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.services.cache.CacheService;
@@ -33,9 +34,6 @@ import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -51,8 +49,12 @@ import org.exoplatform.services.security.MembershipEntry;
 
 public class ForumServiceUtils {
 
-  private static final Log log = ExoLogger.getLogger(ForumServiceUtils.class);
+  private static final String ANY   = "*".intern();
 
+  private static final String COLON = ":".intern();
+
+  private static final String SLASH = "/".intern();
+  
   /**
    * 
    * Verify if a user match user, group, membership expressions
@@ -61,6 +63,7 @@ public class ForumServiceUtils {
    * @return true if the user match at least one of the expressions
    * @throws Exception
    */
+  @SuppressWarnings("unchecked")
   public static boolean hasPermission(String[] userGroupMembership, String userId) throws Exception {
     IdentityRegistry identityRegistry = (IdentityRegistry) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(IdentityRegistry.class);
     Identity identity = identityRegistry.getIdentity(userId);
@@ -77,7 +80,7 @@ public class ForumServiceUtils {
       String expr = item.trim();
 
       if (isMembershipExpression(expr)) {
-        String[] array = expr.split(":");
+        String[] array = expr.split(COLON);
         String membershipType = array[0];
         String group = array[1];
         if (identity.isMemberOf(group, membershipType)) {
@@ -105,7 +108,7 @@ public class ForumServiceUtils {
    * @return
    */
   private static boolean isGroupExpression(String expr) {
-    return ((expr.indexOf("/") >= 0) && !(expr.indexOf(":") >= 0));
+    return ((expr.indexOf(SLASH) >= 0) && !(expr.indexOf(COLON) >= 0));
   }
 
   /**
@@ -114,110 +117,105 @@ public class ForumServiceUtils {
    * @return
    */
   private static boolean isMembershipExpression(String expr) {
-    return ((expr.indexOf("/") >= 0) && (expr.indexOf(":") >= 0));
+    return ((expr.indexOf(SLASH) >= 0) && (expr.indexOf(COLON) >= 0));
   }
 
-  private static PageList getUserByGroup(OrganizationService organizationService, String group) throws Exception {
+  private static ListAccess<User> getUserByGroup(OrganizationService organizationService, String group) throws Exception {
     try {
-      return organizationService.getUserHandler().findUsersByGroup(group);
+      return organizationService.getUserHandler().findUsersByGroupId(group);
     } catch (Exception e) {
       return null;
     }
   }
+  
+  /**
+   * Find usernames matching membership expressions
+   * @param organizationService 
+   * @param memberShip the membership, ex: member:/platform/users , *:/platform/users. 
+   * @return list of users that mach at least one of the membership
+   * @throws Exception
+   */
 
+  @SuppressWarnings("unchecked")
+  private static List<String> getUserByMembershipType(OrganizationService organizationService, String memberShip) throws Exception {
+    List<String> users = new ArrayList<String>();
+    String[] array = memberShip.trim().split(COLON);
+    if (array[0].length() > 1) {
+      ListAccess<User> pageList = getUserByGroup(organizationService, array[1]);
+      if (pageList == null) {
+        return users;
+      }
+      User[] userArray = (User[]) pageList.load(0, pageList.getSize());
+      for (int i = 0; i < pageList.getSize(); i++) {
+        User user = userArray[i];
+        String userName = user.getUserName();
+        if (!users.contains(userName)) {
+          Collection<Membership> memberships = organizationService.getMembershipHandler().findMembershipsByUser(userName);
+          for (Membership member : memberships) {
+            if (member.getMembershipType().equals(array[0]) && member.getGroupId().equals(array[1])) {
+              users.add(userName);
+              break;
+            }
+          }
+        }
+      }
+    } else {
+      if (ANY.equals(array[0])) {
+        users.addAll(getUserByGroupId(organizationService, array[1]));
+      }
+    }
+    return users;
+  }
+  
+  /**
+   * Find usernames matching group id expressions
+   * @param organizationService 
+   * @param groupId the group Id, ex: /platform/users . 
+   * @return list of users that mach at least one of the group id
+   * @throws Exception
+   */
+  private static List<String> getUserByGroupId(OrganizationService organizationService, String groupId) throws Exception {
+    List<String> users = new ArrayList<String>();
+    ListAccess<User> pageList = getUserByGroup(organizationService, groupId);
+    if (pageList == null){
+      return users;
+    }
+    User[] userArray = (User[]) pageList.load(0, pageList.getSize());
+    for (int i = 0; i < pageList.getSize(); i++) {
+      users.add(userArray[i].getUserName());
+    }
+    return users;
+  }
+  
   /**
    * Find usernames matching user, group or membership expressions
    * @param userGroupMembership list that may contain usernames or group names or membership expressions in the form MEMBERSHIPTYPE:GROUP
    * @return list of users that mach at least one of the userGroupMembership
    * @throws Exception
    */
-  @SuppressWarnings("unchecked")
   public static List<String> getUserPermission(String[] userGroupMembership) throws Exception {
-    List<String> users = getFromCache(userGroupMembership);
-    if (users != null) {
-      return users;
+    if (userGroupMembership == null || userGroupMembership.length <= 0 || (userGroupMembership.length == 1 && userGroupMembership[0].equals(" "))) {
+      return new ArrayList<String>();
     }
-    users = new ArrayList<String>();
-
-    if (userGroupMembership == null || userGroupMembership.length <= 0 || (userGroupMembership.length == 1 && userGroupMembership[0].equals(" ")))
-      return users;
-    OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
-    for (String str : userGroupMembership) {
-
-      str = str.trim();
+    List<String> list = getFromCache(userGroupMembership);
+    if (list != null) {
+      return list;
+    }
+    OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer()
+                                                                                       .getComponentInstanceOfType(OrganizationService.class);
+    Set<String> users = new HashSet<String>();
+    for (int j = 0; j < userGroupMembership.length; j++) {
+      String str = userGroupMembership[j].trim();
       if (isMembershipExpression(str)) {
-        String[] array = str.split(":");
-        // List<User> userList = organipageListzationService.getUserHandler().findUsersByGroup(array[1]).getAll() ;
-        PageList pageList = getUserByGroup(organizationService, array[1]);
-        if (pageList == null)
-          continue;
-        if (array[0].length() > 1) {
-          List<User> userList = new ArrayList<User>();
-          for (int i = 1; i <= pageList.getAvailablePage(); i++) {
-            userList.clear();
-            userList.addAll(pageList.getPage(i));
-            for (User user : userList) {
-              if (!users.contains(user.getUserName())) {
-                Collection<Membership> memberships = organizationService.getMembershipHandler().findMembershipsByUser(user.getUserName());
-                for (Membership member : memberships) {
-                  if (member.getMembershipType().equals(array[0])) {
-                    users.add(user.getUserName());
-                    break;
-                  }
-                }
-              }
-            }
-          }
-          /*
-           * for(User user: userList) { if(!users.contains(user.getUserName())){ Collection<Membership> memberships = organizationService.getMembershipHandler().findMembershipsByUser(user.getUserName()) ; for(Membership member : memberships){ if(member.getMembershipType().equals(array[0])) { users.add(user.getUserName()) ; break ; } } } }
-           */
-        } else {
-          if (array[0].charAt(0) == 42) {
-            pageList = getUserByGroup(organizationService, array[1]);
-            if (pageList == null)
-              continue;
-            List<User> userList = new ArrayList<User>();
-            for (int i = 1; i <= pageList.getAvailablePage(); i++) {
-              userList.clear();
-              userList.addAll(pageList.getPage(i));
-              for (User user : userList) {
-                if (!users.contains(user.getUserName())) {
-                  users.add(user.getUserName());
-                }
-              }
-            }
-            /*
-             * for(User user: userList) { if(!users.contains(user.getUserName())){ users.add(user.getUserName()) ; } }
-             */
-          }
-        }
-
+        users.addAll(getUserByMembershipType(organizationService, str));
       } else if (isGroupExpression(str)) {
-        PageList pageList = getUserByGroup(organizationService, str);
-        if (pageList == null)
-          continue;
-        List<User> userList = new ArrayList<User>();
-        for (int i = 1; i <= pageList.getAvailablePage(); i++) {
-          userList.clear();
-          userList.addAll(pageList.getPage(i));
-          for (User user : userList) {
-            if (!users.contains(user.getUserName())) {
-              users.add(user.getUserName());
-            }
-          }
-        }
-        /*
-         * for(User user: userList) { if(!users.contains(user.getUserName())){ users.add(user.getUserName()) ; } }
-         */
+        users.addAll(getUserByGroupId(organizationService, str));
       } else {
-        if (!users.contains(str)) {
-          users.add(str);
-        }
+        users.add(str);
       }
-
     }
-    storeInCache(userGroupMembership, users);
-    return users;
+    storeInCache(userGroupMembership, new ArrayList<String>(users));
+    return new ArrayList<String>(users);
   }
 
   /**
@@ -227,7 +225,7 @@ public class ForumServiceUtils {
    * @throws Exception
    */
   private static void storeInCache(String[] userGroupMembership, List<String> users) throws Exception {
-    ExoCache cache = getCache();
+    ExoCache<Serializable, List<String>> cache = getCache();
     Serializable cacheKey = getCacheKey(userGroupMembership);
     cache.put(cacheKey, users);
   }
@@ -238,13 +236,10 @@ public class ForumServiceUtils {
    * @return
    * @throws Exception
    */
-  @SuppressWarnings("unchecked")
   private static List<String> getFromCache(String[] userGroupMembership) throws Exception {
-    if (userGroupMembership == null || userGroupMembership.length == 0 || (userGroupMembership.length == 1 && userGroupMembership[0].length() == 0))
-      return null;
-    ExoCache cache = getCache();
+    ExoCache<Serializable, List<String>> cache = getCache();
     Serializable cacheKey = getCacheKey(userGroupMembership);
-    return (List<String>) cache.get(cacheKey);
+    return cache.get(cacheKey);
   }
 
   private static Serializable getCacheKey(String[] userGroupMembership) {
@@ -255,7 +250,7 @@ public class ForumServiceUtils {
     return sb.toString();
   }
 
-  private static ExoCache getCache() throws Exception {
+  private static ExoCache<Serializable, List<String>> getCache() throws Exception {
     CacheService cacheService = (CacheService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(CacheService.class);
     return cacheService.getCacheInstance("org.exoplatform.forum.ForumPermissionsUsers");
   }
@@ -270,10 +265,6 @@ public class ForumServiceUtils {
     for (AccessControlEntry accessControlEntry : permsList) {
       extNode.setPermission(accessControlEntry.getIdentity(), arrayPers);
     }
-  }
-
-  public static SessionProvider getSessionProvider() {
-    return CommonUtils.createSystemProvider();
   }
 
   public static SessionManager getSessionManager() {

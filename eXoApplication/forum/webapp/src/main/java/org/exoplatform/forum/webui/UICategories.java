@@ -33,10 +33,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.forum.webui.popup.UIModeratorManagementForm.GetAllUserActionListener;
 import org.exoplatform.ks.common.CommonUtils;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -93,8 +90,6 @@ public class UICategories extends UIContainer {
 
   private List<Watch>              listWatches       = new ArrayList<Watch>();
 
-  private Log                      log               = ExoLogger.getLogger(this.getClass());
-
   public UICategories() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild);
@@ -123,7 +118,6 @@ public class UICategories extends UIContainer {
     return forumService.getScreenName(userName);
   }
 
-  @SuppressWarnings("unused")
   private UserProfile getUserProfile() throws Exception {
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
     useAjax = forumPortlet.isUseAjax();
@@ -282,6 +276,7 @@ public class UICategories extends UIContainer {
     return forum_;
   }
 
+  @SuppressWarnings("unused")
   private Topic getLastTopic(Category cate, Forum forum) throws Exception {
     Topic topic = null;
     String topicPath = forum.getLastTopicPath();

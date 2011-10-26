@@ -727,7 +727,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   public void initDefaultData() throws Exception {
-    SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     Set<String> set = new HashSet<String>();
     try {
       Node categoryHome = getCategoryHome(sProvider);
