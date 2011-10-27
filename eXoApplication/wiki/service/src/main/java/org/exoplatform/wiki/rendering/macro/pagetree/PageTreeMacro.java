@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.wiki.rendering.context.MarkupContextManager;
 import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -70,7 +71,11 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
   @Requirement
   private Execution execution;
   
-  private DefaultWikiModel model;
+  /**
+   * Used to get the build context for document
+   */
+  @Requirement
+  private MarkupContextManager markupContextManager;
   
   private boolean excerpt;
   
@@ -86,8 +91,7 @@ public class PageTreeMacro extends AbstractMacro<PageTreeMacroParameters> {
     String documentName = parameters.getRoot();
     String startDepth = parameters.getStartDepth();
     excerpt = parameters.isExcerpt();
-    model = (DefaultWikiModel) getWikiModel(context);
-    WikiPageParams params = model.getWikiMarkupContext(documentName, ResourceType.DOCUMENT);
+    WikiPageParams params = markupContextManager.getMarkupContext(documentName, ResourceType.DOCUMENT);
     if (StringUtils.EMPTY.equals(documentName)) {
       WikiContext wikiContext = getWikiContext();
       if (wikiContext != null)

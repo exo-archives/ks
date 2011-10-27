@@ -24,7 +24,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
-import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
+import org.exoplatform.wiki.rendering.context.MarkupContextManager;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
@@ -66,8 +66,12 @@ public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> 
 
   @Requirement
   private Execution           execution;
-
-  private DefaultWikiModel    model;
+  
+  /**
+   * Used to get the build context for document
+   */
+  @Requirement
+  private MarkupContextManager markupContextManager;
 
   private RenderingService    renderingservice;
 
@@ -84,10 +88,9 @@ public class IncludePageMacro extends AbstractMacro<IncludePageMacroParameters> 
                              MacroTransformationContext context) throws MacroExecutionException {
 
     String documentName = parameters.getPage();
-    model = (DefaultWikiModel) getWikiModel(context);
     renderingservice = getRenderingService();
     wservice = getWikiService();
-    WikiPageParams params = model.getWikiMarkupContext(documentName,ResourceType.DOCUMENT);
+    WikiPageParams params = markupContextManager.getMarkupContext(documentName, ResourceType.DOCUMENT);
     WikiContext currentContext = null;
     WikiContext pageContext = null;
     StringBuilder includeContent = new StringBuilder();
