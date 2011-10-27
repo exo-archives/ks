@@ -14,29 +14,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.rendering.builder;
+package org.exoplatform.wiki.rendering.converter;
 
-import org.exoplatform.wiki.service.WikiPageParams;
-import org.xwiki.component.annotation.Component;
+import org.xwiki.component.annotation.ComponentRole;
 
 /**
  * Created by The eXo Platform SAS
  * Author : Lai Trung Hieu
  *          hieult@exoplatform.com
- * Oct 27, 2011  
+ * Oct 17, 2011  
  */
-@Component("confluence/1.0")
-public class ConfluenceReferenceBuilder implements ReferenceBuilder {
-
-  @Override
-  public String build(WikiPageParams params) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(params.getType())
-      .append(spacePageSeparator)
-      .append(params.getOwner())
-      .append(wikiSpaceSeparator)
-      .append(params.getPageId());
-    return (sb.toString());
-  }
+@ComponentRole
+public interface ObjectReferenceConverter {
+  
+  /**
+   * Convert syntax-based object reference into general reference: wikiType:wikiOwner.pageName
+   * @param objectReference name of object to convert
+   */
+  public String convert(String objectReference);
 
 }

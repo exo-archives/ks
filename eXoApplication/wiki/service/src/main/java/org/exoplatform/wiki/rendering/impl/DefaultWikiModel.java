@@ -27,15 +27,24 @@ import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
-import org.exoplatform.wiki.rendering.context.MarkupContextManager;
+import org.exoplatform.wiki.rendering.converter.ObjectReferenceConverter;
+import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.MetaDataPage;
 import org.exoplatform.wiki.service.WikiContext;
+import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.Requirement;
+import org.xwiki.component.manager.ComponentLookupException;
+import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.context.Execution;
 import org.xwiki.context.ExecutionContext;
+import org.xwiki.model.EntityType;
+import org.xwiki.model.reference.AttachmentReferenceResolver;
+import org.xwiki.model.reference.DocumentReferenceResolver;
+import org.xwiki.model.reference.EntityReference;
+import org.xwiki.model.reference.ObjectReferenceResolver;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.wiki.WikiModel;
@@ -46,20 +55,30 @@ import org.xwiki.rendering.wiki.WikiModel;
  */
 @Component
 public class DefaultWikiModel implements WikiModel {
+
+  @Requirement
+  private ComponentManager componentManager;
   
-  private static final Log    LOG           = ExoLogger.getLogger(DefaultWikiModel.class);
-  
-  /**
-   * Used to get the current context
-   */
   @Requirement
   private Execution execution;
   
-  /**
-   * Used to get the build context for document
-   */
-  @Requirement
-  private MarkupContextManager markupContextManager;
+  private static final Log LOG = ExoLogger.getLogger(DefaultWikiModel.class);
+  
+  private static final String DEFAULT_WIKI = "xwiki";
+  
+  private static final String DEFAULT_SPACE = "Main";
+  
+  private static final String DEFAULT_PAGE = "WebHome";
+  
+  private static final String PORTAL = "portal";
+  
+  private static final String CLASSIC = "classic";
+  
+  private static final String WIKIHOME = "Wiki_Home";
+
+  private static final String wikiSpaceSeparator = ":";
+
+  private static final String spacePageSeparator = ".";
   
   @Override
   public String getDocumentEditURL(ResourceReference documentReference) {
@@ -68,7 +87,7 @@ public class DefaultWikiModel implements WikiModel {
     if (ec != null) {
       wikiContext = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
     }
-    WikiContext wikiMarkupContext = markupContextManager.getMarkupContext(documentReference.getReference(),ResourceType.DOCUMENT);
+    WikiContext wikiMarkupContext = getWikiMarkupContext(documentReference.getReference(),ResourceType.DOCUMENT);
     if (wikiContext != null) {
       String viewURL = getDocumentViewURL(wikiContext);
       StringBuilder sb = new StringBuilder(viewURL);
@@ -99,7 +118,7 @@ public class DefaultWikiModel implements WikiModel {
 
   @Override
   public String getDocumentViewURL(ResourceReference documentReference) {
-    WikiContext wikiMarkupContext = markupContextManager.getMarkupContext(documentReference.getReference(),ResourceType.DOCUMENT);
+    WikiContext wikiMarkupContext = getWikiMarkupContext(documentReference.getReference(),ResourceType.DOCUMENT);
     return getDocumentViewURL(wikiMarkupContext);
   }
 
@@ -109,7 +128,7 @@ public class DefaultWikiModel implements WikiModel {
     StringBuilder sb = new StringBuilder();
     try {
       ResourceType resourceType = ResourceType.ICON.equals(imageReference.getType()) ? ResourceType.ICON : ResourceType.ATTACHMENT;
-      WikiContext wikiMarkupContext = markupContextManager.getMarkupContext(imageName, resourceType);
+      WikiContext wikiMarkupContext = getWikiMarkupContext(imageName, resourceType);
       String portalContainerName = PortalContainer.getCurrentPortalContainerName();
       String portalURL = wikiMarkupContext.getPortalURL();
       String domainURL = portalURL.substring(0, portalURL.indexOf(portalContainerName) - 1);
@@ -150,7 +169,7 @@ public class DefaultWikiModel implements WikiModel {
     Page page = null;
     String documentName = documentReference.getReference();
     ResourceType type = documentReference.getType();
-    WikiContext wikiMarkupContext = markupContextManager.getMarkupContext(documentName, type);
+    WikiContext wikiMarkupContext = getWikiMarkupContext(documentName, type);
     try {
       WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
                                                                  .getComponentInstanceOfType(WikiService.class);
@@ -191,6 +210,86 @@ public class DefaultWikiModel implements WikiModel {
       }
     }
     return Utils.getDocumentURL(context);
+  }
+  
+  public WikiContext getWikiMarkupContext(String objectName, ResourceType type) {
+    WikiContext wikiMarkupContext = new WikiContext();
+    try {
+      DocumentReferenceResolver<String> stringDocumentReferenceResolver = componentManager.lookup(DocumentReferenceResolver.class);
+      AttachmentReferenceResolver<String> stringAttachmentReferenceResolver = componentManager.lookup(AttachmentReferenceResolver.class);
+      ObjectReferenceResolver<String> stringObjectReferenceResolver = componentManager.lookup(ObjectReferenceResolver.class);
+      ExecutionContext ec = execution.getContext();
+      WikiContext wikiContext = null;
+      if (ec != null) {
+        wikiContext = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
+        try {
+          ObjectReferenceConverter converter = componentManager.lookup(ObjectReferenceConverter.class, wikiContext.getSyntax());
+          objectName = converter.convert(objectName);
+        } catch (ComponentLookupException e) {
+          if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Syntax %s doesn't have any object reference converter", wikiContext.getSyntax()));
+          }
+        }
+      }   
+      boolean isConfluenceSyntax = (objectName.indexOf('^') > 0) ? true : false;
+      EntityReference entityReference = null;
+      if (ResourceType.DOCUMENT.equals(type)) {
+        entityReference = stringDocumentReferenceResolver.resolve(objectName);
+      } else if (ResourceType.ATTACHMENT.equals(type) || ResourceType.ICON.equals(type)) {
+        entityReference = (isConfluenceSyntax) ? stringObjectReferenceResolver.resolve(objectName)
+                                              : stringAttachmentReferenceResolver.resolve(objectName);
+      }
+      
+      if (entityReference != null) {
+        wikiMarkupContext.setType(entityReference.extractReference(EntityType.WIKI).getName());
+        wikiMarkupContext.setOwner(entityReference.extractReference(EntityType.SPACE).getName());
+        wikiMarkupContext.setPageTitle(entityReference.extractReference(EntityType.DOCUMENT).getName());
+        wikiMarkupContext.setPageId(wikiMarkupContext.getPageTitle());
+        wikiMarkupContext.setPageId(TitleResolver.getId(wikiMarkupContext.getPageId(), false));
+        EntityReference attachmentReference = (isConfluenceSyntax) ? entityReference.extractReference(EntityType.OBJECT)
+                                                                  : entityReference.extractReference(EntityType.ATTACHMENT);
+        if (attachmentReference != null) {
+          wikiMarkupContext.setAttachmentName(attachmentReference.getName());
+        }
+        if (ResourceType.ICON.equals(type)) {
+          wikiMarkupContext.setAttachmentName(wikiMarkupContext.getAttachmentName() + ".gif");
+        }
+
+        if (wikiContext != null) {
+          wikiMarkupContext.setPortalURL(wikiContext.getPortalURL());
+          wikiMarkupContext.setPortletURI(wikiContext.getPortletURI());
+        } else {
+          wikiContext = new WikiContext();
+          wikiContext.setType(PORTAL);
+          wikiContext.setOwner(CLASSIC);
+          wikiContext.setPageId(WIKIHOME);
+        }
+        if (DEFAULT_WIKI.equals(wikiMarkupContext.getType())) {
+          wikiMarkupContext.setType(wikiContext.getType());
+        }
+        if (DEFAULT_SPACE.equals(wikiMarkupContext.getOwner())) {
+          wikiMarkupContext.setOwner(wikiContext.getOwner());
+        }
+        if (DEFAULT_PAGE.equals(wikiMarkupContext.getPageId())) {
+          wikiMarkupContext.setPageId(wikiContext.getPageId());
+        }
+      }
+    } catch (Exception e) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Couldn't get wiki context for markup: " + objectName, e);
+      }
+    }
+    return wikiMarkupContext;
+  }
+  
+  public String getDocumentName(WikiPageParams params) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(params.getType())
+      .append(wikiSpaceSeparator)
+      .append(params.getOwner())
+      .append(spacePageSeparator)
+      .append(params.getPageId());
+    return (sb.toString());
   }
   
 }
