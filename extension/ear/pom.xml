@@ -21,11 +21,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.integration</groupId>
-      <artifactId>integ-ks-social</artifactId>
-      <version>${org.exoplatform.integ.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>
       <version>${project.version}</version>
