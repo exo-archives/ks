@@ -19,8 +19,7 @@ package org.exoplatform.poll.webui;
 import java.io.Writer;
 
 import org.exoplatform.webui.application.WebuiRequestContext;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
-import org.exoplatform.webui.form.UIFormInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 /**
  * Created by The eXo Platform SAS
@@ -28,46 +27,10 @@ import org.exoplatform.webui.form.UIFormInput;
  *          tu.duy@exoplatform.com
  * 24 Mar 2008, 08:00:59
  */
-public class UIForumCheckBoxInput<T> extends UIFormCheckBoxInput<T> {
-  /**
-  * Whether this checkbox is checked
-  */
-  private boolean checked = false;
+public class UIForumCheckBoxInput<T> extends UICheckBoxInput {
 
-  /**
-   * A javascript expression that will be fired when the value changes (JS onChange event)
-   */
-
-  @SuppressWarnings("unchecked")
-  public UIForumCheckBoxInput(String name, String bindingExpression, T value) {
-    super(name, bindingExpression, null);
-    if (value != null)
-      typeValue_ = (Class<T>) value.getClass();
-    value_ = value;
-    setId(name);
-  }
-
-  public UIFormInput setValue(T value) {
-    if (value == null)
-      return super.setValue(value);
-    if (value instanceof Boolean) {
-      checked = ((Boolean) value).booleanValue();
-    } else if (boolean.class.isInstance(value)) {
-      checked = boolean.class.cast(value);
-    }
-    typeValue_ = (Class<T>) value.getClass();
-    return super.setValue(value);
-  }
-
-  final public boolean isCheckedBox() {
-    checked = isChecked();
-    return checked;
-  }
-
-  final public UIForumCheckBoxInput setCheckedBox(boolean check) {
-    checked = check;
-    setChecked(check);
-    return this;
+  public UIForumCheckBoxInput(String name, String bindingExpression, Boolean value) {
+    super(name, bindingExpression, value);
   }
 
   public void processRender(WebuiRequestContext context) throws Exception {
@@ -75,7 +38,7 @@ public class UIForumCheckBoxInput<T> extends UIFormCheckBoxInput<T> {
     w.write("<input type='checkbox' name='");
     w.write(name);
     w.write("'");
-    w.write(" value='");
+    w.write("' value='");
     if (value_ != null)
       w.write(String.valueOf(value_));
     w.write("' ");
