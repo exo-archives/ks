@@ -57,12 +57,12 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -357,7 +357,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
     String title = this.userProfile.getUserTitle();
     boolean isAdmin = false;
-    UIFormCheckBoxInput userRole = new UIFormCheckBoxInput<Boolean>(FIELD_USERROLE_CHECKBOX, FIELD_USERROLE_CHECKBOX, false);
+    UICheckBoxInput userRole = new UICheckBoxInput(FIELD_USERROLE_CHECKBOX, FIELD_USERROLE_CHECKBOX, false);
     if (this.userProfile.getUserRole() == 0)
       isAdmin = true;
     if (isAdmin(this.userProfile.getUserId())) {
@@ -371,7 +371,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
     UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
     signature.setValue(this.userProfile.getSignature());
-    UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
+    UICheckBoxInput isDisplaySignature = new UICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
     isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature());
 
     UIFormTextAreaInput moderateForums = new UIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATEFORUMS_MULTIVALUE, null);
@@ -386,7 +386,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     moderateCategorys.setValue(stringProcess(valuesCate));
     moderateCategorys.setEditable(false);
 
-    UIFormCheckBoxInput isDisplayAvatar = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
+    UICheckBoxInput isDisplayAvatar = new UICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
     isDisplayAvatar.setChecked(this.userProfile.getIsDisplayAvatar());
     // Option
     String[] timeZone1 = getLabel(FIELD_TIMEZONE).split(ForumUtils.SLASH);
@@ -440,10 +440,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     UIFormSelectBox maximumPosts = new UIFormSelectBox(FIELD_MAXPOSTS_SELECTBOX, FIELD_MAXPOSTS_SELECTBOX, list);
     maximumPosts.setValue("id" + userProfile.getMaxPostInPage());
     boolean isJump = userProfile.getIsShowForumJump();
-    UIFormCheckBoxInput isShowForumJump = new UIFormCheckBoxInput<Boolean>(FIELD_FORUMJUMP_CHECKBOX, FIELD_FORUMJUMP_CHECKBOX, false);
+    UICheckBoxInput isShowForumJump = new UICheckBoxInput(FIELD_FORUMJUMP_CHECKBOX, FIELD_FORUMJUMP_CHECKBOX, false);
     isShowForumJump.setChecked(isJump);
     // Ban
-    UIFormCheckBoxInput isBanned = new UIFormCheckBoxInput<Boolean>(FIELD_ISBANNED_CHECKBOX, FIELD_ISBANNED_CHECKBOX, false);
+    UICheckBoxInput isBanned = new UICheckBoxInput(FIELD_ISBANNED_CHECKBOX, FIELD_ISBANNED_CHECKBOX, false);
     boolean isBan = userProfile.getIsBanned();
     isBanned.setChecked(isBan);
     list = new ArrayList<SelectItemOption<String>>();
@@ -480,7 +480,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       if (i == 2 && dv.equals("Year")) {
         dv = "Years";
       }
-      if (i == 3 && dv.equals("Years")) {
+      if (i == 4 && dv.equals("Years")) {
         break;
       }
       if (dv.equals("Days") || dv.equals("Day")) {
@@ -495,6 +495,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       }
       if (dv.equals("Month") || dv.equals("Months")) {
         cal = CommonUtils.getGreenwichMeanTime();
+        cal.setLenient(true);
         int t = cal.get(Calendar.MONTH) + i;
         if (t >= 12) {
           cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
@@ -505,6 +506,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       }
       if (dv.equals("Years") || dv.equals("Year")) {
         cal = CommonUtils.getGreenwichMeanTime();
+        cal.setLenient(true);
         cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + i);
         until = cal.getTimeInMillis();
       }
@@ -682,7 +684,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       uiForm.initUserProfileForm();
       uiForm.isEdit = true;
       UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
-      popupWindow.setWindowSize(760, 540);
+      popupWindow.setWindowSize(950, 540);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
     }
   }
@@ -705,7 +707,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue();
       String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue();
       long userRole = 2;
-      boolean isAdmin = (Boolean) inputSetProfile.getUIFormCheckBoxInput(FIELD_USERROLE_CHECKBOX).getValue();
+      boolean isAdmin = (Boolean) inputSetProfile.getUIInput(FIELD_USERROLE_CHECKBOX).getValue();
       if (isAdmin)
         userRole = 0;
       else if (uiForm.isAdmin(userProfile.getUserId())) {
@@ -807,8 +809,8 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
       String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue();
       signature = ForumTransformHTML.enCodeHTMLTitle(signature);
-      boolean isDisplaySignature = (Boolean) inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue();
-      Boolean isDisplayAvatar = (Boolean) inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue();
+      boolean isDisplaySignature = (Boolean) inputSetProfile.getUIInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue();
+      Boolean isDisplayAvatar = (Boolean) inputSetProfile.getUIInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue();
 
       UIFormInputWithActions inputSetOption = uiForm.getChildById(FIELD_USEROPTION_FORM);
       double timeZone = Double.parseDouble(inputSetOption.getUIFormSelectBox(FIELD_TIMEZONE_SELECTBOX).getValue());
@@ -817,11 +819,11 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       String timeFormat = inputSetOption.getUIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX).getValue();
       long maxTopic = Long.parseLong(inputSetOption.getUIFormSelectBox(FIELD_MAXTOPICS_SELECTBOX).getValue().substring(2));
       long maxPost = Long.parseLong(inputSetOption.getUIFormSelectBox(FIELD_MAXPOSTS_SELECTBOX).getValue().substring(2));
-      boolean isShowForumJump = (Boolean) inputSetOption.getUIFormCheckBoxInput(FIELD_FORUMJUMP_CHECKBOX).getValue();
+      boolean isShowForumJump = (Boolean) inputSetOption.getUIInput(FIELD_FORUMJUMP_CHECKBOX).getValue();
 
       UIFormInputWithActions inputSetBan = uiForm.getChildById(FIELD_USERBAN_FORM);
       boolean wasBanned = userProfile.getIsBanned();
-      boolean isBanned = (Boolean) inputSetBan.getUIFormCheckBoxInput(FIELD_ISBANNED_CHECKBOX).getValue();
+      boolean isBanned = (Boolean) inputSetBan.getUIInput(FIELD_ISBANNED_CHECKBOX).getValue();
       String until = inputSetBan.getUIFormSelectBox(FIELD_BANUNTIL_SELECTBOX).getValue();
       long banUntil = 0;
       if (!ForumUtils.isEmpty(until)) {
@@ -891,7 +893,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       }
       UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
       popupWindow.setWindowSize(760, 350);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow);
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent());
     }
   }
 
