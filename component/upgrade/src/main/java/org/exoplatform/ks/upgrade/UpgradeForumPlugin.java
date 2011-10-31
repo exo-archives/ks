@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ks.upgrade;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -37,13 +36,11 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentRequestLifecycle;
-import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.services.jcr.core.nodetype.ExtendedNodeTypeManager;
-import org.exoplatform.services.jcr.core.nodetype.NodeTypeDataManager;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -82,8 +79,8 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
     try {
       // register new nodeTypes
       log.info("\n\nRegister new nodeTypes...\n");
-      registerNodeTypes("jar:/conf/portal/forum-nodetypes.xml", ExtendedNodeTypeManager.IGNORE_IF_EXISTS);
-      registerNodeTypes("jar:/conf/portal/forum-migrate-nodetypes.xml", ExtendedNodeTypeManager.REPLACE_IF_EXISTS);
+      UpgradeUtils.registerNodeTypes("jar:/conf/portal/forum-nodetypes.xml", ExtendedNodeTypeManager.IGNORE_IF_EXISTS);
+      UpgradeUtils.registerNodeTypes("jar:/conf/portal/forum-migrate-nodetypes.xml", ExtendedNodeTypeManager.REPLACE_IF_EXISTS);
       log.info("\n\nMigration forum data....\n");
       migrationForumData(sProvider);
       log.info("\n\nMigration space....\n");
@@ -303,15 +300,6 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
       nodePath = nodePath.substring(1);
     }
     return getSession(sessionProvider).getRootNode().getNode(nodePath);
-  }
-
-  private void registerNodeTypes(String nodeTypeFilesName, int alreadyExistsBehaviour) throws Exception {
-    ConfigurationManager configurationService = (ConfigurationManager) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ConfigurationManager.class);
-    InputStream isXml = configurationService.getInputStream(nodeTypeFilesName);
-    ExtendedNodeTypeManager ntManager = dataLocation.getRepositoryService().getDefaultRepository().getNodeTypeManager();
-    log.info("\nTrying register node types from xml-file " + nodeTypeFilesName);
-    ntManager.registerNodeTypes(isXml, alreadyExistsBehaviour, NodeTypeDataManager.TEXT_XML);
-    log.info("\nNode types were registered from xml-file " + nodeTypeFilesName);
   }
 
   public boolean shouldProceedToUpgrade(String newVersion, String previousVersion) {
