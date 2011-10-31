@@ -22,21 +22,25 @@
 			</div>
 			<table class="UIGrid" width="100%">
 				<tbody>
-					<tr >
-						<th align="center">IP</th>
-						<th><span></span></th>
+					<tr>
+					  <th align="center" style="width: 200px;text-align:center;">IP</th>
+						<th>&nbsp;</th>
 					</tr>	
 					<tr style="background:#edf3ee">
-						<td class="FieldLabel" style="padding-left:20px;">
-							<% uiform.renderField(uiform.NEW_IP_BAN_INPUT1) ;%>*&nbsp;
-							<% uiform.renderField(uiform.NEW_IP_BAN_INPUT2) ;%>*&nbsp;
-							<% uiform.renderField(uiform.NEW_IP_BAN_INPUT3) ;%>*&nbsp;
-							<% uiform.renderField(uiform.NEW_IP_BAN_INPUT4) ;%>*&nbsp;
+						<td class="FieldLabel">
+  						<table border="0" width="100%">
+  						  <tbody>
+  						    <tr>
+  						      <td style="border:none; padding:0px;"><% uiform.renderField(uiform.NEW_IP_BAN_INPUT1) ;%>*&nbsp;</td>
+  						      <td style="border:none; padding:0px;"><% uiform.renderField(uiform.NEW_IP_BAN_INPUT2) ;%>*&nbsp;</td>
+  						      <td style="border:none; padding:0px;"><% uiform.renderField(uiform.NEW_IP_BAN_INPUT3) ;%>*&nbsp;</td>
+  						      <td style="border:none; padding:0px;"><% uiform.renderField(uiform.NEW_IP_BAN_INPUT4) ;%>*&nbsp;</td>
+    							</tr>
+  						  </tbody>
+  						</table>
 						</td>
 						<td class="FieldLabel" align="center">
-							<a href="<%=uicomponent.event("AddIp")%>">
-								[<%=_ctx.appRes("UIBanIPForumManagerForm.label.Add")%>]
-							</a>
+							<a href="<%=uicomponent.event("AddIp")%>">[<%=_ctx.appRes("UIBanIPForumManagerForm.label.Add")%>]</a>
 						</td>
 					</tr>
 				<%
