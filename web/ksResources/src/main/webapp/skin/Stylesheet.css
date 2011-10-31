@@ -1,0 +1,96 @@
+.FL {
+  float: left;
+}
+
+.FR {
+  float: right;
+}
+
+ul,li {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+}
+
+.ClearFix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.ClearFix { !
+  display: inline-block; !
+  zoom: 1; !
+  display: block;
+}
+
+/**************************** UIPopupInfoMenu *********************************/
+.UIPopupInfoMenu {
+  float: none;
+  display: inline;
+  visibility: hidden;
+  top: 0; left : 0; 
+  margin : 0px; 
+  position : relative;
+  width: auto;
+  z-index: 4;
+  position: relative;
+  margin: 0px;
+  left: 0;
+}
+
+.UIPopupInfoMenu .UIPopupInfoContent {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  -moz-border-radius: none;
+  -webkit-border-radius: none;
+  border-radius: none;
+  background: none;
+  border: none;
+  padding: 0px;
+  position: absolute;
+  top: 0; left : 0; 
+}
+
+.UIPopupInfoMenu .UIPopupInfoContent ul {
+  -moz-box-shadow: -1px 2px 3px #D5D5D5;
+  -webkit-box-shadow: -1px 2px 3px #D5D5D5;
+  box-shadow: -1px 2px 3px #D5D5D5;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background: #fff;
+  border: 1px solid #D3D3D3;
+  padding: 8px;
+}
+
+.UIPopupInfoMenu .UIPopupInfoContent .Arrow {
+  background: url('background/Arrow.png') no-repeat right top;
+  width: 50px;
+  height: 12px;
+  margin-bottom: -1px;
+  position: relative;
+}
+
+.UIPopupInfoMenu .UIPopupInfoContent .ItemIcon {
+  background-position: 6px 50%;
+  display: block;
+  line-height: 24px;
+  margin: 0;
+  min-width: 60px;
+  padding: 0 5px 0 28px;
+  text-align: left;
+  white-space: nowrap;
+  color: black;
+}
+
+.UIPopupInfoMenu .UIPopupInfoContent .ItemIcon:hover {
+  background-color: #DEE4F2;
+}
+
+.UIPopupInfoMenu .UIPopupInfoContent .ItemIcon a:hover {
+  color: #F7941D;
+}

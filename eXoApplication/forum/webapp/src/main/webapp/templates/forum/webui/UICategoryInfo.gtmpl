@@ -16,6 +16,7 @@
 	String at = _ctx.appRes("UICategoryInfo.label.at");
 	String mostUserOnline = uicomponent.getMostUsersOnline(forumStatistic.getMostUsersOnline(), at);
 	String userView;
+	String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 %>
 <div id="$uicomponent.id" class="ForumInfos UICategoryInfo">
 	<div class="ForumToolbar ClearFix">
@@ -43,44 +44,32 @@
 							%>
 								<div class="FloatLeft">
 									<% if(t != size){ %>
-									<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">${userView}</a><span>,</span>
+									<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.ks.KSUtils.showUserMenu(this.parentNode, event);">${userView}</a><span>,</span>
 									<% } else {%>
-									<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">${userView}</a>
+									<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.ks.KSUtils.showUserMenu(this.parentNode, event);">${userView}</a>
 									<% } %>					
-									<div style="position:relative;">
-										<div class="UIPopupCategory" style="display:none; left:2px; top:2px; ">
-											<ul class="UIRightClickPopupMenu" style="display:block;">
-															
-												<%
-													String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", user);
-												%>
-													<li class="MenuItem" onclick="$linkProf">
-														<a class="ItemIcon IconsView ViewPublicUserInfo" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
-													</li>
-												<%
-												  if(userProfile.getUserRole() < 3){
-														String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", user);
-												%>
-													<li class="MenuItem" onclick="$sendPrSms">
-														<a class="ItemIcon IconsView PrivateMessage" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
-													</li>
-												<%
-													}
-													String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", user);
-												%>
-													<li class="MenuItem" onclick="$viewPosted">
-														<a class="ItemIcon IconsView ViewPostedByUser" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $userView</a>
-													</li>
-												<%
-													String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", user);
-												%>
-													<li class="MenuItem" onclick="$viewThread">
-														<a class="ItemIcon IconsView ViewThreadByUser" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $userView</a>
-													</li>
-													
-											</ul>
-										</div>
-									</div>
+									<div class="UIPopupInfoMenu">
+                    <div class="UIPopupInfoContent">
+                      <div class="Arrow"><span></span></div>
+                      <ul>
+                        <%
+                          for(viewAction in menuViewInfos) {
+                            if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+                            String linkView = uicomponent.getActionViewInfoUser(viewAction, user) ;
+                            String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+                            if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+                              itemLabelView = itemLabelView + " " + userView ;
+                            }
+                        %>
+                              <li class="ItemIcon IconsView $viewAction MenuItem" onclick="$linkView">
+                                <a href="javaScript:void(0)">$itemLabelView</a>
+                              </li>
+                        <%
+                          }
+                        %>
+                      </ul>
+                    </div>
+                  </div>
 									
 								</div>
 							<% } %>
@@ -105,43 +94,30 @@
 					 		</div>
 							<div class="text" style="padding-bottom:5px;">
 								<span><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>: </span>
-								<a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$viewNewMember</a>
-								<div class="fixPupupMenu">
-									<div class="UIPopupCategory" style="display:none; left:60px; top:0px; width:140px">
-									
-										<ul class="UIRightClickPopupMenu" style="display:block;">
-														
-											<%
-												String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", newMember);
-											%>
-												<li class="MenuItem" onclick="$linkProf">
-													<a class="ItemIcon IconsView ViewPublicUserInfo" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
-												</li>
-											<%
-											  if(userProfile.getUserRole() < 3){
-													String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", newMember);
-											%>
-												<li class="MenuItem" onclick="$sendPrSms">
-													<a class="ItemIcon IconsView PrivateMessage" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
-												</li>
-											<%
-												}
-												String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", newMember);
-											%>
-												<li class="MenuItem" onclick="$viewPosted">
-													<a class="ItemIcon IconsView ViewPostedByUser" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $viewNewMember</a>
-												</li>
-											<%
-												String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", newMember);
-											%>
-												<li class="MenuItem" onclick="$viewThread">
-													<a class="ItemIcon IconsView ViewThreadByUser" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $viewNewMember</a>
-												</li>
-															
-										</ul>
-										
-									</div>
-								</div>
+								<a href="javaScript:void(0)" onclick="eXo.ks.KSUtils.showUserMenu(this.parentNode, event);">$viewNewMember</a>
+								<div class="UIPopupInfoMenu">
+                  <div class="UIPopupInfoContent">
+                    <div class="Arrow"><span></span></div>
+                    <ul>
+                      <%
+                        for(viewAction in menuViewInfos) {
+                          if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+                          String linkView = uicomponent.getActionViewInfoUser(viewAction, newMember) ;
+                          String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+                          if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+                            itemLabelView = itemLabelView + " " + viewNewMember ;
+                          }
+                      %>
+                            <li class="ItemIcon IconsView $viewAction MenuItem" onclick="$linkView">
+                              <a href="javaScript:void(0)">$itemLabelView</a>
+                            </li>
+                      <%
+                        }
+                      %>
+                    </ul>
+                  </div>
+                </div>
+
 							</div>
 					 	</td>
 		 			</tr>

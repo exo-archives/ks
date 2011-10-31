@@ -19,6 +19,7 @@ package org.exoplatform.ks.common.webui;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -118,6 +119,7 @@ public class BaseUIForm extends UIForm {
   private void message(String messageKey, String[] args, int messageType) {
     WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
     context.getUIApplication().addMessage(new ApplicationMessage(messageKey, args, messageType));
+    ((PortalRequestContext) context.getParentAppRequestContext()).ignoreAJAXUpdateOnPortlets(true);
   }
   
   /**

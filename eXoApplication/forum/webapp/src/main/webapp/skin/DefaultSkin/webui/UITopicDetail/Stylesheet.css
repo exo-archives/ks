@@ -93,38 +93,6 @@
 	padding: 10px 0px 0px 15px;
 }
 
-.UITopicDetail .MemberContent .MemberName .UIRightClickPopupMenu {
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-	-moz-border-radius: none;
-	-webkit-border-radius: none;
-	border-radius: none;
-    background: none;
-    border:none;
-	padding: 0px;
-}
-
-.UITopicDetail .MemberContent .MemberName .UIRightClickPopupMenu ul {
-    -moz-box-shadow: -1px 2px 3px #D5D5D5;
-    -webkit-box-shadow: -1px 2px 3px #D5D5D5;
-    box-shadow: -1px 2px 3px #D5D5D5;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-    background: #fff;
-    border: 1px solid #D3D3D3;
-	padding: 8px;
-}
-
-.UITopicDetail .MemberContent .MemberName .UIRightClickPopupMenu .Arrow {
-	background: url('../background/Arrow.png') no-repeat right top;
-	width: 50px;
-	height: 12px;
-	margin-bottom: -1px;
-	position: relative;
-}
-
 .UITopicDetail .MemberContent .State {
 	height: 20px;
 	cursor: pointer;

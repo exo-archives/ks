@@ -4,27 +4,6 @@ function UIForumPortlet() {
 	this.wait = false;
 };
 
-UIForumPortlet.prototype.mouseOnUserMenu = function(obj, event, wait) {
-	this.wait = wait;
-	if(this.wait){
-		this.obj = obj;
-		this.event = event;
-		setTimeout('eXo.forum.UIForumPortlet.viewUserMenu()', 300);
-	}
-};
-
-UIForumPortlet.prototype.viewUserMenu = function(){
-	if(this.wait){
-		try{
-			var evObj = document.createEvent('MouseEvents');
-			evObj.initEvent( 'click', true, true );
-			eXo.webui.UIPopupSelectCategory.show(this.obj, this.obj.dispatchEvent(evObj));
-		} catch(e){
-			eXo.webui.UIPopupSelectCategory.show(this.obj, this.obj.fireEvent("onclick"));
-		}
-	}
-};
-
 UIForumPortlet.prototype.selectItem = function(obj) {
 	var DOMUtil = eXo.core.DOMUtil ;
 	var tr = DOMUtil.findAncestorByTagName(obj, "tr") ;

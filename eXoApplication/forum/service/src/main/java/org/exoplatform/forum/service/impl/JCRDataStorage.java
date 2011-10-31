@@ -390,6 +390,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
   }
 
+  @SuppressWarnings("deprecation")
   private Node getTopicTypeHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getTopicTypesLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
@@ -1263,7 +1264,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node forumNode = getCategoryHome(sProvider).getNode(categoryId + "/" + forumId);
       return getForum(forumNode);
     } catch (Exception e) {
-      log.error("\nCould not get " + forumId + " in " + categoryId + " fail: " + e.getCause());
+      if(log.isDebugEnabled()) {
+        log.debug("\nCould not get " + forumId + " in " + categoryId + " fail: " + e.getCause());
+      }
       return null;
     }
   }

@@ -44,8 +44,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -82,7 +82,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
         @EventConfig(listeners = UICategory.AdvancedSearchActionListener.class)
     }
 )
-@SuppressWarnings({ "unused", "unchecked"})
+@SuppressWarnings({ "unused" })
 public class UICategory extends BaseForumForm {
   private String             categoryId;
 
@@ -209,10 +209,10 @@ public class UICategory extends BaseForumForm {
     List<Forum> listForum = new ArrayList<Forum>();
     for (Forum forum : this.forums) {
       String forumId = forum.getId();
-      if (getUIFormCheckBoxInput(forumId) != null) {
-        getUIFormCheckBoxInput(forumId).setChecked(false);
+      if (getUICheckBoxInput(forumId) != null) {
+        getUICheckBoxInput(forumId).setChecked(false);
       } else {
-        addUIFormInput(new UIFormCheckBoxInput(forumId, forumId, false));
+        addUIFormInput(new UICheckBoxInput(forumId, forumId, false));
       }
       if (isShowForum(forumId))
         listForum.add(forum);
@@ -267,9 +267,9 @@ public class UICategory extends BaseForumForm {
     List<UIComponent> children = this.getChildren();
     List<Forum> forums = new ArrayList<Forum>();
     for (UIComponent child : children) {
-      if (child instanceof UIFormCheckBoxInput) {
-        if (((UIFormCheckBoxInput) child).isChecked()) {
-          forums.add(this.getForum(((UIFormCheckBoxInput) child).getName()));
+      if (child instanceof UICheckBoxInput) {
+        if (((UICheckBoxInput) child).isChecked()) {
+          forums.add(this.getForum(((UICheckBoxInput) child).getName()));
           if(isBreak) break;
         }
       }

@@ -35,7 +35,7 @@
 	String subDescription = ForumUtils.getSubString(description, 35);
 	int rCNB = 0;
 	String actionBookmark = "";
-	
+	String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 %>
 
 <div class="UIForumCategory UICategory" style="padding:2px 10px;">
@@ -336,43 +336,30 @@
 										<% String screemNamePost =  uicomponent.getScreenName(lastPostBy);%>
 										<div class="LastPostInfos">
 											<span><%=_ctx.appRes("UITopicContainer.label.by");%>&nbsp;</span>
-											<a style="color:#058EE6;" href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$screemNamePost</a>
+											<a style="color:#058EE6;" href="javaScript:void(0)" onclick="eXo.ks.KSUtils.showUserMenu(this.parentNode, event);">$screemNamePost</a>
 											<span class="DateTime">&nbsp;($dateTime)</span>
-											
-											
-												<div class="UIPopupCategory" style="display:none;">
-													<ul class="UIRightClickPopupMenu" style="display:block;">
-																		
-														<%
-															String linkProf = uicomponent.getActionViewInfoUser("ViewPublicUserInfo", lastPostBy);
-														%>
-														<li class="ItemIcon IconsView ViewPublicUserInfo" onclick="$linkProf" style="padding-left:30px;">
-															<a class="MenuItem" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
-														</li>
-														<%
-														  if(userProfile.getUserRole() < 3 && lastPostBy.indexOf(Utils.DELETED) < 0){
-																String sendPrSms = uicomponent.getActionViewInfoUser("PrivateMessage", lastPostBy);
-														%>
-														<li class="ItemIcon IconsView PrivateMessage" onclick="$sendPrSms" style="padding-left:30px;">
-															<a class="MenuItem" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
-														</li>
-														<%
-															}
-															String viewPosted = uicomponent.getActionViewInfoUser("ViewPostedByUser", lastPostBy);
-														%>
-														<li class="ItemIcon IconsView ViewPostedByUser" onclick="$viewPosted" style="padding-left:30px;">
-															<a class="MenuItem" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $screemNamePost</a>
-														</li>
-														<%
-															String viewThread = uicomponent.getActionViewInfoUser("ViewThreadByUser", lastPostBy);
-														%>
-														<li class="ItemIcon IconsView ViewThreadByUser" onclick="$viewThread" style="padding-left:30px;">
-															<a class="MenuItem" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $screemNamePost</a>
-														</li>
-																
-													</ul>
-												</div>
-											
+											<div class="UIPopupInfoMenu">
+                        <div class="UIPopupInfoContent">
+                          <div class="Arrow"><span></span></div>
+                          <ul>
+                            <%
+                              for(viewAction in menuViewInfos) {
+                                if((uicomponent.userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+                                String linkView = uicomponent.getActionViewInfoUser(viewAction, lastPostBy) ;
+                                String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
+                                if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
+                                  itemLabelView = itemLabelView + " " + screemNamePost ;
+                                }
+                            %>
+                                  <li class="ItemIcon IconsView $viewAction MenuItem" onclick="$linkView">
+                                    <a href="javaScript:void(0)">$itemLabelView</a>
+                                  </li>
+                            <%
+                              }
+                            %>
+                          </ul>
+                        </div>
+                      </div>
 											
 										</div>
 								<%} else { %>	
