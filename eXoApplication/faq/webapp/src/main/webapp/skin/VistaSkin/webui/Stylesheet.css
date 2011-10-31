@@ -1377,7 +1377,7 @@
 	background: url(/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/UserIcons/Comment.gif) no-repeat 10px center;
 }
 
-.UIAnswersPortlet .ResponseQuestion {
+.UIAnswersPortlet .UIAnswersPopupAction .ResponseQuestion {
 	background: url('background/FAQPortlet.gif') no-repeat left -597px;
 }
 
