@@ -563,7 +563,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             return attachments.get(0);
           } catch (Exception e) {
             attachment.setSize(0);
-            log.debug("Failed to execute avatar of user", e);
+            if (log.isDebugEnabled()) {
+              log.debug("Failed to execute avatar of user", e);
+            }
           }
         }
         return null;
@@ -813,7 +815,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       return categories;
     } catch (Exception e) {
-      log.warn("Can not get all categories.", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Can not get all categories.", e);
+      }
       return categories;
     }
   }
@@ -823,7 +827,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       return getCategory(getCategoryHome(sProvider).getNode(categoryId));
     } catch (Exception e) {
-      if (log.isDebugEnabled()) log.debug("Failed to get category, categoryId: " + categoryId, e);
+      if (log.isDebugEnabled()){
+        log.debug("Failed to get category, categoryId: " + categoryId, e);
+      }
       return null;
     }
   }
@@ -988,7 +994,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         session.logout();
       }
     } catch (Exception e) {
-      log.debug("PathNotFoundException  category node or forum node not found");
+      if (log.isDebugEnabled()) {
+        log.debug("PathNotFoundException  category node or forum node not found");
+      }
     }
   }
 
@@ -1045,7 +1053,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             userProfileNode.setProperty(EXO_MODERATE_CATEGORY, Utils.getStringsInList(moderateCategory));
           }
         } catch (Exception e) {
-          log.debug("Failed to get user profile ", e);
+          if (log.isDebugEnabled()) {
+            log.debug("Failed to get user profile ", e);
+          }
         }
       }
     }
@@ -1117,11 +1127,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     }
-    try {
-      userProfileHomeNode.save();
-    } catch (Exception e) {
-      log.error("Failed to update user profile of moderator in category.", e);
+    if(userProfileHomeNode.isNew()) {
       session.save();
+    } else {
+      userProfileHomeNode.save();
     }
   }
 
@@ -1253,7 +1262,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       return forums;
     } catch (Exception e) {
-      log.debug("Failed to retrieving forums for category " + categoryId, e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to retrieving forums for category " + categoryId, e);
+      }
       return new ArrayList<Forum>();
     }
   }
@@ -1819,7 +1830,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       TopicListAccess topicListAccess = new TopicListAccess(sessionManager, topicQuery);
       return new LazyPageList<Topic>(topicListAccess, pageSize);
     } catch (Exception e) {
-      log.debug("Failed to retrieve topic list for forum " + forumId, e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to retrieve topic list for forum " + forumId, e);
+      }
       return null;
     }
   }
@@ -1924,7 +1937,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node topicNode = getCategoryHome(sProvider).getNode(categoryId + "/" + forumId + "/" + topicId);
       return getTopicNode(topicNode);
     } catch (Exception e) {
-      log.error("Getting Topic fail: " + e.getMessage() + "\n" + e.getCause());
+      if (log.isDebugEnabled()) {
+        log.debug("Getting Topic fail: " + e.getMessage() + "\n" + e.getCause());
+      }
       return null;
     }
   }
@@ -2023,7 +2038,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         forumNode.save();
       }
     } catch (PathNotFoundException e) {
-      log.error("Failed to query last topic", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to query last topic", e);
+      }
       return null;
     }
     return topicNode;
@@ -2092,7 +2109,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         topic.setAttachments(getAttachmentsByNode(FirstPostNode));
       }
     } catch (Exception e) {
-      log.debug("Failed to set attachments in topic.", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to set attachments in topic.", e);
+      }
     }
     return topic;
   }
@@ -2104,7 +2123,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node topicNode = (Node) forumHomeNode.getSession().getItem(topic.getPath());
       return getTopicUpdate(topicNode, topic, isSummary);
     } catch (Exception e) {
-      log.error("Failed to get topic", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get topic", e);
+      }
     }
     return topic;
   }
@@ -2166,7 +2187,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         topics.add(topic);
       }
     } catch (Exception e) {
-      log.error("Failed to get all topic old", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get all topic old", e);
+      }
     }
     return topics;
   }
@@ -2489,7 +2512,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       infoMap.remove(name);
     } catch (Exception e) {
-      log.error("Failed to update user profile info", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to update user profile info", e);
+      }
     }
   }
 
@@ -2509,7 +2534,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       infoMap.put(name, userPostMap);
       schedulerService.addPeriodJob(info, periodInfo, jdatamap);
     } catch (Exception e) {
-      log.debug("Failed to add job for update user profile ", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to add job for update user profile ", e);
+      }
     }
   }
 
@@ -2541,7 +2568,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       try {
         calculateLastRead(sProvider, null, forumId, topicId);
       } catch (Exception e) {
-        log.debug("Failed to update last read topic", e);
+        if (log.isDebugEnabled()) {
+          log.debug("Failed to update last read topic", e);
+        }
       }
       addUpdateUserProfileJob(userPostMap);
       return topic;
@@ -2633,7 +2662,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         try {
           calculateLastRead(sProvider, destForumId, srcForumId, topic.getId());
         } catch (Exception e) {
-          log.error("Failed to calculate last read", e);
+          if (log.isDebugEnabled()) {
+            log.debug("Failed to calculate last read", e);
+          }
         }
       }
       if (forumHomeNode.isNew()) {
@@ -2776,6 +2807,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       JCRPageList pagelist = new ForumPageList(iter, 10, stringBuffer.toString(), true);
       return pagelist;
     } catch (PathNotFoundException e) {
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get post for split topic.", e);
+      }
     }
     return null;
   }
@@ -3539,10 +3573,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     Node postNode = null;
     while (iter.hasNext()) {
       postNode = iter.nextNode();
-      if (postNode.getName().equals(postNode_.getName()))
+      if (postNode.getName().equals(postNode_.getName())) {
         continue;
-      else
+      } else {
         break;
+      }
     }
     return postNode;
   }
@@ -3762,7 +3797,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         messageBuilder.setContent(str);
       }
     } catch (Exception e) {
-      log.debug("Failed to get info MessageBuilder", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get info MessageBuilder", e);
+      }
     }
     return messageBuilder;
   }
@@ -4249,7 +4286,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         userProfile.setIsBanned(isBanIp(ip));
       }
     } catch (Exception e) {
-      log.debug("Failed to get default userprofile of user: " + userName, e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get default userprofile of user: " + userName, e);
+      }
     }
     return userProfile;
   }
@@ -4812,7 +4851,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         newProfileNode.save();
       }
     } catch (Exception e) {
-      log.debug("Failed to save collapsed categories.", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to save collapsed categories.", e);
+      }
     }
   }
 
@@ -5052,7 +5093,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       forumStatistic.setNewMembers(reader.string(EXO_NEW_MEMBERS, ""));
       forumStatistic.setMostUsersOnline(reader.string(EXO_MOST_USERS_ONLINE, ""));
     } catch (Exception e) {
-      log.error("Failed to load forum statistics", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to load forum statistics", e);
+      }
     }
     return forumStatistic;
   }
@@ -5144,7 +5187,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         object = post;
       }
     } catch (Exception e) {
-      log.debug("Can not get " + type + " by Id: " + id, e);
+      if (log.isDebugEnabled()) {
+        log.debug("Can not get " + type + " by Id: " + id, e);
+      }
     }
     return object;
   }
@@ -5162,7 +5207,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       NodeIterator iter = result.getNodes();
       if (iter.getSize() > 0) return iter.nextNode();
     } catch (Exception e) {
-      log.debug("Can not get Node by Id: " + id, e);
+      if (log.isDebugEnabled()) {
+        log.debug("Can not get Node by Id: " + id, e);
+      }
     }
     return null;
   }
@@ -6574,7 +6621,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         try {
           session.getWorkspace().copy(importTemp.getPath(), path);
         } catch (Exception e) {
-          log.debug(path + " or " + importTemp.getPath() + " does not exist: " + e.getMessage() + "\n" + e.getCause());
+          if (log.isDebugEnabled()) {
+            log.debug(path + " or " + importTemp.getPath() + " does not exist: " + e.getMessage() + "\n" + e.getCause());
+          }
         }
       }
     }
@@ -6655,7 +6704,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (banNode.hasProperty(EXO_IPS))
         return Utils.valuesToList(banNode.getProperty(EXO_IPS).getValues());
     } catch (Exception e) {
-      log.error("Failed to get ban list", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get ban list", e);
+      }
     }
     return new ArrayList<String>();
   }
@@ -6706,7 +6757,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (forumNode.hasProperty(EXO_BAN_I_PS))
         list.addAll(Utils.valuesToList(forumNode.getProperty(EXO_BAN_I_PS).getValues()));
     } catch (Exception e) {
-      log.error("Failed to get forum ban list.", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get forum ban list.", e);
+      }
     }
     return list;
   }
@@ -6795,7 +6848,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         session.logout();
       }
     } catch (Exception e) {
-      log.debug("Failed to update statistic counts", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to update statistic counts", e);
+      }
     }
   }
 
@@ -6820,7 +6875,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       Node forumNode = (Node) getCategoryHome(sProvider).getSession().getItem(forumPath);
       pruneSetting = getPruneSetting(forumNode.getNode(Utils.PRUNESETTING));
     } catch (Exception e) {
-      log.debug("Failed to get Prune Settings: " + e.getMessage() + "\n" + e.getCause());
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get Prune Settings: " + e.getMessage() + "\n" + e.getCause());
+      }
     }
     return pruneSetting;
   }
@@ -6885,7 +6942,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       JobDataMap jdatamap = new JobDataMap();
       jdatamap.put(Utils.CACHE_REPO_NAME, repoName);
       schedulerService.addPeriodJob(info, periodInfo, jdatamap);
-      log.debug("\n\nActivated " + info.getJobName());
+      if (log.isInfoEnabled()) {
+        log.info("\n\nActivated " + info.getJobName());
+      }
     }
   }
 
@@ -6937,7 +6996,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       return getIteratorPrune(sProvider, pSetting).getSize();
     } catch (Exception e) {
-      log.error("Failed to check prune", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to check prune", e);
+      }
     }
     return 0;
   }
@@ -7028,7 +7089,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       JCRPageList pagelist = new ForumPageList(iter, 10, pathQuery, true);
       return pagelist;
     } catch (Exception e) {
-      log.error("Failed to get page topic by type: " + type, e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get page topic by type: " + type, e);
+      }
     }
     return null;
   }
@@ -7060,7 +7123,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       s = StringUtils.replace(s, "END]]", "]]>");
       return new ByteArrayInputStream(s.getBytes());
     } catch (Exception e) {
-      log.debug("Failed to create forum rss", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to create forum rss", e);
+      }
     }
     return null;
   }
@@ -7089,7 +7154,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         entries.addAll(topicUpdated(iter.nextNode()));
       }
     } catch (Exception e) {
-      log.debug("Failed to update syndEntry by forum.", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to update syndEntry by forum.", e);
+      }
     }
     return entries;
   }
@@ -7103,7 +7170,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       boolean forumHasRestrictedAudience = (hasProperty(forumNode, EXO_VIEWER));
       String topicName = topicNode.getName();
       if (categoryHasRestrictedAudience || forumHasRestrictedAudience) {
-        log.debug("Post" + topicName + " was not added to feed because category or forum has restricted audience");
+        if (log.isDebugEnabled()) {
+          log.debug("Post" + topicName + " was not added to feed because category or forum has restricted audience");
+        }
         return null;
       }
       // update posts in topic
@@ -7121,12 +7190,16 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         try {
           entries.add(postUpdated(postNode));
         } catch (Exception e) {
-          log.debug("Failed to generate feed for post " + postNode.getPath(), e);
+          if (log.isDebugEnabled()) {
+            log.debug("Failed to generate feed for post " + postNode.getPath(), e);
+          }
         }
       }
 
     } catch (Exception e) {
-      log.debug("Failed to update sundEntry by topic.", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to update sundEntry by topic.", e);
+      }
     }
     return entries;
   }
@@ -7140,7 +7213,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     boolean topicHasLimitedViewers = hasProperty(topicNode, EXO_CAN_VIEW);
 
     if ((notApproved) || isPrivatePost || topicHasLimitedViewers) {
-      log.debug("Post" + postName + " was not added to feed because it is private or topic has restricted audience or it is waiting for approval");
+      if (log.isDebugEnabled()) {
+        log.debug("Post" + postName + " was not added to feed because it is private or topic has restricted audience or it is waiting for approval");
+      }
       return null;
     }
 
@@ -7325,7 +7400,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      log.debug("Failed to get latest user login.", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get latest user login.", e);
+      }
     }
     return "";
   }
@@ -7470,7 +7547,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         list = getPostByQuery(categoryHome, (QueryImpl)query, number, userName, isAdmin);
       }
     } catch (Exception e) {
-      log.debug("Failed to get new post.", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get new post.", e);
+      }
     }
     return list;
   }
@@ -7493,7 +7572,9 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         list = getPostByQuery(categoryHome, (QueryImpl)query, number, "", false);
       }
     } catch (Exception e) {
-      log.debug("Failed to get new post.", e);
+      if (log.isDebugEnabled()) {
+        log.debug("Failed to get new post.", e);
+      }
     }
     return list;
   }
