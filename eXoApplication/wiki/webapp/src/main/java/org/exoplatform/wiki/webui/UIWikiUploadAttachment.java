@@ -84,6 +84,8 @@ public class UIWikiUploadAttachment extends UIWikiForm {
   }
 
   static public class UploadActionListener extends EventListener<UIWikiUploadAttachment> {
+    public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.UploadActionListener";
+    
     @Override
     public void execute(Event<UIWikiUploadAttachment> event) throws Exception {                 
       UIWikiUploadAttachment wikiAttachmentArea = event.getSource();

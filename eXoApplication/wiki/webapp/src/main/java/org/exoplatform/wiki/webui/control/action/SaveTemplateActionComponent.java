@@ -45,6 +45,7 @@ import org.exoplatform.wiki.webui.UIWikiPageTitleControlArea;
 import org.exoplatform.wiki.webui.UIWikiPortlet;
 import org.exoplatform.wiki.webui.UIWikiTemplateDescriptionContainer;
 import org.exoplatform.wiki.webui.WikiMode;
+import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddTemplateModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UISubmitToolBarActionListener;
 import org.exoplatform.wiki.webui.extension.UITemplateSettingForm;
@@ -75,20 +76,19 @@ public class SaveTemplateActionComponent extends UIComponent {
     return FILTERS;
   }
   
-  private boolean isNewMode() {
+  protected boolean isNewMode() {
     return (WikiMode.ADDPAGE.equals(getAncestorOfType(UIWikiPortlet.class).getWikiMode()));
   }  
 
-  private String getActionLink() throws Exception {
+  protected String getActionLink() throws Exception {
     return Utils.createFormActionLink(this, ACTION, ACTION);
   }
   
-  private String getPageTitleInputId() {
+  protected String getPageTitleInputId() {
     return UIWikiPageTitleControlArea.FIELD_TITLEINPUT;
   }
 
-  public static class SaveTemplateActionListener
-                                                extends
+  public static class SaveTemplateActionListener extends
                                                 UISubmitToolBarActionListener<SaveTemplateActionComponent> {
     @Override
     protected void processEvent(Event<SaveTemplateActionComponent> event) throws Exception {

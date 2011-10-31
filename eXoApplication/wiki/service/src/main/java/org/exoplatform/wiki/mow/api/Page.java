@@ -81,8 +81,9 @@ public interface Page {
    * Get the attachments of this page
    * 
    * @return
+   * @throws Exception 
    */
-  Collection<? extends Attachment> getAttachments();
+  Collection<? extends Attachment> getAttachments() throws Exception;
   
   boolean hasPermission(PermissionType permissionType) throws Exception; 
   
@@ -91,18 +92,17 @@ public interface Page {
    * @return
    * @throws Exception
    */
-  HashMap<String, String[]> getPagePermission() throws Exception;
+  HashMap<String, String[]> getPermission() throws Exception;
   
   /**
    * 
    * @param permissions
    * @throws Exception
    */
-  void setPagePermission(HashMap<String, String[]> permissions) throws Exception;
+  void setPermission(HashMap<String, String[]> permissions) throws Exception;
   
   /**
    * get URL of page. The domain part of link can be fixed.
    */
   String getURL();
-  
 }

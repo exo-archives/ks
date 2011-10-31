@@ -136,7 +136,7 @@ public class SimplePageImpl implements Page {
   }
 
   @Override
-  public HashMap<String, String[]> getPagePermission() throws Exception {
+  public HashMap<String, String[]> getPermission() throws Exception {
     return permission;
   }
 
@@ -166,7 +166,7 @@ public class SimplePageImpl implements Page {
   }
 
   @Override
-  public void setPagePermission(HashMap<String, String[]> permissions) throws Exception {
+  public void setPermission(HashMap<String, String[]> permissions) throws Exception {
     if (permissions != null)
       this.permission = new HashMap<String, String[]>(permissions); 
     

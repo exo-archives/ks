@@ -17,6 +17,9 @@
 package org.exoplatform.wiki.mow.api;
 
 import java.util.Calendar;
+import java.util.HashMap;
+
+import org.exoplatform.wiki.service.PermissionType;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
@@ -72,5 +75,10 @@ public interface Attachment {
   String getText() throws Exception;
 
   void setText(String text);
-
+  
+  void setPermission(HashMap<String, String[]> permissions) throws Exception;
+  
+  HashMap<String, String[]> getPermission() throws Exception;
+  
+  boolean hasPermission(PermissionType permissionType) throws Exception;
 }

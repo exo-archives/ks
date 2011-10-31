@@ -26,12 +26,12 @@
       DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, currentLocale);
       String creator;
       String downloadLink;
-      String deleteLink;
+      
       for(attachment in attachments){
         index++;
         if(index%2 == 1){
           rowClass = "EvenRow";
-        }else{
+        } else {
           rowClass = "OddRow";
         }
         if(attachment.getCreator() == null){
@@ -41,15 +41,13 @@
           creator = uicomponent.getFullName(creator);
         }
         downloadLink = attachment.getDownloadURL();
-        deleteLink = uicomponent.event(uicomponent.DELETE_ACTION, URLEncoder.encode(attachment.getName(), "UTF-8"));
     %>
         <tr class="$rowClass">
           <td class="Tit"><a title="<%= _ctx.appRes("UIAttachmentUploadListForm.label.DownloadAttachment"); %>" target="_blank" href="$downloadLink"><%= attachment.getFullTitle() %></a></td>
           <td><%= creator %></td>
           <td><%= df.format(attachment.getUpdatedDate().getTime())%></td>
-          <td><img title="<%= _ctx.appRes("UIAttachmentUploadListForm.label.RemoveAttachment"); %>" onclick="$deleteLink" alt="" class="RemoveFile" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/></td>
+          <td><% uicomponent.renderActions(attachment.getName()); %> </td>
         </tr>
-        
     <%}%>
     
       </tbody>

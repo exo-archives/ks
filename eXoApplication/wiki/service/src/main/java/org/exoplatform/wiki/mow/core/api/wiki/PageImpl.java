@@ -17,7 +17,6 @@
 package org.exoplatform.wiki.mow.core.api.wiki;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,22 +48,16 @@ import org.chromattic.api.annotations.Property;
 import org.chromattic.api.annotations.WorkspaceName;
 import org.chromattic.ext.ntdef.NTFolder;
 import org.chromattic.ext.ntdef.Resource;
-import org.exoplatform.services.jcr.access.AccessControlEntry;
-import org.exoplatform.services.jcr.access.AccessControlList;
-import org.exoplatform.services.jcr.core.ExtendedNode;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.IdentityConstants;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.chromattic.ext.ntdef.VersionableMixin;
 import org.exoplatform.wiki.mow.api.Page;
+import org.exoplatform.wiki.mow.api.Permission;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.mow.core.api.MOWService;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.WikiService;
-import org.exoplatform.wiki.utils.Utils;
 
 /**
  * Created by The eXo Platform SAS
@@ -79,6 +72,8 @@ public abstract class PageImpl extends NTFolder implements Page {
   
   private WikiService wService;
   
+  private Permission permission = new PermissionImpl();
+  
   /**
    * caching related pages for performance
    */
@@ -88,6 +83,11 @@ public abstract class PageImpl extends NTFolder implements Page {
   
   public void setMOWService(MOWService mowService) {
     this.mowService = mowService;
+    permission.setMOWService(mowService);
+  }
+  
+  public MOWService getMOWService() {
+    return mowService;
   }
   
   public void setWikiService(WikiService wService) {
@@ -287,7 +287,6 @@ public abstract class PageImpl extends NTFolder implements Page {
     return file;
   }
   
-  
   @OneToMany
   public abstract Collection<AttachmentImpl> getAttachmentsByChromattic();
 
@@ -295,21 +294,25 @@ public abstract class PageImpl extends NTFolder implements Page {
     return getAttachmentsByChromattic();
   }
   
-  public Collection<AttachmentImpl> getAttachmentsExcludeContent() {
+  public Collection<AttachmentImpl> getAttachmentsExcludeContent() throws Exception {
     Collection<AttachmentImpl> attachments = getAttachmentsByChromattic();
     List<AttachmentImpl> atts = new ArrayList<AttachmentImpl>(attachments.size());
     for (AttachmentImpl attachment : attachments) {
-      if (!WikiNodeType.Definition.CONTENT.equals(attachment.getName())) {
+      if ((attachment.hasPermission(PermissionType.VIEW_ATTACHMENT)
+          || attachment.hasPermission(PermissionType.EDIT_ATTACHMENT))
+          && !WikiNodeType.Definition.CONTENT.equals(attachment.getName())) {
         atts.add(attachment);
       }
     }
     return atts;
   }
   
-  public AttachmentImpl getAttachment(String attachmentId) {
-    for (AttachmentImpl att : getAttachments()) {
-      if (att.getName().equals(attachmentId)) {
-        return att;
+  public AttachmentImpl getAttachment(String attachmentId) throws Exception {
+    for (AttachmentImpl attachment : getAttachments()) {
+      if (attachment.getName().equals(attachmentId)
+          && (attachment.hasPermission(PermissionType.VIEW_ATTACHMENT)
+          || attachment.hasPermission(PermissionType.EDIT_ATTACHMENT))) {
+        return attachment;
       }
     }
     return null;
@@ -317,10 +320,9 @@ public abstract class PageImpl extends NTFolder implements Page {
   
   public void addAttachment(AttachmentImpl attachment) throws DuplicateNameException {
     getAttachments().add(attachment);
-    
   }  
   
-  public void removeAttachment(String attachmentId){
+  public void removeAttachment(String attachmentId) throws Exception {
     AttachmentImpl attachment = getAttachment(attachmentId);
     if(attachment != null){
       attachment.remove();
@@ -356,63 +358,24 @@ public abstract class PageImpl extends NTFolder implements Page {
   public abstract void setOverridePermission(boolean isOverridePermission);
   
   public boolean hasPermission(PermissionType permissionType) throws Exception {
-    String[] permission = new String[] {};
-    if (PermissionType.VIEWPAGE.equals(permissionType)) {
-      permission = new String[] { org.exoplatform.services.jcr.access.PermissionType.READ };
-    } else if (PermissionType.EDITPAGE.equals(permissionType)) {
-      permission = new String[] { org.exoplatform.services.jcr.access.PermissionType.ADD_NODE,
-          org.exoplatform.services.jcr.access.PermissionType.REMOVE,
-          org.exoplatform.services.jcr.access.PermissionType.SET_PROPERTY };
-    }
-
-    ExtendedNode pageNode = (ExtendedNode) getJCRPageNode();
-    AccessControlList acl = pageNode.getACL();
-    ConversationState conversationState = ConversationState.getCurrent();
-    Identity user = null;
-    if (conversationState != null) {
-      user = conversationState.getIdentity();
-    } else {
-      user = new Identity(IdentityConstants.ANONIM);
-    }
-    return Utils.hasPermission(acl, permission, user);
+    return permission.hasPermission(permissionType, getPath());
   }
   
-  public HashMap<String, String[]> getPagePermission() throws Exception {
-    ExtendedNode pageNode = (ExtendedNode) getJCRPageNode();
-    HashMap<String, String[]> perm = new HashMap<String, String[]>();
-    AccessControlList acl = pageNode.getACL();
-    List<AccessControlEntry> aceList = acl.getPermissionEntries();
-    for (int i = 0, length = aceList.size(); i < length; i++) {
-      AccessControlEntry ace = aceList.get(i);
-      String[] nodeActions = perm.get(ace.getIdentity());
-      List<String> actions = null;
-      if (nodeActions != null) {
-        actions = new ArrayList<String>(Arrays.asList(nodeActions));
-      } else {
-        actions = new ArrayList<String>();
-      }
-      actions.add(ace.getPermission());
-      perm.put(ace.getIdentity(), actions.toArray(new String[5]));
-    }
-    return perm;
+  public HashMap<String, String[]> getPermission() throws Exception {
+    return permission.getPermission(getPath());
   }
 
-  public void setPagePermission(HashMap<String, String[]> permissions) throws Exception {
-    getChromatticSession().save();
-    ExtendedNode pageNode = (ExtendedNode) getJCRPageNode();
-    if (pageNode.canAddMixin("exo:privilegeable")) {
-      pageNode.addMixin("exo:privilegeable");
-    }
-    if (permissions != null && permissions.size() > 0) {
-      pageNode.setPermissions(permissions);
-    } else {
-      pageNode.clearACL();
-      pageNode.setPermission(IdentityConstants.ANY, org.exoplatform.services.jcr.access.PermissionType.ALL);
+  public void setPermission(HashMap<String, String[]> permissions) throws Exception {
+    permission.setPermission(permissions, getPath());
+    
+    Collection<AttachmentImpl> attachments = getAttachments();
+    for (AttachmentImpl attachment : attachments) {
+      attachment.setPermission(permissions);
     }
   }
   
   public void setNonePermission() throws Exception {
-    setPagePermission(null);
+    setPermission(null);
   }
   
   /*public void addWikiPage(PageImpl wikiPage) throws DuplicateNameException {
@@ -594,5 +557,4 @@ public abstract class PageImpl extends NTFolder implements Page {
     // clear related pages in cache.
     if (relatedPages != null) relatedPages.clear();
   }
-  
 }

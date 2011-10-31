@@ -1,0 +1,4 @@
+<% 
+  String deleteLink = uicomponent.event(uicomponent.DELETE_ACTION, URLEncoder.encode(uicomponent.getAttachmentName(), "UTF-8")); 
+%>
+<img title="<%= _ctx.appRes("UIAttachmentUploadListForm.label.RemoveAttachment"); %>" onclick="$deleteLink" alt="" class="RemoveFile" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>

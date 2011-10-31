@@ -30,6 +30,9 @@ public enum PermissionType {
 
   ADMINPAGE,
 
-  ADMINSPACE
-
+  ADMINSPACE,
+  
+  VIEW_ATTACHMENT,
+  
+  EDIT_ATTACHMENT
 }

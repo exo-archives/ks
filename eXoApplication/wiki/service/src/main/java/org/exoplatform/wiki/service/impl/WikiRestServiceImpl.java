@@ -68,6 +68,7 @@ import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.rendering.impl.RenderingServiceImpl;
+import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.service.Relations;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -212,7 +213,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
           if (attachfile != null) {
             WikiService wikiService = (WikiService) PortalContainer.getComponent(WikiService.class);
             Page page = wikiService.getExsitedOrNewDraftPageById(wikiType, wikiOwner, pageId);
-            if (page != null) {
+            if (page != null && page.hasPermission(PermissionType.EDITPAGE)) {
               AttachmentImpl att = ((PageImpl) page).createAttachment(attachfile.getName(), attachfile);
               ConversationState conversationState = ConversationState.getCurrent();
               String creator = null;

@@ -482,7 +482,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
         HashMap<String, String[]> permissionMap = uiWikiPermissionForm.convertToPermissionMap(uiWikiPermissionForm.permissionEntries);
         // Include ACL for administrators
         permissionMap.putAll(org.exoplatform.wiki.utils.Utils.getACLForAdmins());
-        page.setPagePermission(permissionMap);
+        page.setPermission(permissionMap);
         page.setOverridePermission(true);
         
         UIPopupContainer popupContainer = wikiPortlet.getPopupContainer(PopupLevel.L1);

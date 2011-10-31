@@ -915,7 +915,7 @@ public class WikiServiceImpl implements WikiService, Startable {
     while (queue.peek() != null) {
       PageImpl p = (PageImpl) queue.poll();
       if (!p.getOverridePermission()) {
-        p.setPagePermission(permMap);
+        p.setPermission(permMap);
       }
       Iterator<PageImpl> iter = p.getChildPages().values().iterator();
       while (iter.hasNext()) {

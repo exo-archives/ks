@@ -220,7 +220,7 @@ public class WikiDataInjector extends DataInjector {
       if (page != null) {
         if (isRecursive || depth == (quantities.size() - 1)) {
           log.info(String.format("Grant permissions %1$s for page: %2$s .........", permissionsToString(permissions), page.getTitle()));
-          page.setPagePermission(permissions);
+          page.setPermission(permissions);
         }
       }
       if (depth < quantities.size() - 1) {

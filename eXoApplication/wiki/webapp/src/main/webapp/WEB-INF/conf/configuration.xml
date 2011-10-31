@@ -261,6 +261,15 @@
              <field name="component"><string>org.exoplatform.wiki.webui.UIWikiUploadAttachment</string></field>             
            </object>
         </object-param>
+        <object-param>
+           <name>RemoveAttachment</name>
+           <object type="org.exoplatform.webui.ext.UIExtension">
+             <field name="type"><string>org.exoplatform.wiki.webui.UIWikiAttachmentUploadListForm</string></field>
+             <field name="rank"><int>100</int></field>
+             <field name="name"><string>RemoveAttachment</string></field>
+             <field name="component"><string>org.exoplatform.wiki.webui.control.action.RemoveAttachmentActionComponent</string></field>             
+           </object>
+        </object-param>
       </init-params>
     </component-plugin>
   </external-component-plugins>

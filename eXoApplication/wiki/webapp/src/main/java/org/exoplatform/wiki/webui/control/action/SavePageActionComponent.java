@@ -84,15 +84,15 @@ public class SavePageActionComponent extends UIComponent {
     return FILTERS;
   }  
 
-  private boolean isNewMode() {
+  protected boolean isNewMode() {
     return (WikiMode.ADDPAGE.equals(getAncestorOfType(UIWikiPortlet.class).getWikiMode()));
   }
   
-  private String getPageTitleInputId() {
+  protected String getPageTitleInputId() {
     return UIWikiPageTitleControlArea.FIELD_TITLEINPUT;
   }
   
-  private String getActionLink() throws Exception {
+  protected String getActionLink() throws Exception {
     return Utils.createFormActionLink(this, ACTION, ACTION);
   }  
   

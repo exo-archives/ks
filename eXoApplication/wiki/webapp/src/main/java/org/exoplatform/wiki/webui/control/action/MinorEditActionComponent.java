@@ -60,7 +60,7 @@ public class MinorEditActionComponent extends UIComponent {
       WebuiRequestContext context = event.getRequestContext();
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       SavePageActionComponent saveAction = wikiPortlet.findFirstComponentOfType(SavePageActionComponent.class);
-      Event<UIComponent> xEvent = saveAction.createEvent(saveAction.ACTION,
+      Event<UIComponent> xEvent = saveAction.createEvent(SavePageActionComponent.ACTION,
                                                          Event.Phase.DECODE,
                                                          context);
       xEvent.getRequestContext().setAttribute(ACTION, true);

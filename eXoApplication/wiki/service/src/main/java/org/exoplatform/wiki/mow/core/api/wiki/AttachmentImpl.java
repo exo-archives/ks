@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 import org.chromattic.api.annotations.Destroy;
 import org.chromattic.api.annotations.ManyToOne;
@@ -31,8 +32,10 @@ import org.chromattic.api.annotations.WorkspaceName;
 import org.chromattic.ext.ntdef.NTFile;
 import org.chromattic.ext.ntdef.Resource;
 import org.exoplatform.wiki.mow.api.Attachment;
+import org.exoplatform.wiki.mow.api.Permission;
 import org.exoplatform.wiki.mow.api.Wiki;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
+import org.exoplatform.wiki.service.PermissionType;
 import org.exoplatform.wiki.utils.Utils;
 
 /**
@@ -42,6 +45,8 @@ import org.exoplatform.wiki.utils.Utils;
 @PrimaryType(name = WikiNodeType.WIKI_ATTACHMENT)
 public abstract class AttachmentImpl extends NTFile implements Attachment {
 
+  private Permission permission = new PermissionImpl();
+  
   @Name
   public abstract String getName();
   public abstract void setName(String name);
@@ -151,5 +156,25 @@ public abstract class AttachmentImpl extends NTFile implements Attachment {
     Resource textContent = Resource.createPlainText(text);
     setContentResource(textContent);
   }
+  
+  public boolean hasPermission(PermissionType permissionType) throws Exception {
+    if (permission.getMOWService() == null) {
+      permission.setMOWService(getParentPage().getMOWService());
+    }
+    return permission.hasPermission(permissionType, getPath());
+  }
+  
+  public HashMap<String, String[]> getPermission() throws Exception {
+    if (permission.getMOWService() == null) {
+      permission.setMOWService(getParentPage().getMOWService());
+    }
+    return permission.getPermission(getPath());
+  }
 
+  public void setPermission(HashMap<String, String[]> permissions) throws Exception {
+    if (permission.getMOWService() == null) {
+      permission.setMOWService(getParentPage().getMOWService());
+    }
+    permission.setPermission(permissions, getPath());
+  }
 }

@@ -59,7 +59,7 @@ import org.exoplatform.wiki.webui.control.listener.MoreContainerActionListener;
 )
 public class WatchPageActionComponent extends UIComponent {
   
-  private static final String                  WATCH_PAGE = "WatchPage";
+  protected static final String                  WATCH_PAGE = "WatchPage";
   
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsUserFilter(), new IsViewModeFilter() });
 
