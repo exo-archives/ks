@@ -32,7 +32,7 @@
 											<div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></div>
 										</div>
 									</th>
-									<th style="width:120px">
+									<th style="width:125px">
 										<div onclick="<%=uicomponent.event("SetOrderBy","createdDate");%>">
 										  <div class="DownArrow1Icon">
 										    <div class="THFixHidden" style="width: 114px;">
@@ -41,7 +41,7 @@
 										  </div>
 										</div>
 									</th>
-									<th style="width:40px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
+									<th style="width:70px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
 								</tr>
 							</thead>
 							<tbody>

@@ -39,10 +39,10 @@
 										<a class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></a>
 									</div>
 								</th>
-								<th style="width:96px;">
+								<th style="width:80px;">
 									<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
 								</th>
-								<th style="width:130px;">
+								<th style="width:90px;">
 									<div onclick="<%=uicomponent.event("SetOrderBy","lastPostDate");%>">
 									  <div class="DownArrow1Icon">
 									    <div class="THFixHidden" style="width: 114px;">
@@ -51,10 +51,10 @@
 									  </div>
 									</div>
 								</th>
-								<th style="width:60px;">
+								<th style="width:80px;">
 									<div onclick="<%=uicomponent.event("SetOrderBy","postCount");%>">
 									  <div class="DownArrow1Icon">
-									    <div class="THFixHidden" style="width: 44px;">
+									    <div class="THFixHidden" style="width: 65px;">
 									      <%=_ctx.appRes("UITopicContainer.label.Replies");%>
 									    </div>
 									  </div>
@@ -70,7 +70,7 @@
 									</div>
 								</th>
 								<%if(isAdmin){ %>
-								  <th style="width:50px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
+								  <th style="width:70px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
 								<%}%>
 							</tr>
 						</thead>
