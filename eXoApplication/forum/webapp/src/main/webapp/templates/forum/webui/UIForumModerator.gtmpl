@@ -35,7 +35,7 @@
                 <ul>
                   <%
                     for(viewAction in menuViewInfos) {
-                      if((userProfile.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
+                      if((uicomponent.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
                       String linkView = uicomponent.getActionViewInfoUser(viewAction, moderator) ;
                       String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
                       if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) {
