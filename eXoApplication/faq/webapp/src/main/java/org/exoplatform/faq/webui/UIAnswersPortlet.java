@@ -19,7 +19,6 @@ package org.exoplatform.faq.webui;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
@@ -34,7 +33,6 @@ import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
@@ -52,7 +50,11 @@ import org.exoplatform.webui.form.UIFormInputInfo;
     template = "app:/templates/faq/webui/UIAnswersPortlet.gtmpl"
 )
 public class UIAnswersPortlet extends UIPortletApplication {
-  private boolean         isFirstTime = true;
+  private final static String SPACE_URL   = "SPACE_URL".intern();
+
+  private final static String SLASH       = "/".intern();
+
+  private boolean             isFirstTime = true;
 
   /**
    * ui component for displaying message when changing mode.
@@ -71,24 +73,23 @@ public class UIAnswersPortlet extends UIPortletApplication {
   }
 
   public String getSpaceCategoryId() {
-
     try {
       PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
       PortletPreferences pref = pcontext.getRequest().getPreferences();
-      if (pref.getValue("SPACE_URL", null) != null) {
-        String url = pref.getValue("SPACE_URL", null);
-        SpaceService sService = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class);
+      if (pref.getValue(SPACE_URL, null) != null) {
+        SpaceService sService = (SpaceService) getApplicationComponent(SpaceService.class);
+        FAQService fService = (FAQService) getApplicationComponent(FAQService.class);
+        String url = pref.getValue(SPACE_URL, null);
         Space space = sService.getSpaceByUrl(url);
-        String categoryId = Utils.CATE_SPACE_ID_PREFIX + space.getId();
-        FAQService fService = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
-        if (fService.getCategoryById(categoryId) != null)
+        String categoryId = Utils.CATE_SPACE_ID_PREFIX + space.getPrettyName();
+        if (fService.isExisting(Utils.CATEGORY_HOME + SLASH + categoryId)) {
           return categoryId;
+        }
       }
       return null;
     } catch (Exception e) {
       return null;
     }
-
   }
 
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {

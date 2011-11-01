@@ -48,8 +48,13 @@
 					if(i < (ids.length-1) || link.equals(Utils.CATEGORY_HOME)){
 						url = uicomponent.url("ChangePath", link);
 						if(link.equals(Utils.CATEGORY_HOME) && ids.length == 1){
+						  String style="";
+						  if(uicomponent.isInSpace()) {
+						    url = "javaScript:void(0)";
+						    style = "cursor: default;";
+						  }
 				%>
-					<span><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName"><b>$viewName</b></a></span>
+					<span><a class="ActionLink" href="$url" style="$style" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName"><b>$viewName</b></a></span>
 						<%} else { %>
 					<span style="vertical-align: bottom;"><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
 						<%} %>

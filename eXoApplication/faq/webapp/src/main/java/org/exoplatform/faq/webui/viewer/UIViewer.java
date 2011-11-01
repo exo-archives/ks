@@ -56,12 +56,31 @@ public class UIViewer extends UIContainer {
 
   private boolean      useAjax      = false;
 
+  private boolean      isInSpace    = false;
+
   private RenderHelper renderHelper = new RenderHelper();
 
   private Log          log          = ExoLogger.getLogger(UIViewer.class);
 
   public UIViewer() {
     fAqService = (FAQService) PortalContainer.getComponent(FAQService.class);
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public boolean isInSpace() {
+    return isInSpace;
+  }
+
+  public void setPath(String path) {
+    if(path.indexOf(Utils.CATE_SPACE_ID_PREFIX) >= 0) {
+      isInSpace = true;
+    } else {
+      isInSpace = false;
+    }
+    this.path = path;
   }
 
   private List<String> arrangeList(List<String> list) {
@@ -103,7 +122,7 @@ public class UIViewer extends UIContainer {
     public void execute(Event<UIViewer> event) throws Exception {
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
       UIViewer viewer = event.getSource();
-      viewer.path = path;
+      viewer.setPath(path);
       event.getRequestContext().addUIComponentToUpdateByAjax(viewer);
     }
   }
