@@ -152,13 +152,10 @@ public class UIWikiUploadAttachment extends UIWikiForm {
 
           att.setTitle(uploadResource.getFileName());
           if (uploadResource.getFileName().lastIndexOf(".") > 0) {
-            att.setTitle(uploadResource.getFileName().substring(0,
-                                                                uploadResource.getFileName()
-                                                                              .lastIndexOf(".")));
-
-            att.setCreator(event.getRequestContext().getRemoteUser());
-            org.exoplatform.wiki.utils.Utils.reparePermissions(att);
+            att.setTitle(uploadResource.getFileName().substring(0, uploadResource.getFileName().lastIndexOf(".")));
           }
+          att.setCreator(event.getRequestContext().getRemoteUser());
+          org.exoplatform.wiki.utils.Utils.reparePermissions(att);
         } catch (Exception e) {
           event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIApplication.msg.unknown-error",
                                                                                          null,
