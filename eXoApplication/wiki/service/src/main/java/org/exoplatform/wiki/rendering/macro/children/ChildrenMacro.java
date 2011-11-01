@@ -20,14 +20,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
-import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
+import org.exoplatform.wiki.rendering.builder.ReferenceBuilder;
+import org.exoplatform.wiki.rendering.context.MarkupContextManager;
 import org.exoplatform.wiki.rendering.macro.ExcerptUtils;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
@@ -53,7 +53,6 @@ import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
-import org.xwiki.rendering.wiki.WikiModel;
 
 /**
  * Created by The eXo Platform SAS
@@ -75,16 +74,21 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
    * Used to get the current syntax parser.
    */
   @Requirement
-  private ComponentManager componentManager;
+  private ComponentManager    componentManager;
   
+  /**
+   * Used to get the current context
+   */
   @Requirement
-  private Execution execution;
+  private Execution           execution;
   
-  private DefaultWikiModel model;
+  /**
+   * Used to get the build context for document
+   */
+  @Requirement
+  private MarkupContextManager markupContextManager;
   
   private boolean excerpt;
-  
-  private ResourceBundle resourceBundle;
   
   public ChildrenMacro() {
     super("Chilren", DESCRIPTION, ChildrenMacroParameters.class);
@@ -102,8 +106,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     String childrenNum = parameters.getChildrenNum();
     String depth = parameters.getDepth();
     
-    model = (DefaultWikiModel) getWikiModel(context);
-    WikiPageParams params = model.getWikiMarkupContext(documentName,ResourceType.DOCUMENT);
+    WikiPageParams params = markupContextManager.getMarkupContext(documentName, ResourceType.DOCUMENT);
     if (StringUtils.EMPTY.equals(documentName)) {
       ExecutionContext ec = execution.getContext();
       if (ec != null) {
@@ -113,7 +116,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     }
     Block root;
     try {
-      root = generateTree(params, descendant, childrenNum, depth);
+      root = generateTree(params, descendant, childrenNum, depth, context);
       return Collections.singletonList(root);
     } catch (Exception e) {
       log.debug("Failed to ", e);
@@ -124,18 +127,18 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
   private Block generateTree(WikiPageParams params,
                              boolean descendant,
                              String childrenNum,
-                             String depth) throws Exception {
+                             String depth,MacroTransformationContext context) throws Exception {
     Block block = new GroupBlock();
-    HashMap<String, Object> context = new HashMap<String, Object>();
-    context.put(TreeNode.SHOW_DESCENDANT, descendant);
-    context.put(TreeNode.CHILDREN_NUMBER, childrenNum);
-    context.put(TreeNode.DEPTH, depth);
-    TreeNode node = TreeUtils.getDescendants(params, context);
-    addBlock(block, node);
+    HashMap<String, Object> treeContext = new HashMap<String, Object>();
+    treeContext.put(TreeNode.SHOW_DESCENDANT, descendant);
+    treeContext.put(TreeNode.CHILDREN_NUMBER, childrenNum);
+    treeContext.put(TreeNode.DEPTH, depth);
+    TreeNode node = TreeUtils.getDescendants(params, treeContext);
+    addBlock(block, node,context);
     return block;
   }
 
-  public ListItemBlock trankformToBlock(TreeNode node) throws Exception {
+  public ListItemBlock trankformToBlock(TreeNode node, MacroTransformationContext context) throws Exception {
     WikiService wikiService = (WikiService) ExoContainerContext.getCurrentContainer()
                                                                .getComponentInstanceOfType(WikiService.class);
     List<Block> blocks = new ArrayList<Block>();
@@ -144,7 +147,7 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     PageImpl page = (PageImpl) wikiService.getPageById(params.getType(),
                                                        params.getOwner(),
                                                        params.getPageId());
-    DocumentResourceReference link = new DocumentResourceReference(model.getDocumentName(params));
+    DocumentResourceReference link = new DocumentResourceReference(getReferenceBuilder(context).build(params));
     List<Block> content = new ArrayList<Block>();
     content.add(new WordBlock(page.getTitle()));
 
@@ -159,13 +162,13 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
     return new ListItemBlock(blocks);
   }
 
-  public void addBlock(Block block, TreeNode node) throws Exception {
+  public void addBlock(Block block, TreeNode node, MacroTransformationContext context) throws Exception {
     List<TreeNode> children = node.getChildren();
     Block childrenBlock = new BulletedListBlock(Collections.<Block> emptyList());
     int size = children.size();
     for (int i = 0; i < size; i++) {
-      Block listBlock = trankformToBlock(children.get(i));
-      addBlock(listBlock, children.get(i));
+      Block listBlock = trankformToBlock(children.get(i), context);
+      addBlock(listBlock, children.get(i), context);
       childrenBlock.addChild(listBlock);
     }
     block.addChild(childrenBlock);
@@ -173,31 +176,15 @@ public class ChildrenMacro extends AbstractMacro<ChildrenMacroParameters> {
 
   @Override
   public boolean supportsInlineMode() {
-
     return true;
   }
-  
-  /**
-   * @return the component manager.
-   */
-  public ComponentManager getComponentManager() {
-    return this.componentManager;
-  }
 
-  protected WikiModel getWikiModel(MacroTransformationContext context) throws MacroExecutionException {
+  private ReferenceBuilder getReferenceBuilder(MacroTransformationContext context) throws MacroExecutionException {
     try {
-      return getComponentManager().lookup(WikiModel.class);
+      return componentManager.lookup(ReferenceBuilder.class, context.getSyntax().toIdString());
     } catch (ComponentLookupException e) {
-      throw new MacroExecutionException("Failed to find wiki model", e);
+      throw new MacroExecutionException(String.format("Failed to find reference builder for syntax %s", context.getSyntax()
+                                                                                                               .toIdString()), e);
     }
-  }
-  
-  private WikiContext getWikiContext() {
-    ExecutionContext ec = execution.getContext();
-    if (ec != null) {
-      WikiContext wikiContext = (WikiContext) ec.getProperty(WikiContext.WIKICONTEXT);
-      return wikiContext;
-    }
-    return null;
   }
 }

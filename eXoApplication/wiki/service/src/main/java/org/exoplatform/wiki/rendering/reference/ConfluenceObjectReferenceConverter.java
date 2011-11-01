@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.rendering.converter;
+package org.exoplatform.wiki.rendering.reference;
 
 import org.apache.commons.lang.StringUtils;
 import org.xwiki.component.annotation.Component;
