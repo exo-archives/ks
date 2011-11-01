@@ -112,15 +112,17 @@
 }
 
 .UIForumPortlet .SearchForm .UIPopupCategory input{
-	width: 68px;
-	height: 12px;
+	width: 70px;
+	height: 20px;
+	line-height: 20px;
+	border: 1px solid #e3e3e3;
 	font-size: 11px;
 	float: left;
+	padding: 0 5px;
 }
 
 .UIForumPortlet .SearchForm .UIPopupCategory .BorderSearch{
-	border-bottom: 1px solid #707070;
-	padding-bottom: 6px;
+	padding-bottom: 10px;
 }
 
 .UIForumPortlet .GotoPageIcon .UIPopupCategory .InputPage {

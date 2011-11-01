@@ -468,10 +468,6 @@
 	color:blue;
 }
 
-.UIForumPortlet .UITopicDetail .ContentAction .UIPopupCategory .SearchPopup{
-	padding: 5px;
-}
-
 .UIForumPortlet .UITopicDetail .FootPost .ActionButton{
 	float: right;
 }

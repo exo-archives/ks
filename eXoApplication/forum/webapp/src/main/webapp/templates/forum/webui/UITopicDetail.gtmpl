@@ -210,7 +210,7 @@
                   <ul id="SearchInTopic" class="SearchPopup UIRightClickPopupMenu"  style="display:block;">
                     <li class="ClearFix SearchTopic BorderSearch">
                         <% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
-                       <a class="SearchLink NormalButtomBT UIActionForum FL" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+                       <a class="SearchLink NormalButtomBT UIActionForum" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
                     </li>
                     <li class="ItemIcon AdvancedSearchIcon MenuItem" onclick="<%=uicomponent.event("AdvancedSearch")%>">
                       <a href="javaScript:void(0)"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>

@@ -100,7 +100,7 @@
 									
 									<li class="BorderSearch ClearFix">
 										<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
-										<a class="NormalButtomBT SearchLink FL" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+										<a class="NormalButtomBT SearchLink" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
 									</li>
 									<li>
 										<a class="MenuItem AdvancedSearchIcon ItemIcon" href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
