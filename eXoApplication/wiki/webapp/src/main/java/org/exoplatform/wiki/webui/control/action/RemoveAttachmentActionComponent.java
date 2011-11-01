@@ -24,15 +24,14 @@ import java.util.Map;
 
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.ext.UIExtensionEventListener;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
-import org.exoplatform.wiki.commons.Utils;
-import org.exoplatform.wiki.mow.api.Page;
+import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.webui.UIWikiAttachmentUploadListForm;
 import org.exoplatform.wiki.webui.UIWikiBottomArea;
@@ -51,10 +50,10 @@ import org.exoplatform.wiki.webui.control.filter.RemoveAttachmentPermissionFilte
     lifecycle = Lifecycle.class,
     template = "app:/templates/wiki/webui/control/action/RemoveAttachmentActionComponent.gtmpl",
     events = {
-      @EventConfig(listeners = RemoveAttachmentActionComponent.RemoveAttachmentActionListener.class, phase = Phase.DECODE)
+      @EventConfig(listeners = RemoveAttachmentActionComponent.RemoveAttachmentActionListener.class)
     }
 )
-public class RemoveAttachmentActionComponent extends UIComponent {
+public class RemoveAttachmentActionComponent extends UIContainer {
   
   public static final String DELETE_ACTION   = "RemoveAttachment";
   
@@ -75,25 +74,17 @@ public class RemoveAttachmentActionComponent extends UIComponent {
     this.attachmentName = attachmentName;
   }
 
-  private Page getCurrentWikiPage() throws Exception {
-    UIWikiPortlet wikiPortlet = this.getAncestorOfType(UIWikiPortlet.class);
-    if (wikiPortlet.getWikiMode() == WikiMode.ADDPAGE) {
-      return Utils.getCurrentNewDraftWikiPage();
-    } else {
-      return Utils.getCurrentWikiPage();
-    }
-  }
-  
   public static class RemoveAttachmentActionListener extends UIExtensionEventListener<RemoveAttachmentActionComponent> {
     @Override
     protected void processEvent(Event<RemoveAttachmentActionComponent> event) throws Exception {
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       UIWikiPageContentArea contentArea = wikiPortlet.findFirstComponentOfType(UIWikiPageContentArea.class);
+      UIWikiAttachmentUploadListForm attachmentUploadListForm = wikiPortlet.findFirstComponentOfType(UIWikiAttachmentUploadListForm.class);
       UIWikiBottomArea bottomArea= wikiPortlet.findFirstComponentOfType(UIWikiBottomArea.class);
-      RemoveAttachmentActionComponent uiComponent = event.getSource();
-      Page page = uiComponent.getCurrentWikiPage();
-      String attFileId = URLDecoder.decode(event.getRequestContext().getRequestParameter(OBJECTID), "UTF-8");
-      ((PageImpl) page).removeAttachment(attFileId);      
+      
+      PageImpl page = (PageImpl) attachmentUploadListForm.getCurrentWikiPage();
+      String attachmentName = URLDecoder.decode(event.getRequestContext().getRequestParameter(OBJECTID), "UTF-8");
+      page.removeAttachment(attachmentName);      
       event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea);
       if (WikiMode.VIEW.equals(wikiPortlet.getWikiMode())) {
         event.getRequestContext().addUIComponentToUpdateByAjax(contentArea);
@@ -102,14 +93,13 @@ public class RemoveAttachmentActionComponent extends UIComponent {
 
     @Override
     protected Map<String, Object> createContext(Event<RemoveAttachmentActionComponent> event) throws Exception {
-      String attFileId = URLDecoder.decode(event.getRequestContext().getRequestParameter(OBJECTID), "UTF-8");
-      Map<String, Object> context = new HashMap<String, Object>();
-      context.put(RemoveAttachmentPermissionFilter.ATTACHMENT_NAME_KEY, attFileId);
-      
       UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
       UIWikiAttachmentUploadListForm attachmentUploadListForm = wikiPortlet.findFirstComponentOfType(UIWikiAttachmentUploadListForm.class);
-      context.put(RemoveAttachmentPermissionFilter.UPLOAD_LIST_FORM, attachmentUploadListForm);
-      
+      PageImpl page = (PageImpl) attachmentUploadListForm.getCurrentWikiPage();
+      String attacmentName = URLDecoder.decode(event.getRequestContext().getRequestParameter(OBJECTID), "UTF-8");
+      AttachmentImpl attachment = page.getAttachment(attacmentName);
+      Map<String, Object> context = new HashMap<String, Object>();
+      context.put(RemoveAttachmentPermissionFilter.ATTACHMENT_KEY, attachment);
       return context;
     }
 

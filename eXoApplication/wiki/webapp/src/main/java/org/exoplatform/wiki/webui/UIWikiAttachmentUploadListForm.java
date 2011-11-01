@@ -100,13 +100,15 @@ public class UIWikiAttachmentUploadListForm extends UIForm {
     component.setAttachmentName(attName);
     UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
     
+    PageImpl page = (PageImpl) getCurrentWikiPage();
+    AttachmentImpl attachment = page.getAttachment(attName);
+    
     // Create context
     Map<String, Object> context = new HashMap<String, Object>();
-    context.put(RemoveAttachmentPermissionFilter.ATTACHMENT_NAME_KEY, attName);
-    context.put(RemoveAttachmentPermissionFilter.UPLOAD_LIST_FORM, this);
+    context.put(RemoveAttachmentPermissionFilter.ATTACHMENT_KEY, attachment);
     
     // Accept permission
-    if (manager.accept(EXTENSION_TYPE, "RemoveAttachment", context)) {
+    if (manager.accept(EXTENSION_TYPE, RemoveAttachmentActionComponent.DELETE_ACTION, context)) {
       renderChild(RemoveAttachmentActionComponent.class);
     }
   }

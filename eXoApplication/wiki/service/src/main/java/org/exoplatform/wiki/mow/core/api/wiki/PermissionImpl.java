@@ -39,10 +39,10 @@ import org.exoplatform.wiki.utils.Utils;
  */
 public class PermissionImpl extends Permission {
   @Override
-  public HashMap<String, String[]> getPermission(String path) throws Exception {
-    ExtendedNode pageNode = (ExtendedNode) getJCRNode(path);
+  public HashMap<String, String[]> getPermission(String jcrPath) throws Exception {
+    ExtendedNode extendedNode = (ExtendedNode) getJCRNode(jcrPath);
     HashMap<String, String[]> perm = new HashMap<String, String[]>();
-    AccessControlList acl = pageNode.getACL();
+    AccessControlList acl = extendedNode.getACL();
     List<AccessControlEntry> aceList = acl.getPermissionEntries();
     for (int i = 0, length = aceList.size(); i < length; i++) {
       AccessControlEntry ace = aceList.get(i);
@@ -60,7 +60,7 @@ public class PermissionImpl extends Permission {
   }
 
   @Override
-  public boolean hasPermission(PermissionType permissionType, String path) throws Exception {
+  public boolean hasPermission(PermissionType permissionType, String jcrPath) throws Exception {
     String[] permission = new String[] {};
     if (PermissionType.VIEWPAGE.equals(permissionType) || PermissionType.VIEW_ATTACHMENT.equals(permissionType)) {
       permission = new String[] { org.exoplatform.services.jcr.access.PermissionType.READ };
@@ -70,8 +70,8 @@ public class PermissionImpl extends Permission {
           org.exoplatform.services.jcr.access.PermissionType.SET_PROPERTY };
     }
 
-    ExtendedNode pageNode = (ExtendedNode) getJCRNode(path);
-    AccessControlList acl = pageNode.getACL();
+    ExtendedNode extendedNode = (ExtendedNode) getJCRNode(jcrPath);
+    AccessControlList acl = extendedNode.getACL();
     ConversationState conversationState = ConversationState.getCurrent();
     Identity user = null;
     if (conversationState != null) {
@@ -83,18 +83,18 @@ public class PermissionImpl extends Permission {
   }
 
   @Override
-  public void setPermission(HashMap<String, String[]> permissions, String path) throws Exception {
+  public void setPermission(HashMap<String, String[]> permissions, String jcrPath) throws Exception {
     getChromatticSession().save();
-    ExtendedNode pageNode = (ExtendedNode) getJCRNode(path);
-    if (pageNode.canAddMixin("exo:privilegeable")) {
-      pageNode.addMixin("exo:privilegeable");
+    ExtendedNode extendedNode = (ExtendedNode) getJCRNode(jcrPath);
+    if (extendedNode.canAddMixin("exo:privilegeable")) {
+      extendedNode.addMixin("exo:privilegeable");
     }
     
     if (permissions != null && permissions.size() > 0) {
-      pageNode.setPermissions(permissions);
+      extendedNode.setPermissions(permissions);
     } else {
-      pageNode.clearACL();
-      pageNode.setPermission(IdentityConstants.ANY, org.exoplatform.services.jcr.access.PermissionType.ALL);
+      extendedNode.clearACL();
+      extendedNode.setPermission(IdentityConstants.ANY, org.exoplatform.services.jcr.access.PermissionType.ALL);
     }
   }
 }
