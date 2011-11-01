@@ -17,6 +17,9 @@
 package org.exoplatform.wiki.webui;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.services.jcr.datamodel.IllegalNameException;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -27,11 +30,15 @@ import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.ext.UIExtensionEventListener;
+import org.exoplatform.webui.ext.filter.UIExtensionFilter;
+import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.wiki.commons.NameValidator;
 import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
+import org.exoplatform.wiki.webui.core.UIWikiForm;
 
 /**
  * Created by The eXo Platform SAS
@@ -44,11 +51,11 @@ import org.exoplatform.wiki.commons.Utils;
   template = "app:/templates/wiki/webui/UIFieldEditableForm.gtmpl",
   events = { 
     @EventConfig(listeners = UIFieldEditableForm.ChangeTitleModeActionListener.class),
-    @EventConfig(listeners = UIFieldEditableForm.SaveActionListener.class)
+    @EventConfig(listeners = UIFieldEditableForm.SavePageTitleActionListener.class)
   }
 )
-public class UIFieldEditableForm extends UIForm {
-
+public class UIFieldEditableForm extends UIWikiForm {
+  
   private String             EditableFieldId;
 
   private String             parentFunctionName;
@@ -59,12 +66,27 @@ public class UIFieldEditableForm extends UIForm {
 
   public static final String CHANGE_TITLEMODE = "ChangeTitleMode";
 
-  public static final String SAVE             = "Save";
-
+  public static final String SAVE             = "SavePageTitle";
+  
+  public static final String SAVE_TITLE       = "saveTitle";
+  
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new EditPagesPermissionFilter() });
+  
+  @UIExtensionFilters
+  public List<UIExtensionFilter> getFilters() {
+    return FILTERS;
+  }
+  
   public UIFieldEditableForm() {
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.HELP,
+        WikiMode.VIEWREVISION });
     UIFormStringInput titleInput = new UIFormStringInput(FIELD_TITLEINPUT, FIELD_TITLEINPUT, null);
     addChild(titleInput);
+    titleInput.setRendered(false);
+    EditableFieldId = UIWikiPageTitleControlArea.FIELD_TITLEINFO;
     
+    Class arg[] = { String.class, Event.class };
+    setParentFunction(SAVE_TITLE, arg);
   }
     
   @Override
@@ -74,7 +96,6 @@ public class UIFieldEditableForm extends UIForm {
   
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
-
     UIComponent titleComponent = this.getParent().findComponentById(EditableFieldId);
     if (titleComponent != null && titleComponent.isRendered())
       getChild(UIFormStringInput.class).setRendered(false);    
@@ -118,8 +139,8 @@ public class UIFieldEditableForm extends UIForm {
     @Override
     public void execute(Event<UIFieldEditableForm> event) throws Exception {
       UIFieldEditableForm editableForm = event.getSource();
-      UIFormInputInfo editableField = editableForm.getParent()
-                                                  .findComponentById(editableForm.getEditableFieldId());
+      UIWikiPageTitleControlArea pageTitleControlArea = editableForm.getParent();
+      UIFormInputInfo editableField = pageTitleControlArea.getChild(UIFormInputInfo.class);
       UIFormStringInput titleInput = editableForm.getChild(UIFormStringInput.class);
       boolean isShow = Boolean.parseBoolean(event.getRequestContext().getRequestParameter(OBJECTID));
 
@@ -135,10 +156,9 @@ public class UIFieldEditableForm extends UIForm {
     }
   }
 
-  public static class SaveActionListener extends EventListener<UIFieldEditableForm> {
+  public static class SavePageTitleActionListener extends UIExtensionEventListener<UIFieldEditableForm> {
     @Override
-    public void execute(Event<UIFieldEditableForm> event) throws Exception {
-
+    public void processEvent(Event<UIFieldEditableForm> event) throws Exception {
       UIFieldEditableForm editableForm = event.getSource();
       editableForm.getParent()
                   .findComponentById(editableForm.getEditableFieldId())
@@ -166,6 +186,16 @@ public class UIFieldEditableForm extends UIForm {
       Method m = editableForm.getParent().getClass()
         .getMethod(editableForm.getParentFunctionName(), editableForm.getFunctionArgType());
       m.invoke(editableForm.getParent(), titleInput.getValue().trim(), event);
+    }
+
+    @Override
+    protected Map<String, Object> createContext(Event<UIFieldEditableForm> event) throws Exception {
+      return null;
+    }
+
+    @Override
+    protected String getExtensionType() {
+      return UIWikiPageTitleControlArea.EXTENSION_TYPE;
     }
   }
 }

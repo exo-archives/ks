@@ -16,13 +16,8 @@
  */
 package org.exoplatform.wiki.webui;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.form.UIFormInputInfo;
@@ -33,6 +28,7 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.webui.control.UIWikiExtensionContainer;
 
 /**
  * Created by The eXo Platform SAS
@@ -44,7 +40,9 @@ import org.exoplatform.wiki.service.WikiService;
   lifecycle = Lifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPageTitleControlArea.gtmpl"
 )
-public class UIWikiPageTitleControlArea extends UIContainer {
+public class UIWikiPageTitleControlArea extends UIWikiExtensionContainer {
+  
+  public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.UIWikiPageTitleControlArea";
 
   public static final String FIELD_TITLEINFO  = "TitleInfo";
 
@@ -54,8 +52,6 @@ public class UIWikiPageTitleControlArea extends UIContainer {
 
   public static final String CHANGE_TITLEMODE = "ChangeTitleMode";
 
-  public static final String SAVE_TITLE       = "saveTitle";
-  
   public UIWikiPageTitleControlArea() throws Exception {
     UIFormInputInfo titleInfo = new UIFormInputInfo(FIELD_TITLEINFO, FIELD_TITLEINFO, FIELD_TITLEINFO);
     titleInfo.setRendered(true);
@@ -66,21 +62,9 @@ public class UIWikiPageTitleControlArea extends UIContainer {
   }
   
   @Override
-  public void processRender(WebuiRequestContext context) throws Exception {
-
-    List<WikiMode> acceptEdiableModes = Arrays.asList(new WikiMode[] { WikiMode.VIEW,
-        WikiMode.HELP, WikiMode.VIEWREVISION });
-    WikiMode currentMode = getAncestorOfType(UIWikiPortlet.class).getWikiMode();
-
-    if (acceptEdiableModes.contains(currentMode)) {
-      if (getChild(UIFieldEditableForm.class) == null)
-        addChild(UIFieldEditableForm.class, null, FIELD_EDITABLE);
-      getChild(UIFieldEditableForm.class).setEditableFieldId(FIELD_TITLEINFO);
-      Class arg[] = { String.class, Event.class };
-      getChild(UIFieldEditableForm.class).setParentFunction(SAVE_TITLE, arg);
-    }
-    super.processRender(context);
-  }  
+  public String getExtensionType() {
+    return EXTENSION_TYPE;
+  }
   
   public UIFormInputInfo getUIFormInputInfo(){
     return findComponentById(FIELD_TITLEINFO);
@@ -124,7 +108,7 @@ public class UIWikiPageTitleControlArea extends UIContainer {
     Utils.redirect(pageParams, WikiMode.VIEW);
   }
   
-  private boolean isAddMode() {
+  protected boolean isAddMode() {
     WikiMode currentMode = (WikiMode) this.getAncestorOfType(UIWikiPortlet.class).getWikiMode();
     return currentMode.equals(WikiMode.ADDPAGE);
   }
