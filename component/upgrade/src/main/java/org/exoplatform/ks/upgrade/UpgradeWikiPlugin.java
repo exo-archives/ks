@@ -52,10 +52,7 @@ public class UpgradeWikiPlugin extends UpgradeProductPlugin {
 
   @Override
   public boolean shouldProceedToUpgrade(String newVersion, String previousVersion) {
-    boolean doUpgrade = VersionComparator.isBefore(previousVersion, "2.2.4-SNAPSHOT")
-        && VersionComparator.isBefore("2.2.3", newVersion)
-        && VersionComparator.isBefore(newVersion, "2.2.6-SNAPSHOT");
-    return doUpgrade;
+    return VersionComparator.isBefore(previousVersion, newVersion);
   }
 
 }

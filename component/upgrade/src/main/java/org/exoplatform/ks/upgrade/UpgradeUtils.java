@@ -47,5 +47,4 @@ public class UpgradeUtils {
     ntManager.registerNodeTypes(isXml, alreadyExistsBehaviour, NodeTypeDataManager.TEXT_XML);
     log.info("\nNode types were registered from xml-file " + nodeTypeFilesName);
   }
-
 }

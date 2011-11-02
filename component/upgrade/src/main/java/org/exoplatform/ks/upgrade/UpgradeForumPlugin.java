@@ -303,8 +303,7 @@ public class UpgradeForumPlugin extends UpgradeProductPlugin {
   }
 
   public boolean shouldProceedToUpgrade(String newVersion, String previousVersion) {
-     boolean doUpgrade = VersionComparator.isSame("0", previousVersion) && ((VersionComparator.isSame("2.2.4-SNAPSHOT", newVersion)) || (VersionComparator.isSame("2.2.4", newVersion)));
-     return doUpgrade;
+    return VersionComparator.isBefore(previousVersion, newVersion);
   }
 
   @SuppressWarnings("deprecation")

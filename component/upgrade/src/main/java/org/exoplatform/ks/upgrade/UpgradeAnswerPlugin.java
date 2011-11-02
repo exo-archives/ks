@@ -138,8 +138,7 @@ public class UpgradeAnswerPlugin extends UpgradeProductPlugin {
   }
 
   public boolean shouldProceedToUpgrade(String newVersion, String previousVersion) {
-     boolean doUpgrade = VersionComparator.isSame("0", previousVersion) && ((VersionComparator.isSame("2.2.5-SNAPSHOT", newVersion)) || (VersionComparator.isSame("2.2.5", newVersion)));
-     return true;
+    return VersionComparator.isBefore(previousVersion, newVersion);
   }
 
   @SuppressWarnings("deprecation")
