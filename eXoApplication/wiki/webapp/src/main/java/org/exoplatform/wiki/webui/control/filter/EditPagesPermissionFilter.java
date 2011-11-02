@@ -43,12 +43,13 @@ public class EditPagesPermissionFilter extends UIExtensionAbstractFilter {
   @Override
   public boolean accept(Map<String, Object> context) throws Exception {
     PageImpl page = (PageImpl) Utils.getCurrentWikiPage();
+    if (page == null) {
+      return false;
+    }
     return page.hasPermission(PermissionType.EDITPAGE);
   }
 
   @Override
   public void onDeny(Map<String, Object> context) throws Exception {
-
   }
-
 }
