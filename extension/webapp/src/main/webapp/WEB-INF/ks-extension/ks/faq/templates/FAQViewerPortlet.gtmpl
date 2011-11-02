@@ -1,428 +1,423 @@
-<%	
-	import org.exoplatform.faq.service.CategoryInfo;
-	import org.exoplatform.faq.service.Utils;
-	import org.exoplatform.web.application.JavascriptManager;
-	
-	def rcontext = _ctx.getRequestContext();
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.createLink('UIFAQPortlet','"+uicomponent.useAjax+"');") ;
+<%  
+  import org.exoplatform.faq.service.CategoryInfo;
+  import org.exoplatform.faq.service.Utils;
+  import org.exoplatform.web.application.JavascriptManager;
+  
+  def rcontext = _ctx.getRequestContext();
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.createLink('UIFAQPortlet','"+uicomponent.useAjax+"');") ;
 %>
 <div class="FAQViewerContainer" id="$uicomponent.id">
-	<%	
-	CategoryInfo cateInfo = uicomponent.getCategoryInfo();
-	if(cateInfo != null) {
-		List subCategoryInfos = cateInfo.getSubCateInfos();
-		List questionCates = cateInfo.getQuestionInfos();
-		
-		String path = cateInfo.getPath();
-		if(path == null || path.length() == 0){
-			path = Utils.CATEGORY_HOME;
-		}
-		String []ids = path.split("/");
-		List navPath = cateInfo.getPathName();
-		if(navPath.isEmpty() || navPath.size() == 0) {
-		
-		}
-		navPath = uicomponent.arrangeList(navPath);
-		if(navPath.size() > 1) {
-		%>
-			<div class="FAQViewerBar">
-				<% 
-				int i = 0;
-				String link = ids[0], viewName;
-				String url;
-				for(pathName in navPath) {
-					if(pathName.equals(Utils.CATEGORY_HOME)){ 
-						pathName = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME);
-						link = Utils.CATEGORY_HOME;
-					}
-					viewName = pathName;
-					if(pathName.length() > 40 && pathName.indexOf("<img") < 0){
-						viewName = org.exoplatform.faq.webui.FAQUtils.getSubString(pathName, 40);
-					}
-					if(pathName.indexOf("<img") >= 0){
-						pathName = "";
-					}
-					if(i < ids.length && i > 0)
-						link = link + "/" + ids[i];
-					if(i < (ids.length-1) || link.equals(Utils.CATEGORY_HOME)){
-						url = uicomponent.url("ChangePath", link);
-						if(link.equals(Utils.CATEGORY_HOME) && ids.length == 1){
-						  String style="";
-						  if(uicomponent.isInSpace()) {
-						    url = "javaScript:void(0)";
-						    style = "cursor: default;";
-						  }
-				%>
-					<span><a class="ActionLink" href="$url" style="$style" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName"><b>$viewName</b></a></span>
-						<%} else { %>
-					<span style="vertical-align: bottom;"><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
-						<%} %>
-				<%} else { %>
-					<span style="vertical-align: bottom;" title="$pathName"><b>$viewName</b></span>
-				<%}
-				++i;
-				}%>
-			</div>
-		<%}%>	
-	
-	<div style="padding: 15px 0 0; background:#F8F8F8; margin-bottom: 15px;">
-		<%for(questionCate in questionCates) { 
-				String question_ =	questionCate.getQuestion();
-				question_ = question_.replaceAll("<br/>", " ");
-				question_ = uicomponent.render(question_);
-				String id_ = questionCate.getId();
-		%>
-		<ul class="FAQViewerQuestionContent">	
-			<li class="FAQViewerIcon"><a class="ActionLinkFAQ" href="#${id_}" name="name${id_}">$question_</a></li>
-		</ul>	
-		<%	}	%>
-		
-		<% 
-		for(categoryInfo in subCategoryInfos){ 
-			String categoryName = categoryInfo.getName();
-			List questionInfos = categoryInfo.getQuestionInfos();
-			List subCategories = categoryInfo.getSubCateInfos();
-		%>
-		
-			<div class="FAQContainerQuest">
-				<div class="FAQViewerIcon">
-					<span>
-						<a class="TitleActionLink" href="<%=uicomponent.url("ChangePath", categoryInfo.getPath());%>" actions="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>">$categoryName</a>
-					</span>
-					<%if(!subCategories.isEmpty()) {%>
-						<span style="color:#ff6603;">[</span>
-					<%} 
-						int j = 0;
-						for(subCategory in subCategories) { 
-							String subCateName = subCategory.getName();
-							String subPath = subCategory.getPath();
-					%>
-						<a class="ActionLink" href="<%=uicomponent.url("ChangePath", subPath)%>" actions="<%=uicomponent.event("ChangePath", subPath)%>">$subCateName</a>
-					<%	if(j != (subCategories.size-1)) {%>
-						<span style="color:#ff6603;"> | </span>
-					<%	}
-							++j;
-						} 
-						if(!subCategories.isEmpty()) {
-					%>
-						<span style="color:#ff6603;">]</span>
-					<% } %>
-				</div>
-				<ul>
-					<%for(questionInfo in questionInfos) { 
-							String question =	questionInfo.getQuestion();
-							question = uicomponent.render(question);
-							String id = questionInfo.getId();
-							
-					%>
-					<li><a class="FAQViewer" href="#${id}">$question</a></li>				
-					<% 
-					} %>
-				</ul>
-			</div>
-		
-		<% } %>
-		
-	</div>
-	
-	<div class="FAQAnswerContainer FAQViewerQuestionContent" style="padding:4px 0px 0px 0px;">
-	<%for(questionCate in questionCates) { 
-			String question_ =	questionCate.getQuestion();
-			question_ = uicomponent.render(question_);
-			String id_ = questionCate.getId();
-			List answers_ = questionCate.getAnswers();
-			String questionDetail_ = uicomponent.render(questionCate.getDetail());
-			
-	%>
-		<div class="FAQAnswerIcon"><a name="$id_">$question_</a></div>
-		<% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
-						<div class="TextDetailStyle"><span class="TextStyle">$questionDetail_</span></div>
-			<% } %>
-		<div class="Answer" style="margin:3px 0px;">
-			<ul>
-			<%for(answer in answers_){ 
-					answer = uicomponent.render(answer);
-			%>
-				<li><div class="TextStyle">${answer}</div></li>
-			<%} %>
-			</ul>
-		</div>
-		<div style="height:18px;">
-			<a class="BackTopIcon" href="#name${id_}"> </a>
-			<div style="clear:right;"><span></span></div>
-		</div>
-	<% } %>
-	</div>
-	
-	<%for(categoryInfo in subCategoryInfos) { 
-			String categoryName = categoryInfo.getName();
-			List questionInfos = categoryInfo.getQuestionInfos();
-			String id = categoryInfo.getId();
-	%>
-	<div class="FAQAnswerbar">
-		<span>$categoryName</span>
-	</div>
-	<div class="FAQAnswerContainer">
-		<%for(questionInfo in questionInfos) {
-				String question = questionInfo.getQuestion();
-				question = uicomponent.render(question);
-				List answers = questionInfo.getAnswers();
-				String qsId = questionInfo.getId();
-				String questionDetail_ = uicomponent.render(questionInfo.getDetail());
-		%>
-		<div class="QuestionContent">
-			
-			<div class="FAQAnswerIcon"><a name="${qsId}">$question</a></div>
-			<% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
-						<div class="TextDetailStyle"><span class="TextStyle">$questionDetail_</span></div>
-			<% } %>
-			<div class="Answer">
-				<ul>
-				<%for(answer in answers){ 
-						answer = uicomponent.render(answer);
-				%>
-					<li><div class="TextStyle">${answer}</div></li>
-				<%} %>
-				</ul>
-			</div>
-		</div>
-		<%} %>
-		<div style="height:18px;">
-			<a class="BackTopIcon" href="#${id}"> </a>
-			<div style="clear:right;"><span></span></div>
-		</div>
-	</div>
-	<% } %>
-	<% } else {
- 	 link = Utils.CATEGORY_HOME; 
-	%>
-		<a class="ActionLink" style="color:red;" href="<%=uicomponent.event("ChangePath", link);%>" >
-			<%=_ctx.appRes("UIBreadcumbs.label.backToHome") %>
-		</a>
+  <%  
+  CategoryInfo cateInfo = uicomponent.getCategoryInfo();
+  if(cateInfo != null) {
+    List subCategoryInfos = cateInfo.getSubCateInfos();
+    List questionCates = cateInfo.getQuestionInfos();
+    
+    String path = cateInfo.getPath();
+    if(path == null || path.length() == 0){
+      path = Utils.CATEGORY_HOME;
+    }
+    String []ids = path.split("/");
+    List navPath = cateInfo.getPathName();
+    navPath = uicomponent.arrangeList(navPath);
+    if(navPath.size() > 1) {
+    %>
+      <div class="FAQViewerBar">
+        <% 
+        int i = 0;
+        String link = ids[0], viewName;
+        String url;
+        for(pathName in navPath) {
+          if(pathName.equals(Utils.CATEGORY_HOME)){ 
+            pathName = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME);
+            link = Utils.CATEGORY_HOME;
+          }
+          viewName = pathName;
+          if(pathName.length() > 40 && pathName.indexOf("<img") < 0){
+            viewName = org.exoplatform.faq.webui.FAQUtils.getSubString(pathName, 40);
+          }
+          if(pathName.indexOf("<img") >= 0){
+            pathName = "";
+          }
+          if(i < ids.length && i > 0)
+            link = link + "/" + ids[i];
+          if(i < (ids.length-1) || link.equals(Utils.CATEGORY_HOME)){
+            String style="";
+            if(uicomponent.isInSpace() && link.equals(Utils.CATEGORY_HOME)) {
+              url = "javaScript:void(0)";
+              style = "cursor: default;";
+            } else {
+              url = uicomponent.url("ChangePath", link);
+            }
+            if(link.equals(Utils.CATEGORY_HOME) && ids.length == 1){
+        %>
+          <span><a class="ActionLink" href="$url" style="$style" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName"><b>$viewName</b></a></span>
+            <%} else { %>
+          <span style="vertical-align: bottom;"><a style="$style" class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
+            <%} %>
+        <%} else { %>
+          <span style="vertical-align: bottom;" title="$pathName"><b>$viewName</b></span>
+        <%}
+        ++i;
+        }%>
+      </div>
+    <%}%> 
+  
+  <div style="padding: 15px 0 0; background:#F8F8F8; margin-bottom: 15px;">
+    <%for(questionCate in questionCates) { 
+        String question_ =  questionCate.getQuestion();
+        question_ = question_.replaceAll("<br/>", " ");
+        question_ = uicomponent.render(question_);
+        String id_ = questionCate.getId();
+    %>
+    <ul class="FAQViewerQuestionContent"> 
+      <li class="FAQViewerIcon"><a class="ActionLinkFAQ" href="#${id_}" name="name${id_}">$question_</a></li>
+    </ul> 
+    <%  } %>
+    
+    <% 
+    for(categoryInfo in subCategoryInfos){ 
+      String categoryName = categoryInfo.getName();
+      List questionInfos = categoryInfo.getQuestionInfos();
+      List subCategories = categoryInfo.getSubCateInfos();
+    %>
+    
+      <div class="FAQContainerQuest">
+        <div class="FAQViewerIcon">
+          <span>
+            <a class="TitleActionLink" href="<%=uicomponent.url("ChangePath", categoryInfo.getPath());%>" actions="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>">$categoryName</a>
+          </span>
+          <%if(!subCategories.isEmpty()) {%>
+            <span style="color:#ff6603;">[</span>
+          <%} 
+            int j = 0;
+            for(subCategory in subCategories) { 
+              String subCateName = subCategory.getName();
+              String subPath = subCategory.getPath();
+          %>
+            <a class="ActionLink" href="<%=uicomponent.url("ChangePath", subPath)%>" actions="<%=uicomponent.event("ChangePath", subPath)%>">$subCateName</a>
+          <%  if(j != (subCategories.size-1)) {%>
+            <span style="color:#ff6603;"> | </span>
+          <%  }
+              ++j;
+            } 
+            if(!subCategories.isEmpty()) {
+          %>
+            <span style="color:#ff6603;">]</span>
+          <% } %>
+        </div>
+        <ul>
+          <%for(questionInfo in questionInfos) { 
+              String question = questionInfo.getQuestion();
+              question = uicomponent.render(question);
+              String id = questionInfo.getId();
+              
+          %>
+          <li><a class="FAQViewer" href="#${id}">$question</a></li>       
+          <% 
+          } %>
+        </ul>
+      </div>
+    
+    <% } %>
+    
+  </div>
+  
+  <div class="FAQAnswerContainer FAQViewerQuestionContent" style="padding:4px 0px 0px 0px;">
+  <%for(questionCate in questionCates) { 
+      String question_ =  questionCate.getQuestion();
+      question_ = uicomponent.render(question_);
+      String id_ = questionCate.getId();
+      List answers_ = questionCate.getAnswers();
+      String questionDetail_ = uicomponent.render(questionCate.getDetail());
+      
+  %>
+    <div class="FAQAnswerIcon"><a name="$id_">$question_</a></div>
+    <% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
+            <div class="TextDetailStyle"><span class="TextStyle">$questionDetail_</span></div>
+      <% } %>
+    <div class="Answer" style="margin:3px 0px;">
+      <ul>
+      <%for(answer in answers_){ 
+          answer = uicomponent.render(answer);
+      %>
+        <li><div class="TextStyle">${answer}</div></li>
+      <%} %>
+      </ul>
+    </div>
+    <div style="height:18px;">
+      <a class="BackTopIcon" href="#name${id_}"> </a>
+      <div style="clear:right;"><span></span></div>
+    </div>
+  <% } %>
+  </div>
+  
+  <%for(categoryInfo in subCategoryInfos) { 
+      String categoryName = categoryInfo.getName();
+      List questionInfos = categoryInfo.getQuestionInfos();
+      String id = categoryInfo.getId();
+  %>
+  <div class="FAQAnswerbar">
+    <span>$categoryName</span>
+  </div>
+  <div class="FAQAnswerContainer">
+    <%for(questionInfo in questionInfos) {
+        String question = questionInfo.getQuestion();
+        question = uicomponent.render(question);
+        List answers = questionInfo.getAnswers();
+        String qsId = questionInfo.getId();
+        String questionDetail_ = uicomponent.render(questionInfo.getDetail());
+    %>
+    <div class="QuestionContent">
+      
+      <div class="FAQAnswerIcon"><a name="${qsId}">$question</a></div>
+      <% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
+            <div class="TextDetailStyle"><span class="TextStyle">$questionDetail_</span></div>
+      <% } %>
+      <div class="Answer">
+        <ul>
+        <%for(answer in answers){ 
+            answer = uicomponent.render(answer);
+        %>
+          <li><div class="TextStyle">${answer}</div></li>
+        <%} %>
+        </ul>
+      </div>
+    </div>
+    <%} %>
+    <div style="height:18px;">
+      <a class="BackTopIcon" href="#${id}"> </a>
+      <div style="clear:right;"><span></span></div>
+    </div>
+  </div>
+  <% } %>
+  <% } else {
+   link = Utils.CATEGORY_HOME; 
+  %>
+    <a class="ActionLink" style="color:red;" href="<%=uicomponent.event("ChangePath", link);%>" >
+      <%=_ctx.appRes("UIBreadcumbs.label.backToHome") %>
+    </a>
 <% } %>
 </div>
 
 
 <style type="text/css">
 .UIFAQPortlet {
-	margin:4px 0;
-	padding:5px;
-	background: white;
-
+  padding:5px;
+  background: white;
 }
 
 .UIFAQPortlet hr {
-	border-color:#CCCCCC;
-	border-style:solid;
-	border-width:1px 0 0;
-	clear:both;
-	height:0;
+  border: solid #CCCCCC;
+  border-width:1px 0 0;
+  clear:both;
+  height:0;
 }
 
 .UIFAQPortlet h1 {
-	font-size:25px;
+  font-size:25px;
 }
 
 .UIFAQPortlet h2 {
-	font-size:23px;
+  font-size:23px;
 }
 
 .UIFAQPortlet h3 {
-	font-size:21px;
+  font-size:21px;
 }
 
 .UIFAQPortlet h4 {
-	font-size:19px;
+  font-size:19px;
 }
 
 .UIFAQPortlet h5 {
-	font-size:17px;
+  font-size:17px;
 }
 .UIFAQPortlet h6 {
-	font-size:15px;
+  font-size:15px;
 }
 
 .UIFAQPortlet .FAQViewerBar {
-	background: #6a90b6;
-	padding: 4px 0px 4px 14px;
-	color: white;
+  background: #6a90b6;
+  padding: 4px 0px 4px 14px;
+  color: white;
 }
 
 .UIFAQPortlet .FAQViewerBar a{
-	color: white;
-	cursor: pointer;
+  color: white;
+  cursor: pointer;
 }
 
 .UIFAQPortlet .FAQViewerBar .FAQBarLableNormal {
-	color: white;
+  color: white;
 }
 
 .UIFAQPortlet .FAQViewerBar .FAQBarLableHiline {
-	font-weight: bold;
-	color: white;
+  font-weight: bold;
+  color: white;
 }
 
 .UIFAQPortlet .FAQViewerContainer {
-	margin-bottom: 20px;
-	font-size: 12px;
+  margin-bottom: 20px;
+  font-size: 12px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerContainerQuest{
-	padding-bottom: 10px;
+  padding-bottom: 10px;
 }
 
 .UIFAQPortlet ul{
-	list-style-type:none;
-	margin:0;
-	padding: 0px 0px 15px 0px;
+  list-style-type:none;
+  margin:0;
+  padding: 0px 0px 15px 0px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerIcon{
-	font-size: 12px;
+  font-size: 12px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerIcon a{
-	color: #464646;
+  color: #464646;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerIcon .FAQLableNormal {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerIcon .FAQLableLink {
-	color: #0B51BB;
+  color: #0B51BB;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewer {
-	color:#464646;
-	font-size:12px;
-	line-height:20px;
-	text-decoration:none;
-	background: url('/faq/skin/DefaultSkin/webui/background/IconFAQViewer.gif') no-repeat left 5px;
-	padding-left: 16px;
+  color:#464646;
+  font-size:12px;
+  line-height:20px;
+  text-decoration:none;
+  background: url('/faq/skin/DefaultSkin/webui/background/IconFAQViewer.gif') no-repeat left 5px;
+  padding-left: 16px;
 }
 
 .UIFAQPortlet .FAQViewerContainer ul li a:hover{
-	color: #ff6603;
-	text-decoration: underline;
+  color: #ff6603;
+  text-decoration: underline;
 }
 
 .UIFAQPortlet ul li a:hover{
-	color: #ff6603;
-	text-decoration: underline;
+  color: #ff6603;
+  text-decoration: underline;
 }
 
 .UIFAQPortlet .FAQAnswerbar {
-	border-bottom:1px dotted #898989;
-	margin:4px 25px 20px;
-	padding-bottom:10px;
-	font-size: 18px;
+  border-bottom:1px dotted #898989;
+  margin:4px 25px 20px;
+  padding-bottom:10px;
+  font-size: 18px;
 }
 
 .UIFAQPortlet .FAQAnswerContainer {
-	margin:4px 25px 0px;
+  margin:4px 25px 0px;
 }
 
 .UIFAQPortlet .FAQAnswerContainer .Answer{
-	padding-left: 16px;
+  padding-left: 16px;
 }
 
 .UIFAQPortlet .FAQAnswerContainer .TextStyle{
-	margin:1px 0px;
+  margin:1px 0px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerQuestionContent .TextDetailStyle{
-	background-color: #f8f8f8;
-	padding: 0px 16px 10px 16px;
+  background-color: #f8f8f8;
+  padding: 0px 16px 10px 16px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerQuestionContent .TextDetailStyle p{
-	margin: 0px;
+  margin: 0px;
 }
 
 .UIFAQPortlet .FAQAnswerContainer .QuestionContent{
-	padding-top: 6px;
+  padding-top: 6px;
 }
 
 .UIFAQPortlet .FAQAnswerContainer ul li{
-	margin: 10px 0px 0px 0px;
-	padding: 0px 0px 0px 16px;
-	background: url('/faq/skin/DefaultSkin/webui/background/ArrowAnswer.gif') no-repeat left 2px;
-	list-style-type:none;
+  margin: 10px 0px 0px 0px;
+  padding: 0px 0px 0px 16px;
+  background: url('/faq/skin/DefaultSkin/webui/background/ArrowAnswer.gif') no-repeat left 2px;
+  list-style-type:none;
 }
 
 .UIFAQPortlet .FAQAnswerContainer ul .TextStyle ul li{
-	list-style-type:none;
-	line-height: 20px;
-	padding: 0px 0px 0px 20px;
-	background: url('/faq/skin/DefaultSkin/webui/background/ArrowAnswerDetail.gif') no-repeat left 4px;
+  list-style-type:none;
+  line-height: 20px;
+  padding: 0px 0px 0px 20px;
+  background: url('/faq/skin/DefaultSkin/webui/background/ArrowAnswerDetail.gif') no-repeat left 4px;
 }
 
 .UIFAQPortlet .FAQAnswerContainer ul .TextStyle ul li ul li{
-	list-style-type: disc;
-	background: none;
-	padding: 0px;
-	margin-left:12px;
+  list-style-type: disc;
+  background: none;
+  padding: 0px;
+  margin-left:12px;
 }
 
 .UIFAQPortlet .FAQAnswerContainer .FAQAnswerIcon{
-	padding-left: 16px;
-	font-weight: bold;
-	background-color: #f8f8f8;
-	padding-top: 10px;
-	padding-bottom: 10px;
+  padding-left: 16px;
+  font-weight: bold;
+  background-color: #f8f8f8;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .UIFAQPortlet .FAQAnswerContainer .FAQAnswerIcon a{
-	color: #ff6603;
+  color: #ff6603;
 }
 
 .UIFAQPortlet .BackTopIcon {
-	background: url('/faq/skin/DefaultSkin/webui/background/BackTopIcon18x21.gif') no-repeat right;
-	width: 21px; height: 18px;
-	float: right;
-	display: block;
+  background: url('/faq/skin/DefaultSkin/webui/background/BackTopIcon18x21.gif') no-repeat right;
+  width: 21px; height: 18px;
+  float: right;
+  display: block;
 }
 
 .UIFAQPortlet .FAQViewerQuestionContent {
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQContainerQuest{
-	background-color:#F8F8F8;
-	padding:0px 24px 0px 24px;
+  background-color:#F8F8F8;
+  padding:0px 24px 0px 24px;
 }
 
 .UIFAQPortlet p {
-	margin: 1px 0px;
+  margin: 1px 0px;
 }
 
 .UIFAQPortlet h {
-	margin: 1px 0px;
+  margin: 1px 0px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .TitleActionLink{
-	font-size: 18px;
+  font-size: 18px;
 }
 
 .FAQViewerContainer .FAQViewerIcon .ActionLinkFAQ{
-	margin-left: 25px;
-	background: url('/faq/skin/DefaultSkin/webui/background/IconFAQViewer.gif') no-repeat left 4px;
-	padding-left: 16px;
+  margin-left: 25px;
+  background: url('/faq/skin/DefaultSkin/webui/background/IconFAQViewer.gif') no-repeat left 4px;
+  padding-left: 16px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerIcon a.ActionLink{
-	color: #FF6603;
+  color: #FF6603;
 }
 
 .UIFAQPortlet .FAQViewerContainer .QuestionContent .TextDetailStyle{
-	background-color:#F8F8F8;
-	padding: 0px 16px 10px 16px;
+  background-color:#F8F8F8;
+  padding: 0px 16px 10px 16px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .QuestionContent .TextDetailStyle p{
-	margin: 0px;
+  margin: 0px;
 }
 
 </style>

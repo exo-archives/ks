@@ -58,6 +58,8 @@ public class UIViewer extends UIContainer {
 
   private boolean      isInSpace    = false;
 
+  private boolean      isSet        = true;
+
   private RenderHelper renderHelper = new RenderHelper();
 
   private Log          log          = ExoLogger.getLogger(UIViewer.class);
@@ -80,7 +82,10 @@ public class UIViewer extends UIContainer {
     } else {
       isInSpace = false;
     }
-    this.path = path;
+    if(isSet){
+      this.path = path;
+      isSet = false;
+    }
   }
 
   private List<String> arrangeList(List<String> list) {
@@ -122,6 +127,7 @@ public class UIViewer extends UIContainer {
     public void execute(Event<UIViewer> event) throws Exception {
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
       UIViewer viewer = event.getSource();
+      viewer.isSet = true;
       viewer.setPath(path);
       event.getRequestContext().addUIComponentToUpdateByAjax(viewer);
     }

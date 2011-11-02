@@ -23,6 +23,9 @@ import java.util.Map;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Session;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
 
 import org.exoplatform.commons.upgrade.UpgradeProductPlugin;
 import org.exoplatform.commons.version.util.VersionComparator;
@@ -102,8 +105,11 @@ public class UpgradeAnswerPlugin extends UpgradeProductPlugin {
               }
               cNode.setProperty(FAQNodeTypes.EXO_ID, newId);
               cNode.save();
-              session.move(cNode.getPath(), parentPath + "/" + newId);
-              session.save();
+              migradeChildrenItems(cNode, newId);
+              if(!nodeName.equals(newId)) {
+                session.move(cNode.getPath(), parentPath + "/" + newId);
+                session.save();
+              }
               log.info(String.format("Rename node of category %s to %s", nodeName, newId));
             } catch (Exception e) {
               log.info(String.format("Failed to rename node of category %s to %s", nodeName, newId));
@@ -113,7 +119,29 @@ public class UpgradeAnswerPlugin extends UpgradeProductPlugin {
       }
     }
   }
+  
+  private void migradeChildrenItems(Node cateNode, String newName) throws Exception {
+    NodeIterator iterator = getNodeIterator(cateNode);
+    while (iterator.hasNext()) {
+      Node cNode = iterator.nextNode();
+      try {
+        if(cNode.hasProperty(FAQNodeTypes.EXO_CATEGORY_ID)) {
+          log.info("\nSet new category id for items children: " + cNode.getName());
+          cNode.setProperty(FAQNodeTypes.EXO_CATEGORY_ID, newName);
+        }
+      } catch (Exception e) {}
+    }
+    cateNode.save();
+  }
 
+  private NodeIterator getNodeIterator(Node node) throws Exception {
+    QueryManager qm = node.getSession().getWorkspace().getQueryManager();
+    StringBuilder pathQuery = new StringBuilder(FAQNodeTypes.JCR_ROOT).append(node.getNode(Utils.QUESTION_HOME).getPath()).append("//*");
+    Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    return result.getNodes();
+  }
+  
   private String getGroupId(String[] grs) throws Exception {
     String s;
     for (int i = 0; i < grs.length; i++) {

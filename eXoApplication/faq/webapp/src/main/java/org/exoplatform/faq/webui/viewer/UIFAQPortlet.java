@@ -22,6 +22,7 @@ import javax.portlet.PortletPreferences;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.popup.UIFAQSettingForm;
+import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.webui.application.WebuiApplication;
@@ -43,8 +44,6 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
     template = "app:/templates/faq/webui/UIFAQPortlet.gtmpl"
 )
 public class UIFAQPortlet extends UIPortletApplication {
-  private final static String SPACE_URL = "SPACE_URL".intern();
-
   private final static String SLASH     = "/".intern();
 
   public UIFAQPortlet() throws Exception {
@@ -59,7 +58,9 @@ public class UIFAQPortlet extends UIPortletApplication {
       if (uiViewer == null) {
         uiViewer = addChild(UIViewer.class, null, null).setRendered(true);
       }
-      uiViewer.setPath(getPathOfCateSpace());
+      if (context.getRequestParameter(OBJECTID) == null && !("true".equals(String.valueOf(context.getRequestParameter("ajaxRequest"))))) {
+        uiViewer.setPath(getPathOfCateSpace());
+      }
     } else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
       removeChild(UIViewer.class);
       if (getChild(UIFAQSettingForm.class) == null) {
@@ -73,20 +74,17 @@ public class UIFAQPortlet extends UIPortletApplication {
     try {
       PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
       PortletPreferences pref = pcontext.getRequest().getPreferences();
-      if (pref.getValue(SPACE_URL, null) != null) {
+      String url;
+      if ((url = pref.getValue(SpaceUtils.SPACE_URL, null)) != null) {
         SpaceService sService = (SpaceService) getApplicationComponent(SpaceService.class);
         FAQService fService = (FAQService) getApplicationComponent(FAQService.class);
-        String url = pref.getValue(SPACE_URL, null);
         Space space = sService.getSpaceByUrl(url);
         String pathOfCateSpace = Utils.CATEGORY_HOME + SLASH + Utils.CATE_SPACE_ID_PREFIX + space.getPrettyName();
         if (fService.isExisting(pathOfCateSpace)) {
           return pathOfCateSpace;
         }
       }
-    } catch (Exception e) {
-    }
+    } catch (Exception e) {}
     return Utils.CATEGORY_HOME;
   }
-
-
 }
