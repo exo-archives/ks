@@ -58,8 +58,6 @@ public class UIViewer extends UIContainer {
 
   private boolean      isInSpace    = false;
 
-  private boolean      isSet        = true;
-
   private RenderHelper renderHelper = new RenderHelper();
 
   private Log          log          = ExoLogger.getLogger(UIViewer.class);
@@ -77,15 +75,7 @@ public class UIViewer extends UIContainer {
   }
 
   public void setPath(String path) {
-    if(path.indexOf(Utils.CATE_SPACE_ID_PREFIX) >= 0) {
-      isInSpace = true;
-    } else {
-      isInSpace = false;
-    }
-    if(isSet){
-      this.path = path;
-      isSet = false;
-    }
+    this.path = path;
   }
 
   private List<String> arrangeList(List<String> list) {
@@ -114,6 +104,11 @@ public class UIViewer extends UIContainer {
 
   private CategoryInfo getCategoryInfo() throws Exception {
     useAjax = FAQUtils.getUseAjaxFAQPortlet();
+    if(path.indexOf(Utils.CATE_SPACE_ID_PREFIX) >= 0) {
+      isInSpace = true;
+    } else {
+      isInSpace = false;
+    }
     return fAqService.getCategoryInfo(path, FAQUtils.getCategoriesIdFAQPortlet());
   }
 
@@ -127,7 +122,6 @@ public class UIViewer extends UIContainer {
     public void execute(Event<UIViewer> event) throws Exception {
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
       UIViewer viewer = event.getSource();
-      viewer.isSet = true;
       viewer.setPath(path);
       event.getRequestContext().addUIComponentToUpdateByAjax(viewer);
     }
