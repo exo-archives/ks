@@ -88,6 +88,11 @@ public class UIFieldEditableForm extends UIWikiForm {
     Class arg[] = { String.class, Event.class };
     setParentFunction(SAVE_TITLE, arg);
   }
+  
+  public void hideTitleInputBox() {
+    UIFormStringInput titleInput = getChild(UIFormStringInput.class);
+    titleInput.setRendered(false);
+  }
     
   @Override
   public String url(String name) throws Exception {

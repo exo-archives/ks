@@ -1738,3 +1738,12 @@ table.UIFormGrid div.Id {
   color:gray;
   cursor:default;
 }
+
+.UIWikiPortlet .TitleInfo {
+  padding: 0px 7px 0px 7px;
+}
+
+.UIWikiPortlet .TitleInfo:HOVER {
+  background-color: whitesmoke;
+  cursor: pointer;
+}

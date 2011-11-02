@@ -38,7 +38,7 @@ UIFieldEditableForm.prototype.init = function(componentId, parentId, titleId,
   eXo.core.Browser.eventListener(document, 'click', me.onClick);
 
   if (titleControl) {   
-    eXo.core.Browser.eventListener(titleControl, 'dblclick', me.onDblClick);
+    eXo.core.Browser.eventListener(titleControl, 'click', me.onClickToChangeTitle);
   }
   if (me.inputControl) {
     me.inputControl.form.onsubmit = function() {
@@ -49,7 +49,7 @@ UIFieldEditableForm.prototype.init = function(componentId, parentId, titleId,
   }
 };
 
-UIFieldEditableForm.prototype.onDblClick = function(evt) {
+UIFieldEditableForm.prototype.onClickToChangeTitle = function(evt) {
   var me = eXo.wiki.UIFieldEditableForm;
   if (me.showInputLink || me.showInputLink.onclick)
     me.showInputLink.onclick();

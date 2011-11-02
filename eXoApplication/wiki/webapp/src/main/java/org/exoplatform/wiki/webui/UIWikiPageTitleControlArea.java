@@ -16,7 +16,11 @@
  */
 package org.exoplatform.wiki.webui;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 import org.exoplatform.webui.event.Event;
@@ -61,6 +65,24 @@ public class UIWikiPageTitleControlArea extends UIWikiExtensionContainer {
     addChild(titleInput);
   }
   
+  @Override
+  public void processRender(WebuiRequestContext context) throws Exception {
+    if (!context.useAjax()) {
+      UIFormInputInfo titleInfo = getChild(UIFormInputInfo.class);
+      List<WikiMode> acceptEdiableModes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.HELP, WikiMode.VIEWREVISION });
+      WikiMode currentMode = getAncestorOfType(UIWikiPortlet.class).getWikiMode();
+      if (acceptEdiableModes.contains(currentMode)) {
+        titleInfo.setRendered(true);
+      }
+
+      UIFieldEditableForm fieldEditableForm = getChild(UIFieldEditableForm.class);
+      if (fieldEditableForm != null) {
+        fieldEditableForm.hideTitleInputBox();
+      }
+    }
+    super.processRender(context);
+  }
+
   @Override
   public String getExtensionType() {
     return EXTENSION_TYPE;
