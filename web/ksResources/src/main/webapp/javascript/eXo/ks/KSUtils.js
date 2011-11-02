@@ -2,9 +2,9 @@ if(!eXo.ks){
 	eXo.ks = {} ;
 }
 
-/********************* Show markLayer popup **************************/
-function KSUtils() {};
 
+function KSUtils() {};
+/********************* Utils *****************************************/
 KSUtils.prototype.findFirstDescendantByClass = function(parent, classChild) {
 	var DOMUtil = eXo.core.DOMUtil;
 	var tags = ["a", "div", "span", "li"];
@@ -17,6 +17,17 @@ KSUtils.prototype.findFirstDescendantByClass = function(parent, classChild) {
 	return null;
 };
 
+KSUtils.prototype.isChrome = function() {
+  var str = String(navigator.userAgent).toLowerCase();
+  return (str.indexOf('chrome') >= 0);
+} ;
+
+KSUtils.prototype.cancel = function(evt) {
+	var _e = window.event || evt ;
+	_e.cancelBubble = true ;
+} ;
+
+/********************* Show markLayer popup **************************/
 KSUtils.prototype.setMaskLayer = function(id) {
 	var DOMUtil = eXo.core.DOMUtil;
 	var portlet = document.getElementById(id) ;
@@ -63,6 +74,9 @@ KSUtils.prototype.showUserMenu = function(obj, event) {
 	eXo.webui.UIPopupSelectCategory.hide() ;
 	uiPopupCategory.style.visibility = "inherit" ;
 	uiPopupCategory.style.display = "inline" ;
+  if (KSUtils.isChrome()) {
+		uiPopupCategory.style.cssFloat = "right";
+	}
 	var Browser = eXo.core.Browser;
   var X = Browser.findMouseRelativeX(uiPopupCategory, event, false);
   var Y = Browser.findMouseRelativeY(uiPopupCategory, event);
@@ -71,11 +85,6 @@ KSUtils.prototype.showUserMenu = function(obj, event) {
   uiPopup.style.top = (Y + 5)+ "px";
 	eXo.core.DOMUtil.listHideElements(uiPopupCategory) ;	
 };
-
-KSUtils.prototype.cancel = function(evt) {
-	var _e = window.event || evt ;
-	_e.cancelBubble = true ;
-} ;
 
 eXo.ks.KSUtils =  new KSUtils();
 
