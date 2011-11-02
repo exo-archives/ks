@@ -25,6 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.portlet.PortletPreferences;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.rendering.RenderHelper;
 import org.exoplatform.faq.rendering.RenderingException;
@@ -62,6 +64,8 @@ import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -309,6 +313,11 @@ public class UIQuestions extends UIContainer {
 	
 	public void setFAQService(FAQService service){
 		faqService_ = service;
+	}
+	private boolean isNotInSpace() {
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		return (portletPref.getValue("SPACE_URL", null) != null)? false:true;
 	}
 
 //	private String[] getActionQuestionWithUser(){
@@ -606,6 +615,7 @@ public class UIQuestions extends UIContainer {
 		}
 	}
 	
+
 	static  public class QuestionManagamentActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
