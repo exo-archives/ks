@@ -104,7 +104,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertNotNull(sProvider_) ;
 	}
 
-	public Category createCategory(String categoryName) {
+	public Category createCategory(String categoryName, int index) {
 		Date date = new Date() ;
 		Category category = new Category() ;
 		category.setName(categoryName) ;
@@ -115,7 +115,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		category.setModerators(new String[]{"root"}) ;
 		category.setCreatedDate(date) ;
 		category.setUserPrivate(new String[]{""});
-		category.setIndex(0);
+		category.setIndex(index);
 		category.setView(true);
 		return category ;
 	}
@@ -203,7 +203,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		return attachment;
 	}
 
-	private void revoveDate() throws Exception {
+	private void removeDate() throws Exception {
 		FAQSetting  faqSetting = new FAQSetting(); faqSetting.setIsAdmin("TRUE");
 		List<Category> categories = faqService_.getSubCategories(Utils.CATEGORY_HOME, faqSetting, false, null);
 		for (Category category : categories) {
@@ -213,13 +213,13 @@ public class TestFAQService extends FAQServiceTestCase{
 
 	private void defaultData() throws Exception {
 	// remove old data. 
-		revoveDate();
+		removeDate();
 	//Create some category default
-		Category cate = createCategory("Category to test question") ;
+		Category cate = createCategory("Category to test question", 1) ;
 		categoryId1 =  Utils.CATEGORY_HOME + "/" + cate.getId();
-		Category cate2 = createCategory("Category 2 to test question") ;
+		Category cate2 = createCategory("Category 2 to test question", 2) ;
 		categoryId2 =  Utils.CATEGORY_HOME + "/" + cate2.getId();
-		Category cate3 = createCategory("Category 3 has not question") ;
+		Category cate3 = createCategory("Category 3 has not question", 3) ;
 		cate3.setModerators(new String[]{"demo"});
 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate, true) ;
 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate2, true) ;
@@ -273,21 +273,21 @@ public class TestFAQService extends FAQServiceTestCase{
 	
 	public void testCategory() throws Exception {
 	// remove Data before testing category.
-		revoveDate();
+		removeDate();
 //		add category Id	
 		faqService_.getAllCategories();
-		Category cate1 = createCategory("Cate 1") ;
+		Category cate1 = createCategory("Cate 1", 1) ;
 		cate1.setIndex(1);
 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate1, true) ;
 
-		Category cate2 = createCategory("Cate 2") ;
+		Category cate2 = createCategory("Cate 2", 2) ;
 		cate2.setIndex(2);
 		cate2.setName("Nguyen van truong test category222222") ;
 		cate2.setModerators(new String[]{"Demo"}) ;
 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate2, true) ;
 		
 //	add sub category 1
-		Category subCate1 = createCategory("Sub Cate 1") ;
+		Category subCate1 = createCategory("Sub Cate 1", 1) ;
 		subCate1.setIndex(1);
 		subCate1.setName("Nguyen van truong test Sub category 1") ;
 		subCate1.setModerators(new String[]{"marry","Demo"}) ;
@@ -306,16 +306,6 @@ public class TestFAQService extends FAQServiceTestCase{
 
 //		Get path of category
 		assertNotNull("Path of category node is null", faqService_.getCategoryPath(cate1.getPath()));
-
-		//		Swap 2 category
-		cate2 = faqService_.getCategoryById(Utils.CATEGORY_HOME+"/"+cate2.getId());
-		assertEquals("Index of category 1 before swap is't 2", cate1.getIndex(), 1);
-		assertEquals("Index of category 2 before swap is't 1", cate2.getIndex(), 2);
-		faqService_.swapCategories(cate1.getPath(), cate2.getPath());
-		cate1 =  faqService_.getCategoryById(cate1.getPath());
-		cate2 =  faqService_.getCategoryById(cate2.getPath());
-		assertEquals("Index of category 1 after swap is't 1", cate1.getIndex(), 2);
-		assertEquals("Index of category 2 after swap is't 2", cate2.getIndex(), 1);
 
 //		update category 
 		cate1.setName("Nguyen van truong test category111111") ;
@@ -348,6 +338,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals("In FAQ System have less than 3 categories", listAll.size(), 3) ;
 
 //		move category 
+		cate2 = faqService_.getCategoryById(Utils.CATEGORY_HOME + "/" + cate2.getId());
 		faqService_.moveCategory(cate2.getPath(), cate1.getPath()) ;
 		cate2 = faqService_.getCategoryById(cate1.getPath()+"/"+cate2.getId());
 		assertNotNull("Category 2 is not already exist in FAQ", cate2) ;
@@ -360,11 +351,69 @@ public class TestFAQService extends FAQServiceTestCase{
 //		get list category by moderator
 		List<String> listCateByModerator = faqService_.getListCateIdByModerator(USER_ROOT);
 		assertEquals("User Root is't moderator of category Home and cate1", listCateByModerator.size(), 2);
-		// remove Data when tested category
-		//faqService_.removeCategory(Utils.CATEGORY_HOME);
-	
-	
 	}
+
+  public void testSwapCategories() throws Exception {
+    // Remove old data.
+    removeDate();
+    // add some categories in root category
+    Category cat = null;
+    List<String> catIds = new ArrayList<String>();
+    catIds.add(Utils.CATEGORY_HOME);
+    for (int i = 1; i <= 5; i++) {
+      cat = createCategory("Category " + i, i);
+      catIds.add(Utils.CATEGORY_HOME + "/" + cat.getId());
+      faqService_.saveCategory(Utils.CATEGORY_HOME, cat, true);
+    }
+    // save some categories in last sub category
+    String parentCatId = Utils.CATEGORY_HOME + "/" + cat.getId();
+    List<String> catSubIds = new ArrayList<String>();
+    catSubIds.add(parentCatId);
+    for (int i = 1; i <= 5; i++) {
+      cat = createCategory("Sub Category " + i, i);
+      catSubIds.add(parentCatId + "/" + cat.getId());
+      faqService_.saveCategory(parentCatId, cat, true);
+    }
+
+    // case 1: Move same parent, with index = 1 down to 3
+    assertEquals("Index of category 1 before swap is't 1", faqService_.getCategoryById(catSubIds.get(1)).getIndex(), 1);
+    assertEquals("Index of category 3 before swap is't 3", faqService_.getCategoryById(catSubIds.get(3)).getIndex(), 3);
+    faqService_.swapCategories(catSubIds.get(1), catSubIds.get(3));
+    assertEquals("Index of category 1 after swap is't 3", faqService_.getCategoryById(catSubIds.get(1)).getIndex(), 3);
+    assertEquals("Index of category 3 after swap is't 2", faqService_.getCategoryById(catSubIds.get(3)).getIndex(), 2);
+
+    // case 2: Move same parent, with index = 4 up to 1
+    assertEquals("Index of category 4 before swap is't 4", faqService_.getCategoryById(catSubIds.get(4)).getIndex(), 4);
+    assertEquals("Index of category 2 before swap is't 1", faqService_.getCategoryById(catSubIds.get(2)).getIndex(), 1);
+    faqService_.swapCategories(catSubIds.get(4), catSubIds.get(2) + ",top");
+    assertEquals("Index of category 4 after swap is't 1", faqService_.getCategoryById(catSubIds.get(4)).getIndex(), 1);
+    assertEquals("Index of category 2 after swap is't 2", faqService_.getCategoryById(catSubIds.get(2)).getIndex(), 2);
+
+    // case 3: Move category of index x up to parent category with index y (y > 1).
+    cat = faqService_.getCategoryById(catSubIds.get(5));
+    assertEquals("Index of category 5 before swap is't 5", cat.getIndex(), 5);
+    assertEquals(String.format("Path of category 5 before swap is't %s", cat.getPath()), cat.getPath(), catSubIds.get(5));
+    // move sub category 5 up to parent and has new index is 3
+    faqService_.swapCategories(catSubIds.get(5), catIds.get(2));
+    cat = faqService_.getCategoryById(Utils.CATEGORY_HOME + "/" + cat.getId());
+    assertEquals("Index of category 5 after swap is't 3", cat.getIndex(), 3);
+    assertEquals(String.format("Path of category 5 after swap is't %s", cat.getPath()), cat.getPath(), Utils.CATEGORY_HOME + "/" + cat.getId());
+
+    // case 4: Move category of index x up to top parent category (new index = 1) .
+    cat = faqService_.getCategoryById(catSubIds.get(3));
+    assertEquals("Index of category 3 before swap is't 3", cat.getIndex(), 3);
+    assertEquals(String.format("Path of category 3 before swap is't %s", cat.getPath()), cat.getPath(), catSubIds.get(3));
+    faqService_.swapCategories(catSubIds.get(3), catIds.get(1) + ",top");
+    cat = faqService_.getCategoryById(Utils.CATEGORY_HOME + "/" + cat.getId());
+    assertEquals("Index of category 3 before swap is't 3", cat.getIndex(), 1);
+    assertEquals(String.format("Path of category 3 before swap is't %s", cat.getPath()), cat.getPath(), Utils.CATEGORY_HOME + "/" + cat.getId());
+    /*
+     * case 5: Move category into other category of the same level as this category.
+     * and case 6: Move category up to the parent category and then move it into other category of the same level as the parent category. 
+     * It used function moveCategory(String categoryId, String destCategoryId); not use swapCategories(String cateId1, String cateId2);
+     */
+  }
+	
 // FAQPortlet
 	public void testCategoryInfo() throws Exception {
 //	Add new data default
@@ -571,7 +620,7 @@ public class TestFAQService extends FAQServiceTestCase{
 
 	public void _testImportData() throws Exception{
 //		remove old data;
-		revoveDate();
+		removeDate();
 //		Before import data, number question is 0
 		assertEquals("Before import data, number question is not 0", faqService_.getAllQuestions().getAvailable(), 0);
 		try {

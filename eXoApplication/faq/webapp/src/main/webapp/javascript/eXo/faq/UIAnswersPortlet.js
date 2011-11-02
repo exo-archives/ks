@@ -665,17 +665,21 @@ eXo.faq.DragDrop = {
 		}
 	},
 	getAction: function(obj,target){
-		if(eXo.core.DOMUtil.hasClass(target,"FAQTmpCategory")){
-			var preElement = eXo.core.DOMUtil.findPreviousElementByTagName(target,"div");
-			if(!preElement) preElement = eXo.core.DOMUtil.findNextElementByTagName(target,"div");
-			if(obj.id == preElement.id) return false;
-			var actionLink = obj.getAttribute("actionLink");
-			actionLink = actionLink.replace("=objectId","="+obj.id +","+preElement.id);
-		}else if(eXo.core.DOMUtil.hasClass(target,"FAQCategory")){
-			var actionLink = obj.getAttribute("actionLink");
-			actionLink = actionLink.replace("=objectId","="+obj.id +","+target.id);
-			actionLink = actionLink.replace("ChangeIndex","MoveCategoryInto");
-		}
+	  if (eXo.core.DOMUtil.hasClass(target,"FAQTmpCategory")){
+      var preElement = eXo.core.DOMUtil.findPreviousElementByTagName(target,"div");
+      var top = " ";
+      if(!preElement) {
+        preElement = eXo.core.DOMUtil.findNextElementByTagName(target,"div");
+        top = "top";
+      }
+      if(obj.id == preElement.id) return false;
+      var actionLink = obj.getAttribute("actionLink");
+      actionLink = actionLink.replace("=objectId", ("="+obj.id +","+ preElement.id + "," + top) );
+    } else if(eXo.core.DOMUtil.hasClass(target,"FAQCategory")){
+      var actionLink = obj.getAttribute("actionLink");
+      actionLink = actionLink.replace("=objectId","="+obj.id +","+target.id);
+      actionLink = actionLink.replace("ChangeIndex","MoveCategoryInto");
+    }
 		return actionLink;
 	}
 };

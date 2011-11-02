@@ -1,0 +1,411 @@
+Index: eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/test/TestFAQService.java
+===================================================================
+--- eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/test/TestFAQService.java	(revision 75861)
++++ eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/test/TestFAQService.java	(working copy)
+@@ -104,7 +104,7 @@
+ 		assertNotNull(sProvider_) ;
+ 	}
+ 
+-	public Category createCategory(String categoryName) {
++	public Category createCategory(String categoryName, int index) {
+ 		Date date = new Date() ;
+ 		Category category = new Category() ;
+ 		category.setName(categoryName) ;
+@@ -115,7 +115,7 @@
+ 		category.setModerators(new String[]{"root"}) ;
+ 		category.setCreatedDate(date) ;
+ 		category.setUserPrivate(new String[]{""});
+-		category.setIndex(0);
++		category.setIndex(index);
+ 		category.setView(true);
+ 		return category ;
+ 	}
+@@ -203,7 +203,7 @@
+ 		return attachment;
+ 	}
+ 
+-	private void revoveDate() throws Exception {
++	private void removeDate() throws Exception {
+ 		FAQSetting  faqSetting = new FAQSetting(); faqSetting.setIsAdmin("TRUE");
+ 		List<Category> categories = faqService_.getSubCategories(Utils.CATEGORY_HOME, faqSetting, false, null);
+ 		for (Category category : categories) {
+@@ -213,13 +213,13 @@
+ 
+ 	private void defaultData() throws Exception {
+ 	// remove old data. 
+-		revoveDate();
++		removeDate();
+ 	//Create some category default
+-		Category cate = createCategory("Category to test question") ;
++		Category cate = createCategory("Category to test question", 1) ;
+ 		categoryId1 =  Utils.CATEGORY_HOME + "/" + cate.getId();
+-		Category cate2 = createCategory("Category 2 to test question") ;
++		Category cate2 = createCategory("Category 2 to test question", 2) ;
+ 		categoryId2 =  Utils.CATEGORY_HOME + "/" + cate2.getId();
+-		Category cate3 = createCategory("Category 3 has not question") ;
++		Category cate3 = createCategory("Category 3 has not question", 3) ;
+ 		cate3.setModerators(new String[]{"demo"});
+ 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate, true) ;
+ 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate2, true) ;
+@@ -273,21 +273,21 @@
+ 	
+ 	public void testCategory() throws Exception {
+ 	// remove Data before testing category.
+-		revoveDate();
++		removeDate();
+ //		add category Id	
+ 		faqService_.getAllCategories();
+-		Category cate1 = createCategory("Cate 1") ;
++		Category cate1 = createCategory("Cate 1", 1) ;
+ 		cate1.setIndex(1);
+ 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate1, true) ;
+ 
+-		Category cate2 = createCategory("Cate 2") ;
++		Category cate2 = createCategory("Cate 2", 2) ;
+ 		cate2.setIndex(2);
+ 		cate2.setName("Nguyen van truong test category222222") ;
+ 		cate2.setModerators(new String[]{"Demo"}) ;
+ 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate2, true) ;
+ 		
+ //	add sub category 1
+-		Category subCate1 = createCategory("Sub Cate 1") ;
++		Category subCate1 = createCategory("Sub Cate 1", 1) ;
+ 		subCate1.setIndex(1);
+ 		subCate1.setName("Nguyen van truong test Sub category 1") ;
+ 		subCate1.setModerators(new String[]{"marry","Demo"}) ;
+@@ -307,16 +307,6 @@
+ //		Get path of category
+ 		assertNotNull("Path of category node is null", faqService_.getCategoryPath(cate1.getPath()));
+ 
+-		//		Swap 2 category
+-		cate2 = faqService_.getCategoryById(Utils.CATEGORY_HOME+"/"+cate2.getId());
+-		assertEquals("Index of category 1 before swap is't 2", cate1.getIndex(), 1);
+-		assertEquals("Index of category 2 before swap is't 1", cate2.getIndex(), 2);
+-		faqService_.swapCategories(cate1.getPath(), cate2.getPath());
+-		cate1 =  faqService_.getCategoryById(cate1.getPath());
+-		cate2 =  faqService_.getCategoryById(cate2.getPath());
+-		assertEquals("Index of category 1 after swap is't 1", cate1.getIndex(), 2);
+-		assertEquals("Index of category 2 after swap is't 2", cate2.getIndex(), 1);
+-
+ //		update category 
+ 		cate1.setName("Nguyen van truong test category111111") ;
+ 		cate1.setCreatedDate(new Date()) ;
+@@ -348,6 +338,7 @@
+ 		assertEquals("In FAQ System have less than 3 categories", listAll.size(), 3) ;
+ 
+ //		move category 
++		cate2 = faqService_.getCategoryById(Utils.CATEGORY_HOME + "/" + cate2.getId());
+ 		faqService_.moveCategory(cate2.getPath(), cate1.getPath()) ;
+ 		cate2 = faqService_.getCategoryById(cate1.getPath()+"/"+cate2.getId());
+ 		assertNotNull("Category 2 is not already exist in FAQ", cate2) ;
+@@ -360,11 +351,69 @@
+ //		get list category by moderator
+ 		List<String> listCateByModerator = faqService_.getListCateIdByModerator(USER_ROOT);
+ 		assertEquals("User Root is't moderator of category Home and cate1", listCateByModerator.size(), 2);
+-		// remove Data when tested category
+-		//faqService_.removeCategory(Utils.CATEGORY_HOME);
++	}
++
++  public void testSwapCategories() throws Exception {
++    // Remove old data.
++    removeDate();
++    // add some categories in root category
++    Category cat = null;
++    List<String> catIds = new ArrayList<String>();
++    catIds.add(Utils.CATEGORY_HOME);
++    for (int i = 1; i <= 5; i++) {
++      cat = createCategory("Category " + i, i);
++      catIds.add(Utils.CATEGORY_HOME + "/" + cat.getId());
++      faqService_.saveCategory(Utils.CATEGORY_HOME, cat, true);
++    }
++    // save some categories in last sub category
++    String parentCatId = Utils.CATEGORY_HOME + "/" + cat.getId();
++    List<String> catSubIds = new ArrayList<String>();
++    catSubIds.add(parentCatId);
++    for (int i = 1; i <= 5; i++) {
++      cat = createCategory("Sub Category " + i, i);
++      catSubIds.add(parentCatId + "/" + cat.getId());
++      faqService_.saveCategory(parentCatId, cat, true);
++    }
++
++    // case 1: Move same parent, with index = 1 down to 3
++    assertEquals("Index of category 1 before swap is't 1", faqService_.getCategoryById(catSubIds.get(1)).getIndex(), 1);
++    assertEquals("Index of category 3 before swap is't 3", faqService_.getCategoryById(catSubIds.get(3)).getIndex(), 3);
++    faqService_.swapCategories(catSubIds.get(1), catSubIds.get(3));
++    assertEquals("Index of category 1 after swap is't 3", faqService_.getCategoryById(catSubIds.get(1)).getIndex(), 3);
++    assertEquals("Index of category 3 after swap is't 2", faqService_.getCategoryById(catSubIds.get(3)).getIndex(), 2);
++
++    // case 2: Move same parent, with index = 4 up to 1
++    assertEquals("Index of category 4 before swap is't 4", faqService_.getCategoryById(catSubIds.get(4)).getIndex(), 4);
++    assertEquals("Index of category 2 before swap is't 1", faqService_.getCategoryById(catSubIds.get(2)).getIndex(), 1);
++    faqService_.swapCategories(catSubIds.get(4), catSubIds.get(2) + ",top");
++    assertEquals("Index of category 4 after swap is't 1", faqService_.getCategoryById(catSubIds.get(4)).getIndex(), 1);
++    assertEquals("Index of category 2 after swap is't 2", faqService_.getCategoryById(catSubIds.get(2)).getIndex(), 2);
++
++    // case 3: Move category of index x up to parent category with index y (y > 1).
++    cat = faqService_.getCategoryById(catSubIds.get(5));
++    assertEquals("Index of category 5 before swap is't 5", cat.getIndex(), 5);
++    assertEquals(String.format("Path of category 5 before swap is't %s", cat.getPath()), cat.getPath(), catSubIds.get(5));
++    // move sub category 5 up to parent and has new index is 3
++    faqService_.swapCategories(catSubIds.get(5), catIds.get(2));
++    cat = faqService_.getCategoryById(Utils.CATEGORY_HOME + "/" + cat.getId());
++    assertEquals("Index of category 5 after swap is't 3", cat.getIndex(), 3);
++    assertEquals(String.format("Path of category 5 after swap is't %s", cat.getPath()), cat.getPath(), Utils.CATEGORY_HOME + "/" + cat.getId());
++
++    // case 4: Move category of index x up to top parent category (new index = 1) .
++    cat = faqService_.getCategoryById(catSubIds.get(3));
++    assertEquals("Index of category 3 before swap is't 3", cat.getIndex(), 3);
++    assertEquals(String.format("Path of category 3 before swap is't %s", cat.getPath()), cat.getPath(), catSubIds.get(3));
++    faqService_.swapCategories(catSubIds.get(3), catIds.get(1) + ",top");
++    cat = faqService_.getCategoryById(Utils.CATEGORY_HOME + "/" + cat.getId());
++    assertEquals("Index of category 3 before swap is't 3", cat.getIndex(), 1);
++    assertEquals(String.format("Path of category 3 before swap is't %s", cat.getPath()), cat.getPath(), Utils.CATEGORY_HOME + "/" + cat.getId());
++    /*
++     * case 5: Move category into other category of the same level as this category.
++     * and case 6: Move category up to the parent category and then move it into other category of the same level as the parent category. 
++     * It used function moveCategory(String categoryId, String destCategoryId); not use swapCategories(String cateId1, String cateId2);
++     */
++  }
+ 	
+-	
+-	}
+ // FAQPortlet
+ 	public void testCategoryInfo() throws Exception {
+ //	Add new data default
+@@ -571,7 +620,7 @@
+ 
+ 	public void _testImportData() throws Exception{
+ //		remove old data;
+-		revoveDate();
++		removeDate();
+ //		Before import data, number question is 0
+ 		assertEquals("Before import data, number question is not 0", faqService_.getAllQuestions().getAvailable(), 0);
+ 		try {
+Index: eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java
+===================================================================
+--- eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(revision 75861)
++++ eXoApplication/faq/service/src/main/java/org/exoplatform/faq/service/impl/JCRDataStorage.java	(working copy)
+@@ -1868,24 +1868,65 @@
+     }
+   }
+ 
+-  private void resetIndex(Node category, long index) throws Exception {
+-    QueryManager qm = category.getSession().getWorkspace().getQueryManager();
+-    Node parent = category.getParent() ;
+-    StringBuffer queryString = new StringBuffer("/jcr:root" + parent.getPath()) ; 
+-    queryString.append("/element(*,exo:faqCategory)order by @exo:index ascending, @exo:dateModified descending") ;
++  private NodeIterator getCategoriesIterator(Node parentCategory) throws Exception {
++    QueryManager qm = parentCategory.getSession().getWorkspace().getQueryManager();
++    StringBuffer queryString = new StringBuffer("/jcr:root" + parentCategory.getPath());
++    queryString.append("/element(*,exo:faqCategory) order by @exo:index ascending");
+     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+     QueryResult result = query.execute();
+-    NodeIterator iter = result.getNodes() ;
+-    if(iter.getSize() >= index) {
+-      long i = 1 ;
+-      Node cat ;
+-      while(iter.hasNext()) {
+-        cat = iter.nextNode() ;
+-        cat.setProperty("exo:index", i) ;				
+-        i ++ ;
++    return result.getNodes();
++  }
++
++  private void resetIndex(Node goingCategory, long index, long gindex) throws Exception {
++    Node parent = goingCategory.getParent();
++    Node node;
++    NodeIterator iter = getCategoriesIterator(parent);
++    if (index <= iter.getSize()) {
++      if (index < 1) {
++        goingCategory.setProperty("exo:index", 1);
+       }
+-      parent.save() ;
+-    }		
++      long l = 1;
++      while (iter.hasNext()) {
++        node = iter.nextNode();
++        if (index < 1) {// move up to top
++          if (node.getName().equals(goingCategory.getName()))
++            continue;
++          else {
++            l++;
++            node.setProperty("exo:index", l);
++          }
++        } else if (index > gindex) {// move down to index
++          l = node.getProperty("exo:index").getLong();
++          if (l >= gindex && l <= index) {
++            if (l == gindex) {
++              goingCategory.setProperty("exo:index", index);
++            } else {
++              node.setProperty("exo:index", l - 1);
++            }
++          }
++          if (l > index)
++            break;
++        } else {// move up to index
++          l = node.getProperty("exo:index").getLong();
++          if (l > index) {
++            if (l == gindex) {
++              goingCategory.setProperty("exo:index", index + 1);
++            } else {
++              node.setProperty("exo:index", l + 1);
++            }
++          }
++        }
++      }
++      parent.getSession().save();
++      iter = getCategoriesIterator(parent);
++    }
++    long i = 1;
++    while (iter.hasNext()) {
++      node = iter.nextNode();
++      node.setProperty("exo:index", i);
++      i++;
++    }
++    parent.save();
+   }
+ 
+   /* (non-Javadoc)
+@@ -1904,9 +1945,18 @@
+         addRSSListener(questionHome) ;
+       } else {
+         newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath()) ;
+-      }	
+-      saveCategory(newCategory, cat, isAddNew, sProvider) ;
+-      resetIndex(newCategory, cat.getIndex()) ;			
++      }
++      long index = cat.getIndex();
++      boolean isResetIndex = (isAddNew || newCategory.getProperty("exo:index").getLong() != index);
++      long size = 0;
++      if (isResetIndex) {
++        size = newCategory.getParent().getNodes().getSize();
++        cat.setIndex(size);
++      }
++      saveCategory(newCategory, cat, isAddNew, sProvider);
++      if (isResetIndex) {
++        resetIndex(newCategory, index, size);
++      }			
+     }catch (Exception e) {
+       log.error("Failed to save category: ", e);
+     }finally { sProvider.close() ;}
+@@ -3076,28 +3126,37 @@
+   /* (non-Javadoc)
+    * @see org.exoplatform.faq.service.impl.DataStorage#swapCategories(java.lang.String, java.lang.String)
+    */
+-  public void swapCategories(String cateId1, String cateId2) throws Exception{
+-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
++  public void swapCategories(String cateId1, String cateId2) throws Exception {
++    SessionProvider sProvider = SessionProvider.createSystemProvider();
+     try {
+-      Node goingCategory = getFAQServiceHome(sProvider).getNode(cateId1);
+-      Node mockCategory = getFAQServiceHome(sProvider).getNode(cateId2);
+-      long index = mockCategory.getProperty("exo:index").getValue().getLong() ;
+-      if(goingCategory.getParent().getPath().equals(mockCategory.getParent().getPath())) {
+-        goingCategory.setProperty("exo:index", index) ;
+-        goingCategory.save();
+-        resetIndex(goingCategory, index) ;
+-      }else {
+-        String id = goingCategory.getName() ;
+-        mockCategory.getSession().move(goingCategory.getPath(), mockCategory.getParent().getPath() + "/" + id) ;
+-        mockCategory.getSession().save() ;
+-        Node destCat = mockCategory.getParent().getNode(id) ;
+-        destCat.setProperty("exo:index", index) ;
+-        destCat.save();
+-        resetIndex(destCat, index) ;
++      String[] strs = Utils.splitForFAQ(cateId2);
++      boolean isTop = (strs.length > 1 && strs[1].trim().length() > 0);
++      Node faqHome = getFAQServiceHome(sProvider);
++      Node goingCategory = faqHome.getNode(cateId1);
++      Node mockCategory = faqHome.getNode(strs[0]);
++      long index = (isTop) ? 0 : mockCategory.getProperty("exo:index").getLong();
++      if (goingCategory.getParent().getPath().equals(mockCategory.getParent().getPath())) {
++        long gindex = goingCategory.getProperty("exo:index").getLong();
++        resetIndex(goingCategory, index, gindex);
++      } else {
++        String id = goingCategory.getName();
++        mockCategory.getSession().move(goingCategory.getPath(), mockCategory.getParent().getPath() + "/" + id);
++        faqHome.getSession().save();
++        Node parent = mockCategory.getParent();
++        Node destCat = parent.getNode(id);
++        long l = 1;
++        if (!isTop) {
++          l = parent.getNodes().getSize();
++          destCat.setProperty("exo:index", l);
++          parent.save();
++        }
++        resetIndex(destCat, index, l);
+       }
+     } catch (Exception e) {
+-      log.error("Failed to swap category", e);
+-    } finally {sProvider.close();}
++      log.error("Failed to swap categories", e);
++    } finally {
++      sProvider.close();
++    }
+   }
+ 
+   /* (non-Javadoc)
+Index: eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UICategories.java
+===================================================================
+--- eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UICategories.java	(revision 75861)
++++ eXoApplication/faq/webapp/src/main/java/org/exoplatform/faq/webui/UICategories.java	(working copy)
+@@ -576,17 +576,14 @@
+ 		public void execute(Event<UICategories> event) throws Exception {
+ 			UICategories uiCategories = event.getSource() ;
+ 			String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(",");
+-			UIAnswersContainer container = uiCategories.getAncestorOfType(UIAnswersContainer.class);
+-			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
++			UIAnswersPortlet portlet = uiCategories.getAncestorOfType(UIAnswersPortlet.class) ;
+ 			try {
+-				uiCategories.faqService_.swapCategories(objectIds[0], objectIds[1]);
+-				//uiCategories.resetListCate();
++			  uiCategories.faqService_.swapCategories(objectIds[0], objectIds[1] + "," + objectIds[2]);
+ 			} catch (Exception e) {
+-				e.printStackTrace();
+-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
++				portlet.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
++				event.getRequestContext().addUIComponentToUpdateByAjax(portlet.getUIPopupMessages()) ;
+ 			}
+-			event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
++			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+ 		}
+ 	}
+ 	
+Index: eXoApplication/faq/webapp/src/main/webapp/javascript/eXo/faq/UIAnswersPortlet.js
+===================================================================
+--- eXoApplication/faq/webapp/src/main/webapp/javascript/eXo/faq/UIAnswersPortlet.js	(revision 75861)
++++ eXoApplication/faq/webapp/src/main/webapp/javascript/eXo/faq/UIAnswersPortlet.js	(working copy)
+@@ -665,17 +665,21 @@
+ 		}
+ 	},
+ 	getAction: function(obj,target){
+-		if(eXo.core.DOMUtil.hasClass(target,"FAQTmpCategory")){
+-			var preElement = eXo.core.DOMUtil.findPreviousElementByTagName(target,"div");
+-			if(!preElement) preElement = eXo.core.DOMUtil.findNextElementByTagName(target,"div");
+-			if(obj.id == preElement.id) return false;
+-			var actionLink = obj.getAttribute("actionLink");
+-			actionLink = actionLink.replace("=objectId","="+obj.id +","+preElement.id);
+-		}else if(eXo.core.DOMUtil.hasClass(target,"FAQCategory")){
+-			var actionLink = obj.getAttribute("actionLink");
+-			actionLink = actionLink.replace("=objectId","="+obj.id +","+target.id);
+-			actionLink = actionLink.replace("ChangeIndex","MoveCategoryInto");
+-		}
++	  if (eXo.core.DOMUtil.hasClass(target,"FAQTmpCategory")){
++      var preElement = eXo.core.DOMUtil.findPreviousElementByTagName(target,"div");
++      var top = " ";
++      if(!preElement) {
++        preElement = eXo.core.DOMUtil.findNextElementByTagName(target,"div");
++        top = "top";
++      }
++      if(obj.id == preElement.id) return false;
++      var actionLink = obj.getAttribute("actionLink");
++      actionLink = actionLink.replace("=objectId", ("="+obj.id +","+ preElement.id + "," + top) );
++    } else if(eXo.core.DOMUtil.hasClass(target,"FAQCategory")){
++      var actionLink = obj.getAttribute("actionLink");
++      actionLink = actionLink.replace("=objectId","="+obj.id +","+target.id);
++      actionLink = actionLink.replace("ChangeIndex","MoveCategoryInto");
++    }
+ 		return actionLink;
+ 	}
+ };
