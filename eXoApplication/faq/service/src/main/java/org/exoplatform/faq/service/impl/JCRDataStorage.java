@@ -512,12 +512,12 @@ public class JCRDataStorage implements DataStorage {
         message.setMimeType(MIMETYPE_TEXTHTML) ;
         message.setFrom(question.getAuthor());
         message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
-        String body = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getDetail())
-        .replaceAll("&questionLink_", question.getLink());
+        String body = StringUtils.replace(faqSetting.getEmailSettingContent(), "&questionContent_", question.getDetail());
+        body = StringUtils.replace(body, "&questionLink_", question.getLink());
         if(question.getAnswers() != null && question.getAnswers().length > 0) {
-          body = body.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
+          body = StringUtils.replace(body, "&questionResponse_", question.getAnswers()[0].getResponses());
         } else {
-          body = body.replaceAll("&questionResponse_", "");
+          body = StringUtils.replace(body, "&questionResponse_", "");
         }
         message.setBody(body);
         sendEmailNotification(emailsList, message) ;
@@ -566,19 +566,20 @@ public class JCRDataStorage implements DataStorage {
 				message.setFrom(question.getAuthor());
 				message.setMimeType(MIMETYPE_TEXTHTML);
 				message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
+				String body = faqSetting.getEmailSettingContent();
 				if (isNew) {
-					message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", reader.string("exo:name", "")).replaceAll("&questionContent_", question.getDetail())
-							.replaceAll("&questionLink_", question.getLink()));
+				  body = StringUtils.replace(body, "&questionContent_", question.getDetail());
+				  body = StringUtils.replace(body, "&categoryName_", reader.string("exo:name", ""));
 				} else {
-					String contentMail = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion());
+				  body = StringUtils.replace(body, "&questionContent_", question.getQuestion());
 					if (question.getAnswers().length > 0) {
-						contentMail = contentMail.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
+					  body = StringUtils.replace(body, "&questionResponse_", question.getAnswers()[0].getResponses());
 					} else {
-						contentMail = contentMail.replaceAll("&questionResponse_", "");
+					  body = StringUtils.replace(body, "&questionResponse_", "");
 					}
-					contentMail = contentMail.replaceAll("&questionLink_", question.getLink());
-					message.setBody(contentMail);
 				}
+				body = StringUtils.replace(body, "&questionLink_", question.getLink());
+				message.setBody(body);
 				sendEmailNotification(emailsList, message);
 			}
 		} catch (Exception e) {
@@ -1719,9 +1720,9 @@ public class JCRDataStorage implements DataStorage {
     if(questionNode.hasProperty("exo:name")){
       questionDetail = questionDetail + "<br/> <span style=\"font-weight:normal\"> " + questionNode.getProperty("exo:name").getString() + "</span>";
     }
-    contentMail = contentMail.replace("&questionContent_", questionDetail).
-    replace("&categoryName_", categoryName).
-    replace("&questionLink_", link);
+    contentMail = StringUtils.replace(contentMail, "&questionContent_", questionDetail);
+    contentMail = StringUtils.replace(contentMail, "&categoryName_", categoryName);
+    contentMail = StringUtils.replace(contentMail, "&questionLink_", link);
     message.setBody(contentMail);
     Set<String>emails = new HashSet<String>();
     emails.addAll(calculateMoveEmail(destCateNode));

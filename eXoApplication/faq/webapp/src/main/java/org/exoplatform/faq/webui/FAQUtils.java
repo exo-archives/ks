@@ -584,5 +584,65 @@ public class FAQUtils {
 		}
 		return limitMB ;
 	}
-	
+
+  public static String convertTextForSearch(String s) {
+    String charIgnore = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
+    if (!isFieldEmpty(s)) {
+      int i = 0;
+      while (charIgnore.indexOf(s.charAt(i) + "") > 0) {
+        ++i;
+        if (i == s.length()) {
+          charIgnore = "";
+          break;
+        }
+      }
+    }
+    if (!isFieldEmpty(charIgnore)) charIgnore = "!#:?=.,+;~`_";
+    return convertSpecialCharToASCII(s, charIgnore, true);
+  }
+
+  public static String convertTextForTitle(String s) {
+    String charIgnore = "!#:?=.,()+;~`_";
+    return convertSpecialCharToASCII(s, charIgnore, true);
+  }
+
+  public static String convertTextForContent(String s) {
+    String charIgnore = "&#<>[]/:?\"=.,*$%()\\+@!^*-}{;`~_";
+    return convertSpecialCharToASCII(s, charIgnore, false);
+  }
+
+  public static String convertSpecialCharToASCII(String s, String charIgnore, boolean isTitle) {
+    if (isFieldEmpty(s)) {
+      return "";
+    }
+    int i = 0;
+    int[] charCodes = new int[] { 48, 32, 65, 57, 97, 90, 127, 122, 39 };// '0', ' ', 'A', '9', 'a', 'Z', '~', 'z', '\''
+    String apos = "&apos;", str1 = "&#", str2 = ";";
+    StringBuilder builder = new StringBuilder();
+    while (i < s.length()) {
+      char c = s.charAt(i);
+      if (charIgnore.indexOf(String.valueOf(c)) >= 0) {
+        builder.append(c);
+      } else {
+        int t = s.codePointAt(i);
+        if (t == charCodes[8]) {
+          builder.append(apos);
+        } else if (t < charCodes[0] && t > charCodes[1] || t < charCodes[2] && t > charCodes[3] || t < charCodes[4] && t > charCodes[5] || t < charCodes[6] && t > charCodes[7]) {
+          if (isTitle && (t == 60 || t == 62)) {
+            if (t == 60) {
+              builder.append("&lt;");
+            } else if (t == 62) {
+              builder.append("&gt;");
+            }
+          } else {
+            builder.append(str1).append(t).append(str2);
+          }
+        } else {
+          builder.append(c);
+        }
+      }
+      ++i;
+    }
+    return builder.toString();
+  }
 }

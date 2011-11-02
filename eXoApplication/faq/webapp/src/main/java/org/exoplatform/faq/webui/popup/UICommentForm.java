@@ -19,10 +19,10 @@ package org.exoplatform.faq.webui.popup;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.rendering.RenderHelper;
 import org.exoplatform.faq.service.Comment;
-import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
@@ -33,7 +33,6 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -60,7 +59,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
     }
 )
 
-public class UICommentForm extends BaseUIForm implements UIPopupComponent {
+public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
 	private String languageSelected ;
 	private Question question_ ;
 	private Comment comment ;
@@ -72,12 +71,10 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 	private boolean isAddNew = false;
 	private boolean isNotDefLg = false; 
 	private FAQSetting faqSetting_ ;
-	private FAQService faqService ;
 	private String link_ = "";
 	private RenderHelper renderHelper = new RenderHelper();
 	
 	public UICommentForm() throws Exception{
-		faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		currentUser_ = FAQUtils.getCurrentUser();
 		this.addChild((new UIFormStringInput(TITLE_USERNAME, TITLE_USERNAME, currentUser_)).setEditable(false));
 		UIFormWYSIWYGInput commentContent = new UIFormWYSIWYGInput(COMMENT_CONTENT, COMMENT_CONTENT, "");
@@ -103,7 +100,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 	public void setInfor(Question question, String commentId, FAQSetting faqSetting, String language) throws Exception{
 		if(!language.equals(question.getLanguage())) {
 			try {
-				QuestionLanguage questionLanguage = faqService.getQuestionLanguageByLanguage(question.getPath(), language);
+				QuestionLanguage questionLanguage = getFAQService().getQuestionLanguageByLanguage(question.getPath(), language);
 				this.questionContent = questionLanguage.getQuestion();
 				this.questionDetail = questionLanguage.getDetail();
 				languageSelected = language;
@@ -122,7 +119,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 		FAQUtils.getEmailSetting(faqSetting_, false, false);
 		if(commentId.indexOf("new") < 0) {
 			isAddNew = true;
-			comment = faqService.getCommentById(question.getPath(), commentId, language) ;
+			comment = getFAQService().getCommentById(question.getPath(), commentId, language) ;
 			((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(comment.getComments());
 		}
 	}
@@ -144,16 +141,18 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 	static public class SaveActionListener extends BaseEventListener<UICommentForm> {
 		public void onEvent(Event<UICommentForm> event, UICommentForm commentForm, final String objectId) throws Exception {
 			String comment = ((UIFormWYSIWYGInput)commentForm.getChildById(commentForm.COMMENT_CONTENT)).getValue();
+			if (FAQUtils.isFieldEmpty(comment) || !ValidatorDataInput.fckContentIsNotEmpty(comment)){
+			  warning("UICommentForm.msg.comment-is-null") ;
+			  return;
+			}
+			if(!commentForm.getFAQService().isExisting(commentForm.question_.getPath())){
+			  warning("UIQuestions.msg.comment-id-deleted") ;
+			  return;
+			}
+			comment = FAQUtils.convertTextForContent(comment);
 			UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
-      if(comment == null || comment.trim().length() == 0 || !ValidatorDataInput.fckContentIsNotEmpty(comment)){
-				warning("UICommentForm.msg.comment-is-null") ;
-        return;
-			}
-      if(!commentForm.faqService.isExisting(commentForm.question_.getPath())){
-      	warning("UIQuestions.msg.comment-id-deleted") ;
-      }
 			try{								
 				//Create link by Vu Duy Tu.
 	      String link = FAQUtils.getLink(commentForm.getLink(), commentForm.getId(), "UICommentForm", "Cancel", "ViewQuestion", "OBJECTID");
@@ -223,7 +222,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 				String currentUser = FAQUtils.getCurrentUser() ;
 				commentForm.comment.setCommentBy(currentUser) ;
 				commentForm.comment.setFullName(FAQUtils.getFullName(null)) ;
-				commentForm.faqService.saveComment(commentForm.question_.getPath(), commentForm.comment, language);
+				commentForm.getFAQService().saveComment(commentForm.question_.getPath(), commentForm.comment, language);
 				if(!commentForm.languageSelected.equals(commentForm.question_.getLanguage())) {
 					try {
 						questions.updateCurrentLanguage() ;

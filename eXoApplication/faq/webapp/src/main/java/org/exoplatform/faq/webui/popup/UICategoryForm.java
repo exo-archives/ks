@@ -205,13 +205,7 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
 		public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm uiCategory = event.getSource() ;
       String name = uiCategory.getUIStringInput(FIELD_NAME_INPUT).getValue() ;
-      if(name.indexOf("<") >=0)  name = name.replace("<", "&lt;") ;
-      if(name.indexOf(">") >=0) name = name.replace(">", "&gt;") ;
-      
-      if(name.indexOf("'") >=0 ){
-      	uiCategory.warning("UICateforyForm.sms.cate-name-invalid") ;
-    		return ;
-      }
+      name = FAQUtils.convertTextForTitle(name);
       
       if(uiCategory.isAddNew_) {
       	if(uiCategory.getFAQService().isCategoryExist(name, uiCategory.parentId_)) {
@@ -224,7 +218,6 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
       		return ;
         }
       }
-      
       
       long index = 1;
       String strIndex = uiCategory.getUIStringInput(FIELD_INDEX_INPUT).getValue() ;

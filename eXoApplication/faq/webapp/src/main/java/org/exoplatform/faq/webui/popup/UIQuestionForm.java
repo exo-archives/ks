@@ -465,12 +465,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
 	        return ;
 	      }
 	
-	      if(language.equals(questionForm.defaultLanguage_)) {
-	      	if(questionContent == null) {
-	          warning("UIQuestionForm.msg.default-question-null") ;
-	          return ;
-	        }
-	      }else {
+	       if (!language.equals(questionForm.defaultLanguage_)) {
 	      	if(questionForm.mapLanguage.isEmpty() || questionForm.mapLanguage.get(questionForm.getDefaultLanguage()) == null) {
 	      		warning("UIQuestionForm.msg.default-question-null") ;
 	          return ;
@@ -484,7 +479,9 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
 	      		questionForm.mapLanguage.get(language).setState(QuestionLanguage.DELETE) ;
 	      	}
 	      }
-	       
+	      questionDetail = FAQUtils.convertTextForContent(questionDetail);
+	      questionContent = FAQUtils.convertTextForTitle(questionContent);
+
 	      Question question = questionForm.getQuestion();
 	      
 	      if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) { //Add new question

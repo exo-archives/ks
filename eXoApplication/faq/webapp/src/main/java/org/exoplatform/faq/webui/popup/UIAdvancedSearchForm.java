@@ -306,18 +306,18 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 				advancedSearch.warning("UIAdvancedSearchForm.msg.email-invalid") ;
 				return ;
 			}
-			if(FAQUtils.CheckSpecial(text) || FAQUtils.CheckSpecial(categoryName) || FAQUtils.CheckSpecial(moderator) ||
-					FAQUtils.CheckSpecial(author) || FAQUtils.CheckSpecial(emailAddress) ||
-					FAQUtils.CheckSpecial(question) || FAQUtils.CheckSpecial(response) || FAQUtils.CheckSpecial(comment)) { 
-				advancedSearch.warning("UIAdvancedSearchForm.msg.failure") ;
-				return ;
-			}
+
+			text = FAQUtils.convertTextForSearch(text);
+			categoryName = FAQUtils.convertTextForSearch(categoryName);
+			question = FAQUtils.convertTextForSearch(question);
+			response = FAQUtils.convertTextForContent(response);
+			comment = FAQUtils.convertTextForContent(comment);
 			/**
 			 * Create query string from data inputed
 			 */
 			FAQEventQuery eventQuery = new FAQEventQuery() ;
 			eventQuery.setType(type) ;
-			eventQuery.setText(FAQUtils.isFieldEmpty(text)?"":text) ;
+			eventQuery.setText(text) ;
 			eventQuery.setName(categoryName) ;
 			eventQuery.setIsModeQuestion(modeQuestion) ;
 			eventQuery.setModerator(moderator) ;
