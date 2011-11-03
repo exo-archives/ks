@@ -36,6 +36,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 
 /**
  * Created by The eXo Platform SAS
@@ -82,7 +83,9 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
     if (getId() == null)
       setId("UIAutoPruneSettingForm");
     UIFormStringInput inActiveDay = new UIFormStringInput(FIELD_INACTIVEDAY_INPUT, FIELD_INACTIVEDAY_INPUT, null);
+    inActiveDay.addValidator(PositiveNumberFormatValidator.class);
     UIFormStringInput jobDay = new UIFormStringInput(FIELD_JOBDAY_INPUT, FIELD_JOBDAY_INPUT, null);
+    jobDay.addValidator(PositiveNumberFormatValidator.class);
 
     UIFormSelectBox inActiveDayType = getSelectBox(FIELD_INACTIVEDAY_SELECTBOX, false);
     UIFormSelectBox jobDayType = getSelectBox(FIELD_JOBDAY_SELECTBOX, true);
