@@ -34,7 +34,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 /**
  * Created by The eXo Platform SAS
@@ -70,7 +70,7 @@ public class UISelectCategoryForm extends BaseForumForm implements UIPopupCompon
     this.forumLinks = forumService.getAllLink(ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR);
   }
 
-  @SuppressWarnings( { "unchecked", "unused" })
+  @SuppressWarnings( { "unused" })
   private List<ForumLinkData> getForumLinks() throws Exception {
     String categoryId = ForumUtils.EMPTY_STR, forumId = ForumUtils.EMPTY_STR;
     boolean isPut = true;
@@ -78,11 +78,11 @@ public class UISelectCategoryForm extends BaseForumForm implements UIPopupCompon
     for (ForumLinkData forumLink : this.forumLinks) {
       if (forumLink.getType().equals(Utils.CATEGORY)) {
         cateId = forumLink.getId();
-        if (getUIFormCheckBoxInput(forumLink.getPath()) == null) {
+        if (getUICheckBoxInput(forumLink.getPath()) == null) {
           if (listIdIsSelected.contains(cateId))
-            addUIFormInput((new UIFormCheckBoxInput(cateId, cateId, false)).setChecked(true));
+            addUIFormInput((new UICheckBoxInput(cateId, cateId, false)).setChecked(true));
           else
-            addUIFormInput((new UIFormCheckBoxInput(cateId, cateId, false)).setChecked(false));
+            addUIFormInput((new UICheckBoxInput(cateId, cateId, false)).setChecked(false));
         }
       }
     }
@@ -98,14 +98,13 @@ public class UISelectCategoryForm extends BaseForumForm implements UIPopupCompon
   }
 
   static public class AddActionListener extends EventListener<UISelectCategoryForm> {
-    @SuppressWarnings("unchecked")
     public void execute(Event<UISelectCategoryForm> event) throws Exception {
       UISelectCategoryForm uiForm = event.getSource();
       List<String> listIdSelected = new ArrayList<String>();
       List<UIComponent> children = uiForm.getChildren();
       for (UIComponent child : children) {
-        if (child instanceof UIFormCheckBoxInput) {
-          if (((UIFormCheckBoxInput) child).isChecked()) {
+        if (child instanceof UICheckBoxInput) {
+          if (((UICheckBoxInput) child).isChecked()) {
             listIdSelected.add(uiForm.getNameForumLinkData(child.getName()) + "(" + child.getName());
           }
         }

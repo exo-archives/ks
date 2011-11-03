@@ -135,11 +135,10 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
   }
 
   public void setUnWatchEmail(String[] emails, String unwatchEmail) {
-    if (emails.length == 1)
+    if (emails.length == 1) {
       setEmails(emails);
-    else if (emails.length > 1) {
+    } else if (emails.length > 1) {
       List<String> temp = new ArrayList<String>();
-      int i = 0;
       for (String em : emails) {
         if (!em.equals(unwatchEmail)) {
           temp.add(em);

@@ -303,12 +303,12 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
       boolean isAutoAddEmail = forum.getIsAutoAddEmailNotify();
       UICheckBoxInput boxInput = getUICheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX);
       boxInput.setChecked(isAutoAddEmail);
-      boxInput.setEditable(!isMode);
+      boxInput.setReadOnly(isMode);
 
       UIFormTextAreaInput areaInput = moderationOptions.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE);
       areaInput.setValue(ForumUtils.unSplitForForum(forum.getModerators()));
-      areaInput.setEditable(!isMode);
-      areaInput.setEnable(!isMode);
+      areaInput.setReadOnly(isMode);
+      areaInput.setDisabled(isMode);
       UIFormTextAreaInput notifyWhenAddPost = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE);
       UIFormTextAreaInput notifyWhenAddTopic = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE);
       notifyWhenAddPost.setValue(ForumUtils.unSplitForForum(forum.getNotifyWhenAddPost()));
@@ -325,7 +325,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
   public void setCategoryValue(String categoryId, boolean isEditable) throws Exception {
     if (!ForumUtils.isEmpty(categoryId))
       getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setValue(categoryId);
-    getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setEnable(isEditable);
+    getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setDisabled(!isEditable);
     isCategoriesUpdate = isEditable;
     this.categoryId = categoryId;
     isUpdate = false;

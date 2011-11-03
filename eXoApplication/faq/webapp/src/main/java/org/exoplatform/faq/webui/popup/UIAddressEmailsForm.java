@@ -43,8 +43,8 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 /**
  * Created by The eXo Platform SARL
@@ -165,12 +165,12 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
   public List<User> getUsers() throws Exception {
     List<User> users = new ArrayList<User>(uiPageList_.getCurrentPageData());
     for (User c : users) {
-      UIFormCheckBoxInput uiInput = getUIFormCheckBoxInput(c.getUserName());
+      UICheckBoxInput uiInput = getUICheckBoxInput(c.getUserName());
       if (uiInput == null)
-        addUIFormInput(new UIFormCheckBoxInput<Boolean>(c.getUserName(), c.getUserName(), null));
+        addUIFormInput(new UICheckBoxInput(c.getUserName(), c.getUserName(), null));
     }
     for (User c : checkedList_.values()) {
-      UIFormCheckBoxInput uiInput = getUIFormCheckBoxInput(c.getUserName());
+      UICheckBoxInput uiInput = getUICheckBoxInput(c.getUserName());
       if (uiInput != null)
         uiInput.setChecked(true);
     }
@@ -217,7 +217,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
   public List<User> getCheckedUser() throws Exception {
     List<User> userList = new ArrayList<User>();
     for (User user : new ArrayList<User>(uiPageList_.getCurrentPageData())) {
-      UIFormCheckBoxInput<Boolean> uiCheckbox = getChildById(user.getUserName());
+      UICheckBoxInput uiCheckbox = getChildById(user.getUserName());
       if (uiCheckbox != null && uiCheckbox.isChecked()) {
         userList.add(user);
       }

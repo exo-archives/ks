@@ -93,7 +93,6 @@ public class UIListInBoxPrivateMessage extends UIContainer {
     return this.listInbox;
   }
 
-  @SuppressWarnings("unused")
   private ForumPrivateMessage getPrivateMessage(String id) throws Exception {
     List<ForumPrivateMessage> list = this.listInbox;
     for (ForumPrivateMessage forumPrivateMessage : list) {

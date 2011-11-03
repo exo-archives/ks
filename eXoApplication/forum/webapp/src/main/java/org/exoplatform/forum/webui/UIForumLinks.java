@@ -208,7 +208,7 @@ public class UIForumLinks extends BaseForumForm {
               isErro = true;
           }
           if (isErro) {
-            uiForm.warning("UIShowBookMarkForm.msg.link-not-found");
+            uiForm.warning("UIShowBookMarkForm.msg.link-not-found", false);
             path = Utils.FORUM_SERVICE;
           }
           if (path.indexOf(Utils.FORUM_SERVICE) >= 0) {

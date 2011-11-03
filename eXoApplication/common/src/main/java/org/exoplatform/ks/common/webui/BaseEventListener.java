@@ -53,37 +53,89 @@ public abstract class BaseEventListener<T extends BaseUIForm> extends EventListe
 
   
   /**
-   * Sends an info message to ui
+   * Sends a info message to ui and ignore ajax update on Portlets
    * @param messageKey resource bundle key for the message
    */
   protected void info(String messageKey) {
-    component.info(messageKey);
+    component.info(messageKey, null, true);
+  }
+
+  protected void info(String messageKey, String arg) {
+    component.info(messageKey, new String[] { arg }, true);
+  }
+  
+  protected void info(String messageKey, String[] args) {
+    component.info(messageKey, args, true);
+  }
+  
+  /**
+   * Sends an info message to ui
+   * @param messageKey resource bundle key for the message
+   * @param ignoreAJAXUpdateOnPortlets as there is need to update only UI components 
+   * of portal (ie: the components outside portlet windows) are updated by AJAX.
+   */
+  protected void info(String messageKey, boolean ignoreAJAXUpdateOnPortlets) {
+    component.info(messageKey, ignoreAJAXUpdateOnPortlets);
   }
   
   /**
    * Sends a ninfo message to ui
    * @param messageKey resource bundle key for the message
    * @param args arguments of the message
+   * @param ignoreAJAXUpdateOnPortlets as there is need to update only UI components 
+   * of portal (ie: the components outside portlet windows) are updated by AJAX.
    */  
-  protected void info(String messageKey, String... args) {
-    component.info(messageKey, args);
+  protected void info(String messageKey, String[] args, boolean ignoreAJAXUpdateOnPortlets) {
+    component.info(messageKey, args, ignoreAJAXUpdateOnPortlets);
   }
  
+  
   /**
-   * Sends a warning message to ui
+   * Sends a warning message to ui and ignore ajax update on Portlets
    * @param messageKey resource bundle key for the message
    */
   protected void warning(String messageKey) {
-    component.warning(messageKey);
+    component.warning(messageKey, null, true);
+  }
+
+  protected void warning(String messageKey, String arg) {
+    component.warning(messageKey, new String[] { arg });
+  }
+  
+  protected void warning(String messageKey, String[] args) {
+    component.warning(messageKey, args);
+  }
+
+  /**
+   * Sends a warning message to ui
+   * @param messageKey resource bundle key for the message
+   * @param ignoreAJAXUpdateOnPortlets as there is need to update only UI components 
+   * of portal (ie: the components outside portlet windows) are updated by AJAX.
+   */
+  protected void warning(String messageKey, boolean ignoreAJAXUpdateOnPortlets) {
+    component.warning(messageKey, ignoreAJAXUpdateOnPortlets);
   }
   
   /**
    * Sends a parameterized warning to ui
    * @param messageKey
    * @param args arguments of the message
+   * @param ignoreAJAXUpdateOnPortlets as there is need to update only UI components 
+   * of portal (ie: the components outside portlet windows) are updated by AJAX.
    */
-  protected void warning(String messageKey, String... args) {
-    component.warning(messageKey, args);
+  protected void warning(String messageKey, String[] args, boolean ignoreAJAXUpdateOnPortlets) {
+    component.warning(messageKey, args, ignoreAJAXUpdateOnPortlets);
+  }
+
+  /**
+   * Sends a parameterized warning to ui
+   * @param messageKey
+   * @param arg argument of the message
+   * @param ignoreAJAXUpdateOnPortlets as there is need to update only UI components 
+   * of portal (ie: the components outside portlet windows) are updated by AJAX.
+   */
+  protected void warning(String messageKey, String arg, boolean ignoreAJAXUpdateOnPortlets) {
+    component.warning(messageKey, new String[] { arg }, ignoreAJAXUpdateOnPortlets);
   }
   
   /**

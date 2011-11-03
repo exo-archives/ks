@@ -38,8 +38,8 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -96,10 +96,10 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
     String checkBoxId;
     for (Post post : posts) {
       checkBoxId = post.getCreatedDate().getTime() + ForumUtils.SLASH + post.getId();
-      if (getUIFormCheckBoxInput(checkBoxId) != null) {
-        getUIFormCheckBoxInput(checkBoxId).setChecked(false);
+      if (getUICheckBoxInput(checkBoxId) != null) {
+        getUICheckBoxInput(checkBoxId).setChecked(false);
       } else {
-        addUIFormInput(new UIFormCheckBoxInput(checkBoxId, checkBoxId, false));
+        addUIFormInput(new UICheckBoxInput(checkBoxId, checkBoxId, false));
       }
     }
     isSetPage = true;
@@ -166,7 +166,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
             uiForm.getForumService().movePost(postPaths.toArray(new String[] {}), destTopicPath, true, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
           } catch (Exception e) {
             uiForm.log.error("Saving topic " + topic + " fail: " + e.getMessage(), e);
-            uiForm.warning("UISplitTopicForm.msg.forum-deleted");
+            uiForm.warning("UISplitTopicForm.msg.forum-deleted", false);
           }
           UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
           forumPortlet.cancelAction();

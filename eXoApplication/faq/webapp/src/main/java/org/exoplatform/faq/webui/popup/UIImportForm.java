@@ -77,25 +77,25 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
         }
         try {
           if (!service.importData(importForm.categoryId_, uploadInput.getUploadDataAsStream(), isZip)) {
-            importForm.warning("UIImportForm.msg.import-fail");
+            importForm.warning("UIImportForm.msg.import-fail", false);
           } else {
-            importForm.info("UIImportForm.msg.import-successful");
+            importForm.info("UIImportForm.msg.import-successful", false);
           }
         } catch (AccessDeniedException ace) {
-          importForm.warning("UIImportForm.msg.access-denied");
+          importForm.warning("UIImportForm.msg.access-denied", false);
         } catch (ConstraintViolationException con) {
-          importForm.warning("UIImportForm.msg.constraint-violation-exception");
+          importForm.warning("UIImportForm.msg.constraint-violation-exception", false);
         } catch (ItemExistsException ise) {
-          importForm.warning("UIImportForm.msg.CategoryIsExist");
+          importForm.warning("UIImportForm.msg.CategoryIsExist", false);
         } catch (Exception e) {
-          importForm.warning("UIImportForm.msg.filetype-error");
+          importForm.warning("UIImportForm.msg.filetype-error", false);
         }
 
         UploadService uploadService = importForm.getApplicationComponent(UploadService.class);
         uploadService.removeUploadResource(uploadInput.getUploadId());
       } catch (Exception e) {
         FAQUtils.findCateExist(service, portlet.findFirstComponentOfType(UIAnswersContainer.class));
-        importForm.warning("UIQuestions.msg.admin-moderator-removed-action");
+        importForm.warning("UIQuestions.msg.admin-moderator-removed-action", false);
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet);
       }
 
@@ -116,7 +116,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent {
       try {
         UploadService uploadService = importForm.getApplicationComponent(UploadService.class);
         UIFormUploadInput uploadInput = (UIFormUploadInput) importForm.getChildById(importForm.FILE_UPLOAD);
-        uploadService.removeUpload(uploadInput.getUploadId());
+        uploadService.removeUploadResource(uploadInput.getUploadId());
       } catch (Exception e) {
       }
       portlet.cancelAction();

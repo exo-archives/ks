@@ -171,7 +171,7 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
   }
 
   public UIFormSelectBoxWithGroups setDisabled(boolean disabled) {
-    setEnable(!disabled);
+    this.disabled = disabled;
     return this;
   }
 
@@ -245,7 +245,7 @@ public class UIFormSelectBoxWithGroups extends UIFormStringInput {
     if (size_ > 1)
       w.write(" size=\"" + size_ + "\"");
 
-    if (!enable_)
+    if (isDisabled())
       w.write(" disabled ");
 
     w.write(">\n");

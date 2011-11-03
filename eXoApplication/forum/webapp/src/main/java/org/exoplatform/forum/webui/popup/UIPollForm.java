@@ -145,7 +145,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
       getUICheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).setChecked(poll.getIsAgainVote());
       UICheckBoxInput multiVoteCheckInput = getUICheckBoxInput(FIELD_MULTIVOTE_CHECKBOX);
       multiVoteCheckInput.setChecked(poll.getIsMultiCheck());
-      multiVoteCheckInput.setEnable(false);
+      multiVoteCheckInput.setDisabled(true);
       this.isUpdate = isUpdate;
       setDefaulFall();
     }
@@ -182,7 +182,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
       long timeOut = 0;
       if (!ForumUtils.isEmpty(timeOutStr)) {
         if (timeOutStr.length() > 4) {
-          uiForm.warning("UIPollForm.msg.longTimeOut", new String[] { uiForm.getLabel(FIELD_TIMEOUT_INPUT) });
+          uiForm.warning("UIPollForm.msg.longTimeOut", new String[] { uiForm.getLabel(FIELD_TIMEOUT_INPUT) }, false);
         }
         timeOut = Long.parseLong(timeOutStr);
       }

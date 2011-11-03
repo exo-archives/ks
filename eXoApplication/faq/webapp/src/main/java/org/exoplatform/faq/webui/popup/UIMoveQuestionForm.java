@@ -161,10 +161,10 @@ public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
           questions.updateCurrentQuestionList();
         } catch (Exception e) {
           moveQuestionForm.log.warn("Can not move this question. Exception: " + e.getMessage());
-          warning("UIQuestions.msg.question-id-deleted");
+          warning("UIQuestions.msg.question-id-deleted", false);
         }
       } catch (Exception e) {
-        warning("UIQuestions.msg.category-id-deleted");
+        warning("UIQuestions.msg.category-id-deleted", false);
       }
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
       questions.setDefaultLanguage();

@@ -50,8 +50,8 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 /**
@@ -98,9 +98,9 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private UIFormWYSIWYGInput             inputResponseQuestion_;
 
-  private UIFormCheckBoxInput<Boolean>   checkShowAnswer_;
+  private UICheckBoxInput   checkShowAnswer_;
 
-  private UIFormCheckBoxInput<Boolean>   isApproved_;
+  private UICheckBoxInput   isApproved_;
 
   // question infor :
   public String                          questionId_           = "";
@@ -134,8 +134,6 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private RenderHelper renderHelper = new RenderHelper();
 
-  private Object Question;
-
   public String getLink() {
     return link_;
   }
@@ -159,8 +157,8 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
     inputResponseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, RESPONSE_CONTENT, "");
     inputResponseQuestion_.setFCKConfig(WebUIUtils.getFCKConfig());
     inputResponseQuestion_.setToolBarName("Basic");
-    checkShowAnswer_ = new UIFormCheckBoxInput<Boolean>(SHOW_ANSWER, SHOW_ANSWER, false);
-    isApproved_ = new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false);
+    checkShowAnswer_ = new UICheckBoxInput(SHOW_ANSWER, SHOW_ANSWER, false);
+    isApproved_ = new UICheckBoxInput(IS_APPROVED, IS_APPROVED, false);
     this.setActions(new String[] { "Save", "Cancel" });
   }
 
@@ -178,8 +176,8 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
     questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse);
     questionLanguages_.setValue(answer.getLanguage());
     questionLanguages_.setSelectedValues(new String[] { answer.getLanguage() });
-    getUIFormCheckBoxInput(SHOW_ANSWER).setChecked(answer.getActivateAnswers());
-    getUIFormCheckBoxInput(IS_APPROVED).setChecked(answer.getApprovedAnswers());
+    getUICheckBoxInput(SHOW_ANSWER).setChecked(answer.getActivateAnswers());
+    getUICheckBoxInput(IS_APPROVED).setChecked(answer.getApprovedAnswers());
   }
 
   public void setQuestionId(Question question, String languageViewed, boolean isAnswerApp) {
@@ -359,7 +357,6 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
   }
 
   static public class SaveActionListener extends EventListener<UIResponseForm> {
-    @SuppressWarnings("unchecked")
     public void execute(Event<UIResponseForm> event) throws Exception {
       UIResponseForm responseForm = event.getSource();
       String language = responseForm.questionLanguages_.getValue();
@@ -381,8 +378,8 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
           answer.setLanguage(language);
         }
         // author: Vu Duy Tu. set show answer
-        answer.setApprovedAnswers(((UIFormCheckBoxInput<Boolean>) responseForm.getChildById(IS_APPROVED)).isChecked());
-        answer.setActivateAnswers(((UIFormCheckBoxInput<Boolean>) responseForm.getChildById(SHOW_ANSWER)).isChecked());
+        answer.setApprovedAnswers(((UICheckBoxInput) responseForm.getChildById(IS_APPROVED)).isChecked());
+        answer.setActivateAnswers(((UICheckBoxInput) responseForm.getChildById(SHOW_ANSWER)).isChecked());
         responseForm.mapAnswers.put(language, answer);
       } else {
         if (responseForm.mapAnswers.containsKey(language)) {
@@ -426,11 +423,11 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
         responseForm.getFAQService().saveAnswer(question.getPath(), answers);
         responseForm.getFAQService().updateQuestionRelatives(question.getPath(), responseForm.listQuestIdRela.toArray(new String[responseForm.listQuestIdRela.size()]));
         if (!responseForm.isModerator && !responseForm.isAnswerApproved){
-          responseForm.info("UIResponseForm.msg.pending-for-moderation");
+          responseForm.info("UIResponseForm.msg.pending-for-moderation", false);
         }
       } catch (PathNotFoundException e) {
         responseForm.log.error("Can not save Question, this question is deleted, exception: " + e.getMessage());
-        responseForm.warning("UIQuestions.msg.question-id-deleted");
+        responseForm.warning("UIQuestions.msg.question-id-deleted", false);
       } catch (Exception e) {
         responseForm.log.error("Can not save Question, exception: " + e.getMessage());
       }

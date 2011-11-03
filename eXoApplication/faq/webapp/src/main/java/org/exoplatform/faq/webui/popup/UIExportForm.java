@@ -50,14 +50,13 @@ public class UIExportForm extends BaseUIForm implements UIPopupComponent {
   }
 
   static public class SaveActionListener extends EventListener<UIExportForm> {
-    @SuppressWarnings("unchecked")
     public void execute(Event<UIExportForm> event) throws Exception {
       UIExportForm exportForm = event.getSource();
 
       String fileName = ((UIFormStringInput) exportForm.getChildById(exportForm.FILE_NAME)).getValue();
       UIAnswersPortlet portlet = exportForm.getAncestorOfType(UIAnswersPortlet.class);
       if (!ValidatorDataInput.fckContentIsNotEmpty(fileName)) {
-        exportForm.warning("UIExportForm.msg.nameFileExport");
+        exportForm.warning("UIExportForm.msg.nameFileExport", false);
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet);
         return;
       }
@@ -77,7 +76,7 @@ public class UIExportForm extends BaseUIForm implements UIPopupComponent {
       } catch (Exception e) {
         event.getSource().log.debug("Fail to export data: ", e);
         FAQUtils.findCateExist(service, portlet.findFirstComponentOfType(UIAnswersContainer.class));
-        exportForm.warning("UIQuestions.msg.admin-moderator-removed-action");
+        exportForm.warning("UIQuestions.msg.admin-moderator-removed-action", false);
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet);
       }
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);

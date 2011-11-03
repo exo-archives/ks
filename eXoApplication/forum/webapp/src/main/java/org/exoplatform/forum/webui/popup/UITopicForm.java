@@ -643,7 +643,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
               } catch (PathNotFoundException e) {
                 forumPortlet.rederForumHome();
                 forumPortlet.cancelAction();
-                warning("UITopicForm.msg.forum-deleted");
+                warning("UITopicForm.msg.forum-deleted", false);
                 event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
                 uiForm.isDoubleClickSubmit = false;
                 return;
@@ -681,10 +681,10 @@ public class UITopicForm extends BaseForumForm implements UISelector {
             forumPortlet.cancelAction();
             if (isOffend || hasForumMod) {
               if (isOffend)
-                warning("MessagePost.msg.isOffend");
+                warning("MessagePost.msg.isOffend", false);
               else {
                 String[] args = new String[] { "forum", "thread" };
-                warning("MessageThread.msg.isModerate", args);
+                warning("MessageThread.msg.isModerate", args, false);
               }
             }
             event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -708,7 +708,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
           forumPortlet.removeCacheUserProfile();
           UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
           topicContainer.setUpdateForum(uiForm.categoryId, uiForm.forum, 0);
-          warning("UITopicForm.msg.no-permission");
+          warning("UITopicForm.msg.no-permission", false);
           event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
           uiForm.isDoubleClickSubmit = false;
           return;
@@ -720,7 +720,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
         categoryContainer.getChild(UICategories.class).setIsRenderChild(false);
         forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
         forumPortlet.cancelAction();
-        warning("UITopicForm.msg.forum-deleted");
+        warning("UITopicForm.msg.forum-deleted", false);
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
     }

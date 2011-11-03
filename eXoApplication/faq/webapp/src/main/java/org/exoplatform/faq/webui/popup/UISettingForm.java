@@ -45,11 +45,11 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 /**
@@ -224,14 +224,14 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
       DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy)).setValue(String.valueOf(faqSetting_.getOrderBy())));
       ;
       DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
-      DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_VOTE_COMMNET, ENABLE_VOTE_COMMNET, false)).setChecked(faqSetting_.isEnanbleVotesAndComments()));
-      DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_ANONYMOUS_SUBMIT_QUESTION, ENABLE_ANONYMOUS_SUBMIT_QUESTION, false)).setChecked(faqSetting_.isEnableAnonymousSubmitQuestion()));
-      DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_RSS, ENABLE_RSS, false)).setChecked(faqSetting_.isEnableAutomaticRSS()));
-      DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_VIEW_AVATAR, ENABLE_VIEW_AVATAR, false)).setChecked(faqSetting_.isEnableViewAvatar()));
-      UIFormCheckBoxInput<Boolean> isPostQuestionInRootCategory = new UIFormCheckBoxInput<Boolean>(POST_QUESTION_IN_ROOT_CATEGORY, POST_QUESTION_IN_ROOT_CATEGORY, true);
+      DisplayTab.addUIFormInput((new UICheckBoxInput(ENABLE_VOTE_COMMNET, ENABLE_VOTE_COMMNET, false)).setChecked(faqSetting_.isEnanbleVotesAndComments()));
+      DisplayTab.addUIFormInput((new UICheckBoxInput(ENABLE_ANONYMOUS_SUBMIT_QUESTION, ENABLE_ANONYMOUS_SUBMIT_QUESTION, false)).setChecked(faqSetting_.isEnableAnonymousSubmitQuestion()));
+      DisplayTab.addUIFormInput((new UICheckBoxInput(ENABLE_RSS, ENABLE_RSS, false)).setChecked(faqSetting_.isEnableAutomaticRSS()));
+      DisplayTab.addUIFormInput((new UICheckBoxInput(ENABLE_VIEW_AVATAR, ENABLE_VIEW_AVATAR, false)).setChecked(faqSetting_.isEnableViewAvatar()));
+      UICheckBoxInput isPostQuestionInRootCategory = new UICheckBoxInput(POST_QUESTION_IN_ROOT_CATEGORY, POST_QUESTION_IN_ROOT_CATEGORY, true);
       isPostQuestionInRootCategory.setChecked(faqSetting_.isPostQuestionInRootCategory());
       DisplayTab.addUIFormInput(isPostQuestionInRootCategory);
-      UIFormCheckBoxInput<Boolean> enableDiscus = new UIFormCheckBoxInput<Boolean>(ENABLE_DISCUSSION, ENABLE_DISCUSSION, false);
+      UICheckBoxInput enableDiscus = new UICheckBoxInput(ENABLE_DISCUSSION, ENABLE_DISCUSSION, false);
       enableDiscus.setChecked(faqSetting_.getIsDiscussForum());
       Discussion.addUIFormInput(enableDiscus);
       UIFormStringInput categoryPath = new UIFormStringInput(FIELD_CATEGORY_PATH_INPUT, FIELD_CATEGORY_PATH_INPUT, null);
@@ -245,7 +245,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
         this.idForumName.add("");
       }
       categoryPath.setValue(idForumName.get(1));
-      categoryPath.setEditable(false);
+      categoryPath.setReadOnly(true);
       Discussion.addUIFormInput(categoryPath);
       List<ActionData> actionData = new ArrayList<ActionData>();
       ActionData ad;
@@ -257,9 +257,9 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
       actionData.add(ad);
       Discussion.setActionField(FIELD_CATEGORY_PATH_INPUT, actionData);
 
-      UIFormCheckBoxInput<Boolean> checkBoxInput = null;
+      UICheckBoxInput checkBoxInput = null;
       for (Cate cate : listCate) {
-        checkBoxInput = new UIFormCheckBoxInput<Boolean>(cate.getCategory().getId(), cate.getCategory().getId(), false);
+        checkBoxInput = new UICheckBoxInput(cate.getCategory().getId(), cate.getCategory().getId(), false);
         checkBoxInput.setChecked(cate.getCategory().isView());
         CategoryScoping.addChild(checkBoxInput);
       }
@@ -285,7 +285,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
       orderType.add(new SelectItemOption<String>(DESC, FAQSetting.ORDERBY_TYPE_DESC));
       addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
 
-      addUIFormInput((new UIFormCheckBoxInput<Boolean>(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
+      addUIFormInput((new UICheckBoxInput(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
 
       setAvatarUrl(FAQUtils.getUserAvatar(FAQUtils.getCurrentUser()));
     }
@@ -336,7 +336,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
       if (settingForm.isEditPortlet_) {
         UIFormInputWithActions inputWithActions = settingForm.getChildById(settingForm.CATEGORY_SCOPING);
         List<String> listCateIds = new ArrayList<String>();
-        UIFormCheckBoxInput<Boolean> checkBoxInput = null;
+        UICheckBoxInput checkBoxInput = null;
         int position = 1;
         boolean isView = true;
         for (int i = 0; i < settingForm.listCate.size(); i++) {
@@ -359,11 +359,11 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
         faqSetting.setDisplayMode(((UIFormSelectBox) inputWithActions.getChildById(settingForm.DISPLAY_MODE)).getValue());
         faqSetting.setOrderBy(String.valueOf(((UIFormSelectBox) inputWithActions.getChildById(ORDER_BY)).getValue()));
         faqSetting.setOrderType(String.valueOf(((UIFormSelectBox) inputWithActions.getChildById(ORDER_TYPE)).getValue()));
-        faqSetting.setEnanbleVotesAndComments(inputWithActions.getUIFormCheckBoxInput(ENABLE_VOTE_COMMNET).isChecked());
-        faqSetting.setEnableAnonymousSubmitQuestion(inputWithActions.getUIFormCheckBoxInput(ENABLE_ANONYMOUS_SUBMIT_QUESTION).isChecked());
-        faqSetting.setEnableAutomaticRSS(inputWithActions.getUIFormCheckBoxInput(ENABLE_RSS).isChecked());
-        faqSetting.setEnableViewAvatar(inputWithActions.getUIFormCheckBoxInput(ENABLE_VIEW_AVATAR).isChecked());
-        faqSetting.setPostQuestionInRootCategory(inputWithActions.getUIFormCheckBoxInput(POST_QUESTION_IN_ROOT_CATEGORY).isChecked());
+        faqSetting.setEnanbleVotesAndComments(inputWithActions.getUICheckBoxInput(ENABLE_VOTE_COMMNET).isChecked());
+        faqSetting.setEnableAnonymousSubmitQuestion(inputWithActions.getUICheckBoxInput(ENABLE_ANONYMOUS_SUBMIT_QUESTION).isChecked());
+        faqSetting.setEnableAutomaticRSS(inputWithActions.getUICheckBoxInput(ENABLE_RSS).isChecked());
+        faqSetting.setEnableViewAvatar(inputWithActions.getUICheckBoxInput(ENABLE_VIEW_AVATAR).isChecked());
+        faqSetting.setPostQuestionInRootCategory(inputWithActions.getUICheckBoxInput(POST_QUESTION_IN_ROOT_CATEGORY).isChecked());
 
         UIFormInputWithActions emailTab = settingForm.getChildById(settingForm.SET_DEFAULT_EMAIL_TAB);
         String defaultAddnewQuestion = ((UIFormWYSIWYGInput) ((UIFormInputWithActions) emailTab.getChildById(settingForm.SET_DEFAULT_ADDNEW_QUESTION_TAB)).getChildById(EMAIL_DEFAULT_ADD_QUESTION)).getValue();
@@ -376,7 +376,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
         if (defaultEditQuestion == null || !ValidatorDataInput.fckContentIsNotEmpty(defaultEditQuestion))
           defaultEditQuestion = " ";
         UIFormInputWithActions Discussion = settingForm.getChildById(DISCUSSION_TAB);
-        boolean isDiscus = (Boolean) Discussion.getUIFormCheckBoxInput(ENABLE_DISCUSSION).getValue();
+        boolean isDiscus = (Boolean) Discussion.getUICheckBoxInput(ENABLE_DISCUSSION).getValue();
         if (isDiscus) {
           String value = Discussion.getUIStringInput(FIELD_CATEGORY_PATH_INPUT).getValue();
           if (!settingForm.idForumName.isEmpty() && !FAQUtils.isFieldEmpty(value)) {
@@ -401,7 +401,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
       } else {
         faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue()));
         faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue()));
-        faqSetting.setSortQuestionByVote(settingForm.getUIFormCheckBoxInput(settingForm.ITEM_VOTE).isChecked());
+        faqSetting.setSortQuestionByVote(settingForm.getUICheckBoxInput(settingForm.ITEM_VOTE).isChecked());
         settingForm.faqService_.saveFAQSetting(faqSetting, FAQUtils.getCurrentUser());
         UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class);
         uiPopupAction.deActivate();

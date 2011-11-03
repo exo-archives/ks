@@ -240,7 +240,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     setLanguages();
     inputAuthor = new UIFormStringInput(AUTHOR, AUTHOR, author_);
     if (author_.trim().length() > 0)
-      inputAuthor.setEditable(false);
+      inputAuthor.setReadOnly(true);
     inputEmailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_);
     inputQuestionContent = new UIFormStringInput(QUESTION_CONTENT, QUESTION_CONTENT, null);
     selectLanguage = new UIFormSelectBox(ALL_LANGUAGES, ALL_LANGUAGES, listSystemLanguages);
@@ -642,14 +642,14 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
           }
           // end discuss
           if (questionForm.getFAQService().saveQuestion(question, isNew, questionForm.faqSetting_) == null) {
-            warning("UIQuestions.msg.question-deleted");
+            warning("UIQuestions.msg.question-deleted", false);
             isNew = false;
           }
           if (isNew) {
             if (!questionForm.isModerate || questionForm.isMode) {
-              info("UIQuestionForm.msg.add-new-question-successful");
+              info("UIQuestionForm.msg.add-new-question-successful", false);
             } else {
-              info("UIQuestionForm.msg.question-not-is-approved");
+              info("UIQuestionForm.msg.question-not-is-approved", false);
             }
           }
         } catch (Exception e) {

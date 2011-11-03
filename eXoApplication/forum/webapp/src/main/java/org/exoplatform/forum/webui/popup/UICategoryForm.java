@@ -320,7 +320,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
       if (!ForumUtils.isEmpty(uiForm.categoryId)) {
         cat = uiForm.getForumService().getCategory(uiForm.categoryId);
         if(cat == null) {
-          warning("UIForumPortlet.msg.catagory-deleted");
+          warning("UIForumPortlet.msg.catagory-deleted", false);
           forumPortlet.cancelAction();
           forumPortlet.rederForumHome();
           event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -363,7 +363,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
         forumLinks.setUpdateForumLinks();
         forumLinks.setValueOption(cat.getId());
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.catagory-deleted");
+        warning("UIForumPortlet.msg.catagory-deleted", false);
         forumPortlet.rederForumHome();
       }
       forumPortlet.cancelAction();

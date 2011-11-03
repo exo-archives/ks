@@ -39,7 +39,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -104,10 +104,10 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
       posts = new ArrayList<Post>();
     if (!posts.isEmpty()) {
       for (Post post : posts) {
-        if (getUIFormCheckBoxInput(post.getId()) != null) {
-          getUIFormCheckBoxInput(post.getId()).setChecked(false);
+        if (getUICheckBoxInput(post.getId()) != null) {
+          getUICheckBoxInput(post.getId()).setChecked(false);
         } else {
-          addUIFormInput(new UIFormCheckBoxInput(post.getId(), post.getId(), false));
+          addUIFormInput(new UICheckBoxInput(post.getId(), post.getId(), false));
         }
       }
     }
@@ -155,7 +155,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
         }
       }
       if (!haveCheck) {
-        warning("UIPageListPostUnApprove.sms.notCheck");
+        warning("UIPageListPostUnApprove.sms.notCheck", false);
       } else {
         if (postUnApprove.isApprove) {
           postUnApprove.forumService.modifyPost(posts, Utils.APPROVE);

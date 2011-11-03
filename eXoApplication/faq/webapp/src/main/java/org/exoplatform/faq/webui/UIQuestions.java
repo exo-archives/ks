@@ -19,7 +19,6 @@ package org.exoplatform.faq.webui;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -74,6 +73,7 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.utils.TimeConvertUtils;
 
 /**
  * Created by The eXo Platform SARL
@@ -532,24 +532,11 @@ public class UIQuestions extends UIContainer {
     return "";
   }
 
+
   private String calculateTimeMessageOfLastActivity(long time) {
     Calendar calendar = CommonUtils.getGreenwichMeanTime();
-    long current = calendar.getTimeInMillis();
-    long interval = current - time;
-    if (interval < 60 * 60 * 1000) { // if interval is less than one hour.
-      String msg = FAQUtils.getResourceBundle(this.getId() + ".label.last-act-time-minute");
-      int mins = (int) interval / (60 * 1000);
-      msg = msg.replace("{0}", String.valueOf(mins));
-      return msg;
-    } else if (interval < 24 * 60 * 60 * 1000) {
-      String msg = FAQUtils.getResourceBundle(this.getId() + ".label.last-act-time-hour");
-      int hours = (int) interval / (60 * 60 * 1000);
-      msg = msg.replace("{0}", String.valueOf(hours));
-      return msg;
-    } else {
-      return FAQUtils.getLongDateFormat(new Date(time));
-    }
-
+    calendar.setTimeInMillis(time);
+    return TimeConvertUtils.convertXTimeAgo(calendar.getTime(), "EEE,MMM dd,yyyy", TimeConvertUtils.MONTH);
   }
 
   private boolean checkQuestionToView(Question question, Event<UIQuestions> event) {

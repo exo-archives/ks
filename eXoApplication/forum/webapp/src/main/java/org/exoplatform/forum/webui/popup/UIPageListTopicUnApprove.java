@@ -38,7 +38,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 /**
  * Created by The eXo Platform SAS
@@ -103,10 +103,10 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
     if (topics == null)
       topics = new ArrayList<Topic>();
     for (Topic topic : topics) {
-      if (getUIFormCheckBoxInput(topic.getId()) != null) {
-        getUIFormCheckBoxInput(topic.getId()).setChecked(false);
+      if (getUICheckBoxInput(topic.getId()) != null) {
+        getUICheckBoxInput(topic.getId()).setChecked(false);
       } else {
-        addUIFormInput(new UIFormCheckBoxInput(topic.getId(), topic.getId(), false));
+        addUIFormInput(new UICheckBoxInput(topic.getId(), topic.getId(), false));
       }
     }
     return topics;

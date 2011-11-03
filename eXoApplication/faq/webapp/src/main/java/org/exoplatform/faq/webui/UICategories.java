@@ -544,7 +544,7 @@ public class UICategories extends BaseUIFAQForm {
         return;
       } catch (Exception e) {
         log.debug("Failed to swap categories.", e);
-        uiCategories.warning("UIQuestions.msg.category-id-deleted");
+        uiCategories.warning("UIQuestions.msg.category-id-deleted", false);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiCategories.getParent());
     }
@@ -624,13 +624,13 @@ public class UICategories extends BaseUIFAQForm {
           if (!uiCategories.getFAQService().isCategoryExist(uiCategories.getFAQService().getCategoryNameOf(categoryId), destCategoryId)) {
             uiCategories.getFAQService().moveCategory(categoryId, destCategoryId);
           } else {
-            uiCategories.warning("UIQuestions.msg.can-not-move-category-same-name");
+            uiCategories.warning("UIQuestions.msg.can-not-move-category-same-name", false);
           }
         } else {
-          uiCategories.warning("UIQuestions.msg.can-not-move-category");
+          uiCategories.warning("UIQuestions.msg.can-not-move-category", false);
         }
       } catch (ItemExistsException e) {
-        uiCategories.warning("UIQuestions.msg.already-in-destination");
+        uiCategories.warning("UIQuestions.msg.already-in-destination", false);
       } catch (Exception e) {
         uiCategories.showMessageQuestionDeleted(event.getRequestContext());
         return;

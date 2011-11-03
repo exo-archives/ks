@@ -27,10 +27,10 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 
 @ComponentConfig(
@@ -77,20 +77,20 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
     this.setActions(new String[] { "Save", "Cancel" });
     if (object == null || object instanceof Category) {
       Category cat = (Category) object;
-      UIFormCheckBoxInput<Boolean> checkBoxInput = null;
+      UICheckBoxInput checkBoxInput = null;
       try {
         UIFormInputWithActions formInputWithActions = new UIFormInputWithActions(LIST_CATEGORIES);
         if (cat == null) {
           for (Category category : getForumService().getCategories()) {
             listObjects.add(category);
-            checkBoxInput = new UIFormCheckBoxInput<Boolean>(category.getId(), category.getId(), true);
+            checkBoxInput = new UICheckBoxInput(category.getId(), category.getId(), true);
             checkBoxInput.setChecked(true);
             formInputWithActions.addChild(checkBoxInput);
           }
         } else {
           for (Forum forum : getForumService().getForums(cat.getId(), null)) {
             listObjects.add(forum);
-            checkBoxInput = new UIFormCheckBoxInput<Boolean>(forum.getId(), forum.getId(), true);
+            checkBoxInput = new UICheckBoxInput(forum.getId(), forum.getId(), true);
             checkBoxInput.setChecked(true);
             formInputWithActions.addChild(checkBoxInput);
           }
@@ -102,7 +102,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
 
       UIFormStringInput stringInput = new UIFormStringInput(FILE_NAME, null);
       stringInput.setValue(getLabel("DefaultFileName"));
-      checkBoxInput = new UIFormCheckBoxInput<Boolean>(CREATE_ZIP, CREATE_ZIP, false);
+      checkBoxInput = new UICheckBoxInput(CREATE_ZIP, CREATE_ZIP, false);
       checkBoxInput.setChecked(true).setEnable(false);
 
       addChild(stringInput);
@@ -120,7 +120,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
       UIFormStringInput stringInput = new UIFormStringInput(FILE_NAME, null);
       stringInput.setValue(getLabel("DefaultFileName"));
       addChild(stringInput);
-      addChild(new UIFormCheckBoxInput<Boolean>(CREATE_ZIP, CREATE_ZIP, false));
+      addChild(new UICheckBoxInput(CREATE_ZIP, CREATE_ZIP, false));
     }
   }
 
@@ -128,8 +128,8 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
     List<String> listId = new ArrayList<String>();
     List<UIComponent> children = ((UIFormInputWithActions) this.getChildById(LIST_CATEGORIES)).getChildren();
     for (UIComponent child : children) {
-      if (child instanceof UIFormCheckBoxInput) {
-        if (((UIFormCheckBoxInput) child).isChecked()) {
+      if (child instanceof UICheckBoxInput) {
+        if (((UICheckBoxInput) child).isChecked()) {
           listId.add(child.getName());
         }
       }
@@ -143,7 +143,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
       String fileName = ((UIFormStringInput) exportForm.getChildById(FILE_NAME)).getValue();
       UIForumPortlet portlet = exportForm.getAncestorOfType(UIForumPortlet.class);
       if (fileName == null || fileName.trim().length() < 1) {
-        exportForm.warning("UIExportForm.msg.nameFileExport");
+        exportForm.warning("UIExportForm.msg.nameFileExport", false);
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet);
         return;
       }
@@ -190,7 +190,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
       }
       InputStream inputStream = null;
       if (file == null) {
-        boolean isCreateZipFile = exportForm.getUIFormCheckBoxInput(CREATE_ZIP).isChecked();
+        boolean isCreateZipFile = exportForm.getUICheckBoxInput(CREATE_ZIP).isChecked();
         inputStream = new ByteArrayInputStream(bos.toByteArray());
         if (!isCreateZipFile) {
           // create file xml to dowload

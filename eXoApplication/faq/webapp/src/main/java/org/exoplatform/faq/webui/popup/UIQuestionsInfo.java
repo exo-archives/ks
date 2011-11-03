@@ -334,7 +334,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
       try {
         Question question = questionsInfo.getFAQService().getQuestionById(questionId);
         boolean isModerateAnswer = questionsInfo.getFAQService().isModerateAnswer(question.getPath());
-        UIResponseForm responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM);
+        UIResponseForm responseForm = questionManagerForm.getChildById(UIQuestionManagerForm.UI_RESPONSE_FORM);
         responseForm.setFAQSetting(questionsInfo.faqSetting_);
         responseForm.updateChildOfQuestionManager(true);
         responseForm.setModertator(true);
@@ -346,7 +346,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
         questionManagerForm.isViewResponseQuestion = true;
         questionManagerForm.isResponseQuestion = true;
       } catch (Exception e) {
-        warning("UIQuestions.msg.question-id-deleted");
+        warning("UIQuestions.msg.question-id-deleted", false);
         for (int i = 0; i < questionsInfo.listQuestion_.size(); i++) {
           if (questionsInfo.listQuestion_.get(i).getPath().equals(questionId)) {
             questionsInfo.listQuestion_.remove(i);
@@ -385,7 +385,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
         }
         // event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } catch (Exception e) {
-        warning("UIQuestions.msg.question-id-deleted");
+        warning("UIQuestions.msg.question-id-deleted", false);
         for (int i = 0; i < questionsInfo.listQuestion_.size(); i++) {
           if (questionsInfo.listQuestion_.get(i).getId().equals(questionId)) {
             questionsInfo.listQuestion_.remove(i);
@@ -465,7 +465,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(questions);
       } catch (Exception e) {
         questionsInfo.log.error("Can not Change Question Status, exception: " + e.getMessage());
-        warning("UIQuestions.msg.question-id-deleted");
+        warning("UIQuestions.msg.question-id-deleted", false);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo.getAncestorOfType(UIPopupContainer.class));
     }

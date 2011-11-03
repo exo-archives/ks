@@ -17,10 +17,11 @@
 package org.exoplatform.faq.webui;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.text.DateFormat;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -62,6 +63,7 @@ import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormInputBase;
 import org.exoplatform.webui.form.UIFormMultiValueInputSet;
 import org.exoplatform.webui.form.UIFormUploadInput;
+import org.exoplatform.webui.utils.TimeConvertUtils;
 
 /**
  * Created by The eXo Platform SARL
@@ -261,10 +263,6 @@ public class FAQUtils {
     return res.getString(resourceBundl);
   }
 
-  /*
-   * public static String[] getQuestionLanguages() { return null ; }
-   */
-
   @SuppressWarnings("unchecked")
   public static Map prepareMap(List inputs, Map properties) throws Exception {
     Map<String, JcrInputProperty> rawinputs = new HashMap<String, JcrInputProperty>();
@@ -286,8 +284,20 @@ public class FAQUtils {
         property = (JcrInputProperty) properties.get(input.getName());
         if (property != null) {
           if (input instanceof UIFormUploadInput) {
-            byte[] content = ((UIFormUploadInput) input).getUploadData();
-            property.setValue(content);
+            FileInputStream stream = (FileInputStream) ((UIFormUploadInput) input).getUploadDataAsStream();
+            try {
+              FileChannel fchan = stream.getChannel();
+              long fsize = fchan.size();
+              ByteBuffer buff = ByteBuffer.allocate((int) fsize);
+              fchan.read(buff);
+              buff.rewind();
+              property.setValue(buff.array());
+              buff.clear();
+              fchan.close();
+              stream.close();
+            } catch (Exception e) {
+              log.error("Can not read file because " + e.getCause());
+            }
           } else if (input instanceof UIFormDateTimeInput) {
             property.setValue(((UIFormDateTimeInput) input).getCalendar());
           } else {
@@ -314,9 +324,10 @@ public class FAQUtils {
   }
 
   public static String getTitle(String text) {
-    /*
-     * int i = 0 ; while (i < text.length()) { if(text.codePointAt(i) < 10) continue; if (text.charAt(i) == '"' ) text = text.replace((text.charAt(i)) + "", "&quot;") ; else i ++ ; }
-     */
+    if (isFieldEmpty(text)){
+      return StringUtils.EMPTY;
+    }
+    text = text.replaceAll("&nbsp;", CommonUtils.SPACE).replaceAll("( \\s*)", CommonUtils.SPACE);
     return StringUtils.replace(text, "\"", "&quot;");
   }
 
@@ -375,7 +386,6 @@ public class FAQUtils {
     }
     WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
     ResourceBundle res = context.getApplicationResourceBundle();
-    // if(!isSettingForm){
     if (emailContent == null || emailContent.trim().length() < 1) {
       if (isNew) {
         emailContent = res.getString("SendEmail.AddNewQuestion.Default");
@@ -386,7 +396,6 @@ public class FAQUtils {
           emailContent = res.getString("SendEmail.ResponseQuestion.Default");
       }
     }
-    // }
     faqSetting.setEmailSettingSubject(res.getString("SendEmail.Default.Subject"));
     faqSetting.setEmailSettingContent(emailContent);
   }
@@ -430,26 +439,20 @@ public class FAQUtils {
   private static String getFormatDate(int dateFormat, Date myDate) {
     if (myDate == null)
       return "";
-    String format = (dateFormat == DateFormat.LONG) ? "DDD,MMM dd,yyyy" : "MM/dd/yyyy";
+    String format = (dateFormat == DateFormat.LONG) ? "EEE,MMM dd,yyyy" : "MM/dd/yyyy";
     try {
       String userName = getCurrentUser();
       if (!isFieldEmpty(userName)) {
-        org.exoplatform.forum.service.ForumService forumService = (org.exoplatform.forum.service.ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(org.exoplatform.forum.service.ForumService.class);
+        org.exoplatform.forum.service.ForumService forumService = (org.exoplatform.forum.service.ForumService)
+        ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(org.exoplatform.forum.service.ForumService.class);
         org.exoplatform.forum.service.UserProfile profile = forumService.getUserSettingProfile(userName);
         format = (dateFormat == DateFormat.LONG) ? profile.getLongDateFormat() : profile.getShortDateFormat();
       }
     } catch (Exception e) {
       log.debug("No forum settings found for date format. Will use format " + format);
     }
-    if (!isFieldEmpty(format)) {
-      if (format.indexOf("DDDD") >= 0)
-        format = format.replaceAll("DDDD", "EEEE");
-      if (format.indexOf("DDD") >= 0)
-        format = format.replaceAll("DDD", "EEE");
-    }
-    PortalRequestContext portalContext = Util.getPortalRequestContext();
-    Format formatter = new SimpleDateFormat(format, portalContext.getLocale());
-    return formatter.format(myDate);
+    format = format.replaceAll("D", "E");
+    return TimeConvertUtils.getFormatDate(myDate, format);
   }
 
   public static String getLongDateFormat(Date myDate) {

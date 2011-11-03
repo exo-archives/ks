@@ -56,11 +56,11 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 /**
  * Created by The eXo Platform SARL
@@ -219,13 +219,13 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     UIFormSelectBox maximumPosts = new UIFormSelectBox(FIELD_MAXPOSTS_SELECTBOX, FIELD_MAXPOSTS_SELECTBOX, list);
     maximumPosts.setValue(ID + userProfile.getMaxPostInPage());
     boolean isJump = userProfile.getIsShowForumJump();
-    UIFormCheckBoxInput isShowForumJump = new UIFormCheckBoxInput<Boolean>(FIELD_FORUMJUMP_CHECKBOX, FIELD_FORUMJUMP_CHECKBOX, isJump);
+    UICheckBoxInput isShowForumJump = new UICheckBoxInput(FIELD_FORUMJUMP_CHECKBOX, FIELD_FORUMJUMP_CHECKBOX, isJump);
     isShowForumJump.setChecked(isJump);
 
     UIFormStringInput userId = new UIFormStringInput(FIELD_USERID_INPUT, FIELD_USERID_INPUT, null);
     userId.setValue(this.userProfile.getUserId());
-    userId.setEditable(false);
-    userId.setEnable(false);
+    userId.setReadOnly(true);
+    userId.setDisabled(true);
     UIFormStringInput screenName = new UIFormStringInput(FIELD_SCREENNAME_INPUT, FIELD_SCREENNAME_INPUT, null);
     String screenN = userProfile.getScreenName();
     if (ForumUtils.isEmpty(screenN))
@@ -234,23 +234,23 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
     userTitle.setValue(this.userProfile.getUserTitle());
     if (this.userProfile.getUserRole() > 0) {
-      userTitle.setEditable(false);
-      userTitle.setEnable(false);
+      userTitle.setReadOnly(true);
+      userTitle.setDisabled(true);
     }
     UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
     String strSignature = this.userProfile.getSignature();
     if (ForumUtils.isEmpty(strSignature))
       strSignature = ForumUtils.EMPTY_STR;
     signature.setValue(strSignature);
-    UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
+    UICheckBoxInput isDisplaySignature = new UICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
     isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature());
 
-    UIFormCheckBoxInput isAutoWatchMyTopics = new UIFormCheckBoxInput<Boolean>(FIELD_AUTOWATCHMYTOPICS_CHECKBOX, FIELD_AUTOWATCHMYTOPICS_CHECKBOX, false);
+    UICheckBoxInput isAutoWatchMyTopics = new UICheckBoxInput(FIELD_AUTOWATCHMYTOPICS_CHECKBOX, FIELD_AUTOWATCHMYTOPICS_CHECKBOX, false);
     isAutoWatchMyTopics.setChecked(userProfile.getIsAutoWatchMyTopics());
-    UIFormCheckBoxInput isAutoWatchTopicIPost = new UIFormCheckBoxInput<Boolean>(FIELD_AUTOWATCHTOPICIPOST_CHECKBOX, FIELD_AUTOWATCHTOPICIPOST_CHECKBOX, false);
+    UICheckBoxInput isAutoWatchTopicIPost = new UICheckBoxInput(FIELD_AUTOWATCHTOPICIPOST_CHECKBOX, FIELD_AUTOWATCHTOPICIPOST_CHECKBOX, false);
     isAutoWatchTopicIPost.setChecked(userProfile.getIsAutoWatchTopicIPost());
 
-    UIFormCheckBoxInput isDisplayAvatar = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
+    UICheckBoxInput isDisplayAvatar = new UICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
     isDisplayAvatar.setChecked(this.userProfile.getIsDisplayAvatar());
 
     UIFormInputWithActions inputSetProfile = new UIFormInputWithActions(FIELD_USERPROFILE_FORM);
@@ -275,8 +275,8 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     UIFormInputWithActions inputUserWatchManger = new UIFormInputWithActions(FIELD_USERWATCHMANGER_FORM);
     listWatches = getForumService().getWatchByUser(this.userProfile.getUserId());
 
-    UIFormCheckBoxInput formCheckBoxRSS = null;
-    UIFormCheckBoxInput formCheckBoxEMAIL = null;
+    UICheckBoxInput formCheckBoxRSS = null;
+    UICheckBoxInput formCheckBoxEMAIL = null;
     String listObjectId = ForumUtils.EMPTY_STR, watchId;
     List<String> listId = new ArrayList<String>();
     ForumSubscription forumSubscription = getForumService().getForumSubscription(userProfile.getUserId());
@@ -289,9 +289,9 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
         listObjectId += ForumUtils.SLASH;
       watchId = watch.getId();
       listObjectId += watchId;
-      formCheckBoxRSS = new UIFormCheckBoxInput<Boolean>(RSS + watch.getId(), RSS + watch.getId(), false);
+      formCheckBoxRSS = new UICheckBoxInput(RSS + watch.getId(), RSS + watch.getId(), false);
       isAddWatchRSS = watch.isAddWatchByRS();
-      formCheckBoxRSS.setEnable(isAddWatchRSS);
+      formCheckBoxRSS.setDisabled(!isAddWatchRSS);
       if (isAddWatchRSS) {
         if (listId.contains(watchId))
           formCheckBoxRSS.setChecked(true);
@@ -300,9 +300,9 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       }
       inputUserWatchManger.addChild(formCheckBoxRSS);
 
-      formCheckBoxEMAIL = new UIFormCheckBoxInput<Boolean>(EMAIL + watch.getId(), EMAIL + watch.getId(), watch.isAddWatchByEmail());
+      formCheckBoxEMAIL = new UICheckBoxInput(EMAIL + watch.getId(), EMAIL + watch.getId(), watch.isAddWatchByEmail());
       formCheckBoxEMAIL.setChecked(watch.isAddWatchByEmail());
-      formCheckBoxEMAIL.setEnable(watch.isAddWatchByEmail());
+      formCheckBoxEMAIL.setDisabled(!watch.isAddWatchByEmail());
       inputUserWatchManger.addChild(formCheckBoxEMAIL);
     }
 
@@ -315,7 +315,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     url = url.substring(0, url.indexOf(ForumUtils.SLASH, 8));
     rssLink = url + CommonUtils.getUserRSSLink(ForumWebservice.APP_TYPE, userProfile.getUserId());
     formStringInput.setValue(rssLink);
-    formStringInput.setEditable(false);
+    formStringInput.setReadOnly(true);
 
     inputUserWatchManger.addChild(formStringInput);
 
@@ -344,7 +344,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     List<String> forumIds = new ArrayList<String>();
     List<String> topicIds = new ArrayList<String>();
     String watchId;
-    UIFormCheckBoxInput formCheckBoxRSS = null;
+    UICheckBoxInput formCheckBoxRSS = null;
     UIFormInputWithActions inputUserWatchManger = this.getChildById(FIELD_USERWATCHMANGER_FORM);
     for (Watch watch : listWatches) {
       formCheckBoxRSS = inputUserWatchManger.getChildById(RSS + watch.getId());
@@ -431,10 +431,10 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       }
 
       signature = ForumTransformHTML.enCodeHTMLTitle(signature);
-      boolean isDisplaySignature = (Boolean) inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue();
-      Boolean isDisplayAvatar = (Boolean) inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue();
-      boolean isAutoWatchMyTopics = (Boolean) inputSetProfile.getUIFormCheckBoxInput(FIELD_AUTOWATCHMYTOPICS_CHECKBOX).getValue();
-      boolean isAutoWatchTopicIPost = (Boolean) inputSetProfile.getUIFormCheckBoxInput(FIELD_AUTOWATCHTOPICIPOST_CHECKBOX).getValue();
+      boolean isDisplaySignature = (Boolean) inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue();
+      Boolean isDisplayAvatar = (Boolean) inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue();
+      boolean isAutoWatchMyTopics = (Boolean) inputSetProfile.getUICheckBoxInput(FIELD_AUTOWATCHMYTOPICS_CHECKBOX).getValue();
+      boolean isAutoWatchTopicIPost = (Boolean) inputSetProfile.getUICheckBoxInput(FIELD_AUTOWATCHTOPICIPOST_CHECKBOX).getValue();
 
       UIFormInputWithActions inputSetOption = uiForm.getChildById(FIELD_USEROPTION_FORM);
       long maxTopic = Long.parseLong(inputSetOption.getUIFormSelectBox(FIELD_MAXTOPICS_SELECTBOX).getValue().substring(2));
@@ -443,7 +443,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       String shortDateFormat = inputSetOption.getUIFormSelectBox(FIELD_SHORTDATEFORMAT_SELECTBOX).getValue();
       String longDateFormat = inputSetOption.getUIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX).getValue();
       String timeFormat = inputSetOption.getUIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX).getValue();
-      boolean isJump = (Boolean) inputSetOption.getUIFormCheckBoxInput(FIELD_FORUMJUMP_CHECKBOX).getValue();
+      boolean isJump = (Boolean) inputSetOption.getUICheckBoxInput(FIELD_FORUMJUMP_CHECKBOX).getValue();
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       userProfile.setUserTitle(userTitle);
       userProfile.setScreenName(screenName);
@@ -536,7 +536,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     public void execute(Event<UIForumUserSettingForm> event) throws Exception {
       UIForumUserSettingForm uiForm = event.getSource();
       UIFormInputWithActions inputUserWatchManger = uiForm.getChildById(FIELD_USERWATCHMANGER_FORM);
-      UIFormCheckBoxInput<Boolean> formCheckBoxRSS = null;
+      UICheckBoxInput formCheckBoxRSS = null;
       StringBuilder listObjectId = new StringBuilder();
       for (int i = 0; i < uiForm.listWatches.size(); i++) {
         formCheckBoxRSS = inputUserWatchManger.getChildById(RSS + uiForm.listWatches.get(i).getId());
@@ -569,7 +569,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
         uiForm.warning("UIForumUserSettingForm.msg.Email-inValid");
         return;
       }
-      UIFormCheckBoxInput<Boolean> formCheckBoxEMAIL = null;
+      UICheckBoxInput formCheckBoxEMAIL = null;
       List<String> listObjectId = new ArrayList<String>();
       for (Watch watch : uiForm.listWatches) {
         formCheckBoxEMAIL = inputUserWatchManger.getChildById(EMAIL + watch.getId());

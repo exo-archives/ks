@@ -360,7 +360,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
         sendMailForm.log.error("Can not send email, exception: " + e.getMessage());
         return;
       }
-      info("UISendMailForm.msg.send-mail-success");
+      info("UISendMailForm.msg.send-mail-success", false);
       UIAnswersPortlet portlet = sendMailForm.getAncestorOfType(UIAnswersPortlet.class);
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
       popupAction.deActivate();

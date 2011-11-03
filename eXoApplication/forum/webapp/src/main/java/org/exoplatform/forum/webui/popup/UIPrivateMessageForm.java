@@ -225,7 +225,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
         areaInput.setValue(ForumUtils.EMPTY_STR);
         stringInput.setValue(ForumUtils.EMPTY_STR);
         formWYSIWYGInput.setValue(ForumUtils.EMPTY_STR);
-        messageForm.info("UIPrivateMessageForm.msg.sent-successfully");
+        messageForm.info("UIPrivateMessageForm.msg.sent-successfully", false);
         if (messageForm.fullMessage) {
           messageForm.id = 1;
           event.getRequestContext().addUIComponentToUpdateByAjax(messageForm.getParent());

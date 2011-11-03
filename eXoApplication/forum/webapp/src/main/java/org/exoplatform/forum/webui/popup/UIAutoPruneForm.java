@@ -31,7 +31,7 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 /**
  * Created by The eXo Platform SAS
@@ -63,16 +63,15 @@ public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent {
   public void deActivate() throws Exception {
   }
 
-  @SuppressWarnings("unchecked")
   private List<PruneSetting> getPruneSettings() throws Exception {
     listPruneSetting = new ArrayList<PruneSetting>();
     try {
-      UIFormCheckBoxInput<Boolean> isActiveBBcode;
+      UICheckBoxInput isActiveBBcode;
       for (PruneSetting pruneSetting : getForumService().getAllPruneSetting()) {
         listPruneSetting.add(pruneSetting);
-        isActiveBBcode = getUIFormCheckBoxInput(getForumIdOfPrune(pruneSetting));
+        isActiveBBcode = getUICheckBoxInput(getForumIdOfPrune(pruneSetting));
         if (isActiveBBcode == null) {
-          isActiveBBcode = new UIFormCheckBoxInput<Boolean>(getForumIdOfPrune(pruneSetting), getForumIdOfPrune(pruneSetting), false);
+          isActiveBBcode = new UICheckBoxInput(getForumIdOfPrune(pruneSetting), getForumIdOfPrune(pruneSetting), false);
           addUIFormInput(isActiveBBcode);
         }
         isActiveBBcode.setChecked(pruneSetting.isActive());
@@ -113,7 +112,7 @@ public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent {
   static public class ActivatePruneActionListener extends BaseEventListener<UIAutoPruneForm> {
     public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
       PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
-      boolean isActive = uiForm.getUIFormCheckBoxInput(pruneId).isChecked();
+      boolean isActive = uiForm.getUICheckBoxInput(pruneId).isChecked();
       if (pruneSetting.getInActiveDay() == 0) {
         UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
         UIAutoPruneSettingForm pruneSettingForm = uiForm.openPopup(popupContainer, UIAutoPruneSettingForm.class, 525, 0);

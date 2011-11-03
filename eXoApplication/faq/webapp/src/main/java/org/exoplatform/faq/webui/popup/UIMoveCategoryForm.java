@@ -148,10 +148,10 @@ public class UIMoveCategoryForm extends BaseUIForm implements UIPopupComponent {
         }
         moveCategory.isCateSelect = false;
       } catch (ItemExistsException ie) {
-        warning("UIQuestions.msg.already-in-destination");
+        warning("UIQuestions.msg.already-in-destination", false);
       } catch (Exception e) {
         moveCategory.log.warn("Can not move this category. Exception: " + e.getMessage());
-        warning("UIQuestions.msg.category-id-deleted");
+        warning("UIQuestions.msg.category-id-deleted", false);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet);
       answerPortlet.cancelAction();

@@ -31,7 +31,7 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 /**
  * Created by The eXo Platform SAS
@@ -86,9 +86,9 @@ public class UIBBCodeManagerForm extends BaseForumForm implements UIPopupCompone
   public void initCheckBoxActiveBBCode() throws Exception {
     for (BBCode bbc : listBBCode) {
       String id = getIdCheckBox(bbc.getId());
-      UIFormCheckBoxInput<Boolean> isActiveBBcode = getUIFormCheckBoxInput(id);
+      UICheckBoxInput isActiveBBcode = getUICheckBoxInput(id);
       if (isActiveBBcode == null) {
-        isActiveBBcode = new UIFormCheckBoxInput<Boolean>(id, id, false);
+        isActiveBBcode = new UICheckBoxInput(id, id, false);
         addUIFormInput(isActiveBBcode);
       }
       isActiveBBcode.setChecked(bbc.isActive());
@@ -138,7 +138,7 @@ public class UIBBCodeManagerForm extends BaseForumForm implements UIPopupCompone
       boolean inactiveAll = true;
       try {
         for (BBCode bbc : uiForm.listBBCode) {
-          boolean isActive = uiForm.getUIFormCheckBoxInput(uiForm.getIdCheckBox(bbc.getId())).isChecked();
+          boolean isActive = uiForm.getUICheckBoxInput(uiForm.getIdCheckBox(bbc.getId())).isChecked();
           if (bbc.isActive() != isActive) {
             bbc.setActive(isActive);
             bbCodes.add(bbc);

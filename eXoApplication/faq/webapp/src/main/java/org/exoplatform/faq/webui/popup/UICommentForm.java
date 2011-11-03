@@ -85,7 +85,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
 
   public UICommentForm() throws Exception {
     currentUser_ = FAQUtils.getCurrentUser();
-    this.addChild((new UIFormStringInput(TITLE_USERNAME, TITLE_USERNAME, currentUser_)).setEditable(false));
+    addUIFormInput((new UIFormStringInput(TITLE_USERNAME, TITLE_USERNAME, currentUser_)).setReadOnly(true));
     UIFormWYSIWYGInput commentContent = new UIFormWYSIWYGInput(COMMENT_CONTENT, COMMENT_CONTENT, "");
     commentContent.setFCKConfig(WebUIUtils.getFCKConfig());
     commentContent.setToolBarName("Basic");
@@ -252,7 +252,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
         }
       } catch (Exception e) {
         event.getSource().log.error("Fail to save action: ", e);
-        warning("UIQuestions.msg.category-id-deleted");
+        warning("UIQuestions.msg.category-id-deleted", false);
       }
       // questions.setDefaultLanguage() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(questions);

@@ -35,9 +35,9 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 /**
  * Created by The eXo Platform SAS 
@@ -54,7 +54,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
         @EventConfig(listeners = UIFAQSettingForm.SelectTabActionListener.class) 
     }
 )
-@SuppressWarnings( { "unchecked", "unused" })
+@SuppressWarnings( { "unused" })
 public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent {
   public static final String SELECT_CATEGORY_TAB    = "SelectCategoryTab";
 
@@ -91,13 +91,13 @@ public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent {
 
     homeCategoryName = faqService_.getCategoryNameOf(Utils.CATEGORY_HOME);
     initSettingForm();
-    UIFormCheckBoxInput<Boolean> checkBoxInput = null;
+    UICheckBoxInput checkBoxInput = null;
     for (Cate cate : listCate) {
-      checkBoxInput = new UIFormCheckBoxInput<Boolean>(cate.getCategory().getId(), cate.getCategory().getId(), false);
+      checkBoxInput = new UICheckBoxInput(cate.getCategory().getId(), cate.getCategory().getId(), false);
       checkBoxInput.setChecked(cate.getCategory().isView());
       selectCategoryTab.addChild(checkBoxInput);
     }
-    UIFormCheckBoxInput<Boolean> useAjaxCheckBox = new UIFormCheckBoxInput<Boolean>(FIELD_USEAJAX_CHECKBOX, FIELD_USEAJAX_CHECKBOX, false);
+    UICheckBoxInput useAjaxCheckBox = new UICheckBoxInput(FIELD_USEAJAX_CHECKBOX, FIELD_USEAJAX_CHECKBOX, false);
     useAjaxCheckBox.setChecked(useAjax);
     preferenceTab.addChild(useAjaxCheckBox);
     addUIFormInput(selectCategoryTab);
@@ -154,14 +154,14 @@ public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent {
     UIFormInputWithActions selectCateTab = getChildById(SELECT_CATEGORY_TAB);
     List<UIComponent> children = selectCateTab.getChildren();
     for (UIComponent child : children) {
-      if (child instanceof UIFormCheckBoxInput) {
-        if (((UIFormCheckBoxInput) child).isChecked()) {
+      if (child instanceof UICheckBoxInput) {
+        if (((UICheckBoxInput) child).isChecked()) {
           list.add(child.getId());
         }
       }
     }
     UIFormInputWithActions withActions = getChildById(PREFERENCE_TAB);
-    UIFormCheckBoxInput useAjaxCheckBox = withActions.getUIFormCheckBoxInput(FIELD_USEAJAX_CHECKBOX);
+    UICheckBoxInput useAjaxCheckBox = withActions.getUICheckBoxInput(FIELD_USEAJAX_CHECKBOX);
     useAjax = useAjaxCheckBox.isChecked();
     return list;
   }

@@ -77,9 +77,9 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 
 @ComponentConfig(
@@ -633,10 +633,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       for (Post post : posts) {
         if (!userNames.contains(post.getOwner()))
           userNames.add(post.getOwner());
-        if (getUIFormCheckBoxInput(post.getId()) != null) {
-          getUIFormCheckBoxInput(post.getId()).setChecked(false);
+        if (getUICheckBoxInput(post.getId()) != null) {
+          getUICheckBoxInput(post.getId()).setChecked(false);
         } else {
-          addUIFormInput(new UIFormCheckBoxInput(post.getId(), post.getId(), false));
+          addUIFormInput(new UICheckBoxInput(post.getId(), post.getId(), false));
         }
         this.IdLastPost = post.getId();
       }
@@ -747,7 +747,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         postForm.updatePost(ForumUtils.EMPTY_STR, false, false, null);
         postForm.setMod(topicDetail.isMod);
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -768,10 +768,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           ratingForm.updateRating(topicDetail.topic);
           topicDetail.isEditTopic = true;
         } else {
-          warning("UITopicDetail.sms.VotedRating", topicDetail.getUserProfile().getScreenName());
+          warning("UITopicDetail.sms.VotedRating", topicDetail.getUserProfile().getScreenName(), false);
         }
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -822,7 +822,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         topicDetail.isEditTopic = true;
         refresh();
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -994,7 +994,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         topicDetail.isEditTopic = true;
       } catch (Exception e) {
         topicDetail.log.warn("Error while editing topic: " + e.getMessage(), e);
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1014,7 +1014,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         pollForm.setTopicPath(topic.getPath());
       } catch (Exception e) {
         topicDetail.log.debug("Failed to open UIPollForm for add new poll.", e);
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1037,7 +1037,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           throwWarning("UITopicContainer.sms.Open", topic.getTopicName());
         }
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1057,10 +1057,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           topicDetail.setRenderInfoPorlet();
           event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent());
         } else {
-          warning("UITopicContainer.sms.Close", topic.getTopicName());
+          warning("UITopicContainer.sms.Close", topic.getTopicName(), false);
         }
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1080,10 +1080,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           topicDetail.setRenderInfoPorlet();
           event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent());
         } else {
-          warning("UITopicContainer.sms.Locked", topic.getTopicName());
+          warning("UITopicContainer.sms.Locked", topic.getTopicName(), false);
         }
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1103,10 +1103,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           topicDetail.setRenderInfoPorlet();
           event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent());
         } else {
-          warning("UITopicContainer.sms.UnLock", topic.getTopicName());
+          warning("UITopicContainer.sms.UnLock", topic.getTopicName(), false);
         }
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1122,7 +1122,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         UIMoveTopicForm moveTopicForm = topicDetail.openPopup(UIMoveTopicForm.class, 400, 420);
         moveTopicForm.updateTopic(topicDetail.forumId, topics, true);
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1141,10 +1141,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           topicDetail.isEditTopic = true;
           refresh();
         } else {
-          warning("UITopicContainer.sms.Stick", topic.getTopicName());
+          warning("UITopicContainer.sms.Stick", topic.getTopicName(), false);
         }
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1163,10 +1163,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           topicDetail.isEditTopic = true;
           refresh();
         } else {
-          warning("UITopicContainer.sms.UnStick", topic.getTopicName());
+          warning("UITopicContainer.sms.UnStick", topic.getTopicName(), false);
         }
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1174,7 +1174,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   static public class SplitTopicActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-
       try {
         JCRPageList pageList = topicDetail.getForumService().getPostForSplitTopic(topicDetail.categoryId + ForumUtils.SLASH + topicDetail.forumId + ForumUtils.SLASH + topicDetail.topicId);
         if (pageList.getAvailable() > 0) {
@@ -1186,7 +1185,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         }
       } catch (Exception e) {
         topicDetail.log.warn("Failed to split topic: " + e.getMessage(), e);
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1203,7 +1202,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         topicDetail.isEditTopic = true;
         refresh();
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1220,7 +1219,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         topicDetail.isEditTopic = true;
         refresh();
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1241,7 +1240,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs);
         forumPortlet.removeCacheUserProfile();
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1483,7 +1482,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       Topic topic = topicDetail.getTopic();
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
       if(topic == null) {
-        warning("UIPostForm.msg.isParentDelete", ForumUtils.EMPTY_STR);
+        warning("UIPostForm.msg.isParentDelete", false);
         forumPortlet.rederForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;
@@ -1552,9 +1551,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
             textAreaInput.setValue(ForumUtils.EMPTY_STR);
             if (isOffend || hasTopicMod) {
               if (isOffend) {
-                warning("MessagePost.msg.isOffend", ForumUtils.EMPTY_STR);
+                warning("MessagePost.msg.isOffend", false);
               } else {
-                warning("MessagePost.msg.isModerate", ForumUtils.EMPTY_STR);
+                warning("MessagePost.msg.isModerate", false);
               }
               topicDetail.IdPostView = "normal";
             } else {
@@ -1565,15 +1564,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
             topicDetail.getTopic();
             topicDetail.setRenderInfoPorlet();
             forumPortlet.removeCacheUserProfile();
-            warning("UIPostForm.msg.no-permission");
+            warning("UIPostForm.msg.no-permission", false);
           }
           refresh();
         } else {
-          warning("MessagePost.msg.message-empty", getLabel(FIELD_MESSAGE_TEXTAREA));
+          warning("MessagePost.msg.message-empty", new String[]{getLabel(FIELD_MESSAGE_TEXTAREA)}, false);
           topicDetail.isDoubleClickQuickReply = false;
         }
       } catch (Exception e) {
-        warning("UIPostForm.msg.isParentDelete", ForumUtils.EMPTY_STR);
+        warning("UIPostForm.msg.isParentDelete", false);
         forumPortlet.rederForumHome();
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       }
@@ -1603,7 +1602,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         viewPost.setViewUserInfo(false);
         viewPost.setActionForm(new String[] { "Close" });
       } else {
-        warning("MessagePost.msg.message-empty", getLabel(FIELD_MESSAGE_TEXTAREA));
+        warning("MessagePost.msg.message-empty", new String[] { getLabel(FIELD_MESSAGE_TEXTAREA) });
       }
     }
   }
@@ -1668,7 +1667,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         String userName = topicDetail.userProfile.getUserId();
         topicDetail.getForumService().saveUserBookmark(userName, buffer.toString(), true);
       } catch (Exception e) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1684,7 +1683,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           refresh();
         }
       } else {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }
@@ -1701,7 +1700,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           refresh();
         }
       } else {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         topicDetail.refreshPortlet();
       }
     }

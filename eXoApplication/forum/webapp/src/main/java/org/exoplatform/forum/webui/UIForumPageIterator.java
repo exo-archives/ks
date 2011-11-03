@@ -99,7 +99,6 @@ public class UIForumPageIterator extends UIContainer {
     return temp;
   }
 
-  @SuppressWarnings("unused")
   public List<Long> getInfoPage() throws Exception {
     List<Long> temp = new ArrayList<Long>();
     try {
@@ -120,7 +119,6 @@ public class UIForumPageIterator extends UIContainer {
     this.page = (int) page;
   }
 
-  @SuppressWarnings("unused")
   public int getPageSelected() {
     return this.page;
   }

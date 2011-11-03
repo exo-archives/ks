@@ -347,8 +347,8 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     List<SelectItemOption<String>> list;
     UIFormStringInput userId = new UIFormStringInput(FIELD_USERID_INPUT, FIELD_USERID_INPUT, null);
     userId.setValue(this.userProfile.getUserId());
-    userId.setEditable(false);
-    userId.setEnable(false);
+    userId.setReadOnly(true);
+    userId.setDisabled(true);
     UIFormStringInput screenName = new UIFormStringInput(FIELD_SCREENNAME_INPUT, FIELD_SCREENNAME_INPUT, null);
     String screenN = userProfile.getScreenName();
     if (ForumUtils.isEmpty(screenN))
@@ -361,7 +361,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     if (this.userProfile.getUserRole() == 0)
       isAdmin = true;
     if (isAdmin(this.userProfile.getUserId())) {
-      userRole.setEnable(false);
+      userRole.setDisabled(true);
       isAdmin = true;
       if (this.userProfile.getUserRole() != 0)
         title = Utils.ADMIN;
@@ -378,13 +378,13 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     List<String> values = Arrays.asList(userProfile.getModerateForums());
     this.listModerate = values;
     moderateForums.setValue(stringProcess(values));
-    moderateForums.setEditable(false);
+    moderateForums.setReadOnly(true);
 
     UIFormTextAreaInput moderateCategorys = new UIFormTextAreaInput(FIELD_MODERATECATEGORYS_MULTIVALUE, FIELD_MODERATECATEGORYS_MULTIVALUE, null);
     List<String> valuesCate = Arrays.asList(userProfile.getModerateCategory());
     this.listModCate = valuesCate;
     moderateCategorys.setValue(stringProcess(valuesCate));
-    moderateCategorys.setEditable(false);
+    moderateCategorys.setReadOnly(true);
 
     UICheckBoxInput isDisplayAvatar = new UICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
     isDisplayAvatar.setChecked(this.userProfile.getIsDisplayAvatar());
@@ -522,13 +522,13 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     banCounter.setValue(userProfile.getBanCounter() + ForumUtils.EMPTY_STR);
     UIFormTextAreaInput banReasonSummary = new UIFormTextAreaInput(FIELD_BANREASONSUMMARY_MULTIVALUE, FIELD_BANREASONSUMMARY_MULTIVALUE, null);
     banReasonSummary.setValue(ForumUtils.unSplitForForum(userProfile.getBanReasonSummary()));
-    banReasonSummary.setEditable(false);
+    banReasonSummary.setReadOnly(true);
     UIFormStringInput createdDateBan = new UIFormStringInput(FIELD_CREATEDDATEBAN_INPUT, FIELD_CREATEDDATEBAN_INPUT, null);
     if (isBan) {
       banReason.setValue(userProfile.getBanReason());
       createdDateBan.setValue(TimeConvertUtils.getFormatDate("MM/dd/yyyy, hh:mm a", userProfile.getCreatedDateBan()));
     } else {
-      banReason.setEnable(true);
+      banReason.setDisabled(false);
     }
     UIFormInputWithActions inputSetProfile = new UIFormInputWithActions(FIELD_USERPROFILE_FORM);
     inputSetProfile.addUIFormInput(userId);
@@ -707,7 +707,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue();
       String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue();
       long userRole = 2;
-      boolean isAdmin = (Boolean) inputSetProfile.getUIInput(FIELD_USERROLE_CHECKBOX).getValue();
+      boolean isAdmin = inputSetProfile.getUICheckBoxInput(FIELD_USERROLE_CHECKBOX).isChecked();
       if (isAdmin)
         userRole = 0;
       else if (uiForm.isAdmin(userProfile.getUserId())) {
@@ -809,8 +809,8 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
       String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue();
       signature = ForumTransformHTML.enCodeHTMLTitle(signature);
-      boolean isDisplaySignature = (Boolean) inputSetProfile.getUIInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue();
-      Boolean isDisplayAvatar = (Boolean) inputSetProfile.getUIInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue();
+      boolean isDisplaySignature = inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).isChecked();
+      Boolean isDisplayAvatar = inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).isChecked();
 
       UIFormInputWithActions inputSetOption = uiForm.getChildById(FIELD_USEROPTION_FORM);
       double timeZone = Double.parseDouble(inputSetOption.getUIFormSelectBox(FIELD_TIMEZONE_SELECTBOX).getValue());
@@ -819,11 +819,11 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       String timeFormat = inputSetOption.getUIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX).getValue();
       long maxTopic = Long.parseLong(inputSetOption.getUIFormSelectBox(FIELD_MAXTOPICS_SELECTBOX).getValue().substring(2));
       long maxPost = Long.parseLong(inputSetOption.getUIFormSelectBox(FIELD_MAXPOSTS_SELECTBOX).getValue().substring(2));
-      boolean isShowForumJump = (Boolean) inputSetOption.getUIInput(FIELD_FORUMJUMP_CHECKBOX).getValue();
+      boolean isShowForumJump = inputSetOption.getUICheckBoxInput(FIELD_FORUMJUMP_CHECKBOX).isChecked();
 
       UIFormInputWithActions inputSetBan = uiForm.getChildById(FIELD_USERBAN_FORM);
       boolean wasBanned = userProfile.getIsBanned();
-      boolean isBanned = (Boolean) inputSetBan.getUIInput(FIELD_ISBANNED_CHECKBOX).getValue();
+      boolean isBanned = inputSetBan.getUICheckBoxInput(FIELD_ISBANNED_CHECKBOX).isChecked();
       String until = inputSetBan.getUIFormSelectBox(FIELD_BANUNTIL_SELECTBOX).getValue();
       long banUntil = 0;
       if (!ForumUtils.isEmpty(until)) {

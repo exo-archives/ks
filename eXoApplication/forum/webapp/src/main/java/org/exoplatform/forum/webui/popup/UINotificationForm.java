@@ -31,10 +31,10 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 /**
@@ -80,7 +80,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     administration = getForumService().getForumAdministration();
     UIFormInputWithActions notifyEmailAddNewTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_ADDNEW_TAB);
     UIFormInputWithActions notifyEmailMoveTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_MOVE_TAB);
-    UIFormCheckBoxInput<Boolean> enableHeaderSubject = initEnableHeaderField();
+    UICheckBoxInput enableHeaderSubject = initEnableHeaderField();
     UIFormStringInput headerSubject = initEnableHeaderSubjectField();
     UIFormWYSIWYGInput notifyEmail = initNotifyEmailField();
     UIFormWYSIWYGInput notifyEmailMoved = initNotifyMoveField();
@@ -139,8 +139,8 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     return headerSubject;
   }
 
-  private UIFormCheckBoxInput<Boolean> initEnableHeaderField() {
-    UIFormCheckBoxInput<Boolean> enableHeaderSubject = new UIFormCheckBoxInput<Boolean>(FIELD_ENABLEHEADERSUBJECT_CHECKBOX, FIELD_ENABLEHEADERSUBJECT_CHECKBOX, false);
+  private UICheckBoxInput initEnableHeaderField() {
+    UICheckBoxInput enableHeaderSubject = new UICheckBoxInput(FIELD_ENABLEHEADERSUBJECT_CHECKBOX, FIELD_ENABLEHEADERSUBJECT_CHECKBOX, false);
     enableHeaderSubject.setChecked(administration.getEnableHeaderSubject());
     return enableHeaderSubject;
   }
@@ -164,7 +164,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       UIFormInputWithActions notifyEmailAddNewTab = getChildById(FIELD_NOTIFYEMAIL_ADDNEW_TAB);
       UIFormInputWithActions notifyEmailMoveTab = getChildById(FIELD_NOTIFYEMAIL_MOVE_TAB);
-      boolean enableHeaderSubject = (Boolean) notifyEmailAddNewTab.getUIFormCheckBoxInput(FIELD_ENABLEHEADERSUBJECT_CHECKBOX).getValue();
+      boolean enableHeaderSubject = (Boolean) notifyEmailAddNewTab.getUICheckBoxInput(FIELD_ENABLEHEADERSUBJECT_CHECKBOX).getValue();
       String headerSubject = notifyEmailAddNewTab.getUIStringInput(FIELD_HEADERSUBJECT_INPUT).getValue();
       String notifyEmail = notifyEmailAddNewTab.getChild(UIFormWYSIWYGInput.class).getValue();
 

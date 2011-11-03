@@ -39,7 +39,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 /**
  * Created by The eXo Platform SAS 
  * Author : Vu Duy Tu 
@@ -55,7 +55,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
       @EventConfig(listeners = UISettingEditModeForm.SelectTabActionListener.class) 
     }
 )
-@SuppressWarnings( { "unused", "unchecked" })
+@SuppressWarnings( { "unused" })
 public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
   private UserProfile              userProfile;
 
@@ -96,14 +96,14 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
     UIForumInputWithActions EnabledPanel = new UIForumInputWithActions(FIELD_SHOW_HIDDEN_TAB);
     UIForumInputWithActions ForumPreference = new UIForumInputWithActions(FIELD_FORUM_PREFERENCE_TAB);
 
-    UIFormCheckBoxInput<Boolean> isShowForumJump = new UIFormCheckBoxInput<Boolean>(FIELD_ISFORUMJUMP_CHECKBOX, FIELD_ISFORUMJUMP_CHECKBOX, true);
-    UIFormCheckBoxInput<Boolean> IsShowPoll = new UIFormCheckBoxInput<Boolean>(FIELD_ISPOLL_CHECKBOX, FIELD_ISPOLL_CHECKBOX, true);
-    UIFormCheckBoxInput<Boolean> isShowModerator = new UIFormCheckBoxInput<Boolean>(FIELD_ISMODERATOR_CHECKBOX, FIELD_ISMODERATOR_CHECKBOX, true);
-    UIFormCheckBoxInput<Boolean> isShowQuickReply = new UIFormCheckBoxInput<Boolean>(FIELD_ISQUICKREPLY_CHECKBOX, FIELD_ISQUICKREPLY_CHECKBOX, true);
-    UIFormCheckBoxInput<Boolean> isShowIconsLegend = new UIFormCheckBoxInput<Boolean>(FIELD_ISICONSLEGEND_CHECKBOX, FIELD_ISICONSLEGEND_CHECKBOX, true);
-    UIFormCheckBoxInput<Boolean> isShowRules = new UIFormCheckBoxInput<Boolean>(FIELD_ISRULES_CHECKBOX, FIELD_ISRULES_CHECKBOX, true);
-    UIFormCheckBoxInput<Boolean> isShowStatistic = new UIFormCheckBoxInput<Boolean>(FIELD_ISSTATISTIC_CHECKBOX, FIELD_ISSTATISTIC_CHECKBOX, true);
-    UIFormCheckBoxInput<Boolean> isUseAjax = new UIFormCheckBoxInput<Boolean>(FIELD_ISUSEAJAX_CHECKBOX, FIELD_ISUSEAJAX_CHECKBOX, true);
+    UICheckBoxInput isShowForumJump = new UICheckBoxInput(FIELD_ISFORUMJUMP_CHECKBOX, FIELD_ISFORUMJUMP_CHECKBOX, true);
+    UICheckBoxInput IsShowPoll = new UICheckBoxInput(FIELD_ISPOLL_CHECKBOX, FIELD_ISPOLL_CHECKBOX, true);
+    UICheckBoxInput isShowModerator = new UICheckBoxInput(FIELD_ISMODERATOR_CHECKBOX, FIELD_ISMODERATOR_CHECKBOX, true);
+    UICheckBoxInput isShowQuickReply = new UICheckBoxInput(FIELD_ISQUICKREPLY_CHECKBOX, FIELD_ISQUICKREPLY_CHECKBOX, true);
+    UICheckBoxInput isShowIconsLegend = new UICheckBoxInput(FIELD_ISICONSLEGEND_CHECKBOX, FIELD_ISICONSLEGEND_CHECKBOX, true);
+    UICheckBoxInput isShowRules = new UICheckBoxInput(FIELD_ISRULES_CHECKBOX, FIELD_ISRULES_CHECKBOX, true);
+    UICheckBoxInput isShowStatistic = new UICheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX, FIELD_ISSTATISTIC_CHECKBOX, true);
+    UICheckBoxInput isUseAjax = new UICheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX, FIELD_ISUSEAJAX_CHECKBOX, true);
 
     EnabledPanel.addUIFormInput(isShowForumJump);
     EnabledPanel.addUIFormInput(IsShowPoll);
@@ -124,15 +124,15 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
     UIForumInputWithActions EnabledPanel = getChildById(FIELD_SHOW_HIDDEN_TAB);
     UIForumInputWithActions ForumPreference = getChildById(FIELD_FORUM_PREFERENCE_TAB);
     portletPreference = ForumUtils.getPorletPreference();
-    EnabledPanel.getUIFormCheckBoxInput(FIELD_ISFORUMJUMP_CHECKBOX).setChecked(portletPreference.isShowForumJump());
-    EnabledPanel.getUIFormCheckBoxInput(FIELD_ISPOLL_CHECKBOX).setChecked(portletPreference.isShowPoll());
-    EnabledPanel.getUIFormCheckBoxInput(FIELD_ISQUICKREPLY_CHECKBOX).setChecked(portletPreference.isShowQuickReply());
-    EnabledPanel.getUIFormCheckBoxInput(FIELD_ISICONSLEGEND_CHECKBOX).setChecked(portletPreference.isShowIconsLegend());
-    EnabledPanel.getUIFormCheckBoxInput(FIELD_ISRULES_CHECKBOX).setChecked(portletPreference.isShowRules());
-    EnabledPanel.getUIFormCheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX).setChecked(portletPreference.isShowStatistics());
-    EnabledPanel.getUIFormCheckBoxInput(FIELD_ISMODERATOR_CHECKBOX).setChecked(portletPreference.isShowModerators());
+    EnabledPanel.getUICheckBoxInput(FIELD_ISFORUMJUMP_CHECKBOX).setChecked(portletPreference.isShowForumJump());
+    EnabledPanel.getUICheckBoxInput(FIELD_ISPOLL_CHECKBOX).setChecked(portletPreference.isShowPoll());
+    EnabledPanel.getUICheckBoxInput(FIELD_ISQUICKREPLY_CHECKBOX).setChecked(portletPreference.isShowQuickReply());
+    EnabledPanel.getUICheckBoxInput(FIELD_ISICONSLEGEND_CHECKBOX).setChecked(portletPreference.isShowIconsLegend());
+    EnabledPanel.getUICheckBoxInput(FIELD_ISRULES_CHECKBOX).setChecked(portletPreference.isShowRules());
+    EnabledPanel.getUICheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX).setChecked(portletPreference.isShowStatistics());
+    EnabledPanel.getUICheckBoxInput(FIELD_ISMODERATOR_CHECKBOX).setChecked(portletPreference.isShowModerators());
 
-    ForumPreference.getUIFormCheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX).setChecked(portletPreference.isUseAjax());
+    ForumPreference.getUICheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX).setChecked(portletPreference.isUseAjax());
   }
 
   public void setUserProfile(UserProfile userProfile) throws Exception {
@@ -191,10 +191,10 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
       boolean isCheck = false;
       if (listCategoryinv.contains(categoryId) || listCategoryinv.isEmpty())
         isCheck = true;
-      if (getUIFormCheckBoxInput(categoryId) != null) {
-        getUIFormCheckBoxInput(categoryId).setChecked(isCheck);
+      if (getUICheckBoxInput(categoryId) != null) {
+        getUICheckBoxInput(categoryId).setChecked(isCheck);
       } else {
-        UIFormCheckBoxInput boxInput = new UIFormCheckBoxInput(categoryId, categoryId, isCheck);
+        UICheckBoxInput boxInput = new UICheckBoxInput(categoryId, categoryId, isCheck);
         boxInput.setChecked(isCheck);
         addUIFormInput(boxInput);
       }
@@ -220,10 +220,10 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
       boolean isCheck = false;
       if (listforuminv.contains(forumId) || listCategoryinv.isEmpty())
         isCheck = true;
-      if (getUIFormCheckBoxInput(forumId) != null) {
-        getUIFormCheckBoxInput(forumId).setChecked(isCheck);
+      if (getUICheckBoxInput(forumId) != null) {
+        getUICheckBoxInput(forumId).setChecked(isCheck);
       } else {
-        UIFormCheckBoxInput boxInput = new UIFormCheckBoxInput(forumId, forumId, isCheck);
+        UICheckBoxInput boxInput = new UICheckBoxInput(forumId, forumId, isCheck);
         boxInput.setChecked(isCheck);
         addUIFormInput(boxInput);
       }
@@ -239,8 +239,8 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
       String listForumId = ForumUtils.EMPTY_STR;
       // int i = 0;
       for (UIComponent child : children) {
-        if (child instanceof UIFormCheckBoxInput) {
-          if (((UIFormCheckBoxInput) child).isChecked()) {
+        if (child instanceof UICheckBoxInput) {
+          if (((UICheckBoxInput) child).isChecked()) {
             if (child.getId().indexOf(Utils.CATEGORY) >= 0) {
               if (ForumUtils.isEmpty(listCategoryId))
                 listCategoryId = child.getId();
@@ -258,17 +258,17 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
       }
       UIForumInputWithActions EnabledPanel = editModeForm.getChildById(FIELD_SHOW_HIDDEN_TAB);
 
-      editModeForm.portletPreference.setShowForumJump((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISFORUMJUMP_CHECKBOX).getValue());
-      editModeForm.portletPreference.setShowPoll((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISPOLL_CHECKBOX).getValue());
-      editModeForm.portletPreference.setShowQuickReply((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISQUICKREPLY_CHECKBOX).getValue());
-      editModeForm.portletPreference.setShowIconsLegend((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISICONSLEGEND_CHECKBOX).getValue());
-      editModeForm.portletPreference.setShowRules((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISRULES_CHECKBOX).getValue());
-      editModeForm.portletPreference.setShowStatistics((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX).getValue());
-      editModeForm.portletPreference.setShowModerators((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISMODERATOR_CHECKBOX).getValue());
+      editModeForm.portletPreference.setShowForumJump((Boolean) EnabledPanel.getUICheckBoxInput(FIELD_ISFORUMJUMP_CHECKBOX).getValue());
+      editModeForm.portletPreference.setShowPoll((Boolean) EnabledPanel.getUICheckBoxInput(FIELD_ISPOLL_CHECKBOX).getValue());
+      editModeForm.portletPreference.setShowQuickReply((Boolean) EnabledPanel.getUICheckBoxInput(FIELD_ISQUICKREPLY_CHECKBOX).getValue());
+      editModeForm.portletPreference.setShowIconsLegend((Boolean) EnabledPanel.getUICheckBoxInput(FIELD_ISICONSLEGEND_CHECKBOX).getValue());
+      editModeForm.portletPreference.setShowRules((Boolean) EnabledPanel.getUICheckBoxInput(FIELD_ISRULES_CHECKBOX).getValue());
+      editModeForm.portletPreference.setShowStatistics((Boolean) EnabledPanel.getUICheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX).getValue());
+      editModeForm.portletPreference.setShowModerators((Boolean) EnabledPanel.getUICheckBoxInput(FIELD_ISMODERATOR_CHECKBOX).getValue());
       UIForumPortlet forumPortlet = editModeForm.getAncestorOfType(UIForumPortlet.class);
 
       UIForumInputWithActions ForumPreference = editModeForm.getChildById(FIELD_FORUM_PREFERENCE_TAB);
-      editModeForm.portletPreference.setUseAjax((Boolean) ForumPreference.getUIFormCheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX).getValue());
+      editModeForm.portletPreference.setUseAjax((Boolean) ForumPreference.getUICheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX).getValue());
 
       try {
         editModeForm.isSave = true;
@@ -296,8 +296,8 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
         String listForumId = ForumUtils.EMPTY_STR;
         List<UIComponent> children = editModeForm.getChildren();
         for (UIComponent child : children) {
-          if (child instanceof UIFormCheckBoxInput) {
-            if (((UIFormCheckBoxInput) child).isChecked()) {
+          if (child instanceof UICheckBoxInput) {
+            if (((UICheckBoxInput) child).isChecked()) {
               if (child.getId().indexOf(Utils.CATEGORY) >= 0) {
                 if (ForumUtils.isEmpty(listCategoryId))
                   listCategoryId = child.getId();

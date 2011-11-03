@@ -94,7 +94,6 @@ public class UIForumInputWithActions extends UIFormInputSet {
     actionField.put(fieldName, actions);
   }
 
-  @SuppressWarnings("rawtypes")
   public void processRender(WebuiRequestContext context) throws Exception {
     if (getComponentConfig() != null) {
       super.processRender(context);

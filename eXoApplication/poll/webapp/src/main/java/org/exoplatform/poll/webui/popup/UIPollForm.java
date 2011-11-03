@@ -105,7 +105,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
     UICheckBoxInput PublicData = new UICheckBoxInput(FIELD_PUBLIC_DATA_CHECKBOX, FIELD_PUBLIC_DATA_CHECKBOX, true);
     PublicData.setChecked(isPublic);
     UIFormStringInput GroupPrivate = new UIFormStringInput(FIELD_GROUP_PRIVATE_INPUT, FIELD_GROUP_PRIVATE_INPUT, "");
-    GroupPrivate.setEditable(false);
+    GroupPrivate.setReadOnly(true);
     addUIFormInput(question);
     addUIFormInput(timeOut);
     addUIFormInput(VoteAgain);
@@ -145,7 +145,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
       getUICheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).setChecked(poll.getIsAgainVote());
       UICheckBoxInput multiVoteCheckInput = getUICheckBoxInput(FIELD_MULTIVOTE_CHECKBOX);
       multiVoteCheckInput.setChecked(poll.getIsMultiCheck());
-      multiVoteCheckInput.setEnable(false);
+      multiVoteCheckInput.setDisabled(true);
       String group = poll.getParentPath();
       poll.setOldParentPath(group);
       if (group.indexOf(PollNodeTypes.APPLICATION_DATA) > 0) {
@@ -195,7 +195,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
       long timeOut = 0;
       if (!Utils.isEmpty(timeOutStr)) {
         if (timeOutStr.length() > 4) {
-          uiForm.warning("UIPollForm.msg.longTimeOut", new String[] { uiForm.getLabel(FIELD_TIMEOUT_INPUT) });
+          uiForm.warning("UIPollForm.msg.longTimeOut", new String[] { uiForm.getLabel(FIELD_TIMEOUT_INPUT) }, false);
         }
         timeOut = Long.parseLong(timeOutStr);
       }
@@ -210,7 +210,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
         if (!Utils.isEmpty(value)) {
           if (value.length() > MAX_TITLE) {
             String[] args = new String[] { uiForm.getLabel(FIELD_OPTIONS) + "(" + i + ")", String.valueOf(MAX_TITLE) };
-            uiForm.warning("NameValidator.msg.warning-long-text", args);
+            uiForm.warning("NameValidator.msg.warning-long-text", args, false);
             return;
           }
           values_.add(CommonUtils.encodeSpecialCharInTitle(value));
@@ -230,7 +230,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
       } else {
         if (question.length() > MAX_TITLE) {
           String[] args = { uiForm.getLabel(FIELD_QUESTION_INPUT), String.valueOf(MAX_TITLE) };
-          uiForm.warning("NameValidator.msg.warning-long-text", args);
+          uiForm.warning("NameValidator.msg.warning-long-text", args, false);
           return;
         }
       }
@@ -400,7 +400,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
         event.getRequestContext().addUIComponentToUpdateByAjax(pollPortlet);
       }
       if (!Utils.isEmpty(sms)) {
-        uiForm.warning("UIPollForm.msg." + sms);
+        uiForm.warning("UIPollForm.msg." + sms, false);
       }
     }
   }

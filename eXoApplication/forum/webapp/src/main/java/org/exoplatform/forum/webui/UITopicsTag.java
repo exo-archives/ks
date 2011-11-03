@@ -41,7 +41,7 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.input.UICheckBoxInput;
 
 
 /**
@@ -172,10 +172,10 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     if (topics == null)
       topics = new ArrayList<Topic>();
     for (Topic topic : topics) {
-      if (getUIFormCheckBoxInput(topic.getId()) != null) {
-        getUIFormCheckBoxInput(topic.getId()).setChecked(false);
+      if (getUICheckBoxInput(topic.getId()) != null) {
+        getUICheckBoxInput(topic.getId()).setChecked(false);
       } else {
-        addUIFormInput(new UIFormCheckBoxInput(topic.getId(), topic.getId(), false));
+        addUIFormInput(new UICheckBoxInput(topic.getId(), topic.getId(), false));
       }
     }
     if(topics.size() > 0) {
@@ -281,7 +281,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
       } catch (Exception e) {
       }
       if (!hasCheck) {
-        warning("UITopicContainer.sms.notCheckMove");
+        warning("UITopicContainer.sms.notCheckMove", false);
       } else {
         topicsTag.isUpdateTag = true;
         Tag tag = topicsTag.getTagById();
@@ -328,9 +328,9 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
           values.add(topicTag.userProfile.getEmail());
           topicTag.getForumService().addWatch(1, path, values, topicTag.userProfile.getUserId());
           topicTag.setListWatches();
-          info("UIAddWatchingForm.msg.successfully");
+          info("UIAddWatchingForm.msg.successfully", false);
         } catch (Exception e) {
-          warning("UIAddWatchingForm.msg.fall");
+          warning("UIAddWatchingForm.msg.fall", false);
         }
         event.getRequestContext().addUIComponentToUpdateByAjax(topicTag);
       }
@@ -341,9 +341,9 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     public void onEvent(Event<UITopicsTag> event, UITopicsTag topicTag, final String path) throws Exception {
       try {
         topicTag.getForumService().removeWatch(1, path, topicTag.userProfile.getUserId() + ForumUtils.SLASH + topicTag.getEmailWatching(path));
-        info("UIAddWatchingForm.msg.UnWatchSuccessfully");
+        info("UIAddWatchingForm.msg.UnWatchSuccessfully", false);
       } catch (Exception e) {
-        warning("UIAddWatchingForm.msg.UnWatchfall");
+        warning("UIAddWatchingForm.msg.UnWatchfall", false);
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(topicTag);
     }

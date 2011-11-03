@@ -20,13 +20,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.UISelectComponent;
 import org.exoplatform.ks.common.webui.UISelector;
 import org.exoplatform.services.organization.Group;
+import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
@@ -120,27 +121,24 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
     return TYPE_MEMBERSHIP.equals(type_);
   }
 
-  @SuppressWarnings( { "unchecked", "cast" })
+  @SuppressWarnings("unchecked")
   public List<String> getList() throws Exception {
     List<String> children = new ArrayList<String>();
+    OrganizationService service = getApplicationComponent(OrganizationService.class);
     if (TYPE_USER.equals(type_)) {
-      PageList<User> userPageList = UserHelper.getUserPageListByGroupId(this.getCurrentGroup().getId());
-      List<User> userList = new ArrayList<User>();
-      for (int i = 1; i <= userPageList.getAvailablePage(); i++) {
-        userList.clear();
-        userList.addAll(userPageList.getPage(i));
-        for (User user : userList) {
-          children.add(user.getUserName());
-        }
+      ListAccess<User> userPageList = service.getUserHandler().findUsersByGroupId(getCurrentGroup().getId());
+      User users[] = userPageList.load(0, userPageList.getSize());
+      for (int i = 0; i < userPageList.getSize(); i++) {
+        children.add(users[i].getUserName());
       }
     } else if (TYPE_MEMBERSHIP.equals(type_)) {
       for (String child : getListMemberhip()) {
         children.add(child);
       }
     } else if (TYPE_GROUP.equals(type_)) {
-      Collection groups = UserHelper.findGroups(getCurrentGroup());
-      for (Object child : groups) {
-        children.add(((Group) child).getGroupName());
+      Collection<Group> groups = service.getGroupHandler().findGroups(getCurrentGroup());
+      for (Group child : groups) {
+        children.add(child.getGroupName());
       }
     }
     return children;

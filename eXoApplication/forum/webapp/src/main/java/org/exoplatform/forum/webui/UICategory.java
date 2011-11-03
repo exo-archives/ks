@@ -453,7 +453,7 @@ public class UICategory extends BaseForumForm {
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
       } else {
         uiCategory.isEditForum = true;
-        warning("UITopicContainer.msg.forum-deleted");
+        warning("UITopicContainer.msg.forum-deleted", false);
         event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory);
       }
     }
@@ -498,7 +498,7 @@ public class UICategory extends BaseForumForm {
       Topic topic = uiCategory.getForumService().getTopicSummary(id[0]+ForumUtils.SLASH+id[1]+ForumUtils.SLASH+id[2]);
       UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
       if (topic == null) {
-        warning("UIForumPortlet.msg.topicEmpty");
+        warning("UIForumPortlet.msg.topicEmpty", false);
         forumPortlet.removeCacheUserProfile();
       } else {
         topic = uiCategory.getForumService().getTopicUpdate(topic, true);
@@ -658,7 +658,7 @@ public class UICategory extends BaseForumForm {
       if (category == null) {
         UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
         forumPortlet.rederForumHome();
-        warning("UIForumPortlet.msg.catagory-deleted");
+        warning("UIForumPortlet.msg.catagory-deleted", false);
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;
       }
@@ -673,7 +673,7 @@ public class UICategory extends BaseForumForm {
       if (cate == null) {
         UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
         forumPortlet.rederForumHome();
-        warning("UITopicContainer.msg.forum-deleted");
+        warning("UITopicContainer.msg.forum-deleted", false);
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;
       }

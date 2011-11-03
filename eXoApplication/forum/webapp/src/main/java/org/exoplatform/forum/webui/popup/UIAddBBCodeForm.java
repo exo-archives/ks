@@ -118,7 +118,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     UIFormTextAreaInput replacement = this.getUIFormTextAreaInput(FIELD_REPLACEMENT_TEXTARE);
     replacement.setValue(bbcode.getReplacement());
     if (bbcode.getTagName().equalsIgnoreCase("list")) {
-      replacement.setEditable(false);
+      replacement.setReadOnly(true);
     }
     this.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).setValue(bbcode.getDescription());
     this.getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).setValue(bbcode.getExample());

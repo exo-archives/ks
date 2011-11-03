@@ -95,7 +95,6 @@ public class UIListSentPrivateMessage extends UIContainer {
     return this.listSend;
   }
 
-  @SuppressWarnings("unused")
   private ForumPrivateMessage getPrivateMessage(String id) throws Exception {
     List<ForumPrivateMessage> list = this.listSend;
     for (ForumPrivateMessage forumPrivateMessage : list) {

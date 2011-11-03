@@ -274,7 +274,7 @@ public class UITopicPoll extends BaseForumForm {
           }
         }
         if (radioInput.getValue().equalsIgnoreCase("vote")) {
-          topicPoll.warning("UITopicPoll.msg.notCheck");
+          topicPoll.warning("UITopicPoll.msg.notCheck", false);
         } else {
           // order number
           List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>();
@@ -412,7 +412,7 @@ public class UITopicPoll extends BaseForumForm {
           poll.setUserVote(setUserVote);
           poll.setVote(votes);
         } else {
-          topicPoll.warning("UITopicPoll.msg.notCheck");
+          topicPoll.warning("UITopicPoll.msg.notCheck", false);
         }
       }
       topicPoll.pollService.savePoll(poll, false, true);
