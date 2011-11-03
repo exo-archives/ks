@@ -313,6 +313,11 @@
       <version>${exo.tool.framework.junit.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.jsecurity</groupId>
+      <artifactId>jsecurity</artifactId>
+      <version>${org.jsecurity.version}</version>
+    </dependency>
+    <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache</artifactId>
       <version>${ehcache.version}</version>
