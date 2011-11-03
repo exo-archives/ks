@@ -25,8 +25,8 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SAS
@@ -81,8 +81,8 @@ public class UIRunPruneForm extends BaseForumForm implements UIPopupComponent {
     public void execute(Event<UIRunPruneForm> event) throws Exception {
       UIRunPruneForm uiform = event.getSource();
       uiform.getForumService().runPrune(uiform.pruneSetting);
-      uiform.cancelChildPopupAction();
       event.getRequestContext().addUIComponentToUpdateByAjax(uiform.getAncestorOfType(UIForumPortlet.class));
+      uiform.cancelChildPopupAction();
     }
   }
 }

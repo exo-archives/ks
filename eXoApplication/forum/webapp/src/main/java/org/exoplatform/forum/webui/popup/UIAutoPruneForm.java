@@ -104,7 +104,7 @@ public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent {
         return;
       } else {
         UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-        UIRunPruneForm pruneForm = uiForm.openPopup(popupContainer, UIRunPruneForm.class, 200, 0);
+        UIRunPruneForm pruneForm = uiForm.openPopup(popupContainer, UIRunPruneForm.class, 300, 0);
         pruneForm.setPruneSetting(pruneSetting);
       }
     }
