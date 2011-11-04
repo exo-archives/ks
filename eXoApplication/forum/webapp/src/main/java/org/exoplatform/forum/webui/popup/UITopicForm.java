@@ -80,7 +80,7 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
             lifecycle = UIFormLifecycle.class,
             template = "app:/templates/forum/webui/popup/UITopicForm.gtmpl",
             events = {
-              @EventConfig(listeners = UITopicForm.PreviewThreadActionListener.class), 
+              @EventConfig(listeners = UITopicForm.PreviewThreadActionListener.class,phase = Phase.DECODE), 
               @EventConfig(listeners = UITopicForm.SubmitThreadActionListener.class,phase = Phase.DECODE), 
               @EventConfig(listeners = UITopicForm.AttachmentActionListener.class,phase = Phase.DECODE), 
               @EventConfig(listeners = UITopicForm.RemoveAttachmentActionListener.class,phase = Phase.DECODE), 

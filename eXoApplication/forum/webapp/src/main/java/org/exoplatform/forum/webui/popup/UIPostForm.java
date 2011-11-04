@@ -63,8 +63,8 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/popup/UIPostForm.gtmpl",
     events = {
-      @EventConfig(listeners = UIPostForm.PreviewPostActionListener.class), 
-      @EventConfig(listeners = UIPostForm.SubmitPostActionListener.class), 
+      @EventConfig(listeners = UIPostForm.PreviewPostActionListener.class, phase = Phase.DECODE), 
+      @EventConfig(listeners = UIPostForm.SubmitPostActionListener.class, phase = Phase.DECODE), 
       @EventConfig(listeners = UIPostForm.AttachmentActionListener.class, phase = Phase.DECODE), 
       @EventConfig(listeners = UIPostForm.RemoveAttachmentActionListener.class, phase = Phase.DECODE), 
       @EventConfig(listeners = UIPostForm.SelectTabActionListener.class, phase = Phase.DECODE), 
@@ -277,11 +277,11 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
       checksms = checksms.replaceAll("&nbsp;", " ");
       t = checksms.trim().length();
-      if (postTitle != null && postTitle.length() <= 3) {
+      if (ForumUtils.isEmpty(postTitle)) {
         k = 0;
       }
-      postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
       if (t > 0 && k != 0 && !checksms.equals("null")) {
+        postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
         Post post = uiForm.post_;
         post.setName(postTitle);
         post.setMessage(message);
@@ -327,41 +327,41 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
         if (forumPortlet.checkForumHasAddPost(uiForm.categoryId, uiForm.forumId, uiForm.topicId)) {
           UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
           int t = 0, k = 1;
-          String postTitle = (" " + threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue()).trim();
+          String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
           boolean isAddRe = false;
-          while (postTitle.indexOf(uiForm.getTitle("").trim()) == 0) {
-            postTitle = postTitle.replaceFirst(STR_RE.trim(), ForumUtils.EMPTY_STR).trim();
-            isAddRe = true;
-          }
           int maxText = ForumUtils.MAXTITLE;
-          if (postTitle.length() > maxText) {
-            warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT), String.valueOf(maxText) });
-            uiForm.isDoubleClickSubmit = false;
-            return;
+          if(!ForumUtils.isEmpty(postTitle)) {
+            while (postTitle.indexOf(uiForm.getTitle("").trim()) == 0) {
+              postTitle = postTitle.replaceFirst(STR_RE.trim(), ForumUtils.EMPTY_STR).trim();
+              isAddRe = true;
+            }
+            if (postTitle.length() > maxText) {
+              warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT), String.valueOf(maxText) });
+              uiForm.isDoubleClickSubmit = false;
+              return;
+            }
           }
-          String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue();
-          if (!ForumUtils.isEmpty(editReason) && editReason.length() > maxText) {
-            warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_EDITREASON_INPUT), String.valueOf(maxText) });
-            uiForm.isDoubleClickSubmit = false;
-            return;
-          }
-
-          editReason = CommonUtils.encodeSpecialCharInTitle(editReason);
-          String userName = userProfile.getUserId();
           String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
           String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
-          message = ForumTransformHTML.fixAddBBcodeAction(message);
-          message = CommonUtils.encodeSpecialCharInContent(message);
-          
           checksms = checksms.replaceAll("&nbsp;", " ");
           t = checksms.length();
-          if (postTitle.length() <= 0) {
+          if (ForumUtils.isEmpty(postTitle)) {
             k = 0;
           }
-          postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
-          Post post = uiForm.post_;
-          boolean isPP = false;
           if (t > 0 && k != 0 && !checksms.equals("null")) {
+            String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue();
+            if (!ForumUtils.isEmpty(editReason) && editReason.length() > maxText) {
+              warning("NameValidator.msg.warning-long-text", new String[] { uiForm.getLabel(FIELD_EDITREASON_INPUT), String.valueOf(maxText) });
+              uiForm.isDoubleClickSubmit = false;
+              return;
+            }
+            String userName = userProfile.getUserId();
+            editReason = CommonUtils.encodeSpecialCharInTitle(editReason);
+            message = ForumTransformHTML.fixAddBBcodeAction(message);
+            message = CommonUtils.encodeSpecialCharInContent(message);
+            postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
+            Post post = uiForm.post_;
+            boolean isPP = false;
             boolean isOffend = false;
             boolean hasTopicMod = false;
             if (!uiForm.isMod()) {
@@ -484,7 +484,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
               if (t == 0)
                 args = new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT) + ", " + uiForm.getLabel(FIELD_MESSAGECONTENT) };
               uiForm.isDoubleClickSubmit = false;
-              uiForm.warning("NameValidator.msg.ShortText", args);
+              uiForm.warning("NameValidator.msg.ShortMessage", args);
             } else if (t == 0) {
               args = new String[] { uiForm.getLabel(FIELD_MESSAGECONTENT) };
               uiForm.isDoubleClickSubmit = false;
@@ -496,12 +496,12 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
           forumPortlet.removeCacheUserProfile();
           UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
           topicDetail.initInfoTopic(uiForm.categoryId, uiForm.forumId, uiForm.topic, 0);
-          uiForm.warning("UIPostForm.msg.no-permission");
+          uiForm.warning("UIPostForm.msg.no-permission", false);
           event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         }
       } catch (Exception e) {
         uiForm.log.error("Can not save post into this topic, exception: " + e.getMessage(), e);
-        uiForm.warning("UIPostForm.msg.isParentDelete");
+        uiForm.warning("UIPostForm.msg.isParentDelete", false);
         forumPortlet.cancelAction();
       }
     }
