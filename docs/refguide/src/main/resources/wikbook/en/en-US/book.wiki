@@ -1,5 +1,7 @@
 
 h1. Prerequisites {anchor:id=KSref.Prerequisites}
+
+Please refer to the following links for the prerequisites information:
 [http://wiki.exoplatform.org/xwiki/bin/view/Portal/Portal%20Manual#HDevelopment| Portlets & Gadgets]
 
 [http://wiki.exoplatform.org/xwiki/bin/view/WS/|REST APIs]
@@ -70,7 +72,7 @@ h4. Answers Email Templates Configuration {anchor:id=KSref.Configuration.Answers
 h3. Poll Configuration {anchor:id=KSref.Configuration.PollConfiguration} 
 {include:document="Initialization_Poll_Plugin_Configuration.wiki"}
 
-h1. JCR structure {anchor:id=KSref.JCRStructure} 
+h1. JCR structure {anchor:id=KSref.JCRStructure}
 {include:document="KS_JCR_structure.wiki"}
 
 h1. Developer reference {anchor:id=KSref.DeveloperReference}

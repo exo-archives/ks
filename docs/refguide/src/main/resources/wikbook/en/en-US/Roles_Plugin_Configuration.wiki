@@ -1,6 +1,6 @@
 h1. Overview {anchor:id=KSref.RolesPluginConfiguration.Overview}
 
-The roles plug-in component defines roles in Forum of eXo Platform 3. This convenient application defines access to a set of functions within the application.
+The roles plug-in component defines roles in the *Forum* portlet of eXo Platform 3. This convenient application defines access to a set of functions within the application.
 Currently, it only defines the person who has the _administrator_ role. Administrators can get access to administration functions.
 At runtime, the application gets data from the roles plug-in to decide whether the logged user has the administrative role or not.
 
@@ -43,7 +43,7 @@ In particular, at runtime of ForumService, the roles plug-in component is called
 In which:
 
 || Name || Set-method || Type || Description ||
-| *add.role.rules.plugin* | addRolePlugin | org.exoplatform.ks. common.conf. RoleRulesPlugin | Add role rules. |
+| *add.role.rules.plugin* | {{addRolePlugin}} | {{org.exoplatform.ks. common.conf. RoleRulesPlugin}} | Add role rules. |
 
 * Init-params:
 

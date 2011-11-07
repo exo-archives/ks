@@ -11,6 +11,6 @@ h1. Preferences {anchor:id=KSref.GadgetPoll.GadgetPollPreferences}
 
 h1. Links to used REST services {anchor:id=KSref.GadgetPoll.LinkToUsedRESTServices}
 
-* portal/rest/private/ks/poll/viewpoll/{{{pollId}}}
+* _portal/rest/private/ks/poll/viewpoll/{{{pollId}}}_
 
-* portal/rest/private/ks/poll/votepoll/{{{pollId}}}/{{{indexVote}}}
+* _portal/rest/private/ks/poll/votepoll/{{{pollId}}}/{{{indexVote}}}_

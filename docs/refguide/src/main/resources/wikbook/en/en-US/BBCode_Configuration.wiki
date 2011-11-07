@@ -635,7 +635,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
 
 * In which,
 || Name || Set method || Type || Description ||
-| *forum.default.bbcodes* | registerBBCodePlugin | org.exoplatform.ks.bbcode. spi.BBCodePlugin | Define formats for data displayed on UI. |
+| *forum.default.bbcodes* | registerBBCodePlugin | {{org.exoplatform.ks.bbcode. spi.BBCodePlugin}} | Define formats for data displayed on UI. |
 
 - The BBCode array is defined by the _org.exoplatform.ks.bbcode.spi.BBCodeData_ object as below:
 {code:xml}
@@ -660,6 +660,7 @@ In particular, at runtime of BBCode Service, the BBCode plug-in component is cal
   </field>
 </object> 
 {code}
+
 - The BBCode includes basic data which are defined in the field tag with a specific name as below:
 
 {code:xml}

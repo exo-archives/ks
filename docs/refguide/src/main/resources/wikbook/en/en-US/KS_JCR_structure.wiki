@@ -1,6 +1,7 @@
 h1. Overview {anchor:id=KSref.JCRStructure.Overview}
 eXo Knowledge is a JCR-based product, it uses JCR to store data.
-The root node of eXo Knowledge is exo:application which includes these child nodes: exo:forumHome, exo:faqHome. 
+
+The root node of eXo Knowledge is _{noformat}exo:application{noformat}_ which includes these child nodes: _{noformat}exo:forumHome{noformat}_, _{noformat}exo:faqHome{noformat}_. 
 
 h1. Forum JCR structure {anchor:id=KSref.JCRStructure.ForumJCRStructure}
 Forum is a JCR-based application. The Forum data are saved in eXo-JCR under the Forum Service data directory. The whole JCR structure of Forum can be visualized in the diagram below:
@@ -8,429 +9,427 @@ Forum is a JCR-based application. The Forum data are saved in eXo-JCR under the 
 !Forum_JCR_Structure.png!
 
 h2. Forum System {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumSystem}
-The Forum System node is created from the note type exo:forumSystem. That is defined as a child node of Forum Service and can store nodes with these following note types: exo:banIP, exo:forumUserProfile, exo:statistic, exo:administration under the Forum System.
-The Forum System node is stored in {{/exo:applications/ForumService/ForumSystem}}.
+The Forum System node is created from the note type _{noformat}exo:forumSystem{noformat}_. That is defined as a child node of Forum Service and can store nodes with these following note types: _{noformat}exo:banIP{noformat}_, _{noformat}exo:forumUserProfile{noformat}_, _{noformat}exo:statistic{noformat}_, _{noformat}exo:administration{noformat}_ under the Forum System.
+The Forum System node is stored in _{noformat}/exo:applications/ForumService/ForumSystem{noformat}_.
 
 h3. User Profile and User Profile Home {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumSystem.UserProfileAndUserProfileHome}
 The User Profile and User Profile Home node are used to store information of each user. User Profile is automatically created by a listener when a user registers to the organization service. Private message and forum subscription can be added to User Profile as a child node. 
-These node types exo:forumUserProfile, exo:userProfileHome, exo:privateMessage and exo:forumSubscription are defined as child nodes of exo:forumUserProfile.
-The User Profile node is stored under ForumSystem node: {{/exo:applications/ForumService/ForumSystem/exo:userProfileHome/exo:forumUserProfile}}.
+These node types _{noformat}exo:forumUserProfile{noformat}_, _{noformat}exo:userProfileHome{noformat}_, _{noformat}exo:privateMessage{noformat}_ and _{noformat}exo:forumSubscription{noformat}_ are defined as child nodes of _{noformat}exo:forumUserProfile{noformat}_.
+The User Profile node is stored under ForumSystem node: _{noformat}/exo:applications/ForumService/ForumSystem/exo:userProfileHome/exo:forumUserProfile{noformat}_.
 
-- The node type exo:forumUserProfile has the following properties:
-
-|| Properties name || Required type || Multiple || Description ||
-| exo:userId | String | false| The user id. |
-| exo:fullName | String | false| The user's full name. |
-| exo:firstName | String | false| The user's first name. |
-| exo:lastName | String | false| The user's last name. |
-| exo:email | String | false| The user's email address. |
-| exo:userTitle | String | false| The user's title: Administrator, Moderator or User. |
-| exo:screenName | String | false| The displayed name of user in Forum. |
-| exo:userRole | Long | false| The user's role. The value can be: "O": Administrator, "1": Moderator, "2": User, "3": guest. |
-| exo:signature | String | false| The signature displayed at the end of each user's post. |
-| exo:totalPost | Long | false| The total posts submitted by the user. |
-| exo:totalTopic | Long | false| The total topics started by the user. |
-| exo:jobWattingForModerator | Long | false| The number of jobs that are waiting to be moderated. |
-| exo:moderateForums | String | true| The list of forum ids that user is the moderator. |
-| exo:moderateCategory | String | true| The list of category ids that user is the moderator. |
-| exo:readTopic | String | true| The list of topics that user has read. |
-| exo:readForum | String | true| The read of forums that user has read. |
-| exo:lastReadPostOfTopic | String | true| The list of last read posts id in a topic that user has read. |
-| exo:lastReadPostOfForum | String | true| The list of last read posts id in a forum that user has read. |
-| exo:isAutoWatchMyTopics | Boolean | false| Enable/disable the auto-watch the topics created by user. Topics created by a user will be watched automatically if the value is set to "true". |
-| exo:isAutoWatchTopicIPost | Boolean | false| Enable/disable the auto-watch posts submitted by user. Topics posted by an user will be watched automatically if the value is set to "true". |
-| exo:bookmark | String | true| The list of topics/posts bookmarked by user. |
-| exo:lastLoginDate | Date | false| The date of the last login. |
-| exo:joinedDate | Date | false| The date when user joined forum. |
-| exo:lastPostDate | Date | false| The date of the last post. |
-| exo:isDisplaySignature | Boolean | false | Users' signature will be displayed at the end of their post if the value is set to "true". |
-| exo:isDisplayAvatar | Boolean | false | User's avatar is displayed if the value is set to "true". |
-| exo:newMessage | Long | false | The number of new messages. |
-| exo:timeZone | Double | false | The time zone configured by user. |
-| exo:timeFormat | String | false | The time format configured by user 12h/24h. |
-| exo:shortDateformat | String | false | The format of short date configured by user. Example: 'dd/MM/yyyy'. |
-| exo:longDateformat | String | false | The format of long date configured by user. Example: 'dd mmm, yyyy'. |
-| exo:maxPost | Long | false | The number of the maximum posts displayed per page. |
-| exo:maxTopic | Long | false | The number of the maximum topics displayed per page |
-| exo:isShowForumJump | Boolean | false | Display/hide the forum jump drop-down list. This jump list will be shown if the value is set to "true". |
-| exo:collapCategories | String | true | The list of categories collapsed by user. |
-| exo:isBanned | Boolean | false| The user's condition. User is currently banned if the value is set to "true". |
-| exo:banUntil | Long | false | The time when the ban period will expire. |
-| exo:banReason | String | false | The description for the reason that user was banned. |
-| exo:banCounter | String | false | The number of bans that user has committed. |
-| exo:banReasonSummary | String | true| The list of ban reason summaries when a user is banned for more than one time. |
-| exo:createdDateBan | Date | false | The date when the ban period is started. |
-
-- The child node type exo:privateMessage has the following properties:
+- The node type _{noformat}exo:forumUserProfile{noformat}_ has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:from | String | false | The user id of the sender. |
-| exo:sendTo | String | false | The user id of the receiver. |
-| exo:name | String | false | The private message subject. |
-| exo:message | String | false | The message contents. |
-| exo:type | String | false | The private message type: sent messages or received messages. |
-| exo:receivedDate | Date | false | The date when the private message was received. |
-| exo:isUnread | Boolean | false | The private message read status: read/unread. |
+| *exo:userId | {{string}} | {{false}} | The user id. |
+| *exo:fullName | {{string}} | {{false}} | The user's full name. |
+| *exo:firstName | {{string}} | {{false}} | The user's first name. |
+| *exo:lastName | {{string}} | {{false}} | The user's last name. |
+| *exo:email | {{string}} | {{false}} | The user's email address. |
+| *exo:userTitle | {{string}} | {{false}} | The user's title: Administrator, Moderator or User. |
+| *exo:screenName | {{string}} | {{false}} | The displayed name of user in Forum. |
+| *exo:userRole | {{long}} | {{false}} | The user's role. The value can be: "O": Administrator, "1": Moderator, "2": User, "3": guest. |
+| *exo:signature | {{string}} | {{false}} | The signature displayed at the end of each user's post. |
+| *exo:totalPost | {{long}} | {{false}} | The total posts submitted by the user. |
+| *exo:totalTopic | {{long}} | {{false}} | The total topics started by the user. |
+| *exo:jobWattingForModerator | {{long}} | {{false}} | The number of jobs that are waiting to be moderated. |
+| *exo:moderateForums | {{string}} | {{true}} | The list of forum ids that user is the moderator. |
+| *exo:moderateCategory | {{string}} | {{true}} | The list of category ids that user is the moderator. |
+| *exo:readTopic | {{string}} | {{true}} | The list of topics that user has read. |
+| *exo:readForum | {{string}} | {{true}} | The read of forums that user has read. |
+| *exo:lastReadPostOfTopic | {{string}} | {{true}} | The list of last read posts id in a topic that user has read. |
+| *exo:lastReadPostOfForum | {{string}} | {{true}} | The list of last read posts id in a forum that user has read. |
+| *exo:isAutoWatchMyTopics | {{false}} | {{false}} | Enable/disable the auto-watch the topics created by user. Topics created by a user will be watched automatically if the value is set to "true". |
+| *exo:isAutoWatchTopicIPost | {{false}} | {{false}} | Enable/disable the auto-watch posts submitted by user. Topics posted by an user will be watched automatically if the value is set to "true". |
+| *exo:bookmark | {{string}} | {{true}} | The list of topics/posts bookmarked by user. |
+| *exo:lastLoginDate | {{Date}} | {{false}} | The date of the last login. |
+| *exo:joinedDate | {{Date}} | {{false}} | The date when user joined forum. |
+| *exo:lastPostDate | {{Date}} | {{false}} | The date of the last post. |
+| *exo:isDisplaySignature | {{false}} | {{false}} | Users' signature will be displayed at the end of their post if the value is set to "true". |
+| *exo:isDisplayAvatar | {{false}} | {{false}} | User's avatar is displayed if the value is set to "true". |
+| *exo:newMessage | {{long}} | {{false}} | The number of new messages. |
+| *exo:timeZone | {{Double}} | {{false}} | The time zone configured by user. |
+| *exo:timeFormat | {{string}} | {{false}} | The time format configured by user 12h/24h. |
+| *exo:shortDateformat | {{string}} | {{false}} | The format of short date configured by user. Example: 'dd/MM/yyyy'. |
+| *exo:longDateformat | {{string}} | {{false}} | The format of long date configured by user. Example: 'dd mmm, yyyy'. |
+| *exo:maxPost | {{long}} | {{false}} | The number of the maximum posts displayed per page. |
+| *exo:maxTopic | {{long}} | {{false}} | The number of the maximum topics displayed per page |
+| *exo:isShowForumJump | {{false}} | {{false}} | Display/hide the forum jump drop-down list. This jump list will be shown if the value is set to "true". |
+| *exo:collapCategories | {{string}} | {{true}} | The list of categories collapsed by user. |
+| *exo:isBanned | {{false}} | {{false}} | The user's condition. User is currently banned if the value is set to "true". |
+| *exo:banUntil | {{long}} | {{false}} | The time when the ban period will expire. |
+| *exo:banReason | {{string}} | {{false}} | The description for the reason that user was banned. |
+| *exo:banCounter | {{string}} | {{false}} | The number of bans that user has committed. |
+| *exo:banReasonSummary | {{string}} | {{true}} | The list of ban reason summaries when a user is banned for more than one time. |
+| *exo:createdDateBan | {{Date}} | {{false}} | The date when the ban period is started. |
 
-- The child node type exo:forumSubscription has the following properties:
+- The child node type _{noformat}exo:privateMessage{noformat}_ has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:categoryIds | String | true | The ids of the subscribed categories. |
-| exo:forumIds | String | true | The ids of the subscribed forums. |
-| exo:topicIds | String | true | The ids of the subscribed topics. |
+| *exo:from | {{string}} | {{false}} | The user id of the sender. |
+| *exo:sendTo | {{string}} | {{false}} | The user id of the receiver. |
+| *exo:name | {{string}} | {{false}} | The private message subject. |
+| *exo:message | {{string}} | {{false}} | The message contents. |
+| *exo:type | {{string}} | {{false}} | The private message type: sent messages or received messages. |
+| *exo:receivedDate | {{Date}} | {{false}} | The date when the private message was received. |
+| *exo:isUnread | {{false}} | {{false}} | The private message read status: read/unread. |
+
+- The child node type _{noformat}exo:forumSubscription{noformat}_ has the following properties:
+
+|| Properties name || Required type || Multiple || Description ||
+| *exo:categoryIds | {{string}} | {{true}} | The ids of the subscribed categories. |
+| *exo:forumIds | {{string}} | {{true}} | The ids of the subscribed forums. |
+| *exo:topicIds | {{string}} | {{true}} | The ids of the subscribed topics. |
 
 h3. Statistic and Statistic Home {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumSystem.StatisticAndStatisticHome}
-Statistic and Statistic Home are used to store statistic information of forum, such as number of posts, topics, users, active users. The node type is exo:forumStatistic, exo:statisticHome.
-- The Statistic node is stored under the Forum System node: {{/exo:applications/ForumService/ForumSystem/exo:statisticHome/exo:forumStatistic}} and its node type has the following properties:
+Statistic and Statistic Home are used to store statistic information of forum, such as number of posts, topics, users, active users. The node type is _{noformat}exo:forumStatistic{noformat}_, _{noformat}exo:statisticHome{noformat}_.
+- The Statistic node is stored under the Forum System node: _{noformat}/exo:applications/ForumService/ForumSystem/exo:statisticHome/exo:forumStatistic{noformat}_ and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:postCount | Long | false | The total number of submitted posts in Forum. |
-| exo:topicCount | Long | false | The number of total created topics in Forum.|
-| exo:membersCount | Long | false | The number of the registered users. |
-| exo:newMembers | String | false | The id of the latest registered user. |
-| exo:mostUsersOnline | String | false | The highest number of the online users. |
-| exo:activeUsers | Long | false | The number of active users. |
+| *exo:postCount | {{long}} | {{false}} | The total number of submitted posts in Forum. |
+| *exo:topicCount | {{long}} | {{false}} | The number of total created topics in Forum.|
+| *exo:membersCount | {{long}} | {{false}} | The number of the registered users. |
+| *exo:newMembers | {{string}} | {{false}} | The id of the latest registered user. |
+| *exo:mostUsersOnline | {{string}} | {{false}} | The highest number of the online users. |
+| *exo:activeUsers | {{long}} | {{false}} | The number of active users. |
 
 h3. Ban IP and Ban IP Home {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumSystem.BanIPAndBanIPHome}
-The Ban IP and Ban IP Home node are used to store data about banned IP addresses. The node type exo:banIPHome contains the child node exo:IPHome.
-- The Ban IP node is stored under the Forum System node: {{/exo:applications/ForumService/ForumSystem/exo:banIPHome/exo:banIP}} and its node type has the following properties:
+The Ban IP and Ban IP Home node are used to store data about banned IP addresses. The node type _{noformat}exo:banIPHome{noformat}_ contains the child node _{noformat}exo:IPHome{noformat}_.
+- The Ban IP node is stored under the Forum System node: _{noformat}/exo:applications/ForumService/ForumSystem/exo:banIPHome/exo:banIP{noformat}_ and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:ips | String | true | The list of ip addresses of the banned users. |
+| *exo:ips | {{string}} | {{true}} | The list of ip addresses of the banned users. |
 
 h3. Administration and Administration Home {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumSystem.AdministrationAndAdministrationHome}
 
-Administration and Administration Home are used to store data for setting the layout, notification email format and censor jobs. The node type of the Administration Home node is exo:administrationHome and the its child node type is exo:administration.
-The Administration node is stored under the ForumSystem node {{/exo:applications/ForumService/ForumSystem/exo:administrationHome/exo:administration}} and its node type has the following properties:
+Administration and Administration Home are used to store data for setting the layout, notification email format and censor jobs. The node type of the Administration Home node is _exo:administrationHome_ and the its child node type is _exo:administration_.
+The Administration node is stored under the ForumSystem node _{noformat}/exo:applications/ForumService/ForumSystem/exo:administrationHome/exo:administration{noformat}_ and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:forumSortBy | String | false | Sort forum by criteria: post count, topic count, lock status. |
-| exo:forumSortByType | String | false | Sort forum by ascending/descending type. |
-| exo:topicSortBy | String | false | Sort topic by criteria. |
-| exo:topicSortByType | String | false | Sort topic by ascending type or descending type. |
-| exo:censoredKeyword | String | false | The list of censored words. |
-| exo:headerSubject | String | false | The subject header. |
-| exo:enableHeaderSubject | Boolean | false | Enable/disable the subject header. The subject header is displayed if the value is set to "true".|
-| exo:notifyEmailContent | String | false | Define if the notification email will be sent when there is a new added topic/post. |
-| exo:notifyEmailMoved | String | false | Define if the notification email will be sent when there are any moved topic/post. |
+| *exo:forumSortBy | {{string}} | {{false}} | Sort forum by criteria: post count, topic count, lock status. |
+| *exo:forumSortByType | {{string}} | {{false}} | Sort forum by ascending/descending type. |
+| *exo:topicSortBy | {{string}} | {{false}} | Sort topic by criteria. |
+| *exo:topicSortByType | {{string}} | {{false}} | Sort topic by ascending type or descending type. |
+| *exo:censoredKeyword | {{string}} | {{false}} | The list of censored words. |
+| *exo:headerSubject | {{string}} | {{false}} | The subject header. |
+| *exo:enableHeaderSubject | {{false}} | {{false}} | Enable/disable the subject header. The subject header is displayed if the value is set to "true".|
+| *exo:notifyEmailContent | {{string}} | {{false}} | Define if the notification email will be sent when there is a new added topic/post. |
+| *exo:notifyEmailMoved | {{string}} | {{false}} | Define if the notification email will be sent when there are any moved topic/post. |
 
 h2. Forum Data {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumData}
-The Forum Data node is created from the node type exo:forumData. The data nodes like category, forum, topic, post, tag, BBcode and topic type will be stored under the Forum Data node:{{/exo:applications/ForumService/ForumData}}.
+The Forum Data node is created from the node type _{noformat}exo:forumData{noformat}_. The data nodes like category, forum, topic, post, tag, BBcode and topic type will be stored under the Forum Data node: _{noformat}/exo:applications/ForumService/ForumData{noformat}_.
 
 h3. Category and Category home {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumData.CategoryAndCategoryHome}
-The Category node is used to store all categories of forum, this node is a child node of the Forum Data node and only Category note type can be added to the Category Home. The node type of the Category Home node is exo:categoryHome
-is stored in {{/exo:applications/ForumService/ForumData/CategoryHome}}.
-The Category node has the node type exo:forumCategory which is a child node of the CategoryHome node. This note type is defined to allow adding child nodes as exo:forum and exo:forumRSS.
+The Category node is used to store all categories of forum, this node is a child node of the Forum Data node and only Category note type can be added to the Category Home. The node type of the Category Home node is _exo:categoryHome_
+is stored in _{noformat}/exo:applications/ForumService/ForumData/CategoryHome{noformat}_.
+The Category node has the node type _{noformat}exo:forumCategory{noformat}_ which is a child node of the CategoryHome node. This note type is defined to allow adding child nodes as _{noformat}exo:forum{noformat}_ and _{noformat}exo:forumRSS{noformat}_.
 
-- The node type exo:forumCategory has the following properties:
+- The node type _{noformat}exo:forumCategory{noformat}_ has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:id | String | false | The category id. |
-| exo:owner | String | false | The category creator. |
-| exo:path | String | false | The node path of the category. |
-| exo:createdDate | Date | false | The date when the category was created. |
-| exo:modifiedBy | String | false | The id of the user who made the last modification on the category. |
-| exo:name | String | false | The category name. |
-| exo:modifiedDate | Date | false | The date when the modifications on category were made. |
-| exo:description | String | false | The category description. |
-| exo:moderators | String | true | The list of moderators of the category. |
-| exo:tempModerators | String | true | The temporary moderator of the category. |
-| exo:createTopicRole | String | true | The topic role. |
-| exo:poster | String | true | The list of ids of the users and groups who can post in the category. |
-| exo:viewer | String | true | The list of ids of the users and groups who can only view posts in the category. |
-| exo:categoryOrder | Long | false | The order number of category in the category list. |
-| exo:userPrivate | String | true | The list of user ids whose access are restricted from the category. |
-| exo:forumCount | Long | false | The total number of forums in the category. |
+| *exo:id | {{string}} | {{false}} | The category id. |
+| *exo:owner | {{string}} | {{false}} | The category creator. |
+| *exo:path | {{string}} | {{false}} | The node path of the category. |
+| *exo:createdDate | {{Date}} | {{false}} | The date when the category was created. |
+| *exo:modifiedBy | {{string}} | {{false}} | The id of the user who made the last modification on the category. |
+| *exo:name | {{string}} | {{false}} | The category name. |
+| *exo:modifiedDate | {{Date}} | {{false}} | The date when the modifications on category were made. |
+| *exo:description | {{string}} | {{false}} | The category description. |
+| *exo:moderators | {{string}} | {{true}} | The list of moderators of the category. |
+| *exo:tempModerators | {{string}} | {{true}} | The temporary moderator of the category. |
+| *exo:createTopicRole | {{string}} | {{true}} | The topic role. |
+| *exo:poster | {{string}} | {{true}} | The list of ids of the users and groups who can post in the category. |
+| *exo:viewer | {{string}} | {{true}} | The list of ids of the users and groups who can only view posts in the category. |
+| *exo:categoryOrder | {{long}} | {{false}} | The order number of category in the category list. |
+| *exo:userPrivate | {{string}} | {{true}} | The list of user ids whose access are restricted from the category. |
+| *exo:forumCount | {{long}} | {{false}} | The total number of forums in the category. |
 
 h3. Forum {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumData.Forum}
 The Forum node is defined as a child node of category and allowed adding child nodes as Topic and RSS type. The node type of Forum is exo:forum.
-The Forum node is stored in {{/exo:applications/ForumService/ForumData/CategoryHome/%Category-id%/%Forum-id%}} and its node type has the following properties:
+The Forum node is stored in _{noformat}/exo:applications/ForumService/ForumData/CategoryHome/%Category-id%/%Forum-id%{noformat}_ and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:id | String | false | The forum id. |
-| exo:owner | String | false | The forum creator. |
-| exo:path | String | false | The node path of the forum. |
-| exo:name | String | false | The forum title. |
-| exo:forumOrder | Integer | false | The order number in the list of forums. Forum with smaller number will get higher order. |
-| exo:createdDate | Date | false | The date and time when the forum was created. |
-| exo:modifiedBy | String | false | The id of user who modified the category. |
-| exo:modifiedDate | Date | false | The time of modification, including date, time and time zone. |
-| exo:lastTopicPath | String | false | The id of the last topic in the forum. |
-| exo:description | String | false | The description of forum. |
-| exo:postCount | Long | false | The total number of submitted posts in the forum. |
-| exo:topicCount | Long | false | The total number of created topics in the forum. |
-| exo:isAutoAddEmailNotify | Boolean | false | Enable/disable the notification email to moderators. |
-| exo:notifyWhenAddTopic | String | true | Email addresses to notify when there is a new topic in the forum. |
-| exo:notifyWhenAddPost | String | true | Email addresses to notify when there is a new post in the forum. |
-| exo:isModerateTopic | Boolean | false | All new topic will be moderated if the value is set to "true". |
-| exo:isModeratePost | Boolean | false | All new posts will be moderated if the value is set to "true". |
-| exo:isClosed | Boolean | false | The forum status: closed/open. Forum is closed if the value is set to "true". |
-| exo:isLock | Boolean | false | The forum status: locked/unlocked. Forum is locked if the value is set to "true". |
-| exo:createTopicRole | String | true | The list of ids of the users or groups who can create topic in the forum. |
-| exo:poster | String | true | The list of ids of the users or groups who can submit post in the forum. |
-| exo:viewer | String | true | The list ids of the users or groups who can view posts in the forum. |
-| exo:moderators | String | true | The list of user ids who are the moderators of forum. |
-| exo:tempModerators | String | true | The list of user ids who are the temporary moderators. |
-| exo:banIPs | String | true | The list of banned IP addresses. |
+| *exo:id | {{string}} | {{false}} | The forum id. |
+| *exo:owner | {{string}} | {{false}} | The forum creator. |
+| *exo:path | {{string}} | {{false}} | The node path of the forum. |
+| *exo:name | {{string}} | {{false}} | The forum title. |
+| *exo:forumOrder | Integer | {{false}} | The order number in the list of forums. Forum with smaller number will get higher order. |
+| *exo:createdDate | {{Date}} | {{false}} | The date and time when the forum was created. |
+| *exo:modifiedBy | {{string}} | {{false}} | The id of user who modified the category. |
+| *exo:modifiedDate | {{Date}} | {{false}} | The time of modification, including date, time and time zone. |
+| *exo:lastTopicPath | {{string}} | {{false}} | The id of the last topic in the forum. |
+| *exo:description | {{string}} | {{false}} | The description of forum. |
+| *exo:postCount | {{long}} | {{false}} | The total number of submitted posts in the forum. |
+| *exo:topicCount | {{long}} | {{false}} | The total number of created topics in the forum. |
+| *exo:isAutoAddEmailNotify | {{false}} | {{false}} | Enable/disable the notification email to moderators. |
+| *exo:notifyWhenAddTopic | {{string}} | {{true}} | Email addresses to notify when there is a new topic in the forum. |
+| *exo:notifyWhenAddPost | {{string}} | {{true}} | Email addresses to notify when there is a new post in the forum. |
+| *exo:isModerateTopic | {{false}} | {{false}} | All new topic will be moderated if the value is set to "true". |
+| *exo:isModeratePost | {{false}} | {{false}} | All new posts will be moderated if the value is set to "true". |
+| *exo:isClosed | {{false}} | {{false}} | The forum status: closed/open. Forum is closed if the value is set to "true". |
+| *exo:isLock | {{false}} | {{false}} | The forum status: locked/unlocked. Forum is locked if the value is set to "true". |
+| *exo:createTopicRole | {{string}} | {{true}} | The list of ids of the users or groups who can create topic in the forum. |
+| *exo:poster | {{string}} | {{true}} | The list of ids of the users or groups who can submit post in the forum. |
+| *exo:viewer | {{string}} | {{true}} | The list ids of the users or groups who can view posts in the forum. |
+| *exo:moderators | {{string}} | {{true}} | The list of user ids who are the moderators of forum. |
+| *exo:tempModerators | {{string}} | {{true}} | The list of user ids who are the temporary moderators. |
+| *exo:banIPs | {{string}} | {{true}} | The list of banned IP addresses. |
 
 
 h3. Topic {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumData.Topic}
-The Topic node is defined as a child node of the Forum node and allowed adding child nodes as Topic, Poll and RSS type. The node type of the Topic and Poll node is exo:topic, exo:poll.
-- The Topic node is stored in {{/exo:applications/ForumService/ForumData/CategoryHome/%Category-id%/%Forum-id%/%Topic-id%}} and its node type has the following properties:
+The Topic node is defined as a child node of the Forum node and allowed adding child nodes as Topic, Poll and RSS type. The node type of the Topic and Poll node is _{noformat}exo:topic{noformat}_, _{noformat}exo:poll{noformat}_.
+- The Topic node is stored in _{noformat}/exo:applications/ForumService/ForumData/CategoryHome/%Category-id%/%Forum-id%/%Topic-id%{noformat}_ and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:id | String | false | The topic id. |
-| exo:owner | String | false | The user id of the topic creator. |
-| exo:path | String | false | The node path of the topic. |
-| exo:name | String | false | The subject of the topic |
-| exo:createdDate | Date | false | The time when the topic was created. |
-| exo:modifiedBy | String | false | The id of the user who made the latest modification in the topic. |
-| exo:modifiedDate | Date | false | The date when the modifications were made. |
-| exo:lastPostBy | String | false | The user id of the last poster in topic. |
-| exo:lastPostDate | Date | false | The date when the last post was submitted. |
-| exo:description | String | false | The topic description. |
-| exo:topicType | String | false | The id of the topic type. |
-| exo:postCount | Long | false | The number of posts in the topic. |
-| exo:viewCount | Long | false | The number of topic views. |
-| exo:numberAttachments | Long | false | The number of attachments in the topic. |
-| exo:icon | String | false | The name of the topic icon. |
-| exo:link | String | false | The link to the topic. Example: {noformat}http://localhost:8080/ksdemo/public/classic/forum/topic/%Topic-id%.{noformat} |
-| exo:isModeratePost | Boolean | false | All posts in the topic will have to wait for moderation if the value is set to "true". |
-| exo:isNotifyWhenAddPost | Boolean | false | When there is a new post in a topic, a notification message will be sent to the topic owner if this value is set to "true". |
-| exo:isClosed | Boolean | false | The state of the topic: closed/open. If the value is set to "true", the topic is closed. |
-| exo:isLock | Boolean | false | The lock status of the topic: lock/unlocked. If the value is set to "true", the topic is locked. |
-| exo:isApproved | Boolean | false | The topic is approved to be published if the value is set to "true". |
-| exo:isSticky | Boolean | false | If the value is set to "true", the topic is currently sticky. |
-| exo:isWaiting | boolean | false | The topic status. The topic is waiting for moderation if the value is set to "true". |
-| exo:isActive | boolean | false | The topic activity status: active/inactive. The topic is active (topic gets new posts in a period of time) if the status is set to "true". |
-| exo:isActiveByForum | Boolean | false | The topic status based on the forum state. Example: When the topic is active and the forum that contains it is closed, this topic will be considered as inactive. |
-| exo:canView | String | true | List of user ids who can view the topic contents. |
-| exo:canPost | String | true | List of user ids who can post in the topic. |
-| exo:isPoll | Boolean | false | The topic contains poll if the value is set to "true". |
-| exo:userVoteRating | String | true | The list of user id who voted. |
-| exo:tagId | String | true | The list of the topic tag id. |
-| exo:voteRating | Double | false | The average vote score of the topic. |
+| *exo:id | {{string}} | {{false}} | The topic id. |
+| *exo:owner | {{string}} | {{false}} | The user id of the topic creator. |
+| *exo:path | {{string}} | {{false}} | The node path of the topic. |
+| *exo:name | {{string}} | {{false}} | The subject of the topic |
+| *exo:createdDate | {{Date}} | {{false}} | The time when the topic was created. |
+| *exo:modifiedBy | {{string}} | {{false}} | The id of the user who made the latest modification in the topic. |
+| *exo:modifiedDate | {{Date}} | {{false}} | The date when the modifications were made. |
+| *exo:lastPostBy | {{string}} | {{false}} | The user id of the last poster in topic. |
+| *exo:lastPostDate | {{Date}} | {{false}} | The date when the last post was submitted. |
+| *exo:description | {{string}} | {{false}} | The topic description. |
+| *exo:topicType | {{string}} | {{false}} | The id of the topic type. |
+| *exo:postCount | {{long}} | {{false}} | The number of posts in the topic. |
+| *exo:viewCount | {{long}} | {{false}} | The number of topic views. |
+| *exo:numberAttachments | {{long}} | {{false}} | The number of attachments in the topic. |
+| *exo:icon | {{string}} | {{false}} | The name of the topic icon. |
+| *exo:link | {{string}} | {{false}} | The link to the topic. Example: {noformat}http://localhost:8080/ksdemo/public/classic/forum/topic/%Topic-id%.{noformat} |
+| *exo:isModeratePost | {{false}} | {{false}} | All posts in the topic will have to wait for moderation if the value is set to "true". |
+| *exo:isNotifyWhenAddPost | {{false}} | {{false}} | When there is a new post in a topic, a notification message will be sent to the topic owner if this value is set to "true". |
+| *exo:isClosed | {{false}} | {{false}} | The state of the topic: closed/open. If the value is set to "true", the topic is closed. |
+| *exo:isLock | {{false}} | {{false}} | The lock status of the topic: lock/unlocked. If the value is set to "true", the topic is locked. |
+| *exo:isApproved | {{false}} | {{false}} | The topic is approved to be published if the value is set to "true". |
+| *exo:isSticky | {{false}} | {{false}} | If the value is set to "true", the topic is currently sticky. |
+| *exo:isWaiting | {{boolean }} | {{false}} | The topic status. The topic is waiting for moderation if the value is set to "true". |
+| *exo:isActive | {{boolean }} | {{false}} | The topic activity status: active/inactive. The topic is active (topic gets new posts in a period of time) if the status is set to "true". |
+| *exo:isActiveByForum | {{false}} | {{false}} | The topic status based on the forum state. Example: When the topic is active and the forum that contains it is closed, this topic will be considered as inactive. |
+| *exo:canView | {{string}} | {{true}} | List of user ids who can view the topic contents. |
+| *exo:canPost | {{string}} | {{true}} | List of user ids who can post in the topic. |
+| *exo:isPoll | {{false}} | {{false}} | The topic contains poll if the value is set to "true". |
+| *exo:userVoteRating | {{string}} | {{true}} | The list of user id who voted. |
+| *exo:tagId | {{string}} | {{true}} | The list of the topic tag id. |
+| *exo:voteRating | {{Double}} | {{false}} | The average vote score of the topic. |
 
-- The child node type exo:poll has the following properties:
+- The child node type _{noformat}exo:poll{noformat}_ has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:id | String | false | The poll id. |
-| exo:owner | String | false | The user id of poll creator. |
-| exo:createdDate | Date | false | The date and time when the poll was created. |
-| exo:modifiedBy | String | false | The user id who modified the poll. |
-| exo:modifiedDate | Date | false | The time when the poll is modified. |
-| exo:lastVote | Date | false | The date of the last vote. |
-| exo:question | String | false | The contents of the question for poll. |
-| exo:timeOut | Long | false | The time when the polled is closed. |
-| exo:option | String | true | The list of options for poll. |
-| exo:vote | String | true | The list of votes by users. |
-| exo:userVote | String | true | The list of user ids who voted. |
-| exo:isMultiCheck | Boolean | false | User can choose more than one option if the value is set to "true". |
-| exo:isAgainVote | Boolean | false | Users can change their vote if the value is set to "true". |
-| exo:isClosed | Boolean | false | The poll status. Poll is closed if the value is set to "true". |
+| *exo:id | {{string}} | {{false}} | The poll id. |
+| *exo:owner | {{string}} | {{false}} | The user id of poll creator. |
+| *exo:createdDate | {{Date}} | {{false}} | The date and time when the poll was created. |
+| *exo:modifiedBy | {{string}} | {{false}} | The user id who modified the poll. |
+| *exo:modifiedDate | {{Date}} | {{false}} | The time when the poll is modified. |
+| *exo:lastVote | {{Date}} | {{false}} | The date of the last vote. |
+| *exo:question | {{string}} | {{false}} | The contents of the question for poll. |
+| *exo:timeOut | {{long}} | {{false}} | The time when the polled is closed. |
+| *exo:option | {{string}} | {{true}} | The list of options for poll. |
+| *exo:vote | {{string}} | {{true}} | The list of votes by users. |
+| *exo:userVote | {{string}} | {{true}} | The list of user ids who voted. |
+| *exo:isMultiCheck | {{false}} | {{false}} | User can choose more than one option if the value is set to "true". |
+| *exo:isAgainVote | {{false}} | {{false}} | Users can change their vote if the value is set to "true". |
+| *exo:isClosed | {{false}} | {{false}} | The poll status. Poll is closed if the value is set to "true". |
 
 
 
 h3. Post {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumData.Post}
-The Post node is defined as child node of Topic and allowed adding only the Attachment child node type. The Post node type is exo:post, and the child node type is exo:forumAttachment.
-- The Post node is stored in {{/exo:applications/ForumService/ForumData/CategoryHome/%Category-id%/%Forum-id%/%Topic-id%/%Post-id%}} and its node type has the following properties:
+The Post node is defined as child node of Topic and allowed adding only the Attachment child node type. The Post node type is _{noformat}exo:post{noformat}_, and the child node type is exo:forumAttachment.
+- The Post node is stored in _{noformat}/exo:applications/ForumService/ForumData/CategoryHome/%Category-id%/%Forum-id%/%Topic-id%/%Post-id%{noformat}_ and its node type has the following properties:
 
 || Properties name || Required type || Multiple|| Description ||
-| exo:id | String | false | The post id. |
-| exo:owner | String | false | The user id of the poster. |
-| exo:path | String | false | The node path of the post. |
-| exo:createdDate | Date | false | The date time when post is submitted, including date, time, time zone. |
-| exo:modifiedBy | String | false | The id of the user who modified the post. |
-| exo:editReason | String | false | The reason for editing the post. |
-| exo:modifiedDate | Date | false | The date when the post was modified. |
-| exo:name | String | false | The post title. |
-| exo:message | String | false | The message of the post. |
-| exo:remoteAddr | String | false | The remote IP address of the post. |
-| exo:icon | String | false | The name of the icon for the post. |
-| exo:userPrivate | String | true | The list of user ids that are restricted from the post. |
-| exo:link | String | false | The link to open the topic. |
-| exo:isApproved | Boolean | false | The state of the post: approved/unapproved. The post is approved if the value is set to "true". |
-| exo:numberAttach | Long | false | The number of attachments in the post. |
-| exo:isActiveByTopic | Boolean | false | The post is activity status based on the topic state. If the topic is close, all post in it will be considered as inactive.  |
-| exo:isHidden | Boolean | false | The post status: shown/hidden. The post is hidden if the value is set to "true". |
-| exo:isFirstPost | Boolean | false | The post is the first one in a topic if the value is set to "true". |
-
+| *exo:id | {{string}} | {{false}} | The post id. |
+| *exo:owner | {{string}} | {{false}} | The user id of the poster. |
+| *exo:path | {{string}} | {{false}} | The node path of the post. |
+| *exo:createdDate | {{Date}} | {{false}} | The date time when post is submitted, including date, time, time zone. |
+| *exo:modifiedBy | {{string}} | {{false}} | The id of the user who modified the post. |
+| *exo:editReason | {{string}} | {{false}} | The reason for editing the post. |
+| *exo:modifiedDate | {{Date}} | {{false}} | The date when the post was modified. |
+| *exo:name | {{string}} | {{false}} | The post title. |
+| *exo:message | {{string}} | {{false}} | The message of the post. |
+| *exo:remoteAddr | {{string}} | {{false}} | The remote IP address of the post. |
+| *exo:icon | {{string}} | {{false}} | The name of the icon for the post. |
+| *exo:userPrivate | {{string}} | {{true}} | The list of user ids that are restricted from the post. |
+| *exo:link | {{string}} | {{false}} | The link to open the topic. |
+| *exo:isApproved | {{false}} | {{false}} | The state of the post: approved/unapproved. The post is approved if the value is set to "true". |
+| *exo:numberAttach | {{long}} | {{false}} | The number of attachments in the post. |
+| *exo:isActiveByTopic | {{false}} | {{false}} | The post is activity status based on the topic state. If the topic is close, all post in it will be considered as inactive.  |
+| *exo:isHidden | {{false}} | {{false}} | The post status: shown/hidden. The post is hidden if the value is set to "true". |
+| *exo:isFirstPost | {{false}} | {{false}} | The post is the first one in a topic if the value is set to "true". |
 
 
 h3. Tag and Tag home {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumData.TagAndTagHome}
-The Tag node is used to store data about tag name, topics with tag added, number of users using this tag, number of tags in use. The node type of the Tag node is exo:forumTag and its child node type is "exo:tagHome".
-The Tag node is stored in {{/exo:applications/ForumService/ForumData/TagHome/%tag-id%}} and its node type has the following properties:
+The Tag node is used to store data about tag name, topics with tag added, number of users using this tag, number of tags in use. The node type of the Tag node is _{noformat}exo:forumTag{noformat}_ and its child node type is _{noformat}exo:tagHome{noformat}_.
+The Tag node is stored in _{noformat}/exo:applications/ForumService/ForumData/TagHome/%tag-id%{noformat}_ and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:id | String | false | The id of tag. |
-| exo:name | String | false | The tag name. |
-| exo:useCount | Long | false | The number of times that the tag was used. |
-| exo:userTag | String | true | The number of users using the tag. |
-
+| *exo:id | {{string}} | {{false}} | The id of tag. |
+| *exo:name | {{string}} | {{false}} | The tag name. |
+| *exo:useCount | {{long}} | {{false}} | The number of times that the tag was used. |
+| *exo:userTag | {{string}} | {{true}} | The number of users using the tag. |
 
 
 h3. BBCode and BBCode home {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumData.BBCodeAndBBCodeHome}
-The BBCode note is used to define what BBCode will be used in the forum. The node type of the BBCode node is exo:forumBBCode.
-The BBCode node is stored in {{/exo:applications/ForumService/ForumData/forumBBCode/%BBCode_tag%}} and its node type has the following properties:
+The BBCode note is used to define what BBCode will be used in the forum. The node type of the BBCode node is _{noformat}exo:forumBBCode{noformat}_.
+The BBCode node is stored in _{noformat}/exo:applications/ForumService/ForumData/forumBBCode/%BBCode_tag%{noformat}_ and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:description | String | false | The description about the tag purpose. Example: {noformat} 'The [url] tag allows creating links to other websites and files'.{noformat} |
-| exo:example |  String |  false | The example about using the tag. Example: {noformat}[URL]http://www.exoplatform.com[/URL]'.{noformat} |
-| exo:isActive | Boolean  | false | The BBCode tag is active/deactive. The BBCode tag is active if the value is set to "true". |
-| exo:isOption | Boolean | false | If the value is set to "true", user can create a tag with atributes and values. |
-| exo:replacement |  String | false | The HTML code that will be replaced by the tag. {noformat}Example: [url] tag replaces '<a target='_blank' href="{param}">{param}</a>'{noformat}. |
-| exo:tagName | String | false | The BBCode tag name. |
+| *exo:description | {{string}} | {{false}} | The description about the tag purpose. Example: {noformat}The [url] tag allows creating links to other websites and files.{noformat} |
+| *exo:example | {{string}} | {{false}} | The example about using the tag. Example: {noformat}[URL]http://www.exoplatform.com[/URL]'.{noformat} |
+| *exo:isActive | {{boolean}}  | {{false}} | The BBCode tag is active/deactive. The BBCode tag is active if the value is set to "true". |
+| *exo:isOption | {{false}} | {{false}} | If the value is set to "true", user can create a tag with atributes and values. |
+| *exo:replacement |  {{string}} | {{false}} | The HTML code that will be replaced by the tag. {noformat}Example: [url] tag replaces '<a target='_blank' href="{param}">{param}</a>'{noformat}. |
+| *exo:tagName | {{string}} | {{false}} | The BBCode tag name. |
 
 
 h3. Topic type and Topic type home {anchor:id=KSref.JCRStructure.ForumJCRStructure.ForumData.TopicTypeAndTopicTypeHome}
-The Topic type home contains a child node with the node type exo:topicType.
-The Topic node is stored in {{/exo:applications/ForumService/ForumData/TopicTypeHome/%Topic-id%}} and its node type has the following properties:
+The Topic type home contains a child node with the node type _{noformat}exo:topicType{noformat}_.
+The Topic node is stored in _{noformat}/exo:applications/ForumService/ForumData/TopicTypeHome/%Topic-id%{noformat}_ and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:id | String | false | The id of the topic type. |
-| exo:name | String | false | The name of the topic type. |
-| exo:icon | String | false | The icon of the topic type. |
+| *exo:id | {{string}} | {{false}} | The id of the topic type. |
+| *exo:name | {{string}} | {{false}} | The name of the topic type. |
+| *exo:icon | {{string}} | {{false}} | The icon of the topic type. |
 
 
 h1. FAQ JCR structure {anchor:id=KSref.JCRStructure.FAQJCRStructure}
-FAQ is a JCR-based application. The FAQ data are stored in the eXo-JCR under the faqApp data directory. 
+FAQ is a JCR-based application. The FAQ data are stored in the eXo-JCR under the faqApp data directory.
 The whole FAQ JCR structure can be visualized in the following diagram:
 
 !FAQ_JCR_Structure.png!
 
 h2. Category {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category}
-The Category node is created from the exo:faqCategory node type and defined to add data inside as:
+The Category node is created from the _{noformat}exo:faqCategory{noformat}_ node type and defined to add data inside as:
 - Sub-category
 - Question Home
 - RSS
 
 h3. Sub-category {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.SubCategory}
 The system will automatically create the Category Home node under the FAQ application node at the first time the user launches application. All users-created categories are the sub-categories of Category Home.
-The home of the Category node is automatically created in: {{/exo:applications/faqApp/categories}}.
+The home of the Category node is automatically created in: _{noformat}/exo:applications/faqApp/categories{noformat}_.
 
-In fact, Sub-category is also a category. FAQ has defined a mixin note type called mix:faqSubCategory to allow adding a node having the same type with category to an existing category. 
+In fact, Sub-category is also a category. FAQ has defined a mixin note type called _{noformat}mix:faqSubCategory{noformat}_ to allow adding a node having the same type with category to an existing category. 
 When a category is created, this mixin note type will be mixed to that category. 
 
-The node type exo:faqCategory has the following properties:
+The node type _{noformat}exo:faqCategory{noformat}_ has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:id | String | false | The sub-category id. |
-| exo:name | String | false | The name of the sub-category. |
-| exo:userPrivate | String | true | The list of user ids that are restricted from the category. |
-| exo:description | String | false | The description of the sub-category. |
-| exo:isModerateQuestions | Boolean | false | The question post moderation status. All questions posted in the sub-category will have wait for moderation if the vcalue is "true". |
-| exo:isModerateAnswers | Boolean | false | The answer post moderation status. All answers posted in the sub-category will have to wait for moderation if the value is set to "true". |
-| exo:isView | Boolean | false | The category is shown/hidden. The category will be shown if the value is set to "true". |
-| exo:viewAuthorInfor | Boolean | false | The category enables user to view the information of questions poster if the value is set to "true'. |
-| exo:moderators | String | true | The list of user ids who are the category moderator. |
-| exo:createdDate | Date | false | The time when the sub-category is created. |
-| exo:index | Long | false | The index number of the category. |
+| *exo:id | {{string}} | {{false}} | The sub-category id. |
+| *exo:name | {{string}} | {{false}} | The name of the sub-category. |
+| *exo:userPrivate | {{string}} | {{true}} | The list of user ids that are restricted from the category. |
+| *exo:description | {{string}} | {{false}} | The description of the sub-category. |
+| *exo:isModerateQuestions | {{false}} | {{false}} | The question post moderation status. All questions posted in the sub-category will have wait for moderation if the vcalue is "true". |
+| *exo:isModerateAnswers | {{false}} | {{false}} | The answer post moderation status. All answers posted in the sub-category will have to wait for moderation if the value is set to "true". |
+| *exo:isView | {{false}} | {{false}} | The category is shown/hidden. The category will be shown if the value is set to "true". |
+| *exo:viewAuthorInfor | {{false}} | {{false}} | The category enables user to view the information of questions poster if the value is set to "true'. |
+| *exo:moderators | {{string}} | {{true}} | The list of user ids who are the category moderator. |
+| *exo:createdDate | {{Date}} | {{false}} | The time when the sub-category is created. |
+| *exo:index | {{long}} | {{false}} | The index number of the category. |
 
 h3. RSS {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.RSS}
 Each category has a RSS child node that stores a RSS feed representing all questions in this category as the binary data type. 
-The RSS node is stored in {{/exo:applications/faqApp/categories/ks.rss}} and its node type is exo:faqRSS.
+The RSS node is stored in _{noformat}/exo:applications/faqApp/categories/ks.rss{noformat}_ and its node type is _{noformat}exo:faqRSS{noformat}_.
 
 h3. Question and Question Home {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.QuestionAndQuestionHome}
-The Question Home node is created from the exo:faqQuestionHome node type that is defined as a child node of category. This node cantains all question nodes that created in side a category. Only the Question node type exo:faqQuestion can be added to the question Home. 
-The Question Home node is created as a child node of Categories {{/exo:applications/faqApp/categories/questions}}.
+The Question Home node is created from the _{noformat}exo:faqQuestionHome{noformat}_ node type that is defined as a child node of category. This node cantains all question nodes that created in side a category. Only the Question node type exo:faqQuestion can be added to the question Home. 
+The Question Home node is created as a child node of Categories _{noformat}/exo:applications/faqApp/categories/questions{noformat}_.
 
 Question node is created from exo:faqQuestion note type under the Question Home node. The Answers, Comments and Attachments node are defined as child nodes of the Question node.
-The Question node is created under the Question Home: {{/exo:applications/faqApp/categories/questions/%Question-id%}}.
+The Question node is created under the Question Home: _{noformat}/exo:applications/faqApp/categories/questions/%Question-id%{noformat}_.
 
-- The exo:faqQuestion node type has the following properties:
+- The _{noformat}exo:faqQuestion{noformat}_ node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:id | String | false | The question id. |
-| exo:language | String | false | The language of the question. |
-| exo:name | String | false | The question details. |
-| exo:title | String | false | The question title. |
-| exo:author | String | false | The the user id of the question poster. |
-| exo:email | String | false | The email of the question author |
-| exo:isActivated | Boolean | false | The question status: activated/inactivated. The question is activated if the value is set to "true". |
-| exo:isApproved | Boolean | false | The state of the question: approved/unapproved. The question is approved to be published if the value is set to "true". |
-| exo:categoryId | String | false | The id of the category containing the question. |
-| exo:createdDate | Date | false | The date and time when the question was submitted. |
-| exo:relatives | String | true | The list of the related questions ids. |
-| exo:usersVote | String | true | The list of user ids who voted. |
-| exo:markVote | Double | false | The average vote scores of the question. |
-| exo:topicIdDiscuss | String | false | The topic id in the forum where the question is discussed. |
-| exo:nameAttachs | String | true | The file name of attachments in the question. |
-| exo:lastActivity | String | false | The user id and time when the last activity of the question was made. |
-| exo:numberOfPublicAnswers | Long | false | The number of all posted answers that has been published. |
-| exo:link | String | false | The link to open the question. |
-| exo:responses | String | true | The responses of the question. |
-| exo:dateResponse | Date | true | The date when the question received the answer. |
-| exo:responseBy | String | true | The user id of the answer poster. |
+| *exo:id | {{string}} | {{false}} | The question id. |
+| *exo:language | {{string}} | {{false}} | The language of the question. |
+| *exo:name | {{string}} | {{false}} | The question details. |
+| *exo:title | {{string}} | {{false}} | The question title. |
+| *exo:author | {{string}} | {{false}} | The the user id of the question poster. |
+| *exo:email | {{string}} | {{false}} | The email of the question author |
+| *exo:isActivated | {{false}} | {{false}} | The question status: activated/inactivated. The question is activated if the value is set to "true". |
+| *exo:isApproved | {{false}} | {{false}} | The state of the question: approved/unapproved. The question is approved to be published if the value is set to "true". |
+| *exo:categoryId | {{string}} | {{false}} | The id of the category containing the question. |
+| *exo:createdDate | {{Date}} | {{false}} | The date and time when the question was submitted. |
+| *exo:relatives | {{string}} | {{true}} | The list of the related questions ids. |
+| *exo:usersVote | {{string}} | {{true}} | The list of user ids who voted. |
+| *exo:markVote | {{Double}} | {{false}} | The average vote scores of the question. |
+| *exo:topicIdDiscuss | {{string}} | {{false}} | The topic id in the forum where the question is discussed. |
+| *exo:nameAttachs | {{string}} | {{true}} | The file name of attachments in the question. |
+| *exo:lastActivity | {{string}} | {{false}} | The user id and time when the last activity of the question was made. |
+| *exo:numberOfPublicAnswers | {{long}} | {{false}} | The number of all posted answers that has been published. |
+| *exo:link | {{string}} | {{false}} | The link to open the question. |
+| *exo:responses | {{string}} | {{true}} | The responses of the question. |
+| *exo:dateResponse | {{Date}} | {{true}} | The date when the question received the answer. |
+| *exo:responseBy | {{string}} | {{true}} | The user id of the answer poster. |
 
 
 h3. Multilanguages {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.Multilanguages}
-A question can support multilanguages, all other languages are stored as a child node of the question and can be add to the question via a mixin node type called mix:faqi18n.
-After the mixin node type mix:faqi18n is added to the question, the node type exo:questionLanguageHome can be added to the question node and this note type will contain all languages node with the note type exo:faqLanguage.
-All display properties of the question are defined in the node type exo:faqLanguage.
+A question can support multilanguages, all other languages are stored as a child node of the question and can be add to the question via a mixin node type called _{noformat}mix:faqi18n{noformat}_.
+After the mixin node type _{noformat}mix:faqi18n{noformat}_ is added to the question, the node type _{noformat}exo:questionLanguageHome{noformat}_ can be added to the question node and this note type will contain all languages node with the note type _{noformat}exo:faqLanguage{noformat}_.
+All display properties of the question are defined in the node type _{noformat}exo:faqLanguage{noformat}_.
 
-- The node type exo:faqLanguage has the following properties:
+- The node type _{noformat}exo:faqLanguage{noformat}_ has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:language | String | false | The language of the question. |
-| exo:name | String | false | The name of the language. |
-| exo:title | String | false | The title of the question in the selected language. |
-| exo:questionId | String | false | The id of the question. |
-| exo:categoryId | String | false | The id of the category. |
+| *exo:language | {{string}} | {{false}} | The language of the question. |
+| *exo:name | {{string}} | {{false}} | The name of the language. |
+| *exo:title | {{string}} | {{false}} | The title of the question in the selected language. |
+| *exo:questionId | {{string}} | {{false}} | The id of the question. |
+| *exo:categoryId | {{string}} | {{false}} | The id of the category. |
 
 h3. Answer, Comment and Attachment {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.AnswersCommentAndAttachment}
 The Answer, Comment and Attachment node is defined as the child nodes of the Question node. Attachment node is defined as a nt:file note type and stored right under the Question node. 
 Answers and comments node are stored under the Answer home and the Comment home node.
 
-- The Answer node is stored in {{/exo:applications/faqApp/categories/questions/%Question-id%/faqAnswerHome/%Answer-id%}} and its node type has the following properties:
+- The Answer node is stored in _{noformat}/exo:applications/faqApp/categories/questions/%Question-id%/faqAnswerHome/%Answer-id%{noformat}_ and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:id | String | false | The id of the answer. |
-| exo:questionId | String | false | The id of the question. |
-| exo:categoryId | String | false | The id of the category containing the question. |
-| exo:responses | String | false | The content of the answer. |
-| exo:dateResponse | Date | false | The date when the response was posted. |
-| exo:responseBy | String | false | The id of the user who responded the answer. |
-| exo:responseLanguage | String | false | The language of the answer response. |
-| exo:approveResponses | Boolean | false | The response is pending for approval if the value is set to "false". |
-| exo:activateResponses | Boolean | false | The state of the answer: activated/deactivated . |
-| exo:usersVoteAnswer | String | true | The list of user ids who voted for the answer. |
-| exo:MarkVotes | Long | false | The average vote scores of the answer. |
-| exo:postId | String | false | The post id. |
-| exo:fullName | String | false | The answer author's full name. |
+| *exo:id | {{string}} | {{false}} | The id of the answer. |
+| *exo:questionId | {{string}} | {{false}} | The id of the question. |
+| *exo:categoryId | {{string}} | {{false}} | The id of the category containing the question. |
+| *exo:responses | {{string}} | {{false}} | The content of the answer. |
+| *exo:dateResponse | {{Date}} | {{false}} | The date when the response was posted. |
+| *exo:responseBy | {{string}} | {{false}} | The id of the user who responded the answer. |
+| *exo:responseLanguage | {{string}} | {{false}} | The language of the answer response. |
+| *exo:approveResponses | {{false}} | {{false}} | The response is pending for approval if the value is set to "false". |
+| *exo:activateResponses | {{false}} | {{false}} | The state of the answer: activated/deactivated . |
+| *exo:usersVoteAnswer | {{string}} | {{true}} | The list of user ids who voted for the answer. |
+| *exo:MarkVotes | {{long}} | {{false}} | The average vote scores of the answer. |
+| *exo:postId | {{string}} | {{false}} | The post id. |
+| *exo:fullName | {{string}} | {{false}} | The answer author's full name. |
 
-- The Comment node is stored in {{/exo:applications/faqApp/categories/questions/%Question-id%/faqCommentHome/%Comment-id%}} and its node type has the following propeties:
+- The Comment node is stored in _{noformat}/exo:applications/faqApp/categories/questions/%Question-id%/faqCommentHome/%Comment-id%{noformat}_ and its node type has the following propeties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:id | String | false | The comment id. |
-| exo:comments | String | false | The comment contents. |
-| exo:dateComment | Date | false | The date when the comment is posted. |
-| exo:commentBy | String | false | The user id of the comment poster. |
-| exo:postId | String | false | The id of the post. |
-| exo:fullName | String | false | The full name of the comment poster. |
-| exo:categoryId | String | false | The id of the category in which the comment is posted. |
-| exo:questionId | String | false | The id of the question in which the comment is posted. |
-| exo:commentLanguage | String | false | The language of the comment. |
+| *exo:id | {{string}} | {{false}} | The comment id. |
+| *exo:comments | {{string}} | {{false}} | The comment contents. |
+| *exo:dateComment | {{Date}} | {{false}} | The date when the comment is posted. |
+| *exo:commentBy | {{string}} | {{false}} | The user id of the comment poster. |
+| *exo:postId | {{string}} | {{false}} | The id of the post. |
+| *exo:fullName | {{string}} | {{false}} | The full name of the comment poster. |
+| *exo:categoryId | {{string}} | {{false}} | The id of the category in which the comment is posted. |
+| *exo:questionId | {{string}} | {{false}} | The id of the question in which the comment is posted. |
+| *exo:commentLanguage | {{string}} | {{false}} | The language of the comment. |
 
-- The Attachment node is stored in {{/exo:applications/faqApp/categories/questions/%Question-id%/faqAttachment}} and its node type has the following properties:
+- The Attachment node is stored in _{noformat}/exo:applications/faqApp/categories/questions/%Question-id%/faqAttachment{noformat}_ and its node type has the following properties:
 
 || Properties name || Required type || Multiple || Possible values || Description ||
-| exo:fileName | String | false | The name of the attachment file. |
+| *exo:fileName | {{string}} | {{false}} | The name of the attachment file. |
 
 h3. FAQ setting {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.FAQSetting}
 This FAQ Setting node stores the user settings data, such as how answer is ordered (in alphabetical order or by created date), the order type (descending or ascending) or the user's selection to sort questions by popularity. Each user has a dedicated settings data to select the display preferences in FAQ . The default setting will be used if the users has never changed and saved their setting. 
 
-- The User Setting node of an individual user is stored in {{/exo:applications/faqApp/settingHome/userSettingHome/%user-id%}} and has the following properties:
+- The User Setting node of an individual user is stored in _/exo:applications/faqApp/settingHome/userSettingHome/%user-id%_ and has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:ordeBy | string | false | Define how questions are ordered, by "alphabet/index" or "created date". |
-| exo:ordeType | string | false | The value "asc" = ascending and "des" = descending. |
-| exo:sortQuestionByVote | Boolean | false | All questions will be sorted by the popularity (based on the number of votes) if the value is set to "true". |
+| *exo:ordeBy |  {{string}} | {{false}} | Define how questions are ordered, by "alphabet/index" or "created date". |
+| *exo:ordeType |  {{string}} | {{false}} | The value "asc" = ascending and "des" = descending. |
+| *exo:sortQuestionByVote | {{false}} | {{false}} | All questions will be sorted by the popularity (based on the number of votes) if the value is set to "true". |
 
 h3. Template for FAQ {anchor:id=KSref.JCRStructure.FAQJCRStructure.Category.TemplateFAQ}
 This node stores the template for FAQ portlet. The user can edit this template online in FAQ to change the layout, skins, and more.
 
-- The template is stored in an nt:file note type under the Template Home node.
-{{/exo:applications/faqApp/templateHome/nt:file}}.
+- The template is stored in an _{noformat}nt:file{noformat}_ note type under the Template Home node.
+_{noformat}/exo:applications/faqApp/templateHome/nt:file{noformat}_.
 
 h1. Poll JCR structure {anchor:id=KSref.JCRStructure.PollJCRStructure}
 
@@ -438,33 +437,33 @@ The Poll data are saved in eXo-JCR under the eXoPolls data directory. The whole 
 
 !Polls_JCR_Structure.png!
 
-The Poll node is used to store the default data in a poll. The node type of the Poll node is exo:poll.
-The Poll node is stored under eXoPolls node {{/exo:applications/eXoPolls/%PortalName%/Polls/Poll-id%}} and its node type (exo:poll) has the following properties:
+The Poll node is used to store the default data in a poll. The node type of the Poll node is _{noformat}exo:poll{noformat}_.
+The Poll node is stored under eXoPolls node _{noformat}/exo:applications/eXoPolls/%PortalName%/Polls/Poll-id%{noformat}_ and its node type (_{noformat}exo:poll{noformat}_) has the following properties:
 
 || Properties name || Required type || Multiple || Description ||
-| exo:id | String | false | The poll id. |
-| exo:owner | String | false | The user id of the poll creator. |
-| exo:createdDate | Date | false | The date and time when the poll is created. |
-| exo:modifiedBy | String | false | The id of the user who made the last modification on the poll. |
-| exo:modifiedDate | Date | false | The date and time when the latest modification on poll was made. |
-| exo:lastVote | Date | false | The date and time when the last vote was made. |
-| exo:question | String | false | The question content of poll. |
-| exo:timeOut | Long | false | The time when the poll will be closed. |
-| exo:option | String | true | The list of options for poll. Each option is separated by a comma. |
-| exo:vote | String | true | The list of votes by users. |
-| exo:userVote | String | true | The list of user ids who voted. |
-| exo:isMultiCheck | Boolean | false | Enable/disable the multi check. User can vote for more than one option if the value is set to "true". |
-| exo:isAgainVote | Boolean | false | Enable/disable the option to vote again. User can change their vote if the value is set to "true". |
-| exo:isClosed | Boolean | false | The poll status: open/closed. The poll is closed if the value is set to "true". |
+| *exo:id | {{string}} | {{false}} | The poll id. |
+| *exo:owner | {{string}} | {{false}} | The user id of the poll creator. |
+| *exo:createdDate | {{Date}} | {{false}} | The date and time when the poll is created. |
+| *exo:modifiedBy | {{string}} | {{false}} | The id of the user who made the last modification on the poll. |
+| *exo:modifiedDate | {{Date}} | {{false}} | The date and time when the latest modification on poll was made. |
+| *exo:lastVote | {{Date}} | {{false}} | The date and time when the last vote was made. |
+| *exo:question | {{string}} | {{false}} | The question content of poll. |
+| *exo:timeOut | {{long}} | {{false}} | The time when the poll will be closed. |
+| *exo:option | {{string}} | {{true}} | The list of options for poll. Each option is separated by a comma. |
+| *exo:vote | {{string}} | {{true}} | The list of votes by users. |
+| *exo:userVote | {{string}} | {{true}} | The list of user ids who voted. |
+| *exo:isMultiCheck | {{false}} | {{false}} | Enable/disable the multi check. User can vote for more than one option if the value is set to "true". |
+| *exo:isAgainVote | {{false}} | {{false}} | Enable/disable the option to vote again. User can change their vote if the value is set to "true". |
+| *exo:isClosed | {{false}} | {{false}} | The poll status: open/closed. The poll is closed if the value is set to "true". |
 
 h1. Wiki JCR structure
-The Wiki portlet is a JCR-based application. The Wiki data are stored in the eXo JCR storage. The Wiki application of eXo Knowledge supports several wikis, each wiki is organized as a tree of pages and hosted in different locations, depending on the type of wiki:
+The *Wiki* portlet is a JCR-based application. The Wiki data are stored in the eXo JCR storage. The Wiki application of eXo Knowledge supports several wikis, each wiki is organized as a tree of pages and hosted in different locations, depending on the type of wiki:
 
 * Portal wikis: _{noformat}/exo:applications/eXoWiki/wikis/$PORTAL/WikiHome{noformat}_
 * Group wikis: _{noformat}/Groups/$GROUP/ApplicationData/eXoWiki/WikiHome{noformat}_
 * User wikis: _{noformat}/Users/$USERNAME/ApplicationData/eXoWiki/WikiHome{noformat}_
 
-_WikiHome_ a conventional name of the root page of a Wiki. The type of _WikiHome_ is "exo:wikihome". 
+_WikiHome_ a conventional name of the root page of a Wiki. The type of WikiHome is _{noformat}exo:wikihome{noformat}_.
 Each page may have a number of sub-pages and attachments.
 
 Other Wiki metadata are organized below _{noformat}/exo:applications/eXoWiki/wikimetadata{noformat}_.
@@ -475,94 +474,92 @@ The whole Wiki JCR structure can be visualized in the following diagram:
 
 
 h2. Wiki data
-Depending on the Wiki type (portal, group or user); its pages, attachments and default syntax are stored under a node with either of node types: "wiki:portalwiki", "wiki:groupwiki" or "wiki:userwiki", respectively. Such a node has four child nodes: WikiHome, Preferences, LinkRegistry and Trash.
-These node types have the super type "wiki:wiki" that has the following properties:
+Depending on the Wiki type (portal, group or user); its pages, attachments and default syntax are stored under a node with either of node types: _{noformat}wiki:portalwiki{noformat}_, _{noformat}wiki:groupwiki{noformat}_ or _{noformat}wiki:userwiki{noformat}_, respectively. Such a node has four child nodes: WikiHome, Preferences, LinkRegistry and Trash.
+These node types have the super type _{noformat}wiki:wiki{noformat}_ that has the following properties:
 
 || Properties name || Required type || Multiple ||||Description ||
-|ref|Reference|false|The reference to one of three following nodes: portalwikis, groupwikis or userwikis.|
-|owner|String|false|The name of the wiki.|
-|wikiPermissions|String|true|The property consists of the permission information of the wiki. The permission string has the format: VIEWPAGE,EDITPAGE,ADMINPAGE,ADMINSPACE:USER:john; VIEWPAGE:GROUP:/platform/users; VIEWPAGE,EDITPAGE,ADMINPAGE,ADMINSPACE:MEMBERSHIP:manager:/platform/administrators.|
-|isDefaultPermissionsInited|Boolean|true|Check whether the default permission is applied to all the wiki tree or not. Its default value is "false".|
+| *ref| Reference | {{false}} | The reference to one of three following nodes: portalwikis, groupwikis or userwikis.|
+| *owner | {{string}} | {{false}} | The name of the wiki.|
+| *wikiPermissions | {{string}} | {{true}} | The property consists of the permission information of the wiki. The permission string has the format: VIEWPAGE,EDITPAGE,ADMINPAGE,ADMINSPACE:USER:john; VIEWPAGE:GROUP:/platform/users; VIEWPAGE,EDITPAGE,ADMINPAGE,ADMINSPACE:MEMBERSHIP:manager:/platform/administrators.|
+| *isDefaultPermissionsInited | {{boolean}} | {{true}} |Check whether the default permission is applied to all the wiki tree or not. Its default value is "false".|
 
 h3. WikiHome
-The WikiHome node stores the root page of a Wiki. It has the node type "exo:wikihome" that has the super type "wiki:page" inherited from "nt:folder". The super type has the following properties:
+The WikiHome node stores the root page of a Wiki. It has the node type _{noformat}exo:wikihome{noformat}_ that has the super type _{noformat}wiki:page{noformat}_ inherited from _{noformat}nt:folder{noformat}_. The super type has the following properties:
 
 || Properties name || Required type || Multiple ||Description ||
-|owner|String|false|The creator of the page.|
-|author|String|false|The last person who modifies the page.|
-|createdDate|Date|false|The date when the page is created.|
-|updatedDate|Date|false|The last date when the page is updated.|
-|syntax|String|false|The Wiki syntax is used to write the page.|
-|title|String|false|The title of the page.|
-|comment|String|false|The comment explains what is modified in the page.|
-|url|String|false|The URL to the page.|
-|isOverridePermission|Boolean|false|Check whether the default permission is overridden on the page or not. Its default value is "false".|
-|exo:relation|Reference|true|The property consists of the UUIDs of the related pages.|
+| *owner | {{string}}| false|The creator of the page.|
+| *author | {{string}}| {{false}} | The last person who modifies the page.|
+| *createdDate | {{Date}} | {{false}} | The date when the page is created.|
+| *updatedDate | {{Date}} | {{false}} | The last date when the page is updated.|
+| *syntax| {{string}} | {{false}} | The Wiki syntax is used to write the page.|
+| *title| {{string}} | {{false}} | The title of the page.|
+| *comment| {{string}} | {{false}} | The comment explains what is modified in the page.|
+| *url| {{string}} | {{false}} | The URL to the page.|
+| *isOverridePermission | {{boolean}} | {{false}} | Check whether the default permission is overridden on the page or not. Its default value is "false".|
+| *exo:relation | Reference| {{true}} | The property consists of the UUIDs of the related pages.|
 
-The nodes that have the type "wiki:page", have a child node named "content" and other child nodes including attachments with the type "wiki:attachment" inherited from "nt:file".
-The node type "wiki:attachment" has the following properties:
+The nodes that have the type _{noformat}wiki:page{noformat}_, have a child node named "content" and other child nodes including attachments with the type _{noformat}wiki:attachment{noformat}_ inherited from _{noformat}nt:file{noformat}_.
+The node type _{noformat}wiki:attachment{noformat}_ has the following properties:
 || Properties name || Required type || Multiple ||Description ||
-|title|String|false|The name of the attachment.|
-|fileType|String|false|The type of the attachment.|
-|creator|String|false|The creator of the attachment.|
+| *title | {{string}} | {{false}} | The name of the attachment.|
+| *fileType | {{string}} | {{false}} | The type of the attachment.|
+| *creator | {{string}} | {{false}} | The creator of the attachment.|
 
-* Three mixin node types: "wiki:removed", "wiki:renamed" and "wiki:watched" may be added to the node type "wiki:page".
+* Three mixin node types: _{noformat}wiki:removed{noformat}_, _{noformat}wiki:renamed{noformat}_ and _{noformat}wiki:watched{noformat}_ may be added to the node type _{noformat}wiki:page{noformat}_.
 
-The mixin node type "wiki:removed" has the following properties:
+The mixin node type _{noformat}wiki:removed{noformat}_ has the following properties:
 || Properties name || Required type || Multiple ||Description ||
-|removedBy|String|false|The person who deleted the page.|
-|removedDate|Date|false|The date when the page is deleted.|
-|parentPath|String|false|The path to the parent page of the deleted page.|
+| *removedBy | {{string}} | {{false}} | The person who deleted the page.|
+| *removedDate | {{Date}} | {{false}} | The date when the page is deleted.|
+| *parentPath | {{string}} | {{false}} | The path to the parent page of the deleted page.|
 
 
 
-The mixin node type "wiki:renamed" has the following properties:
+The mixin node type _{noformat}wiki:renamed{noformat}_ has the following properties:
 || Properties name || Required type || Multiple ||Description ||
-|oldPageIds|String|true|The old Ids of the renamed page.|
+| *oldPageIds | {{string}} | {{true}} | The old Ids of the renamed page.|
 
 
-The mixin node type "wiki:watched" has the following properties:
+The mixin node type _{noformat}wiki:watched{noformat}_ has the following properties:
 || Properties name || Required type || Multiple ||Description ||
-|watcher|String|false|The Id of the person who is watching the page.|
+| *watcher | {{string}} | {{false}} | The Id of the person who is watching the page.|
 
 
 h3. Preferences
-The "Preferences" node stores the default syntax and page templates of the Wiki. It has the node type "wiki:preferences" and two child nodes "PreferencesSyntax" and "TemplateContainer".
+The Preferences node stores the default syntax and page templates of the Wiki. It has the node type _{noformat}wiki:preferences{noformat}_ and two child nodes _PreferencesSyntax_ and _TemplateContainer_.
 
-* The "PreferencesSyntax" node has the node type "wiki:preferencessyntax" that has the following properties:
+* The PreferencesSyntax node has the node type _{noformat}wiki:preferencessyntax{noformat}_ that has the following properties:
 || Properties name || Required type || Multiple ||Description ||
-|defaultSyntax|String|false|The default Wiki syntax of each wiki.|
-|allowMutipleSyntaxes|Boolean|false|Specify whether multiple syntaxes are enabled or not.|
+| *defaultSyntax | {{string}}| {{false}} | The default Wiki syntax of each wiki.|
+| *allowMutipleSyntaxes | {{boolean}} | {{false}} | Specify whether multiple syntaxes are enabled or not.|
 
-* The "TemplateContainer" node stores the page templates. Its child node has the node type "wiki:template" inherited from the node type "wiki:page". 
-The node type "wiki:template" has the following properties:
+* The TemplateContainer node stores the page templates. Its child node has the node type _{noformat}wiki:template{noformat}_ inherited from the node type _{noformat}wiki:page{noformat}_. 
+The node type _{noformat}wiki:template{noformat}_ has the following properties:
 
 || Properties name || Required type || Multiple ||Description ||
-|description|String|false|The description of the template.|
-
+| *description | {{string}} | {{false}} | The description of the template.|
 
 h3. LinkRegistry
 
-The "LinkRegistry" node stores the entries to keep track of renaming or moving pages. Each link entry has the node type "wiki:linkentry" that has the following properties:
+The LinkRegistry node stores the entries to keep track of renaming or moving pages. Each link entry has the node type _{noformat}wiki:linkentry{noformat}_ that has the following properties:
 || Properties name || Required type || Multiple ||Description ||
-|alias|String|false|The Id of a page that is moved or renamed. Its format is "wikitype@wikiowner@page_name".|
-|newlink|Path|false|A new path to the wiki page that has been moved or renamed.|
+| *alias | {{string}} | {{false}} | The Id of a page that is moved or renamed. Its format is _{noformat}wikitype@wikiowner@page_name{noformat}_.|
+|*newlink | {{Path}} | {{false}} | A new path to the wiki page that has been moved or renamed.|
 
 h3. Trash
-The "Trash" node stores deleted pages.
-
+The Trash_node stores deleted pages.
 
 h2. Wiki metadata
-Wiki metadata are stored in the node wikimetadata that has the node type "wiki:store". These metadata consist of information about help contents, draft contents and the way to find the wikis in the system.
-The nodes portalwikis, groupwikis and userwikis allow finding the wikis under the type: portal, group and user, basing on the JCR reference features. These nodes have the node types "wiki:portalwikis", "wiki:groupwikis" and "wiki:userwikis" relatively.
+Wiki metadata are stored in the node wikimetadata that has the node type _wiki:store_. These metadata consist of information about help contents, draft contents and the way to find the wikis in the system.
+The nodes _portalwikis, groupwikis_ and _userwikis_ allow finding the wikis under the type: portal, group and user, basing on the JCR reference features. These nodes have the node types _{noformat}wiki:portalwikis{noformat}_, _{noformat}wiki:groupwikis{noformat}_ and _{noformat}wiki:userwikis{noformat}_ relatively.
 
 *Help pages*
 
-Help-related information about Wiki syntaxes are stored under the "helppages" node which has the node type "wiki:page". For syntax help, there are two help pages (summary and detailed) for each syntax. The summary page suggests the simple syntax, while the detailed page provides the full syntax-related information. The detailed page is arranged as the child page of the summary page, and both of which have the same node type "wiki:page".
+Help-related information about Wiki syntaxes are stored under the helppages node which has the node type _{noformat}wiki:page{noformat}_. For syntax help, there are two help pages (summary and details) for each syntax. The summary page suggests the simple syntax, while the detailed page provides the full syntax-related information. The detailed page is arranged as the child page of the summary page, and both of which have the same node type _{noformat}wiki:page{noformat}_.
 
 *Draft pages*
 
-The unsaved content of a new page is stored under the "draftNewPages" node that has the node type "wiki:page".
+The unsaved content of a new page is stored under the draftNewPages node that has the node type _{noformat}wiki:page{noformat}_.
 
 
 

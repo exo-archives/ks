@@ -49,9 +49,9 @@ You can change the template FAQ viewer in one of the following two ways:
 
 h2. Plug-in {anchor:id=KSref.FAQTemplateConfiguration.Plugin}
 
-*1.* Create a file named *_FAQViewerPortlet.gtmpl_*. The content of the file is the template of the FAQ viewer.
+*1.* Create a file named _FAQViewerPortlet.gtmpl_. The content of the file is the template of the FAQ viewer.
 
-*2.* Copy this file and paste into _ks-extension/WEB-INF/ks-extension/ks/faq/templates/_ that is in the *webapps* folder of the server (tomcat, jboss).
+*2.* Copy this file and paste into _{noformat}ks-extension/WEB-INF/ks-extension/ks/faq/templates/{noformat}_ that is in the *webapps* folder of the server (tomcat, jboss).
 
 When the server runs, _FAQViewerPortlet.gtmpl_ will initialize the template of the FAQ viewer.
 
@@ -109,9 +109,9 @@ private List<String> answers = new ArrayList<String>();
 
 ||Param|| Type || Description ||
 |*id*| {{String}} | The jcr node name of the question node. |
-|*question*| {{String}}| The content of the question. |
+|*question*| {{String}} | The content of the question. |
 |*details*| {{String}} | Details of the question. |
 |*answers*| {{List<String>}} | The list of answers for the question. |
 
 * The *SubCategoryInfo* class:
-The params of this class are the same as those of the CategoryInfo class. See [here|#Category-info] for more information.
+The params of this class are the same as those of the _CategoryInfo_ class. See [here|#Category-info] for more information.

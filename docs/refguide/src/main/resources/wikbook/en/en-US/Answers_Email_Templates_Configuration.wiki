@@ -1,6 +1,6 @@
 h1. Overview {anchor:id=KSref.AnswerEmailTemplateConfiguration.Overview}
 Answers is configured mainly in the file:
-- Portlet preferences: */webapps/faq/WEB-INF/portlet.xml*
+- Portlet preferences: _/webapps/faq/WEB-INF/portlet.xml_.
 
 {info}
 For general information of eXo Knowledge configuration, refer to [eXo Knowledge Configuration| KS:KS Manual#Configuration] section.
@@ -15,8 +15,8 @@ Parameters are used in templates consist of:
 
 || Parameter || Description ||
 | *&categoryName_* | Load the name of Category. |
-| *&questionContent_* | Load the question's content. |
+| *&questionContent_* | Load the question content. |
 | *&questionResponse_* | Load the question's answer. |
-| *&questionLink_*| Load the link to question in the Answers portlet. |
+| *&questionLink_*| Load the link to question in the *Answers* portlet. |
 
 

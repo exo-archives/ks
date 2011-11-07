@@ -5,7 +5,7 @@ h1. Overview {anchor:id=KSref.AnswerPortlet.Overview}
 
 h1. Portlet.xml {anchor:id=KSref.AnswerPortlet.AnswerPortletxml}
 
-* See the portlet.xml file in the project following this path: /webapps/faq/WEB-INF/portlet.xml
+* See the _portlet.xml_ file in the project following this path: _/webapps/faq/WEB-INF/portlet.xml_
 
 h1. Portlet Preferences {anchor:id=KSref.AnswerPortlet.AnswerPortletPreferences}
 
@@ -24,4 +24,4 @@ The Answers portlet consists of preferences as follows:
 | *orderType* | {{asc}}, {{desc}} | {{asc}} | Display questions in the ascending or descending order. |
 | *isDiscussForum* | {{true}}, {{false}} | {{false}} | Enable the DiscussQuestions function. |
 | *idNameCategoryForum* | {{CategoryName, {{ForumName}} | {{empty}} | Select categories and forums for the DiscussionQuestions function. |
-| *uploadFileSizeLimitMB* | {{integer}} | {{20}}| Set the maximum size of uploaded files in MB. |
+| *uploadFileSizeLimitMB* | {{integer}} | {{20}}| Set the maximum size of uploaded files (in MBs). |

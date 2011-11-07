@@ -3,7 +3,7 @@ The default Forum settings are a set of settings for a new account. It contains 
 
 h1. Configuration {anchor:id=KSref.DefaultUserProfileSetting.Configuration}
 
-This configuration is declared in the file named "ks-configuration.xml". Its path is _"\[tomcat source\]/webapps/ks-extension/WEB-INF/ks-extension/ks/ks-configuration.xml"_ if you are running the tomcat and _"\[project source\]/extension/webapp/src/main/webapp/WEB-INF/ks-extension/ks/ks-configuration.xml"_ if you are in the development phrase.
+This configuration is declared in the file named _ks-configuration.xml_. Its path is _{noformat}\[tomcat source\]/webapps/ks-extension/WEB-INF/ks-extension/ks/ks-configuration.xml{noformat}_ if you are running the tomcat and _"\[project source\]/extension/webapp/src/main/webapp/WEB-INF/ks-extension/ks/ks-configuration.xml"_ if you are in the development phrase.
 
 {code:xml}
 ...
