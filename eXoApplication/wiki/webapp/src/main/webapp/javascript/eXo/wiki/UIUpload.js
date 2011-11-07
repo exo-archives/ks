@@ -215,7 +215,7 @@ UIUpload.prototype.showUploaded = function(id, fileName) {
   progressIframe.style.display = "none";
     
   var selectFileFrame = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "SelectFileFrame") ;
-  selectFileFrame.style.display = "block" ;
+  // selectFileFrame.style.display = "block" ;
   var fileNameLabel = eXo.core.DOMUtil.findFirstDescendantByClass(selectFileFrame, "div", "FileNameLabel") ;
   if(fileName != null) fileNameLabel.innerHTML += " " + fileName;
   var progressBarFrame = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ProgressBarFrame") ;

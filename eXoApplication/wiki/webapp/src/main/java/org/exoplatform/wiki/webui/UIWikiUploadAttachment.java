@@ -28,7 +28,6 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.commons.NameValidator;
@@ -37,7 +36,9 @@ import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiResource;
+import org.exoplatform.wiki.webui.control.UIAttachmentContainer;
 import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
+import org.exoplatform.wiki.webui.control.listener.UIWikiPortletActionListener;
 import org.exoplatform.wiki.webui.core.UIWikiForm;
 import org.exoplatform.wiki.webui.form.UIWikiFormUploadInput;
 
@@ -51,13 +52,13 @@ import org.exoplatform.wiki.webui.form.UIWikiFormUploadInput;
   lifecycle = UIFormLifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiUploadAttachment.gtmpl",
   events = {
-    @EventConfig(listeners = UIWikiUploadAttachment.UploadActionListener.class)
+    @EventConfig(listeners = UIWikiUploadAttachment.UploadAttachmentActionListener.class)
   }
 )
 public class UIWikiUploadAttachment extends UIWikiForm {
-  public static final String FIELD_UPLOAD = "upload";
-  
   public static int SIZE_LIMIT = -1;
+  
+  public static String FIELD_UPLOAD = UIWikiFormUploadInput.UPLOAD_ACTION;
   
   private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new EditPagesPermissionFilter() });
 
@@ -83,9 +84,9 @@ public class UIWikiUploadAttachment extends UIWikiForm {
     }
   }
 
-  static public class UploadActionListener extends EventListener<UIWikiUploadAttachment> {
+  static public class UploadAttachmentActionListener extends UIWikiPortletActionListener<UIWikiUploadAttachment> {
     @Override
-    public void execute(Event<UIWikiUploadAttachment> event) throws Exception {                 
+    public void processEvent(Event<UIWikiUploadAttachment> event) throws Exception {                 
       UIWikiUploadAttachment wikiAttachmentArea = event.getSource();
       UIWikiFormUploadInput input = (UIWikiFormUploadInput) wikiAttachmentArea.getUIInput(FIELD_UPLOAD);
       UploadResource uploadResource = input.getUploadResource();
@@ -175,6 +176,11 @@ public class UIWikiUploadAttachment extends UIWikiForm {
       uiInput.setAutoUpload(true);
       wikiAttachmentArea.addChild(uiInput);
       event.getRequestContext().addUIComponentToUpdateByAjax(bottomArea); 
+    }
+
+    @Override
+    protected String getExtensionType() {
+      return UIAttachmentContainer.EXTENSION_TYPE;
     }
   }
 }

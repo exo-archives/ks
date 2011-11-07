@@ -29,7 +29,7 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 @ComponentConfig(template = "app:/templates/wiki/webui/form/UIFormUploadInput.gtmpl")
 public class UIWikiFormUploadInput extends UIFormUploadInput {
 
-  final static public String UPLOAD = "Upload" ; 
+  final static public String UPLOAD_ACTION = "UploadAttachment" ; 
   
   public UIWikiFormUploadInput(String name, String bindingExpression) {
     super(name, bindingExpression);
@@ -44,10 +44,9 @@ public class UIWikiFormUploadInput extends UIFormUploadInput {
   public String getPostUploadActionLink() throws Exception {
     UIComponent uiParent = getParent();
     if(uiParent != null){
-      return uiParent.event(UPLOAD, getUploadId());
+      return uiParent.event(UPLOAD_ACTION, getUploadId());
     } else {
       return "";
     }
   }
-
 }

@@ -16,7 +16,6 @@
  */
 package org.exoplatform.wiki.webui.control;
 
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 import org.exoplatform.wiki.webui.UIWikiAttachmentUploadListForm;
@@ -35,11 +34,6 @@ public class UIAttachmentContainer extends UIWikiExtensionContainer {
     addChild(UIWikiAttachmentUploadListForm.class, null, null);
   }
   
-  @Override
-  public void processRender(WebuiRequestContext context) throws Exception {
-    super.processRender(context);
-  }
-
   @Override
   public String getExtensionType() {
     return EXTENSION_TYPE;
