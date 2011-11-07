@@ -139,4 +139,30 @@ public class PropertyReader {
     return list;
   }
 
+  public Object readProperty(String propertyName, Class returnedType) {
+    Object value = null;
+    if (returnedType.isArray()) {
+      if (returnedType.equals(String[].class)) {
+        value = strings(propertyName);
+      } else {
+        throw new UnsupportedOperationException("Couldn't cast " + returnedType.getName() + " to String[]!");
+      }
+    } else {
+      if (returnedType == Boolean.class) {
+        value = bool(propertyName);
+      } else if (returnedType == Date.class) {
+        value = date(propertyName);
+      } else if (returnedType == Double.class) {
+        value = d(propertyName);
+      } else if (returnedType == Long.class) {
+        value = l(propertyName);
+      } else if (returnedType == String.class) {
+        value = string(propertyName);
+      } else {
+        throw new UnsupportedOperationException(returnedType.getName() + " is not supported in return value.");
+      }
+    }     
+    return value;
+  }
+  
 }

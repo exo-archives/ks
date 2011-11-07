@@ -1277,4 +1277,14 @@ public class FAQServiceImpl implements FAQService, Startable {
   public void calculateDeletedUser(String userName) throws Exception {
     jcrData_.calculateDeletedUser(userName);
   }
+
+  @Override
+  public Object readCategoryProperty(String categoryId, String propertyName, Class returnType) throws Exception {
+    return jcrData_.readCategoryProperty(categoryId, propertyName, returnType);
+  }
+
+  @Override
+  public Object readQuestionProperty(String questionId, String propertyName, Class returnType) throws Exception {
+    return jcrData_.readQuestionProperty(questionId, propertyName, returnType);
+  }
 }

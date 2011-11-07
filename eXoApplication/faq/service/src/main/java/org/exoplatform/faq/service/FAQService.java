@@ -1056,5 +1056,25 @@ public interface FAQService extends FAQServiceLegacy {
   public Comment[] getComments(String questionId) throws Exception;
 
   public void calculateDeletedUser(String userName) throws Exception;
-
+  
+  /**
+   * read property of the category by its name
+   * @param categoryId id of the category
+   * @param propertyName name of the property
+   * @param returnType expected return-type. The supported class are String[], String, Long, Boolean, Double and Date .  
+   * @return 
+   * @throws Exception
+   */
+  public Object readCategoryProperty(String categoryId, String propertyName, Class returnType) throws Exception;
+  
+  /**
+   * read property of the question by its name
+   * @param questionId id of the question
+   * @param propertyName name of the property
+   * @param returnType expected return-type. The supported class are String[], String, Long, Boolean, Double and Date.
+   * @return
+   * @throws Exception
+   */
+  public Object readQuestionProperty(String questionId, String propertyName, Class returnType) throws Exception;
+  
 }

@@ -1947,7 +1947,33 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     return null;
 
   }
-
+  
+  public Object readQuestionProperty(String questionId, String propertyName, Class returnType) throws Exception{
+    if (questionId == null || propertyName == null) 
+      throw new IllegalArgumentException("The parameter is null");
+    Node questionNode = getQuestionNodeById(questionId);
+    if (questionNode != null)
+      return new PropertyReader(questionNode).readProperty(propertyName, returnType);
+    else return null;
+  }
+  
+  /**
+   * read property of the category by its name
+   * @param categoryId id of the category
+   * @param propertyName name of the property
+   * @param returnValue expected return-type. The supported class types are String[], String, Long, Boolean, Double and Date.  
+   * @return 
+   * @throws Exception
+   */
+  public Object readCategoryProperty(String categoryId, String propertyName, Class returnType) throws Exception {
+    if (categoryId == null || propertyName == null) 
+      throw new IllegalArgumentException("The parameter is null");
+    Node categoryNode = getCategoryNodeById(categoryId);
+    if (categoryNode != null)
+      return new PropertyReader(categoryNode).readProperty(propertyName, returnType);
+    else return null;
+  }
+  
   /*
    * (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#existingCategories()
@@ -2832,10 +2858,9 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
    * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryPath(java.lang.String)
    */
   public List<String> getCategoryPath(String categoryId) throws Exception {
-    SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<String> breadcums = new ArrayList<String>();
     try {
-      Node category = getFAQServiceHome(sProvider).getNode(categoryId);
+      Node category = getCategoryNodeById(categoryId);
       while (!category.getName().equals(Utils.CATEGORY_HOME)) {
         breadcums.add(category.getName());
         category = category.getParent();
@@ -3896,4 +3921,5 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   private String getLastActivityInfo(String author, long answerTime) {
     return new StringBuilder(author).append(Utils.HYPHEN).append(answerTime).toString();
   }
+
 }
