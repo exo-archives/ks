@@ -88,6 +88,10 @@ public class CommonUtils {
 
   public static final String         AMP          = "&amp;".intern();
 
+  public static final String         DOMAIN_KEY   = "gatein.email.domain.url".intern();
+
+  public static final String         FROM_KEY     = "gatein.email.smtp.from".intern();
+
   private static List<String>        tokens     = new ArrayList<String>();
 
   private static Map<String, String> charcodes  = new HashMap<String, String>();
@@ -203,7 +207,7 @@ public class CommonUtils {
     if (from == null)
       return null;
     Properties props = new Properties(System.getProperties());
-    String mailAddr = props.getProperty("gatein.email.smtp.from");
+    String mailAddr = props.getProperty(FROM_KEY);
     if (mailAddr == null || mailAddr.length() == 0)
       mailAddr = props.getProperty("mail.from");
     if (mailAddr != null) {
@@ -218,6 +222,11 @@ public class CommonUtils {
     } else {
       return null;
     }
+  }
+  
+  public static String getDomainURL() {
+    Properties props = new Properties(System.getProperties());
+    return props.containsKey(DOMAIN_KEY) ? props.getProperty(DOMAIN_KEY) : EMPTY_STR;
   }
 
   public static String processBBCode(String s) {

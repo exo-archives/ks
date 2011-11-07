@@ -55,7 +55,6 @@ import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.mail.Message;
 import org.picocontainer.Startable;
 
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
@@ -749,16 +748,6 @@ public class FAQServiceImpl implements FAQService, Startable {
 
   public List<String> getCategoryPath(String categoryId) throws Exception {
     return jcrData_.getCategoryPath(categoryId);
-  }
-
-  /**
-   * This function will send message to address but you want send
-   * 
-   * @param   message is object save content with user want send to one or many address email
-   * @throws Exception the exception
-   */
-  public void sendMessage(Message message) throws Exception {
-    jcrData_.sendMessage(message);
   }
 
   /**

@@ -22,8 +22,8 @@ import java.util.List;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;

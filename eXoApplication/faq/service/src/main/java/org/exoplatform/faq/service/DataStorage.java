@@ -24,7 +24,6 @@ import javax.jcr.Node;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
-import org.exoplatform.services.mail.Message;
 
 /**
  * Created by The eXo Platform SAS
@@ -63,8 +62,6 @@ public interface DataStorage {
   byte[] getTemplate() throws Exception;
 
   void saveTemplate(String str) throws Exception;
-
-  void sendMessage(Message message) throws Exception;
 
   Iterator<NotifyInfo> getPendingMessages() throws Exception;
 

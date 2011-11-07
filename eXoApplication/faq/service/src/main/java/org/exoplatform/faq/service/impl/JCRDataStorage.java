@@ -59,8 +59,6 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Cate;
@@ -74,6 +72,7 @@ import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JCRPageList;
+import org.exoplatform.faq.service.MessageBuilder;
 import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionInfo;
@@ -95,7 +94,6 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.security.ConversationState;
 
@@ -113,8 +111,6 @@ import com.sun.syndication.io.SyndFeedOutput;
 public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   private static final Log        log                  = ExoLogger.getLogger(JCRDataStorage.class);
-
-  final private static String     MIMETYPE_TEXTHTML    = TEXT_HTML.intern();
 
   @SuppressWarnings("unused")
   private Map<String, String>     serverConfig_        = new HashMap<String, String>();
@@ -468,7 +464,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       emails.addAll(reader.list(EXO_EMAIL_WATCHING, new ArrayList<String>()));
       users.addAll(reader.list(EXO_USER_WATCHING, new ArrayList<String>()));
       // watch in this question
-      if (question.getEmailsWatch() != null && question.getEmailsWatch().length > 0) {
+      if (!CommonUtils.isEmpty(question.getEmailsWatch())) {
         emails.addAll(Arrays.asList(question.getEmailsWatch()));
         users.addAll(Arrays.asList(question.getUsersWatch()));
       }
@@ -489,37 +485,27 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       } else {
         emailsList.addAll(emails);
       }
-      if (emailsList != null && emailsList.size() > 0) {
-        Message message = new Message();
-        message.setMimeType(MIMETYPE_TEXTHTML);
-        message.setFrom(question.getAuthor());
-        message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
-        String body = StringUtils.replace(faqSetting.getEmailSettingContent(), "&questionContent_", question.getDetail());
-        body = StringUtils.replace(body, "&questionLink_", question.getLink());
+      if (!emailsList.isEmpty()) {
+        MessageBuilder messageBuilder = new MessageBuilder();
+        messageBuilder.setType(MessageBuilder.TYPESEND.NEW_QUESTION);
+        messageBuilder.setCategoryName(reader.string(EXO_NAME, "Root"));
+        messageBuilder.setContent(faqSetting.getEmailSettingContent());
+        messageBuilder.setSubject(faqSetting.getEmailSettingSubject());
+        messageBuilder.setQuestionOwner(question.getAuthor());
+        messageBuilder.setQuestionEmail(question.getEmail());
+        messageBuilder.setQuestionLink(question.getLink());
+        messageBuilder.setQuestionDetail(question.getDetail());
+        messageBuilder.setQuestionContent(question.getQuestion());
+        
         if (question.getAnswers() != null && question.getAnswers().length > 0) {
-          body = StringUtils.replace(body, "&questionResponse_", question.getAnswers()[0].getResponses());
+          messageBuilder.setQuestionResponse(question.getAnswers()[0].getResponses());
         } else {
-          body = StringUtils.replace(body, "&questionResponse_", EMPTY_STR);
+          messageBuilder.setQuestionResponse(EMPTY_STR);
         }
-        message.setBody(body);
-        sendEmailNotification(emailsList, message);
+        sendEmailNotification(emailsList, messageBuilder.getMessage());
       }
     } catch (Exception e) {
       log.error("Failed to send a nofify for category watcher: ", e);
-    }
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#sendMessage(org.exoplatform.services.mail.Message)
-   */
-  public void sendMessage(Message message) throws Exception {
-    try {
-      MailService mService = (MailService) PortalContainer.getComponent(MailService.class);
-      mService.sendMessage(message);
-    } catch (NullPointerException e) {
-      MailService mService = (MailService) StandaloneContainer.getInstance().getComponentInstanceOfType(MailService.class);
-      mService.sendMessage(message);
     }
   }
 
@@ -1543,32 +1529,27 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   }
 
   private void sendNotifyMoveQuestion(Node destCateNode, Node questionNode, String cateId, String link, FAQSetting faqSetting) throws Exception {
-    String contentMail = faqSetting.getEmailMoveQuestion();
-    String categoryName = null;
-    try {
-      categoryName = questionNode.getParent().getParent().getProperty(EXO_NAME).getString();
-    } catch (Exception e) {
-      categoryName = "Root";
-    }
-    Message message = new Message();
-    message.setMimeType(MIMETYPE_TEXTHTML);
-    message.setFrom(questionNode.getProperty(EXO_AUTHOR).getString());
-    message.setSubject(faqSetting.getEmailSettingSubject() + ": " + questionNode.getProperty(EXO_TITLE).getString());
-    if (categoryName == null || categoryName.trim().length() < 1)
-      categoryName = "Root";
-    String questionDetail = questionNode.getProperty(EXO_TITLE).getString();
-    if (questionNode.hasProperty(EXO_NAME)) {
-      questionDetail = questionDetail + "<br/> <span style=\"font-weight:normal\"> " + questionNode.getProperty(EXO_NAME).getString() + "</span>";
-    }
-    contentMail = StringUtils.replace(contentMail, "&questionContent_", questionDetail);
-    contentMail = StringUtils.replace(contentMail, "&categoryName_", categoryName);
-    contentMail = StringUtils.replace(contentMail, "&questionLink_", link);
-    message.setBody(contentMail);
+    Node categoryName = questionNode.getParent().getParent();
+    PropertyReader reader = new PropertyReader(categoryName);
+    
+    MessageBuilder messageBuilder = new MessageBuilder();
+    messageBuilder.setType(MessageBuilder.TYPESEND.MOVE_QUESTION);
+    messageBuilder.setCategoryName(reader.string(EXO_NAME, "Root"));
+    messageBuilder.setContent(faqSetting.getEmailMoveQuestion());
+    messageBuilder.setSubject(faqSetting.getEmailSettingSubject());
+    
+    reader = new PropertyReader(questionNode);
+    messageBuilder.setQuestionOwner(reader.string(EXO_AUTHOR, EMPTY_STR));
+    messageBuilder.setQuestionEmail(reader.string(EXO_EMAIL, EMPTY_STR));
+    messageBuilder.setQuestionLink(link);
+    messageBuilder.setQuestionDetail(reader.string(EXO_NAME, EMPTY_STR));
+    messageBuilder.setQuestionContent(reader.string(EXO_TITLE, EMPTY_STR));
+    
     Set<String> emails = new HashSet<String>();
     emails.addAll(calculateMoveEmail(destCateNode));
     emails.addAll(calculateMoveEmail(questionNode.getParent()));
-    emails.add(questionNode.getProperty(EXO_EMAIL).getString());
-    sendEmailNotification(new ArrayList<String>(emails), message);
+    emails.add(messageBuilder.getQuestionEmail());
+    sendEmailNotification(new ArrayList<String>(emails), messageBuilder.getMessage());
   }
 
   private Set<String> calculateMoveEmail(Node node) throws Exception {

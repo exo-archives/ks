@@ -35,6 +35,7 @@ import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.WebUIUtils;
+import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -131,7 +132,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
   }
 
   public void setLink(String link) {
-    this.link_ = link;
+    this.link_ = FAQUtils.getLinkAction(link);
   }
 
   public List<User> getToUsers() {
@@ -354,7 +355,8 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
       message.setSubject(subject);
       message.setBody(body);
       try {
-        sendMailForm.getFAQService().sendMessage(message);
+        MailService mailService = (MailService) sendMailForm.getApplicationComponent(MailService.class);
+        mailService.sendMessage(message);
       } catch (Exception e) {
         warning("UISendMailForm.msg.send-mail-error");
         sendMailForm.log.error("Can not send email, exception: " + e.getMessage());

@@ -26,7 +26,6 @@ import javax.jcr.Node;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.impl.AnswerEventListener;
 import org.exoplatform.ks.common.NotifyInfo;
-import org.exoplatform.services.mail.Message;
 
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 
@@ -449,14 +448,6 @@ public interface FAQService extends FAQServiceLegacy {
    * @throws Exception the exception
    */
   public List<String> getCategoryPath(String categoryId) throws Exception;
-
-  /**
-   * This method will send message to address but you want send
-   * 
-   * @param   message is object save content with user want send to one or many address email
-   * @throws Exception the exception
-   */
-  public void sendMessage(Message message) throws Exception;
 
   /**
    * This method will get messages to send notify

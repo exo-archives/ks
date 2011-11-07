@@ -498,9 +498,11 @@ public class FAQUtils {
   }
   
   public static String getLinkAction(String link) {
-    PortalRequestContext portalContext = Util.getPortalRequestContext();
-    String url = portalContext.getRequest().getRequestURL().toString();
-    link = url.substring(0, url.indexOf("/", 8)) + link.replaceAll("amp;", "");
+    if (!isFieldEmpty(link) && link.indexOf("http") != 0) {
+      PortalRequestContext portalContext = Util.getPortalRequestContext();
+      String url = portalContext.getRequest().getRequestURL().toString();
+      link = url.substring(0, url.indexOf("/", 8)) + link.replaceAll("amp;", "");
+    }
     return link;
   }
 

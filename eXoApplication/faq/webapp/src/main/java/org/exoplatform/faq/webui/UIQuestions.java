@@ -508,10 +508,7 @@ public class UIQuestions extends UIContainer {
   }
 
   private String getLink(String questionId) {
-    if(viewerLink.containsKey(questionId)) {
-      return FAQUtils.getLinkAction(viewerLink.get(questionId));
-    }
-    return "";
+    return viewerLink.containsKey(questionId) ? viewerLink.get(questionId) : "";
   }
 
   private String getBackPath() {
@@ -519,7 +516,7 @@ public class UIQuestions extends UIContainer {
   }
 
   private void setLink(String questionId, String link) {
-    viewerLink.put(questionId, link);
+    viewerLink.put(questionId, link.replaceAll("amp;", ""));
   }
 
   public String render(Object obj) throws RenderingException {

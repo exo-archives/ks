@@ -237,6 +237,11 @@ public class MessageBuilder {
   }
 
   public void setPrivateLink() {
+    if(!CommonUtils.isEmpty(link)) {
+      if(link.indexOf("http") != 0) {
+        link = CommonUtils.getDomainURL() + link;
+      }
+    }
     try {
       String host = this.link.substring(0, this.link.indexOf(SLASH, 8));
       String link = this.link.replace(host, "");

@@ -142,7 +142,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
     try {
       UIAnswersPortlet portlet = getAncestorOfType(UIAnswersPortlet.class);
       UIQuestions questions = portlet.findFirstComponentOfType(UIQuestions.class);
-      link_ = FAQUtils.getLinkAction(questions.url("ViewQuestion", question_.getPath()));
+      link_ = questions.url("ViewQuestion", question_.getPath()).replaceAll("amp;", "");
     } catch (Exception e) {
       log.warn("Can not set link for question.");
     }

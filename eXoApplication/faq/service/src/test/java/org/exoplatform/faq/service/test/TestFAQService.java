@@ -742,9 +742,6 @@ public class TestFAQService extends FAQServiceTestCase {
     List<String> list = faqService_.getAllFAQAdmin();
     assertNotNull(list);
     assertEquals("User demo is addmin of FAQ System", faqService_.isAdminRole(USER_DEMO), false);
-    /*
-     * // Test send mail for user: Message message = new Message(); message.setMimeType("text/htm") ; message.setFrom("maivanha1610@yahoo.com") ; message.setTo("maivanha1610@gmail.com") ; message.setSubject("Test send mail") ; message.setBody("run JUnit test") ; try { faqService_.sendMessage(message) ; } catch(Exception e) { }
-     */
   }
 
   public void testUserAvatar() throws Exception {

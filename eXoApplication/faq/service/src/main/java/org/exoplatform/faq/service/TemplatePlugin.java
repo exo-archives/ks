@@ -26,7 +26,6 @@ import org.exoplatform.container.xml.InitParams;
 public class TemplatePlugin extends BaseComponentPlugin {
   private String path_;
 
-  @SuppressWarnings("unchecked")
   public TemplatePlugin(InitParams params) throws Exception {
     path_ = params.getValueParam("viewerTemplate").getValue();
   }
