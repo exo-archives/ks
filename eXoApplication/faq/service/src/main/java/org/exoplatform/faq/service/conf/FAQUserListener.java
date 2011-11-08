@@ -30,13 +30,13 @@ import org.exoplatform.services.organization.UserEventListener;
  * Feb 15, 2011  
  */
 
-public class UserListener extends UserEventListener {
+public class FAQUserListener extends UserEventListener {
 
-  private static Log log = ExoLogger.getLogger(UserListener.class);
+  private static Log log = ExoLogger.getLogger(FAQUserListener.class);
 
   FAQService         faqService;
 
-  public UserListener() throws Exception {
+  public FAQUserListener() throws Exception {
     faqService = (FAQService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(FAQService.class);
   }
 

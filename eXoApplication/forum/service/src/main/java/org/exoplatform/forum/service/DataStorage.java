@@ -335,6 +335,8 @@ public interface DataStorage {
   public boolean deleteUserProfile(String userId) throws Exception;
 
   public void calculateDeletedUser(String userName) throws Exception;
+  
+  public void calculateDeletedGroup(String groupId, String groupName) throws Exception;
 
   void initDataPlugin() throws Exception;
 

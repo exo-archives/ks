@@ -33,13 +33,13 @@ import org.exoplatform.services.organization.UserEventListener;
  * Created by The eXo Platform SARL Author : Hung Nguyen Quang
  * hung.nguyen@exoplatform.com Nov 23, 2007 3:09:21 PM
  */
-public class NewUserListener extends UserEventListener {
+public class ForumUserListener extends UserEventListener {
 
-  private static Log  log = ExoLogger.getLogger(NewUserListener.class);
+  private static Log  log = ExoLogger.getLogger(ForumUserListener.class);
 
   private UserProfile profileTemplate;
 
-  public NewUserListener(InitParams params) throws Exception {
+  public ForumUserListener(InitParams params) throws Exception {
     if (params == null)
       return;
     PropertiesParam propsParams = params.getPropertiesParam("user.profile.setting");

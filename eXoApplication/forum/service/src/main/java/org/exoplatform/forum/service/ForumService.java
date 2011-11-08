@@ -1404,6 +1404,14 @@ public interface ForumService extends ForumServiceLegacy {
   public void calculateDeletedUser(String userName) throws Exception;
 
   /**
+   * update data when delete a group
+   * 
+   * @param groupId the identity of group.
+   * @throws Exception the exception
+   */
+  public void calculateDeletedGroup(String groupId, String groupName) throws Exception;
+
+  /**
    * create RSS
    * 
    * @param objectId id of forum

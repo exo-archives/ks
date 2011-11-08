@@ -1698,6 +1698,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
       getTotalJobWatting(sProvider, new HashSet<String>(Arrays.asList(forum.getModerators())));
     } catch (Exception e) {
+      logDebug("Failed to remove forum: " + forumId);
       return null;
     }
     return forum;
@@ -6245,10 +6246,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       JsonGeneratorImpl generatorImpl = new JsonGeneratorImpl();
       Category cat = new Category();
       ContinuationService continuation = getContinuationService();
+      Set<String> set = new HashSet<String>(ForumServiceUtils.getUserPermission(userIds.toArray(new String[userIds.size()])));
       if (continuation != null) {
-        userIds.addAll(getAllAdministrator(sProvider));
-        for (String userId : userIds) {
-          if (Utils.isEmpty(userId)) continue;
+        set.addAll(getAllAdministrator(sProvider));
+        for (String userId : set) {
+          if (Utils.isEmpty(userId) || userId.indexOf(CommonUtils.SLASH) > 0 || userId.indexOf(CommonUtils.COLON) > 0) continue;
           int job = getTotalJobWaitingForModerator(getForumHomeNode(sProvider).getSession(), userId);
           if (job >= 0) {
             cat.setCategoryName(String.valueOf(job));
@@ -7213,9 +7215,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     boolean topicHasLimitedViewers = hasProperty(topicNode, EXO_CAN_VIEW);
 
     if ((notApproved) || isPrivatePost || topicHasLimitedViewers) {
-      if (log.isDebugEnabled()) {
-        log.debug("Post" + postName + " was not added to feed because it is private or topic has restricted audience or it is waiting for approval");
-      }
+      logDebug("Post" + postName + " was not added to feed because it is private or topic has restricted audience or it is waiting for approval");
       return null;
     }
 
@@ -7225,7 +7225,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     boolean forumHasRestrictedAudience = (hasProperty(forumNode, EXO_VIEWER));
 
     if (categoryHasRestrictedAudience || forumHasRestrictedAudience) {
-      log.debug("Post" + postName + " was not added to feed because category or forum has restricted audience");
+      logDebug("Post" + postName + " was not added to feed because category or forum has restricted audience");
       return null;
     }
 
@@ -7626,7 +7626,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node categoryHome = getCategoryHome(sProvider);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      String[] strs = new String[] { EXO_OWNER, EXO_MODIFIED_BY, EXO_LAST_POST_BY, EXO_USER_PRIVATE, EXO_MODERATORS, EXO_POSTER, EXO_VIEWER, EXO_CAN_POST, EXO_CAN_VIEW, EXO_USER_WATCHING, EXO_RSS_WATCHING };
+      String[] strs = new String[] { EXO_OWNER, EXO_MODIFIED_BY, EXO_LAST_POST_BY, EXO_USER_PRIVATE, EXO_MODERATORS, EXO_CREATE_TOPIC_ROLE,
+                                     EXO_POSTER, EXO_VIEWER, EXO_CAN_POST, EXO_CAN_VIEW, EXO_USER_WATCHING, EXO_RSS_WATCHING };
       StringBuilder builder = new StringBuilder();
       for (int i = 0; i < strs.length; i++) {
         if (i > 0)
@@ -7635,7 +7636,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       }
 
       StringBuilder pathQuery = new StringBuilder();
-      pathQuery.append("/jcr:root").append(categoryHome.getPath()).append("//*[").append(builder).append("]");
+      pathQuery.append(JCR_ROOT).append(categoryHome.getPath()).append("//*[").append(builder).append("]");
       Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
@@ -7680,6 +7681,70 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
+  public void calculateDeletedGroup(String groupId, String groupName) throws Exception {
+    try {
+      // remove forum in space
+      Node forumSpaceNode = getNodeById(CommonUtils.createSystemProvider(), Utils.FORUM_SPACE_ID_PREFIX + groupName, Utils.FORUM);
+      if (forumSpaceNode != null) {
+        log.info("\n\n-------> delete forum: " + forumSpaceNode.getName());
+        removeForum(forumSpaceNode.getParent().getName(), forumSpaceNode.getName());
+      }
+      // remove group storage in categories/forums/topics
+      SessionProvider sProvider = CommonUtils.createSystemProvider();
+      Node categoryHome = getCategoryHome(sProvider);
+      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+      String[] strs = new String[] { EXO_USER_PRIVATE, EXO_MODERATORS, EXO_CREATE_TOPIC_ROLE, EXO_POSTER, EXO_VIEWER, EXO_CAN_POST, EXO_CAN_VIEW };
+      StringBuilder pathQuery = new StringBuilder(JCR_ROOT).append(categoryHome.getPath()).append("//*[");
+      for (int i = 0; i < strs.length; i++) {
+        if (i > 0) {
+          pathQuery.append(" or ");
+        }
+        pathQuery.append("(@").append(strs[i]).append("='").append(groupId).append("') or (jcr:contains(@").append(strs[i]).append(", '").append(groupId).append("'))");
+      }
+      pathQuery.append("]");
+      Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
+      QueryResult result = query.execute();
+      NodeIterator iter = result.getNodes();
+      List<String> list;
+      PropertyReader reader;
+      while (iter.hasNext()) {
+        Node node = iter.nextNode();
+        if (node.isNodeType(EXO_FORUM_CATEGORY) || node.isNodeType(EXO_FORUM) || node.isNodeType(EXO_TOPIC)) {
+          reader = new PropertyReader(node);
+          for (int i = 0; i < strs.length; i++) {
+            list = reader.list(strs[i], new ArrayList<String>());
+            if (!list.isEmpty()) {
+              list = containsGroup(list, groupId);
+              node.setProperty(strs[i], list.toArray(new String[list.size()]));
+            }
+          }
+        }
+      }
+      if (categoryHome.isNew()) {
+        categoryHome.getSession().save();
+      } else {
+        categoryHome.save();
+      }
+
+    } catch (Exception e) {
+      logDebug("Failed to calculate deleted Group.", e);
+    }
+  }
+  
+  public static List<String> containsGroup(List<String> list, String groupId) {
+    List<String> ls = new ArrayList<String>();
+    for (String string : list) {
+      if(string.indexOf(groupId) >= 0) {
+        continue;
+      }
+      ls.add(string);
+    }
+    if(ls.isEmpty()) {
+      ls.add(CommonUtils.EMPTY_STR);
+    }
+    return ls;
+  }
+  
   public List<InitializeForumPlugin> getDefaultPlugins() {
     return defaultPlugins;
   }
@@ -7704,6 +7769,20 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     log.info("JCR Data Storage for forum initialized to " + dataLocator);
   }
   
+  private static void logDebug(String message, Throwable e) {
+    if(log.isDebugEnabled()) {
+      if(e != null) {
+        log.debug(message, e);
+      } else {
+        log.debug(message);
+      }
+    }
+  }
+
+  private static void logDebug(String message) {
+    logDebug(message, null);
+  }
+
   private Calendar getGreenwichMeanTime() {
     return CommonUtils.getGreenwichMeanTime();
   }

@@ -16,7 +16,7 @@
       </value-param>
     </init-params>
   </component>
-  
+
   <component>
     <key>org.exoplatform.ks.common.image.ResizeImageService</key>
     <type>org.exoplatform.ks.common.image.impl.ResizeImageServiceImpl</type>
@@ -35,56 +35,62 @@
   </component>
 
 
-   <component>
-     <type>org.exoplatform.services.scheduler.impl.QuartzSheduler</type>
-   </component>
+  <component>
+    <type>org.exoplatform.services.scheduler.impl.QuartzSheduler</type>
+  </component>
 
-   <component>
-      <type>org.exoplatform.services.scheduler.QueueTasks</type>
-   </component>
+  <component>
+    <type>org.exoplatform.services.scheduler.QueueTasks</type>
+  </component>
 
   <component>
     <key>org.exoplatform.services.scheduler.JobSchedulerService</key>
     <type>org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl</type>
   </component>
 
- 
-
 
   <external-component-plugins>
     <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
-  <!--Answer user listener-->
+    <!--Answer user listener-->
     <component-plugin>
       <name>answer.user.event.listener</name>
       <set-method>addListenerPlugin</set-method>
-      <type>org.exoplatform.faq.service.conf.UserListener</type>
+      <type>org.exoplatform.faq.service.conf.FAQUserListener</type>
       <description>calculate info when deleted users</description>
     </component-plugin>
-  <!--Forum user listener-->
+    <!--Forum user listener-->
     <component-plugin>
-      <name>forum.new.user.event.listener</name>
+      <name>forum.user.event.listener</name>
       <set-method>addListenerPlugin</set-method>
-      <type>org.exoplatform.forum.service.conf.NewUserListener</type>
+      <type>org.exoplatform.forum.service.conf.ForumUserListener</type>
       <description>creates a profile in forum for each new user and calculate info when deleted user.</description>
       <init-params>
         <properties-param>
           <name>user.profile.setting</name>
           <description>set default user profile</description>
-          <property name="timeZone" value="GMT"/>
-          <property name="shortDateFormat" value="MM/dd/yyyy"/>
-          <property name="longDateFormat" value="DDD,MMM dd,yyyy"/>
-          <property name="timeFormat" value="hh:mm a"/>
-          <property name="maxTopic" value="10"/>
-          <property name="maxPost" value="10"/>
-          <property name="isShowForumJump" value="true"/>
+          <property name="timeZone" value="GMT" />
+          <property name="shortDateFormat" value="MM/dd/yyyy" />
+          <property name="longDateFormat" value="DDD,MMM dd,yyyy" />
+          <property name="timeFormat" value="hh:mm a" />
+          <property name="maxTopic" value="10" />
+          <property name="maxPost" value="10" />
+          <property name="isShowForumJump" value="true" />
         </properties-param>
       </init-params>
     </component-plugin>
+    <!--Forum group listener-->
+    <component-plugin>
+      <name>forum.group.event.listener </name>
+      <set-method>addListenerPlugin </set-method>
+      <type>org.exoplatform.forum.service.conf.ForumGroupListener</type>
+      <description>Remove the forums in spaces and remove group storage in categories/forums/topics</description>
+    </component-plugin>
+
   </external-component-plugins>
 
   <external-component-plugins>
-   <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>
-   <!--Forum send email notification configuration-->
+    <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>
+    <!--Forum send email notification configuration-->
     <component-plugin>
       <name>ForumSendNotificationJob</name>
       <set-method>addPeriodJob</set-method>
@@ -93,14 +99,14 @@
       <init-params>
         <properties-param>
           <name>job.info</name>
-          <description>save the monitor data  periodically</description>
-          <property name="jobName" value="SendMailJob"/>
-          <property name="groupName" value="KnowlegedSuite"/>
-          <property name="job" value="org.exoplatform.forum.service.conf.SendMailJob"/>
-          <property name="repeatCount" value="0"/>
-          <property name="period" value="120000"/> <!-- 2 mins-->
-          <property name="startTime" value="+0"/>
-          <property name="endTime" value=""/>
+          <description>save the monitor data periodically</description>
+          <property name="jobName" value="SendMailJob" />
+          <property name="groupName" value="KnowlegedSuite" />
+          <property name="job" value="org.exoplatform.forum.service.conf.SendMailJob" />
+          <property name="repeatCount" value="0" />
+          <property name="period" value="120000" /> <!-- 2 mins-->
+          <property name="startTime" value="+0" />
+          <property name="endTime" value="" />
         </properties-param>
       </init-params>
     </component-plugin>
@@ -114,14 +120,14 @@
       <init-params>
         <properties-param>
           <name>job.info</name>
-          <description>save the monitor data  periodically</description>
-          <property name="jobName" value="NotifyJob"/>
-          <property name="groupName" value="KnowlegedSuite"/>
-          <property name="job" value="org.exoplatform.faq.service.notify.NotifyJob"/>
-          <property name="repeatCount" value="0"/>
-          <property name="period" value="120000"/> <!-- 2 mins-->
-          <property name="startTime" value="+0"/>
-          <property name="endTime" value=""/>
+          <description>save the monitor data periodically</description>
+          <property name="jobName" value="NotifyJob" />
+          <property name="groupName" value="KnowlegedSuite" />
+          <property name="job" value="org.exoplatform.faq.service.notify.NotifyJob" />
+          <property name="repeatCount" value="0" />
+          <property name="period" value="120000" /> <!-- 2 mins-->
+          <property name="startTime" value="+0" />
+          <property name="endTime" value="" />
         </properties-param>
       </init-params>
     </component-plugin>

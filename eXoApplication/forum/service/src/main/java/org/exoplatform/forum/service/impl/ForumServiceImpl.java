@@ -260,6 +260,11 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   }
 
+  
+  public void calculateDeletedGroup(String groupId, String groupName) throws Exception {
+    storage.calculateDeletedGroup(groupId, groupName);
+  }
+  
   /**
    * {@inheritDoc}
    */

@@ -279,18 +279,21 @@ public class UICategory extends BaseForumForm {
 
   static public class EditCategoryActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
-      UICategoryForm categoryForm = uiCategory.openPopup(UICategoryForm.class, "EditCategoryForm", 550, 380);
-      categoryForm.setCategoryValue(uiCategory.getCategory(), true);
-      uiCategory.isEditCategory = true;
+      if(uiCategory.getCategory() != null) {
+        UICategoryForm categoryForm = uiCategory.openPopup(UICategoryForm.class, "EditCategoryForm", 550, 380);
+        categoryForm.setCategoryValue(uiCategory.getCategory(), true);
+        uiCategory.isEditCategory = true;
+      } else {
+        UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
+        forumPortlet.rederForumHome();
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+      }
     }
   }
 
   static public class DeleteCategoryActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
-      try {
-        uiCategory.getForumService().removeCategory(uiCategory.categoryId);
-      } catch (Exception e) {
-      }
+      uiCategory.getForumService().removeCategory(uiCategory.categoryId);
       UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
       forumPortlet.rederForumHome();
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -299,11 +302,17 @@ public class UICategory extends BaseForumForm {
 
   static public class AddForumActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
-      UIForumForm forumForm = uiCategory.openPopup(UIForumForm.class, "AddNewForumForm", 650, 480);
-      forumForm.initForm();
-      forumForm.setCategoryValue(uiCategory.categoryId, false);
-      forumForm.setForumUpdate(false);
-      uiCategory.isEditForum = true;
+      if (uiCategory.getCategory() != null) {
+        UIForumForm forumForm = uiCategory.openPopup(UIForumForm.class, "AddNewForumForm", 650, 480);
+        forumForm.initForm();
+        forumForm.setCategoryValue(uiCategory.categoryId, false);
+        forumForm.setForumUpdate(false);
+        uiCategory.isEditForum = true;
+      } else {
+        UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class);
+        forumPortlet.rederForumHome();
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+      }
     }
   }
 

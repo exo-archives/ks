@@ -138,7 +138,11 @@ public class ForumServiceUtils {
 
   @SuppressWarnings("unchecked")
   private static List<String> getUserByMembershipType(OrganizationService organizationService, String memberShip) throws Exception {
-    List<String> users = new ArrayList<String>();
+    List<String> users = getFromCache(new String[]{memberShip});
+    if (users != null) {
+      return users;
+    }
+    users = new ArrayList<String>();
     String[] array = memberShip.trim().split(COLON);
     if (array[0].length() > 1) {
       ListAccess<User> pageList = getUserByGroup(organizationService, array[1]);
@@ -164,6 +168,7 @@ public class ForumServiceUtils {
         users.addAll(getUserByGroupId(organizationService, array[1]));
       }
     }
+    storeInCache(new String[]{memberShip}, users);
     return users;
   }
   
@@ -175,7 +180,11 @@ public class ForumServiceUtils {
    * @throws Exception
    */
   private static List<String> getUserByGroupId(OrganizationService organizationService, String groupId) throws Exception {
-    List<String> users = new ArrayList<String>();
+    List<String> users = getFromCache(new String[]{groupId});
+    if (users != null) {
+      return users;
+    }
+    users = new ArrayList<String>();
     ListAccess<User> pageList = getUserByGroup(organizationService, groupId);
     if (pageList == null){
       return users;
@@ -184,6 +193,7 @@ public class ForumServiceUtils {
     for (int i = 0; i < pageList.getSize(); i++) {
       users.add(userArray[i].getUserName());
     }
+    storeInCache(new String[]{groupId}, users);
     return users;
   }
   
