@@ -177,10 +177,12 @@ public class MessageBuilder implements FAQNodeTypes {
       body = StringUtils.replace(body, "&questionResponse_", questionResponse);
     }
     body = StringUtils.replace(body, "&questionContent_", questionContent);
+    
     if(!CommonUtils.isEmpty(questionLink)) {
-      if(questionLink.indexOf("http") != 0) {
-        questionLink = CommonUtils.getDomainURL() + questionLink;
+      if(questionLink.indexOf("http") == 0) {
+        questionLink = questionLink.substring(questionLink.indexOf("/", 8));
       }
+      questionLink = CommonUtils.getDomainURL() + questionLink;
     }
     body = StringUtils.replace(body, "&questionLink_", questionLink);
     return body;
@@ -190,7 +192,7 @@ public class MessageBuilder implements FAQNodeTypes {
     Message message = new Message();
     message.setMimeType(MIMETYPE_TEXTHTML);
     message.setFrom(questionOwner);
-    message.setSubject(subject + ": " + questionContent);
+    message.setSubject(CommonUtils.decodeSpecialCharToHTMLnumber(subject + ": " + questionContent));
     message.setBody(getBody());
     return message;
   }

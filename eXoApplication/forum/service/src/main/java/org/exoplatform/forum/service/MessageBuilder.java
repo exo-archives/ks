@@ -237,16 +237,17 @@ public class MessageBuilder {
   }
 
   public void setPrivateLink() {
-    if(!CommonUtils.isEmpty(link)) {
-      if(link.indexOf("http") != 0) {
-        link = CommonUtils.getDomainURL() + link;
-      }
-    }
     try {
-      String host = this.link.substring(0, this.link.indexOf(SLASH, 8));
-      String link = this.link.replace(host, "");
-      String ptContainer = link.substring(1, link.indexOf(SLASH, 2));
-      privateLink = new StringBuilder(host).append(SLASH).append(ptContainer).append(SLASH).append("login?&initialURI=").append(link).append(SLASH).append(id).toString();
+      String host = CommonUtils.getDomainURL();
+      if(!CommonUtils.isEmpty(link)) {
+        if(link.indexOf("http") == 0) {
+          link = link.substring(link.indexOf(SLASH, 8));
+        }
+        String link = this.link;
+        this.link = host + link;
+        String ptContainer = link.substring(1, link.indexOf(SLASH, 2));
+        privateLink = new StringBuilder(host).append(SLASH).append(ptContainer).append(SLASH).append("login?&initialURI=").append(link).append(SLASH).append(id).toString();
+      }
     } catch (Exception e) {
       privateLink = link;
     }
@@ -264,7 +265,7 @@ public class MessageBuilder {
     } else {
       headerSubject = "[" + catName + "][" + forumName + "]" + topicName;
     }
-    message.setSubject(headerSubject);
+    message.setSubject(CommonUtils.decodeSpecialCharToHTMLnumber(headerSubject));
     String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);
     content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", types.get(watchType));
     content_ = StringUtils.replace(content_, "$ADD_TYPE", types.get(addType));
@@ -291,7 +292,7 @@ public class MessageBuilder {
     Message message = new Message();
     message.setMimeType(ForumNodeTypes.TEXT_HTML);
     message.setFrom(owner);
-    message.setSubject(headerSubject);
+    message.setSubject(CommonUtils.decodeSpecialCharToHTMLnumber(headerSubject));
 
     String content_ = StringUtils.replace(content, "$OBJECT_NAME", objName);
     content_ = StringUtils.replace(content_, "$OBJECT_PARENT_NAME", addType);

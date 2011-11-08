@@ -223,10 +223,11 @@ public class CommonUtils {
       return null;
     }
   }
-  
+
   public static String getDomainURL() {
     Properties props = new Properties(System.getProperties());
-    return props.containsKey(DOMAIN_KEY) ? props.getProperty(DOMAIN_KEY) : EMPTY_STR;
+    String domain = props.getProperty(DOMAIN_KEY);
+    return isEmpty(domain) ? EMPTY_STR : domain;
   }
 
   public static String processBBCode(String s) {
