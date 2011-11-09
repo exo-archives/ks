@@ -1,0 +1,5 @@
+<%
+	String restoreLink = uicomponent.event(uicomponent.RESTORE_ACTION, uicomponent.versionName);
+	String restoreLabel = (uicomponent.isCurrentVersion) ? "" : uicomponent.label;
+%>
+<a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeHash('#');" onclick="$restoreLink" title="<%=uicomponent.tooltip;%>"> <%=restoreLabel;%> </a>

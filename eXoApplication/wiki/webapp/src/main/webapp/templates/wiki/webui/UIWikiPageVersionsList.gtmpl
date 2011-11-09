@@ -74,12 +74,9 @@
             author = (author != null) ? author : _ctx.appRes("UIWikiPortlet.label.Anonymous");
             String comment = frozenNode.getComment();
             comment = (comment != null) ? comment : "";
-            String restore = (isCurrentVersion) ? "" : _ctx.appRes("UIWikiPageVersionsList.label.Restore");
             String viewLink = uicomponent.event(uicomponent.VIEW_REVISION, version.getName());
-            String restoreLink = uicomponent.event(uicomponent.RESTORE_ACTION, version.getName());
             
             String viewLinkId=  UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + uicomponent.VIEW_REVISION+"/"+versionNumber;
-            String restoreLinkId= UIWikiPortlet.WIKI_PORTLET_ACTION_PREFIX + uicomponent.RESTORE_ACTION;
         %>
         <tr class="$rowClass">
           <td>
@@ -95,7 +92,7 @@
           <td><%= author %></td>
           <td><%= comment %></td>
           <td class="Tit" style="border-right: 1px solid #d7d7d7;">
-      	    <a href="javascript:eXo.wiki.UIWikiAjaxRequest.makeHash('#');" onclick="$restoreLink" title="<%= _ctx.appRes("UIWikiPageVersionsList.label.RestoreRevision"); %>" ><%= restore %></a>      	   
+          	<% uicomponent.renderRestoreRevisionActions(version.getName()); %>
           </td>
         </tr>
         <%}%>

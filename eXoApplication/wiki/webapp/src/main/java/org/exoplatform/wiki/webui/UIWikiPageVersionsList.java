@@ -19,6 +19,7 @@ package org.exoplatform.wiki.webui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -27,10 +28,12 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.ext.UIExtensionManager;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
-import org.exoplatform.wiki.webui.control.action.RestoreActionListener;
+import org.exoplatform.wiki.webui.control.action.RemoveAttachmentActionComponent;
+import org.exoplatform.wiki.webui.control.action.RestoreRevisionActionComponent;
 import org.exoplatform.wiki.webui.control.action.ViewRevisionActionListener;
 import org.exoplatform.wiki.webui.core.UIWikiForm;
 
@@ -44,7 +47,6 @@ import org.exoplatform.wiki.webui.core.UIWikiForm;
   lifecycle = UIFormLifecycle.class,
   template = "app:/templates/wiki/webui/UIWikiPageVersionsList.gtmpl",
   events = {
-    @EventConfig(listeners = RestoreActionListener.class),
     @EventConfig(listeners = ViewRevisionActionListener.class),
     @EventConfig(listeners = UIWikiPageVersionsList.CompareRevisionActionListener.class)
   }
@@ -53,15 +55,17 @@ public class UIWikiPageVersionsList extends UIWikiForm {
   
   private List<NTVersion>    versionsList;
 
-  public static final String RESTORE_ACTION = "Restore";
+  public static final String RESTORE_ACTION = "RestoreRevision";
 
   public static final String VIEW_REVISION  = "ViewRevision";
   
   public static final String COMPARE_ACTION = "CompareRevision";
+  
+  public static final String EXTENSION_TYPE = "org.exoplatform.wiki.webui.UIWikiPageVersionsList";
 
   public UIWikiPageVersionsList() throws Exception {
     super();
-    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.SHOWHISTORY, WikiMode.VIEW });    
+    this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.SHOWHISTORY, WikiMode.VIEW });  
   }
 
   @Override
@@ -71,6 +75,7 @@ public class UIWikiPageVersionsList extends UIWikiForm {
     for (NTVersion version : this.versionsList) {
       addUIFormInput(new UIFormCheckBoxInput<Boolean>(version.getName(), "", false));
     }
+    addChild(RestoreRevisionActionComponent.class, null, null);
     super.processRender(context);
   }
 
@@ -78,8 +83,27 @@ public class UIWikiPageVersionsList extends UIWikiForm {
     return versionsList;
   }
   
-  static public class CompareRevisionActionListener
-                                                   extends
+  protected void renderRestoreRevisionActions(String versionName) throws Exception {
+    if ((versionName == null) || versionsList.isEmpty()) {
+      return;
+    }
+    
+    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
+    ResourceBundle bundle = context.getApplicationResourceBundle();
+    RestoreRevisionActionComponent component = getChild(RestoreRevisionActionComponent.class);
+    component.setVersionName(versionName);
+    component.setCurrentVersion(versionName.equals(versionsList.get(0).getName()));
+    component.setLabel(bundle.getString("UIWikiPageVersionsList.label.RestoreRevision"));
+    component.setTooltip(bundle.getString("UIWikiPageVersionsList.title.RestoreRevision"));
+    
+    // Accept permission
+    UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
+    if (manager.accept(EXTENSION_TYPE, RestoreRevisionActionComponent.RESTORE_ACTION, null)) {
+      renderChild(RestoreRevisionActionComponent.class);
+    }
+  }
+  
+  public static class CompareRevisionActionListener extends
                                                    org.exoplatform.wiki.webui.control.action.CompareRevisionActionListener {
     @Override
     public void execute(Event<UIComponent> event) throws Exception {
@@ -117,5 +141,4 @@ public class UIWikiPageVersionsList extends UIWikiForm {
       }
     }
   }
-
 }
