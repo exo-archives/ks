@@ -56,6 +56,10 @@ public class Utils {
   
   public static final String DOT = "DOT";
   
+  public static final String  SPACE                       = "space";
+
+  public static final String  PAGE                        = "page";
+  
   private static final Log      log_               = ExoLogger.getLogger(Utils.class);
   
   private static final String JCR_WEBDAV_SERVICE_BASE_URI = "/jcr";

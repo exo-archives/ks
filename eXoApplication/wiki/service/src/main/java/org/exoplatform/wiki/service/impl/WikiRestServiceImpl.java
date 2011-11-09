@@ -436,7 +436,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
   }
   
   @GET
-  @Path("/images/{wikiType}/{wikiOwner}/{pageId}/{imageId}")
+  @Path("/images/{wikiType}/space/{wikiOwner:.+}/page/{pageId}/{imageId}")
   @Produces("image")
   public Response getImage(@Context UriInfo uriInfo,
                            @PathParam("wikiType") String wikiType,
