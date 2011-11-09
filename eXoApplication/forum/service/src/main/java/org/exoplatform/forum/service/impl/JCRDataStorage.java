@@ -7686,14 +7686,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       // remove forum in space
       Node forumSpaceNode = getNodeById(CommonUtils.createSystemProvider(), Utils.FORUM_SPACE_ID_PREFIX + groupName, Utils.FORUM);
       if (forumSpaceNode != null) {
-        log.info("\n\n-------> delete forum: " + forumSpaceNode.getName());
+        log.info("\nINFO: Delete forum in space: " + forumSpaceNode.getName());
         removeForum(forumSpaceNode.getParent().getName(), forumSpaceNode.getName());
       }
       // remove group storage in categories/forums/topics
       SessionProvider sProvider = CommonUtils.createSystemProvider();
       Node categoryHome = getCategoryHome(sProvider);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      String[] strs = new String[] { EXO_USER_PRIVATE, EXO_MODERATORS, EXO_CREATE_TOPIC_ROLE, EXO_POSTER, EXO_VIEWER, EXO_CAN_POST, EXO_CAN_VIEW };
+      String[] strs = new String[] { EXO_USER_PRIVATE, EXO_CREATE_TOPIC_ROLE, EXO_POSTER, EXO_VIEWER, EXO_CAN_POST, EXO_CAN_VIEW, EXO_MODERATORS };
       StringBuilder pathQuery = new StringBuilder(JCR_ROOT).append(categoryHome.getPath()).append("//*[");
       for (int i = 0; i < strs.length; i++) {
         if (i > 0) {
@@ -7707,26 +7707,35 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       NodeIterator iter = result.getNodes();
       List<String> list;
       PropertyReader reader;
+      boolean isSave;
       while (iter.hasNext()) {
         Node node = iter.nextNode();
         if (node.isNodeType(EXO_FORUM_CATEGORY) || node.isNodeType(EXO_FORUM) || node.isNodeType(EXO_TOPIC)) {
+          isSave = false;
           reader = new PropertyReader(node);
           for (int i = 0; i < strs.length; i++) {
             list = reader.list(strs[i], new ArrayList<String>());
             if (!list.isEmpty()) {
+              int oldSize = list.size();
               list = containsGroup(list, groupId);
-              node.setProperty(strs[i], list.toArray(new String[list.size()]));
+              if(oldSize > list.size() || list.get(0).equals(CommonUtils.EMPTY_STR)) {
+                if(strs[i].equals(EXO_MODERATORS)) {
+                  // calculate moderator for users
+                  node.setProperty(EXO_TEMP_MODERATORS, reader.strings(EXO_MODERATORS, new String[]{CommonUtils.EMPTY_STR}));
+                  node.save();
+                }
+                node.setProperty(strs[i], list.toArray(new String[list.size()]));
+                isSave = true;
+              }
             }
+          }
+          if(isSave){
+            node.save();
           }
         }
       }
-      if (categoryHome.isNew()) {
-        categoryHome.getSession().save();
-      } else {
-        categoryHome.save();
-      }
-
     } catch (Exception e) {
+      e.printStackTrace();
       logDebug("Failed to calculate deleted Group.", e);
     }
   }

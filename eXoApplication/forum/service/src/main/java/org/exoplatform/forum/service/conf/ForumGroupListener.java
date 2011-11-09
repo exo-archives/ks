@@ -45,7 +45,7 @@ public class ForumGroupListener extends GroupEventListener {
     return forumService;
   }
 
-  public void postDelete(Group group) throws Exception {
+  public void preDelete(Group group) throws Exception {
     String groupId = group.getId();
     log.info("Calculate deleted group from forum: " + groupId);
     getForumService().calculateDeletedGroup(groupId, group.getGroupName());

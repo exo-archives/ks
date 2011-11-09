@@ -21,8 +21,8 @@
 -->
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
-  xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
+  xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+  xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
   <external-component-plugins>
     <target-component>org.exoplatform.portal.config.UserPortalConfigService</target-component>
@@ -47,36 +47,36 @@
           <description>the path to the location that contains Page templates</description>
           <value>classpath:/portal/template/pages</value>
         </value-param>
-				<object-param>
+        <object-param>
           <name>site.templates.location</name>
           <description>description</description>
           <object type="org.exoplatform.portal.config.SiteConfigTemplates">
-						<field name="location">
+            <field name="location">
               <string>classpath:/portal</string>
             </field>
             <field name="portalTemplates">
               <collection type="java.util.HashSet">
-								<value>
+                <value>
                   <string>classic</string>
                 </value>
                 <value>
                   <string>test</string>
                 </value>
-							</collection>
+              </collection>
             </field>
             <field name="groupTemplates">
               <collection type="java.util.HashSet">
-								<value>
+                <value>
                   <string>group</string>
                 </value>
-							</collection>
+              </collection>
             </field>
             <field name="userTemplates">
               <collection type="java.util.HashSet">
                 <value>
                   <string>user</string>
                 </value>
-							</collection>
+              </collection>
             </field>
           </object>
         </object-param>
@@ -198,7 +198,7 @@
           <object type="org.exoplatform.services.organization.OrganizationConfig">
             <field  name="membershipType">
               <collection type="java.util.ArrayList">
-              	<value>
+                <value>
                   <object type="org.exoplatform.services.organization.OrganizationConfig$MembershipType">
                     <field  name="type"><string>manager</string></field>
                     <field  name="description"><string>manager membership type</string></field>
@@ -363,8 +363,8 @@
                     <field  name="email"><string>root@localhost</string></field>
                     <field  name="groups">
                       <string>
-                      	manager:/platform/administrators,member:/platform/users,
-                      	member:/organization/management/executive-board
+                        manager:/platform/administrators,member:/platform/users,
+                        member:/organization/management/executive-board
                       </string>
                     </field>
                   </object>
@@ -379,8 +379,8 @@
                     <field  name="email"><string>john@localhost</string></field>
                     <field  name="groups">
                       <string>
-                      	member:/platform/administrators,member:/platform/users,
-                      	manager:/organization/management/executive-board
+                        member:/platform/administrators,member:/platform/users,
+                        manager:/organization/management/executive-board
                       </string>
                     </field>
                   </object>

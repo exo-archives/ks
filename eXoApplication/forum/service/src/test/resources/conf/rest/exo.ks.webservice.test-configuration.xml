@@ -17,6 +17,6 @@
   	<type>org.exoplatform.forum.service.ws.ForumWebservice</type>
   </component>
   
-   
+   <remove-configuration>org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer</remove-configuration>
   
 </configuration>

@@ -15,7 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.forum.service;
+package org.exoplatform.forum.service.rest;
 
 import java.io.BufferedReader;
 import java.io.IOException;

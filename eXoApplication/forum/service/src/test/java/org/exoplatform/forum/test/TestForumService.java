@@ -606,6 +606,26 @@ public class TestForumService extends ForumServiceTestCase {
     assertEquals("Ip is removed in listBans, size is not 0 ", listBans.size(), 0);
   }
 
+  public void testCalculateDeletedGroupForSpace() throws Exception {
+    killData();
+    // test for case in spaces:
+    String groupId = "/spaces/new_space";
+    String groupName = "new_space";
+    String cateId = Utils.CATEGORY + "spaces";
+    String forumId = Utils.FORUM_SPACE_ID_PREFIX + groupName;
+    Category category = createCategory(cateId);
+    category.setCategoryName("spaces");
+    category.setUserPrivate(new String[] { groupId });
+    forumService_.saveCategory(category, true);
+    Forum forum = createdForum();
+    forum.setForumName("New Space");
+    forum.setId(forumId);
+    forumService_.saveForum(cateId, forum, true);
+    assertNotNull(String.format("The forum %s in space %s is null", forumId, groupName), forumService_.getForum(cateId, forumId));
+    forumService_.calculateDeletedGroup(groupId, groupName);
+    assertNull(String.format("The forum %s is not null after deleted the group %s ", forumId, groupId), forumService_.getForum(cateId, forumId));
+  }
+
   private UserProfile createdUserProfile(String userName) {
     UserProfile userProfile = new UserProfile();
     userProfile.setUserId(userName);

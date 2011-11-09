@@ -15,13 +15,12 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.forum.test;
+package org.exoplatform.forum.service.rest;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.RuntimeDelegate;
 
-import org.exoplatform.forum.service.AbstractResourceTest;
 import org.exoplatform.forum.service.ws.ForumWebservice;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
