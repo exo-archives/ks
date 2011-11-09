@@ -297,6 +297,31 @@ UIWikiPortlet.prototype.makeRenderingErrorsExpandable = function (uicomponentId)
   }
 };
 
+UIWikiPortlet.prototype.decorateSpecialLink = function(uicomponentId) {
+  var DOMUtil = eXo.core.DOMUtil;
+  var uicomponent = document.getElementById(uicomponentId);
+  var invalidChars = DOMUtil.findFirstDescendantByClass(uicomponent, "div",
+      "InvalidChars");
+  var invalidCharsMsg = invalidChars.innerText;
+  if (!invalidCharsMsg || invalidCharsMsg == "undefined") {
+    invalidCharsMsg = invalidChars.textContent;
+  }
+  if (uicomponent) {
+    var linkSpans = DOMUtil.findDescendantsByClass(uicomponent, "span",
+        "wikicreatelink");
+    for (i = 0; i < linkSpans.length; i++) {
+      var linkSpan = linkSpans[i];
+      var pageLink = linkSpan.childNodes[0];
+      if (pageLink.href == "javascript:void(0);") {
+        eXo.core.EventManager.addEvent(pageLink, "click", function(event) {
+          alert(invalidCharsMsg);
+          return;
+        });
+      }
+    }
+  }
+};
+
 eXo.wiki.UIWikiPortlet = new UIWikiPortlet();
 
 /** ******************* Other functions ***************** */

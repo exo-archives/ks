@@ -30,12 +30,12 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
-import org.exoplatform.wiki.commons.NameValidator;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.core.api.wiki.AttachmentImpl;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
 import org.exoplatform.wiki.service.WikiResource;
+import org.exoplatform.wiki.utils.WikiNameValidator;
 import org.exoplatform.wiki.webui.control.UIAttachmentContainer;
 import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
 import org.exoplatform.wiki.webui.control.listener.UIWikiPortletActionListener;
@@ -95,7 +95,7 @@ public class UIWikiUploadAttachment extends UIWikiForm {
         if (uploadResource != null) {
           String fileName = uploadResource.getFileName();
           if (fileName != null) {            
-            NameValidator.validateFileName(fileName);
+            WikiNameValidator.validateFileName(fileName);
           }
         }
       } catch (IllegalNameException ex) {

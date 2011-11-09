@@ -19,6 +19,7 @@ package org.exoplatform.wiki.webui;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
+import org.exoplatform.wiki.utils.WikiNameValidator;
 
 /**
  * Created by The eXo Platform SAS
@@ -32,6 +33,8 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
 )
 public class UIWikiContentDisplay extends UIContainer {
   private String htmlOutput;
+  
+  protected static final String INVALID_CHARACTERS = WikiNameValidator.INVALID_CHARACTERS;
 
   public String getHtmlOutput() {
     return htmlOutput;

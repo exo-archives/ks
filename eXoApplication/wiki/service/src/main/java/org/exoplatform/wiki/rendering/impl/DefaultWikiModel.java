@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.jcr.datamodel.IllegalNameException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.Page;
@@ -31,6 +32,7 @@ import org.exoplatform.wiki.rendering.context.MarkupContextManager;
 import org.exoplatform.wiki.service.MetaDataPage;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.utils.WikiNameValidator;
 import org.exoplatform.wiki.utils.Utils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.annotation.Requirement;
@@ -70,28 +72,32 @@ public class DefaultWikiModel implements WikiModel {
     }
     WikiContext wikiMarkupContext = markupContextManager.getMarkupContext(documentReference.getReference(),ResourceType.DOCUMENT);
     if (wikiContext != null) {
-      String viewURL = getDocumentViewURL(wikiContext);
-      StringBuilder sb = new StringBuilder(viewURL);
+      StringBuilder sb = new StringBuilder();
       String pageTitle = wikiMarkupContext.getPageTitle();
       String wikiType = wikiMarkupContext.getType();
       String wiki = wikiMarkupContext.getOwner();
-      sb.append("?")
-        .append(WikiContext.ACTION)
-        .append("=")
-        .append(WikiContext.ADDPAGE)
-        .append("&")
-        .append(WikiContext.PAGETITLE)
-        .append("=")
-        .append(pageTitle)
-        .append("&")
-        .append(WikiContext.WIKI)
-        .append("=")
-        .append(wiki)
-        .append("&")
-        .append(WikiContext.WIKITYPE)
-        .append("=")
-        .append(wikiType);
-      
+      try {
+        WikiNameValidator.validate(pageTitle);
+        sb.append(getDocumentViewURL(wikiContext));
+        sb.append("?")
+          .append(WikiContext.ACTION)
+          .append("=")
+          .append(WikiContext.ADDPAGE)
+          .append("&")
+          .append(WikiContext.PAGETITLE)
+          .append("=")
+          .append(pageTitle)
+          .append("&")
+          .append(WikiContext.WIKI)
+          .append("=")
+          .append(wiki)
+          .append("&")
+          .append(WikiContext.WIKITYPE)
+          .append("=")
+          .append(wikiType);
+      } catch (IllegalNameException ex) {
+        sb.append(String.format("javascript:void(0);"));
+      }
       return sb.toString();
     }
     return "";

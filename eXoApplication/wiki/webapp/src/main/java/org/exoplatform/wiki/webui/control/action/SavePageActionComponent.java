@@ -36,7 +36,6 @@ import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
-import org.exoplatform.wiki.commons.NameValidator;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.api.Page;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
@@ -46,6 +45,7 @@ import org.exoplatform.wiki.rendering.RenderingService;
 import org.exoplatform.wiki.resolver.TitleResolver;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.service.WikiService;
+import org.exoplatform.wiki.utils.WikiNameValidator;
 import org.exoplatform.wiki.webui.EditMode;
 import org.exoplatform.wiki.webui.UIWikiPageControlArea;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
@@ -115,7 +115,7 @@ public class SavePageActionComponent extends UIComponent {
       Page page = Utils.getCurrentWikiPage();
       Utils.setUpWikiContext(wikiPortlet);
       try {
-        NameValidator.validate(titleInput.getValue());
+        WikiNameValidator.validate(titleInput.getValue());
       } catch (IllegalNameException ex) {
         String msg = ex.getMessage();
         ApplicationMessage appMsg = new ApplicationMessage("WikiPageNameValidator.msg.EmptyTitle",

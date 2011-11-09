@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.wiki.commons;
+package org.exoplatform.wiki.utils;
 
 import java.util.StringTokenizer;
 
@@ -26,16 +26,17 @@ import org.exoplatform.services.jcr.datamodel.IllegalNameException;
  *          hieu.lai@exoplatform.com
  * 28 Mar 2011  
  */
-public class NameValidator {
+public class WikiNameValidator {
   
-  public static void validate(String s) throws Exception {
-    String invalidCharacters = ": @ / \\ | ^ # ; [ ] { } < > * ' \" + ? &"; // and .
+  public static final String INVALID_CHARACTERS  = ": @ / \\ | ^ # ; [ ] { } < > * ' \" + ? &"; // and .
+  
+  public static void validate(String s) throws IllegalNameException {
     StringTokenizer tokens;
     if (s == null || s.trim().length() == 0) {
       throw new IllegalNameException();
     }
     for (int i = 0; i < s.length(); i++) {
-      tokens = new StringTokenizer(invalidCharacters);
+      tokens = new StringTokenizer(INVALID_CHARACTERS);
       char c = s.charAt(i);
       boolean isInvalid = false;
       while (tokens.hasMoreTokens()) {
@@ -47,7 +48,7 @@ public class NameValidator {
       if (Character.isLetter(c) || Character.isDigit(c) || (!isInvalid)) {
         continue;
       } else {
-        throw new IllegalNameException(invalidCharacters);
+        throw new IllegalNameException(INVALID_CHARACTERS);
       }
     }     
   }  

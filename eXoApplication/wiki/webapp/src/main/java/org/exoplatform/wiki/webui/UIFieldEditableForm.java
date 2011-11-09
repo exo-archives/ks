@@ -35,8 +35,8 @@ import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.wiki.commons.NameValidator;
 import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.utils.WikiNameValidator;
 import org.exoplatform.wiki.webui.control.filter.EditPagesPermissionFilter;
 import org.exoplatform.wiki.webui.core.UIWikiForm;
 
@@ -172,7 +172,7 @@ public class UIFieldEditableForm extends UIWikiForm {
       UIFormStringInput titleInput = editableForm.getChild(UIFormStringInput.class)
                                                  .setRendered(false);
       try {
-        NameValidator.validate(titleInput.getValue());
+        WikiNameValidator.validate(titleInput.getValue());
       } catch (IllegalNameException ex) {
         String msg = ex.getMessage();
         ApplicationMessage appMsg = new ApplicationMessage("WikiPageNameValidator.msg.EmptyTitle",
