@@ -771,4 +771,9 @@ public class FakeForumService implements ForumService {
     
   }
 
+  @Override
+  public void calculateDeletedGroup(String groupId, String groupName) throws Exception {
+    
+  }
+
 }
