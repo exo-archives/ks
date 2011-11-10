@@ -200,27 +200,29 @@ public class UIForumPortlet extends UIPortletApplication {
   public void renderComponentByURL(WebuiRequestContext context) throws Exception {
 
     PortalRequestContext portalContext = Util.getPortalRequestContext();
-
-    String url = ((HttpServletRequest) portalContext.getRequest()).getRequestURL().toString();
-    String old = url;
     String isAjax = portalContext.getRequestParameter("ajaxRequest");
     if (isAjax != null && Boolean.parseBoolean(isAjax))
       return;
+
+    String url = ((HttpServletRequest) portalContext.getRequest()).getRequestURL().toString();
+    String pageNodeSelected = ForumUtils.SLASH + Util.getUIPortal().getSelectedUserNode().getURI();
     String portalName = Util.getUIPortal().getName();
-    url = (url.contains(portalName)) ? url.substring(url.lastIndexOf(portalName)) : url;
-    url = (url.contains(Utils.FORUM_SERVICE)) ? url.substring(url.lastIndexOf(Utils.FORUM_SERVICE))
-                                             : ((url.contains(Utils.CATEGORY)) ? url.substring(url.lastIndexOf(Utils.CATEGORY)) : ((url.contains(Utils.TOPIC)) ? url.substring(url.lastIndexOf(Utils.TOPIC)) : ((url.contains(Utils.FORUM) && ((url.lastIndexOf(Utils.FORUM) + 5) < url.length())) ? url.substring(url.lastIndexOf(Utils.FORUM)) : url)));
-    if (url.indexOf(portalName) >= 0)
-      return;
-
-    if (url.equals(old)) {
-      if (!ForumUtils.isEmpty(getForumIdOfSpace()))
-        url = getForumIdOfSpace();
-      else
-        return;
+    if(url.contains(portalName + pageNodeSelected)) {
+      url = url.substring(url.lastIndexOf(portalName + pageNodeSelected)+ (portalName + pageNodeSelected).length());
+    } else if(url.contains(pageNodeSelected)) {
+      url = url.substring(url.lastIndexOf(pageNodeSelected)+ pageNodeSelected.length());
     }
-
-    if (!ForumUtils.isEmpty(url)) {
+    if(!ForumUtils.isEmpty(url)) {
+      url = (url.contains(ForumUtils.SLASH+Utils.FORUM_SERVICE)) ? url.substring(url.lastIndexOf(Utils.FORUM_SERVICE)) :
+           ((url.contains(ForumUtils.SLASH+Utils.CATEGORY)) ? url.substring(url.lastIndexOf(ForumUtils.SLASH+Utils.CATEGORY)+1) :
+           ((url.contains(ForumUtils.SLASH+Utils.TOPIC)) ? url.substring(url.lastIndexOf(ForumUtils.SLASH+Utils.TOPIC)+1) :
+           ((url.contains(ForumUtils.SLASH+Utils.FORUM)) ? url.substring(url.lastIndexOf(ForumUtils.SLASH+Utils.FORUM)+1) : url)));
+    } else {
+      if (!ForumUtils.isEmpty(getForumIdOfSpace())){
+        url = getForumIdOfSpace();
+      }
+    }
+    if (!ForumUtils.isEmpty(url) && url.length() > Utils.FORUM.length()) {
       calculateRenderComponent(url, context);
       context.addUIComponentToUpdateByAjax(this);
     }
