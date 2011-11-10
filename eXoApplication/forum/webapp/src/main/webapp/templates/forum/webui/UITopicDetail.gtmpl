@@ -81,7 +81,7 @@
     }
     isNotLogin = uicomponent.isNotLogin() ;
     if(isNotLogin){
-      linkGest = ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId()+"/false", false);
+      linkGest = ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId()+"/false", true);
     } 
   }
   String idLastPost = uicomponent.getIdPostView() ;
