@@ -406,7 +406,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
       }
     }
 
-    int maxTopic = userProfile.getMaxTopicInPage().intValue();
+    int maxTopic = (int)userProfile.getMaxTopicInPage();
     if (maxTopic <= 0) {
       maxTopic = 10;
     }

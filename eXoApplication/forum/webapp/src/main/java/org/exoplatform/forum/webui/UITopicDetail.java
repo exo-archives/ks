@@ -584,7 +584,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
           isApprove = "true";
       }
       pageList = getForumService().getPosts(this.categoryId, this.forumId, topicId, isApprove, isHidden, isWaiting, userName);
-      int maxPost = this.userProfile.getMaxPostInPage().intValue();
+      int maxPost = (int)this.userProfile.getMaxPostInPage();
       if (maxPost <= 0)
         maxPost = 10;
       pageList.setPageSize(maxPost);
@@ -609,7 +609,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     try {
       try {
         if (!ForumUtils.isEmpty(lastPostId)) {
-          int maxPost = this.userProfile.getMaxPostInPage().intValue();
+          int maxPost = (int)this.userProfile.getMaxPostInPage();
           Long index = getForumService().getLastReadIndex((categoryId + ForumUtils.SLASH + forumId + ForumUtils.SLASH + topicId + ForumUtils.SLASH + lastPostId), isApprove, isHidden, userName);
           if (index.intValue() <= maxPost)
             pageSelect = 1;
