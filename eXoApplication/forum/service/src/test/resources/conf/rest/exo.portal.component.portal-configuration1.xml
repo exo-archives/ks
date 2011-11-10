@@ -44,6 +44,11 @@
   </component>
 
   <component>
+    <key>org.exoplatform.services.organization.OrganizationService</key>
+    <type>org.exoplatform.commons.testing.mock.SimpleMockOrganizationService</type>
+  </component>
+
+  <component>
      <key>org.exoplatform.services.security.Authenticator</key>
      <type>org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl</type>
   </component>

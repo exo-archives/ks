@@ -1443,7 +1443,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   private void setModeratorForum(Session session, String[] strModerators, String[] oldModeratoForums, Forum forum, String categoryId, boolean isNew) throws Exception {
     Node userProfileHomeNode = session.getRootNode().getNode(dataLocator.getUserProfilesLocation());
     Node userProfileNode;
-
+    
     List<String> moderators = ForumServiceUtils.getUserPermission(strModerators);
     if (moderators.size() > 0) {
       for (String string : moderators) {
@@ -1516,7 +1516,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
                 userProfileNode.setProperty(EXO_USER_TITLE, Utils.USER);
               }
             }
-          } catch (PathNotFoundException e) {
+          } catch (Exception e) {
+            logDebug("Failed to removing forumId storage in property moderator of user: " + string);
           }
         }
       }
@@ -7735,7 +7736,6 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
       logDebug("Failed to calculate deleted Group.", e);
     }
   }

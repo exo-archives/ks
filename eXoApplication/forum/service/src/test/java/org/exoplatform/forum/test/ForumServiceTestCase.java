@@ -110,12 +110,11 @@ public abstract class ForumServiceTestCase extends BasicTestCase {
   private static void initContainer() {
     try {
       ExoContainer container_ = RootContainer.getInstance();
-      ;
       if (container_ != null) {
         container_.stop();
         container_.dispose();
       }
-      String containerConf = ForumServiceTestCase.class.getResource("/conf/portal/test-configuration.xml").toString();
+      String containerConf = ForumServiceTestCase.class.getResource("/conf/portal/configuration.xml").toString();
       StandaloneContainer.addConfigurationURL(containerConf);
       container = StandaloneContainer.getInstance();
       String loginConf = Thread.currentThread().getContextClassLoader().getResource("conf/portal/login.conf").toString();

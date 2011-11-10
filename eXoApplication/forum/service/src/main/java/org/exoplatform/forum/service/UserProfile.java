@@ -142,8 +142,8 @@ public class UserProfile {
     bookmark = new String[] {};
     banReasonSummary = new String[] {};
     collapCategories = new String[] {};
-    lastReadPostOfTopic = new String[] { " " };
-    lastReadPostOfForum = new String[] { " " };
+    lastReadPostOfTopic = new String[] { "" };
+    lastReadPostOfForum = new String[] { "" };
     Date dateHost = new Date();
     timeZone = (double) dateHost.getTimezoneOffset() / 60;
     shortDateformat = "MM/dd/yyyy";
@@ -167,11 +167,11 @@ public class UserProfile {
     return this.userTitle;
   }
 
-  public void setUserRole(Long userRole) {
+  public void setUserRole(long userRole) {
     this.userRole = userRole;
   }
 
-  public Long getUserRole() {
+  public long getUserRole() {
     return this.userRole;
   }
 
@@ -183,19 +183,19 @@ public class UserProfile {
     return this.signature;
   }
 
-  public void setTotalPost(Long totalPost) {
+  public void setTotalPost(long totalPost) {
     this.totalPost = totalPost;
   }
 
-  public Long getTotalPost() {
+  public long getTotalPost() {
     return this.totalPost;
   }
 
-  public void setTotalTopic(Long totalTopic) {
+  public void setTotalTopic(long totalTopic) {
     this.totalTopic = totalTopic;
   }
 
-  public Long getTotalTopic() {
+  public long getTotalTopic() {
     return this.totalTopic;
   }
 
@@ -316,7 +316,7 @@ public class UserProfile {
     this.maxTopic = maxTopic;
   }
 
-  public Long getMaxTopicInPage() {
+  public long getMaxTopicInPage() {
     return this.maxTopic;
   }
 
@@ -324,7 +324,7 @@ public class UserProfile {
     this.maxPost = maxPost;
   }
 
-  public Long getMaxPostInPage() {
+  public long getMaxPostInPage() {
     return this.maxPost;
   }
 
@@ -373,7 +373,7 @@ public class UserProfile {
     this.banUntil = banUntil;
   }
 
-  public Long getBanUntil() {
+  public long getBanUntil() {
     return banUntil;
   }
 

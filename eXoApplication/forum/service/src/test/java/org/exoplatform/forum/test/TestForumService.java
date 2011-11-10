@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -150,7 +151,29 @@ public class TestForumService extends ForumServiceTestCase {
     assertNotNull(administration);
     assertEquals(administration.getForumSortBy(), "forumName");
   }
+  
+  private void setData() throws Exception {
+    killData();
+    Category cat = createCategory(getId(Utils.CATEGORY));
+    this.categoryId = cat.getId();
+    forumService_.saveCategory(cat, true);
+    Forum forum = createdForum();
+    this.forumId = forum.getId();
+    forumService_.saveForum(categoryId, forum, true);
+    Topic topic = createdTopic("root");
+    forumService_.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
+    this.topicId = topic.getId();
+  }
 
+  private void killData() throws Exception {
+    List<Category> cats = forumService_.getCategories();
+    if (cats.size() > 0) {
+      for (Category category : cats) {
+        forumService_.removeCategory(category.getId());
+      }
+    }
+  }
+  
   public void testCategory() throws Exception {
     String[] catIds = new String[] { getId(Utils.CATEGORY), getId(Utils.CATEGORY), getId(Utils.CATEGORY) };
 
@@ -360,28 +383,6 @@ public class TestForumService extends ForumServiceTestCase {
     assertEquals("Can not get all topic type. Size of topicTypes list is not 3.", listTopicType.size(), 3);
   }
 
-  private void setData() throws Exception {
-    killData();
-    Category cat = createCategory(getId(Utils.CATEGORY));
-    this.categoryId = cat.getId();
-    forumService_.saveCategory(cat, true);
-    Forum forum = createdForum();
-    this.forumId = forum.getId();
-    forumService_.saveForum(categoryId, forum, true);
-    Topic topic = createdTopic("root");
-    forumService_.saveTopic(categoryId, forumId, topic, true, false, new MessageBuilder());
-    this.topicId = topic.getId();
-  }
-
-  private void killData() throws Exception {
-    List<Category> cats = forumService_.getCategories();
-    if (cats.size() > 0) {
-      for (Category category : cats) {
-        forumService_.removeCategory(category.getId());
-      }
-    }
-  }
-
   public void testPost() throws Exception {
     // set Data
     setData();
@@ -482,10 +483,6 @@ public class TestForumService extends ForumServiceTestCase {
     //
   }
 
-  /*
-   * public void testPoll() throws Exception{ //set Data setData(); Poll poll = createPoll("question to this poll1", new String[]{"option 1", "option 2", "option 3"}); // Save new poll forumService_.savePoll(categoryId, forumId, topicId, poll, true, false); // Get poll assertNotNull(forumService_.getPoll(categoryId, forumId, topicId)); // Set close for poll poll.setIsClosed(true);
-   * forumService_.setClosedPoll(categoryId, forumId, topicId, poll); assertEquals(true, forumService_.getPoll(categoryId, forumId, topicId).getIsClosed()); // Delete poll forumService_.removePoll(categoryId, forumId, topicId); assertNull(forumService_.getPoll(categoryId, forumId, topicId)); }
-   */
   public void testGetObject() throws Exception {
     // set Data
     setData();
@@ -558,11 +555,11 @@ public class TestForumService extends ForumServiceTestCase {
   }
 
   public void testSearch() throws Exception {
-    /*
-     * setData(); //getQuickSearch List<String> users = new ArrayList<String>(); users.add("root"); String pathQuery = ""; // from ForumService/ String textQuery = "description"; String type = "true,all"; List<ForumSearch> forumSearchs = forumService_.getQuickSearch(textQuery, type, pathQuery, "root", null, null, null); assertEquals(forumSearchs.isEmpty(), false); //getAdvancedSearch
-     * ForumEventQuery eventQuery = new ForumEventQuery(); eventQuery.setListOfUser(users); eventQuery.setUserPermission(0); eventQuery.setType(Utils.TOPIC) ; eventQuery.setKeyValue(textQuery) ; eventQuery.setValueIn("entire") ; eventQuery.setPath("") ; eventQuery.setByUser(""); eventQuery.setIsLock("") ; eventQuery.setIsClose("") ; eventQuery.setTopicCountMin("0") ;
-     * eventQuery.setPostCountMin("0") ; eventQuery.setViewCountMin("0") ; eventQuery.setModerator("") ; forumSearchs = forumService_.getAdvancedSearch(eventQuery, null, null); assertEquals(forumSearchs.isEmpty(), false);
-     */
+  /*  
+    setData(); //getQuickSearch List<String> users = new ArrayList<String>(); users.add("root"); String pathQuery = ""; // from ForumService/ String textQuery = "description"; String type = "true,all"; List<ForumSearch> forumSearchs = forumService_.getQuickSearch(textQuery, type, pathQuery, "root", null, null, null); assertEquals(forumSearchs.isEmpty(), false); //getAdvancedSearch
+    ForumEventQuery eventQuery = new ForumEventQuery(); eventQuery.setListOfUser(users); eventQuery.setUserPermission(0); eventQuery.setType(Utils.TOPIC) ; eventQuery.setKeyValue(textQuery) ; eventQuery.setValueIn("entire") ; eventQuery.setPath("") ; eventQuery.setByUser(""); eventQuery.setIsLock("") ; eventQuery.setIsClose("") ; eventQuery.setTopicCountMin("0") ;
+    eventQuery.setPostCountMin("0") ; eventQuery.setViewCountMin("0") ; eventQuery.setModerator("") ; forumSearchs = forumService_.getAdvancedSearch(eventQuery, null, null); assertEquals(forumSearchs.isEmpty(), false);
+  */   
   }
 
   public void testWatch() throws Exception {
@@ -626,6 +623,60 @@ public class TestForumService extends ForumServiceTestCase {
     assertNull(String.format("The forum %s is not null after deleted the group %s ", forumId, groupId), forumService_.getForum(cateId, forumId));
   }
 
+  public void testCalculateDeletedGroupForNormal() throws Exception {
+    killData();
+    // set group in categories/forums/topics
+    String groupId = "/platform/users";
+    String groupName = "users";
+    UserProfile profile = createdUserProfile(USER_DEMO);
+    profile.setUserRole(UserProfile.USER);
+    profile.setUserTitle("User");
+    profile.setModerateForums(new String[]{""});
+    profile.setModerateCategory(new String[]{""});
+    forumService_.saveUserProfile(profile, false, false);
+    forumService_.saveUserModerator(USER_DEMO, new ArrayList<String>(), false);
+    assertEquals(UserProfile.USER, forumService_.getUserInfo(USER_DEMO).getUserRole());
+
+    String []groupUser = new String[]{groupId, USER_ROOT};
+    Category category = createCategory(getId(Utils.CATEGORY));
+    category.setUserPrivate(groupUser);
+    category.setCreateTopicRole(groupUser);
+    category.setModerators(groupUser);
+    category.setViewer(groupUser);
+    category.setPoster(groupUser);
+    forumService_.saveCategory(category, true);
+    Forum forum = createdForum();
+    forum.setViewer(groupUser);
+    forum.setCreateTopicRole(groupUser);
+    forum.setPoster(groupUser);
+    forum.setModerators(groupUser);
+    forumService_.saveForum(category.getId(), forum, true);
+    // the user demo in group "/platform/users" is moderator of forum, checking it
+    assertEquals(UserProfile.MODERATOR, forumService_.getUserInfo(USER_DEMO).getUserRole());
+    
+    Topic topic = createdTopic(USER_DEMO);
+    topic.setCanView(groupUser);
+    topic.setCanPost(groupUser);
+    forumService_.saveTopic(category.getId(), forum.getId(), topic, true, false, new MessageBuilder());
+    // checking data
+    assertEquals(ArrayToString(groupUser), ArrayToString(forumService_.getCategory(category.getId()).getUserPrivate()));
+    assertEquals(ArrayToString(groupUser), ArrayToString(forumService_.getForum(category.getId(), forum.getId()).getModerators()));
+    assertEquals(ArrayToString(groupUser), ArrayToString(forumService_.getTopic(category.getId(), forum.getId(), topic.getId(), null).getCanView()));
+    // deleted group in system
+    forumService_.calculateDeletedGroup(groupId, groupName);
+    // checking again data
+    assertEquals(UserProfile.USER, forumService_.getUserInfo(USER_DEMO).getUserRole());
+    assertEquals(USER_ROOT, ArrayToString(forumService_.getCategory(category.getId()).getUserPrivate()));
+    assertEquals(USER_ROOT, ArrayToString(forumService_.getForum(category.getId(), forum.getId()).getModerators()));
+    assertEquals(USER_ROOT, ArrayToString(forumService_.getTopic(category.getId(), forum.getId(), topic.getId(), null).getCanView()));
+  }
+  
+  private String ArrayToString(String[] strs) {
+    List<String> list = Arrays.asList(strs);
+    Collections.sort(list);
+    return list.toString().replace("[", "").replace("]", "");
+  }
+  
   private UserProfile createdUserProfile(String userName) {
     UserProfile userProfile = new UserProfile();
     userProfile.setUserId(userName);
@@ -703,7 +754,6 @@ public class TestForumService extends ForumServiceTestCase {
 
     forum.setViewer(new String[] {});
     forum.setCreateTopicRole(new String[] {});
-    forum.setCreateTopicRole(new String[] {});
     forum.setModerators(new String[] {});
     return forum;
   }
@@ -723,11 +773,6 @@ public class TestForumService extends ForumServiceTestCase {
   private String getId(String type) {
     return type + IdGenerator.generate();
   }
-
-  /*
-   * private Poll createPoll(String question, String[] options){ Poll poll = new Poll(); poll.setCreatedDate(new Date()); poll.setIsAgainVote(true); poll.setIsClosed(false); poll.setIsMultiCheck(true); poll.setModifiedBy("root"); poll.setModifiedDate(new Date()); poll.setOption(options); poll.setOwner("root"); poll.setQuestion(question); poll.setUserVote(new String[]{}); poll.setVote(new
-   * String[]{}); return poll; }
-   */
 
   private Tag createTag(String name) {
     Tag tag = new Tag();
