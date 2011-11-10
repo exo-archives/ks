@@ -104,6 +104,8 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
 
   private String                         cateId_                              = Utils.ALL;
 
+  public static final String             SEMICOLON                            = ";";
+
   public void activate() throws Exception {
   }
 
@@ -152,8 +154,9 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
       moderateCates.clear();
       for (String str : listCate) {
         try {
-          this.listCategories.add(new SelectItemOption<String>(str.substring(40), str.substring(0, 40)));
-          moderateCates.add(str.substring(0, 40));
+          int idxOfSemicolon = str.indexOf(SEMICOLON) ;
+          this.listCategories.add(new SelectItemOption<String>(str.substring(idxOfSemicolon + 1), str.substring(0, idxOfSemicolon)));
+          moderateCates.add(str.substring(0, idxOfSemicolon));
         } catch (StringIndexOutOfBoundsException e) {
           if (str.indexOf(Utils.CATEGORY_HOME) == 0) {
             this.listCategories.add(new SelectItemOption<String>(str.substring(Utils.CATEGORY_HOME.length()), Utils.CATEGORY_HOME));

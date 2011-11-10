@@ -127,6 +127,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   private KSDataLocation          dataLocator;
 
+  public static final String      SEMICOLON            = ";";
+
   public JCRDataStorage(KSDataLocation dataLocator) throws Exception {
     this.dataLocator = dataLocator;
     sessionManager = dataLocator.getSessionManager();
@@ -1882,9 +1884,28 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   public List<String> getListCateIdByModerator(String user) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
+      List<String> allOfUser = UserHelper.getAllGroupAndMembershipOfUser(user);
+      StringBuilder builder = new StringBuilder();      
+      int i = 0;
+      if(allOfUser != null && allOfUser.size() > 0){
+        builder.append(" ( ");
+        for (String strUser : allOfUser) {
+          strUser = strUser.trim();
+          if (strUser.length() > 0) {
+            if (i > 0) {
+              builder.append(" or ");
+              i = 1;
+            }
+            builder.append("@").append(EXO_MODERATORS).append("= '").append(strUser).append("' ");
+          }
+          i++;
+        }
+        builder.append(" ) ");
+        builder.append(" and @exo:isView='true'  ");
+      }
       Node categoryHome = getCategoryHome(sProvider, null);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer queryString = new StringBuffer(JCR_ROOT).append(categoryHome.getParent().getPath()).append("//element(*,exo:faqCategory)[@exo:moderators='").append(user.trim()).append("'").append(" and @exo:isView='true' ]");
+      StringBuffer queryString = new StringBuffer(JCR_ROOT).append(categoryHome.getParent().getPath()).append("//element(*,exo:faqCategory)[ " + builder.toString() + " ]");
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
@@ -1892,7 +1913,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       while (iter.hasNext()) {
         Node cate = iter.nextNode();
         try {
-          listCateId.add(cate.getName() + cate.getProperty(EXO_NAME).getString());
+          listCateId.add(cate.getName() + SEMICOLON + cate.getProperty(EXO_NAME).getString());
         } catch (Exception e) {
           log.debug("Getting property of " + cate + " node failed: ", e);
         }
