@@ -84,23 +84,14 @@ public abstract class AbstractMOWTestcase extends TestCase {
 
   private static void initContainer() {
     try {
-      String containerConf = Thread.currentThread()
-                                   .getContextClassLoader()
-                                   .getResource("conf/standalone/configuration.xml")
-                                   .toString();
+      String containerConf = Thread.currentThread().getContextClassLoader().getResource("conf/standalone/configuration.xml").toString();
       StandaloneContainer.addConfigurationURL(containerConf);
-
       //
-      String loginConf = Thread.currentThread()
-                               .getContextClassLoader()
-                               .getResource("conf/standalone/login.conf")
-                               .toString();
+      String loginConf = Thread.currentThread().getContextClassLoader().getResource("conf/standalone/login.conf").toString();
       System.setProperty("java.security.auth.login.config", loginConf);
-
       //
       container = StandaloneContainer.getInstance();
       mowService = (MOWService) container.getComponentInstanceOfType(MOWService.class);
-
     } catch (Exception e) {
       throw new RuntimeException("Failed to initialize standalone container: " + e.getMessage(), e);
     }

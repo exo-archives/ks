@@ -26,4 +26,5 @@
   <import>jar:/conf/standalone/jcr-configuration.xml</import>
   <import>jar:/conf/standalone/organization-configuration.xml</import>
   <import>jar:/conf/standalone/test-configuration.xml</import>
+  <import>jar:/conf/portal/wiki/configuration.xml</import>
 </configuration>

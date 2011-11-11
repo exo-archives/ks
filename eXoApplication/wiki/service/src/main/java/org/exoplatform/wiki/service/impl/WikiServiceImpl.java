@@ -880,7 +880,7 @@ public class WikiServiceImpl implements WikiService, Startable {
         }
       }
     } catch (Exception e) {
-      log.warn("Cannot init emotion icons...", e);
+      log.warn("Can not init emotion icons...");
     } finally {
       sessionProvider.close();
     }
@@ -1003,31 +1003,39 @@ public class WikiServiceImpl implements WikiService, Startable {
   }
   
   private void removeDraftPages() {
-    Model model = getModel();
-    WikiStoreImpl wikiStore = (WikiStoreImpl) model.getWikiStore();
-    PageImpl draftPages = wikiStore.getDraftNewPagesContainer();
-    draftPages.remove();
+    try {
+      Model model = getModel();
+      WikiStoreImpl wikiStore = (WikiStoreImpl) model.getWikiStore();
+      PageImpl draftPages = wikiStore.getDraftNewPagesContainer();
+      draftPages.remove();
+    } catch (Exception e) {
+      log.warn("Can not remove draft pages ...");
+    }
   }
   
   @Override
   public void start() {
-    ChromatticManager chromatticManager = (ChromatticManager) ExoContainerContext.getCurrentContainer()
-                                                                                 .getComponentInstanceOfType(ChromatticManager.class);
-    RequestLifeCycle.begin(chromatticManager);
     try {
-      log.info("Init template page plugin ...");
-      setTemplatePagePlugin();
+      ChromatticManager chromatticManager = (ChromatticManager) ExoContainerContext.getCurrentContainer()
+                                                                                   .getComponentInstanceOfType(ChromatticManager.class);
+      RequestLifeCycle.begin(chromatticManager);
+      try {
+        setTemplatePagePlugin();
+      } catch (Exception e) {
+        log.warn("Can not init page templates ...");
+      }
+      addEmotionIcons();
+      removeDraftPages();
+      try {
+        getWikiHome(PortalConfig.GROUP_TYPE, "sandbox");
+      } catch (Exception e) {
+        log.warn("Can not init sandbox wiki ...");
+      }
     } catch (Exception e) {
-      log.warn("Cannot init template page plugin ...");
+      log.warn("Can not start WikiService ...", e);
+    } finally {
+      RequestLifeCycle.end();
     }
-    addEmotionIcons();
-    removeDraftPages();
-    try {
-      getWikiHome(PortalConfig.GROUP_TYPE, "sandbox");
-    } catch (Exception e) {
-      log.warn("Cannot init sandbox wiki ...");
-    }
-    RequestLifeCycle.end();
   }
 
   @Override
