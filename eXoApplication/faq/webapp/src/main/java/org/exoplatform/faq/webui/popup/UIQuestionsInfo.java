@@ -32,6 +32,7 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPageIterator;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -104,8 +105,6 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
 
   private String                         cateId_                              = Utils.ALL;
 
-  public static final String             SEMICOLON                            = ";";
-
   public void activate() throws Exception {
   }
 
@@ -154,7 +153,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
       moderateCates.clear();
       for (String str : listCate) {
         try {
-          int idxOfSemicolon = str.indexOf(SEMICOLON) ;
+          int idxOfSemicolon = str.indexOf(CommonUtils.SEMICOLON) ;
           this.listCategories.add(new SelectItemOption<String>(str.substring(idxOfSemicolon + 1), str.substring(0, idxOfSemicolon)));
           moderateCates.add(str.substring(0, idxOfSemicolon));
         } catch (StringIndexOutOfBoundsException e) {

@@ -127,8 +127,6 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   private KSDataLocation          dataLocator;
 
-  public static final String      SEMICOLON            = ";";
-
   public JCRDataStorage(KSDataLocation dataLocator) throws Exception {
     this.dataLocator = dataLocator;
     sessionManager = dataLocator.getSessionManager();
@@ -1896,16 +1894,16 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
               builder.append(" or ");
               i = 1;
             }
-            builder.append("@").append(EXO_MODERATORS).append("= '").append(strUser).append("' ");
+            builder.append("@").append(EXO_MODERATORS).append("='").append(strUser).append("'");
           }
           i++;
         }
         builder.append(" ) ");
-        builder.append(" and @exo:isView='true'  ");
+        builder.append(" and @").append(EXO_IS_VIEW).append("='true'  ");
       }
       Node categoryHome = getCategoryHome(sProvider, null);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer queryString = new StringBuffer(JCR_ROOT).append(categoryHome.getParent().getPath()).append("//element(*,exo:faqCategory)[ " + builder.toString() + " ]");
+      StringBuffer queryString = new StringBuffer(JCR_ROOT).append(categoryHome.getParent().getPath()).append("//element(*,").append(EXO_FAQ_CATEGORY).append(")[ " + builder.toString() + " ]");
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
@@ -1913,7 +1911,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       while (iter.hasNext()) {
         Node cate = iter.nextNode();
         try {
-          listCateId.add(cate.getName() + SEMICOLON + cate.getProperty(EXO_NAME).getString());
+          listCateId.add(cate.getName() + CommonUtils.SEMICOLON + cate.getProperty(EXO_NAME).getString());
         } catch (Exception e) {
           log.debug("Getting property of " + cate + " node failed: ", e);
         }
