@@ -18,7 +18,10 @@ package org.exoplatform.wiki.webui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -30,6 +33,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.webui.control.UIAttachmentContainer;
 import org.exoplatform.wiki.webui.core.UIWikiContainer;
 
@@ -113,7 +117,20 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
                                                    extends
                                                    org.exoplatform.wiki.webui.control.action.CompareRevisionActionListener {
     public void execute(Event<UIComponent> event) throws Exception {
-      this.setVersionToCompare(new ArrayList<NTVersion>((Utils.getCurrentPageRevisions())));
+      ArrayList<NTVersion> lstVersion = new ArrayList<NTVersion>((Utils.getCurrentPageRevisions()));
+      this.setVersionToCompare(lstVersion);
+      WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
+      String verName = pageParams.getParameter("verName");
+      if (!StringUtils.isEmpty(verName)) {
+        for (int i = 0; i < lstVersion.size(); i++) {
+          NTVersion ver = lstVersion.get(i);
+          if (ver.getName().equals(verName) && i < lstVersion.size() + 1) {
+            this.setFrom(i);
+            this.setTo(i + 1);
+            break;
+          }
+        }
+      }
       super.execute(event);
     }
   }

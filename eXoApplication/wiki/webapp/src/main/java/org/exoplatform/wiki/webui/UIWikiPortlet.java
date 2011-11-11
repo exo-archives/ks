@@ -161,6 +161,14 @@ public class UIWikiPortlet extends UIPortletApplication {
             xEvent.broadcast();
           }
         }
+      }else if (UIWikiPageInfoArea.COMPARE_REVISION.equalsIgnoreCase(pageParams.getParameter(WikiContext.ACTION))) {
+        UIWikiPageInfoArea pageInfoArea = this.findFirstComponentOfType(UIWikiPageInfoArea.class);
+        if (pageInfoArea != null) {
+          Event<UIComponent> xEvent = pageInfoArea.createEvent(UIWikiPageInfoArea.COMPARE_REVISION, Event.Phase.PROCESS, context);
+          if (xEvent != null) {
+            xEvent.broadcast();
+          }
+        }
       }
       try {
         // TODO: ignore request URL of resources
