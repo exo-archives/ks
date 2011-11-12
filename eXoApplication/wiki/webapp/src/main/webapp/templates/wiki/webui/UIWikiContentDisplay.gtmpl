@@ -7,7 +7,7 @@
 %>
 <div class="UIWikiContentDisplay" id="$uicomponent.id">
   <div class="InvalidChars" style="display:none">$msg</div>
-  <div class="WikiContent" style="autoflow:true;">
+  <div class="WikiContent">
     ${uicomponent.htmlOutput}
   </div>
 </div>
