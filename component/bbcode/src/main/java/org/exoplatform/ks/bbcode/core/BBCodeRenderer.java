@@ -25,6 +25,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.spi.BBCodeData;
 import org.exoplatform.ks.bbcode.spi.BBCodeProvider;
+import org.exoplatform.ks.common.TransformHTML;
 import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.rendering.core.SupportedSyntaxes;
 import org.exoplatform.services.log.ExoLogger;
@@ -103,7 +104,15 @@ public class BBCodeRenderer implements Renderer {
       try {
         clsIndex = s.indexOf(end, tagIndex);
         str = s.substring(tagIndex + start.length(), clsIndex);
-        param = StringUtils.replace(bbcode.getReplacement(), "{param}", str);
+        if ("WIKI".equals(bbc)) {
+          String sourceSyntax = Syntax.CONFLUENCE_1_0.toIdString();
+          RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RenderingService.class);
+          param = TransformHTML.getPlainText(str);
+          param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
+          param = "<div class=\"UIWikiPortlet\">" + param + "</div>";
+        } else {
+          param = StringUtils.replace(bbcode.getReplacement(), "{param}", str);
+        }
         s = StringUtils.replace(s, start + str + end, param);
       } catch (Exception e) {
         continue;
@@ -159,6 +168,7 @@ public class BBCodeRenderer implements Renderer {
             sourceSyntax = Syntax.MEDIAWIKI_1_0.toIdString();
           }
           RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RenderingService.class);
+          param = TransformHTML.getPlainText(param);
           param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
           param = "<div class=\"UIWikiPortlet\">" + param + "</div>";
         } else {

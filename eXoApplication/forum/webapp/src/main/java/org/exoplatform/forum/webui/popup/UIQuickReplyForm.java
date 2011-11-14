@@ -25,7 +25,6 @@ import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.info.UIForumQuickReplyPortlet;
@@ -33,6 +32,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.ks.common.TransformHTML;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.WebUIUtils;
@@ -119,7 +119,7 @@ public class UIQuickReplyForm extends UIForm {
           if (quickReply.topic != null)
             hasTopicMod = quickReply.topic.getIsModeratePost();
         }
-        message = ForumTransformHTML.enCodeHTMLContent(message);
+        message = TransformHTML.enCodeHTMLContent(message);
         String remoteAddr = WebUIUtils.getRemoteIP();
         UserProfile userProfile = forumService.getDefaultUserProfile(quickReply.userName, remoteAddr);
         // set link
@@ -183,7 +183,7 @@ public class UIQuickReplyForm extends UIForm {
       String message = quickReply.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue();
       String checksms = (message);
       if (checksms != null && checksms.trim().length() > 3) {
-        message = ForumTransformHTML.enCodeHTMLContent(message);
+        message = TransformHTML.enCodeHTMLContent(message);
         Topic topic = quickReply.topic;
         Post post = new Post();
         post.setName(quickReply.getLabel("Re") + topic.getTopicName());

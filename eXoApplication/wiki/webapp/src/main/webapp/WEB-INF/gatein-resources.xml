@@ -25,6 +25,13 @@
   xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_2 http://www.gatein.org/xml/ns/gatein_resources_1_2"
   xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2">
 
+  <portal-skin>
+    <skin-module>wiki</skin-module>
+    <skin-name>Default</skin-name>
+    <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
+    <css-priority>1</css-priority>
+  </portal-skin>
+
   <portlet-skin>
     <application-name>wiki</application-name>
     <portlet-name>WikiPortlet</portlet-name>

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
-package org.exoplatform.forum;
+package org.exoplatform.ks.common;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,82 +27,82 @@ import junit.framework.TestCase;
  *          tu.duy@exoplatform.com
  * Jan 6, 2010 - 7:17:11 AM  
  */
-public class TestForumTransformHTML extends TestCase{
+public class TestTransformHTML extends TestCase{
 
   private static List<String> bbcs = Arrays.asList(new String[] { "B", "I", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT", "CODE"});
-  public TestForumTransformHTML() throws Exception {
+  public TestTransformHTML() throws Exception {
     super();
   }
   
   public void testCleanHtmlCode() {
     // for text is empty
-    String str = ForumUtils.EMPTY_STR;
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.cleanHtmlCode(str, bbcs));
+    String str = TransformHTML.EMPTY_STR;
+    assertEquals(TransformHTML.EMPTY_STR, TransformHTML.cleanHtmlCode(str, bbcs));
     
     // for text contain bbcode  
     str = "text [b]content[/b] has [I]bbcode[/I], [url]link[/url] and img: [img]http://host.com/abc.jpg[/img]";
     assertEquals("text content has bbcode, link and img: http://host.com/abc.jpg", 
-                  ForumTransformHTML.cleanHtmlCode(str, bbcs));
+                  TransformHTML.cleanHtmlCode(str, bbcs));
     
     // for text contain bbcode and tag html   
     str += " defaul data <a href='http://exoplatform.com'>link</a>. new <b>data</b>" +
                        " test<style>.css{color:blue;}</style>, <script> function a {alert('abc');}</script>tested.";
     assertEquals("text content has bbcode, link and img: http://host.com/abc.jpg defaul data link. new data test, tested.",
-                    ForumTransformHTML.cleanHtmlCode(str, bbcs));
+                    TransformHTML.cleanHtmlCode(str, bbcs));
   }
   
   public void testGetTitleInHTMLCode() {
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.getTitleInHTMLCode(ForumUtils.EMPTY_STR, bbcs));
-    assertEquals("1 3", ForumTransformHTML.getTitleInHTMLCode("1  3", bbcs));
+    assertEquals(TransformHTML.EMPTY_STR, TransformHTML.getTitleInHTMLCode(TransformHTML.EMPTY_STR, bbcs));
+    assertEquals("1 3", TransformHTML.getTitleInHTMLCode("1  3", bbcs));
 
     String title = " title [b]title[/b] <b>title</b>&nbsp;&nbsp; title<br/>title      title    title " + new String(Character.toChars(20)) + "title\t\ntitle";
-    assertEquals("title title title title title title title title title", ForumTransformHTML.getTitleInHTMLCode(title, bbcs));
+    assertEquals("title title title title title title title title title", TransformHTML.getTitleInHTMLCode(title, bbcs));
   }
   
   public void testRemoveCharterStrange() {
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.removeCharterStrange(null));
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.removeCharterStrange(ForumUtils.EMPTY_STR));
+    assertEquals(TransformHTML.EMPTY_STR, TransformHTML.removeCharterStrange(null));
+    assertEquals(TransformHTML.EMPTY_STR, TransformHTML.removeCharterStrange(TransformHTML.EMPTY_STR));
 
-    assertEquals("abc", ForumTransformHTML.removeCharterStrange("abc\n\t" + new String(Character.toChars(30))));
-    assertEquals("abc ", ForumTransformHTML.removeCharterStrange("abc\n" + new String(Character.toChars(32))));
+    assertEquals("abc", TransformHTML.removeCharterStrange("abc\n\t" + new String(Character.toChars(30))));
+    assertEquals("abc ", TransformHTML.removeCharterStrange("abc\n" + new String(Character.toChars(32))));
   }
   
   public void testEnCodeHTML() {
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.enCodeHTMLTitle(null));
+    assertEquals(TransformHTML.EMPTY_STR, TransformHTML.enCodeHTMLTitle(null));
     // clear space superfluous fix for FCKEditer
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.enCodeHTMLTitle("<p>&nbsp;&nbsp;&nbsp;</p>"));
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.enCodeHTMLTitle("<p>&nbsp;&nbsp;&nbsp;     </p>"));
-    assertEquals("abc", ForumTransformHTML.enCodeHTMLTitle("<br/><br/><br/><br/>abc"));
-    assertEquals("abc", ForumTransformHTML.enCodeHTMLTitle("abc<br/><br/><br/><br/>"));
+    assertEquals(TransformHTML.EMPTY_STR, TransformHTML.enCodeHTMLTitle("<p>&nbsp;&nbsp;&nbsp;</p>"));
+    assertEquals(TransformHTML.EMPTY_STR, TransformHTML.enCodeHTMLTitle("<p>&nbsp;&nbsp;&nbsp;     </p>"));
+    assertEquals("abc", TransformHTML.enCodeHTMLTitle("<br/><br/><br/><br/>abc"));
+    assertEquals("abc", TransformHTML.enCodeHTMLTitle("abc<br/><br/><br/><br/>"));
     // encode: '<' --> '&lt;' ; '>' --> '&gt;' ; ''' --> &#39
     assertEquals("&lt;p&gt; test &lt;br/&gt; test &#39test&#39 &lt;div&gt;text&lt;/div&gt;&lt;/p&gt;", 
-                ForumTransformHTML.enCodeHTMLTitle("<p> test <br/> test 'test' <div>text</div></p>"));
+                TransformHTML.enCodeHTMLTitle("<p> test <br/> test 'test' <div>text</div></p>"));
   }
   
   public void testEnCodeViewSignature() {
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.enCodeViewSignature(null));
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.enCodeViewSignature(ForumUtils.EMPTY_STR));
-    assertEquals("ABC hello<br/> test<div>hello</div><br/>Hello World.", ForumTransformHTML.enCodeViewSignature("ABC hello\n test<div>hello</div>\nHello World."));
+    assertEquals(TransformHTML.EMPTY_STR, TransformHTML.enCodeViewSignature(null));
+    assertEquals(TransformHTML.EMPTY_STR, TransformHTML.enCodeViewSignature(TransformHTML.EMPTY_STR));
+    assertEquals("ABC hello<br/> test<div>hello</div><br/>Hello World.", TransformHTML.enCodeViewSignature("ABC hello\n test<div>hello</div>\nHello World."));
   }
 
   public void testEnCodeHTMLContent() {
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.enCodeViewSignature(null));
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.enCodeViewSignature(ForumUtils.EMPTY_STR));
+    assertEquals(TransformHTML.EMPTY_STR, TransformHTML.enCodeViewSignature(null));
+    assertEquals(TransformHTML.EMPTY_STR, TransformHTML.enCodeViewSignature(TransformHTML.EMPTY_STR));
     String s =   "Abc\txyz \nHelo everybody <div>xxx</div> BBB.\nStar is 'Ngoi Sao'";
     assertEquals("Abc&nbsp; &nbsp; xyz <br/>Helo everybody &lt;div&gt;xxx&lt;/div&gt; BBB.<br/>Star is &#39;Ngoi Sao&#39;", 
-                 ForumTransformHTML.enCodeHTMLContent(s));
+                 TransformHTML.enCodeHTMLContent(s));
   }
 
   public void testFixAddBBcodeAction() {
     // value input not null.
-    assertEquals(ForumUtils.EMPTY_STR, ForumTransformHTML.fixAddBBcodeAction(ForumUtils.EMPTY_STR));
+    assertEquals(TransformHTML.EMPTY_STR, TransformHTML.fixAddBBcodeAction(TransformHTML.EMPTY_STR));
     // check for tag <p>
     assertEquals("<p>[quote] test [/quote]</p>s<p>[code] text [/code]</p> <p>[QUOTE] QUOTE[/QUOTE]</p> <p>[CODE] CODE[/CODE]</p>", 
-                  ForumTransformHTML.fixAddBBcodeAction("<p>[quote]</p> test <p>[/quote]</p>s<p>[code]</p> text <p>[/code]</p> " +
+                  TransformHTML.fixAddBBcodeAction("<p>[quote]</p> test <p>[/quote]</p>s<p>[code]</p> text <p>[/code]</p> " +
                  "<p>[QUOTE]</p> QUOTE<p>[/QUOTE]</p> <p>[CODE]</p> CODE<p>[/CODE]</p>"));
     // check for tag <span>
     assertEquals("<span>[quote] test [/quote]</span>s<span>[code] text [/code]</span> <span>[QUOTE] QUOTE[/QUOTE]</span> <span>[CODE] CODE[/CODE]</span>", 
-        ForumTransformHTML.fixAddBBcodeAction("<span>[quote]</span> test <span>[/quote]</span>s<span>[code]</span> text <span>[/code]</span> " +
+        TransformHTML.fixAddBBcodeAction("<span>[quote]</span> test <span>[/quote]</span>s<span>[code]</span> text <span>[/code]</span> " +
             "<span>[QUOTE]</span> QUOTE<span>[/QUOTE]</span> <span>[CODE]</span> CODE<span>[/CODE]</span>"));
   }
 

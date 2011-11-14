@@ -33,7 +33,6 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
-import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.rendering.RenderHelper;
@@ -65,6 +64,7 @@ import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.TransformHTML;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.webui.BaseEventListener;
@@ -1513,7 +1513,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
               if (topicDetail.topic != null)
                 hasTopicMod = topicDetail.topic.getIsModeratePost();
             }
-            message = ForumTransformHTML.enCodeHTMLContent(message);
+            message = TransformHTML.enCodeHTMLContent(message);
 
             // set link
             String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicDetail.topicId, false);
@@ -1584,7 +1584,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
       String message = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue();
       String checksms = (message);
       if (checksms != null && message.trim().length() > 0) {
-        message = ForumTransformHTML.enCodeHTMLContent(message);
+        message = TransformHTML.enCodeHTMLContent(message);
         String userName = topicDetail.userProfile.getUserId();
         Topic topic = topicDetail.topic;
         Post post = new Post();
@@ -1716,7 +1716,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   public String renderPost(Post post) throws RenderingException {
     if (SIGNATURE.equals(post.getId())) {
-      post.setMessage(ForumTransformHTML.enCodeViewSignature(post.getMessage()));
+      post.setMessage(TransformHTML.enCodeViewSignature(post.getMessage()));
     }
     return renderHelper.renderPost(post);
   }

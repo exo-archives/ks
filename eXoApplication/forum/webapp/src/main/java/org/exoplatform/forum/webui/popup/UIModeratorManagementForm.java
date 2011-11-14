@@ -28,7 +28,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.forum.ForumSessionUtils;
-import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.TimeConvertUtils;
 import org.exoplatform.forum.service.ForumLinkData;
@@ -42,6 +41,7 @@ import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.TransformHTML;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.organization.OrganizationService;
@@ -808,7 +808,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
       }
 
       String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue();
-      signature = ForumTransformHTML.enCodeHTMLTitle(signature);
+      signature = TransformHTML.enCodeHTMLTitle(signature);
       boolean isDisplaySignature = inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).isChecked();
       Boolean isDisplayAvatar = inputSetProfile.getUICheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).isChecked();
 

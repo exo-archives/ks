@@ -23,7 +23,6 @@ import java.util.ResourceBundle;
 
 import javax.jcr.ItemExistsException;
 
-import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -38,6 +37,7 @@ import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
+import org.exoplatform.ks.common.TransformHTML;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -81,7 +81,7 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
 
   @SuppressWarnings("unused")
   private String getTitleInHTMLCode(String s) {
-    return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+    return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
   }
 
   public void updatePost(String topicId, List<Post> posts) throws Exception {

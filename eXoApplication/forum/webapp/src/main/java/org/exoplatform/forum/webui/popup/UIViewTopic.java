@@ -26,7 +26,6 @@ import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
-import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
@@ -40,6 +39,7 @@ import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.TransformHTML;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.log.ExoLogger;
@@ -108,7 +108,7 @@ public class UIViewTopic extends BaseForumForm implements UIPopupComponent {
 
   public String renderPost(Post post) throws RenderingException {
     if (SIGNATURE.equals(post.getId())) {
-      post.setMessage(ForumTransformHTML.enCodeViewSignature(post.getMessage()));
+      post.setMessage(TransformHTML.enCodeViewSignature(post.getMessage()));
     }
     return renderHelper.renderPost(post);
   }

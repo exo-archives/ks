@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
-import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.MessageBuilder;
@@ -36,6 +35,7 @@ import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.TransformHTML;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -274,7 +274,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
       String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
       String userName = UserHelper.getCurrentUser();
       String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-      String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+      String checksms = TransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
       checksms = checksms.replaceAll("&nbsp;", " ");
       t = checksms.trim().length();
       if (ForumUtils.isEmpty(postTitle)) {
@@ -342,7 +342,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             }
           }
           String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-          String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+          String checksms = TransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
           checksms = checksms.replaceAll("&nbsp;", " ");
           t = checksms.length();
           if (ForumUtils.isEmpty(postTitle)) {
@@ -357,7 +357,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             }
             String userName = userProfile.getUserId();
             editReason = CommonUtils.encodeSpecialCharInTitle(editReason);
-            message = ForumTransformHTML.fixAddBBcodeAction(message);
+            message = TransformHTML.fixAddBBcodeAction(message);
             message = CommonUtils.encodeSpecialCharInContent(message);
             postTitle = CommonUtils.encodeSpecialCharInTitle(postTitle);
             Post post = uiForm.post_;

@@ -15,7 +15,7 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-package org.exoplatform.forum;
+package org.exoplatform.ks.common;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,72 +31,87 @@ import org.apache.commons.lang.StringUtils;
  * May 22, 2008 - 2:58:53 AM
  */
 
-public class ForumTransformHTML {
+public class TransformHTML {
+  
+  public static final String EMPTY_STR = "";
+
+  public static final String SPACE     = " ";
 
   public static String cleanHtmlCode(String sms, List<String> bbcs) {
-    if (sms == null || sms.trim().length() <= 0)
-      return ForumUtils.EMPTY_STR;
-    sms = StringUtils.replace(sms, "\n", " ");
+    if (isEmpty(sms))
+      return EMPTY_STR;
+    sms = StringUtils.replace(sms, "\n", SPACE);
     // clean bbcode
-    List<String> bbcList = new ArrayList<String>();
-    bbcList.addAll(bbcs);
-    for (String bbc : bbcs) {
-      bbcList.add(bbc.toLowerCase());
-    }
-    int lastIndex = 0;
-    int tagIndex = 0;
-    String start, end;
-    for (String bbc : bbcList) {
-      start = "[" + bbc;
-      end = "[/" + bbc + "]";
-      lastIndex = 0;
-      tagIndex = 0;
-      while ((tagIndex = sms.indexOf(start, lastIndex)) != -1) {
-        lastIndex = tagIndex + 1;
-        try {
-          int clsIndex = sms.indexOf(end, tagIndex);
-          String content = sms.substring(tagIndex, clsIndex);
-          String content_ = content.substring(content.indexOf("]") + 1);
-          sms = StringUtils.replace(sms, content + end, content_);
-        } catch (Exception e) {
-          continue;
+    if (bbcs != null && bbcs.size() > 0) {
+      List<String> bbcList = new ArrayList<String>();
+      bbcList.addAll(bbcs);
+      for (String bbc : bbcs) {
+        bbcList.add(bbc.toLowerCase());
+      }
+      int lastIndex = 0;
+      int tagIndex = 0;
+      String start, end;
+      for (String bbc : bbcList) {
+        start = "[" + bbc;
+        end = "[/" + bbc + "]";
+        lastIndex = 0;
+        tagIndex = 0;
+        while ((tagIndex = sms.indexOf(start, lastIndex)) != -1) {
+          lastIndex = tagIndex + 1;
+          try {
+            int clsIndex = sms.indexOf(end, tagIndex);
+            String content = sms.substring(tagIndex, clsIndex);
+            String content_ = content.substring(content.indexOf("]") + 1);
+            sms = StringUtils.replace(sms, content + end, content_);
+          } catch (Exception e) {
+            continue;
+          }
         }
       }
+      sms = StringUtils.replace(sms, "[U]", EMPTY_STR);
+      sms = StringUtils.replace(sms, "[/U]", EMPTY_STR);
+      sms = StringUtils.replace(sms, "[u]", EMPTY_STR);
+      sms = StringUtils.replace(sms, "[/u]", EMPTY_STR);
     }
-    sms = StringUtils.replace(sms, "[U]", ForumUtils.EMPTY_STR);
-    sms = StringUtils.replace(sms, "[/U]", ForumUtils.EMPTY_STR);
-    sms = StringUtils.replace(sms, "[u]", ForumUtils.EMPTY_STR);
-    sms = StringUtils.replace(sms, "[/u]", ForumUtils.EMPTY_STR);
     // Clean html code
     String scriptregex = "<(script|style)[^>]*>[^<]*</(script|style)>";
     Pattern p1 = Pattern.compile(scriptregex, Pattern.CASE_INSENSITIVE);
     Matcher m1 = p1.matcher(sms);
-    sms = m1.replaceAll(ForumUtils.EMPTY_STR);
+    sms = m1.replaceAll(EMPTY_STR);
     String tagregex = "<[^>]*>";
     Pattern p2 = Pattern.compile(tagregex);
     Matcher m2 = p2.matcher(sms);
-    sms = m2.replaceAll(ForumUtils.EMPTY_STR);
+    sms = m2.replaceAll(EMPTY_STR);
     String multiplenewlines = "(\\n{1,2})(\\s*\\n)+";
     sms = sms.replaceAll(multiplenewlines, "$1");
     return sms;
   }
 
   public static String getTitleInHTMLCode(String s, List<String> bbcs) {
-    if (ForumUtils.isEmpty(s)){
-      return ForumUtils.EMPTY_STR;
-    }
-    if(s.length() > 500) {
+    if (isEmpty(s))
+      return EMPTY_STR;
+    if (s.length() > 500)
       s = s.substring(0, 500);
-    }
-    s = s.replaceAll("&nbsp;", " ").replaceAll("<br/>", " ").replaceAll("( \\s*)", " ");
+    s = s.replaceAll("&nbsp;", SPACE).replaceAll("<br/>", SPACE).replaceAll("( \\s*)", SPACE);
     s = cleanHtmlCode(s, bbcs);
     s = removeCharterStrange(s);
+    return s.trim();
+  }
+  
+  public static String getPlainText(String s) {
+    if (isEmpty(s))
+      return EMPTY_STR;
+    s = s.replaceAll("&nbsp;", SPACE)
+         .replaceAll("<br/>", "\n")
+         .replaceAll("<br />", "\n")
+         .replaceAll("<p>", EMPTY_STR)
+         .replaceAll("</p>", EMPTY_STR);
     return s.trim();
   }
 
   public static String removeCharterStrange(String s) {
     if (s == null || s.length() <= 0)
-      return ForumUtils.EMPTY_STR;
+      return EMPTY_STR;
     int i = 0;
     StringBuilder builder = new StringBuilder();
     while (i < s.length()) {
@@ -107,12 +122,12 @@ public class ForumTransformHTML {
     }
     return builder.toString();
   }
-
+  
   public static String enCodeHTMLTitle(String s) {
     StringBuffer buffer = new StringBuffer();
     if (s != null) {
       s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
-      s = s.replaceFirst("(<br/>)*", ForumUtils.EMPTY_STR);
+      s = s.replaceFirst("(<br/>)*", EMPTY_STR);
       s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
       for (int j = 0; j < s.trim().length(); j++) {
         char c = s.charAt(j);
@@ -127,7 +142,7 @@ public class ForumTransformHTML {
         }
       }
     }
-    return buffer.toString().replaceFirst("(<br/>)*", ForumUtils.EMPTY_STR);
+    return buffer.toString().replaceFirst("(<br/>)*", EMPTY_STR);
   }
 
   public static String enCodeHTMLContent(String message) {
@@ -150,7 +165,7 @@ public class ForumTransformHTML {
         buffer.append(c);
       }
     }
-   return buffer.toString(); 
+    return buffer.toString();
   }
 
   public static String enCodeViewSignature(String s) {
@@ -166,7 +181,7 @@ public class ForumTransformHTML {
       }
       s = buffer.toString();
     } else
-      s = ForumUtils.EMPTY_STR;
+      s = EMPTY_STR;
     return s;
   }
 
@@ -175,23 +190,23 @@ public class ForumTransformHTML {
     int lastIndex = 0;
     String start;
     String end;
-    String text_ = ForumUtils.EMPTY_STR;
-    StringBuilder builder;
+    String text_ = EMPTY_STR;
+    StringBuilder builder = new StringBuilder();
     String[] tagBBcode = new String[] { "quote", "code", "QUOTE", "CODE" };
     for (int i = 0; i < tagBBcode.length; i++) {
       start = "[" + tagBBcode[i];
       end = "[/" + tagBBcode[i] + "]";
       while ((tagIndex = b.indexOf(start, lastIndex)) != -1) {
         lastIndex = tagIndex + 1;
-        builder = new StringBuilder();
         try {
           int clsIndex = b.indexOf(end, tagIndex);
           String text = b.substring(tagIndex, clsIndex);
           if (text == null || text.trim().length() == 0)
             continue;
           text_ = text;
+          builder = new StringBuilder();
           if (text.indexOf('<' + "p") > text.indexOf('<' + "/p")) {
-            text = StringUtils.replaceOnce(text, "</p>", ForumUtils.EMPTY_STR);
+            text = StringUtils.replaceOnce(text, "</p>", EMPTY_STR);
             int t = text.lastIndexOf('<' + "p>");
             builder.append(text.substring(0, t));
             if (text.length() > (t + 3)) {
@@ -207,7 +222,7 @@ public class ForumTransformHTML {
 
           builder = new StringBuilder();
           if (text.indexOf('<' + "span") > text.indexOf('<' + "/span")) {
-            text = StringUtils.replaceOnce(text, "</span>", ForumUtils.EMPTY_STR);
+            text = StringUtils.replaceOnce(text, "</span>", EMPTY_STR);
             int t = text.lastIndexOf('<' + "span");
             builder.append(text.substring(0, t));
             if (text.length() > (t + 6)) {
@@ -225,4 +240,14 @@ public class ForumTransformHTML {
     }
     return b;
   }
+  
+  /**
+   * Check string is null or empty
+   * @param String s
+   * @return boolean
+   */
+  private static boolean isEmpty(String s) {
+    return (s == null || s.trim().length() <= 0) ? true : false;
+  }
+  
 }
