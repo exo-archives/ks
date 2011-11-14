@@ -25,13 +25,7 @@
 					<a href="#demo" class="IconDropDown" id="ShowAll" target="_blank">__MSG_showall__</a>
 					<div class="ContTit">__MSG_title__</div>
 				</div>
-				<div class="GadCont LastPost" id="ItemContainer">
-	        <!--
-					<div class="PostItem">
-						<label id="abc">09:00<span>Joint PR CS + KS</span></label>
-					</div>
-	        -->
-				</div>
+				<div class="GadCont LastPost" id="ItemContainer"></div>
 			</div>
     ]]>
   </Content>

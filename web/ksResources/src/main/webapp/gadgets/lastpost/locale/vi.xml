@@ -21,33 +21,38 @@
 
 <messagebundle>
 	<msg name="title">
-  	Last post
+  	Bài mới nhất
   </msg>
 	<msg name="baseurl">
-  	Forum portlet
+  	Ứng dụng diễn đàn
   </msg>
 	<msg name="subscribeurl">
-  	Subscription url
+  	Subscription URL
   </msg>
 	<msg name="limit">
-		Total
+		Giới hạn
   </msg>
 	<msg name="format">
-  	Date time format
+  	Định dạng ngày tháng
   </msg>  
   <msg name="showall">
-  	Forum
+  	Diễn đàn
   </msg>
 	<msg name="noevent">
-  	No new post
+  	Không có bài mới nào.
   </msg>	
+	<msg name="urlEmpty">
+  	Bạn phải nhập <b>Subscription URL</b> trong thiết lập Gadget.<br/> Theo định dạng là: <i>"/{container_name}/{rest_name}/ks/forum/getmessage".</i>
+  </msg>	<msg name="urlError">
+  	Đường dẫn <b>Subscription URL</b> bạn nhập không đúng. Nó có định dạng là:<br/> <i>"/{container_name}/{rest_name}/ks/forum/getmessage".</i>
+  </msg>
 	<msg name="setting">
-  	Setting
+  	Thiết lập
   </msg>
 	<msg name="save">
-  	Save
+  	Lưu
   </msg>
 	<msg name="cancel">
-  	Cancel
+  	Hủy
   </msg>
 </messagebundle>

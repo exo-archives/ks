@@ -27,7 +27,7 @@
   	Forum portlet
   </msg>
 	<msg name="subscribeurl">
-  	Subscription url
+  	Subscription URL
   </msg>
 	<msg name="limit">
 		Total
@@ -41,6 +41,11 @@
 	<msg name="noevent">
   	No new post
   </msg>	
+	<msg name="urlEmpty">
+  	It is required to enter <b>Subscription URL</b> in the Gadget Settings.<br/> Its format must be: <i>"/{container_name}/{rest_name}/ks/forum/getmessage".</i>
+  </msg>	<msg name="urlError">
+  	Your entered <b>Subscription URL</b> is not correct. Its format must be:<br/> <i>"/{container_name}/{rest_name}/ks/forum/getmessage".</i>
+  </msg>
 	<msg name="setting">
   	Setting
   </msg>

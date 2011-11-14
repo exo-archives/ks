@@ -103,136 +103,151 @@ DateTimeFormater.prototype.format = function (date, mask, utc) {
 
 DateTimeFormater = new DateTimeFormater();
 
-function DOMUtil(){	
+function DOMUtil() {
 };
 
 DOMUtil.prototype.findNextElementByTagName = function(element, tagName) {
-	var nextElement = element.nextSibling ;
+	var nextElement = element.nextSibling;
 	if(!nextElement) return null;
 	var nodeName = nextElement.nodeName.toLowerCase();
 	if(nodeName != tagName) return null;
-	return nextElement ;
-} ;
+	return nextElement;
+};
 
 DOMUtil = new DOMUtil();
-function eXoLastpostGadget(){	
-} ;
+function eXoLastpostGadget() {
+};
 
-eXoLastpostGadget.prototype.getPrefs = function(){
+eXoLastpostGadget.prototype.getPrefs = function () {
 	var prefs = new gadgets.Prefs();
-	var url = prefs.getString("url") || "/portal/rest/ks/forum/getmessage";
-	var baseurl = prefs.getString("baseurl") || "/forum";
-	var limit = prefs.getString("limit") || 5;	
+	var url = prefs.getString("url");
+	var baseurl = prefs.getString("baseurl");
+	var limit = prefs.getString("limit") || 5;
 	this.prefs = {
-		"url"  : url,
-		"baseurl"  : baseurl,
+		"url": url,
+		"baseurl": baseurl,
 		"limit": limit
 	}
 	return this.prefs;
-}
+};
 
 //TODO: Need a new solution for creating url replace for using parent 
-eXoLastpostGadget.prototype.setLink = function(){
-	var host = "http://" +  top.location.host + parent.eXo.env.portal.context + "/" + parent.eXo.env.portal.accessMode + "/" + parent.eXo.env.portal.portalName;
-	var baseurl   = eXoLastpostGadget.prefs.baseurl;
-	var url = (baseurl)?host + baseurl: host + "/forum";
-	var a = document.getElementById("ShowAll");
-	a.href = url;
-}
-eXoLastpostGadget.prototype.createRequestUrl = function(){
+eXoLastpostGadget.prototype.setLink = function () {
+	var host = "http://" + top.location.host + parent.eXo.env.portal.context + "/" + parent.eXo.env.portal.portalName;
+	var baseurl = eXoLastpostGadget.prefs.baseurl;
+	var url = (baseurl) ? (host + baseurl) : (host + "/forum");
+	document.getElementById("ShowAll").href = url;
+};
+
+eXoLastpostGadget.prototype.getData = function () {
 	var prefs = eXoLastpostGadget.prefs || eXoLastpostGadget.getPrefs();
-	var url = prefs.url + "/" + prefs.limit;
-	return url;
-}
-eXoLastpostGadget.prototype.getData = function(){					 
-	var url = eXoLastpostGadget.createRequestUrl();					
-	eXoLastpostGadget.ajaxAsyncGetRequest(url,eXoLastpostGadget.render);
-	if(typeof(requestInterval) == "undefined") requestInterval = setInterval(eXoLastpostGadget.getData,300000);
-}				
-eXoLastpostGadget.prototype.render =  function(data){
+	var url = String(prefs.url);
+	var typeM = "";
+	if (url === "") {
+		typeM = "urlEmpty";
+	} else if (url.indexOf("ks/forum/get") < 0) {
+		typeM = "urlError";
+	}
+	if (typeM != "") {
+		eXoLastpostGadget.notify(typeM);
+		return;
+	}
+	url += "/" + prefs.limit;
+	eXoLastpostGadget.ajaxAsyncGetRequest(url, eXoLastpostGadget.render);
+	if (typeof (requestInterval) == "undefined") requestInterval = setInterval(eXoLastpostGadget.getData, 300000);
+};
+
+eXoLastpostGadget.prototype.render = function (data) {
 	data = data.data;
-	if(!data || data.length == 0){
-		eXoLastpostGadget.notify();
+	if (!data || data.length == 0) {
+		eXoLastpostGadget.notify("noevent");
 		return;
 	}
 	var cont = document.getElementById("ItemContainer");
 	var prefs = eXoLastpostGadget.prefs || eXoLastpostGadget.getPrefs();
 	var gadgetPref = new gadgets.Prefs();
-	
+
 	var html = '';
-	var len = (prefs.limit && (parseInt(prefs.limit) > 0) &&  (parseInt(prefs.limit) < data.length))? prefs.limit:data.length;
-	
-	for(var i = 0 ; i < len; i++){	
-	  var item = data[i];
+	var len = (prefs.limit && (parseInt(prefs.limit) > 0) && (parseInt(prefs.limit) < data.length)) ? prefs.limit : data.length;
+
+	for (var i = 0; i < len; i++) {
+		var item = data[i];
 		var time = time = DateTimeFormater.format(new Date(item.createdDate.time));
 		html += '<div class="PostItem">';
-		html += '<a href="' + item.link + '" target="_blank">'+ eXoLastpostGadget.truncateMessage(item.message,100) +'</a>';
+		html += '<a href="' + item.link + '" target="_blank">' + eXoLastpostGadget.truncateMessage(item.message, 100) + '</a>';
 		html += '</div>';
 		html += '<div class="DateTime">' + time + '</div>';
-	}		
-  cont.innerHTML = html;
+	}
+	cont.innerHTML = html;
 	eXoLastpostGadget.setLink();
 	gadgets.window.adjustHeight();
-}
+};
 
-eXoLastpostGadget.prototype.cleanString = function(str){
-	str = str.replace(/(<([^>]+)>)/ig,"");
+eXoLastpostGadget.prototype.cleanString = function (str) {
+	str = str.replace(/(<([^>]+)>)/ig, "");
 	var start = str.lastIndexOf("QUOTE]");
-	if(start < 0) return str;	
+	if (start < 0) return str;
 	var end = str.length;
-	if(start == (end - 6)){ 
+	if (start == (end - 6)) {
 		start = 0;
 		end = str.indexOf("[QUOTE");
-		return str.substring(start,end);
+		return str.substring(start, end);
 	}
-	str = str.substring(start + 6,end);
+	str = str.substring(start + 6, end);
 	return str;
-}
+};
 
-eXoLastpostGadget.prototype.truncateMessage = function(msg,limit){
+eXoLastpostGadget.prototype.truncateMessage = function (msg, limit) {
 	msg = eXoLastpostGadget.cleanString(msg);
-	if(msg.length < limit) return msg;
+	if (msg.length < limit) return msg;
 	limit++;
-	var tmpMsg = msg.substring(0,limit);
+	var tmpMsg = msg.substring(0, limit);
 	var lastSpaceChar = tmpMsg.lastIndexOf(" ");
-	if(lastSpaceChar < limit) {
-		tmpMsg = tmpMsg.substring(0,lastSpaceChar);
+	if (lastSpaceChar < limit) {
+		tmpMsg = tmpMsg.substring(0, lastSpaceChar);
 	}
 	tmpMsg += "...";
 	return tmpMsg;
-}
+};
 
-eXoLastpostGadget.prototype.onLoadHander = function(){
+eXoLastpostGadget.prototype.onLoadHander = function () {
 	eXoLastpostGadget.getPrefs();
 	eXoLastpostGadget.getData();
-}
-eXoLastpostGadget.prototype.ajaxAsyncGetRequest = function(url, callback) {
-	/* User when get this gadget by gedget service.
-	var params = {};  
+};
+
+eXoLastpostGadget.prototype.ajaxAsyncGetRequest = function (url, callback) {
+/* User when get this gadget by gedget service.
+	var params = {};	
 	params[gadgets.io.RequestParameters.AUTHORIZATION] = gadgets.io.AuthorizationType.SIGNED;
 	params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
 	params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
-  	gadgets.io.makeRequest(url, callback, params);
-  	return;
+		gadgets.io.makeRequest(url, callback, params);
+		return;
 	 */
-	var request =  parent.eXo.core.Browser.createHttpRequest() ;
-	request.open('GET', url, true) ;
-	request.setRequestHeader("Cache-Control", "max-age=86400") ;
-	request.send(null) ;
-	if(!callback) return;
-	request.onreadystatechange = function(){
-		if(request.readyState == 4 && (request.status == 200 || request.status == 204)){
+	var request = parent.eXo.core.Browser.createHttpRequest();
+	request.open('GET', url, true);
+	request.setRequestHeader("Cache-Control", "max-age=86400");
+	request.send(null);
+	if (!callback) {
+		return;
+	}
+	request.onreadystatechange = function () {
+		if (request.status == 404) {
+			eXoLastpostGadget.notify("urlError");
+			return;
+		}
+		if (request.readyState == 4 && (request.status == 200 || request.status == 204)) {
 			callback(gadgets.json.parse(request.responseText));
 		}
-	}					
-}
+	}
+};
 
-eXoLastpostGadget.prototype.notify = function(){
-	var msg = gadgets.Prefs().getMsg("noevent");
+eXoLastpostGadget.prototype.notify = function (typeM) {
+	var msg = gadgets.Prefs().getMsg(typeM);
 	document.getElementById("ItemContainer").innerHTML = '<div class="Warning">' + msg + '</div>';
 	eXoLastpostGadget.setLink();
-}
+};
 
-eXoLastpostGadget =  new eXoLastpostGadget();
+eXoLastpostGadget = new eXoLastpostGadget();
 
-gadgets.util.registerOnLoadHandler(eXoLastpostGadget.onLoadHander);		
+gadgets.util.registerOnLoadHandler(eXoLastpostGadget.onLoadHander);
