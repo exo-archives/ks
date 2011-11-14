@@ -3,6 +3,10 @@
 	text-align: right;
 }
 
+.UIForumPortlet .UIForumLinks .NormalButtomBT {
+	margin: 0 0 0 10px;
+}
+
 .UIForumLinks .HorizontalLayout {
 	border: none;
 	background: none;

@@ -62,14 +62,14 @@
 														if(!action.equals("RemoveForum")){
 												%>
 															 
-													<li class="ItemIcon $classIconItem">
-														<a class="MenuItem" href="$link"><%=nameItem%></a>
+													<li class="MenuItem">
+														<a class="ItemIcon $classIconItem" href="$link"><%=nameItem%></a>
 													</li>
 												 
 												<%	} else {%>
 															
-													<li class="ItemIcon $classIconItem">
-														<a class="MenuItem" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UICategory.confirm.DeleteMoreForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.RemoveForum")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckForum")%>')){$link;}"><%=nameItem%></a>
+													<li class="MenuItem">
+														<a class="ItemIcon $classIconItem" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UICategory.confirm.DeleteMoreForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.RemoveForum")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckForum")%>')){$link;}"><%=nameItem%></a>
 													</li>
 														
 													<%}
@@ -102,8 +102,8 @@
 										<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
 										<a class="NormalButtomBT SearchLink" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
 									</li>
-									<li>
-										<a class="MenuItem AdvancedSearchIcon ItemIcon" href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
+									<li class="MenuItem">
+										<a class="ItemIcon AdvancedSearchIcon" href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
 									</li>
 							</ul>
 						</div>
@@ -351,8 +351,8 @@
                                   itemLabelView = itemLabelView + " " + screemNamePost ;
                                 }
                             %>
-                                  <li class="ItemIcon IconsView $viewAction MenuItem" onclick="$linkView">
-                                    <a href="javaScript:void(0)">$itemLabelView</a>
+                                  <li class="MenuItem" onclick="$linkView">
+                                    <a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
                                   </li>
                             <%
                               }
@@ -385,14 +385,14 @@
 	<div id="RightClickContainer" style="display:none;">
 		<%if(uicomponent.userProfile.getUserRole() < 3){%>
 				
-					<li class="ItemIcon AddLinkToBookIcon">
-						<a class="MenuItem AddBookmark" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+					<li class="MenuItem AddBookmark">
+						<a class="ItemIcon AddLinkToBookIcon" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 					</li>
-					<li class="ItemIcon AddWatchingIcon">
-						<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+					<li class="MenuItem AddWatching">
+						<a href="" class="ItemIcon AddWatchingIcon"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
  					</li>
- 					<li class="ItemIcon ForumRSSFeed">
-						<a class="MenuItem AddRSS" href=""><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
+ 					<li class="MenuItem AddRSS">
+						<a class="ItemIcon ForumRSSFeed" href=""><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
 					</li>
 				
 	 <% } %>

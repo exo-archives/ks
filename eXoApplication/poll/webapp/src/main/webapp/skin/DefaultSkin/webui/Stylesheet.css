@@ -46,39 +46,6 @@ ul, li {
   float:right;
 }
 
-/**************************** Fix UIRightClickPopupMenu *********************************/
-
-
-.UIPollPortlet .UIRightClickPopupMenu {
-    background: #F6F6F6;
-	border: 1px solid #d3d3d3;
-	-moz-box-shadow: 1px 1px white inset, -1px -1px white inset, 2px 2px 2px #d5d5d5;
-	-wedkit-box-shadow: 1px 1px white inset, -1px -1px white inset, 2px 2px 2px #d5d5d5;
-}
-
-.UIPollPortlet .UIRightClickPopupMenu .ItemIcon {
-	text-align:left;
-	display: block;
-	margin: 0px;
-	min-width:60px;
-	padding: 0px 5px 0px 28px;
-	background-position: 6px;
-	line-height: 24px;
-	white-space: nowrap;
-}
-
-*html .UIPollPortlet .ForumToolbar .UIRightClickPopupMenu .ItemIcon {
-	width:110px;
-}
-
-*html .UIPollPortlet .UIRightClickPopupMenu .ItemIcon {
-	width:60px;
-}
-
-.UIPollPortlet .UIRightClickPopupMenu .ItemIcon:hover {
-	background-color: #DEE4F2;
-}
-
 /******************************** ViewPollForm *******************************/
 .UIPollPortlet .ViewPollForm {
 	padding: 0px 15px;
@@ -141,7 +108,7 @@ ul, li {
 }
 
 .UIPollPortlet .DeletePollIcon {
-	background: url('background/DeletePollIcon.gif') no-repeat;
+	background: url('background/DeletePollIcon.gif') no-repeat left center;
 }
 
 .UIPollPortlet .ForumToolbar {
@@ -155,19 +122,19 @@ ul, li {
 	line-height: 24px;
 }
 .UIPollPortlet .ForumToolbar .CollapseButton {
-	background: url('background/Collapser.gif') no-repeat ;
+	background: url('background/Collapser.gif') no-repeat left center ;
 }
 
 .UIPollPortlet .EditPollIcon {
-	background:url("background/EditPollIcon.gif") no-repeat;
+	background:url("background/EditPollIcon.gif") no-repeat left center;
 }
 
 .UIPollPortlet .ClosePollIcon {
-	background:url("background/ClosePollIcon.gif") no-repeat;
+	background:url("background/ClosePollIcon.gif") no-repeat left center;
 }
 
 .UIPollPortlet .OpenPollIcon {
-	background:url("background/OpenPollIcon.gif") no-repeat;
+	background:url("background/OpenPollIcon.gif") no-repeat left center;
 }
 
 .UIPollPortlet .StatusIcon {

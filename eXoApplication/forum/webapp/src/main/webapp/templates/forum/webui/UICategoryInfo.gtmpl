@@ -61,8 +61,8 @@
                               itemLabelView = itemLabelView + " " + userView ;
                             }
                         %>
-                              <li class="ItemIcon IconsView $viewAction MenuItem" onclick="$linkView">
-                                <a href="javaScript:void(0)">$itemLabelView</a>
+                              <li class="MenuItem" onclick="$linkView">
+                                <a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
                               </li>
                         <%
                           }
@@ -108,8 +108,8 @@
                             itemLabelView = itemLabelView + " " + viewNewMember ;
                           }
                       %>
-                            <li class="ItemIcon IconsView $viewAction MenuItem" onclick="$linkView">
-                              <a href="javaScript:void(0)">$itemLabelView</a>
+                            <li class="MenuItem" onclick="$linkView">
+                              <a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
                             </li>
                       <%
                         }

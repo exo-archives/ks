@@ -81,7 +81,7 @@
     }
     isNotLogin = uicomponent.isNotLogin() ;
     if(isNotLogin){
-      linkGest = ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId()+"/false", true);
+      linkGest = ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId()+"/false", false);
     } 
   }
   String idLastPost = uicomponent.getIdPostView() ;
@@ -177,20 +177,20 @@
                             if(isView) {
                               if(action.equals("DeletePost")){
                             %>
-                                <li class="ItemIcon $classIcon MenuItem" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicDetail', '', '<%=_ctx.appRes("UITopicDetail.confirm.DeleteMorePost")%>', '<%=_ctx.appRes("UITopicContainer.confirm.DeleteOnePost")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckPost")%>')){$link;}">
-                                  <a href="javaScript:void(0)">$itemLabel</a>
+                                <li class="MenuItem" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicDetail', '', '<%=_ctx.appRes("UITopicDetail.confirm.DeleteMorePost")%>', '<%=_ctx.appRes("UITopicContainer.confirm.DeleteOnePost")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckPost")%>')){$link;}">
+                                  <a class="ItemIcon $classIcon" href="javaScript:void(0)">$itemLabel</a>
                                 </li>
                             <%
                               } else {
                             %>
-                                <li class="ItemIcon $classIcon MenuItem"  onclick="$link">
-                                  <a href="javaScript:void(0)">$itemLabel</a>
+                                <li class="MenuItem" onclick="$link">
+                                  <a class="ItemIcon $classIcon" href="javaScript:void(0)">$itemLabel</a>
                                 </li>
                             <%}
                             } else {
                             %>
-                                <li class="ItemIcon $classIcon DisableMenuItem" onclick="javaScript:void(0)">
-                                  <a href="javaScript:void(0)">$itemLabel</a>
+                                <li class="DisableMenuItem" onclick="javaScript:void(0)">
+                                  <a class="ItemIcon $classIcon" href="javaScript:void(0)">$itemLabel</a>
                                 </li>
                             <%}
                           }
@@ -212,8 +212,8 @@
                         <% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
                        <a class="SearchLink NormalButtomBT UIActionForum" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
                     </li>
-                    <li class="ItemIcon AdvancedSearchIcon MenuItem" onclick="<%=uicomponent.event("AdvancedSearch")%>">
-                      <a href="javaScript:void(0)"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
+                    <li class="MenuItem" onclick="<%=uicomponent.event("AdvancedSearch")%>">
+                      <a class="ItemIcon AdvancedSearchIcon" href="javaScript:void(0)"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
                     </li>
                   </ul>
                 </div>
@@ -271,12 +271,12 @@
                                   } 
                                   if(!isView){ 
                               %>
-                                    <li class="ItemIcon $classIcon DisableMenuItem" style="display:none;">
-                                      <a href="javaScript:void(0)">$itemLabel</a>
+                                    <li class="DisableMenuItem" style="display:none;">
+                                      <a class="ItemIcon $classIcon" href="javaScript:void(0)">$itemLabel</a>
                                     </li>
                               <% } else { %>
-                                    <li class="ItemIcon $classIcon MenuItem" onclick="$link">
-                                      <a href="javaScript:void(0)">$itemLabel</a>
+                                    <li class="MenuItem" onclick="$link">
+                                      <a class="ItemIcon $classIcon" href="javaScript:void(0)">$itemLabel</a>
                                     </li>
                                 <% } %>
                               <% } 
@@ -308,15 +308,15 @@
                                    }
                                    if(!isView){ 
                                 %>
-                                      <li class="ItemIcon $classIcon DisableMenuItem">
-                                      <a href="javaScript:void(0)">$itemLabel</a>
+                                      <li class="DisableMenuItem">
+                                      <a class="ItemIcon $classIcon" href="javaScript:void(0)">$itemLabel</a>
                                       </li>
                                 <% } else { %>
                                     <% if(isApprove) { %>
                                       <li class="LineMenu"><span></span></li>
                                     <% } %>
-                                      <li class="ItemIcon $classIcon MenuItem"  onclick="$link">
-                                        <a href="javaScript:void(0)">$itemLabel</a>
+                                      <li class="MenuItem" onclick="$link">
+                                        <a class="ItemIcon $classIcon" href="javaScript:void(0)">$itemLabel</a>
                                       </li>
                                 <% } 
                                  }  
@@ -471,8 +471,8 @@
                                 String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
                                 if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
                             %>
-                                  <li class="ItemIcon IconsView $viewAction MenuItem" onclick="$linkView">
-                                    <a href="javaScript:void(0)">$itemLabelView</a>
+                                  <li class="MenuItem" onclick="$linkView">
+                                    <a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
                                   </li>
                             <%
                               }
@@ -501,8 +501,8 @@
                             String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
                             if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + viewScreenName ;
                         %>
-                          <li class="ItemIcon IconsView $viewAction MenuItem" onclick="$linkView">
-                            <a href="javaScript:void(0)">$itemLabelView</a>
+                          <li class="MenuItem" onclick="$linkView">
+                            <a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
                           </li>
                         <%
                           }
@@ -583,7 +583,7 @@
                             String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "')){" + uicomponent.event("BanIPAllForum", ip).replaceFirst("javascript:", "") + ";}"; 
                           %>
                           <li class="MenuItem" onclick="$link">  
-                              <a  class="ItemIcon" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.BanIPAllForum")%></a>
+                              <a class="ItemIcon" href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.BanIPAllForum")%></a>
                           </li>
                         <% } %>
                         </ul>

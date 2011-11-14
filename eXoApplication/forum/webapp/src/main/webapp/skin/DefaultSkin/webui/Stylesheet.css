@@ -91,52 +91,6 @@ ul,li{
   font-size: 12px;
   color: black;
 }
-/**************************** Fix UIRightClickPopupMenu *********************************/
-
-.UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .ItemIcon {
-	min-width:110px;
-}
-
-.UIForumPortlet .UIRightClickPopupMenu {
-	display: none;
-	background: #ffffff;
-	border: 1px solid #c6c6c6;
-	-moz-box-shadow: 1px 3px 5px #e6e6e6;
-	-webkit-box-shadow: 1px 3px 5px #e6e6e6;
-	box-shadow: 1px 3px 5px #e6e6e6;
-	border-radius: 2px;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	padding: 5px;
-}
-
-.UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
-	text-align:left;
-	display: block;
-	margin: 0px;
-	min-width:60px;
-	padding: 0px 5px 0px 28px;
-	background-position: 6px;
-	line-height: 24px;
-	white-space: nowrap;
-}
-
-*html .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .ItemIcon {
-	width:110px;
-}
-
-*html .UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
-	width:60px;
-}
-
-.UIForumPortlet .UIRightClickPopupMenu .ItemIcon:hover {
-	background-color: #DEE4F2;
-	color: #F7941D;
-}
-
-.UIForumPortlet .UIRightClickPopupMenu .ItemIcon a:hover {
-	color: #F7941D;
-}
 
 /**************************** UIActionForum *********************************/
 .UIForumPortlet .UIActionForum {
@@ -179,16 +133,21 @@ ul,li{
 
 /**************************** UIForumPortlet ForumToolBar *********************************/
 .UIForumPortlet .NormalButtomBT {
-	background:url('background/buttons/NormalButtonForum.gif') repeat-x top;
+	background:url('background/buttons/NormalButtonForum.png') repeat-x top;
 	padding: 0px 5px;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border: 1px solid #acacac;
 	line-height: 20px;
-	margin: 0px 0px 0px 90px;
+	margin: 0px 0px 0px 5px;
 	white-space: nowrap;
 	font-size: 10px;
+	display: inline-block;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu a.NormalButtomBT {
+	display: inline-block;
 }
 
 .UIForumPortlet .NormalButtomBT:hover {
@@ -221,10 +180,6 @@ ul,li{
 	width:16px; height:16px; 
 	margin:5px 5px 0px 0px;
 	cursor:pointer;
-}
-
-.UIForumPortlet a {
-	color:#000000;
 }
 
 .UIForumPortlet .ForumToolbar .Title {
@@ -414,16 +369,25 @@ ul,li{
 }
 
 .UIForumPortlet .DisableMenuItem {
-	display:block;
-	white-space:nowrap;
-	cursor:auto;
-	-moz-opacity:0.5;
-	color:black;
+	padding: 0 10px;
 }
 
 .UIForumPortlet .DisableMenuItem:hover {
+	background: #eaeaea;
+}
+
+.UIForumPortlet .DisableMenuItem .ItemIcon {
+	padding: 5px 0px 5px 26px;
+	line-height: 16px;
+	width: auto;
+	cursor: pointer;
+	white-space: nowrap;
+	display: block;
 	color:gray;
-	cursor:auto;
+}
+
+.UIRightClickPopupMenu .DisableMenuItem:hover .ItemIcon {
+	
 }
 
 .UIForumPortlet .UIForm .UIFormGrid td.FieldComponent  {
@@ -602,10 +566,6 @@ ul,li{
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border: 1px solid #4d67aa;
-}
-
-.UIForumPortlet .ForumToolbar .SearchForm  .SearchPopup {
-	padding: 10px 12px 6px 12px;
 }
 
 .UIForumPortlet .UIRightClickPopupMenu .ClickPopupContent .AddLinkToBookIcon{

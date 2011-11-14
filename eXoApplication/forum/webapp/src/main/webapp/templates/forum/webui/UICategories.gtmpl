@@ -292,8 +292,8 @@
                                         itemLabelView = itemLabelView + " " + screemNamePost ;
                                       }
                                   %>
-                                        <li class="ItemIcon IconsView $viewAction MenuItem" onclick="$linkView">
-                                          <a href="javaScript:void(0)">$itemLabelView</a>
+                                        <li class="MenuItem" onclick="$linkView">
+                                          <a class="ItemIcon IconsView $viewAction" href="javaScript:void(0)">$itemLabelView</a>
                                         </li>
                                   <%
                                     }
@@ -332,14 +332,14 @@
   <div id="RightClickContainer" style="display:none">
   <%if(uicomponent.userProfile.getUserRole() < 3){%>
         
-          <li class="ItemIcon AddLinkToBookIcon">
-            <a class="MenuItem AddBookmark" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+          <li class="MenuItem AddBookmark">
+            <a class="ItemIcon AddLinkToBookIcon" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
           </li>
-          <li class="ItemIcon AddWatchingIcon">
-            <a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+          <li class="MenuItem AddWatching">
+            <a href="" class="ItemIcon AddWatchingIcon"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
           </li>
-          <li class="ItemIcon ForumRSSFeed">
-            <a class="MenuItem AddRSS" href="#"><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
+          <li class="MenuItem AddRSS">
+            <a class="ItemIcon ForumRSSFeed" href="#"><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
           </li>
         
     <% } %>

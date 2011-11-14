@@ -68,7 +68,6 @@
 .UIForumPortlet .AdvancedSearchIcon {
 	background: url('icons/16x16/FindIcon.gif') no-repeat left center;	
 	cursor: pointer;
-	margin: 0px 20px;
 }
 /******************************************** UIBreadcumbs ****************************************/
 
@@ -266,14 +265,6 @@
 	*border-top: none; 
 	padding-top: 1px;
 	*padding-top: 0px;
-}
-
-.UIForumPortlet .ContentContainer .UITopicList a {
-	color: #058ee6;
-}
-
-.UIForumPortlet .ContentContainer .UITopicList .UIRightClickPopupMenu a {
-	padding-left: 30px;
 }
 
 .UIForumPortlet .ContentContainer .ForumStatsList a {

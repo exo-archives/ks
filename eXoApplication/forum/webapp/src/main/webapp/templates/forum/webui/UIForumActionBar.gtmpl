@@ -56,8 +56,8 @@
 									
 										<ul class="UIRightClickPopupMenu" style="display:block;">
 										<% for(ac in uicomponent.getActionMenu()){ %>
-											<li class="ItemIcon ${ac}Icon">
-												<a class="MenuItem" href="<%=uicomponent.event(ac)%>" style="display:block">
+											<li class="MenuItem">
+												<a class="ItemIcon ${ac}Icon" href="<%=uicomponent.event(ac)%>" style="display:block">
 													<span><%= _ctx.appRes("UIForumActionBar.label." + ac); %></span>
 												</a>
 											</li>

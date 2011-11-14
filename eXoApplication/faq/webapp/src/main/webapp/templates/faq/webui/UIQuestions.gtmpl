@@ -97,7 +97,7 @@
 															if(action.equals("DeleteCategory") && uicomponent.isCategoryHome()) continue; 
 													%>
 															<div onmousedown="<%=uicomponent.event(action, cateId);%>" class="MenuItem">
-																<a class="IconItem $action" href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action." + action)%></a>
+																<a class="ItemIcon $action" href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action." + action)%></a>
 															</div>
 													<%
 														}%>
@@ -315,7 +315,7 @@
 																	String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);
 															%>
 																	<div class="MenuItem $lockFunction">
-																		<a class="IconItem $iconView" href="$linkView">$itemLabelView</a>
+																		<a class="ItemIcon $iconView" href="$linkView">$itemLabelView</a>
 																	</div>																
 															<%}%>
 															
@@ -326,7 +326,7 @@
 																		String linkView = uicomponent.event("EditQuestion", qId);
 																	%>	
 																		<div class="MenuItem">
-																			<a class="IconItem Edit" href="$linkView">$itemLabelView</a>
+																			<a class="ItemIcon Edit" href="$linkView">$itemLabelView</a>
 																		</div>
 																	<%	
 																	}
@@ -336,7 +336,7 @@
 															%>
 																		<div class="MenuItem">
 																			<div title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
-																				<a class="IconItem DiscussForum" href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getPath())%>"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+																				<a class="ItemIcon DiscussForum" href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getPath())%>"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
 																			</div>
 																		</div>
 															<%	
@@ -355,7 +355,7 @@
 																		}
 															%>
 																		<div class="MenuItem">
-																			<a class="IconItem DiscussForum" onmousedown="window.open('$link'); return false;" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+																			<a class="ItemIcon DiscussForum" onmousedown="window.open('$link'); return false;" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
 																		</div>
 															<%	} 
 																} 
@@ -704,7 +704,7 @@
 																												String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);																												
 																										%>
 																												<div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem $lockFunction" style="cursor:pointer;">
-																													<a class="IconItem $iconView" href="javascript:void(0);">$itemLabelView</a>
+																													<a class="ItemIcon $iconView" href="javascript:void(0);">$itemLabelView</a>
 																												</div>
 																										<%
 																											}
@@ -714,7 +714,7 @@
 																												String linkView = uicomponent.event("EditQuestion", qId);																				
 																										%>
 																											<div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem" style="cursor:pointer;">
-																												<a class="IconItem Edit" href="javascript:void(0);">$itemLabelView</a>
+																												<a class="ItemIcon Edit" href="javascript:void(0);">$itemLabelView</a>
 																											</div>
 																										<%}%>
 																									</div>

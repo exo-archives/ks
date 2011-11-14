@@ -35,15 +35,18 @@ UIForumPortlet.prototype.selectItem = function(obj) {
 		var firstItem = modMenu.getElementsByTagName("a")[0] ;
 		if(j >= 2) {
 			if(!firstItem.getAttribute("oldClass")) {
-				firstItem.setAttribute("oldClass", firstItem.className) ;
 				firstItem.setAttribute("oldHref", firstItem.href) ;
-				firstItem.className = "DisableMenuItem" ;
 				firstItem.href = "javascript:void(0);" ;
+				var parentIt = DOMUtil.findAncestorByClass(firstItem, "MenuItem");
+				firstItem.setAttribute("oldClass", parentIt.className) ;
+				parentIt.className = "DisableMenuItem" ;
 			}
 		} else {
 			if(firstItem.getAttribute("oldClass")) {
-				firstItem.className = firstItem.getAttribute("oldClass") ;
 				firstItem.href = firstItem.getAttribute("oldHref") ;
+				var parentIt = DOMUtil.findAncestorByClass(firstItem, "DisableMenuItem");
+				parentIt.className = firstItem.getAttribute("oldClass") ;
+				firstItem.setAttribute("oldClass", "") ;
 			}
 		}
 	}
@@ -153,7 +156,7 @@ UIForumPortlet.prototype.checkAction = function(obj, evt) {
 	}
 	if (alen > 2) {	
 		if (j < 1) {
-			for(var n = arguments[alen-1] ; n < mlen ; n++) {
+			for(var n = arguments[alen-1] ; n < mlen ; n++) { 
 				if(!menuItems[n].getAttribute("tmpClass")) {
 					menuItems[n].setAttribute("tmpClass",menuItems[n].className) ;
 					menuItems[n].setAttribute("tmpHref",menuItems[n].href) ;
@@ -232,19 +235,21 @@ UIForumPortlet.prototype.checkActionTopic = function(obj, evt) {
 	}
 	if(j === 0) {
 		for(var k = 0; k < mlen; k ++) {
-			if(DOMUtil.findAncestorByClass(menuItems[k], "SetUnWaiting") != null) break;
+			if(menuItems[k].className === "ItemIcon SetUnWaiting") break;
 			if(!menuItems[k].getAttribute("tmpClass")) {
-				menuItems[k].setAttribute("tmpClass",menuItems[k].className) ;
 				menuItems[k].setAttribute("tmpHref",menuItems[k].href) ;
-				menuItems[k].className = "DisableMenuItem" ;
 				menuItems[k].href = "javascript:void(0);" ;
-				DOMUtil.findAncestorByClass(menuItems[k], "ItemIcon").onclick = eXo.forum.UIForumPortlet.cancel;
+				var parentIt = DOMUtil.findAncestorByClass(menuItems[k],"MenuItem");
+				menuItems[k].setAttribute("tmpClass", parentIt.className) ;
+				parentIt.className = "DisableMenuItem";
+				parentIt.onclick = eXo.forum.UIForumPortlet.cancel;
 			}	
 		}	
 	} else {
 		for(var n = 0 ; n < mlen ; n++) {
 			if(menuItems[n].getAttribute("tmpClass")) {
-				menuItems[n].className = menuItems[n].getAttribute("tmpClass") ;
+			    var parent = DOMUtil.findAncestorByClass(menuItems[n],"DisableMenuItem");
+				if(parent) parent.className = menuItems[n].getAttribute("tmpClass") ;
 				menuItems[n].href = menuItems[n].getAttribute("tmpHref") ;
 				menuItems[n].removeAttribute("tmpClass") ;
 				menuItems[n].removeAttribute("tmpHref") ;
@@ -636,9 +641,9 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 	if(popupContents == null) return;
 	var popupContainer = document.getElementById('RightClickContainer') ;
 	if(popupContainer == null) return;
-	var itemmenuBookMark = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddBookmark") ;
-	var itemmenuWatching = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddWatching") ;
-	var itemmenuRSS = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddRSS") ;
+	var itemmenuBookMark = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddLinkToBookIcon") ;
+	var itemmenuWatching = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddWatchingIcon") ;
+	var itemmenuRSS = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "ForumRSSFeed") ;
 	if(itemmenuWatching == null || itemmenuBookMark == null) return;
 	var labelWatchings = String(itemmenuWatching.innerHTML).split(";");
 	for(var i = 0; i < popupContents.length; i++){
@@ -1035,68 +1040,3 @@ eXo.forum.CheckBox = {
 		}
 	}
 } ;
-//if(!eXo.ks) eXo.ks = {};
-//eXo.ks.UIContextMenu = {
-//	menus : [],
-//	init: function(id){
-//		var cont = document.getElementById(id);
-//		this.classNames = new Array("Title","whileRow","OddRow");
-//		this.container = cont;
-//		eXo.core.EventManager.addEvent(cont,"contextmenu",this.show);
-//	},
-//	getMenu : function(evt) {
-//		var element = this.getMenuElement(evt);
-//		if(!element) return;
-//		var menuId = element.getAttribute("ctxMenuId");
-//		var menu = eXo.core.DOMUtil.findDescendantById(this.container,menuId);
-//		if(!menu) return;
-//		if(element.tagName != "TR") element.parentNode.appendChild(menu);
-//		return menu;
-//	},
-//	getMenuElement : function(evt) {
-//		var target = eXo.core.EventManager.getEventTarget(evt);
-//		while(target){
-//			var className = target.className;
-//			if(!className) {
-//				target = target.parentNode;
-//				continue;
-//			}
-//			className = className.replace(/^\s+/g, "").replace(/\s+$/g, "");
-//			var classArray = className.split(/[ ]+/g);
-//			for (i = 0; i < classArray.length; i++) {
-//				if (this.classNames.contains(classArray[i])) {
-//					return target;
-//				}
-//			}
-//			target = target.parentNode;
-//		}
-//		return null;
-//	},
-//	hideElement: function(){
-//		var ln = eXo.core.DOMUtil.hideElementList.length ;
-//		if (ln > 0) {
-//			for (var i = 0; i < ln; i++) {
-//				eXo.core.DOMUtil.hideElementList[i].style.display = "none" ;
-//			}
-//			eXo.core.DOMUtil.hideElementList.clear() ;
-//		}
-//	},
-//	setPosition : function(obj,evt){		
-//		var x  = eXo.core.Browser.getBrowserWidth() - eXo.core.Browser.findMouseXInPage(evt) - obj.offsetWidth;
-//		var y = eXo.core.Browser.findMouseYInPage(evt);
-//		obj.style.position = "absolute";
-//		obj.style.display = "block";
-//		obj.style.top =  y + "px";
-//		obj.style.right = x + "px";
-//	},
-//	show: function(evt){
-//		eXo.core.EventManager.cancelEvent(evt);
-//		var ctx = eXo.ks.UIContextMenu;
-//		var menu = ctx.getMenu(evt);
-//		ctx.hideElement();
-//		if(!menu) return;
-//		ctx.setPosition(menu,evt);
-//		eXo.core.DOMUtil.listHideElements(menu);
-//		return false;
-//	}
-//};
