@@ -277,6 +277,10 @@ public class UIWikiPortlet extends UIPortletApplication {
     context.put(WikiConstants.IS_MARKUP, Boolean.valueOf(!wikiRichTextArea.isRendered()));
     return context;
   }
+  
+  protected boolean isKeepSessionNoTimeOut() {
+    return (this.mode == WikiMode.EDITPAGE) || (this.mode == WikiMode.EDITTEMPLATE);
+  }
  
   public static class ViewPageActionListener extends EventListener<UIWikiPortlet> {
     @Override

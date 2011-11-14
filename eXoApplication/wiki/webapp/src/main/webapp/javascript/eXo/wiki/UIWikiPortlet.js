@@ -322,6 +322,16 @@ UIWikiPortlet.prototype.decorateSpecialLink = function(uicomponentId) {
   }
 };
 
+UIWikiPortlet.prototype.setSessionKeepAliveMode = function(isKeepSessionNoTimeOut) {
+  if (isKeepSessionNoTimeOut == true) {
+    eXo.session.itvInit();
+  } else {
+    eXo.session.destroyItv();
+    eXo.session.initialized = false;
+    eXo.session.openUrl = null;
+  }
+}
+
 eXo.wiki.UIWikiPortlet = new UIWikiPortlet();
 
 /** ******************* Other functions ***************** */
