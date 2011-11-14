@@ -63,6 +63,10 @@ public class Utils {
   private static final Log      log_               = ExoLogger.getLogger(Utils.class);
   
   private static final String JCR_WEBDAV_SERVICE_BASE_URI = "/jcr";
+  
+  public static final String COMPARE_REVISION = "CompareRevision";
+  
+  public static final String VER_NAME = "verName";
 
   final private static String MIMETYPE_TEXTHTML = "text/html";
   
@@ -518,5 +522,14 @@ public class Utils {
     result = result.replaceAll("<pre class=\"diffremoveword\">",
                                "<pre style=\" background: #ffd8da;\">");
     return result;
+  }
+  
+  /*
+   * get URL to public on social activity
+   */
+  public static String getURL(String url, String verName){
+    StringBuffer strBuffer = new StringBuffer(url);
+    strBuffer.append("?").append(WikiContext.ACTION).append("=").append(COMPARE_REVISION).append("&").append(VER_NAME).append("=").append(verName);
+    return strBuffer.toString();
   }
 }

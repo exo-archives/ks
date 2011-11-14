@@ -161,10 +161,11 @@ public class UIWikiPortlet extends UIPortletApplication {
             xEvent.broadcast();
           }
         }
-      }else if (UIWikiPageInfoArea.COMPARE_REVISION.equalsIgnoreCase(pageParams.getParameter(WikiContext.ACTION))) {
+      }else if (org.exoplatform.wiki.utils.Utils.COMPARE_REVISION.equalsIgnoreCase(pageParams.getParameter(WikiContext.ACTION))) {
+        //UIWikiPageInfoArea.COMPARE_REVISION
         UIWikiPageInfoArea pageInfoArea = this.findFirstComponentOfType(UIWikiPageInfoArea.class);
         if (pageInfoArea != null) {
-          Event<UIComponent> xEvent = pageInfoArea.createEvent(UIWikiPageInfoArea.COMPARE_REVISION, Event.Phase.PROCESS, context);
+          Event<UIComponent> xEvent = pageInfoArea.createEvent(org.exoplatform.wiki.utils.Utils.COMPARE_REVISION, Event.Phase.PROCESS, context);
           if (xEvent != null) {
             xEvent.broadcast();
           }

@@ -120,7 +120,7 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
       ArrayList<NTVersion> lstVersion = new ArrayList<NTVersion>((Utils.getCurrentPageRevisions()));
       this.setVersionToCompare(lstVersion);
       WikiPageParams pageParams = Utils.getCurrentWikiPageParams();
-      String verName = pageParams.getParameter("verName");
+      String verName = pageParams.getParameter(org.exoplatform.wiki.utils.Utils.VER_NAME);
       if (!StringUtils.isEmpty(verName)) {
         for (int i = 0; i < lstVersion.size(); i++) {
           NTVersion ver = lstVersion.get(i);
