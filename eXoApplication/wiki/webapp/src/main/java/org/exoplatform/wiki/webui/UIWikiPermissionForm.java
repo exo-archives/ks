@@ -34,12 +34,12 @@ import org.exoplatform.webui.core.UIPopupContainer;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.organization.UIGroupMembershipSelector;
 import org.exoplatform.webui.organization.account.UIGroupSelector;
 import org.exoplatform.webui.organization.account.UIUserSelector;
@@ -77,7 +77,7 @@ import org.exoplatform.wiki.webui.core.UIWikiForm;
     @EventConfig(listeners = UIWikiPermissionForm.CloseActionListener.class)
   }
 ),
-@ComponentConfig(type = UIPopupWindow.class, id = "UIWikiUserPermissionPopupSelector", template = "system:/groovy/webui/core/UIPopupWindow.gtmpl", events = {
+@ComponentConfig(type = UIPopupWindow.class, id = UIWikiPermissionForm.USER_PERMISSION_POPUP_SELECTOR, template = "system:/groovy/webui/core/UIPopupWindow.gtmpl", events = {
     @EventConfig(listeners = UIWikiPermissionForm.ClosePopupActionListener.class, name = "ClosePopup"),
     @EventConfig(listeners = UIWikiPermissionForm.SelectUserActionListener.class, name = "Add", phase = Phase.DECODE),
     @EventConfig(listeners = UIWikiPermissionForm.CloseUserPopupActionListener.class, name = "Close", phase = Phase.DECODE) })
@@ -88,40 +88,55 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
 
   private Scope scope;
 
-  public static String ANY = "any";
+  public final static String ANY = "any";
   
-  public static String ADD_ENTRY = "AddEntry";
+  public final static String ADD_ENTRY = "AddEntry";
   
-  public static String DELETE_ENTRY = "DeleteEntry";
+  public final static String DELETE_ENTRY = "DeleteEntry";
   
-  public static String WIKI_PERMISSION_OWNER = "UIWikiPermissionOwner";
+  public final static String WIKI_PERMISSION_OWNER = "UIWikiPermissionOwner";
   
-  public static String PERMISSION_OWNER = "PermissionOwner";
+  public final static String PERMISSION_OWNER = "PermissionOwner";
   
-  public static String PERMISSION_POPUP_SELECTOR = "UIWikiPermissionPopupSelector";
+  public final static String PERMISSION_POPUP_SELECTOR = "UIWikiPermissionPopupSelector";
   
-  public static String USER_PERMISSION_POPUP_SELECTOR = "UIWikiUserPermissionPopupSelector";
+  public final static String USER_PERMISSION_POPUP_SELECTOR = "UIWikiUserPermissionPopupSelector";
   
-  public static String OPEN_SELECT_USER_FORM = "OpenSelectUserForm";
+  public final static String OPEN_SELECT_USER_FORM = "OpenSelectUserForm";
   
-  public static String OPEN_SELECT_GROUP_FORM= "OpenSelectGroupForm";
+  public final static String OPEN_SELECT_GROUP_FORM= "OpenSelectGroupForm";
   
-  public static String OPEN_SELECT_MEMBERSHIP_FORM= "OpenSelectMembershipForm";
+  public final static String OPEN_SELECT_MEMBERSHIP_FORM= "OpenSelectMembershipForm";
   
-  public static String GROUP_ICON = "ActionIcon GroupIcon";
+  public final static String GROUP_ICON = "ActionIcon GroupIcon";
   
-  public static String USER_ICON = "ActionIcon UserIcon";
+  public final static String USER_ICON = "ActionIcon UserIcon";
   
-  public static String MEMBERSHIP_ICON = "ActionIcon MembershipIcon";
+  public final static String MEMBERSHIP_ICON = "ActionIcon MembershipIcon";
   
-  public static String ADD_ICON = "ActionIcon Add";
+  public final static String ADD_ICON = "ActionIcon Add";
   
-  public static String SAVE = "Save";
+  public final static String SAVE = "Save";
   
-  public static String CLOSE = "Close";
+  public final static String CLOSE = "Close";
 
   public static enum Scope {
     WIKI, PAGE
+  }
+  
+  public UIPopupWindow getUserPermissionPopupSelector() {
+    return (UIPopupWindow) getChildById(createIdByScope(USER_PERMISSION_POPUP_SELECTOR));
+  }
+  
+  public UIPopupWindow getPermissionPopupSelector() {
+    return (UIPopupWindow) getChildById(createIdByScope(PERMISSION_POPUP_SELECTOR));
+  }
+  
+  private String createIdByScope(String defaultId) {
+    if (scope == null) {
+      return defaultId;
+    }
+    return defaultId + "_" + scope.toString();
   }
 
   public UIWikiPermissionForm() throws Exception {
@@ -158,9 +173,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     owner.setActionField(PERMISSION_OWNER, actions);
 
     addChild(owner);
-
-    addChild(UIPopupWindow.class, USER_PERMISSION_POPUP_SELECTOR, USER_PERMISSION_POPUP_SELECTOR);
-    addChild(UIPopupWindow.class, null, PERMISSION_POPUP_SELECTOR);
+    addPopupWindow();
 
     setActions(new String[] { SAVE, CLOSE });
   }
@@ -168,9 +181,22 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
   public Scope getScope() {
     return scope;
   }
+  
+  private void addPopupWindow() throws Exception {
+    addChild(UIPopupWindow.class, USER_PERMISSION_POPUP_SELECTOR, createIdByScope(USER_PERMISSION_POPUP_SELECTOR));
+    addChild(UIPopupWindow.class, null, createIdByScope(PERMISSION_POPUP_SELECTOR));
+  }
+  
+  private void removeOldPopupWindow() {
+    removeChildById(createIdByScope(USER_PERMISSION_POPUP_SELECTOR));
+    removeChildById(createIdByScope(PERMISSION_POPUP_SELECTOR));
+  }
 
-  public void setScope(Scope scope) {
+  public void setScope(Scope scope) throws Exception {
+    removeOldPopupWindow();
     this.scope = scope;
+    addPopupWindow();
+    
     if (Scope.WIKI.equals(this.scope)) {
       this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW, WikiMode.EDITPAGE,
           WikiMode.ADDPAGE, WikiMode.DELETEPAGE, WikiMode.VIEWREVISION, WikiMode.SHOWHISTORY,
@@ -359,7 +385,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     @Override
     public void execute(Event<UIWikiPermissionForm> event) throws Exception {
       UIWikiPermissionForm uiWikiPermissionForm = event.getSource();
-      UIPopupWindow uiPopup = uiWikiPermissionForm.getChildById(USER_PERMISSION_POPUP_SELECTOR);
+      UIPopupWindow uiPopup = uiWikiPermissionForm.getUserPermissionPopupSelector();
       uiPopup.setWindowSize(540, 0);
       UIUserSelector uiUserSelector = uiWikiPermissionForm.createUIComponent(UIUserSelector.class, null, null);
       uiUserSelector.setShowSearch(true);
@@ -390,7 +416,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     @Override
     public void execute(Event<UIWikiPermissionForm> event) throws Exception {
       UIWikiPermissionForm uiWikiPermissionForm = event.getSource();
-      UIPopupWindow uiPopup = uiWikiPermissionForm.getChildById(PERMISSION_POPUP_SELECTOR);
+      UIPopupWindow uiPopup = uiWikiPermissionForm.getPermissionPopupSelector();
       uiPopup.setWindowSize(540, 0);
       UIGroupSelector uiGroupSelector = uiWikiPermissionForm.createUIComponent(UIGroupSelector.class, null, null);
       uiPopup.setUIComponent(uiGroupSelector);
@@ -407,7 +433,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       UIFormInputWithActions inputWithActions = uiWikiPermissionForm.getChild(UIFormInputWithActions.class);
       UIFormStringInput uiFormStringInput = inputWithActions.getChild(UIFormStringInput.class);
       uiFormStringInput.setValue(groupId);
-      UIPopupWindow uiPopup = uiWikiPermissionForm.getChildById(PERMISSION_POPUP_SELECTOR);
+      UIPopupWindow uiPopup = uiWikiPermissionForm.getPermissionPopupSelector();
       closePopupAction(uiPopup, event.getRequestContext());
     }
   }
@@ -416,7 +442,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
     @Override
     public void execute(Event<UIWikiPermissionForm> event) throws Exception {
       UIWikiPermissionForm uiWikiPermissionForm = event.getSource();
-      UIPopupWindow uiPopup = uiWikiPermissionForm.getChildById(PERMISSION_POPUP_SELECTOR);
+      UIPopupWindow uiPopup = uiWikiPermissionForm.getPermissionPopupSelector();
       uiPopup.setWindowSize(540, 0);
       UIGroupMembershipSelector uiGroupMembershipSelector = uiWikiPermissionForm.createUIComponent(UIGroupMembershipSelector.class, null, null);
       uiPopup.setUIComponent(uiGroupMembershipSelector);
@@ -435,7 +461,7 @@ public class UIWikiPermissionForm extends UIWikiForm implements UIPopupComponent
       UIFormInputWithActions inputWithActions = uiWikiPermissionForm.getChild(UIFormInputWithActions.class);
       UIFormStringInput uiFormStringInput = inputWithActions.getChild(UIFormStringInput.class);
       uiFormStringInput.setValue(membershipId + ":" + currentGroup);
-      UIPopupWindow uiPopup = uiWikiPermissionForm.getChildById(PERMISSION_POPUP_SELECTOR);
+      UIPopupWindow uiPopup = uiWikiPermissionForm.getPermissionPopupSelector();
       closePopupAction(uiPopup, event.getRequestContext());
       event.getRequestContext().addUIComponentToUpdateByAjax(uiWikiPermissionForm.getParent());
     }

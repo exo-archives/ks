@@ -1,5 +1,5 @@
 <%
-  uicomponent.renderChild(uicomponent.USER_PERMISSION_POPUP_SELECTOR) ;
+  uicomponent.renderChild(uicomponent.createIdByScope(uicomponent.USER_PERMISSION_POPUP_SELECTOR)) ;
 %>
 <div class="UIForm $uicomponent.id">
   <%uiform.begin()%>
@@ -8,7 +8,7 @@
         <%
           List children = uicomponent.getChildren() ;
           for(component in children) {
-            if(component.isRendered() && component.getId()!= uicomponent.USER_PERMISSION_POPUP_SELECTOR){
+            if(component.isRendered() && component.getId() != uicomponent.createIdByScope(uicomponent.USER_PERMISSION_POPUP_SELECTOR)){
               uicomponent.renderChild(component) ;
             }
           }
