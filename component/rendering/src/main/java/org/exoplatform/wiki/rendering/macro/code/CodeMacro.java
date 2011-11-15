@@ -17,7 +17,10 @@
 package org.exoplatform.wiki.rendering.macro.code;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -26,6 +29,8 @@ import org.xwiki.component.annotation.Requirement;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.GroupBlock;
+import org.xwiki.rendering.block.WordBlock;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.box.AbstractBoxMacro;
 import org.xwiki.rendering.macro.code.CodeMacroParameters;
@@ -94,25 +99,18 @@ public class CodeMacro extends AbstractBoxMacro<CodeMacroParameters> {
   protected List<Block> parseContent(CodeMacroParameters parameters,
                                      String content,
                                      MacroTransformationContext context) throws MacroExecutionException {
-    List<Block> result;
-    try {
-      if (LANGUAGE_NONE.equalsIgnoreCase(parameters.getLanguage())) {
-        if (StringUtils.isEmpty(content)) {
-          result = Collections.emptyList();
-        } else {
-          result = this.plainTextParser.parse(new StringReader(content))
-                                       .getChildren()
-                                       .get(0)
-                                       .getChildren();
-        }
-      } else {
+    if (!LANGUAGE_NONE.equalsIgnoreCase(parameters.getLanguage())) {
+      try {
+        List<Block> result;
         result = highlight(parameters, content);
+        return result;
+      } catch (Exception e) {
+        if (getLogger().isDebugEnabled()) {
+          getLogger().debug("Can not highlight code", e);
+        }
       }
-    } catch (Exception e) {
-      throw new MacroExecutionException("Failed to highlight content", e);
     }
-
-    return result;
+    return parsePlainTextContent(content);
   }
 
   /**
@@ -150,4 +148,24 @@ public class CodeMacro extends AbstractBoxMacro<CodeMacroParameters> {
 
     return parser.highlight(parameters.getLanguage(), new StringReader(content));
   }
+  
+  private List<Block> parsePlainTextContent(String content) {
+    List<Block> result;
+    if (StringUtils.isEmpty(content)) {
+      result = Collections.emptyList();
+    } else {
+      try {
+        result = this.plainTextParser.parse(new StringReader(content))
+                                     .getChildren()
+                                     .get(0)
+                                     .getChildren();
+      } catch (Exception e) {
+        result = new ArrayList<Block>();
+        content = content.replaceAll("\n", "<br/>");
+        result.add(new GroupBlock(Arrays.<Block> asList(new WordBlock(content)), new LinkedHashMap<String, String>()));
+      }
+    }
+    return result;
+  }
+  
 }
