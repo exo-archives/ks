@@ -278,7 +278,7 @@ public class UIWikiPortlet extends UIPortletApplication {
     return context;
   }
   
-  protected boolean isKeepSessionNoTimeOut() {
+  protected boolean isKeepSessionAlive() {
     return (this.mode == WikiMode.EDITPAGE) || (this.mode == WikiMode.EDITTEMPLATE);
   }
  

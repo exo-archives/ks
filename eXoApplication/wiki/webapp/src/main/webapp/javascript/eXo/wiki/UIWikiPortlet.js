@@ -322,8 +322,8 @@ UIWikiPortlet.prototype.decorateSpecialLink = function(uicomponentId) {
   }
 };
 
-UIWikiPortlet.prototype.setSessionKeepAliveMode = function(isKeepSessionNoTimeOut) {
-  if (isKeepSessionNoTimeOut == true) {
+UIWikiPortlet.prototype.keepSessionAlive = function(isKeepSessionAlive) {
+  if (isKeepSessionAlive == true) {
     eXo.session.itvInit();
   } else {
     eXo.session.destroyItv();
