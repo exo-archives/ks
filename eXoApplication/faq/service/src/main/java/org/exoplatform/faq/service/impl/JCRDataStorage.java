@@ -1892,18 +1892,18 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           if (strUser.length() > 0) {
             if (i > 0) {
               builder.append(" or ");
-              i = 1;
             }
             builder.append("@").append(EXO_MODERATORS).append("='").append(strUser).append("'");
+            i++;
           }
-          i++;
         }
-        builder.append(" ) ");
-        builder.append(" and @").append(EXO_IS_VIEW).append("='true'  ");
+        builder.append(" ) and ");
       }
+      builder.append("(@").append(EXO_IS_VIEW).append("='true')");
       Node categoryHome = getCategoryHome(sProvider, null);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer queryString = new StringBuffer(JCR_ROOT).append(categoryHome.getParent().getPath()).append("//element(*,").append(EXO_FAQ_CATEGORY).append(")[ " + builder.toString() + " ]");
+      StringBuffer queryString = new StringBuffer(JCR_ROOT).append(categoryHome.getParent().getPath())
+                                                           .append("//element(*,").append(EXO_FAQ_CATEGORY).append(")[").append(builder).append("]");
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();
       NodeIterator iter = result.getNodes();
