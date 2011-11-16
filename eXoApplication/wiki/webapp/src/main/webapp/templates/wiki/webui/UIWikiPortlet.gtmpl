@@ -41,6 +41,13 @@
 <script type="text/javascript" src="/wiki/javascript/xwiki/xwiki.js"></script>
 <script type="text/javascript" defer src="/wiki/javascript/xwiki/xwikiexplorer/xwikiexplorer.js"></script>
 <% } %>
+
+<style type="text/css">
+body .wiki-body, html .wiki-body {
+  overflow: hidden;
+}
+</style>
+
 <!--  -->
 <div class="UIWikiPortlet" id="$uicomponent.id" >
   <div class="ParentMaskLayer">
