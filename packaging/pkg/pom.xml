@@ -568,6 +568,11 @@
       <version>${org.jboss.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.jboss</groupId>
+      <artifactId>jbossxb</artifactId>
+      <version>${org.jbossxb.version}</version>
+    </dependency>
+    <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>${commons-logging.version}</version>
