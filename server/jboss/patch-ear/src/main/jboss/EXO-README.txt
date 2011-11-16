@@ -1,26 +1,23 @@
+/**
+ * Copyright (C) 2003-2011 eXo Platform SAS.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ **/
 
-====
-    Copyright (C) 2010 eXo Platform SAS.
-    
-    This is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation; either version 2.1 of
-    the License, or (at your option) any later version.
-    
-    This software is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    Lesser General Public License for more details.
-    
-    You should have received a copy of the GNU Lesser General Public
-    License along with this software; if not, write to the Free
-    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-    02110-1301 USA, or see the FSF site: http://www.fsf.org.
-====
-
-=================================================
-    Release Notes - exo-ks - Version 2.0.0 Beta02
-=================================================
+=====================================================
+    Release Notes eXo Knowledge Suite Version 2.2.5
+=====================================================
 
 ===============
 1 Introduction
@@ -29,20 +26,31 @@
 ** eXo Knowledge  Suite provides a rich, Web 2.0 browser-based interface with comprehensive
 forum, frequency answer and question 
 
-*eXo FAQ
-
-*eXo FORUM 
-
+    * Forum : A full featured message boards application that holds on-line discussions and posts user generated content.
+    * Answers : A questions/answers application to help finding solutions
+    * FAQ : An Answers-based application to publish questions/answers in public FAQs
+    * Wiki : A very new application to help you can work on page data with confluence or xWiki syntax or rich text editor  
 =============
 2 What's new?
 =============
 
 
     * General
-          o Upgraded to GateIn 3.0 GA and dependencies http://www.jboss.org/gatein/
-          o Fix bugs 
-          
-          
+      - Many bugs fixes 
+      - Wiki add support for Confluence Graphical emoticons
+      - Forum  User's popup UI Improvement
+      - Forum  More actions, search and moderation popup UI Improvement
+      - Forum  Support wiki markup
+      - Regroup Actions on the editing UI
+      - Forum Improve label for censored posts
+      - Improve some templates to fit PLF3.5 skin style
+      - wiki UI for Save actions are not correctly placed when Help is displayed
+      - wiki When navigate in the wiki, the wiki-tree doesn't save its size 
+      - Forum From any space we should not be able to go back to the Home of the forum
+      - Forum  View User Profile must display the social user profile page if social is present
+      - Forum  Replace dates by timeIntervals 
+      - Wiki UI improvement to fit with PLF 3.5     
+     
     * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/KS+2-0-Beta02+Release+Notes            
           
 =========

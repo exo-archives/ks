@@ -1,6 +1,5 @@
-
 /**
- * Copyright (C) 2003-20010 eXo Platform SAS.
+ * Copyright (C) 2003-2011 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -16,9 +15,9 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  **/
 
-=================================================
-    Release Notes eXo Knowledge Suite Version 2.2.0
-=================================================
+=====================================================
+    Release Notes eXo Knowledge Suite Version 2.2.5
+=====================================================
 
 ===============
 1 Introduction
@@ -30,6 +29,7 @@ forum, frequency answer and question
     * Forum : A full featured message boards application that holds on-line discussions and posts user generated content.
     * Answers : A questions/answers application to help finding solutions
     * FAQ : An Answers-based application to publish questions/answers in public FAQs
+    * Wiki : A very new application to help you can work on page data with confluence or xWiki syntax or rich text editor  
 
 =============
 2 What's new?
@@ -37,9 +37,22 @@ forum, frequency answer and question
 
 
     * General
-        o 
-          
-    * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Release+Notes           
+      - Many bugs fixes 
+      - Wiki add support for Confluence Graphical emoticons
+      - Forum  User's popup UI Improvement
+      - Forum  More actions, search and moderation popup UI Improvement
+      - Forum  Support wiki markup
+      - Regroup Actions on the editing UI
+      - Forum Improve label for censored posts
+      - Improve some templates to fit PLF3.5 skin style
+      - wiki UI for Save actions are not correctly placed when Help is displayed
+      - wiki When navigate in the wiki, the wiki-tree doesn't save its size 
+      - Forum From any space we should not be able to go back to the Home of the forum
+      - Forum  View User Profile must display the social user profile page if social is present
+      - Forum  Replace dates by timeIntervals 
+      - Wiki UI improvement to fit with PLF 3.5     
+     
+    * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/KS+2-0-Beta02+Release+Notes            
           
 =========
 3 INSTALL
@@ -63,7 +76,7 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
    
    * NOTE for cygwin's user: the JAVA_HOME must be in MS Windows format like: "C:\Program Files\JDK 1.6"
     Example use: export JAVA_HOME=`cygpath -w "$JAVA_HOME"`; to convert unix like format to MS Windows format.
-    Make sure you set JAVA_OPTS="-Xshare:auto -Xms256m -Xmx1024m -XX:MaxPermSize=256M "
+    
    
    * Start jboss server:
    
@@ -74,170 +87,20 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
      +) On Unix/Linux/cygwin
        Open a terminal, go to jboss/bin and type the command:
          ./run.sh
-         
-+) Edit the file $TOMCAT_HOME/gatein/conf/configuration.properties and configure mail  if you want to enable mail notifications.
-Similarly, if you want to use the ksdemo, you need to edit $TOMCAT_HOME/gatein/conf/portal/ksdemo/ksdemo.properties
 
-To enable mail notifications, quickly you can use your own gmail account for example :
-
-# EMail
-gatein.email.smtp.username=*youracount@server.com*
-gatein.email.smtp.password=*yourpassword*
-gatein.email.smtp.host=smtp.gmail.com
-gatein.email.smtp.port=465
-gatein.email.smtp.starttls.enable=true
-gatein.email.smtp.auth=true
-gatein.email.smtp.socketFactory.port=465
-gatein.email.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
-
-         
-
-==============
-4 Known issues 
-==============
-  *  
 ===========================  
-5 Other resources and links
+4 Other resources and links
 ===========================
 * [Community JIRA>http://jira.exoplatform.org/browse/KS]
-* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.2.0]
+* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.0.0-Beta02]
 * [Download>http://download.forge.objectweb.org/exoplatform/]
 * [Live demo>http://ks.demo.exoplatform.org]
 * [Announces>http://blog.exoplatform.org/tags/ks/]
 * [Company site>http://www.exoplatform.com]
 
 ====================
-6 Detailed Changelog 
+5 Detailed Changelog 
 ====================
-- Version 2.2.0
-- Version 2.1.0
-
-- Version 2.0.0
-
-** Bug
-    * [KS-701] - Post with special format can ruin the font style of the forum 
-    * [KS-1880] - Backport Translation and formatting patch
-    * [KS-1933] - [BFPME-475] i18n labels
-    * [KS-2096] - deletion of a user isn't fully propagated throughout the system
-    * [KS-2195] - RSS from forum and faq generate is not true.
-    * [KS-2259] - javascript errors on first drop of Forum app
-    * [KS-2277] - In IE 7: Border is broken in Notification form. see file attach
-    * [KS-2311] - Tomcat KS 2.0 Beta01 doesn't start on linux
-    * [KS-2317] - IE 7: Forum's description pane disappears after move scroll bar of browser to bottom.
-    * [KS-2361] - Error  when import "Root" category
-    * [KS-2386] - Don't show first topic of Forum when get RSS of Category
-    * [KS-2395] - deleted topic is restored 
-    * [KS-2401] - Answers portlet stays in french when I change language to English
-    * [KS-2402] - FAQ - Still possible to create a question at the root
-    * [KS-2424] - FAQ- Administrator VS moderator
-    * [KS-2437] - Remove the use of exoservice gmail Account from MPailService configuration
-    * [KS-2441] - Don't  show topic/post when get RSS of category&Forum
-    * [KS-2442] - Don't show question when get RSS of root category
-    * [KS-2443] - Still can rate for topic although topic rated
-    * [KS-2458] - [Post reply] button is still visible although this user does not have permission to reply topic
-    * [KS-2459] -  There is no way to back to Forum home after search into a specific topic
-    * [KS-2460] - Can not edit topic with limitation of viewers
-    * [KS-2461] - Answer - Still show unapprove question when user is owner of this question
-    * [KS-2463] - Don't show date/time when check number of Most Users online
-    * [KS-2465] - Show message error JS  when click add category after removed user "demo"
-    * [KS-2466] - Answer - Can not sort category/question by created date/alphabet
-    * [KS-2467] - Always show total active members is 1 although there are some user are active in forum on different browsers
-    * [KS-2469] -  User is still able to move the topic to the forum which this user does not have right to add topic
-    * [KS-2471] -  User is still able to move topic to closed and locked forum which user is not the moderator of the destination forum
-    * [KS-2472] - User is still able to move topic to the Forum which belongs to the Category that user has been restricted view permission
-    * [KS-2475] - Can't search by Answer
-    * [KS-2478] - Category's moderator don't see the approve and actvicate options when editing a question in this category
-    * [KS-2502] -  Displaying Total topic/post is "0" although there are some posts
-    * [KS-2522] - Forum: some translation in French
-    * [KS-2528] - French translation encoding is F**ed
-    * [KS-2532] - [Answer] show error when get RSS of a category that without sub-categories
-    * [KS-2535] - User is still able view post although without view permission in special case
-
-** Feedback
-    * [KS-2510] - Create topic is too slow
-    * [KS-2525] - "Email notify" prefixes email notifications
-
-** Improvement
-    * [KS-1242] - Create Shorter Permlinks
-    * [KS-1659] - quotes in preview pane are not displayed
-    * [KS-1694] - Variables for notification subject
-    * [KS-1728] - Click on user name to display menu
-    * [KS-1882] - Translate label (on Forum)
-    * [KS-1885] - Change the message related to the Moderation (on Forum)
-    * [KS-1890] - Correcting esthetical, spelling and translating some words
-    * [KS-2005] - Display  sort order 
-    * [KS-2346] - Allow to display question details in FAQ portlet
-    * [KS-2527] - Anyone can answer by default
-
-** New Feature
-    * [KS-1956] - Configurable JCR data  location 
-    * [KS-2218] - New Administration Menu
-
-** Task
-    * [KS-2398] - Fix missing dependencies
-    * [KS-2524] - remove source button in FCK Editor
-    * [KS-2526] - Polish demo homepage
-    * [KS-2551] - Use the new logos
-    * [KS-2552] - remove redhat mention in footer
-
-
-
-- Version 2.0.0-CR02 
-
-** Bug
-    * [KS-2195] - RSS from forum and faq generate is not true.
-    * [KS-2304] - Category is appear again after deleted
-    * [KS-2312] - JBoss KS 2.0 Beta01 doesn't start on linux
-    * [KS-2371] - Checking session manager problem
-    * [KS-2381] - Can't add a poll
-    * [KS-2383] - Don't show second question of category  in RSS's content
-    * [KS-2389] - Don't show object (category/forum/topic) which got RSS feed in My subscription tab
-    * [KS-2393] - In /ksdemo: default data isn't displayed in both Forum & Answer
-    * [KS-2394] - sometimes can not add category/forum/topic after do some actions in Forum
-    * [KS-2396] - Can not add new Category after deleting Category by the main menu on the action bar
-    * [KS-2401] - Answers portlet stays in french when I change language to English
-    * [KS-2402] - FAQ - Still possible to create a question at the root
-    * [KS-2404] - Some functions are not executed after add category with special character for Restricted Audience field
-    * [KS-2410] - Edit question is invalid in special case
-    * [KS-2421] - FAQ- Problem of moderate questions 
-
-** Task
-    * [KS-1936] - Manage e.printStacktrace() and replace by logging system for Forum and FAQ
-    * [KS-2378] - NPE stacktrace at startup
-
-- Version 2.0.0-CR01
-  http://jira.exoplatform.org/secure/ReleaseNote.jspa?version=11378&styleName=Text&projectId=10150&Create=Create
-** Bug
-     
-    * [KS-2203] - Show code error in Rss feed content of forum 
-    * [KS-2212] - Don't show questions when get RSS of Answer porlet
-    * [KS-2217] - Some bugs with Setting and active prune
-    * [KS-2240] - Alert message is shown below Add tag textbox. see file attach
-    * [KS-2242] - Show pending index is incorrect in special case. see file attach
-    * [KS-2266] - Remove text which unavailable in alert message. see file attach
-    * [KS-2269] - Show message "This file has been lost" although this file is existing in attachment
-    * [KS-2274] - Split topic pop up is closed after alert message appears
-    * [KS-2276] - Category is still displayed although deleted  in special case.
-    * [KS-2278] - IE 7: Remove scroll bar at right & bottom of Topic type form
-    * [KS-2280] - IE7: Don't keep ticking on check box after next/previous page.
-    * [KS-2298] - IE7: List  tag is empty when there are 2 pages post in topic
-    * [KS-2299] - Added poll in topic is still displayed although without view topic right.
-    * [KS-2315] - IE7: Upload icon isn't displayed. See file attach
-    * [KS-2318] - IE7: Error JS when add post reply in special case
-    * [KS-2319] - IE7: show message error when setting forum in a special case
-    * [KS-2320] - Bug unknown error when view topic in special case 
-    * [KS-2334] - Edit mode: Forum is still unchecked although it's showing in special case
-    * [KS-2337] - watch category: Email is still listed in watches form although unwatched 
-    * [KS-2339] - Attached file in question is lost in special case
-    * [KS-2340] - Relate question disappears after move it to a destination category
-    * [KS-2345] - Have problem with add post reply in default topic
-    * [KS-2347] - Cannot add a new forum
-    * [KS-2352] - Error when view topic and throw exception
-
-** Improvement
-    * [KS-2309] - In category drop down list: should focus to category which opening.
-    * [KS-2338] - Need to change from warning message to info message
-    
 - Version 2.0.0-Beta02
 * Bug
     * [KS-2236] - Exception throws in console when deleting category and question in Answers 
