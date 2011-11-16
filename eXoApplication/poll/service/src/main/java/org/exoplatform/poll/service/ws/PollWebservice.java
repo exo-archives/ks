@@ -4,7 +4,6 @@
 package org.exoplatform.poll.service.ws;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -116,7 +115,8 @@ public class PollWebservice implements ResourceContainer {
         PollService pollService = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
         Poll poll = pollService.getPoll(pollId.trim());
         String username = getUserId();
-        if (poll != null && !IdentityConstants.ANONIM.equals(username)) {
+        if (poll != null && !IdentityConstants.ANONIM.equals(username) && 
+            validateIndexVote(indexVote, poll.getOption().length)) {
           poll = Utils.calculateVote(poll, username, indexVote);
           pollService.savePoll(poll, false, true);
           poll.setVotes();
@@ -128,8 +128,24 @@ public class PollWebservice implements ResourceContainer {
       } catch (Exception e) {
         log.debug("Failed to vote poll.", e);
       }
+      return Response.ok("You do not have permission to vote this poll; or some options have been removed from the poll.", MediaType.TEXT_PLAIN).cacheControl(cacheControl).build();
     }
     return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+  }
+
+  private boolean validateIndexVote(String indexVote, int max) {
+    String[] ivArr = indexVote.split(Utils.COLON);
+    for (int i = 1; i < ivArr.length; i++) {
+      try {
+        int t = Integer.parseInt(ivArr[i]);
+        if (t >= max) {
+          return false;
+        }
+      } catch (Exception e) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private boolean isGuestPermission(Poll poll_) throws Exception {

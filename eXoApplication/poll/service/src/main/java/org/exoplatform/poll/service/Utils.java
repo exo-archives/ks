@@ -20,7 +20,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by The eXo Platform SAS
@@ -77,7 +80,9 @@ public class Utils {
       }
     }
     userVote.remove(currentVote);
-
+    if(voteOptions.indexOf(COLON) > 0) {
+      voteOptions = StringUtils.join(new HashSet<String>(Arrays.asList(voteOptions.split(COLON))), COLON);
+    }
     // add the new vote
     userVote.add(userId + COLON + voteOptions);
 
@@ -87,7 +92,7 @@ public class Utils {
     for (String uv : userVote) {
       String[] uvArr = uv.split(COLON);
       for (int i = 1; i < uvArr.length; i++) {
-        votes[Integer.parseInt(uvArr[i])]++;
+        votes[Integer.parseInt(uvArr[i].trim())]++;
         total++;
       }
     }

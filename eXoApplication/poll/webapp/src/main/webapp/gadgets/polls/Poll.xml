@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+    <ModulePrefs title="Poll" author="eXoPlatform"
+     author_email="tuvd@exoplatform.com"
+     thumbnail="style/Polls.png"
+     description="Show a featured poll">
+        <Require feature="opensocial-0.8"/>
+        <Require feature="dynamic-height"/>
+        <Require feature="views"/>
+        <Require feature="settitle"/>
+        <Require feature="minimessage"/>
+        <Locale messages="locale/default.xml"/>
+        <Locale lang="fr" messages="locale/fr.xml"/>
+        <Locale lang="en" messages="locale/en.xml"/>
+
+    </ModulePrefs>
+    <Content type="html" view="default, home, profile">
+        <![CDATA[   
+    <link rel="stylesheet" href="style/poll.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="style/gadget-common.css" />
+    <script src="script/jquery.min.js"></script>
+    <script type="text/javascript">
+    var MODULE_ID = __MODULE_ID__;    
+    </script>
+
+    <script type="text/javascript" src="script/poll.js"></script>
+    
+    <!-- View of the gadget  -->
+    <div class="UIGadgetThemes">
+      <div class="TitGad ClearFix">
+         <div title="Setting" id="SettingButton" class="SettingButton" style="display:block; height:19px">
+            <a href="#"></a>
+          </div>
+        <div class="ContTit">__MSG_title__</div>
+      </div>
+      <!-- Display poll  -->
+      <div class="GadCont">
+        <div  id="listpoll"></div>
+        <div  id="poll" class="ClearFix"></div>
+        <div id="createpoll" class="light_message" style="margin-top: 8px"></div>
+      </div>
+    </div>
+  ]]>
+    </Content>
+</Module>

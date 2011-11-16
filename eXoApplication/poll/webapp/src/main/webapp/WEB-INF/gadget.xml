@@ -26,6 +26,6 @@
     xmlns="http://www.gatein.org/xml/ns/gadgets_1_0">
 
 	<gadget name="pollslist">
-		<path>/gadgets/polls/Polls.xml</path>
+		<path>/gadgets/polls/Poll.xml</path>
 	</gadget>
 </gadgets>

@@ -19,15 +19,17 @@
 
 -->
 
-<messagebundle>  
-  <msg name="doNotPermission">You do not permission to show this gadget.</msg>
-  <msg name="editPoll">Edit poll gadget.</msg>
-  <msg name="voteNow">Vote Now</msg>
-  <msg name="poll">Poll:</msg>
-  <msg name="options">Options</msg>
-  <msg name="percentage">Percentage</msg>
-  <msg name="votes">Votes</msg>
-  <msg name="totalVoters">Total voters:</msg>
-  <msg name="cmSelectPoll">You can select the Poll to show poll in this gadget.</msg>
-  <msg name="selectPoll">Select Poll:</msg>
+<messagebundle>
+  <msg name="title">Featured Poll</msg>
+  <msg name="setting">Setting</msg>
+  <msg name="vote">Vote</msg>
+  <msg name="voteAgain">Vote again</msg>
+  <msg name="warning">Please choose one option at least</msg>
+  <msg name="option">Options</msg>
+  <msg name="percent">Percent</msg>
+  <msg name="voter">voters</msg>
+  <msg name="total">Total</msg>
+  <msg name="discuss">Discuss in forum</msg>
+  <msg name="nopoll">There are no polls...</msg>  
+  <msg name="createPoll">Create your poll on</msg>    
 </messagebundle>
