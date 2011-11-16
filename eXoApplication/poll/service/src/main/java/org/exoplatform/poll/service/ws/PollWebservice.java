@@ -4,6 +4,7 @@
 package org.exoplatform.poll.service.ws;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.IdentityConstants;
 import org.exoplatform.services.security.MembershipEntry;
 
 /**
@@ -113,8 +115,9 @@ public class PollWebservice implements ResourceContainer {
       try {
         PollService pollService = (PollService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
         Poll poll = pollService.getPoll(pollId.trim());
-        if (poll != null) {
-          poll = calculateVote(poll, getUserId(), indexVote);
+        String username = getUserId();
+        if (poll != null && !IdentityConstants.ANONIM.equals(username)) {
+          poll = Utils.calculateVote(poll, username, indexVote);
           pollService.savePoll(poll, false, true);
           poll.setVotes();
           poll.setInfoVote();
@@ -129,103 +132,6 @@ public class PollWebservice implements ResourceContainer {
     return Response.status(Status.INTERNAL_SERVER_ERROR).build();
   }
 
-  private Poll calculateVote(Poll poll, String userVote, String optionVote) throws Exception {
-    String[] votes;
-    String[] setUserVote;
-    // User vote and vote number
-    String[] temporary = poll.getUserVote();
-    int size = 0;
-    if (temporary != null && temporary.length > 0) {
-      size = temporary.length;
-    }
-    if (!poll.getIsMultiCheck()) {
-      // order number
-      int j = Integer.valueOf(optionVote);
-
-      setUserVote = new String[(size + 1)];
-      System.arraycopy(temporary, 0, setUserVote, 0, size);
-      setUserVote[size] = userVote + ":" + j;
-      size = size + 1;
-      votes = poll.getVote();
-      double onePercent = (double) 100 / size;
-      int i = 0;
-      for (String vote : votes) {
-        double a = Double.parseDouble(vote);
-        if (i == j)
-          votes[i] = "" + ((a - a / size) + onePercent);
-        else
-          votes[i] = "" + (a - a / size);
-        i = i + 1;
-      }
-      // save Poll
-      poll.setVote(votes);
-      poll.setUserVote(setUserVote);
-      // multichoice when vote
-    } else {
-      List<String> listValue = new ArrayList<String>();// list index checked
-
-      votes = poll.getVote();
-      double totalVote = 0;
-      double doubleVote[] = new double[votes.length];
-      String[] listUserVoted = poll.getUserVote();
-      if (listUserVoted.length > 0) {
-        for (String us : listUserVoted) {
-          totalVote += us.split(":").length - 1;
-        }
-      }
-      int i = 0;
-      int pos = 0;
-      if (votes != null && votes.length > 0) {
-        for (String v : votes) {
-          doubleVote[i++] = Double.parseDouble(v);
-        }
-      }
-      if (totalVote > 0) {
-        for (i = 0; i < doubleVote.length; i++) {
-          doubleVote[i] = (doubleVote[i] * totalVote) / 100;
-        }
-      }
-
-      setUserVote = poll.getUserVote();
-      for (i = 0; i < setUserVote.length; i++) {
-        if (setUserVote[i].split(":")[0].equals(userVote)) {
-          pos = i;
-          break;
-        }
-      }
-      String[] posHaveVoted = (setUserVote[pos].substring(setUserVote[pos].indexOf(":"))).split(":");
-      setUserVote[pos] = setUserVote[pos].substring(0, setUserVote[pos].indexOf(":"));
-      for (String posVoted : posHaveVoted) {
-        if (Utils.isEmpty(posVoted)) {
-          doubleVote[Integer.parseInt(posVoted)] -= 1;
-          totalVote -= 1;
-        }
-      }
-      i = 0;
-      for (String option : poll.getOption()) {
-        if (listValue.contains(option)) {
-          doubleVote[i] += 1;
-          totalVote += 1;
-          setUserVote[pos] += ":" + i;
-        }
-        i++;
-      }
-      i = 0;
-      for (double dv : doubleVote) {
-        if (totalVote > 0)
-          votes[i] = ((dv / totalVote) * 100) + "";
-        else
-          votes[i] = "0";
-        i++;
-      }
-      // save votes:
-      poll.setUserVote(setUserVote);
-      poll.setVote(votes);
-    }
-
-    return poll;
-  }
-
   private boolean isGuestPermission(Poll poll_) throws Exception {
     if (poll_.getIsClosed())
       return true;
@@ -235,7 +141,7 @@ public class PollWebservice implements ResourceContainer {
         return true;
     }
     String username = getUserId();
-    if (Utils.isEmpty(username))
+    if (Utils.isEmpty(username) || IdentityConstants.ANONIM.equals(username))
       return true;
     String[] userVotes = poll_.getUserVote();
     for (String string : userVotes) {

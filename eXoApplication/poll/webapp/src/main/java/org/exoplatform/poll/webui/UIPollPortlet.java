@@ -28,6 +28,7 @@ import org.exoplatform.poll.Utils;
 import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.IdentityConstants;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -89,12 +90,14 @@ public class UIPollPortlet extends UIPortletApplication {
       List<String> list = new ArrayList<String>();
       Identity identity = ConversationState.getCurrent().getIdentity();
       userId = identity.getUserId();
-      if (Utils.isEmpty(userId)) {
+      if (Utils.isEmpty(userId) || IdentityConstants.ANONIM.equals(userId)) {
         userId = UserHelper.getCurrentUser();
+        if(!Utils.isEmpty(userId)) {
+          list.add(userId);
+        }
       } else {
         list.addAll(identity.getGroups());
       }
-      list.add(userId);
       for (String str : list) {
         if (str.equals(userACL.getSuperUser()) || str.equals(userACL.getAdminGroups()))
           isAdmin = true;

@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.portlet.PortletPreferences;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
@@ -89,7 +90,7 @@ public class UIPoll extends BasePollForm {
     userId = pollPortlet.getUserId();
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-    pollId = portletPref.getValue(Utils.POLL_ID_SHOW, "");
+    pollId = portletPref.getValue(Utils.POLL_ID_SHOW, StringUtils.EMPTY);
     if (Utils.isEmpty(pollId)) {
       List<String> list = getPollService().getPollSummary(null).getPollId();
       if (!list.isEmpty()) {
@@ -139,19 +140,17 @@ public class UIPoll extends BasePollForm {
     this.isEditPoll = true;
   }
 
-  @SuppressWarnings("unchecked")
-  private void init() throws Exception {
-    if (this.hasChildren()) {
-      this.removeChild(UIFormRadioBoxInput.class);
-      int i = 0;
-      while (i < 10) {
-        if (this.hasChildren())
-          this.removeChild(UIForumCheckBoxInput.class);
-        else
-          break;
-        ++i;
+  private void removeChilren() {
+    List<UIComponent> children = new ArrayList<UIComponent>(getChildren());
+    for (UIComponent child : children) {
+      if (child instanceof UIFormRadioBoxInput || child instanceof UIForumCheckBoxInput) {
+        removeChild(child.getClass());
       }
     }
+  }
+
+  private void init() throws Exception {
+    removeChilren();
     if (poll_ != null) {
       if (!poll_.getIsMultiCheck()) {
         List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>();
@@ -212,7 +211,7 @@ public class UIPoll extends BasePollForm {
     }
     String[] userVotes = poll_.getUserVote();
     for (String string : userVotes) {
-      string = string.substring(0, string.indexOf(":"));
+      string = string.substring(0, string.indexOf(org.exoplatform.poll.service.Utils.COLON));
       if (string.equalsIgnoreCase(userId))
         return true;
     }
@@ -228,7 +227,7 @@ public class UIPoll extends BasePollForm {
       size = userVotes.length;
     } else {
       for (int i = 0; i < userVotes.length; i++) {
-        size += userVotes[i].split(":").length - 1;
+        size += userVotes[i].split(org.exoplatform.poll.service.Utils.COLON).length - 1;
       }
     }
     temp = size;
@@ -241,10 +240,10 @@ public class UIPoll extends BasePollForm {
       double tmp = Double.parseDouble(string);
       double k = (tmp * size) / 100;
       int t = (int) Math.round(k);
-      string = "" + (double) t * 100 / size;
-      infoVote[j] = string + ":" + t;
+      string = String.valueOf((double) t * 100 / size);
+      infoVote[j] = string + org.exoplatform.poll.service.Utils.COLON + String.valueOf(t);
     }
-    infoVote[l] = "" + temp;
+    infoVote[l] = String.valueOf(temp);
     if (poll.getIsMultiCheck()) {
       infoVote[l] = String.valueOf(userVotes.length);
     }
@@ -252,167 +251,55 @@ public class UIPoll extends BasePollForm {
   }
 
   static public class VoteActionListener extends EventListener<UIPoll> {
-    @SuppressWarnings("unchecked")
     public void execute(Event<UIPoll> event) throws Exception {
       UIPoll topicPoll = event.getSource();
-      Poll poll = topicPoll.poll_;
-      String[] votes;
-      String[] setUserVote;
-      String userVote = topicPoll.userId;
+      String values = StringUtils.EMPTY;
       List<UIComponent> children = topicPoll.getChildren();
-
-      // User vote and vote number
-      String[] temporary = topicPoll.poll_.getUserVote();
-      int size = 0;
-      if (temporary != null && temporary.length > 0) {
-        size = temporary.length;
-      }
-
-      if (!poll.getIsMultiCheck()) {
-        UIFormRadioBoxInput radioInput = null;
+      topicPoll.poll_ = topicPoll.getPollService().getPoll(topicPoll.pollId);
+      int maxOption = topicPoll.poll_.getOption().length;
+      boolean isFailed = false;
+      int i = 0;
+      if (!topicPoll.poll_.getIsMultiCheck()) {
         for (UIComponent child : children) {
           if (child instanceof UIFormRadioBoxInput) {
-            radioInput = (UIFormRadioBoxInput) child;
-          }
-        }
-        if (radioInput.getValue().equalsIgnoreCase("vote")) {
-          topicPoll.warning("UIPoll.msg.notCheck", false);
-        } else {
-          // order number
-          List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>();
-          options = radioInput.getOptions();
-          int i = 0, j = 0;
-          for (SelectItemOption<String> option : options) {
-            if (option.getValue().equalsIgnoreCase(radioInput.getValue())) {
-              j = i;
-              break;
-            }
-            i = i + 1;
-          }
-          int index = 0;
-          if (topicPoll.isAgainVote) {
-            setUserVote = new String[size];
-            for (int t = 0; t < size; t++) {
-              String string = temporary[t].substring(0, temporary[t].length() - 2);
-              if (string.equalsIgnoreCase(userVote)) {
-                setUserVote[t] = userVote + ":" + j;
-                index = t;
-              } else {
-                setUserVote[t] = temporary[t];
+            for (SelectItemOption<String> option : ((UIFormRadioBoxInput) child).getOptions()) {
+              if (option.getValue().equalsIgnoreCase(((UIFormRadioBoxInput) child).getValue())) {
+                values = String.valueOf(i);
+                if(i >= maxOption){
+                  isFailed = true;
+                }
+                break;
               }
+              ++i;
             }
-          } else {
-            setUserVote = new String[(size + 1)];
-            System.arraycopy(temporary, 0, setUserVote, 0, size);
-            setUserVote[size] = userVote + ":" + j;
-            size = size + 1;
+            break;
           }
-          votes = topicPoll.poll_.getVote();
-          double onePercent = (double) 100 / size;
-          if (topicPoll.isAgainVote) {
-            char tmp = temporary[index].charAt((temporary[index].length() - 1));
-            int k = Integer.valueOf(tmp) - 48;
-            if (k < votes.length)
-              votes[k] = String.valueOf((Double.parseDouble(votes[k]) - onePercent));
-            votes[j] = String.valueOf((Double.parseDouble(votes[j]) + onePercent));
-          } else {
-            i = 0;
-            for (String vote : votes) {
-              double a = Double.parseDouble(vote);
-              if (i == j)
-                votes[i] = "" + ((a - a / size) + onePercent);
-              else
-                votes[i] = "" + (a - a / size);
-              i = i + 1;
-            }
-          }
-          // save Poll
-          poll.setVote(votes);
-          poll.setUserVote(setUserVote);
         }
         // multichoice when vote
       } else {
-        UIForumCheckBoxInput forumCheckBox = null;
-        List<String> listValue = new ArrayList<String>();
         for (UIComponent child : children) {
           if (child instanceof UIForumCheckBoxInput) {
-            forumCheckBox = ((UIForumCheckBoxInput) child);
-            if (forumCheckBox.isChecked()) {
-              listValue.add(forumCheckBox.getName());
-            }
-          }
-        }
-        if (!listValue.isEmpty()) {
-          votes = topicPoll.poll_.getVote();
-          double totalVote = 0;
-          double doubleVote[] = new double[votes.length];
-          String[] listUserVoted = topicPoll.poll_.getUserVote();
-          if (listUserVoted.length > 0) {
-            for (String us : listUserVoted) {
-              totalVote += us.split(":").length - 1;
-            }
-          }
-          int i = 0;
-          int pos = 0;
-          if (votes != null && votes.length > 0) {
-            for (String v : votes) {
-              doubleVote[i++] = Double.parseDouble(v);
-            }
-          }
-          if (totalVote > 0) {
-            for (i = 0; i < doubleVote.length; i++) {
-              doubleVote[i] = (doubleVote[i] * totalVote) / 100;
-            }
-          }
-          if (!topicPoll.isAgainVote) {
-            i = 0;
-            pos = size;
-            setUserVote = new String[size + 1];
-            for (String userHaveVoted : poll.getUserVote())
-              setUserVote[i++] = userHaveVoted;
-            setUserVote[i] = userVote;
-          } else {
-            setUserVote = poll.getUserVote();
-            for (i = 0; i < setUserVote.length; i++) {
-              if (setUserVote[i].split(":")[0].equals(userVote)) {
-                pos = i;
+            if (((UIForumCheckBoxInput) child).isChecked()) {
+              if (i >= maxOption) {
+                isFailed = true;
                 break;
               }
+              values += ((values.length() > 0) ? org.exoplatform.poll.service.Utils.COLON : StringUtils.EMPTY) + String.valueOf(i);
             }
-            String[] posHaveVoted = (setUserVote[pos].substring(setUserVote[pos].indexOf(":"))).split(":");
-            setUserVote[pos] = setUserVote[pos].substring(0, setUserVote[pos].indexOf(":"));
-            for (String posVoted : posHaveVoted) {
-              if (!Utils.isEmpty(posVoted)) {
-                doubleVote[Integer.parseInt(posVoted)] -= 1;
-                totalVote -= 1;
-              }
-            }
+            ++i;
           }
-          i = 0;
-          for (String option : topicPoll.poll_.getOption()) {
-            if (listValue.contains(option)) {
-              doubleVote[i] += 1;
-              totalVote += 1;
-              setUserVote[pos] += ":" + i;
-            }
-            i++;
-          }
-          i = 0;
-          for (double dv : doubleVote) {
-            if (totalVote > 0 && dv > 0)
-              votes[i] = ((dv / totalVote) * 100) + "";
-            else
-              votes[i] = "0.0";
-            i++;
-          }
-          // save votes:
-          poll.setUserVote(setUserVote);
-          poll.setVote(votes);
+        }
+      }
+      if(!isFailed) {
+        if (!Utils.isEmpty(values)) {
+          Poll poll = org.exoplatform.poll.service.Utils.calculateVote(topicPoll.poll_, topicPoll.userId, values);
+          topicPoll.getPollService().savePoll(poll, false, true);
         } else {
           topicPoll.warning("UIPoll.msg.notCheck", false);
         }
+      } else {
+        topicPoll.warning("UIPoll.msg.voteFailed", false);
       }
-      topicPoll.getPollService().savePoll(poll, false, true);
       topicPoll.isAgainVote = false;
       event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll.getParent());
     }
@@ -429,10 +316,10 @@ public class UIPoll extends BasePollForm {
         popupAction = forumPollPortlet.getChild(UIPopupAction.class);
       }
       UIPollForm pollForm = popupAction.createUIComponent(UIPollForm.class, null, null);
+      topicPoll.isEditPoll = true;
       topicPoll.poll_ = topicPoll.getPoll();
       pollForm.setUpdatePoll(topicPoll.poll_, true);
       popupAction.activate(pollForm, 662, 466);
-      topicPoll.isEditPoll = true;
     }
   }
 
@@ -441,15 +328,8 @@ public class UIPoll extends BasePollForm {
       UIPoll topicPoll = event.getSource();
       try {
         topicPoll.getPollService().removePoll(topicPoll.pollId);
+        topicPoll.removeChilren();
       } catch (Exception e) {
-      }
-      if (topicPoll.poll_.getIsMultiCheck()) {
-        List<UIComponent> children = topicPoll.getChildren();
-        for (int i = 0; i < children.size(); i++) {
-          topicPoll.removeChild(UIForumCheckBoxInput.class);
-        }
-      } else {
-        topicPoll.removeChild(UIFormRadioBoxInput.class);
       }
       UIPollPortlet pollPortlet = topicPoll.getAncestorOfType(UIPollPortlet.class);
       topicPoll.setRendered(false);
@@ -461,8 +341,8 @@ public class UIPoll extends BasePollForm {
     public void execute(Event<UIPoll> event) throws Exception {
       UIPoll topicPoll = event.getSource();
       topicPoll.isAgainVote = true;
+      topicPoll.isEditPoll = true;
       topicPoll.poll_ = topicPoll.getPoll();
-      topicPoll.init();
       event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll);
     }
   }
@@ -477,6 +357,7 @@ public class UIPoll extends BasePollForm {
       }
       try {
         topicPoll.getPollService().setClosedPoll(topicPoll.poll_);
+        topicPoll.isEditPoll = true;
       } catch (Exception e) {
       }
       topicPoll.isAgainVote = false;

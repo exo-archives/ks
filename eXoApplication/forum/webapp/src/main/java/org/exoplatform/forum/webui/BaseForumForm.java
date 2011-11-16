@@ -155,10 +155,10 @@ public class BaseForumForm extends BaseUIForm {
       values.add(userProfile.getEmail());
       getForumService().addWatch(1, path, values, userProfile.getUserId());
       setListWatches();
-      info("UIAddWatchingForm.msg.successfully");
+      info("UIAddWatchingForm.msg.successfully", false);
       return true;
     } catch (Exception e) {
-      warning("UIAddWatchingForm.msg.fall");
+      warning("UIAddWatchingForm.msg.fall", false);
       return false;
     }
   }
@@ -167,10 +167,10 @@ public class BaseForumForm extends BaseUIForm {
     try {
       getForumService().removeWatch(1, path, userProfile.getUserId() + ForumUtils.SLASH + getEmailWatching(path));
       setListWatches();
-      info("UIAddWatchingForm.msg.UnWatchSuccessfully");
+      info("UIAddWatchingForm.msg.UnWatchSuccessfully", false);
       return true;
     } catch (Exception e) {
-      warning("UIAddWatchingForm.msg.UnWatchfall");
+      warning("UIAddWatchingForm.msg.UnWatchfall", false);
       log.debug("Failed to add watch.");
       return false;
     }

@@ -27,7 +27,7 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
  *          tu.duy@exoplatform.com
  * 24 Mar 2008, 08:00:59
  */
-public class UIForumCheckBoxInput<T> extends UICheckBoxInput {
+public class UIForumCheckBoxInput extends UICheckBoxInput {
 
   public UIForumCheckBoxInput(String name, String bindingExpression, Boolean value) {
     super(name, bindingExpression, value);
