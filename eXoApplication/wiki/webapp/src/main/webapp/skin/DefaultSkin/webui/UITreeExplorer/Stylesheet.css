@@ -1,58 +1,36 @@
 @import url('DefaultSkin/icons/16x16/Stylesheet.css');
 
-.SideBarContent {
-  width: 550px;
-  height: 300px;
-  border: #E4E4E4 solid 1px;
-  margin: 5px 0;
-}
-
-.SideBarContent .BarContent {
-  background: white;
-  padding: 3px 3px 3px 6px;
-  color: black;
-  font-weight: bold;
-  height: 16px;
-}
-
-.SideBarContent .SideContent {
-  padding-top: 5px;
-  background: whiteSmoke;
-  height: 270px;
-  overflow: auto;
-}
-
-.UITreeExplorer {
+.UIWikiPortlet .UITreeExplorer {
   _overflow-x: hidden;
   _width: 183px;
 }
 
-.UITreeExplorer .Node {
+.UIWikiPortlet .UITreeExplorer .Node {
   white-space: normal;
   padding: 2px 0px;
 }
 
-.UITreeExplorer .Node a {
+.UIWikiPortlet .UITreeExplorer .Node a {
   display: inline;
   color: #555;
   line-height: 18px;
   /*white-space: normal;*/
 }
 
-.UITreeExplorer .LastNode {
+.UIWikiPortlet .UITreeExplorer .LastNode {
   
 }
 
-.UITreeExplorer .NodeLabel {
+.UIWikiPortlet .UITreeExplorer .NodeLabel {
   line-height: 22px;
   margin-left: 20px;
 }
 
-.UITreeExplorer .Bold {
+.UIWikiPortlet .UITreeExplorer .Bold {
   font-weight: bold;
 }
 
-.UITreeExplorer .ExpandIcon {
+.UIWikiPortlet .UITreeExplorer .ExpandIcon {
   background-position: 0 7px;
   width: auto;
   height: auto;
@@ -61,7 +39,7 @@
   display: block;
 }
 
-.UITreeExplorer .CollapseIcon {
+.UIWikiPortlet .UITreeExplorer .CollapseIcon {
   background-position: 0 7px;
   width: auto;
   padding-left: 15px; /* orientation=lt */
@@ -69,7 +47,7 @@
   display: block;
 }
 
-.UITreeExplorer .EmptyIcon {
+.UIWikiPortlet .UITreeExplorer .EmptyIcon {
   background-position: 0 7px;
   width: auto;
   height: auto;
@@ -78,43 +56,43 @@
   display: block;
 }
 
-.UITreeExplorer .NodeGroup { 
+.UIWikiPortlet .UITreeExplorer .NodeGroup { 
 	padding-left: 20px;
 }
 
-.UITreeExplorer .TreeNodeType {  
+.UIWikiPortlet .UITreeExplorer .TreeNodeType {  
 }
 
 
-.UITreeExplorer .TreeNodeType a:hover {
+.UIWikiPortlet .UITreeExplorer .TreeNodeType a:hover {
   text-decoration: none;
   cursor:default;
 }
 
-.UITreeExplorer .Space {
+.UIWikiPortlet .UITreeExplorer .Space {
   background: url('DefaultSkin/background/SpaceNode.gif') no-repeat left 1px; /* orientation=lt */
   text-transform: capitalize;
 }
 
-.UITreeExplorer .Wiki {
+.UIWikiPortlet .UITreeExplorer .Wiki {
   background: url('DefaultSkin/background/WikiNode.gif') no-repeat left 1px; /* orientation=lt */
   text-transform: capitalize;
 }
 
-.UITreeExplorer .Wikihome {
+.UIWikiPortlet .UITreeExplorer .Wikihome {
   background: url('DefaultSkin/background/PageNode.gif') no-repeat left 3px; /* orientation=lt */
 }
 
-.UITreeExplorer .Page {
+.UIWikiPortlet .UITreeExplorer .Page {
   background: url('DefaultSkin/background/PageNode.gif') no-repeat left 3px; /* orientation=lt */
 }
 
-.UITreeExplorer .Hover a {
+.UIWikiPortlet .UITreeExplorer .Hover a {
   font-weight: bold;
   color: #0053a7;
 }
 
-.UITreeExplorer .NodeLabel a:hover {
+.UIWikiPortlet .UITreeExplorer .NodeLabel a:hover {
   color: #0053a7;
   cursor: pointer;
 }

@@ -355,7 +355,7 @@ public class Utils {
     // Get differences
     String pageTitle = page.getTitle();
     String currentVersionContent = content.getText();
-    NTVersion previousVersion = page.getVersionableMixin().getBaseVersion();
+    NTVersion previousVersion = page.getVersionableMixin().getBaseVersion();    
     String previousVersionContent = ((AttachmentImpl) previousVersion.getNTFrozenNode()
                                                                   .getChildren()
                                                                   .get(WikiNodeType.Definition.CONTENT)).getText();
