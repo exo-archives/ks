@@ -82,6 +82,7 @@ import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.SubCategoryInfo;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.UserHelper;
@@ -172,7 +173,7 @@ public class JCRDataStorage implements DataStorage {
     if (name == null) {
       name = ConversationState.getCurrent().getIdentity().getUserId();
     }
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;		
+    SessionProvider sProvider = CommonUtils.createSystemProvider();		
     try {
       Node cateHomeNode = getCategoryHome(sProvider, null);
       for(int i = 0; i < rulesPlugins_.size(); ++i) {
@@ -185,7 +186,7 @@ public class JCRDataStorage implements DataStorage {
       }
     } catch (Exception e) {
       log.debug("Check user whether is admin: ", e);
-    } finally { sProvider.close() ;}
+    }
     return false ;
   }
 
@@ -209,7 +210,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getUserSetting(java.lang.String, org.exoplatform.faq.service.FAQSetting)
    */
   public void getUserSetting(String userName, FAQSetting faqSetting) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node userSettingHome = getUserSettingHome(sProvider) ;
       Node userSettingNode = userSettingHome.getNode(userName) ;
@@ -218,14 +219,14 @@ public class JCRDataStorage implements DataStorage {
       if(userSettingNode.hasProperty("exo:sortQuestionByVote")) faqSetting.setSortQuestionByVote(userSettingNode.getProperty("exo:sortQuestionByVote").getValue().getBoolean());
     }catch (Exception e) {
       saveFAQSetting(faqSetting, userName);
-    }finally { sProvider.close() ;}		
+    }
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#saveFAQSetting(org.exoplatform.faq.service.FAQSetting, java.lang.String)
    */
   public void saveFAQSetting(FAQSetting faqSetting,String userName) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{			
       Node userSettingNode = getUserSettingHome(sProvider).getNode(userName);
       userSettingNode.setProperty("exo:ordeBy", faqSetting.getOrderBy());
@@ -238,14 +239,14 @@ public class JCRDataStorage implements DataStorage {
       userSettingNode.setProperty("exo:ordeType", faqSetting.getOrderType());
       userSettingNode.setProperty("exo:sortQuestionByVote", faqSetting.isSortQuestionByVote());
       userSettingNode.getSession().save() ;
-    }finally { sProvider.close() ;}		
+    }
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#getUserAvatar(java.lang.String)
    */
   public FileAttachment getUserAvatar(String userName) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node node = getKSUserAvatarHomeNode(sProvider).getNode(userName);
       if(node.isNodeType("nt:file")) {
@@ -265,7 +266,7 @@ public class JCRDataStorage implements DataStorage {
       return null;
     }catch(Exception e){
       log.error("Failed to get user avatar", e);
-    }finally { sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -273,7 +274,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#saveUserAvatar(java.lang.String, org.exoplatform.faq.service.FileAttachment)
    */
   public void saveUserAvatar(String userId, FileAttachment fileAttachment) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node ksAvatarHomeNode = getKSUserAvatarHomeNode(sProvider);
       Node avatarNode ;
@@ -290,14 +291,14 @@ public class JCRDataStorage implements DataStorage {
       else ksAvatarHomeNode.save();
     }catch (Exception e) {
       log.error("Failed to save user avatar: ", e);
-    }finally {sProvider.close() ;}		
+    }	
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#setDefaultAvatar(java.lang.String)
    */
   public void setDefaultAvatar(String userName)throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node avatarHome = getKSUserAvatarHomeNode(sProvider);
       if(avatarHome.hasNode(userName)){
@@ -309,7 +310,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch (Exception e) {
       log.error("Failed to set default avatar: ", e);
-    }finally { sProvider.close() ;}		
+    }
   }
 
 
@@ -318,14 +319,12 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsIterator()
    */
   public NodeIterator getQuestionsIterator() throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider();
+		SessionProvider sProvider = CommonUtils.createSystemProvider();
 		try {
 			Node faqHome = getFAQServiceHome(sProvider);
 			return getQuestionsIterator(faqHome, "", true);
 		} catch (Exception e) {
 			log.error("Failed to get question iterator: ", e);
-		} finally {
-			sProvider.close();
 		}
 		return null;
 	}
@@ -389,7 +388,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#initRootCategory()
    */
   public boolean initRootCategory() throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node faqServiceHome = getFAQServiceHome(sProvider) ;
       if (faqServiceHome.hasNode(Utils.CATEGORY_HOME)) {
@@ -406,7 +405,7 @@ public class JCRDataStorage implements DataStorage {
     }catch (Exception e) {
       log.error("Could not initialize root category", e);
       return false;
-    }finally {sProvider.close() ; }
+    }
 
   }
 
@@ -416,7 +415,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getTemplate()
    */
   public byte[] getTemplate() throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node templateHome = getTemplateHome(sProvider);
       Node fileNode = templateHome.getNode(Utils.UI_FAQ_VIEWER);
@@ -430,8 +429,6 @@ public class JCRDataStorage implements DataStorage {
       }
     } catch (Exception e) {
       log.error("Failed to get template", e);
-    } finally {
-      sProvider.close();
     }
     return null;
   }
@@ -440,7 +437,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#saveTemplate(java.lang.String)
    */
   public void saveTemplate(String str) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node templateHome = getTemplateHome(sProvider);
       Node fileNode ;
@@ -468,8 +465,6 @@ public class JCRDataStorage implements DataStorage {
       }
     } catch (Exception e) {
       log.error("Failed to save template: ", e);
-    } finally {
-      sProvider.close();
     }
   }
 
@@ -604,7 +599,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionLanguages(java.lang.String)
    */
   public List<QuestionLanguage> getQuestionLanguages(String questionId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
     try {
       Node questionNode = getFAQServiceHome(sProvider).getNode(questionId) ;
@@ -622,7 +617,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch (Exception e){
       log.error("Failed to get question language: ", e);
-    } finally { sProvider.close() ;}		
+    }
     return listQuestionLanguage ;
   }
 
@@ -644,7 +639,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#deleteAnswer(java.lang.String, java.lang.String)
    */
   public void deleteAnswer(String questionId, String answerId) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node questionNode = getFAQServiceHome(sProvider).getNode(questionId);
       Node answerNode = questionNode.getNode(Utils.ANSWER_HOME).getNode(answerId);
@@ -652,14 +647,14 @@ public class JCRDataStorage implements DataStorage {
       questionNode.save();
     }catch (Exception e) {
       log.error("Failed to delete a answer: ", e);
-    }finally {sProvider.close() ;}
+    }
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#deleteComment(java.lang.String, java.lang.String)
    */
   public void deleteComment(String questionId, String commentId) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node questionNode = getFAQServiceHome(sProvider).getNode(questionId);
       Node commnetNode = questionNode.getNode(Utils.COMMENT_HOME).getNode(commentId);
@@ -667,7 +662,7 @@ public class JCRDataStorage implements DataStorage {
       questionNode.save();
     }catch (Exception e) {
       log.error("Failed to delete a commnent: ", e);
-    }finally { sProvider.close() ;}
+    }
   }
 
   private Answer[] getAnswers(Node questionNode) throws Exception{
@@ -715,7 +710,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getPageListAnswer(java.lang.String, java.lang.Boolean)
    */
   public JCRPageList getPageListAnswer(String questionId, Boolean isSortByVote) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node answerHome = getFAQServiceHome(sProvider).getNode(questionId + "/" + Utils.ANSWER_HOME);
       QueryManager qm = answerHome.getSession().getWorkspace().getQueryManager();
@@ -731,7 +726,7 @@ public class JCRDataStorage implements DataStorage {
     } catch (Exception e) {
       log.error("Failed to get page list answers", e);
       return null;
-    } finally { sProvider.close() ;}
+    }
   }
 
 
@@ -747,7 +742,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#saveAnswer(java.lang.String, org.exoplatform.faq.service.Answer[])
    */
   public void saveAnswer(String questionId, Answer[] answers) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node quesNode = getFAQServiceHome(sProvider).getNode(questionId);
       if(!quesNode.isNodeType("mix:faqi18n")) {
@@ -792,7 +787,7 @@ public class JCRDataStorage implements DataStorage {
       quesNode.save() ;
     }catch (Exception e) {
       log.error("Failed to save answer: ", e);
-    }finally { sProvider.close() ;}
+    }
   }
 
   private void saveAnswer(Answer answer, Node answerHome, String questionId, String categoryId) throws Exception {
@@ -840,7 +835,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#saveComment(java.lang.String, org.exoplatform.faq.service.Comment, boolean)
    */
   public void saveComment(String questionId, Comment comment, boolean isNew) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node quesNode = getFAQServiceHome(sProvider).getNode(questionId);
       if(!quesNode.isNodeType("mix:faqi18n")) {
@@ -889,14 +884,14 @@ public class JCRDataStorage implements DataStorage {
       else quesNode.save();
     }catch(Exception e) {
       log.error("Failed to save comment: ", e);
-    }finally { sProvider.close() ;}
+    }
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#saveAnswerQuestionLang(java.lang.String, org.exoplatform.faq.service.Answer, java.lang.String, boolean)
    */
   public void saveAnswerQuestionLang(String questionId, Answer answer, String language, boolean isNew) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node quesNode = getFAQServiceHome(sProvider).getNode(questionId);
       Node answerHome = null;
@@ -926,7 +921,7 @@ public class JCRDataStorage implements DataStorage {
       answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
     }catch (Exception e) {
       log.error("Failed to save answer question language: ", e);
-    }finally { sProvider.close() ;}		
+    }
   }
 
   /*public void saveCommentQuestionLang(String questionId, Comment comment, String language, boolean isNew) throws Exception{
@@ -964,13 +959,13 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getAnswerById(java.lang.String, java.lang.String)
    */
   public Answer getAnswerById(String questionId, String answerid) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node answerNode = getFAQServiceHome(sProvider).getNode(questionId).getNode(Utils.ANSWER_HOME).getNode(answerid);
       return getAnswerByNode(answerNode);
     } catch (Exception e){
       log.error("Failed to get answer by id.", e);
-    }finally { sProvider.close() ;}
+    }
     return null;	
   }
 
@@ -1003,7 +998,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getPageListComment(java.lang.String)
    */
   public JCRPageList getPageListComment(String questionId) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node commentHome = getFAQServiceHome(sProvider).getNode(questionId + "/" + Utils.COMMENT_HOME) ;
       QueryManager qm = commentHome.getSession().getWorkspace().getQueryManager();
@@ -1016,7 +1011,7 @@ public class JCRDataStorage implements DataStorage {
     } catch (Exception e) {
       log.error("Failed to get page list comments", e);
       return null;
-    } finally { sProvider.close() ; }
+    }
   }
 
   private Comment getCommentByNode(Node commentNode) throws Exception {
@@ -1034,14 +1029,14 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getCommentById(java.lang.String, java.lang.String)
    */
   public Comment getCommentById(String questionId, String commentId) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node commentNode =	getFAQServiceHome(sProvider).getNode(questionId + "/" + Utils.COMMENT_HOME + "/" + commentId);
       return getCommentByNode(commentNode);
     } catch (Exception e){
       log.error("Failed to get comment by id: "+commentId, e);
       return null;
-    } finally { sProvider.close() ;}
+    }
   }
 
   private Node getLanguageNodeByLanguage(Node questionNode, String languge) throws Exception{
@@ -1142,7 +1137,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#saveQuestion(org.exoplatform.faq.service.Question, boolean, org.exoplatform.faq.service.FAQSetting)
    */
   public Node saveQuestion(Question question, boolean isAddNew, FAQSetting faqSetting) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;		 
+    SessionProvider sProvider = CommonUtils.createSystemProvider();	 
     try {
       Node questionNode;
       Node questionHome ;
@@ -1175,7 +1170,7 @@ public class JCRDataStorage implements DataStorage {
       return questionNode;
     }catch (Exception e) {
       log.error("Failed to save question ", e);
-    }finally {sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -1184,7 +1179,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#removeQuestion(java.lang.String)
    */
   public void removeQuestion(String questionId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node questionNode = getFAQServiceHome(sProvider).getNode(questionId);
       Node questionHome = questionNode.getParent() ;
@@ -1192,7 +1187,7 @@ public class JCRDataStorage implements DataStorage {
       questionHome.save();
     }catch (Exception e) {
       log.error("Fail ro remove question: ",e);
-    } finally { sProvider.close() ;}
+    }
   }
 
   /* (non-Javadoc)
@@ -1300,7 +1295,7 @@ public class JCRDataStorage implements DataStorage {
 
   private List<String> getRetrictedCategories(String userId, List<String> usermemberships) throws Exception{
     List<String> categoryList = new ArrayList<String>();
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sessionProvider = CommonUtils.createSystemProvider();
     try{
       Node faqHome = getFAQServiceHome(sessionProvider);
       StringBuffer queryString = new StringBuffer("/jcr:root").append(faqHome.getPath()). 
@@ -1335,7 +1330,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch(Exception e) {
       log.error("Failed to get restricte category: ", e);
-    }finally{ sessionProvider.close() ;}		
+    }
     return categoryList;
   }
 
@@ -1343,7 +1338,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getAllQuestions()
    */
   public QuestionPageList getAllQuestions() throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider, null) ;
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -1361,7 +1356,7 @@ public class JCRDataStorage implements DataStorage {
       return pageList ;
     }catch (Exception e) {
       log.error("Failed to get all questions: ", e);
-    } finally { sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -1370,7 +1365,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsNotYetAnswer(java.lang.String, boolean)
    */
   public QuestionPageList getQuestionsNotYetAnswer(String categoryId, boolean isApproved) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider, null) ;
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -1409,14 +1404,14 @@ public class JCRDataStorage implements DataStorage {
       return pageList ;
     }catch (Exception e) {
       log.error("Get question not yet answer failed: ", e);
-    }finally { sProvider.close() ;}
+    }
     return null ;
   }
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#getPendingQuestionsByCategory(java.lang.String, org.exoplatform.faq.service.FAQSetting)
    */
   public QuestionPageList getPendingQuestionsByCategory(String categoryId, FAQSetting faqSetting) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider, null) ;
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -1448,7 +1443,7 @@ public class JCRDataStorage implements DataStorage {
       return pageList ;
     }catch (Exception e) {
       log.error("Get pedding question through category failed: ", e);
-    }finally {sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -1456,7 +1451,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsByCatetory(java.lang.String, org.exoplatform.faq.service.FAQSetting)
    */
   public QuestionPageList getQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception {
-    SessionProvider sProvider =	SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider =	CommonUtils.createSystemProvider();
     try {
       String id ;
       Node categoryNode ;
@@ -1506,7 +1501,7 @@ public class JCRDataStorage implements DataStorage {
       return pageList ;
     }catch (Exception e) {
       log.debug("Getting question through category failed: ", e);
-    }finally { sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -1514,7 +1509,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getAllQuestionsByCatetory(java.lang.String, org.exoplatform.faq.service.FAQSetting)
    */
   public QuestionPageList getAllQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider, null) ;
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -1550,7 +1545,7 @@ public class JCRDataStorage implements DataStorage {
       return pageList ;
     }catch (Exception e) {
       log.debug("Failed to get all question through category: ", e);
-    }finally { sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -1558,7 +1553,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsByListCatetory(java.util.List, boolean)
    */
   public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider, null) ;
 
@@ -1582,7 +1577,7 @@ public class JCRDataStorage implements DataStorage {
       return pageList ;
     } catch ( Exception e) {
       log.debug("Failed get questions through list of category: ", e);
-    }finally { sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -1590,7 +1585,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getQuickQuestionsByListCatetory(java.util.List, boolean)
    */
   public List<Question> getQuickQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<Question> questions = new ArrayList<Question> () ;
     try {
       Node categoryHome = getCategoryHome(sProvider, null) ;
@@ -1612,7 +1607,7 @@ public class JCRDataStorage implements DataStorage {
       }
     } catch ( Exception e) {
       log.debug("Getting quick questions through list of category failed: ", e);
-    }finally { sProvider.close() ;}
+    }
     return questions ;
   }
 
@@ -1630,7 +1625,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryPathOfQuestion(java.lang.String)
    */
   public String getCategoryPathOfQuestion(String questionPath) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     String path = "";
     Node faqHome = null;
     try {
@@ -1649,7 +1644,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch( Exception e) {
       log.debug("Getting category path of the question failed: ", e);
-    }finally { sProvider.close() ;}		
+    }
     return path;
   }
 
@@ -1658,7 +1653,7 @@ public class JCRDataStorage implements DataStorage {
    */
   public void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception {
 
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node faqHome = getFAQServiceHome(sProvider) ;
       String homePath = faqHome.getPath() ;
@@ -1699,7 +1694,7 @@ public class JCRDataStorage implements DataStorage {
       }			
     }catch (Exception e) {
       log.error("Failed to remove question: ", e);
-    }finally { sProvider.close() ;}
+    }
 
   } 
 
@@ -1777,7 +1772,7 @@ public class JCRDataStorage implements DataStorage {
    */
   public void changeStatusCategoryView(List<String> listCateIds) throws Exception{
     if(listCateIds == null || listCateIds.size() < 1) return;
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node faqHome = getFAQServiceHome(sProvider);
       Node cat ;
@@ -1788,7 +1783,7 @@ public class JCRDataStorage implements DataStorage {
       faqHome.save();
     }catch (Exception e) {
       log.error("Changing status category view failed: ", e);
-    }finally { sProvider.close() ;}		
+    }
   }
 
 
@@ -1796,7 +1791,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getMaxindexCategory(java.lang.String)
    */
   public long getMaxindexCategory(String parentId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     long max = 0 ;
     try {
       NodeIterator iter = getFAQServiceHome(sProvider).getNode((parentId == null)?Utils.CATEGORY_HOME:parentId).getNodes();
@@ -1806,7 +1801,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch (Exception e) {
       log.error("Failed to get max index category", e);
-    }finally { sProvider.close() ;}
+    }
     return max ;
   }
 
@@ -1934,7 +1929,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#saveCategory(java.lang.String, org.exoplatform.faq.service.Category, boolean)
    */
   public void saveCategory(String parentId, Category cat, boolean isAddNew) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node newCategory ;
       if(isAddNew) {
@@ -1960,7 +1955,7 @@ public class JCRDataStorage implements DataStorage {
       }			
     }catch (Exception e) {
       log.error("Failed to save category: ", e);
-    }finally { sProvider.close() ;}
+    }
 
   }
 
@@ -1990,28 +1985,26 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#listingCategoryTree()
    */
   public List<Cate> listingCategoryTree() throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-    try {
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
       Node cateHome = getCategoryHome(sProvider, null) ;
       int i = 1 ;
       List<Cate> cateList = new ArrayList<Cate>() ;		
       cateList.addAll(listingSubTree(cateHome, i)) ;
       return cateList	;
-    }finally { sProvider.close() ;}	
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#removeCategory(java.lang.String)
    */
   public void removeCategory(String categoryId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node faqHome = getFAQServiceHome(sProvider) ;
       faqHome.getNode(categoryId).remove() ;
       faqHome.save() ;
     }catch (Exception e) {
       log.error("Can not remove category has id: " + categoryId);
-    } finally { sProvider.close() ;}		
+    }	
   }
 
   private Category getCategory(Node categoryNode) throws Exception {
@@ -2037,12 +2030,12 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryById(java.lang.String)
    */
   public Category getCategoryById(String categoryId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       return getCategory(getCategoryNodeById(sProvider, categoryId)) ;
     }catch (Exception e) {
       log.debug("Category not found " + categoryId);
-    }finally { sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -2050,7 +2043,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#findCategoriesByName(java.lang.String)
    */
   public List<Category> findCategoriesByName(String categoryName) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider, null) ;
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -2067,7 +2060,7 @@ public class JCRDataStorage implements DataStorage {
       return result ;
     }catch(Exception e) {
       log.error("Could not retrieve categories by name " + categoryName, e);
-    }finally { sProvider.close() ;}
+    }
     return null ;	 
   }
 
@@ -2076,7 +2069,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getListCateIdByModerator(java.lang.String)
    */
   public List<String> getListCateIdByModerator(String user) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider, null) ;
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -2098,7 +2091,7 @@ public class JCRDataStorage implements DataStorage {
       return listCateId ;
     }catch(Exception e) {
       log.error("Failed to get list of CateID through Moderator: ", e);
-    }finally { sProvider.close() ;}
+    }
     return null ;		
   }
 
@@ -2106,7 +2099,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getAllCategories()
    */
   public List<Category> getAllCategories() throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider, null) ;
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -2121,7 +2114,7 @@ public class JCRDataStorage implements DataStorage {
       return catList ;
     }catch (Exception e) {
       log.error("Getting all category failed: ", e);
-    }finally { sProvider.close() ;}
+    }
     return null ;
 
   }
@@ -2130,7 +2123,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#existingCategories()
    */
   public long existingCategories() throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider, null) ;
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -2140,7 +2133,7 @@ public class JCRDataStorage implements DataStorage {
       result.getNodes().getSize() ;			
     }catch (Exception e) {
       log.error("Failed to check existing categories", e);
-    }finally { sProvider.close() ;}
+    }
     return 0 ;		
   }
 
@@ -2148,12 +2141,12 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryNodeById(java.lang.String)
    */
   public Node getCategoryNodeById(String categoryId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       return getCategoryNodeById(sProvider, categoryId);
     }catch (Exception e) {
       log.error("Getting node failed: ", e);
-    } finally {sProvider.close() ;} 
+    }
     return null ;
   }
 
@@ -2179,7 +2172,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getSubCategories(java.lang.String, org.exoplatform.faq.service.FAQSetting, boolean, java.util.List)
    */
   public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> limitedUsers) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<Category> catList = new ArrayList<Category>() ;
     try {			
       Node parentCategory ;			
@@ -2215,7 +2208,7 @@ public class JCRDataStorage implements DataStorage {
       } 
     }catch (Exception e) {
       throw e;
-    }finally {sProvider.close();}		
+    }
     return catList ;
   }
 
@@ -2223,7 +2216,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryInfo(java.lang.String, org.exoplatform.faq.service.FAQSetting)
    */
   public long[] getCategoryInfo( String categoryId, FAQSetting faqSetting) throws Exception	{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     long[] cateInfo = new long[]{0, 0, 0, 0};// categories, all, open, pending
     try {
       Node parentCategory ;
@@ -2264,7 +2257,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch(Exception e) {
       log.error("Failed to get category info: ", e);
-    }finally {sProvider.close() ;}
+    }
     return cateInfo ;
   }
 
@@ -2280,7 +2273,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#moveCategory(java.lang.String, java.lang.String)
    */
   public void moveCategory(String categoryId, String destCategoryId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node faqHome = getFAQServiceHome(sProvider) ;
       Node srcNode = faqHome.getNode(categoryId) ;
@@ -2298,14 +2291,13 @@ public class JCRDataStorage implements DataStorage {
     } catch (Exception e) {
       if(log.isDebugEnabled()) log.debug(e.getMessage());
     }
-    finally { sProvider.close() ;}		
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#addWatchCategory(java.lang.String, org.exoplatform.faq.service.Watch)
    */
   public void addWatchCategory(String id, Watch watch)throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node faqHome = getFAQServiceHome (sProvider) ;
       Map<String, String> watchs = new HashMap<String, String> () ;
@@ -2329,7 +2321,7 @@ public class JCRDataStorage implements DataStorage {
       watchingNode.save() ;
     }catch (Exception e) {
       log.error("Failed to add watch category: " , e);
-    } finally {sProvider.close() ;} 
+    }
   }
 
   //TODO Going to remove
@@ -2337,7 +2329,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getListMailInWatch(java.lang.String)
    */
   public QuestionPageList getListMailInWatch(String categoryId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider, null) ;	
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -2349,7 +2341,7 @@ public class JCRDataStorage implements DataStorage {
       return pageList;
     }catch(Exception e) {
       log.error("Failed to get list of mail watch: ", e);
-    }finally {sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -2357,7 +2349,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getWatchByCategory(java.lang.String)
    */
   public List<Watch> getWatchByCategory(String categoryId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<Watch> listWatches = new ArrayList<Watch>();
     try {
       Node category = getFAQServiceHome(sProvider).getNode(categoryId) ;
@@ -2377,7 +2369,7 @@ public class JCRDataStorage implements DataStorage {
       return listWatches;
     }catch(Exception e) {
       log.error("Failed to get watch through category: ",e);
-    }finally {sProvider.close() ;}
+    }
     return listWatches ;
   }
 
@@ -2385,13 +2377,13 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#hasWatch(java.lang.String)
    */
   public boolean hasWatch(String categoryPath) {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node cat = getFAQServiceHome(sProvider).getNode(categoryPath) ;
       if(new PropertyReader(cat).strings("exo:userWatching", new String[]{}).length > 0) return true ;
     }catch (Exception e) {
       log.error("Failed to check has watch", e);
-    }finally { sProvider.close() ;}
+    }
     return false ;
   }
 
@@ -2399,7 +2391,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#addWatchQuestion(java.lang.String, org.exoplatform.faq.service.Watch, boolean)
    */
   public void addWatchQuestion(String questionId, Watch watch, boolean isNew) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     Map<String, String> watchMap = new HashMap<String, String>() ;
     try {
       Node questionNode = getFAQServiceHome(sProvider).getNode(questionId);
@@ -2423,7 +2415,7 @@ public class JCRDataStorage implements DataStorage {
       //questionHome.save();
     }catch (Exception e) {
       log.error("Failed to add a watch question: ", e );
-    }finally { sProvider.close () ;} 
+    }
 
   }
 
@@ -2431,7 +2423,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getWatchByQuestion(java.lang.String)
    */
   public List<Watch> getWatchByQuestion(String questionId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<Watch> listWatches = new ArrayList<Watch>();
     try {
       Node category = getFAQServiceHome(sProvider).getNode(questionId) ;
@@ -2452,7 +2444,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch(Exception e) {
       log.error("Failed to get watch through question: ", e);
-    }finally {sProvider.close() ;}
+    }
     return listWatches ;
   }
 
@@ -2460,7 +2452,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getWatchedCategoryByUser(java.lang.String)
    */
   public QuestionPageList getWatchedCategoryByUser(String userId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider, null);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -2473,7 +2465,7 @@ public class JCRDataStorage implements DataStorage {
       return pageList ;
     }catch ( Exception e) {
       log.error("Failed to get watched category through user: ", e);
-    }finally { sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -2481,7 +2473,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#isUserWatched(java.lang.String, java.lang.String)
    */
   public boolean isUserWatched(String userId, String cateId) {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node faqHome = getFAQServiceHome(sProvider);
       Node cate = faqHome.getNode(cateId) ;
@@ -2491,7 +2483,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch (Exception e) {
       log.error("Failed to check user watched", e);
-    }finally { sProvider.close() ;}
+    }
     return false;
   }
 
@@ -2499,7 +2491,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getWatchedSubCategory(java.lang.String, java.lang.String)
    */
   public List<String> getWatchedSubCategory(String userId, String cateId) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<String> watchedSub = new ArrayList<String> () ;
     try {
       Node faqHome = getFAQServiceHome(sProvider);
@@ -2515,7 +2507,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch (Exception e) {
       log.error("Getting watched sub category failed: ", e);
-    }finally { sProvider.close() ;}
+    }
     return watchedSub ;
   }
 
@@ -2523,7 +2515,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getListQuestionsWatch(org.exoplatform.faq.service.FAQSetting, java.lang.String)
    */
   public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node categoryHome = getCategoryHome(sProvider, null) ;
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -2556,7 +2548,7 @@ public class JCRDataStorage implements DataStorage {
       return pageList ;
     }catch (Exception e) {
       log.error("Failed to get list of question watch: ", e);
-    }finally { sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -2565,7 +2557,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#deleteCategoryWatch(java.lang.String, java.lang.String)
    */
   public void deleteCategoryWatch(String categoryId, String user) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node category = getFAQServiceHome(sProvider).getNode(categoryId) ;
       Map<String, String> emailMap = new HashMap<String, String>() ;
@@ -2580,14 +2572,14 @@ public class JCRDataStorage implements DataStorage {
       category.save() ;		
     }catch (Exception e) {
       log.error("Failed to deleted category watch", e);
-    }finally { sProvider.close() ;}
+    }
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#unWatchCategory(java.lang.String, java.lang.String)
    */
   public void unWatchCategory(String categoryId, String user) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node category = getFAQServiceHome(sProvider).getNode(categoryId) ;
       Map<String, String> userMap = new HashMap<String, String>() ;
@@ -2602,14 +2594,14 @@ public class JCRDataStorage implements DataStorage {
       category.save() ;		
     }catch (Exception e) {
       log.error("Failed to unWatch category", e);
-    }finally { sProvider.close() ;}
+    }
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#unWatchQuestion(java.lang.String, java.lang.String)
    */
   public void unWatchQuestion(String questionId, String user) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node question = getFAQServiceHome(sProvider).getNode(questionId) ;
       Map<String, String> userMap = new HashMap<String, String>() ;
@@ -2624,14 +2616,14 @@ public class JCRDataStorage implements DataStorage {
       question.save() ;
     }catch (Exception e) {
       log.error("Unwatching question failed: ", e);
-    }finally { sProvider.close() ;}		
+    }
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#getSearchResults(org.exoplatform.faq.service.FAQEventQuery)
    */
   public List<ObjectSearchResult> getSearchResults(FAQEventQuery eventQuery) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
 
     eventQuery.setViewingCategories(getViewableCategoryIds(sProvider)) ;
     List<String> retrictedCategoryList = new ArrayList<String>() ;
@@ -2978,7 +2970,7 @@ public class JCRDataStorage implements DataStorage {
       }			
     } catch (Exception e) {
       throw e;
-    } finally {sProvider.close() ;}
+    }
     return new ArrayList<ObjectSearchResult> () ;
   }
 
@@ -3055,7 +3047,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryPath(java.lang.String)
    */
   public List<String> getCategoryPath(String categoryId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     List<String> breadcums = new ArrayList<String>() ;
     try {
       Node category = getFAQServiceHome(sProvider).getNode(categoryId) ;
@@ -3065,7 +3057,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch(Exception e) {
       log.error("Failed to get category: ", e);
-    }finally { sProvider.close() ;}		
+    }
     return breadcums;
   }
 
@@ -3073,7 +3065,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getParentCategoriesName(java.lang.String)
    */
   public String getParentCategoriesName(String path) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     StringBuilder names = new StringBuilder();
     List<String> list = new ArrayList<String>();
     try {
@@ -3092,7 +3084,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch (Exception e) {
       log.error("Failed to get parent categories name", e);
-    }finally { sProvider.close() ;}		
+    }
     return names.toString();
   }
 
@@ -3128,7 +3120,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#swapCategories(java.lang.String, java.lang.String)
    */
   public void swapCategories(String cateId1, String cateId2) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       String[] strs = Utils.splitForFAQ(cateId2);
       boolean isTop = (strs.length > 1 && strs[1].trim().length() > 0);
@@ -3155,23 +3147,21 @@ public class JCRDataStorage implements DataStorage {
       }
     } catch (Exception e) {
       log.error("Failed to swap categories", e);
-    } finally {
-      sProvider.close();
-    }
+    } 
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#saveTopicIdDiscussQuestion(java.lang.String, java.lang.String)
    */
   public void saveTopicIdDiscussQuestion(String questionId, String topicId) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node questionNode = getFAQServiceHome(sProvider).getNode(questionId);
       questionNode.setProperty("exo:topicIdDiscuss", topicId);
       questionNode.save() ;
     } catch (Exception e) {
       log.error("Failed to save topic discuss question: ", e);
-    }finally { sProvider.close() ;}
+    }
   }
 
   /* (non-Javadoc)
@@ -3217,7 +3207,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#importData(java.lang.String, java.io.InputStream, boolean)
    */
   public boolean importData(String parentId, InputStream inputStream, boolean isZip) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
     	List<String> patchNodeImport = new ArrayList<String>();
     	Node categoryNode = getFAQServiceHome(sProvider).getNode(parentId);
@@ -3270,7 +3260,7 @@ public class JCRDataStorage implements DataStorage {
     }catch(Exception e) {
       log.error("Failed to import data in category " + parentId, e);
       return false ;
-    }finally{ sProvider.close() ;}	
+    }
     return true ;
   }
   //
@@ -3316,17 +3306,15 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#isExisting(java.lang.String)
    */
   public boolean isExisting(String path) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-    try{
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     	return getFAQServiceHome(sProvider).hasNode(path);
-    } finally { sProvider.close() ;}
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryPathOf(java.lang.String)
    */
   public String getCategoryPathOf(String id) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node node = getFAQServiceHome(sProvider).getNode(id) ;
       String path;	
@@ -3336,7 +3324,7 @@ public class JCRDataStorage implements DataStorage {
       return path.substring(path.indexOf(Utils.CATEGORY_HOME)) ;
     }catch (Exception e) {			
       log.error("Failed to get category of path: "+id, e);
-    }finally { sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -3344,7 +3332,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#isModerateAnswer(java.lang.String)
    */
   public boolean isModerateAnswer(String id) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node node = getFAQServiceHome(sProvider).getNode(id) ;
       if(node.isNodeType("exo:faqQuestion")) node = node.getParent().getParent() ;
@@ -3353,7 +3341,7 @@ public class JCRDataStorage implements DataStorage {
       return false;
     }catch (Exception e) {
       log.error("Failed to check moderate answer", e);
-    }finally { sProvider.close() ;}
+    }
     return false ;
   }
 
@@ -3361,7 +3349,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#isModerateQuestion(java.lang.String)
    */
   public boolean isModerateQuestion(String id) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node node = getFAQServiceHome(sProvider).getNode(id) ;
       if(node.isNodeType("exo:faqQuestion")) node = node.getParent().getParent() ;
@@ -3370,7 +3358,7 @@ public class JCRDataStorage implements DataStorage {
       return false;
     } catch (Exception e) {
       log.error("Failed to moderate question", e);
-    }finally { sProvider.close() ;}
+    }
     return false ;
   }
 
@@ -3378,7 +3366,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#isViewAuthorInfo(java.lang.String)
    */
   public boolean isViewAuthorInfo(String id) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node node ;
       if(id == null) node = getCategoryHome(sProvider, null) ;
@@ -3387,12 +3375,12 @@ public class JCRDataStorage implements DataStorage {
       return new PropertyReader(node).bool("exo:viewAuthorInfor", false);
     }catch (Exception e) {
       log.error("Failed to check view author infor", e);
-    }finally { sProvider.close() ;}
+    }
     return false ;
   }
 
   public boolean isCategoryModerator(String categoryId, String user) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     boolean isCalMod = false;
     try{
       List<String> userGroups = UserHelper.getAllGroupAndMembershipOfUser(user);
@@ -3404,8 +3392,7 @@ public class JCRDataStorage implements DataStorage {
         isCalMod =	Utils.hasPermission(userGroups, values);
     }catch(Exception e) {
       log.error("Cheking whether category moderator failed: ", e); 
-    }finally { sProvider.close() ;}
-
+    }
     return isCalMod ;
   }
 
@@ -3413,7 +3400,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#isCategoryExist(java.lang.String, java.lang.String)
    */
   public boolean isCategoryExist(String name, String path) {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node category = getFAQServiceHome(sProvider).getNode(path) ;
       NodeIterator iter = category.getNodes() ;
@@ -3427,8 +3414,6 @@ public class JCRDataStorage implements DataStorage {
       }			
     }catch(Exception e) {
       log.error("Cheking whether catagory is exist: ", e);
-    }finally{
-      sProvider.close() ;
     }
     return false ;
   }
@@ -3451,7 +3436,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionNodeById(java.lang.String)
    */
   public Node getQuestionNodeById(String path) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node serviceHome = getFAQServiceHome(sProvider) ;
       try {
@@ -3468,7 +3453,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch (Exception e) {
       log.error("Failed to get question node by path:"+path, e);
-    }finally {sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -3476,7 +3461,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getModeratorsOf(java.lang.String)
    */
   public String[] getModeratorsOf(String path) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node node = getFAQServiceHome(sProvider).getNode(path) ;
       if(node.isNodeType("exo:faqQuestion")) {
@@ -3486,7 +3471,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch (Exception e) {			
       log.error("Failed to get moderators of path: " + path, e);
-    }finally { sProvider.close() ;}
+    }
     return new String[]{} ;
   }
 
@@ -3494,14 +3479,14 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryNameOf(java.lang.String)
    */
   public String getCategoryNameOf(String categoryPath) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node node = getFAQServiceHome(sProvider).getNode(categoryPath) ;
       if(node.hasProperty("exo:name")) return node.getProperty("exo:name").getString() ;
       return node.getName() ;
     }catch (Exception e) {			
       log.error("Failed to get category name of path: " + categoryPath, e);
-    }finally { sProvider.close() ;}
+    }
     return null ;
   }
 
@@ -3509,7 +3494,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryInfo(java.lang.String, java.util.List)
    */
   public CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     CategoryInfo categoryInfo = new CategoryInfo() ;
     try {
       Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryPath) ;
@@ -3558,7 +3543,7 @@ public class JCRDataStorage implements DataStorage {
       }
     }catch(Exception e) {
       return null;
-    }finally{ sProvider.close() ;}
+    }
     return categoryInfo ;
   }
 
@@ -3582,7 +3567,7 @@ public class JCRDataStorage implements DataStorage {
   }
 
   public void reCalculateInfoOfQuestion(String absPathOfProp) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Item item = null;
       Node quesNode = null;
@@ -3672,8 +3657,6 @@ public class JCRDataStorage implements DataStorage {
       }
     } catch (Exception e) {
       log.error("Failed to re calculateInfo of question", e);
-    } finally {
-      sProvider.close();
     }
   }
 
@@ -3808,19 +3791,19 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#updateQuestionRelatives(java.lang.String, java.lang.String[])
    */
   public void updateQuestionRelatives( String questionPath, String[] relatives) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node question = getFAQServiceHome(sProvider).getNode(questionPath) ;
       question.setProperty("exo:relatives", relatives) ;
       question.save() ;
     }catch (Exception e) {
       log.error("Failed to update question relatives: ", e);
-    }finally {sProvider.close() ;}
+    }
   }
 
 
   public InputStream createAnswerRSS(String cateId) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    SessionProvider sProvider = CommonUtils.createSystemProvider();
     try{
       Node cateNode = getCategoryNodeById(sProvider, cateId);
       List<SyndEntry> entries = new ArrayList<SyndEntry>();
@@ -3869,7 +3852,7 @@ public class JCRDataStorage implements DataStorage {
       return new ByteArrayInputStream(s.getBytes());
     }catch (Exception e) {
       log.error("Failed to create answer RSS ", e);
-    }finally {sProvider.close() ;}
+    }
     return null;
   }
 

@@ -4,6 +4,9 @@
   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
   <component>
+    <type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService</type>
+  </component>
+  <component>
       <type>org.exoplatform.services.rest.impl.RequestHandlerImpl</type>
    </component>
    <component>
