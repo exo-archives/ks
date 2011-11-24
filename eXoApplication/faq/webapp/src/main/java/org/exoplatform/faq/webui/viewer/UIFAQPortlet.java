@@ -21,6 +21,7 @@ import javax.portlet.PortletPreferences;
 
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.popup.UIFAQSettingForm;
 import org.exoplatform.social.core.space.SpaceUtils;
 import org.exoplatform.social.core.space.model.Space;
@@ -58,7 +59,8 @@ public class UIFAQPortlet extends UIPortletApplication {
       if (uiViewer == null) {
         uiViewer = addChild(UIViewer.class, null, null).setRendered(true);
       }
-      if (context.getRequestParameter(OBJECTID) == null && !("true".equals(String.valueOf(context.getRequestParameter("ajaxRequest"))))) {
+      if (FAQUtils.isFieldEmpty(context.getRequestParameter(OBJECTID)) && 
+                       !context.getParentAppRequestContext().useAjax() && !uiViewer.isSetPath()) {
         uiViewer.setPath(getPathOfCateSpace());
       }
     } else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {

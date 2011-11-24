@@ -32,9 +32,11 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.MonitorEvent;
 
 /**
  * Created by The eXo Platform SAS 
@@ -58,6 +60,8 @@ public class UIViewer extends UIContainer {
 
   private boolean      isInSpace    = false;
 
+  private boolean      isSetPath    = false;
+
   private RenderHelper renderHelper = new RenderHelper();
 
   private Log          log          = ExoLogger.getLogger(UIViewer.class);
@@ -66,12 +70,21 @@ public class UIViewer extends UIContainer {
     fAqService = (FAQService) PortalContainer.getComponent(FAQService.class);
   }
 
+  public void processDecode(WebuiRequestContext context) throws Exception {
+    super.processDecode(context);
+    isSetPath = false;
+  }
+  
   public String getPath() {
     return path;
   }
 
   public boolean isInSpace() {
     return isInSpace;
+  }
+
+  public boolean isSetPath() {
+    return isSetPath;
   }
 
   public void setPath(String path) {
@@ -123,6 +136,7 @@ public class UIViewer extends UIContainer {
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
       UIViewer viewer = event.getSource();
       viewer.setPath(path);
+      viewer.isSetPath = true;
       event.getRequestContext().addUIComponentToUpdateByAjax(viewer);
     }
   }
