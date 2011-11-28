@@ -167,7 +167,8 @@ public class DefaultWikiModel implements WikiModel {
                                        wikiMarkupContext.getOwner(),
                                        wikiMarkupContext.getPageId());
         if (page == null) {
-          return false;
+          page = wikiService.getRelatedPage(wikiMarkupContext.getType(), wikiMarkupContext.getOwner(), wikiMarkupContext.getPageId());
+          return page != null;
         } 
       }
 
