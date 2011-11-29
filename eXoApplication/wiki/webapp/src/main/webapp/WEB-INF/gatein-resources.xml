@@ -193,4 +193,11 @@
       <js-path>/javascript/eXo/wiki/UIWikiPageEditForm.js</js-path>
     </param>
   </javascript>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.wiki.UIWikiRichTextArea</js-module>
+      <js-path>/javascript/eXo/wiki/UIWikiRichTextArea.js</js-path>
+    </param>
+  </javascript>
 </gatein-resources>

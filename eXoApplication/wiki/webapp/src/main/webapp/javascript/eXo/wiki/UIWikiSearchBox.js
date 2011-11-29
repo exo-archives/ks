@@ -94,7 +94,7 @@ UIWikiSearchBox.prototype.pressHandler = function(evt, textbox) {
       }
       me.typeHandler(textbox);
       clearTimeout(me.typeTimeout);
-    }, 100)
+    }, 500)
   }
   return;
 };

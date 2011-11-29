@@ -171,9 +171,9 @@ Object.extend(XWiki, {
       var attachment = this.getAttachmentFromResourceName(name);
       var anchor = this.getAnchorFromResourceName(name);
 
-      if (!wiki) { wiki = eXo.wiki.currentWiki; }
-      if (!space) { space = eXo.wiki.currentSpace; }
-      if (!pageName) { pageName = eXo.wiki.currentPage; }
+      if (!wiki) { wiki = eXo.wiki.UIWikiRichTextArea.wiki; }
+      if (!space) { space = eXo.wiki.UIWikiRichTextArea.space; }
+      if (!pageName) { pageName = eXo.wiki.UIWikiRichTextArea.page; }
       if (!attachment) { attachment = ""; }
       if (!anchor) { anchor = ""; }
 
@@ -1426,3 +1426,40 @@ document.observe('xwiki:dom:loaded', function() {
     });
   }
 });
+
+/**
+ * Customized CSS for WYSIWYG editor and make some walk around for Chrome and Safari
+ */
+document.observe('xwiki:wysiwyg:loaded', function() {
+  var iframe = $$('#UIWikiPageEditForm iframe[class=gwt-RichTextArea]')[0];    
+  iframe.style.height ="380px";  
+  var doc = iframe.contentWindow.document;
+  doc.body.id = 'body';
+  doc.body.className = 'UIWikiPortlet UIWikiPortletWysiwygCss';
+  var scripts = doc.getElementsByTagName("script");    
+  if (scripts.length == 0) {
+    var script = doc.createElement("script");
+    script.setAttribute('type','text/javascript');
+    script.text = "var eXo = parent.eXo;";
+    doc.getElementsByTagName("head")[0].appendChild(script);
+  }
+  var links = doc.getElementsByTagName("link");    
+  if (links.length == 0) {
+    var css = doc.createElement("link");
+    css.setAttribute("rel", "stylesheet");
+    css.setAttribute("type", "text/css");
+    css.setAttribute("href", "/wiki/skin/DefaultSkin/webui/Stylesheet.css");
+    doc.getElementsByTagName("head")[0].appendChild(css);
+  }
+  if (browser.isAppleWebKit){
+    eXo.wiki.WysiwygEditor.interval = window.setInterval(function(){
+      var iframe = $$('#UIWikiPageEditForm iframe[class=gwt-RichTextArea]')[0];
+      if (!iframe){
+        window.clearInterval(eXo.wiki.WysiwygEditor.interval);
+        return;
+      }
+        eXo.wiki.WysiwygEditor.getCommandManager().execute('submit', 'true');        
+     }, 500);
+   }
+});
+

@@ -1,84 +1,18 @@
 <%
   import org.exoplatform.wiki.service.WikiPageParams;
   
+  def rcontext = _ctx.getRequestContext() ;
   String restUrlToViewCurrentPage = uicomponent.getRestUrlToViewCurrentPage();
   WikiPageParams wikiPageParams = uicomponent.getCurrentWikiPageParams();
   String wikiType = wikiPageParams.getType();
   String wikiOwner = wikiPageParams.getOwner();
   String pageId = wikiPageParams.getPageId();
   String selectedSyntax = uicomponent.getSelectedSyntax();
+  rcontext.getJavascriptManager().importJavascript('eXo.wiki.UIWikiRichTextArea', '/wiki/javascript/') ;
+  rcontext.getJavascriptManager().addJavascript("eXo.wiki.UIWikiRichTextArea.init('UIWikiRichTextArea_TextArea', '" + restUrlToViewCurrentPage + "', '" + selectedSyntax + "', '" + wikiType + "', '" + wikiOwner + "', '" + pageId + "');");
+  
 %>
 <div class="UIWikiRichTextEditor">
   <% uicomponent.renderChild(uicomponent.RICHTEXT_AREA_INPUT); %>
 </div>
-
-<script type="text/javascript">
-  eXo.wiki.currentWiki = '$wikiType';
-  eXo.wiki.currentSpace = '$wikiOwner';
-  eXo.wiki.currentPage = '$pageId';
-  // Create a new editor instance.
-  eXo.wiki.createWysiwygEditor = function(){
-    eXo.wiki.WysiwygEditor = new WysiwygEditor({
-      hookId: 'UIWikiRichTextArea_TextArea',
-      inputURL: '$restUrlToViewCurrentPage',
-      syntax: '$selectedSyntax',
-      wiki: '$wikiType',
-      space: '$wikiOwner',
-      page: '$pageId',
-      //displayTabs: true,
-      defaultEditor: 'wysiwyg',
-      plugins: 'submit line separator text valign justify list indent history format font color symbol table link image macro import',
-      menu: 'link image table macro',
-      toolbar: 'bold italic underline strikethrough teletype | subscript superscript | justifyleft justifycenter justifyright justifyfull | unorderedlist orderedlist | outdent indent | undo redo | format | fontname fontsize forecolor backcolor | hr removeformat symbol | import'
-      //debug: true
-    });
-  };
-  
-  if(eXo.wiki.WysiwygEditor){
-    try{
-      eXo.wiki.WysiwygEditor.release();
-      instance =0;
-    }catch(e){
-      if(window.console){
-        window.console.error(e);
-      }
-    }
-  };
-  
-  try{
-    if(WysiwygEditor){
-     if (instance==0) {
-      eXo.wiki.createWysiwygEditor();
-      instance =1;
-      }
-    }
-  }catch(e){
-    eXo.wiki.Wysiwyg.onModuleLoad(eXo.wiki.createWysiwygEditor);
-  }
-  
-  document.observe('xwiki:wysiwyg:loaded', function() {
-    var editForm = document.getElementById('UIWikiPageEditForm');
-    var iframe = eXo.core.DOMUtil.findFirstDescendantByClass(editForm, 'iframe', 'gwt-RichTextArea');    
-    iframe.style.height ="380px";
-    var doc = iframe.contentWindow.document;
-    doc.body.id = 'body';
-    doc.body.className = 'UIWikiPortlet UIWikiPortletWysiwygCss';
-    var scripts = doc.getElementsByTagName("script");    
-    if (scripts.length == 0) {
-      var script = doc.createElement("script");
-      script.setAttribute('type','text/javascript');
-      script.text = "var eXo = parent.eXo;";
-      doc.getElementsByTagName("head")[0].appendChild(script);
-    }
-    var links = doc.getElementsByTagName("link");    
-    if (links.length == 0) {
-      var css = doc.createElement("link");
-      css.setAttribute("rel", "stylesheet");
-      css.setAttribute("type", "text/css");
-      css.setAttribute("href", "/wiki/skin/DefaultSkin/webui/Stylesheet.css");
-      doc.getElementsByTagName("head")[0].appendChild(css);
-    }
-  });
-  
-</script>
 
