@@ -1327,7 +1327,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
                                  .append(EXO_FAQ_QUESTION).append(")[(@").append(EXO_CATEGORY_ID).append("='").append(id)
                                  .append("') and (@").append(EXO_IS_ACTIVATED).append("='true')");
       if (!faqSetting.isCanEdit()) {
-        queryString.append(" and (@").append(EXO_IS_APPROVED).append("='true')");
+        queryString.append(" and (@").append(EXO_IS_APPROVED).append("='true'");
         if (userId != null && userId.length() > 0 && FAQSetting.DISPLAY_BOTH.equals(faqSetting.getDisplayMode())) {
           queryString.append(" or @").append(EXO_AUTHOR).append("='").append(userId).append("')");
         } else {
@@ -1339,6 +1339,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         }
       }
       queryString.append("] order by ").append(Utils.getOderBy(faqSetting));
+      System.out.println(queryString.toString());
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();
       QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true);

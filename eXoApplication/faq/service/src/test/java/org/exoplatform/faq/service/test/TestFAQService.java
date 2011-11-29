@@ -140,6 +140,7 @@ public class TestFAQService extends FAQServiceTestCase {
     question.setApproved(true);
     question.setCreatedDate(new Date());
     question.setCategoryId(cateId);
+    question.setCategoryPath(cateId);
     question.setRelations(new String[] {});
     question.setAttachMent(listAttachments);
     question.setAnswers(new Answer[] {});
