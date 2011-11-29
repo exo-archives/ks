@@ -27,9 +27,12 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
+import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
@@ -102,9 +105,9 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private String                         languageIsResponsed     = "";
 
-  private String                         questionChanged_        = "";
+  private String                         questionId              = "";
 
-  private String                         link_                   = "";
+  private String                         questionChanged_        = "";
 
   public List<User>                      toUsers                 = new ArrayList<User>();
 
@@ -125,14 +128,6 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
   }
 
   public void deActivate() throws Exception {
-  }
-
-  public String getLink() {
-    return link_;
-  }
-
-  public void setLink(String link) {
-    this.link_ = FAQUtils.getLinkAction(link);
   }
 
   public List<User> getToUsers() {
@@ -219,6 +214,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
     // question
 
     String contenQuestion = "";
+    String qsId = question.getId();
     StringBuffer stringBuffer = new StringBuffer();
     for (QuestionLanguage questionLangua : listQuestionLanguage) {
       if (questionLangua.getLanguage().equals(language)) {
@@ -234,14 +230,10 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
           }
           stringBuffer.append("</p>");
         }
-        if (!FAQUtils.isFieldEmpty(link_)) {
-          if (!language.equals(question.getLanguage())) {
-            if (!link_.contains("language")) {
-              link_ = link_ + "/language=" + language;
-            }
-          }
-          stringBuffer.append(getLabel("Link").replaceFirst("<link>", link_));
+        if (!language.equals(languageIsResponsed)) {
+          qsId = qsId.concat(UIQuestions.OBJECT_LANGUAGE).concat(language);
         }
+        stringBuffer.append(getLabel("Link").replaceFirst("<link>", CommonUtils.getDomainURL() + FAQUtils.getQuestionURI(qsId, false)));
         break;
       }
     }
@@ -396,8 +388,6 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
         }
         addressEmailsForm.setAlreadyCheckedUser(userList);
       }
-
-      // event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
 
@@ -427,8 +417,6 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
         }
         addressEmailsForm.setAlreadyCheckedUser(userList);
       }
-
-      // event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
 
@@ -458,8 +446,6 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
         }
         addressEmailsForm.setAlreadyCheckedUser(userList);
       }
-
-      // event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
 
@@ -480,24 +466,23 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
       UIFormWYSIWYGInput body = sendMailForm.getChildById(FILED_MESSAGE);
       UIFormStringInput subject = sendMailForm.getChildById(FILED_SUBJECT);
       String language = formSelectBox.getValue();
-      String contenQuestion = "";
+      String contenQuestion = "", qsId = sendMailForm.questionId;
       StringBuilder strBuilder = new StringBuilder();
       for (QuestionLanguage questionLanguage : sendMailForm.listQuestionLanguage) {
         if (questionLanguage.getLanguage().equals(language)) {
-          sendMailForm.languageIsResponsed = language;
           contenQuestion = questionLanguage.getQuestion();
           Answer[] answers = questionLanguage.getAnswers();
-          strBuilder.append(sendMailForm.getLabel("change-content")).append(":<p><b>").append(sendMailForm.getLabel("Question")).append("</b> ").append(contenQuestion).append("</p>").append("<p><b>").append(sendMailForm.getLabel("Detail")).append("</b> ").append(questionLanguage.getDetail()).append("</p>");
+          strBuilder.append(sendMailForm.getLabel("change-content")).append(":<p><b>").append(sendMailForm.getLabel("Question")).append("</b> ")
+                    .append(contenQuestion).append("</p>").append("<p><b>").append(sendMailForm.getLabel("Detail")).append("</b> ")
+                    .append(questionLanguage.getDetail()).append("</p>");
           if (answers != null && answers.length > 0) {
             strBuilder.append(sendMailForm.getLabel("Response")).append("</b> ").append(answers[sendMailForm.posOfResponse].getResponses()).append("</p>");
           }
-          if (!FAQUtils.isFieldEmpty(sendMailForm.link_)) {
-            String link_ = sendMailForm.link_;
-            if (!link_.contains("language")) {
-              link_ = link_ + "/language=" + language;
-            }
-            strBuilder.append(sendMailForm.getLabel("Link").replaceFirst("<link>", link_));
+          if(!language.equals(sendMailForm.languageIsResponsed)){
+            qsId = qsId.concat(UIQuestions.OBJECT_LANGUAGE).concat(language);
+            sendMailForm.languageIsResponsed = language;
           }
+          strBuilder.append(sendMailForm.getLabel("Link").replaceFirst("<link>", CommonUtils.getDomainURL() + FAQUtils.getQuestionURI(qsId, false)));
           body.setValue(strBuilder.toString());
           subject.setValue(sendMailForm.getLabel("change-title") + contenQuestion);
           break;

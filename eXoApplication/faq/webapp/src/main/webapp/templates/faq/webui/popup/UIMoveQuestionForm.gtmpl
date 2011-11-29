@@ -7,7 +7,6 @@
 	String compId = uicomponent.getId() ; 
 	def rcontext = _ctx.getRequestContext() ;	
 	rcontext.getJavascriptManager().addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
-	uicomponent.setURLBuilder();
 %>
 <div class="UIMoveQuestionForm $uicomponent.id">
 	<% uiform.begin() %>

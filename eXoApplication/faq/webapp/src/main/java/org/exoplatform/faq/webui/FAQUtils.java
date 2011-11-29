@@ -44,6 +44,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JcrInputProperty;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -496,33 +497,32 @@ public class FAQUtils {
     }
     return "";
   }
-  
-  public static String getLinkAction(String link) {
-    if (!isFieldEmpty(link) && link.indexOf("http") != 0) {
-      PortalRequestContext portalContext = Util.getPortalRequestContext();
-      String url = portalContext.getRequest().getRequestURL().toString();
-      link = url.substring(0, url.indexOf("/", 8)) + link.replaceAll("amp;", "");
-    }
-    return link;
-  }
-
-  public static String getLinkDiscuss(String topicId) throws Exception {
+  /**
+   * Get question uri by question id of question relative path.
+   * 
+   * @param: param the question id or question relative path.
+   * @param: isAnswer is display form answer question or not.
+   * @return: the link go to the question and show form answer or not.
+   * @throws Exception
+  */
+  public static String getQuestionURI(String param, boolean isAnswer) throws Exception {
     PortalRequestContext portalContext = Util.getPortalRequestContext();
-    String link = portalContext.getRequest().getRequestURL().toString();
+    String selectedNode = Util.getUIPortal().getSelectedUserNode().getURI();
+    return  portalContext.getPortalURI().concat(selectedNode)
+                         .concat(Utils.QUESTION_ID).concat(param).concat((isAnswer)?Utils.ANSWER_NOW.concat("true"):"");
+  }
+  
+  public static String getLinkDiscuss(String topicId) throws Exception {
     try {
-      String selectedNode = Util.getUIPortal().getSelectedUserNode().getURI();
-      String portalName = "/" + Util.getUIPortal().getName();
-      if (link.indexOf(portalName) > 0) {
-        if (link.indexOf(portalName + "/" + selectedNode) < 0) {
-          link = link.replaceFirst(portalName, portalName + "/" + selectedNode);
-        }
-      }
-      link = link.substring(0, link.indexOf(selectedNode) + selectedNode.length());
-      link = link.replaceAll(selectedNode, "forum") + "/" + org.exoplatform.forum.service.Utils.TOPIC + "/" + topicId;
+      PortalRequestContext portalContext = Util.getPortalRequestContext();
+      String link = portalContext.getPortalURI().concat("forum/")
+                                 .concat(org.exoplatform.forum.service.Utils.TOPIC).concat("/").concat(topicId);
+      
+      return link;
     } catch (Exception e) {
       log.error("Fail to get link discuss: ", e);
     }
-    return link;
+    return "";
   }
 
   public static int getLimitUploadSize(boolean isAvatar) {

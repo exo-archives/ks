@@ -61,6 +61,9 @@ public class Question {
   /** The category id. */
   private String               categoryId;
 
+  /** The category id. */
+  private String               categoryPath;
+
   /** The relations. */
   private String[]             relations;
 
@@ -309,6 +312,28 @@ public class Question {
    */
   public String getCategoryId() {
     return categoryId;
+  }
+
+  /**
+   * Relative path of parent category of Question object,
+   * each question is contained in a category
+   * 
+   * @param categoryPath is relative path of category which contain this question
+   */
+  public void setCategoryPath(String categoryPath) {
+    if(categoryPath != null && categoryPath.indexOf(Utils.FAQ_APP) > 0) {
+      categoryPath = categoryPath.substring(categoryPath.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1);
+    }
+    this.categoryPath = categoryPath;
+  }
+
+  /**
+   * Get relative path of category which contain this question.
+   * 
+   * @return a relative path of category which thi question
+   */
+  public String getCategoryPath() {
+    return categoryPath;
   }
 
   /**

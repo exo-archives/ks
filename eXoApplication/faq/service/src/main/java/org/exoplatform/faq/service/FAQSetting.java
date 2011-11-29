@@ -80,6 +80,10 @@ public class FAQSetting {
   /** The ORDERB desc. */
   public static String ORDERBY_DESC                  = " descending";
 
+  public static String DISPLAY_APPROVED              = "approved";
+
+  public static String DISPLAY_BOTH                  = "both";
+
   private String       emailMoveQuestion             = null;
 
   private boolean      isPostQuestionInRootCategory  = true;

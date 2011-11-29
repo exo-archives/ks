@@ -54,6 +54,14 @@ public class Utils {
 
   final public static String HYPHEN               = "-".intern();
 
+  final public static String QUESTION_ID_PARAM    = "questionId";
+
+  final public static String ANSWER_NOW_PARAM     = "answer-now";
+
+  final public static String QUESTION_ID          = "?&".concat(QUESTION_ID_PARAM).concat("=");
+
+  final public static String ANSWER_NOW           = "&".concat(ANSWER_NOW_PARAM).concat("=");
+
   /**
    * This method sort list category is date ascending
    * @author Administrator

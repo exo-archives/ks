@@ -155,7 +155,7 @@ public class MessageBuilder implements FAQNodeTypes {
   }
 
   public void setContent(String content) {
-    this.content = content;
+    this.content = StringUtils.replace(content, "&amp;", "&");
   }
 
   public TYPESEND getType() {
@@ -177,7 +177,6 @@ public class MessageBuilder implements FAQNodeTypes {
       body = StringUtils.replace(body, "&questionResponse_", questionResponse);
     }
     body = StringUtils.replace(body, "&questionContent_", questionContent);
-    
     if(!CommonUtils.isEmpty(questionLink)) {
       if(questionLink.indexOf("http") == 0) {
         questionLink = questionLink.substring(questionLink.indexOf("/", 8));
@@ -185,7 +184,8 @@ public class MessageBuilder implements FAQNodeTypes {
       questionLink = CommonUtils.getDomainURL() + questionLink;
     }
     body = StringUtils.replace(body, "&questionLink_", questionLink);
-    return body;
+    body = StringUtils.replace(body, "&answerNowLink_", questionLink + Utils.ANSWER_NOW + "true");
+    return StringUtils.replace(body, "&", "&amp;");
   }
 
   public Message getMessage() {

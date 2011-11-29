@@ -4,7 +4,6 @@
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript('eXo.faq.UIAnswersPortlet.setSelectboxOnchange("'+ uicomponent.id +'");');
-	uicomponent.setLink();
 %>
 <div class="UIResponse $uicomponent.id">
 	<% uiform.begin() %>

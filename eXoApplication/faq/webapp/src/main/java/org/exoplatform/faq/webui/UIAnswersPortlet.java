@@ -21,6 +21,7 @@ import javax.portlet.PortletPreferences;
 
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
@@ -104,7 +105,7 @@ public class UIAnswersPortlet extends UIPortletApplication {
         }
         addChild(UIAnswersContainer.class, null, null);
       }
-      renderPortletById();
+      renderPortletByURL();
     } else if (portletMode == PortletMode.EDIT) {
       try {
         changeModeMessage.setValue(context.getApplicationResourceBundle().getString("UIAnswersPortlet.label.deny-access-edit-mode"));
@@ -133,18 +134,26 @@ public class UIAnswersPortlet extends UIPortletApplication {
     super.processRender(app, context);
   }
 
-  private void renderPortletById() throws Exception {
+  public void renderPortletByURL() throws Exception {
     try {
-      String cateId = getSpaceCategoryId();
-      PortalRequestContext context = Util.getPortalRequestContext();
-      if (!FAQUtils.isFieldEmpty(cateId) && context.getRequestParameter(OBJECTID) == null && !("true".equals("" + context.getRequestParameter("ajaxRequest")))) {
-        UIBreadcumbs uiBreadcums = findFirstComponentOfType(UIBreadcumbs.class);
-        UIQuestions uiQuestions = findFirstComponentOfType(UIQuestions.class);
-        UICategories categories = findFirstComponentOfType(UICategories.class);
-        uiBreadcums.setUpdataPath(Utils.CATEGORY_HOME + "/" + cateId);
-        uiBreadcums.setRenderSearch(true);
-        uiQuestions.setCategoryId(Utils.CATEGORY_HOME + "/" + cateId);
-        categories.setPathCategory(Utils.CATEGORY_HOME + "/" + cateId);
+      PortalRequestContext portalContext = Util.getPortalRequestContext();
+      if (portalContext.getRequestParameter(OBJECTID) == null && !portalContext.useAjax()) {
+        String cateId = getSpaceCategoryId();
+        if (!FAQUtils.isFieldEmpty(cateId)) {
+          UIBreadcumbs uiBreadcums = findFirstComponentOfType(UIBreadcumbs.class);
+          UIQuestions uiQuestions = findFirstComponentOfType(UIQuestions.class);
+          UICategories categories = findFirstComponentOfType(UICategories.class);
+          uiBreadcums.setUpdataPath(Utils.CATEGORY_HOME + "/" + cateId);
+          uiBreadcums.setRenderSearch(true);
+          uiQuestions.setCategoryId(Utils.CATEGORY_HOME + "/" + cateId);
+          categories.setPathCategory(Utils.CATEGORY_HOME + "/" + cateId);
+        } else {
+          String questionId = portalContext.getRequestParameter(Utils.QUESTION_ID_PARAM);
+          String asn = portalContext.getRequestParameter(Utils.ANSWER_NOW_PARAM);
+          if (!FAQUtils.isFieldEmpty(questionId)) {
+            viewQuestionById(portalContext, questionId, Boolean.valueOf(asn), false);
+          }
+        }
       }
     } catch (Exception e) {
       log.error("can not render the selected category", e);
@@ -163,5 +172,66 @@ public class UIAnswersPortlet extends UIPortletApplication {
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
     String repository = portletPref.getValue("display", "");
     return repository;
+  }
+  
+  public void viewQuestionById(WebuiRequestContext context, String questionId, boolean isAnswerNow, boolean isAction) throws Exception {
+    UIQuestions uiQuestions = this.findFirstComponentOfType(UIQuestions.class);
+    FAQService faqService_ = (FAQService) getApplicationComponent(FAQService.class);
+    uiQuestions.isSortAnswerUp = null;
+    try {
+      boolean isRelation = false;
+      boolean isSetLang = true;
+      if (questionId.indexOf(UIQuestions.OBJECT_LANGUAGE) > 0) {
+        String[] array = questionId.split(UIQuestions.OBJECT_LANGUAGE);
+        questionId = array[0];
+        if (array[1].indexOf(UIQuestions.OBJECT_RELATION) > 0) { // click on relation
+          isRelation = true;
+          if (!FAQUtils.isFieldEmpty(uiQuestions.viewingQuestionId_)) {
+            uiQuestions.backPath_ = uiQuestions.viewingQuestionId_ + UIQuestions.OBJECT_LANGUAGE + uiQuestions.language_ + UIQuestions.OBJECT_BACK;
+          }
+        } else { // Click on back
+          if (array[1].indexOf(UIQuestions.OBJECT_BACK) > 0) {
+            isRelation = true;
+            array[1] = array[1].replaceFirst(UIQuestions.OBJECT_BACK, "");
+          }
+          isSetLang = false;
+          uiQuestions.language_ = array[1];
+          uiQuestions.backPath_ = "";
+        }
+      }
+      Question question = faqService_.getQuestionById(questionId);
+      if (uiQuestions.checkQuestionToView(question, context)) {
+        String questionPath = question.getPath();
+        UIBreadcumbs breadcumbs = this.findFirstComponentOfType(UIBreadcumbs.class);
+        String categoryPath = question.getCategoryPath();
+        breadcumbs.setUpdataPath(categoryPath);
+        UICategories categories = this.findFirstComponentOfType(UICategories.class);
+        categories.setPathCategory(breadcumbs.getPaths());
+        uiQuestions.setCategoryId(categoryPath);
+        uiQuestions.updateCurrentQuestionList();
+        uiQuestions.pageList.setObjectId(questionPath);
+        if(!isAction){
+          uiQuestions.viewQuestion(question);
+        }
+        uiQuestions.viewingQuestionId_ = questionPath;
+        if (isRelation){
+          uiQuestions.updateLanguageMap();
+        }
+        if(isSetLang){
+          uiQuestions.language_ = question.getLanguage();
+        } else {
+          uiQuestions.updateCurrentLanguage();
+        }
+        uiQuestions.updateQuestionLanguageByLanguage(questionPath, question.getLanguage());
+        if (isAnswerNow) {
+          uiQuestions.processResponseQuestionAction(context, questionPath);
+        }
+        context.addUIComponentToUpdateByAjax(getChild(UIAnswersContainer.class));
+      }
+      return;
+    } catch (Exception e) {
+      log.debug("Failed to view question by id: " + questionId, e);
+      uiQuestions.showMessageDeletedQuestion(context);
+    }
   }
 }

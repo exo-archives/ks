@@ -558,7 +558,7 @@ public class UICategories extends BaseUIFAQForm {
       UIQuestions questions = container.findFirstComponentOfType(UIQuestions.class);
       int pos = 0;
       if (typeFilter.equals(uiCategories.FILTER_OPEN_QUESTIONS)) {
-        boolean isApproved = uiCategories.faqSetting_.getDisplayMode().equals("Approved");
+        boolean isApproved = FAQSetting.DISPLAY_APPROVED.equals(uiCategories.faqSetting_.getDisplayMode());
         String categoryId = uiCategories.categoryId_;
         if (!uiCategories.isModerator && !isApproved) {
           categoryId = categoryId + " (@exo:author='" + uiCategories.faqSetting_.getCurrentUser() + "')";

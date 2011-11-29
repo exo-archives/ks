@@ -211,7 +211,6 @@
 				
 				for(question in listQuestion) {
 					String qId = question.getPath();
-					uicomponent.setLink(qId, uicomponent.url("ViewQuestion", qId));
 					linkQuestion=uicomponent.event("OpenQuestion", qId);
 					String questionIcon = "" ;
 					String colorViewQuestion = "";
@@ -874,7 +873,7 @@
                             for (Map.Entry<String, String> entry : mapQuestionRelation.entrySet()) {
                               relationId = entry.getKey();
   														relationContent = entry.getValue();
-  														linkRelaQues = uicomponent.event("ViewQuestion", relationId + "/language=" + uicomponent.language_+"/relation");
+  														linkRelaQues = uicomponent.event("ViewQuestion", relationId + uicomponent.OBJECT_LANGUAGE + uicomponent.language_+ uicomponent.OBJECT_RELATION);
   														if(relationContent != null && relationContent.trim().length() > 0) {
   											%>
   															<div style="padding:0px 0px 5px 10px;">

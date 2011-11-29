@@ -79,8 +79,6 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private FAQSetting   faqSetting_;
 
-  private String       link_           = "";
-
   private RenderHelper renderHelper    = new RenderHelper();
 
   public UICommentForm() throws Exception {
@@ -135,16 +133,6 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
     }
   }
 
-  public void setLink() throws Exception {
-    try {
-      UIAnswersPortlet portlet = getAncestorOfType(UIAnswersPortlet.class);
-      UIQuestions questions = portlet.findFirstComponentOfType(UIQuestions.class);
-      link_ = questions.url("ViewQuestion", question_.getPath()).replaceAll("amp;", "");
-    } catch (Exception e) {
-      log.warn("Can not set link for question.");
-    }
-  }
-
   static public class CancelActionListener extends EventListener<UICommentForm> {
     public void execute(Event<UICommentForm> event) throws Exception {
       UICommentForm commentForm = event.getSource();
@@ -173,7 +161,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
       try {
         // Create link by Vu Duy Tu.
         if(FAQUtils.isFieldEmpty(commentForm.question_.getLink())) {
-          commentForm.question_.setLink(commentForm.link_);
+          commentForm.question_.setLink(FAQUtils.getQuestionURI(commentForm.question_.getId(), false));
         }
         if (commentForm.comment != null) {
           commentForm.comment.setNew(false);

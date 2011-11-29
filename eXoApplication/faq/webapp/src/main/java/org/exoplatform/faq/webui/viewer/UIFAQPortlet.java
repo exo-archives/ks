@@ -19,6 +19,7 @@ package org.exoplatform.faq.webui.viewer;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -60,7 +61,7 @@ public class UIFAQPortlet extends UIPortletApplication {
         uiViewer = addChild(UIViewer.class, null, null).setRendered(true);
       }
       if (FAQUtils.isFieldEmpty(context.getRequestParameter(OBJECTID)) && 
-                       !context.getParentAppRequestContext().useAjax() && !uiViewer.isSetPath()) {
+                       !context.getParentAppRequestContext().useAjax() && StringUtils.EMPTY.equals(uiViewer.getPath())) {
         uiViewer.setPath(getPathOfCateSpace());
       }
     } else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {

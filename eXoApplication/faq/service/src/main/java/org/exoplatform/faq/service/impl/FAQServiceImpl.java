@@ -233,9 +233,7 @@ public class FAQServiceImpl implements FAQService, Startable {
    */
   public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId, FAQSetting setting) throws Exception {
     sProvider.close();
-    if (setting.getDisplayMode().equals("Approved"))
-      return getQuestionsNotYetAnswer(categoryId, true);
-    return getQuestionsNotYetAnswer(categoryId, false);
+    return getQuestionsNotYetAnswer(categoryId, FAQSetting.DISPLAY_APPROVED.equals(setting.getDisplayMode()));
   }
 
   public QuestionPageList getQuestionsNotYetAnswer(String categoryId, boolean isApproved) throws Exception {

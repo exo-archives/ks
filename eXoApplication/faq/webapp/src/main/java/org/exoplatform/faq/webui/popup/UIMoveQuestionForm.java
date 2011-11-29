@@ -19,21 +19,17 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Cate;
-import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
-import org.exoplatform.webui.application.WebuiRequestContext;
-import org.exoplatform.webui.application.portlet.PortletURLBuilder;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -56,7 +52,7 @@ import org.exoplatform.webui.event.EventListener;
     }
 )
 @SuppressWarnings("unused")
-public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
+public class UIMoveQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
   private String            questionId_      = "";
 
   private String            homeCategoryName = "";
@@ -67,12 +63,8 @@ public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
 
   private List<Cate>        listCate         = new ArrayList<Cate>();
 
-  private static FAQService faqService_      = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
-  
-  private PortletURLBuilder urlBuilder =  null;
-
   public UIMoveQuestionForm() throws Exception {
-    homeCategoryName = faqService_.getCategoryNameOf(Utils.CATEGORY_HOME);
+    homeCategoryName = getFAQService().getCategoryNameOf(Utils.CATEGORY_HOME);
   }
 
   public String getCategoryID() {
@@ -93,17 +85,9 @@ public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
     return this.listCate;
   }
 
-  private void setURLBuilder() {
-    try {
-      urlBuilder = (PortletURLBuilder) WebuiRequestContext.getCurrentInstance().getURLBuilder();
-    } catch (Exception e) {
-      log.warn("Can't set url builder ...");
-    }
-  }
-
   public void setQuestionId(String questionId) throws Exception {
     this.questionId_ = questionId;
-    Question question = faqService_.getQuestionById(questionId_);
+    Question question = getFAQService().getQuestionById(questionId_);
     this.categoryId_ = question.getCategoryId();
   }
 
@@ -117,7 +101,7 @@ public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
   }
 
   public void updateSubCategory() throws Exception {
-    this.listCate.addAll(faqService_.listingCategoryTree());
+    this.listCate.addAll(getFAQService().listingCategoryTree());
     String orderType = faqSetting_.getOrderType();
     if (orderType.equals("asc"))
       faqSetting_.setOrderType("desc");
@@ -126,38 +110,30 @@ public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
   }
 
   static public class OkActionListener extends BaseEventListener<UIMoveQuestionForm> {
-    public void onEvent(Event<UIMoveQuestionForm> event, UIMoveQuestionForm moveQuestionForm, String cateId) throws Exception {
+    public void onEvent(Event<UIMoveQuestionForm> event, UIMoveQuestionForm moveQuestionForm, String catePath) throws Exception {
       UIAnswersPortlet portlet = moveQuestionForm.getAncestorOfType(UIAnswersPortlet.class);
       UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
       try {
-        if (!moveQuestionForm.faqSetting_.isAdmin() && !faqService_.isCategoryModerator(cateId, null)) {
+        if (!moveQuestionForm.faqSetting_.isAdmin() && !questions.getFAQService().isCategoryModerator(catePath, null)) {
           warning("UIQuestions.msg.can-not-move-question");
           return;
         }
         try {
-          Question question = faqService_.getQuestionById(moveQuestionForm.questionId_);
-          if (cateId.substring(cateId.lastIndexOf("/") + 1).equals(question.getCategoryId())) {
+          Question question = questions.getFAQService().getQuestionById(moveQuestionForm.questionId_);
+          String cateId = catePath.substring(catePath.lastIndexOf("/") + 1);
+          if (cateId.equals(question.getCategoryId())) {
             warning("UIMoveQuestionForm.msg.choice-orther");
             return;
           }
           question.setCategoryId(cateId);
-          StringBuffer questionId = new StringBuffer(cateId);
-          questionId.append("/").append(Utils.QUESTION_HOME).append("/")
-                    .append((question.getId().indexOf("/") >= 0) ? question.getId().substring(questionId.lastIndexOf("/") + 1) : question.getId());
-          String link = "";
-          try {
-            link = moveQuestionForm.urlBuilder.createURL(questions, "ViewQuestion", null, questionId.toString(), null);
-            link = FAQUtils.getLinkAction(link);
-            moveQuestionForm.urlBuilder = null;
-          } catch (Exception e) {
-            moveQuestionForm.log.warn("Can't set new link for open question...");
-          }
+          question.setCategoryPath(catePath);
+          String link = FAQUtils.getQuestionURI(new StringBuffer(catePath).append("/").
+                                                append(Utils.QUESTION_HOME).append("/").append(question.getId()).toString(), false);
           FAQUtils.getEmailSetting(moveQuestionForm.faqSetting_, false, false);
           FAQUtils.getEmailMoveQuestion(moveQuestionForm.faqSetting_);
-          // faqService_.saveQuestion(question, false, moveQuestionForm.faqSetting_) ;
           List<String> questionList = new ArrayList<String>();
           questionList.add(question.getPath());
-          faqService_.moveQuestions(questionList, cateId, link, moveQuestionForm.faqSetting_);
+          questions.getFAQService().moveQuestions(questionList, catePath, link, moveQuestionForm.faqSetting_);
           questions.updateCurrentQuestionList();
         } catch (Exception e) {
           moveQuestionForm.log.warn("Can not move this question. Exception: " + e.getMessage());

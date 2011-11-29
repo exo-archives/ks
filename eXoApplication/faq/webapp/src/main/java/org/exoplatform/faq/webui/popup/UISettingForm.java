@@ -95,10 +95,6 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
 
   public static final String  ORDER_TYPE                       = "order-type".intern();
 
-  private static final String DISPLAY_APPROVED                 = "approved";
-
-  private static final String DISPLAY_BOTH                     = "both";
-
   private static final String ENABLE_VOTE_COMMNET              = "enableVotComment";
 
   private static final String ENABLE_ANONYMOUS_SUBMIT_QUESTION = "enableAnonymousSubmitQuestion";
@@ -181,8 +177,8 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
       UIFormInputWithActions CategoryScoping = new UIFormInputWithActions(CATEGORY_SCOPING);
 
       List<SelectItemOption<String>> displayMode = new ArrayList<SelectItemOption<String>>();
-      displayMode.add(new SelectItemOption<String>(DISPLAY_APPROVED, DISPLAY_APPROVED));
-      displayMode.add(new SelectItemOption<String>(DISPLAY_BOTH, DISPLAY_BOTH));
+      displayMode.add(new SelectItemOption<String>(FAQSetting.DISPLAY_APPROVED, FAQSetting.DISPLAY_APPROVED));
+      displayMode.add(new SelectItemOption<String>(FAQSetting.DISPLAY_BOTH, FAQSetting.DISPLAY_BOTH));
 
       List<SelectItemOption<String>> orderBy = new ArrayList<SelectItemOption<String>>();
       orderBy.add(new SelectItemOption<String>(ITEM_CREATE_DATE, FAQSetting.DISPLAY_TYPE_POSTDATE));

@@ -118,8 +118,6 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private String                         currentLanguage       = "";
 
-  private String                         link_                 = "";
-
   private boolean                        isChildOfQuestionManager_;
 
   private FAQSetting                     faqSetting_;
@@ -134,19 +132,6 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private RenderHelper renderHelper = new RenderHelper();
 
-  public String getLink() {
-    return link_;
-  }
-
-  public void setLink() throws Exception {
-    try {
-      UIAnswersPortlet portlet = getAncestorOfType(UIAnswersPortlet.class);
-      UIQuestions questions = portlet.findFirstComponentOfType(UIQuestions.class);
-      link_ = questions.url("ViewQuestion", question_.getPath()).replaceAll("amp;", "");
-    } catch (Exception e) {
-      log.warn("Can not set link for question.");
-    }
-  }
 
   public void setFAQSetting(FAQSetting faqSetting) {
     this.faqSetting_ = faqSetting;
@@ -403,7 +388,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
       UIQuestions uiQuestions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
       // Link Question to send mail
        if(FAQUtils.isFieldEmpty(question.getLink())) {
-         question.setLink(responseForm.getLink());
+         question.setLink(FAQUtils.getQuestionURI(question.getId(), false));
        }
 
       // set answer to question for discuss forum function

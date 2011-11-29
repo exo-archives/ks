@@ -1,6 +1,3 @@
-<%
-	uicomponent.setLink();
-%>
 <div class="UIResponse $uicomponent.id">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout" style="*width:92%;">

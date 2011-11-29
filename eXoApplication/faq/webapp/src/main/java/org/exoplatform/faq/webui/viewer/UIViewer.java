@@ -19,6 +19,7 @@ package org.exoplatform.faq.webui.viewer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.rendering.RenderHelper;
 import org.exoplatform.faq.service.CategoryInfo;
@@ -58,8 +59,6 @@ public class UIViewer extends UIContainer {
 
   private boolean      isInSpace    = false;
 
-  private boolean      isSetPath    = false;
-
   private RenderHelper renderHelper = new RenderHelper();
 
   private Log          log          = ExoLogger.getLogger(UIViewer.class);
@@ -70,7 +69,7 @@ public class UIViewer extends UIContainer {
 
   public void processDecode(WebuiRequestContext context) throws Exception {
     super.processDecode(context);
-    isSetPath = false;
+    setPath(StringUtils.EMPTY);
   }
   
   public String getPath() {
@@ -79,10 +78,6 @@ public class UIViewer extends UIContainer {
 
   public boolean isInSpace() {
     return isInSpace;
-  }
-
-  public boolean isSetPath() {
-    return isSetPath;
   }
 
   public void setPath(String path) {
@@ -134,7 +129,6 @@ public class UIViewer extends UIContainer {
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
       UIViewer viewer = event.getSource();
       viewer.setPath(path);
-      viewer.isSetPath = true;
       event.getRequestContext().addUIComponentToUpdateByAjax(viewer);
     }
   }

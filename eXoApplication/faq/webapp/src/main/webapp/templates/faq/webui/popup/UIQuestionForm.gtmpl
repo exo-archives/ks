@@ -1,7 +1,6 @@
 <%
 	import org.exoplatform.faq.webui.FAQUtils;
 	uicomponent.setLanguages();
-	uicomponent.setQuestionLink();
 %>
 <div class="UIQuestionForm $uicomponent.id">
 	<% uiform.begin() %>

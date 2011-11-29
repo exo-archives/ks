@@ -130,7 +130,13 @@ public class UIQuestions extends UIContainer {
 
   public static final String            OBJECT_ITERATOR       = "object_iter";
 
-  private FAQSetting                    faqSetting_           = null;
+  public static final String            OBJECT_BACK           = "/back";
+
+  public static final String            OBJECT_LANGUAGE       = "/language=";
+
+  public static final String            OBJECT_RELATION       = "/relation=";
+
+  public FAQSetting                     faqSetting_           = null;
 
   private Map<String, Question>         questionMap_          = new LinkedHashMap<String, Question>();
 
@@ -138,7 +144,7 @@ public class UIQuestions extends UIContainer {
 
   private boolean                       canEditQuestion       = false;
 
-  private Boolean                       isSortAnswerUp        = null;
+  public Boolean                        isSortAnswerUp        = null;
 
   public String                         categoryId_           = null;
 
@@ -156,7 +162,7 @@ public class UIQuestions extends UIContainer {
 
   public String                         backPath_             = "";
 
-  private String                        language_             = FAQUtils.getDefaultLanguage();
+  public String                         language_             = FAQUtils.getDefaultLanguage();
 
   private String                        discussId             = "";
 
@@ -188,8 +194,6 @@ public class UIQuestions extends UIContainer {
 
   public long                           pageSelect            = 0;
   
-  private Map<String, String>           viewerLink            = new HashMap<String, String>();
-
   public UIQuestions() throws Exception {
     backPath_ = null;
     this.categoryId_ = Utils.CATEGORY_HOME;
@@ -319,6 +323,10 @@ public class UIQuestions extends UIContainer {
   }
 
   public FAQSetting getFAQSetting() {
+    if (faqSetting_ == null) {
+      faqSetting_ = new FAQSetting();
+      FAQUtils.getPorletPreference(faqSetting_);
+    }
     return faqSetting_;
   }
 
@@ -375,7 +383,11 @@ public class UIQuestions extends UIContainer {
   }
 
   private void setIsModerators() throws Exception {
-    canEditQuestion = (faqSetting_.isAdmin() || faqService_.isCategoryModerator(categoryId_, null)) ? true : false;
+    canEditQuestion = isModerators(categoryId_);
+  }
+
+  private boolean isModerators(String categoryId) throws Exception {
+    return (getFAQSetting().isAdmin() || faqService_.isCategoryModerator(categoryId, null)) ? true : false;
   }
 
   public String getVoteScore(Question question) {
@@ -451,7 +463,6 @@ public class UIQuestions extends UIContainer {
     viewAuthorInfor = faqService_.isViewAuthorInfo(categoryId);
     this.categoryId_ = categoryId;
     setViewRootCate();
-    setListObject();
   }
 
   public void viewQuestion(Question question) throws Exception {
@@ -479,14 +490,18 @@ public class UIQuestions extends UIContainer {
   }
 
   public void updateQuestionLanguageByLanguage(String questionPath, String language) throws Exception {
-    languageMap.put(language, faqService_.getQuestionLanguageByLanguage(questionPath, language));
+    try {
+      languageMap.put(language, faqService_.getQuestionLanguageByLanguage(questionPath, language));
+    } catch (Exception e) {
+      log.debug("Failed to update map language by viewing question", e);
+    }
   }
 
   public void updateLanguageMap() throws Exception {
     try {
-      languageMap.clear();
       if (viewingQuestionId_ != null && viewingQuestionId_.length() > 0) {
         List<QuestionLanguage> languages = faqService_.getQuestionLanguages(viewingQuestionId_);
+        languageMap.clear();
         for (QuestionLanguage lang : languages) {
           languageMap.put(lang.getLanguage(), lang);
         }
@@ -507,16 +522,8 @@ public class UIQuestions extends UIContainer {
     return mapReturn;
   }
 
-  private String getLink(String questionId) {
-    return viewerLink.containsKey(questionId) ? viewerLink.get(questionId) : "";
-  }
-
   private String getBackPath() {
     return this.backPath_;
-  }
-
-  private void setLink(String questionId, String link) {
-    viewerLink.put(questionId, link.replaceAll("amp;", ""));
   }
 
   public String render(Object obj) throws RenderingException {
@@ -529,22 +536,18 @@ public class UIQuestions extends UIContainer {
     return "";
   }
 
-
   private String calculateTimeMessageOfLastActivity(long time) {
     Calendar calendar = CommonUtils.getGreenwichMeanTime();
     calendar.setTimeInMillis(time);
     return TimeConvertUtils.convertXTimeAgo(calendar.getTime(), "EEE,MMM dd,yyyy", TimeConvertUtils.MONTH);
   }
 
-  private boolean checkQuestionToView(Question question, Event<UIQuestions> event) {
-    if (!question.isActivated() || (!question.isApproved() && faqSetting_.getDisplayMode().equals(FAQUtils.DISPLAYAPPROVED))) {
-      WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
-      context.getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.question-pending",
-                                                                   null,
-                                                                   ApplicationMessage.WARNING));      
-      event.getRequestContext().addUIComponentToUpdateByAjax(this.getAncestorOfType(UIAnswersContainer.class));
+  public boolean checkQuestionToView(Question question, WebuiRequestContext context) throws Exception {
+    if (question != null && (question.isActivated() && question.isApproved()) || isModerators(question.getCategoryPath())) {
       return true;
     } else {
+      context.getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.question-pending", null, ApplicationMessage.WARNING));
+      context.addUIComponentToUpdateByAjax(getAncestorOfType(UIAnswersContainer.class));
       return false;
     }
   }
@@ -769,94 +772,30 @@ public class UIQuestions extends UIContainer {
 
   static public class ViewQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-      UIQuestions uiQuestions = event.getSource();
-      UIAnswersPortlet answerPortlet = uiQuestions.getAncestorOfType(UIAnswersPortlet.class);      
-      uiQuestions.isSortAnswerUp = null;
-      String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
-      try {
-        boolean isRelation = false;
-        String answerNow = event.getRequestContext().getRequestParameter("answer-now");
-        if (questionId.indexOf("/language=") > 0) {
-          String[] array = questionId.split("/language=");
-          questionId = array[0];
-          if (array[1].indexOf("/relation") > 0) { // click on relation
-            isRelation = true;
-            if (!FAQUtils.isFieldEmpty(uiQuestions.viewingQuestionId_)) {
-              uiQuestions.backPath_ = uiQuestions.viewingQuestionId_ + "/language=" + uiQuestions.language_ + "/back";
-            }
-          } else { // Click on back
-            uiQuestions.viewingQuestionId_ = questionId;
-            if (array[1].indexOf("/back") > 0) {
-              isRelation = true;
-              array[1] = array[1].replaceFirst("/back", "");
-            }
-            uiQuestions.language_ = array[1];
-            uiQuestions.backPath_ = "";
-          }
-        }
-        Question question = uiQuestions.faqService_.getQuestionById(questionId);
-        if (questionId.indexOf("/") < 0) {
-          questionId = question.getPath();
-          uiQuestions.viewingQuestionId_ = questionId;
-        }
-
-        if (uiQuestions.checkQuestionToView(question, event))
-          return;
-        String categoryId = uiQuestions.faqService_.getCategoryPathOf(questionId);
-        FAQSetting faqSetting = uiQuestions.faqSetting_;
-        Boolean canViewQuestion = false;
-        if (question.isActivated() && (faqSetting.getDisplayMode().equals("both") || question.isApproved())) {
-          canViewQuestion = true;
-        }
-        if (canViewQuestion) {
-          uiQuestions.pageList.setObjectId(questionId);
-          uiQuestions.setCategoryId(categoryId);
-          UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class);
-          breadcumbs.setUpdataPath(categoryId);
-          UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
-          categories.setPathCategory(breadcumbs.getPaths());
-          event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs);
-          if ("true".equalsIgnoreCase(answerNow)) {
-            uiQuestions.processResponseQuestionAction(event, questionId);
-          }
-        } else {
-          event.getRequestContext().getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.question-pending",
-                                                                                         null,
-                                                                                         ApplicationMessage.INFO));          
-          event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet);
-          return;
-        }
-        uiQuestions.viewingQuestionId_ = questionId;
-        uiQuestions.updateCurrentQuestionList();
-        try {
-          uiQuestions.updateQuestionLanguageByLanguage(questionId, uiQuestions.language_);
-        } catch (Exception e) {
-          uiQuestions.language_ = question.getLanguage();
-        }
-        if (isRelation)
-          uiQuestions.updateLanguageMap();
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class));
-      } catch (Exception e) {
-        log.debug("Failed to view question by id: " + questionId, e);
-        uiQuestions.showMessageDeletedQuestion(event.getRequestContext());
-      }
+      WebuiRequestContext context = event.getRequestContext();
+      String questionId = context.getRequestParameter(OBJECTID);
+      String asn = context.getRequestParameter(Utils.ANSWER_NOW_PARAM);
+      event.getSource().getAncestorOfType(UIAnswersPortlet.class)
+                       .viewQuestionById(event.getRequestContext(), questionId, "true".equals(asn), true);
     }
   }
 
   static public class OpenQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
       UIQuestions uiQuestions = event.getSource();
-      String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
+      WebuiRequestContext context = event.getRequestContext();
+      String questionId = context.getRequestParameter(OBJECTID);
       String id = questionId.substring(questionId.lastIndexOf("/") + 1);
       Question question = uiQuestions.questionMap_.get(id);
-      if (uiQuestions.checkQuestionToView(question, event))
+      if (!uiQuestions.checkQuestionToView(question, context)) {
         return;
+      }
       uiQuestions.language_ = question.getLanguage();
       uiQuestions.isSortAnswerUp = null;
       uiQuestions.backPath_ = "";
       uiQuestions.viewingQuestionId_ = questionId;
       uiQuestions.updateLanguageMap();
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class));
+      context.addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class));
     }
   }
 
@@ -877,7 +816,7 @@ public class UIQuestions extends UIContainer {
    * @param questionId
    * @throws Exception
    */
-  private void processResponseQuestionAction(Event<UIQuestions> event, String questionId) throws Exception {
+  public void processResponseQuestionAction(WebuiRequestContext context, String questionId) throws Exception {
     boolean isAnswerApproved = false;
     try {
       Question question = faqService_.getQuestionById(questionId);
@@ -895,19 +834,17 @@ public class UIQuestions extends UIContainer {
       responseForm.setFAQSetting(faqSetting_);
       popupContainer.setId("FAQResponseQuestion");
       popupAction.activate(popupContainer, 900, 500);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      context.addUIComponentToUpdateByAjax(popupAction);
     } catch (Exception e) {
       updateCurrentQuestionList();
-      showMessageDeletedQuestion(event.getRequestContext());
+      showMessageDeletedQuestion(context);
     }
   }
 
   static public class ResponseQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-      UIQuestions uiForm = event.getSource();
-      Question question = null;
-      String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
-      uiForm.processResponseQuestionAction(event, questionId);
+      WebuiRequestContext context = event.getRequestContext();
+      ((UIQuestions) event.getSource()).processResponseQuestionAction(context, context.getRequestParameter(OBJECTID));
     }
   }
 
@@ -997,7 +934,7 @@ public class UIQuestions extends UIContainer {
     return true;
   }
 
-  private void showMessageDeletedQuestion(WebuiRequestContext context) throws Exception {
+  public void showMessageDeletedQuestion(WebuiRequestContext context) throws Exception {
     UIAnswersPortlet portlet = this.getAncestorOfType(UIAnswersPortlet.class);
     context.getUIApplication().addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING));    
     context.addUIComponentToUpdateByAjax(portlet);
@@ -1212,12 +1149,6 @@ public class UIQuestions extends UIContainer {
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
         UIPopupContainer watchContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
         UISendMailForm sendMailForm = watchContainer.addChild(UISendMailForm.class, null, null);
-        // Create link by Vu Duy Tu.
-        String link = "";
-        if (isSendLink) {
-          link = uiQuestions.getLink(questionId);
-        }
-        sendMailForm.setLink(link);
         if (!questionId.equals(uiQuestions.viewingQuestionId_) || FAQUtils.isFieldEmpty(uiQuestions.language_))
           sendMailForm.setUpdateQuestion(questionId, "");
         else

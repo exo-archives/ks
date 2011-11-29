@@ -129,13 +129,9 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private String                         questionId_          = null;
 
-  private String                         questionId           = null;
-
   private String                         defaultLanguage_     = "";
 
   private String                         lastLanguage_        = "";
-
-  private String                         link_                = "";
 
   private String                         author_              = "";
 
@@ -166,10 +162,6 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
   }
 
   public void deActivate() throws Exception {
-  }
-
-  public String getLink() {
-    return link_;
   }
 
   public void setFAQSetting(FAQSetting faqSetting) {
@@ -366,19 +358,6 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     return questionId_;
   }
   
-  @SuppressWarnings("unused")
-  private void setQuestionLink() {
-    try {
-      questionId = (FAQUtils.isFieldEmpty(questionId_)) ? new Question().getId() : questionId_;
-      StringBuilder qsId = new StringBuilder(categoryId_).append("/").append(org.exoplatform.faq.service.Utils.QUESTION_HOME).append("/").append(questionId);
-      UIAnswersPortlet portlet = getAncestorOfType(UIAnswersPortlet.class);
-      UIQuestions questions = portlet.findFirstComponentOfType(UIQuestions.class);
-      link_ = questions.url("ViewQuestion", qsId.toString()).replaceAll("amp;", "");
-    } catch (Exception e) {
-      log.warn("Can not set link for question.");
-    }
-  }
-
   public void setDefaultLanguage(String defaultLanguage) {
     this.defaultLanguage_ = defaultLanguage;
   }
@@ -563,8 +542,9 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
         if (questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) { // Add new question
           question = new Question();
-          question.setId(questionForm.questionId);
-          question.setCategoryId(questionForm.getCategoryId());
+          String catId = questionForm.getCategoryId();
+          question.setCategoryId((catId.indexOf("/") > 0) ? catId.substring(catId.lastIndexOf("/") + 1) : catId);
+          question.setCategoryPath(questionForm.getCategoryId());
           question.setRelations(new String[] {});
         } else { // Edit question
           isNew = false;
@@ -610,8 +590,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
         UIAnswersPortlet portlet = questionForm.getAncestorOfType(UIAnswersPortlet.class);
         UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
         // Create link by Vu Duy Tu.
-        if (isNew) {
-          question.setLink(questionForm.getLink());
+        if (FAQUtils.isFieldEmpty(question.getLink())) {
+          question.setLink(FAQUtils.getQuestionURI(question.getId(), false));
         }
 
         // For discuss in forum
