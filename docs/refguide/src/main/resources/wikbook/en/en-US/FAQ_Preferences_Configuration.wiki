@@ -25,7 +25,7 @@ FAQ portlet has preferences that you can configure to alter the behavior.
 
 At the runtime, you can use the portlet EDIT mode to set the preferences: 
 
-!DisplayMode.png!
+!images/DisplayMode.png!
 
 Alternatively, you can configure the portlet in the _portet-preferences.xml_ file.
 

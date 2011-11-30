@@ -9,7 +9,7 @@ For general information of eXo Knowledge configuration, refer to [eXo Knowledge 
 h1. Configuration {anchor:id=KSref.AnswerEmailTemplatesConfiguration.Configuration}
 The Mail templates use a specific syntax, enabling you to create a customized email message in the Edit mode via three templates: New question, Edit/answer, and Move question. 
 
-!EmailTemplate.png!
+!images/EmailTemplate.png!
 
 Parameters which are used in templates consist of:
 
