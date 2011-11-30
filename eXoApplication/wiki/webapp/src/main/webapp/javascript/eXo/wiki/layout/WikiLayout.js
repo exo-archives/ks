@@ -55,22 +55,25 @@ WikiLayout.prototype.init = function(prtId) {
     this.layoutContainer = DOMUtil.findFirstDescendantByClass(wikiLayout, "div", "WikiLayout");
     this.spliter = DOMUtil.findFirstDescendantByClass(this.layoutContainer, "div", "Spliter");
     this.verticalLine = DOMUtil.findFirstDescendantByClass(this.layoutContainer, "div", "VerticalLine");
-    
     if (this.spliter) {
       this.leftArea = DOMUtil.findPreviousElementByTagName(this.spliter, "div");
       this.rightArea = DOMUtil.findNextElementByTagName(this.spliter, "div");
-
       var leftWidth = eXo.core.Browser.getCookie("leftWidth");
-      if ((leftWidth != null) && (leftWidth != "") && (leftWidth * 1 > 0)) {
+   window.console.info("getCookie: " + leftWidth);
+      if (this.leftArea && this.rightArea && (leftWidth != null) && (leftWidth != "") && (leftWidth * 1 > 0)) {
         this.spliter.style.left = leftWidth + 'px';
         this.leftArea.style.width = leftWidth + 'px';
         this.rightArea.style.left = (leftWidth + this.spliter.offsetWidth) +'px';
       }
       this.spliter.onmousedown = eXo.wiki.WikiLayout.exeRowSplit;
     }
-    this.setWithLayOut();
-    this.setHeightLayOut();
-  }catch(e){};
+    if(this.layoutContainer) {
+      this.processeWithHeight();
+    }
+  }catch(e){
+   window.console.info("Failed to init WikiLayout: " + e);
+   return;
+  };
 };
 
 WikiLayout.prototype.processeWithHeight = function() {
@@ -174,8 +177,10 @@ WikiLayout.prototype.adjustWidth = function(evt) {
 };
 
 WikiLayout.prototype.clear = function() {
+ if(eXo.wiki.WikiLayout.leftArea) {
   eXo.core.Browser.setCookie("leftWidth", eXo.wiki.WikiLayout.leftArea.offsetWidth, 1);
   document.onmousemove = null;
+ }
 };
 
 WikiLayout.prototype.heightDelta = function() {
