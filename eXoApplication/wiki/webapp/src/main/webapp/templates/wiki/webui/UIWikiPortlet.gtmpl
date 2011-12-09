@@ -4,7 +4,7 @@
   import org.exoplatform.web.application.JavascriptManager;
   
   def rcontext = _ctx.getRequestContext() ;
- 		
+    
   String viewLink = uicomponent.event(uicomponent.VIEW_PAGE_ACTION);
   String actionId = uicomponent.WIKI_PORTLET_ACTION_PREFIX + uicomponent.VIEW_PAGE_ACTION;
   String restContextName = PortalContainer.getInstance().getRestContextName();
@@ -43,13 +43,13 @@
 <% } %>
 
 <style type="text/css">
-body .wiki-body, html .wiki-body {
+.wiki-body {
   overflow: hidden;
 }
 </style>
 
 <!--  -->
-<div class="UIWikiPortlet" id="$uicomponent.id" >
+<div class="UIWikiPortlet" id="$uicomponent.id">
   <div class="ParentMaskLayer">
     <div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
   </div>

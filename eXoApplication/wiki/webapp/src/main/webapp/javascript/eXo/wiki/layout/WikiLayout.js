@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 eXo Platform SAS.
+ * Copyright (C) 2003-2011 eXo Platform SAS.
  * 
  * This is free software; you can redistribute it and/or modify it under the
  * terms of the GNU Lesser General Public License as published by the Free
@@ -27,24 +27,34 @@ function WikiLayout() {
   this.posY = 0;
   this.portletId = 'UIWikiPortlet';
   this.wikiBodyClass = 'wiki-body';
+  this.bodyClass = '';
+  this.min_height= 350;
+  this.currHeight = 0;
+  this.currWidth = 0;
 };
 
 window.onresize = function() {
-  eXo.wiki.WikiLayout.processeWithHeight();
+  var isIE = (eXo.core.Browser.getBrowserType() == "ie") ? true : false;
+  if(isIE) {
+    if(this.currHeight != document.documentElement.clientHeight || this.currWidth != document.documentElement.clientWidth) {
+      eXo.wiki.WikiLayout.processeWithHeight();
+    }
+    this.currHeight = document.documentElement.clientHeight;
+    this.currWidth  = document.documentElement.clientWidth;
+  } else {
+    eXo.wiki.WikiLayout.processeWithHeight();
+  }
 };
 
 WikiLayout.prototype.init = function(prtId) {
+  try {
+    if(!this.myBody || String(this.myBody) == "undefined") {
+      this.myBody = document.getElementsByTagName("body")[0];
+      this.bodyClass = String(this.myBody.className+'');
+      this.myHtml = document.getElementsByTagName("html")[0];
+    }
+  }catch(e){};
   try{
-    try {
-      var myBody = document.getElementsByTagName("body")[0];
-      var className = String(myBody.className+'');
-      className = (className.length > 0 && className.indexOf(this.wikiBodyClass) < 0)?(className + ' ' + this.wikiBodyClass):this.wikiBodyClass;      
-      myBody.className = className;
-      var myHtml = document.getElementsByTagName("html")[0];
-      myHtml.className = this.wikiBodyClass;
-    } catch(e) {
-    };
-    
     if(prtId.length > 0) this.portletId = prtId;
     var isIE = (eXo.core.Browser.getBrowserType() == "ie") ? true : false;
     var idPortal = (isIE) ? 'UIWorkingWorkspace' : 'UIPortalApplication';
@@ -60,9 +70,7 @@ WikiLayout.prototype.init = function(prtId) {
       this.rightArea = DOMUtil.findNextElementByTagName(this.spliter, "div");
       var leftWidth = eXo.core.Browser.getCookie("leftWidth");
       if (this.leftArea && this.rightArea && (leftWidth != null) && (leftWidth != "") && (leftWidth * 1 > 0)) {
-        this.spliter.style.left = leftWidth + 'px';
         this.leftArea.style.width = leftWidth + 'px';
-        this.rightArea.style.left = (leftWidth + this.spliter.offsetWidth) +'px';
       }
       this.spliter.onmousedown = eXo.wiki.WikiLayout.exeRowSplit;
     }
@@ -74,11 +82,24 @@ WikiLayout.prototype.init = function(prtId) {
   };
 };
 
+WikiLayout.prototype.setClassBody = function(clazz) {
+  if(this.myBody && this.myHtml) {
+    if(String(clazz) != this.bodyClass) {
+      this.myBody.className = (clazz + " " + this.bodyClass);
+      this.myHtml.className = clazz;
+    } else {
+      this.myBody.className = clazz;
+      this.myHtml.className = "";
+    }
+  }
+};
+
 WikiLayout.prototype.processeWithHeight = function() {
   var WikiLayout = eXo.wiki.WikiLayout;
   if (WikiLayout.layoutContainer) {
-    WikiLayout.setWithLayOut();
+    WikiLayout.setClassBody(WikiLayout.wikiBodyClass);
     WikiLayout.setHeightLayOut();
+    WikiLayout.setWithLayOut();
   } else {
     WikiLayout.init('');
   }
@@ -86,31 +107,32 @@ WikiLayout.prototype.processeWithHeight = function() {
 
 WikiLayout.prototype.setWithLayOut = function() {
   var WikiLayout = eXo.wiki.WikiLayout;
-
   var maxWith = WikiLayout.layoutContainer.offsetWidth;
   var lWith = 0;
   if (WikiLayout.leftArea && WikiLayout.spliter) {
     lWith = WikiLayout.leftArea.offsetWidth + WikiLayout.spliter.offsetWidth;
   }
-  
   if (WikiLayout.rightArea) {
     WikiLayout.rightArea.style.width = (maxWith - lWith) + 'px';
-    WikiLayout.rightArea.style.left = lWith + 'px';
   }
+  WikiLayout.setHeightRightContent();
 };
 
 WikiLayout.prototype.setHeightLayOut = function() {
   var WikiLayout = eXo.wiki.WikiLayout;
   var layout = eXo.wiki.WikiLayout.layoutContainer;
   var hdef = document.documentElement.clientHeight - layout.offsetTop;
-  hdef = (hdef > 200) ? hdef : 200;
+  hdef = (hdef > WikiLayout.min_height) ? hdef : WikiLayout.min_height;
   var hct = hdef * 1;
   layout.style.height = hdef + "px";
-  var delta = 0;
-  while ((delta = WikiLayout.heightDelta()) > 0 && hdef >= 200) {
+  var delta = WikiLayout.heightDelta();
+  if(delta + WikiLayout.min_height > hdef) {
+    WikiLayout.setClassBody(WikiLayout.bodyClass);
+  }
+  while ((delta = WikiLayout.heightDelta()) > 0 && (hdef - delta) > WikiLayout.min_height) {
     hct = hdef - delta;
-    hdef = hdef - 2;
     layout.style.height = (hct + "px");
+    hdef = hdef - 2;
   }
   
   if (WikiLayout.leftArea && WikiLayout.spliter) {
@@ -123,18 +145,37 @@ WikiLayout.prototype.setHeightLayOut = function() {
   if (WikiLayout.rightArea) {
     WikiLayout.rightArea.style.height = hct + "px";
   }
-  
-  WikiLayout.setHeightRightContent();
 };
 
 WikiLayout.prototype.setHeightRightContent = function() {
   var WikiLayout = eXo.wiki.WikiLayout;
+  var DOMUtil = eXo.core.DOMUtil;
   if(!WikiLayout.layoutContainer) WikiLayout.init('');
-  var pageArea = eXo.core.DOMUtil.findFirstDescendantByClass(WikiLayout.layoutContainer, "div", "UIWikiPageArea");
-  var bottomArea = eXo.core.DOMUtil.findFirstDescendantByClass(WikiLayout.layoutContainer, "div", "UIWikiBottomArea");
+  var pageArea = DOMUtil.findFirstDescendantByClass(WikiLayout.layoutContainer, "div", "UIWikiPageArea");
+  var bottomArea = DOMUtil.findFirstDescendantByClass(WikiLayout.layoutContainer, "div", "UIWikiBottomArea");
+  var content = DOMUtil.findFirstDescendantByClass(WikiLayout.layoutContainer, "div", "WikiContent");
+  var delta = 18;
+  if(content) {
+    var wm = 0;
+    var divs = DOMUtil.findDescendantsByTagName(WikiLayout.layoutContainer, "div");
+    var tables = DOMUtil.findDescendantsByTagName(WikiLayout.layoutContainer, "table");
+    for (var i = 0; i < divs.length; ++i) {
+      if(wm < divs[i].offsetWidth) {
+        wm = divs[i].offsetWidth;
+      }
+    }
+    for (var i = 0; i < tables.length; ++i) {
+      if(wm < tables[i].offsetWidth) {
+        wm = tables[i].offsetWidth;
+      }
+    }
+    if(wm > WikiLayout.rightArea.offsetWidth){
+      delta += 18;
+    }
+  }
   if (pageArea && bottomArea) {
     pageArea.style.height = "auto";
-    var h = eXo.wiki.WikiLayout.layoutContainer.offsetHeight - (bottomArea.offsetHeight + 18);
+    var h = eXo.wiki.WikiLayout.layoutContainer.offsetHeight - (bottomArea.offsetHeight + delta);
     var x = pageArea.offsetHeight;
     pageArea.style.height = ((h < x)?x:h) + "px";
   }
@@ -170,8 +211,6 @@ WikiLayout.prototype.adjustWidth = function(evt) {
   
   WikiLayout.leftArea.style.width = leftWidth + "px";
   WikiLayout.rightArea.style.width = rightWidth + "px";
-  WikiLayout.rightArea.style.left = (leftWidth + WikiLayout.spliter.offsetWidth) + "px";
-  WikiLayout.spliter.style.left = leftWidth + "px";
 };
 
 WikiLayout.prototype.clear = function() {

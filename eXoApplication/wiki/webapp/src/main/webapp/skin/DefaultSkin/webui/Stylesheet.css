@@ -355,35 +355,27 @@ table.UIFormGrid div.Id {
 }
 
 .UIWikiPortlet .UILeftContainerArea {
-	top: 0px;
-	left: 0px;
-	z-index: 1;
 	width: 265px;
 	overflow: auto;
 	padding: 0px;
-	position: absolute;
 	min-height: 250px;
+  float:left;
 }
 
 .UIWikiPortlet .UIRightContainerArea {
-	top: 0px;
-	left: 266px;
-	z-index: 1;
 	overflow: auto;
 	padding: 0px;
-	position: absolute;
+  width: 70%;
 	min-height: 250px;
+  float:left;
 }
 
 .UIWikiPortlet .Spliter {
-	position: absolute;
-	top: 0px;
-	left: 265px;
-	z-index: 1;
 	background: #e1e1e1;
 	width: 1px;
 	cursor: col-resize;
 	padding: 0px;
+  float:left;
 }
 
 .UIWikiPortlet .VerticalLine {
@@ -555,7 +547,6 @@ table.UIFormGrid div.Id {
 
 .UIWikiPortlet .UIWikiContentDisplay {
 	padding: 10px;
-	overflow-y: auto;
 }
 
 .UIWikiPageVersionsList {
@@ -650,6 +641,11 @@ table.UIFormGrid div.Id {
 	list-style: decimal;
 }
 
+.UIWikiPortlet .WikiContent table {
+  !table-layout: auto;
+  !width: 100%;
+}
+
 #UIMoveTree .Hover {
 	background-color: #FFFFFF;
 }
@@ -698,8 +694,7 @@ table.UIFormGrid div.Id {
 	background: white;
 	height: 350px;
 	margin-top: 6px;
-	overflow-x: hidden;
-	overflow-y: auto;
+	overflow: auto;
 	padding: 0px 8px 8px 8px;
 }
 

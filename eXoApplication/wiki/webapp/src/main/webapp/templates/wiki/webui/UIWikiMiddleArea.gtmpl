@@ -6,7 +6,7 @@
   String showHideAction = uicomponent.event(uicomponent.SHOW_HIDE_ACTION);
 %>
 <div class="UIWikiMiddleArea" id="$uicomponent.id">
-  <div class="WikiLayout">
+  <div class="WikiLayout ClearFix">
     <% if(uicomponent.isPageSettingContainerRender()) { %>
     
       <% uicomponent.renderChild(UIWikiPageSettingContainer.class); %>       
