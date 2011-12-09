@@ -468,17 +468,17 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
             }
             uiForm.isMP = uiForm.isQuote = false;
             if (isParentDelete) {
-              uiForm.warning("UIPostForm.msg.isParentDelete");
               forumPortlet.cancelAction();
+              uiForm.warning("UIPostForm.msg.isParentDelete");
               return;
             }
             forumPortlet.cancelAction();
             if (isOffend || hasTopicMod) {
               topicDetail.setIdPostView("normal");
               if (isOffend)
-                uiForm.warning("MessagePost.msg.isOffend");
+                uiForm.warning("MessagePost.msg.isOffend", false);
               else {
-                uiForm.warning("MessagePost.msg.isModerate");
+                uiForm.warning("MessagePost.msg.isModerate", false);
               }
             }
             event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer);

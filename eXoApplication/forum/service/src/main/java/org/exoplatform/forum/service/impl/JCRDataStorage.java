@@ -2554,7 +2554,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   private String getEmailUser(SessionProvider sProvider, String userId) throws Exception {
-    return new PropertyReader(getUserProfileHome(sProvider).getNode(userId)).string(EXO_EMAIL, "");
+    return new PropertyReader(getUserProfileHome(sProvider).getNode(userId)).string(EXO_EMAIL, CommonUtils.EMPTY_STR);
   }
 
   public void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
@@ -2575,16 +2575,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           owner = topics.get(0).getEditReason();
         }
       }
-
-      MessageBuilder messageBuilder = new MessageBuilder();
-      messageBuilder.setContent(mailContent);
+      String headerSubject = "[" + destForumNode.getParent().getProperty(EXO_NAME).getString() + "][" + destForumNode.getProperty(EXO_NAME).getString() + "] ";
+      MessageBuilder messageBuilder = getInfoMessageMove(sProvider, mailContent, headerSubject, true);
       messageBuilder.setOwner(getScreenName(sProvider, owner));
-      String objectName = "[" + destForumNode.getParent().getProperty(EXO_NAME).getString() + "][" + destForumNode.getProperty(EXO_NAME).getString() + "] ";
-      messageBuilder = getInfoMessageBuilder(sProvider, messageBuilder);
       messageBuilder.setAddType(forumName);
-      messageBuilder.setTypes(Utils.FORUM, Utils.TOPIC, "", "");
+      messageBuilder.setTypes(Utils.FORUM, Utils.TOPIC, CommonUtils.EMPTY_STR, CommonUtils.EMPTY_STR);
       // ----------------------- finish ----------------------
-      String destForumId = destForumNode.getName(), srcForumId = "";
+      String destForumId = destForumNode.getName(), srcForumId = CommonUtils.EMPTY_STR;
       for (Topic topic : topics) {
         String topicPath = topic.getPath();
         String newTopicPath = destForumPath + "/" + topic.getId();
@@ -2620,7 +2617,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         destForumNode.setProperty(EXO_POST_COUNT, destForumNode.getProperty(EXO_POST_COUNT).getLong() + topicPostCount);
 
         // send email after move topic:
-        messageBuilder.setHeaderSubject(messageBuilder.getHeaderSubject() + objectName + topic.getTopicName());
+        messageBuilder.setObjName(topic.getTopicName());
+        messageBuilder.setHeaderSubject(messageBuilder.getHeaderSubject() + topic.getTopicName());
         messageBuilder.setLink(link.replaceFirst("pathId", topic.getId()));
         Set<String> set = new HashSet<String>();
         // set email author this topic
@@ -3198,25 +3196,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   private void sendNotification(Node node, Topic topic, Post post, MessageBuilder messageBuilder, boolean isApprovePost) throws Exception {
-    Node forumAdminNode = null;
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
-      try {
-        forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
-      } catch (Exception e) {
-      }
-      if (forumAdminNode != null) {
-        if (forumAdminNode.hasProperty(EXO_NOTIFY_EMAIL_CONTENT))
-          messageBuilder.setContent(forumAdminNode.getProperty(EXO_NOTIFY_EMAIL_CONTENT).getString());
-        if (forumAdminNode.hasProperty(EXO_ENABLE_HEADER_SUBJECT)) {
-          if (forumAdminNode.getProperty(EXO_ENABLE_HEADER_SUBJECT).getBoolean()) {
-            if (forumAdminNode.hasProperty(EXO_HEADER_SUBJECT)) {
-              messageBuilder.setHeaderSubject(forumAdminNode.getProperty(EXO_HEADER_SUBJECT).getString());
-            }
-          }
-        }
-      }
-
+      messageBuilder = getInfoMessageMove(sProvider, messageBuilder.getContent(), messageBuilder.getHeaderSubject(), false);
+      
       List<String> listUser = new ArrayList<String>();
       List<String> emailList = new ArrayList<String>();
       List<String> emailListCate = new ArrayList<String>();
@@ -3723,15 +3706,11 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       } else {
         forumHomeNode.save();
       }
-
+      MessageBuilder messageBuilder = getInfoMessageMove(sProvider, mailContent, CommonUtils.EMPTY_STR, true);
       String topicName = destTopicNode.getProperty(EXO_NAME).getString();
       String ownerTopic = destTopicNode.getProperty(EXO_OWNER).getString();
-
-      MessageBuilder messageBuilder = new MessageBuilder();
-      messageBuilder.setContent(mailContent);
       messageBuilder.setOwner(getScreenName(sProvider, ownerTopic));
       String objectName = "[" + destForumNode.getParent().getProperty(EXO_NAME).getString() + "][" + destForumNode.getProperty(EXO_NAME).getString() + "] " + topicName;
-      messageBuilder = getInfoMessageBuilder(sProvider, messageBuilder);
       messageBuilder.setHeaderSubject(messageBuilder.getHeaderSubject() + objectName);
       messageBuilder.setAddType(topicName);
       link = link.replaceFirst("pathId", destTopicNode.getProperty(EXO_ID).getString());
@@ -3777,21 +3756,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     }
   }
 
-  private MessageBuilder getInfoMessageBuilder(SessionProvider sProvider, MessageBuilder messageBuilder) throws Exception {
+  private MessageBuilder getInfoMessageMove(SessionProvider sProvider, String defaultContent,  String defaultSubject, boolean isMove) throws Exception {
+    MessageBuilder messageBuilder = new MessageBuilder();
     try {
-      Node node = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
-      PropertyReader reader = new PropertyReader(node);
+      Node forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
+      PropertyReader reader = new PropertyReader(forumAdminNode);
+      String property = (isMove) ? EXO_NOTIFY_EMAIL_MOVED : EXO_NOTIFY_EMAIL_CONTENT;
+      messageBuilder.setContent(reader.string(property, defaultContent));
       if (reader.bool(EXO_ENABLE_HEADER_SUBJECT)) {
-        messageBuilder.setHeaderSubject(reader.string(EXO_HEADER_SUBJECT, " "));
-      }
-      String str = reader.string(EXO_NOTIFY_EMAIL_MOVED);
-      if (!Utils.isEmpty(str)) {
-        messageBuilder.setContent(str);
+        messageBuilder.setHeaderSubject(reader.string(EXO_HEADER_SUBJECT, defaultSubject));
       }
     } catch (Exception e) {
-      if (log.isDebugEnabled()) {
-        log.debug("Failed to get info MessageBuilder", e);
-      }
+      messageBuilder.setContent(defaultContent);
+      messageBuilder.setHeaderSubject(defaultSubject);
     }
     return messageBuilder;
   }
