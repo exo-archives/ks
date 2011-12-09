@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
 
-import javax.jcr.Node;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
@@ -22,8 +21,6 @@ import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.AccessControlList;
-import org.exoplatform.services.jcr.access.PermissionType;
-import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.Message;
@@ -200,18 +197,6 @@ public class Utils {
     sb.append(repositoryService.getConfig().getDefaultRepositoryName());
     sb.append("/");
     return sb.toString();
-  }
-  
-  public static void reparePermissions(AttachmentImpl att) throws Exception {
-    MOWService mowService = (MOWService) PortalContainer.getComponent(MOWService.class);
-    WikiStoreImpl store = (WikiStoreImpl) mowService.getModel().getWikiStore();
-    Node attNode = (Node) store.getSession().getJCRSession().getItem(att.getPath());
-    ExtendedNode extNode = (ExtendedNode) attNode;
-    if (extNode.canAddMixin("exo:privilegeable"))
-      extNode.addMixin("exo:privilegeable");
-    String[] arrayPers = { PermissionType.READ };
-    extNode.setPermission("any", arrayPers);
-    attNode.getSession().save();
   }
   
   public static String getDocumentURL(WikiContext wikiContext) {
