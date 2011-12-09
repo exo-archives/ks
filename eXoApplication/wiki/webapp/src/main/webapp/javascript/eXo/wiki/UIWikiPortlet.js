@@ -29,6 +29,7 @@ function UIWikiPortlet() {
 UIWikiPortlet.prototype.init = function(portletId, linkId) {
   var me = eXo.wiki.UIWikiPortlet;
   me.wikiportlet = document.getElementById(portletId);
+  me.changeWindowTite(me.wikiportlet);
   me.changeModeLink = document.getElementById(linkId);
 
   // window.onload = function(event) {me.changeMode(event);};
@@ -46,6 +47,14 @@ UIWikiPortlet.prototype.init = function(portletId, linkId) {
     me.onKeyUp(event);
   };
 }
+
+UIWikiPortlet.prototype.changeWindowTite = function(elm) {
+  if(elm) {
+    var breadCrumb = eXo.core.DOMUtil.findFirstDescendantByClass(elm, 'div', 'UIWikiBreadCrumb');
+    var selected = eXo.core.DOMUtil.findFirstDescendantByClass(breadCrumb, 'a', 'Selected');
+    top.document.title = selected.innerHTML;
+  }
+};
 
 UIWikiPortlet.prototype.onMouseUp = function(evt) {
   var me = eXo.wiki.UIWikiPortlet;
