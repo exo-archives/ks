@@ -141,11 +141,11 @@
 }
 
 .UIForumPortlet .pdfIcon {
-	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/MiscIcons/AcrobatFile.gif') no-repeat center;
+	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/MiscIcons/AcrobatFile.gif') no-repeat left center;
 }
 
 .UIForumPortlet .mpegIcon {
-	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/MiscIcons/Music.gif') no-repeat center;
+	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/MiscIcons/Music.gif') no-repeat left center;
 }
 
 .UIForumPortlet .octet-streamIcon {
