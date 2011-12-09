@@ -1,5 +1,7 @@
 package org.exoplatform.ks.common.jcr;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -76,6 +78,14 @@ public class PropertyReader {
       return node.getProperty(name).getBoolean();
     } catch (Exception e) {
       return defaultValue;
+    }
+  }
+  
+  public InputStream stream(String name) {
+    try {
+      return node.getProperty(name).getStream();
+    } catch (Exception e) {
+      return new ByteArrayInputStream("".getBytes());
     }
   }
 

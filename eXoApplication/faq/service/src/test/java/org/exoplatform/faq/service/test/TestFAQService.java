@@ -204,7 +204,7 @@ public class TestFAQService extends FAQServiceTestCase {
       attachment.setName(fileName);
       InputStream is = new FileInputStream(file);
       attachment.setInputStream(is);
-      attachment.setMimeType("");
+      attachment.setMimeType("image/jpg");
     } catch (Exception e) {
       log.error("Fail to create user avatar: ", e);
     }
@@ -747,7 +747,7 @@ public class TestFAQService extends FAQServiceTestCase {
 
   public void testUserAvatar() throws Exception {
     // Add new avatar for user:
-    faqService_.saveUserAvatar(USER_ROOT, createUserAvatar("rootAvatar"));
+    faqService_.saveUserAvatar(USER_ROOT, createUserAvatar("defaultAvatar.jpg"));
 
     // Get user avatar
     assertNotNull(faqService_.getUserAvatar(USER_ROOT));

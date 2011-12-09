@@ -896,7 +896,7 @@ public class UIForumPortlet extends UIPortletApplication {
       messageForm.setUserProfile(forumPortlet.userProfile);
       messageForm.setSendtoField(userId);
       popupContainer.setId("PrivateMessageForm");
-      popupAction.activate(popupContainer, 650, 480);
+      popupAction.activate(popupContainer, 720, 550);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
     }
   }

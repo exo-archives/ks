@@ -24,6 +24,7 @@ import javax.jcr.PathNotFoundException;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.Post;
@@ -375,8 +376,12 @@ public class UITopicForm extends BaseForumForm implements UISelector {
     inputSet.setActionField(FIELD_ATTACHMENTS, getUploadFileList());
   }
 
-  public void addToUploadFileList(ForumAttachment attachfile) {
+  public void addUploadFile(ForumAttachment attachfile) {
     attachments_.add(attachfile);
+  }
+
+  public void addUploadFileList(List<BufferAttachment> attachfiles) {
+    attachments_.addAll(attachfiles);
   }
 
   public void removeFromUploadFileList(ForumAttachment attachfile) {

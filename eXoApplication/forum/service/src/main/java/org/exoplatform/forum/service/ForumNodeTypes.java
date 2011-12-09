@@ -191,6 +191,8 @@ public interface ForumNodeTypes {
 
   public static final String EXO_FILE_NAME                  = "exo:fileName";
 
+  public static final String EXO_FILE_SIZE                  = "exo:fileSize";
+
   public static final String EXO_FORUM_ATTACHMENT           = "exo:forumAttachment";
 
   public static final String EXO_NUMBER_ATTACH              = "exo:numberAttach";

@@ -244,29 +244,12 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node node = getKSUserAvatarHomeNode(sProvider).getNode(userName);
-      if (node.isNodeType(NT_FILE)) {
-        FileAttachment attachment = new FileAttachment();
-        Node nodeFile = node.getNode(JCR_CONTENT);
-        attachment.setId(node.getPath());
-        attachment.setMimeType(nodeFile.getProperty(JCR_MIME_TYPE).getString());
-        attachment.setNodeName(node.getName());
-        attachment.setName("avatar." + attachment.getMimeType());
-        String workspace = node.getSession().getWorkspace().getName();
-        attachment.setWorkspace(workspace);
-        attachment.setPath("/" + workspace + node.getPath());
-        attachment.setSize(nodeFile.getProperty(JCR_DATA).getStream().available());
-        return attachment;
-      }
-    } catch (PathNotFoundException e) {
-      return null;
-    } catch (RepositoryException e) {
-      return null;
+      return getFileAttachment(node);
     } catch (Exception e) {
-      log.error("Failed to get user avatar", e);
+      return null;
     }
-    return null;
   }
-
+  
   /*
    * (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#saveUserAvatar(java.lang.String, org.exoplatform.faq.service.FileAttachment)
@@ -1085,38 +1068,53 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       question.setCategoryId(node.getName());
       question.setCategoryPath(node.getPath());
     }
-    List<FileAttachment> listFile = new ArrayList<FileAttachment>();
-    NodeIterator nodeIterator = questionNode.getNodes();
-    Node nodeFile;
-    FileAttachment attachment = null;
-    String workspace = questionNode.getSession().getWorkspace().getName();
-    while (nodeIterator.hasNext()) {
-      node = nodeIterator.nextNode();
-      if (node.isNodeType(EXO_FAQ_ATTACHMENT)) {
-        attachment = new FileAttachment();
-        nodeFile = node.getNode(JCR_CONTENT);
-        attachment.setId(node.getPath());
-        attachment.setMimeType(nodeFile.getProperty(JCR_MIME_TYPE).getString());
-        attachment.setNodeName(node.getName());
-        attachment.setName(nodeFile.getProperty(EXO_FILE_NAME).getString());
-        attachment.setWorkspace(workspace);
-        attachment.setPath("/" + workspace + node.getPath());
-        try {
-          if (nodeFile.hasProperty(JCR_DATA))
-            attachment.setSize(nodeFile.getProperty(JCR_DATA).getStream().available());
-          else
-            attachment.setSize(0);
-        } catch (Exception e) {
-          attachment.setSize(0);
-          log.error("Failed to get question: ", e);
-        }
-        listFile.add(attachment);
-      }
-    }
-    question.setAttachMent(listFile);
+    question.setAttachMent(getFileAttachments(questionNode));
     question.setAnswers(getAnswers(questionNode));
     question.setComments(getComment(questionNode));
     return question;
+  }
+  
+  
+  private static FileAttachment getFileAttachment(Node node) throws Exception {
+    FileAttachment attachment = null;
+    try {
+      if (node.isNodeType(EXO_FAQ_ATTACHMENT) || node.isNodeType(NT_FILE)) {
+        PropertyReader readerContent;
+        String workspace = node.getSession().getWorkspace().getName();
+        attachment = new FileAttachment();
+        readerContent = new PropertyReader(node.getNode(JCR_CONTENT));
+        attachment.setId(node.getPath());
+        attachment.setMimeType(readerContent.string(JCR_MIME_TYPE));
+        attachment.setNodeName(node.getName());
+        attachment.setWorkspace(workspace);
+        attachment.setPath(CommonUtils.SLASH + workspace + node.getPath());
+        attachment.setSize(readerContent.stream(JCR_DATA).available());
+        String fileName = readerContent.string(EXO_FILE_NAME);
+        if (CommonUtils.isEmpty(fileName)) {
+          String type = attachment.getMimeType(); 
+          if (type.indexOf(CommonUtils.SLASH) > 0) {
+            type = type.substring(type.indexOf(CommonUtils.SLASH) + 1);
+          }
+          fileName = "avatar." + type;
+        }
+        attachment.setName(fileName);
+      }
+    } catch (Exception e) {
+      logDebug("Failed to get attachment in node: " + node.getName(), e);
+    }
+    return attachment;
+  }
+  
+  public static List<FileAttachment> getFileAttachments(Node node) throws Exception {
+    List<FileAttachment> listFile = new ArrayList<FileAttachment>();
+    NodeIterator iter = node.getNodes();
+    while (iter.hasNext()) {
+      FileAttachment attachment = getFileAttachment(iter.nextNode());
+      if (attachment != null) {
+        listFile.add(attachment);
+      }
+    }
+    return listFile;
   }
 
   /*
@@ -1753,15 +1751,14 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath());
       }
       long index = cat.getIndex();
-      boolean isResetIndex = (isAddNew || new PropertyReader(newCategory).l(EXO_INDEX) != index);
-      long size = 0;
+      long oldIndex = newCategory.getParent().getNodes().getSize();
+      boolean isResetIndex = (isAddNew || (oldIndex=new PropertyReader(newCategory).l(EXO_INDEX)) != index);
       if (isResetIndex) {
-        size = newCategory.getParent().getNodes().getSize();
-        cat.setIndex(size);
+        cat.setIndex(oldIndex);
       }
       saveCategory(newCategory, cat, isAddNew, sProvider);
       if (isResetIndex) {
-        resetIndex(newCategory, index, size);
+        resetIndex(newCategory, index, oldIndex);
       }
     } catch (Exception e) {
       log.error("Failed to save category: ", e);
@@ -3942,6 +3939,20 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   private String getLastActivityInfo(String author, long answerTime) {
     return new StringBuilder(author).append(Utils.HYPHEN).append(answerTime).toString();
+  }
+  
+  private static void logDebug(String message, Throwable e) {
+    if(log.isDebugEnabled()) {
+      if(e != null) {
+        log.debug(message, e);
+      } else {
+        log.debug(message);
+      }
+    }
+  }
+
+  private static void logDebug(String message) {
+    logDebug(message, null);
   }
 
 }

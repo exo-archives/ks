@@ -129,7 +129,7 @@ public class UIForumActionBar extends UIContainer {
       messageForm.setUserProfile(uiActionBar.userProfile);
       messageForm.setFullMessage(true);
       popupContainer.setId("PrivateMessageForm");
-      popupAction.activate(popupContainer, 800, 480);
+      popupAction.activate(popupContainer, 820, 550);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
       if (RELOAD.equals(event.getRequestContext().getRequestParameter(OBJECTID))) {
         forumPortlet.removeCacheUserProfile();

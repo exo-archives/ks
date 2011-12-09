@@ -23,6 +23,7 @@ import java.util.List;
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.MessageBuilder;
 import org.exoplatform.forum.service.Post;
@@ -198,8 +199,12 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     threadContent.setActionField(FIELD_ATTACHMENTS, getUploadFileList());
   }
 
-  public void addToUploadFileList(ForumAttachment attachfile) {
+  public void addUploadFile(ForumAttachment attachfile) {
     attachments_.add(attachfile);
+  }
+
+  public void addUploadFileList(List<BufferAttachment> attachfiles) {
+    attachments_.addAll(attachfiles);
   }
 
   public void removeFromUploadFileList(ForumAttachment attachfile) {

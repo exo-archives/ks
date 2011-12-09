@@ -21,7 +21,6 @@ import java.io.InputStream;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
-import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.jcr.RepositoryService;
 
@@ -225,8 +224,7 @@ public class FileAttachment {
    * @throws Exception if Repository or RepositoryConfiguration occur exception
    */
   private Session getSesison() throws Exception {
-    ExoContainer container = ExoContainerContext.getCurrentContainer();
-    RepositoryService repoService = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
+    RepositoryService repoService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
     return repoService.getDefaultRepository().getSystemSession(getWorkspace());
   }
 }

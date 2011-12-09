@@ -432,4 +432,7 @@
 
   </external-component-plugins>
 
+  <remove-configuration>org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer</remove-configuration>
+  <remove-configuration>org.exoplatform.services.transaction.ExoTransactionService</remove-configuration>
+  <remove-configuration>org.exoplatform.services.deployment.ContentInitializerService</remove-configuration>
 </configuration>

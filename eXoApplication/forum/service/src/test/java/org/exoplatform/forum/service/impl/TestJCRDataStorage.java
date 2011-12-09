@@ -139,7 +139,7 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
 
     ForumAttachment attachment = storage.getUserAvatar("username2");
     assertNotNull(attachment);
-    assertEquals("avatar.text/plain", attachment.getName());
+    assertEquals("avatar.plain", attachment.getName());
     assertEquals("text/plain", attachment.getMimeType());
     assertEquals("/" + getWorkspace() + "/" + avatarLocation, attachment.getPath()); // /portal-test/ksUserAvatar/username
     assertEquals("stuff", stringOf(attachment.getInputStream()));

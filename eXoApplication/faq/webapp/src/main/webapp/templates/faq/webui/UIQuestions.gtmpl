@@ -783,75 +783,64 @@
 															for(FileAttachment fileAttachment :question.getAttachMent()){
 																String fileName = fileAttachment.getName();
 																long fileSize = fileAttachment.getSize();
-																if(fileSize > 0){
-																	String size = uicomponent.convertSize(fileSize);
-																	String fileType = fileAttachment.getMimeType();
-																	String fileWorkSpace = fileAttachment.getWorkspace();
-																	ValidatorDataInput validate = new ValidatorDataInput();
-																	String linkImage = FAQUtils.getFileSource(fileAttachment);
-																	String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
-																	if(validate.isImage(fileName)) {
-																		String attLink = uicomponent.getImageUrl(fileAttachment.getPath());
-																%>
-																		<div style="float:left; margin:10px 5px 0px 12px;" id="divId${fileName}">
-																			<div class="Image">
-																				<div onclick="eXo.faq.UIAnswersPortlet.showPicture('$attLink');">
-																					<img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="" class="AttachmentFile"/>
-																				</div>
+																String size = uicomponent.convertSize(fileSize);
+																String fileType = fileAttachment.getMimeType();
+																String fileWorkSpace = fileAttachment.getWorkspace();
+																ValidatorDataInput validate = new ValidatorDataInput();
+																String linkImage = FAQUtils.getFileSource(fileAttachment);
+																String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
+																if(validate.isImage(fileName)) {
+																	String attLink = uicomponent.getImageUrl(fileAttachment.getPath());
+															%>
+																	<div style="float:left; margin:10px 5px 0px 12px;" id="divId${fileName}">
+																		<div class="Image">
+																			<div onclick="eXo.faq.UIAnswersPortlet.showPicture('$attLink');">
+																				<img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="" class="AttachmentFile"/>
 																			</div>
-																			<div style="clear:left;"><span></span></div>
-													 						<div class="LabelBox">
-														 						<div style="line-height:20px; white-space:nowrap;">
-															 						<div class="Size AttachmentLabel">
-															 							<%
-															 								String downloadAtt = uicomponent.event("DownloadAttach");
-															 							if(fileName.length() > 60){
-															 							%>
-						 																	<a class="AttachmentLabel" title="$fileName" onclick="ajaxRedirect('$linkImage');	if(eXo.core.Browser.browserType === 'ie') {$downloadAtt ; } return false;" href="javaScript:void(0);">
-							 																	<span><%=FAQUtils.getSubString(fileName, 60);%></span>
-							 																</a>
-						 																<%}else{%>
-						 																	<a class="AttachmentLabel" onclick="ajaxRedirect('$linkImage'); if(eXo.core.Browser.browserType === 'ie') {$downloadAtt ; } return false;" href="javaScript:void(0);">
-							 																	<span>$fileName</span>
-							 																</a>
-						 																<%}%>
-															 						</div>
-															 						<div style="color:#1052b5; float:left;">
-															 							<span>&nbsp;- </span><span style="color:gray;font-size:11px;">$size</span>
-															 						</div>
-															 					</div>
-														 						<div style="clear:left;"><span></span></div>
-														 					</div>
-													 					</div>
-																<%} else { %>
-																		<div class="LabelBox" style="margin:10px 5px 0px 12px; line-height:20px; float:left;">
-																			<div class="AttachmentIcon FileAttachmentIcon" style="width:auto; height:auto;float:left;">
-																			<%
-																			if(fileName.length() > 60){
-												 							%>
-			 																	<a title="$fileName" class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-				 																	<%=FAQUtils.getSubString(fileName, 60);%>
-				 																</a>
-			 																<%}else{%>
-																				<a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-																					$fileName
-																				</a>
-			 																<%}%>
-																			</div>
-																			<div style=" float:left;">&nbsp;-&nbsp;<span style="color:gray;">$size</span></div>
-																			<div style="clear:left;"><span></span></div>
-																		</div>
-																<%}
-																} else {
-																%>
-																	<div class="LabelBox" style="margin:10px 10px 0px 12px;">
-																		<div class="FalseIcon" style="padding-left:15px;">
-																			<a style="color:red;" href="javaScript:void(0)"><%=_ctx.appRes("UIQuestions.label.lostFile")%></a>
 																		</div>
 																		<div style="clear:left;"><span></span></div>
+												 						<div class="LabelBox">
+													 						<div style="line-height:20px; white-space:nowrap;">
+														 						<div class="Size AttachmentLabel">
+														 							<%
+														 								String downloadAtt = uicomponent.event("DownloadAttach");
+														 							if(fileName.length() > 60){
+														 							%>
+					 																	<a class="AttachmentLabel" title="$fileName" onclick="ajaxRedirect('$linkImage');	if(eXo.core.Browser.browserType === 'ie') {$downloadAtt ; } return false;" href="javaScript:void(0);">
+						 																	<span><%=FAQUtils.getSubString(fileName, 60);%></span>
+						 																</a>
+					 																<%}else{%>
+					 																	<a class="AttachmentLabel" onclick="ajaxRedirect('$linkImage'); if(eXo.core.Browser.browserType === 'ie') {$downloadAtt ; } return false;" href="javaScript:void(0);">
+						 																	<span>$fileName</span>
+						 																</a>
+					 																<%}%>
+														 						</div>
+														 						<div style="color:#1052b5; float:left;">
+														 							<span>&nbsp;- </span><span style="color:gray;font-size:11px;">$size</span>
+														 						</div>
+														 					</div>
+													 						<div style="clear:left;"><span></span></div>
+													 					</div>
+												 					</div>
+															<%} else { %>
+																	<div class="LabelBox" style="margin:10px 5px 0px 12px; line-height:20px; float:left;">
+																		<div class="AttachmentIcon FileAttachmentIcon" style="width:auto; height:auto;float:left;">
+																		<%
+																		if(fileName.length() > 60){
+											 							%>
+		 																	<a title="$fileName" class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+			 																	<%=FAQUtils.getSubString(fileName, 60);%>
+			 																</a>
+		 																<%}else{%>
+																			<a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+																				$fileName
+																			</a>
+		 																<%}%>
+																		</div>
+																		<div style=" float:left;">&nbsp;-&nbsp;<span style="color:gray;">$size</span></div>
+																		<div style="clear:left;"><span></span></div>
 																	</div>
-																<%
-																}
+															<%}
 															}%>
 														<div style="clear:left;"><span></span></div>
 													</div>

@@ -27,6 +27,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.SessionManager;
@@ -598,9 +599,6 @@ public class QuestionPageList extends JCRPageList {
     listObject_ = null;
   }
 
-  /*
-   * private Boolean[] ValuesToBoolean(Value[] Val) throws Exception { if(Val.length < 1) return new Boolean[]{} ; Boolean[] bools = new Boolean[Val.length] ; for(int i = 0; i < Val.length; ++i) { bools[i] = Val[i].getBoolean(); } return bools; }
-   */
   /**
    * Set values for all question's properties from question node which is got form NodeIterator.
    * 
@@ -614,17 +612,12 @@ public class QuestionPageList extends JCRPageList {
     Question question = new Question();
     question.setId(questionNode.getName());
     PropertyReader reader = new PropertyReader(questionNode);
-
     question.setLanguage(reader.string(FAQNodeTypes.EXO_LANGUAGE, ""));
     question.setDetail(reader.string(FAQNodeTypes.EXO_NAME, ""));
     question.setAuthor(reader.string(FAQNodeTypes.EXO_AUTHOR, ""));
     question.setEmail(reader.string(FAQNodeTypes.EXO_EMAIL, ""));
     question.setQuestion(reader.string(FAQNodeTypes.EXO_TITLE, ""));
     question.setCreatedDate(reader.date(FAQNodeTypes.EXO_CREATED_DATE, CommonUtils.getGreenwichMeanTime().getTime()));
-    question.setCategoryId(reader.string(FAQNodeTypes.EXO_CATEGORY_ID, ""));
-    /*
-     * String catePath = questionNode.getParent().getParent().getPath() ; question.setCategoryId(catePath.substring(catePath.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
-     */
     question.setActivated(reader.bool(FAQNodeTypes.EXO_IS_ACTIVATED, true));
     question.setApproved(reader.bool(FAQNodeTypes.EXO_IS_APPROVED, true));
     question.setRelations(reader.strings(FAQNodeTypes.EXO_RELATIVES, new String[] {}));
@@ -638,38 +631,14 @@ public class QuestionPageList extends JCRPageList {
     question.setNumberOfPublicAnswers(reader.l(FAQNodeTypes.EXO_NUMBER_OF_PUBLIC_ANSWERS));
     String path = questionNode.getPath();
     question.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
-
-    List<FileAttachment> listFile = new ArrayList<FileAttachment>();
-    NodeIterator nodeIterator = questionNode.getNodes();
-    Node nodeFile;
-    Node node;
-    FileAttachment attachment = null;
-    String workspace = questionNode.getSession().getWorkspace().getName();
-    while (nodeIterator.hasNext()) {
-      node = nodeIterator.nextNode();
-      if (node.isNodeType(FAQNodeTypes.EXO_FAQ_ATTACHMENT)) {
-        attachment = new FileAttachment();
-        nodeFile = node.getNode(FAQNodeTypes.JCR_CONTENT);
-        attachment.setId(node.getPath());
-        attachment.setMimeType(nodeFile.getProperty(FAQNodeTypes.JCR_MIME_TYPE).getString());
-        attachment.setNodeName(node.getName());
-        attachment.setName(nodeFile.getProperty(FAQNodeTypes.EXO_FILE_NAME).getValue().getString());
-        attachment.setWorkspace(workspace);
-        attachment.setPath("/" + workspace + node.getPath());
-        try {
-          if (nodeFile.hasProperty(FAQNodeTypes.JCR_DATA))
-            attachment.setSize(nodeFile.getProperty(FAQNodeTypes.JCR_DATA).getStream().available());
-          else
-            attachment.setSize(0);
-        } catch (Exception e) {
-          attachment.setSize(0);
-        }
-        listFile.add(attachment);
-      }
-    }
-    question.setAttachMent(listFile);
+    question.setAttachMent(JCRDataStorage.getFileAttachments(questionNode));
     question.setAnswers(getAnswers(questionNode));
     question.setComments(getComment(questionNode));
+    while (!questionNode.isNodeType(FAQNodeTypes.EXO_FAQ_CATEGORY)) {
+      questionNode = questionNode.getParent();
+      question.setCategoryId(questionNode.getName());
+      question.setCategoryPath(questionNode.getPath());
+    }
     return question;
   }
 

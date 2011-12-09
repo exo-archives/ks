@@ -1445,7 +1445,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
         String[] args = new String[] { userId.substring(0, t) };
         throw new MessageException(new ApplicationMessage("UITopicDetail.msg.userIsDeleted", args, ApplicationMessage.WARNING));
       }
-      UIPrivateMessageForm messageForm = topicDetail.openPopup(UIPrivateMessageForm.class, 650, 480);
+      UIPrivateMessageForm messageForm = topicDetail.openPopup(UIPrivateMessageForm.class, 720, 550);
       messageForm.setFullMessage(false);
       messageForm.setUserProfile(topicDetail.userProfile);
       messageForm.setSendtoField(userId);

@@ -42,7 +42,7 @@ public class BufferAttachment extends ForumAttachment {
     Session session = getSesison();
     try {
       attachment = (Node) session.getItem(getPathNode());
-      return attachment.getNode("jcr:content").getProperty("jcr:data").getStream();
+      return attachment.getNode(ForumNodeTypes.JCR_CONTENT).getProperty(ForumNodeTypes.JCR_DATA).getStream();
     } catch (Exception e) {
       return null;
     } finally {

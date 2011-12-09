@@ -81,7 +81,6 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.ForumSubscription;
 import org.exoplatform.forum.service.InitializeForumPlugin;
-import org.exoplatform.forum.service.JCRForumAttachment;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.LazyPageList;
 import org.exoplatform.forum.service.MessageBuilder;
@@ -539,36 +538,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
      */
     public ForumAttachment execute(Session session) throws Exception {
       Node ksAvatarHomnode = getKSUserAvatarHomeNode();
-      List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
       if (ksAvatarHomnode.hasNode(username)) {
-        Node node = ksAvatarHomnode.getNode(username);
-        Node nodeFile = null;
-        String workspace = "";
-        if (node.isNodeType(NT_FILE)) {
-          JCRForumAttachment attachment = new JCRForumAttachment();
-          nodeFile = node.getNode(JCR_CONTENT);
-          attachment.setId(node.getName());
-          attachment.setPathNode(node.getPath());
-          attachment.setMimeType(nodeFile.getProperty(JCR_MIME_TYPE).getString());
-          attachment.setName("avatar." + attachment.getMimeType());
-          workspace = node.getSession().getWorkspace().getName();
-          attachment.setWorkspace(workspace);
-          attachment.setPath("/" + workspace + node.getPath());
-          try {
-            if (nodeFile.hasProperty(JCR_DATA))
-              attachment.setSize(nodeFile.getProperty(JCR_DATA).getStream().available());
-            else
-              attachment.setSize(0);
-            attachments.add(attachment);
-            return attachments.get(0);
-          } catch (Exception e) {
-            attachment.setSize(0);
-            if (log.isDebugEnabled()) {
-              log.debug("Failed to execute avatar of user", e);
-            }
-          }
-        }
-        return null;
+        return getAttachment(ksAvatarHomnode.getNode(username));
       } else {
         return null;
       }
@@ -2957,23 +2928,42 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     return postNew;
   }
 
-  private List<ForumAttachment> getAttachmentsByNode(Node node) throws Exception {
-    List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
-    NodeIterator postAttachments = node.getNodes();
-    Node nodeFile;
-    while (postAttachments.hasNext()) {
-      Node nodeContent = postAttachments.nextNode();
-      if (nodeContent.isNodeType(EXO_FORUM_ATTACHMENT)) {
-        JCRForumAttachment attachment = new JCRForumAttachment();
-        nodeFile = nodeContent.getNode(JCR_CONTENT);
+  private static ForumAttachment getAttachment(Node nodeContent) throws Exception {
+    try {
+      if (nodeContent.isNodeType(EXO_FORUM_ATTACHMENT) || nodeContent.isNodeType(NT_FILE)) {
+        BufferAttachment attachment = new BufferAttachment();
+        PropertyReader readerContent = new PropertyReader(nodeContent.getNode(JCR_CONTENT));
         attachment.setId(nodeContent.getName());
         attachment.setPathNode(nodeContent.getPath());
-        attachment.setMimeType(nodeFile.getProperty(JCR_MIME_TYPE).getString());
-        attachment.setName(nodeFile.getProperty(EXO_FILE_NAME).getString());
-        attachment.setSize(nodeFile.getProperty(JCR_DATA).getStream().available());
+        attachment.setMimeType(readerContent.string(JCR_MIME_TYPE, CommonUtils.EMPTY_STR));
+        attachment.setSize(readerContent.stream(JCR_DATA).available());
         String workspace = nodeContent.getSession().getWorkspace().getName();
         attachment.setWorkspace(workspace);
-        attachment.setPath("/" + workspace + nodeContent.getPath());
+        attachment.setPath(CommonUtils.SLASH + workspace + nodeContent.getPath());
+        String fileName = readerContent.string(EXO_FILE_NAME);
+        if (CommonUtils.isEmpty(fileName)) {
+          String type = attachment.getMimeType(); 
+          if (type.indexOf(CommonUtils.SLASH) > 0) {
+            type = type.substring(type.indexOf(CommonUtils.SLASH) + 1);
+          }
+          fileName = "avatar." + type;
+        }
+        attachment.setName(fileName);
+        return attachment;
+      }
+    } catch (Exception e) {
+      logDebug("Failed to get attachment in node: " + nodeContent.getName());
+    }
+    return null;
+  }
+
+  public static List<ForumAttachment> getAttachmentsByNode(Node node) throws Exception {
+    List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
+    NodeIterator postAttachments = node.getNodes();
+    while (postAttachments.hasNext()) {
+      Node nodeAttatch = postAttachments.nextNode();
+      ForumAttachment attachment = getAttachment(nodeAttatch);
+      if (attachment != null) {
         attachments.add(attachment);
       }
     }
@@ -3066,7 +3056,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
               nodeContent = nodeFile.addNode(JCR_CONTENT, EXO_FORUM_RESOURCE);
               nodeContent.setProperty(JCR_MIME_TYPE, file.getMimeType());
               nodeContent.setProperty(JCR_DATA, file.getInputStream());
-              nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
+              nodeContent.setProperty(JCR_LAST_MODIFIED, Calendar.getInstance().getTimeInMillis());
               nodeContent.setProperty(EXO_FILE_NAME, file.getName());
             }
           } catch (Exception e) {
