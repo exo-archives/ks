@@ -46,8 +46,9 @@
   padding: 10px 0px 0px 0px;
 }
 
-.UIPrivateMessageForm .SendMessageTab #MailMessage___Frame {
-  height: 200px;
+.UIForumPortlet .UIPrivateMessageForm .FieldComponent div {
+  float: left;
+  width: 98%;
 }
 
 .UIForumPortlet .UIPrivateMessageForm .MessageContainer {
