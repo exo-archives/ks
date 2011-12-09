@@ -19,6 +19,7 @@ import org.exoplatform.commons.chromattic.ChromatticManager;
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.container.configuration.ConfigurationManager;
@@ -29,6 +30,7 @@ import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.services.deployment.plugins.XMLDeploymentPlugin;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -233,11 +235,21 @@ public class WikiServiceImpl implements WikiService, Startable {
   }  
   
   public void deleteDraftNewPage(String newDraftPageId) throws Exception {
+    RepositoryService repoService = (RepositoryService) PortalContainer.getInstance()
+                                                                       .getComponentInstanceOfType(RepositoryService.class);
+    try {
+      repoService.getCurrentRepository();
+    } catch (Exception e) {
+      log.info("Can not get current repository. Drap page will removed in next starting service");
+      return;
+    }
     Model model = getModel();
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     PageImpl draftNewPagesContainer = wStore.getDraftNewPagesContainer();
     PageImpl draftPage = (PageImpl) draftNewPagesContainer.getChild(newDraftPageId);
-    if (draftPage != null) draftPage.remove();
+    if (draftPage != null){
+      draftPage.remove();
+    }
   }
 
   public boolean renamePage(String wikiType,
