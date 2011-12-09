@@ -902,24 +902,22 @@ public class UIQuestions extends UIContainer {
 
   static public class EditQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-      UIQuestions questions = event.getSource();
+      UIQuestions uiQuestions = event.getSource();
       String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
-      UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class);
+      UIAnswersPortlet portlet = uiQuestions.getAncestorOfType(UIAnswersPortlet.class);
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null);
       Question question = null;
       try {
-        question = questions.getFAQService().getQuestionById(questionId);
-        question.setQuestion(questions.getQuestionContent());
-        question.setDetail(questions.getQuestionDetail().getDetail());
-        question.setLanguage(questions.getLanguage());
+        question = uiQuestions.getFAQService().getQuestionById(questionId);
       } catch (Exception e) {
-        questions.showMessageDeletedQuestion(event.getRequestContext());
+        uiQuestions.showMessageDeletedQuestion(event.getRequestContext());
         return;
       }
-      UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null);
-      questionForm.setFAQSetting(questions.faqSetting_);
-      questionForm.setQuestion(question);
+      UIQuestionForm uiQuestionForm = popupContainer.addChild(UIQuestionForm.class, null, null);
+      uiQuestionForm.setFAQSetting(uiQuestions.faqSetting_);
+      uiQuestionForm.setEditLanguage(uiQuestions.getLanguage());
+      uiQuestionForm.setQuestion(question);
       popupContainer.setId("EditQuestion");
       popupAction.activate(popupContainer, 900, 450);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
