@@ -1,13 +1,17 @@
 <% 
-  import java.util.List;
   import org.exoplatform.web.application.JavascriptManager;
   
   def rcontext = _ctx.getRequestContext();
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  
   jsmanager.importJavascript('eXo.wiki.UIWikiSettingContainer', '/wiki/javascript/') ;
   jsmanager.addJavascript("eXo.wiki.UIWikiSettingContainer.init('" + uicomponent.id + "') ;"); 
 %>
+
+<style>
+.UIWikiPortlet .WikiLayout {
+  position: static;
+}
+</style>
 
 <div class="UIWikiSettingContainer" id="$uicomponent.id">
   <div class="SettingItems">
@@ -28,9 +32,9 @@
   
   <div class="VerticalLine"></div>
   
-  <div class="Content">	
-		<%
-		uicomponent.renderChild(uicomponent.getActiveItem());
-		%>
+  <div class="Content"> 
+    <%
+    uicomponent.renderChild(uicomponent.getActiveItem());
+    %>
   </div>
 </div>
