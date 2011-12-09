@@ -100,7 +100,7 @@
         <properties-param>
           <name>ref-addresses</name>
           <description>ref-addresses</description>
-          <property name="repositoryName" value="repository"/>
+          <property name="repositoryName" value="${gatein.jcr.repository.default}"/>
         </properties-param>
       </init-params>
     </component-plugin>

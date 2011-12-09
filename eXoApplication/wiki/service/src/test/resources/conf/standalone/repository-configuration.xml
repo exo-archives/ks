@@ -16,14 +16,14 @@
   ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
   -->
-<repository-service default-repository="repository">
+<repository-service default-repository="${gatein.jcr.repository.default}">
   <repositories>
-    <repository name="repository" system-workspace="knowledge" default-workspace="knowledge">
+    <repository name="${gatein.jcr.repository.default}" system-workspace="${gatein.jcr.workspace.system}" default-workspace="${gatein.jcr.workspace.default}">
       <security-domain>exo-domain</security-domain>
       <session-max-age>1h</session-max-age>
       <authentication-policy>org.exoplatform.services.jcr.impl.core.access.JAASAuthenticator</authentication-policy>
       <workspaces>
-        <workspace name="knowledge">
+        <workspace name="${gatein.jcr.workspace.default}">
           <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
             <properties>
               <property name="source-name" value="jdbcjcr" />
