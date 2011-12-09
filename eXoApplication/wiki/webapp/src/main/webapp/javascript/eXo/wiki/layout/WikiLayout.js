@@ -59,7 +59,6 @@ WikiLayout.prototype.init = function(prtId) {
       this.leftArea = DOMUtil.findPreviousElementByTagName(this.spliter, "div");
       this.rightArea = DOMUtil.findNextElementByTagName(this.spliter, "div");
       var leftWidth = eXo.core.Browser.getCookie("leftWidth");
-   window.console.info("getCookie: " + leftWidth);
       if (this.leftArea && this.rightArea && (leftWidth != null) && (leftWidth != "") && (leftWidth * 1 > 0)) {
         this.spliter.style.left = leftWidth + 'px';
         this.leftArea.style.width = leftWidth + 'px';
@@ -71,7 +70,6 @@ WikiLayout.prototype.init = function(prtId) {
       this.processeWithHeight();
     }
   }catch(e){
-   window.console.info("Failed to init WikiLayout: " + e);
    return;
   };
 };
