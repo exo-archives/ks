@@ -152,6 +152,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
   private boolean                        isAddCheckBox        = false;
 
   private Locale                         currentLocale        = null;
+  
+  private String                         editLanguage         = null;
 
   @SuppressWarnings("unused")
   private boolean                        isRenderSelectLang   = false;
@@ -166,6 +168,14 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
 
   public void setFAQSetting(FAQSetting faqSetting) {
     this.faqSetting_ = faqSetting;
+  }
+  
+  public String getEditLanguage() {
+    return editLanguage;
+  }
+
+  public void setEditLanguage(String editLanguage) {
+    this.editLanguage = editLanguage;
   }
 
   public UIQuestionForm() throws Exception {
@@ -236,7 +246,10 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     inputEmailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_);
     inputQuestionContent = new UIFormStringInput(QUESTION_CONTENT, QUESTION_CONTENT, null);
     selectLanguage = new UIFormSelectBox(ALL_LANGUAGES, ALL_LANGUAGES, listSystemLanguages);
-    if (!FAQUtils.isFieldEmpty(defaultLanguage_)) {
+    if (!FAQUtils.isFieldEmpty(getEditLanguage())) {
+      selectLanguage.setValue(getEditLanguage());
+      selectLanguage.setSelectedValues(new String[] { getEditLanguage() });
+    } else if (!FAQUtils.isFieldEmpty(defaultLanguage_)) {
       selectLanguage.setValue(defaultLanguage_);
       selectLanguage.setSelectedValues(new String[] { defaultLanguage_ });
     }
@@ -338,8 +351,14 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       authorQ.setValue(question_.getAuthor());
       UIFormStringInput emailQ = this.getChildById(EMAIL_ADDRESS);
       emailQ.setValue(question_.getEmail());
-      inputQuestionContent.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(question_.getQuestion()));
-      inputQuestionDetail.setValue(question_.getDetail());
+      
+      if(mapLanguage.containsKey(this.editLanguage)){
+        inputQuestionDetail.setValue(mapLanguage.get(this.editLanguage).getDetail());
+        inputQuestionContent.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(mapLanguage.get(this.editLanguage).getQuestion()));        
+      }else{
+        inputQuestionContent.setValue(CommonUtils.decodeSpecialCharToHTMLnumber(question_.getQuestion()));
+        inputQuestionDetail.setValue(question_.getDetail());
+      }
     } catch (Exception e) {
       log.error("Set question is fall, exception: " + e.getMessage());
       initPage(false);
@@ -452,8 +471,9 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
       String language = questionForm.selectLanguage.getValue();
       String detail = questionForm.inputQuestionDetail.getValue();
       String question = questionForm.inputQuestionContent.getValue();
-      if (!ValidatorDataInput.fckContentIsNotEmpty(detail))
+      if (!ValidatorDataInput.fckContentIsNotEmpty(detail)){
         detail = " ";
+      }
       if (!ValidatorDataInput.fckContentIsNotEmpty(question)) {
         if (questionForm.mapLanguage.containsKey(questionForm.lastLanguage_)) {
           questionForm.mapLanguage.get(questionForm.lastLanguage_).setState(QuestionLanguage.DELETE);
