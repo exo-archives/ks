@@ -93,8 +93,7 @@ public class UIWikiSearchBox extends UIForm {
       if (!wikiPortlet.getWikiMode().equals(WikiMode.ADVANCEDSEARCH)) {
         wikiPortlet.changeMode(WikiMode.ADVANCEDSEARCH);
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(wikiPortlet.findFirstComponentOfType(UIWikiUpperArea.class));
-      event.getRequestContext().addUIComponentToUpdateByAjax(wikiPortlet.findFirstComponentOfType(UIWikiPageContainer.class));
+      event.getRequestContext().addUIComponentToUpdateByAjax(wikiPortlet);
     }    
   }
 }
