@@ -26,11 +26,13 @@ import org.xwiki.rendering.listener.chaining.BlockStateChainingListener;
 import org.xwiki.rendering.listener.chaining.ListenerChain;
 import org.xwiki.rendering.listener.chaining.StackableChainingListener;
 import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.renderer.AbstractChainingPrintRenderer;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
 import org.xwiki.rendering.renderer.printer.VoidWikiPrinter;
 import org.xwiki.rendering.renderer.printer.WikiPrinter;
 import org.xwiki.rendering.renderer.reference.ResourceReferenceSerializer;
+import org.xwiki.rendering.transformation.icon.IconTransformationConfiguration;
 
 /**
  * Created by The eXo Platform SAS
@@ -47,6 +49,8 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
   private ConfluenceSyntaxLinkRenderer linkRenderer;
 
   private ConfluenceSyntaxImageRenderer imageRenderer;
+  
+  private ConfluenceSyntaxIconRenderer  iconRenderer;
 
   private ConfluenceSyntaxMacroRenderer macroPrinter;
 
@@ -59,14 +63,20 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
   private StringBuffer listStyle = new StringBuffer();
 
   private Map<String, String> previousFormatParameters;
+  
+  private IconTransformationConfiguration iconTransformationConfiguration;
 
-  public ConfluenceSyntaxChainingRenderer(ListenerChain listenerChain, ResourceReferenceSerializer linkReferenceSerializer) {
+  public ConfluenceSyntaxChainingRenderer(ListenerChain listenerChain,
+                                          ResourceReferenceSerializer linkReferenceSerializer,
+                                          IconTransformationConfiguration iconTransformationConfiguration) {
 
     setListenerChain(listenerChain);
 
     this.linkReferenceSerializer = linkReferenceSerializer;
+    this.iconTransformationConfiguration = iconTransformationConfiguration;
     this.linkRenderer = new ConfluenceSyntaxLinkRenderer(getConfluenceSyntaxListenerChain(), linkReferenceSerializer);
     this.imageRenderer = new ConfluenceSyntaxImageRenderer();
+    this.iconRenderer = new ConfluenceSyntaxIconRenderer(iconTransformationConfiguration);
     this.macroPrinter = new ConfluenceSyntaxMacroRenderer();
   }
 
@@ -82,7 +92,9 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
    * @see StackableChainingListener#createChainingListenerInstance()
    */
   public StackableChainingListener createChainingListenerInstance() {
-    ConfluenceSyntaxChainingRenderer renderer = new ConfluenceSyntaxChainingRenderer(getListenerChain(), this.linkReferenceSerializer);
+    ConfluenceSyntaxChainingRenderer renderer = new ConfluenceSyntaxChainingRenderer(getListenerChain(),
+                                                                                     this.linkReferenceSerializer,
+                                                                                     this.iconTransformationConfiguration);
     renderer.setPrinter(getPrinter());
     return renderer;
   }
@@ -97,6 +109,10 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
 
   private ConfluenceSyntaxImageRenderer getImageRenderer() {
     return this.imageRenderer;
+  }
+  
+  private ConfluenceSyntaxIconRenderer getIconRenderer() {
+    return this.iconRenderer;
   }
 
   private ConfluenceSyntaxMacroRenderer getMacroPrinter() {
@@ -806,10 +822,14 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
    *      boolean, Map)
    */
   @Override
-  public void onImage(ResourceReference image, boolean isFreeStandingURI, Map<String, String> parameters) {
-    getImageRenderer().beginRenderImage(getConfluencePrinter());
-    getImageRenderer().renderImageContent(getConfluencePrinter(), getImageRenderer().renderImage(image));
-    getImageRenderer().endRenderImage(getConfluencePrinter(), parameters);
+  public void onImage(ResourceReference image, boolean isFreeStandingURI, Map<String, String> parameters) {    
+    if (ResourceType.ICON.equals(image.getType())) {
+      getIconRenderer().renderIcon(getConfluencePrinter(), image);
+    } else{
+      getImageRenderer().beginRenderImage(getConfluencePrinter());
+      getImageRenderer().renderImageContent(getConfluencePrinter(), getImageRenderer().renderImage(image));
+      getImageRenderer().endRenderImage(getConfluencePrinter(), parameters);  
+    }
   }
 
   protected void printParameters(Map<String, String> parameters) {

@@ -97,37 +97,8 @@ public class RenderingServiceImpl implements RenderingService, Startable {
     } catch (ConversionException e) {
       throw new ConversionException("Failed to refine input source", e);
     }
-    if (supportSectionEdit) {
-      List<HeaderBlock> filteredHeaders = getFilteredHeaders(xdom);
-      int sectionIndex = 1;
-      for (HeaderBlock block : filteredHeaders) {
-        SectionBlock section = block.getSection();
-        Block parentBlock = section.getParent();
-        ResourceReference link = new ResourceReference( "section=" + sectionIndex, ResourceType.URL);       
-        sectionIndex++;
-        List<Block> emtyList = Collections.emptyList();
-        Map<String, String> linkParameters = new LinkedHashMap<String, String>();
-        linkParameters.put("title", "Edit section: " + renderXDOM(new XDOM(block.getChildren()), sSyntax));
-        LinkBlock linkBlock = new LinkBlock(emtyList, link, true, linkParameters);
-        Map<String, String> spanParameters = new LinkedHashMap<String, String>();
-        spanParameters.put("class", "EditSection");
-        FormatBlock spanBlock = new FormatBlock(Collections.singletonList((Block) linkBlock), Format.NONE, spanParameters);
-        
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("class", "header-container");
-        Block headerContainer = new GroupBlock(params);
-        headerContainer.addChild(block);
-        headerContainer.addChild(spanBlock);
-        section.replaceChild(headerContainer, block);
-        
-        params.put("class", "section-container");
-        Block sectionContainer = new GroupBlock(params);
-        sectionContainer.addChild(section);
-        parentBlock.replaceChild(sectionContainer, section);
-      }
-    }
 
-    WikiPrinter printer = convert(xdom, sSyntax, tSyntax);
+    WikiPrinter printer = convert(xdom, sSyntax, tSyntax, supportSectionEdit);
     return printer.toString();
   }
   
@@ -228,7 +199,7 @@ public class RenderingServiceImpl implements RenderingService, Startable {
    * parent.getChildren(); for (Block block : children) { outputTree(block,
    * level+1); } }
    */
-  private WikiPrinter convert(XDOM xdom, Syntax sourceSyntax, Syntax targetSyntax) throws Exception {
+  private WikiPrinter convert(XDOM xdom, Syntax sourceSyntax, Syntax targetSyntax, boolean supportSectionEdit) throws Exception {
 
     // Step 2: Run transformations
     try {
@@ -247,6 +218,37 @@ public class RenderingServiceImpl implements RenderingService, Startable {
       throw new ConversionException("Failed to locate Renderer for syntax [" + targetSyntax + "]",
                                     e);
     }
+
+    if (supportSectionEdit) {
+      List<HeaderBlock> filteredHeaders = getFilteredHeaders(xdom);
+      int sectionIndex = 1;
+      for (HeaderBlock block : filteredHeaders) {
+        SectionBlock section = block.getSection();
+        Block parentBlock = section.getParent();
+        ResourceReference link = new ResourceReference( "section=" + sectionIndex, ResourceType.URL);       
+        sectionIndex++;
+        List<Block> emtyList = Collections.emptyList();
+        Map<String, String> linkParameters = new LinkedHashMap<String, String>();
+        linkParameters.put("title", "Edit section: " + renderXDOM(new XDOM(block.getChildren()), sourceSyntax));
+        LinkBlock linkBlock = new LinkBlock(emtyList, link, true, linkParameters);
+        Map<String, String> spanParameters = new LinkedHashMap<String, String>();
+        spanParameters.put("class", "EditSection");
+        FormatBlock spanBlock = new FormatBlock(Collections.singletonList((Block) linkBlock), Format.NONE, spanParameters);
+        
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("class", "header-container");
+        Block headerContainer = new GroupBlock(params);
+        headerContainer.addChild(block);
+        headerContainer.addChild(spanBlock);
+        section.replaceChild(headerContainer, block);
+        
+        params.put("class", "section-container");
+        Block sectionContainer = new GroupBlock(params);
+        sectionContainer.addChild(section);
+        parentBlock.replaceChild(sectionContainer, section);
+      }
+    }
+    
     renderer.render(xdom, printer);
     return printer;
 

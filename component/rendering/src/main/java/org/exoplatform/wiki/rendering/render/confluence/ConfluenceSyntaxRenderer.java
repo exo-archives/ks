@@ -29,6 +29,7 @@ import org.xwiki.rendering.listener.chaining.ListenerChain;
 import org.xwiki.rendering.listener.chaining.LookaheadChainingListener;
 import org.xwiki.rendering.renderer.AbstractChainingPrintRenderer;
 import org.xwiki.rendering.renderer.reference.ResourceReferenceSerializer;
+import org.xwiki.rendering.transformation.icon.IconTransformationConfiguration;
 
 /**
  * Created by The eXo Platform SAS
@@ -48,6 +49,9 @@ public class ConfluenceSyntaxRenderer extends AbstractChainingPrintRenderer impl
    */
   @Requirement("confluence/1.0/link")
   private ResourceReferenceSerializer linkReferenceSerializer;
+  
+  @Requirement
+  private IconTransformationConfiguration iconTransformationConfiguration;
 
   /**
    * {@inheritDoc}
@@ -67,7 +71,7 @@ public class ConfluenceSyntaxRenderer extends AbstractChainingPrintRenderer impl
     chain.addListener(new GroupStateChainingListener(chain));
     chain.addListener(new BlockStateChainingListener(chain));
     chain.addListener(new ConsecutiveNewLineStateChainingListener(chain));
-    chain.addListener(new ConfluenceSyntaxChainingRenderer(chain, this.linkReferenceSerializer));
+    chain.addListener(new ConfluenceSyntaxChainingRenderer(chain, this.linkReferenceSerializer, iconTransformationConfiguration));
   }
 }
 
