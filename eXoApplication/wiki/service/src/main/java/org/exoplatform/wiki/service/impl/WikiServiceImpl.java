@@ -759,17 +759,23 @@ public class WikiServiceImpl implements WikiService, Startable {
   private Wiki getWiki(String wikiType, String owner, Model model) {
     WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
     WikiImpl wiki = null;
-    if (PortalConfig.PORTAL_TYPE.equals(wikiType)) {
-      WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
-      wiki = portalWikiContainer.getWiki(owner);
-    } else if (PortalConfig.GROUP_TYPE.equals(wikiType)) {
-      WikiContainer<GroupWiki> groupWikiContainer = wStore.getWikiContainer(WikiType.GROUP);
-      wiki = groupWikiContainer.getWiki(owner);
-    } else if (PortalConfig.USER_TYPE.equals(wikiType)) {
-      WikiContainer<UserWiki> userWikiContainer = wStore.getWikiContainer(WikiType.USER);
-      wiki = userWikiContainer.getWiki(owner);
+    try {
+      if (PortalConfig.PORTAL_TYPE.equals(wikiType)) {
+        WikiContainer<PortalWiki> portalWikiContainer = wStore.getWikiContainer(WikiType.PORTAL);
+        wiki = portalWikiContainer.getWiki(owner);
+      } else if (PortalConfig.GROUP_TYPE.equals(wikiType)) {
+        WikiContainer<GroupWiki> groupWikiContainer = wStore.getWikiContainer(WikiType.GROUP);
+        wiki = groupWikiContainer.getWiki(owner);
+      } else if (PortalConfig.USER_TYPE.equals(wikiType)) {
+        WikiContainer<UserWiki> userWikiContainer = wStore.getWikiContainer(WikiType.USER);
+        wiki = userWikiContainer.getWiki(owner);
+      }
+      model.save();
+    } catch (Exception e) {
+      if (log.isDebugEnabled()) {
+        log.debug("[WikiService] Cannot get wiki " + wikiType + ":" + owner, e);
+      }
     }
-    model.save();
     return wiki;
   }
 

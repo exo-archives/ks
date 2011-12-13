@@ -30,18 +30,18 @@ public class PageResolver {
         return params;
       } else {
         LOG.error("Couldn't extract WikiPageParams for URI: " + requestURI + ". ResolverPlugin is not set!");
-        return null;
+        return new WikiPageParams();
       }
     } catch (Exception e) {
-      LOG.error("Couldn't extract WikiPageParams for URI: " + requestURI, e);
-      return null;
+      LOG.warn("Couldn't extract WikiPageParams for URI: " + requestURI, e);
+      return new WikiPageParams();
     }
   }
   
   public Page resolve(String requestURI, UserNode portalUserNode) throws Exception {
     WikiPageParams params = extractWikiPageParams(requestURI, portalUserNode);
-    if (params == null) {
-      LOG.error("Couldn't resolve URI: " + requestURI);
+    if (params.getType() == null) {
+      LOG.warn("Couldn't resolve URI: " + requestURI);
       return null;
     }
 
