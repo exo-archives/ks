@@ -463,27 +463,27 @@ public class WikiServiceImpl implements WikiService, Startable {
   }
 
   public Page getPageById(String wikiType, String wikiOwner, String pageId) throws Exception {
-
-    Model model = getModel();
-    WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+    PageImpl page = null;
     if (WikiNodeType.Definition.WIKI_HOME_NAME.equals(pageId) || pageId == null) {
-      return getWikiHome(wikiType, wikiOwner);
-    }
-
-    String statement = new WikiSearchData(wikiType, wikiOwner, pageId).getPageConstraint();
-    if (statement != null) {
-      PageImpl page = searchPage(statement, wStore.getSession());
-      // page.setChromatticSession(wStore.getSession()) ;
-      if (page == null) {
-        page = getWikiHome(wikiType, wikiOwner);
-        String wikiHomeId = TitleResolver.getId(page.getTitle(), true);
-        if (!wikiHomeId.equals(pageId)) {
-          page = null;
+      page = getWikiHome(wikiType, wikiOwner);
+    } else {
+      String statement = new WikiSearchData(wikiType, wikiOwner, pageId).getPageConstraint();
+      if (statement != null) {
+        Model model = getModel();
+        WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
+        page = searchPage(statement, wStore.getSession());
+        if (page == null) {
+          page = getWikiHome(wikiType, wikiOwner);
+          String wikiHomeId = TitleResolver.getId(page.getTitle(), true);
+          if (!wikiHomeId.equals(pageId)) {
+            page = null;
+          }
         }
       }
-      if (page != null && page.hasPermission(PermissionType.VIEWPAGE)) {
-        return page;
-      }
+    }
+    
+    if (page != null && page.hasPermission(PermissionType.VIEWPAGE)) {
+      return page;
     }
     return null;
   }
