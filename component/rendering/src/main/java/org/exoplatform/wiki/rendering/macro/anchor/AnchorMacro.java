@@ -39,7 +39,7 @@ public class AnchorMacro extends AbstractMacro<AnchorMacroParameters> {
     Map<String, String> params = new HashMap<String, String>();
     params.put("name", anchor);
     List<Block> inner = new ArrayList<Block>();
-    inner.add(new WordBlock(anchorName));
+    inner.add(new WordBlock(""));
     Block anchorBlock = new LinkBlock(inner, documentReference, false, params);    
     return Collections.singletonList(anchorBlock);
   }
