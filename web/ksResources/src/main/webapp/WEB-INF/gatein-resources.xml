@@ -5,8 +5,8 @@
                       xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2">
 
   <portal-skin>
-    <skin-module>ks</skin-module>
     <skin-name>Default</skin-name>
+    <skin-module>ks</skin-module>
     <css-path>/skin/Stylesheet.css</css-path>
     <css-priority>1</css-priority>
   </portal-skin>

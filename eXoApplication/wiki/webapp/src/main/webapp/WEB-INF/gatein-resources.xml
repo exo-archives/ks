@@ -26,8 +26,8 @@
   xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_2">
 
   <portal-skin>
-    <skin-module>wiki</skin-module>
     <skin-name>Default</skin-name>
+    <skin-module>wiki</skin-module>
     <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
     <css-priority>1</css-priority>
   </portal-skin>
