@@ -69,7 +69,7 @@ public class TreeUtils {
       spaceNode.pushDescendants(context);
       return spaceNode;
     }
-    return null;
+    return new TreeNode();
   }
   
   public static List<JsonNodeData> tranformToJson(TreeNode treeNode, HashMap<String, Object> context) throws Exception {
