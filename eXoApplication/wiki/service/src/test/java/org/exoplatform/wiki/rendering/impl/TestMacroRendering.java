@@ -201,7 +201,7 @@ public class TestMacroRendering extends AbstractRenderingTestCase {
   }
   
   public void testRenderAnchorMacro() throws Exception {
-    String expectedHtml = "<span class=\"wikilink\"><a name=\"Hlevel1\" href=\"#Hlevel1\">level1</a></span>";
+    String expectedHtml = "<span class=\"wikilink\"><a name=\"Hlevel1\" href=\"#Hlevel1\"></a></span>";
     assertEquals(expectedHtml, renderingService.render("{{anchor name=\"level1\" /}}",
                                                        Syntax.XWIKI_2_0.toIdString(),
                                                        Syntax.XHTML_1_0.toIdString(),
