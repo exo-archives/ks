@@ -147,8 +147,8 @@
 	background: #ffffff;
 	border: 1px solid #cccccc;
 	margin: 7px 10px;
-	height: 28px;
-	padding: 2px 5px 0px 5px;
+	padding: 2px 5px;
+	zoom: 1;
 }
 
 .UIForumPortlet .UIForumActionBar a:hover {
@@ -196,6 +196,7 @@
 	line-height: 16px;
 	padding: 7px 10px; 
 	margin: 0px 0px 10px 0px;
+	zoom: 1;
 }
 
 .UIForumPortlet .UIForumDescription .ForumLabel {
@@ -258,6 +259,7 @@
 
 .UIForumPortlet .ContentContainer {
 	border: 1px solid #d1d3db;
+	zoom: 1;
 }
 
 .UIForumPortlet .UICategoryInfo .ContentContainer {
