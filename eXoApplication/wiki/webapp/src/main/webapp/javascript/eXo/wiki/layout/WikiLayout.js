@@ -28,32 +28,29 @@ function WikiLayout() {
   this.portletId = 'UIWikiPortlet';
   this.wikiBodyClass = 'wiki-body';
   this.bodyClass = '';
-  this.min_height= 350;
-  this.currHeight = 0;
+  this.myBody;
+  this.myHtml;
+  this.min_height = 350;
   this.currWidth = 0;
 };
 
 window.onresize = function() {
-  var isIE = (eXo.core.Browser.getBrowserType() == "ie") ? true : false;
-  if(isIE) {
-    if(this.currHeight != document.documentElement.clientHeight || this.currWidth != document.documentElement.clientWidth) {
-      eXo.wiki.WikiLayout.processeWithHeight();
-    }
-    this.currHeight = document.documentElement.clientHeight;
-    this.currWidth  = document.documentElement.clientWidth;
-  } else {
+  eXo.core.Browser.managerResize();
+  if(this.currWidth != document.documentElement.clientWidth) {
     eXo.wiki.WikiLayout.processeWithHeight();
   }
+  this.currWidth  = document.documentElement.clientWidth;
 };
 
 WikiLayout.prototype.init = function(prtId) {
   try {
-    if(!this.myBody || String(this.myBody) == "undefined") {
+    if(String(typeof this.myBody) == "undefined" || !this.myBody) {
       this.myBody = document.getElementsByTagName("body")[0];
       this.bodyClass = String(this.myBody.className+'');
       this.myHtml = document.getElementsByTagName("html")[0];
     }
   }catch(e){};
+  
   try{
     if(prtId.length > 0) this.portletId = prtId;
     var isIE = (eXo.core.Browser.getBrowserType() == "ie") ? true : false;
@@ -76,6 +73,7 @@ WikiLayout.prototype.init = function(prtId) {
     }
     if(this.layoutContainer) {
       this.processeWithHeight();
+      eXo.core.Browser.addOnResizeCallback("WikiLayout", eXo.wiki.WikiLayout.processeWithHeight);
     }
   }catch(e){
    return;

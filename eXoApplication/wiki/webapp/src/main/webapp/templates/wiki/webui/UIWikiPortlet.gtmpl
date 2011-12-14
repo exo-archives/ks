@@ -12,9 +12,10 @@
   String changeModeLink= uicomponent.event(uicomponent.CHANGE_MODE_ACTION);
   String changeModeLinkId = uicomponent.WIKI_PORTLET_ACTION_PREFIX + uicomponent.CHANGE_MODE_ACTION; 
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.importJavascript('eXo.ks.KSUtils', '/ksResources/javascript/');
   jsmanager.importJavascript('eXo.wiki.UIWikiPortlet', '/wiki/javascript/') ;
   jsmanager.importJavascript('eXo.wiki.UIWikiAjaxRequest', '/wiki/javascript/') ;
-  jsmanager.importJavascript('eXo.ks.KSUtils', '/ksResources/javascript/');
+  jsmanager.importJavascript('eXo.wiki.layout.WikiLayout', '/wiki/javascript/');
   jsmanager.addJavascript("eXo.wiki.WikiLayout.init('" + uicomponent.id + "') ;") ; 
   jsmanager.addJavascript("eXo.wiki.UIWikiAjaxRequest.init('" + uicomponent.WIKI_PORTLET_ACTION_PREFIX + "', '" + uicomponent.VIEW_PAGE_ACTION + "');");  
   jsmanager.addJavascript("eXo.wiki.UIWikiPortlet.init('"+uicomponent.id+ "', '" + changeModeLinkId + "');");
