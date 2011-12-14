@@ -1,15 +1,31 @@
+eXo.require("eXo.core.Browser"); 
+
 function UIAnswersPortlet() {
-	this.viewImage = true;
-	this.scrollManagerLoaded = false;
-	this.hiddentMenu = true;
-	this.scrollMgr = [];
+  this.viewImage = true;
+  this.scrollManagerLoaded = false;
+  this.hiddentMenu = true;
+  this.scrollMgr = [];
+  this.portletId = "UIAnswersPortlet";
 };
 
-UIAnswersPortlet.prototype.updateContainersHeight = function() {
-	var ansCt = document.getElementById('AnswersContainer');
-	var ansVCt = document.getElementById('AnswersViewContent');
-	if(ansVCt && ansCt){
-		ansCt.style.height = (ansVCt.offsetHeight-61) + "px";
+UIAnswersPortlet.prototype.init = function (portletId) {
+  eXo.faq.UIAnswersPortlet.portletId = String(portletId);
+  var portlet = document.getElementById(portletId);
+  if(portlet) {
+    eXo.faq.UIAnswersPortlet.updateContainersHeight(portlet);
+    eXo.faq.UIAnswersPortlet.controlWorkSpace();
+  }
+};
+
+UIAnswersPortlet.prototype.updateContainersHeight = function (elm) {
+  if(elm) {
+    var ansCt = eXo.core.DOMUtil.findFirstDescendantByClass(elm, "div", "CategoriesContainer");
+    if (ansCt) {
+      var ansVCt = eXo.core.DOMUtil.findFirstDescendantByClass(elm, "div", "ViewQuestionContent");
+      if(ansVCt) {
+         ansCt.style.height = (ansVCt.offsetHeight - 67) + "px";
+      }
+    }
   }
 };
 

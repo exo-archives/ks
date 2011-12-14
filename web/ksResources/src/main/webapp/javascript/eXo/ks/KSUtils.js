@@ -31,10 +31,10 @@ KSUtils.prototype.cancel = function(evt) {
 KSUtils.prototype.setMaskLayer = function(id) {
 	var DOMUtil = eXo.core.DOMUtil;
 	var portlet = document.getElementById(id) ;
-	var masklayer = DOMUtil.findFirstDescendantByClass(portlet, "div", "KSMaskLayer") ;
-	var popupAction = DOMUtil.findFirstDescendantByClass(portlet, "span", "UIKSPopupAction") ;
-	var popupWindow = eXo.ks.KSUtils.findFirstDescendantByClass(popupAction, "UIPopupWindow") ;
- 	if(masklayer) {
+	if(portlet) {
+  	var masklayer = DOMUtil.findFirstDescendantByClass(portlet, "div", "KSMaskLayer") ;
+  	var popupAction = DOMUtil.findFirstDescendantByClass(portlet, "span", "UIKSPopupAction") ;
+  	var popupWindow = eXo.ks.KSUtils.findFirstDescendantByClass(popupAction, "UIPopupWindow") ;
  		masklayer.style.width = "auto";
  		masklayer.style.height = "auto";
 	 	if(popupWindow) {
