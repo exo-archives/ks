@@ -32,5 +32,46 @@
     <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
     <css-priority>1</css-priority>
   </portlet-skin>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.forum.UIForumPortlet</js-module>
+      <js-path>/javascript/eXo/forum/UIForumPortlet.js</js-path>
+      <js-priority>51</js-priority>
+    </param>
+  </javascript>
+
+  <javascript>
+    <param>
+      <js-module>eXo.forum.ForumTotalJob</js-module>
+      <js-path>/javascript/eXo/forum/ForumTotalJob.js</js-path>
+      <js-priority>52</js-priority>
+    </param>
+  </javascript>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.forum.ForumSendNotification</js-module>
+      <js-path>/javascript/eXo/forum/ForumSendNotification.js</js-path>
+      <js-priority>52</js-priority>
+    </param>
+  </javascript>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.forum.webservice.SearchTagName</js-module>
+      <js-path>/javascript/eXo/forum/webservice/SearchTagName.js</js-path>
+      <js-priority>52</js-priority>
+    </param>
+  </javascript>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.forum.webservice.SearchIpBan</js-module>
+      <js-path>/javascript/eXo/forum/webservice/SearchIpBan.js</js-path>
+      <js-priority>52</js-priority>
+    </param>
+  </javascript>
+  
 </gatein-resources>
 

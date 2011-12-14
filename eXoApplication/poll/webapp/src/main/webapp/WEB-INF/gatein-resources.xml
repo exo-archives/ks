@@ -32,4 +32,13 @@
     <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
     <css-priority>1</css-priority>
   </portlet-skin>
+  
+  <javascript>
+    <param>
+      <js-module>eXo.poll.UIPollPortlet</js-module>
+      <js-path>/javascript/eXo/poll/UIPollPortlet.js</js-path>
+      <js-priority>50</js-priority>
+    </param>
+  </javascript>
+  
 </gatein-resources>

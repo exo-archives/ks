@@ -11,12 +11,20 @@
     <css-priority>1</css-priority>
   </portal-skin>
 
-  <!-- javascript>
+  <javascript>
     <param>
       <js-module>eXo.ks.KSUtils</js-module>
       <js-path>/javascript/eXo/ks/KSUtils.js</js-path>
+      <js-priority>8</js-priority>
     </param>
-  </javascript -->
+  </javascript>
+  <javascript>
+    <param>
+      <js-module>eXo.ks.MaskLayerControl</js-module>
+      <js-path>/javascript/eXo/ks/MaskLayerControl.js</js-path>
+      <js-priority>9</js-priority>
+    </param>
+  </javascript>
 
 </gatein-resources>
 
