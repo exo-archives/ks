@@ -10,17 +10,17 @@
       <%
         if(Scope.WIKI.equals(uiParent.getScope())){
       %>
-        <th>Owner</th>
-        <th class="center">View Pages</th>
-        <th class="center">Edit Pages</th>
-        <th class="center">Admin Pages</th>
-        <th class="center">Admin Space</th>
-        <th class="center">Action</th>
+        <th><%=_ctx.appRes("UIPermissionGrid.label.Owner")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.ViewPages")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.EditPages")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.AdminPages")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.AdminSpace")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.Action")%></th>
       <% } else { %>
-        <th>Owner</th>
-        <th class="center">View Pages</th>
-        <th class="center">Edit Pages</th>
-        <th class="center">Action</th>
+        <th><%=_ctx.appRes("UIPermissionGrid.label.Owner")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.ViewPages")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.EditPages")%></th>
+        <th class="center"><%=_ctx.appRes("UIPermissionGrid.label.Action")%></th>
       <%}%>
       </tr>
     </thead>

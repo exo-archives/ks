@@ -15,7 +15,7 @@
 	<%uiform.begin();%>
 	<div class="TemplateControl ClearFix">		  		
       <div class="TemplateActions" >
-        <a class="AddTemplate" onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');">Add more</a>
+        <a class="AddTemplate" onclick="eXo.wiki.UIWikiAjaxRequest.makeNewHash('$anchor');"><%=_ctx.appRes("UITemplateSettingForm.action.title.Add")%></a>
         <a onclick="$addLink" id="$actionId" style="display:none;">&nbsp;</a>
       </div>
       <div class="TemplateSearchBox" >	
