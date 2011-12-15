@@ -70,7 +70,7 @@
 									</div>
 								</th>
 								<%if(isAdmin){ %>
-								  <th style="width:70px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
+								  <th style="width:85px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
 								<%}%>
 							</tr>
 						</thead>

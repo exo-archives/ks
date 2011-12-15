@@ -41,7 +41,7 @@
 										  </div>
 										</div>
 									</th>
-									<th style="width:70px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
+									<th style="width:85px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
 								</tr>
 							</thead>
 							<tbody>
