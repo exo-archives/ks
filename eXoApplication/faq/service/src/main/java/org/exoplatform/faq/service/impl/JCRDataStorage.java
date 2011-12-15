@@ -1721,16 +1721,24 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
           }
         }
       }
-      parent.getSession().save();
-      iter = getCategoriesIterator(parent);
+      parent.save();
+    } else {
+      goingCategory.setProperty(EXO_INDEX, iter.getSize());
+      goingCategory.save();
     }
+    reUpdateIndex(parent);
+  }
+  
+  private void reUpdateIndex(Node parentCateNode) throws Exception {
+    NodeIterator iter = getCategoriesIterator(parentCateNode);
     long i = 1;
+    Node node;
     while (iter.hasNext()) {
       node = iter.nextNode();
       node.setProperty(EXO_INDEX, i);
       i++;
     }
-    parent.save();
+    parentCateNode.save();
   }
 
   /*
@@ -1751,13 +1759,14 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath());
       }
       long index = cat.getIndex();
-      long oldIndex = newCategory.getParent().getNodes().getSize();
-      boolean isResetIndex = (isAddNew || (oldIndex=new PropertyReader(newCategory).l(EXO_INDEX)) != index);
+      long oldIndex = new PropertyReader(newCategory).l(EXO_INDEX, newCategory.getParent().getNodes().getSize());
+      boolean isResetIndex = (isAddNew || (oldIndex != index));
       if (isResetIndex) {
         cat.setIndex(oldIndex);
       }
       saveCategory(newCategory, cat, isAddNew, sProvider);
       if (isResetIndex) {
+        index = (index < oldIndex) ? index - 1 : index;
         resetIndex(newCategory, index, oldIndex);
       }
     } catch (Exception e) {
@@ -2146,6 +2155,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     try {
       Node faqHome = getFAQServiceHome(sProvider);
       Node srcNode = faqHome.getNode(categoryId);
+      Node parentNode = srcNode.getParent();
       String srcPath = srcNode.getPath();
       String destPath = faqHome.getPath() + "/" + destCategoryId + "/" + srcNode.getName();
       faqHome.getSession().move(srcPath, destPath);
@@ -2153,8 +2163,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
       Node destNode = faqHome.getNode(destCategoryId + "/" + srcNode.getName());
       destNode.setProperty(EXO_INDEX, destNode.getParent().getNodes().getSize());
       destNode.save();
-      // resetIndex(category, index)
-      // Should be update moderators for moving category
+      // update index for children categories of parent category moved. 
+      reUpdateIndex(parentNode);
     } catch (ItemExistsException e) {
       throw e;
     } catch (Exception e) {
@@ -2948,6 +2958,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
         Node parent = mockCategory.getParent();
         String asPath = parent.getPath().replaceFirst(dataLocator.getFaqHomeLocation(), EMPTY_STR).replaceFirst("//", EMPTY_STR);
         if (!isCategoryExist(sProvider, new PropertyReader(goingCategory).string(EXO_NAME, EMPTY_STR), asPath)) {
+          Node parentNode = goingCategory.getParent();
           String id = goingCategory.getName();
           mockCategory.getSession().move(goingCategory.getPath(), parent.getPath() + "/" + id);
           faqHome.getSession().save();
@@ -2959,6 +2970,8 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
             parent.save();
           }
           resetIndex(destCat, index, l);
+          // update index for children categories of parent category moved.
+          reUpdateIndex(parentNode);
         } else {
           throw new RuntimeException();
         }
