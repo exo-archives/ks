@@ -279,7 +279,8 @@ public class UIWikiPortlet extends UIPortletApplication {
   }
   
   protected boolean isKeepSessionAlive() {
-    return (this.mode == WikiMode.EDITPAGE) || (this.mode == WikiMode.EDITTEMPLATE);
+    return (this.mode == WikiMode.EDITPAGE) || (this.mode == WikiMode.EDITTEMPLATE) 
+      || (this.mode == WikiMode.ADDPAGE) || (this.mode == WikiMode.ADDTEMPLATE);
   }
  
   public static class ViewPageActionListener extends EventListener<UIWikiPortlet> {
