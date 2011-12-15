@@ -1818,8 +1818,12 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
     try {
       Node faqHome = getFAQServiceHome(sProvider);
-      faqHome.getNode(categoryId).remove();
+      Node node = faqHome.getNode(categoryId);
+      Node parent = node.getParent();
+      node.remove();
       faqHome.save();
+      // update index
+      reUpdateIndex(parent);
     } catch (Exception e) {
       log.error("Can not remove category has id: " + categoryId);
     }
