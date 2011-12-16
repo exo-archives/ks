@@ -599,3 +599,27 @@ ul,li{
 	height: 70px;
 }
 
+.UIForumPortlet .PostContent ul {
+	padding-left: 35px;
+}
+
+.UIForumPortlet .PostContent ul li {
+	list-style-type: disc;
+}
+
+.UIForumPortlet .PostContent ol li {
+	list-style: inherit;
+}
+
+.UIForumPortlet .UIAddBBCodeForm .PreviewContainer ul {
+	padding-left: 35px;
+}
+
+.UIForumPortlet .UIAddBBCodeForm .PreviewContainer ul li {
+	list-style-type: disc;
+}
+
+.UIForumPortlet .UIAddBBCodeForm .PreviewContainer ol li {
+	list-style: inherit;
+}
+

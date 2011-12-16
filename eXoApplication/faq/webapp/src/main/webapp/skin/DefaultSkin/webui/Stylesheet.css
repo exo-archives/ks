@@ -650,6 +650,14 @@
 .UIAnswersPortlet .LeftQuestionContainer .UIDetailContainer {
 	padding: 5px 0px;
 }
+ 
+.UIAnswersPortlet .LeftQuestionContainer .UIDetailContainer ul li {
+	list-style: disc;
+}
+
+.UIAnswersPortlet .LeftQuestionContainer .UIDetailContainer ol li {
+	list-style-type: inherit;
+}
 
 .UIAnswersPortlet .ProfileContainer .AuthorInfor {
 	margin: 5px auto 0px auto;
