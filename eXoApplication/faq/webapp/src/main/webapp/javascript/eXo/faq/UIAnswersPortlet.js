@@ -158,7 +158,7 @@ UIAnswersPortlet.prototype.changeStarForVoteQuestion = function (i, id) {
 UIAnswersPortlet.prototype.jumToQuestion = function (id) {
   var obj = document.getElementById(id);
   if (obj) {
-    var viewContent = document.getElementById("AnswersViewContent");
+    var viewContent = eXo.core.DOMUtil.findAncestorByClass(obj, "ViewQuestionContent");
     var scroll = eXo.core.Browser.findPosYInContainer(obj, viewContent);
     viewContent.scrollTop = scroll;
   }
