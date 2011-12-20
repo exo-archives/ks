@@ -135,35 +135,46 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
           for (String str : postIds) {
             postPaths.add(path + str.substring(str.indexOf(ForumUtils.SLASH)));
           }
+          // Create new topic split
           Topic topic = new Topic();
           Post post = uiForm.getForumService().getPost(ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, postPaths.get(0));
           String owner = uiForm.getUserProfile().getUserId();
           String topicId = post.getId().replaceFirst(Utils.POST, Utils.TOPIC);
           topic.setId(topicId);
           topic.setTopicName(newTopicTitle);
-          topic.setOwner(owner);
+          topic.setOwner(post.getOwner());
           topic.setModifiedBy(owner);
           topic.setDescription(post.getMessage());
           topic.setIcon(post.getIcon());
           topic.setAttachments(post.getAttachments());
+          topic.setIsWaiting(post.getIsWaiting());
           Post lastPost = uiForm.getForumService().getPost(ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR, postPaths.get(postPaths.size() - 1));
           topic.setLastPostBy(lastPost.getOwner());
           if (postPaths.size() > 1) {
             topic.setLastPostDate(lastPost.getCreatedDate());
           }
+          // edit fist post for topic split
+          post.setName(newTopicTitle);
+          post.setIsApproved(true);
+          post.setIsActiveByTopic(true);
+          post.setIsHidden(false);
+          post.setIsWaiting(false);
+          
           String[] string = path.split(ForumUtils.SLASH);
           String categoryId = string[string.length - 3];
           String forumId = string[string.length - 2];
           try {
             // set link
             String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId", false);
-            //
             WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
             ResourceBundle res = context.getApplicationResourceBundle();
-
+            // save new topic split.
             uiForm.getForumService().saveTopic(categoryId, forumId, topic, true, true, ForumUtils.getDefaultMail());
+            // save post is fist post of topic split.
+            uiForm.getForumService().savePost(categoryId, forumId, uiForm.topic.getId(), post, false, ForumUtils.getDefaultMail());
+            // move all post selected for topic split. 
             String destTopicPath = path.substring(0, path.lastIndexOf(ForumUtils.SLASH)) + ForumUtils.SLASH + topicId;
-            uiForm.getForumService().movePost(postPaths.toArray(new String[] {}), destTopicPath, true, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
+            uiForm.getForumService().movePost(postPaths.toArray(new String[postPaths.size()]), destTopicPath, true, res.getString("UINotificationForm.label.EmailToAuthorMoved"), link);
           } catch (Exception e) {
             uiForm.log.error("Saving topic " + topic + " fail: " + e.getMessage(), e);
             uiForm.warning("UISplitTopicForm.msg.forum-deleted", false);

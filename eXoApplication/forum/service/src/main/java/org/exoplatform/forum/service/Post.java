@@ -94,6 +94,10 @@ public class Post {
    * @return
    */
   public String getTopicId() {
+    if (path != null && path.length() > 0) {
+      String[] arr = path.split("/");
+      return arr[arr.length - 2];
+    }
     return null;
   }
 
@@ -102,6 +106,10 @@ public class Post {
    * @return
    */
   public String getForumId() {
+    if (path != null && path.length() > 0) {
+      String[] arr = path.split("/");
+      return arr[arr.length - 3];
+    }
     return null;
   }
 
