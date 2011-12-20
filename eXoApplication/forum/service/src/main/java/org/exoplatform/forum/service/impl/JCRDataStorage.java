@@ -6299,27 +6299,20 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   protected List<File> createCategoryFiles(List<String> objectIds, SessionProvider sessionProvider) throws Exception {
-    Node categoryHome = getCategoryHome(sessionProvider);
     List<File> listFiles = new ArrayList<File>();
-    // File file = null;
-    // Writer writer = null;
-    for (Category category : getCategories()) {
-      if (objectIds != null && objectIds.size() > 0 && !objectIds.contains(category.getId()))
-        continue;
-      ByteArrayOutputStream outputStream = null;
-      try {
-        outputStream = new ByteArrayOutputStream();
-        Calendar date = new GregorianCalendar();
-        categoryHome.getSession().exportSystemView(category.getPath(), outputStream, false, false);
-
-        /*
-         * file = new File(category.getId() + ".xml"); file.deleteOnExit(); file.createNewFile(); writer = new BufferedWriter(new FileWriter(file)); writer.write(outputStream.toString());
-         */
-        listFiles.add(CommonUtils.getXMLFile(outputStream, "eXo Knowledge Suite - Forum", "Category", date.getTime(), category.getId()));
-      } finally {
-        outputStream.close();
-        // writer.close();
-      }
+    ByteArrayOutputStream outputStream = null;
+    Node categoryHome = getCategoryHome(sessionProvider);
+    Node cateNode = null;
+    for (String categoryId : objectIds) {
+        try {
+          cateNode = categoryHome.getNode(categoryId);
+          outputStream = new ByteArrayOutputStream();
+          Calendar date = new GregorianCalendar();
+          categoryHome.getSession().exportSystemView(cateNode.getPath(), outputStream, false, false);
+          listFiles.add(CommonUtils.getXMLFile(outputStream, "eXo Knowledge Suite - Forum", "Category", date.getTime(), cateNode.getName()));
+        } finally {
+          outputStream.close();
+        }
     }
     return listFiles;
   }

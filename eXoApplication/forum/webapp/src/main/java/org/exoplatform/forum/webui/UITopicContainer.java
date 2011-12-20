@@ -305,10 +305,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   }
 
   public void setForum(boolean isSetModerator) throws Exception {
-    if (this.isUpdate || forum == null) {
-      this.forum = getForumService().getForum(categoryId, forumId);
-      this.isUpdate = false;
-    }
+    this.forum = getForum();
     this.canAddNewThread = true;
     moderators = ForumServiceUtils.getUserPermission(forum.getModerators());
     String userId = getUserProfile().getUserId();
@@ -365,7 +362,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   }
 
   private Forum getForum() throws Exception {
-    return this.forum;
+    if (isUpdate || forum == null) {
+      forum = getForumService().getForum(categoryId, forumId);
+      isUpdate = false;
+    }
+    return forum;
   }
 
   private void initPage() throws Exception {
@@ -772,6 +773,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   static public class ExportForumActionListener extends BaseEventListener<UITopicContainer> {
     public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
+      uiTopicContainer.isUpdate = true;
       Forum forum = uiTopicContainer.getForum();
       if (forum == null) {
         warning("UITopicContainer.msg.forum-deleted", false);

@@ -671,6 +671,11 @@ public class UICategory extends BaseForumForm {
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         return;
       }
+      uiCategory.isEditForum = true;
+      if (uiCategory.getForumList().isEmpty()) {
+        warning("UICategory.msg.emptyCategoryExport");
+        return;
+      }
       UIExportForm exportForm = uiCategory.openPopup(UIExportForm.class, 450, 300);
       exportForm.setObjectId(category);
     }

@@ -6,13 +6,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.webui.UIPopupAction;
@@ -59,11 +62,12 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
 
   private final static String EXPORT_CATEGORIES = "ExportCategories";
 
-  List<Object>                listObjects       = new ArrayList<Object>();
+  Map<String, String>         mapObject         = new HashMap<String, String>();
 
   private Object              object_           = ForumUtils.EMPTY_STR;
 
   public UIExportForm() {
+    this.setActions(new String[] { "Save", "Cancel" });
   }
 
   public void activate() throws Exception {
@@ -72,9 +76,17 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
   public void deActivate() throws Exception {
   }
 
-  public void setObjectId(Object object) {
+  private void clearDataForm() throws Exception {
+    List<UIComponent> components = new ArrayList<UIComponent>(getChildren());
+    for (UIComponent uiComponent : components) {
+      removeChild(uiComponent.getClass());
+    }
+    mapObject.clear();
+  }
+
+  public void setObjectId(Object object) throws Exception {
     this.object_ = object;
-    this.setActions(new String[] { "Save", "Cancel" });
+    clearDataForm();
     if (object == null || object instanceof Category) {
       Category cat = (Category) object;
       UICheckBoxInput checkBoxInput = null;
@@ -82,14 +94,14 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
         UIFormInputWithActions formInputWithActions = new UIFormInputWithActions(LIST_CATEGORIES);
         if (cat == null) {
           for (Category category : getForumService().getCategories()) {
-            listObjects.add(category);
+            mapObject.put(category.getId(), category.getCategoryName());
             checkBoxInput = new UICheckBoxInput(category.getId(), category.getId(), true);
             checkBoxInput.setChecked(true);
             formInputWithActions.addChild(checkBoxInput);
           }
         } else {
           for (Forum forum : getForumService().getForums(cat.getId(), null)) {
-            listObjects.add(forum);
+            mapObject.put(forum.getId(), forum.getForumName());
             checkBoxInput = new UICheckBoxInput(forum.getId(), forum.getId(), true);
             checkBoxInput.setChecked(true);
             formInputWithActions.addChild(checkBoxInput);
@@ -103,7 +115,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
       UIFormStringInput stringInput = new UIFormStringInput(FILE_NAME, null);
       stringInput.setValue(getLabel("DefaultFileName"));
       checkBoxInput = new UICheckBoxInput(CREATE_ZIP, CREATE_ZIP, false);
-      checkBoxInput.setChecked(true).setEnable(false);
+      checkBoxInput.setChecked(true).setDisabled(true);
 
       addChild(stringInput);
       addChild(checkBoxInput);
@@ -142,9 +154,8 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
       UIExportForm exportForm = event.getSource();
       String fileName = ((UIFormStringInput) exportForm.getChildById(FILE_NAME)).getValue();
       UIForumPortlet portlet = exportForm.getAncestorOfType(UIForumPortlet.class);
-      if (fileName == null || fileName.trim().length() < 1) {
-        exportForm.warning("UIExportForm.msg.nameFileExport", false);
-        event.getRequestContext().addUIComponentToUpdateByAjax(portlet);
+      if (ForumUtils.isEmpty(fileName)) {
+        exportForm.warning("UIExportForm.msg.nameFileExport");
         return;
       }
       UIFormRadioBoxInput radioBoxInput = exportForm.getChildById(EXPORT_MODE);
@@ -170,49 +181,97 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
         nodePath = category.getPath();
         categoryId = category.getId();
       }
-      DownloadService dservice = exportForm.getApplicationComponent(DownloadService.class);
-      InputStreamDownloadResource dresource;
-      ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      CompressData zipService = new CompressData();
 
+      if(!ForumUtils.isEmpty(forumId) && exportForm.mapObject.size() == 0) {
+        exportForm.warning("UICategory.msg.emptyCategoryExport", false);
+        portlet.cancelAction();
+        return;        
+      }
+
+      ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      InputStream inputStream = null;
+      InputStreamDownloadResource dresource = null;
       File file = null;
       try {
-        List<String> listId = new ArrayList<String>();
-        if (!exportForm.isExportAll) {
-          if (forumId == null || forumId.trim().length() < 1)
-            listId.addAll(exportForm.getListSelected());
+        try {
+          List<String> listId = new ArrayList<String>();
+          if (!exportForm.isExportAll) {
+            if (ForumUtils.isEmpty(forumId)) {
+              String type = Utils.CATEGORY;
+              String path = ForumUtils.EMPTY_STR;
+              if (!ForumUtils.isEmpty(categoryId)) {
+                type = Utils.FORUM;
+                path = categoryId.concat(ForumUtils.SLASH);
+              }
+              for (String str : exportForm.getListSelected()) {
+                if (exportForm.getForumService().getObjectNameByPath(path.concat(str)) != null) {
+                  listId.add(str);
+                } else {
+                  String sms = (type.equals(Utils.FORUM)) ? "UIExportForm.msg.ForumIsNoLonagerExist" : "UIExportForm.msg.CategoryIsNoLonagerExist";
+                  exportForm.warning(sms, new String[] { exportForm.mapObject.get(str) }, false);
+                  exportForm.setObjectId(exportForm.object_);
+                  event.getRequestContext().addUIComponentToUpdateByAjax(portlet);
+                  return;
+                }
+              }
+              if (listId.isEmpty()) {
+                String sms = (type.equals(Utils.FORUM)) ? "UIExportForm.msg.NotCheckForum" : "UIExportForm.msg.NotCheckCategory";
+                exportForm.warning(sms);
+                return;
+              }
+            } else {
+              Forum forum = (Forum) exportForm.object_;
+              if (exportForm.getForumService().getObjectNameByPath(forum.getCategoryId().concat(ForumUtils.SLASH).concat(forum.getId())) == null) {
+                exportForm.warning("UIExportForm.msg.ForumIsNoLonagerExist", new String[] { forum.getForumName() }, false);
+                portlet.cancelAction();
+                portlet.rederForumHome();
+                event.getRequestContext().addUIComponentToUpdateByAjax(portlet);
+                return;
+              }
+            }
+          }
+          file = (File) exportForm.getForumService().exportXML(categoryId, forumId, listId, nodePath, bos, exportForm.isExportAll);
+        } catch (Exception e) {
+          log.error("export failed: ", e);
+          exportForm.warning("UIExportForm.msg.UnknownException");
+          return;
         }
-        file = (File) exportForm.getForumService().exportXML(categoryId, forumId, listId, nodePath, bos, exportForm.isExportAll);
-      } catch (Exception e) {
-        log.error("export failed: ", e);
-        exportForm.warning("UIImportForm.msg.ObjectIsNoLonagerExist");
-        return;
-      }
-      InputStream inputStream = null;
-      if (file == null) {
-        boolean isCreateZipFile = exportForm.getUICheckBoxInput(CREATE_ZIP).isChecked();
-        inputStream = new ByteArrayInputStream(bos.toByteArray());
-        if (!isCreateZipFile) {
-          // create file xml to dowload
-          dresource = new InputStreamDownloadResource(inputStream, "text/xml");
-          dresource.setDownloadName(fileName + ".xml");
+        if (file == null) {
+          boolean isCreateZipFile = exportForm.getUICheckBoxInput(CREATE_ZIP).isChecked();
+          inputStream = new ByteArrayInputStream(bos.toByteArray());
+          if (!isCreateZipFile) {
+            // create file xml to dowload
+            dresource = new InputStreamDownloadResource(inputStream, "text/xml");
+            dresource.setDownloadName(fileName + ".xml");
+          } else {
+            // create zip file
+            CompressData zipService = new CompressData();
+            zipService.addInputStream("System.xml", inputStream);
+            bos = new ByteArrayOutputStream();
+            zipService.createZip(bos);
+            ByteArrayInputStream zipInput = new ByteArrayInputStream(bos.toByteArray());
+            dresource = new InputStreamDownloadResource(zipInput, "application/zip");
+            dresource.setDownloadName(fileName + ".zip");
+          }
         } else {
-          // create zip file
-          zipService.addInputStream("System.xml", inputStream);
-          bos = new ByteArrayOutputStream();
-          zipService.createZip(bos);
-          ByteArrayInputStream zipInput = new ByteArrayInputStream(bos.toByteArray());
-          dresource = new InputStreamDownloadResource(zipInput, "application/zip");
+          inputStream = new FileInputStream(file);
+          dresource = new InputStreamDownloadResource(inputStream, "text/xml");
           dresource.setDownloadName(fileName + ".zip");
         }
-      } else {
-        inputStream = new FileInputStream(file);
-        dresource = new InputStreamDownloadResource(inputStream, "text/xml");
-        dresource.setDownloadName(fileName + ".zip");
+        DownloadService dservice = exportForm.getApplicationComponent(DownloadService.class);
+        String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+        event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
+      } finally {
+        if (bos != null) {
+          bos.close();
+        }
+        if (inputStream != null) {
+          inputStream.close();
+        }
+        if (dresource != null && dresource.getInputStream() != null) {
+          dresource.getInputStream().close();
+        }
       }
-
-      String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-      event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
 
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
       popupAction.deActivate();
@@ -224,9 +283,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent {
     public void execute(Event<UIExportForm> event) throws Exception {
       UIExportForm exportForm = event.getSource();
       UIForumPortlet portlet = exportForm.getAncestorOfType(UIForumPortlet.class);
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class);
-      popupAction.deActivate();
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+      portlet.cancelAction();
     }
   }
 }
