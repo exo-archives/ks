@@ -155,8 +155,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
   
   private String                         editLanguage         = null;
 
-  @SuppressWarnings("unused")
-  private boolean                        isRenderSelectLang   = false;
+  protected boolean                      isRenderSelectLang   = false;
 
   private FAQSetting                     faqSetting_;
   
@@ -385,8 +384,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     return this.defaultLanguage_;
   }
 
-  @SuppressWarnings("unused")
-  private String getAuthor() {
+  protected String getAuthor() {
     return this.author_;
   }
 
@@ -394,8 +392,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     this.author_ = author;
   }
 
-  @SuppressWarnings("unused")
-  private String getEmail() {
+  protected String getEmail() {
     return this.email_;
   }
 
@@ -449,8 +446,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
     listFileAttach_.add(fileAttachment);
   }
 
-  @SuppressWarnings("unused")
-  private List<FileAttachment> getListFile() {
+  protected List<FileAttachment> getListFile() {
     return listFileAttach_;
   }
 

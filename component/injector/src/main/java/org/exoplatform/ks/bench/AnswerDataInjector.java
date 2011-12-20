@@ -83,8 +83,8 @@ public class AnswerDataInjector extends DataInjector {
   private void initDatas() {
     faqSetting.setDisplayMode("");
     faqSetting.setEmailSettingSubject("eXo Answers Notification");
-    faqSetting.setEmailSettingContent("<p>We have a new question or answer by injector datas in category " +
-    		"<strong>&categoryName_</strong></p><p><em>&questionContent_</em></p>");
+    faqSetting.setEmailSettingContent("<p>We have a new question or answer by injector datas in category " + 
+        "<strong>&categoryName_</strong></p><p><em>&questionContent_</em></p>");
     List<String> users = Arrays.asList(new String[] { "root", "demo", "mary", "john" });
     List<String> userFullNames = Arrays.asList(new String[] { "Root Root", "Demo", "Mary Kelly", "John Anthony" });
     for (int i = 0; i < users.size(); ++i) {
@@ -170,11 +170,11 @@ public class AnswerDataInjector extends DataInjector {
   }
 
   private String getTabs(int currentDepth) {
-    String s = "";
+    StringBuffer s = new StringBuffer();
     for (int i = 0; i < currentDepth; i++) {
-      s += "    ";
+      s.append("    ");
     }
-    return s;
+    return s.toString();
   }
   
   private void initDataForOneCategory(String parentId, Category cat, int currentDepth, int index, int size, InjectInfo info) throws Exception {

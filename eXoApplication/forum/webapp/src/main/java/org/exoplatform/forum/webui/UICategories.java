@@ -113,8 +113,7 @@ public class UICategories extends UIContainer {
     return CommonUtils.getRSSLink("forum", getPortalName(), cateId);
   }
 
-  @SuppressWarnings("unused")
-  private String getScreenName(String userName) throws Exception {
+  protected String getScreenName(String userName) throws Exception {
     return forumService.getScreenName(userName);
   }
 
@@ -132,8 +131,7 @@ public class UICategories extends UIContainer {
     return this.userProfile;
   }
 
-  @SuppressWarnings("unused")
-  private String getActionViewInfoUser(String linkType, String userName) {
+  protected String getActionViewInfoUser(String linkType, String userName) {
     return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
@@ -141,8 +139,7 @@ public class UICategories extends UIContainer {
     listWatches = forumService.getWatchByUser(getUserProfile().getUserId());
   }
 
-  @SuppressWarnings("unused")
-  private boolean isWatching(String path) throws Exception {
+  protected boolean isWatching(String path) throws Exception {
     for (Watch watch : listWatches) {
       if (path.equals(watch.getNodePath()) && watch.isAddWatchByEmail())
         return true;
@@ -161,8 +158,7 @@ public class UICategories extends UIContainer {
     return ForumUtils.EMPTY_STR;
   }
 
-  @SuppressWarnings("unused")
-  private int getDayForumNewPost() {
+  protected int getDayForumNewPost() {
     return dayForumNewPost;
   }
 
@@ -170,8 +166,7 @@ public class UICategories extends UIContainer {
     return useAjax;
   }
 
-  @SuppressWarnings("unused")
-  private String getLastReadPostOfForum(String forumId) throws Exception {
+  protected String getLastReadPostOfForum(String forumId) throws Exception {
     return userProfile.getLastPostIdReadOfForum(forumId);
   }
 
@@ -203,8 +198,7 @@ public class UICategories extends UIContainer {
     return AllForum;
   }
 
-  @SuppressWarnings("unused")
-  private boolean isShowCategory(String id) {
+  protected boolean isShowCategory(String id) {
     List<String> list = new ArrayList<String>();
     list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories());
     if (list.isEmpty())
@@ -270,14 +264,10 @@ public class UICategories extends UIContainer {
         }
       }
     }
-    if (forum_ == null) {
-      forum_ = forumService.getForum(categoryId, forumId);
-    }
     return forum_;
   }
 
-  @SuppressWarnings("unused")
-  private Topic getLastTopic(Category cate, Forum forum) throws Exception {
+  protected Topic getLastTopic(Category cate, Forum forum) throws Exception {
     Topic topic = null;
     String topicPath = forum.getLastTopicPath();
     if (!ForumUtils.isEmpty(topicPath)) {
@@ -306,12 +296,12 @@ public class UICategories extends UIContainer {
     return null;
   }
 
-  @SuppressWarnings("unused")
-  private boolean getIsPrivate(String[] uesrs) throws Exception {
+  protected boolean getIsPrivate(String[] uesrs) throws Exception {
     if (uesrs != null && uesrs.length > 0 && !uesrs[0].equals(" ")) {
       return ForumServiceUtils.hasPermission(uesrs, userProfile.getUserId());
-    } else
+    } else {
       return true;
+    }
   }
 
   static public class CollapCategoryActionListener extends EventListener<UICategories> {

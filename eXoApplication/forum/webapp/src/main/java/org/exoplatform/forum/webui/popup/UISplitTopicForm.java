@@ -80,8 +80,8 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
     return this.isRender;
   }
 
-  @SuppressWarnings( { "unchecked", "unused" })
-  private List<Post> getListPost() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<Post> getListPost() throws Exception {
     String path = this.topic.getPath();
     path = path.substring(path.indexOf(Utils.CATEGORY));
     if (isSetPage) {
@@ -111,8 +111,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
     isSetPage = false;
   }
 
-  @SuppressWarnings("unused")
-  private Topic getTopic() {
+  protected Topic getTopic() {
     return this.topic;
   }
 

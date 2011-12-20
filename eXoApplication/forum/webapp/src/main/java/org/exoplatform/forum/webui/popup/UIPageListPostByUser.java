@@ -90,8 +90,7 @@ public class UIPageListPostByUser extends UIContainer {
     return hasEnableIPLogging;
   }
 
-  @SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+  protected UserProfile getUserProfile() throws Exception {
     if (this.userProfile == null) {
       UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
       this.userProfile = forumPortlet.getUserProfile();
@@ -105,13 +104,12 @@ public class UIPageListPostByUser extends UIContainer {
     strOrderBy = "createdDate descending";
   }
 
-  @SuppressWarnings("unused")
-  private String getTitleInHTMLCode(String s) {
+  protected String getTitleInHTMLCode(String s) {
     return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
   }
 
-  @SuppressWarnings( { "unchecked", "unused" })
-  private List<Post> getPostsByUser() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<Post> getPostsByUser() throws Exception {
     UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
     List<Post> posts = null;
     try {

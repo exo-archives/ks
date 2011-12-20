@@ -122,8 +122,7 @@ public class UIPopupViewQuestion extends BaseUIForm implements UIPopupComponent 
     return "";
   }
 
-  @SuppressWarnings("unused")
-  private String convertSize(long size) {
+  protected String convertSize(long size) {
     String result = "";
     long residual = 0;
     int i = 0;

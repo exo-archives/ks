@@ -67,7 +67,6 @@ import org.exoplatform.webui.form.UIFormSelectBox;
         @EventConfig(listeners = UIQuestionsInfo.ResponseQuestionActionListener.class) 
     }
 )
-@SuppressWarnings("unused")
 public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
   private static final String            LIST_QUESTION_INTERATOR              = "FAQUserPageIteratorTab1";
 
@@ -129,7 +128,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
     setListQuestion();
   }
 
-  private boolean hasInGroup(List<String> listGroup, String[] listPermission) {
+  protected boolean hasInGroup(List<String> listGroup, String[] listPermission) {
     for (String per : listPermission) {
       if (per != null && per.trim().length() > 0 && listGroup.contains(per))
         return true;
@@ -169,27 +168,27 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
     }
   }
 
-  private String[] getQuestionActions() {
+  protected String[] getQuestionActions() {
     return new String[] { "AddLanguage", "Attachment", "Save", "Close" };
   }
 
-  private String[] getQuestionNotAnsweredActions() {
+  protected String[] getQuestionNotAnsweredActions() {
     return new String[] { "QuestionRelation", "Attachment", "Save", "Close" };
   }
 
-  private String[] getTab() {
+  protected String[] getTab() {
     return new String[] { "Question managerment", "Question not yet answered" };
   }
 
-  private boolean getIsEdit() {
+  protected boolean getIsEdit() {
     return isEditTab_;
   }
 
-  private boolean getIsResponse() {
+  protected boolean getIsResponse() {
     return isResponseTab_;
   }
 
-  private long getTotalpages(String pageInteratorId) {
+  protected long getTotalpages(String pageInteratorId) {
     UIAnswersPageIterator pageIterator = this.getChildById(pageInteratorId);
     try {
       return pageIterator.getInfoPage().get(3);
@@ -243,7 +242,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
     }
   }
 
-  private String getCategoryPath(String questionPath) {
+  protected String getCategoryPath(String questionPath) {
     try {
       return getFAQService().getParentCategoriesName(questionPath.substring(0, questionPath.indexOf("/" + Utils.QUESTION_HOME)));
     } catch (Exception e) {
@@ -252,7 +251,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
     }
   }
 
-  private List<Question> getListQuestion() {
+  protected List<Question> getListQuestion() {
     if (!isChangeTab_) {
       pageSelect = pageIterator.getPageSelected();
       listQuestion_ = new ArrayList<Question>();
@@ -279,7 +278,7 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
    * 
    * @return the list question not answered
    */
-  private List<Question> getListQuestionNotAnswered() {
+  protected List<Question> getListQuestionNotAnswered() {
     if (!isChangeTab_) {
       pageSelectNotAnswer = pageQuesNotAnswerIterator.getPageSelected();
       listQuestionNotYetAnswered_.clear();

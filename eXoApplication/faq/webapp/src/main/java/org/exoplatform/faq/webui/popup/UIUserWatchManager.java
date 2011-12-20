@@ -62,11 +62,9 @@ import org.exoplatform.webui.form.UIFormTabPane;
 public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponent {
   private FAQSetting            faqSetting_            = null;
 
-  @SuppressWarnings("unused")
-  private UIAnswersPageIterator pageIteratorCate;
+  protected UIAnswersPageIterator pageIteratorCate;
 
-  @SuppressWarnings("unused")
-  private JCRPageList           pageListCate;
+  protected JCRPageList           pageListCate;
 
   private UIAnswersPageIterator pageIteratorQues;
 
@@ -146,7 +144,8 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
         pageIteratorCates = this.getChildById(LIST_CATES_WATCHED);
         pageIteratorCates.updatePageList(pageListCates);
       }
-      long pageSelect = pageIteratorCates.getPageSelected();
+      long pageSelect = pageIteratorCates.getPageSelected();        
+      
       List<Category> listCategories = new ArrayList<Category>();
       listCategories.addAll(this.pageListCates.getPageResultCategoriesSearch(pageSelect, null));
       if (listCategories.isEmpty()) {
@@ -164,8 +163,7 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
     }
   }
 
-  @SuppressWarnings("unused")
-  private List<Question> getListQuestionsWatch() {
+  protected List<Question> getListQuestionsWatch() {
     try {
       if (pageListQues == null) {
         pageListQues = faqService_.getListQuestionsWatch(faqSetting_, FAQUtils.getCurrentUser());
@@ -177,7 +175,8 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
       long pageSelect = pageIteratorQues.getPageSelected();
       List<Question> listQuestion_ = new ArrayList<Question>();
       listQuestion_.addAll(this.pageListQues.getPage(pageSelect, null));
-      if (listQuestion_.isEmpty()) {
+      if (listQuestion_.isEmpty()) {        
+        
         UIAnswersPageIterator pageIterator = null;
         while (listQuestion_.isEmpty() && pageSelect > 1) {
           pageIterator = this.getChildById(LIST_QUESTIONS_WATCHED);
@@ -192,8 +191,7 @@ public class UIUserWatchManager extends UIFormTabPane implements UIPopupComponen
     return null;
   }
 
-  @SuppressWarnings("unused")
-  private long getTotalpages(String pageInteratorId) {
+  protected long getTotalpages(String pageInteratorId) {
     UIAnswersPageIterator pageIterator = this.getChildById(pageInteratorId);
     try {
       return pageIterator.getInfoPage().get(3);

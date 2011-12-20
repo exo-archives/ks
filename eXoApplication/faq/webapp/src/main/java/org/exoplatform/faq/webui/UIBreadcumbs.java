@@ -87,8 +87,7 @@ public class UIBreadcumbs extends UIContainer {
     return this.currentPath_;
   }
 
-  @SuppressWarnings("unused")
-  private int getMaxPath() {
+  protected int getMaxPath() {
     return breadcumbs_.size();
   }
 
@@ -104,12 +103,8 @@ public class UIBreadcumbs extends UIContainer {
       UIQuestions uiQuestions = answerPortlet.findFirstComponentOfType(UIQuestions.class);
       UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
       try {
-        // System.out.println("paths ===>" + paths);
-        // uiQuestions.setPath(paths) ;
-        // categoryId = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
         uiQuestions.backPath_ = "";
         uiQuestions.setLanguage(FAQUtils.getDefaultLanguage());
-        // uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().isViewAuthorInfo(paths);
         uiBreadcums.setUpdataPath(paths);
         categories.setPathCategory(paths);
         uiQuestions.setCategoryId(paths);
@@ -123,5 +118,4 @@ public class UIBreadcumbs extends UIContainer {
       event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet);
     }
   }
-
 }

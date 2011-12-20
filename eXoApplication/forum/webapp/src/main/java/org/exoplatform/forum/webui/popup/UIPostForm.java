@@ -150,16 +150,14 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
     this.setActions(new String[] { "PreviewPost", "SubmitPost", "Cancel" });
   }
 
-  @SuppressWarnings("unused")
-  private boolean tabIsSelected(int tabId) {
+  protected boolean tabIsSelected(int tabId) {
     if (this.tabId == tabId)
       return true;
     else
       return false;
   }
 
-  @SuppressWarnings("unused")
-  private String[] getTabName() {
+  protected String[] getTabName() {
     String[] tab = { "UIPostForm.tittle.threadContent", "UIPostForm.tittle.iconAndSmiley" };
     return tab;
   }

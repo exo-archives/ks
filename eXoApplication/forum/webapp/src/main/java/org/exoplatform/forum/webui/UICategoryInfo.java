@@ -45,7 +45,6 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UICategoryInfo.CreatedLinkActionListener.class )
     }
 )
-@SuppressWarnings("unused")
 public class UICategoryInfo extends UIContainer {
   private ForumService forumService;
 
@@ -55,25 +54,25 @@ public class UICategoryInfo extends UIContainer {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }
 
-  private List<String> getUserOnline() throws Exception {
+  protected List<String> getUserOnline() throws Exception {
     return forumService.getOnlineUsers();
   }
 
-  private String getScreenName(String userName) throws Exception {
+  protected String getScreenName(String userName) throws Exception {
     return forumService.getScreenName(userName);
   }
 
-  private UserProfile getUserProfile() throws Exception {
+  protected UserProfile getUserProfile() throws Exception {
     UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
     userProfile = forumPortlet.getUserProfile();
     return userProfile;
   }
 
-  private String getActionViewInfoUser(String linkType, String userName) {
+  protected String getActionViewInfoUser(String linkType, String userName) {
     return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
-  private String getMostUsersOnline(String s, String at) throws Exception {
+  protected String getMostUsersOnline(String s, String at) throws Exception {
     if (ForumUtils.isEmpty(s))
       return ForumUtils.EMPTY_STR;
     try {

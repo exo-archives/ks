@@ -50,8 +50,7 @@ public class UIForumModerator extends UIContainer {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   }
 
-  @SuppressWarnings("unused")
-  private long getUserRole() {
+  protected long getUserRole() {
     return role;
   }
 
@@ -59,8 +58,7 @@ public class UIForumModerator extends UIContainer {
     this.role = role;
   }
 
-  @SuppressWarnings("unused")
-  private List<String> getModeratorsForum() throws Exception {
+  protected List<String> getModeratorsForum() throws Exception {
     return moderators;
   }
 
@@ -68,13 +66,11 @@ public class UIForumModerator extends UIContainer {
     this.moderators = moderators;
   }
 
-  @SuppressWarnings("unused")
-  private String getActionViewInfoUser(String linkType, String userName) {
+  protected String getActionViewInfoUser(String linkType, String userName) {
     return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
-  @SuppressWarnings("unused")
-  private String getScreenName(String userId) throws Exception {
+  protected String getScreenName(String userId) throws Exception {
     return forumService.getScreenName(userId);
   }
 

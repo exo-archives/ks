@@ -77,7 +77,6 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UICategories.MoveCategoryIntoActionListener.class) 
     }
 )
-@SuppressWarnings("unused")
 public class UICategories extends BaseUIFAQForm {
   private static final Log log                      = ExoLogger.getLogger(UICategories.class);
 
@@ -125,11 +124,11 @@ public class UICategories extends BaseUIFAQForm {
     this.faqSetting_ = faqSetting;
   }
 
-  private boolean isShowInfo() {
+  protected boolean isShowInfo() {
     return ((UIAnswersContainer) getParent()).getRenderChild();
   }
 
-  private long[] getCategoryInfo() {
+  protected long[] getCategoryInfo() {
     long[] result = new long[] { 0, 0, 0, 0 };
     try {
       boolean canEdit = faqSetting_.isCanEdit();
@@ -142,7 +141,7 @@ public class UICategories extends BaseUIFAQForm {
     return result;
   }
 
-  private List<Category> getListCate() {
+  protected List<Category> getListCate() {
     return this.listCate;
   }
 
@@ -173,7 +172,7 @@ public class UICategories extends BaseUIFAQForm {
     }
   }
 
-  private boolean isCategoryModerator(String path) throws Exception {
+  protected boolean isCategoryModerator(String path) throws Exception {
     if (faqSetting_.isAdmin())
       return true;
     if (!FAQUtils.isFieldEmpty(categoryId_) && path.indexOf(categoryId_) >= 0 && isModerator)
@@ -199,7 +198,7 @@ public class UICategories extends BaseUIFAQForm {
     return getFAQService().isUserWatched(faqSetting_.getCurrentUser(), cateId);
   }
 
-  private boolean hasWatch(String categoryPath) {
+  protected boolean hasWatch(String categoryPath) {
     return getFAQService().hasWatch(categoryPath);
   }
 
@@ -212,7 +211,7 @@ public class UICategories extends BaseUIFAQForm {
     }
   }
 
-  private void setListCate() throws Exception {
+  protected void setListCate() throws Exception {
     if (!isSwap) {
       try {
         checkAndSetListCategory(categoryId_);
@@ -251,7 +250,7 @@ public class UICategories extends BaseUIFAQForm {
     setIsModerators();
   }
 
-  private String[] getActionCategory(String cateId) {
+  protected String[] getActionCategory(String cateId) {
     if (categoryId_ == null) {
       if (isWatched(cateId))
         return firstActionCateUnWatch_;
@@ -265,7 +264,7 @@ public class UICategories extends BaseUIFAQForm {
     }
   }
 
-  private String[] getActionCategoryWithUser(String cateId) {
+  protected String[] getActionCategoryWithUser(String cateId) {
     try {
       if (FAQUtils.getCurrentUser() != null) {
         if (isWatched(cateId))

@@ -27,12 +27,10 @@ import org.exoplatform.webui.ext.filter.UIExtensionFilter;
 import org.exoplatform.webui.ext.filter.UIExtensionFilters;
 import org.exoplatform.wiki.webui.UIWikiPageEditForm;
 import org.exoplatform.wiki.webui.UIWikiSidePanelArea;
-import org.exoplatform.wiki.webui.control.UIEditorTabs;
 import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.filter.IsMarkupModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIEditorTabsActionListener;
-import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 
 /**
  * Created by The eXo Platform SAS

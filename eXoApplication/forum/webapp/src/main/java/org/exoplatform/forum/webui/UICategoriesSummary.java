@@ -35,8 +35,7 @@ public class UICategoriesSummary extends UIContainer {
     addChild(UIForumIconState.class, null, null).updateInfor(true);
   }
 
-  @SuppressWarnings("unused")
-  private void setRenderChild() throws Exception {
+  protected void setRenderChild() throws Exception {
     try {
       UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
       UICategoryInfo categoryInfo = getChild(UICategoryInfo.class);

@@ -95,8 +95,7 @@ public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponen
     this.userName = userId;
   }
 
-  @SuppressWarnings("unused")
-  private String getTitleInHTMLCode(String s) {
+  protected String getTitleInHTMLCode(String s) {
     return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
   }
 
@@ -105,8 +104,8 @@ public class UIPageListPostByIP extends BaseForumForm implements UIPopupComponen
     strOrderBy = "createdDate descending";
   }
 
-  @SuppressWarnings( { "unchecked", "unused" })
-  private List<Post> getPostsByUser() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<Post> getPostsByUser() throws Exception {
     UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
     List<Post> posts = null;
     try {

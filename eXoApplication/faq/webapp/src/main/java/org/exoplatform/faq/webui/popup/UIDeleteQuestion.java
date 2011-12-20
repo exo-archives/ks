@@ -63,18 +63,15 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent {
   public void deActivate() throws Exception {
   }
 
-  @SuppressWarnings("unused")
-  private String getAuthor() {
+  protected String getAuthor() {
     return this.question_.getAuthor();
   }
 
-  @SuppressWarnings("unused")
-  private String getEmail() {
+  protected String getEmail() {
     return this.question_.getEmail();
   }
 
-  @SuppressWarnings("unused")
-  private String getQuestion() {
+  protected String getQuestion() {
     return this.question_.getQuestion();
   }
 

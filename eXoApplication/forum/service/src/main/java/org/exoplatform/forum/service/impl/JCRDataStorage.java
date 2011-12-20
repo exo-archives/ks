@@ -5880,7 +5880,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       List<String> RSSUsers;
       String emails[];
       String path;
-      String pathName = "";
+      StringBuffer pathName = new StringBuffer();
       String typeNode;
       PropertyReader reader;
       while (iterator.hasNext()) {
@@ -5891,24 +5891,27 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         RSSUsers = reader.list(EXO_RSS_WATCHING, new ArrayList<String>());
         rootPath = categoryHome.getPath();
         path = node.getPath();
-        pathName = "";
-        if (node.isNodeType(Utils.TYPE_CATEGORY))
+        pathName.setLength(0);
+        if (node.isNodeType(Utils.TYPE_CATEGORY)) {
           typeNode = Utils.TYPE_CATEGORY;
-        else if (node.isNodeType(Utils.TYPE_FORUM))
+        } else if (node.isNodeType(Utils.TYPE_FORUM)) {
           typeNode = Utils.TYPE_FORUM;
-        else
+        } else {
           typeNode = Utils.TYPE_TOPIC;
+        }
+        
         for (String str : (path.replace(rootPath + "/", "")).split("/")) {
           rootPath += "/" + str;
-          if (!Utils.isEmpty(pathName))
-            pathName += " > ";
-          pathName += ((Node) categoryHome.getSession().getItem(rootPath)).getProperty(EXO_NAME).getString();
+          if (!Utils.isEmpty(pathName.toString())) {
+            pathName.append(" > ");
+          }
+          pathName.append(((Node) categoryHome.getSession().getItem(rootPath)).getProperty(EXO_NAME).getString());
         }
         watch = new Watch();
         watch.setId(node.getName());
         watch.setNodePath(path);
         watch.setUserId(userId);
-        watch.setPath(pathName);
+        watch.setPath(pathName.toString());
         watch.setTypeNode(typeNode);
         if (users.contains(userId)) {
           watch.setEmail(emails[users.indexOf(userId)]);

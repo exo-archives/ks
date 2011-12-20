@@ -55,7 +55,6 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
       @EventConfig(listeners = UISettingEditModeForm.SelectTabActionListener.class) 
     }
 )
-@SuppressWarnings( { "unused" })
 public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
   private UserProfile              userProfile;
 
@@ -149,7 +148,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
     return list;
   }
 
-  private boolean tabIsSelected(int tabId) {
+  protected boolean tabIsSelected(int tabId) {
     if (this.tabId == tabId)
       return true;
     else
@@ -162,7 +161,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
   public void deActivate() throws Exception {
   }
 
-  private List<Category> getCategoryList() throws Exception {
+  protected List<Category> getCategoryList() throws Exception {
     List<Category> categoryList = new ArrayList<Category>();
     try {
       ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
@@ -202,7 +201,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
     return categoryList;
   }
 
-  private List<Forum> getForumList(String categoryId) throws Exception {
+  protected List<Forum> getForumList(String categoryId) throws Exception {
     List<Forum> forumList = null;
     String strQuery = ForumUtils.EMPTY_STR;
     if (this.userProfile.getUserRole() > 0)

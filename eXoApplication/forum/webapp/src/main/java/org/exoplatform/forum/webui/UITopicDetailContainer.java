@@ -41,8 +41,7 @@ public class UITopicDetailContainer extends UIContainer {
     this.isRender = isRender;
   }
 
-  @SuppressWarnings("unused")
-  private boolean getRenderPoll(boolean isShow) throws Exception {
+  protected boolean getRenderPoll(boolean isShow) throws Exception {
     try {
       boolean isRdByDeff = this.getAncestorOfType(UIForumPortlet.class).isShowPoll();
       if (isShow && isRender && isRdByDeff)

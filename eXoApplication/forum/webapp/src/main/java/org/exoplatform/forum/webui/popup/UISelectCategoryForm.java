@@ -70,10 +70,7 @@ public class UISelectCategoryForm extends BaseForumForm implements UIPopupCompon
     this.forumLinks = forumService.getAllLink(ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR);
   }
 
-  @SuppressWarnings( { "unused" })
-  private List<ForumLinkData> getForumLinks() throws Exception {
-    String categoryId = ForumUtils.EMPTY_STR, forumId = ForumUtils.EMPTY_STR;
-    boolean isPut = true;
+  protected List<ForumLinkData> getForumLinks() throws Exception {
     String cateId = ForumUtils.EMPTY_STR;
     for (ForumLinkData forumLink : this.forumLinks) {
       if (forumLink.getType().equals(Utils.CATEGORY)) {

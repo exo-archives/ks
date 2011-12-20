@@ -118,15 +118,14 @@ import org.exoplatform.webui.utils.TimeConvertUtils;
         @EventConfig(listeners = UIQuestions.DiscussForumActionListener.class) 
     }
 )
-@SuppressWarnings("unused")
 public class UIQuestions extends UIContainer {
   private static Log                    log                   = ExoLogger.getLogger(UIQuestions.class);
 
-  private static String                 SEARCH_INPUT          = "SearchInput";
+  protected static String               SEARCH_INPUT          = "SearchInput";
 
-  private static String                 COMMENT_ITER          = "CommentIter";
+  protected static String               COMMENT_ITER          = "CommentIter";
 
-  private static String                 ANSWER_ITER           = "AnswerIter";
+  protected static String               ANSWER_ITER           = "AnswerIter";
 
   public static final String            OBJECT_ITERATOR       = "object_iter";
 
@@ -164,7 +163,7 @@ public class UIQuestions extends UIContainer {
 
   public String                         language_             = FAQUtils.getDefaultLanguage();
 
-  private String                        discussId             = "";
+  protected String                      discussId             = "";
 
   private String[]                      firstTollbar_         = new String[] { "AddNewQuestion", "QuestionManagament" };
 
@@ -205,7 +204,7 @@ public class UIQuestions extends UIContainer {
       setId("UIQuestions");
   }
 
-  private boolean isNotInSpace() {
+  protected boolean isNotInSpace() {
     PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     PortletPreferences portletPref = pcontext.getRequest().getPreferences();
     return (portletPref.getValue("SPACE_URL", null) != null) ? false : true;
@@ -230,7 +229,7 @@ public class UIQuestions extends UIContainer {
     }
   }
 
-  private boolean isAddQuestion() {
+  protected boolean isAddQuestion() {
     if (isViewRootCate && (currentUser_ != null || currentUser_ == null && faqSetting_.isEnableAnonymousSubmitQuestion())) {
       if (isCategoryHome() && !faqSetting_.isPostQuestionInRootCategory()) {
         return false;
@@ -260,7 +259,7 @@ public class UIQuestions extends UIContainer {
     return url;
   }
 
-  private boolean isDiscussForum() throws Exception {
+  protected boolean isDiscussForum() throws Exception {
     return faqSetting_.getIsDiscussForum();
   }
 
@@ -284,7 +283,7 @@ public class UIQuestions extends UIContainer {
     }
   }
 
-  private Answer[] getPageListAnswer(String questionId) throws Exception {
+  protected Answer[] getPageListAnswer(String questionId) throws Exception {
     if (isSortAnswerUp != null) {
       Answer[] answers = languageMap.get(language_).getAnswers();
       Answer temp;
@@ -310,15 +309,15 @@ public class UIQuestions extends UIContainer {
     return languageMap.get(language_).getAnswers();
   }
 
-  private Comment[] getPageListComment(String questionId) throws Exception {
+  protected Comment[] getPageListComment(String questionId) throws Exception {
     return languageMap.get(language_).getComments();
   }
 
-  private String[] getActionTollbar() {
+  protected String[] getActionTollbar() {
     return firstTollbar_;
   }
 
-  private String[] getMenuCateManager() {
+  protected String[] getMenuCateManager() {
     return menuCateManager;
   }
 
@@ -330,7 +329,7 @@ public class UIQuestions extends UIContainer {
     return faqSetting_;
   }
 
-  private String[] getActionCategoryWithUser() {
+  protected String[] getActionCategoryWithUser() {
     if (currentUser_ != null)
       return userActionsCate_;
     else if (faqSetting_.isEnableAutomaticRSS())
@@ -339,7 +338,7 @@ public class UIQuestions extends UIContainer {
       return new String[] { userActionsCate_[0] };
   }
 
-  private String[] getActionQuestion() {
+  protected String[] getActionQuestion() {
     return (canEditQuestion) ? ((faqSetting_.isEnanbleVotesAndComments()) ? moderatorActionQues_ : moderatorActionQues2_) : ((FAQUtils.isFieldEmpty(currentUser_)) ? userActionQues2_ : ((faqSetting_.isEnanbleVotesAndComments()) ? userActionQues_ : userActionQues3_));
   }
 
@@ -367,14 +366,14 @@ public class UIQuestions extends UIContainer {
     this.language_ = language;
   }
 
-  private String getQuestionContent() {
+  protected String getQuestionContent() {
     if (languageMap.containsKey(language_)) {
       return languageMap.get(language_).getQuestion();
     }
     return "";
   }
 
-  private Question getQuestionDetail() {
+  protected Question getQuestionDetail() {
     Question question = new Question();
     if (languageMap.containsKey(language_)) {
       question.setDetail(languageMap.get(language_).getDetail());
@@ -382,7 +381,7 @@ public class UIQuestions extends UIContainer {
     return question;
   }
 
-  private void setIsModerators() throws Exception {
+  protected void setIsModerators() throws Exception {
     canEditQuestion = isModerators(categoryId_);
   }
 
@@ -398,7 +397,7 @@ public class UIQuestions extends UIContainer {
   }
 
   // should be check canVote in Question object
-  private boolean canVote(Question question) {
+  protected boolean canVote(Question question) {
     if (question.getUsersVote() != null)
       for (String user : question.getUsersVote()) {
         if (user.contains(currentUser_ + "/"))
@@ -413,7 +412,7 @@ public class UIQuestions extends UIContainer {
       language_ = language;
   }
 
-  private String convertSize(long size) {
+  protected String convertSize(long size) {
     String result = "";
     long residual = 0;
     int i = 0;
@@ -430,7 +429,7 @@ public class UIQuestions extends UIContainer {
     return result;
   }
 
-  private Question[] getListQuestion() {
+  protected Question[] getListQuestion() {
     try {
       updateCurrentQuestionList();
     } catch (Exception e) {
@@ -439,19 +438,19 @@ public class UIQuestions extends UIContainer {
     return questionMap_.values().toArray(new Question[] {});
   }
 
-  private boolean getCanEditQuestion() {
+  protected boolean getCanEditQuestion() {
     return this.canEditQuestion;
   }
 
-  private String getQuestionView() {
+  protected String getQuestionView() {
     return this.viewingQuestionId_;
   }
 
-  private String[] getQuestionLangauges(String questionPath) {
+  protected String[] getQuestionLangauges(String questionPath) {
     return languageMap.keySet().toArray(new String[] {});
   }
 
-  private String getAvatarUrl(String userId) throws Exception {
+  protected String getAvatarUrl(String userId) throws Exception {
     return FAQUtils.getUserAvatar(userId);
   }
 
@@ -512,7 +511,7 @@ public class UIQuestions extends UIContainer {
     }
   }
   
-  private Map<String, String> getQuestionRelation(List<String> questionIdLst) {
+  protected Map<String, String> getQuestionRelation(List<String> questionIdLst) {
     Map<String, String> mapReturn = new LinkedHashMap<String, String>();
     try {
       mapReturn = faqService_.getRelationQuestion(questionIdLst);
@@ -522,7 +521,7 @@ public class UIQuestions extends UIContainer {
     return mapReturn;
   }
 
-  private String getBackPath() {
+  protected String getBackPath() {
     return this.backPath_;
   }
 
@@ -536,7 +535,7 @@ public class UIQuestions extends UIContainer {
     return "";
   }
 
-  private String calculateTimeMessageOfLastActivity(long time) {
+  protected String calculateTimeMessageOfLastActivity(long time) {
     Calendar calendar = CommonUtils.getGreenwichMeanTime();
     calendar.setTimeInMillis(time);
     return TimeConvertUtils.convertXTimeAgo(calendar.getTime(), "EEE,MMM dd,yyyy", TimeConvertUtils.MONTH);
@@ -1009,7 +1008,6 @@ public class UIQuestions extends UIContainer {
     public void execute(Event<UIQuestions> event) throws Exception {
       UIQuestions questions = event.getSource();
       String commentId = event.getRequestContext().getRequestParameter(OBJECTID);
-      UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class);
       try {
         Comment comment = questions.getFAQService().getCommentById(questions.viewingQuestionId_, commentId, questions.language_);
         if (comment != null) {
@@ -1075,7 +1073,6 @@ public class UIQuestions extends UIContainer {
   static public class VoteQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
       UIQuestions questions = event.getSource();
-      UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class);
       String objectId = event.getRequestContext().getRequestParameter(OBJECTID);
       if (questions.checkExistingQuestion(event.getRequestContext(), questions.viewingQuestionId_)) {
         String userName = FAQUtils.getCurrentUser();
@@ -1137,10 +1134,8 @@ public class UIQuestions extends UIContainer {
     public void execute(Event<UIQuestions> event) throws Exception {
       UIQuestions uiQuestions = event.getSource();
       String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
-      boolean isSendLink = true;
       if (questionId.indexOf("/true") > 0) {
         questionId = questionId.replace("/true", "");
-        isSendLink = false;
       }
       if (uiQuestions.checkExistingQuestion(event.getRequestContext(), questionId)) {
         UIAnswersPortlet portlet = uiQuestions.getAncestorOfType(UIAnswersPortlet.class);

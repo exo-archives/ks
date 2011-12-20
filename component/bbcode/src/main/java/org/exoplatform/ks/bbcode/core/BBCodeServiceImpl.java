@@ -26,7 +26,6 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.ks.bbcode.spi.BBCodeData;
@@ -330,12 +329,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
     }
   }
 
-  private <T> T getComponent(Class<T> type) {
-    return type.cast(ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(type));
-  }
-
   public void stop() {
-
   }
 
   public void setContext(ManagementContext context) {

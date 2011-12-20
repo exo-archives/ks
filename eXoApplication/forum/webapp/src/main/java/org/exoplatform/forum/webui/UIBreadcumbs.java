@@ -62,12 +62,11 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIBreadcumbs.RssActionListener.class)
     }
 )
-@SuppressWarnings("unused")
 public class UIBreadcumbs extends UIContainer {
 
   private static Log         log           = ExoLogger.getExoLogger(UIBreadcumbs.class);
 
-  private boolean            useAjax       = true;
+  protected boolean            useAjax       = true;
 
   private ForumService       forumService;
 
@@ -94,7 +93,7 @@ public class UIBreadcumbs extends UIContainer {
     addChild(UIQuickSearchForm.class, null, QUICK_SEARCH);
   }
 
-  private void setIsUseAjax() throws Exception {
+  protected void setIsUseAjax() throws Exception {
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
     userProfile = forumPortlet.getUserProfile();
     useAjax = forumPortlet.isUseAjax();
@@ -211,11 +210,11 @@ public class UIBreadcumbs extends UIContainer {
     this.isOpen = isOpen;
   }
 
-  private String getToolTip() {
+  protected String getToolTip() {
     return tooltipLink;
   }
 
-  private boolean isLink() {
+  protected boolean isLink() {
     return this.isLink;
   }
 
@@ -229,15 +228,15 @@ public class UIBreadcumbs extends UIContainer {
     }
   }
 
-  private String getPath(int index) {
+  protected String getPath(int index) {
     return this.path_.get(index);
   }
 
-  private int getMaxPath() {
+  protected int getMaxPath() {
     return breadcumbs_.size();
   }
 
-  private List<String> getBreadcumbs() throws Exception {
+  protected List<String> getBreadcumbs() throws Exception {
     return breadcumbs_;
   }
 
@@ -248,7 +247,7 @@ public class UIBreadcumbs extends UIContainer {
       return false;
   }
 
-  private String getType(String id) {
+  protected String getType(String id) {
     return (id.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : 
             ((id.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : 
               ((id.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : 
@@ -256,7 +255,7 @@ public class UIBreadcumbs extends UIContainer {
                   (ForumUtils.EMPTY_STR))));
   }
 
-  private boolean checkLinkPrivate(String id) throws Exception {
+  protected boolean checkLinkPrivate(String id) throws Exception {
     boolean isPrivate = false;
     if (id.indexOf(Utils.TOPIC) >= 0) {
       try {

@@ -77,17 +77,17 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     this.keyword = keyword;
   }
 
-  private String getKeyword() {
+  protected String getKeyword() {
     return keyword;
   }
 
-  private String getDateFormat(Calendar cal) throws Exception {
+  protected String getDateFormat(Calendar cal) throws Exception {
     Locale currentLocale = Util.getPortalRequestContext().getLocale();
     DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, currentLocale);
     return df.format(cal.getTime());
   }
   
-  private Wiki getWiki(SearchResult result) throws Exception {
+  protected Wiki getWiki(SearchResult result) throws Exception {
     Wiki searchWiki = null;
     try {
       if (WikiNodeType.WIKI_PAGE_CONTENT.equals(result.getType()) || WikiNodeType.WIKI_ATTACHMENT.equals(result.getType())) {
@@ -102,7 +102,7 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     return searchWiki;
   }
 
-  private String getPageSearchName(Wiki wiki, String pageTitle) throws Exception {
+  protected String getPageSearchName(Wiki wiki, String pageTitle) throws Exception {
     if (pageTitle.indexOf(keyword) >= 0) return "";
     if(registry == null) {
       registry = ((WikiImpl) wiki).getLinkRegistry();
@@ -138,7 +138,7 @@ public class UIWikiAdvanceSearchResult extends UIContainer {
     return "";
   }
 
-  private String getWikiNodeUri(Wiki wiki) throws Exception {
+  protected String getWikiNodeUri(Wiki wiki) throws Exception {
     String wikiType = wiki.getType();
     PortalRequestContext portalRequestContext = Util.getPortalRequestContext();
     StringBuilder sb = new StringBuilder(portalRequestContext.getPortalURI());

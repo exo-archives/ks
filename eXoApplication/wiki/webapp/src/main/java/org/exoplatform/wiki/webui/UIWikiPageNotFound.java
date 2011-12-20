@@ -47,7 +47,7 @@ public class UIWikiPageNotFound extends UIWikiComponent {
     wservice = (WikiService) PortalContainer.getComponent(WikiService.class);
   }
 
-  private Page getRelatedPage() {
+  protected Page getRelatedPage() {
     try {
       WikiPageParams params = Utils.getCurrentWikiPageParams();
       return wservice.getRelatedPage(params.getType(), params.getOwner(), params.getPageId());
@@ -57,7 +57,7 @@ public class UIWikiPageNotFound extends UIWikiComponent {
     return null;
   }
 
-  private String getHomeURL(WikiPageParams param) throws Exception {
+  protected String getHomeURL(WikiPageParams param) throws Exception {
     param.setPageId(WikiNodeType.Definition.WIKI_HOME_NAME);
     return Utils.getURLFromParams(param);
   }

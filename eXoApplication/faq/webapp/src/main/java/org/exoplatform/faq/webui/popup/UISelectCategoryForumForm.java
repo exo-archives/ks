@@ -79,8 +79,7 @@ public class UISelectCategoryForumForm extends UIForm implements UIPopupComponen
     return listForum;
   }
 
-  @SuppressWarnings("unused")
-  private List<Category> getCategories() throws Exception {
+  protected List<Category> getCategories() throws Exception {
     return this.listcate;
   }
 

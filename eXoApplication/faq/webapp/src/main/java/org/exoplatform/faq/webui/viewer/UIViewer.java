@@ -28,8 +28,6 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.resolver.ResourceResolver;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -49,19 +47,16 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIViewer.ChangePathActionListener.class)
     }
 )
-@SuppressWarnings("unused")
 public class UIViewer extends UIContainer {
   private FAQService   fAqService;
 
   private String       path         = Utils.CATEGORY_HOME;
 
-  private boolean      useAjax      = false;
+  protected boolean    useAjax      = false;
 
   private boolean      isInSpace    = false;
 
   private RenderHelper renderHelper = new RenderHelper();
-
-  private Log          log          = ExoLogger.getLogger(UIViewer.class);
 
   public UIViewer() {
     fAqService = (FAQService) PortalContainer.getComponent(FAQService.class);
@@ -84,7 +79,7 @@ public class UIViewer extends UIContainer {
     this.path = path;
   }
 
-  private List<String> arrangeList(List<String> list) {
+  protected List<String> arrangeList(List<String> list) {
     List<String> newList = new ArrayList<String>();
     if (list.isEmpty() || list.size() == 0) {
       newList.add("<img src=\"/faq/skin/DefaultSkin/webui/background/HomeIcon.gif\" alt=\"" + Utils.CATEGORY_HOME + "\"/>");
@@ -108,7 +103,7 @@ public class UIViewer extends UIContainer {
     return "FAQViewerTemplate";
   }
 
-  private CategoryInfo getCategoryInfo() throws Exception {
+  protected CategoryInfo getCategoryInfo() throws Exception {
     useAjax = FAQUtils.getUseAjaxFAQPortlet();
     if(path.indexOf(Utils.CATE_SPACE_ID_PREFIX) >= 0) {
       isInSpace = true;
@@ -118,7 +113,7 @@ public class UIViewer extends UIContainer {
     return fAqService.getCategoryInfo(path, FAQUtils.getCategoriesIdFAQPortlet());
   }
 
-  private String render(String s) {
+  protected String render(String s) {
     Question question = new Question();
     question.setDetail(s);
     return renderHelper.renderQuestion(question);

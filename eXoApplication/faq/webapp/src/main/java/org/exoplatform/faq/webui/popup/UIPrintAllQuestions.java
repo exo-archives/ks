@@ -52,13 +52,12 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIPrintAllQuestions.CloseActionListener.class) 
     }
 )
-@SuppressWarnings("unused")
 public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent {
   private String[]     sizes_          = new String[] { "bytes", "KB", "MB" };
 
   private String       categoryId      = null;
 
-  private String       currentUser_;
+  protected String     currentUser_;
 
   private boolean      canEditQuestion = false;
 
@@ -66,7 +65,7 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
 
   private FAQSetting   faqSetting_     = null;
 
-  private boolean      viewAuthorInfor = true;
+  protected boolean    viewAuthorInfor = true;
 
   private RenderHelper renderHelper    = new RenderHelper();
 
@@ -84,7 +83,7 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
     }
   }
 
-  private String getQuestionRelationById(String questionId) {
+  protected String getQuestionRelationById(String questionId) {
     try {
       Question question = faqService_.getQuestionById(questionId);
       if (question != null) {
@@ -106,11 +105,11 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent 
     return url;
   }
 
-  private String getAvatarUrl(String userId) throws Exception {
+  protected String getAvatarUrl(String userId) throws Exception {
     return FAQUtils.getUserAvatar(userId);
   }
 
-  private String convertSize(long size) {
+  protected String convertSize(long size) {
     String result = "";
     long residual = 0;
     int i = 0;

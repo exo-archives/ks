@@ -52,9 +52,8 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
         @EventConfig(listeners = UIAddRelationForm.CancelActionListener.class) 
     }
 )
-@SuppressWarnings("unused")
 public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
-  private String              homeCategoryName = "";
+  protected String            homeCategoryName = "";
 
   private List<Question>      listQuestion     = new ArrayList<Question>();
 
@@ -72,7 +71,7 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
   public void deActivate() throws Exception {
   }
 
-  private List<String> listCateSelected = new ArrayList<String>();
+  protected List<String> listCateSelected = new ArrayList<String>();
 
   private List<Cate>   listCategory_    = new ArrayList<Cate>();
 
@@ -81,7 +80,7 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
 
   }
 
-  private List<Cate> getListCate() {
+  protected List<Cate> getListCate() {
     return this.listCategory_;
   }
 
@@ -135,11 +134,6 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
   }
 
   private void setListCate(String path) throws Exception {
-    // List<Cate> listCate = new ArrayList<Cate>();
-    // String userName = FAQUtils.getCurrentUser();
-    /*
-     * List<String>userPrivates = null; if(userName != null){ userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName); }
-     */
     this.listCategory_.clear();
     this.listCategory_.addAll(getFAQService().listingCategoryTree());
     mapQuestion_.put(Utils.CATEGORY_HOME, new ArrayList<Question>());
@@ -149,7 +143,7 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
 
   }
 
-  private List<Question> getQuestions(String cateId) {
+  protected List<Question> getQuestions(String cateId) {
     return mapQuestion_.get(cateId);
   }
 

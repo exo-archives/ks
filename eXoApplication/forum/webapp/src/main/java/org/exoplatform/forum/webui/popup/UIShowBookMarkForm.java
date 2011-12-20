@@ -78,8 +78,8 @@ public class UIShowBookMarkForm extends BaseForumForm implements UIPopupComponen
     }
   }
   
-  @SuppressWarnings( { "unused", "unchecked" })
-  private List<String> getBookMark() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<String> getBookMark() throws Exception {
     updateBookMark();
     pageList = new ForumPageList(6, bookMarks.size());
     pageList.setPageSize(6);
@@ -97,7 +97,7 @@ public class UIShowBookMarkForm extends BaseForumForm implements UIPopupComponen
     return list;
   }
 
-  private String getBookMarkId(String id) throws Exception {
+  protected String getBookMarkId(String id) throws Exception {
     for (String str : this.bookMarks) {
       if (str.indexOf(id) >= 0)
         return str;
@@ -105,8 +105,7 @@ public class UIShowBookMarkForm extends BaseForumForm implements UIPopupComponen
     return ForumUtils.EMPTY_STR;
   }
 
-  @SuppressWarnings("unused")
-  private String getType(String id) {
+  protected String getType(String id) {
     return (id.indexOf(Utils.FORUM_SERVICE) >= 0) ? Utils.FORUM_SERVICE : ((id.indexOf(Utils.CATEGORY) >= 0) ? ForumUtils.CATEGORY : ((id.indexOf(Utils.FORUM) >= 0) ? ForumUtils.FORUM : ((id.indexOf(Utils.TOPIC) >= 0) ? ForumUtils.TOPIC : (ForumUtils.EMPTY_STR))));
   }
 

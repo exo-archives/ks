@@ -28,11 +28,11 @@ public class ForumRSSEventListener implements EventListener{
   private String path_ ;
   private String workspace_ ;
   private String repository_ ; 
-  private KSDataLocation locator;
+  protected KSDataLocation locator;
   public ForumRSSEventListener(KSDataLocation dataLocator) throws Exception {
     this.locator = dataLocator;
     workspace_ = dataLocator.getWorkspace();
-    repository_ = dataLocator.DEFAULT_REPOSITORY_NAME;
+    repository_ = KSDataLocation.DEFAULT_REPOSITORY_NAME;
   }
   
   public String getSrcWorkspace(){  return workspace_ ; }
@@ -70,7 +70,7 @@ public class ForumRSSEventListener implements EventListener{
     }  */  
   }
   
-  private boolean hasProperties(String path) {
+  protected boolean hasProperties(String path) {
     String property = path.substring(path.lastIndexOf("/")+1);
     List<String> list = Arrays.asList((new String[]{"exo:message", "exo:name", "exo:isApproved", "exo:isActiveByTopic",
         "exo:isHidden", "exo:isClosed", "exo:isLock", "exo:isWaiting", "exo:isActive", "exo:isActiveByForum"}));

@@ -68,8 +68,7 @@ public class UIForumPageIterator extends UIContainer {
     this.pageList = pageList;
   }
 
-  @SuppressWarnings("unused")
-  private List<String> getTotalpage() throws Exception {
+  protected List<String> getTotalpage() throws Exception {
     int max_Page = (int) pageList.getAvailablePage();
     if (this.page > max_Page)
       this.page = max_Page;

@@ -58,7 +58,7 @@ public class UIRelatedPagesContainer extends UIWikiExtensionContainer {
     super.processRender(context);    
   }
   
-  private boolean isHasExtension() {
+  protected boolean isHasExtension() {
     return extensionSize > 0;
   }
 
@@ -80,8 +80,7 @@ public class UIRelatedPagesContainer extends UIWikiExtensionContainer {
     }
   }
   
-  private Page getCurrentPage() throws Exception {
+  protected Page getCurrentPage() throws Exception {
     return Utils.getCurrentWikiPage();
   }
-
 }

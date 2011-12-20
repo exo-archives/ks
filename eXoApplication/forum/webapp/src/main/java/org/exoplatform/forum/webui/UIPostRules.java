@@ -52,8 +52,7 @@ public class UIPostRules extends UIContainer {
   public UIPostRules() throws Exception {
   }
 
-  @SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+  protected UserProfile getUserProfile() throws Exception {
     if (this.userProfile == null) {
       try {
         this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();

@@ -38,8 +38,6 @@ import org.exoplatform.forum.webui.popup.UISortSettingForm;
 import org.exoplatform.forum.webui.popup.UITopicTypeManagerForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -75,15 +73,12 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIForumActionBar.OpenIPBanActionListener.class)
     }
 )
-@SuppressWarnings("unused")
 public class UIForumActionBar extends UIContainer {
   private UserProfile         userProfile;
 
   private ForumService        forumService;
 
   private static final String RELOAD = "RELOAD".intern();
-
-  private static final Log    log    = ExoLogger.getLogger(UIForumActionBar.class);
 
   public UIForumActionBar() throws Exception {
     forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
@@ -94,15 +89,15 @@ public class UIForumActionBar extends UIContainer {
     return userProfile;
   }
 
-  private String[] getActionMenu() throws Exception {
+  protected String[] getActionMenu() throws Exception {
     return (ForumUtils.enableIPLogging()) ? (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "TopicTypeManager", "OpenIPBan", "ExportCategory", "ImportCategory" }) : (new String[] { "SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", "TopicTypeManager", "ExportCategory", "ImportCategory" });
   }
 
-  private int getTotalJobWattingForModerator() throws Exception {
+  protected int getTotalJobWattingForModerator() throws Exception {
     return forumService.getJobWattingForModeratorByUser(this.userProfile.getUserId());
   }
 
-  private long getNewMessage() throws Exception {
+  protected long getNewMessage() throws Exception {
     try {
       String username = this.userProfile.getUserId();
       return forumService.getNewPrivateMessage(username);

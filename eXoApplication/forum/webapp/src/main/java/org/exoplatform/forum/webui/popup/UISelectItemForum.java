@@ -84,10 +84,7 @@ public class UISelectItemForum extends BaseForumForm implements UIPopupComponent
     }
   }
 
-  @SuppressWarnings( { "unused" })
-  private List<ForumLinkData> getForumLinks() throws Exception {
-    String categoryId = ForumUtils.EMPTY_STR, forumId = ForumUtils.EMPTY_STR;
-    boolean isPut = true;
+  protected List<ForumLinkData> getForumLinks() throws Exception {
     List<ForumLinkData> linkForum = new ArrayList<ForumLinkData>();
     String cateId = ForumUtils.EMPTY_STR;
     for (ForumLinkData forumLink : this.forumLinks) {
@@ -107,18 +104,15 @@ public class UISelectItemForum extends BaseForumForm implements UIPopupComponent
         mapListForum.put(cateId, linkForum);
         linkForum = new ArrayList<ForumLinkData>();
       }
-
     }
     return this.forumLinks;
   }
 
-  @SuppressWarnings("unused")
-  private List<ForumLinkData> getForums(String categoryId) {
+  protected List<ForumLinkData> getForums(String categoryId) {
     return mapListForum.get(categoryId);
   }
 
-  @SuppressWarnings("unused")
-  private List<ForumLinkData> getTopics(String forumId) {
+  protected List<ForumLinkData> getTopics(String forumId) {
     return mapListTopic.get(forumId);
   }
 

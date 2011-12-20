@@ -169,8 +169,7 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     return s;
   }
 
-  @SuppressWarnings("unused")
-  private int getIsSelected() {
+  protected int getIsSelected() {
     return this.id;
   }
 

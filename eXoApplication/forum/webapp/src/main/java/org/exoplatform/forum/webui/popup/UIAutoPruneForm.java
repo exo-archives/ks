@@ -50,7 +50,6 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
       @EventConfig(listeners = UIAutoPruneForm.CloseActionListener.class, phase = Phase.DECODE)
     }
 )
-@SuppressWarnings("unused")
 public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent {
   private List<PruneSetting> listPruneSetting = new ArrayList<PruneSetting>();
 
@@ -63,7 +62,7 @@ public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent {
   public void deActivate() throws Exception {
   }
 
-  private List<PruneSetting> getPruneSettings() throws Exception {
+  protected List<PruneSetting> getPruneSettings() throws Exception {
     listPruneSetting = new ArrayList<PruneSetting>();
     try {
       UICheckBoxInput isActiveBBcode;

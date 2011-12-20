@@ -272,8 +272,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
   public void deActivate() throws Exception {
   }
 
-  @SuppressWarnings("unused")
-  private boolean getIsSelected(int id) {
+  protected boolean getIsSelected(int id) {
     if (this.id == id)
       return true;
     return false;

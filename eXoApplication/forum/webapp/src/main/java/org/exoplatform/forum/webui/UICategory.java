@@ -82,7 +82,6 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
         @EventConfig(listeners = UICategory.AdvancedSearchActionListener.class)
     }
 )
-@SuppressWarnings({ "unused" })
 public class UICategory extends BaseForumForm {
   private String             categoryId;
 
@@ -92,7 +91,7 @@ public class UICategory extends BaseForumForm {
 
   private boolean            isEditForum     = false;
 
-  private boolean            useAjax         = true;
+  protected boolean            useAjax         = true;
 
   private int                dayForumNewPost = 0;
 
@@ -116,7 +115,7 @@ public class UICategory extends BaseForumForm {
   
   
 
-  private String getActionViewInfoUser(String linkType, String userName) {
+  protected String getActionViewInfoUser(String linkType, String userName) {
     return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
@@ -125,11 +124,11 @@ public class UICategory extends BaseForumForm {
     return CommonUtils.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
   }
 
-  private int getDayForumNewPost() {
+  protected int getDayForumNewPost() {
     return dayForumNewPost;
   }
 
-  private String getLastReadPostOfForum(String forumId) throws Exception {
+  protected String getLastReadPostOfForum(String forumId) throws Exception {
     return userProfile.getLastPostIdReadOfForum(forumId);
   }
 
@@ -193,7 +192,7 @@ public class UICategory extends BaseForumForm {
     return (list.contains(id)) ? true : false;
   }
 
-  private List<Forum> getForumList() throws Exception {
+  protected List<Forum> getForumList() throws Exception {
     if (this.isEditForum) {
       String strQuery = ForumUtils.EMPTY_STR;
       if (this.userProfile.getUserRole() > 0)
@@ -236,7 +235,7 @@ public class UICategory extends BaseForumForm {
     return null;
   }
 
-  private Topic getLastTopic(Category cate, Forum forum) throws Exception {
+  protected Topic getLastTopic(Category cate, Forum forum) throws Exception {
     Topic topic = null;
     String topicPath = forum.getLastTopicPath();
     if (!ForumUtils.isEmpty(topicPath)) {
@@ -318,7 +317,6 @@ public class UICategory extends BaseForumForm {
 
   static public class EditForumActionListener extends BaseEventListener<UICategory> {
     public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
-      List<UIComponent> children = uiCategory.getChildren();
       List<Forum> forums = uiCategory.getForumsChecked(true);
       if (forums.size() > 0) {
         UIForumForm forumForm = uiCategory.openPopup(UIForumForm.class, "EditForumForm", 650, 480);

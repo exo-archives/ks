@@ -95,8 +95,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
       this.userIdAndtagId = tagId;
   }
 
-  @SuppressWarnings("unused")
-  private String getActionViewInfoUser(String linkType, String userName) {
+  protected String getActionViewInfoUser(String linkType, String userName) {
     return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
@@ -115,13 +114,11 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     return CommonUtils.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
   }
 
-  @SuppressWarnings("unused")
-  private String getTitleInHTMLCode(String s) {
+  protected String getTitleInHTMLCode(String s) {
     return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
   }
 
-  @SuppressWarnings("unused")
-  private long getSizePost(String Id) throws Exception {
+  protected long getSizePost(String Id) throws Exception {
     if (mapNumberPagePost.containsKey(Id))
       return mapNumberPagePost.get(Id);
     String Ids[] = Id.split(ForumUtils.SLASH);
@@ -159,8 +156,8 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     }
   }
 
-  @SuppressWarnings( { "unchecked", "unused" })
-  private List<Topic> getTopicsTag() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<Topic> getTopicsTag() throws Exception {
     this.pageList = getForumService().getTopicByMyTag(userIdAndtagId, strOrderBy);
     int maxTopic = (int)this.userProfile.getMaxTopicInPage();
     if (maxTopic <= 0)
@@ -196,8 +193,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
     return this.tag;
   }
 
-  @SuppressWarnings("unused")
-  private String[] getStarNumber(Topic topic) throws Exception {
+  protected String[] getStarNumber(Topic topic) throws Exception {
     double voteRating = topic.getVoteRating();
     return ForumUtils.getStarNumber(voteRating);
   }

@@ -156,7 +156,7 @@ public abstract class JCRAPIAspect
             MAPPING = Collections.unmodifiableMap(tempMapping);            
          }
       }
-      if (statistics == UNKNOWN)
+      if (UNKNOWN.equals(statistics))
       {
          return null;
       }

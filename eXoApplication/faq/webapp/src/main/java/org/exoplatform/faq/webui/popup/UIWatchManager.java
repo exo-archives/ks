@@ -113,8 +113,7 @@ public class UIWatchManager extends BaseUIForm implements UIPopupComponent {
     return listEmails;
   }
 
-  @SuppressWarnings("unused")
-  private long getTotalpages(String pageInteratorId) {
+  protected long getTotalpages(String pageInteratorId) {
     UIAnswersPageIterator pageIterator = this.getChildById(LIST_EMAILS_WATCH);
     try {
       return pageIterator.getInfoPage().get(3);
@@ -124,8 +123,7 @@ public class UIWatchManager extends BaseUIForm implements UIPopupComponent {
     }
   }
 
-  @SuppressWarnings("unused")
-  private List<Watch> getListWatch() throws Exception {
+  protected List<Watch> getListWatch() throws Exception {
     return this.listWatchs_;
   }
 

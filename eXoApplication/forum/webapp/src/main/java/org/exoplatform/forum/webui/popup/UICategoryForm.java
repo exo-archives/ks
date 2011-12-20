@@ -185,8 +185,7 @@ public class UICategoryForm extends BaseForumForm implements UIPopupComponent, U
     this.setActions(new String[] { "Save", "Cancel" });
   }
 
-  @SuppressWarnings("unused")
-  private boolean getIsSelected(int id) {
+  protected boolean getIsSelected(int id) {
     if (this.id == id)
       return true;
     return false;

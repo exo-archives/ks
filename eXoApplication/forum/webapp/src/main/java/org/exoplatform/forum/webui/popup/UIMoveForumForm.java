@@ -77,8 +77,7 @@ public class UIMoveForumForm extends BaseUIForm implements UIPopupComponent {
     this.isForumUpdate = isForumUpdate;
   }
 
-  @SuppressWarnings("unused")
-  private List<Category> getCategories() throws Exception {
+  protected List<Category> getCategories() throws Exception {
     ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     List<Category> categorys = new ArrayList<Category>();
     for (Category category : forumService.getCategories()) {
@@ -89,8 +88,7 @@ public class UIMoveForumForm extends BaseUIForm implements UIPopupComponent {
     return categorys;
   }
 
-  @SuppressWarnings("unused")
-  private boolean getSeclectedCategory(String cactegoryId) throws Exception {
+  protected boolean getSeclectedCategory(String cactegoryId) throws Exception {
     if (cactegoryId.equalsIgnoreCase(this.newCategoryId_))
       return true;
     else

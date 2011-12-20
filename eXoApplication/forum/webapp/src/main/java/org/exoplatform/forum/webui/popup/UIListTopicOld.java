@@ -80,13 +80,11 @@ public class UIListTopicOld extends UIContainer {
     this.date = date;
   }
 
-  @SuppressWarnings("unused")
-  private String getTitleInHTMLCode(String s) {
+  protected String getTitleInHTMLCode(String s) {
     return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
   }
 
-  @SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+  protected UserProfile getUserProfile() throws Exception {
     if (userProfile == null) {
       this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
     }
@@ -97,8 +95,8 @@ public class UIListTopicOld extends UIContainer {
     this.isUpdate = isUpdate;
   }
 
-  @SuppressWarnings( { "unused", "unchecked" })
-  private List<Topic> getTopicsOld() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<Topic> getTopicsOld() throws Exception {
     if (topics == null || topics.size() == 0 || isUpdate) {
       JCRPageList pageList = forumService.getPageTopicOld(date, ForumUtils.EMPTY_STR);
       if (pageList != null) {

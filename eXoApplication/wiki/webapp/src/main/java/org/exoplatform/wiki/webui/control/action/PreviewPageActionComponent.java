@@ -39,7 +39,6 @@ import org.exoplatform.wiki.webui.UIWikiRichTextArea;
 import org.exoplatform.wiki.webui.control.action.core.AbstractFormActionComponent;
 import org.exoplatform.wiki.webui.control.filter.IsEditAddModeFilter;
 import org.exoplatform.wiki.webui.control.listener.UIEditorTabsActionListener;
-import org.exoplatform.wiki.webui.control.listener.UIPageToolBarActionListener;
 import org.exoplatform.wiki.webui.popup.UIWikiPagePreview;
 import org.xwiki.rendering.syntax.Syntax;
 

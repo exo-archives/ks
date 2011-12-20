@@ -130,8 +130,7 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
     this.isActivate = isActivate;
   }
 
-  @SuppressWarnings("unused")
-  private void setInitForm() throws Exception {
+  protected void setInitForm() throws Exception {
     if (!isTest) {
       long i = pruneSetting.getInActiveDay();
       String type = FIELD_VALUEDAY;

@@ -107,8 +107,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
   public void deActivate() throws Exception {
   }
 
-  @SuppressWarnings("unused")
-  private boolean getPriview() {
+  protected boolean getPriview() {
     return isPriview;
   }
 
@@ -143,8 +142,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
     this.example = example;
   }
   
-  @SuppressWarnings("unused")
-  private String getReplaceByBBCode() throws Exception {
+  protected String getReplaceByBBCode() throws Exception {
     return (new BBCodeRenderer()).renderExample(example, bbcode);
   }
 

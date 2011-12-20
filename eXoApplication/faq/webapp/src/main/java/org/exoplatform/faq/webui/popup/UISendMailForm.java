@@ -27,7 +27,6 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
-import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
@@ -71,11 +70,10 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
         @EventConfig(listeners = UISendMailForm.ChangeLanguageActionListener.class) 
     }
 )
-@SuppressWarnings("unused")
 public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
-  private boolean                        isViewCC                = false;
+  protected boolean                      isViewCC                = false;
 
-  private boolean                        isViewBCC               = false;
+  protected boolean                      isViewBCC               = false;
 
   private static final String            FILED_FROM_NAME         = "FromName";
 
@@ -107,7 +105,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
 
   private String                         questionId              = "";
 
-  private String                         questionChanged_        = "";
+  protected String                       questionChanged_        = "";
 
   public List<User>                      toUsers                 = new ArrayList<User>();
 
@@ -154,7 +152,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
     addBCCUsers = userList;
   }
 
-  private List<SelectItemOption<String>> getListLanguageToSendFriend() {
+  protected List<SelectItemOption<String>> getListLanguageToSendFriend() {
     return listLanguageToReponse;
   }
 
@@ -196,10 +194,6 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent {
     questionChanged_ = question.getQuestion();
 
     listLanguageToReponse.add(new SelectItemOption<String>(language, language));
-    // set info for form
-    // for(QuestionLanguage quesLanguage : listQuestionLanguage) {
-    // listLanguageToReponse.add(new SelectItemOption<String>(quesLanguage.getLanguage(), quesLanguage.getLanguage())) ;
-    // }
 
     addChild(new UIFormStringInput(FILED_FROM_NAME, FILED_FROM_NAME, name));
     addChild(new UIFormStringInput(FILED_FROM, FILED_FROM, email));

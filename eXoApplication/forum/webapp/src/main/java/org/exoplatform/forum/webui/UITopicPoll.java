@@ -160,8 +160,7 @@ public class UITopicPoll extends BaseForumForm {
     return null;
   }
 
-  @SuppressWarnings("unused")
-  private boolean getIsEditPoll() {
+  protected boolean getIsEditPoll() {
     return isEditPoll;
   }
 
@@ -169,13 +168,11 @@ public class UITopicPoll extends BaseForumForm {
     this.isEditPoll = isEditPoll;
   }
 
-  @SuppressWarnings("unused")
-  private boolean getCanViewEditMenu() {
+  protected boolean getCanViewEditMenu() {
     return this.canViewEditMenu;
   }
 
-  @SuppressWarnings("unused")
-  private boolean isGuestPermission() throws Exception {
+  protected boolean isGuestPermission() throws Exception {
     if (poll_.getIsClosed())
       return true;
     String userVote = userProfile.getUserId();
@@ -201,8 +198,7 @@ public class UITopicPoll extends BaseForumForm {
     return false;
   }
 
-  @SuppressWarnings("unused")
-  private String[] getInfoVote() throws Exception {
+  protected String[] getInfoVote() throws Exception {
     Poll poll = poll_;
     String[] voteNumber = poll.getVote();
     String[] userVotes = poll.getUserVote();
@@ -234,8 +230,7 @@ public class UITopicPoll extends BaseForumForm {
     return infoVote;
   }
 
-  @SuppressWarnings("unused")
-  private void reloadTopicDetail() {
+  protected void reloadTopicDetail() {
     UITopicDetailContainer topicDetailContainer = (UITopicDetailContainer) this.getParent();
     topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true);
   }
@@ -245,7 +240,7 @@ public class UITopicPoll extends BaseForumForm {
       UITopicPoll topicPoll = event.getSource();
       if (!ForumUtils.isEmpty(topicPoll.pollId)) {
         topicPoll.poll_ = topicPoll.pollService.getPoll(topicPoll.pollId);
-        String values = ForumUtils.EMPTY_STR;
+        StringBuffer values = new StringBuffer();
         List<UIComponent> children = topicPoll.getChildren();
         int maxOption = topicPoll.poll_.getOption().length;
         boolean isFailed = false;
@@ -255,7 +250,7 @@ public class UITopicPoll extends BaseForumForm {
             if (child instanceof UIFormRadioBoxInput) {
               for (SelectItemOption<String> option : ((UIFormRadioBoxInput) child).getOptions()) {
                 if (option.getValue().equalsIgnoreCase(((UIFormRadioBoxInput) child).getValue())) {
-                  values = String.valueOf(i);
+                  values.append(i);
                   if (i >= maxOption) {
                     isFailed = true;
                   }
@@ -275,15 +270,15 @@ public class UITopicPoll extends BaseForumForm {
                   isFailed = true;
                   break;
                 }
-                values += ((values.length() > 0) ? org.exoplatform.poll.service.Utils.COLON : ForumUtils.EMPTY_STR) + String.valueOf(i);
+                values.append(((values.length() > 0) ? org.exoplatform.poll.service.Utils.COLON : ForumUtils.EMPTY_STR) + String.valueOf(i));
               }
               ++i;
             }
           }
         }
         if (!isFailed) {
-          if (!Utils.isEmpty(values)) {
-            Poll poll = org.exoplatform.poll.service.Utils.calculateVote(topicPoll.poll_, topicPoll.userProfile.getUserId(), values);
+          if (!Utils.isEmpty(values.toString())) {
+            Poll poll = org.exoplatform.poll.service.Utils.calculateVote(topicPoll.poll_, topicPoll.userProfile.getUserId(), values.toString());
             topicPoll.pollService.savePoll(poll, false, true);
           } else {
             topicPoll.warning("UITopicPoll.msg.notCheck", false);

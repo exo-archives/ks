@@ -497,7 +497,7 @@ public class WikiServiceImpl implements WikiService, Startable {
     if (oldLinkEntry != null) {
       newLinkEntry = oldLinkEntry.getNewLink();
     }
-    while (oldLinkEntry != newLinkEntry && newLinkEntry != null) {
+    while (newLinkEntry != null && !newLinkEntry.equals(oldLinkEntry)) {
       oldLinkEntry = newLinkEntry;
       newLinkEntry = oldLinkEntry.getNewLink();
     }

@@ -46,11 +46,11 @@ public class CancelActionComponent extends UIComponent {
     return FILTERS;
   }
   
-  private boolean isNewMode() {
+  protected boolean isNewMode() {
     return (WikiMode.ADDPAGE.equals(getAncestorOfType(UIWikiPortlet.class).getWikiMode()));
   }  
 
-  private String getCurrentPageURL() throws Exception {
+  protected String getCurrentPageURL() throws Exception {
     return Utils.getURLFromParams(Utils.getCurrentWikiPageParams());
   }
 }

@@ -113,7 +113,6 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
     @EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
   }
 )
-@SuppressWarnings( { "unused", "unchecked" })
 public class UITopicContainer extends UIForumKeepStickPageIterator {
   private String                 forumId           = ForumUtils.EMPTY_STR;
 
@@ -143,7 +142,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
   private boolean                isShowActive      = false;
 
-  private String                 DEFAULT_ID        = TopicType.DEFAULT_ID;
+  protected String               DEFAULT_ID        = TopicType.DEFAULT_ID;
 
   private Map<String, TopicType> topicTypeM        = new HashMap<String, TopicType>();
 
@@ -274,7 +273,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     setForum(true);
   }
 
-  private String getActionViewInfoUser(String linkType, String userName) {
+  protected String getActionViewInfoUser(String linkType, String userName) {
     return getAncestorOfType(UIForumPortlet.class).getPortletLink(linkType, userName);
   }
 
@@ -369,7 +368,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     return forum;
   }
 
-  private void initPage() throws Exception {
+  protected void initPage() throws Exception {
     setListWatches();
     objectId = forumId;
     if (getUserProfile() == null) {
@@ -435,6 +434,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     return actions;
   }
 
+  @SuppressWarnings("unchecked")
   public List<Topic> getTopicPageList() throws Exception {
     if (pageList == null)
       return new ArrayList<Topic>();

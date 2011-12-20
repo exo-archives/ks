@@ -122,8 +122,7 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
     this.TopicPath = topicPath;
   }
 
-  @SuppressWarnings("unused")
-  private String getDateAfter() throws Exception {
+  protected String getDateAfter() throws Exception {
     Date date = new Date();
     if (poll != null && poll.getTimeOut() > 0) {
       date = poll.getModifiedDate();

@@ -83,8 +83,7 @@ public class ResultQuickSearch extends BaseUIForm implements UIPopupComponent {
     }
   }
 
-  @SuppressWarnings("unused")
-  private long getTotalpages(String pageInteratorId) {
+  protected long getTotalpages(String pageInteratorId) {
     UIAnswersPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH);
     try {
       return pageIterator.getInfoPage().get(3);

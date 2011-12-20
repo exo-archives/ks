@@ -65,8 +65,7 @@ public class UIListInBoxPrivateMessage extends UIContainer {
     addChild(UIForumPageIterator.class, null, "PageListInBoxMessage");
   }
 
-  @SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+  protected UserProfile getUserProfile() throws Exception {
     if (userProfile == null) {
       userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
     }
@@ -74,13 +73,12 @@ public class UIListInBoxPrivateMessage extends UIContainer {
     return userProfile;
   }
 
-  @SuppressWarnings("unused")
-  private boolean isRenderIterator() {
+  protected boolean isRenderIterator() {
     return isRenderIterator;
   }
 
-  @SuppressWarnings( { "unused", "unchecked" })
-  private List<ForumPrivateMessage> getListInBoxPrivateMessage() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<ForumPrivateMessage> getListInBoxPrivateMessage() throws Exception {
     JCRPageList pageList = this.forumService.getPrivateMessage(userName, Utils.RECEIVE_MESSAGE);
     UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
     forumPageIterator.updatePageList(pageList);

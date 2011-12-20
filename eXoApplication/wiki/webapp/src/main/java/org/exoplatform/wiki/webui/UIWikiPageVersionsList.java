@@ -32,7 +32,6 @@ import org.exoplatform.webui.ext.UIExtensionManager;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.wiki.chromattic.ext.ntdef.NTVersion;
 import org.exoplatform.wiki.commons.Utils;
-import org.exoplatform.wiki.webui.control.action.RemoveAttachmentActionComponent;
 import org.exoplatform.wiki.webui.control.action.RestoreRevisionActionComponent;
 import org.exoplatform.wiki.webui.control.action.ViewRevisionActionListener;
 import org.exoplatform.wiki.webui.core.UIWikiForm;

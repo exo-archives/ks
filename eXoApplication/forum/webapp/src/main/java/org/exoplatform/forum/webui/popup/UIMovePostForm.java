@@ -79,8 +79,7 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
   public void deActivate() throws Exception {
   }
 
-  @SuppressWarnings("unused")
-  private String getTitleInHTMLCode(String s) {
+  protected String getTitleInHTMLCode(String s) {
     return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
   }
 
@@ -109,21 +108,18 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
     }
   }
 
-  @SuppressWarnings("unused")
-  private List<Category> getCategories() throws Exception {
+  protected List<Category> getCategories() throws Exception {
     return this.categories;
   }
 
-  @SuppressWarnings("unused")
-  private boolean getSelectForum(String forumId) throws Exception {
+  protected boolean getSelectForum(String forumId) throws Exception {
     if (this.posts.get(0).getPath().contains(forumId))
       return true;
     else
       return false;
   }
 
-  @SuppressWarnings("unused")
-  private List<Forum> getForums(String categoryId) throws Exception {
+  protected List<Forum> getForums(String categoryId) throws Exception {
     List<Forum> forums = new ArrayList<Forum>();
     for (Forum forum : this.getForumService().getForums(categoryId, ForumUtils.EMPTY_STR)) {
       if (getUserProfile().getUserRole() == 1) {
@@ -137,8 +133,7 @@ public class UIMovePostForm extends BaseForumForm implements UIPopupComponent {
     return forums;
   }
 
-  @SuppressWarnings("unused")
-  private List<Topic> getTopics(String categoryId, String forumId, boolean isMode) throws Exception {
+  protected List<Topic> getTopics(String categoryId, String forumId, boolean isMode) throws Exception {
     List<Topic> topics = new ArrayList<Topic>();
     List<Topic> topics_ = this.getForumService().getTopics(categoryId, forumId);
     for (Topic topic : topics_) {

@@ -56,10 +56,6 @@ public class BBCodeRenderer implements Renderer {
     return SupportedSyntaxes.bbcode.name();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.exoplatform.ks.rendering.api.Renderer#render(java.lang.String)
-   */
   public String render(String s) {
     for (BBCode bbcode : getBbcodes()) {
       s = processReplace(s, bbcode);
@@ -267,7 +263,7 @@ public class BBCodeRenderer implements Renderer {
     return result;
   }
 
-  private List<BBCode> convert(List<BBCodeData> bbc) {
+  protected List<BBCode> convert(List<BBCodeData> bbc) {
     List<BBCode> bbcodes = new ArrayList<BBCode>();
     for (BBCodeData bbCodeData : bbc) {
       BBCode bbCode = new BBCode();

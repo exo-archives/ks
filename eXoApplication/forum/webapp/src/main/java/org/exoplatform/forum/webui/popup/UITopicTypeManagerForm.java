@@ -51,7 +51,6 @@ import org.exoplatform.webui.event.Event.Phase;
       @EventConfig(listeners = UITopicTypeManagerForm.CloseActionListener.class, phase = Phase.DECODE)
     }
 )
-@SuppressWarnings("unused")
 public class UITopicTypeManagerForm extends BaseForumForm implements UIPopupComponent {
   private List<TopicType> listTT = new ArrayList<TopicType>();
 
@@ -65,7 +64,7 @@ public class UITopicTypeManagerForm extends BaseForumForm implements UIPopupComp
   public void deActivate() throws Exception {
   }
 
-  private List<TopicType> getTopicTypes() throws Exception {
+  protected List<TopicType> getTopicTypes() throws Exception {
     listTT = new ArrayList<TopicType>();
     listTT.addAll(getForumService().getTopicTypes());
     return listTT;

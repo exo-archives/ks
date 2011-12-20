@@ -18,8 +18,6 @@ package org.exoplatform.wiki.webui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.services.log.ExoLogger;
@@ -66,8 +64,7 @@ public class UIWikiPageInfoArea extends UIWikiContainer {
     this.accept_Modes = Arrays.asList(new WikiMode[] { WikiMode.VIEW });
   }
 
-  @SuppressWarnings("unused")
-  private PageImpl getCurrentWikiPage() {
+  protected PageImpl getCurrentWikiPage() {
     PageImpl currentPage = null;
     try {
       currentPage = (PageImpl) Utils.getCurrentWikiPage();

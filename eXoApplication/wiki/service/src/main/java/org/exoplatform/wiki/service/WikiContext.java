@@ -17,7 +17,6 @@
 package org.exoplatform.wiki.service;
 
 import java.io.Serializable;
-import java.util.ResourceBundle;
 
 import org.xwiki.rendering.syntax.Syntax;
 

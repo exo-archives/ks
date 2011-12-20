@@ -97,8 +97,7 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
     isForum = true;
   }
 
-  @SuppressWarnings("unused")
-  private String getRestPath() throws Exception {
+  protected String getRestPath() throws Exception {
     try {
       ExoContainerContext exoContext = (ExoContainerContext) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
       return ForumUtils.SLASH + exoContext.getPortalContainerName() + ForumUtils.SLASH + exoContext.getRestContextName();
@@ -108,8 +107,8 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
     return ForumUtils.EMPTY_STR;
   }
 
-  @SuppressWarnings( { "unused", "unchecked" })
-  private List<String> getListIpBan() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<String> getListIpBan() throws Exception {
     List<String> listIpBan = new ArrayList<String>();
     if (isForum) {
       listIpBan = getForumService().getForumBanList(forumId);

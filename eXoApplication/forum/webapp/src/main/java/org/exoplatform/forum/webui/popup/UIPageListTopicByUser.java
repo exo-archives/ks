@@ -87,8 +87,7 @@ public class UIPageListTopicByUser extends UIContainer {
     addChild(UIForumPageIterator.class, null, "PageListTopicByUser");
   }
 
-  @SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+  protected UserProfile getUserProfile() throws Exception {
     UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
     isUseAjax = forumPortlet.isUseAjax();
     return this.userProfile = forumPortlet.getUserProfile();
@@ -102,13 +101,12 @@ public class UIPageListTopicByUser extends UIContainer {
     this.userName = userName;
   }
 
-  @SuppressWarnings("unused")
-  private String getTitleInHTMLCode(String s) {
+  protected String getTitleInHTMLCode(String s) {
     return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
   }
 
-  @SuppressWarnings( { "unchecked", "unused" })
-  private List<Topic> getTopicsByUser() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<Topic> getTopicsByUser() throws Exception {
     UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
     try {
       boolean isMod = false;
@@ -134,8 +132,7 @@ public class UIPageListTopicByUser extends UIContainer {
     return (Topic) forumService.getObjectNameById(topicId, Utils.TOPIC);
   }
 
-  @SuppressWarnings("unused")
-  private String[] getStarNumber(Topic topic) throws Exception {
+  protected String[] getStarNumber(Topic topic) throws Exception {
     double voteRating = topic.getVoteRating();
     return ForumUtils.getStarNumber(voteRating);
   }

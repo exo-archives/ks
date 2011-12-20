@@ -82,8 +82,7 @@ public class UIWikiPageInfo extends UIWikiContainer {
     return content;
   }
   
-  private Page getCurrentPage() throws Exception {
+  protected Page getCurrentPage() throws Exception {
     return Utils.getCurrentWikiPage();
   }
-  
 }

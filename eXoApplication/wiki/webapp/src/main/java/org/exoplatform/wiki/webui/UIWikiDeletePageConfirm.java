@@ -58,7 +58,7 @@ public class UIWikiDeletePageConfirm extends UIWikiComponent {
     wservice = (WikiService)PortalContainer.getComponent(WikiService.class) ;
   }
   
-  private List<SearchResult> getRelativePages() {
+  protected List<SearchResult> getRelativePages() {
     try{
       WikiPageParams params = Utils.getCurrentWikiPageParams() ;
       return wservice.searchRenamedPage(params.getType(), params.getOwner(), params.getPageId()) ;
@@ -66,7 +66,7 @@ public class UIWikiDeletePageConfirm extends UIWikiComponent {
     return null ;
   }
   
-  private PageImpl getCurrentPage() {
+  protected PageImpl getCurrentPage() {
     try{
       WikiPageParams params = Utils.getCurrentWikiPageParams() ;
       pageID = params.getPageId() ;
@@ -76,10 +76,10 @@ public class UIWikiDeletePageConfirm extends UIWikiComponent {
     return null ;
   }
   
-  private String getCurrentPageId(){ return pageID ;}
-  private String getWiki(){ return owner ;}
+  protected String getCurrentPageId(){ return pageID ;}
+  protected String getWiki(){ return owner ;}
   
-  private String getHomeURL() {
+  protected String getHomeURL() {
     return Util.getPortalRequestContext().getPortalURI() + "wiki";
   }
   

@@ -94,8 +94,7 @@ public class UICommentForm extends BaseUIFAQForm implements UIPopupComponent {
     return questionContent;
   }
 
-  @SuppressWarnings("unused")
-  private String getQuestionDetail() {
+  protected String getQuestionDetail() {
     Question question = new Question();
     question.setDetail(questionDetail);
     return renderHelper.renderQuestion(question);

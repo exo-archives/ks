@@ -141,7 +141,6 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
       @EventConfig(listeners = UITopicDetail.AddWatchingActionListener.class)
     }
 )
-@SuppressWarnings("unused")
 public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   private String                     categoryId;
@@ -174,11 +173,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   private boolean                    canCreateTopic;
 
-  private boolean                    isGetSv                 = true;
+  protected boolean                  isGetSv                 = true;
 
   private boolean                    isShowQuickReply        = true;
 
-  private boolean                    isShowRule              = true;
+  protected boolean                  isShowRule              = true;
 
   private boolean                    isDoubleClickQuickReply = false;
 
@@ -193,8 +192,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   private String                     lastPostId              = ForumUtils.EMPTY_STR;
 
   private List<String>               listContactsGotten      = new ArrayList<String>();
-
-//  private List<Watch>                listWatches             = new ArrayList<Watch>();
 
   private Map<String, Integer>       pagePostRemember        = new HashMap<String, Integer>();
 
@@ -240,7 +237,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     return CommonUtils.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
   }
 
-  private String getRestPath() throws Exception {
+  protected String getRestPath() throws Exception {
     try {
       ExoContainerContext exoContext = (ExoContainerContext) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
       return ForumUtils.SLASH + exoContext.getPortalContainerName() + ForumUtils.SLASH + exoContext.getRestContextName();
@@ -488,7 +485,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     this.isEditTopic = isEditTopic;
   }
 
-  private boolean isModerator() {
+  protected boolean isModerator() {
     return isMod;
   }
 
@@ -597,7 +594,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     }
   }
 
-  private boolean getIsModeratePost() {
+  protected boolean getIsModeratePost() {
     return this.isModeratePost;
   }
 
@@ -724,7 +721,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     return mapUserProfile.get(userName);
   }
 
-  private void renderPoll() throws Exception {
+  protected void renderPoll() throws Exception {
     UITopicDetailContainer container = this.getParent();
     container.setRederPoll(false);
     ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(container);
@@ -1114,7 +1111,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
   static public class SetMoveTopicActionListener extends BaseEventListener<UITopicDetail> {
     public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-      UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
       try {
         List<Topic> topics = new ArrayList<Topic>();
         topics.add(topicDetail.topic);

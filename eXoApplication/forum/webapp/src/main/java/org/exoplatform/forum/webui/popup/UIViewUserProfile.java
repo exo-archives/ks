@@ -44,7 +44,6 @@ import org.exoplatform.webui.event.Event.Phase;
       @EventConfig(listeners = UIViewUserProfile.CloseActionListener.class,phase = Phase.DECODE)
     }
 )
-@SuppressWarnings("unused")
 public class UIViewUserProfile extends BaseForumForm implements UIPopupComponent {
   private UserProfile   userProfileViewer;
 
@@ -55,11 +54,11 @@ public class UIViewUserProfile extends BaseForumForm implements UIPopupComponent
   public UIViewUserProfile() {
   }
 
-  private boolean isAdmin(String userId) throws Exception {
+  protected boolean isAdmin(String userId) throws Exception {
     return getForumService().isAdminRole(userId);
   }
 
-  private boolean isOnline(String userId) throws Exception {
+  protected boolean isOnline(String userId) throws Exception {
     return getForumService().isOnline(userId);
   }
 
@@ -71,11 +70,11 @@ public class UIViewUserProfile extends BaseForumForm implements UIPopupComponent
     return this.userProfileViewer;
   }
 
-  private String getAvatarUrl() throws Exception {
+  protected String getAvatarUrl() throws Exception {
     return ForumSessionUtils.getUserAvatarURL(userProfileViewer.getUserId(), getForumService());
   }
 
-  private String[] getLabelProfile() {
+  protected String[] getLabelProfile() {
     return new String[] { getLabel("userName"), getLabel("firstName"), getLabel("lastName"), getLabel("birthDay"), getLabel("gender"), 
         getLabel("email"), getLabel("jobTitle"), getLabel("location"), getLabel("homePhone"), getLabel("workPhone"), getLabel("website")};
   }

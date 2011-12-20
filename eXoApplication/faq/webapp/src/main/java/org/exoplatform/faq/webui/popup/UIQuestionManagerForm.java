@@ -41,7 +41,6 @@ import org.exoplatform.webui.form.UIForm;
         @EventConfig(listeners = UIQuestionManagerForm.CancelActionListener.class) 
     }
 )
-@SuppressWarnings("unused")
 public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   public static final String UI_QUESTION_INFO       = "QuestionInfo";
 
@@ -78,19 +77,19 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     questionsInfo.setFAQSetting(setting);
   }
 
-  private boolean getIsEdit() {
+  protected boolean getIsEdit() {
     return this.isEditQuestion;
   }
 
-  private boolean getIsViewEdit() {
+  protected boolean getIsViewEdit() {
     return this.isViewEditQuestion;
   }
 
-  private boolean getIsResponse() {
+  protected boolean getIsResponse() {
     return this.isResponseQuestion;
   }
 
-  private boolean getIsVewResponse() {
+  protected boolean getIsVewResponse() {
     return this.isViewResponseQuestion;
   }
 

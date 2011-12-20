@@ -61,7 +61,6 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
         @EventConfig(listeners = UIPoll.VoteAgainPollActionListener.class) 
     }
 )
-@SuppressWarnings("unused")
 public class UIPoll extends BasePollForm {
   private Poll     poll_;
 
@@ -184,7 +183,7 @@ public class UIPoll extends BasePollForm {
     return poll_;
   }
 
-  private boolean getIsEditPoll() {
+  protected boolean getIsEditPoll() {
     return isEditPoll;
   }
 
@@ -192,11 +191,11 @@ public class UIPoll extends BasePollForm {
     this.isEditPoll = isEditPoll;
   }
 
-  private boolean getCanViewEditMenu() {
+  protected boolean getCanViewEditMenu() {
     return isAdmin;
   }
 
-  private boolean isGuestPermission() throws Exception {
+  protected boolean isGuestPermission() throws Exception {
     if (poll_.getIsClosed())
       return true;
     if (Utils.isEmpty(userId))
@@ -218,7 +217,7 @@ public class UIPoll extends BasePollForm {
     return false;
   }
 
-  private String[] getInfoVote() throws Exception {
+  protected String[] getInfoVote() throws Exception {
     Poll poll = poll_;
     String[] voteNumber = poll.getVote();
     String[] userVotes = poll.getUserVote();
@@ -253,7 +252,7 @@ public class UIPoll extends BasePollForm {
   static public class VoteActionListener extends EventListener<UIPoll> {
     public void execute(Event<UIPoll> event) throws Exception {
       UIPoll topicPoll = event.getSource();
-      String values = StringUtils.EMPTY;
+      StringBuffer values = new StringBuffer();
       List<UIComponent> children = topicPoll.getChildren();
       topicPoll.poll_ = topicPoll.getPollService().getPoll(topicPoll.pollId);
       int maxOption = topicPoll.poll_.getOption().length;
@@ -264,7 +263,8 @@ public class UIPoll extends BasePollForm {
           if (child instanceof UIFormRadioBoxInput) {
             for (SelectItemOption<String> option : ((UIFormRadioBoxInput) child).getOptions()) {
               if (option.getValue().equalsIgnoreCase(((UIFormRadioBoxInput) child).getValue())) {
-                values = String.valueOf(i);
+                values.setLength(0);
+                values.append(String.valueOf(i));
                 if(i >= maxOption){
                   isFailed = true;
                 }
@@ -284,15 +284,15 @@ public class UIPoll extends BasePollForm {
                 isFailed = true;
                 break;
               }
-              values += ((values.length() > 0) ? org.exoplatform.poll.service.Utils.COLON : StringUtils.EMPTY) + String.valueOf(i);
+              values.append(((values.length() > 0) ? org.exoplatform.poll.service.Utils.COLON : StringUtils.EMPTY) + String.valueOf(i));
             }
             ++i;
           }
         }
       }
       if(!isFailed) {
-        if (!Utils.isEmpty(values)) {
-          Poll poll = org.exoplatform.poll.service.Utils.calculateVote(topicPoll.poll_, topicPoll.userId, values);
+        if (!Utils.isEmpty(values.toString())) {
+          Poll poll = org.exoplatform.poll.service.Utils.calculateVote(topicPoll.poll_, topicPoll.userId, values.toString());
           topicPoll.getPollService().savePoll(poll, false, true);
         } else {
           topicPoll.warning("UIPoll.msg.notCheck", false);

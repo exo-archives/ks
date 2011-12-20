@@ -54,7 +54,6 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
         @EventConfig(listeners = UIFAQSettingForm.SelectTabActionListener.class) 
     }
 )
-@SuppressWarnings( { "unused" })
 public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent {
   public static final String SELECT_CATEGORY_TAB    = "SelectCategoryTab";
 
@@ -78,7 +77,7 @@ public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent {
 
   private List<String>       categoriesId           = new ArrayList<String>();
 
-  private String             homeCategoryName       = "";
+  protected String           homeCategoryName       = "";
 
   public UIFAQSettingForm() throws Exception {
     faqService_ = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
@@ -111,7 +110,7 @@ public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent {
     return categoriesId;
   }
 
-  private boolean getIsSelected(int id) {
+  protected boolean getIsSelected(int id) {
     if (this.id_ == id)
       return true;
     return false;
@@ -127,7 +126,7 @@ public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent {
     withActions.getUIFormTextAreaInput(FIELD_TEMPLATE_TEXTARE).setValue(template);
   }
 
-  private List<Cate> getListCate() {
+  protected List<Cate> getListCate() {
     return this.listCate;
   }
 

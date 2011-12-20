@@ -134,8 +134,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 
   public final String        WATCHES_ITERATOR                   = "WatchChesPageIterator";
 
-  @SuppressWarnings("unused")
-  private String             tabId                              = "ForumUserProfile";
+  protected String           tabId                              = "ForumUserProfile";
 
   private String[]           permissionUser                     = null;
 
@@ -157,8 +156,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     return pcontainer.getPortalContainerInfo().getContainerName();
   }
 
-  @SuppressWarnings( { "unchecked" })
-  private void initForumOption() throws Exception {
+  protected void initForumOption() throws Exception {
     try {
       this.userProfile = getForumService().getUserSettingProfile(UserHelper.getCurrentUser());
     } catch (Exception e) {
@@ -338,7 +336,6 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     }
   }
 
-  @SuppressWarnings("unchecked")
   private void saveForumSubscription() throws Exception {
     List<String> cateIds = new ArrayList<String>();
     List<String> forumIds = new ArrayList<String>();
@@ -391,8 +388,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
     return calendar.getTime();
   }
 
-  @SuppressWarnings("unused")
-  private String getAvatarUrl() throws Exception {
+  protected String getAvatarUrl() throws Exception {
     return ForumSessionUtils.getUserAvatarURL(UserHelper.getCurrentUser(), this.getForumService());
   }
 

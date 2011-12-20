@@ -60,8 +60,8 @@ public class UIViewResultSearchUser extends UIForm implements UIPopupComponent {
     this.getChild(UIForumPageIterator.class).updatePageList(this.pageList);
   }
 
-  @SuppressWarnings( { "unused", "unchecked" })
-  private List<UserProfile> getListUserProfile() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<UserProfile> getListUserProfile() throws Exception {
     UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
     int page = pageIterator.getPageSelected();
     List<UserProfile> listUserProfile = pageList.getPage(page);

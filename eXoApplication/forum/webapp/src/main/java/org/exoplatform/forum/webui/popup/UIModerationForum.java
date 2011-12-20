@@ -57,7 +57,6 @@ import org.exoplatform.webui.event.Event.Phase;
       @EventConfig(listeners = UIModerationForum.CloseActionListener.class, phase=Phase.DECODE)
     }
 )
-@SuppressWarnings("unchecked")
 public class UIModerationForum extends BaseForumForm implements UIPopupComponent {
   private String[]            path            = new String[] {};
 
@@ -88,8 +87,7 @@ public class UIModerationForum extends BaseForumForm implements UIPopupComponent
     this.isReloadPortlet = isReloadPortlet;
   }
 
-  @SuppressWarnings("unused")
-  private String getTitleInHTMLCode(String s) {
+  protected String getTitleInHTMLCode(String s) {
     return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
   }
 
@@ -118,8 +116,8 @@ public class UIModerationForum extends BaseForumForm implements UIPopupComponent
     return isShowIter;
   }
 
-  @SuppressWarnings( { "unused" })
-  private List<ForumSearch> getListObject() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<ForumSearch> getListObject() throws Exception {
     try {
       list_ = getForumService().getJobWattingForModerator(getPath());
     } catch (Exception e) {

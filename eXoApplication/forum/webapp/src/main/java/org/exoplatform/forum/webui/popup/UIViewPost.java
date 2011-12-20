@@ -91,8 +91,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
     this.setActions(actions);
   }
 
-  @SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+  protected UserProfile getUserProfile() throws Exception {
     try {
       userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
     } catch (Exception e) {
@@ -121,8 +120,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
     return url;
   }
 
-  @SuppressWarnings("unused")
-  private String getFileSource(ForumAttachment attachment) throws Exception {
+  protected String getFileSource(ForumAttachment attachment) throws Exception {
     DownloadService dservice = getApplicationComponent(DownloadService.class);
     try {
       InputStream input = attachment.getInputStream();
@@ -137,8 +135,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
     this.post = post;
   }
 
-  @SuppressWarnings("unused")
-  private Post getPostView() throws Exception {
+  protected Post getPostView() throws Exception {
     return post;
   }
 

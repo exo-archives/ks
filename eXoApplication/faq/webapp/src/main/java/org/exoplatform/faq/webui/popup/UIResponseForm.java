@@ -222,15 +222,13 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
     addChild(checkShowAnswer_);
   }
 
-  @SuppressWarnings("unused")
-  private String render(String s) {
+  protected String render(String s) {
     Question question = new Question();
     question.setDetail(s);
     return renderHelper.renderQuestion(question);
   }
 
-  @SuppressWarnings("unused")
-  private String getValue(String id) {
+  protected String getValue(String id) {
     if (id.equals("QuestionTitle"))
       return questionContent;
     else
@@ -267,8 +265,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
     this.listRelationQuestion.addAll(listQuestionContent);
   }
 
-  @SuppressWarnings("unused")
-  private List<String> getListRelationQuestion() {
+  protected List<String> getListRelationQuestion() {
     return this.listRelationQuestion;
   }
 

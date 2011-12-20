@@ -65,8 +65,7 @@ public class ResultSearchCategory extends BaseUIForm implements UIPopupComponent
     addChild(UIAnswersPageIterator.class, null, LIST_RESULT_SEARCH);
   }
 
-  @SuppressWarnings("unused")
-  private List<Category> getListCategory() {
+  protected List<Category> getListCategory() {
     long pageSelected = pageIterator.getPageSelected();
     listCategory_ = new ArrayList<Category>();
     try {
@@ -89,8 +88,7 @@ public class ResultSearchCategory extends BaseUIForm implements UIPopupComponent
     }
   }
 
-  @SuppressWarnings("unused")
-  private long getTotalpages(String pageInteratorId) {
+  protected long getTotalpages(String pageInteratorId) {
     UIAnswersPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH);
     try {
       return pageIterator.getInfoPage().get(3);

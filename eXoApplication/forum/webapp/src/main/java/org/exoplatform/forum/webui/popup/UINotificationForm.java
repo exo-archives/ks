@@ -145,8 +145,7 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
     return enableHeaderSubject;
   }
 
-  @SuppressWarnings("unused")
-  private boolean tabIsSelected(int tabId) {
+  protected boolean tabIsSelected(int tabId) {
     if (this.tabId == tabId)
       return true;
     else

@@ -51,7 +51,6 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
       @EventConfig(listeners = UIBBCodeManagerForm.CloseActionListener.class, phase = Phase.DECODE)
     }
 )
-@SuppressWarnings("unused")
 public class UIBBCodeManagerForm extends BaseForumForm implements UIPopupComponent {
   private BBCodeService bbCodeService;
 
@@ -82,7 +81,6 @@ public class UIBBCodeManagerForm extends BaseForumForm implements UIPopupCompone
     return id.contains("=") ? id.replaceFirst("=", "opt") : id;
   }
 
-  @SuppressWarnings("unchecked")
   public void initCheckBoxActiveBBCode() throws Exception {
     for (BBCode bbc : listBBCode) {
       String id = getIdCheckBox(bbc.getId());
@@ -95,7 +93,7 @@ public class UIBBCodeManagerForm extends BaseForumForm implements UIPopupCompone
     }
   }
 
-  private List<BBCode> getListBBcode() throws Exception {
+  protected List<BBCode> getListBBcode() throws Exception {
     return listBBCode;
   }
 

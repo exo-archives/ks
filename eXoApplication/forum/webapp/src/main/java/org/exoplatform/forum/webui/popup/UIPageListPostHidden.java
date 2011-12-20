@@ -74,8 +74,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
   public void deActivate() throws Exception {
   }
 
-  @SuppressWarnings("unused")
-  private String getTitleInHTMLCode(String s) {
+  protected String getTitleInHTMLCode(String s) {
     return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
   }
 
@@ -85,8 +84,8 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
     this.topicId = topicId;
   }
 
-  @SuppressWarnings( { "unchecked", "unused" })
-  private List<Post> getPosts() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<Post> getPosts() throws Exception {
     pageList = forumService.getPosts(this.categoryId, this.forumId, this.topicId, "true", "true", ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR);
     pageList.setPageSize(6);
     maxPage = pageList.getAvailablePage();

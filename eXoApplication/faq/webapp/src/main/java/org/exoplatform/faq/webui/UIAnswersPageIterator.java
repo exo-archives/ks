@@ -56,8 +56,7 @@ public class UIAnswersPageIterator extends UIContainer {
     beginTabPage = 0;
   }
 
-  @SuppressWarnings("unused")
-  private List<String> getTotalpage() throws Exception {
+  protected List<String> getTotalpage() throws Exception {
     int max_Page = 1;
     if (pageList != null)
       max_Page = (int) pageList.getAvailablePage();

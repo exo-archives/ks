@@ -24,7 +24,6 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.rendering.context.MarkupContextManager;
-import org.exoplatform.wiki.rendering.impl.DefaultWikiModel;
 import org.exoplatform.wiki.service.WikiContext;
 import org.exoplatform.wiki.service.WikiPageParams;
 import org.exoplatform.wiki.tree.TreeNode;

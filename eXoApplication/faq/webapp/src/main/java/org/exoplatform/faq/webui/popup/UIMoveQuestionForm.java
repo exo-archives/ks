@@ -51,11 +51,10 @@ import org.exoplatform.webui.event.EventListener;
         @EventConfig(listeners = UIMoveQuestionForm.CancelActionListener.class) 
     }
 )
-@SuppressWarnings("unused")
 public class UIMoveQuestionForm extends BaseUIFAQForm implements UIPopupComponent {
   private String            questionId_      = "";
 
-  private String            homeCategoryName = "";
+  protected String          homeCategoryName = "";
 
   private String            categoryId_;
 
@@ -81,7 +80,7 @@ public class UIMoveQuestionForm extends BaseUIFAQForm implements UIPopupComponen
   public void deActivate() throws Exception {
   }
 
-  private List<Cate> getListCate() {
+  protected List<Cate> getListCate() {
     return this.listCate;
   }
 

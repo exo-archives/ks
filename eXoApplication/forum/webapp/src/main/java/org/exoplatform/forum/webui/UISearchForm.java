@@ -187,8 +187,7 @@ public class UISearchForm extends BaseForumForm implements UISelector {
     setActions(new String[] { "Search", "ResetField", "Cancel" });
   }
 
-  @SuppressWarnings("unused")
-  private void setLocale() throws Exception {
+  protected void setLocale() throws Exception {
     PortalRequestContext portalContext = Util.getPortalRequestContext();
     Locale locale = portalContext.getLocale();
     if (this.locale == null || !locale.getLanguage().equals(this.locale.getLanguage())) {

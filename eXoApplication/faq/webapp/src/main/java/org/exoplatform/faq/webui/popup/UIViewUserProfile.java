@@ -50,8 +50,7 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
   public UIViewUserProfile() throws Exception {
   }
 
-  @SuppressWarnings("unused")
-  private String getAvatarUrl(String userId) throws Exception {
+  protected String getAvatarUrl(String userId) throws Exception {
     return FAQUtils.getUserAvatar(userId);
   }
 
@@ -63,8 +62,7 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
     return user_;
   }
 
-  @SuppressWarnings("unused")
-  private String[] getLabelProfile() throws Exception {
+  protected String[] getLabelProfile() throws Exception {
     return new String[] { getLabel("userName"), getLabel("firstName"), getLabel("lastName"), getLabel("birthDay"), getLabel("gender"), 
         getLabel("email"), getLabel("jobTitle"), getLabel("location"), getLabel("homePhone"), getLabel("workPhone"), getLabel("website")};
   }
@@ -92,5 +90,4 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction);
     }
   }
-
 }

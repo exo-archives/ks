@@ -76,8 +76,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
   public void deActivate() throws Exception {
   }
 
-  @SuppressWarnings("unused")
-  private String getTitleInHTMLCode(String s) {
+  protected String getTitleInHTMLCode(String s) {
     return TransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
   }
 
@@ -88,8 +87,8 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
     this.isApprove = isApprove;
   }
 
-  @SuppressWarnings( { "unchecked", "unused" })
-  private List<Post> getPosts() throws Exception {
+  @SuppressWarnings("unchecked")
+  protected List<Post> getPosts() throws Exception {
     String app = "", censer = "true";
     if (isApprove) {
       app = "false";

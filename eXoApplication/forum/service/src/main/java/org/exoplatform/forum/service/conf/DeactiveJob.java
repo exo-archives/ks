@@ -25,7 +25,6 @@ import javax.jcr.NodeIterator;
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.ks.common.job.MultiTenancyJob;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.quartz.JobDataMap;

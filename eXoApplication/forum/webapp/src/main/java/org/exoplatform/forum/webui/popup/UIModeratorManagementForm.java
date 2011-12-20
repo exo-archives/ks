@@ -85,7 +85,6 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
       @EventConfig(listeners = UIModeratorManagementForm.CancelActionListener.class, phase=Phase.DECODE)
     }
 )
-@SuppressWarnings( { "unused", "unchecked", "deprecation" })
 public class UIModeratorManagementForm extends BaseForumForm implements UIPopupComponent {
   private List<UserProfile>   userProfiles                       = new ArrayList<UserProfile>();
 
@@ -93,7 +92,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 
   private String[]            titleUser                          = null;
 
-  private JCRPageList         userPageList;
+  protected JCRPageList       userPageList;
 
   private boolean             isEdit                             = false;
 
@@ -195,7 +194,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     return getForumService().isAdminRole(userId);
   }
 
-  private String getIsBanned(UserProfile userProfile) throws Exception {
+  protected String getIsBanned(UserProfile userProfile) throws Exception {
     if (userProfile.getBanUntil() > 0) {
       Calendar calendar = CommonUtils.getGreenwichMeanTime();
       if (calendar.getTimeInMillis() >= userProfile.getBanUntil()) {
@@ -206,6 +205,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     return "true";
   }
 
+  @SuppressWarnings("unchecked")
   private void setListUserProfile() throws Exception {
     if (valueSearch == null || valueSearch.trim().length() < 1) {
       int page = pageIterator.getPageSelected();
@@ -218,7 +218,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     }
   }
 
-  private List<UserProfile> getListProFileUser() throws Exception {
+  protected List<UserProfile> getListProFileUser() throws Exception {
     if (!isViewSearchUser) {
       this.setListUserProfile();
     } else {
@@ -305,7 +305,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     return listId;
   }
 
-  private String getCategoryId(String str) {
+  protected String getCategoryId(String str) {
     try {
       str = str.substring((str.lastIndexOf('(') + 1), str.lastIndexOf('/'));
     } catch (Exception e) {
@@ -324,7 +324,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     return list;
   }
 
-  private boolean getIsEdit() {
+  protected boolean getIsEdit() {
     return this.isEdit;
   }
 
@@ -605,7 +605,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
     }
   }
 
-  private List<ForumLinkData> getForumLinks() throws Exception {
+  protected List<ForumLinkData> getForumLinks() throws Exception {
     return this.forumLinks;
   }
 

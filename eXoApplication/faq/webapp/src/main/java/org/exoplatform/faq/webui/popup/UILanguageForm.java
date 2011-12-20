@@ -84,18 +84,15 @@ public class UILanguageForm extends BaseUIForm implements UIPopupComponent {
     this.LANGUAGE_SELECT.addAll(language);
   }
 
-  @SuppressWarnings("unused")
-  private List<String> getListLanguage() {
+  protected List<String> getListLanguage() {
     return this.LIST_LANGUAGE;
   }
 
-  @SuppressWarnings("unused")
-  private String[] getLocaledLanguage() {
+  protected String[] getLocaledLanguage() {
     return this.listLocaldName.toArray(new String[] {});
   }
 
-  @SuppressWarnings("unused")
-  private List<String> getListSelected() {
+  protected List<String> getListSelected() {
     return this.LANGUAGE_SELECT;
   }
 

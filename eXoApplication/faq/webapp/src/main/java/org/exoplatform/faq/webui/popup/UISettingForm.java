@@ -73,7 +73,6 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
         @EventConfig(listeners = UISettingForm.CancelActionListener.class) 
     }
 )
-@SuppressWarnings("unused")
 public class UISettingForm extends BaseUIForm implements UIPopupComponent {
   public final String         DISPLAY_TAB                      = "DisplayTab";
 
@@ -131,9 +130,9 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
 
   private List<String>        idForumName                      = new ArrayList<String>();
 
-  private boolean             isResetMail                      = false;
+  protected boolean           isResetMail                      = false;
 
-  private int                 indexOfTab                       = 0;
+  protected int               indexOfTab                       = 0;
 
   private String              avatarUrl;
 
@@ -320,7 +319,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent {
   public void deActivate() throws Exception {
   }
 
-  private String getSelectedTab() {
+  protected String getSelectedTab() {
     return tabSelected;
   }
 
