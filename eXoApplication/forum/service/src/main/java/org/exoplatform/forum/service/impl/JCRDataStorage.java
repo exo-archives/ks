@@ -2832,16 +2832,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     try {
       Node categoryHome = getCategoryHome(sProvider);
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer pathQuery = new StringBuffer();
-      pathQuery.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,").append(EXO_POST).append(")[@exo:isFirstPost='false' and @exo:owner='").append(userName);
-      if (isMod)
-        pathQuery.append("' and ((@exo:userPrivate='").append(userId).append("') or (@exo:userPrivate='exoUserPri'))]");
-      else
-        pathQuery.append("' and @exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true' and ((@exo:userPrivate='").append(userId).append("') or (@exo:userPrivate='exoUserPri'))]");
+      StringBuffer pathQuery = new StringBuffer(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,")
+                                   .append(EXO_POST).append(")[@").append(EXO_IS_FIRST_POST).append("='false' and @")
+                                   .append(EXO_OWNER).append("='").append(userName).append("'");
+      if (!isMod) {
+        pathQuery.append(" and @").append(EXO_IS_APPROVED).append("='true' and @").append(EXO_IS_HIDDEN)
+                 .append("='false' and @").append(EXO_IS_ACTIVE_BY_TOPIC).append("='true' and @").append(EXO_IS_WAITING).append("='false'");
+      }
+      pathQuery.append(" and ((@").append(EXO_USER_PRIVATE).append("='").append(userId).append("') or (@")
+               .append(EXO_USER_PRIVATE).append("='").append(EXO_USER_PRI).append("'))]");
       if (!Utils.isEmpty(strOrderBy)) {
-        pathQuery.append("order by @exo:").append(strOrderBy);
-        if (strOrderBy.indexOf("createdDate") < 0) {
-          pathQuery.append(",@exo:createdDate descending");
+        pathQuery.append(" order by @").append(strOrderBy);
+        if (strOrderBy.indexOf(EXO_CREATED_DATE) < 0) {
+          pathQuery.append(", @").append(EXO_CREATED_DATE).append(Utils.DESCENDING);
         }
       }
       Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
@@ -3638,6 +3641,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       if (srcTopicNode.hasProperty(EXO_IS_MODERATE_POST)) {
         srcModeratePost = srcTopicNode.getProperty(EXO_IS_MODERATE_POST).getBoolean();
       }
+      PropertyReader destTopicReader = new PropertyReader(destTopicNode);
+      boolean isActiveByTopic = destTopicReader.bool(EXO_IS_APPROVED) && destTopicReader.bool(EXO_IS_ACTIVE) 
+                                && destTopicReader.bool(EXO_IS_ACTIVE_BY_FORUM) && !destTopicReader.bool(EXO_IS_CLOSED)
+                                && !destTopicReader.bool(EXO_IS_WAITING);
       boolean unAproved = false;
       String path;
       for (int i = 0; i < totalpost; ++i) {
@@ -3662,6 +3669,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
             unAproved = true;
           }
         }
+        postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, isActiveByTopic);
       }
 
       // set destTopicNode
@@ -3780,10 +3788,15 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       NodeIterator iter = srcTopicNode.getNodes();
       List<Post> posts = new ArrayList<Post>();
       Post post;
+      boolean isTopicWaiting = new PropertyReader(srcTopicNode).bool(EXO_IS_WAITING);
       while (iter.hasNext()) {
         post = new Post();
         Node node = iter.nextNode();
         if (node.isNodeType(EXO_POST)) {
+          if(new PropertyReader(node).bool(EXO_IS_FIRST_POST)){
+            node.setProperty(EXO_IS_WAITING, isTopicWaiting);
+            node.save();
+          }
           post.setPath(node.getPath());
           post.setCreatedDate(node.getProperty(EXO_CREATED_DATE).getDate().getTime());
           posts.add(post);

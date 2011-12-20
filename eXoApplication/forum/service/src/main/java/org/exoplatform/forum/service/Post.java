@@ -71,7 +71,7 @@ public class Post {
   private List<ForumAttachment> attachments     = null;
 
   public Post() {
-    userPrivate = new String[] { "exoUserPri" };
+    userPrivate = new String[] { ForumNodeTypes.EXO_USER_PRI };
   }
 
   public String getId() {

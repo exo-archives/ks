@@ -72,7 +72,7 @@ public class UIPageListPostByUser extends UIContainer {
 
   private String       userName           = ForumUtils.EMPTY_STR;
 
-  private String       strOrderBy         = "createdDate descending";
+  private String       strOrderBy         = Utils.EXO_CREATED_DATE.concat(Utils.DESCENDING);
 
   private boolean      hasEnableIPLogging = true;
 
@@ -101,7 +101,7 @@ public class UIPageListPostByUser extends UIContainer {
 
   public void setUserName(String userId) {
     this.userName = userId;
-    strOrderBy = "createdDate descending";
+    strOrderBy = Utils.EXO_CREATED_DATE.concat(Utils.DESCENDING);
   }
 
   protected String getTitleInHTMLCode(String s) {
@@ -119,7 +119,7 @@ public class UIPageListPostByUser extends UIContainer {
       JCRPageList pageList = forumService.getPagePostByUser(this.userName, this.userProfile.getUserId(), isMod, strOrderBy);
       forumPageIterator.updatePageList(pageList);
       if (pageList != null)
-        pageList.setPageSize(6);
+        pageList.setPageSize(10);
       posts = pageList.getPage(forumPageIterator.getPageSelected());
       forumPageIterator.setSelectPage(pageList.getCurrentPage());
     } catch (Exception e) {

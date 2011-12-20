@@ -1,9 +1,10 @@
-<% 
-	import org.exoplatform.forum.webui.UIForumPageIterator ;
+<%
+	import org.exoplatform.forum.service.Utils;
 	import org.exoplatform.forum.service.Post ; 
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.TimeConvertUtils;
 	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.webui.UIForumPageIterator ;
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	List posts = uicomponent.getPostsByUser() ;
 	boolean isAdmin = false;
@@ -27,14 +28,14 @@
 							<tr>
 								<th style="width:40px"></th>
 								<th style="width:100%;">
-									<div onclick="<%=uicomponent.event("SetOrderBy","name");%>">
+									<div onclick="<%=uicomponent.event("SetOrderBy", Utils.EXO_NAME);%>">
 										<div class="DownArrow1Icon"  style="cursor:pointer">
 											<%=_ctx.appRes("UIPageListPostByUser.label.PostName");%>
 									</div>
 									</div>
 								</th>
 								<th style="width:130px">
-									<div onclick="<%=uicomponent.event("SetOrderBy","createdDate");%>">
+									<div onclick="<%=uicomponent.event("SetOrderBy", Utils.EXO_CREATED_DATE);%>">
 										<div class="DownArrow1Icon" style="cursor:pointer">
 											<%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%>
 										</div>
