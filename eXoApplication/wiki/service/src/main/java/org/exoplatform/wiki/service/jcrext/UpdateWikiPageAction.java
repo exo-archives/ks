@@ -16,8 +16,10 @@
  */
 package org.exoplatform.wiki.service.jcrext;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -26,8 +28,6 @@ import org.apache.commons.chain.Context;
 import org.exoplatform.services.command.action.Action;
 import org.exoplatform.services.ext.action.InvocationContext;
 import org.exoplatform.services.jcr.observation.ExtendedEvent;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
 
@@ -39,7 +39,7 @@ import org.exoplatform.wiki.mow.api.WikiNodeType;
  */
 public class UpdateWikiPageAction implements Action {
   
-  private static final Log      log               = ExoLogger.getLogger(UpdateWikiPageAction.class);
+  List<String> unSupportChangePageInfo = Arrays.asList(new String[] { WikiNodeType.Definition.WATCHER });
   
   @Override
   public boolean execute(Context context) throws Exception {
@@ -66,8 +66,13 @@ public class UpdateWikiPageAction implements Action {
       wikiPageNode.setProperty(WikiNodeType.Definition.CREATED_DATE, calendar);
     }
     
-    wikiPageNode.setProperty(WikiNodeType.Definition.UPDATED_DATE, calendar);
-    wikiPageNode.setProperty(WikiNodeType.Definition.AUTHOR, userName);
+    if ((item instanceof Property)) {
+      if (((Property) item).getParent().isNodeType(WikiNodeType.WIKI_PAGE) && 
+            !unSupportChangePageInfo.contains(((Property) item).getName())) {
+        wikiPageNode.setProperty(WikiNodeType.Definition.UPDATED_DATE, calendar);
+        wikiPageNode.setProperty(WikiNodeType.Definition.AUTHOR, userName);
+      }
+    }
     return false;
   }
 }

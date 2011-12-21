@@ -265,7 +265,7 @@
                 <value>
                   <object type="org.exoplatform.services.jcr.impl.ext.action.ActionConfiguration">
                     <field  name="eventTypes"><string>addNode,changeProperty</string></field>
-                    <field  name="nodeTypes"><string>wiki:page,wiki:content,wiki:attachment</string></field>
+                    <field  name="nodeTypes"><string>wiki:page,wiki:attachment</string></field>
                     <field  name="actionClassName"><string>org.exoplatform.wiki.service.jcrext.UpdateWikiPageAction</string></field>
                   </object>
                 </value>
