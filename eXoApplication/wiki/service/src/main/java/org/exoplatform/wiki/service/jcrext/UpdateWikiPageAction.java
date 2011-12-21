@@ -64,6 +64,8 @@ public class UpdateWikiPageAction implements Action {
     
     if (eventCode == ExtendedEvent.NODE_ADDED && item instanceof Node && ((Node) item).isNodeType(WikiNodeType.WIKI_PAGE)) {
       wikiPageNode.setProperty(WikiNodeType.Definition.CREATED_DATE, calendar);
+      wikiPageNode.setProperty(WikiNodeType.Definition.UPDATED_DATE, calendar);
+      wikiPageNode.setProperty(WikiNodeType.Definition.AUTHOR, userName);
     }
     
     if ((item instanceof Property)) {

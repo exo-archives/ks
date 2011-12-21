@@ -18,7 +18,6 @@ package org.exoplatform.wiki.mow.core.api;
 
 import java.util.Date;
 
-import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.wiki.mow.api.Model;
 import org.exoplatform.wiki.mow.api.WikiType;
 import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
@@ -43,29 +42,9 @@ public class TestJCRExtActions extends AbstractMOWTestcase {
     wikipage.setName("UpdateWikiPageAction-001");
     wikiHomePage.addWikiPage(wikipage);
     wikipage.setOwner("Root") ;
-    assertNotNull(wikipage.getAuthor()) ;
-    assertEquals(ConversationState.getCurrent().getIdentity().getUserId(), wikipage.getAuthor());
-    assertNotNull(wikipage.getUpdatedDate()) ;
-    Date d1 = wikipage.getUpdatedDate();
-    //update UpdateWikiPageAction-001 page
-    PageImpl addedPage = wikiHomePage.getWikiPage("UpdateWikiPageAction-001") ;
-    assertNotNull(addedPage);
-    addedPage.setOwner("Demo") ;
-    model.save();
-    Date d2 = addedPage.getUpdatedDate();
-    //d2 must after d1 because owner property is modified
-   /* assertTrue(d2.after(d1));
-    //only get UpdateWikiPageAction-001 page and don't modify any thing
-    PageImpl editedPage = wikiHomePage.getWikiPage("UpdateWikiPageAction-001") ;
-    assertNotNull(editedPage) ;
-    assertEquals(editedPage.getOwner(), "Demo") ;  
-    model.save();
-    assertNotNull(editedPage.getAuthor()) ;
-    assertEquals("root", editedPage.getAuthor());
-    assertNotNull(editedPage.getUpdatedDate()) ;
-    Date d3 = editedPage.getUpdatedDate();
-    //d3 must equals d2 because no property is modified
-    assertTrue(d3.equals(d2));*/
+    assertNotNull(wikipage.getOwner()) ;
+    Date d1 = wikipage.getCreatedDate();
+    assertNotNull(d1) ;
   }
   
 }
