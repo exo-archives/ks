@@ -5879,10 +5879,10 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     List<Watch> listWatches = new ArrayList<Watch>();
     try {
       Node categoryHome = getCategoryHome(sProvider);
-      String rootPath = categoryHome.getPath();
+      StringBuffer rootPath = new StringBuffer(categoryHome.getPath());
       QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       StringBuffer queryString = new StringBuffer();
-      queryString.append(JCR_ROOT).append(rootPath).append("//element(*,").append(EXO_FORUM_WATCHING).append(")[(@").append(EXO_USER_WATCHING).append("='").append(userId).append("') or (@").append(EXO_RSS_WATCHING).append("='").append(userId).append("')]");
+      queryString.append(JCR_ROOT).append(rootPath.toString()).append("//element(*,").append(EXO_FORUM_WATCHING).append(")[(@").append(EXO_USER_WATCHING).append("='").append(userId).append("') or (@").append(EXO_RSS_WATCHING).append("='").append(userId).append("')]");
 
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();
@@ -5902,7 +5902,8 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
         users = reader.list(EXO_USER_WATCHING, new ArrayList<String>());
         emails = reader.strings(EXO_EMAIL_WATCHING, new String[] {});
         RSSUsers = reader.list(EXO_RSS_WATCHING, new ArrayList<String>());
-        rootPath = categoryHome.getPath();
+        rootPath.setLength(0);
+        rootPath.append(categoryHome.getPath());
         path = node.getPath();
         pathName.setLength(0);
         if (node.isNodeType(Utils.TYPE_CATEGORY)) {
@@ -5913,12 +5914,13 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
           typeNode = Utils.TYPE_TOPIC;
         }
         
-        for (String str : (path.replace(rootPath + "/", "")).split("/")) {
-          rootPath += "/" + str;
+        for (String str : (path.replace(rootPath.toString() + "/", "")).split("/")) {
+          rootPath.append("/");
+          rootPath.append(str);
           if (!Utils.isEmpty(pathName.toString())) {
             pathName.append(" > ");
           }
-          pathName.append(((Node) categoryHome.getSession().getItem(rootPath)).getProperty(EXO_NAME).getString());
+          pathName.append(((Node) categoryHome.getSession().getItem(rootPath.toString())).getProperty(EXO_NAME).getString());
         }
         watch = new Watch();
         watch.setId(node.getName());
