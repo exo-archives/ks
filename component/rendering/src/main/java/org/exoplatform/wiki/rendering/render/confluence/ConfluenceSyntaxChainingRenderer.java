@@ -16,6 +16,9 @@
  */
 package org.exoplatform.wiki.rendering.render.confluence;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -131,7 +134,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
     }
 
     if (parameters.size() > 0) {
-      printParameters(parameters, true);
+      printBeginParameters(parameters, true);
     }
 
     print("{group}");
@@ -245,12 +248,12 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
         // this.previousFormatParameters = null;
       } else if (!this.previousFormatParameters.equals(parameters)) {
         this.previousFormatParameters = null;
-        printParameters(parameters, false);
+        printBeginParameters(parameters, false);
       } else {
         this.previousFormatParameters = null;
       }
     } else if (this.previousFormatParameters == null) {
-      printParameters(parameters, false);
+      printBeginParameters(parameters, false);
     }
 
     switch (format) {
@@ -347,7 +350,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
   @Override
   public void beginParagraph(Map<String, String> parameters) {
     printEmptyLine();
-    printParameters(parameters);
+    printBeginParameters(parameters);
   }
 
   /**
@@ -430,8 +433,8 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
   @Override
   public void beginHeader(HeaderLevel level, String id, Map<String, String> parameters) {
     printEmptyLine();
-    printParameters(parameters);
     print("h" + level.getAsInt() + ". ");
+    printBeginParameters(parameters, false);
   }
 
   /**
@@ -442,6 +445,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
    */
   @Override
   public void endHeader(HeaderLevel level, String id, Map<String, String> parameters) {
+    printEndParameters(parameters, false);
   }
 
   /**
@@ -493,7 +497,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
     } else {
       this.listStyle.append("#");
     }
-    printParameters(parameters);
+    printBeginParameters(parameters);
   }
 
   /**
@@ -590,7 +594,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
   @Override
   public void onHorizontalLine(Map<String, String> parameters) {
     printEmptyLine();
-    printParameters(parameters);
+    printBeginParameters(parameters);
     print("----");
   }
 
@@ -604,7 +608,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
     if (!isInline) {
       printEmptyLine();
     }
-    printParameters(parameters);
+    printBeginParameters(parameters);
 
     print("{{{");
     getConfluencePrinter().printVerbatimContent(protectedString);
@@ -633,7 +637,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
     } else {
       print("\n");
     }
-    printParameters(parameters);
+    printBeginParameters(parameters);
   }
 
   /**
@@ -714,7 +718,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
     }
 
     if (!parameters.isEmpty()) {
-      printParameters(parameters);
+      printBeginParameters(parameters);
     }
   }
 
@@ -751,7 +755,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
   public void beginTable(Map<String, String> parameters) {
     printEmptyLine();
     if (!parameters.isEmpty()) {
-      printParameters(parameters);
+      printBeginParameters(parameters);
     }
   }
 
@@ -763,7 +767,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
   @Override
   public void beginTableCell(Map<String, String> parameters) {
     print("|");
-    printParameters(parameters, false);
+    printBeginParameters(parameters, false);
   }
 
   /**
@@ -774,7 +778,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
   @Override
   public void beginTableHeadCell(Map<String, String> parameters) {
     print("||");
-    printParameters(parameters, false);
+    printBeginParameters(parameters, false);
   }
 
   /**
@@ -788,7 +792,7 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
       print("\n");
     }
 
-    printParameters(parameters, false);
+    printBeginParameters(parameters, false);
   }
 
   /**
@@ -832,11 +836,35 @@ public class ConfluenceSyntaxChainingRenderer extends AbstractChainingPrintRende
     }
   }
 
-  protected void printParameters(Map<String, String> parameters) {
-    printParameters(parameters, true);
+  protected void printBeginParameters(Map<String, String> parameters) {
+    printBeginParameters(parameters, true);
   }
-
-  protected void printParameters(Map<String, String> parameters, boolean newLine) {
+  
+  protected void printEndParameters(Map<String, String> parameters) {
+    printEndParameters(parameters, true);
+  }
+  
+  protected void printEndParameters(Map<String, String> parameters, boolean newLine) {
+    StringBuffer parametersStr = new StringBuffer();
+    List<Map.Entry<String, String>> list = new LinkedList<Map.Entry<String,String>>(parameters.entrySet());
+    Collections.reverse(list);
+    for (Map.Entry<String, String> entry : list) {
+      String value = entry.getValue();
+      String key = entry.getKey();
+      if (key != null && value != null) {
+        if ("style".equals(key))
+          if (!newLine) {
+            parametersStr.append("{span}");
+          }
+          else {
+            parametersStr.append("{div}");
+          }
+      }
+    }
+    print(parametersStr.toString());
+  }
+  
+  protected void printBeginParameters(Map<String, String> parameters, boolean newLine) {
     StringBuffer parametersStr = new StringBuffer();
     for (Map.Entry<String, String> entry : parameters.entrySet()) {
       String value = entry.getValue();
