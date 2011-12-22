@@ -425,7 +425,7 @@
                                     <table class="DisablePrint">
                                       <tr>
                                         <!-- action translation question -->
-                                        <td style="white-space:nowrap;font-weight:bold;text-align:right;padding-left:5px;">
+                                        <td style="font-weight:bold;text-align:right;padding-left:5px;">
                                           <%
                                             int countLanguage = 2;
                                             for(String quesLanguage in listQuestLanguage) {
