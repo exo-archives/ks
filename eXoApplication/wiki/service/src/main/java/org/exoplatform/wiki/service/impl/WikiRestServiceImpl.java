@@ -426,6 +426,7 @@ public class WikiRestServiceImpl implements WikiRestService, ResourceContainer {
                              @QueryParam("wikiOwner") String wikiOwner) throws Exception {
     try {
       WikiSearchData data = new WikiSearchData(null, keyword.toLowerCase(), null, wikiType, wikiOwner);
+      data.setLimit(10);
       List<TitleSearchResult> result = wikiService.searchDataByTitle(data);
       return Response.ok(new BeanToJsons(result), MediaType.APPLICATION_JSON)
                      .cacheControl(cc)

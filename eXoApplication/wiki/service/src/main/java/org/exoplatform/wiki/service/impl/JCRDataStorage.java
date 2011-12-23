@@ -3,6 +3,8 @@ package org.exoplatform.wiki.service.impl;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -19,9 +21,11 @@ import javax.jcr.query.RowIterator;
 import org.chromattic.api.ChromatticSession;
 import org.chromattic.common.IO;
 import org.chromattic.core.api.ChromatticSessionImpl;
+import org.chromattic.core.jcr.SessionWrapper;
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.configuration.ConfigurationManager;
+import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.wiki.mow.api.WikiNodeType;
@@ -192,29 +196,59 @@ public class JCRDataStorage implements DataStorage{
   
   public List<TitleSearchResult> searchDataByTitle(ChromatticSession session, WikiSearchData data) throws Exception {
     List<TitleSearchResult> resultList = new ArrayList<TitleSearchResult>();
-    searchDataByTitle(session, data, resultList, true);
-    searchDataByTitle(session, data, resultList, false);
+    SessionWrapper sessionWrapper = ((ChromatticSessionImpl) session).getDomainSession().getSessionWrapper();
+    int limit = data.getLimit();
+    QueryImpl q = (QueryImpl) sessionWrapper.createQuery(data.getStatementForTitle(true));
+    searchDataByTitle(q, resultList, limit);
+    if (limit == 0 || (limit = limit - resultList.size()) > 0) {
+      q = (QueryImpl) sessionWrapper.createQuery(data.getStatementForTitle(false));
+      searchDataByTitle(q, resultList, limit);
+    }
+    Collections.sort(resultList, new SortComparatorDESC());
     return resultList;
-  }  
-  
-  private void searchDataByTitle(ChromatticSession session,
-                                 WikiSearchData data,
-                                 List<TitleSearchResult> resultList,
-                                 boolean onlyHomePages) throws Exception {
-    String statement = data.getStatementForTitle(onlyHomePages);
-    Query q = ((ChromatticSessionImpl)session).getDomainSession().getSessionWrapper().createQuery(statement);
-    QueryResult result = q.execute();
-    RowIterator iter = result.getRows();
-    while (iter.hasNext()) {
-      try {
-        TitleSearchResult iterResult = getTitleSearchResult(iter.nextRow());
-        if (iterResult != null) {
-          resultList.add(iterResult);
+  }
+
+  private void searchDataByTitle(QueryImpl q, List<TitleSearchResult> resultList, int numberItem) throws Exception {
+    RowIterator iter;
+    // no limit
+    if (numberItem == 0) {
+      iter = q.execute().getRows();
+      while (iter.hasNext()) {
+        addTitleSearchResult(iter.nextRow(), resultList);
+      }
+    } else {
+      // limit numberItem
+      int offset = 0, count = 0, limit = 0;
+      while (count < numberItem) {
+        q.setOffset(offset);
+        limit = numberItem + offset;
+        q.setLimit(limit);
+        iter = q.execute().getRows();
+        if (iter.getSize() <= 0) {
+          break;
         }
-      } catch (Exception e) {
-        log.debug("Failed to search date by title", e);
+        while (iter.hasNext()) {
+          count += addTitleSearchResult(iter.nextRow(), resultList);
+          if (count == numberItem) {
+            break;
+          }
+        }
+        offset = limit;
       }
     }
+  }
+
+  private int addTitleSearchResult(Row row, List<TitleSearchResult> resultList) throws Exception {
+    try {
+      TitleSearchResult iterResult = getTitleSearchResult(row);
+      if (iterResult != null) {
+        resultList.add(iterResult);
+        return 1;
+      }
+    } catch (Exception e) {
+      log.warn(String.format("Failed to add item %s ", row.toString()), e);
+    }
+    return 0;
   }
  
   private boolean isContains(List<SearchResult> list, SearchResult result) throws Exception {
@@ -292,5 +326,11 @@ public class JCRDataStorage implements DataStorage{
                                                            null,
                                                            description);
     return result;
+  }
+  
+  static private class SortComparatorDESC implements Comparator<TitleSearchResult> {
+    public int compare(TitleSearchResult titleSearchResult1, TitleSearchResult titleSearchResult2) {
+      return titleSearchResult2.getType().compareTo(titleSearchResult1.getType());
+    }
   }
 }

@@ -50,6 +50,8 @@ public class SearchData {
 
   public String jcrQueryPath;
   
+  public int limit = 0;
+  
   public static final String ALL_PATH    = "%/";
 
   protected static String    PORTAL_PATH = "/exo:applications/"
@@ -146,6 +148,14 @@ public class SearchData {
     this.jcrQueryPath = jcrQueryPath;
   }
   
+  public int getLimit() {
+    return limit;
+  }
+
+  public void setLimit(int limit) {
+    this.limit = limit;
+  }
+
   public String getStatement() {
     return null;
   }

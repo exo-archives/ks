@@ -79,7 +79,7 @@ public class WikiSearchData extends SearchData {
              .append("LOWER(title) LIKE '%")
              .append(title)
              .append("%' ")
-             .append("ORDER BY jcr:primaryType DESC, jcr:score DESC");
+             .append("ORDER BY jcr:score DESC");
     return statement.toString();
   }
 
