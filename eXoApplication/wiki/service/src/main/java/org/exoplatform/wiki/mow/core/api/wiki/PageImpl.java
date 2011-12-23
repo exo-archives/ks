@@ -18,12 +18,15 @@ package org.exoplatform.wiki.mow.core.api.wiki;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
@@ -304,6 +307,7 @@ public abstract class PageImpl extends NTFolder implements Page {
         atts.add(attachment);
       }
     }
+    Collections.sort(atts);
     return atts;
   }
   
@@ -341,13 +345,18 @@ public abstract class PageImpl extends NTFolder implements Page {
   protected abstract Map<String, PageImpl> getChildrenContainer();
   
   public Map<String, PageImpl> getChildPages() throws Exception {
-    Map<String, PageImpl> result = new HashMap<String, PageImpl>();
-    Iterator<Entry<String, PageImpl>> iter = getChildrenContainer().entrySet().iterator();
-    while (iter.hasNext()) {
-      Entry<String, PageImpl> entry = iter.next();
-      PageImpl page = entry.getValue();
+    TreeMap<String, PageImpl> result = new TreeMap<String, PageImpl>(new Comparator<String>() {
+      @Override
+      public int compare(String o1, String o2) {
+        return o1.toLowerCase().compareTo(o2.toLowerCase());
+      }
+    });
+    List<PageImpl> pages = new ArrayList<PageImpl>(getChildrenContainer().values());
+    
+    for (int i = 0; i < pages.size(); i++) {
+      PageImpl page = pages.get(i);
       if (page != null && page.hasPermission(PermissionType.VIEWPAGE)) {
-        result.put(page.getName(), page);
+        result.put(page.getTitle(), page);
       }
     }
     return result;

@@ -43,7 +43,7 @@ import org.exoplatform.wiki.utils.Utils;
  * May, 2010  
  */
 @PrimaryType(name = WikiNodeType.WIKI_ATTACHMENT)
-public abstract class AttachmentImpl extends NTFile implements Attachment {
+public abstract class AttachmentImpl extends NTFile implements Attachment, Comparable<AttachmentImpl> {
 
   private Permission permission = new PermissionImpl();
   
@@ -180,5 +180,10 @@ public abstract class AttachmentImpl extends NTFile implements Attachment {
       permission.setMOWService(getParentPage().getMOWService());
     }
     permission.setPermission(permissions, getPath());
+  }
+  
+  @Override
+  public int compareTo(AttachmentImpl o) {
+    return getName().toLowerCase().compareTo(o.getName().toLowerCase());
   }
 }
