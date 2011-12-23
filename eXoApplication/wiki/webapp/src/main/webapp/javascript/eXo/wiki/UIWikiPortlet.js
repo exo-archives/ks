@@ -52,7 +52,9 @@ UIWikiPortlet.prototype.changeWindowTite = function(elm) {
   if(elm) {
     var breadCrumb = eXo.core.DOMUtil.findFirstDescendantByClass(elm, 'div', 'UIWikiBreadCrumb');
     var selected = eXo.core.DOMUtil.findFirstDescendantByClass(breadCrumb, 'a', 'Selected');
-    top.document.title = selected.innerHTML;
+    if(selected) {
+      top.document.title = selected.innerHTML;
+    }
   }
 };
 
@@ -312,16 +314,15 @@ UIWikiPortlet.prototype.decorateSpecialLink = function(uicomponentId) {
   var invalidChars = DOMUtil.findFirstDescendantByClass(uicomponent, "div",
       "InvalidChars");
   var invalidCharsMsg = invalidChars.innerText;
-  if (!invalidCharsMsg || invalidCharsMsg == "undefined") {
+  if (!invalidCharsMsg || typeof(invalidCharsMsg) == "undefined") {
     invalidCharsMsg = invalidChars.textContent;
   }
   if (uicomponent) {
-    var linkSpans = DOMUtil.findDescendantsByClass(uicomponent, "span",
-        "wikicreatelink");
+    var linkSpans = DOMUtil.findDescendantsByClass(uicomponent, "span", "wikicreatelink");
     for (i = 0; i < linkSpans.length; i++) {
       var linkSpan = linkSpans[i];
       var pageLink = linkSpan.childNodes[0];
-      if (pageLink.href == "javascript:void(0);") {
+      if (typeof(pageLink) != "undefined" && pageLink.href == "javascript:void(0);") {
         eXo.core.EventManager.addEvent(pageLink, "click", function(event) {
           alert(invalidCharsMsg);
           return;
