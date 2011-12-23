@@ -450,7 +450,8 @@ public class TestWikiService extends AbstractMOWTestcase {
     assertNotNull(attachment1.getContentResource());
     kspage.getChromatticSession().save();
     // limit size is 2
-    WikiSearchData data = new WikiSearchData(null, "dump", null, null, null, 2);
+    WikiSearchData data = new WikiSearchData(null, "dump", null, null, null);
+    data.setLimit(2);
     List<TitleSearchResult> result = wService.searchDataByTitle(data);
     assertEquals(2, result.size());
     // limit size is 10
