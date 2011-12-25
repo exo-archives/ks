@@ -272,20 +272,16 @@ public class UIPrivateMessageForm extends BaseForumForm implements UIPopupCompon
     String content = privateMessage.getMessage();
     String label = this.getLabel(FIELD_REPLY_LABEL);
     String title = CommonUtils.decodeSpecialCharToHTMLnumber(privateMessage.getName());
+    if (title.indexOf(label) < 0) {
+      title = new StringBuffer(label).append(": ").append(title).toString();
+    }
     if (isReply) {
       UIFormTextAreaInput areaInput = this.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA);
       areaInput.setValue(privateMessage.getFrom());
-      if (title.indexOf(label) < 0) {
-        title = label + ": " + title;
-      }
       stringInput.setValue(title);
-      content = "<br/><br/><br/><div style=\"padding: 5px; border-left:solid 2px blue;\">" + content + "</div>";
-      message.setValue(content);
+      content = new StringBuffer("<br/><br/><br/><div style=\"padding: 5px; border-left:solid 2px blue;\">").append(content).append("</div>").toString();
     } else {
       label = this.getLabel(FIELD_FORWARD_LABEL);
-      if (title.indexOf(label) < 0) {
-        title = label + ": " + title;
-      }
       stringInput.setValue(title);
     }
     message.setValue(content);

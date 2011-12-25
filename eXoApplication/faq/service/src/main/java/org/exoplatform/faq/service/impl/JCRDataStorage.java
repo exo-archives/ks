@@ -1353,28 +1353,23 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
   @Override
   public String getCategoryPathOfQuestion(String questionPath) throws Exception {
     SessionProvider sProvider = CommonUtils.createSystemProvider();
-    String path = EMPTY_STR;
+    StringBuilder pathName = new StringBuilder();
     Node faqHome = null;
     try {
       faqHome = getFAQServiceHome(sProvider);
       Node question = faqHome.getNode(questionPath);
       Node subCat = question.getParent().getParent();
-      String pathName = EMPTY_STR;
+      pathName.append(new PropertyReader(faqHome).string(EXO_NAME, "home"));
       while (!subCat.getName().equals(Utils.CATEGORY_HOME)) {
-        pathName = "/" + subCat.getProperty(EXO_NAME).getString() + pathName;
+        pathName.append(CommonUtils.SLASH).append(new PropertyReader(subCat).string(EXO_NAME, subCat.getName()));
         subCat = subCat.getParent();
-      }
-      try {
-        pathName = faqHome.getProperty(EXO_NAME).getString() + pathName;
-      } catch (Exception e) {
-        pathName = "home" + pathName;
       }
     } catch (Exception e) {
       if (log.isDebugEnabled()) {
         log.debug("Getting category path of the question failed: ", e);
       }
     }
-    return path;
+    return pathName.toString();
   }
 
   @Override

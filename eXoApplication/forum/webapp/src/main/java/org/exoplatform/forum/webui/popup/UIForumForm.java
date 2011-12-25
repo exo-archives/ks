@@ -17,8 +17,12 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
@@ -50,13 +54,13 @@ import org.exoplatform.webui.core.UITree;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIFormInputWithActions;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
-import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
@@ -111,8 +115,6 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
   private String             forumId                             = ForumUtils.EMPTY_STR;
 
   private String             categoryId                          = ForumUtils.EMPTY_STR;
-
-  private String             listEmailAutoUpdate                 = ForumUtils.EMPTY_STR;
 
   private int                id                                  = 0;
 
@@ -346,6 +348,10 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
     return new String[] { FIELD_MODERATOR_MULTIVALUE, FIELD_TOPICABLE_MULTIVALUE, FIELD_POSTABLE_MULTIVALUE, FIELD_VIEWER_MULTIVALUE };
   }
 
+  private static String listToString(Collection<String> list) {
+    return list.toString().replace("[", ForumUtils.EMPTY_STR).replace("]", ForumUtils.EMPTY_STR);
+  }
+  
   public void updateSelect(String selectField, String value) throws Exception {
     UIFormTextAreaInput fieldInput = getUIFormTextAreaInput(selectField);
     if (selectField.indexOf("Notify") >= 0) {
@@ -505,8 +511,8 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
           if (!invisibleCategories.isEmpty()) {
             if (invisibleCategories.contains(categoryId)) {
               invisibleForums.add(newForum.getId());
-              listForumId = invisibleForums.toString().replace('[' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replace(']' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replaceAll(" ", ForumUtils.EMPTY_STR);
-              listCategoryId = invisibleCategories.toString().replace('[' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replace(']' + ForumUtils.EMPTY_STR, ForumUtils.EMPTY_STR).replaceAll(" ", ForumUtils.EMPTY_STR);
+              listForumId = listToString(invisibleForums).replaceAll(" ", ForumUtils.EMPTY_STR);
+              listCategoryId = listToString(invisibleCategories).replaceAll(" ", ForumUtils.EMPTY_STR);
               ForumUtils.savePortletPreference(listCategoryId, listForumId);
             }
           }
@@ -600,78 +606,38 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
         event.getRequestContext().addUIComponentToUpdateByAjax(moderationOptions);
     }
   }
+  
+  private String listEmailForSendNotify(Set<String> listModerator, String inputValue) throws Exception {
+    Set<String> newset = new HashSet<String>(listModerator);
+    if (!ForumUtils.isEmpty(inputValue)) {
+      newset.addAll(Arrays.asList(ForumUtils.splitForForum(inputValue)));
+    }
+    return listToString(newset);
+  }
 
   private void setDefaultEmail(UIFormInputWithActions moderationOptions) throws Exception {
     String moderators = moderationOptions.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).getValue();
-    UIFormTextAreaInput notifyWhenAddTopics = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE);
-    UIFormTextAreaInput notifyWhenAddPosts = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE);
-    String emailTopic = notifyWhenAddTopics.getValue();
-    String emailPost = notifyWhenAddPosts.getValue();
     if (!ForumUtils.isEmpty(moderators)) {
+      UIFormTextAreaInput notifyWhenAddTopics = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE);
+      UIFormTextAreaInput notifyWhenAddPosts = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE);
+      String emailTopic = notifyWhenAddTopics.getValue();
+      String emailPost = notifyWhenAddPosts.getValue();
       String[] moderators_ = ForumUtils.splitForForum(moderators);
-      List<String> listModerator = new ArrayList<String>();
-      String email = ForumUtils.EMPTY_STR;
-      this.listEmailAutoUpdate = ForumUtils.EMPTY_STR;
+      Set<String> listModerator = new HashSet<String>();
+      String email;
       User user = null;
       List<String> list = ForumServiceUtils.getUserPermission(moderators_);
-      boolean isFist = true;
       for (String string : list) {
         user = UserHelper.getUserByUserId(string);
         if (user != null) {
           email = user.getEmail();
-          if (isFist) {
-            this.listEmailAutoUpdate = email;
-            listModerator.add(email);
-            isFist = false;
-          } else {
-            if (!listModerator.contains(email)) {
-              this.listEmailAutoUpdate = this.listEmailAutoUpdate + ", " + email;
-              listModerator.add(email);
-            }
-          }
+          listModerator.add(email);
         }
       }
-      if (ForumUtils.isEmpty(emailTopic)) {
-        notifyWhenAddTopics.setValue(this.listEmailAutoUpdate);
-      } else {
-        String[] strs = ForumUtils.splitForForum(emailTopic);
-        String emailTopics = ForumUtils.EMPTY_STR;
-        for (int i = 0; i < strs.length; i++) {
-          if (!listModerator.contains(strs[i].trim())) {
-            if (emailTopics.length() == 0)
-              emailTopics = strs[i];
-            else
-              emailTopics = emailTopics + ", " + strs[i];
-          }
-        }
-        if (emailTopics.trim().length() == 0)
-          emailTopics = this.listEmailAutoUpdate;
-        else
-          emailTopics = emailTopics + ", " + this.listEmailAutoUpdate;
-        notifyWhenAddTopics.setValue(emailTopics);
-      }
-      if (ForumUtils.isEmpty(emailPost)) {
-        notifyWhenAddPosts.setValue(this.listEmailAutoUpdate);
-      } else {
-        String[] strs = ForumUtils.splitForForum(emailPost);
-        String emailPosts = ForumUtils.EMPTY_STR;
-        for (int i = 0; i < strs.length; i++) {
-          if (!listModerator.contains(strs[i].trim())) {
-            if (emailPosts.length() == 0)
-              emailPosts = strs[i];
-            else
-              emailPosts = emailPosts + ", " + strs[i];
-          }
-        }
-        if (emailPosts.trim().length() == 0)
-          emailPosts = this.listEmailAutoUpdate;
-        else
-          emailPosts = emailPosts + ", " + this.listEmailAutoUpdate;
-        notifyWhenAddPosts.setValue(emailPosts);
-      }
+      notifyWhenAddTopics.setValue(listEmailForSendNotify(listModerator, emailTopic));
+      notifyWhenAddPosts.setValue(listEmailForSendNotify(listModerator, emailPost));
       WebuiRequestContext context = WebuiRequestContext.getCurrentInstance();
       context.addUIComponentToUpdateByAjax(moderationOptions);
-    } else {
     }
   }
 

@@ -17,18 +17,17 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.SettingPortletPreference;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
-import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -38,7 +37,6 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.input.UICheckBoxInput;
 /**
  * Created by The eXo Platform SAS 
@@ -55,8 +53,7 @@ import org.exoplatform.webui.form.input.UICheckBoxInput;
       @EventConfig(listeners = UISettingEditModeForm.SelectTabActionListener.class) 
     }
 )
-public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
-  private UserProfile              userProfile;
+public class UISettingEditModeForm extends BaseForumForm implements UIPopupComponent {
 
   public static final String       FIELD_SCOPED_TAB             = "Scoped";
 
@@ -132,20 +129,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
     EnabledPanel.getUICheckBoxInput(FIELD_ISMODERATOR_CHECKBOX).setChecked(portletPreference.isShowModerators());
 
     ForumPreference.getUICheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX).setChecked(portletPreference.isUseAjax());
-  }
-
-  public void setUserProfile(UserProfile userProfile) throws Exception {
-    setInitComponent();
-    this.userProfile = userProfile;
-    this.isSave = false;
-  }
-
-  private List<String> getListInValus(String value) throws Exception {
-    List<String> list = new ArrayList<String>();
-    if (!ForumUtils.isEmpty(value)) {
-      list.addAll(Arrays.asList(ForumUtils.addStringToString(value, value)));
-    }
-    return list;
+    isSave = false;
   }
 
   protected boolean tabIsSelected(int tabId) {
@@ -164,10 +148,9 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
   protected List<Category> getCategoryList() throws Exception {
     List<Category> categoryList = new ArrayList<Category>();
     try {
-      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-      String userId = userProfile.getUserId();
+      String userId = getUserProfile().getUserId();
       if (userProfile.getUserRole() > 0) {
-        for (Category category : forumService.getCategories()) {
+        for (Category category : getForumService().getCategories()) {
           String[] uesrs = category.getUserPrivate();
           if (uesrs != null && uesrs.length > 0 && !uesrs[0].equals(" ")) {
             if (ForumServiceUtils.hasPermission(uesrs, userId)) {
@@ -178,7 +161,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
           }
         }
       } else {
-        categoryList.addAll(forumService.getCategories());
+        categoryList.addAll(getForumService().getCategories());
       }
     } catch (Exception e) {
     }
@@ -203,12 +186,12 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 
   protected List<Forum> getForumList(String categoryId) throws Exception {
     List<Forum> forumList = null;
-    String strQuery = ForumUtils.EMPTY_STR;
-    if (this.userProfile.getUserRole() > 0)
-      strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
+    StringBuilder strQuery = new StringBuilder();
+    if (getUserProfile().getUserRole() > 0)
+      strQuery.append("(@").append(Utils.EXO_IS_CLOSED).append("='false') or (@")
+              .append(Utils.EXO_MODERATORS).append("='").append(userProfile.getUserId()).append("')");
     try {
-      ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-      forumList = forumService.getForums(categoryId, strQuery);
+      forumList = getForumService().getForums(categoryId, strQuery.toString());
     } catch (Exception e) {
       forumList = new ArrayList<Forum>();
     }
@@ -230,31 +213,28 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
     return forumList;
   }
 
-  static public class SaveActionListener extends EventListener<UISettingEditModeForm> {
-    public void execute(Event<UISettingEditModeForm> event) throws Exception {
-      UISettingEditModeForm editModeForm = event.getSource();
-      List<UIComponent> children = editModeForm.getChildren();
-      String listCategoryId = ForumUtils.EMPTY_STR;
-      String listForumId = ForumUtils.EMPTY_STR;
-      // int i = 0;
-      for (UIComponent child : children) {
-        if (child instanceof UICheckBoxInput) {
-          if (((UICheckBoxInput) child).isChecked()) {
-            if (child.getId().indexOf(Utils.CATEGORY) >= 0) {
-              if (ForumUtils.isEmpty(listCategoryId))
-                listCategoryId = child.getId();
-              else
-                listCategoryId = listCategoryId + ForumUtils.COMMA + child.getId();
-            } else {
-              if (ForumUtils.isEmpty(listForumId))
-                listForumId = child.getId();
-              else
-                listForumId = listForumId + ForumUtils.COMMA + child.getId();
-            }
-            // ++i;
+  private void setNewListActive() throws Exception {
+    Set<String> categoryIds = new HashSet<String>();
+    Set<String> forumIds = new HashSet<String>();
+    List<UIComponent> children = getChildren();
+    for (UIComponent child : children) {
+      if (child instanceof UICheckBoxInput) {
+        if (((UICheckBoxInput) child).isChecked()) {
+          if (child.getId().indexOf(Utils.CATEGORY) >= 0) {
+            categoryIds.add(child.getId());
+          } else {
+            forumIds.add(child.getId());
           }
         }
       }
+    }
+    listforuminv = new ArrayList<String>(forumIds);
+    listCategoryinv = new ArrayList<String>(categoryIds);
+  }
+
+  static public class SaveActionListener extends EventListener<UISettingEditModeForm> {
+    public void execute(Event<UISettingEditModeForm> event) throws Exception {
+      UISettingEditModeForm editModeForm = event.getSource();
       UIForumInputWithActions EnabledPanel = editModeForm.getChildById(FIELD_SHOW_HIDDEN_TAB);
 
       editModeForm.portletPreference.setShowForumJump((Boolean) EnabledPanel.getUICheckBoxInput(FIELD_ISFORUMJUMP_CHECKBOX).getValue());
@@ -271,8 +251,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 
       try {
         editModeForm.isSave = true;
-        listCategoryinv = editModeForm.getListInValus(listCategoryId);
-        listforuminv = editModeForm.getListInValus(listForumId);
+        editModeForm.setNewListActive();
         editModeForm.portletPreference.setInvisibleCategories(listCategoryinv);
         editModeForm.portletPreference.setInvisibleForums(listforuminv);
         ForumUtils.savePortletPreference(editModeForm.portletPreference);
@@ -291,28 +270,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
       String id = event.getRequestContext().getRequestParameter(OBJECTID);
       UISettingEditModeForm editModeForm = event.getSource();
       if (editModeForm.tabId == 0) {
-        String listCategoryId = ForumUtils.EMPTY_STR;
-        String listForumId = ForumUtils.EMPTY_STR;
-        List<UIComponent> children = editModeForm.getChildren();
-        for (UIComponent child : children) {
-          if (child instanceof UICheckBoxInput) {
-            if (((UICheckBoxInput) child).isChecked()) {
-              if (child.getId().indexOf(Utils.CATEGORY) >= 0) {
-                if (ForumUtils.isEmpty(listCategoryId))
-                  listCategoryId = child.getId();
-                else
-                  listCategoryId = listCategoryId + ForumUtils.COMMA + child.getId();
-              } else {
-                if (ForumUtils.isEmpty(listForumId))
-                  listForumId = child.getId();
-                else
-                  listForumId = listForumId + ForumUtils.COMMA + child.getId();
-              }
-            }
-          }
-        }
-        listCategoryinv = editModeForm.getListInValus(listCategoryId);
-        listforuminv = editModeForm.getListInValus(listForumId);
+        editModeForm.setNewListActive();
         editModeForm.isSave = true;
       }
       editModeForm.tabId = Integer.parseInt(id);

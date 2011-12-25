@@ -63,19 +63,20 @@ public class UIForumLinks extends BaseForumForm {
   public UIForumLinks() throws Exception {
   }
 
-  private String getStrQuery(List<String> list, String property) {
+  private StringBuffer getStrQuery(List<String> list, String property) {
     StringBuffer strQuery = new StringBuffer();
-    int t = 0;
+    String AC = (property.indexOf("fn") < 0) ? "@" : ForumUtils.EMPTY_STR;
     for (String string : list) {
-      if (t == 0)
-        strQuery.append("(").append(property).append("='").append(string).append("'");
-      else
-        strQuery.append(" or ").append(property).append("='").append(string).append("'");
-      ++t;
+      if (strQuery.length() == 0) {
+        strQuery.append("(").append(AC).append(property).append("='").append(string).append("'");
+      } else {
+        strQuery.append(" or ").append(AC).append(property).append("='").append(string).append("'");
+      }
     }
-    if (t > 0)
+    if (strQuery.length() > 0) {
       strQuery.append(")");
-    return strQuery.toString();
+    }
+    return strQuery;
   }
 
   public void setUpdateForumLinks() throws Exception {
@@ -92,45 +93,47 @@ public class UIForumLinks extends BaseForumForm {
         }
       }
     }
-    String strQueryCate = ForumUtils.EMPTY_STR;
-    String strQueryForum = ForumUtils.EMPTY_STR;
+    StringBuffer buffQueryCate = new StringBuffer();
+    StringBuffer buffQueryForum = new StringBuffer();
     List<String> listUser = UserHelper.getAllGroupAndMembershipOfUser(this.userProfile.getUserId());
     if (this.userProfile.getUserRole() > 0) {
       // set Query for Forum
-      strQueryForum = getStrQuery(listUser, "@exo:moderators");
-      if (!ForumUtils.isEmpty(strQueryForum))
-        strQueryForum = "(@exo:isClosed='false' or " + strQueryForum + ")";
-      else
-        strQueryForum = "@exo:isClosed='false'";
-
+      StringBuffer mods = getStrQuery(listUser, Utils.EXO_MODERATORS);
+      if (mods.length() > 0) {
+        buffQueryForum.append("(@").append(Utils.EXO_IS_CLOSED).append("='false' or ").append(mods).append(")");
+      } else {
+        buffQueryForum.append("(@").append(Utils.EXO_IS_CLOSED).append("='false')");
+      }
       // set Query for Category
       listUser.add(" ");
-      strQueryCate = getStrQuery(listUser, "@exo:userPrivate");
+      buffQueryCate = getStrQuery(listUser, Utils.EXO_USER_PRIVATE);
     }
     List<String> listCateIdScope = forumPortlet.getInvisibleCategories();
     List<String> listForumIdScope = forumPortlet.getInvisibleForums();
     if (!listForumIdScope.isEmpty() && !listForumIdScope.get(0).equals(" ")) {
-      String s = getStrQuery(listForumIdScope, "fn:name()");
-      if (!ForumUtils.isEmpty(strQueryForum))
-        strQueryForum = strQueryForum + " and " + s;
-      else
-        strQueryForum = s;
+      if (buffQueryForum.length() > 0) {
+        buffQueryForum.append(" and ").append(getStrQuery(listForumIdScope, "fn:name()"));
+      } else {
+        buffQueryForum.append(getStrQuery(listForumIdScope, "fn:name()"));
+      }
     }
 
     if (!listCateIdScope.isEmpty() && !listCateIdScope.get(0).equals(" ")) {
-      String s = getStrQuery(listCateIdScope, "fn:name()");
-      if (!ForumUtils.isEmpty(strQueryCate))
-        strQueryCate = strQueryCate + " and " + s;
-      else
-        strQueryCate = s;
+
+      if (buffQueryCate.length() > 0) {
+        buffQueryCate.append(" and ").append(getStrQuery(listCateIdScope, "fn:name()"));
+      } else {
+        buffQueryCate.append(getStrQuery(listCateIdScope, "fn:name()"));
+      }
+    }
+    if (buffQueryForum.length() > 0) {
+      buffQueryForum = new StringBuffer("[").append(buffQueryForum).append("]");
+    }
+    if (buffQueryCate.length() > 0) {
+      buffQueryCate = new StringBuffer("[").append(buffQueryCate).append("]");
     }
 
-    if (!ForumUtils.isEmpty(strQueryForum))
-      strQueryForum = "[" + strQueryForum + "]";
-    if (!ForumUtils.isEmpty(strQueryCate))
-      strQueryCate = "[" + strQueryCate + "]";
-
-    this.forumLinks = getForumService().getAllLink(strQueryCate, strQueryForum);
+    this.forumLinks = getForumService().getAllLink(buffQueryCate.toString(), buffQueryForum.toString());
     List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
     list.add(new SelectItemOption<String>(this.getLabel(FIELD_FORUMHOMEPAGE_LABEL) + ForumUtils.SLASH + FIELD_FORUMHOMEPAGE_LABEL, Utils.FORUM_SERVICE));
     String space = "&nbsp; &nbsp; ", type = "/categoryLink";

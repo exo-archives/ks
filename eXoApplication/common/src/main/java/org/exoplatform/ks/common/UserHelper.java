@@ -61,27 +61,27 @@ public class UserHelper {
   }
 
   public static String checkValueUser(String values) throws Exception {
-    String errorUser = null;
-    if(values != null && values.trim().length() > 0) {
+    StringBuilder errorUser = new StringBuilder();
+    if (values != null && values.trim().length() > 0) {
       String[] userIds = values.split(",");
       for (String str : userIds) {
-        str = str.trim() ;
-        if(str.indexOf("$") >= 0) str = str.replace("$", "&#36");
-          
-        if(str.indexOf("/") >= 0) {
-          if(!UserHelper.hasGroupIdAndMembershipId(str)){
-            if(errorUser == null) errorUser = str ;
-            else errorUser = errorUser + ", " + str;
+        str = str.trim();
+        if (str.indexOf("$") >= 0) str = str.replace("$", "&#36");
+
+        if (str.indexOf("/") >= 0) {
+          if (!UserHelper.hasGroupIdAndMembershipId(str)) {
+            if (errorUser.length() == 0) errorUser.append(str);
+            else errorUser.append(", ").append(str);
           }
-        }else {//user
-          if((getUserHandler().findUserByName(str) == null)) {
-            if(errorUser == null) errorUser = str ;
-            else errorUser = errorUser + ", " + str;
+        } else {// user
+          if ((getUserHandler().findUserByName(str) == null)) {
+            if (errorUser.length() == 0) errorUser.append(str);
+            else errorUser.append(", ").append(str);
           }
         }
       }
     }
-    return errorUser;
+    return errorUser.toString();
   }
 
   public static boolean hasGroupIdAndMembershipId(String str) throws Exception {
@@ -205,23 +205,17 @@ public class UserHelper {
       userId = identity.getUserId();
       if (userId != null) {
         listOfUser.add(userId);
-        String value = "";
         for (MembershipEntry membership : identity.getMemberships()) {
-          value = membership.getGroup();
-          listOfUser.add(value); // its groups
-          value = membership.getMembershipType() + ":" + value;
-          listOfUser.add(value); // its memberships
+          listOfUser.add(membership.getGroup()); // its groups
+          listOfUser.add(membership.getMembershipType() + ":" + membership.getGroup()); // its memberships
         }
       }
     } else {
       listOfUser.add(userId); // himself
-      String value = "";
       Collection<Membership> memberships = findMembershipsByUser(userId);
       for (Membership membership : memberships) {
-        value = membership.getGroupId();
-        listOfUser.add(value); // its groups
-        value = membership.getMembershipType() + ":" + value;
-        listOfUser.add(value); // its memberships
+        listOfUser.add(membership.getGroupId()); // its groups
+        listOfUser.add(membership.getMembershipType() + ":" + membership.getGroupId()); // its memberships
       }
     }
     return listOfUser;

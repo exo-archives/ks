@@ -234,14 +234,14 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
         return;
       }
       UIAnswersPortlet uiPortlet = uiAddressForm.getAncestorOfType(UIAnswersPortlet.class);
-      String toAddress = "";
       StringBuffer sb = new StringBuffer();
+      StringBuffer toAddress = new StringBuffer();
       for (User ct : checkedUser) {
         uiAddressForm.newCheckedList_.put(ct.getUserName(), ct);
       }
       for (User user : uiAddressForm.newCheckedList_.values()) {
         if (user.getEmail() != null)
-          toAddress += user.getFullName() + "<" + user.getEmail() + "> ,";
+          toAddress.append(user.getFullName()).append("<").append(user.getEmail()).append("> ,");
       }
       List<String> listMail = Arrays.asList(sb.toString().split(","));
       String email = null;
@@ -256,13 +256,13 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
       }
       UISendMailForm uiSendMailForm = uiPortlet.findFirstComponentOfType(UISendMailForm.class);
       if (uiAddressForm.getRecipientType().equals("To")) {
-        uiSendMailForm.setFieldToValue(toAddress);
+        uiSendMailForm.setFieldToValue(toAddress.toString());
         uiSendMailForm.setToUsers(new ArrayList<User>(uiAddressForm.newCheckedList_.values()));
       } else if (uiAddressForm.getRecipientType().equals("AddCc")) {
-        uiSendMailForm.setFieldCCValue(toAddress);
+        uiSendMailForm.setFieldCCValue(toAddress.toString());
         uiSendMailForm.setAddCCUsers(new ArrayList<User>(uiAddressForm.newCheckedList_.values()));
       } else if (uiAddressForm.getRecipientType().equals("AddBcc")) {
-        uiSendMailForm.setFieldBCCValue(toAddress);
+        uiSendMailForm.setFieldBCCValue(toAddress.toString());
         uiSendMailForm.setAddBCCUsers(new ArrayList<User>(uiAddressForm.newCheckedList_.values()));
       }
       uiAddressForm.checkedList_ = uiAddressForm.newCheckedList_;
@@ -280,17 +280,16 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
         return;
       }
       UIPopupContainer uiPopupContainer = uiAddressForm.getAncestorOfType(UIPopupContainer.class);
-      // UISendEmailsContainer uiPopupContainer = uiAddressForm.getAncestorOfType(UISendEmailsContainer.class) ;
       uiAddressForm.checkedList_.clear();
       uiAddressForm.newCheckedList_.clear();
-      String toAddress = "";
       StringBuffer sb = new StringBuffer();
+      StringBuffer toAddress = new StringBuffer();
       for (User ct : checkedUser) {
         uiAddressForm.newCheckedList_.put(ct.getUserName(), ct);
       }
       for (User user : uiAddressForm.newCheckedList_.values()) {
         if (user.getEmail() != null) {
-          toAddress += user.getFullName() + "<" + user.getEmail() + "> ,";
+          toAddress.append(user.getFullName()).append("<").append(user.getEmail()).append("> ,");
           if (sb.length() > 0)
             sb.append(",");
           sb.append(user.getEmail());
@@ -298,15 +297,15 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
       }
       UISendMailForm uiSendMailForm = uiPopupContainer.getChild(UISendMailForm.class);
       if (uiAddressForm.getRecipientType().equals("to")) {
-        uiSendMailForm.setFieldToValue(toAddress);
+        uiSendMailForm.setFieldToValue(toAddress.toString());
         uiSendMailForm.setToUsers(checkedUser);
       }
       if (uiAddressForm.getRecipientType().equals("AddCc")) {
-        uiSendMailForm.setFieldCCValue(toAddress);
+        uiSendMailForm.setFieldCCValue(toAddress.toString());
         uiSendMailForm.setAddCCUsers(checkedUser);
       }
       if (uiAddressForm.getRecipientType().equals("AddBcc")) {
-        uiSendMailForm.setFieldBCCValue(toAddress);
+        uiSendMailForm.setFieldBCCValue(toAddress.toString());
         uiSendMailForm.setAddBCCUsers(checkedUser);
       }
       uiAddressForm.checkedList_ = uiAddressForm.newCheckedList_;

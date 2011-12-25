@@ -177,7 +177,7 @@ public class UIForumPortlet extends UIPortletApplication {
     } else if (portletMode == PortletMode.EDIT) {
       if (getChild(UISettingEditModeForm.class) == null) {
         UISettingEditModeForm editModeForm = addChild(UISettingEditModeForm.class, null, null);
-        editModeForm.setUserProfile(getUserProfile());
+        editModeForm.setInitComponent();
         if (getChild(UIBreadcumbs.class) != null) {
           removeChild(UIBreadcumbs.class);
           removeChild(UIForumActionBar.class);

@@ -105,7 +105,7 @@ public class BBCodeRenderer implements Renderer {
           RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RenderingService.class);
           param = TransformHTML.getPlainText(str);
           param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
-          param = "<div class=\"UIWikiPortlet\">" + param + "</div>";
+          param = new StringBuffer("<div class=\"UIWikiPortlet\">").append(param).append("</div>").toString();
         } else {
           param = StringUtils.replace(bbcode.getReplacement(), "{param}", str);
         }
@@ -166,7 +166,7 @@ public class BBCodeRenderer implements Renderer {
           RenderingService renderingService = (RenderingService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RenderingService.class);
           param = TransformHTML.getPlainText(param);
           param = renderingService.render(param, sourceSyntax, Syntax.XHTML_1_0.toIdString(), false);
-          param = "<div class=\"UIWikiPortlet\">" + param + "</div>";
+          param = new StringBuffer("<div class=\"UIWikiPortlet\">").append(param).append("</div>").toString();
         } else {
           param = StringUtils.replace(bbcode.getReplacement(), "{param}", param);
           param = StringUtils.replace(param, "{option}", option);

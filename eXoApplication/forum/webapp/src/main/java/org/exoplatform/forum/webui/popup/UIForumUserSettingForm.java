@@ -543,14 +543,11 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
         }
       }
       if (listObjectId.length() > 0) {
-        String rssLink = ForumUtils.EMPTY_STR;
         PortalRequestContext portalContext = Util.getPortalRequestContext();
-        String url = portalContext.getRequest().getRequestURL().toString();
-        url = url.replaceFirst("http://", ForumUtils.EMPTY_STR);
-        url = url.substring(0, url.indexOf(ForumUtils.SLASH));
-        url = "http://" + url;
-        rssLink = url + CommonUtils.getRSSLink("forum", uiForm.getPortalName(), listObjectId.toString());
-        ((UIFormStringInput) inputUserWatchManger.getChildById(RSS_LINK)).setValue(rssLink);
+        String selectedNode = Util.getUIPortal().getSelectedUserNode().getURI();
+        StringBuffer rssLink = new StringBuffer(portalContext.getPortalURI()).append(selectedNode)
+               .append(CommonUtils.getRSSLink("forum", uiForm.getPortalName(), listObjectId.toString()));
+        ((UIFormStringInput) inputUserWatchManger.getChildById(RSS_LINK)).setValue(rssLink.toString());
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
     }
@@ -587,17 +584,15 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
       String path = event.getRequestContext().getRequestParameter(OBJECTID);
       UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
       String[] id = path.split(ForumUtils.SLASH);
-      String paths = ForumUtils.EMPTY_STR;
+      StringBuilder paths = new StringBuilder();
       for (int i = 0; i < id.length; i++) {
         if (id[i].indexOf(Utils.CATEGORY) >= 0)
-          paths = id[i];
-        else if (id[i].indexOf(Utils.FORUM) >= 0)
-          paths = paths + ForumUtils.SLASH + id[i];
-        else if (id[i].indexOf(Utils.TOPIC) >= 0)
-          paths = paths + ForumUtils.SLASH + id[i];
+          paths.append(id[i]);
+        else if (id[i].indexOf(Utils.FORUM) >= 0 || id[i].indexOf(Utils.TOPIC) >= 0)
+          paths.append(ForumUtils.SLASH).append(id[i]);
       }
       try {
-        forumPortlet.calculateRenderComponent(paths, event.getRequestContext());
+        forumPortlet.calculateRenderComponent(paths.toString(), event.getRequestContext());
         event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
         forumPortlet.cancelAction();
       } catch (Exception e) {

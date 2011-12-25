@@ -350,12 +350,12 @@ public class FAQServiceImpl implements FAQService, Startable {
   public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception {
     return jcrData_.getQuestionsByListCatetory(listCategoryId, isNotYetAnswer);
   }
-
+  // NOTE: this function not use in ks-2.0 and more
   public String getCategoryPathOfQuestion(String questionPath, SessionProvider sProvider) throws Exception {
     sProvider.close();
     return getCategoryPathOfQuestion(questionPath);
   }
-
+  // NOTE: this function not use in ks-2.2.4 and more
   public String getCategoryPathOfQuestion(String questionPath) throws Exception {
     return jcrData_.getCategoryPathOfQuestion(questionPath);
   }

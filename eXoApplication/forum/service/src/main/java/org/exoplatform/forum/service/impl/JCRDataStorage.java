@@ -1584,22 +1584,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     forum.setPostCount(reader.l(EXO_POST_COUNT));
     forum.setTopicCount(reader.l(EXO_TOPIC_COUNT));
     forum.setIsModerateTopic(reader.bool(EXO_IS_MODERATE_TOPIC));
-
-    String lastTopicPath = "";
-    if (forumNode.hasProperty(EXO_LAST_TOPIC_PATH)) {
-      lastTopicPath = reader.string(EXO_LAST_TOPIC_PATH, "");
-      if (!Utils.isEmpty(lastTopicPath)) {
-        if (lastTopicPath.lastIndexOf("/") > 0) {
-          lastTopicPath = forum.getPath() + lastTopicPath.substring(lastTopicPath.lastIndexOf("/"));
-        } else {
-          lastTopicPath = forum.getPath() + "/" + lastTopicPath;
-        }
-      }
-    }
-    forum.setLastTopicPath(lastTopicPath);
+    forum.setLastTopicPath(getLastTopicPath(reader, forum));
     forum.setIsClosed(reader.bool(EXO_IS_CLOSED));
     forum.setIsLock(reader.bool(EXO_IS_LOCK));
     return forum;
+  }
+  
+  private String getLastTopicPath(PropertyReader reader, Forum forum) {
+    String lastTopic = reader.string(EXO_LAST_TOPIC_PATH, CommonUtils.EMPTY_STR);
+    if (!Utils.isEmpty(lastTopic)) {
+      lastTopic = (lastTopic.lastIndexOf(CommonUtils.SLASH) > 0) ? lastTopic.substring(lastTopic.lastIndexOf(CommonUtils.SLASH)) : lastTopic;
+      lastTopic = new StringBuilder(forum.getPath()).append(CommonUtils.SLASH).append(lastTopic).toString();
+    }
+    return lastTopic;
   }
 
   private Forum getForum(Node forumNode) throws Exception {
@@ -1614,19 +1611,7 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
     forum.setCreatedDate(reader.date(EXO_CREATED_DATE));
     forum.setModifiedBy(reader.string(EXO_MODIFIED_BY));
     forum.setModifiedDate(reader.date(EXO_MODIFIED_DATE));
-    String lastTopicPath = "";
-    if (forumNode.hasProperty(EXO_LAST_TOPIC_PATH)) {
-      lastTopicPath = reader.string(EXO_LAST_TOPIC_PATH, "");
-      if (!Utils.isEmpty(lastTopicPath)) {
-        if (lastTopicPath.lastIndexOf("/") > 0) {
-          lastTopicPath = forum.getPath() + lastTopicPath.substring(lastTopicPath.lastIndexOf("/"));
-        } else {
-          lastTopicPath = forum.getPath() + "/" + lastTopicPath;
-        }
-      }
-    }
-
-    forum.setLastTopicPath(lastTopicPath);
+    forum.setLastTopicPath(getLastTopicPath(reader, forum));
     forum.setDescription(reader.string(EXO_DESCRIPTION));
     forum.setPostCount(reader.l(EXO_POST_COUNT));
     forum.setTopicCount(reader.l(EXO_TOPIC_COUNT));
@@ -3995,13 +3980,14 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
   }
 
   private List<String> getTagName(NodeIterator iter, List<String> tagNames) {
-    String str = "";
+    StringBuilder str;
+    PropertyReader reader;
     while (iter.hasNext()) {
       try {
-        PropertyReader reader = new PropertyReader((Node) iter.nextNode());
-        str = reader.string(EXO_NAME);
-        str = str + Utils.SPACE + "<font color=\"Salmon\">(" + reader.string(EXO_USE_COUNT) + ")</font>";
-        tagNames.add(str);
+        reader = new PropertyReader((Node) iter.nextNode());
+        str = new StringBuilder(reader.string(EXO_NAME));
+        str.append(Utils.SPACE).append("<font color=\"Salmon\">(").append(reader.string(EXO_USE_COUNT)).append(")</font>");
+        tagNames.add(str.toString());
         if (tagNames.size() == 5)
           break;
       } catch (Exception e) {
@@ -7570,18 +7556,19 @@ public class JCRDataStorage implements DataStorage, ForumNodeTypes {
       profile.setProperty(EXO_MODERATE_CATEGORY, new String[] {});
       profile.setProperty(EXO_MODERATE_FORUMS, new String[] {});
       profile.save();
-      String id = userId + Utils.DELETED;
+      StringBuilder id = new StringBuilder(userId).append(Utils.DELETED);
       try {
         profileDeleted = profileHome.getNode(Utils.USER_PROFILE_DELETED);
         long index = profileDeleted.getNodes().getSize();
-        if (index > 0)
-          id = id + index;
+        if (index > 0){
+          id.append(index);
+        }
       } catch (Exception e) {
         profileDeleted = profileHome.addNode(Utils.USER_PROFILE_DELETED, EXO_USER_DELETED);
         session.save();
         deletedUserCalculateListener(profileDeleted);
       }
-      session.getWorkspace().move(profile.getPath(), profileDeleted.getPath() + "/" + id);
+      session.getWorkspace().move(profile.getPath(), new StringBuilder(profileDeleted.getPath()).append(CommonUtils.SLASH).append(id).toString());
       try {
         Node avatarHome = session.getRootNode().getNode(dataLocator.getAvatarsLocation());
         if (avatarHome.hasNode(userId)) {
