@@ -180,9 +180,11 @@ public class WikiServiceImpl implements WikiService, Startable {
       boolean isExisted = result.hasNext();
       if (!isExisted) {
         Page page = getWikiHome(wikiType, wikiOwner);
-        String wikiHomeId = TitleResolver.getId(page.getTitle(), true);
-        if (wikiHomeId.equals(pageId)) {
-          isExisted = true;
+        if (page != null) {
+          String wikiHomeId = TitleResolver.getId(page.getTitle(), true);
+          if (wikiHomeId.equals(pageId)) {
+            isExisted = true;
+          }
         }
       }
       return isExisted;
@@ -472,8 +474,7 @@ public class WikiServiceImpl implements WikiService, Startable {
         Model model = getModel();
         WikiStoreImpl wStore = (WikiStoreImpl) model.getWikiStore();
         page = searchPage(statement, wStore.getSession());
-        if (page == null) {
-          page = getWikiHome(wikiType, wikiOwner);
+        if (page == null && (page = getWikiHome(wikiType, wikiOwner)) != null) {
           String wikiHomeId = TitleResolver.getId(page.getTitle(), true);
           if (!wikiHomeId.equals(pageId)) {
             page = null;
@@ -580,7 +581,7 @@ public class WikiServiceImpl implements WikiService, Startable {
       
       if ((data.getTitle() != null) && (data.getWikiType() != null) && (data.getWikiOwner() != null)) {
         PageImpl homePage = getWikiHome(data.getWikiType(), data.getWikiOwner());
-        if (data.getTitle().equals("") || homePage.getTitle().contains(data.getTitle())) {
+        if (data.getTitle().equals("") || homePage != null && homePage.getTitle().contains(data.getTitle())) {
           Calendar wikiHomeCreateDate = Calendar.getInstance();
           wikiHomeCreateDate.setTime(homePage.getCreatedDate());
           

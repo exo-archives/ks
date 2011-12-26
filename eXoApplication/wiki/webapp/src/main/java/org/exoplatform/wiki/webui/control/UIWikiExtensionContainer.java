@@ -19,6 +19,8 @@ package org.exoplatform.wiki.webui.control;
 import java.util.HashMap;
 import java.util.List;
 
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.ext.UIExtension;
@@ -35,27 +37,35 @@ import org.exoplatform.wiki.webui.core.UIExtensionContainer;
 public abstract class UIWikiExtensionContainer extends UIExtensionContainer {
   
   protected int extensionSize;
+  
+  protected static final Log log = ExoLogger.getLogger("org.exoplatform.wiki.webui.control.UIWikiExtensionContainer");
 
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
-    UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
-    HashMap<String, Object> extContext = wikiPortlet.getUIExtContext();    
-    if (checkModificationContext(extContext)) {
-      UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
-      List<UIExtension> extensions = manager.getUIExtensions(getExtensionType());
-      extensionSize = 0;
-      if (extensions != null && extensions.size() > 0) {
-        for (UIExtension extension : extensions) {
-          UIComponent uicomponent = manager.addUIExtension(extension, extContext, this);
-          if (uicomponent != null) {
-            extensionSize++;
+    try {
+      UIWikiPortlet wikiPortlet = getAncestorOfType(UIWikiPortlet.class);
+      HashMap<String, Object> extContext = wikiPortlet.getUIExtContext();
+      if (checkModificationContext(extContext)) {
+        UIExtensionManager manager = getApplicationComponent(UIExtensionManager.class);
+        List<UIExtension> extensions = manager.getUIExtensions(getExtensionType());
+        extensionSize = 0;
+        if (extensions != null && extensions.size() > 0) {
+          for (UIExtension extension : extensions) {
+            UIComponent uicomponent = manager.addUIExtension(extension, extContext, this);
+            if (uicomponent != null) {
+              extensionSize++;
+            }
           }
         }
       }
-    }
 
-    if (this.getChildren().size() > 0) {
-      super.processRender(context);
+      if (this.getChildren().size() > 0) {
+        super.processRender(context);
+      }
+    } catch (Exception e) {
+      if (log.isDebugEnabled()) {
+        log.debug("[UIWikiExtensionContainer] An exception happens when rendering UIWikiExtensionContainer", e);
+      }
     }
   }
 
