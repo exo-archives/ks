@@ -766,7 +766,7 @@ public class JCRDataStorage implements DataStorage, FAQNodeTypes {
 
   private Comment[] getComment(Node questionNode) throws Exception {
     try {
-      if (!questionNode.hasNode(Utils.COMMENT_HOME))
+      if (questionNode == null || !questionNode.hasNode(Utils.COMMENT_HOME))
         return new Comment[] {};
       NodeIterator nodeIterator = questionNode.getNode(Utils.COMMENT_HOME).getNodes();
       Comment[] comments = new Comment[(int) nodeIterator.getSize()];
