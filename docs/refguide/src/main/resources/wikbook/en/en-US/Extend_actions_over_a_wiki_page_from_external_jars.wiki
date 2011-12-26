@@ -1,0 +1,197 @@
+This section describes how to create a sample action extension in Wiki.
+
+h1. Overview  {anchor:id=KSref.Extend_actions_over_a_wiki_page_from_external_jars.Overview}
+
+The toolbar in Wiki is built basing on the UI Extension Framework, so you can add your own actions packaged in external jars to it.
+
+h1. How to add action extension to the Wiki toolbar {anchor:id=KSref.Extend_actions_over_a_wiki_page_from_external_jars.How_to_add_action_extension_to_the_Wiki_toolbar}
+
+After reading this section, you can add your own actions to the Wiki toolbar. In the following example, you are going to add a new action on the Wiki toolbar to view the Wiki markup of a page.
+
+h2. Create a new project for action extension  {anchor:id=KSref.Extend_actions_over_a_wiki_page_from_external_jars.Create_a_new_project_for_action_extension}
+
+Create a Maven project which has the following directory structure:
+
+!images/Wiki_action_example.png|align="center"!
+
+Navigating in the project's folder, you will see the following structure:
+
+* _pom.xml_: the project's POM file.
+* _src/main/java/.../ViewSourceActionComponent.java_: a simple action supporting user to view the wiki markup of a page.
+* _src/main/resources/conf/portal/configuration.xml_: the configuration file to register your actions with the _org.exoplatform.webui.ext.UIExtensionManager_ service.
+
+Here is the content of the _pom.xml_ file:
+
+{code:lang=xml}
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.acme</groupId>
+  <artifactId>example</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>eXo Wiki action - Example</name>
+  <description>eXo Wiki action - Example</description>
+  <dependencies>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.core</artifactId>
+      <version>3.2.0-PLF-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>exo.platform.commons.webui.ext</artifactId>
+      <version>1.1.3-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.wiki.service</artifactId>
+      <version>2.2.4-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.wiki.webapp</artifactId>
+      <version>2.2.4-SNAPSHOT</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+{code}
+
+h2. Create new actions and their corresponding listeners    {anchor:id=KSref.Extend_actions_over_a_wiki_page_from_external_jars.Create_new_actions_and_their_corresponding_listeners}
+
+Edit the _ViewSourceActionComponent_ class as below:
+
+{code:lang=java}
+package com.acme;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.ext.filter.UIExtensionFilter;
+import org.exoplatform.webui.ext.filter.UIExtensionFilters;
+import org.exoplatform.wiki.commons.Utils;
+import org.exoplatform.wiki.mow.core.api.wiki.PageImpl;
+import org.exoplatform.wiki.webui.UIWikiContentDisplay;
+import org.exoplatform.wiki.webui.UIWikiPageContentArea;
+import org.exoplatform.wiki.webui.UIWikiPortlet;
+import org.exoplatform.wiki.webui.control.action.core.AbstractEventActionComponent;
+import org.exoplatform.wiki.webui.control.filter.IsViewModeFilter;
+import org.exoplatform.wiki.webui.control.listener.MoreContainerActionListener;
+
+@ComponentConfig (
+  template = "app:/templates/wiki/webui/control/action/AbstractActionComponent.gtmpl",
+  events = {
+        @EventConfig(listeners = ViewSourceActionComponent.ViewSourceActionListener.class)
+    }
+)
+public class ViewSourceActionComponent extends AbstractEventActionComponent {
+
+  public static final String                   ACTION  = "ViewSource";
+
+  private static final List<UIExtensionFilter> FILTERS = Arrays.asList(new UIExtensionFilter[] { new IsViewModeFilter() });
+
+  @UIExtensionFilters
+  public List<UIExtensionFilter> getFilters() {
+    return FILTERS;
+  }
+
+  @Override
+  public String getActionName() {
+    return ACTION;
+  }
+
+  @Override
+  public boolean isAnchor() {
+    return false;
+  }
+
+  public static class ViewSourceActionListener extends MoreContainerActionListener<ViewSourceActionComponent> {
+    @Override
+    protected void processEvent(Event<ViewSourceActionComponent> event) throws Exception {
+      UIWikiPortlet wikiPortlet = event.getSource().getAncestorOfType(UIWikiPortlet.class);
+      UIWikiContentDisplay contentDisplay = wikiPortlet.findFirstComponentOfType(UIWikiPageContentArea.class)
+                                                       .getChildById(UIWikiPageContentArea.VIEW_DISPLAY);
+      PageImpl wikipage = (PageImpl) Utils.getCurrentWikiPage();
+      contentDisplay.setHtmlOutput(wikipage.getContent().getText());
+      event.getRequestContext().addUIComponentToUpdateByAjax(contentDisplay);
+    }
+
+  }
+
+}
+{code}
+
+h2. Register new actions with UIExtensionManager      {anchor:id=KSref.Extend_actions_over_a_wiki_page_from_external_jars.Register_new_actions_with_UIExtensionManager}
+
+Edit the _configuration.xml_ file as below:
+
+{code:lang=xml}
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
+  xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
+
+  <external-component-plugins>
+    <target-component>org.exoplatform.webui.ext.UIExtensionManager</target-component>
+    <component-plugin>
+      <name>add.action</name>
+      <set-method>registerUIExtensionPlugin</set-method>
+      <type>org.exoplatform.webui.ext.UIExtensionPlugin</type>
+      <init-params>
+        <object-param>
+          <name>ViewSource</name>
+          <object type="org.exoplatform.webui.ext.UIExtension">
+            <field name="type"><string>org.exoplatform.wiki.webui.control.MoreExtensionContainer</string></field>
+            <field name="rank"><int>1000</int></field>
+            <field name="name"><string>ViewSource</string></field>
+            <field name="component"><string>com.acme.ViewSourceActionComponent</string></field>
+          </object>
+        </object-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
+
+</configuration>
+{code}
+
+Besides the _MoreExtensionContainer_ type, action extension may be one of these following types:
+
+|| Type || Description ||
+| {{org.exoplatform.wiki.webui.control.UIPageToolBar}} | Actions will be placed on the Wiki page toolbar at the view mode. |
+| {{org.exoplatform.wiki.webui.control.AddExtensionContainer}} | Actions will be placed on the *Add Page* drop-down list on the Wiki page toolbar at the view mode. |
+| {{org.exoplatform.wiki.webui.control.MoreExtensionContainer}} | Actions will be placed on the *More* drop-down list on the Wiki page toolbar at the view mode. |
+| {{org.exoplatform.wiki.webui.control.UISubmitToolBar}} | Actions will be placed on the Wiki page toolbar at the edit mode. |
+| {{org.exoplatform.wiki.webui.control.UIEditorTabs}} | Actions will be placed the on Wiki editor tabs. |
+| {{org.exoplatform.wiki.webui.control.BrowseExtensionContainer}} | Actions will be placed on the *Browse* drop-down list at the view mode. |
+| {{org.exoplatform.wiki.webui.popup.UIWikiSettingContainer}} | Actions will be placed on the Wiki setting tabs. |
+
+h3. Deploy new action extension      {anchor:id=KSref.Extend_actions_over_a_wiki_page_from_external_jars.Deploy_new_action_extension}
+Follow these steps to deploy your new action extension:
+
+*1*. Build the project by using the *mvn clean install* command.
+*2*. Copy the _target/example-1.0-SNAPSHOT.jar_ file into the _TOMCAT_HOME/webapps/wiki.war/WEB-INF/lib/_ directory.
+*3*. Run the tomcat and go to Wiki application, you should see the result as below:
+
+!images/New_action.png|align="center"!
+
+!images/Results.png|align="center"!
