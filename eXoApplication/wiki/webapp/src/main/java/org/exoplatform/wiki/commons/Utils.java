@@ -135,11 +135,13 @@ public class Utils {
     sb.append(portalURI);
     sb.append(pageNodeSelected);
     sb.append("/");
-    if (!PortalConfig.PORTAL_TYPE.equalsIgnoreCase(params.getType())) {
+    if (params == null) {
+      return sb.toString();
+    }
+    if (params.getType() != null && !PortalConfig.PORTAL_TYPE.equalsIgnoreCase(params.getType())) {
       sb.append(params.getType().toLowerCase());
       sb.append("/");
-      sb.append(org.exoplatform.wiki.utils.Utils.validateWikiOwner(params.getType(),
-                                                                   params.getOwner()));
+      sb.append(org.exoplatform.wiki.utils.Utils.validateWikiOwner(params.getType(), params.getOwner()));
       sb.append("/");
     }
     sb.append(URLEncoder.encode(params.getPageId(), "UTF-8"));

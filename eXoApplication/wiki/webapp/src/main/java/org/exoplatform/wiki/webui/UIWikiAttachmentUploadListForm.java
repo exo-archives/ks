@@ -59,12 +59,13 @@ public class UIWikiAttachmentUploadListForm extends UIForm {
   }
   
   protected Collection<AttachmentImpl> getAttachmentsList() {
-    Collection<AttachmentImpl> attachments = null;
+    Collection<AttachmentImpl> attachments = new ArrayList<AttachmentImpl>();
     try {
       Page page = getCurrentWikiPage();
-      attachments = ((PageImpl) page).getAttachmentsExcludeContent();
+      if (page != null) {
+        attachments = ((PageImpl) page).getAttachmentsExcludeContent();
+      }
     } catch (Exception e) {
-      attachments = new ArrayList<AttachmentImpl>();
       log.warn("An error happened when get attachments list", e);
     }
     return attachments;

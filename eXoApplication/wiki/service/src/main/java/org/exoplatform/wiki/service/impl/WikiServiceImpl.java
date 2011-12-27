@@ -347,8 +347,12 @@ public class WikiServiceImpl implements WikiService, Startable {
   }
 
   public List<PermissionEntry> getWikiPermission(String wikiType, String wikiOwner) throws Exception {
+    List<PermissionEntry> permissionEntries = new ArrayList<PermissionEntry>();
     Model model = getModel();
     WikiImpl wiki = (WikiImpl) getWiki(wikiType, wikiOwner, model);
+    if (wiki == null) {
+      return permissionEntries;
+    }
     if (!wiki.getDefaultPermissionsInited()) {
       List<String> permissions = getWikiDefaultPermissions(wikiType, wikiOwner);
       wiki.setWikiPermissions(permissions);
@@ -373,7 +377,6 @@ public class WikiServiceImpl implements WikiService, Startable {
       updateAllPagesPermissions(wikiType, wikiOwner, permMap);
     }
     List<String> permissions = wiki.getWikiPermissions();
-    List<PermissionEntry> permissionEntries = new ArrayList<PermissionEntry>();
     for (String perm : permissions) {
       String[] actions = perm.substring(0, perm.indexOf(":")).split(",");
       perm = perm.substring(perm.indexOf(":") + 1);
