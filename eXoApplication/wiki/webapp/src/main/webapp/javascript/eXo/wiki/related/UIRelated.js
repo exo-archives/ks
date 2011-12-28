@@ -24,12 +24,12 @@ UIRelated.prototype.initRelatedDOM = function (dataList, redirectUrl) {
 	for (var i = 0; i < relatedList.length; i++) {
 		var relatedItem = relatedList[i];
 		var nodeGroupDiv = document.createElement("div");
-		nodeGroupDiv.setAttribute("class", "NodeGroup");
+		nodeGroupDiv.className = "NodeGroup";
 		var nodeDiv = document.createElement("div");
-		nodeDiv.setAttribute("class", "Page TreeNodeType Node");
+		nodeGroupDiv.className = "Page TreeNodeType Node";		
 		
 		var labelDiv = document.createElement("div");
-		labelDiv.setAttribute("class", "NodeLabel");
+		labelDiv.className = "NodeLabel";
 		var a = document.createElement("a");
 		if (redirectUrl && relatedItem.identity != null) {
 			var relatedLink = redirectUrl + "&objectId=" + encodeURIComponent(relatedItem.identity);
