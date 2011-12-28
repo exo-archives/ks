@@ -1399,20 +1399,21 @@ table.UIFormGrid div.Id {
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	margin-top: 8px;
 	width: 50%;
 	float:left;
+	padding: 6px 0 6px 6px;
+	margin-top: 10px;
 }
 
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm #TitleInput {
 	background: #f8f8f8;
 	border: none;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	font-size: 18px;
-	padding: 6px 0 6px 6px;
-	width: 97%;
+}
+
+.UIWikiPageEditForm .UIWikiPageContentInputContainer,.UIWikiPageEditForm .SyntaxType,
+  .UIWikiPageEditForm .CommentInput {
+  margin-bottom: 15px;
 }
 
 .UIWikiPageEditForm .UIForm .UIWikiPageContentInputContainer textarea {
@@ -1439,10 +1440,6 @@ table.UIFormGrid div.Id {
 	margin: 0px 0px 13px;
 	width: 30%;
 	padding: 7px 0px 7px 5px;
-}
-
-.UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm,.UIWikiPageEditForm .UIWikiPageContentInputContainer,.UIWikiPageEditForm .SyntaxType,.UIWikiPageEditForm .CommentInput {
-	margin-bottom: 15px;
 }
 
 .UIWikiPageEditForm .SyntaxType .SyntaxTypeTitle,.UIWikiPageEditForm .CommentInput .CommentTitle {
