@@ -404,14 +404,6 @@ table.UIFormGrid div.Id {
 	padding-left: 15px;
 }
 
-.UIWikiPageEditForm .UIWikiTemplateDescriptionContainer input {
-	width: 90%;
-	border: none;
-	background-color: #f8f8f8;
-	line-height: 24px;
-	font-size: 14px;
-}
-
 /* wiki homepage */
 .UIWikiPortlet .UIWikiPageArea {
 	padding: 0 15px;
@@ -1402,13 +1394,16 @@ table.UIFormGrid div.Id {
 	width: 50%;
 	float:left;
 	padding: 6px 0 6px 6px;
-	margin-top: 10px;
+  margin-top: 15px;
 }
 
 .UIWikiPageEditForm .UIWikiPageTitleControlForm_PageEditForm #TitleInput {
 	background: #f8f8f8;
 	border: none;
 	font-size: 18px;
+	line-height: 20px;
+  height: 20px;
+	width: 99%;
 }
 
 .UIWikiPageEditForm .UIWikiPageContentInputContainer,.UIWikiPageEditForm .SyntaxType,
@@ -1437,9 +1432,18 @@ table.UIFormGrid div.Id {
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	margin: 0px 0px 13px;
-	width: 30%;
-	padding: 7px 0px 7px 5px;
+	margin: 6px 0px 0px;
+	width: 35%;
+	padding: 6px 0 6px 6px;
+}
+
+.UIWikiPageEditForm .UIWikiTemplateDescriptionContainer input {
+	width: 99%;
+	border: none;
+	background-color: #f8f8f8;
+	line-height: 18px;
+	height: 18px;
+	font-size: 14px;
 }
 
 .UIWikiPageEditForm .SyntaxType .SyntaxTypeTitle,.UIWikiPageEditForm .CommentInput .CommentTitle {
@@ -1500,6 +1504,7 @@ table.UIFormGrid div.Id {
 	border-radius: 5px 5px 0 0;
 	-moz-border-radius: 5px 5px 0 0;
 	-moz-border-radius: 5px 5px 0 0;
+  border-top: 1px solid #DCDCDC;
 	font-weight: bold;
 	color: #555555;
 	line-height: 29px;

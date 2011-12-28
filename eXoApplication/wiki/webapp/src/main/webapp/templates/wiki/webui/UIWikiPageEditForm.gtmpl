@@ -14,7 +14,7 @@
   <%
    uiform.renderChild(uiform.FIELD_TEMPLATEDESCTIPTION);  
   %>
-  <div class="ClearFix">
+  <div class="ClearFix ActionContainer">
   <%
    uiform.renderChild(uiform.EDITOR_TABS);
   %>
