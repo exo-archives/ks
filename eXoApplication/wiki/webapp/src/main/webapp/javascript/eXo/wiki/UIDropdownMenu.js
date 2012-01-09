@@ -22,7 +22,6 @@ function UIDropdownMenu(){
 
 UIDropdownMenu.prototype.init = function(componentid){
   var component = document.getElementById(String(componentid));
-  var menu = eXo.core.DOMUtil.findFirstDescendantByClass(component, "div","HoverMenu");
   component.onmouseover = eXo.wiki.UIDropdownMenu.hover;
   component.onmouseout = eXo.wiki.UIDropdownMenu.hover;
   component.onfocus = eXo.wiki.UIDropdownMenu.hover;
@@ -30,8 +29,9 @@ UIDropdownMenu.prototype.init = function(componentid){
 };
 
 UIDropdownMenu.prototype.hover = function(event){
+	var ev = window.event || event ;
+  var evType = String(ev.type);
   var menu = eXo.core.DOMUtil.findFirstDescendantByClass(this, "div","HoverMenu");
-  var evType = String(event.type);
   if (evType == "mouseover" || evType == "onfocus"){
     menu.style.display="block";
   } else{
