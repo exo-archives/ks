@@ -41,55 +41,7 @@ UIForm.prototype.submitPageEvent = function(formId, action, params) {
   form.elements['formOp'].value = action ; 
   if(!form.originalAction) form.originalAction = form.action ; 
   form.action =  form.originalAction +  encodeURI(params) ;
-  this.ajaxPagePost(form, null);
+  form.submit();
 } ;
-
-/*
- * This method is called when a HTTP POST should be done but in an AJAX case
- * some manipulations are needed. Once the content of the form is placed into a
- * string object, the call is delegated to the doPageRequest() method
- */
-UIForm.prototype.ajaxPagePost = function(formElement, callback) {
-  if (!callback) callback = null;
-  var queryString = eXo.webui.UIForm.serializeForm(formElement);
-  var url = formElement.action;
-  this.doPageRequest("POST", url, queryString, callback);
-};
-
-/*
- * The doPageRequest() method takes incoming request from GET and POST calls The
- * second argument is the URL to target on the server The third argument is the
- * query string object which is created out of a form element, this value is not
- * null only when there is a POST request.
- * 
- * 1) An AjaxRequest object is instantiated, it holds the reference to the XHR
- * method 2) An HttpResponseHandler object is instantiated and its methods like
- * ajaxResponse, ajaxLoading, ajaxTimeout are associated with the one from the
- * AjaxRequest and will be called by the XHR during the process method
- */
-UIForm.prototype.doPageRequest = function(method, url, queryString, callback) {
-  request = new AjaxRequest(method, url, queryString);
-  handler = new HttpResponseHandler();
-  request.onSuccess = function(request) {
-    try {
-      var url = request.responseText;
-      url = url.substring(url.indexOf("eXo.env.server.portalBaseURL"));
-      url = url.substring(0, url.indexOf("eXo.env.server.portalURLTemplate"));
-      eval(url);
-    } catch (e) {
-    }
-    ajaxRedirect(eXo.env.server.portalBaseURL);
-  };
-  request.onLoading = handler.ajaxLoading;
-  request.onTimeout = handler.ajaxTimeout;
-  request.callBack = callback;
-  eXo.portal.CurrentRequest = request;
-  request.process();
-  eXo.session.itvDestroy();
-  if (eXo.session.canKeepState && eXo.session.isOpen
-      && eXo.env.portal.accessMode == 'private') {
-    eXo.session.itvInit();
-  }
-};
 
 eXo.wiki.UIForm = new UIForm();
