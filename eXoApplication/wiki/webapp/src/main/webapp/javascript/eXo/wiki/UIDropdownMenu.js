@@ -39,9 +39,4 @@ UIDropdownMenu.prototype.hover = function(event){
   }  
 };
 
-UIDropdownMenu.prototype.cancel = function(evt) {
-	var _e = window.event || evt ;
-	_e.cancelBubble = true ;
-} ;
-
 eXo.wiki.UIDropdownMenu = new UIDropdownMenu();

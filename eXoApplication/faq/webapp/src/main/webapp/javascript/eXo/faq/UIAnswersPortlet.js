@@ -344,9 +344,7 @@ UIAnswersPortlet.prototype.removeLink = function (rootNode) {
   i = contextAnchors.length;
   while (i--) {
     contextAnchors[i].onmousedown = null;
-    contextAnchors[i].onmousedown = null;
-    contextAnchors[i].onfocus = null;
-    contextAnchors[i].onblur = null;
+    contextAnchors[i].onkeydown = null;
   }
   contextAnchors = this.findDescendantsByAttribute(rootNode, "div", "onmouseover");
   i = contextAnchors.length;
