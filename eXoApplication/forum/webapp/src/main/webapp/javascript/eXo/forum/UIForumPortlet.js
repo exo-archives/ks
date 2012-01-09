@@ -923,7 +923,7 @@ UIForumPortlet.prototype.initContextMenu = function(id){
 	uiContextMenu.setup();
 };
 
-UIForumPortlet.prototype.showBBCodeHelp = function(id, isIn){
+UIForumPortlet.prototype.showBBCodeHelp = function(id, isIn){ 
 	var parentElm = document.getElementById(id);
 	var popupHelp = document.getElementById(id+"ID");
 	if(parentElm){
@@ -953,9 +953,9 @@ UIForumPortlet.prototype.showBBCodeHelp = function(id, isIn){
       } else {
         worksPaceW = (document.getElementById('UIPortalApplication').offsetWidth)*1;
       }
-			left = (parPopup.offsetLeft)*1 + (parPopup2.offsetLeft)*1 + parentElm.offsetLeft;
+			left = (parPopup.offsetLeft)*1 + (parPopup2.offsetLeft)*1 + parentElm.offsetLeft + parentElm.parentNode.offsetLeft;
 			if(left+popupHelp.offsetWidth > worksPaceW) {
-				popupHelp.style.left = "-"  + (contentHelp.offsetWidth+22) + "px";
+				popupHelp.style.left = "-"  + (contentHelp.offsetWidth+18) + "px";
 				popupHelp.className = "RightBBCodeHelpPopup";
 			} else {
 				popupHelp.className = "LeftBBCodeHelpPopup";
