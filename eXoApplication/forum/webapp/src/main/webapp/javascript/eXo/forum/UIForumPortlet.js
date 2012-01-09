@@ -332,21 +332,23 @@ UIForumPortlet.prototype.initVote = function(voteId, rate) {
 	var optsContainer = DOMUtil.findFirstDescendantByClass(vote, "div", "OptionsContainer") ;
 	var options = DOMUtil.getChildrenByTagName(optsContainer, "div") ;
 	for(var i = 0; i < options.length-1; i++) {
-		options[i].onmouseover = this.overVote ;
+		options[i].onmouseover = eXo.forum.UIForumPortlet.overVote ;
+		options[i].onblur = eXo.forum.UIForumPortlet.overVote ;
 		if(i < rate) options[i].className = "RatedVote" ;
 	}
-	vote.onmouseover = function() {
-		var optsCon= DOMUtil.findFirstDescendantByClass(this, "div", "OptionsContainer") ;
-		var opts = DOMUtil.getChildrenByTagName(optsCon, "div") ;
+	vote.onmouseover = eXo.forum.UIForumPortlet.parentOverVote;
+	vote.onblur = eXo.forum.UIForumPortlet.parentOverVote;
+	optsContainer.onmouseover = eXo.forum.UIForumPortlet.cancel;
+  optsContainer.onblur = eXo.forum.UIForumPortlet.cancel;
+};
+
+UIForumPortlet.prototype.parentOverVote = function(event) {
+		var optsCon= eXo.core.DOMUtil.findFirstDescendantByClass(this, "div", "OptionsContainer") ;
+		var opts = eXo.core.DOMUtil.getChildrenByTagName(optsCon, "div") ;
 		for(var j = 0; j < opts.length-1; j++) {
 			if(j < this.rate) opts[j].className = "RatedVote" ;
 			else opts[j].className = "NormalVote" ;
 		}
-	}
-	optsContainer.onmouseover = function(e) {
-		if(!e) e = window.event ;
-		e.cancelBubble = true ;
-	}
 };
 
 UIForumPortlet.prototype.overVote = function(event) {
@@ -362,7 +364,6 @@ UIForumPortlet.prototype.overVote = function(event) {
 		opts[i].className = "OverVote" ;
 	}
 };
-
 
 UIForumPortlet.prototype.showPopup = function(elevent,e) {
 	var strs = ["AddTagId","goPageTop","goPageBottom","SearchForm"];
@@ -786,7 +787,9 @@ UIForumPortlet.prototype.initTagScroll = function() {
 	 
 	removeChildren(menu);
 	uiNav.tagScrollMgr.arrowsContainer.onmouseover = over;
+	uiNav.tagScrollMgr.arrowsContainer.onfocus = over;
 	uiNav.tagScrollMgr.arrowsContainer.onmouseout = out;
+	uiNav.tagScrollMgr.arrowsContainer.onblur = out;
 	for (var i = 0; i < elements.length; i++) {
 		if (elements[i].isVisible) {
 			elements[i].style.display = "block";
@@ -924,13 +927,6 @@ UIForumPortlet.prototype.showBBCodeHelp = function(id, isIn){
 	var parentElm = document.getElementById(id);
 	var popupHelp = document.getElementById(id+"ID");
 	if(parentElm){
-    parentElm.onmouseover = function() {
-      popupHelp.style.display = "block";
-    };
-    parentElm.onmouseout = function() {
-      popupHelp.style.display = 'none';
-    };
-
 		if(isIn == "true"){
 			popupHelp.style.display = "block";
 			var contentHelp = eXo.core.DOMUtil.findFirstDescendantByClass(popupHelp,"div","ContentHelp");

@@ -225,25 +225,28 @@ SearchTagName.prototype.buildItemNode = function(ip) {
 		eXo.forum.webservice.SearchTagName.parentNode.style.visibility = "hidden";
 		eXo.forum.webservice.SearchTagName.searchTagName(' ');
 	}
-	itemNode.onmouseover =  function() {
-		if(this.className === 'TagNameItem'){
-			this.className = 'TagNameItem OverItem';
-		} else {
-			this.className = 'TagNameItem OverItem Slect';
-		}
-  }
-	itemNode.onmouseout =  function() {
-		if(this.className === 'TagNameItem OverItem'){
-			this.className = 'TagNameItem';
-		} else {
-			this.className = 'TagNameItem Selected';
-		}
-	}
+	itemNode.onmouseover = eXo.forum.webservice.SearchTagName.mouseEvent(this, true);
+	itemNode.onfocus = eXo.forum.webservice.SearchTagName.mouseEvent(this, true);
+  itemNode.onmouseout = eXo.forum.webservice.SearchTagName.mouseEvent(this, false);
+  itemNode.onblur = eXo.forum.webservice.SearchTagName.mouseEvent(this, false);
 	return itemNode;
 };
 
-SearchTagName.prototype.mouseOver = function(elm) {
-	elm.className = 'TagNameItem OverItem';
+
+SearchTagName.prototype.mouseEvent = function(elm, isOv) {
+  if (isOv) {
+    if (elm.className === 'TagNameItem') {
+      elm.className = 'TagNameItem OverItem';
+    } else {
+      elm.className = 'TagNameItem OverItem Slect';
+    }
+  } else {
+    if (elm.className === 'TagNameItem OverItem') {
+    	elm.className = 'TagNameItem';
+    } else {
+    	elm.className = 'TagNameItem Selected';
+    }
+  }
 };
 
 SearchTagName.prototype.ajaxProcessOverwrite = function(manualMode, ajaxRequest) {

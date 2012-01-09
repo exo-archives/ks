@@ -36,8 +36,10 @@ UIWikiEditParagraph.prototype.init = function(pageContentAreaId, editActionId) {
     linkLabel.innerHTML = '';
     
     var headerContainer = sections[index].parentNode;
-    headerContainer.onmouseover = function() { eXo.wiki.UIWikiPortlet.highlightEditSection(this, true); }
-    headerContainer.onmouseout = function() { eXo.wiki.UIWikiPortlet.highlightEditSection(this, false); }
+    headerContainer.onmouseover = eXo.wiki.UIWikiPortlet.highlightEditSection(headerContainer, true);
+    headerContainer.onmouseout = eXo.wiki.UIWikiPortlet.highlightEditSection(headerContainer, false);
+    headerContainer.onfocus = eXo.wiki.UIWikiPortlet.highlightEditSection(headerContainer, true);
+    headerContainer.onblur = eXo.wiki.UIWikiPortlet.highlightEditSection(headerContainer, false);
   }
 };
 

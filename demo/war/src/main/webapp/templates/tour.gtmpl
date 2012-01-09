@@ -11,13 +11,13 @@
 <div class="UIKSGuidedTour ClearFix" id="UIKSGuidedTour" style="border: 1px solid red;">
 
 	<ul class="LeftKSGuidedTour">
-		<li class="Button HightLineButton" onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
+		<li class="Button HightLineButton" onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onfocus="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)" onblur="onMouseOutButton(this)">
 			<h5>Quick Overview</h5>
 		</li>
-		<li class="Button NormalButton" onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
+		<li class="Button NormalButton" onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onfocus="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)" onblur="onMouseOutButton(this)">
 			<h5>Publish Expertise</h5>
 		</li>
-		<li class="Button NormalButton" onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
+		<li class="Button NormalButton" onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onfocus="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)" onblur="onMouseOutButton(this)">
 			<h5>Forge Knowledge</h5>
 		</li>
 		<li class="SignUpButton">

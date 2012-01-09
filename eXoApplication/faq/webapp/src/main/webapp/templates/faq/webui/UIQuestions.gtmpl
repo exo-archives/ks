@@ -28,7 +28,7 @@
               <tr>
                 <td class="ControlButtonContainer">
                   <!-- ================== CustomView action ====================== -->
-                  <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
+                  <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onblur="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" onfocus="eXo.faq.UIAnswersPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
                     <div style="cursor:pointer" class="SeparatorLine" id="FAQTitlePanels" title="<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>" onclick="eXo.faq.UIAnswersPortlet.changeCustomView('true', '<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>', '<%=_ctx.appRes("UIQuestions.label.ShowLeftPanels")%>')">
                       <div class="LeftOverButton">
                         <div class="RightOverButton">
@@ -46,7 +46,7 @@
                   if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
                     String linkRss = uicomponent.getRSSLink() ;
                   %>
-                    <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
+                    <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onblur="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" onfocus="eXo.faq.UIAnswersPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
                       <div class="SeparatorLine">
                         <div class="LeftOverButton">
                           <div class="RightOverButton">
@@ -63,7 +63,7 @@
                 }
                 if(canEditQuestion) {
                 %>
-                  <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this); eXo.faq.UIAnswersPortlet.setCheckEvent(true); eXo.faq.UIAnswersPortlet.checkAction();" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this);" class="DefaultStyle FAQBar ControlButton">
+                  <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this); eXo.faq.UIAnswersPortlet.setCheckEvent(true); eXo.faq.UIAnswersPortlet.checkAction();" onblur="eXo.faq.UIAnswersPortlet.OverButton(this); eXo.faq.UIAnswersPortlet.setCheckEvent(true); eXo.faq.UIAnswersPortlet.checkAction();" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this);" onfocus="eXo.faq.UIAnswersPortlet.OverButton(this);" class="DefaultStyle FAQBar ControlButton">
                     <div class="SeparatorLine">
                       <div class="LeftOverButton">
                         <div class="RightOverButton">
@@ -78,7 +78,7 @@
                       </div>
                       
                       <!-- ================================================= Begin popup menu ================================ -->
-                      <div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none;" onmouseover="eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.faq.UIAnswersPortlet.setCheckEvent(true); eXo.faq.UIAnswersPortlet.checkAction();">
+                      <div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none;" onmouseover="eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager')" onfocus="eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.faq.UIAnswersPortlet.setCheckEvent(true); eXo.faq.UIAnswersPortlet.checkAction();" onblur="eXo.faq.UIAnswersPortlet.setCheckEvent(true); eXo.faq.UIAnswersPortlet.checkAction();">
                       <div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; width:150px; min-width:150px;">
                       
                         <div class="MiddleLeftRightClickPopupMenu">
@@ -90,7 +90,7 @@
                             for(String action in actionTollbar) {
                               if(action.equals("DeleteCategory") && uicomponent.isCategoryHome()) continue; 
                           %>
-                              <div onmousedown="<%=uicomponent.event(action, cateId);%>" class="MenuItem">
+                              <div onmousedown="<%=uicomponent.event(action, cateId);%>" onkeydown="<%=uicomponent.event(action, cateId);%>" class="MenuItem">
                                 <a class="ItemIcon $action" href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action." + action)%></a>
                               </div>
                           <%
@@ -111,7 +111,7 @@
                   String[] actionTollbar = uicomponent.getActionTollbar();
                   for(String action in actionTollbar) {
                 %>
-                    <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
+                    <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onblur="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" onfocus="eXo.faq.UIAnswersPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
                       <div onclick="<%=uicomponent.event(action, cateId);%>" class="SeparatorLine">
                         <div class="LeftOverButton">
                           <div class="RightOverButton">
@@ -129,7 +129,7 @@
                 } else {
                   if(uicomponent.isAddQuestion()) {
                 %>
-                    <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
+                    <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onblur="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" onfocus="eXo.faq.UIAnswersPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
                       <div onclick="<%=uicomponent.event("AddNewQuestion", cateId);%>" class="SeparatorLine">
                         <div class="LeftOverButton">
                           <div class="RightOverButton">
@@ -148,7 +148,7 @@
                 if(currentUser != null && currentUser.trim().length() > 0) {
                   String actionSetting = uicomponent.event("Setting");
               %>
-                  <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
+                  <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onblur="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" onfocus="eXo.faq.UIAnswersPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
                     <div onclick="$actionSetting" class="SeparatorLine">
                       <div class="LeftOverButton">
                         <div class="RightOverButton">
@@ -162,7 +162,7 @@
                     </div>
                   </div>
                 <% } %>
-                <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
+                <div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onblur="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)" onfocus="eXo.faq.UIAnswersPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
                   <!--<div onclick="eXo.faq.UIAnswersPortlet.printAll(this)">-->
                   <div onclick="<%=uicomponent.event("PrintAllQuestion")%>" class="SeparatorLine">
                     <div class="LeftOverButton">
@@ -348,7 +348,7 @@
                                     }
                               %>
                                     <div class="MenuItem">
-                                      <a class="ItemIcon DiscussForum" onmousedown="window.open('$link'); return false;" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+                                      <a class="ItemIcon DiscussForum" onmousedown="window.open('$link'); return false;" onkeydown="window.open('$link'); return false;" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
                                     </div>
                               <%  } 
                                 } 
@@ -578,8 +578,8 @@
                                                     }%>
                                                   </div>
                                               <% } else { %>
-                                                  <div id="faqVoteSpace" class="faqVoteSpace" onmouseover="eXo.faq.UIAnswersPortlet.viewTitle('faqVoteQuestion');eXo.faq.UIAnswersPortlet.hiddenTitle('faqMarkVoteSpace'); " 
-                                                                          onmouseout="eXo.faq.UIAnswersPortlet.viewTitle('faqMarkVoteSpace');eXo.faq.UIAnswersPortlet.hiddenTitle('faqVoteQuestion');">
+                                                  <div id="faqVoteSpace" class="faqVoteSpace" onmouseover="eXo.faq.UIAnswersPortlet.viewTitle('faqVoteQuestion');eXo.faq.UIAnswersPortlet.hiddenTitle('faqMarkVoteSpace'); " onfocus="eXo.faq.UIAnswersPortlet.viewTitle('faqVoteQuestion');eXo.faq.UIAnswersPortlet.hiddenTitle('faqMarkVoteSpace'); " 
+                                                                          onmouseout="eXo.faq.UIAnswersPortlet.viewTitle('faqMarkVoteSpace');eXo.faq.UIAnswersPortlet.hiddenTitle('faqVoteQuestion');" onblur="eXo.faq.UIAnswersPortlet.viewTitle('faqMarkVoteSpace');eXo.faq.UIAnswersPortlet.hiddenTitle('faqVoteQuestion');">
                                                     <div id="faqMarkVoteSpace" style="display:block;">
                                                     <%String classNameForStar = "";
                                                       for(int mark = 0; mark < 5; mark ++){
@@ -604,13 +604,13 @@
                                                       <%
                                                       if (question.isApproved() || uicomponent.canEditQuestion) {
                                                       %>
-                                                      <div id="faqVoteQuestion" style="display:none;" onmouseout="eXo.faq.UIAnswersPortlet.changeStarForVoteQuestion('-1', 'FAQHomeStarVote')" title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
+                                                      <div id="faqVoteQuestion" style="display:none;" onmouseout="eXo.faq.UIAnswersPortlet.changeStarForVoteQuestion('-1', 'FAQHomeStarVote')" onblur="eXo.faq.UIAnswersPortlet.changeStarForVoteQuestion('-1', 'FAQHomeStarVote')" title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
                                                       <%
                                                         for(int i = 0; i < 5; i ++) {
                                                           number = String.valueOf(i+1);
                                                           onclick = uicomponent.event("VoteQuestion", number);
                                                         %>
-                                                          <div id="FAQHomeStarVote$i" class="RatedVote" onmouseover="eXo.faq.UIAnswersPortlet.changeStarForVoteQuestion('$i', 'FAQHomeStarVote')" onclick="$onclick" title=""><span></span></div>
+                                                          <div id="FAQHomeStarVote$i" class="RatedVote" onmouseover="eXo.faq.UIAnswersPortlet.changeStarForVoteQuestion('$i', 'FAQHomeStarVote')" onfocus="eXo.faq.UIAnswersPortlet.changeStarForVoteQuestion('$i', 'FAQHomeStarVote')" onclick="$onclick" title=""><span></span></div>
                                                       <%}%>
                                                       </div>
                                                       <%}%>
@@ -648,7 +648,7 @@
                                     <div class="LeftQuestionContainer" style="width:99%;">
                                       <div class="$questionIcon">
                                         
-                                        <div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionIndex', '', null, null)">
+                                        <div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionIndex', '', null, null)" onkeydown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionIndex', '', null, null)">
                                           
                                           <!-- question content -->
                                           <div class="ViewQuestionNotApproved">
@@ -696,7 +696,7 @@
                                                         }
                                                         String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);                                                       
                                                     %>
-                                                        <div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem $lockFunction" style="cursor:pointer;">
+                                                        <div onclick="javascript:void(0);" onmousedown="$linkView" onkeydown="$linkView" class="MenuItem $lockFunction" style="cursor:pointer;">
                                                           <a class="ItemIcon $iconView" href="javascript:void(0);">$itemLabelView</a>
                                                         </div>
                                                     <%
@@ -706,7 +706,7 @@
                                                         String itemLabelView = _ctx.appRes("UIQuestions.action.EditQuestion");
                                                         String linkView = uicomponent.event("EditQuestion", qId);                                       
                                                     %>
-                                                      <div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem" style="cursor:pointer;">
+                                                      <div onclick="javascript:void(0);" onmousedown="$linkView" onkeydown="$linkView" class="MenuItem" style="cursor:pointer;">
                                                         <a class="ItemIcon Edit" href="javascript:void(0);">$itemLabelView</a>
                                                       </div>
                                                     <%}%>
@@ -963,7 +963,7 @@
                                             %>
                                               <div style="float:left;">
                                                 <div style="float:left;" title="+1">
-                                                  <div class="VoteAnswerUp" id="$idVote" onmouseover="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)">
+                                                  <div class="VoteAnswerUp" id="$idVote" onmouseover="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onfocus="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)" onblur="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)">
                                                     <a href="$userVoteUpAnswer" style="width:16px; height:16px; display:block"></a>
                                                   </div>
                                                 </div>
@@ -972,7 +972,7 @@
                                                 ++i;
                                               %>
                                                 <div style="float:left;" title="-1">
-                                                  <div class="VoteAnswerDown" id="$idVote" onmouseover="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)">
+                                                  <div class="VoteAnswerDown" id="$idVote" onmouseover="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onfocus="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)" onblur="eXo.faq.UIAnswersPortlet.voteAnswerUpDown('$idVote', null)">
                                                     <a href="$userVotedownAnswer" style="width:16px; height:16px; display:block"></a>
                                                   </div>
                                                 </div>

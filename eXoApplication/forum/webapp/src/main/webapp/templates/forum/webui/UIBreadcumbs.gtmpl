@@ -42,7 +42,7 @@
 				 		 	if(uicomponent.isLink()) {
 				 %>
 				 	<%if(uicomponent.useAjax){%>
-							<a href="$link" title="$namePath" onmousedown="$event; return false;" class="Selected">$name</a>
+							<a href="$link" title="$namePath" onmousedown="$event; return false;" onkeydown="$event; return false;" class="Selected">$name</a>
 					<%} else {%>
 							<a href="$link" title="$namePath" class="Selected">$name</a>
 					<%}%>

@@ -345,12 +345,16 @@ UIAnswersPortlet.prototype.removeLink = function (rootNode) {
   while (i--) {
     contextAnchors[i].onmousedown = null;
     contextAnchors[i].onmousedown = null;
+    contextAnchors[i].onfocus = null;
+    contextAnchors[i].onblur = null;
   }
   contextAnchors = this.findDescendantsByAttribute(rootNode, "div", "onmouseover");
   i = contextAnchors.length;
   while (i--) {
     contextAnchors[i].onmouseover = null;
     contextAnchors[i].onmouseout = null;
+    contextAnchors[i].onfocus = null;
+    contextAnchors[i].onblur = null;
   }
 
   contextAnchors = this.findDescendantsByAttribute(rootNode, "div", "onclick");

@@ -21,30 +21,27 @@ function UIDropdownMenu(){
 };
 
 UIDropdownMenu.prototype.init = function(componentid){
-  var component = document.getElementById(componentid);
-  var me = eXo.wiki.UIDropdownMenu;
-  var menu = eXo.core.DOMUtil.findDescendantsByClass(component, "div","HoverMenu")[0];
-  component.onmouseover = function(e) {
-    return me.hover(menu, true);
-  }
-  component.onmouseout = function(e) {
-    return me.hover(menu, false);
-  }
-
-  menu.onmouseover = function(e) {
-    return me.hover(this, true);
-  }
-  menu.onmouseout = function(e) {
-    return me.hover(this, false);
-  }
+  var component = document.getElementById(String(componentid));
+  var menu = eXo.core.DOMUtil.findFirstDescendantByClass(component, "div","HoverMenu");
+  component.onmouseover = eXo.wiki.UIDropdownMenu.hover;
+  component.onmouseout = eXo.wiki.UIDropdownMenu.hover;
+  component.onfocus = eXo.wiki.UIDropdownMenu.hover;
+  component.onblur = eXo.wiki.UIDropdownMenu.hover;
 };
 
-UIDropdownMenu.prototype.hover = function(menu, state){
-  if (state==true){
+UIDropdownMenu.prototype.hover = function(event){
+  var menu = eXo.core.DOMUtil.findFirstDescendantByClass(this, "div","HoverMenu");
+  var evType = String(event.type);
+  if (evType == "mouseover" || evType == "onfocus"){
     menu.style.display="block";
-  }
-  else{
+  } else{
     menu.style.display="none";
   }  
 };
+
+UIDropdownMenu.prototype.cancel = function(evt) {
+	var _e = window.event || evt ;
+	_e.cancelBubble = true ;
+} ;
+
 eXo.wiki.UIDropdownMenu = new UIDropdownMenu();

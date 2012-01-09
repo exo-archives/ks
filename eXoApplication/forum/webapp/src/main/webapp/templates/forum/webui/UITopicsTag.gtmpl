@@ -157,8 +157,8 @@
                 <% if(topic.getIsSticky()) {%>
                   <span class="Text StickyIcon FL"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
                 <% } %>
-                  <a onclick="$link; return false;" href="$url" title="$titlePost" class="$title FL TitleNorman" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">$topicTitle</a>
-                  <div id="UIPopupCategory${rCNB}" action="$actionBookmark" class="ClickPopupContent" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
+                  <a onclick="$link; return false;" href="$url" title="$titlePost" class="$title FL TitleNorman" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)" onkeydown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">$topicTitle</a>
+                  <div id="UIPopupCategory${rCNB}" action="$actionBookmark" class="ClickPopupContent" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;" onkeydown="event.cancelBubble=true;">
                   </div>
                 </div>
                     <% ++rCNB; %>

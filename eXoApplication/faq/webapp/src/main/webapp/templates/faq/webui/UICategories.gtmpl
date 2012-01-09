@@ -124,7 +124,7 @@
                                 }
                             %>
                                 <div class="MenuItem">
-                                  <a class="ItemIcon $viewAction" href="javascript:void(0) ;" onmousedown="$linkView">$itemLabelView</a>
+                                  <a class="ItemIcon $viewAction" href="javascript:void(0) ;" onmousedown="$linkView" onkeydown="$linkView">$itemLabelView</a>
                                 </div>
                                 
                             <%
